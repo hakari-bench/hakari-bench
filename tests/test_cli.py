@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import argparse
+
 from nano_ir_benchmark.cli import parse_args
+from nano_ir_benchmark.datasets import EvalTask, NanoDatasetSpec
 
 
 def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
@@ -106,3 +109,35 @@ def test_parse_args_does_not_mix_default_dataset_into_collection() -> None:
 
     assert args.dataset == []
     assert args.collection == ["MNanoBEIR"]
+
+
+def test_load_dataset_for_args_uses_candidate_subset_for_bm25(monkeypatch) -> None:
+    from nano_ir_benchmark.cli import _load_dataset_for_args
+
+    calls: list[str | None] = []
+
+    def fake_load_ir_dataset(task: EvalTask, *, candidate_subset_name: str | None = None) -> object:
+        _ = task
+        calls.append(candidate_subset_name)
+        return object()
+
+    monkeypatch.setattr("nano_ir_benchmark.cli.load_ir_dataset", fake_load_ir_dataset)
+    task = EvalTask(
+        dataset=NanoDatasetSpec(
+            name="Toy",
+            dataset_id="toy/data",
+            corpus_config="corpus",
+            queries_config="queries",
+            qrels_config="qrels",
+            candidate_config="bm25",
+        ),
+        split_name="test",
+        task_name="test",
+    )
+
+    _load_dataset_for_args(
+        argparse.Namespace(model_type="bm25", candidate_subset_name="bm25"),
+        task,
+    )
+
+    assert calls == ["bm25"]

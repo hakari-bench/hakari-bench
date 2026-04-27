@@ -87,9 +87,27 @@ def run_or_load_task(
     bm25_payload: dict[str, Any] | None = None
     payload_model_metadata = model_metadata
     if args.model_type == "bm25":
-        bm25_config = resolve_bm25_config_for_queries(bm25_config_from_args(args), dataset.queries)
-        bm25_payload = bm25_config_payload(bm25_config)
-        payload_model_metadata = collect_bm25_metadata(args, config=bm25_config)
+        raw_bm25_config = bm25_config_from_args(args)
+        bm25_source = "dataset_candidate_subset" if dataset.candidates is not None else "computed_bm25s"
+        bm25_candidate_subset_name = (
+            args.candidate_subset_name if dataset.candidates is not None else None
+        )
+        bm25_config = (
+            raw_bm25_config
+            if dataset.candidates is not None
+            else resolve_bm25_config_for_queries(raw_bm25_config, dataset.queries)
+        )
+        bm25_payload = bm25_config_payload(
+            bm25_config,
+            source=bm25_source,
+            candidate_subset_name=bm25_candidate_subset_name,
+        )
+        payload_model_metadata = collect_bm25_metadata(
+            args,
+            config=bm25_config,
+            source=bm25_source,
+            candidate_subset_name=bm25_candidate_subset_name,
+        )
         evaluation = evaluate_bm25_task(
             dataset=dataset,
             config=bm25_config,
@@ -142,7 +160,7 @@ def run_or_load_task(
             "query_prompt_name": args.query_prompt_name,
             "corpus_prompt_name": args.corpus_prompt_name,
             "truncate_dim": args.truncate_dim,
-            "candidate_subset_name": args.candidate_subset_name if args.model_type == "reranker" else None,
+            "candidate_subset_name": args.candidate_subset_name if args.model_type in {"bm25", "reranker"} else None,
             "rerank_top_n": args.rerank_top_n if args.model_type == "reranker" else None,
             "bm25": bm25_payload,
         },
@@ -251,6 +269,7 @@ def build_all_payload(
     splits.sort(key=lambda item: (str(item["dataset_id"]), str(item["task_name"])))
     generated_at_utc = datetime.now(timezone.utc).isoformat()
     resolved_run_finished_at_utc = run_finished_at_utc or generated_at_utc
+    resolved_model_metadata = _consistent_task_model_metadata(results) or model_metadata
     return {
         "generated_at_utc": generated_at_utc,
         "run": {
@@ -259,7 +278,7 @@ def build_all_payload(
             "evaluated_at_utc": resolved_run_finished_at_utc,
             "wall_seconds": run_wall_seconds,
         },
-        "model": model_metadata,
+        "model": resolved_model_metadata,
         "environment": environment,
         "cli_args": vars(args),
         "aggregate_metric": args.aggregate_metric,
@@ -300,4 +319,14 @@ def _numeric(value: Any, *, fallback: Any = None) -> float | None:
         return float(value)
     if isinstance(fallback, int | float):
         return float(fallback)
+    return None
+
+
+def _consistent_task_model_metadata(results: list[TaskRunResult]) -> dict[str, Any] | None:
+    task_models = [result.payload.get("model") for result in results if isinstance(result.payload.get("model"), dict)]
+    if not task_models:
+        return None
+    first = task_models[0]
+    if all(model == first for model in task_models):
+        return first
     return None

@@ -23,7 +23,9 @@ output/results/{model_name}/{dataset_name}/{split_or_task}.json
 
 ## BM25
 
-BM25 can be evaluated directly:
+BM25 can be evaluated directly. If the dataset provides a candidate subset named
+by `--candidate-subset-name` (default: `bm25`), that ranking is used as the BM25
+baseline. If the subset is unavailable, BM25 is computed locally.
 
 ```bash
 uv run nano-ir-bench evaluate \

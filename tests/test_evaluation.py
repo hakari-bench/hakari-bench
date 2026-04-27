@@ -34,6 +34,17 @@ def _toy_dataset() -> LoadedIrDataset:
     )
 
 
+def _toy_dataset_without_candidates() -> LoadedIrDataset:
+    dataset = _toy_dataset()
+    return LoadedIrDataset(
+        queries=dataset.queries,
+        corpus=dataset.corpus,
+        qrels=dataset.qrels,
+        candidates=None,
+        evaluator_name=dataset.evaluator_name,
+    )
+
+
 class FakeDenseModel:
     similarity_fn_name = "dot"
     prompts = {"query": "query: ", "document": "document: "}
@@ -249,6 +260,49 @@ def test_build_all_payload_includes_split_and_total_durations(tmp_path: Path) ->
     )
 
 
+def test_build_all_payload_uses_task_model_metadata_when_consistent(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="bm25/bm25s-okapi-auto",
+        model_type="bm25",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+        bm25_tokenizer=None,
+        bm25_tokenizer_name=None,
+        bm25_stemmer_algorithm="english",
+        bm25_k1=1.5,
+        bm25_b=0.75,
+        top_k=1,
+    )
+    result = run_or_load_task(
+        task=task,
+        model=None,
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "stale"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    payload = build_all_payload(
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "stale"},
+        results=[result],
+    )
+
+    assert payload["model"]["bm25"]["source"] == "dataset_candidate_subset"
+
+
 def test_run_or_load_task_records_auto_bm25_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     task = _toy_task()
     args = argparse.Namespace(
@@ -284,7 +338,7 @@ def test_run_or_load_task_records_auto_bm25_config(tmp_path: Path, monkeypatch: 
         args=args,
         environment={"package_versions": {}},
         model_metadata={"name_or_path": "bm25/bm25s-okapi-auto"},
-        dataset_loader=lambda _: _toy_dataset(),
+        dataset_loader=lambda _: _toy_dataset_without_candidates(),
     )
 
     assert result.payload["config"]["bm25"]["algorithm"] == "okapi"
@@ -292,3 +346,44 @@ def test_run_or_load_task_records_auto_bm25_config(tmp_path: Path, monkeypatch: 
     assert result.payload["config"]["bm25"]["auto_selected"] is True
     assert result.payload["config"]["bm25"]["auto_detected_language"] == "en"
     assert result.payload["model"]["bm25"]["tokenizer"] == "regex"
+
+
+def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="bm25/bm25s-okapi-auto",
+        model_type="bm25",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+        bm25_tokenizer=None,
+        bm25_tokenizer_name=None,
+        bm25_stemmer_algorithm="english",
+        bm25_k1=1.5,
+        bm25_b=0.75,
+        top_k=1,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=None,
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "bm25/bm25s-okapi-auto"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    assert result.payload["config"]["candidate_subset_name"] == "bm25"
+    assert result.payload["config"]["bm25"]["source"] == "dataset_candidate_subset"
+    assert result.payload["config"]["bm25"]["candidate_subset_name"] == "bm25"
+    assert result.payload["model"]["bm25"]["source"] == "dataset_candidate_subset"
+    assert result.payload["evaluation"]["aggregate_metric_value"] == pytest.approx(0.5)

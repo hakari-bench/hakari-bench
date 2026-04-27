@@ -281,7 +281,12 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def _load_dataset_for_args(args: argparse.Namespace, task: EvalTask) -> LoadedIrDataset:
-    candidate_subset_name = args.candidate_subset_name if getattr(args, "model_type", None) == "reranker" else None
+    model_type = getattr(args, "model_type", None)
+    candidate_subset_name = (
+        (getattr(args, "candidate_subset_name", None) or task.dataset.candidate_config)
+        if model_type in {"bm25", "reranker"}
+        else None
+    )
     return load_ir_dataset(task, candidate_subset_name=candidate_subset_name)
 
 

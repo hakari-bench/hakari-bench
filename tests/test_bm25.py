@@ -245,3 +245,27 @@ def test_evaluate_bm25_task_returns_ir_metrics() -> None:
 
     assert result.metrics["Toy_bm25_bm25s_okapi_ndcg@10"] == pytest.approx(1.0)
     assert result.timing["score_and_topk_seconds"] >= 0.0
+
+
+def test_evaluate_bm25_task_uses_dataset_candidate_subset_without_bm25s(monkeypatch: pytest.MonkeyPatch) -> None:
+    class _FailingBM25:
+        def __init__(self, **kwargs: object) -> None:
+            _ = kwargs
+            raise AssertionError("bm25s should not be used when dataset candidates are available")
+
+    monkeypatch.setitem(sys.modules, "bm25s", types.SimpleNamespace(BM25=_FailingBM25))
+    dataset = LoadedIrDataset(
+        queries={"q1": "cat fish", "q2": "dog bone"},
+        corpus={"d1": "cat likes fish", "d2": "dog likes bone", "d3": "other"},
+        qrels={"q1": {"d1"}, "q2": {"d2"}},
+        candidates={"q1": ["d1", "d3"], "q2": ["d2", "d1"]},
+        evaluator_name="Toy",
+    )
+
+    result = evaluate_bm25_task(
+        dataset=dataset,
+        config=BM25Config(tokenizer=None, top_k=1, show_progress=False),
+    )
+
+    assert result.metrics["Toy_bm25_dataset_subset_ndcg@10"] == pytest.approx(1.0)
+    assert result.timing["score_and_topk_seconds"] >= 0.0

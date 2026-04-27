@@ -165,17 +165,36 @@ def bm25_config_name(config: BM25Config) -> str:
     return "-".join(parts)
 
 
-def bm25_config_payload(config: BM25Config) -> dict[str, Any]:
-    return {"backend": "bm25s", "algorithm": _BM25_ALGORITHM_NAME, **asdict(config)}
+def bm25_config_payload(
+    config: BM25Config,
+    *,
+    source: str = "computed_bm25s",
+    candidate_subset_name: str | None = None,
+) -> dict[str, Any]:
+    payload = {
+        "backend": "bm25s" if source == "computed_bm25s" else "dataset",
+        "algorithm": _BM25_ALGORITHM_NAME if source == "computed_bm25s" else "bm25",
+        "source": source,
+        **asdict(config),
+    }
+    if candidate_subset_name is not None:
+        payload["candidate_subset_name"] = candidate_subset_name
+    return payload
 
 
-def collect_bm25_metadata(args: Any, *, config: BM25Config | None = None) -> dict[str, Any]:
+def collect_bm25_metadata(
+    args: Any,
+    *,
+    config: BM25Config | None = None,
+    source: str = "computed_bm25s",
+    candidate_subset_name: str | None = None,
+) -> dict[str, Any]:
     config = config or bm25_config_from_args(args)
     return {
         "model_type": "bm25",
         "name_or_path": args.model,
-        "backend_library": "bm25s",
-        "bm25": bm25_config_payload(config),
+        "backend_library": "bm25s" if source == "computed_bm25s" else "dataset",
+        "bm25": bm25_config_payload(config, source=source, candidate_subset_name=candidate_subset_name),
         "total_parameters": 0,
         "trainable_parameters": 0,
         "transformer_parameters": 0,
@@ -187,7 +206,17 @@ def evaluate_bm25_task(*, dataset: Any, config: BM25Config) -> Any:
     from nano_ir_benchmark.evaluation import TaskEvaluation
 
     score_start = time.perf_counter()
-    rankings = rank_bm25_candidates(corpus=dataset.corpus, queries=dataset.queries, config=config)
+    if dataset.candidates is None:
+        rankings = rank_bm25_candidates(corpus=dataset.corpus, queries=dataset.queries, config=config)
+        score_name = "bm25_bm25s_okapi"
+    else:
+        rankings = rank_dataset_candidates(
+            queries=dataset.queries,
+            corpus=dataset.corpus,
+            candidates=dataset.candidates,
+            top_k=config.top_k,
+        )
+        score_name = "bm25_dataset_subset"
     score_seconds = time.perf_counter() - score_start
 
     metric_start = time.perf_counter()
@@ -195,7 +224,7 @@ def evaluate_bm25_task(*, dataset: Any, config: BM25Config) -> Any:
         rankings=rankings,
         qrels=dataset.qrels,
         evaluator_name=dataset.evaluator_name,
-        score_name="bm25_bm25s_okapi",
+        score_name=score_name,
     )
     metric_seconds = time.perf_counter() - metric_start
     return TaskEvaluation(
@@ -208,6 +237,21 @@ def evaluate_bm25_task(*, dataset: Any, config: BM25Config) -> Any:
             "pure_compute_seconds": float(score_seconds + metric_seconds),
         },
     )
+
+
+def rank_dataset_candidates(
+    *,
+    queries: dict[str, str],
+    corpus: dict[str, str],
+    candidates: dict[str, list[str]],
+    top_k: int,
+) -> dict[str, list[str]]:
+    if top_k <= 0:
+        raise ValueError("top_k must be positive.")
+    return {
+        query_id: [doc_id for doc_id in candidates.get(query_id, []) if doc_id in corpus][:top_k]
+        for query_id in queries
+    }
 
 
 def rank_bm25_candidates(
