@@ -3,10 +3,10 @@
 ## Project Overview
 
 This repository implements a Nano-style information retrieval benchmark runner
-for SentenceTransformers-compatible models.
+for SentenceTransformers-compatible models and BM25 baselines.
 
-The library code lives under `nano_ir_benchmark/`. Built-in dataset definitions
-live under `config/datasets/`, and dataset collection definitions live under
+Library code lives under `nano_ir_benchmark/`. Built-in dataset definitions live
+under `config/datasets/`, and dataset collection definitions live under
 `config/dataset_collections/`.
 
 ## Environment
@@ -16,22 +16,24 @@ live under `config/datasets/`, and dataset collection definitions live under
 - Add runtime dependencies with `uv add`.
 - Add development-only dependencies with `uv add --dev`.
 - Keep `uv.lock` updated when dependencies change.
+- Keep `transformers>=4` and `sentence-transformers>=5` compatibility.
 
 ## Development Workflow
 
-- Follow TDD for behavioral changes: add or update focused tests before
-  changing implementation when practical.
-- Prefer small, scoped changes that match the existing modules:
-  - `bm25.py` for BM25 candidate generation, BM25 baseline evaluation,
-    and tokenizer dispatch.
-  - `datasets.py` for dataset specs, collections, split/task resolution.
-  - `models.py` for model loading and runtime/model metadata.
-  - `evaluation.py` for dataset loading and task scoring.
-  - `metrics.py` for IR metric calculation.
-  - `results.py` for output paths, cache behavior, and JSON payloads.
+- Follow TDD for behavioral changes: add or update focused tests before changing
+  implementation when practical.
+- Keep changes scoped to the existing module boundaries:
   - `cli.py` for command-line parsing and orchestration.
-- Keep generated benchmark results out of commits. `output/` is intentionally
-  ignored.
+  - `datasets.py` for dataset specs, collections, split/task resolution.
+  - `evaluation.py` for dataset loading and dense/sparse/reranker scoring.
+  - `bm25.py` for BM25 baseline evaluation, candidate generation, and tokenizer
+    dispatch.
+  - `metrics.py` for IR metric calculation.
+  - `models.py` for model loading and runtime/model metadata.
+  - `results.py` for output paths, cache behavior, and JSON payloads.
+- Prefer YAML dataset configuration over hard-coded dataset lists.
+- Do not commit generated benchmark outputs, caches, or local scratch artifacts.
+  `output/` and `tmp/` are intentionally ignored.
 
 ## Validation
 
@@ -49,38 +51,62 @@ uv run ruff check .
 uv run ty check
 ```
 
-## Benchmark Behavior
+## Model Loading
 
-- The default model loader is SentenceTransformers dense embedding.
-- Supported model type options are `dense`, `sparse`, `reranker`, and
-  `late-interaction`; late interaction is currently reserved for a future
-  adapter.
-- Default dtype is `bf16`.
-- `--trust-remote-code`, `--flash-attn2`, `--attn-implementation`, and dtype
-  options must remain explicit CLI options.
-- Prompt overrides should be optional. If no prompt or prompt name is provided,
+- The default model type is `dense`, loaded with `SentenceTransformer`.
+- Supported `--model-type` values are `dense`, `sparse`, `reranker`,
+  `late-interaction`, and `bm25`.
+- `sparse` uses SentenceTransformers `SparseEncoder`.
+- `reranker` uses SentenceTransformers `CrossEncoder` and requires a candidate
+  subset such as `bm25`; `--rerank-top-n` limits the candidates to rerank.
+- `late-interaction` is currently reserved and should continue to raise until an
+  adapter is implemented.
+- Default dtype is `bf16`. Keep `--dtype`, `--trust-remote-code`,
+  `--flash-attn2`, `--attn-implementation`, `--device`,
+  `--model-max-seq-length`, and `--truncate-dim` explicit CLI options.
+- Prompt overrides are optional. If no prompt or prompt name is provided,
   preserve SentenceTransformers model prompt behavior.
-- Result files are written below:
+
+## BM25 Behavior
+
+- BM25 evaluation supports two sources:
+  - If an evaluation dataset has the selected candidate subset
+    (`--candidate-subset-name`, default `bm25`), use that ranking as the BM25
+    baseline.
+  - If the subset is unavailable, compute BM25 locally with `bm25s`.
+- Local BM25 uses `bm25s` with the standard Okapi-style Robertson method.
+- If `--bm25-tokenizer` is omitted for local BM25, auto-select the tokenizer by
+  sampling 10 queries and detecting language with `fast-langdetect`: use
+  `wordseg` for supported languages and `regex` for all others.
+- Supported BM25 tokenizers are `regex`, `whitespace`, `transformer`, `stemmer`,
+  `english_regex`, `english_porter`, `english_porter_stop`, and `wordseg`.
+- `wordseg` support is optional. Keep language-specific dependencies behind the
+  `wordseg` extra and lazy-load them only when the tokenizer is selected.
+- Persist the resolved BM25 source, backend, algorithm, tokenizer, and candidate
+  subset metadata in result JSON under `config.bm25` and `model.bm25`.
+
+## Results and Metadata
+
+- Per-task result files are written below:
 
 ```text
 output/results/{model_name}/{huggingface_dataset_name}/{split_or_task}.json
 ```
 
+- Aggregate results are written to:
+
+```text
+output/results/{model_name}/all.json
+```
+
 - Existing result files should be skipped unless `--override` is provided.
-- BM25 evaluation and candidate generation use `bm25s` with the standard
-  Okapi-style Robertson method when BM25 must be computed locally. If an
-  evaluation dataset has a candidate subset selected by `--candidate-subset-name`
-  (default: `bm25`), BM25 evaluation should use that subset ranking instead of
-  recomputing candidates. If `--bm25-tokenizer` is omitted for local BM25,
-  auto-select the tokenizer by sampling 10 queries and detecting language with
-  `fast-langdetect`: use `wordseg` for supported languages and `regex` for all
-  others. Persist the resolved BM25 source/algorithm/tokenizer in result JSON.
-- BM25 `wordseg` tokenizer support is optional. Keep language-specific
-  dependencies behind the `wordseg` extra and lazy-load them only when the
-  tokenizer is selected.
-- Metadata should preserve as much runtime detail as practical, including batch
-  size, dtype, package versions, torch/CUDA info, total parameters, trainable
-  parameters, and active/transformer parameters.
+- Result JSON should preserve as much runtime detail as practical, including
+  batch size, dtype, package versions, torch/CUDA info, prompts, total
+  parameters, trainable parameters, embedding parameters, transformer/active
+  parameters, evaluation timestamps, dataset load duration, and evaluation
+  timing.
+- Active parameters are currently computed as total parameters minus input
+  embedding parameters when both counts are available.
 
 ## Dataset Configuration
 
@@ -92,6 +118,6 @@ output/results/{model_name}/{huggingface_dataset_name}/{split_or_task}.json
   - collection-style benchmarks such as `MNanoBEIR`.
 - `MNanoBEIR` is defined as a built-in collection in
   `config/dataset_collections/mnanobeir.yaml`.
-- Keep benchmark naming consistent across docs, configs, and tests:
-  `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`, `NanoRTEB`,
-  `NanoMTEB`, `NanoMMTEB`, and `NanoCodeSearchNet`.
+- Built-in dataset names should stay consistent across docs, configs, and tests:
+  `NanoBEIR-en`, `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`,
+  `NanoRTEB`, `NanoMTEB`, `NanoMMTEB`, and `NanoCodeSearchNet`.
