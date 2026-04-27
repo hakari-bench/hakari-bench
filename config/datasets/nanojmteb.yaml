@@ -1,0 +1,19 @@
+name: NanoJMTEB
+dataset_id: hotchpotch/NanoJMTEB
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+  - NanoJaCWIR
+  - NanoJaGovFaqs
+  - NanoJaqket
+  - NanoJaMIRACL
+  - NanoJaMintaka
+  - NanoJaMrTidy
+  - NanoJaMultiLongDoc
+  - NanoJaNLPJournalAbsArticle
+  - NanoJaNLPJournalAbsIntro
+  - NanoJaNLPJournalTitleAbs
+  - NanoJaNLPJournalTitleIntro

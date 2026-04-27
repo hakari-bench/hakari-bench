@@ -1,0 +1,22 @@
+name: NanoRTEB
+dataset_id: hotchpotch/NanoRTEB
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+  - NanoAILACasedocs
+  - NanoAILAStatutes
+  - NanoLegalSummarization
+  - NanoFinanceBench
+  - NanoHC3Finance
+  - NanoFinQA
+  - NanoApps
+  - NanoDS1000
+  - NanoHumanEval
+  - NanoMBPP
+  - NanoWikiSQL
+  - NanoFreshStack
+  - NanoChatDoctor
+  - NanoCUREv1

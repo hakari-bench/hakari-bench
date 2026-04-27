@@ -18,8 +18,53 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoBEIR-en").dataset_id == "sentence-transformers/NanoBEIR-en"
     assert registry.get_dataset("NanoMIRACL").dataset_id == "hotchpotch/NanoMIRACL"
     assert registry.get_dataset("NanoMLDR").dataset_id == "hotchpotch/NanoMLDR"
+    assert registry.get_dataset("NanoJMTEB").dataset_id == "hotchpotch/NanoJMTEB"
+    assert registry.get_dataset("NanoRTEB").dataset_id == "hotchpotch/NanoRTEB"
     assert registry.get_dataset("NanoCodeSearchNet").dataset_id == "hotchpotch/NanoCodeSearchNet"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
+
+
+def test_resolve_eval_tasks_for_builtin_nanorteb_uses_declared_splits() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoRTEB"], collection_values=[], split_values=[])
+
+    assert [(task.dataset_name, task.split_name) for task in tasks] == [
+        ("NanoRTEB", "NanoAILACasedocs"),
+        ("NanoRTEB", "NanoAILAStatutes"),
+        ("NanoRTEB", "NanoLegalSummarization"),
+        ("NanoRTEB", "NanoFinanceBench"),
+        ("NanoRTEB", "NanoHC3Finance"),
+        ("NanoRTEB", "NanoFinQA"),
+        ("NanoRTEB", "NanoApps"),
+        ("NanoRTEB", "NanoDS1000"),
+        ("NanoRTEB", "NanoHumanEval"),
+        ("NanoRTEB", "NanoMBPP"),
+        ("NanoRTEB", "NanoWikiSQL"),
+        ("NanoRTEB", "NanoFreshStack"),
+        ("NanoRTEB", "NanoChatDoctor"),
+        ("NanoRTEB", "NanoCUREv1"),
+    ]
+
+
+def test_resolve_eval_tasks_for_builtin_nanojmteb_uses_declared_splits() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoJMTEB"], collection_values=[], split_values=[])
+
+    assert [(task.dataset_name, task.split_name) for task in tasks] == [
+        ("NanoJMTEB", "NanoJaCWIR"),
+        ("NanoJMTEB", "NanoJaGovFaqs"),
+        ("NanoJMTEB", "NanoJaqket"),
+        ("NanoJMTEB", "NanoJaMIRACL"),
+        ("NanoJMTEB", "NanoJaMintaka"),
+        ("NanoJMTEB", "NanoJaMrTidy"),
+        ("NanoJMTEB", "NanoJaMultiLongDoc"),
+        ("NanoJMTEB", "NanoJaNLPJournalAbsArticle"),
+        ("NanoJMTEB", "NanoJaNLPJournalAbsIntro"),
+        ("NanoJMTEB", "NanoJaNLPJournalTitleAbs"),
+        ("NanoJMTEB", "NanoJaNLPJournalTitleIntro"),
+    ]
 
 
 def test_resolve_eval_tasks_for_builtin_nanomldr_uses_declared_splits() -> None:
