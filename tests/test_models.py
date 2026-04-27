@@ -85,4 +85,70 @@ def test_collect_model_metadata_counts_parameters() -> None:
     assert metadata["name_or_path"] == "toy"
     assert metadata["total_parameters"] == 11
     assert metadata["trainable_parameters"] == 11
-    assert metadata["active_parameters"] == 11
+    assert metadata["embedding_parameters"] is None
+    assert metadata["active_parameters"] is None
+
+
+def test_collect_model_metadata_counts_active_parameters_from_input_embeddings() -> None:
+    model = _FakeSentenceTransformerLike(backbone_attr="auto_model")
+    args = _metadata_args()
+
+    metadata = collect_model_metadata(model, args)
+
+    assert metadata["total_parameters"] == 38
+    assert metadata["trainable_parameters"] == 38
+    assert metadata["embedding_parameters"] == 20
+    assert metadata["active_parameters"] == 18
+
+
+def test_collect_model_metadata_counts_active_parameters_from_st_model_attribute() -> None:
+    model = _FakeSentenceTransformerLike(backbone_attr="model")
+    args = _metadata_args()
+
+    metadata = collect_model_metadata(model, args)
+
+    assert metadata["total_parameters"] == 38
+    assert metadata["embedding_parameters"] == 20
+    assert metadata["active_parameters"] == 18
+
+
+def _metadata_args() -> argparse.Namespace:
+    return argparse.Namespace(
+        model="toy",
+        model_type="dense",
+        dtype="bf16",
+        device="cpu",
+        trust_remote_code=False,
+        attn_implementation=None,
+        flash_attn2=False,
+    )
+
+
+class _FakeSentenceTransformerLike(torch.nn.Module):
+    def __init__(self, *, backbone_attr: str) -> None:
+        super().__init__()
+        self.add_module("0", _FakeTransformerModule(backbone_attr=backbone_attr))
+
+    def __getitem__(self, index: int) -> torch.nn.Module:
+        module = self._modules[str(index)]
+        assert isinstance(module, torch.nn.Module)
+        return module
+
+
+class _FakeTransformerModule(torch.nn.Module):
+    def __init__(self, *, backbone_attr: str) -> None:
+        super().__init__()
+        self.add_module(backbone_attr, _FakeBackbone())
+
+
+class _FakeBackbone(torch.nn.Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.embeddings = torch.nn.Module()
+        self.input_embeddings = torch.nn.Embedding(5, 4)
+        self.embeddings.tok_embeddings = self.input_embeddings
+        self.layers = torch.nn.ModuleList([torch.nn.Linear(4, 3, bias=False)])
+        self.final_norm = torch.nn.LayerNorm(3)
+
+    def get_input_embeddings(self) -> torch.nn.Embedding:
+        return self.input_embeddings

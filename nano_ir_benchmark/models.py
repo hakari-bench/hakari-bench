@@ -137,7 +137,11 @@ def _version_or_none(package: str) -> str | None:
 
 
 def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
-    total_parameters, trainable_parameters, transformer_parameters = _parameter_counts(model)
+    total_parameters, trainable_parameters, embedding_parameters = _parameter_counts(model)
+    active_parameters = _active_parameter_count(
+        total_parameters=total_parameters,
+        embedding_parameters=embedding_parameters,
+    )
     return {
         "model_type": args.model_type,
         "name_or_path": args.model,
@@ -155,8 +159,9 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
         "default_prompt_name": getattr(model, "default_prompt_name", None),
         "total_parameters": total_parameters,
         "trainable_parameters": trainable_parameters,
-        "transformer_parameters": transformer_parameters,
-        "active_parameters": transformer_parameters or total_parameters,
+        "embedding_parameters": embedding_parameters,
+        "transformer_parameters": active_parameters,
+        "active_parameters": active_parameters,
     }
 
 
@@ -166,16 +171,81 @@ def _parameter_counts(model: Any) -> tuple[int | None, int | None, int | None]:
         return None, None, None
     total = 0
     trainable = 0
-    transformer = 0
     for name, parameter in named_parameters:
         count = int(parameter.numel())
         total += count
         if parameter.requires_grad:
             trainable += count
-        lowered = name.lower()
-        if any(marker in lowered for marker in ["transformer", "auto_model", "encoder.layer", "backbone"]):
-            transformer += count
-    return total, trainable, transformer if transformer else None
+    return total, trainable, _embedding_parameter_count(model)
+
+
+def _active_parameter_count(*, total_parameters: int | None, embedding_parameters: int | None) -> int | None:
+    if total_parameters is None or embedding_parameters is None:
+        return None
+    if embedding_parameters > total_parameters:
+        return None
+    return total_parameters - embedding_parameters
+
+
+def _embedding_parameter_count(model: Any) -> int | None:
+    embedding = _input_embeddings(model)
+    weight = getattr(embedding, "weight", None) if embedding is not None else None
+    if weight is None:
+        return None
+    if hasattr(weight, "numel"):
+        return int(weight.numel())
+    shape = getattr(weight, "shape", None)
+    if shape is None:
+        return None
+    count = 1
+    for dimension in shape:
+        count *= int(dimension)
+    return count
+
+
+def _input_embeddings(model: Any) -> Any | None:
+    for source in _input_embedding_sources(model):
+        get_input_embeddings = getattr(source, "get_input_embeddings", None)
+        if get_input_embeddings is None:
+            continue
+        try:
+            embedding = get_input_embeddings()
+        except Exception:
+            continue
+        if embedding is not None:
+            return embedding
+    return None
+
+
+def _input_embedding_sources(model: Any) -> list[Any]:
+    sources: list[Any] = []
+
+    first_module = _first_sentence_transformer_module(model)
+    if first_module is not None:
+        sources.extend(
+            source
+            for source in [
+                getattr(first_module, "auto_model", None),
+                getattr(first_module, "model", None),
+                first_module,
+            ]
+            if source is not None
+        )
+
+    model_attr = getattr(model, "model", None)
+    sources.extend(
+        source
+        for source in [model_attr, getattr(model_attr, "auto_model", None), model]
+        if source is not None
+    )
+    return sources
+
+
+def _first_sentence_transformer_module(model: Any) -> Any | None:
+    try:
+        return model[0]
+    except Exception:
+        return None
 
 
 def _named_parameters(model: Any) -> list[tuple[str, torch.nn.Parameter]] | None:
