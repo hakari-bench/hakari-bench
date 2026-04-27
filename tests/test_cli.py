@@ -13,6 +13,46 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.output_dir == "output/results"
 
 
+def test_parse_args_allows_bm25_evaluation_without_model_name() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model-type",
+            "bm25",
+            "--bm25-tokenizer",
+            "english_porter_stop",
+        ]
+    )
+
+    assert args.model == "bm25/bm25s-okapi-english_porter_stop"
+    assert args.bm25_tokenizer == "english_porter_stop"
+
+
+def test_parse_args_accepts_build_bm25_options() -> None:
+    args = parse_args(
+        [
+            "build-bm25",
+            "--dataset",
+            "NanoMLDR",
+            "--split",
+            "ja",
+            "--top-k",
+            "50",
+            "--bm25-tokenizer",
+            "stemmer",
+            "--bm25-stemmer-algorithm",
+            "french",
+        ]
+    )
+
+    assert args.command == "build-bm25"
+    assert args.dataset == ["NanoMLDR"]
+    assert args.split == ["ja"]
+    assert args.top_k == 50
+    assert args.bm25_tokenizer == "stemmer"
+    assert args.bm25_stemmer_algorithm == "french"
+
+
 def test_parse_args_accepts_prompt_and_reranker_options() -> None:
     args = parse_args(
         [

@@ -5,6 +5,13 @@ import json
 from pathlib import Path
 from typing import Any
 
+from nano_ir_benchmark.bm25 import (
+    BM25BuildResult,
+    bm25_config_name,
+    bm25_config_from_args,
+    collect_bm25_metadata,
+    run_or_load_bm25_task,
+)
 from nano_ir_benchmark.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
 from nano_ir_benchmark.evaluation import LoadedIrDataset, load_ir_dataset
 from nano_ir_benchmark.models import (
@@ -18,6 +25,7 @@ from nano_ir_benchmark.results import (
     build_all_payload,
     result_path_for_task,
     run_or_load_task,
+    safe_path_part,
     write_all_payload,
 )
 
@@ -27,8 +35,12 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     evaluate = subparsers.add_parser("evaluate", help="Evaluate a model on Nano-style IR datasets.")
-    evaluate.add_argument("--model", required=True, help="Hugging Face model id or local model path.")
-    evaluate.add_argument("--model-type", default="dense", choices=["dense", "sparse", "reranker", "late-interaction"])
+    evaluate.add_argument("--model", default=None, help="Hugging Face model id or local model path.")
+    evaluate.add_argument(
+        "--model-type",
+        default="dense",
+        choices=["dense", "sparse", "reranker", "late-interaction", "bm25"],
+    )
     evaluate.add_argument("--dtype", default="bf16", choices=["bf16", "fp16", "fp32"])
     evaluate.add_argument("--attn-implementation", default=None)
     evaluate.add_argument("--flash-attn2", action="store_true")
@@ -57,14 +69,59 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--output-dir", default="output/results")
     evaluate.add_argument("--override", action="store_true")
     evaluate.add_argument("--aggregate-metric", default="ndcg@10")
+    _add_bm25_args(evaluate)
+
+    build_bm25 = subparsers.add_parser("build-bm25", help="Build BM25 candidate files for Nano-style datasets.")
+    build_bm25.add_argument(
+        "--dataset",
+        action="append",
+        default=None,
+        help="Dataset name/id. Repeat or pass comma-separated values.",
+    )
+    build_bm25.add_argument("--collection", action="append", default=[], help="Dataset collection name.")
+    build_bm25.add_argument("--split", action="append", default=[], help="Split/task name. Repeat or comma-separate.")
+    build_bm25.add_argument("--output-dir", default="output/bm25")
+    build_bm25.add_argument("--override", action="store_true")
+    build_bm25.add_argument("--show-progress", action="store_true")
+    _add_bm25_args(build_bm25)
     return parser
 
 
+def _add_bm25_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--top-k", type=int, default=100, help="Number of BM25 candidates per query.")
+    parser.add_argument(
+        "--bm25-tokenizer",
+        default="regex",
+        choices=[
+            "regex",
+            "whitespace",
+            "transformer",
+            "stemmer",
+            "english_regex",
+            "english_porter",
+            "english_porter_stop",
+        ],
+    )
+    parser.add_argument("--bm25-tokenizer-name", default=None)
+    parser.add_argument("--bm25-stemmer-algorithm", default="english")
+    parser.add_argument("--bm25-k1", type=float, default=1.5)
+    parser.add_argument("--bm25-b", type=float, default=0.75)
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    args = parser.parse_args(argv)
     if args.command == "evaluate" and args.dataset is None and not args.collection:
         args.dataset = ["sentence-transformers/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:
+        args.dataset = []
+    if args.command == "evaluate" and args.model_type == "bm25" and args.model is None:
+        args.model = f"bm25/{bm25_config_name(bm25_config_from_args(args))}"
+    if args.command == "evaluate" and args.model_type != "bm25" and args.model is None:
+        parser.error("--model is required unless --model-type bm25 is used.")
+    if args.command == "build-bm25" and args.dataset is None and not args.collection:
+        args.dataset = ["sentence-transformers/NanoBEIR-en"]
+    elif args.command == "build-bm25" and args.dataset is None:
         args.dataset = []
     return args
 
@@ -86,7 +143,9 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     environment = collect_runtime_environment()
 
     model: Any | None = None
-    if pending_tasks:
+    if args.model_type == "bm25":
+        model_metadata = collect_bm25_metadata(args)
+    elif pending_tasks:
         model = load_model(
             ModelLoadConfig(
                 model_name_or_path=args.model,
@@ -117,7 +176,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         if model is None and result_path_for_task(output_dir=output_dir, model_name_or_path=args.model, task=task).exists():
             results.append(_load_cached_task(args=args, task=task))
             continue
-        if model is None:
+        if model is None and args.model_type != "bm25":
             raise RuntimeError("Internal error: model was not loaded for a pending task.")
         results.append(
             run_or_load_task(
@@ -151,8 +210,63 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     return all_payload
 
 
+def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
+    registry = DatasetRegistry.load_builtin()
+    tasks = resolve_eval_tasks(
+        registry=registry,
+        dataset_values=args.dataset,
+        collection_values=args.collection,
+        split_values=args.split,
+    )
+    config = bm25_config_from_args(args)
+    results: list[BM25BuildResult] = []
+    for task in tasks:
+        dataset = _load_dataset_for_args(args, task)
+        results.append(run_or_load_bm25_task(task=task, dataset=dataset, args=args, config=config))
+
+    payload = {
+        "generated_at_utc": results[-1].payload.get("generated_at_utc") if results else None,
+        "output_dir": args.output_dir,
+        "config": {
+            "bm25": vars(args),
+        },
+        "totals": {
+            "split_count": len(results),
+            "cache_hit_count": sum(1 for result in results if result.cache_hit),
+            "evaluated_count": sum(1 for result in results if not result.cache_hit),
+        },
+        "splits": [
+            {
+                "dataset_name": result.task.dataset_name,
+                "dataset_id": result.task.dataset_id,
+                "split_name": result.task.split_name,
+                "task_name": result.task.task_name,
+                "cache_hit": result.cache_hit,
+                "result_path": str(result.output_path),
+            }
+            for result in results
+        ],
+    }
+    config_name = safe_path_part(bm25_config_name(config))
+    all_path = Path(args.output_dir) / config_name / "all.json"
+    all_path.parent.mkdir(parents=True, exist_ok=True)
+    all_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(
+        json.dumps(
+            {
+                "all_json": str(all_path),
+                "evaluated_count": payload["totals"]["evaluated_count"],
+                "cache_hit_count": payload["totals"]["cache_hit_count"],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+    return payload
+
+
 def _load_dataset_for_args(args: argparse.Namespace, task: EvalTask) -> LoadedIrDataset:
-    candidate_subset_name = args.candidate_subset_name if args.model_type == "reranker" else None
+    candidate_subset_name = args.candidate_subset_name if getattr(args, "model_type", None) == "reranker" else None
     return load_ir_dataset(task, candidate_subset_name=candidate_subset_name)
 
 
@@ -170,6 +284,9 @@ def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
     if args.command == "evaluate":
         run_evaluate(args)
+        return
+    if args.command == "build-bm25":
+        run_build_bm25(args)
         return
     raise ValueError(f"Unsupported command: {args.command}")
 

@@ -5,8 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "bm25s>=0.3.6",
     "datasets>=4.8.4",
+    "nltk>=3.9.4",
     "numpy>=2.4.4",
+    "pystemmer>=3.0.0",
     "pyyaml>=6.0.3",
     "scipy>=1.17.1",
     "sentence-transformers>=5",

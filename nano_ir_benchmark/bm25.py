@@ -1,0 +1,389 @@
+from __future__ import annotations
+
+import json
+import importlib
+import re
+import time
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Literal, Sequence, cast
+
+import numpy as np
+
+from nano_ir_benchmark.datasets import EvalTask
+from nano_ir_benchmark.metrics import compute_ir_metrics
+
+BM25Tokenizer = Literal[
+    "regex",
+    "whitespace",
+    "transformer",
+    "stemmer",
+    "english_regex",
+    "english_porter",
+    "english_porter_stop",
+]
+
+_TOKEN_PATTERN = re.compile(r"\b\w+\b", flags=re.UNICODE)
+_ENGLISH_TOKEN_PATTERN = re.compile(r"[A-Za-z0-9]+")
+_DEFAULT_TRANSFORMER_TOKENIZER = "Qwen/Qwen3-0.6B"
+_MAX_TOKENIZER_CHUNK_CHARS = 4000
+_ENGLISH_STOPWORDS = frozenset(
+    {
+        "a",
+        "an",
+        "and",
+        "are",
+        "as",
+        "at",
+        "be",
+        "been",
+        "being",
+        "but",
+        "by",
+        "for",
+        "from",
+        "had",
+        "has",
+        "have",
+        "he",
+        "her",
+        "hers",
+        "him",
+        "his",
+        "i",
+        "if",
+        "in",
+        "into",
+        "is",
+        "it",
+        "its",
+        "itself",
+        "me",
+        "my",
+        "myself",
+        "of",
+        "on",
+        "or",
+        "our",
+        "ours",
+        "ourselves",
+        "she",
+        "so",
+        "than",
+        "that",
+        "the",
+        "their",
+        "theirs",
+        "them",
+        "themselves",
+        "then",
+        "there",
+        "these",
+        "they",
+        "this",
+        "those",
+        "to",
+        "too",
+        "up",
+        "very",
+        "was",
+        "we",
+        "were",
+        "what",
+        "when",
+        "where",
+        "which",
+        "who",
+        "whom",
+        "why",
+        "will",
+        "with",
+        "you",
+        "your",
+        "yours",
+        "yourself",
+        "yourselves",
+    }
+)
+
+
+@dataclass(frozen=True)
+class BM25Config:
+    tokenizer: str = "regex"
+    tokenizer_name: str | None = None
+    stemmer_algorithm: str = "english"
+    top_k: int = 100
+    k1: float = 1.5
+    b: float = 0.75
+    show_progress: bool = False
+
+
+@dataclass(frozen=True)
+class BM25BuildResult:
+    task: EvalTask
+    cache_hit: bool
+    output_path: Path
+    payload: dict[str, Any]
+
+
+def bm25_config_from_args(args: Any) -> BM25Config:
+    return BM25Config(
+        tokenizer=args.bm25_tokenizer,
+        tokenizer_name=args.bm25_tokenizer_name,
+        stemmer_algorithm=args.bm25_stemmer_algorithm,
+        top_k=args.top_k,
+        k1=args.bm25_k1,
+        b=args.bm25_b,
+        show_progress=args.show_progress,
+    )
+
+
+def bm25_config_name(config: BM25Config) -> str:
+    parts = ["bm25s", "okapi", config.tokenizer]
+    if config.tokenizer == "transformer" and config.tokenizer_name:
+        parts.append(config.tokenizer_name)
+    if config.tokenizer == "stemmer":
+        parts.append(config.stemmer_algorithm)
+    return "-".join(parts)
+
+
+def collect_bm25_metadata(args: Any) -> dict[str, Any]:
+    config = bm25_config_from_args(args)
+    return {
+        "model_type": "bm25",
+        "name_or_path": args.model,
+        "backend_library": "bm25s",
+        "bm25": {"backend": "bm25s", "algorithm": "okapi", **asdict(config)},
+        "total_parameters": 0,
+        "trainable_parameters": 0,
+        "transformer_parameters": 0,
+        "active_parameters": 0,
+    }
+
+
+def evaluate_bm25_task(*, dataset: Any, config: BM25Config) -> Any:
+    from nano_ir_benchmark.evaluation import TaskEvaluation
+
+    score_start = time.perf_counter()
+    rankings = rank_bm25_candidates(corpus=dataset.corpus, queries=dataset.queries, config=config)
+    score_seconds = time.perf_counter() - score_start
+
+    metric_start = time.perf_counter()
+    metrics = compute_ir_metrics(
+        rankings=rankings,
+        qrels=dataset.qrels,
+        evaluator_name=dataset.evaluator_name,
+        score_name="bm25_bm25s_okapi",
+    )
+    metric_seconds = time.perf_counter() - metric_start
+    return TaskEvaluation(
+        metrics=metrics,
+        timing={
+            "query_embedding_seconds": 0.0,
+            "corpus_embedding_seconds": 0.0,
+            "score_and_topk_seconds": float(score_seconds),
+            "metric_compute_seconds": float(metric_seconds),
+            "pure_compute_seconds": float(score_seconds + metric_seconds),
+        },
+    )
+
+
+def rank_bm25_candidates(
+    *,
+    corpus: dict[str, str],
+    queries: dict[str, str],
+    config: BM25Config,
+) -> dict[str, list[str]]:
+    import bm25s
+
+    if not corpus:
+        raise ValueError("corpus is empty.")
+    if not queries:
+        raise ValueError("queries is empty.")
+    _validate_config(config)
+
+    corpus_ids = list(corpus)
+    query_ids = list(queries)
+    corpus_tokens = tokenize_texts(
+        [corpus[corpus_id] for corpus_id in corpus_ids],
+        tokenizer=cast(BM25Tokenizer, config.tokenizer),
+        tokenizer_name=config.tokenizer_name,
+        stemmer_algorithm=config.stemmer_algorithm,
+    )
+    query_tokens = tokenize_texts(
+        [queries[query_id] for query_id in query_ids],
+        tokenizer=cast(BM25Tokenizer, config.tokenizer),
+        tokenizer_name=config.tokenizer_name,
+        stemmer_algorithm=config.stemmer_algorithm,
+    )
+    if not any(corpus_tokens):
+        raise ValueError("corpus produced no BM25 tokens.")
+
+    top_k = max(1, min(config.top_k, len(corpus_ids)))
+    retriever = bm25s.BM25(k1=config.k1, b=config.b, method="lucene")
+    retriever.index(corpus_tokens, show_progress=config.show_progress, leave_progress=False)
+    ranked_indices, _scores = retriever.retrieve(
+        query_tokens,
+        k=top_k,
+        show_progress=config.show_progress,
+        leave_progress=False,
+        return_as="tuple",
+    )
+    return {
+        query_id: [corpus_ids[int(index)] for index in np.asarray(row).reshape(-1).tolist()]
+        for query_id, row in zip(query_ids, ranked_indices)
+    }
+
+
+def tokenize_texts(
+    texts: Sequence[str],
+    *,
+    tokenizer: BM25Tokenizer,
+    tokenizer_name: str | None = None,
+    stemmer_algorithm: str = "english",
+) -> list[list[str]]:
+    if tokenizer == "whitespace":
+        return [[token for token in text.lower().split() if token] for text in texts]
+    if tokenizer == "regex":
+        return [_regex_tokens(text) for text in texts]
+    if tokenizer == "english_regex":
+        return [_english_regex_tokens(text) for text in texts]
+    if tokenizer == "english_porter":
+        return [_porter_stem_tokens(_english_regex_tokens(text)) for text in texts]
+    if tokenizer == "english_porter_stop":
+        return [
+            _porter_stem_tokens([token for token in _english_regex_tokens(text) if token not in _ENGLISH_STOPWORDS])
+            for text in texts
+        ]
+    if tokenizer == "stemmer":
+        return [_pystemmer_tokens(_regex_tokens(text), stemmer_algorithm=stemmer_algorithm) for text in texts]
+    if tokenizer == "transformer":
+        return _tokenize_with_transformer(texts, tokenizer_name or _DEFAULT_TRANSFORMER_TOKENIZER)
+    raise ValueError(f"Unsupported BM25 tokenizer: {tokenizer}")
+
+
+def rankings_to_candidate_rows(rankings: dict[str, list[str]]) -> list[dict[str, Any]]:
+    return [{"query-id": query_id, "corpus-ids": corpus_ids} for query_id, corpus_ids in rankings.items()]
+
+
+def candidate_rows_to_rankings(rows: Sequence[dict[str, Any]]) -> dict[str, list[str]]:
+    return {str(row["query-id"]): [str(corpus_id) for corpus_id in row["corpus-ids"]] for row in rows}
+
+
+def bm25_candidate_path_for_task(*, output_dir: Path, task: EvalTask, config: BM25Config) -> Path:
+    from nano_ir_benchmark.results import safe_path_part
+
+    return output_dir / safe_path_part(bm25_config_name(config)) / safe_path_part(task.dataset_id) / f"{safe_path_part(task.task_name)}.json"
+
+
+def run_or_load_bm25_task(
+    *,
+    task: EvalTask,
+    dataset: Any,
+    args: Any,
+    config: BM25Config,
+) -> BM25BuildResult:
+    output_path = bm25_candidate_path_for_task(output_dir=Path(args.output_dir), task=task, config=config)
+    if output_path.exists() and not args.override:
+        return BM25BuildResult(
+            task=task,
+            cache_hit=True,
+            output_path=output_path,
+            payload=json.loads(output_path.read_text(encoding="utf-8")),
+        )
+
+    started_at = datetime.now(timezone.utc)
+    start = time.perf_counter()
+    rankings = rank_bm25_candidates(corpus=dataset.corpus, queries=dataset.queries, config=config)
+    elapsed = time.perf_counter() - start
+    rows = rankings_to_candidate_rows(rankings)
+    metrics = compute_ir_metrics(
+        rankings=rankings,
+        qrels=dataset.qrels,
+        evaluator_name=dataset.evaluator_name,
+        score_name="bm25_bm25s_okapi",
+    )
+    payload = {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "target": {
+            "dataset_name": task.dataset_name,
+            "dataset_id": task.dataset_id,
+            "split_name": task.split_name,
+            "task_name": task.task_name,
+            "corpus_config": task.dataset.corpus_config,
+            "queries_config": task.dataset.queries_config,
+            "qrels_config": task.dataset.qrels_config,
+        },
+        "config": {"backend": "bm25s", "algorithm": "okapi", **asdict(config)},
+        "evaluation": {
+            "started_at_utc": started_at.isoformat(),
+            "finished_at_utc": datetime.now(timezone.utc).isoformat(),
+            "wall_seconds": float(elapsed),
+            "cache_hit": False,
+        },
+        "metrics": metrics,
+        "rows": rows,
+    }
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    return BM25BuildResult(task=task, cache_hit=False, output_path=output_path, payload=payload)
+
+
+def _validate_config(config: BM25Config) -> None:
+    if config.tokenizer not in {"whitespace", "regex", "transformer", "stemmer", "english_regex", "english_porter", "english_porter_stop"}:
+        raise ValueError(f"Unsupported BM25 tokenizer: {config.tokenizer}")
+    if config.top_k <= 0:
+        raise ValueError("top_k must be positive.")
+    if config.k1 <= 0.0:
+        raise ValueError("k1 must be positive.")
+    if not 0.0 <= config.b <= 1.0:
+        raise ValueError("b must be between 0 and 1.")
+
+
+def _regex_tokens(text: str) -> list[str]:
+    return [match.group(0).lower() for match in _TOKEN_PATTERN.finditer(text)]
+
+
+def _english_regex_tokens(text: str) -> list[str]:
+    return [match.group(0).lower() for match in _ENGLISH_TOKEN_PATTERN.finditer(text)]
+
+
+def _porter_stem_tokens(tokens: list[str]) -> list[str]:
+    from nltk.stem import PorterStemmer
+
+    stemmer = PorterStemmer()
+    return [str(stemmer.stem(token)) for token in tokens]
+
+
+def _pystemmer_tokens(tokens: list[str], *, stemmer_algorithm: str) -> list[str]:
+    stemmer_module = importlib.import_module("Stemmer")
+    stemmer_cls = getattr(stemmer_module, "Stemmer")
+    stemmer = stemmer_cls(stemmer_algorithm)
+    return [str(stemmer.stemWord(token)) for token in tokens]
+
+
+def _tokenize_with_transformer(texts: Sequence[str], tokenizer_name: str) -> list[list[str]]:
+    from transformers import AutoTokenizer
+
+    transformer_tokenizer: Any = AutoTokenizer.from_pretrained(tokenizer_name)
+    tokenized_texts: list[list[str]] = []
+    for text in texts:
+        tokens: list[str] = []
+        for chunk in _chunk_text(text, max_chunk_chars=_MAX_TOKENIZER_CHUNK_CHARS):
+            tokenize_fn = getattr(transformer_tokenizer, "tokenize")
+            raw_tokens = tokenize_fn(chunk, add_special_tokens=False)
+            if isinstance(raw_tokens, str):
+                tokens.append(raw_tokens)
+            else:
+                tokens.extend(str(token) for token in raw_tokens)
+        tokenized_texts.append(tokens)
+    return tokenized_texts
+
+
+def _chunk_text(text: str, *, max_chunk_chars: int) -> list[str]:
+    if max_chunk_chars <= 0:
+        raise ValueError("max_chunk_chars must be positive.")
+    if len(text) <= max_chunk_chars:
+        return [text]
+    return [text[index : index + max_chunk_chars] for index in range(0, len(text), max_chunk_chars)]

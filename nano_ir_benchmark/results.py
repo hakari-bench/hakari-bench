@@ -10,6 +10,7 @@ from typing import Any, Callable
 
 import numpy as np
 
+from nano_ir_benchmark.bm25 import bm25_config_from_args, evaluate_bm25_task
 from nano_ir_benchmark.datasets import EvalTask
 from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
 
@@ -72,7 +73,12 @@ def run_or_load_task(
     dataset = dataset_loader(task)
     started_at = datetime.now(timezone.utc)
     start = time.perf_counter()
-    if args.model_type == "reranker":
+    if args.model_type == "bm25":
+        evaluation = evaluate_bm25_task(
+            dataset=dataset,
+            config=bm25_config_from_args(args),
+        )
+    elif args.model_type == "reranker":
         evaluation = evaluate_reranker_task(
             model=model,
             dataset=dataset,

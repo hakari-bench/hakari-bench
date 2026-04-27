@@ -17,8 +17,31 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
 
     assert registry.get_dataset("NanoBEIR-en").dataset_id == "sentence-transformers/NanoBEIR-en"
     assert registry.get_dataset("NanoMIRACL").dataset_id == "hotchpotch/NanoMIRACL"
+    assert registry.get_dataset("NanoMLDR").dataset_id == "hotchpotch/NanoMLDR"
     assert registry.get_dataset("NanoCodeSearchNet").dataset_id == "hotchpotch/NanoCodeSearchNet"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
+
+
+def test_resolve_eval_tasks_for_builtin_nanomldr_uses_declared_splits() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMLDR"], collection_values=[], split_values=[])
+
+    assert [(task.dataset_name, task.split_name) for task in tasks] == [
+        ("NanoMLDR", "ar"),
+        ("NanoMLDR", "de"),
+        ("NanoMLDR", "en"),
+        ("NanoMLDR", "es"),
+        ("NanoMLDR", "fr"),
+        ("NanoMLDR", "hi"),
+        ("NanoMLDR", "it"),
+        ("NanoMLDR", "ja"),
+        ("NanoMLDR", "ko"),
+        ("NanoMLDR", "pt"),
+        ("NanoMLDR", "ru"),
+        ("NanoMLDR", "th"),
+        ("NanoMLDR", "zh"),
+    ]
 
 
 def test_resolve_eval_tasks_expands_mnanobeir_collection() -> None:
