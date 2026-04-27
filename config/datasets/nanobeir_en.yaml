@@ -1,0 +1,7 @@
+name: NanoBEIR-en
+dataset_id: sentence-transformers/NanoBEIR-en
+benchmark_kind: nanobeir
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
