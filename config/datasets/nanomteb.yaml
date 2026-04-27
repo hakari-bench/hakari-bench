@@ -1,0 +1,17 @@
+name: NanoMTEB
+dataset_id: hotchpotch/NanoMTEB
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+  - NanoArguAna
+  - NanoCQADupstackGaming
+  - NanoCQADupstackUnix
+  - NanoClimateFEVERHardNegatives
+  - NanoFEVERHardNegatives
+  - NanoFiQA2018
+  - NanoHotpotQAHardNegatives
+  - NanoSCIDOCS
+  - NanoTouche2020

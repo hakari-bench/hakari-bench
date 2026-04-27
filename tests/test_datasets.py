@@ -20,8 +20,55 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoMLDR").dataset_id == "hotchpotch/NanoMLDR"
     assert registry.get_dataset("NanoJMTEB").dataset_id == "hotchpotch/NanoJMTEB"
     assert registry.get_dataset("NanoRTEB").dataset_id == "hotchpotch/NanoRTEB"
+    assert registry.get_dataset("NanoMTEB").dataset_id == "hotchpotch/NanoMTEB"
+    assert registry.get_dataset("NanoMMTEB").dataset_id == "hotchpotch/NanoMMTEB"
     assert registry.get_dataset("NanoCodeSearchNet").dataset_id == "hotchpotch/NanoCodeSearchNet"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
+
+
+def test_resolve_eval_tasks_for_builtin_nanomteb_uses_declared_splits() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMTEB"], collection_values=[], split_values=[])
+
+    assert [(task.dataset_name, task.split_name) for task in tasks] == [
+        ("NanoMTEB", "NanoArguAna"),
+        ("NanoMTEB", "NanoCQADupstackGaming"),
+        ("NanoMTEB", "NanoCQADupstackUnix"),
+        ("NanoMTEB", "NanoClimateFEVERHardNegatives"),
+        ("NanoMTEB", "NanoFEVERHardNegatives"),
+        ("NanoMTEB", "NanoFiQA2018"),
+        ("NanoMTEB", "NanoHotpotQAHardNegatives"),
+        ("NanoMTEB", "NanoSCIDOCS"),
+        ("NanoMTEB", "NanoTouche2020"),
+    ]
+
+
+def test_resolve_eval_tasks_for_builtin_nanommteb_uses_declared_splits() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMMTEB"], collection_values=[], split_values=[])
+
+    assert [(task.dataset_name, task.split_name) for task in tasks] == [
+        ("NanoMMTEB", "NanoStackOverflowQA"),
+        ("NanoMMTEB", "NanoTwitterHjerne"),
+        ("NanoMMTEB", "NanoAILAStatutes"),
+        ("NanoMMTEB", "NanoArguAna"),
+        ("NanoMMTEB", "NanoHagrid"),
+        ("NanoMMTEB", "NanoLegalBenchCorporateLobbying"),
+        ("NanoMMTEB", "NanoLEMBPasskey"),
+        ("NanoMMTEB", "NanoSCIDOCS"),
+        ("NanoMMTEB", "NanoSpartQA"),
+        ("NanoMMTEB", "NanoTempReasonL1"),
+        ("NanoMMTEB", "NanoWinoGrande"),
+        ("NanoMMTEB", "NanoBelebele"),
+        ("NanoMMTEB", "NanoMLQA"),
+        ("NanoMMTEB", "NanoStatcanDialogueDataset"),
+        ("NanoMMTEB", "NanoWikipediaRetrievalMultilingual"),
+        ("NanoMMTEB", "NanoCovid"),
+        ("NanoMMTEB", "NanoNews21Instruction"),
+        ("NanoMMTEB", "NanoMIRACLRetrievalHardNegatives"),
+    ]
 
 
 def test_resolve_eval_tasks_for_builtin_nanorteb_uses_declared_splits() -> None:

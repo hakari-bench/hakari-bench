@@ -90,5 +90,5 @@ output/results/{model_name}/{huggingface_dataset_name}/{split_or_task}.json
 - `MNanoBEIR` is defined as a built-in collection in
   `config/dataset_collections/mnanobeir.yaml`.
 - Keep benchmark naming consistent across docs, configs, and tests:
-  `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`, `NanoRTEB`, and
-  `NanoCodeSearchNet`.
+  `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`, `NanoRTEB`,
+  `NanoMTEB`, `NanoMMTEB`, and `NanoCodeSearchNet`.

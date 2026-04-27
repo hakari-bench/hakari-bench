@@ -1,0 +1,26 @@
+name: NanoMMTEB
+dataset_id: hotchpotch/NanoMMTEB
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+  - NanoStackOverflowQA
+  - NanoTwitterHjerne
+  - NanoAILAStatutes
+  - NanoArguAna
+  - NanoHagrid
+  - NanoLegalBenchCorporateLobbying
+  - NanoLEMBPasskey
+  - NanoSCIDOCS
+  - NanoSpartQA
+  - NanoTempReasonL1
+  - NanoWinoGrande
+  - NanoBelebele
+  - NanoMLQA
+  - NanoStatcanDialogueDataset
+  - NanoWikipediaRetrievalMultilingual
+  - NanoCovid
+  - NanoNews21Instruction
+  - NanoMIRACLRetrievalHardNegatives
