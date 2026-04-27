@@ -12,6 +12,7 @@ from nano_ir_benchmark.bm25 import (
     evaluate_bm25_task,
     rank_bm25_candidates,
     rankings_to_candidate_rows,
+    resolve_bm25_config_for_queries,
     tokenize_texts,
 )
 from nano_ir_benchmark.evaluation import LoadedIrDataset
@@ -63,6 +64,53 @@ def test_rank_bm25_candidates_uses_bm25s_robertson_for_okapi(monkeypatch: pytest
 
     assert rankings == {"q1": ["d1"]}
     assert methods == ["robertson"]
+
+
+def test_resolve_bm25_config_auto_selects_wordseg_for_supported_language() -> None:
+    calls: list[str] = []
+
+    def detector(text: str) -> dict[str, object]:
+        calls.append(text)
+        return {"lang": "ja", "score": 0.99}
+
+    config = resolve_bm25_config_for_queries(
+        BM25Config(tokenizer=None),
+        {f"q{i}": f"query {i}" for i in range(20)},
+        detector=detector,
+    )
+
+    assert len(calls) == 10
+    assert config.tokenizer == "wordseg"
+    assert config.tokenizer_name == "ja"
+    assert config.auto_selected is True
+    assert config.auto_detected_language == "ja"
+    assert config.auto_detection_sample_size == 10
+    assert config.auto_detection_language_counts == {"ja": 10}
+
+
+def test_resolve_bm25_config_auto_selects_regex_for_other_languages() -> None:
+    config = resolve_bm25_config_for_queries(
+        BM25Config(tokenizer=None),
+        {"q1": "what is bm25", "q2": "retrieval benchmark"},
+        detector=lambda _: {"lang": "en", "score": 0.98},
+    )
+
+    assert config.tokenizer == "regex"
+    assert config.tokenizer_name is None
+    assert config.auto_selected is True
+    assert config.auto_detected_language == "en"
+
+
+def test_resolve_bm25_config_keeps_explicit_tokenizer() -> None:
+    config = resolve_bm25_config_for_queries(
+        BM25Config(tokenizer="english_porter_stop"),
+        {"q1": "what is bm25"},
+        detector=lambda _: {"lang": "ja", "score": 0.99},
+    )
+
+    assert config.tokenizer == "english_porter_stop"
+    assert config.auto_selected is False
+    assert config.auto_detected_language is None
 
 
 def test_tokenize_texts_supports_basic_tokenizers() -> None:

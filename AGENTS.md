@@ -68,8 +68,10 @@ output/results/{model_name}/{huggingface_dataset_name}/{split_or_task}.json
 
 - Existing result files should be skipped unless `--override` is provided.
 - BM25 evaluation and candidate generation use `bm25s` with the standard
-  Okapi-style Robertson method. Keep tokenizer choices explicit. There is no
-  auto tokenizer selection in this repository.
+  Okapi-style Robertson method. If `--bm25-tokenizer` is omitted, auto-select
+  the tokenizer by sampling 10 queries and detecting language with
+  `fast-langdetect`: use `wordseg` for supported languages and `regex` for all
+  others. Persist the resolved BM25 algorithm/tokenizer in result JSON.
 - BM25 `wordseg` tokenizer support is optional. Keep language-specific
   dependencies behind the `wordseg` extra and lazy-load them only when the
   tokenizer is selected.

@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 import importlib
+import random
 import re
 import time
 from collections.abc import Callable, Iterable
+from collections import Counter
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -120,13 +122,17 @@ _ENGLISH_STOPWORDS = frozenset(
 
 @dataclass(frozen=True)
 class BM25Config:
-    tokenizer: str = "regex"
+    tokenizer: str | None = None
     tokenizer_name: str | None = None
     stemmer_algorithm: str = "english"
     top_k: int = 100
     k1: float = 1.5
     b: float = 0.75
     show_progress: bool = False
+    auto_selected: bool = False
+    auto_detected_language: str | None = None
+    auto_detection_language_counts: dict[str, int] | None = None
+    auto_detection_sample_size: int | None = None
 
 
 @dataclass(frozen=True)
@@ -150,7 +156,8 @@ def bm25_config_from_args(args: Any) -> BM25Config:
 
 
 def bm25_config_name(config: BM25Config) -> str:
-    parts = ["bm25s", _BM25_ALGORITHM_NAME, config.tokenizer]
+    tokenizer = config.tokenizer or "auto"
+    parts = ["bm25s", _BM25_ALGORITHM_NAME, tokenizer]
     if config.tokenizer in {"transformer", "wordseg"} and config.tokenizer_name:
         parts.append(config.tokenizer_name)
     if config.tokenizer == "stemmer":
@@ -158,13 +165,17 @@ def bm25_config_name(config: BM25Config) -> str:
     return "-".join(parts)
 
 
-def collect_bm25_metadata(args: Any) -> dict[str, Any]:
-    config = bm25_config_from_args(args)
+def bm25_config_payload(config: BM25Config) -> dict[str, Any]:
+    return {"backend": "bm25s", "algorithm": _BM25_ALGORITHM_NAME, **asdict(config)}
+
+
+def collect_bm25_metadata(args: Any, *, config: BM25Config | None = None) -> dict[str, Any]:
+    config = config or bm25_config_from_args(args)
     return {
         "model_type": "bm25",
         "name_or_path": args.model,
         "backend_library": "bm25s",
-        "bm25": {"backend": "bm25s", "algorithm": _BM25_ALGORITHM_NAME, **asdict(config)},
+        "bm25": bm25_config_payload(config),
         "total_parameters": 0,
         "trainable_parameters": 0,
         "transformer_parameters": 0,
@@ -211,6 +222,7 @@ def rank_bm25_candidates(
         raise ValueError("corpus is empty.")
     if not queries:
         raise ValueError("queries is empty.")
+    config = resolve_bm25_config_for_queries(config, queries)
     _validate_config(config)
 
     corpus_ids = list(corpus)
@@ -275,6 +287,43 @@ def tokenize_texts(
     raise ValueError(f"Unsupported BM25 tokenizer: {tokenizer}")
 
 
+def resolve_bm25_config_for_queries(
+    config: BM25Config,
+    queries: dict[str, str],
+    *,
+    detector: Callable[[str], Any] | None = None,
+) -> BM25Config:
+    if config.tokenizer is not None:
+        return config
+
+    sampled_queries = _sample_query_texts(queries, sample_size=10)
+    detections = [_normalize_detect_result((detector or _detect_language)(text)) for text in sampled_queries]
+    languages = [language for language, _score in detections if language]
+    language_counts = dict(Counter(languages))
+    detected_language = _select_detected_language(detections)
+
+    if detected_language in WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES:
+        tokenizer = "wordseg"
+        tokenizer_name = detected_language
+    else:
+        tokenizer = "regex"
+        tokenizer_name = None
+
+    return BM25Config(
+        tokenizer=tokenizer,
+        tokenizer_name=tokenizer_name,
+        stemmer_algorithm=config.stemmer_algorithm,
+        top_k=config.top_k,
+        k1=config.k1,
+        b=config.b,
+        show_progress=config.show_progress,
+        auto_selected=True,
+        auto_detected_language=detected_language,
+        auto_detection_language_counts=language_counts,
+        auto_detection_sample_size=len(sampled_queries),
+    )
+
+
 def rankings_to_candidate_rows(rankings: dict[str, list[str]]) -> list[dict[str, Any]]:
     return [{"query-id": query_id, "corpus-ids": corpus_ids} for query_id, corpus_ids in rankings.items()]
 
@@ -296,7 +345,8 @@ def run_or_load_bm25_task(
     args: Any,
     config: BM25Config,
 ) -> BM25BuildResult:
-    output_path = bm25_candidate_path_for_task(output_dir=Path(args.output_dir), task=task, config=config)
+    resolved_config = resolve_bm25_config_for_queries(config, dataset.queries)
+    output_path = bm25_candidate_path_for_task(output_dir=Path(args.output_dir), task=task, config=resolved_config)
     if output_path.exists() and not args.override:
         return BM25BuildResult(
             task=task,
@@ -307,7 +357,7 @@ def run_or_load_bm25_task(
 
     started_at = datetime.now(timezone.utc)
     start = time.perf_counter()
-    rankings = rank_bm25_candidates(corpus=dataset.corpus, queries=dataset.queries, config=config)
+    rankings = rank_bm25_candidates(corpus=dataset.corpus, queries=dataset.queries, config=resolved_config)
     elapsed = time.perf_counter() - start
     rows = rankings_to_candidate_rows(rankings)
     metrics = compute_ir_metrics(
@@ -327,7 +377,7 @@ def run_or_load_bm25_task(
             "queries_config": task.dataset.queries_config,
             "qrels_config": task.dataset.qrels_config,
         },
-        "config": {"backend": "bm25s", "algorithm": _BM25_ALGORITHM_NAME, **asdict(config)},
+        "config": bm25_config_payload(resolved_config),
         "evaluation": {
             "started_at_utc": started_at.isoformat(),
             "finished_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -382,6 +432,47 @@ def _pystemmer_tokens(tokens: list[str], *, stemmer_algorithm: str) -> list[str]
     stemmer_cls = getattr(stemmer_module, "Stemmer")
     stemmer = stemmer_cls(stemmer_algorithm)
     return [str(stemmer.stemWord(token)) for token in tokens]
+
+
+def _sample_query_texts(queries: dict[str, str], *, sample_size: int) -> list[str]:
+    texts = [text for text in queries.values() if text]
+    if len(texts) <= sample_size:
+        return texts
+    return random.Random(0).sample(texts, sample_size)
+
+
+def _detect_language(text: str) -> Any:
+    fast_langdetect_module = importlib.import_module("fast_langdetect")
+    detect_fn = getattr(fast_langdetect_module, "detect")
+    return detect_fn(text)
+
+
+def _normalize_detect_result(result: Any) -> tuple[str | None, float]:
+    candidate = result[0] if isinstance(result, list) and result else result
+    if isinstance(candidate, dict):
+        language = candidate.get("lang") or candidate.get("language")
+        score = candidate.get("score") or candidate.get("probability") or 0.0
+        return (_normalize_language_code(str(language)) if language else None, float(score))
+    if isinstance(candidate, str):
+        return _normalize_language_code(candidate), 1.0
+    return None, 0.0
+
+
+def _normalize_language_code(language: str) -> str:
+    return language.lower().replace("_", "-").split("-")[0]
+
+
+def _select_detected_language(detections: list[tuple[str | None, float]]) -> str | None:
+    scores: dict[str, float] = {}
+    counts: Counter[str] = Counter()
+    for language, score in detections:
+        if language is None:
+            continue
+        counts[language] += 1
+        scores[language] = scores.get(language, 0.0) + score
+    if not counts:
+        return None
+    return sorted(counts, key=lambda language: (-counts[language], -scores[language], language))[0]
 
 
 def _tokenize_with_transformer(texts: Sequence[str], tokenizer_name: str) -> list[list[str]]:

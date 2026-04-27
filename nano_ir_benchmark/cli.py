@@ -91,7 +91,7 @@ def _add_bm25_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--top-k", type=int, default=100, help="Number of BM25 candidates per query.")
     parser.add_argument(
         "--bm25-tokenizer",
-        default="regex",
+        default=None,
         choices=[
             "regex",
             "whitespace",
@@ -244,6 +244,7 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
                 "task_name": result.task.task_name,
                 "cache_hit": result.cache_hit,
                 "result_path": str(result.output_path),
+                "bm25": result.payload.get("config"),
             }
             for result in results
         ],

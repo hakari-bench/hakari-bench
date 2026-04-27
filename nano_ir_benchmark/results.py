@@ -10,7 +10,13 @@ from typing import Any, Callable
 
 import numpy as np
 
-from nano_ir_benchmark.bm25 import bm25_config_from_args, evaluate_bm25_task
+from nano_ir_benchmark.bm25 import (
+    bm25_config_from_args,
+    bm25_config_payload,
+    collect_bm25_metadata,
+    evaluate_bm25_task,
+    resolve_bm25_config_for_queries,
+)
 from nano_ir_benchmark.datasets import EvalTask
 from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
 
@@ -73,10 +79,15 @@ def run_or_load_task(
     dataset = dataset_loader(task)
     started_at = datetime.now(timezone.utc)
     start = time.perf_counter()
+    bm25_payload: dict[str, Any] | None = None
+    payload_model_metadata = model_metadata
     if args.model_type == "bm25":
+        bm25_config = resolve_bm25_config_for_queries(bm25_config_from_args(args), dataset.queries)
+        bm25_payload = bm25_config_payload(bm25_config)
+        payload_model_metadata = collect_bm25_metadata(args, config=bm25_config)
         evaluation = evaluate_bm25_task(
             dataset=dataset,
-            config=bm25_config_from_args(args),
+            config=bm25_config,
         )
     elif args.model_type == "reranker":
         evaluation = evaluate_reranker_task(
@@ -104,7 +115,7 @@ def run_or_load_task(
     aggregate_metric_value = aggregate_metric_value_for(evaluation.metrics, args.aggregate_metric)
     payload = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "model": model_metadata,
+        "model": payload_model_metadata,
         "environment": environment,
         "target": {
             "dataset_name": task.dataset_name,
@@ -127,6 +138,7 @@ def run_or_load_task(
             "truncate_dim": args.truncate_dim,
             "candidate_subset_name": args.candidate_subset_name if args.model_type == "reranker" else None,
             "rerank_top_n": args.rerank_top_n if args.model_type == "reranker" else None,
+            "bm25": bm25_payload,
         },
         "evaluation": {
             "started_at_utc": started_at.isoformat(),
@@ -188,6 +200,7 @@ def build_all_payload(
                 "aggregate_metric": evaluation.get("aggregate_metric"),
                 "aggregate_metric_value": aggregate_value,
                 "evaluated_at_utc": evaluation.get("evaluated_at_utc"),
+                "bm25": result.payload.get("config", {}).get("bm25"),
             }
         )
     splits.sort(key=lambda item: (str(item["dataset_id"]), str(item["task_name"])))

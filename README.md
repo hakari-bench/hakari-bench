@@ -29,7 +29,6 @@ uv run nano-ir-bench evaluate \
   --model-type bm25 \
   --dataset NanoMLDR \
   --split ja \
-  --bm25-tokenizer regex \
   --top-k 100
 ```
 
@@ -46,7 +45,12 @@ uv run nano-ir-bench build-bm25 \
 BM25 scoring uses `bm25s` with the standard Okapi-style Robertson method.
 Available tokenizers are `regex`, `whitespace`, `transformer`, `stemmer`,
 `english_regex`, `english_porter`, `english_porter_stop`, and `wordseg`. The
-default is `regex`, which is a safe language-agnostic choice for non-CJK text.
+default is `auto`: 10 query texts are sampled deterministically and detected
+with `fast-langdetect`. If the detected language supports `wordseg`, BM25 uses
+`wordseg`; otherwise it uses `regex`.
+
+The resolved BM25 algorithm and tokenizer are written to each result JSON under
+`config.bm25` and `model.bm25`.
 
 `wordseg` is optional and lazy-loads language-specific tokenizers. Install the
 extra before using it:

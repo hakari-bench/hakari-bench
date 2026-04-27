@@ -28,6 +28,13 @@ def test_parse_args_allows_bm25_evaluation_without_model_name() -> None:
     assert args.bm25_tokenizer == "english_porter_stop"
 
 
+def test_parse_args_defaults_bm25_tokenizer_to_auto_when_omitted() -> None:
+    args = parse_args(["evaluate", "--model-type", "bm25"])
+
+    assert args.model == "bm25/bm25s-okapi-auto"
+    assert args.bm25_tokenizer is None
+
+
 def test_parse_args_accepts_wordseg_bm25_tokenizer() -> None:
     args = parse_args(
         [

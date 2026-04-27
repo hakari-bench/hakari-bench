@@ -155,3 +155,48 @@ def test_run_or_load_task_skips_existing_json(tmp_path: Path) -> None:
 
     assert result.cache_hit is True
     assert result.payload["metrics"] == {"cached": 1.0}
+
+
+def test_run_or_load_task_records_auto_bm25_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="bm25/bm25s-okapi-auto",
+        model_type="bm25",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+        bm25_tokenizer=None,
+        bm25_tokenizer_name=None,
+        bm25_stemmer_algorithm="english",
+        bm25_k1=1.5,
+        bm25_b=0.75,
+        top_k=3,
+    )
+    monkeypatch.setattr(
+        "nano_ir_benchmark.bm25._detect_language",
+        lambda _: {"lang": "en", "score": 0.99},
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=None,
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "bm25/bm25s-okapi-auto"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    assert result.payload["config"]["bm25"]["algorithm"] == "okapi"
+    assert result.payload["config"]["bm25"]["tokenizer"] == "regex"
+    assert result.payload["config"]["bm25"]["auto_selected"] is True
+    assert result.payload["config"]["bm25"]["auto_detected_language"] == "en"
+    assert result.payload["model"]["bm25"]["tokenizer"] == "regex"
