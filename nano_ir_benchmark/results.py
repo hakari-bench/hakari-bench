@@ -76,7 +76,12 @@ def run_or_load_task(
             payload=json.loads(output_path.read_text(encoding="utf-8")),
         )
 
+    total_start = time.perf_counter()
+    dataset_load_started_at = datetime.now(timezone.utc)
+    dataset_load_start = time.perf_counter()
     dataset = dataset_loader(task)
+    dataset_load_seconds = time.perf_counter() - dataset_load_start
+    dataset_load_finished_at = datetime.now(timezone.utc)
     started_at = datetime.now(timezone.utc)
     start = time.perf_counter()
     bm25_payload: dict[str, Any] | None = None
@@ -111,6 +116,7 @@ def run_or_load_task(
         )
     elapsed = time.perf_counter() - start
     finished_at = datetime.now(timezone.utc)
+    total_elapsed = time.perf_counter() - total_start
 
     aggregate_metric_value = aggregate_metric_value_for(evaluation.metrics, args.aggregate_metric)
     payload = {
@@ -141,10 +147,14 @@ def run_or_load_task(
             "bm25": bm25_payload,
         },
         "evaluation": {
+            "dataset_load_started_at_utc": dataset_load_started_at.isoformat(),
+            "dataset_load_finished_at_utc": dataset_load_finished_at.isoformat(),
+            "dataset_load_seconds": float(dataset_load_seconds),
             "started_at_utc": started_at.isoformat(),
             "finished_at_utc": finished_at.isoformat(),
             "evaluated_at_utc": finished_at.isoformat(),
             "duration_seconds_excluding_dataset_load": float(evaluation.timing.get("pure_compute_seconds", elapsed)),
+            "duration_seconds_including_dataset_load": float(total_elapsed),
             "wall_seconds": float(elapsed),
             "aggregate_metric": args.aggregate_metric,
             "aggregate_metric_value": aggregate_metric_value,
@@ -171,10 +181,21 @@ def build_all_payload(
     environment: dict[str, Any],
     model_metadata: dict[str, Any],
     results: list[TaskRunResult],
+    run_started_at_utc: str | None = None,
+    run_finished_at_utc: str | None = None,
+    run_wall_seconds: float | None = None,
 ) -> dict[str, Any]:
     aggregate_values: list[float] = []
     timing_all = {key: 0.0 for key in TIMING_KEYS}
     timing_this_run = {key: 0.0 for key in TIMING_KEYS}
+    dataset_load_seconds_all = 0.0
+    dataset_load_seconds_this_run = 0.0
+    duration_excluding_load_all = 0.0
+    duration_excluding_load_this_run = 0.0
+    duration_including_load_all = 0.0
+    duration_including_load_this_run = 0.0
+    wall_seconds_all = 0.0
+    wall_seconds_this_run = 0.0
     splits: list[dict[str, Any]] = []
     for result in results:
         evaluation = result.payload.get("evaluation", {})
@@ -189,6 +210,22 @@ def build_all_payload(
                     timing_all[key] += float(value)
                     if not result.cache_hit:
                         timing_this_run[key] += float(value)
+        dataset_load_seconds = _numeric(evaluation.get("dataset_load_seconds"))
+        duration_excluding_load = _numeric(evaluation.get("duration_seconds_excluding_dataset_load"))
+        duration_including_load = _numeric(
+            evaluation.get("duration_seconds_including_dataset_load"),
+            fallback=evaluation.get("wall_seconds"),
+        )
+        wall_seconds = _numeric(evaluation.get("wall_seconds"))
+        dataset_load_seconds_all += dataset_load_seconds or 0.0
+        duration_excluding_load_all += duration_excluding_load or 0.0
+        duration_including_load_all += duration_including_load or 0.0
+        wall_seconds_all += wall_seconds or 0.0
+        if not result.cache_hit:
+            dataset_load_seconds_this_run += dataset_load_seconds or 0.0
+            duration_excluding_load_this_run += duration_excluding_load or 0.0
+            duration_including_load_this_run += duration_including_load or 0.0
+            wall_seconds_this_run += wall_seconds or 0.0
         splits.append(
             {
                 "dataset_name": result.task.dataset_name,
@@ -197,15 +234,31 @@ def build_all_payload(
                 "task_name": result.task.task_name,
                 "cache_hit": result.cache_hit,
                 "result_path": str(result.output_path),
+                "dataset_load_started_at_utc": evaluation.get("dataset_load_started_at_utc"),
+                "dataset_load_finished_at_utc": evaluation.get("dataset_load_finished_at_utc"),
+                "started_at_utc": evaluation.get("started_at_utc"),
+                "finished_at_utc": evaluation.get("finished_at_utc"),
+                "evaluated_at_utc": evaluation.get("evaluated_at_utc"),
+                "dataset_load_seconds": dataset_load_seconds,
+                "duration_seconds_excluding_dataset_load": duration_excluding_load,
+                "duration_seconds_including_dataset_load": duration_including_load,
+                "wall_seconds": wall_seconds,
                 "aggregate_metric": evaluation.get("aggregate_metric"),
                 "aggregate_metric_value": aggregate_value,
-                "evaluated_at_utc": evaluation.get("evaluated_at_utc"),
                 "bm25": result.payload.get("config", {}).get("bm25"),
             }
         )
     splits.sort(key=lambda item: (str(item["dataset_id"]), str(item["task_name"])))
+    generated_at_utc = datetime.now(timezone.utc).isoformat()
+    resolved_run_finished_at_utc = run_finished_at_utc or generated_at_utc
     return {
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "generated_at_utc": generated_at_utc,
+        "run": {
+            "started_at_utc": run_started_at_utc,
+            "finished_at_utc": resolved_run_finished_at_utc,
+            "evaluated_at_utc": resolved_run_finished_at_utc,
+            "wall_seconds": run_wall_seconds,
+        },
         "model": model_metadata,
         "environment": environment,
         "cli_args": vars(args),
@@ -216,6 +269,14 @@ def build_all_payload(
             "cache_hit_count": sum(1 for result in results if result.cache_hit),
             "evaluated_count": sum(1 for result in results if not result.cache_hit),
             "aggregate_metric_mean": float(np.mean(aggregate_values)) if aggregate_values else None,
+            "dataset_load_seconds_this_run": dataset_load_seconds_this_run,
+            "dataset_load_seconds_all_splits": dataset_load_seconds_all,
+            "duration_seconds_excluding_dataset_load_this_run": duration_excluding_load_this_run,
+            "duration_seconds_excluding_dataset_load_all_splits": duration_excluding_load_all,
+            "duration_seconds_including_dataset_load_this_run": duration_including_load_this_run,
+            "duration_seconds_including_dataset_load_all_splits": duration_including_load_all,
+            "wall_seconds_this_run": wall_seconds_this_run,
+            "wall_seconds_all_splits": wall_seconds_all,
             "timing_seconds_this_run": timing_this_run,
             "timing_seconds_all_splits": timing_all,
         },
@@ -232,3 +293,11 @@ def write_all_payload(*, output_dir: Path, model_name_or_path: str, payload: dic
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _numeric(value: Any, *, fallback: Any = None) -> float | None:
+    if isinstance(value, int | float):
+        return float(value)
+    if isinstance(fallback, int | float):
+        return float(fallback)
+    return None

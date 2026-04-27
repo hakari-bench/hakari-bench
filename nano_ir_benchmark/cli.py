@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -128,6 +130,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
+    run_started_at = datetime.now(timezone.utc)
+    run_start = time.perf_counter()
     registry = DatasetRegistry.load_builtin()
     tasks = resolve_eval_tasks(
         registry=registry,
@@ -193,7 +197,16 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     if not pending_tasks and results and isinstance(results[0].payload.get("model"), dict):
         model_metadata = results[0].payload["model"]
 
-    all_payload = build_all_payload(args=args, environment=environment, model_metadata=model_metadata, results=results)
+    run_finished_at = datetime.now(timezone.utc)
+    all_payload = build_all_payload(
+        args=args,
+        environment=environment,
+        model_metadata=model_metadata,
+        results=results,
+        run_started_at_utc=run_started_at.isoformat(),
+        run_finished_at_utc=run_finished_at.isoformat(),
+        run_wall_seconds=float(time.perf_counter() - run_start),
+    )
     all_path = write_all_payload(output_dir=output_dir, model_name_or_path=args.model, payload=all_payload)
     print(
         json.dumps(

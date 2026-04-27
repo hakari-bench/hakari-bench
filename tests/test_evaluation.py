@@ -9,7 +9,7 @@ import pytest
 
 from nano_ir_benchmark.datasets import EvalTask, NanoDatasetSpec
 from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
-from nano_ir_benchmark.results import result_path_for_task, run_or_load_task, safe_path_part
+from nano_ir_benchmark.results import build_all_payload, result_path_for_task, run_or_load_task, safe_path_part
 
 
 def _toy_task() -> EvalTask:
@@ -155,6 +155,98 @@ def test_run_or_load_task_skips_existing_json(tmp_path: Path) -> None:
 
     assert result.cache_hit is True
     assert result.payload["metrics"] == {"cached": 1.0}
+
+
+def test_run_or_load_task_records_evaluation_timestamps_and_durations(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    evaluation = result.payload["evaluation"]
+    assert evaluation["dataset_load_started_at_utc"].endswith("+00:00")
+    assert evaluation["dataset_load_finished_at_utc"].endswith("+00:00")
+    assert evaluation["started_at_utc"].endswith("+00:00")
+    assert evaluation["finished_at_utc"].endswith("+00:00")
+    assert evaluation["evaluated_at_utc"] == evaluation["finished_at_utc"]
+    assert evaluation["dataset_load_seconds"] >= 0.0
+    assert evaluation["duration_seconds_excluding_dataset_load"] >= 0.0
+    assert evaluation["duration_seconds_including_dataset_load"] >= evaluation["duration_seconds_excluding_dataset_load"]
+
+
+def test_build_all_payload_includes_split_and_total_durations(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+    )
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    payload = build_all_payload(
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "hotchpotch/model"},
+        results=[result],
+        run_started_at_utc="2026-04-27T00:00:00+00:00",
+        run_finished_at_utc="2026-04-27T00:00:01+00:00",
+        run_wall_seconds=1.0,
+    )
+
+    assert payload["run"]["started_at_utc"] == "2026-04-27T00:00:00+00:00"
+    assert payload["run"]["finished_at_utc"] == "2026-04-27T00:00:01+00:00"
+    assert payload["run"]["evaluated_at_utc"] == "2026-04-27T00:00:01+00:00"
+    assert payload["run"]["wall_seconds"] == 1.0
+    split = payload["splits"][0]
+    assert split["started_at_utc"] == result.payload["evaluation"]["started_at_utc"]
+    assert split["finished_at_utc"] == result.payload["evaluation"]["finished_at_utc"]
+    assert split["dataset_load_seconds"] == result.payload["evaluation"]["dataset_load_seconds"]
+    assert split["duration_seconds_including_dataset_load"] == result.payload["evaluation"][
+        "duration_seconds_including_dataset_load"
+    ]
+    assert payload["totals"]["duration_seconds_including_dataset_load_this_run"] == pytest.approx(
+        result.payload["evaluation"]["duration_seconds_including_dataset_load"]
+    )
 
 
 def test_run_or_load_task_records_auto_bm25_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
