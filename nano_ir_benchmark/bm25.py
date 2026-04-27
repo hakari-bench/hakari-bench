@@ -4,6 +4,7 @@ import json
 import importlib
 import re
 import time
+from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -22,12 +23,21 @@ BM25Tokenizer = Literal[
     "english_regex",
     "english_porter",
     "english_porter_stop",
+    "wordseg",
 ]
 
+_BM25_ALGORITHM_NAME = "okapi"
+_BM25S_OKAPI_METHOD = "robertson"
 _TOKEN_PATTERN = re.compile(r"\b\w+\b", flags=re.UNICODE)
 _ENGLISH_TOKEN_PATTERN = re.compile(r"[A-Za-z0-9]+")
 _DEFAULT_TRANSFORMER_TOKENIZER = "Qwen/Qwen3-0.6B"
 _MAX_TOKENIZER_CHUNK_CHARS = 4000
+WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES: dict[str, tuple[str, ...]] = {
+    "ja": ("fugashi", "unidic_lite"),
+    "zh": ("jieba",),
+    "th": ("pythainlp.tokenize",),
+    "ko": ("kiwipiepy",),
+}
 _ENGLISH_STOPWORDS = frozenset(
     {
         "a",
@@ -140,8 +150,8 @@ def bm25_config_from_args(args: Any) -> BM25Config:
 
 
 def bm25_config_name(config: BM25Config) -> str:
-    parts = ["bm25s", "okapi", config.tokenizer]
-    if config.tokenizer == "transformer" and config.tokenizer_name:
+    parts = ["bm25s", _BM25_ALGORITHM_NAME, config.tokenizer]
+    if config.tokenizer in {"transformer", "wordseg"} and config.tokenizer_name:
         parts.append(config.tokenizer_name)
     if config.tokenizer == "stemmer":
         parts.append(config.stemmer_algorithm)
@@ -154,7 +164,7 @@ def collect_bm25_metadata(args: Any) -> dict[str, Any]:
         "model_type": "bm25",
         "name_or_path": args.model,
         "backend_library": "bm25s",
-        "bm25": {"backend": "bm25s", "algorithm": "okapi", **asdict(config)},
+        "bm25": {"backend": "bm25s", "algorithm": _BM25_ALGORITHM_NAME, **asdict(config)},
         "total_parameters": 0,
         "trainable_parameters": 0,
         "transformer_parameters": 0,
@@ -221,7 +231,7 @@ def rank_bm25_candidates(
         raise ValueError("corpus produced no BM25 tokens.")
 
     top_k = max(1, min(config.top_k, len(corpus_ids)))
-    retriever = bm25s.BM25(k1=config.k1, b=config.b, method="lucene")
+    retriever = bm25s.BM25(k1=config.k1, b=config.b, method=_BM25S_OKAPI_METHOD)
     retriever.index(corpus_tokens, show_progress=config.show_progress, leave_progress=False)
     ranked_indices, _scores = retriever.retrieve(
         query_tokens,
@@ -260,6 +270,8 @@ def tokenize_texts(
         return [_pystemmer_tokens(_regex_tokens(text), stemmer_algorithm=stemmer_algorithm) for text in texts]
     if tokenizer == "transformer":
         return _tokenize_with_transformer(texts, tokenizer_name or _DEFAULT_TRANSFORMER_TOKENIZER)
+    if tokenizer == "wordseg":
+        return _tokenize_with_wordseg(texts, tokenizer_name)
     raise ValueError(f"Unsupported BM25 tokenizer: {tokenizer}")
 
 
@@ -315,7 +327,7 @@ def run_or_load_bm25_task(
             "queries_config": task.dataset.queries_config,
             "qrels_config": task.dataset.qrels_config,
         },
-        "config": {"backend": "bm25s", "algorithm": "okapi", **asdict(config)},
+        "config": {"backend": "bm25s", "algorithm": _BM25_ALGORITHM_NAME, **asdict(config)},
         "evaluation": {
             "started_at_utc": started_at.isoformat(),
             "finished_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -331,7 +343,16 @@ def run_or_load_bm25_task(
 
 
 def _validate_config(config: BM25Config) -> None:
-    if config.tokenizer not in {"whitespace", "regex", "transformer", "stemmer", "english_regex", "english_porter", "english_porter_stop"}:
+    if config.tokenizer not in {
+        "whitespace",
+        "regex",
+        "transformer",
+        "stemmer",
+        "english_regex",
+        "english_porter",
+        "english_porter_stop",
+        "wordseg",
+    }:
         raise ValueError(f"Unsupported BM25 tokenizer: {config.tokenizer}")
     if config.top_k <= 0:
         raise ValueError("top_k must be positive.")
@@ -379,6 +400,107 @@ def _tokenize_with_transformer(texts: Sequence[str], tokenizer_name: str) -> lis
                 tokens.extend(str(token) for token in raw_tokens)
         tokenized_texts.append(tokens)
     return tokenized_texts
+
+
+def _tokenize_with_wordseg(texts: Sequence[str], language: str | None) -> list[list[str]]:
+    if language is None:
+        raise ValueError(
+            "wordseg tokenizer requires --bm25-tokenizer-name with one of "
+            f"{sorted(WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES)}."
+        )
+    splitter = _build_wordseg_splitter(_normalize_wordseg_language(language))
+    return [splitter(text) for text in texts]
+
+
+def _normalize_wordseg_language(language: str) -> str:
+    return language.lower().replace("_", "-").split("-")[0]
+
+
+def _build_wordseg_splitter(
+    language: str,
+    *,
+    module_loader: Callable[[str], Any] = importlib.import_module,
+) -> Callable[[str], list[str]]:
+    language = _normalize_wordseg_language(language)
+    if language == "ja":
+        fugashi_module = _load_wordseg_module("fugashi", language=language, module_loader=module_loader)
+        _load_wordseg_module("unidic_lite", language=language, module_loader=module_loader)
+        tagger_cls = getattr(fugashi_module, "Tagger")
+        tagger = tagger_cls()
+
+        def splitter(text: str) -> list[str]:
+            return _tokenize_chunked(
+                text,
+                lambda chunk: [str(word.surface) for word in tagger(chunk) if str(word.surface)],
+            )
+
+        return splitter
+
+    if language == "zh":
+        jieba_module = _load_wordseg_module("jieba", language=language, module_loader=module_loader)
+        cut_fn = cast(Callable[[str], Iterable[str]], getattr(jieba_module, "cut"))
+
+        def splitter(text: str) -> list[str]:
+            return _tokenize_chunked(text, lambda chunk: [str(token) for token in cut_fn(chunk) if str(token)])
+
+        return splitter
+
+    if language == "th":
+        pythainlp_tokenize_module = _load_wordseg_module(
+            "pythainlp.tokenize",
+            language=language,
+            module_loader=module_loader,
+        )
+        word_tokenize_fn = cast(Callable[..., list[str]], getattr(pythainlp_tokenize_module, "word_tokenize"))
+
+        def splitter(text: str) -> list[str]:
+            return _tokenize_chunked(
+                text,
+                lambda chunk: [str(token) for token in word_tokenize_fn(chunk, engine="newmm") if str(token)],
+            )
+
+        return splitter
+
+    if language == "ko":
+        kiwipiepy_module = _load_wordseg_module("kiwipiepy", language=language, module_loader=module_loader)
+        kiwi_cls = getattr(kiwipiepy_module, "Kiwi")
+        kiwi = kiwi_cls()
+
+        def splitter(text: str) -> list[str]:
+            return _tokenize_chunked(
+                text,
+                lambda chunk: [str(token.form) for token in kiwi.tokenize(chunk) if str(token.form)],
+            )
+
+        return splitter
+
+    raise ValueError(
+        f"wordseg tokenizer does not support language '{language}'. "
+        f"Supported languages: {sorted(WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES)}"
+    )
+
+
+def _load_wordseg_module(
+    module_name: str,
+    *,
+    language: str,
+    module_loader: Callable[[str], Any],
+) -> Any:
+    try:
+        return module_loader(module_name)
+    except ImportError as exc:
+        dependencies = WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES.get(language, ())
+        raise RuntimeError(
+            f"Missing dependencies for wordseg language '{language}': {dependencies}. "
+            "Install them with `uv sync --extra wordseg` or install the matching optional packages."
+        ) from exc
+
+
+def _tokenize_chunked(text: str, tokenize_chunk: Callable[[str], list[str]]) -> list[str]:
+    tokens: list[str] = []
+    for text_chunk in _chunk_text(text, max_chunk_chars=_MAX_TOKENIZER_CHUNK_CHARS):
+        tokens.extend(tokenize_chunk(text_chunk))
+    return tokens
 
 
 def _chunk_text(text: str, *, max_chunk_chars: int) -> list[str]:

@@ -24,6 +24,15 @@ build-backend = "setuptools.build_meta"
 [project.scripts]
 nano-ir-bench = "nano_ir_benchmark.cli:main"
 
+[project.optional-dependencies]
+wordseg = [
+    "fugashi>=1.5.2",
+    "jieba>=0.42.1",
+    "kiwipiepy>=0.22.2",
+    "pythainlp>=5.2.0",
+    "unidic-lite>=1.0.8",
+]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 

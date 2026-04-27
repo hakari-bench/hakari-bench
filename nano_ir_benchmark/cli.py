@@ -100,6 +100,7 @@ def _add_bm25_args(parser: argparse.ArgumentParser) -> None:
             "english_regex",
             "english_porter",
             "english_porter_stop",
+            "wordseg",
         ],
     )
     parser.add_argument("--bm25-tokenizer-name", default=None)

@@ -1,9 +1,14 @@
 from __future__ import annotations
 
+import sys
+import types
+from collections.abc import Iterable
+
 import pytest
 
 from nano_ir_benchmark.bm25 import (
     BM25Config,
+    _build_wordseg_splitter,
     evaluate_bm25_task,
     rank_bm25_candidates,
     rankings_to_candidate_rows,
@@ -14,23 +19,50 @@ from nano_ir_benchmark.evaluation import LoadedIrDataset
 
 def test_rank_bm25_candidates_uses_bm25s_okapi() -> None:
     corpus = {
-        "d1": "red apple fruit",
+        "d1": "red orchard fruit",
         "d2": "blue car engine",
         "d3": "apple pie recipe",
     }
-    queries = {"q1": "apple"}
+    queries = {"q1": "orchard"}
 
     rankings = rank_bm25_candidates(
         corpus=corpus,
         queries=queries,
         config=BM25Config(
             tokenizer="regex",
-            top_k=2,
+            top_k=1,
             show_progress=False,
         ),
     )
 
-    assert set(rankings["q1"]) == {"d1", "d3"}
+    assert rankings["q1"] == ["d1"]
+
+
+def test_rank_bm25_candidates_uses_bm25s_robertson_for_okapi(monkeypatch: pytest.MonkeyPatch) -> None:
+    methods: list[str | None] = []
+
+    class _FakeBM25:
+        def __init__(self, *, k1: float, b: float, method: str) -> None:
+            _ = (k1, b)
+            methods.append(method)
+
+        def index(self, corpus_tokens: list[list[str]], **kwargs: object) -> None:
+            _ = (corpus_tokens, kwargs)
+
+        def retrieve(self, query_tokens: list[list[str]], **kwargs: object) -> tuple[list[list[int]], None]:
+            _ = (query_tokens, kwargs)
+            return [[0]], None
+
+    monkeypatch.setitem(sys.modules, "bm25s", types.SimpleNamespace(BM25=_FakeBM25))
+
+    rankings = rank_bm25_candidates(
+        corpus={"d1": "red apple"},
+        queries={"q1": "apple"},
+        config=BM25Config(tokenizer="regex", top_k=1),
+    )
+
+    assert rankings == {"q1": ["d1"]}
+    assert methods == ["robertson"]
 
 
 def test_tokenize_texts_supports_basic_tokenizers() -> None:
@@ -55,6 +87,92 @@ def test_tokenize_texts_supports_pystemmer() -> None:
     assert tokenize_texts(["running runners"], tokenizer="stemmer", stemmer_algorithm="english") == [
         ["run", "runner"]
     ]
+
+
+def test_tokenize_texts_supports_wordseg_japanese_with_lazy_loader() -> None:
+    class _Word:
+        def __init__(self, surface: str) -> None:
+            self.surface = surface
+
+    class _FugashiModule:
+        class Tagger:
+            def __call__(self, text: str) -> list[_Word]:
+                _ = text
+                return [_Word("東京"), _Word("タワー")]
+
+    def module_loader(module_name: str) -> object:
+        if module_name == "fugashi":
+            return _FugashiModule()
+        if module_name == "unidic_lite":
+            return types.SimpleNamespace()
+        raise AssertionError(module_name)
+
+    splitter = _build_wordseg_splitter("ja", module_loader=module_loader)
+
+    assert splitter("東京タワー") == ["東京", "タワー"]
+
+
+def test_tokenize_texts_supports_wordseg_chinese_with_lazy_loader() -> None:
+    def module_loader(module_name: str) -> object:
+        if module_name == "jieba":
+            return types.SimpleNamespace(cut=lambda text: ["北京", "大学"])
+        raise AssertionError(module_name)
+
+    splitter = _build_wordseg_splitter("zh", module_loader=module_loader)
+
+    assert splitter("北京大学") == ["北京", "大学"]
+
+
+def test_tokenize_texts_supports_wordseg_thai_with_lazy_loader() -> None:
+    engines: list[str] = []
+
+    def word_tokenize(text: str, *, engine: str) -> list[str]:
+        _ = text
+        engines.append(engine)
+        return ["ภาษา", "ไทย"]
+
+    def module_loader(module_name: str) -> object:
+        if module_name == "pythainlp.tokenize":
+            return types.SimpleNamespace(word_tokenize=word_tokenize)
+        raise AssertionError(module_name)
+
+    splitter = _build_wordseg_splitter("th", module_loader=module_loader)
+
+    assert splitter("ภาษาไทย") == ["ภาษา", "ไทย"]
+    assert engines == ["newmm"]
+
+
+def test_tokenize_texts_supports_wordseg_korean_with_lazy_loader() -> None:
+    class _Token:
+        def __init__(self, form: str) -> None:
+            self.form = form
+
+    class _Kiwi:
+        def tokenize(self, text: str) -> Iterable[_Token]:
+            _ = text
+            return [_Token("한국"), _Token("어")]
+
+    def module_loader(module_name: str) -> object:
+        if module_name == "kiwipiepy":
+            return types.SimpleNamespace(Kiwi=lambda: _Kiwi())
+        raise AssertionError(module_name)
+
+    splitter = _build_wordseg_splitter("ko", module_loader=module_loader)
+
+    assert splitter("한국어") == ["한국", "어"]
+
+
+def test_tokenize_texts_requires_wordseg_language() -> None:
+    with pytest.raises(ValueError, match="requires --bm25-tokenizer-name"):
+        tokenize_texts(["東京タワー"], tokenizer="wordseg")
+
+
+def test_tokenize_texts_reports_missing_wordseg_dependency() -> None:
+    def module_loader(module_name: str) -> object:
+        raise ImportError(module_name)
+
+    with pytest.raises(RuntimeError, match="Missing dependencies for wordseg language 'ja'"):
+        _build_wordseg_splitter("ja", module_loader=module_loader)
 
 
 def test_rankings_to_candidate_rows_preserves_query_ids() -> None:

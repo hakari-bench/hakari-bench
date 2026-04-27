@@ -43,7 +43,27 @@ uv run nano-ir-bench build-bm25 \
   --top-k 100
 ```
 
-BM25 scoring uses `bm25s` with the standard Okapi-style method. Available
-tokenizers are `regex`, `whitespace`, `transformer`, `stemmer`,
-`english_regex`, `english_porter`, and `english_porter_stop`. The default is
-`regex`, which is a safe language-agnostic choice for non-CJK text.
+BM25 scoring uses `bm25s` with the standard Okapi-style Robertson method.
+Available tokenizers are `regex`, `whitespace`, `transformer`, `stemmer`,
+`english_regex`, `english_porter`, `english_porter_stop`, and `wordseg`. The
+default is `regex`, which is a safe language-agnostic choice for non-CJK text.
+
+`wordseg` is optional and lazy-loads language-specific tokenizers. Install the
+extra before using it:
+
+```bash
+uv sync --extra wordseg
+```
+
+Supported `wordseg` language values are passed via `--bm25-tokenizer-name`:
+
+```bash
+uv run nano-ir-bench build-bm25 \
+  --dataset NanoMLDR \
+  --split ja \
+  --bm25-tokenizer wordseg \
+  --bm25-tokenizer-name ja
+```
+
+The current mapping is `ja` = `fugashi` + `unidic-lite`, `zh` = `jieba`,
+`th` = `pythainlp`, and `ko` = `kiwipiepy`.

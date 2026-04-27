@@ -68,8 +68,11 @@ output/results/{model_name}/{huggingface_dataset_name}/{split_or_task}.json
 
 - Existing result files should be skipped unless `--override` is provided.
 - BM25 evaluation and candidate generation use `bm25s` with the standard
-  Okapi-style method. Keep tokenizer choices explicit. There is no auto
-  tokenizer selection in this repository.
+  Okapi-style Robertson method. Keep tokenizer choices explicit. There is no
+  auto tokenizer selection in this repository.
+- BM25 `wordseg` tokenizer support is optional. Keep language-specific
+  dependencies behind the `wordseg` extra and lazy-load them only when the
+  tokenizer is selected.
 - Metadata should preserve as much runtime detail as practical, including batch
   size, dtype, package versions, torch/CUDA info, total parameters, trainable
   parameters, and active/transformer parameters.
