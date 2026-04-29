@@ -11,6 +11,11 @@ def test_nanojmteb_is_a_ranked_benchmark() -> None:
     assert report.benchmark_name("hotchpotch/NanoJMTEB", "NanoJMTEB") == "NanoJMTEB"
 
 
+def test_nanorteb_is_a_ranked_benchmark() -> None:
+    assert "NanoRTEB" in report.TARGET_BENCHMARKS
+    assert report.benchmark_name("hotchpotch/NanoRTEB", "NanoRTEB") == "NanoRTEB"
+
+
 def test_load_results_reads_task_json_not_only_all_json(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
     task_path = model_dir / "hotchpotch__NanoJMTEB" / "NanoJaCWIR.json"

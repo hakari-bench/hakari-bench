@@ -14,6 +14,7 @@ import duckdb
 TARGET_BENCHMARKS = [
     "MNanoBEIR",
     "NanoJMTEB",
+    "NanoRTEB",
     "NanoMTEB",
     "NanoMMTEB",
     "NanoCodeSearchNet",
