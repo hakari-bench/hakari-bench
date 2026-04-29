@@ -13,10 +13,12 @@ dependencies = [
     "nltk>=3.9.4",
     "numpy>=2.4.4",
     "peft>=0.19.1",
+    "protobuf>=6.33.2",
     "pystemmer>=3.0.0",
     "pyyaml>=6.0.3",
     "scipy>=1.17.1",
     "sentence-transformers>=5",
+    "sentencepiece>=0.2.1",
     "torch>=2.9,<2.10",
     "transformers>=5,<6",
 ]
