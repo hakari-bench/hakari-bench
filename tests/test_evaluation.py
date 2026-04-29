@@ -63,6 +63,25 @@ class FakeDenseModel:
         return np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]])
 
 
+class FakeTaskDenseModel:
+    similarity_fn_name = "dot"
+
+    def __init__(self) -> None:
+        self.calls: list[dict[str, object]] = []
+
+    def encode_query(self, sentences: list[str], **kwargs: object) -> np.ndarray:
+        raise AssertionError("encode_query should not be used when an explicit task is configured")
+
+    def encode_document(self, sentences: list[str], **kwargs: object) -> np.ndarray:
+        raise AssertionError("encode_document should not be used when an explicit task is configured")
+
+    def encode(self, sentences: list[str], **kwargs: object) -> np.ndarray:
+        self.calls.append({"sentences": sentences, **kwargs})
+        if len(sentences) == 2:
+            return np.array([[1.0, 0.0], [0.0, 1.0]])
+        return np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]])
+
+
 class FakeReranker:
     def predict(self, pairs: list[tuple[str, str]], **kwargs: object) -> list[float]:
         return [1.0 if pair in {("cat query", "cat doc"), ("dog query", "dog doc")} else 0.0 for pair in pairs]
@@ -108,6 +127,28 @@ def test_evaluate_dense_task_explicit_prompts_take_precedence() -> None:
     assert "prompt_name" not in model.query_calls[0]
     assert model.document_calls[0]["prompt"] == "D: "
     assert "prompt_name" not in model.document_calls[0]
+
+
+def test_evaluate_dense_task_explicit_tasks_use_generic_encode() -> None:
+    model = FakeTaskDenseModel()
+
+    result = evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        query_task="retrieval",
+        corpus_task="retrieval",
+        truncate_dim=None,
+    )
+
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+    assert model.calls[0]["task"] == "retrieval"
+    assert model.calls[1]["task"] == "retrieval"
 
 
 def test_evaluate_reranker_task_uses_candidate_top_n() -> None:

@@ -91,6 +91,10 @@ def test_parse_args_accepts_prompt_and_reranker_options() -> None:
             "reranker",
             "--query-prompt-name",
             "query",
+            "--query-task",
+            "retrieval",
+            "--corpus-task",
+            "retrieval",
             "--corpus-prompt",
             "passage: ",
             "--rerank-top-n",
@@ -100,6 +104,8 @@ def test_parse_args_accepts_prompt_and_reranker_options() -> None:
 
     assert args.model_type == "reranker"
     assert args.query_prompt_name == "query"
+    assert args.query_task == "retrieval"
+    assert args.corpus_task == "retrieval"
     assert args.corpus_prompt == "passage: "
     assert args.rerank_top_n == 50
 

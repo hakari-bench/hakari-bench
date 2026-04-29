@@ -66,6 +66,8 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--corpus-prompt", default=None)
     evaluate.add_argument("--query-prompt-name", default=None)
     evaluate.add_argument("--corpus-prompt-name", default=None)
+    evaluate.add_argument("--query-task", default=None)
+    evaluate.add_argument("--corpus-task", default=None)
     evaluate.add_argument("--candidate-subset-name", default="bm25")
     evaluate.add_argument("--rerank-top-n", type=int, default=100)
     evaluate.add_argument("--output-dir", default="output/results")

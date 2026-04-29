@@ -68,6 +68,10 @@ def load_model(config: ModelLoadConfig) -> Any:
         raise NotImplementedError("Late-interaction models are reserved for a future adapter.")
 
     model_kwargs = _model_kwargs(config)
+    attn_implementation = resolve_attn_implementation(
+        attn_implementation=config.attn_implementation,
+        flash_attn2=config.flash_attn2,
+    )
     if config.model_type == "dense":
         model = _import_sentence_transformer()(
             config.model_name_or_path,
@@ -75,6 +79,8 @@ def load_model(config: ModelLoadConfig) -> Any:
             trust_remote_code=config.trust_remote_code,
             model_kwargs=model_kwargs,
         )
+        _set_model_dtype(model, config.dtype)
+        _set_attn_implementation(model, attn_implementation)
         _set_max_seq_length(model, config.max_seq_length)
         return model
 
@@ -85,6 +91,8 @@ def load_model(config: ModelLoadConfig) -> Any:
             trust_remote_code=config.trust_remote_code,
             model_kwargs=model_kwargs,
         )
+        _set_model_dtype(model, config.dtype)
+        _set_attn_implementation(model, attn_implementation)
         _set_max_seq_length(model, config.max_seq_length)
         return model
 
@@ -96,9 +104,40 @@ def load_model(config: ModelLoadConfig) -> Any:
         }
         if config.max_seq_length is not None:
             kwargs["max_length"] = config.max_seq_length
-        return _import_cross_encoder()(config.model_name_or_path, **kwargs)
+        model = _import_cross_encoder()(config.model_name_or_path, **kwargs)
+        _set_model_dtype(model, config.dtype)
+        _set_attn_implementation(model, attn_implementation)
+        return model
 
     raise ValueError(f"Unsupported model type: {config.model_type}")
+
+
+def _set_model_dtype(model: Any, dtype: str) -> None:
+    torch_dtype = resolve_torch_dtype(dtype)
+    if isinstance(model, torch.nn.Module):
+        model.to(dtype=torch_dtype)
+        return
+    inner_model = getattr(model, "model", None)
+    if isinstance(inner_model, torch.nn.Module):
+        inner_model.to(dtype=torch_dtype)
+
+
+def _set_attn_implementation(model: Any, attn_implementation: str | None) -> None:
+    if attn_implementation is None:
+        return
+    modules = model.modules() if isinstance(model, torch.nn.Module) else [model]
+    for module in modules:
+        config = getattr(module, "config", None)
+        if config is None:
+            continue
+        try:
+            setattr(config, "_attn_implementation", attn_implementation)
+        except Exception:
+            pass
+        try:
+            setattr(config, "attn_implementation", attn_implementation)
+        except Exception:
+            pass
 
 
 def _set_max_seq_length(model: Any, max_seq_length: int | None) -> None:

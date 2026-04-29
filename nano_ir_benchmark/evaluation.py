@@ -82,7 +82,9 @@ def evaluate_dense_task(
     corpus_prompt: str | None,
     query_prompt_name: str | None,
     corpus_prompt_name: str | None,
-    truncate_dim: int | None,
+    query_task: str | None = None,
+    corpus_task: str | None = None,
+    truncate_dim: int | None = None,
 ) -> TaskEvaluation:
     query_ids = list(dataset.queries)
     corpus_ids = list(dataset.corpus)
@@ -98,6 +100,7 @@ def evaluate_dense_task(
         show_progress=show_progress,
         prompt=query_prompt,
         prompt_name=query_prompt_name,
+        task=query_task,
         truncate_dim=truncate_dim,
     )
     query_seconds = time.perf_counter() - query_start
@@ -111,6 +114,7 @@ def evaluate_dense_task(
         show_progress=show_progress,
         prompt=corpus_prompt,
         prompt_name=corpus_prompt_name,
+        task=corpus_task,
         truncate_dim=truncate_dim,
     )
     corpus_seconds = time.perf_counter() - corpus_start
@@ -198,9 +202,10 @@ def _encode(
     show_progress: bool,
     prompt: str | None,
     prompt_name: str | None,
+    task: str | None,
     truncate_dim: int | None,
 ) -> Any:
-    encode_fn = getattr(model, "encode_query" if role == "query" else "encode_document", None)
+    encode_fn = None if task is not None else getattr(model, "encode_query" if role == "query" else "encode_document", None)
     if encode_fn is None:
         encode_fn = model.encode
 
@@ -209,6 +214,8 @@ def _encode(
         kwargs["prompt"] = prompt
     elif prompt_name is not None:
         kwargs["prompt_name"] = prompt_name
+    if task is not None:
+        kwargs["task"] = task
     if truncate_dim is not None:
         kwargs["truncate_dim"] = truncate_dim
 

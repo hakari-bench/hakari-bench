@@ -64,6 +64,12 @@ uv run ty check
 - Default dtype is `bf16`. Keep `--dtype`, `--trust-remote-code`,
   `--flash-attn2`, `--attn-implementation`, `--device`,
   `--model-max-seq-length`, and `--truncate-dim` explicit CLI options.
+- Do not shorten model max sequence length for benchmark runs just to avoid
+  slow execution or memory pressure. Use the model's default/configured maximum
+  length unless the user explicitly requests a different value. If memory errors
+  happen, first reduce batch size or adjust execution options; changing
+  `--model-max-seq-length` makes results less comparable and must be called out
+  clearly in the result metadata and summary.
 - Prompt overrides are optional. If no prompt or prompt name is provided,
   preserve SentenceTransformers model prompt behavior.
 

@@ -28,10 +28,13 @@ def test_resolve_attn_implementation_rejects_flash_attn_conflict() -> None:
 def test_load_model_passes_dense_options(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[dict[str, object]] = []
 
-    class FakeSentenceTransformer:
+    class FakeSentenceTransformer(torch.nn.Module):
         def __init__(self, model_name_or_path: str, **kwargs: object) -> None:
+            super().__init__()
             calls.append({"model_name_or_path": model_name_or_path, **kwargs})
             self.max_seq_length = None
+            self.projection = torch.nn.Linear(2, 2)
+            self.inner = FakeCustomModule()
 
     monkeypatch.setattr("nano_ir_benchmark.models._import_sentence_transformer", lambda: FakeSentenceTransformer)
 
@@ -50,6 +53,8 @@ def test_load_model_passes_dense_options(monkeypatch: pytest.MonkeyPatch) -> Non
 
     assert isinstance(model, FakeSentenceTransformer)
     assert model.max_seq_length == 128
+    assert model.projection.weight.dtype is torch.bfloat16
+    assert model.inner.model.config._attn_implementation == "flash_attention_2"
     assert calls == [
         {
             "model_name_or_path": "hotchpotch/model",
@@ -152,3 +157,20 @@ class _FakeBackbone(torch.nn.Module):
 
     def get_input_embeddings(self) -> torch.nn.Embedding:
         return self.input_embeddings
+
+
+class _FakeConfig:
+    def __init__(self) -> None:
+        self._attn_implementation = "sdpa"
+
+
+class _FakeNestedModel(torch.nn.Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.config = _FakeConfig()
+
+
+class FakeCustomModule(torch.nn.Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.model = _FakeNestedModel()

@@ -7,15 +7,18 @@ requires-python = ">=3.12"
 dependencies = [
     "bm25s>=0.3.6",
     "datasets>=4.8.4",
+    "duckdb>=1.5.2",
     "fast-langdetect>=1.0.0",
+    "flash-attn @ https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3%2Bcu12torch2.9cxx11abiTRUE-cp312-cp312-linux_x86_64.whl",
     "nltk>=3.9.4",
     "numpy>=2.4.4",
+    "peft>=0.19.1",
     "pystemmer>=3.0.0",
     "pyyaml>=6.0.3",
     "scipy>=1.17.1",
     "sentence-transformers>=5",
-    "torch>=2",
-    "transformers>=4",
+    "torch>=2.9,<2.10",
+    "transformers>=5,<6",
 ]
 
 [build-system]

@@ -130,6 +130,8 @@ def run_or_load_task(
             corpus_prompt=args.corpus_prompt,
             query_prompt_name=args.query_prompt_name,
             corpus_prompt_name=args.corpus_prompt_name,
+            query_task=getattr(args, "query_task", None),
+            corpus_task=getattr(args, "corpus_task", None),
             truncate_dim=args.truncate_dim,
         )
     elapsed = time.perf_counter() - start
@@ -159,6 +161,8 @@ def run_or_load_task(
             "corpus_prompt": args.corpus_prompt,
             "query_prompt_name": args.query_prompt_name,
             "corpus_prompt_name": args.corpus_prompt_name,
+            "query_task": getattr(args, "query_task", None),
+            "corpus_task": getattr(args, "corpus_task", None),
             "truncate_dim": args.truncate_dim,
             "candidate_subset_name": args.candidate_subset_name if args.model_type in {"bm25", "reranker"} else None,
             "rerank_top_n": args.rerank_top_n if args.model_type == "reranker" else None,
