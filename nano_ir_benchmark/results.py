@@ -17,7 +17,7 @@ from nano_ir_benchmark.bm25 import (
     evaluate_bm25_task,
     resolve_bm25_config_for_queries,
 )
-from nano_ir_benchmark.datasets import EvalTask
+from nano_ir_benchmark.datasets import EvalTask, resolve_dataset_revision
 from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
 
 TIMING_KEYS = [
@@ -25,6 +25,8 @@ TIMING_KEYS = [
     "corpus_embedding_seconds",
     "score_and_topk_seconds",
     "metric_compute_seconds",
+    "embedding_variant_score_and_topk_seconds",
+    "embedding_variant_metric_compute_seconds",
     "pure_compute_seconds",
 ]
 
@@ -133,12 +135,18 @@ def run_or_load_task(
             query_task=getattr(args, "query_task", None),
             corpus_task=getattr(args, "corpus_task", None),
             truncate_dim=args.truncate_dim,
+            embedding_variants=getattr(args, "embedding_variants", []),
+            aggregate_metric=args.aggregate_metric,
         )
     elapsed = time.perf_counter() - start
     finished_at = datetime.now(timezone.utc)
     total_elapsed = time.perf_counter() - total_start
 
     aggregate_metric_value = aggregate_metric_value_for(evaluation.metrics, args.aggregate_metric)
+    dataset_revision = resolve_dataset_revision(
+        task.dataset_id,
+        requested_revision=getattr(args, "dataset_revision", None),
+    )
     payload = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "model": payload_model_metadata,
@@ -146,6 +154,7 @@ def run_or_load_task(
         "target": {
             "dataset_name": task.dataset_name,
             "dataset_id": task.dataset_id,
+            "dataset_revision": dataset_revision,
             "split_name": task.split_name,
             "task_name": task.task_name,
             "corpus_config": task.dataset.corpus_config,
@@ -164,6 +173,8 @@ def run_or_load_task(
             "query_task": getattr(args, "query_task", None),
             "corpus_task": getattr(args, "corpus_task", None),
             "truncate_dim": args.truncate_dim,
+            "embedding_variants": getattr(args, "embedding_variants", []),
+            "dataset_revision": getattr(args, "dataset_revision", None),
             "candidate_subset_name": args.candidate_subset_name if args.model_type in {"bm25", "reranker"} else None,
             "rerank_top_n": args.rerank_top_n if args.model_type == "reranker" else None,
             "bm25": bm25_payload,
@@ -182,6 +193,7 @@ def run_or_load_task(
             "aggregate_metric_value": aggregate_metric_value,
             "cache_hit": False,
             "timing": evaluation.timing,
+            "embedding_evaluations": evaluation.embedding_evaluations,
         },
         "metrics": evaluation.metrics,
     }
@@ -252,6 +264,7 @@ def build_all_payload(
             {
                 "dataset_name": result.task.dataset_name,
                 "dataset_id": result.task.dataset_id,
+                "dataset_revision": result.payload.get("target", {}).get("dataset_revision"),
                 "split_name": result.task.split_name,
                 "task_name": result.task.task_name,
                 "cache_hit": result.cache_hit,
@@ -267,6 +280,7 @@ def build_all_payload(
                 "wall_seconds": wall_seconds,
                 "aggregate_metric": evaluation.get("aggregate_metric"),
                 "aggregate_metric_value": aggregate_value,
+                "embedding_evaluations": _summarize_embedding_evaluations(evaluation.get("embedding_evaluations")),
                 "bm25": result.payload.get("config", {}).get("bm25"),
             }
         )
@@ -324,6 +338,49 @@ def _numeric(value: Any, *, fallback: Any = None) -> float | None:
     if isinstance(fallback, int | float):
         return float(fallback)
     return None
+
+
+def _summarize_embedding_evaluations(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    summaries: list[dict[str, Any]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        summaries.append(
+            {
+                "name": item.get("name"),
+                "transform": item.get("transform"),
+                "embedding_dimensions": item.get("embedding_dimensions"),
+                "embedding_metadata": item.get("embedding_metadata"),
+                "aggregate_metric": item.get("aggregate_metric"),
+                "aggregate_metric_value": item.get("aggregate_metric_value"),
+                "best_score": item.get("best_score"),
+                "best_distance": item.get("best_distance"),
+                "best_score_name": item.get("best_score_name"),
+                "distance_evaluations": _summarize_distance_evaluations(item.get("distance_evaluations")),
+            }
+        )
+    return summaries
+
+
+def _summarize_distance_evaluations(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    summaries: list[dict[str, Any]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        summaries.append(
+            {
+                "distance": item.get("distance"),
+                "score_name": item.get("score_name"),
+                "aggregate_metric": item.get("aggregate_metric"),
+                "aggregate_metric_value": item.get("aggregate_metric_value"),
+                "timing": item.get("timing"),
+            }
+        )
+    return summaries
 
 
 def _consistent_task_model_metadata(results: list[TaskRunResult]) -> dict[str, Any] | None:

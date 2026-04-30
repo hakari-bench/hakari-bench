@@ -32,6 +32,8 @@ class TaskResult:
     model_name: str
     benchmark: str
     dataset_id: str
+    dataset_revision: str | None
+    dataset_revision_requested: str | None
     dataset_name: str
     split_name: str | None
     task_name: str
@@ -123,6 +125,8 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
         model_dir = result_path.relative_to(results_dir).parts[0]
         model_name = str(model.get("name_or_path") or model_dir) if isinstance(model, dict) else model_dir
         dataset_id = str(target.get("dataset_id") or "")
+        dataset_revision = _dataset_revision_value(target.get("dataset_revision"), key="resolved")
+        dataset_revision_requested = _dataset_revision_value(target.get("dataset_revision"), key="requested")
         task_name = str(target.get("task_name") or target.get("split_name") or "")
         task_key = f"{benchmark}::{dataset_id}::{task_name}"
         rows.append(
@@ -131,6 +135,8 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
                 model_name=model_name,
                 benchmark=benchmark,
                 dataset_id=dataset_id,
+                dataset_revision=dataset_revision,
+                dataset_revision_requested=dataset_revision_requested,
                 dataset_name=str(target.get("dataset_name") or ""),
                 split_name=target.get("split_name"),
                 task_name=task_name,
@@ -331,7 +337,8 @@ def write_duckdb(
             """
             CREATE TABLE task_results (
                 model_dir VARCHAR, model_name VARCHAR, benchmark VARCHAR,
-                dataset_id VARCHAR, dataset_name VARCHAR, split_name VARCHAR, task_name VARCHAR, task_key VARCHAR,
+                dataset_id VARCHAR, dataset_revision VARCHAR, dataset_revision_requested VARCHAR,
+                dataset_name VARCHAR, split_name VARCHAR, task_name VARCHAR, task_key VARCHAR,
                 score DOUBLE, score_100 DOUBLE, aggregate_metric VARCHAR, result_path VARCHAR,
                 active_parameters BIGINT, total_parameters BIGINT, max_seq_length INTEGER, dtype VARCHAR,
                 attn_implementation VARCHAR, torch_version VARCHAR, transformers_version VARCHAR,
@@ -341,13 +348,15 @@ def write_duckdb(
             """
         )
         con.executemany(
-            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 (
                     row.model_dir,
                     row.model_name,
                     row.benchmark,
                     row.dataset_id,
+                    row.dataset_revision,
+                    row.dataset_revision_requested,
                     row.dataset_name,
                     row.split_name,
                     row.task_name,
@@ -558,6 +567,7 @@ def render_html(*, data_json: str) -> str:
       {{ key: 'mean_score', label: 'Mean nDCG@10', type: 'number', direction: 'desc' }},
       {{ key: 'task_count', label: 'Tasks', type: 'number', direction: 'desc' }},
       {{ key: 'active_parameters', label: 'Active Params', type: 'number', direction: 'asc' }},
+      {{ key: 'total_parameters', label: 'Total Params', type: 'number', direction: 'asc' }},
       {{ key: 'max_seq_length', label: 'Max Len', type: 'number', direction: 'desc' }},
       {{ key: 'attn_implementation', label: 'Attn', type: 'text', direction: 'asc' }},
       {{ key: 'torch_version', label: 'Torch', type: 'text', direction: 'asc' }},
@@ -688,7 +698,7 @@ def render_html(*, data_json: str) -> str:
           const value = row[column.key];
           if (column.key.endsWith('_rank')) td.textContent = fmtRank(value);
           else if (column.key === 'borda_score' || column.key === 'mean_score') td.textContent = fmtNumber(value);
-          else if (column.key === 'active_parameters') td.textContent = fmtParams(value);
+          else if (column.key === 'active_parameters' || column.key === 'total_parameters') td.textContent = fmtParams(value);
           else if (column.type === 'number') td.textContent = value ?? '';
           else td.textContent = value ?? '';
           tr.appendChild(td);
@@ -728,6 +738,15 @@ def _int_or_none(value: Any) -> int | None:
 
 def _float_or_none(value: Any) -> float | None:
     return float(value) if isinstance(value, int | float) else None
+
+
+def _dataset_revision_value(value: Any, *, key: str) -> str | None:
+    if isinstance(value, dict):
+        item = value.get(key)
+        return str(item) if item is not None else None
+    if key == "resolved" and value is not None:
+        return str(value)
+    return None
 
 
 if __name__ == "__main__":

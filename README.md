@@ -23,6 +23,99 @@ Results are written under:
 output/results/{model_name}/{dataset_name}/{split_or_task}.json
 ```
 
+For Hugging Face datasets, each task JSON records the resolved dataset repo
+revision under `target.dataset_revision`. Use `--dataset-revision REV` to pin a
+specific branch, tag, or commit; the resolved commit SHA is still stored.
+
+## Embedding variants
+
+Derived embedding variants can be evaluated together with the base embedding
+run. The model is encoded once, then every derived variant is applied through a
+single post-encode transform pipeline and scored from the already-computed
+embeddings. This keeps variant evaluation cheap and avoids changing model
+inference behavior.
+
+### Quantization
+
+Post-encode `int8` and `ubinary` quantization is recommended even for models
+that do not support Matryoshka dimensions. It measures the retrieval quality
+loss from storage/search-friendly document embedding formats without requiring
+model support for quantized inference. By default, `quantize:` uses docs-only
+quantization: corpus/document embeddings are quantized, while query embeddings
+remain at the model's original floating-point precision.
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/embedding-model \
+  --dataset NanoMTEB \
+  --embedding-variant quantize:int8,ubinary
+```
+
+`int8` and `uint8` variants use ranges computed from the current corpus
+embeddings. Query embeddings are not used for calibration and are not quantized
+in the default docs-only mode. For scoring, scalar quantized document values are
+dequantized back to approximate `float32` vectors before similarity search, so
+ranking does not compare raw bucket ids as if they were embedding coordinates.
+`binary` and `ubinary` document variants are stored as packed binary vectors and
+scored through unpacked sign vectors.
+
+If a symmetric query-and-document quantization comparison is explicitly needed,
+use `quantize-both:`:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/embedding-model \
+  --dataset NanoMTEB \
+  --embedding-variant quantize-both:int8,ubinary
+```
+
+### Truncated Dimensions
+
+Matryoshka-style truncated embedding dimensions can be evaluated from the same
+base embedding run:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/matryoshka-embedding-model \
+  --dataset NanoMTEB \
+  --embedding-variant truncate:512,256
+```
+
+### Truncated Dimensions With Quantization
+
+When evaluating dimensions, run the standalone truncation variants, standalone
+quantization variants, and their cross product:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/matryoshka-embedding-model \
+  --dataset NanoMTEB \
+  --embedding-variant truncate:256,128,64 \
+  --embedding-variant quantize:int8,ubinary \
+  --embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary
+```
+
+All three groups answer different questions: standalone truncation measures the
+dimension trade-off, standalone quantization measures the quantization trade-off
+at the original dimension, and the cross product measures the combined
+dimension-and-quantization trade-off such as `128dim x int8` or
+`64dim x ubinary`.
+
+Each task JSON keeps the base result in `metrics` and records the base and
+derived results under `evaluation.embedding_evaluations`. Every entry includes
+the measured embedding dimension as `embedding_dimensions.dim`; if query and
+corpus dimensions differ, it records `query_dim` and `corpus_dim` instead. The
+optional `embedding_metadata` block records the representation type
+(`dense`, `sparse`, or future `late_interaction`), dimension format, shapes, and
+sparse nnz/density statistics when available. Quantized variants also record
+the value dtype, quantization precision, original dimension, stored dimension,
+calibration/ranges source, scoring representation, quantization method
+(`corpus_only` or `query_and_corpus`), and side (`query` or `corpus`) when
+applicable. Dense embedding evaluations score both `cosine` and `dot`, store
+both entries in `distance_evaluations`, and copy the better aggregate result to
+`metrics`, `aggregate_metric_value`, `best_score`, `best_distance`, and
+`best_score_name`.
+
 ## BM25
 
 BM25 can be evaluated directly. If the dataset provides a candidate subset named

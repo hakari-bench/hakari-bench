@@ -7,6 +7,7 @@ import pytest
 from nano_ir_benchmark.datasets import (
     DatasetRegistry,
     NanoDatasetSpec,
+    resolve_dataset_revision,
     resolve_dataset_splits,
     resolve_eval_tasks,
 )
@@ -215,6 +216,42 @@ def test_resolve_dataset_splits_uses_yaml_splits_without_network() -> None:
     )
 
     assert resolve_dataset_splits(spec) == ["a", "b"]
+
+
+def test_resolve_dataset_revision_uses_huggingface_hub_sha(monkeypatch: pytest.MonkeyPatch) -> None:
+    class FakeDatasetInfo:
+        sha = "abc123"
+
+    class FakeHfApi:
+        def dataset_info(self, repo_id: str, revision: str | None = None) -> FakeDatasetInfo:
+            assert repo_id == "owner/dataset"
+            assert revision == "main"
+            return FakeDatasetInfo()
+
+    resolve_dataset_revision.cache_clear()
+    monkeypatch.setattr("nano_ir_benchmark.datasets.HfApi", FakeHfApi)
+
+    assert resolve_dataset_revision("owner/dataset", requested_revision="main") == {
+        "requested": "main",
+        "resolved": "abc123",
+        "source": "huggingface_hub",
+    }
+
+
+def test_resolve_dataset_revision_returns_unknown_when_hub_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    class FakeHfApi:
+        def dataset_info(self, repo_id: str, revision: str | None = None) -> object:
+            raise RuntimeError(f"cannot resolve {repo_id}@{revision}")
+
+    resolve_dataset_revision.cache_clear()
+    monkeypatch.setattr("nano_ir_benchmark.datasets.HfApi", FakeHfApi)
+
+    revision = resolve_dataset_revision("local/dataset", requested_revision=None)
+
+    assert revision["requested"] is None
+    assert revision["resolved"] is None
+    assert revision["source"] == "huggingface_hub"
+    assert revision["error"].startswith("RuntimeError:")
 
 
 def test_registry_loads_yaml_files(tmp_path: Path) -> None:
