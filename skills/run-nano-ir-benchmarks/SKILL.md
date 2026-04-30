@@ -24,6 +24,7 @@ For every specified model:
 - Investigate Matryoshka support. If the model card or paper documents supported dimensions, prefer simultaneous derived evaluations with `--embedding-variant truncate:DIM` over separate reruns.
 - Check whether `--trust-remote-code` is required.
 - Check the model's default maximum sequence length, but do not override it unless the user explicitly asks.
+- When a benchmark should be reproducible against a specific dataset state, use `--dataset-revision REV`; otherwise verify that the output JSON records the resolved Hugging Face dataset SHA.
 
 ## Attention And Runtime Choice
 
@@ -77,7 +78,7 @@ Use both GPUs when available by assigning separate processes with `CUDA_VISIBLE_
 ## Result Hygiene
 
 - Respect existing result JSON. Skip cached results unless the user asks for override or the run configuration must be corrected.
-- Preserve enough metadata to explain the run: prompts, embedding variants, dtype, attention implementation, Transformers/Sentence Transformers/Torch versions, batch size, timing, parameter counts, and max sequence length.
+- Preserve enough metadata to explain the run: dataset revision, prompts, embedding variants and representation metadata, dtype, attention implementation, Transformers/Sentence Transformers/Torch versions, batch size, timing, parameter counts, and max sequence length.
 - When comparing models, check that prompt and embedding-variant choices are fair and intentional.
 - Rebuild DuckDB and HTML reports after adding new benchmark results that should appear in the leaderboard.
 - Summarize failures plainly. If a model keeps failing after reasonable batch-size and attention fallbacks, mark it skipped with the exact reason.

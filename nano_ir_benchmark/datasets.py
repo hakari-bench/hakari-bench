@@ -1,10 +1,17 @@
 from __future__ import annotations
 
+import importlib
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, cast
 
 import yaml
+
+try:
+    HfApi: Any = getattr(importlib.import_module("huggingface_hub"), "HfApi")
+except Exception:  # pragma: no cover
+    HfApi = None
 
 try:
     from datasets import get_dataset_split_names
@@ -213,6 +220,30 @@ def resolve_dataset_splits(spec: NanoDatasetSpec) -> list[str]:
     if mapping is not None:
         return list(mapping.values())
     return list(get_dataset_split_names(spec.dataset_id, spec.queries_config))
+
+
+@lru_cache(maxsize=512)
+def resolve_dataset_revision(dataset_id: str, requested_revision: str | None = None) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "requested": requested_revision,
+        "resolved": None,
+        "source": "huggingface_hub",
+    }
+    if HfApi is None:
+        payload["error"] = "huggingface_hub is not installed."
+        return payload
+    try:
+        info = HfApi().dataset_info(repo_id=dataset_id, revision=requested_revision)
+    except Exception as exc:
+        payload["error"] = f"{type(exc).__name__}: {exc}"
+        return payload
+
+    sha = getattr(info, "sha", None)
+    if sha is None:
+        payload["error"] = "Dataset revision SHA was not returned by Hugging Face Hub."
+    else:
+        payload["resolved"] = str(sha)
+    return payload
 
 
 def _resolve_selected_split(spec: NanoDatasetSpec, value: str) -> tuple[str, str]:

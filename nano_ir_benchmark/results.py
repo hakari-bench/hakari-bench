@@ -17,7 +17,7 @@ from nano_ir_benchmark.bm25 import (
     evaluate_bm25_task,
     resolve_bm25_config_for_queries,
 )
-from nano_ir_benchmark.datasets import EvalTask
+from nano_ir_benchmark.datasets import EvalTask, resolve_dataset_revision
 from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
 
 TIMING_KEYS = [
@@ -143,6 +143,10 @@ def run_or_load_task(
     total_elapsed = time.perf_counter() - total_start
 
     aggregate_metric_value = aggregate_metric_value_for(evaluation.metrics, args.aggregate_metric)
+    dataset_revision = resolve_dataset_revision(
+        task.dataset_id,
+        requested_revision=getattr(args, "dataset_revision", None),
+    )
     payload = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "model": payload_model_metadata,
@@ -150,6 +154,7 @@ def run_or_load_task(
         "target": {
             "dataset_name": task.dataset_name,
             "dataset_id": task.dataset_id,
+            "dataset_revision": dataset_revision,
             "split_name": task.split_name,
             "task_name": task.task_name,
             "corpus_config": task.dataset.corpus_config,
@@ -169,6 +174,7 @@ def run_or_load_task(
             "corpus_task": getattr(args, "corpus_task", None),
             "truncate_dim": args.truncate_dim,
             "embedding_variants": getattr(args, "embedding_variants", []),
+            "dataset_revision": getattr(args, "dataset_revision", None),
             "candidate_subset_name": args.candidate_subset_name if args.model_type in {"bm25", "reranker"} else None,
             "rerank_top_n": args.rerank_top_n if args.model_type == "reranker" else None,
             "bm25": bm25_payload,
@@ -258,6 +264,7 @@ def build_all_payload(
             {
                 "dataset_name": result.task.dataset_name,
                 "dataset_id": result.task.dataset_id,
+                "dataset_revision": result.payload.get("target", {}).get("dataset_revision"),
                 "split_name": result.task.split_name,
                 "task_name": result.task.task_name,
                 "cache_hit": result.cache_hit,
@@ -344,6 +351,8 @@ def _summarize_embedding_evaluations(value: Any) -> list[dict[str, Any]]:
             {
                 "name": item.get("name"),
                 "transform": item.get("transform"),
+                "embedding_dimensions": item.get("embedding_dimensions"),
+                "embedding_metadata": item.get("embedding_metadata"),
                 "aggregate_metric": item.get("aggregate_metric"),
                 "aggregate_metric_value": item.get("aggregate_metric_value"),
             }

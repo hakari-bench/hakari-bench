@@ -28,12 +28,17 @@ class TaskEvaluation:
     embedding_evaluations: list[dict[str, Any]] = field(default_factory=list)
 
 
-def load_ir_dataset(task: EvalTask, *, candidate_subset_name: str | None = None) -> LoadedIrDataset:
+def load_ir_dataset(
+    task: EvalTask,
+    *,
+    candidate_subset_name: str | None = None,
+    revision: str | None = None,
+) -> LoadedIrDataset:
     from datasets import load_dataset
 
-    corpus_dataset = load_dataset(task.dataset_id, task.dataset.corpus_config, split=task.split_name)
-    queries_dataset = load_dataset(task.dataset_id, task.dataset.queries_config, split=task.split_name)
-    qrels_dataset = load_dataset(task.dataset_id, task.dataset.qrels_config, split=task.split_name)
+    corpus_dataset = load_dataset(task.dataset_id, task.dataset.corpus_config, split=task.split_name, revision=revision)
+    queries_dataset = load_dataset(task.dataset_id, task.dataset.queries_config, split=task.split_name, revision=revision)
+    qrels_dataset = load_dataset(task.dataset_id, task.dataset.qrels_config, split=task.split_name, revision=revision)
 
     corpus = {str(row["_id"]): str(row["text"]) for row in corpus_dataset if str(row.get("text", ""))}
     queries = {str(row["_id"]): str(row["text"]) for row in queries_dataset if str(row.get("text", ""))}
@@ -48,7 +53,7 @@ def load_ir_dataset(task: EvalTask, *, candidate_subset_name: str | None = None)
         else:
             qrels[query_id].add(str(corpus_ids))
 
-    candidates = _load_candidates(task, candidate_subset_name=candidate_subset_name)
+    candidates = _load_candidates(task, candidate_subset_name=candidate_subset_name, revision=revision)
     return LoadedIrDataset(
         queries=queries,
         corpus=corpus,
@@ -58,13 +63,18 @@ def load_ir_dataset(task: EvalTask, *, candidate_subset_name: str | None = None)
     )
 
 
-def _load_candidates(task: EvalTask, *, candidate_subset_name: str | None) -> dict[str, list[str]] | None:
+def _load_candidates(
+    task: EvalTask,
+    *,
+    candidate_subset_name: str | None,
+    revision: str | None,
+) -> dict[str, list[str]] | None:
     if candidate_subset_name is None:
         return None
     try:
         from datasets import load_dataset
 
-        rows = load_dataset(task.dataset_id, candidate_subset_name, split=task.split_name)
+        rows = load_dataset(task.dataset_id, candidate_subset_name, split=task.split_name, revision=revision)
     except Exception:
         return None
     candidates: dict[str, list[str]] = {}
@@ -152,6 +162,8 @@ def evaluate_dense_task(
         _embedding_evaluation_payload(
             name="base",
             transform={"type": "identity", "algorithm": "none", "parameters": {}},
+            embedding_dimensions=_embedding_dimensions(query_embeddings, corpus_embeddings),
+            embedding_metadata=_embedding_metadata(query_embeddings, corpus_embeddings),
             metrics=metrics,
             timing=base_timing,
             aggregate_metric=aggregate_metric,
@@ -189,6 +201,8 @@ def evaluate_dense_task(
             _embedding_evaluation_payload(
                 name=str(variant["name"]),
                 transform=dict(variant["transform"]),
+                embedding_dimensions=_embedding_dimensions(variant_query_embeddings, variant_corpus_embeddings),
+                embedding_metadata=_embedding_metadata(variant_query_embeddings, variant_corpus_embeddings),
                 metrics=variant_metrics,
                 timing={
                     "query_embedding_seconds": 0.0,
@@ -305,18 +319,24 @@ def _embedding_evaluation_payload(
     *,
     name: str,
     transform: dict[str, Any],
+    embedding_dimensions: dict[str, int | None],
+    embedding_metadata: dict[str, Any] | None,
     metrics: dict[str, float],
     timing: dict[str, float],
     aggregate_metric: str,
 ) -> dict[str, Any]:
-    return {
+    payload = {
         "name": name,
         "transform": transform,
+        "embedding_dimensions": embedding_dimensions,
         "aggregate_metric": aggregate_metric,
         "aggregate_metric_value": _aggregate_metric_value_for(metrics, aggregate_metric),
         "metrics": metrics,
         "timing": timing,
     }
+    if embedding_metadata is not None:
+        payload["embedding_metadata"] = embedding_metadata
+    return payload
 
 
 def _aggregate_metric_value_for(metrics: dict[str, float], suffix: str) -> float:
@@ -351,6 +371,100 @@ def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
     if dim > matrix.shape[1]:
         raise ValueError(f"Cannot truncate embeddings with dimension {matrix.shape[1]} to {dim}.")
     return matrix[:, :dim]
+
+
+def _embedding_dimensions(query_embeddings: Any, corpus_embeddings: Any) -> dict[str, int | None]:
+    query_dim = _embedding_dimension(query_embeddings)
+    corpus_dim = _embedding_dimension(corpus_embeddings)
+    if query_dim == corpus_dim:
+        return {"dim": query_dim}
+    return {"query_dim": query_dim, "corpus_dim": corpus_dim}
+
+
+def _embedding_metadata(query_embeddings: Any, corpus_embeddings: Any) -> dict[str, Any] | None:
+    dimensions = _embedding_dimensions(query_embeddings, corpus_embeddings)
+    representation_type = _embedding_representation_type(query_embeddings, corpus_embeddings)
+    return {
+        "representation_type": representation_type,
+        "dimension_format": _dimension_format(representation_type),
+        "dimensions": dimensions,
+        "query": _embedding_side_metadata(query_embeddings),
+        "corpus": _embedding_side_metadata(corpus_embeddings),
+    }
+
+
+def _embedding_representation_type(query_embeddings: Any, corpus_embeddings: Any) -> str:
+    if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
+        return "sparse"
+    query_shape = _shape_list(query_embeddings)
+    corpus_shape = _shape_list(corpus_embeddings)
+    if _is_late_interaction_shape(query_shape) or _is_late_interaction_shape(corpus_shape):
+        return "late_interaction"
+    return "dense"
+
+
+def _dimension_format(representation_type: str) -> str:
+    if representation_type == "sparse":
+        return "sparse_vector"
+    if representation_type == "late_interaction":
+        return "multi_vector"
+    return "single_vector"
+
+
+def _embedding_side_metadata(embeddings: Any) -> dict[str, Any]:
+    metadata: dict[str, Any] = {"shape": _shape_list(embeddings)}
+    if _is_sparse_embedding(embeddings):
+        metadata.update(_sparse_embedding_stats(embeddings))
+    return metadata
+
+
+def _sparse_embedding_stats(embeddings: Any) -> dict[str, Any]:
+    shape = _shape_list(embeddings)
+    row_count = int(shape[0]) if shape else 0
+    total_size = int(np.prod(shape)) if shape else 0
+    if sparse.issparse(embeddings):
+        matrix = sparse.csr_matrix(embeddings)
+        row_nnz = np.diff(matrix.indptr)
+        nnz_total = int(matrix.nnz)
+    elif isinstance(embeddings, torch.Tensor) and embeddings.is_sparse:
+        coalesced = embeddings.coalesce()
+        row_indices = coalesced.indices()[0].detach().cpu().numpy() if coalesced._nnz() else np.array([], dtype=np.int64)
+        row_nnz = np.bincount(row_indices, minlength=row_count)
+        nnz_total = int(coalesced._nnz())
+    else:
+        return {}
+
+    return {
+        "nnz_total": nnz_total,
+        "nnz_mean": float(np.mean(row_nnz)) if row_count else 0.0,
+        "nnz_max": int(np.max(row_nnz)) if row_count else 0,
+        "density": float(nnz_total / total_size) if total_size else 0.0,
+    }
+
+
+def _is_sparse_embedding(embeddings: Any) -> bool:
+    return sparse.issparse(embeddings) or (isinstance(embeddings, torch.Tensor) and embeddings.is_sparse)
+
+
+def _is_late_interaction_shape(shape: list[int]) -> bool:
+    return len(shape) >= 3
+
+
+def _embedding_dimension(embeddings: Any) -> int | None:
+    shape = _shape_list(embeddings)
+    if len(shape) < 2:
+        return None
+    return int(shape[1])
+
+
+def _shape_list(embeddings: Any) -> list[int]:
+    shape = getattr(embeddings, "shape", None)
+    if shape is None:
+        try:
+            shape = np.asarray(embeddings).shape
+        except Exception:
+            return []
+    return [int(dimension) for dimension in shape]
 
 
 def _to_numpy_float32(embeddings: Any) -> np.ndarray:

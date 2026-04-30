@@ -10,6 +10,7 @@ dependencies = [
     "duckdb>=1.5.2",
     "fast-langdetect>=1.0.0",
     "flash-attn @ https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3%2Bcu12torch2.9cxx11abiTRUE-cp312-cp312-linux_x86_64.whl",
+    "huggingface-hub>=1.12.0",
     "nltk>=3.9.4",
     "numpy>=2.4.4",
     "peft>=0.19.1",

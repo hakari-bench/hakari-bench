@@ -70,6 +70,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     evaluate.add_argument("--collection", action="append", default=[], help="Dataset collection name.")
     evaluate.add_argument("--split", action="append", default=[], help="Split/task name. Repeat or comma-separate.")
+    evaluate.add_argument("--dataset-revision", default=None, help="Hugging Face dataset revision to evaluate.")
 
     evaluate.add_argument("--batch-size", type=int, default=32)
     evaluate.add_argument("--show-progress", action="store_true")
@@ -95,6 +96,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     build_bm25.add_argument("--collection", action="append", default=[], help="Dataset collection name.")
     build_bm25.add_argument("--split", action="append", default=[], help="Split/task name. Repeat or comma-separate.")
+    build_bm25.add_argument("--dataset-revision", default=None, help="Hugging Face dataset revision to build from.")
     build_bm25.add_argument("--output-dir", default="output/bm25")
     build_bm25.add_argument("--override", action="store_true")
     build_bm25.add_argument("--show-progress", action="store_true")
@@ -285,6 +287,7 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
             {
                 "dataset_name": result.task.dataset_name,
                 "dataset_id": result.task.dataset_id,
+                "dataset_revision": result.payload.get("target", {}).get("dataset_revision"),
                 "split_name": result.task.split_name,
                 "task_name": result.task.task_name,
                 "cache_hit": result.cache_hit,
@@ -341,7 +344,11 @@ def _load_dataset_for_args(args: argparse.Namespace, task: EvalTask) -> LoadedIr
         if model_type in {"bm25", "reranker"}
         else None
     )
-    return load_ir_dataset(task, candidate_subset_name=candidate_subset_name)
+    return load_ir_dataset(
+        task,
+        candidate_subset_name=candidate_subset_name,
+        revision=getattr(args, "dataset_revision", None),
+    )
 
 
 def _load_cached_task(*, args: argparse.Namespace, task: EvalTask) -> TaskRunResult:

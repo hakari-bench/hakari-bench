@@ -14,7 +14,7 @@ from typing import Any, Literal, Sequence, cast
 
 import numpy as np
 
-from nano_ir_benchmark.datasets import EvalTask
+from nano_ir_benchmark.datasets import EvalTask, resolve_dataset_revision
 from nano_ir_benchmark.metrics import compute_ir_metrics
 
 BM25Tokenizer = Literal[
@@ -415,6 +415,10 @@ def run_or_load_bm25_task(
         "target": {
             "dataset_name": task.dataset_name,
             "dataset_id": task.dataset_id,
+            "dataset_revision": resolve_dataset_revision(
+                task.dataset_id,
+                requested_revision=getattr(args, "dataset_revision", None),
+            ),
             "split_name": task.split_name,
             "task_name": task.task_name,
             "corpus_config": task.dataset.corpus_config,

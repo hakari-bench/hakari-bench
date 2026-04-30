@@ -119,6 +119,22 @@ def test_parse_args_accepts_prompt_and_reranker_options() -> None:
     assert args.rerank_top_n == 50
 
 
+def test_parse_args_accepts_dataset_revision() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--dataset",
+            "NanoJMTEB",
+            "--dataset-revision",
+            "abc123",
+        ]
+    )
+
+    assert args.dataset_revision == "abc123"
+
+
 def test_parse_args_accepts_embedding_variants() -> None:
     args = parse_args(
         [
@@ -181,8 +197,14 @@ def test_load_dataset_for_args_uses_candidate_subset_for_bm25(monkeypatch) -> No
 
     calls: list[str | None] = []
 
-    def fake_load_ir_dataset(task: EvalTask, *, candidate_subset_name: str | None = None) -> object:
+    def fake_load_ir_dataset(
+        task: EvalTask,
+        *,
+        candidate_subset_name: str | None = None,
+        revision: str | None = None,
+    ) -> object:
         _ = task
+        assert revision == "abc123"
         calls.append(candidate_subset_name)
         return object()
 
@@ -201,7 +223,7 @@ def test_load_dataset_for_args_uses_candidate_subset_for_bm25(monkeypatch) -> No
     )
 
     _load_dataset_for_args(
-        argparse.Namespace(model_type="bm25", candidate_subset_name="bm25"),
+        argparse.Namespace(model_type="bm25", candidate_subset_name="bm25", dataset_revision="abc123"),
         task,
     )
 

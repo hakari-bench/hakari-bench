@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from scipy import sparse
 
 from nano_ir_benchmark.datasets import EvalTask, NanoDatasetSpec
 from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
@@ -80,6 +81,18 @@ class FakeTaskDenseModel:
         if len(sentences) == 2:
             return np.array([[1.0, 0.0], [0.0, 1.0]])
         return np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]])
+
+
+class FakeSparseModel:
+    similarity_fn_name = "dot"
+
+    def encode_query(self, sentences: list[str], **kwargs: object) -> sparse.csr_matrix:
+        return sparse.csr_matrix([[1.0, 0.0, 0.0, 2.0], [0.0, 3.0, 0.0, 0.0]])
+
+    def encode_document(self, sentences: list[str], **kwargs: object) -> sparse.csr_matrix:
+        return sparse.csr_matrix(
+            [[1.0, 0.0, 0.0, 1.0], [0.0, 2.0, 0.0, 0.0], [0.0, 0.0, 4.0, 0.0]]
+        )
 
 
 class FakeReranker:
@@ -181,10 +194,47 @@ def test_evaluate_dense_task_scores_embedding_variants_without_extra_encoding() 
     assert "truncate_dim" not in model.query_calls[0]
     assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
     assert result.embedding_evaluations[0]["name"] == "base"
+    assert result.embedding_evaluations[0]["embedding_dimensions"] == {"dim": 2}
+    assert result.embedding_evaluations[0]["embedding_metadata"] == {
+        "representation_type": "dense",
+        "dimension_format": "single_vector",
+        "dimensions": {"dim": 2},
+        "query": {"shape": [2, 2]},
+        "corpus": {"shape": [3, 2]},
+    }
     assert result.embedding_evaluations[1]["name"] == "truncate_dim_1"
     assert result.embedding_evaluations[1]["transform"]["parameters"] == {"dim": 1}
+    assert result.embedding_evaluations[1]["embedding_dimensions"] == {"dim": 1}
+    assert result.embedding_evaluations[1]["embedding_metadata"]["dimensions"] == {"dim": 1}
     assert result.embedding_evaluations[1]["aggregate_metric_value"] < 1.0
     assert "ToyData_test_dot_truncate_dim_1_ndcg@10" in result.embedding_evaluations[1]["metrics"]
+
+
+def test_evaluate_dense_task_records_sparse_embedding_metadata() -> None:
+    result = evaluate_dense_task(
+        model=FakeSparseModel(),
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+    )
+
+    base = result.embedding_evaluations[0]
+    assert base["embedding_dimensions"] == {"dim": 4}
+    assert base["embedding_metadata"]["representation_type"] == "sparse"
+    assert base["embedding_metadata"]["dimension_format"] == "sparse_vector"
+    assert base["embedding_metadata"]["dimensions"] == {"dim": 4}
+    assert base["embedding_metadata"]["query"]["shape"] == [2, 4]
+    assert base["embedding_metadata"]["query"]["nnz_total"] == 3
+    assert base["embedding_metadata"]["query"]["nnz_mean"] == pytest.approx(1.5)
+    assert base["embedding_metadata"]["query"]["density"] == pytest.approx(3 / 8)
+    assert base["embedding_metadata"]["corpus"]["shape"] == [3, 4]
+    assert base["embedding_metadata"]["corpus"]["nnz_total"] == 4
+    assert base["embedding_metadata"]["corpus"]["nnz_max"] == 2
 
 
 def test_evaluate_reranker_task_uses_candidate_top_n() -> None:
@@ -284,6 +334,58 @@ def test_run_or_load_task_records_evaluation_timestamps_and_durations(tmp_path: 
     assert evaluation["duration_seconds_including_dataset_load"] >= evaluation["duration_seconds_excluding_dataset_load"]
 
 
+def test_run_or_load_task_records_dataset_revision(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        dataset_revision="main",
+        override=False,
+    )
+    monkeypatch.setattr(
+        "nano_ir_benchmark.results.resolve_dataset_revision",
+        lambda dataset_id, requested_revision=None: {
+            "requested": requested_revision,
+            "resolved": f"{dataset_id}@sha",
+            "source": "huggingface_hub",
+        },
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    assert result.payload["target"]["dataset_revision"] == {
+        "requested": "main",
+        "resolved": "toy/data@sha",
+        "source": "huggingface_hub",
+    }
+
+    all_payload = build_all_payload(
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "hotchpotch/model"},
+        results=[result],
+    )
+    assert all_payload["splits"][0]["dataset_revision"]["resolved"] == "toy/data@sha"
+
+
 def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) -> None:
     task = _toy_task()
     args = argparse.Namespace(
@@ -337,6 +439,9 @@ def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) 
     )
     split_variants = all_payload["splits"][0]["embedding_evaluations"]
     assert [item["name"] for item in split_variants] == ["base", "truncate_dim_1"]
+    assert split_variants[0]["embedding_dimensions"] == {"dim": 2}
+    assert split_variants[0]["embedding_metadata"]["representation_type"] == "dense"
+    assert split_variants[1]["embedding_dimensions"] == {"dim": 1}
     assert "metrics" not in split_variants[1]
 
 

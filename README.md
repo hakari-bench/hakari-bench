@@ -23,6 +23,10 @@ Results are written under:
 output/results/{model_name}/{dataset_name}/{split_or_task}.json
 ```
 
+For Hugging Face datasets, each task JSON records the resolved dataset repo
+revision under `target.dataset_revision`. Use `--dataset-revision REV` to pin a
+specific branch, tag, or commit; the resolved commit SHA is still stored.
+
 ## Embedding variants
 
 Matryoshka-style truncated embedding dimensions can be evaluated together with
@@ -36,9 +40,14 @@ uv run nano-ir-bench evaluate \
   --embedding-variant truncate:512,256
 ```
 
-Each task JSON keeps the base result in `metrics` and records the derived
-results under `evaluation.embedding_evaluations`. The variant schema is designed
-to support future embedding transforms such as int8 or binary quantization.
+Each task JSON keeps the base result in `metrics` and records the base and
+derived results under `evaluation.embedding_evaluations`. Every entry includes
+the measured embedding dimension as `embedding_dimensions.dim`; if query and
+corpus dimensions differ, it records `query_dim` and `corpus_dim` instead. The
+optional `embedding_metadata` block records the representation type
+(`dense`, `sparse`, or future `late_interaction`), dimension format, shapes, and
+sparse nnz/density statistics when available. The variant schema is designed to
+support future embedding transforms such as int8 or binary quantization.
 
 ## BM25
 
