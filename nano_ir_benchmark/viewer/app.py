@@ -173,7 +173,7 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -
         )
     else:
         columns.append(("mean_score", "Mean", "desc", "right"))
-        columns.extend((f"metric:{column}", column, "desc", "right") for column in result.metric_columns)
+        columns.extend((f"metric:{column}", _metric_column_label(column), "desc", "right") for column in result.metric_columns)
     columns.extend(
         [
             ("task_count", "Tasks", "desc", "right"),
@@ -261,3 +261,7 @@ def _fmt_params(value: int | None) -> str:
     if value >= 1_000_000:
         return f"{value / 1_000_000:.1f}M"
     return f"{value:,}"
+
+
+def _metric_column_label(column: str) -> str:
+    return column.removeprefix("Nano")

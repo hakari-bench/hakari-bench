@@ -6,7 +6,7 @@ from pathlib import Path
 
 import duckdb
 
-from nano_ir_benchmark.viewer.app import create_app
+from nano_ir_benchmark.viewer.app import _metric_column_label, create_app
 from nano_ir_benchmark.viewer.config import load_viewer_config
 from nano_ir_benchmark.viewer.leaderboard import LeaderboardService, TaskScore, compute_leaderboard_rows
 from nano_ir_benchmark.viewer.store import DuckDbLocation, LocalDuckDbStore
@@ -87,6 +87,34 @@ def test_individual_leaderboard_uses_simple_task_mean() -> None:
     assert by_model["model/a"].metric_values == {}
 
 
+def test_leaderboard_uses_competition_rank_for_ties() -> None:
+    scores = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.3, 0.1]
+    rows = compute_leaderboard_rows(
+        [
+            TaskScore(
+                f"model/{index}",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                score,
+                None,
+                None,
+                None,
+            )
+            for index, score in enumerate(scores, start=1)
+        ],
+        is_overall=False,
+    )
+
+    ranks_by_model = {row.model_name: row.mean_rank for row in rows}
+    assert ranks_by_model["model/8"] == 8
+    assert ranks_by_model["model/9"] == 8
+    assert ranks_by_model["model/10"] == 10
+
+
 def test_individual_leaderboard_adds_metric_columns_from_score_group(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
@@ -141,8 +169,14 @@ benchmarks:
     assert response.status_code == 200
     assert "Task Mean" in response.text
     assert "Lang Mean" in response.text
-    assert "NanoBEIR-ja" in response.text
+    assert "BEIR-ja<span" in response.text
     assert "metric%3ANanoBEIR-ja" in response.text
+
+
+def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
+    assert _metric_column_label("NanoAILAStatutes") == "AILAStatutes"
+    assert _metric_column_label("NanoBEIR-ja") == "BEIR-ja"
+    assert _metric_column_label("arguana") == "arguana"
 
 
 def test_local_duckdb_store_copies_newer_source_on_page_load(tmp_path: Path) -> None:

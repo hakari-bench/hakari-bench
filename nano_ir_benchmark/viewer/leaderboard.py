@@ -266,9 +266,9 @@ def _rank_desc(items: Iterable[tuple[str, float]]) -> dict[str, float]:
         end = index + 1
         while end < len(sorted_items) and sorted_items[end][1] == sorted_items[index][1]:
             end += 1
-        average_rank = (index + 1 + end) / 2.0
+        rank = float(index + 1)
         for model_name, _ in sorted_items[index:end]:
-            ranks[model_name] = average_rank
+            ranks[model_name] = rank
         index = end
     return ranks
 
