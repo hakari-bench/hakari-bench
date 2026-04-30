@@ -5,6 +5,7 @@ from itertools import product
 from typing import Any
 
 QUANTIZE_PRECISIONS = {"int8", "uint8", "binary", "ubinary"}
+QUANTIZE_TARGETS = {"corpus", "query_and_corpus"}
 
 
 def parse_embedding_variants(
@@ -85,17 +86,33 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
     elif current_kind == "truncate" and _is_integer_token(token):
         dim_value = token
         return _truncate_variant(token=token, dim_value=dim_value), "truncate"
+    elif token.startswith(("quantize-docs:", "quantize_docs:", "quantize-corpus:", "quantize_corpus:")):
+        precision = token.split(":", 1)[1]
+        return _quantize_variant(token=token, precision=precision, target="corpus"), "quantize:corpus"
+    elif token.startswith(("quantize-docs=", "quantize_docs=", "quantize-corpus=", "quantize_corpus=")):
+        precision = token.split("=", 1)[1]
+        return _quantize_variant(token=token, precision=precision, target="corpus"), "quantize:corpus"
+    elif token.startswith(("quantize-both:", "quantize_both:", "quantize-query-corpus:", "quantize_query_corpus:")):
+        precision = token.split(":", 1)[1]
+        return _quantize_variant(token=token, precision=precision, target="query_and_corpus"), "quantize:query_and_corpus"
+    elif token.startswith(("quantize-both=", "quantize_both=", "quantize-query-corpus=", "quantize_query_corpus=")):
+        precision = token.split("=", 1)[1]
+        return _quantize_variant(token=token, precision=precision, target="query_and_corpus"), "quantize:query_and_corpus"
     elif token.startswith("quantize:"):
         precision = token.split(":", 1)[1]
-        return _quantize_variant(token=token, precision=precision), "quantize"
+        return _quantize_variant(token=token, precision=precision, target="corpus"), "quantize:corpus"
     elif token.startswith("quantize="):
         precision = token.split("=", 1)[1]
-        return _quantize_variant(token=token, precision=precision), "quantize"
-    elif current_kind == "quantize" and token in QUANTIZE_PRECISIONS:
-        return _quantize_variant(token=token, precision=token), "quantize"
+        return _quantize_variant(token=token, precision=precision, target="corpus"), "quantize:corpus"
+    elif current_kind is not None and current_kind.startswith("quantize:") and token in QUANTIZE_PRECISIONS:
+        target = current_kind.split(":", 1)[1]
+        if target not in QUANTIZE_TARGETS:
+            raise ValueError(f"Unsupported quantization target in parser state: {target}")
+        return _quantize_variant(token=token, precision=token, target=target), current_kind
     else:
         raise ValueError(
-            f"Unsupported embedding variant '{token}'. Supported syntax: truncate:DIM or quantize:PRECISION"
+            "Unsupported embedding variant "
+            f"'{token}'. Supported syntax: truncate:DIM, quantize:PRECISION, or quantize-both:PRECISION"
         )
 
 
@@ -143,19 +160,26 @@ def _pipeline_steps(variant: dict[str, Any]) -> list[dict[str, Any]]:
     return steps
 
 
-def _quantize_variant(*, token: str, precision: str) -> dict[str, Any]:
+def _quantize_variant(*, token: str, precision: str, target: str) -> dict[str, Any]:
     if precision not in QUANTIZE_PRECISIONS:
         raise ValueError(
             f"Embedding variant '{token}' has unsupported quantization precision {precision!r}. "
             f"Supported precisions are: {', '.join(sorted(QUANTIZE_PRECISIONS))}."
         )
+    if target not in QUANTIZE_TARGETS:
+        raise ValueError(
+            f"Embedding variant '{token}' has unsupported quantization target {target!r}. "
+            f"Supported targets are: {', '.join(sorted(QUANTIZE_TARGETS))}."
+        )
 
-    parameters: dict[str, Any] = {"precision": precision}
+    method = "corpus_only" if target == "corpus" else "query_and_corpus"
+    suffix = "docs" if target == "corpus" else "both"
+    parameters: dict[str, Any] = {"precision": precision, "target": target, "method": method}
     if precision in {"int8", "uint8"}:
         parameters["calibration"] = "corpus"
 
     return {
-        "name": f"quantize_{precision}",
+        "name": f"quantize_{precision}_{suffix}",
         "transform": _pipeline_transform(
             {
                 "type": "quantize",

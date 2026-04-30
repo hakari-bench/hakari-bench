@@ -22,9 +22,10 @@ For every specified model:
 - If no usable Sentence Transformers prompt config exists, inspect the Hugging Face model card first, then relevant articles or papers for retrieval prefixes such as query/document/passage instructions.
 - Record and use explicit retrieval prefixes when the model card or paper requires them, for example via `--query-prompt`, `--corpus-prompt`, `--query-prompt-name`, or `--corpus-prompt-name`.
 - Investigate Matryoshka support. If the model card or paper documents supported dimensions, prefer simultaneous derived evaluations with `--embedding-variant truncate:DIM` over separate reruns.
-- Unless the user explicitly says not to, include post-encode quantization variants with `--embedding-variant quantize:int8,ubinary`. These variants do not require model-side quantized inference support and are useful even when the model is not Matryoshka-capable.
+- Unless the user explicitly says not to, include post-encode docs-only quantization variants with `--embedding-variant quantize:int8,ubinary`. These variants quantize corpus/document embeddings while keeping query embeddings at the model's original floating-point precision. They do not require model-side quantized inference support and are useful even when the model is not Matryoshka-capable.
 - If Matryoshka dimensions are requested or documented, evaluate all three related groups: standalone dimensions, standalone quantization, and the dimension x quantization cross product. For example, use `--embedding-variant truncate:256,128,64`, `--embedding-variant quantize:int8,ubinary`, and `--embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary`. This is "all" because standalone dimensions isolate the dimension trade-off, standalone quantization isolates the quantization trade-off at the original dimension, and the cross product measures combined trade-offs such as `128dim x int8` and `64dim x ubinary`.
-- Do not use evaluation queries for scalar quantization calibration. The benchmark uses corpus-derived ranges for `int8`/`uint8` and clips query outliers; using query values for buckets would be a transductive test-set adaptation.
+- Do not quantize query embeddings for the standard quantization run. Only use `quantize-both:` when the user explicitly asks for symmetric query+document quantization.
+- Do not use evaluation queries for scalar quantization calibration. The benchmark uses corpus-derived ranges for `int8`/`uint8`; using query values for buckets would be a transductive test-set adaptation.
 - Check whether `--trust-remote-code` is required.
 - Check the model's default maximum sequence length, but do not override it unless the user explicitly asks.
 - When a benchmark should be reproducible against a specific dataset state, use `--dataset-revision REV`; otherwise verify that the output JSON records the resolved Hugging Face dataset SHA.
@@ -68,14 +69,24 @@ uv run nano-ir-bench evaluate \
   --embedding-variant truncate:512,256
 ```
 
-For standard post-encode quantization, include `int8` and `ubinary` unless the
-user asks otherwise:
+For standard post-encode quantization, include docs-only `int8` and `ubinary`
+unless the user asks otherwise. In this default mode, query embeddings remain
+float and only corpus/document embeddings are quantized:
 
 ```bash
 uv run nano-ir-bench evaluate \
   --model MODEL_NAME \
   --dataset DATASET_NAME \
   --embedding-variant quantize:int8,ubinary
+```
+
+Only use symmetric query+document quantization when explicitly requested:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model MODEL_NAME \
+  --dataset DATASET_NAME \
+  --embedding-variant quantize-both:int8,ubinary
 ```
 
 When dimensions are part of the run, include standalone dimensions, standalone

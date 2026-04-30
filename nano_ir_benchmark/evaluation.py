@@ -36,6 +36,8 @@ class QuantizedEmbeddingMatrix:
     precision: str
     original_dim: int
     algorithm: str
+    method: str
+    side: str
     ranges_source: str | None = None
     ranges: np.ndarray | None = None
 
@@ -496,10 +498,12 @@ def _apply_embedding_pipeline_step_pair(
         return _truncate_embeddings(query_embeddings, dim), _truncate_embeddings(corpus_embeddings, dim)
     if step_type == "quantize":
         precision = str(step.get("parameters", {}).get("precision"))
+        target = str(step.get("parameters", {}).get("target") or "corpus")
         return _quantize_embedding_pair(
             query_embeddings=query_embeddings,
             corpus_embeddings=corpus_embeddings,
             precision=precision,
+            target=target,
             algorithm=str(step.get("algorithm") or "sentence_transformers_embedding_quantization"),
         )
     raise ValueError(f"Unsupported embedding variant pipeline step: {step_type}")
@@ -527,13 +531,16 @@ def _quantize_embedding_pair(
     query_embeddings: Any,
     corpus_embeddings: Any,
     precision: str,
+    target: str = "corpus",
     algorithm: str,
-) -> tuple[QuantizedEmbeddingMatrix, QuantizedEmbeddingMatrix]:
+) -> tuple[Any, Any]:
     if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
         raise ValueError("Quantized embedding variants are only supported for dense embeddings.")
     if precision not in {"int8", "uint8", "binary", "ubinary"}:
         raise ValueError(f"Unsupported quantization precision: {precision}")
     precision_literal = cast(QuantizationPrecision, precision)
+    target = _normalize_quantization_target(target)
+    method = "corpus_only" if target == "corpus" else "query_and_corpus"
 
     query_matrix = _to_numpy_float32(query_embeddings)
     corpus_matrix = _to_numpy_float32(corpus_embeddings)
@@ -555,33 +562,55 @@ def _quantize_embedding_pair(
         ranges = np.vstack((np.min(corpus_matrix, axis=0), np.max(corpus_matrix, axis=0)))
         ranges_source = "corpus"
 
+    original_dim = int(query_matrix.shape[1])
     if precision_literal in {"binary", "ubinary"}:
-        query_values = _pack_binary_embeddings(query_matrix, precision=precision_literal)
         corpus_values = _pack_binary_embeddings(corpus_matrix, precision=precision_literal)
+        if target == "query_and_corpus":
+            query_values = _pack_binary_embeddings(query_matrix, precision=precision_literal)
+        else:
+            query_values = None
     else:
         if ranges is None:
             raise ValueError(f"Missing scalar quantization ranges for precision: {precision_literal}")
-        query_values = _quantize_scalar_embeddings(query_matrix, precision=precision_literal, ranges=ranges)
         corpus_values = _quantize_scalar_embeddings(corpus_matrix, precision=precision_literal, ranges=ranges)
-    original_dim = int(query_matrix.shape[1])
+        if target == "query_and_corpus":
+            query_values = _quantize_scalar_embeddings(query_matrix, precision=precision_literal, ranges=ranges)
+        else:
+            query_values = None
+    corpus_quantized = QuantizedEmbeddingMatrix(
+        values=corpus_values,
+        precision=precision_literal,
+        original_dim=original_dim,
+        algorithm=algorithm,
+        method=method,
+        side="corpus",
+        ranges_source=ranges_source,
+        ranges=ranges.astype(np.float32, copy=True) if ranges is not None else None,
+    )
+    if query_values is None:
+        return query_embeddings, corpus_quantized
     return (
         QuantizedEmbeddingMatrix(
             values=query_values,
             precision=precision_literal,
             original_dim=original_dim,
             algorithm=algorithm,
+            method=method,
+            side="query",
             ranges_source=ranges_source,
             ranges=ranges.astype(np.float32, copy=True) if ranges is not None else None,
         ),
-        QuantizedEmbeddingMatrix(
-            values=corpus_values,
-            precision=precision_literal,
-            original_dim=original_dim,
-            algorithm=algorithm,
-            ranges_source=ranges_source,
-            ranges=ranges.astype(np.float32, copy=True) if ranges is not None else None,
-        ),
+        corpus_quantized,
     )
+
+
+def _normalize_quantization_target(target: str) -> str:
+    normalized = target.strip().lower().replace("-", "_")
+    if normalized in {"corpus", "document", "documents", "doc", "docs", "corpus_only"}:
+        return "corpus"
+    if normalized in {"both", "query_and_corpus", "query_corpus", "query_and_document", "query_and_docs"}:
+        return "query_and_corpus"
+    raise ValueError(f"Unsupported quantization target: {target}")
 
 
 def _quantize_scalar_embeddings(
@@ -670,8 +699,12 @@ def _embedding_representation_type(query_embeddings: Any, corpus_embeddings: Any
 
 
 def _dimension_format(*, query_embeddings: Any, corpus_embeddings: Any, representation_type: str) -> str:
-    if _is_packed_binary_quantized(query_embeddings) or _is_packed_binary_quantized(corpus_embeddings):
+    query_packed = _is_packed_binary_quantized(query_embeddings)
+    corpus_packed = _is_packed_binary_quantized(corpus_embeddings)
+    if query_packed and corpus_packed:
         return "packed_binary_vector"
+    if query_packed or corpus_packed:
+        return "mixed_single_and_packed_binary_vector"
     if representation_type == "sparse":
         return "sparse_vector"
     if representation_type == "late_interaction":
@@ -689,6 +722,8 @@ def _embedding_side_metadata(embeddings: Any) -> dict[str, Any]:
             "original_dim": embeddings.original_dim,
             "stored_dim": _stored_embedding_dimension(embeddings),
             "score_representation": _quantized_score_representation(embeddings),
+            "method": embeddings.method,
+            "side": embeddings.side,
         }
         if embeddings.ranges_source is not None:
             quantization["ranges_source"] = embeddings.ranges_source

@@ -14,8 +14,12 @@ def _truncate_step(dim: int) -> dict[str, object]:
     return {"type": "truncate", "algorithm": "dimension_slice", "parameters": {"dim": dim}}
 
 
-def _quantize_step(precision: str) -> dict[str, object]:
-    parameters: dict[str, object] = {"precision": precision}
+def _quantize_step(precision: str, *, target: str = "corpus") -> dict[str, object]:
+    parameters: dict[str, object] = {
+        "precision": precision,
+        "target": target,
+        "method": "corpus_only" if target == "corpus" else "query_and_corpus",
+    }
     if precision in {"int8", "uint8"}:
         parameters["calibration"] = "corpus"
     return {
@@ -206,8 +210,25 @@ def test_parse_args_accepts_quantized_embedding_variants() -> None:
     )
 
     assert args.embedding_variants == [
-        _pipeline_variant("quantize_int8", _quantize_step("int8")),
-        _pipeline_variant("quantize_ubinary", _quantize_step("ubinary")),
+        _pipeline_variant("quantize_int8_docs", _quantize_step("int8")),
+        _pipeline_variant("quantize_ubinary_docs", _quantize_step("ubinary")),
+    ]
+
+
+def test_parse_args_accepts_explicit_query_and_corpus_quantized_embedding_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "quantize-both:int8,ubinary",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _pipeline_variant("quantize_int8_both", _quantize_step("int8", target="query_and_corpus")),
+        _pipeline_variant("quantize_ubinary_both", _quantize_step("ubinary", target="query_and_corpus")),
     ]
 
 
@@ -227,12 +248,12 @@ def test_parse_args_accepts_embedding_variant_cross_product() -> None:
     # single variants. This keeps evaluation on one code path instead of adding
     # a separate truncate x quantize branch.
     assert args.embedding_variants == [
-        _pipeline_variant("truncate_dim_256_quantize_int8", _truncate_step(256), _quantize_step("int8")),
-        _pipeline_variant("truncate_dim_256_quantize_ubinary", _truncate_step(256), _quantize_step("ubinary")),
-        _pipeline_variant("truncate_dim_128_quantize_int8", _truncate_step(128), _quantize_step("int8")),
-        _pipeline_variant("truncate_dim_128_quantize_ubinary", _truncate_step(128), _quantize_step("ubinary")),
-        _pipeline_variant("truncate_dim_64_quantize_int8", _truncate_step(64), _quantize_step("int8")),
-        _pipeline_variant("truncate_dim_64_quantize_ubinary", _truncate_step(64), _quantize_step("ubinary")),
+        _pipeline_variant("truncate_dim_256_quantize_int8_docs", _truncate_step(256), _quantize_step("int8")),
+        _pipeline_variant("truncate_dim_256_quantize_ubinary_docs", _truncate_step(256), _quantize_step("ubinary")),
+        _pipeline_variant("truncate_dim_128_quantize_int8_docs", _truncate_step(128), _quantize_step("int8")),
+        _pipeline_variant("truncate_dim_128_quantize_ubinary_docs", _truncate_step(128), _quantize_step("ubinary")),
+        _pipeline_variant("truncate_dim_64_quantize_int8_docs", _truncate_step(64), _quantize_step("int8")),
+        _pipeline_variant("truncate_dim_64_quantize_ubinary_docs", _truncate_step(64), _quantize_step("ubinary")),
     ]
 
 

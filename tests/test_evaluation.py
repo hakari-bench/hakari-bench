@@ -22,8 +22,12 @@ def _truncate_step(dim: int) -> dict[str, object]:
     return {"type": "truncate", "algorithm": "dimension_slice", "parameters": {"dim": dim}}
 
 
-def _quantize_step(precision: str) -> dict[str, object]:
-    parameters: dict[str, object] = {"precision": precision}
+def _quantize_step(precision: str, *, target: str = "corpus") -> dict[str, object]:
+    parameters: dict[str, object] = {
+        "precision": precision,
+        "target": target,
+        "method": "corpus_only" if target == "corpus" else "query_and_corpus",
+    }
     if precision in {"int8", "uint8"}:
         parameters["calibration"] = "corpus"
     return {
@@ -286,8 +290,8 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
         corpus_prompt_name=None,
         truncate_dim=None,
         embedding_variants=[
-            _pipeline_variant("quantize_int8", _quantize_step("int8")),
-            _pipeline_variant("quantize_ubinary", _quantize_step("ubinary")),
+            _pipeline_variant("quantize_int8_docs", _quantize_step("int8")),
+            _pipeline_variant("quantize_ubinary_docs", _quantize_step("ubinary")),
         ],
     )
 
@@ -298,8 +302,8 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
 
     assert [item["name"] for item in result.embedding_evaluations] == [
         "base",
-        "quantize_int8",
-        "quantize_ubinary",
+        "quantize_int8_docs",
+        "quantize_ubinary_docs",
     ]
     int8_eval = result.embedding_evaluations[1]
     assert int8_eval["aggregate_metric_value"] == pytest.approx(1.0)
@@ -308,7 +312,8 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
     assert [item["distance"] for item in int8_eval["distance_evaluations"]] == ["dot", "cosine"]
     assert int8_eval["embedding_dimensions"] == {"dim": 2}
     assert int8_eval["embedding_metadata"]["dimension_format"] == "single_vector"
-    assert int8_eval["embedding_metadata"]["query"]["value_dtype"] == "int8"
+    assert "value_dtype" not in int8_eval["embedding_metadata"]["query"]
+    assert "quantization" not in int8_eval["embedding_metadata"]["query"]
     assert int8_eval["embedding_metadata"]["corpus"]["quantization"] == {
         "precision": "int8",
         "algorithm": "sentence_transformers_embedding_quantization",
@@ -316,29 +321,67 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
         "original_dim": 2,
         "stored_dim": 2,
         "score_representation": "dequantized_float32",
+        "method": "corpus_only",
+        "side": "corpus",
     }
 
     ubinary_eval = result.embedding_evaluations[2]
     assert ubinary_eval["aggregate_metric_value"] == pytest.approx(1.0)
     assert [item["distance"] for item in ubinary_eval["distance_evaluations"]] == ["dot", "cosine"]
-    assert ubinary_eval["embedding_dimensions"] == {"dim": 2, "stored_dim": 1}
-    assert ubinary_eval["embedding_metadata"]["dimension_format"] == "packed_binary_vector"
-    assert ubinary_eval["embedding_metadata"]["query"]["shape"] == [2, 1]
-    assert ubinary_eval["embedding_metadata"]["query"]["value_dtype"] == "uint8"
+    assert ubinary_eval["embedding_dimensions"] == {"dim": 2, "query_stored_dim": 2, "corpus_stored_dim": 1}
+    assert ubinary_eval["embedding_metadata"]["dimension_format"] == "mixed_single_and_packed_binary_vector"
+    assert ubinary_eval["embedding_metadata"]["query"]["shape"] == [2, 2]
+    assert "value_dtype" not in ubinary_eval["embedding_metadata"]["query"]
+    assert "quantization" not in ubinary_eval["embedding_metadata"]["query"]
+    assert ubinary_eval["embedding_metadata"]["corpus"]["shape"] == [3, 1]
+    assert ubinary_eval["embedding_metadata"]["corpus"]["value_dtype"] == "uint8"
     assert ubinary_eval["embedding_metadata"]["corpus"]["quantization"] == {
         "precision": "ubinary",
         "algorithm": "sentence_transformers_embedding_quantization",
         "original_dim": 2,
         "stored_dim": 1,
         "score_representation": "unpacked_sign_float32",
+        "method": "corpus_only",
+        "side": "corpus",
     }
-    assert "ToyData_test_dot_quantize_ubinary_ndcg@10" in ubinary_eval["metrics"]
+    assert "ToyData_test_dot_quantize_ubinary_docs_ndcg@10" in ubinary_eval["metrics"]
 
 
-def test_quantize_int8_uses_corpus_calibration_and_clips_query_outliers() -> None:
-    # Query embeddings are evaluation inputs, so calibration must not use them.
-    # This test also prevents the low-compute scalar path from falling back to
-    # numpy int8 overflow/wrap when query values exceed corpus-derived ranges.
+def test_quantize_int8_defaults_to_corpus_only_and_keeps_query_float() -> None:
+    # Query embeddings are evaluation inputs and are cheap to keep at full
+    # precision. The default quantization path should therefore quantize only
+    # corpus/document vectors and record that method in JSON metadata.
+    query_embeddings = np.array([[10.0, -10.0]], dtype=np.float32)
+    corpus_embeddings = np.array([[1.0, -1.0], [-1.0, 1.0]], dtype=np.float32)
+
+    query_result, corpus_quantized = evaluation_module._quantize_embedding_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        precision="int8",
+        algorithm="sentence_transformers_embedding_quantization",
+    )
+
+    assert query_result is query_embeddings
+    assert corpus_quantized.ranges_source == "corpus"
+    assert corpus_quantized.method == "corpus_only"
+    assert corpus_quantized.side == "corpus"
+    assert corpus_quantized.values.tolist() == [[127, -128], [-128, 127]]
+    np.testing.assert_allclose(
+        evaluation_module._to_numpy_float32(query_result),
+        query_embeddings,
+        atol=1e-6,
+    )
+    np.testing.assert_allclose(
+        evaluation_module._to_numpy_float32(corpus_quantized),
+        corpus_embeddings,
+        atol=1e-6,
+    )
+
+
+def test_quantize_int8_query_and_corpus_mode_clips_query_outliers() -> None:
+    # Explicit query_and_corpus mode keeps the old symmetric quantization
+    # behavior. Query outliers still must be clipped against corpus-derived
+    # ranges rather than wrapped by numpy int8 casts.
     query_embeddings = np.array([[10.0, -10.0]], dtype=np.float32)
     corpus_embeddings = np.array([[1.0, -1.0], [-1.0, 1.0]], dtype=np.float32)
 
@@ -347,20 +390,20 @@ def test_quantize_int8_uses_corpus_calibration_and_clips_query_outliers() -> Non
         corpus_embeddings=corpus_embeddings,
         precision="int8",
         algorithm="sentence_transformers_embedding_quantization",
+        target="query_and_corpus",
     )
 
     assert query_quantized.ranges_source == "corpus"
     assert corpus_quantized.ranges_source == "corpus"
+    assert query_quantized.method == "query_and_corpus"
+    assert query_quantized.side == "query"
+    assert corpus_quantized.method == "query_and_corpus"
+    assert corpus_quantized.side == "corpus"
     assert query_quantized.values.tolist() == [[127, -128]]
     assert corpus_quantized.values.tolist() == [[127, -128], [-128, 127]]
     np.testing.assert_allclose(
         evaluation_module._to_numpy_float32(query_quantized),
         np.array([[1.0, -1.0]], dtype=np.float32),
-        atol=1e-6,
-    )
-    np.testing.assert_allclose(
-        evaluation_module._to_numpy_float32(corpus_quantized),
-        corpus_embeddings,
         atol=1e-6,
     )
 
@@ -392,8 +435,8 @@ def test_evaluate_dense_task_uses_single_pipeline_path_for_all_embedding_variant
         truncate_dim=None,
         embedding_variants=[
             _pipeline_variant("truncate_dim_1", _truncate_step(1)),
-            _pipeline_variant("quantize_int8", _quantize_step("int8")),
-            _pipeline_variant("truncate_dim_1_quantize_ubinary", _truncate_step(1), _quantize_step("ubinary")),
+            _pipeline_variant("quantize_int8_docs", _quantize_step("int8")),
+            _pipeline_variant("truncate_dim_1_quantize_ubinary_docs", _truncate_step(1), _quantize_step("ubinary")),
         ],
     )
 
