@@ -23,7 +23,6 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoRTEB").dataset_id == "hotchpotch/NanoRTEB"
     assert registry.get_dataset("NanoMTEB").dataset_id == "hotchpotch/NanoMTEB"
     assert registry.get_dataset("NanoMMTEB").dataset_id == "hotchpotch/NanoMMTEB"
-    assert registry.get_dataset("NanoCodeSearchNet").dataset_id == "hotchpotch/NanoCodeSearchNet"
     assert registry.get_dataset("NanoLongEmbed").dataset_id == "hotchpotch/NanoLongEmbed"
     assert registry.get_dataset("NanoCoIR").dataset_id == "hotchpotch/NanoCoIR"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14

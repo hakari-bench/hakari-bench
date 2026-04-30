@@ -17,7 +17,6 @@ TARGET_BENCHMARKS = [
     "NanoRTEB",
     "NanoMTEB",
     "NanoMMTEB",
-    "NanoCodeSearchNet",
     "NanoMIRACL",
     "NanoMLDR",
     "NanoLongEmbed",
