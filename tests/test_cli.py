@@ -81,6 +81,15 @@ def test_parse_args_accepts_build_bm25_options() -> None:
     assert args.bm25_stemmer_algorithm == "french"
 
 
+def test_parse_args_accepts_web_viewer_options() -> None:
+    args = parse_args(["web", "--host", "0.0.0.0", "--port", "28090", "--data-dir", "output/viewer"])
+
+    assert args.command == "web"
+    assert args.host == "0.0.0.0"
+    assert args.port == 28090
+    assert args.data_dir == "output/viewer"
+
+
 def test_parse_args_accepts_prompt_and_reranker_options() -> None:
     args = parse_args(
         [

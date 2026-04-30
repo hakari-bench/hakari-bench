@@ -74,3 +74,29 @@ uv run nano-ir-bench build-bm25 \
 
 The current mapping is `ja` = `fugashi` + `unidic-lite`, `zh` = `jieba`,
 `th` = `pythainlp`, and `ko` = `kiwipiepy`.
+
+## Viewer
+
+Install the web viewer dependencies with the `viewer` group:
+
+```bash
+uv sync --group viewer
+```
+
+For all development and viewer dependencies, use the `all` group:
+
+```bash
+uv sync --group all
+```
+
+Start the HTMX/Tailwind leaderboard viewer:
+
+```bash
+uv run nano-ir-bench web
+```
+
+By default, it binds to `127.0.0.1:8000` and keeps
+`output/viewer/nano_ir_bench.duckdb` synchronized from the benchmark output
+DuckDB when a page is loaded. Use `--host 0.0.0.0 --port 28090` for remote
+access, or pass `--source-output-dir` / `--source-duckdb-path` to point at a
+different source.

@@ -88,6 +88,19 @@ def build_parser() -> argparse.ArgumentParser:
     build_bm25.add_argument("--override", action="store_true")
     build_bm25.add_argument("--show-progress", action="store_true")
     _add_bm25_args(build_bm25)
+
+    web = subparsers.add_parser("web", help="Run the Nano IR benchmark result viewer.")
+    web.add_argument("--host", default="127.0.0.1", help="Bind host. Use 0.0.0.0 to allow remote access.")
+    web.add_argument("--port", type=int, default=8000)
+    web.add_argument("--data-dir", default="output/viewer", help="Local viewer data/cache directory.")
+    web.add_argument("--duckdb-path", default=None, help="Local DuckDB path. Defaults to DATA_DIR/nano_ir_bench.duckdb.")
+    web.add_argument(
+        "--source-output-dir",
+        default="../nano_ir_bench/output",
+        help="Source benchmark output directory containing results/nano_ir_bench.duckdb.",
+    )
+    web.add_argument("--source-duckdb-path", default=None, help="Explicit source DuckDB path to copy from.")
+    web.add_argument("--viewer-config-dir", default="config/viewer", help="Viewer YAML config directory.")
     return parser
 
 
@@ -282,6 +295,28 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
     return payload
 
 
+def run_web(args: argparse.Namespace) -> None:
+    from nano_ir_benchmark.viewer.app import create_app
+    from nano_ir_benchmark.viewer.store import LocalDuckDbStore, resolve_duckdb_location
+
+    import uvicorn
+
+    location = resolve_duckdb_location(
+        data_dir=Path(args.data_dir),
+        duckdb_path=Path(args.duckdb_path) if args.duckdb_path else None,
+        source_output_dir=Path(args.source_output_dir) if args.source_output_dir else None,
+        source_duckdb_path=Path(args.source_duckdb_path) if args.source_duckdb_path else None,
+    )
+    store = LocalDuckDbStore(location)
+    store.ensure_current()
+    app = create_app(store=store, config_dir=Path(args.viewer_config_dir))
+    print(f"Serving Nano IR benchmark viewer on http://{args.host}:{args.port}")
+    print(f"Local DuckDB: {location.local_path}")
+    if location.source_path is not None:
+        print(f"Source DuckDB: {location.source_path}")
+    uvicorn.run(app, host=args.host, port=args.port)
+
+
 def _load_dataset_for_args(args: argparse.Namespace, task: EvalTask) -> LoadedIrDataset:
     model_type = getattr(args, "model_type", None)
     candidate_subset_name = (
@@ -309,6 +344,9 @@ def main(argv: list[str] | None = None) -> None:
         return
     if args.command == "build-bm25":
         run_build_bm25(args)
+        return
+    if args.command == "web":
+        run_web(args)
         return
     raise ValueError(f"Unsupported command: {args.command}")
 

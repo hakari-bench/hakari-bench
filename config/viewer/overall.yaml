@@ -1,0 +1,12 @@
+name: Overall
+label: Overall
+benchmarks:
+  - MNanoBEIR
+  - NanoRTEB
+  - NanoMTEB
+  - NanoMMTEB
+  - NanoCodeSearchNet
+  - NanoMIRACL
+  - NanoMLDR
+  - NanoLongEmbed
+  - NanoCoIR
