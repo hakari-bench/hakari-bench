@@ -6,6 +6,25 @@ from nano_ir_benchmark.cli import parse_args
 from nano_ir_benchmark.datasets import EvalTask, NanoDatasetSpec
 
 
+def _pipeline_variant(name: str, *steps: dict[str, object]) -> dict[str, object]:
+    return {"name": name, "transform": {"type": "pipeline", "steps": list(steps)}}
+
+
+def _truncate_step(dim: int) -> dict[str, object]:
+    return {"type": "truncate", "algorithm": "dimension_slice", "parameters": {"dim": dim}}
+
+
+def _quantize_step(precision: str) -> dict[str, object]:
+    parameters: dict[str, object] = {"precision": precision}
+    if precision in {"int8", "uint8"}:
+        parameters["calibration"] = "corpus"
+    return {
+        "type": "quantize",
+        "algorithm": "sentence_transformers_embedding_quantization",
+        "parameters": parameters,
+    }
+
+
 def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     args = parse_args(["evaluate", "--model", "hotchpotch/model"])
 
@@ -147,22 +166,8 @@ def test_parse_args_accepts_embedding_variants() -> None:
     )
 
     assert args.embedding_variants == [
-        {
-            "name": "truncate_dim_256",
-            "transform": {
-                "type": "truncate",
-                "algorithm": "dimension_slice",
-                "parameters": {"dim": 256},
-            },
-        },
-        {
-            "name": "truncate_dim_128",
-            "transform": {
-                "type": "truncate",
-                "algorithm": "dimension_slice",
-                "parameters": {"dim": 128},
-            },
-        },
+        _pipeline_variant("truncate_dim_256", _truncate_step(256)),
+        _pipeline_variant("truncate_dim_128", _truncate_step(128)),
     ]
 
 
@@ -182,7 +187,53 @@ def test_parse_args_accepts_compact_truncate_embedding_variants() -> None:
         "truncate_dim_256",
         "truncate_dim_128",
     ]
-    assert [variant["transform"]["parameters"]["dim"] for variant in args.embedding_variants] == [512, 256, 128]
+    assert [variant["transform"]["steps"][0]["parameters"]["dim"] for variant in args.embedding_variants] == [
+        512,
+        256,
+        128,
+    ]
+
+
+def test_parse_args_accepts_quantized_embedding_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "quantize:int8,ubinary",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _pipeline_variant("quantize_int8", _quantize_step("int8")),
+        _pipeline_variant("quantize_ubinary", _quantize_step("ubinary")),
+    ]
+
+
+def test_parse_args_accepts_embedding_variant_cross_product() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant-cross",
+            "truncate:256,128,64",
+            "quantize:int8,ubinary",
+        ]
+    )
+
+    # Cross product variants are normalized into the same pipeline shape as
+    # single variants. This keeps evaluation on one code path instead of adding
+    # a separate truncate x quantize branch.
+    assert args.embedding_variants == [
+        _pipeline_variant("truncate_dim_256_quantize_int8", _truncate_step(256), _quantize_step("int8")),
+        _pipeline_variant("truncate_dim_256_quantize_ubinary", _truncate_step(256), _quantize_step("ubinary")),
+        _pipeline_variant("truncate_dim_128_quantize_int8", _truncate_step(128), _quantize_step("int8")),
+        _pipeline_variant("truncate_dim_128_quantize_ubinary", _truncate_step(128), _quantize_step("ubinary")),
+        _pipeline_variant("truncate_dim_64_quantize_int8", _truncate_step(64), _quantize_step("int8")),
+        _pipeline_variant("truncate_dim_64_quantize_ubinary", _truncate_step(64), _quantize_step("ubinary")),
+    ]
 
 
 def test_parse_args_does_not_mix_default_dataset_into_collection() -> None:

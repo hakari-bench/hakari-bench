@@ -8,9 +8,29 @@ import numpy as np
 import pytest
 from scipy import sparse
 
+import nano_ir_benchmark.evaluation as evaluation_module
 from nano_ir_benchmark.datasets import EvalTask, NanoDatasetSpec
 from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
 from nano_ir_benchmark.results import build_all_payload, result_path_for_task, run_or_load_task, safe_path_part
+
+
+def _pipeline_variant(name: str, *steps: dict[str, object]) -> dict[str, object]:
+    return {"name": name, "transform": {"type": "pipeline", "steps": list(steps)}}
+
+
+def _truncate_step(dim: int) -> dict[str, object]:
+    return {"type": "truncate", "algorithm": "dimension_slice", "parameters": {"dim": dim}}
+
+
+def _quantize_step(precision: str) -> dict[str, object]:
+    parameters: dict[str, object] = {"precision": precision}
+    if precision in {"int8", "uint8"}:
+        parameters["calibration"] = "corpus"
+    return {
+        "type": "quantize",
+        "algorithm": "sentence_transformers_embedding_quantization",
+        "parameters": parameters,
+    }
 
 
 def _toy_task() -> EvalTask:
@@ -177,16 +197,7 @@ def test_evaluate_dense_task_scores_embedding_variants_without_extra_encoding() 
         query_prompt_name=None,
         corpus_prompt_name=None,
         truncate_dim=None,
-        embedding_variants=[
-            {
-                "name": "truncate_dim_1",
-                "transform": {
-                    "type": "truncate",
-                    "algorithm": "dimension_slice",
-                    "parameters": {"dim": 1},
-                },
-            }
-        ],
+        embedding_variants=[_pipeline_variant("truncate_dim_1", _truncate_step(1))],
     )
 
     assert len(model.query_calls) == 1
@@ -203,11 +214,128 @@ def test_evaluate_dense_task_scores_embedding_variants_without_extra_encoding() 
         "corpus": {"shape": [3, 2]},
     }
     assert result.embedding_evaluations[1]["name"] == "truncate_dim_1"
-    assert result.embedding_evaluations[1]["transform"]["parameters"] == {"dim": 1}
+    assert result.embedding_evaluations[1]["transform"]["steps"][0]["parameters"] == {"dim": 1}
     assert result.embedding_evaluations[1]["embedding_dimensions"] == {"dim": 1}
     assert result.embedding_evaluations[1]["embedding_metadata"]["dimensions"] == {"dim": 1}
     assert result.embedding_evaluations[1]["aggregate_metric_value"] < 1.0
     assert "ToyData_test_dot_truncate_dim_1_ndcg@10" in result.embedding_evaluations[1]["metrics"]
+
+
+def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> None:
+    model = FakeDenseModel()
+
+    result = evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        embedding_variants=[
+            _pipeline_variant("quantize_int8", _quantize_step("int8")),
+            _pipeline_variant("quantize_ubinary", _quantize_step("ubinary")),
+        ],
+    )
+
+    assert len(model.query_calls) == 1
+    assert len(model.document_calls) == 1
+    assert "precision" not in model.query_calls[0]
+    assert "precision" not in model.document_calls[0]
+
+    assert [item["name"] for item in result.embedding_evaluations] == [
+        "base",
+        "quantize_int8",
+        "quantize_ubinary",
+    ]
+    int8_eval = result.embedding_evaluations[1]
+    assert int8_eval["aggregate_metric_value"] == pytest.approx(1.0)
+    assert int8_eval["embedding_dimensions"] == {"dim": 2}
+    assert int8_eval["embedding_metadata"]["dimension_format"] == "single_vector"
+    assert int8_eval["embedding_metadata"]["query"]["value_dtype"] == "int8"
+    assert int8_eval["embedding_metadata"]["corpus"]["quantization"] == {
+        "precision": "int8",
+        "algorithm": "sentence_transformers_embedding_quantization",
+        "ranges_source": "corpus",
+        "original_dim": 2,
+        "stored_dim": 2,
+    }
+
+    ubinary_eval = result.embedding_evaluations[2]
+    assert ubinary_eval["aggregate_metric_value"] == pytest.approx(1.0)
+    assert ubinary_eval["embedding_dimensions"] == {"dim": 2, "stored_dim": 1}
+    assert ubinary_eval["embedding_metadata"]["dimension_format"] == "packed_binary_vector"
+    assert ubinary_eval["embedding_metadata"]["query"]["shape"] == [2, 1]
+    assert ubinary_eval["embedding_metadata"]["query"]["value_dtype"] == "uint8"
+    assert ubinary_eval["embedding_metadata"]["corpus"]["quantization"] == {
+        "precision": "ubinary",
+        "algorithm": "sentence_transformers_embedding_quantization",
+        "original_dim": 2,
+        "stored_dim": 1,
+    }
+    assert "ToyData_test_dot_quantize_ubinary_ndcg@10" in ubinary_eval["metrics"]
+
+
+def test_quantize_int8_uses_corpus_calibration_and_clips_query_outliers() -> None:
+    # Query embeddings are evaluation inputs, so calibration must not use them.
+    # This test also prevents the low-compute scalar path from falling back to
+    # numpy int8 overflow/wrap when query values exceed corpus-derived ranges.
+    query_embeddings = np.array([[10.0, -10.0]], dtype=np.float32)
+    corpus_embeddings = np.array([[1.0, -1.0], [-1.0, 1.0]], dtype=np.float32)
+
+    query_quantized, corpus_quantized = evaluation_module._quantize_embedding_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        precision="int8",
+        algorithm="sentence_transformers_embedding_quantization",
+    )
+
+    assert query_quantized.ranges_source == "corpus"
+    assert corpus_quantized.ranges_source == "corpus"
+    assert query_quantized.values.tolist() == [[127, -128]]
+    assert corpus_quantized.values.tolist() == [[127, -128], [-128, 127]]
+
+
+def test_evaluate_dense_task_uses_single_pipeline_path_for_all_embedding_variants(monkeypatch) -> None:
+    model = FakeDenseModel()
+    pipeline_calls: list[list[str]] = []
+    original_apply_pipeline = evaluation_module._apply_embedding_pipeline_pair
+
+    def apply_pipeline_spy(*, query_embeddings, corpus_embeddings, steps):
+        pipeline_calls.append([str(step["type"]) for step in steps])
+        return original_apply_pipeline(
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            steps=steps,
+        )
+
+    monkeypatch.setattr(evaluation_module, "_apply_embedding_pipeline_pair", apply_pipeline_spy)
+
+    evaluation_module.evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        embedding_variants=[
+            _pipeline_variant("truncate_dim_1", _truncate_step(1)),
+            _pipeline_variant("quantize_int8", _quantize_step("int8")),
+            _pipeline_variant("truncate_dim_1_quantize_ubinary", _truncate_step(1), _quantize_step("ubinary")),
+        ],
+    )
+
+    # This guards the intended low-compute shape: every derived evaluation,
+    # including cross variants, must go through the same post-encode pipeline
+    # path instead of adding transform-specific branches or extra model encodes.
+    assert len(model.query_calls) == 1
+    assert len(model.document_calls) == 1
+    assert pipeline_calls == [["truncate"], ["quantize"], ["truncate", "quantize"]]
 
 
 def test_evaluate_dense_task_records_sparse_embedding_metadata() -> None:
@@ -399,16 +527,7 @@ def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) 
         query_prompt_name=None,
         corpus_prompt_name=None,
         truncate_dim=None,
-        embedding_variants=[
-            {
-                "name": "truncate_dim_1",
-                "transform": {
-                    "type": "truncate",
-                    "algorithm": "dimension_slice",
-                    "parameters": {"dim": 1},
-                },
-            }
-        ],
+        embedding_variants=[_pipeline_variant("truncate_dim_1", _truncate_step(1))],
         candidate_subset_name="bm25",
         rerank_top_n=100,
         aggregate_metric="ndcg@10",

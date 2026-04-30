@@ -22,6 +22,9 @@ For every specified model:
 - If no usable Sentence Transformers prompt config exists, inspect the Hugging Face model card first, then relevant articles or papers for retrieval prefixes such as query/document/passage instructions.
 - Record and use explicit retrieval prefixes when the model card or paper requires them, for example via `--query-prompt`, `--corpus-prompt`, `--query-prompt-name`, or `--corpus-prompt-name`.
 - Investigate Matryoshka support. If the model card or paper documents supported dimensions, prefer simultaneous derived evaluations with `--embedding-variant truncate:DIM` over separate reruns.
+- Unless the user explicitly says not to, include post-encode quantization variants with `--embedding-variant quantize:int8,ubinary`. These variants do not require model-side quantized inference support and are useful even when the model is not Matryoshka-capable.
+- If Matryoshka dimensions are requested or documented, evaluate all three related groups: standalone dimensions, standalone quantization, and the dimension x quantization cross product. For example, use `--embedding-variant truncate:256,128,64`, `--embedding-variant quantize:int8,ubinary`, and `--embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary`. This is "all" because standalone dimensions isolate the dimension trade-off, standalone quantization isolates the quantization trade-off at the original dimension, and the cross product measures combined trade-offs such as `128dim x int8` and `64dim x ubinary`.
+- Do not use evaluation queries for scalar quantization calibration. The benchmark uses corpus-derived ranges for `int8`/`uint8` and clips query outliers; using query values for buckets would be a transductive test-set adaptation.
 - Check whether `--trust-remote-code` is required.
 - Check the model's default maximum sequence length, but do not override it unless the user explicitly asks.
 - When a benchmark should be reproducible against a specific dataset state, use `--dataset-revision REV`; otherwise verify that the output JSON records the resolved Hugging Face dataset SHA.
@@ -64,6 +67,32 @@ uv run nano-ir-bench evaluate \
   --dataset DATASET_NAME \
   --embedding-variant truncate:512,256
 ```
+
+For standard post-encode quantization, include `int8` and `ubinary` unless the
+user asks otherwise:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model MODEL_NAME \
+  --dataset DATASET_NAME \
+  --embedding-variant quantize:int8,ubinary
+```
+
+When dimensions are part of the run, include standalone dimensions, standalone
+quantization, and their cross product:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model MODEL_NAME \
+  --dataset DATASET_NAME \
+  --embedding-variant truncate:256,128,64 \
+  --embedding-variant quantize:int8,ubinary \
+  --embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary
+```
+
+The benchmark implementation normalizes all of these derived evaluations into a
+single post-encode pipeline path, so the model is still encoded once and cross
+variants add only the transform/scoring work needed for each derived embedding.
 
 For BM25:
 

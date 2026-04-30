@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Literal, cast
 
 import numpy as np
 import torch
@@ -10,6 +10,8 @@ from scipy import sparse
 
 from nano_ir_benchmark.datasets import EvalTask
 from nano_ir_benchmark.metrics import compute_ir_metrics
+
+QuantizationPrecision = Literal["int8", "uint8", "binary", "ubinary"]
 
 
 @dataclass(frozen=True)
@@ -26,6 +28,23 @@ class TaskEvaluation:
     metrics: dict[str, float]
     timing: dict[str, float]
     embedding_evaluations: list[dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class QuantizedEmbeddingMatrix:
+    values: np.ndarray
+    precision: str
+    original_dim: int
+    algorithm: str
+    ranges_source: str | None = None
+
+    @property
+    def shape(self) -> tuple[int, ...]:
+        return self.values.shape
+
+    @property
+    def dtype(self) -> np.dtype:
+        return self.values.dtype
 
 
 def load_ir_dataset(
@@ -173,8 +192,11 @@ def evaluate_dense_task(
     variant_score_seconds = 0.0
     variant_metric_seconds = 0.0
     for variant in embedding_variants or []:
-        variant_query_embeddings = _apply_embedding_variant(query_embeddings, variant)
-        variant_corpus_embeddings = _apply_embedding_variant(corpus_embeddings, variant)
+        variant_query_embeddings, variant_corpus_embeddings = _apply_embedding_variant_pair(
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            variant=variant,
+        )
         variant_score_name = f"{score_name}_{variant['name']}"
 
         variant_score_start = time.perf_counter()
@@ -347,13 +369,64 @@ def _aggregate_metric_value_for(metrics: dict[str, float], suffix: str) -> float
     return float(np.mean(values))
 
 
-def _apply_embedding_variant(embeddings: Any, variant: dict[str, Any]) -> Any:
+def _apply_embedding_variant_pair(
+    *,
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    variant: dict[str, Any],
+) -> tuple[Any, Any]:
     transform = variant.get("transform", {})
-    transform_type = transform.get("type")
-    if transform_type == "truncate":
-        dim = int(transform.get("parameters", {}).get("dim"))
-        return _truncate_embeddings(embeddings, dim)
-    raise ValueError(f"Unsupported embedding variant transform: {transform_type}")
+    if transform.get("type") != "pipeline":
+        raise ValueError(f"Unsupported embedding variant transform: {transform.get('type')}")
+    steps = transform.get("steps")
+    if not isinstance(steps, list) or not steps:
+        raise ValueError("Embedding variant pipeline must contain at least one step.")
+    return _apply_embedding_pipeline_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        steps=steps,
+    )
+
+
+def _apply_embedding_pipeline_pair(
+    *,
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    steps: list[dict[str, Any]],
+) -> tuple[Any, Any]:
+    # Keep every derived evaluation on this single post-encode pipeline path.
+    # Cross variants such as truncate+quantize should reuse the one model
+    # inference result and add only the minimal transform work needed per step.
+    current_query_embeddings = query_embeddings
+    current_corpus_embeddings = corpus_embeddings
+    for step in steps:
+        current_query_embeddings, current_corpus_embeddings = _apply_embedding_pipeline_step_pair(
+            query_embeddings=current_query_embeddings,
+            corpus_embeddings=current_corpus_embeddings,
+            step=step,
+        )
+    return current_query_embeddings, current_corpus_embeddings
+
+
+def _apply_embedding_pipeline_step_pair(
+    *,
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    step: dict[str, Any],
+) -> tuple[Any, Any]:
+    step_type = step.get("type")
+    if step_type == "truncate":
+        dim = int(step.get("parameters", {}).get("dim"))
+        return _truncate_embeddings(query_embeddings, dim), _truncate_embeddings(corpus_embeddings, dim)
+    if step_type == "quantize":
+        precision = str(step.get("parameters", {}).get("precision"))
+        return _quantize_embedding_pair(
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            precision=precision,
+            algorithm=str(step.get("algorithm") or "sentence_transformers_embedding_quantization"),
+        )
+    raise ValueError(f"Unsupported embedding variant pipeline step: {step_type}")
 
 
 def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
@@ -373,12 +446,109 @@ def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
     return matrix[:, :dim]
 
 
+def _quantize_embedding_pair(
+    *,
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    precision: str,
+    algorithm: str,
+) -> tuple[QuantizedEmbeddingMatrix, QuantizedEmbeddingMatrix]:
+    if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
+        raise ValueError("Quantized embedding variants are only supported for dense embeddings.")
+    if precision not in {"int8", "uint8", "binary", "ubinary"}:
+        raise ValueError(f"Unsupported quantization precision: {precision}")
+    precision_literal = cast(QuantizationPrecision, precision)
+
+    query_matrix = _to_numpy_float32(query_embeddings)
+    corpus_matrix = _to_numpy_float32(corpus_embeddings)
+    if query_matrix.ndim != 2 or corpus_matrix.ndim != 2:
+        raise ValueError("Quantized embedding variants require 2D dense embeddings.")
+    if query_matrix.shape[1] != corpus_matrix.shape[1]:
+        raise ValueError(
+            f"Cannot quantize query dimension {query_matrix.shape[1]} with corpus dimension {corpus_matrix.shape[1]}."
+        )
+
+    ranges = None
+    ranges_source = None
+    if precision_literal in {"int8", "uint8"}:
+        if corpus_matrix.shape[0] == 0:
+            raise ValueError("Cannot calibrate quantized embeddings from an empty corpus.")
+        # Strict evaluation should not adapt quantization buckets to the eval
+        # queries. Use corpus-only ranges, then clip query outliers to prevent
+        # numpy int8/uint8 casts from wrapping values outside those ranges.
+        ranges = np.vstack((np.min(corpus_matrix, axis=0), np.max(corpus_matrix, axis=0)))
+        ranges_source = "corpus"
+
+    if precision_literal in {"binary", "ubinary"}:
+        query_values = _pack_binary_embeddings(query_matrix, precision=precision_literal)
+        corpus_values = _pack_binary_embeddings(corpus_matrix, precision=precision_literal)
+    else:
+        if ranges is None:
+            raise ValueError(f"Missing scalar quantization ranges for precision: {precision_literal}")
+        query_values = _quantize_scalar_embeddings(query_matrix, precision=precision_literal, ranges=ranges)
+        corpus_values = _quantize_scalar_embeddings(corpus_matrix, precision=precision_literal, ranges=ranges)
+    original_dim = int(query_matrix.shape[1])
+    return (
+        QuantizedEmbeddingMatrix(
+            values=query_values,
+            precision=precision_literal,
+            original_dim=original_dim,
+            algorithm=algorithm,
+            ranges_source=ranges_source,
+        ),
+        QuantizedEmbeddingMatrix(
+            values=corpus_values,
+            precision=precision_literal,
+            original_dim=original_dim,
+            algorithm=algorithm,
+            ranges_source=ranges_source,
+        ),
+    )
+
+
+def _quantize_scalar_embeddings(
+    embeddings: np.ndarray,
+    *,
+    precision: QuantizationPrecision,
+    ranges: np.ndarray,
+) -> np.ndarray:
+    starts = ranges[0, :]
+    steps = (ranges[1, :] - ranges[0, :]) / 255
+    steps = np.where(steps == 0, 1, steps)
+    buckets = (embeddings - starts) / steps
+    if precision == "uint8":
+        return np.rint(np.clip(buckets, 0, 255)).astype(np.uint8)
+    if precision == "int8":
+        return np.rint(np.clip(buckets - 128, -128, 127)).astype(np.int8)
+    raise ValueError(f"Unsupported scalar quantization precision: {precision}")
+
+
+def _pack_binary_embeddings(embeddings: np.ndarray, *, precision: QuantizationPrecision) -> np.ndarray:
+    packed = np.packbits(embeddings > 0, axis=1)
+    if precision == "ubinary":
+        return packed
+    if precision == "binary":
+        return (packed.astype(np.int16) - 128).astype(np.int8)
+    raise ValueError(f"Unsupported binary quantization precision: {precision}")
+
+
 def _embedding_dimensions(query_embeddings: Any, corpus_embeddings: Any) -> dict[str, int | None]:
     query_dim = _embedding_dimension(query_embeddings)
     corpus_dim = _embedding_dimension(corpus_embeddings)
     if query_dim == corpus_dim:
-        return {"dim": query_dim}
-    return {"query_dim": query_dim, "corpus_dim": corpus_dim}
+        dimensions = {"dim": query_dim}
+    else:
+        dimensions = {"query_dim": query_dim, "corpus_dim": corpus_dim}
+
+    if _is_packed_binary_quantized(query_embeddings) or _is_packed_binary_quantized(corpus_embeddings):
+        query_stored_dim = _stored_embedding_dimension(query_embeddings)
+        corpus_stored_dim = _stored_embedding_dimension(corpus_embeddings)
+        if query_stored_dim == corpus_stored_dim:
+            dimensions["stored_dim"] = query_stored_dim
+        else:
+            dimensions["query_stored_dim"] = query_stored_dim
+            dimensions["corpus_stored_dim"] = corpus_stored_dim
+    return dimensions
 
 
 def _embedding_metadata(query_embeddings: Any, corpus_embeddings: Any) -> dict[str, Any] | None:
@@ -386,7 +556,11 @@ def _embedding_metadata(query_embeddings: Any, corpus_embeddings: Any) -> dict[s
     representation_type = _embedding_representation_type(query_embeddings, corpus_embeddings)
     return {
         "representation_type": representation_type,
-        "dimension_format": _dimension_format(representation_type),
+        "dimension_format": _dimension_format(
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            representation_type=representation_type,
+        ),
         "dimensions": dimensions,
         "query": _embedding_side_metadata(query_embeddings),
         "corpus": _embedding_side_metadata(corpus_embeddings),
@@ -403,7 +577,9 @@ def _embedding_representation_type(query_embeddings: Any, corpus_embeddings: Any
     return "dense"
 
 
-def _dimension_format(representation_type: str) -> str:
+def _dimension_format(*, query_embeddings: Any, corpus_embeddings: Any, representation_type: str) -> str:
+    if _is_packed_binary_quantized(query_embeddings) or _is_packed_binary_quantized(corpus_embeddings):
+        return "packed_binary_vector"
     if representation_type == "sparse":
         return "sparse_vector"
     if representation_type == "late_interaction":
@@ -413,6 +589,17 @@ def _dimension_format(representation_type: str) -> str:
 
 def _embedding_side_metadata(embeddings: Any) -> dict[str, Any]:
     metadata: dict[str, Any] = {"shape": _shape_list(embeddings)}
+    if _is_quantized_embedding_matrix(embeddings):
+        metadata["value_dtype"] = str(embeddings.values.dtype)
+        quantization = {
+            "precision": embeddings.precision,
+            "algorithm": embeddings.algorithm,
+            "original_dim": embeddings.original_dim,
+            "stored_dim": _stored_embedding_dimension(embeddings),
+        }
+        if embeddings.ranges_source is not None:
+            quantization["ranges_source"] = embeddings.ranges_source
+        metadata["quantization"] = quantization
     if _is_sparse_embedding(embeddings):
         metadata.update(_sparse_embedding_stats(embeddings))
     return metadata
@@ -446,11 +633,28 @@ def _is_sparse_embedding(embeddings: Any) -> bool:
     return sparse.issparse(embeddings) or (isinstance(embeddings, torch.Tensor) and embeddings.is_sparse)
 
 
+def _is_quantized_embedding_matrix(embeddings: Any) -> bool:
+    return isinstance(embeddings, QuantizedEmbeddingMatrix)
+
+
+def _is_packed_binary_quantized(embeddings: Any) -> bool:
+    return _is_quantized_embedding_matrix(embeddings) and embeddings.precision in {"binary", "ubinary"}
+
+
 def _is_late_interaction_shape(shape: list[int]) -> bool:
     return len(shape) >= 3
 
 
 def _embedding_dimension(embeddings: Any) -> int | None:
+    if _is_quantized_embedding_matrix(embeddings):
+        return int(embeddings.original_dim)
+    shape = _shape_list(embeddings)
+    if len(shape) < 2:
+        return None
+    return int(shape[1])
+
+
+def _stored_embedding_dimension(embeddings: Any) -> int | None:
     shape = _shape_list(embeddings)
     if len(shape) < 2:
         return None
@@ -458,6 +662,8 @@ def _embedding_dimension(embeddings: Any) -> int | None:
 
 
 def _shape_list(embeddings: Any) -> list[int]:
+    if _is_quantized_embedding_matrix(embeddings):
+        return [int(dimension) for dimension in embeddings.values.shape]
     shape = getattr(embeddings, "shape", None)
     if shape is None:
         try:
@@ -468,6 +674,8 @@ def _shape_list(embeddings: Any) -> list[int]:
 
 
 def _to_numpy_float32(embeddings: Any) -> np.ndarray:
+    if _is_quantized_embedding_matrix(embeddings):
+        return embeddings.values.astype(np.float32, copy=False)
     if isinstance(embeddings, torch.Tensor):
         if embeddings.dtype is torch.bfloat16:
             embeddings = embeddings.float()
@@ -492,6 +700,14 @@ def _rank_by_similarity(
     corpus_embeddings: Any,
     score_name: str,
 ) -> dict[str, list[str]]:
+    if _is_packed_binary_quantized(query_embeddings) or _is_packed_binary_quantized(corpus_embeddings):
+        return _rank_packed_binary(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+        )
+
     if sparse.issparse(query_embeddings) or sparse.issparse(corpus_embeddings):
         return _rank_sparse(
             query_ids=query_ids,
@@ -515,6 +731,37 @@ def _rank_by_similarity(
         scores = query_matrix @ corpus_matrix.T
 
     return _scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+
+
+def _rank_packed_binary(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+) -> dict[str, list[str]]:
+    if not _is_packed_binary_quantized(query_embeddings) or not _is_packed_binary_quantized(corpus_embeddings):
+        raise ValueError("Packed binary ranking requires quantized binary query and corpus embeddings.")
+    if query_embeddings.original_dim != corpus_embeddings.original_dim:
+        raise ValueError(
+            f"Cannot rank binary embeddings with query dimension {query_embeddings.original_dim} "
+            f"and corpus dimension {corpus_embeddings.original_dim}."
+        )
+
+    query_bits = _unpack_binary_quantized_embeddings(query_embeddings)
+    corpus_bits = _unpack_binary_quantized_embeddings(corpus_embeddings)
+    distances = np.bitwise_xor(query_bits[:, None, :], corpus_bits[None, :, :]).sum(axis=2)
+    scores = -distances.astype(np.float32)
+    return _scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+
+
+def _unpack_binary_quantized_embeddings(embeddings: QuantizedEmbeddingMatrix) -> np.ndarray:
+    packed = embeddings.values
+    if embeddings.precision == "binary":
+        packed = (packed.astype(np.int16) + 128).astype(np.uint8)
+    else:
+        packed = packed.astype(np.uint8, copy=False)
+    return np.unpackbits(packed, axis=1)[:, : embeddings.original_dim]
 
 
 def _rank_sparse(

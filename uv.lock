@@ -1106,7 +1106,7 @@ requires-dist = [
     { name = "pythainlp", marker = "extra == 'wordseg'", specifier = ">=5.2.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "scipy", specifier = ">=1.17.1" },
-    { name = "sentence-transformers", specifier = ">=5" },
+    { name = "sentence-transformers", specifier = ">=5.4" },
     { name = "sentencepiece", specifier = ">=0.2.1" },
     { name = "torch", specifier = ">=2.9,<2.10" },
     { name = "transformers", specifier = ">=5,<6" },

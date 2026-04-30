@@ -1,20 +1,34 @@
 from __future__ import annotations
 
+import copy
+from itertools import product
 from typing import Any
 
+QUANTIZE_PRECISIONS = {"int8", "uint8", "binary", "ubinary"}
 
-def parse_embedding_variants(values: list[str] | None) -> list[dict[str, Any]]:
+
+def parse_embedding_variants(
+    values: list[str] | None,
+    cross_values: list[list[str]] | None = None,
+) -> list[dict[str, Any]]:
     variants: list[dict[str, Any]] = []
     seen_names: set[str] = set()
+
+    def add_variant(variant: dict[str, Any]) -> None:
+        name = str(variant["name"])
+        if name in seen_names:
+            raise ValueError(f"Duplicate embedding variant: {name}")
+        seen_names.add(name)
+        variants.append(variant)
+
     current_kind: str | None = None
     for value in values or []:
-        for token in _split_tokens(value):
-            variant, current_kind = _parse_embedding_variant(token, current_kind=current_kind)
-            name = str(variant["name"])
-            if name in seen_names:
-                raise ValueError(f"Duplicate embedding variant: {name}")
-            seen_names.add(name)
-            variants.append(variant)
+        parsed_variants, current_kind = _parse_embedding_variant_value(value, current_kind=current_kind)
+        for variant in parsed_variants:
+            add_variant(variant)
+    for cross_group in cross_values or []:
+        for variant in _parse_embedding_variant_cross(cross_group):
+            add_variant(variant)
     return variants
 
 
@@ -22,23 +36,67 @@ def _split_tokens(value: str) -> list[str]:
     return [token.strip() for token in value.split(",") if token.strip()]
 
 
+def _parse_embedding_variant_value(
+    value: str,
+    *,
+    current_kind: str | None = None,
+) -> tuple[list[dict[str, Any]], str | None]:
+    variants: list[dict[str, Any]] = []
+    for token in _split_tokens(value):
+        variant, current_kind = _parse_embedding_variant(token, current_kind=current_kind)
+        variants.append(variant)
+    return variants, current_kind
+
+
+def _parse_embedding_variant_cross(values: list[str]) -> list[dict[str, Any]]:
+    if len(values) < 2:
+        raise ValueError("--embedding-variant-cross requires at least two variant specs.")
+
+    variant_groups: list[list[dict[str, Any]]] = []
+    for value in values:
+        variants, _current_kind = _parse_embedding_variant_value(value)
+        if not variants:
+            raise ValueError("--embedding-variant-cross received an empty variant spec.")
+        variant_groups.append(variants)
+
+    crossed: list[dict[str, Any]] = []
+    for variant_tuple in product(*variant_groups):
+        name_parts = [str(variant["name"]) for variant in variant_tuple]
+        steps: list[dict[str, Any]] = []
+        for variant in variant_tuple:
+            steps.extend(copy.deepcopy(_pipeline_steps(variant)))
+        crossed.append(_pipeline_variant(name_parts, steps))
+    return crossed
+
+
 def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> tuple[dict[str, Any], str]:
     if token.startswith("truncate:"):
         dim_value = token.split(":", 1)[1]
+        return _truncate_variant(token=token, dim_value=dim_value), "truncate"
     elif token.startswith("truncate="):
         dim_value = token.split("=", 1)[1]
+        return _truncate_variant(token=token, dim_value=dim_value), "truncate"
     elif token.startswith("truncate_dim:"):
         dim_value = token.split(":", 1)[1]
+        return _truncate_variant(token=token, dim_value=dim_value), "truncate"
     elif token.startswith("truncate_dim="):
         dim_value = token.split("=", 1)[1]
+        return _truncate_variant(token=token, dim_value=dim_value), "truncate"
     elif current_kind == "truncate" and _is_integer_token(token):
         dim_value = token
+        return _truncate_variant(token=token, dim_value=dim_value), "truncate"
+    elif token.startswith("quantize:"):
+        precision = token.split(":", 1)[1]
+        return _quantize_variant(token=token, precision=precision), "quantize"
+    elif token.startswith("quantize="):
+        precision = token.split("=", 1)[1]
+        return _quantize_variant(token=token, precision=precision), "quantize"
+    elif current_kind == "quantize" and token in QUANTIZE_PRECISIONS:
+        return _quantize_variant(token=token, precision=token), "quantize"
     else:
         raise ValueError(
-            f"Unsupported embedding variant '{token}'. Supported syntax: truncate:DIM or truncate:DIM,DIM"
+            f"Unsupported embedding variant '{token}'. Supported syntax: truncate:DIM or quantize:PRECISION"
         )
-
-    return _truncate_variant(token=token, dim_value=dim_value), "truncate"
 
 
 def _is_integer_token(token: str) -> bool:
@@ -55,9 +113,54 @@ def _truncate_variant(*, token: str, dim_value: str) -> dict[str, Any]:
 
     return {
         "name": f"truncate_dim_{dim}",
-        "transform": {
-            "type": "truncate",
-            "algorithm": "dimension_slice",
-            "parameters": {"dim": dim},
-        },
+        "transform": _pipeline_transform(
+            {
+                "type": "truncate",
+                "algorithm": "dimension_slice",
+                "parameters": {"dim": dim},
+            }
+        ),
+    }
+
+
+def _pipeline_transform(*steps: dict[str, Any]) -> dict[str, Any]:
+    # Normalize every CLI shorthand into this shape so evaluation has one
+    # low-overhead post-encode pipeline path for single and cross variants.
+    return {"type": "pipeline", "steps": list(steps)}
+
+
+def _pipeline_variant(name_parts: list[str], steps: list[dict[str, Any]]) -> dict[str, Any]:
+    return {"name": "_".join(name_parts), "transform": _pipeline_transform(*steps)}
+
+
+def _pipeline_steps(variant: dict[str, Any]) -> list[dict[str, Any]]:
+    transform = variant.get("transform", {})
+    if transform.get("type") != "pipeline":
+        raise ValueError(f"Embedding variant {variant.get('name')!r} is not a pipeline variant.")
+    steps = transform.get("steps")
+    if not isinstance(steps, list) or not steps:
+        raise ValueError(f"Embedding variant {variant.get('name')!r} has no pipeline steps.")
+    return steps
+
+
+def _quantize_variant(*, token: str, precision: str) -> dict[str, Any]:
+    if precision not in QUANTIZE_PRECISIONS:
+        raise ValueError(
+            f"Embedding variant '{token}' has unsupported quantization precision {precision!r}. "
+            f"Supported precisions are: {', '.join(sorted(QUANTIZE_PRECISIONS))}."
+        )
+
+    parameters: dict[str, Any] = {"precision": precision}
+    if precision in {"int8", "uint8"}:
+        parameters["calibration"] = "corpus"
+
+    return {
+        "name": f"quantize_{precision}",
+        "transform": _pipeline_transform(
+            {
+                "type": "quantize",
+                "algorithm": "sentence_transformers_embedding_quantization",
+                "parameters": parameters,
+            }
+        ),
     }

@@ -58,7 +58,20 @@ def build_parser() -> argparse.ArgumentParser:
         default=[],
         help=(
             "Derived embedding evaluation spec. Repeat or comma-separate. "
-            "Current syntax: truncate:DIM. Example: --embedding-variant truncate:256,truncate:128"
+            "Current syntax: truncate:DIM or quantize:PRECISION. "
+            "Example: --embedding-variant truncate:256,truncate:128 --embedding-variant quantize:int8,ubinary"
+        ),
+    )
+    evaluate.add_argument(
+        "--embedding-variant-cross",
+        dest="embedding_variant_cross_values",
+        action="append",
+        nargs="+",
+        default=[],
+        metavar="SPEC",
+        help=(
+            "Cross product of derived embedding specs, normalized into pipeline variants. "
+            "Example: --embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary"
         ),
     )
 
@@ -144,10 +157,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     args = parser.parse_args(argv)
     if args.command == "evaluate":
         try:
-            args.embedding_variants = parse_embedding_variants(args.embedding_variant_values)
+            args.embedding_variants = parse_embedding_variants(
+                args.embedding_variant_values,
+                args.embedding_variant_cross_values,
+            )
         except ValueError as exc:
             parser.error(str(exc))
         delattr(args, "embedding_variant_values")
+        delattr(args, "embedding_variant_cross_values")
     if args.command == "evaluate" and args.dataset is None and not args.collection:
         args.dataset = ["sentence-transformers/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:
