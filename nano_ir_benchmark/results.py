@@ -193,6 +193,7 @@ def run_or_load_task(
             "aggregate_metric_value": aggregate_metric_value,
             "cache_hit": False,
             "timing": evaluation.timing,
+            "embedding_conversion": evaluation.embedding_conversion,
             "embedding_evaluations": evaluation.embedding_evaluations,
         },
         "metrics": evaluation.metrics,
@@ -280,6 +281,7 @@ def build_all_payload(
                 "wall_seconds": wall_seconds,
                 "aggregate_metric": evaluation.get("aggregate_metric"),
                 "aggregate_metric_value": aggregate_value,
+                "embedding_conversion": evaluation.get("embedding_conversion"),
                 "embedding_evaluations": _summarize_embedding_evaluations(evaluation.get("embedding_evaluations")),
                 "bm25": result.payload.get("config", {}).get("bm25"),
             }

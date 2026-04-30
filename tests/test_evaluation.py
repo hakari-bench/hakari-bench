@@ -251,6 +251,36 @@ def test_evaluate_dense_task_scores_embedding_variants_without_extra_encoding() 
     assert "ToyData_test_dot_truncate_dim_1_ndcg@10" in result.embedding_evaluations[1]["metrics"]
 
 
+def test_evaluate_dense_task_records_query_and_docs_conversion_speed() -> None:
+    result = evaluate_dense_task(
+        model=FakeDenseModel(),
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+    )
+
+    query_conversion = result.embedding_conversion["query"]
+    assert query_conversion["text_count"] == 2
+    assert query_conversion["batch_size"] == 4
+    assert query_conversion["seconds"] == pytest.approx(result.timing["query_embedding_seconds"])
+    assert query_conversion["texts_per_second"] == pytest.approx(
+        query_conversion["text_count"] / query_conversion["seconds"]
+    )
+
+    docs_conversion = result.embedding_conversion["docs"]
+    assert docs_conversion["text_count"] == 3
+    assert docs_conversion["batch_size"] == 4
+    assert docs_conversion["seconds"] == pytest.approx(result.timing["corpus_embedding_seconds"])
+    assert docs_conversion["texts_per_second"] == pytest.approx(
+        docs_conversion["text_count"] / docs_conversion["seconds"]
+    )
+
+
 def test_evaluate_dense_task_records_cosine_and_dot_and_adopts_best_distance() -> None:
     result = evaluate_dense_task(
         model=FakeScaleSensitiveDenseModel(),
@@ -570,6 +600,10 @@ def test_run_or_load_task_records_evaluation_timestamps_and_durations(tmp_path: 
     assert evaluation["dataset_load_seconds"] >= 0.0
     assert evaluation["duration_seconds_excluding_dataset_load"] >= 0.0
     assert evaluation["duration_seconds_including_dataset_load"] >= evaluation["duration_seconds_excluding_dataset_load"]
+    assert evaluation["embedding_conversion"]["query"]["text_count"] == 2
+    assert evaluation["embedding_conversion"]["query"]["batch_size"] == 2
+    assert evaluation["embedding_conversion"]["docs"]["text_count"] == 3
+    assert evaluation["embedding_conversion"]["docs"]["batch_size"] == 2
 
 
 def test_run_or_load_task_records_dataset_revision(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -727,6 +761,7 @@ def test_build_all_payload_includes_split_and_total_durations(tmp_path: Path) ->
     assert split["duration_seconds_including_dataset_load"] == result.payload["evaluation"][
         "duration_seconds_including_dataset_load"
     ]
+    assert split["embedding_conversion"] == result.payload["evaluation"]["embedding_conversion"]
     assert payload["totals"]["duration_seconds_including_dataset_load_this_run"] == pytest.approx(
         result.payload["evaluation"]["duration_seconds_including_dataset_load"]
     )
