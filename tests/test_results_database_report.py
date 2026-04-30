@@ -16,6 +16,16 @@ def test_nanorteb_is_a_ranked_benchmark() -> None:
     assert report.benchmark_name("hotchpotch/NanoRTEB", "NanoRTEB") == "NanoRTEB"
 
 
+def test_nanolongembed_is_a_ranked_benchmark() -> None:
+    assert "NanoLongEmbed" in report.TARGET_BENCHMARKS
+    assert report.benchmark_name("hotchpotch/NanoLongEmbed", "NanoLongEmbed") == "NanoLongEmbed"
+
+
+def test_nanocoir_is_a_ranked_benchmark() -> None:
+    assert "NanoCoIR" in report.TARGET_BENCHMARKS
+    assert report.benchmark_name("hotchpotch/NanoCoIR", "NanoCoIR") == "NanoCoIR"
+
+
 def test_load_results_reads_task_json_not_only_all_json(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
     task_path = model_dir / "hotchpotch__NanoJMTEB" / "NanoJaCWIR.json"

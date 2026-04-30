@@ -20,6 +20,8 @@ TARGET_BENCHMARKS = [
     "NanoCodeSearchNet",
     "NanoMIRACL",
     "NanoMLDR",
+    "NanoLongEmbed",
+    "NanoCoIR",
 ]
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
 

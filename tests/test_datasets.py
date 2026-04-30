@@ -23,6 +23,8 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoMTEB").dataset_id == "hotchpotch/NanoMTEB"
     assert registry.get_dataset("NanoMMTEB").dataset_id == "hotchpotch/NanoMMTEB"
     assert registry.get_dataset("NanoCodeSearchNet").dataset_id == "hotchpotch/NanoCodeSearchNet"
+    assert registry.get_dataset("NanoLongEmbed").dataset_id == "hotchpotch/NanoLongEmbed"
+    assert registry.get_dataset("NanoCoIR").dataset_id == "hotchpotch/NanoCoIR"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
 
 
@@ -133,6 +135,40 @@ def test_resolve_eval_tasks_for_builtin_nanomldr_uses_declared_splits() -> None:
         ("NanoMLDR", "ru"),
         ("NanoMLDR", "th"),
         ("NanoMLDR", "zh"),
+    ]
+
+
+def test_resolve_eval_tasks_for_builtin_nanolongembed_uses_declared_splits() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoLongEmbed"], collection_values=[], split_values=[])
+
+    assert [(task.dataset_name, task.split_name) for task in tasks] == [
+        ("NanoLongEmbed", "NanoNarrativeQA"),
+        ("NanoLongEmbed", "NanoSummScreenFD"),
+        ("NanoLongEmbed", "NanoQMSum"),
+        ("NanoLongEmbed", "Nano2WikiMultihopQA"),
+        ("NanoLongEmbed", "NanoPasskey"),
+        ("NanoLongEmbed", "NanoNeedle"),
+    ]
+
+
+def test_resolve_eval_tasks_for_builtin_nanocoir_uses_declared_splits() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoCoIR"], collection_values=[], split_values=[])
+
+    assert [(task.dataset_name, task.split_name) for task in tasks] == [
+        ("NanoCoIR", "NanoApps"),
+        ("NanoCoIR", "NanoCodeFeedbackMT"),
+        ("NanoCoIR", "NanoCodeFeedbackST"),
+        ("NanoCoIR", "NanoCodeTransOceanContest"),
+        ("NanoCoIR", "NanoCodeTransOceanDL"),
+        ("NanoCoIR", "NanoCosQA"),
+        ("NanoCoIR", "NanoStackOverflowQA"),
+        ("NanoCoIR", "NanoSyntheticText2SQL"),
+        ("NanoCoIR", "NanoCodeSearchNet"),
+        ("NanoCoIR", "NanoCodeSearchNetCCR"),
     ]
 
 
