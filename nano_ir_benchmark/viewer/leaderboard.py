@@ -8,7 +8,7 @@ from typing import Any, Iterable, Literal
 import duckdb
 from pydantic import BaseModel, ConfigDict, Field
 
-from nano_ir_benchmark.viewer.config import ScoreGroupConfig, ViewerConfig
+from nano_ir_benchmark.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
 
 SortDirection = Literal["asc", "desc"]
 
@@ -61,6 +61,7 @@ class LeaderboardResult(BaseModel):
     expected_tasks: int
     rows: list[LeaderboardRow]
     available_views: list[str]
+    available_view_labels: dict[str, str]
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
     metric_columns: list[str]
@@ -94,11 +95,14 @@ class LeaderboardService:
         direction: SortDirection = "asc",
         score_group_name: str | None = None,
     ) -> LeaderboardResult:
+        overall = self.config.overall_for_view(view_name)
         benchmarks = self.config.benchmarks_for_view(view_name)
-        is_overall = view_name == self.config.overall.name
+        is_overall = overall is not None
         score_groups = [] if is_overall else _score_groups_for_view(self.config, view_name)
         selected_score_group = _select_score_group(score_groups, score_group_name)
         rows = self._load_task_scores(benchmarks)
+        if overall is not None:
+            rows = _aggregate_overall_scores(rows, overall)
         metric_columns = _metric_columns(rows, selected_score_group) if selected_score_group is not None else []
         leaderboard_rows = compute_leaderboard_rows(
             rows,
@@ -113,6 +117,7 @@ class LeaderboardService:
             expected_tasks=len({row.task_key for row in rows}),
             rows=sort_rows(leaderboard_rows, sort=sort, direction=direction),
             available_views=self.config.view_names,
+            available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
             score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
             selected_score_group=(
                 ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
@@ -280,6 +285,47 @@ def _group_by_benchmark(rows: list[TaskScore]) -> dict[str, list[TaskScore]]:
     return grouped
 
 
+def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> list[TaskScore]:
+    component_by_benchmark = {component.name: component for component in overall.benchmark_components}
+    if not any(component.group_by is not None for component in component_by_benchmark.values()):
+        return rows
+
+    expected_raw_tasks: dict[str, set[str]] = defaultdict(set)
+    raw_tasks_by_model_benchmark: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for row in rows:
+        expected_raw_tasks[row.benchmark].add(row.task_key)
+        raw_tasks_by_model_benchmark[(row.model_name, row.benchmark)].add(row.task_key)
+
+    aggregate_inputs: dict[tuple[str, str, str], list[TaskScore]] = defaultdict(list)
+    for row in rows:
+        component = component_by_benchmark[row.benchmark]
+        model_benchmark = (row.model_name, row.benchmark)
+        if raw_tasks_by_model_benchmark[model_benchmark] != expected_raw_tasks[row.benchmark]:
+            continue
+        aggregate_key = _score_group_key(row, component.group_by or "task_key")
+        aggregate_inputs[(row.model_name, row.benchmark, aggregate_key)].append(row)
+
+    aggregated: list[TaskScore] = []
+    for (model_name, benchmark, aggregate_key), aggregate_rows in aggregate_inputs.items():
+        first = aggregate_rows[0]
+        aggregated.append(
+            TaskScore(
+                model_name=model_name,
+                benchmark=benchmark,
+                dataset_id=benchmark,
+                dataset_name=benchmark,
+                split_name="",
+                task_name=aggregate_key,
+                task_key=f"{benchmark}::{aggregate_key}",
+                score=_mean(row.score for row in aggregate_rows),
+                active_parameters=first.active_parameters,
+                total_parameters=first.total_parameters,
+                max_seq_length=first.max_seq_length,
+            )
+        )
+    return aggregated
+
+
 def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGroupConfig]:
     benchmark = config.benchmark_for_view(view_name)
     return benchmark.resolved_score_groups if benchmark is not None else []
@@ -318,6 +364,8 @@ def _metric_values(
 
 
 def _score_group_key(row: TaskScore, group_by: str) -> str:
+    if group_by == "task_key":
+        return row.task_key
     if group_by == "dataset_name":
         return row.dataset_name
     if group_by == "dataset_id":

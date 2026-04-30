@@ -23,8 +23,33 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoLongEmbed",
         "NanoCoIR",
     ]
-    assert config.view_names[:7] == [
+    grouped_overall = config.overall_for_view("OverallGrouped")
+    assert grouped_overall is not None
+    assert [component.name for component in grouped_overall.benchmark_components] == [
+        "MNanoBEIR",
+        "NanoRTEB",
+        "NanoMMTEB",
+        "NanoMLDR",
+        "NanoLongEmbed",
+        "NanoCoIR",
+        "NanoMTEB",
+        "NanoMIRACL",
+        "NanoJMTEB",
+    ]
+    assert [component.group_by for component in grouped_overall.benchmark_components] == [
+        "task_name",
+        "task_name",
+        "task_name",
+        "benchmark",
+        "benchmark",
+        "task_name",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+    ]
+    assert config.view_names[:8] == [
         "Overall",
+        "OverallGrouped",
         "NanoMMTEB",
         "NanoRTEB",
         "MNanoBEIR",
@@ -32,6 +57,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoLongEmbed",
         "NanoCoIR",
     ]
+    assert "NanoCodeSearchNet" not in config.view_names
     assert "NanoJMTEB" in config.view_names
     assert "NanoJMTEB" not in config.overall.benchmarks
     mnanobeir = config.benchmark_for_view("MNanoBEIR")
@@ -83,6 +109,77 @@ benchmarks:
     assert result.rows[0].task_count == 3
     assert result.rows[0].macro_mean == 77.5
     assert result.rows[0].micro_mean == 80.0
+
+
+def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task1", "task-ja-1", 0.80, 10, 12, 8192),
+            ("model/a", "BenchTask", "bench/task-en", "BenchTask-en", "en", "task1", "task-en-1", 0.60, 10, 12, 8192),
+            ("model/a", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task2", "task-ja-2", 0.50, 10, 12, 8192),
+            ("model/a", "BenchMean", "bench/mean", "BenchMean", "m1", "m1", "mean-1", 0.90, 10, 12, 8192),
+            ("model/a", "BenchMean", "bench/mean", "BenchMean", "m2", "m2", "mean-2", 0.70, 10, 12, 8192),
+            ("model/b", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task1", "task-ja-1", 0.60, 20, 24, 4096),
+            ("model/b", "BenchTask", "bench/task-en", "BenchTask-en", "en", "task1", "task-en-1", 0.40, 20, 24, 4096),
+            ("model/b", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task2", "task-ja-2", 0.90, 20, 24, 4096),
+            ("model/b", "BenchMean", "bench/mean", "BenchMean", "m1", "m1", "mean-1", 0.50, 20, 24, 4096),
+            ("model/b", "BenchMean", "bench/mean", "BenchMean", "m2", "m2", "mean-2", 0.50, 20, 24, 4096),
+            ("model/incomplete", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task1", "task-ja-1", 1.00, 30, 36, 2048),
+            ("model/incomplete", "BenchTask", "bench/task-en", "BenchTask-en", "en", "task1", "task-en-1", 1.00, 30, 36, 2048),
+            ("model/incomplete", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task2", "task-ja-2", 1.00, 30, 36, 2048),
+            ("model/incomplete", "BenchMean", "bench/mean", "BenchMean", "m1", "m1", "mean-1", 1.00, 30, 36, 2048),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: BenchTask
+  - name: BenchMean
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+overalls:
+  - name: Overall
+    label: Overall
+    benchmarks:
+      - BenchTask
+      - BenchMean
+  - name: OverallGrouped
+    label: Overall Grouped
+    benchmarks:
+      - name: BenchTask
+        group_by: task_name
+      - name: BenchMean
+        group_by: benchmark
+""".strip(),
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("OverallGrouped")
+
+    assert result.expected_tasks == 3
+    assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
+    by_model = {row.model_name: row for row in result.rows}
+    assert by_model["model/a"].task_count == 3
+    assert by_model["model/a"].borda_score == 100 * 2 / 3
+    assert by_model["model/b"].borda_score == 100 / 3
+    assert by_model["model/a"].micro_mean == (70 + 50 + 80) / 3
+    assert by_model["model/a"].macro_mean == 70.0
+
+    from fastapi.testclient import TestClient
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=OverallGrouped")
+
+    assert response.status_code == 200
+    assert "Overall Grouped" in response.text
 
 
 def test_individual_leaderboard_uses_simple_task_mean() -> None:

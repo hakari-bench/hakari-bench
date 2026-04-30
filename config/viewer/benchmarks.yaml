@@ -27,9 +27,6 @@ benchmarks:
   - name: NanoMTEB
     label: NanoMTEB
     include_in_overall: false
-  - name: NanoCodeSearchNet
-    label: NanoCodeSearchNet
-    include_in_overall: false
   - name: NanoMIRACL
     label: NanoMIRACL
     include_in_overall: false

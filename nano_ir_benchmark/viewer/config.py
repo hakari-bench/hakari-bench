@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
@@ -37,30 +38,59 @@ class BenchmarkConfig(BaseModel):
         return [ScoreGroupConfig(name="task", label="Tasks", group_by="task_name")]
 
 
+class OverallBenchmarkConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    name: str
+    group_by: str | None = None
+
+
 class OverallConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     name: str = "Overall"
     label: str = "Overall"
-    benchmarks: list[str] = Field(default_factory=list)
+    benchmarks: list[str | OverallBenchmarkConfig] = Field(default_factory=list)
+
+    @property
+    def benchmark_components(self) -> list[OverallBenchmarkConfig]:
+        return [
+            OverallBenchmarkConfig(name=component) if isinstance(component, str) else component
+            for component in self.benchmarks
+        ]
+
+    @property
+    def benchmark_names(self) -> list[str]:
+        return [component.name for component in self.benchmark_components]
 
 
 class ViewerConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     benchmarks: list[BenchmarkConfig]
-    overall: OverallConfig
+    overalls: list[OverallConfig]
+
+    @property
+    def overall(self) -> OverallConfig:
+        return self.overalls[0]
 
     @property
     def view_names(self) -> list[str]:
-        return [self.overall.name, *(benchmark.name for benchmark in self.benchmarks)]
+        return [*(overall.name for overall in self.overalls), *(benchmark.name for benchmark in self.benchmarks)]
 
     def benchmarks_for_view(self, view_name: str) -> list[str]:
-        if view_name == self.overall.name:
-            return self.overall.benchmarks
+        overall = self.overall_for_view(view_name)
+        if overall is not None:
+            return overall.benchmark_names
         if any(benchmark.name == view_name for benchmark in self.benchmarks):
             return [view_name]
         raise ValueError(f"Unknown viewer benchmark: {view_name}")
+
+    def overall_for_view(self, view_name: str) -> OverallConfig | None:
+        for overall in self.overalls:
+            if overall.name == view_name:
+                return overall
+        return None
 
     def benchmark_for_view(self, view_name: str) -> BenchmarkConfig | None:
         for benchmark in self.benchmarks:
@@ -69,8 +99,9 @@ class ViewerConfig(BaseModel):
         return None
 
     def label_for_view(self, view_name: str) -> str:
-        if view_name == self.overall.name:
-            return self.overall.label
+        overall = self.overall_for_view(view_name)
+        if overall is not None:
+            return overall.label
         for benchmark in self.benchmarks:
             if benchmark.name == view_name:
                 return benchmark.display_label
@@ -85,8 +116,19 @@ def load_viewer_config(config_dir: Path = Path("config/viewer")) -> ViewerConfig
 
     benchmarks = [BenchmarkConfig.model_validate(item) for item in benchmarks_payload.get("benchmarks", [])]
     configured_names = {benchmark.name for benchmark in benchmarks}
-    overall = OverallConfig.model_validate(overall_payload)
-    missing = [name for name in overall.benchmarks if name not in configured_names]
+    overalls = _load_overalls(overall_payload)
+    missing = [
+        name
+        for overall in overalls
+        for name in overall.benchmark_names
+        if name not in configured_names
+    ]
     if missing:
         raise ValueError(f"Unknown overall benchmark(s): {', '.join(missing)}")
-    return ViewerConfig(benchmarks=benchmarks, overall=overall)
+    return ViewerConfig(benchmarks=benchmarks, overalls=overalls)
+
+
+def _load_overalls(payload: dict[str, Any]) -> list[OverallConfig]:
+    if "overalls" in payload:
+        return [OverallConfig.model_validate(item) for item in payload["overalls"]]
+    return [OverallConfig.model_validate(payload)]

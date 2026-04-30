@@ -137,6 +137,7 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str) -> str:
     buttons: list[str] = []
     for view_name in result.available_views:
         active = view_name == result.view_name
+        view_label = result.available_view_labels.get(view_name, view_name)
         classes = (
             "border-cyan-700 bg-cyan-50 text-cyan-900"
             if active
@@ -150,7 +151,7 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str) -> str:
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                   hx-target="#leaderboard-panel" hx-swap="innerHTML">
-                  {escape(view_name)}
+                  {escape(view_label)}
                 </button>"""
         )
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Benchmark views">{''.join(buttons)}</nav>"""

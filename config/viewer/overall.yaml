@@ -1,9 +1,31 @@
-name: Overall
-label: Overall
-benchmarks:
-  - NanoMMTEB
-  - NanoRTEB
-  - MNanoBEIR
-  - NanoMLDR
-  - NanoLongEmbed
-  - NanoCoIR
+overalls:
+  - name: Overall
+    label: Overall
+    benchmarks:
+      - NanoMMTEB
+      - NanoRTEB
+      - MNanoBEIR
+      - NanoMLDR
+      - NanoLongEmbed
+      - NanoCoIR
+  - name: OverallGrouped
+    label: Overall Grouped
+    benchmarks:
+      - name: MNanoBEIR
+        group_by: task_name
+      - name: NanoRTEB
+        group_by: task_name
+      - name: NanoMMTEB
+        group_by: task_name
+      - name: NanoMLDR
+        group_by: benchmark
+      - name: NanoLongEmbed
+        group_by: benchmark
+      - name: NanoCoIR
+        group_by: task_name
+      - name: NanoMTEB
+        group_by: benchmark
+      - name: NanoMIRACL
+        group_by: benchmark
+      - name: NanoJMTEB
+        group_by: benchmark
