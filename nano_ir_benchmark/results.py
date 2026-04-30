@@ -355,6 +355,29 @@ def _summarize_embedding_evaluations(value: Any) -> list[dict[str, Any]]:
                 "embedding_metadata": item.get("embedding_metadata"),
                 "aggregate_metric": item.get("aggregate_metric"),
                 "aggregate_metric_value": item.get("aggregate_metric_value"),
+                "best_score": item.get("best_score"),
+                "best_distance": item.get("best_distance"),
+                "best_score_name": item.get("best_score_name"),
+                "distance_evaluations": _summarize_distance_evaluations(item.get("distance_evaluations")),
+            }
+        )
+    return summaries
+
+
+def _summarize_distance_evaluations(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    summaries: list[dict[str, Any]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        summaries.append(
+            {
+                "distance": item.get("distance"),
+                "score_name": item.get("score_name"),
+                "aggregate_metric": item.get("aggregate_metric"),
+                "aggregate_metric_value": item.get("aggregate_metric_value"),
+                "timing": item.get("timing"),
             }
         )
     return summaries

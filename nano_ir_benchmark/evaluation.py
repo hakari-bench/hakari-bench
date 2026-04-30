@@ -37,6 +37,7 @@ class QuantizedEmbeddingMatrix:
     original_dim: int
     algorithm: str
     ranges_source: str | None = None
+    ranges: np.ndarray | None = None
 
     @property
     def shape(self) -> tuple[int, ...]:
@@ -151,25 +152,20 @@ def evaluate_dense_task(
     )
     corpus_seconds = time.perf_counter() - corpus_start
 
-    score_start = time.perf_counter()
-    score_name = _score_name(getattr(model, "similarity_fn_name", "cosine"))
-    rankings = _rank_by_similarity(
+    preferred_score_name = _score_name(getattr(model, "similarity_fn_name", "cosine"))
+    base_scoring = _score_embedding_distances(
         query_ids=query_ids,
         corpus_ids=corpus_ids,
-        query_embeddings=query_embeddings,
-        corpus_embeddings=corpus_embeddings,
-        score_name=score_name,
-    )
-    score_seconds = time.perf_counter() - score_start
-
-    metric_start = time.perf_counter()
-    metrics = compute_ir_metrics(
-        rankings=rankings,
         qrels=dataset.qrels,
         evaluator_name=dataset.evaluator_name,
-        score_name=score_name,
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        preferred_score_name=preferred_score_name,
+        variant_name=None,
+        aggregate_metric=aggregate_metric,
     )
-    metric_seconds = time.perf_counter() - metric_start
+    score_seconds = float(base_scoring["score_seconds"])
+    metric_seconds = float(base_scoring["metric_seconds"])
     base_timing = {
         "query_embedding_seconds": float(query_seconds),
         "corpus_embedding_seconds": float(corpus_seconds),
@@ -183,7 +179,7 @@ def evaluate_dense_task(
             transform={"type": "identity", "algorithm": "none", "parameters": {}},
             embedding_dimensions=_embedding_dimensions(query_embeddings, corpus_embeddings),
             embedding_metadata=_embedding_metadata(query_embeddings, corpus_embeddings),
-            metrics=metrics,
+            scoring=base_scoring,
             timing=base_timing,
             aggregate_metric=aggregate_metric,
         )
@@ -197,27 +193,21 @@ def evaluate_dense_task(
             corpus_embeddings=corpus_embeddings,
             variant=variant,
         )
-        variant_score_name = f"{score_name}_{variant['name']}"
-
-        variant_score_start = time.perf_counter()
-        variant_rankings = _rank_by_similarity(
+        variant_scoring = _score_embedding_distances(
             query_ids=query_ids,
             corpus_ids=corpus_ids,
-            query_embeddings=variant_query_embeddings,
-            corpus_embeddings=variant_corpus_embeddings,
-            score_name=score_name,
-        )
-        variant_score_elapsed = time.perf_counter() - variant_score_start
-        variant_score_seconds += variant_score_elapsed
-
-        variant_metric_start = time.perf_counter()
-        variant_metrics = compute_ir_metrics(
-            rankings=variant_rankings,
             qrels=dataset.qrels,
             evaluator_name=dataset.evaluator_name,
-            score_name=variant_score_name,
+            query_embeddings=variant_query_embeddings,
+            corpus_embeddings=variant_corpus_embeddings,
+            preferred_score_name=preferred_score_name,
+            variant_name=str(variant["name"]),
+            aggregate_metric=aggregate_metric,
         )
-        variant_metric_elapsed = time.perf_counter() - variant_metric_start
+        variant_score_elapsed = float(variant_scoring["score_seconds"])
+        variant_score_seconds += variant_score_elapsed
+
+        variant_metric_elapsed = float(variant_scoring["metric_seconds"])
         variant_metric_seconds += variant_metric_elapsed
         embedding_evaluations.append(
             _embedding_evaluation_payload(
@@ -225,7 +215,7 @@ def evaluate_dense_task(
                 transform=dict(variant["transform"]),
                 embedding_dimensions=_embedding_dimensions(variant_query_embeddings, variant_corpus_embeddings),
                 embedding_metadata=_embedding_metadata(variant_query_embeddings, variant_corpus_embeddings),
-                metrics=variant_metrics,
+                scoring=variant_scoring,
                 timing={
                     "query_embedding_seconds": 0.0,
                     "corpus_embedding_seconds": 0.0,
@@ -238,7 +228,7 @@ def evaluate_dense_task(
         )
 
     return TaskEvaluation(
-        metrics=metrics,
+        metrics=cast(dict[str, float], base_scoring["metrics"]),
         timing={
             "query_embedding_seconds": float(query_seconds),
             "corpus_embedding_seconds": float(corpus_seconds),
@@ -343,7 +333,7 @@ def _embedding_evaluation_payload(
     transform: dict[str, Any],
     embedding_dimensions: dict[str, int | None],
     embedding_metadata: dict[str, Any] | None,
-    metrics: dict[str, float],
+    scoring: dict[str, Any],
     timing: dict[str, float],
     aggregate_metric: str,
 ) -> dict[str, Any]:
@@ -352,8 +342,12 @@ def _embedding_evaluation_payload(
         "transform": transform,
         "embedding_dimensions": embedding_dimensions,
         "aggregate_metric": aggregate_metric,
-        "aggregate_metric_value": _aggregate_metric_value_for(metrics, aggregate_metric),
-        "metrics": metrics,
+        "aggregate_metric_value": scoring["aggregate_metric_value"],
+        "best_score": scoring["best_score"],
+        "best_distance": scoring["best_distance"],
+        "best_score_name": scoring["best_score_name"],
+        "distance_evaluations": scoring["distance_evaluations"],
+        "metrics": scoring["metrics"],
         "timing": timing,
     }
     if embedding_metadata is not None:
@@ -367,6 +361,88 @@ def _aggregate_metric_value_for(metrics: dict[str, float], suffix: str) -> float
     if not values:
         raise ValueError(f"No metric ending with '{suffix}' found. Available metrics: {sorted(metrics)}")
     return float(np.mean(values))
+
+
+def _score_embedding_distances(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    qrels: dict[str, set[str]],
+    evaluator_name: str,
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    preferred_score_name: str,
+    variant_name: str | None,
+    aggregate_metric: str,
+) -> dict[str, Any]:
+    distance_evaluations: list[dict[str, Any]] = []
+    score_seconds = 0.0
+    metric_seconds = 0.0
+    for distance in _distance_names(preferred_score_name):
+        metric_score_name = _metric_score_name(distance=distance, variant_name=variant_name)
+
+        score_start = time.perf_counter()
+        rankings = _rank_by_similarity(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            score_name=distance,
+        )
+        score_elapsed = time.perf_counter() - score_start
+        score_seconds += score_elapsed
+
+        metric_start = time.perf_counter()
+        metrics = compute_ir_metrics(
+            rankings=rankings,
+            qrels=qrels,
+            evaluator_name=evaluator_name,
+            score_name=metric_score_name,
+        )
+        metric_elapsed = time.perf_counter() - metric_start
+        metric_seconds += metric_elapsed
+
+        aggregate_metric_value = _aggregate_metric_value_for(metrics, aggregate_metric)
+        distance_evaluations.append(
+            {
+                "distance": distance,
+                "score_name": metric_score_name,
+                "aggregate_metric": aggregate_metric,
+                "aggregate_metric_value": aggregate_metric_value,
+                "metrics": metrics,
+                "timing": {
+                    "score_and_topk_seconds": float(score_elapsed),
+                    "metric_compute_seconds": float(metric_elapsed),
+                    "pure_compute_seconds": float(score_elapsed + metric_elapsed),
+                },
+            }
+        )
+
+    best = max(distance_evaluations, key=lambda item: float(item["aggregate_metric_value"]))
+    return {
+        "distance_evaluations": distance_evaluations,
+        "metrics": best["metrics"],
+        "aggregate_metric_value": best["aggregate_metric_value"],
+        "best_score": best["aggregate_metric_value"],
+        "best_distance": best["distance"],
+        "best_score_name": best["score_name"],
+        "score_seconds": score_seconds,
+        "metric_seconds": metric_seconds,
+    }
+
+
+def _distance_names(preferred_score_name: str) -> list[str]:
+    names: list[str] = []
+    for score_name in (preferred_score_name, "cosine", "dot"):
+        if score_name in {"cosine", "dot"} and score_name not in names:
+            names.append(score_name)
+    return names or ["cosine", "dot"]
+
+
+def _metric_score_name(*, distance: str, variant_name: str | None) -> str:
+    if variant_name is None:
+        return distance
+    return f"{distance}_{variant_name}"
 
 
 def _apply_embedding_variant_pair(
@@ -495,6 +571,7 @@ def _quantize_embedding_pair(
             original_dim=original_dim,
             algorithm=algorithm,
             ranges_source=ranges_source,
+            ranges=ranges.astype(np.float32, copy=True) if ranges is not None else None,
         ),
         QuantizedEmbeddingMatrix(
             values=corpus_values,
@@ -502,6 +579,7 @@ def _quantize_embedding_pair(
             original_dim=original_dim,
             algorithm=algorithm,
             ranges_source=ranges_source,
+            ranges=ranges.astype(np.float32, copy=True) if ranges is not None else None,
         ),
     )
 
@@ -530,6 +608,20 @@ def _pack_binary_embeddings(embeddings: np.ndarray, *, precision: QuantizationPr
     if precision == "binary":
         return (packed.astype(np.int16) - 128).astype(np.int8)
     raise ValueError(f"Unsupported binary quantization precision: {precision}")
+
+
+def _dequantize_scalar_embeddings(embeddings: QuantizedEmbeddingMatrix) -> np.ndarray:
+    if embeddings.precision not in {"int8", "uint8"}:
+        raise ValueError(f"Cannot scalar-dequantize precision: {embeddings.precision}")
+    if embeddings.ranges is None:
+        raise ValueError(f"Quantized {embeddings.precision} embeddings are missing dequantization ranges.")
+    starts = embeddings.ranges[0, :]
+    steps = (embeddings.ranges[1, :] - embeddings.ranges[0, :]) / 255
+    steps = np.where(steps == 0, 1, steps)
+    buckets = embeddings.values.astype(np.float32)
+    if embeddings.precision == "int8":
+        buckets = buckets + 128
+    return buckets * steps + starts
 
 
 def _embedding_dimensions(query_embeddings: Any, corpus_embeddings: Any) -> dict[str, int | None]:
@@ -596,6 +688,7 @@ def _embedding_side_metadata(embeddings: Any) -> dict[str, Any]:
             "algorithm": embeddings.algorithm,
             "original_dim": embeddings.original_dim,
             "stored_dim": _stored_embedding_dimension(embeddings),
+            "score_representation": _quantized_score_representation(embeddings),
         }
         if embeddings.ranges_source is not None:
             quantization["ranges_source"] = embeddings.ranges_source
@@ -637,8 +730,20 @@ def _is_quantized_embedding_matrix(embeddings: Any) -> bool:
     return isinstance(embeddings, QuantizedEmbeddingMatrix)
 
 
+def _is_scalar_quantized(embeddings: Any) -> bool:
+    return _is_quantized_embedding_matrix(embeddings) and embeddings.precision in {"int8", "uint8"}
+
+
 def _is_packed_binary_quantized(embeddings: Any) -> bool:
     return _is_quantized_embedding_matrix(embeddings) and embeddings.precision in {"binary", "ubinary"}
+
+
+def _quantized_score_representation(embeddings: QuantizedEmbeddingMatrix) -> str:
+    if embeddings.precision in {"int8", "uint8"}:
+        return "dequantized_float32"
+    if embeddings.precision in {"binary", "ubinary"}:
+        return "unpacked_sign_float32"
+    return "stored_values_float32"
 
 
 def _is_late_interaction_shape(shape: list[int]) -> bool:
@@ -674,6 +779,10 @@ def _shape_list(embeddings: Any) -> list[int]:
 
 
 def _to_numpy_float32(embeddings: Any) -> np.ndarray:
+    if _is_scalar_quantized(embeddings):
+        return _dequantize_scalar_embeddings(embeddings)
+    if _is_packed_binary_quantized(embeddings):
+        return _unpack_binary_quantized_embeddings_as_sign_float32(embeddings)
     if _is_quantized_embedding_matrix(embeddings):
         return embeddings.values.astype(np.float32, copy=False)
     if isinstance(embeddings, torch.Tensor):
@@ -700,7 +809,9 @@ def _rank_by_similarity(
     corpus_embeddings: Any,
     score_name: str,
 ) -> dict[str, list[str]]:
-    if _is_packed_binary_quantized(query_embeddings) or _is_packed_binary_quantized(corpus_embeddings):
+    if score_name == "hamming" and (
+        _is_packed_binary_quantized(query_embeddings) or _is_packed_binary_quantized(corpus_embeddings)
+    ):
         return _rank_packed_binary(
             query_ids=query_ids,
             corpus_ids=corpus_ids,
@@ -762,6 +873,11 @@ def _unpack_binary_quantized_embeddings(embeddings: QuantizedEmbeddingMatrix) ->
     else:
         packed = packed.astype(np.uint8, copy=False)
     return np.unpackbits(packed, axis=1)[:, : embeddings.original_dim]
+
+
+def _unpack_binary_quantized_embeddings_as_sign_float32(embeddings: QuantizedEmbeddingMatrix) -> np.ndarray:
+    bits = _unpack_binary_quantized_embeddings(embeddings).astype(np.float32, copy=False)
+    return bits * 2.0 - 1.0
 
 
 def _rank_sparse(

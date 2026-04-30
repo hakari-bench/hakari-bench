@@ -84,6 +84,26 @@ class FakeDenseModel:
         return np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]])
 
 
+class FakeScaleSensitiveDenseModel:
+    similarity_fn_name = "dot"
+
+    def encode_query(self, sentences: list[str], **kwargs: object) -> np.ndarray:
+        return np.array([[1.0, 0.0]], dtype=np.float32)
+
+    def encode_document(self, sentences: list[str], **kwargs: object) -> np.ndarray:
+        return np.array([[1.0, 0.0], [10.0, 1.0]], dtype=np.float32)
+
+
+def _scale_sensitive_dataset() -> LoadedIrDataset:
+    return LoadedIrDataset(
+        queries={"q1": "scale query"},
+        corpus={"d1": "relevant same direction", "d2": "larger norm distractor"},
+        qrels={"q1": {"d1"}},
+        candidates=None,
+        evaluator_name="ScaleToy_test",
+    )
+
+
 class FakeTaskDenseModel:
     similarity_fn_name = "dot"
 
@@ -213,12 +233,43 @@ def test_evaluate_dense_task_scores_embedding_variants_without_extra_encoding() 
         "query": {"shape": [2, 2]},
         "corpus": {"shape": [3, 2]},
     }
+    assert result.embedding_evaluations[0]["best_distance"] == "dot"
+    assert result.embedding_evaluations[0]["best_score"] == pytest.approx(1.0)
+    assert [item["distance"] for item in result.embedding_evaluations[0]["distance_evaluations"]] == [
+        "dot",
+        "cosine",
+    ]
     assert result.embedding_evaluations[1]["name"] == "truncate_dim_1"
     assert result.embedding_evaluations[1]["transform"]["steps"][0]["parameters"] == {"dim": 1}
     assert result.embedding_evaluations[1]["embedding_dimensions"] == {"dim": 1}
     assert result.embedding_evaluations[1]["embedding_metadata"]["dimensions"] == {"dim": 1}
     assert result.embedding_evaluations[1]["aggregate_metric_value"] < 1.0
     assert "ToyData_test_dot_truncate_dim_1_ndcg@10" in result.embedding_evaluations[1]["metrics"]
+
+
+def test_evaluate_dense_task_records_cosine_and_dot_and_adopts_best_distance() -> None:
+    result = evaluate_dense_task(
+        model=FakeScaleSensitiveDenseModel(),
+        dataset=_scale_sensitive_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+    )
+
+    base = result.embedding_evaluations[0]
+    assert [item["distance"] for item in base["distance_evaluations"]] == ["dot", "cosine"]
+    distance_values = {item["distance"]: item["aggregate_metric_value"] for item in base["distance_evaluations"]}
+    assert distance_values["dot"] < distance_values["cosine"]
+    assert base["best_distance"] == "cosine"
+    assert base["best_score_name"] == "cosine"
+    assert base["best_score"] == pytest.approx(distance_values["cosine"])
+    assert base["aggregate_metric_value"] == pytest.approx(distance_values["cosine"])
+    assert result.metrics == base["metrics"]
+    assert "ScaleToy_test_cosine_ndcg@10" in result.metrics
 
 
 def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> None:
@@ -252,6 +303,9 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
     ]
     int8_eval = result.embedding_evaluations[1]
     assert int8_eval["aggregate_metric_value"] == pytest.approx(1.0)
+    assert int8_eval["best_score"] == pytest.approx(1.0)
+    assert int8_eval["best_distance"] == "dot"
+    assert [item["distance"] for item in int8_eval["distance_evaluations"]] == ["dot", "cosine"]
     assert int8_eval["embedding_dimensions"] == {"dim": 2}
     assert int8_eval["embedding_metadata"]["dimension_format"] == "single_vector"
     assert int8_eval["embedding_metadata"]["query"]["value_dtype"] == "int8"
@@ -261,10 +315,12 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
         "ranges_source": "corpus",
         "original_dim": 2,
         "stored_dim": 2,
+        "score_representation": "dequantized_float32",
     }
 
     ubinary_eval = result.embedding_evaluations[2]
     assert ubinary_eval["aggregate_metric_value"] == pytest.approx(1.0)
+    assert [item["distance"] for item in ubinary_eval["distance_evaluations"]] == ["dot", "cosine"]
     assert ubinary_eval["embedding_dimensions"] == {"dim": 2, "stored_dim": 1}
     assert ubinary_eval["embedding_metadata"]["dimension_format"] == "packed_binary_vector"
     assert ubinary_eval["embedding_metadata"]["query"]["shape"] == [2, 1]
@@ -274,6 +330,7 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
         "algorithm": "sentence_transformers_embedding_quantization",
         "original_dim": 2,
         "stored_dim": 1,
+        "score_representation": "unpacked_sign_float32",
     }
     assert "ToyData_test_dot_quantize_ubinary_ndcg@10" in ubinary_eval["metrics"]
 
@@ -296,6 +353,16 @@ def test_quantize_int8_uses_corpus_calibration_and_clips_query_outliers() -> Non
     assert corpus_quantized.ranges_source == "corpus"
     assert query_quantized.values.tolist() == [[127, -128]]
     assert corpus_quantized.values.tolist() == [[127, -128], [-128, 127]]
+    np.testing.assert_allclose(
+        evaluation_module._to_numpy_float32(query_quantized),
+        np.array([[1.0, -1.0]], dtype=np.float32),
+        atol=1e-6,
+    )
+    np.testing.assert_allclose(
+        evaluation_module._to_numpy_float32(corpus_quantized),
+        corpus_embeddings,
+        atol=1e-6,
+    )
 
 
 def test_evaluate_dense_task_uses_single_pipeline_path_for_all_embedding_variants(monkeypatch) -> None:
@@ -548,6 +615,8 @@ def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) 
     assert [item["name"] for item in embedding_evaluations] == ["base", "truncate_dim_1"]
     assert embedding_evaluations[1]["aggregate_metric"] == "ndcg@10"
     assert embedding_evaluations[1]["aggregate_metric_value"] < 1.0
+    assert embedding_evaluations[1]["best_distance"] in {"dot", "cosine"}
+    assert [item["distance"] for item in embedding_evaluations[1]["distance_evaluations"]] == ["dot", "cosine"]
     assert result.payload["metrics"] == embedding_evaluations[0]["metrics"]
 
     all_payload = build_all_payload(
@@ -560,6 +629,9 @@ def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) 
     assert [item["name"] for item in split_variants] == ["base", "truncate_dim_1"]
     assert split_variants[0]["embedding_dimensions"] == {"dim": 2}
     assert split_variants[0]["embedding_metadata"]["representation_type"] == "dense"
+    assert split_variants[0]["best_distance"] == "dot"
+    assert [item["distance"] for item in split_variants[0]["distance_evaluations"]] == ["dot", "cosine"]
+    assert "metrics" not in split_variants[0]["distance_evaluations"][0]
     assert split_variants[1]["embedding_dimensions"] == {"dim": 1}
     assert "metrics" not in split_variants[1]
 

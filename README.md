@@ -52,8 +52,11 @@ uv run nano-ir-bench evaluate \
 `int8` and `uint8` variants use ranges computed from the current corpus
 embeddings and share those ranges for query and corpus quantization. Query
 embeddings are not used for calibration; range-exceeding query values are
-clipped to avoid integer overflow/wrap. `binary` and `ubinary` variants are
-stored as packed binary vectors and ranked with Hamming distance.
+clipped to avoid integer overflow/wrap. For scoring, scalar quantized values
+are dequantized back to approximate `float32` vectors before similarity search,
+so ranking does not compare raw bucket ids as if they were embedding
+coordinates. `binary` and `ubinary` variants are stored as packed binary
+vectors and scored through unpacked sign vectors.
 
 ### Truncated Dimensions
 
@@ -95,7 +98,10 @@ optional `embedding_metadata` block records the representation type
 (`dense`, `sparse`, or future `late_interaction`), dimension format, shapes, and
 sparse nnz/density statistics when available. Quantized variants also record
 the value dtype, quantization precision, original dimension, stored dimension,
-and calibration/ranges source when applicable.
+calibration/ranges source, and scoring representation when applicable. Dense
+embedding evaluations score both `cosine` and `dot`, store both entries in
+`distance_evaluations`, and copy the better aggregate result to `metrics`,
+`aggregate_metric_value`, `best_score`, `best_distance`, and `best_score_name`.
 
 ## BM25
 
