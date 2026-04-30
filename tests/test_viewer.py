@@ -6,18 +6,34 @@ from pathlib import Path
 
 import duckdb
 
-from nano_ir_benchmark.viewer.app import _metric_column_label, create_app
+from nano_ir_benchmark.viewer.app import _fmt_max_len, _metric_column_label, create_app
 from nano_ir_benchmark.viewer.config import load_viewer_config
 from nano_ir_benchmark.viewer.leaderboard import LeaderboardService, TaskScore, compute_leaderboard_rows
 from nano_ir_benchmark.viewer.store import DuckDbLocation, LocalDuckDbStore
 
 
-def test_viewer_config_excludes_jmteb_from_overall() -> None:
+def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> None:
     config = load_viewer_config()
 
+    assert config.overall.benchmarks == [
+        "NanoMMTEB",
+        "NanoRTEB",
+        "MNanoBEIR",
+        "NanoMLDR",
+        "NanoLongEmbed",
+        "NanoCoIR",
+    ]
+    assert config.view_names[:7] == [
+        "Overall",
+        "NanoMMTEB",
+        "NanoRTEB",
+        "MNanoBEIR",
+        "NanoMLDR",
+        "NanoLongEmbed",
+        "NanoCoIR",
+    ]
     assert "NanoJMTEB" in config.view_names
     assert "NanoJMTEB" not in config.overall.benchmarks
-    assert "NanoRTEB" in config.overall.benchmarks
     mnanobeir = config.benchmark_for_view("MNanoBEIR")
     assert mnanobeir is not None
     assert [group.name for group in mnanobeir.resolved_score_groups] == ["task_mean", "lang_mean"]
@@ -169,14 +185,24 @@ benchmarks:
     assert response.status_code == 200
     assert "Task Mean" in response.text
     assert "Lang Mean" in response.text
-    assert "BEIR-ja<span" in response.text
+    assert "Mean Score" in response.text
+    assert ">BEIR-ja</span>" in response.text
+    assert "[overflow-wrap:anywhere]" in response.text
+    assert "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem]" in response.text
     assert "metric%3ANanoBEIR-ja" in response.text
+    assert 'hx-push-url="/?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja' in response.text
 
 
 def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
     assert _metric_column_label("NanoAILAStatutes") == "AILAStatutes"
     assert _metric_column_label("NanoBEIR-ja") == "BEIR-ja"
+    assert _metric_column_label("NanoWikipediaRetrievalMultilingual") == "WikipediaRetrievalMultilingual"
     assert _metric_column_label("arguana") == "arguana"
+
+
+def test_max_len_is_formatted_with_grouping_separator() -> None:
+    assert _fmt_max_len(8192) == "8,192"
+    assert _fmt_max_len(None) == ""
 
 
 def test_local_duckdb_store_copies_newer_source_on_page_load(tmp_path: Path) -> None:
@@ -219,6 +245,46 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     assert "Macro Mean" in response.text
     assert "model/a" in response.text
     assert 'hx-get="/leaderboard?' in response.text
+
+
+def test_viewer_page_uses_query_state_and_canonical_url(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoArguAna", "arguana", "ja-arguana", 0.80, 10, 12, 8192),
+            ("model/b", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoArguAna", "arguana", "ja-arguana", 0.70, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: MNanoBEIR
+    score_groups:
+      - name: lang_mean
+        label: Lang Mean
+        group_by: dataset_name
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n",
+        encoding="utf-8",
+    )
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/?view=MNanoBEIR&group=lang_mean&sort=metric:NanoBEIR-ja&direction=desc")
+
+    assert response.status_code == 200
+    assert '<link rel="canonical" href="/">' in response.text
+    assert (
+        'hx-get="/leaderboard?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja&amp;direction=desc&amp;group=lang_mean"'
+        in response.text
+    )
 
 
 def _write_task_results(
