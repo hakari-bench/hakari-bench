@@ -1,5 +1,7 @@
 # nano-ir-bench
 
+NanoIR Benchmark is a library, viewer, and leaderboard project for evaluating small information retrieval datasets.
+
 Nano-style information retrieval benchmark runner for SentenceTransformers-compatible models.
 
 Built-in dataset definitions include `NanoBEIR-en`, `NanoMIRACL`, `NanoMLDR`,
@@ -74,3 +76,8 @@ uv run nano-ir-bench build-bm25 \
 
 The current mapping is `ja` = `fugashi` + `unidic-lite`, `zh` = `jieba`,
 `th` = `pythainlp`, and `ko` = `kiwipiepy`.
+
+## Achievements
+
+- Built on the idea behind [Nano-BEIR](https://huggingface.co/blog/sionic-ai/eval-sionic-nano-beir).
+- The NanoBEIR evaluation implementation in [Sentence Transformers](https://github.com/huggingface/sentence-transformers/) was a reference for this project. Thanks to the maintainers and contributors.
