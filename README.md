@@ -23,6 +23,23 @@ Results are written under:
 output/results/{model_name}/{dataset_name}/{split_or_task}.json
 ```
 
+## Embedding variants
+
+Matryoshka-style truncated embedding dimensions can be evaluated together with
+the base embedding run. The model is encoded once, then each derived embedding
+variant is scored from the already-computed embeddings.
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/matryoshka-embedding-model \
+  --dataset NanoMTEB \
+  --embedding-variant truncate:512,256
+```
+
+Each task JSON keeps the base result in `metrics` and records the derived
+results under `evaluation.embedding_evaluations`. The variant schema is designed
+to support future embedding transforms such as int8 or binary quantization.
+
 ## BM25
 
 BM25 can be evaluated directly. If the dataset provides a candidate subset named

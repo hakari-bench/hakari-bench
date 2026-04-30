@@ -21,7 +21,7 @@ For every specified model:
 - Check whether the model is a Sentence Transformers model with prompt configuration. Prefer its built-in prompt config when present.
 - If no usable Sentence Transformers prompt config exists, inspect the Hugging Face model card first, then relevant articles or papers for retrieval prefixes such as query/document/passage instructions.
 - Record and use explicit retrieval prefixes when the model card or paper requires them, for example via `--query-prompt`, `--corpus-prompt`, `--query-prompt-name`, or `--corpus-prompt-name`.
-- Investigate Matryoshka support. If the model card or paper documents supported dimensions, include the appropriate `--truncate-dim` option requested by the user or appropriate for the comparison.
+- Investigate Matryoshka support. If the model card or paper documents supported dimensions, prefer simultaneous derived evaluations with `--embedding-variant truncate:DIM` over separate reruns.
 - Check whether `--trust-remote-code` is required.
 - Check the model's default maximum sequence length, but do not override it unless the user explicitly asks.
 
@@ -54,6 +54,16 @@ uv run nano-ir-bench evaluate \
   --dtype bf16
 ```
 
+For Matryoshka-style dimensions, evaluate derived truncated embeddings from one
+inference pass:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model MODEL_NAME \
+  --dataset DATASET_NAME \
+  --embedding-variant truncate:512,256
+```
+
 For BM25:
 
 ```bash
@@ -67,7 +77,7 @@ Use both GPUs when available by assigning separate processes with `CUDA_VISIBLE_
 ## Result Hygiene
 
 - Respect existing result JSON. Skip cached results unless the user asks for override or the run configuration must be corrected.
-- Preserve enough metadata to explain the run: prompts, truncate dim, dtype, attention implementation, Transformers/Sentence Transformers/Torch versions, batch size, timing, parameter counts, and max sequence length.
-- When comparing models, check that prompt and truncate-dim choices are fair and intentional.
+- Preserve enough metadata to explain the run: prompts, embedding variants, dtype, attention implementation, Transformers/Sentence Transformers/Torch versions, batch size, timing, parameter counts, and max sequence length.
+- When comparing models, check that prompt and embedding-variant choices are fair and intentional.
 - Rebuild DuckDB and HTML reports after adding new benchmark results that should appear in the leaderboard.
 - Summarize failures plainly. If a model keeps failing after reasonable batch-size and attention fallbacks, mark it skipped with the exact reason.

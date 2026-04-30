@@ -119,6 +119,56 @@ def test_parse_args_accepts_prompt_and_reranker_options() -> None:
     assert args.rerank_top_n == 50
 
 
+def test_parse_args_accepts_embedding_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "truncate:256,truncate:128",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        {
+            "name": "truncate_dim_256",
+            "transform": {
+                "type": "truncate",
+                "algorithm": "dimension_slice",
+                "parameters": {"dim": 256},
+            },
+        },
+        {
+            "name": "truncate_dim_128",
+            "transform": {
+                "type": "truncate",
+                "algorithm": "dimension_slice",
+                "parameters": {"dim": 128},
+            },
+        },
+    ]
+
+
+def test_parse_args_accepts_compact_truncate_embedding_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "truncate:512,256,128",
+        ]
+    )
+
+    assert [variant["name"] for variant in args.embedding_variants] == [
+        "truncate_dim_512",
+        "truncate_dim_256",
+        "truncate_dim_128",
+    ]
+    assert [variant["transform"]["parameters"]["dim"] for variant in args.embedding_variants] == [512, 256, 128]
+
+
 def test_parse_args_does_not_mix_default_dataset_into_collection() -> None:
     args = parse_args(["evaluate", "--model", "hotchpotch/model", "--collection", "MNanoBEIR"])
 

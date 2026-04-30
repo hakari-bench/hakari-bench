@@ -151,6 +151,42 @@ def test_evaluate_dense_task_explicit_tasks_use_generic_encode() -> None:
     assert model.calls[1]["task"] == "retrieval"
 
 
+def test_evaluate_dense_task_scores_embedding_variants_without_extra_encoding() -> None:
+    model = FakeDenseModel()
+
+    result = evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        embedding_variants=[
+            {
+                "name": "truncate_dim_1",
+                "transform": {
+                    "type": "truncate",
+                    "algorithm": "dimension_slice",
+                    "parameters": {"dim": 1},
+                },
+            }
+        ],
+    )
+
+    assert len(model.query_calls) == 1
+    assert len(model.document_calls) == 1
+    assert "truncate_dim" not in model.query_calls[0]
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+    assert result.embedding_evaluations[0]["name"] == "base"
+    assert result.embedding_evaluations[1]["name"] == "truncate_dim_1"
+    assert result.embedding_evaluations[1]["transform"]["parameters"] == {"dim": 1}
+    assert result.embedding_evaluations[1]["aggregate_metric_value"] < 1.0
+    assert "ToyData_test_dot_truncate_dim_1_ndcg@10" in result.embedding_evaluations[1]["metrics"]
+
+
 def test_evaluate_reranker_task_uses_candidate_top_n() -> None:
     result = evaluate_reranker_task(
         model=FakeReranker(),
@@ -246,6 +282,62 @@ def test_run_or_load_task_records_evaluation_timestamps_and_durations(tmp_path: 
     assert evaluation["dataset_load_seconds"] >= 0.0
     assert evaluation["duration_seconds_excluding_dataset_load"] >= 0.0
     assert evaluation["duration_seconds_including_dataset_load"] >= evaluation["duration_seconds_excluding_dataset_load"]
+
+
+def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        embedding_variants=[
+            {
+                "name": "truncate_dim_1",
+                "transform": {
+                    "type": "truncate",
+                    "algorithm": "dimension_slice",
+                    "parameters": {"dim": 1},
+                },
+            }
+        ],
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    assert result.payload["config"]["embedding_variants"] == args.embedding_variants
+    embedding_evaluations = result.payload["evaluation"]["embedding_evaluations"]
+    assert [item["name"] for item in embedding_evaluations] == ["base", "truncate_dim_1"]
+    assert embedding_evaluations[1]["aggregate_metric"] == "ndcg@10"
+    assert embedding_evaluations[1]["aggregate_metric_value"] < 1.0
+    assert result.payload["metrics"] == embedding_evaluations[0]["metrics"]
+
+    all_payload = build_all_payload(
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "hotchpotch/model"},
+        results=[result],
+    )
+    split_variants = all_payload["splits"][0]["embedding_evaluations"]
+    assert [item["name"] for item in split_variants] == ["base", "truncate_dim_1"]
+    assert "metrics" not in split_variants[1]
 
 
 def test_build_all_payload_includes_split_and_total_durations(tmp_path: Path) -> None:

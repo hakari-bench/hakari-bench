@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
@@ -25,6 +25,7 @@ class LoadedIrDataset:
 class TaskEvaluation:
     metrics: dict[str, float]
     timing: dict[str, float]
+    embedding_evaluations: list[dict[str, Any]] = field(default_factory=list)
 
 
 def load_ir_dataset(task: EvalTask, *, candidate_subset_name: str | None = None) -> LoadedIrDataset:
@@ -85,6 +86,8 @@ def evaluate_dense_task(
     query_task: str | None = None,
     corpus_task: str | None = None,
     truncate_dim: int | None = None,
+    embedding_variants: list[dict[str, Any]] | None = None,
+    aggregate_metric: str = "ndcg@10",
 ) -> TaskEvaluation:
     query_ids = list(dataset.queries)
     corpus_ids = list(dataset.corpus)
@@ -138,6 +141,65 @@ def evaluate_dense_task(
         score_name=score_name,
     )
     metric_seconds = time.perf_counter() - metric_start
+    base_timing = {
+        "query_embedding_seconds": float(query_seconds),
+        "corpus_embedding_seconds": float(corpus_seconds),
+        "score_and_topk_seconds": float(score_seconds),
+        "metric_compute_seconds": float(metric_seconds),
+        "pure_compute_seconds": float(query_seconds + corpus_seconds + score_seconds + metric_seconds),
+    }
+    embedding_evaluations = [
+        _embedding_evaluation_payload(
+            name="base",
+            transform={"type": "identity", "algorithm": "none", "parameters": {}},
+            metrics=metrics,
+            timing=base_timing,
+            aggregate_metric=aggregate_metric,
+        )
+    ]
+
+    variant_score_seconds = 0.0
+    variant_metric_seconds = 0.0
+    for variant in embedding_variants or []:
+        variant_query_embeddings = _apply_embedding_variant(query_embeddings, variant)
+        variant_corpus_embeddings = _apply_embedding_variant(corpus_embeddings, variant)
+        variant_score_name = f"{score_name}_{variant['name']}"
+
+        variant_score_start = time.perf_counter()
+        variant_rankings = _rank_by_similarity(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=variant_query_embeddings,
+            corpus_embeddings=variant_corpus_embeddings,
+            score_name=score_name,
+        )
+        variant_score_elapsed = time.perf_counter() - variant_score_start
+        variant_score_seconds += variant_score_elapsed
+
+        variant_metric_start = time.perf_counter()
+        variant_metrics = compute_ir_metrics(
+            rankings=variant_rankings,
+            qrels=dataset.qrels,
+            evaluator_name=dataset.evaluator_name,
+            score_name=variant_score_name,
+        )
+        variant_metric_elapsed = time.perf_counter() - variant_metric_start
+        variant_metric_seconds += variant_metric_elapsed
+        embedding_evaluations.append(
+            _embedding_evaluation_payload(
+                name=str(variant["name"]),
+                transform=dict(variant["transform"]),
+                metrics=variant_metrics,
+                timing={
+                    "query_embedding_seconds": 0.0,
+                    "corpus_embedding_seconds": 0.0,
+                    "score_and_topk_seconds": float(variant_score_elapsed),
+                    "metric_compute_seconds": float(variant_metric_elapsed),
+                    "pure_compute_seconds": float(variant_score_elapsed + variant_metric_elapsed),
+                },
+                aggregate_metric=aggregate_metric,
+            )
+        )
 
     return TaskEvaluation(
         metrics=metrics,
@@ -146,8 +208,13 @@ def evaluate_dense_task(
             "corpus_embedding_seconds": float(corpus_seconds),
             "score_and_topk_seconds": float(score_seconds),
             "metric_compute_seconds": float(metric_seconds),
-            "pure_compute_seconds": float(query_seconds + corpus_seconds + score_seconds + metric_seconds),
+            "embedding_variant_score_and_topk_seconds": float(variant_score_seconds),
+            "embedding_variant_metric_compute_seconds": float(variant_metric_seconds),
+            "pure_compute_seconds": float(
+                query_seconds + corpus_seconds + score_seconds + metric_seconds + variant_score_seconds + variant_metric_seconds
+            ),
         },
+        embedding_evaluations=embedding_evaluations,
     )
 
 
@@ -232,6 +299,58 @@ def _predict_scores(model: Any, *, pairs: list[tuple[str, str]], batch_size: int
     if isinstance(raw_scores, torch.Tensor):
         raw_scores = raw_scores.detach().cpu().float().numpy()
     return [float(score) for score in np.asarray(raw_scores).reshape(-1).tolist()]
+
+
+def _embedding_evaluation_payload(
+    *,
+    name: str,
+    transform: dict[str, Any],
+    metrics: dict[str, float],
+    timing: dict[str, float],
+    aggregate_metric: str,
+) -> dict[str, Any]:
+    return {
+        "name": name,
+        "transform": transform,
+        "aggregate_metric": aggregate_metric,
+        "aggregate_metric_value": _aggregate_metric_value_for(metrics, aggregate_metric),
+        "metrics": metrics,
+        "timing": timing,
+    }
+
+
+def _aggregate_metric_value_for(metrics: dict[str, float], suffix: str) -> float:
+    suffix = suffix.lower()
+    values = [value for key, value in metrics.items() if key.lower().endswith(suffix)]
+    if not values:
+        raise ValueError(f"No metric ending with '{suffix}' found. Available metrics: {sorted(metrics)}")
+    return float(np.mean(values))
+
+
+def _apply_embedding_variant(embeddings: Any, variant: dict[str, Any]) -> Any:
+    transform = variant.get("transform", {})
+    transform_type = transform.get("type")
+    if transform_type == "truncate":
+        dim = int(transform.get("parameters", {}).get("dim"))
+        return _truncate_embeddings(embeddings, dim)
+    raise ValueError(f"Unsupported embedding variant transform: {transform_type}")
+
+
+def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
+    if dim <= 0:
+        raise ValueError("Truncate dimension must be positive.")
+    if sparse.issparse(embeddings):
+        if dim > embeddings.shape[1]:
+            raise ValueError(f"Cannot truncate embeddings with dimension {embeddings.shape[1]} to {dim}.")
+        return embeddings[:, :dim]
+    if isinstance(embeddings, torch.Tensor):
+        if dim > embeddings.shape[1]:
+            raise ValueError(f"Cannot truncate embeddings with dimension {embeddings.shape[1]} to {dim}.")
+        return embeddings[:, :dim]
+    matrix = np.asarray(embeddings)
+    if dim > matrix.shape[1]:
+        raise ValueError(f"Cannot truncate embeddings with dimension {matrix.shape[1]} to {dim}.")
+    return matrix[:, :dim]
 
 
 def _to_numpy_float32(embeddings: Any) -> np.ndarray:

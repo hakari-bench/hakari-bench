@@ -15,6 +15,7 @@ from nano_ir_benchmark.bm25 import (
     run_or_load_bm25_task,
 )
 from nano_ir_benchmark.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
+from nano_ir_benchmark.embedding_variants import parse_embedding_variants
 from nano_ir_benchmark.evaluation import LoadedIrDataset, load_ir_dataset
 from nano_ir_benchmark.models import (
     ModelLoadConfig,
@@ -50,6 +51,16 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--trust-remote-code", action="store_true")
     evaluate.add_argument("--model-max-seq-length", type=int, default=None)
     evaluate.add_argument("--truncate-dim", type=int, default=None)
+    evaluate.add_argument(
+        "--embedding-variant",
+        dest="embedding_variant_values",
+        action="append",
+        default=[],
+        help=(
+            "Derived embedding evaluation spec. Repeat or comma-separate. "
+            "Current syntax: truncate:DIM. Example: --embedding-variant truncate:256,truncate:128"
+        ),
+    )
 
     evaluate.add_argument(
         "--dataset",
@@ -129,6 +140,12 @@ def _add_bm25_args(parser: argparse.ArgumentParser) -> None:
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = build_parser()
     args = parser.parse_args(argv)
+    if args.command == "evaluate":
+        try:
+            args.embedding_variants = parse_embedding_variants(args.embedding_variant_values)
+        except ValueError as exc:
+            parser.error(str(exc))
+        delattr(args, "embedding_variant_values")
     if args.command == "evaluate" and args.dataset is None and not args.collection:
         args.dataset = ["sentence-transformers/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:

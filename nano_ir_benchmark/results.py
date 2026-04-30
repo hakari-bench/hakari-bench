@@ -25,6 +25,8 @@ TIMING_KEYS = [
     "corpus_embedding_seconds",
     "score_and_topk_seconds",
     "metric_compute_seconds",
+    "embedding_variant_score_and_topk_seconds",
+    "embedding_variant_metric_compute_seconds",
     "pure_compute_seconds",
 ]
 
@@ -133,6 +135,8 @@ def run_or_load_task(
             query_task=getattr(args, "query_task", None),
             corpus_task=getattr(args, "corpus_task", None),
             truncate_dim=args.truncate_dim,
+            embedding_variants=getattr(args, "embedding_variants", []),
+            aggregate_metric=args.aggregate_metric,
         )
     elapsed = time.perf_counter() - start
     finished_at = datetime.now(timezone.utc)
@@ -164,6 +168,7 @@ def run_or_load_task(
             "query_task": getattr(args, "query_task", None),
             "corpus_task": getattr(args, "corpus_task", None),
             "truncate_dim": args.truncate_dim,
+            "embedding_variants": getattr(args, "embedding_variants", []),
             "candidate_subset_name": args.candidate_subset_name if args.model_type in {"bm25", "reranker"} else None,
             "rerank_top_n": args.rerank_top_n if args.model_type == "reranker" else None,
             "bm25": bm25_payload,
@@ -182,6 +187,7 @@ def run_or_load_task(
             "aggregate_metric_value": aggregate_metric_value,
             "cache_hit": False,
             "timing": evaluation.timing,
+            "embedding_evaluations": evaluation.embedding_evaluations,
         },
         "metrics": evaluation.metrics,
     }
@@ -267,6 +273,7 @@ def build_all_payload(
                 "wall_seconds": wall_seconds,
                 "aggregate_metric": evaluation.get("aggregate_metric"),
                 "aggregate_metric_value": aggregate_value,
+                "embedding_evaluations": _summarize_embedding_evaluations(evaluation.get("embedding_evaluations")),
                 "bm25": result.payload.get("config", {}).get("bm25"),
             }
         )
@@ -324,6 +331,24 @@ def _numeric(value: Any, *, fallback: Any = None) -> float | None:
     if isinstance(fallback, int | float):
         return float(fallback)
     return None
+
+
+def _summarize_embedding_evaluations(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    summaries: list[dict[str, Any]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        summaries.append(
+            {
+                "name": item.get("name"),
+                "transform": item.get("transform"),
+                "aggregate_metric": item.get("aggregate_metric"),
+                "aggregate_metric_value": item.get("aggregate_metric_value"),
+            }
+        )
+    return summaries
 
 
 def _consistent_task_model_metadata(results: list[TaskRunResult]) -> dict[str, Any] | None:
