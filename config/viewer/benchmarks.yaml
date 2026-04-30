@@ -1,4 +1,10 @@
 benchmarks:
+  - name: NanoMMTEB
+    label: NanoMMTEB
+    include_in_overall: true
+  - name: NanoRTEB
+    label: NanoRTEB
+    include_in_overall: true
   - name: MNanoBEIR
     label: MNanoBEIR
     include_in_overall: true
@@ -9,21 +15,6 @@ benchmarks:
       - name: lang_mean
         label: Lang Mean
         group_by: dataset_name
-  - name: NanoRTEB
-    label: NanoRTEB
-    include_in_overall: true
-  - name: NanoMTEB
-    label: NanoMTEB
-    include_in_overall: true
-  - name: NanoMMTEB
-    label: NanoMMTEB
-    include_in_overall: true
-  - name: NanoCodeSearchNet
-    label: NanoCodeSearchNet
-    include_in_overall: true
-  - name: NanoMIRACL
-    label: NanoMIRACL
-    include_in_overall: true
   - name: NanoMLDR
     label: NanoMLDR
     include_in_overall: true
@@ -33,6 +24,15 @@ benchmarks:
   - name: NanoCoIR
     label: NanoCoIR
     include_in_overall: true
+  - name: NanoMTEB
+    label: NanoMTEB
+    include_in_overall: false
+  - name: NanoCodeSearchNet
+    label: NanoCodeSearchNet
+    include_in_overall: false
+  - name: NanoMIRACL
+    label: NanoMIRACL
+    include_in_overall: false
   - name: NanoJMTEB
     label: NanoJMTEB
     include_in_overall: false

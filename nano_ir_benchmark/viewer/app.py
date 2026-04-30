@@ -33,9 +33,21 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
     app = FastAPI(title="Nano IR Benchmark Viewer")
 
     @app.get("/", response_class=HTMLResponse)
-    def index() -> str:
+    def index(
+        view: str = Query(default=viewer_config.overall.name),
+        sort: str = Query(default="borda_rank"),
+        direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        group: str | None = Query(default=None),
+    ) -> str:
         store.ensure_current()
-        return render_page(viewer_config=viewer_config, duckdb_path=store.path)
+        initial_query = _state_query(
+            viewer_config=viewer_config,
+            view=view,
+            sort=sort,
+            direction=direction,
+            group=group,
+        )
+        return render_page(viewer_config=viewer_config, duckdb_path=store.path, initial_query=initial_query)
 
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
@@ -45,10 +57,17 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         group: str | None = Query(default=None),
     ) -> str:
         store.ensure_current()
-        if view not in viewer_config.view_names:
-            view = viewer_config.overall.name
-        if sort not in SORT_COLUMNS and not sort.startswith("metric:"):
-            sort = "borda_rank"
+        state_query = _state_query(
+            viewer_config=viewer_config,
+            view=view,
+            sort=sort,
+            direction=direction,
+            group=group,
+        )
+        view = state_query["view"]
+        sort = state_query["sort"]
+        direction = state_query["direction"]
+        group = state_query.get("group")
         service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
         result = service.get_leaderboard(
             view,
@@ -61,14 +80,15 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
     return app
 
 
-def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path) -> str:
-    initial_query = urlencode({"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"})
+def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query: dict[str, str] | None = None) -> str:
+    query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"})
     return f"""<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nano IR Benchmark Viewer</title>
+  <link rel="canonical" href="/">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/htmx.org@2.0.8"></script>
 </head>
@@ -81,7 +101,7 @@ def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path) -> str:
     </header>
     <section
       id="leaderboard-panel"
-      hx-get="/leaderboard?{initial_query}"
+      hx-get="{_leaderboard_url(query)}"
       hx-trigger="load"
       hx-swap="innerHTML"
     >
@@ -124,10 +144,12 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str) -> str:
         )
         tab_sort = "borda_rank" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query = urlencode({"view": view_name, "sort": tab_sort, "direction": tab_direction})
+        query_payload = {"view": view_name, "sort": tab_sort, "direction": tab_direction}
+        query = urlencode(query_payload)
         buttons.append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
-                  hx-get="/leaderboard?{query}" hx-target="#leaderboard-panel" hx-swap="innerHTML">
+                  hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                  hx-target="#leaderboard-panel" hx-swap="innerHTML">
                   {escape(view_name)}
                 </button>"""
         )
@@ -148,9 +170,13 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str)
         query = urlencode(
             {"view": result.view_name, "sort": "borda_rank", "direction": "asc", "group": score_group.name}
         )
+        page_url = _page_url(
+            {"view": result.view_name, "sort": "borda_rank", "direction": "asc", "group": score_group.name}
+        )
         buttons.append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
-                  hx-get="/leaderboard?{query}" hx-target="#leaderboard-panel" hx-swap="innerHTML">
+                  hx-get="{_leaderboard_url(query)}" hx-push-url="{page_url}"
+                  hx-target="#leaderboard-panel" hx-swap="innerHTML">
                   {escape(score_group.label)}
                 </button>"""
         )
@@ -159,31 +185,34 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str)
 
 def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -> str:
     columns = [
-        ("borda_rank", "Borda", "asc", "right"),
-        ("mean_rank", "Mean", "asc", "right"),
-        ("model_name", "Model Name", "asc", "left"),
-        ("borda_score", "Borda Score", "desc", "right"),
+        ("borda_rank", "Borda", "asc", "right", False),
+        ("mean_rank", "Mean", "asc", "right", False),
+        ("model_name", "Model Name", "asc", "left", False),
+        ("borda_score", "Borda Score", "desc", "right", False),
     ]
     if result.is_overall:
         columns.extend(
             [
-                ("macro_mean", "Macro Mean", "desc", "right"),
-                ("micro_mean", "Micro Mean", "desc", "right"),
+                ("macro_mean", "Macro Mean", "desc", "right", False),
+                ("micro_mean", "Micro Mean", "desc", "right", False),
             ]
         )
     else:
-        columns.append(("mean_score", "Mean", "desc", "right"))
-        columns.extend((f"metric:{column}", _metric_column_label(column), "desc", "right") for column in result.metric_columns)
+        columns.append(("mean_score", "Mean Score", "desc", "right", False))
+        columns.extend(
+            (f"metric:{column}", _metric_column_label(column), "desc", "right", True)
+            for column in result.metric_columns
+        )
     columns.extend(
         [
-            ("task_count", "Tasks", "desc", "right"),
-            ("active_parameters", "Active Params", "asc", "right"),
-            ("total_parameters", "Total Params", "asc", "right"),
-            ("max_seq_length", "Max Len", "desc", "right"),
+            ("task_count", "Tasks", "desc", "right", False),
+            ("active_parameters", "Active Params", "asc", "right", False),
+            ("total_parameters", "Total Params", "asc", "right", False),
+            ("max_seq_length", "Max Len", "desc", "right", False),
         ]
     )
     heads = []
-    for key, label, default_direction, align in columns:
+    for key, label, default_direction, align, is_metric in columns:
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
         indicator = " ▲" if sort == key and direction == "asc" else " ▼" if sort == key else ""
         query_payload = {"view": result.view_name, "sort": key, "direction": next_direction}
@@ -192,11 +221,14 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -
         query = urlencode(query_payload)
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
+        th_spacing = "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 normal-case" if is_metric else "px-3 uppercase"
+        label_class = "min-w-0 leading-tight [overflow-wrap:anywhere]" if is_metric else ""
         heads.append(
-            f"""<th scope="col" class="bg-zinc-100 px-3 py-2 text-xs font-semibold uppercase text-zinc-600 {text_align}">
+            f"""<th scope="col" class="bg-zinc-100 py-2 text-xs font-semibold text-zinc-600 {text_align} {th_spacing}">
                  <button type="button" class="inline-flex w-full {justify} hover:text-cyan-700"
-                         hx-get="/leaderboard?{query}" hx-target="#leaderboard-panel" hx-swap="innerHTML">
-                   {escape(label)}<span class="text-zinc-400">{indicator}</span>
+                         hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                         hx-target="#leaderboard-panel" hx-swap="innerHTML">
+                   <span class="{label_class}">{escape(label)}</span><span class="shrink-0 text-zinc-400">{indicator}</span>
                  </button>
                </th>"""
         )
@@ -225,7 +257,7 @@ def render_table_body(*, result: LeaderboardResult) -> str:
               <td class="px-3 py-2 text-right tabular-nums">{row.task_count}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_params(row.active_parameters)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_params(row.total_parameters)}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{row.max_seq_length or ""}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
@@ -234,7 +266,7 @@ def render_table_body(*, result: LeaderboardResult) -> str:
 def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
     values = row.metric_values
     return "".join(
-        f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
+        f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
         for column in result.metric_columns
     )
 
@@ -263,5 +295,38 @@ def _fmt_params(value: int | None) -> str:
     return f"{value:,}"
 
 
+def _fmt_max_len(value: int | None) -> str:
+    return "" if value is None else f"{value:,}"
+
+
 def _metric_column_label(column: str) -> str:
     return column.removeprefix("Nano")
+
+
+def _state_query(
+    *,
+    viewer_config: ViewerConfig,
+    view: str,
+    sort: str,
+    direction: str,
+    group: str | None,
+) -> dict[str, str]:
+    if view not in viewer_config.view_names:
+        view = viewer_config.overall.name
+    if sort not in SORT_COLUMNS and not sort.startswith("metric:"):
+        sort = "borda_rank"
+    if direction not in {"asc", "desc"}:
+        direction = "asc"
+
+    query = {"view": view, "sort": sort, "direction": direction}
+    if group:
+        query["group"] = group
+    return query
+
+
+def _page_url(query: dict[str, str]) -> str:
+    return escape(f"/?{urlencode(query)}", quote=True)
+
+
+def _leaderboard_url(query: str) -> str:
+    return escape(f"/leaderboard?{query}", quote=True)

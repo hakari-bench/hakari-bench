@@ -1,12 +1,9 @@
 name: Overall
 label: Overall
 benchmarks:
-  - MNanoBEIR
-  - NanoRTEB
-  - NanoMTEB
   - NanoMMTEB
-  - NanoCodeSearchNet
-  - NanoMIRACL
+  - NanoRTEB
+  - MNanoBEIR
   - NanoMLDR
   - NanoLongEmbed
   - NanoCoIR
