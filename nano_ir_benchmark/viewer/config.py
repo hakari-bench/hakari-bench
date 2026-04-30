@@ -6,16 +6,35 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
 
+class ScoreGroupConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    name: str
+    label: str | None = None
+    group_by: str = "task_name"
+
+    @property
+    def display_label(self) -> str:
+        return self.label or self.name
+
+
 class BenchmarkConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     name: str
     label: str | None = None
     include_in_overall: bool = True
+    score_groups: list[ScoreGroupConfig] = Field(default_factory=list)
 
     @property
     def display_label(self) -> str:
         return self.label or self.name
+
+    @property
+    def resolved_score_groups(self) -> list[ScoreGroupConfig]:
+        if self.score_groups:
+            return self.score_groups
+        return [ScoreGroupConfig(name="task", label="Tasks", group_by="task_name")]
 
 
 class OverallConfig(BaseModel):
@@ -42,6 +61,12 @@ class ViewerConfig(BaseModel):
         if any(benchmark.name == view_name for benchmark in self.benchmarks):
             return [view_name]
         raise ValueError(f"Unknown viewer benchmark: {view_name}")
+
+    def benchmark_for_view(self, view_name: str) -> BenchmarkConfig | None:
+        for benchmark in self.benchmarks:
+            if benchmark.name == view_name:
+                return benchmark
+        return None
 
     def label_for_view(self, view_name: str) -> str:
         if view_name == self.overall.name:

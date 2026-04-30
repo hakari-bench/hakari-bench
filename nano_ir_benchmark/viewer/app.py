@@ -10,6 +10,7 @@ from pydantic import BaseModel, ConfigDict
 from nano_ir_benchmark.viewer.config import ViewerConfig, load_viewer_config
 from nano_ir_benchmark.viewer.leaderboard import (
     LeaderboardResult,
+    LeaderboardRow,
     LeaderboardService,
     SORT_COLUMNS,
     SortDirection,
@@ -41,14 +42,20 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        group: str | None = Query(default=None),
     ) -> str:
         store.ensure_current()
         if view not in viewer_config.view_names:
             view = viewer_config.overall.name
-        if sort not in SORT_COLUMNS:
+        if sort not in SORT_COLUMNS and not sort.startswith("metric:"):
             sort = "borda_rank"
         service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
-        result = service.get_leaderboard(view, sort=sort, direction=cast(SortDirection, direction))
+        result = service.get_leaderboard(
+            view,
+            sort=sort,
+            direction=cast(SortDirection, direction),
+            score_group_name=group,
+        )
         return render_leaderboard(result=result, sort=sort, direction=direction)
 
     return app
@@ -89,6 +96,7 @@ def render_leaderboard(*, result: LeaderboardResult, sort: str, direction: str) 
     return f"""
 <div>
   {render_tabs(result=result, sort=sort, direction=direction)}
+  {render_score_groups(result=result, sort=sort, direction=direction)}
   <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
     <div>
       <h2 class="text-lg font-semibold">{escape(result.view_label)}</h2>
@@ -114,7 +122,9 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str) -> str:
             if active
             else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
         )
-        query = urlencode({"view": view_name, "sort": sort, "direction": direction})
+        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_direction = "asc" if sort.startswith("metric:") else direction
+        query = urlencode({"view": view_name, "sort": tab_sort, "direction": tab_direction})
         buttons.append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
                   hx-get="/leaderboard?{query}" hx-target="#leaderboard-panel" hx-swap="innerHTML">
@@ -122,6 +132,29 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str) -> str:
                 </button>"""
         )
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Benchmark views">{''.join(buttons)}</nav>"""
+
+
+def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str) -> str:
+    if len(result.score_groups) <= 1 or result.selected_score_group is None:
+        return ""
+    buttons: list[str] = []
+    for score_group in result.score_groups:
+        active = score_group.name == result.selected_score_group.name
+        classes = (
+            "border-zinc-900 bg-zinc-900 text-white"
+            if active
+            else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
+        )
+        query = urlencode(
+            {"view": result.view_name, "sort": "borda_rank", "direction": "asc", "group": score_group.name}
+        )
+        buttons.append(
+            f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
+                  hx-get="/leaderboard?{query}" hx-target="#leaderboard-panel" hx-swap="innerHTML">
+                  {escape(score_group.label)}
+                </button>"""
+        )
+    return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Score groups">{''.join(buttons)}</nav>"""
 
 
 def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -> str:
@@ -140,6 +173,7 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -
         )
     else:
         columns.append(("mean_score", "Mean", "desc", "right"))
+        columns.extend((f"metric:{column}", column, "desc", "right") for column in result.metric_columns)
     columns.extend(
         [
             ("task_count", "Tasks", "desc", "right"),
@@ -152,7 +186,10 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -
     for key, label, default_direction, align in columns:
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
         indicator = " ▲" if sort == key and direction == "asc" else " ▼" if sort == key else ""
-        query = urlencode({"view": result.view_name, "sort": key, "direction": next_direction})
+        query_payload = {"view": result.view_name, "sort": key, "direction": next_direction}
+        if result.selected_score_group is not None:
+            query_payload["group"] = result.selected_score_group.name
+        query = urlencode(query_payload)
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
         heads.append(
@@ -184,6 +221,7 @@ def render_table_body(*, result: LeaderboardResult) -> str:
               <td class="whitespace-nowrap px-3 py-2 font-medium">{escape(row.model_name)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
+              {_render_metric_cells(result=result, row=row)}
               <td class="px-3 py-2 text-right tabular-nums">{row.task_count}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_params(row.active_parameters)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_params(row.total_parameters)}</td>
@@ -191,6 +229,14 @@ def render_table_body(*, result: LeaderboardResult) -> str:
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
+
+
+def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    values = row.metric_values
+    return "".join(
+        f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
+        for column in result.metric_columns
+    )
 
 
 def _next_direction(*, key: str, sort: str, direction: str, default_direction: str) -> str:

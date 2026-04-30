@@ -6,9 +6,9 @@ from pathlib import Path
 from typing import Any, Iterable, Literal
 
 import duckdb
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
-from nano_ir_benchmark.viewer.config import ViewerConfig
+from nano_ir_benchmark.viewer.config import ScoreGroupConfig, ViewerConfig
 
 SortDirection = Literal["asc", "desc"]
 
@@ -17,6 +17,10 @@ SortDirection = Literal["asc", "desc"]
 class TaskScore:
     model_name: str
     benchmark: str
+    dataset_id: str
+    dataset_name: str
+    split_name: str
+    task_name: str
     task_key: str
     score: float
     active_parameters: int | None
@@ -38,6 +42,14 @@ class LeaderboardRow(BaseModel):
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
+    metric_values: dict[str, float] = Field(default_factory=dict)
+
+
+class ScoreGroup(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    name: str
+    label: str
 
 
 class LeaderboardResult(BaseModel):
@@ -49,6 +61,9 @@ class LeaderboardResult(BaseModel):
     expected_tasks: int
     rows: list[LeaderboardRow]
     available_views: list[str]
+    score_groups: list[ScoreGroup]
+    selected_score_group: ScoreGroup | None = None
+    metric_columns: list[str]
 
 
 SORT_COLUMNS = {
@@ -77,17 +92,34 @@ class LeaderboardService:
         *,
         sort: str = "borda_rank",
         direction: SortDirection = "asc",
+        score_group_name: str | None = None,
     ) -> LeaderboardResult:
         benchmarks = self.config.benchmarks_for_view(view_name)
+        is_overall = view_name == self.config.overall.name
+        score_groups = [] if is_overall else _score_groups_for_view(self.config, view_name)
+        selected_score_group = _select_score_group(score_groups, score_group_name)
         rows = self._load_task_scores(benchmarks)
-        leaderboard_rows = compute_leaderboard_rows(rows, is_overall=view_name == self.config.overall.name)
+        metric_columns = _metric_columns(rows, selected_score_group) if selected_score_group is not None else []
+        leaderboard_rows = compute_leaderboard_rows(
+            rows,
+            is_overall=is_overall,
+            score_group=selected_score_group,
+            metric_columns=metric_columns,
+        )
         return LeaderboardResult(
             view_name=view_name,
             view_label=self.config.label_for_view(view_name),
-            is_overall=view_name == self.config.overall.name,
+            is_overall=is_overall,
             expected_tasks=len({row.task_key for row in rows}),
             rows=sort_rows(leaderboard_rows, sort=sort, direction=direction),
             available_views=self.config.view_names,
+            score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
+            selected_score_group=(
+                ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
+                if selected_score_group is not None
+                else None
+            ),
+            metric_columns=metric_columns,
         )
 
     def _load_task_scores(self, benchmarks: list[str]) -> list[TaskScore]:
@@ -98,6 +130,10 @@ class LeaderboardService:
             SELECT
                 model_name,
                 benchmark,
+                dataset_id,
+                dataset_name,
+                COALESCE(split_name, '') AS split_name,
+                task_name,
                 task_key,
                 score,
                 active_parameters,
@@ -116,17 +152,27 @@ class LeaderboardService:
             TaskScore(
                 model_name=str(row[0]),
                 benchmark=str(row[1]),
-                task_key=str(row[2]),
-                score=float(row[3]),
-                active_parameters=_int_or_none(row[4]),
-                total_parameters=_int_or_none(row[5]),
-                max_seq_length=_int_or_none(row[6]),
+                dataset_id=str(row[2]),
+                dataset_name=str(row[3]),
+                split_name=str(row[4]),
+                task_name=str(row[5]),
+                task_key=str(row[6]),
+                score=float(row[7]),
+                active_parameters=_int_or_none(row[8]),
+                total_parameters=_int_or_none(row[9]),
+                max_seq_length=_int_or_none(row[10]),
             )
             for row in result
         ]
 
 
-def compute_leaderboard_rows(rows: list[TaskScore], *, is_overall: bool) -> list[LeaderboardRow]:
+def compute_leaderboard_rows(
+    rows: list[TaskScore],
+    *,
+    is_overall: bool,
+    score_group: ScoreGroupConfig | None = None,
+    metric_columns: list[str] | None = None,
+) -> list[LeaderboardRow]:
     expected_tasks = {row.task_key for row in rows}
     if not expected_tasks:
         return []
@@ -154,6 +200,7 @@ def compute_leaderboard_rows(rows: list[TaskScore], *, is_overall: bool) -> list
         ]
         macro_mean = _mean(benchmark_means)
         mean_score = macro_mean if is_overall else micro_mean
+        metric_values = _metric_values(model_rows, score_group=score_group, metric_columns=metric_columns or [])
         leaderboard_rows.append(
             LeaderboardRow(
                 borda_rank=0.0,
@@ -167,6 +214,7 @@ def compute_leaderboard_rows(rows: list[TaskScore], *, is_overall: bool) -> list
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
+                metric_values=metric_values,
             )
         )
 
@@ -179,11 +227,14 @@ def compute_leaderboard_rows(rows: list[TaskScore], *, is_overall: bool) -> list
 
 
 def sort_rows(rows: list[LeaderboardRow], *, sort: str, direction: SortDirection) -> list[LeaderboardRow]:
+    metric_key = sort.removeprefix("metric:") if sort.startswith("metric:") else None
+    if metric_key is not None and not any(metric_key in row.metric_values for row in rows):
+        metric_key = None
     sort_key = sort if sort in SORT_COLUMNS else "borda_rank"
-    reverse = direction == "desc"
+    reverse = direction == "desc" and (metric_key is not None or sort in SORT_COLUMNS)
 
     def key(row: LeaderboardRow) -> tuple[int, Any, float, str]:
-        value = getattr(row, sort_key)
+        value = row.metric_values.get(metric_key) if metric_key is not None else getattr(row, sort_key)
         missing = value is None
         normalized = str(value).lower() if isinstance(value, str) else value
         return (1 if missing else 0, normalized, row.borda_rank, row.model_name.lower())
@@ -227,6 +278,55 @@ def _group_by_benchmark(rows: list[TaskScore]) -> dict[str, list[TaskScore]]:
     for row in rows:
         grouped[row.benchmark].append(row)
     return grouped
+
+
+def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGroupConfig]:
+    benchmark = config.benchmark_for_view(view_name)
+    return benchmark.resolved_score_groups if benchmark is not None else []
+
+
+def _select_score_group(
+    groups: list[ScoreGroupConfig],
+    score_group_name: str | None,
+) -> ScoreGroupConfig | None:
+    if not groups:
+        return None
+    for group in groups:
+        if group.name == score_group_name:
+            return group
+    return groups[0]
+
+
+def _metric_columns(rows: list[TaskScore], score_group: ScoreGroupConfig | None) -> list[str]:
+    if score_group is None:
+        return []
+    return sorted({_score_group_key(row, score_group.group_by) for row in rows})
+
+
+def _metric_values(
+    rows: list[TaskScore],
+    *,
+    score_group: ScoreGroupConfig | None,
+    metric_columns: list[str],
+) -> dict[str, float]:
+    if score_group is None:
+        return {}
+    values_by_column: dict[str, list[float]] = defaultdict(list)
+    for row in rows:
+        values_by_column[_score_group_key(row, score_group.group_by)].append(row.score * 100.0)
+    return {column: _mean(values_by_column[column]) for column in metric_columns if values_by_column[column]}
+
+
+def _score_group_key(row: TaskScore, group_by: str) -> str:
+    if group_by == "dataset_name":
+        return row.dataset_name
+    if group_by == "dataset_id":
+        return row.dataset_id
+    if group_by == "split_name":
+        return row.split_name
+    if group_by == "benchmark":
+        return row.benchmark
+    return row.task_name
 
 
 def _mean(values: Iterable[float]) -> float:

@@ -6,8 +6,8 @@ from pathlib import Path
 
 import duckdb
 
-from nano_ir_benchmark.viewer.config import load_viewer_config
 from nano_ir_benchmark.viewer.app import create_app
+from nano_ir_benchmark.viewer.config import load_viewer_config
 from nano_ir_benchmark.viewer.leaderboard import LeaderboardService, TaskScore, compute_leaderboard_rows
 from nano_ir_benchmark.viewer.store import DuckDbLocation, LocalDuckDbStore
 
@@ -18,6 +18,9 @@ def test_viewer_config_excludes_jmteb_from_overall() -> None:
     assert "NanoJMTEB" in config.view_names
     assert "NanoJMTEB" not in config.overall.benchmarks
     assert "NanoRTEB" in config.overall.benchmarks
+    mnanobeir = config.benchmark_for_view("MNanoBEIR")
+    assert mnanobeir is not None
+    assert [group.name for group in mnanobeir.resolved_score_groups] == ["task_mean", "lang_mean"]
 
 
 def test_overall_leaderboard_requires_all_configured_benchmark_tasks(tmp_path: Path) -> None:
@@ -25,13 +28,13 @@ def test_overall_leaderboard_requires_all_configured_benchmark_tasks(tmp_path: P
     _write_task_results(
         db_path,
         [
-            ("model/a", "BenchA", "a1", 0.90, 10, 12, 8192),
-            ("model/a", "BenchA", "a2", 0.80, 10, 12, 8192),
-            ("model/a", "BenchB", "b1", 0.70, 10, 12, 8192),
-            ("model/b", "BenchA", "a1", 0.95, 20, 24, 4096),
-            ("model/b", "BenchA", "a2", 0.75, 20, 24, 4096),
-            ("model/b", "BenchB", "b1", 0.65, 20, 24, 4096),
-            ("model/incomplete", "BenchA", "a1", 1.00, 30, 36, 2048),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.80, 10, 12, 8192),
+            ("model/a", "BenchB", "bench/b", "BenchB", "b1", "b1", "BenchB::b1", 0.70, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.95, 20, 24, 4096),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.75, 20, 24, 4096),
+            ("model/b", "BenchB", "bench/b", "BenchB", "b1", "b1", "BenchB::b1", 0.65, 20, 24, 4096),
+            ("model/incomplete", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 1.00, 30, 36, 2048),
         ],
     )
     config_dir = tmp_path / "config"
@@ -69,10 +72,10 @@ benchmarks:
 def test_individual_leaderboard_uses_simple_task_mean() -> None:
     rows = compute_leaderboard_rows(
         [
-            TaskScore("model/a", "BenchA", "a1", 0.50, None, None, None),
-            TaskScore("model/a", "BenchA", "a2", 0.70, None, None, None),
-            TaskScore("model/b", "BenchA", "a1", 0.80, None, None, None),
-            TaskScore("model/b", "BenchA", "a2", 0.20, None, None, None),
+            TaskScore("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.50, None, None, None),
+            TaskScore("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "a2", 0.70, None, None, None),
+            TaskScore("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, None, None, None),
+            TaskScore("model/b", "BenchA", "bench/a", "BenchA", "a2", "a2", "a2", 0.20, None, None, None),
         ],
         is_overall=False,
     )
@@ -81,6 +84,65 @@ def test_individual_leaderboard_uses_simple_task_mean() -> None:
     assert by_model["model/a"].mean_score == 60.0
     assert by_model["model/a"].macro_mean is None
     assert by_model["model/a"].micro_mean is None
+    assert by_model["model/a"].metric_values == {}
+
+
+def test_individual_leaderboard_adds_metric_columns_from_score_group(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoArguAna", "arguana", "ja-arguana", 0.80, 10, 12, 8192),
+            ("model/a", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoFEVER", "fever", "ja-fever", 0.60, 10, 12, 8192),
+            ("model/a", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoArguAna", "arguana", "en-arguana", 0.70, 10, 12, 8192),
+            ("model/a", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoFEVER", "fever", "en-fever", 0.50, 10, 12, 8192),
+            ("model/b", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoArguAna", "arguana", "ja-arguana", 0.50, 20, 24, 4096),
+            ("model/b", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoFEVER", "fever", "ja-fever", 0.40, 20, 24, 4096),
+            ("model/b", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoArguAna", "arguana", "en-arguana", 0.60, 20, 24, 4096),
+            ("model/b", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoFEVER", "fever", "en-fever", 0.30, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: MNanoBEIR
+    score_groups:
+      - name: task_mean
+        label: Task Mean
+        group_by: task_name
+      - name: lang_mean
+        label: Lang Mean
+        group_by: dataset_name
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n",
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    task_result = service.get_leaderboard("MNanoBEIR", score_group_name="task_mean")
+    lang_result = service.get_leaderboard("MNanoBEIR", score_group_name="lang_mean", sort="metric:NanoBEIR-ja")
+
+    assert task_result.metric_columns == ["arguana", "fever"]
+    assert task_result.rows[0].metric_values["arguana"] == 75.0
+    assert lang_result.metric_columns == ["NanoBEIR-en", "NanoBEIR-ja"]
+    lang_by_model = {row.model_name: row for row in lang_result.rows}
+    assert lang_by_model["model/a"].metric_values["NanoBEIR-ja"] == 70.0
+
+    from fastapi.testclient import TestClient
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=MNanoBEIR&group=lang_mean&sort=metric:NanoBEIR-ja")
+
+    assert response.status_code == 200
+    assert "Task Mean" in response.text
+    assert "Lang Mean" in response.text
+    assert "NanoBEIR-ja" in response.text
+    assert "metric%3ANanoBEIR-ja" in response.text
 
 
 def test_local_duckdb_store_copies_newer_source_on_page_load(tmp_path: Path) -> None:
@@ -107,8 +169,8 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     _write_task_results(
         db_path,
         [
-            ("model/a", "BenchA", "a1", 0.90, 10, 12, 8192),
-            ("model/b", "BenchA", "a1", 0.80, 20, 24, 4096),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.80, 20, 24, 4096),
         ],
     )
     config_dir = tmp_path / "config"
@@ -125,7 +187,10 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     assert 'hx-get="/leaderboard?' in response.text
 
 
-def _write_task_results(db_path: Path, rows: list[tuple[str, str, str, float, int, int, int]]) -> None:
+def _write_task_results(
+    db_path: Path,
+    rows: list[tuple[str, str, str, str, str, str, str, float, int, int, int]],
+) -> None:
     con = duckdb.connect(str(db_path))
     try:
         con.execute(
@@ -133,6 +198,10 @@ def _write_task_results(db_path: Path, rows: list[tuple[str, str, str, float, in
             CREATE TABLE task_results (
                 model_name VARCHAR,
                 benchmark VARCHAR,
+                dataset_id VARCHAR,
+                dataset_name VARCHAR,
+                split_name VARCHAR,
+                task_name VARCHAR,
                 task_key VARCHAR,
                 score DOUBLE,
                 active_parameters BIGINT,
@@ -141,6 +210,6 @@ def _write_task_results(db_path: Path, rows: list[tuple[str, str, str, float, in
             )
             """
         )
-        con.executemany("INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?)", rows)
+        con.executemany("INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
     finally:
         con.close()

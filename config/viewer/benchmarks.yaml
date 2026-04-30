@@ -2,6 +2,13 @@ benchmarks:
   - name: MNanoBEIR
     label: MNanoBEIR
     include_in_overall: true
+    score_groups:
+      - name: task_mean
+        label: Task Mean
+        group_by: task_name
+      - name: lang_mean
+        label: Lang Mean
+        group_by: dataset_name
   - name: NanoRTEB
     label: NanoRTEB
     include_in_overall: true
