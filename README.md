@@ -1,5 +1,7 @@
 # nano-ir-bench
 
+NanoIR Benchmark is a library, viewer, and leaderboard project for evaluating small information retrieval datasets.
+
 Nano-style information retrieval benchmark runner for SentenceTransformers-compatible models.
 
 Built-in dataset definitions include `NanoBEIR-en`, `NanoMIRACL`, `NanoMLDR`,
@@ -100,3 +102,8 @@ By default, it binds to `127.0.0.1:8000` and keeps
 DuckDB when a page is loaded. Use `--host 0.0.0.0 --port 28090` for remote
 access, or pass `--source-output-dir` / `--source-duckdb-path` to point at a
 different source.
+
+## Achievements
+
+- Built on the idea behind [Nano-BEIR](https://huggingface.co/blog/sionic-ai/eval-sionic-nano-beir).
+- The NanoBEIR evaluation implementation in [Sentence Transformers](https://github.com/huggingface/sentence-transformers/) was a reference for this project. Thanks to the maintainers and contributors.
