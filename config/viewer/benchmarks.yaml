@@ -24,6 +24,33 @@ benchmarks:
   - name: NanoCoIR
     label: NanoCoIR
     include_in_overall: true
+  - name: NanoIFIR
+    label: NanoIFIR
+    include_in_overall: true
+  - name: NanoLaw
+    label: NanoLaw
+    include_in_overall: true
+  - name: NanoMedical
+    label: NanoMedical
+    include_in_overall: true
+  - name: NanoRARb
+    label: NanoRARb
+    include_in_overall: true
+  - name: NanoBRIGHT
+    label: NanoBRIGHT
+    include_in_overall: true
+  - name: NanoCodeRAG
+    label: NanoCodeRAG
+    include_in_overall: true
+  - name: NanoChemTEB
+    label: NanoChemTEB
+    include_in_overall: true
+  - name: NanoR2MED
+    label: NanoR2MED
+    include_in_overall: true
+  - name: NanoBuiltBench
+    label: NanoBuiltBench
+    include_in_overall: true
   - name: NanoMTEB
     label: NanoMTEB
     include_in_overall: false

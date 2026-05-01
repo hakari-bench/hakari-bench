@@ -14,15 +14,25 @@ from nano_ir_benchmark.viewer.store import DuckDbLocation, LocalDuckDbStore
 
 def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> None:
     config = load_viewer_config()
-
-    assert config.overall.benchmarks == [
+    expected_overall_benchmarks = [
         "NanoMMTEB",
         "NanoRTEB",
         "MNanoBEIR",
         "NanoMLDR",
         "NanoLongEmbed",
         "NanoCoIR",
+        "NanoIFIR",
+        "NanoLaw",
+        "NanoMedical",
+        "NanoRARb",
+        "NanoBRIGHT",
+        "NanoCodeRAG",
+        "NanoChemTEB",
+        "NanoR2MED",
+        "NanoBuiltBench",
     ]
+
+    assert config.overall.benchmark_names == expected_overall_benchmarks
     grouped_overall = config.overall_for_view("OverallGrouped")
     assert grouped_overall is not None
     assert [component.name for component in grouped_overall.benchmark_components] == [
@@ -32,6 +42,15 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoMLDR",
         "NanoLongEmbed",
         "NanoCoIR",
+        "NanoIFIR",
+        "NanoLaw",
+        "NanoMedical",
+        "NanoRARb",
+        "NanoBRIGHT",
+        "NanoCodeRAG",
+        "NanoChemTEB",
+        "NanoR2MED",
+        "NanoBuiltBench",
         "NanoMTEB",
         "NanoMIRACL",
         "NanoJMTEB",
@@ -46,20 +65,24 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "benchmark",
         "benchmark",
         "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
     ]
-    assert config.view_names[:8] == [
+    assert config.view_names[: len(expected_overall_benchmarks) + 2] == [
         "Overall",
         "OverallGrouped",
-        "NanoMMTEB",
-        "NanoRTEB",
-        "MNanoBEIR",
-        "NanoMLDR",
-        "NanoLongEmbed",
-        "NanoCoIR",
+        *expected_overall_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
     assert "NanoJMTEB" in config.view_names
-    assert "NanoJMTEB" not in config.overall.benchmarks
+    assert "NanoJMTEB" not in config.overall.benchmark_names
     mnanobeir = config.benchmark_for_view("MNanoBEIR")
     assert mnanobeir is not None
     assert [group.name for group in mnanobeir.resolved_score_groups] == ["task_mean", "lang_mean"]

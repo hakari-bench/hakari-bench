@@ -27,6 +27,7 @@ class LoadedIrDataset:
 class TaskEvaluation:
     metrics: dict[str, float]
     timing: dict[str, float]
+    embedding_conversion: dict[str, Any] = field(default_factory=dict)
     embedding_evaluations: list[dict[str, Any]] = field(default_factory=list)
 
 
@@ -175,6 +176,18 @@ def evaluate_dense_task(
         "metric_compute_seconds": float(metric_seconds),
         "pure_compute_seconds": float(query_seconds + corpus_seconds + score_seconds + metric_seconds),
     }
+    embedding_conversion = {
+        "query": _embedding_conversion_payload(
+            text_count=len(query_texts),
+            batch_size=batch_size,
+            seconds=query_seconds,
+        ),
+        "docs": _embedding_conversion_payload(
+            text_count=len(corpus_texts),
+            batch_size=batch_size,
+            seconds=corpus_seconds,
+        ),
+    }
     embedding_evaluations = [
         _embedding_evaluation_payload(
             name="base",
@@ -242,6 +255,7 @@ def evaluate_dense_task(
                 query_seconds + corpus_seconds + score_seconds + metric_seconds + variant_score_seconds + variant_metric_seconds
             ),
         },
+        embedding_conversion=embedding_conversion,
         embedding_evaluations=embedding_evaluations,
     )
 
@@ -318,6 +332,16 @@ def _encode(
         return encode_fn(sentences, convert_to_numpy=True, **kwargs)
     except TypeError:
         return encode_fn(sentences, **kwargs)
+
+
+def _embedding_conversion_payload(*, text_count: int, batch_size: int, seconds: float) -> dict[str, int | float | None]:
+    seconds = float(seconds)
+    return {
+        "text_count": int(text_count),
+        "batch_size": int(batch_size),
+        "seconds": seconds,
+        "texts_per_second": float(text_count / seconds) if seconds > 0.0 else None,
+    }
 
 
 def _predict_scores(model: Any, *, pairs: list[tuple[str, str]], batch_size: int, show_progress: bool) -> list[float]:

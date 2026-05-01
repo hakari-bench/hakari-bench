@@ -5,8 +5,8 @@ NanoIR Benchmark is a library, viewer, and leaderboard project for evaluating sm
 Nano-style information retrieval benchmark runner for SentenceTransformers-compatible models.
 
 Built-in dataset definitions include `NanoBEIR-en`, `NanoMIRACL`, `NanoMLDR`,
-`NanoJMTEB`, `NanoRTEB`, `NanoMTEB`, `NanoMMTEB`, and
-`NanoCodeSearchNet`.
+`NanoJMTEB`, `NanoRTEB`, `NanoMTEB`, `NanoMMTEB`, `NanoLongEmbed`, and
+`NanoCoIR`.
 
 ## Example
 
@@ -58,6 +58,18 @@ dequantized back to approximate `float32` vectors before similarity search, so
 ranking does not compare raw bucket ids as if they were embedding coordinates.
 `binary` and `ubinary` document variants are stored as packed binary vectors and
 scored through unpacked sign vectors.
+
+This quantization evaluation is an offline quality probe, not a full search
+engine simulation. It measures how much retrieval quality changes when document
+embeddings are stored in lower-precision forms. During scoring, NanoIR Benchmark
+uses exact matrix scoring over score-time representations: scalar quantized
+documents are dequantized to approximate `float32`, and binary documents are
+unpacked to `-1/+1` sign vectors. It does not currently benchmark an ANN index,
+SIMD/GPU int8 dot kernels, packed binary Hamming/XNOR kernels, product
+quantization, index build time, memory locality, or backend-specific recall
+loss. Use these numbers as a model-level quantization tolerance signal; use a
+real index backend benchmark when production search-engine latency, memory, or
+ANN recall is the question.
 
 If a symmetric query-and-document quantization comparison is explicitly needed,
 use `quantize-both:`:

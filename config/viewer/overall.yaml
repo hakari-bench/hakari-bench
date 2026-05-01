@@ -8,6 +8,15 @@ overalls:
       - NanoMLDR
       - NanoLongEmbed
       - NanoCoIR
+      - NanoIFIR
+      - NanoLaw
+      - NanoMedical
+      - NanoRARb
+      - NanoBRIGHT
+      - NanoCodeRAG
+      - NanoChemTEB
+      - NanoR2MED
+      - NanoBuiltBench
   - name: OverallGrouped
     label: Overall Grouped
     benchmarks:
@@ -23,6 +32,24 @@ overalls:
         group_by: benchmark
       - name: NanoCoIR
         group_by: task_name
+      - name: NanoIFIR
+        group_by: benchmark
+      - name: NanoLaw
+        group_by: benchmark
+      - name: NanoMedical
+        group_by: benchmark
+      - name: NanoRARb
+        group_by: benchmark
+      - name: NanoBRIGHT
+        group_by: benchmark
+      - name: NanoCodeRAG
+        group_by: benchmark
+      - name: NanoChemTEB
+        group_by: benchmark
+      - name: NanoR2MED
+        group_by: benchmark
+      - name: NanoBuiltBench
+        group_by: benchmark
       - name: NanoMTEB
         group_by: benchmark
       - name: NanoMIRACL
