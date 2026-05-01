@@ -101,6 +101,7 @@ class LeaderboardService:
         score_groups = [] if is_overall else _score_groups_for_view(self.config, view_name)
         selected_score_group = _select_score_group(score_groups, score_group_name)
         rows = self._load_task_scores(benchmarks)
+        rows = _exclude_configured_tasks(rows, self.config)
         if overall is not None:
             rows = _aggregate_overall_scores(rows, overall)
         metric_columns = _metric_columns(rows, selected_score_group) if selected_score_group is not None else []
@@ -324,6 +325,22 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
             )
         )
     return aggregated
+
+
+def _exclude_configured_tasks(rows: list[TaskScore], config: ViewerConfig) -> list[TaskScore]:
+    excluded_by_benchmark = {
+        benchmark.name: set(benchmark.excluded_tasks)
+        for benchmark in config.benchmarks
+        if benchmark.excluded_tasks
+    }
+    if not excluded_by_benchmark:
+        return rows
+    return [
+        row
+        for row in rows
+        if row.task_name not in excluded_by_benchmark.get(row.benchmark, set())
+        and row.task_key not in excluded_by_benchmark.get(row.benchmark, set())
+    ]
 
 
 def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGroupConfig]:

@@ -83,6 +83,9 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
     assert "NanoCodeSearchNet" not in config.view_names
     assert "NanoJMTEB" in config.view_names
     assert "NanoJMTEB" not in config.overall.benchmark_names
+    nano_law = config.benchmark_for_view("NanoLaw")
+    assert nano_law is not None
+    assert "NanoAILACasedocs" in nano_law.excluded_tasks
     mnanobeir = config.benchmark_for_view("MNanoBEIR")
     assert mnanobeir is not None
     assert [group.name for group in mnanobeir.resolved_score_groups] == ["task_mean", "lang_mean"]
@@ -203,6 +206,64 @@ overalls:
 
     assert response.status_code == 200
     assert "Overall Grouped" in response.text
+
+
+def test_configured_excluded_tasks_are_not_used_in_leaderboards(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "keep", "keep", "BenchA::keep", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "drop", "drop", "BenchA::drop", 0.10, 10, 12, 8192),
+            ("model/a", "BenchB", "bench/b", "BenchB", "b1", "b1", "BenchB::b1", 0.80, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "keep", "keep", "BenchA::keep", 0.70, 20, 24, 4096),
+            ("model/b", "BenchA", "bench/a", "BenchA", "drop", "drop", "BenchA::drop", 1.00, 20, 24, 4096),
+            ("model/b", "BenchB", "bench/b", "BenchB", "b1", "b1", "BenchB::b1", 0.60, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: BenchA
+    excluded_tasks:
+      - drop
+  - name: BenchB
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+overalls:
+  - name: Overall
+    label: Overall
+    benchmarks:
+      - BenchA
+      - BenchB
+  - name: OverallGrouped
+    label: Overall Grouped
+    benchmarks:
+      - name: BenchA
+        group_by: benchmark
+      - name: BenchB
+        group_by: benchmark
+""".strip(),
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    bench_result = service.get_leaderboard("BenchA")
+    overall_result = service.get_leaderboard("Overall")
+    grouped_result = service.get_leaderboard("OverallGrouped")
+
+    assert bench_result.expected_tasks == 1
+    assert bench_result.metric_columns == ["keep"]
+    assert bench_result.rows[0].model_name == "model/a"
+    assert overall_result.expected_tasks == 2
+    assert overall_result.rows[0].micro_mean == 85.0
+    assert grouped_result.expected_tasks == 2
+    assert grouped_result.rows[0].micro_mean == 85.0
 
 
 def test_individual_leaderboard_uses_simple_task_mean() -> None:

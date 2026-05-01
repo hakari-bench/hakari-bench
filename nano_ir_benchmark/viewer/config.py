@@ -25,6 +25,7 @@ class BenchmarkConfig(BaseModel):
     name: str
     label: str | None = None
     include_in_overall: bool = True
+    excluded_tasks: list[str] = Field(default_factory=list)
     score_groups: list[ScoreGroupConfig] = Field(default_factory=list)
 
     @property

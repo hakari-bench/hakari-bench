@@ -27,15 +27,45 @@ benchmarks:
   - name: NanoIFIR
     label: NanoIFIR
     include_in_overall: true
+    excluded_tasks:
+      # Duplicates FiQA-style tasks in MNanoBEIR/NanoMTEB, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoIFIRFiQA
+      # Duplicates NFCorpus-style tasks in MNanoBEIR, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoIFIRNFCorpus
+      # Duplicates SciFact-style tasks in MNanoBEIR, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoIFIRScifact
   - name: NanoLaw
     label: NanoLaw
     include_in_overall: true
+    excluded_tasks:
+      # Duplicates NanoRTEB/NanoAILACasedocs, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoAILACasedocs
+      # Duplicates NanoRTEB/NanoAILAStatutes and NanoMMTEB/NanoAILAStatutes, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoAILAStatutes
+      # Duplicates NanoRTEB/NanoLegalSummarization, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoLegalSummarization
+      # Duplicates NanoMMTEB/NanoLegalBenchCorporateLobbying, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoLegalBenchCorporateLobbying
   - name: NanoMedical
     label: NanoMedical
     include_in_overall: true
+    excluded_tasks:
+      # Duplicates NanoRTEB/NanoCUREv1, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoCUREv1
+      # Duplicates NFCorpus-style tasks in MNanoBEIR, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoNFCorpus
+      # Duplicates SciFact-style tasks in MNanoBEIR, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoSciFact
   - name: NanoRARb
     label: NanoRARb
     include_in_overall: true
+    excluded_tasks:
+      # Duplicates NanoMMTEB/NanoWinoGrande, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoWinoGrande
+      # Duplicates NanoMMTEB/NanoSpartQA, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoSpartQA
+      # Duplicates NanoMMTEB/NanoTempReasonL1, so this uploaded copy is excluded from leaderboard calculations.
+      - NanoTempReasonL1
   - name: NanoBRIGHT
     label: NanoBRIGHT
     include_in_overall: true
