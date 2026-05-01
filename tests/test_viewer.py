@@ -14,24 +14,26 @@ from nano_ir_benchmark.viewer.store import DuckDbLocation, LocalDuckDbStore
 
 def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> None:
     config = load_viewer_config()
+    expected_overall_benchmarks = [
+        "NanoMMTEB",
+        "NanoRTEB",
+        "MNanoBEIR",
+        "NanoMLDR",
+        "NanoLongEmbed",
+        "NanoCoIR",
+        "NanoIFIR",
+        "NanoLaw",
+        "NanoMedical",
+        "NanoRARb",
+        "NanoBRIGHT",
+        "NanoCodeRAG",
+        "NanoChemTEB",
+        "NanoR2MED",
+        "NanoBuiltBench",
+    ]
 
-    assert config.overall.benchmarks == [
-        "NanoMMTEB",
-        "NanoRTEB",
-        "MNanoBEIR",
-        "NanoMLDR",
-        "NanoLongEmbed",
-        "NanoCoIR",
-    ]
-    assert config.view_names[:7] == [
-        "Overall",
-        "NanoMMTEB",
-        "NanoRTEB",
-        "MNanoBEIR",
-        "NanoMLDR",
-        "NanoLongEmbed",
-        "NanoCoIR",
-    ]
+    assert config.overall.benchmarks == expected_overall_benchmarks
+    assert config.view_names[: len(expected_overall_benchmarks) + 1] == ["Overall", *expected_overall_benchmarks]
     assert "NanoJMTEB" in config.view_names
     assert "NanoJMTEB" not in config.overall.benchmarks
     mnanobeir = config.benchmark_for_view("MNanoBEIR")

@@ -21,6 +21,15 @@ TARGET_BENCHMARKS = [
     "NanoMLDR",
     "NanoLongEmbed",
     "NanoCoIR",
+    "NanoIFIR",
+    "NanoLaw",
+    "NanoMedical",
+    "NanoRARb",
+    "NanoBRIGHT",
+    "NanoCodeRAG",
+    "NanoChemTEB",
+    "NanoR2MED",
+    "NanoBuiltBench",
 ]
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
 

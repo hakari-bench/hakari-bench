@@ -1,0 +1,12 @@
+name: NanoCodeRAG
+dataset_id: hotchpotch/NanoCodeRAG
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+  - NanoCodeRAGLibraryDocumentationSolutions
+  - NanoCodeRAGOnlineTutorials
+  - NanoCodeRAGProgrammingSolutions
+  - NanoCodeRAGStackoverflowPosts

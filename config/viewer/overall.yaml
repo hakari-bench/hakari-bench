@@ -7,3 +7,12 @@ benchmarks:
   - NanoMLDR
   - NanoLongEmbed
   - NanoCoIR
+  - NanoIFIR
+  - NanoLaw
+  - NanoMedical
+  - NanoRARb
+  - NanoBRIGHT
+  - NanoCodeRAG
+  - NanoChemTEB
+  - NanoR2MED
+  - NanoBuiltBench

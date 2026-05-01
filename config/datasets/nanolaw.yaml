@@ -1,0 +1,16 @@
+name: NanoLaw
+dataset_id: hotchpotch/NanoLaw
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+  - NanoAILACasedocs
+  - NanoAILAStatutes
+  - NanoLegalSummarization
+  - NanoGerDaLIRSmall
+  - NanoLeCaRDv2
+  - NanoLegalBenchConsumerContractsQA
+  - NanoLegalBenchCorporateLobbying
+  - NanoLegalQuAD

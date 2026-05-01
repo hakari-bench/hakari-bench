@@ -1,0 +1,28 @@
+name: NanoBRIGHT
+dataset_id: hotchpotch/NanoBRIGHT
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+  - NanoBrightBiology
+  - NanoBrightEarthScience
+  - NanoBrightEconomics
+  - NanoBrightPsychology
+  - NanoBrightRobotics
+  - NanoBrightStackoverflow
+  - NanoBrightSustainableLiving
+  - NanoBrightPony
+  - NanoBrightLeetcode
+  - NanoBrightAops
+  - NanoBrightTheoremQATheorems
+  - NanoBrightTheoremQAQuestions
+  - NanoBrightBiologyLong
+  - NanoBrightEarthScienceLong
+  - NanoBrightEconomicsLong
+  - NanoBrightPsychologyLong
+  - NanoBrightRoboticsLong
+  - NanoBrightStackoverflowLong
+  - NanoBrightSustainableLivingLong
+  - NanoBrightPonyLong

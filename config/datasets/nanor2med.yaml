@@ -1,0 +1,16 @@
+name: NanoR2MED
+dataset_id: hotchpotch/NanoR2MED
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+  - NanoR2MEDBiology
+  - NanoR2MEDBioinformatics
+  - NanoR2MEDMedicalSciences
+  - NanoR2MEDMedXpertQAExam
+  - NanoR2MEDMedQADiag
+  - NanoR2MEDPMCTreatment
+  - NanoR2MEDPMCClinical
+  - NanoR2MEDIIYiClinical

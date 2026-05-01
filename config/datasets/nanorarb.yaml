@@ -1,0 +1,25 @@
+name: NanoRARb
+dataset_id: hotchpotch/NanoRARb
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+  - NanoARCChallenge
+  - NanoAlphaNLI
+  - NanoHellaSwag
+  - NanoWinoGrande
+  - NanoPIQA
+  - NanoSIQA
+  - NanoQuail
+  - NanoSpartQA
+  - NanoTempReasonL1
+  - NanoTempReasonL2Pure
+  - NanoTempReasonL2Fact
+  - NanoTempReasonL2Context
+  - NanoTempReasonL3Pure
+  - NanoTempReasonL3Fact
+  - NanoTempReasonL3Context
+  - NanoRARbCode
+  - NanoRARbMath
