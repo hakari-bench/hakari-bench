@@ -100,6 +100,63 @@ def test_render_html_includes_total_parameters_column() -> None:
     assert "Total Params" in html
 
 
+def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
+    model_dir = tmp_path / "model"
+    task_path = model_dir / "hotchpotch__NanoJMTEB" / "NanoJaCWIR.json"
+    task_path.parent.mkdir(parents=True)
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {"name_or_path": "example/model"},
+                "environment": {"package_versions": {}},
+                "target": {
+                    "dataset_name": "NanoJMTEB",
+                    "dataset_id": "hotchpotch/NanoJMTEB",
+                    "split_name": "NanoJaCWIR",
+                    "task_name": "NanoJaCWIR",
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.42},
+                "embedding_evaluations": [
+                    {
+                        "name": "base",
+                        "aggregate_metric": "ndcg@10",
+                        "aggregate_metric_value": 0.42,
+                        "embedding_dimensions": {"dim": 768},
+                    },
+                    {
+                        "name": "truncate_dim_512_quantize_uint8_docs",
+                        "aggregate_metric": "ndcg@10",
+                        "aggregate_metric_value": 0.40,
+                        "embedding_dimensions": {"dim": 512},
+                        "embedding_metadata": {
+                            "corpus": {
+                                "quantization": {
+                                    "precision": "uint8",
+                                    "original_dim": 512,
+                                    "stored_dim": 512,
+                                }
+                            }
+                        },
+                    },
+                ],
+                "metrics": {"NanoJaCWIR_ndcg@10": 0.42},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (model_dir / "all.json").write_text(
+        json.dumps({"model": {"name_or_path": "example/model"}, "environment": {"package_versions": {}}, "totals": {}}),
+        encoding="utf-8",
+    )
+
+    rows, _, _ = report.load_results(tmp_path)
+
+    assert [(row.embedding_variant_name, row.score, row.embedding_dim, row.quantization) for row in rows] == [
+        (None, 0.42, 768, None),
+        ("truncate_dim_512_quantize_uint8_docs", 0.40, 512, "uint8"),
+    ]
+
+
 def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
     row = report.TaskResult(
         model_dir="model",

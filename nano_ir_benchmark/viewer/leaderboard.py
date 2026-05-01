@@ -26,6 +26,9 @@ class TaskScore:
     active_parameters: int | None
     total_parameters: int | None
     max_seq_length: int | None
+    embedding_variant_name: str | None = None
+    embedding_dim: int | None = None
+    quantization: str | None = None
 
 
 class LeaderboardRow(BaseModel):
@@ -42,6 +45,8 @@ class LeaderboardRow(BaseModel):
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
+    embedding_dim: int | None = None
+    quantization: str | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
 
 
@@ -62,6 +67,7 @@ class LeaderboardResult(BaseModel):
     rows: list[LeaderboardRow]
     available_views: list[str]
     available_view_labels: dict[str, str]
+    include_embedding_variants: bool = False
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
     metric_columns: list[str]
@@ -79,6 +85,8 @@ SORT_COLUMNS = {
     "active_parameters",
     "total_parameters",
     "max_seq_length",
+    "embedding_dim",
+    "quantization",
 }
 
 
@@ -94,13 +102,14 @@ class LeaderboardService:
         sort: str = "borda_rank",
         direction: SortDirection = "asc",
         score_group_name: str | None = None,
+        include_embedding_variants: bool = False,
     ) -> LeaderboardResult:
         overall = self.config.overall_for_view(view_name)
         benchmarks = self.config.benchmarks_for_view(view_name)
         is_overall = overall is not None
         score_groups = [] if is_overall else _score_groups_for_view(self.config, view_name)
         selected_score_group = _select_score_group(score_groups, score_group_name)
-        rows = self._load_task_scores(benchmarks)
+        rows = self._load_task_scores(benchmarks, include_embedding_variants=include_embedding_variants)
         rows = _exclude_configured_tasks(rows, self.config)
         if overall is not None:
             rows = _aggregate_overall_scores(rows, overall)
@@ -119,6 +128,7 @@ class LeaderboardService:
             rows=sort_rows(leaderboard_rows, sort=sort, direction=direction),
             available_views=self.config.view_names,
             available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
+            include_embedding_variants=include_embedding_variants,
             score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
             selected_score_group=(
                 ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
@@ -128,35 +138,54 @@ class LeaderboardService:
             metric_columns=metric_columns,
         )
 
-    def _load_task_scores(self, benchmarks: list[str]) -> list[TaskScore]:
+    def _load_task_scores(self, benchmarks: list[str], *, include_embedding_variants: bool) -> list[TaskScore]:
         if not self.duckdb_path.exists():
             return []
-        placeholders = ", ".join("?" for _ in benchmarks)
-        query = f"""
-            SELECT
-                model_name,
-                benchmark,
-                dataset_id,
-                dataset_name,
-                COALESCE(split_name, '') AS split_name,
-                task_name,
-                task_key,
-                score,
-                active_parameters,
-                total_parameters,
-                max_seq_length
-            FROM task_results
-            WHERE benchmark IN ({placeholders})
-              AND score IS NOT NULL
-        """
         con = duckdb.connect(str(self.duckdb_path), read_only=True)
         try:
+            columns = _table_columns(con, "task_results")
+            variant_name_expr = _column_or_null(columns, "embedding_variant_name")
+            embedding_dim_expr = _column_or_null(columns, "embedding_dim")
+            quantization_expr = _column_or_null(columns, "quantization")
+            variant_filter = (
+                ""
+                if include_embedding_variants or "embedding_variant_name" not in columns
+                else "AND embedding_variant_name IS NULL"
+            )
+            placeholders = ", ".join("?" for _ in benchmarks)
+            query = f"""
+                SELECT
+                    model_name,
+                    benchmark,
+                    dataset_id,
+                    dataset_name,
+                    COALESCE(split_name, '') AS split_name,
+                    task_name,
+                    task_key,
+                    score,
+                    active_parameters,
+                    total_parameters,
+                    max_seq_length,
+                    {variant_name_expr} AS embedding_variant_name,
+                    {embedding_dim_expr} AS embedding_dim,
+                    {quantization_expr} AS quantization
+                FROM task_results
+                WHERE benchmark IN ({placeholders})
+                  AND score IS NOT NULL
+                  {variant_filter}
+            """
             result = con.execute(query, benchmarks).fetchall()
         finally:
             con.close()
         return [
             TaskScore(
-                model_name=str(row[0]),
+                model_name=_display_model_name(
+                    str(row[0]),
+                    embedding_dim=_int_or_none(row[12]),
+                    quantization=str(row[13]) if row[13] is not None else None,
+                )
+                if include_embedding_variants
+                else str(row[0]),
                 benchmark=str(row[1]),
                 dataset_id=str(row[2]),
                 dataset_name=str(row[3]),
@@ -167,6 +196,9 @@ class LeaderboardService:
                 active_parameters=_int_or_none(row[8]),
                 total_parameters=_int_or_none(row[9]),
                 max_seq_length=_int_or_none(row[10]),
+                embedding_variant_name=str(row[11]) if row[11] is not None else None,
+                embedding_dim=_int_or_none(row[12]),
+                quantization=str(row[13]) if row[13] is not None else None,
             )
             for row in result
         ]
@@ -220,6 +252,8 @@ def compute_leaderboard_rows(
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
+                embedding_dim=first.embedding_dim,
+                quantization=first.quantization,
                 metric_values=metric_values,
             )
         )
@@ -322,6 +356,9 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
+                embedding_variant_name=first.embedding_variant_name,
+                embedding_dim=first.embedding_dim,
+                quantization=first.quantization,
             )
         )
     return aggregated
@@ -346,6 +383,25 @@ def _exclude_configured_tasks(rows: list[TaskScore], config: ViewerConfig) -> li
 def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGroupConfig]:
     benchmark = config.benchmark_for_view(view_name)
     return benchmark.resolved_score_groups if benchmark is not None else []
+
+
+def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:
+    return {str(row[0]) for row in con.execute(f"DESCRIBE {table}").fetchall()}
+
+
+def _column_or_null(columns: set[str], column: str) -> str:
+    return column if column in columns else "NULL"
+
+
+def _display_model_name(model_name: str, *, embedding_dim: int | None, quantization: str | None) -> str:
+    details = []
+    if embedding_dim is not None:
+        details.append(f"{embedding_dim} dims")
+    if quantization:
+        details.append(quantization)
+    if not details:
+        return model_name
+    return f"{model_name} ({', '.join(details)})"
 
 
 def _select_score_group(

@@ -38,6 +38,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         group: str | None = Query(default=None),
+        variants: bool = Query(default=False),
     ) -> str:
         store.ensure_current()
         initial_query = _state_query(
@@ -46,6 +47,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             sort=sort,
             direction=direction,
             group=group,
+            variants=variants,
         )
         return render_page(viewer_config=viewer_config, duckdb_path=store.path, initial_query=initial_query)
 
@@ -55,6 +57,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         group: str | None = Query(default=None),
+        variants: bool = Query(default=False),
     ) -> str:
         store.ensure_current()
         state_query = _state_query(
@@ -63,6 +66,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             sort=sort,
             direction=direction,
             group=group,
+            variants=variants,
         )
         view = state_query["view"]
         sort = state_query["sort"]
@@ -74,6 +78,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             sort=sort,
             direction=cast(SortDirection, direction),
             score_group_name=group,
+            include_embedding_variants=variants,
         )
         return render_leaderboard(result=result, sort=sort, direction=direction)
 
@@ -116,6 +121,7 @@ def render_leaderboard(*, result: LeaderboardResult, sort: str, direction: str) 
     return f"""
 <div>
   {render_tabs(result=result, sort=sort, direction=direction)}
+  {render_variant_toggle(result=result, sort=sort, direction=direction)}
   {render_score_groups(result=result, sort=sort, direction=direction)}
   <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
     <div>
@@ -146,6 +152,8 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str) -> str:
         tab_sort = "borda_rank" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = {"view": view_name, "sort": tab_sort, "direction": tab_direction}
+        if result.include_embedding_variants:
+            query_payload["variants"] = "1"
         query = urlencode(query_payload)
         buttons.append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
@@ -155,6 +163,24 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str) -> str:
                 </button>"""
         )
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Benchmark views">{''.join(buttons)}</nav>"""
+
+
+def render_variant_toggle(*, result: LeaderboardResult, sort: str, direction: str) -> str:
+    query_payload = {"view": result.view_name, "sort": sort, "direction": direction}
+    if result.selected_score_group is not None:
+        query_payload["group"] = result.selected_score_group.name
+    if not result.include_embedding_variants:
+        query_payload["variants"] = "1"
+    query = urlencode(query_payload)
+    checked = " checked" if result.include_embedding_variants else ""
+    return f"""
+    <label class="mb-4 inline-flex items-center gap-2 text-sm text-zinc-700">
+      <input type="checkbox" class="h-4 w-4 accent-cyan-700"{checked}
+             hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+             hx-target="#leaderboard-panel" hx-swap="innerHTML" hx-trigger="change">
+      <span>Include variants</span>
+    </label>
+    """
 
 
 def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str) -> str:
@@ -168,12 +194,11 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str)
             if active
             else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
         )
-        query = urlencode(
-            {"view": result.view_name, "sort": "borda_rank", "direction": "asc", "group": score_group.name}
-        )
-        page_url = _page_url(
-            {"view": result.view_name, "sort": "borda_rank", "direction": "asc", "group": score_group.name}
-        )
+        query_payload = {"view": result.view_name, "sort": "borda_rank", "direction": "asc", "group": score_group.name}
+        if result.include_embedding_variants:
+            query_payload["variants"] = "1"
+        query = urlencode(query_payload)
+        page_url = _page_url(query_payload)
         buttons.append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{page_url}"
@@ -210,6 +235,8 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -
             ("active_parameters", "Active Params", "asc", "right", False),
             ("total_parameters", "Total Params", "asc", "right", False),
             ("max_seq_length", "Max Len", "desc", "right", False),
+            ("embedding_dim", "Dims", "desc", "right", False),
+            ("quantization", "Quantization", "asc", "left", False),
         ]
     )
     heads = []
@@ -219,6 +246,8 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -
         query_payload = {"view": result.view_name, "sort": key, "direction": next_direction}
         if result.selected_score_group is not None:
             query_payload["group"] = result.selected_score_group.name
+        if result.include_embedding_variants:
+            query_payload["variants"] = "1"
         query = urlencode(query_payload)
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
@@ -238,7 +267,7 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -
 
 def render_table_body(*, result: LeaderboardResult) -> str:
     if not result.rows:
-        return """<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="10">No complete results found.</td></tr></tbody>"""
+        return """<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="12">No complete results found.</td></tr></tbody>"""
     body_rows = []
     for row in result.rows:
         mean_cells = (
@@ -259,6 +288,8 @@ def render_table_body(*, result: LeaderboardResult) -> str:
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_params(row.active_parameters)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_params(row.total_parameters)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
+              <td class="px-3 py-2 text-left">{escape(row.quantization or "")}</td>
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
@@ -300,6 +331,10 @@ def _fmt_max_len(value: int | None) -> str:
     return "" if value is None else f"{value:,}"
 
 
+def _fmt_embedding_dim(value: int | None) -> str:
+    return "" if value is None else f"{value:,}"
+
+
 def _metric_column_label(column: str) -> str:
     return column.removeprefix("Nano")
 
@@ -311,6 +346,7 @@ def _state_query(
     sort: str,
     direction: str,
     group: str | None,
+    variants: bool,
 ) -> dict[str, str]:
     if view not in viewer_config.view_names:
         view = viewer_config.overall.name
@@ -322,6 +358,8 @@ def _state_query(
     query = {"view": view, "sort": sort, "direction": direction}
     if group:
         query["group"] = group
+    if variants:
+        query["variants"] = "1"
     return query
 
 

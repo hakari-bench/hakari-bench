@@ -266,6 +266,47 @@ overalls:
     assert grouped_result.rows[0].micro_mean == 85.0
 
 
+def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192, "quantize_uint8_docs", 768, "uint8"),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 20, 24, 4096, None, 512, None),
+        ],
+        include_embedding_variant_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    base_result = service.get_leaderboard("BenchA", include_embedding_variants=False)
+    variant_result = service.get_leaderboard("BenchA", include_embedding_variants=True)
+
+    assert [row.model_name for row in base_result.rows] == ["model/a", "model/b"]
+    assert [row.model_name for row in variant_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (768 dims, uint8)",
+        "model/b (512 dims)",
+    ]
+    assert variant_result.rows[1].embedding_dim == 768
+    assert variant_result.rows[1].quantization == "uint8"
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&variants=1")
+
+    assert response.status_code == 200
+    assert "Include variants" in response.text
+    assert "model/a (768 dims, uint8)" in response.text
+    assert "Dims" in response.text
+    assert "Quantization" in response.text
+
+
 def test_individual_leaderboard_uses_simple_task_mean() -> None:
     rows = compute_leaderboard_rows(
         [
@@ -470,27 +511,43 @@ benchmarks:
 
 def _write_task_results(
     db_path: Path,
-    rows: list[tuple[str, str, str, str, str, str, str, float, int, int, int]],
+    rows: list[tuple],
+    *,
+    include_embedding_variant_columns: bool = False,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
+        variant_columns = (
+            [
+                "embedding_variant_name VARCHAR",
+                "embedding_dim INTEGER",
+                "quantization VARCHAR",
+            ]
+            if include_embedding_variant_columns
+            else []
+        )
+        columns = [
+            "model_name VARCHAR",
+            "benchmark VARCHAR",
+            "dataset_id VARCHAR",
+            "dataset_name VARCHAR",
+            "split_name VARCHAR",
+            "task_name VARCHAR",
+            "task_key VARCHAR",
+            "score DOUBLE",
+            "active_parameters BIGINT",
+            "total_parameters BIGINT",
+            "max_seq_length INTEGER",
+            *variant_columns,
+        ]
         con.execute(
-            """
+            f"""
             CREATE TABLE task_results (
-                model_name VARCHAR,
-                benchmark VARCHAR,
-                dataset_id VARCHAR,
-                dataset_name VARCHAR,
-                split_name VARCHAR,
-                task_name VARCHAR,
-                task_key VARCHAR,
-                score DOUBLE,
-                active_parameters BIGINT,
-                total_parameters BIGINT,
-                max_seq_length INTEGER
+                {", ".join(columns)}
             )
             """
         )
-        con.executemany("INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
+        placeholders = ", ".join("?" for _ in rows[0])
+        con.executemany(f"INSERT INTO task_results VALUES ({placeholders})", rows)
     finally:
         con.close()
