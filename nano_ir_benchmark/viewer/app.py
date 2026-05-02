@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from html import escape
 from pathlib import Path
+import re
 from typing import cast
 from urllib.parse import urlencode
 
@@ -425,7 +426,7 @@ def render_table_body(*, result: LeaderboardResult, filter_state: FilterState | 
     if not result.rows:
         return """<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="12">No complete results found.</td></tr></tbody>"""
     body_rows = []
-    normalized_filter = _active_model_filter(filter_state.model_filter)
+    model_filter_terms = _active_model_filter_terms(filter_state.model_filter)
     dim_options = _dim_filter_options(result.rows)
     quant_options = _quant_filter_options(result.rows)
     selected_dims = _selected_filter_values(
@@ -440,7 +441,7 @@ def render_table_body(*, result: LeaderboardResult, filter_state: FilterState | 
     )
     for row in result.rows:
         hidden = (
-            bool(normalized_filter and normalized_filter not in row.model_name.lower())
+            bool(model_filter_terms and not _model_name_matches_filter_terms(row.model_name, model_filter_terms))
             or _dim_bucket(row.embedding_dim) not in selected_dims
             or _quant_bucket(row.quantization) not in selected_quants
         )
@@ -508,9 +509,13 @@ def _model_variant_details(row: LeaderboardRow) -> list[str]:
     return details
 
 
-def _active_model_filter(model_filter: str) -> str:
-    normalized = model_filter.strip().lower()
-    return normalized if len(normalized) >= 3 else ""
+def _active_model_filter_terms(model_filter: str) -> tuple[str, ...]:
+    return tuple(token.casefold() for token in re.split(r"\s+", model_filter.strip()) if len(token) >= 3)
+
+
+def _model_name_matches_filter_terms(model_name: str, terms: tuple[str, ...]) -> bool:
+    normalized = model_name.casefold()
+    return any(term in normalized for term in terms)
 
 
 def _render_filter_details(

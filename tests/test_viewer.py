@@ -407,6 +407,34 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "uint8" in inferred_quant_response.text
 
 
+def test_model_filter_matches_any_whitespace_separated_token_case_insensitively(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("google/gemma-embed", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("Qwen/Qwen3-Embedding", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+            ("other/model", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&model_filter=GeMmA%20qwen")
+
+    assert response.status_code == 200
+    assert 'value="GeMmA qwen"' in response.text
+    assert "google/gemma-embed" in response.text
+    assert "Qwen/Qwen3-Embedding" in response.text
+    assert "other/model" in response.text
+    assert response.text.count('data-filter-hidden="true"') == 1
+
+
 def test_individual_leaderboard_uses_simple_task_mean() -> None:
     rows = compute_leaderboard_rows(
         [
