@@ -35,6 +35,11 @@ under `config/datasets/`, and dataset collection definitions live under
 - Do not commit generated benchmark outputs, caches, or local scratch artifacts.
   `output/` and `tmp/` are intentionally ignored.
 
+## Documentation
+
+- Write project documentation in English unless the user explicitly requests
+  another language.
+
 ## Leaderboard Viewer
 
 - When updating the leaderboard viewer in this project, keep

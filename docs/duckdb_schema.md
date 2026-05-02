@@ -1,18 +1,18 @@
 # DuckDB Schema and Leaderboard Query Guide
 
-この文書は、Nano IR Benchmark の結果 DuckDB
-`nano_ir_bench.duckdb` から leaderboard viewer を作るためのデータ定義と
-SQL の引き方をまとめたものです。
+This document describes how the Nano IR Benchmark viewer stores leaderboard
+data in DuckDB and how a viewer should query that data.
 
-結論として、viewer が leaderboard を作るときの主データは
-`task_results` です。`runs` は run 単位の補足情報、`metrics_long` は詳細
-metric、`model_scores` と `borda_task_scores` は静的 HTML レポート用に
-事前計算された派生テーブルです。現在の HTMX viewer は
-`model_scores` ではなく `task_results` から毎回 leaderboard を計算します。
+The main source table for the HTMX leaderboard viewer is `task_results`.
+`runs` contains run-level metadata, `metrics_long` contains detailed task
+metrics, and `model_scores` / `borda_task_scores` are precomputed tables used
+by the static HTML report. The current HTMX viewer does not read
+`model_scores`; it computes the leaderboard from `task_results` on each
+request.
 
-## 生成方法
+## Generation
 
-DuckDB は benchmark の JSON 出力から生成します。
+Build the DuckDB database from benchmark JSON output:
 
 ```bash
 uv run python scripts/build_results_database_and_report.py \
@@ -21,42 +21,50 @@ uv run python scripts/build_results_database_and_report.py \
   --html-output output/results/report.html
 ```
 
-入力は主に次の JSON です。
+The input files are:
 
-- `output/results/{model_dir}/all.json`: model/run 単位の summary。
-- `output/results/{model_dir}/{dataset_name}/{split_or_task}.json`: task 単位の結果。
+- `output/results/{model_dir}/all.json`: model/run-level summaries.
+- `output/results/{model_dir}/{dataset_name}/{split_or_task}.json`:
+  task-level benchmark results.
 
-`load_results()` は task JSON の `target.dataset_id` と
-`target.dataset_name` から `benchmark` を判定し、対象 benchmark だけを
-`task_results` に入れます。base embedding の結果は
-`embedding_variant_name IS NULL` の行になり、`evaluation.embedding_evaluations`
-に入っている派生 embedding 結果は variant 行として追加されます。
+`load_results()` determines `benchmark` from `target.dataset_id` and
+`target.dataset_name`, then writes only supported benchmark rows into
+`task_results`. The base embedding result is stored as a row where
+`embedding_variant_name IS NULL`. Derived embedding results from
+`evaluation.embedding_evaluations` are stored as additional variant rows.
 
-web viewer は `uv run nano-ir-bench web` で起動します。デフォルトでは
-`output/viewer/nano_ir_bench.duckdb` をローカル閲覧用 DB として使い、ページ
-load 時に benchmark output 側の DB が新しければコピーします。
+Start the web viewer with:
 
-## Viewer 設定
+```bash
+uv run nano-ir-bench web
+```
 
-leaderboard の view は DuckDB 内ではなく YAML で定義します。
+By default, the viewer reads `output/viewer/nano_ir_bench.duckdb`. On each page
+load, it copies a newer source database from the benchmark output directory
+when one is available.
 
-- `config/viewer/benchmarks.yaml`: benchmark view の一覧、表示 label、除外
-  task、benchmark view 内の score group。
-- `config/viewer/overall.yaml`: Overall 系 view と、どの benchmark を含めるか。
+## Viewer Configuration
 
-`benchmarks.yaml` の主な項目:
+Leaderboard views are defined in YAML, not in DuckDB.
 
-| 項目 | 意味 |
+- `config/viewer/benchmarks.yaml`: benchmark views, display labels, excluded
+  tasks, and benchmark-local score groups.
+- `config/viewer/overall.yaml`: overall views and the benchmarks included in
+  each overall view.
+
+Main `benchmarks.yaml` fields:
+
+| field | meaning |
 | --- | --- |
-| `name` | `task_results.benchmark` と一致する view 名。 |
-| `label` | UI 表示名。省略時は `name`。 |
-| `include_in_overall` | 現状は説明用 metadata。実際の Overall 構成は `overall.yaml` が決める。 |
-| `excluded_tasks` | ranking から除外する task。`task_name` または `task_key` と照合する。 |
-| `score_groups` | benchmark view の横持ち metric 列定義。ranking 自体は変えない。 |
+| `name` | View name. Must match `task_results.benchmark`. |
+| `label` | UI label. Defaults to `name`. |
+| `include_in_overall` | Descriptive metadata. Actual overall composition is defined by `overall.yaml`. |
+| `excluded_tasks` | Task names or task keys excluded from ranking. Matched against `task_name` and `task_key`. |
+| `score_groups` | Additional metric columns for a benchmark view. These do not change ranking. |
 
-`score_groups[].group_by` と `overall.yaml` の `group_by` は次のキーを使えます。
+`score_groups[].group_by` and `overall.yaml` `group_by` can use these values:
 
-| `group_by` | group key として使う列 |
+| `group_by` | source column |
 | --- | --- |
 | `task_key` | `task_results.task_key` |
 | `dataset_name` | `task_results.dataset_name` |
@@ -65,234 +73,245 @@ leaderboard の view は DuckDB 内ではなく YAML で定義します。
 | `benchmark` | `task_results.benchmark` |
 | `task_name` | `task_results.task_name` |
 
-不明な `group_by` は実装上 `task_name` と同じ扱いになります。
+Unknown `group_by` values are treated like `task_name` by the current
+implementation.
 
 ## Table Overview
 
 ### `task_results`
 
-leaderboard の canonical source です。1 行は「1 model / 1 benchmark task /
-1 embedding variant」の score を表します。base result は
-`embedding_variant_name IS NULL` です。
+`task_results` is the canonical leaderboard source. Each row is one score for
+one model, one benchmark task, and one embedding variant. Base results use
+`embedding_variant_name IS NULL`.
 
-| column | type | 意味 |
+| column | type | meaning |
 | --- | --- | --- |
-| `model_dir` | `VARCHAR` | `output/results/{model_dir}` のディレクトリ名。 |
-| `model_name` | `VARCHAR` | JSON の `model.name_or_path`。なければ `model_dir`。 |
-| `benchmark` | `VARCHAR` | viewer 上の benchmark group。例: `MNanoBEIR`, `NanoJMTEB`。 |
-| `dataset_id` | `VARCHAR` | `target.dataset_id`。Hugging Face dataset repo など。 |
-| `dataset_revision` | `VARCHAR` | 解決済み dataset revision。通常は commit SHA。 |
-| `dataset_revision_requested` | `VARCHAR` | 実行時に要求した revision。未指定なら `NULL`。 |
-| `dataset_name` | `VARCHAR` | `target.dataset_name`。 |
-| `split_name` | `VARCHAR` | `target.split_name`。task split がなければ `NULL` の場合がある。 |
-| `task_name` | `VARCHAR` | `target.task_name`。なければ `split_name`。 |
-| `task_key` | `VARCHAR` | ranking の task identity。生成式は `{benchmark}::{dataset_id}::{task_name}`。 |
-| `score` | `DOUBLE` | raw aggregate score。通常は 0.0 から 1.0 の nDCG 系値。 |
-| `score_100` | `DOUBLE` | `score * 100.0`。表示用。 |
-| `aggregate_metric` | `VARCHAR` | `evaluation.aggregate_metric`。例: `ndcg@10`。 |
-| `result_path` | `VARCHAR` | 元 task JSON の path。 |
-| `active_parameters` | `BIGINT` | active parameter 数。取れない場合は `NULL`。 |
-| `total_parameters` | `BIGINT` | total parameter 数。取れない場合は `NULL`。 |
-| `max_seq_length` | `INTEGER` | model の max sequence length。 |
-| `dtype` | `VARCHAR` | 評価時 dtype。例: `bf16`。 |
-| `embedding_variant_name` | `VARCHAR` | 派生 embedding variant 名。base result は `NULL`。 |
-| `embedding_dim` | `INTEGER` | その行の embedding dimension。base 行にも入る場合がある。 |
-| `quantization` | `VARCHAR` | quantization precision。例: `int8`, `uint8`, `ubinary`。 |
-| `attn_implementation` | `VARCHAR` | attention implementation。例: `flash_attention_2`。 |
-| `torch_version` | `VARCHAR` | 評価環境の torch version。 |
-| `transformers_version` | `VARCHAR` | 評価環境の transformers version。 |
-| `sentence_transformers_version` | `VARCHAR` | 評価環境の sentence-transformers version。 |
-| `started_at_utc` | `VARCHAR` | task 評価開始時刻。UTC ISO 文字列。 |
-| `finished_at_utc` | `VARCHAR` | task 評価終了時刻。UTC ISO 文字列。 |
-| `evaluated_at_utc` | `VARCHAR` | 評価完了時刻。古い JSON ではこの列だけの場合がある。 |
-| `duration_seconds_including_dataset_load` | `DOUBLE` | dataset load を含む task 所要秒数。 |
-| `wall_seconds` | `DOUBLE` | task 評価 wall time 秒数。 |
+| `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
+| `model_name` | `VARCHAR` | `model.name_or_path` from result JSON, or `model_dir` when absent. |
+| `benchmark` | `VARCHAR` | Viewer benchmark group, such as `MNanoBEIR` or `NanoJMTEB`. |
+| `dataset_id` | `VARCHAR` | `target.dataset_id`, usually a Hugging Face dataset repo. |
+| `dataset_revision` | `VARCHAR` | Resolved dataset revision, usually a commit SHA. |
+| `dataset_revision_requested` | `VARCHAR` | Requested revision from the run, or `NULL` when not specified. |
+| `dataset_name` | `VARCHAR` | `target.dataset_name`. |
+| `split_name` | `VARCHAR` | `target.split_name`; may be `NULL` for unsplit tasks. |
+| `task_name` | `VARCHAR` | `target.task_name`, or `split_name` when task name is missing. |
+| `task_key` | `VARCHAR` | Ranking task identity. Generated as `{benchmark}::{dataset_id}::{task_name}` after task-name canonicalization. |
+| `score` | `DOUBLE` | Raw aggregate score, usually a 0.0 to 1.0 nDCG-style value. |
+| `score_100` | `DOUBLE` | `score * 100.0`, used for display. |
+| `aggregate_metric` | `VARCHAR` | `evaluation.aggregate_metric`, such as `ndcg@10`. |
+| `result_path` | `VARCHAR` | Source task JSON path. |
+| `active_parameters` | `BIGINT` | Active parameter count, or `NULL` if unavailable. |
+| `total_parameters` | `BIGINT` | Total parameter count, or `NULL` if unavailable. |
+| `max_seq_length` | `INTEGER` | Model maximum sequence length. |
+| `dtype` | `VARCHAR` | Evaluation dtype, such as `bf16`. |
+| `embedding_variant_name` | `VARCHAR` | Derived embedding variant name. Base result rows use `NULL`. |
+| `embedding_dim` | `INTEGER` | Embedding dimension for this row. May be present on base rows. |
+| `quantization` | `VARCHAR` | Quantization precision, such as `int8`, `uint8`, or `ubinary`. |
+| `attn_implementation` | `VARCHAR` | Attention implementation, such as `flash_attention_2`. |
+| `torch_version` | `VARCHAR` | Torch version used for evaluation. |
+| `transformers_version` | `VARCHAR` | Transformers version used for evaluation. |
+| `sentence_transformers_version` | `VARCHAR` | Sentence Transformers version used for evaluation. |
+| `started_at_utc` | `VARCHAR` | Task evaluation start time as a UTC ISO string. |
+| `finished_at_utc` | `VARCHAR` | Task evaluation finish time as a UTC ISO string. |
+| `evaluated_at_utc` | `VARCHAR` | Evaluation completion time. Older JSON may only have this timestamp. |
+| `duration_seconds_including_dataset_load` | `DOUBLE` | Task duration including dataset loading. |
+| `wall_seconds` | `DOUBLE` | Task evaluation wall time in seconds. |
 
 ### `runs`
 
-`all.json` から作られる model/run 単位の summary です。leaderboard の rank
-計算には使いませんが、model metadata や run completeness を表示する用途で
-使えます。
+`runs` is built from `all.json` and stores model/run-level summaries. It is not
+used for rank computation, but it is useful for model metadata and run
+completeness displays.
 
-| column | type | 意味 |
+| column | type | meaning |
 | --- | --- | --- |
-| `model_dir` | `VARCHAR` | `output/results/{model_dir}` のディレクトリ名。 |
-| `model_name` | `VARCHAR` | JSON の `model.name_or_path`。 |
-| `all_json_path` | `VARCHAR` | 元 `all.json` の path。 |
-| `generated_at_utc` | `VARCHAR` | `all.json` 生成時刻。 |
-| `started_at_utc` | `VARCHAR` | run 開始時刻。 |
-| `finished_at_utc` | `VARCHAR` | run 終了時刻。 |
-| `target_count` | `INTEGER` | 評価対象 target 数。 |
-| `split_count` | `INTEGER` | split/task 数。 |
-| `cache_hit_count` | `INTEGER` | cache hit 数。 |
-| `evaluated_count` | `INTEGER` | 実評価数。 |
-| `aggregate_metric_mean` | `DOUBLE` | `all.json` 側の aggregate metric mean。 |
-| `active_parameters` | `BIGINT` | model active parameter 数。 |
-| `total_parameters` | `BIGINT` | model total parameter 数。 |
-| `max_seq_length` | `INTEGER` | model max sequence length。 |
-| `dtype` | `VARCHAR` | 評価時 dtype。 |
-| `attn_implementation` | `VARCHAR` | attention implementation。 |
-| `torch_version` | `VARCHAR` | torch version。 |
-| `transformers_version` | `VARCHAR` | transformers version。 |
-| `sentence_transformers_version` | `VARCHAR` | sentence-transformers version。 |
+| `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
+| `model_name` | `VARCHAR` | `model.name_or_path` from `all.json`. |
+| `all_json_path` | `VARCHAR` | Source `all.json` path. |
+| `generated_at_utc` | `VARCHAR` | `all.json` generation time. |
+| `started_at_utc` | `VARCHAR` | Run start time. |
+| `finished_at_utc` | `VARCHAR` | Run finish time. |
+| `target_count` | `INTEGER` | Number of target datasets/tasks. |
+| `split_count` | `INTEGER` | Number of splits/tasks. |
+| `cache_hit_count` | `INTEGER` | Number of cache hits. |
+| `evaluated_count` | `INTEGER` | Number of evaluated tasks. |
+| `aggregate_metric_mean` | `DOUBLE` | Aggregate metric mean from `all.json`. |
+| `active_parameters` | `BIGINT` | Model active parameter count. |
+| `total_parameters` | `BIGINT` | Model total parameter count. |
+| `max_seq_length` | `INTEGER` | Model maximum sequence length. |
+| `dtype` | `VARCHAR` | Evaluation dtype. |
+| `attn_implementation` | `VARCHAR` | Attention implementation. |
+| `torch_version` | `VARCHAR` | Torch version. |
+| `transformers_version` | `VARCHAR` | Transformers version. |
+| `sentence_transformers_version` | `VARCHAR` | Sentence Transformers version. |
 
 ### `metrics_long`
 
-task JSON の `metrics` dict を long format にした table です。特定 metric の
-詳細確認用で、現行 viewer の rank 計算には使いません。
+`metrics_long` is a long-format representation of each task JSON `metrics`
+dictionary. It is intended for detailed metric inspection. The current viewer
+does not use it for ranking.
 
-| column | type | 意味 |
+| column | type | meaning |
 | --- | --- | --- |
-| `model_dir` | `VARCHAR` | model output directory。 |
-| `model_name` | `VARCHAR` | model name。 |
-| `benchmark` | `VARCHAR` | benchmark group。 |
-| `dataset_id` | `VARCHAR` | dataset id。 |
-| `task_name` | `VARCHAR` | task name。 |
-| `metric_name` | `VARCHAR` | metric 名。例: `NanoJaCWIR_ndcg@10`。 |
-| `metric_value` | `DOUBLE` | metric 値。 |
-| `result_path` | `VARCHAR` | 元 task JSON の path。 |
+| `model_dir` | `VARCHAR` | Model output directory. |
+| `model_name` | `VARCHAR` | Model name. |
+| `benchmark` | `VARCHAR` | Benchmark group. |
+| `dataset_id` | `VARCHAR` | Dataset id. |
+| `task_name` | `VARCHAR` | Task name. |
+| `metric_name` | `VARCHAR` | Metric name, such as `NanoJaCWIR_ndcg@10`. |
+| `metric_value` | `DOUBLE` | Metric value. |
+| `result_path` | `VARCHAR` | Source task JSON path. |
 
 ### `model_scores`
 
-`scripts/build_results_database_and_report.py` が静的 HTML report 用に作る
-precomputed standings です。base 行だけを使って生成されます。
+`model_scores` is a precomputed standings table written by
+`scripts/build_results_database_and_report.py` for the static HTML report. It
+is generated from base rows only.
 
-現行 viewer はこの table を使いません。viewer と同じ結果を出したい場合は、
-`task_results` から後述の SQL または `LeaderboardService` と同じロジックで
-計算してください。特に tie rank は現行 viewer が competition rank
-(`1, 2, 2, 4`) を使う一方、静的 report 側の helper は average rank を使う
-箇所があります。
+The current HTMX viewer does not use this table. To match the viewer, compute
+from `task_results` using the SQL recipes below or the `LeaderboardService`
+logic. In particular, tie behavior differs in older static report helpers:
+the viewer uses competition rank (`1, 2, 2, 4`) for leaderboard ranks.
 
-| column | type | 意味 |
+| column | type | meaning |
 | --- | --- | --- |
-| `view_name` | `VARCHAR` | `Overall` または benchmark 名。 |
-| `model_name` | `VARCHAR` | model name。 |
-| `task_count` | `INTEGER` | ranking に使った task 数。 |
-| `mean_score` | `DOUBLE` | 平均 score。100 点換算。 |
-| `score_rank` | `DOUBLE` | `mean_score` による rank。 |
-| `borda_score` | `DOUBLE` | task 別 Borda score の平均。 |
-| `borda_rank` | `DOUBLE` | `borda_score` による rank。 |
-| `active_parameters` | `BIGINT` | active parameter 数。 |
-| `total_parameters` | `BIGINT` | total parameter 数。 |
-| `max_seq_length` | `INTEGER` | max sequence length。 |
-| `dtype` | `VARCHAR` | dtype。 |
-| `attn_implementation` | `VARCHAR` | attention implementation。 |
-| `torch_version` | `VARCHAR` | torch version。 |
-| `transformers_version` | `VARCHAR` | transformers version。 |
-| `sentence_transformers_version` | `VARCHAR` | sentence-transformers version。 |
+| `view_name` | `VARCHAR` | `Overall` or benchmark view name. |
+| `model_name` | `VARCHAR` | Model name. |
+| `task_count` | `INTEGER` | Number of tasks used for ranking. |
+| `mean_score` | `DOUBLE` | Mean score on a 0 to 100 scale. |
+| `score_rank` | `DOUBLE` | Rank by `mean_score`. |
+| `borda_score` | `DOUBLE` | Mean per-task Borda score. |
+| `borda_rank` | `DOUBLE` | Rank by `borda_score`. |
+| `active_parameters` | `BIGINT` | Active parameter count. |
+| `total_parameters` | `BIGINT` | Total parameter count. |
+| `max_seq_length` | `INTEGER` | Maximum sequence length. |
+| `dtype` | `VARCHAR` | Evaluation dtype. |
+| `attn_implementation` | `VARCHAR` | Attention implementation. |
+| `torch_version` | `VARCHAR` | Torch version. |
+| `transformers_version` | `VARCHAR` | Transformers version. |
+| `sentence_transformers_version` | `VARCHAR` | Sentence Transformers version. |
 
 ### `borda_task_scores`
 
-静的 report 用の per-task Borda detail です。現行 viewer の rank 計算には使いません。
+`borda_task_scores` stores precomputed per-task Borda details for the static
+HTML report. The current HTMX viewer does not use it.
 
-| column | type | 意味 |
+| column | type | meaning |
 | --- | --- | --- |
-| `view_name` | `VARCHAR` | `Overall` または benchmark 名。 |
-| `model_name` | `VARCHAR` | model name。 |
-| `benchmark` | `VARCHAR` | benchmark group。 |
-| `task_key` | `VARCHAR` | task identity。 |
-| `rank` | `DOUBLE` | task 内 score rank。 |
-| `model_count` | `INTEGER` | その task に参加した complete model 数。 |
-| `borda_score` | `DOUBLE` | その task での Borda score。 |
-| `score` | `DOUBLE` | raw task score。 |
+| `view_name` | `VARCHAR` | `Overall` or benchmark view name. |
+| `model_name` | `VARCHAR` | Model name. |
+| `benchmark` | `VARCHAR` | Benchmark group. |
+| `task_key` | `VARCHAR` | Task identity. |
+| `rank` | `DOUBLE` | Score rank within the task. |
+| `model_count` | `INTEGER` | Number of complete models participating in the task. |
+| `borda_score` | `DOUBLE` | Borda score for this task. |
+| `score` | `DOUBLE` | Raw task score. |
 
 ## Leaderboard Semantics
 
-### score と rank
+### Score and Rank
 
-- task score は `task_results.score` を使います。
-- 表示用 mean は `score * 100.0` の平均です。
-- task ごとの rank は score 降順の competition rank です。同点は同じ rank
-  になり、次の rank は飛びます。
-- task ごとの Borda score は次の式です。
+- Task score is `task_results.score`.
+- Display means are computed from `score * 100.0`.
+- Per-task ranks are competition ranks over score descending. Tied models share
+  the same rank, and the next rank skips ahead.
+- Per-task Borda score is:
 
 ```text
-model_count <= 1 のとき 100
-それ以外は 100 * (model_count - rank) / (model_count - 1)
+100                              when model_count <= 1
+100 * (model_count - rank) / (model_count - 1) otherwise
 ```
 
-model の `borda_score` は、view 内の各 task Borda score の平均です。
-`borda_rank` は `borda_score` 降順 rank、`mean_rank` は `mean_score` 降順
-rank です。
+A model's `borda_score` is the mean of its per-task Borda scores within the
+selected view. `borda_rank` ranks `borda_score` descending. `mean_rank` ranks
+`mean_score` descending.
 
-### complete model rule
+Borda should stay within `0..100` as long as each model identity is unique
+within each task. If a viewer collapses multiple embedding variants into the
+same displayed model key, the `rank` and `model_count` populations can diverge
+and produce invalid values. The current viewer avoids this by expanding
+colliding variant display names.
 
-ranking に入る model は、view 内の期待 task をすべて持つ model だけです。
+### Complete Model Rule
 
-1. `benchmark` filter と `excluded_tasks` を適用する。
-2. embedding variant 表示設定を適用する。
-3. 残った行の `task_key` 集合を expected tasks とする。
-4. model ごとの `task_key` 集合が expected tasks と完全一致する model だけを
-   leaderboard に出す。
+Only models that have every expected task in the selected view are ranked.
 
-OverallGrouped のように `group_by` を使う Overall では、先に benchmark 内の
-raw task completeness を満たす model/benchmark だけを group に集約し、その
-集約後 task 集合に対して complete model rule を再適用します。
+1. Apply benchmark filtering and `excluded_tasks`.
+2. Apply embedding variant display settings.
+3. Build the expected task set from the remaining rows.
+4. Keep only models whose task-key set exactly matches the expected task set.
 
-### Benchmark view と Overall view
+For grouped overall views such as `OverallGrouped`, the viewer first checks raw
+task completeness within each model/benchmark pair, then aggregates rows by the
+configured group key, and finally applies the complete model rule again to the
+aggregated task set.
 
-benchmark view の `mean_score` は、その benchmark の task score mean です。
+### Benchmark and Overall Views
 
-Overall view では次を区別します。
+For benchmark views, `mean_score` is the mean of all task scores in that
+benchmark.
 
-- `micro_mean`: Overall に含めた task をすべて同じ重みで平均した値。
-- `macro_mean`: benchmark ごとの平均を作り、それを benchmark 間で平均した値。
-- `mean_score`: Overall view では `macro_mean`。benchmark view では task mean。
+For overall views:
 
-`Overall` は通常 raw `task_key` をそのまま使います。`OverallGrouped` は
-`overall.yaml` の `group_by` に従って、benchmark 内 task を平均した集約 unit
-を作ってから Borda と mean を計算します。
+- `micro_mean`: mean over all included tasks with equal task weight.
+- `macro_mean`: mean of benchmark-level means with equal benchmark weight.
+- `mean_score`: `macro_mean` for overall views, task mean for benchmark views.
 
-### embedding variants
+`Overall` normally uses raw `task_key` values. `OverallGrouped` uses the
+`group_by` settings from `overall.yaml` to average tasks into benchmark-local
+units before computing Borda and means.
 
-デフォルトの viewer は base result のみを表示します。
+### Embedding Variants
+
+By default, the viewer displays base results only:
 
 ```sql
 embedding_variant_name IS NULL
 ```
 
-variant 表示を有効にした場合も base result は常に含め、選択された variant
-種別だけを追加します。
+When variant display is enabled, base results are always included and selected
+variant categories are added.
 
-| UI flag | variant 判定 |
+| UI flag | variant rule |
 | --- | --- |
-| Quantization | `quantization IS NOT NULL` または `embedding_variant_name` に `quantize` を含む。 |
-| Truncate dims | `embedding_variant_name` に `truncate` を含む。 |
-| Other variants | quantization でも truncate でもない variant。 |
+| Quantization | `quantization IS NOT NULL` or `embedding_variant_name` contains `quantize`. |
+| Truncate dims | `embedding_variant_name` contains `truncate`. |
+| Other variants | Variant rows that are neither quantization nor truncation variants. |
 
-現行 viewer は variant 表示時に `model_name` に `embedding_dim` と
-`quantization` を付けた表示名を ranking key として扱います。同じ表示名に
-複数の `embedding_variant_name` が衝突する場合は、表示名に variant 名も足し
-ます。これは同一 task 内で複数 variant が同じ model として潰れ、Borda の
-`rank` と `model_count` の母集団がずれるのを防ぐためです。
+When variants are displayed, the current viewer appends `embedding_dim` and
+`quantization` to `model_name` and uses that display name as the ranking key.
+If multiple `embedding_variant_name` values would produce the same display
+name, the viewer also appends the variant name. This prevents multiple rows
+from the same task from collapsing into a single model key and corrupting Borda
+rank populations.
 
-新しく viewer を作る場合は、内部 key には `model_name` と
-`embedding_variant_name` を組み合わせた安定 key を持ち、表示 label は別に作る
-ほうがさらに衝突に強くなります。
+For a new viewer, a stronger design is to use an internal key made from
+`model_name` and `embedding_variant_name`, then build the display label
+separately.
 
-## 現行 viewer の取得層
+## Current Viewer Data Access Layer
 
-`nano_ir_benchmark/viewer/data.py` の `TaskResultsRepository` が、DuckDB
-から Pydantic DTO の `TaskResultRecord` を取得します。
-`LeaderboardService` はこの DTO を leaderboard 計算用の `TaskScore` に変換し、
-ranking、Overall 集約、score group、sort を Python 側で行います。
+`nano_ir_benchmark/viewer/data.py` contains `TaskResultsRepository`, which
+reads DuckDB rows into the Pydantic DTO `TaskResultRecord`. `LeaderboardService`
+converts that DTO into the leaderboard-domain `TaskScore`, then performs
+ranking, overall aggregation, score grouping, and sorting in Python.
 
-この分離の意図は、SQL と DB schema 互換処理を取得層に閉じ込め、Borda や
-complete model rule などの leaderboard semantics を `LeaderboardService` 側に
-残すことです。`TaskResultRecord` は DuckDB の row contract を表す DTO であり、
-計算ロジックは持ちません。
+This boundary keeps SQL and DB-schema compatibility in the data layer while
+keeping Borda and complete-model semantics in `LeaderboardService`.
+`TaskResultRecord` is a row contract DTO and does not contain ranking logic.
 
-`TaskResultsRepository.fetch_task_results()` が担う SQL 上の判断は次の通りです。
+`TaskResultsRepository.fetch_task_results()` is responsible for these SQL
+choices:
 
-- canonical source の `task_results` だけを読む。
-- ranking できない `score IS NULL` の行は除外する。
-- view が要求した `benchmark` だけを読む。
-- variant 表示が不要なときは `embedding_variant_name IS NULL` の base rows だけを読む。
-- 古い DuckDB に variant 列がない場合は、該当 DTO field を `NULL` として返す。
-- 旧 NanoJMTEB task 名を現行名へ正規化し、旧名と新名の結果が混在する場合は
-  新名の行を優先する。
+- Read only the canonical `task_results` source.
+- Exclude `score IS NULL` rows because they cannot participate in ranking.
+- Read only benchmarks requested by the selected view.
+- Read only base rows when variants are not requested.
+- Select missing variant columns as `NULL` for old DuckDB files.
+- Canonicalize legacy NanoJMTEB task names and prefer canonical-name rows when
+  old and new task names are both present.
 
-概念的には次の SQL です。
+Conceptually, it runs this query:
 
 ```sql
 SELECT
@@ -316,14 +335,14 @@ WHERE benchmark IN ('MNanoBEIR', 'NanoRTEB')
   AND embedding_variant_name IS NULL;
 ```
 
-`embedding_variant_name` などの variant 列が存在しない古い DB では、現行
-viewer はそれらを `NULL` として扱います。
+For older databases without `embedding_variant_name`, `embedding_dim`, or
+`quantization`, the viewer treats those fields as `NULL`.
 
-### NanoJMTEB task name aliases
+### NanoJMTEB Task Name Aliases
 
-NanoJMTEB の一部 split/task 名は `NanoJa...` 付きの旧名から、`Nano...` の現行名
-へ変更されています。viewer と DuckDB/report 生成スクリプトは、旧 result JSON
-や古い DuckDB を読めるように次の alias を現行名へ正規化します。
+Some NanoJMTEB split/task names changed from legacy `NanoJa...` names to
+canonical `Nano...` names. The viewer and the DuckDB/report generation script
+normalize these aliases so old result JSON and old DuckDB files remain usable.
 
 | legacy name | canonical name |
 | --- | --- |
@@ -336,19 +355,23 @@ NanoJMTEB の一部 split/task 名は `NanoJa...` 付きの旧名から、`Nano.
 | `NanoJaNLPJournalTitleAbs` | `NanoNLPJournalTitleAbs` |
 | `NanoJaNLPJournalTitleIntro` | `NanoNLPJournalTitleIntro` |
 
-正規化後の `task_key` は
-`NanoJMTEB::hakari-bench/NanoJMTEB::{canonical task name}` です。旧名と新名が
-同じ model/task/variant として同時に存在する場合は、現行名の行を優先します。
-これは同じ task が二重に ranking に入って Borda の母集団が壊れるのを防ぐため
-です。
+The canonical task key is:
+
+```text
+NanoJMTEB::hakari-bench/NanoJMTEB::{canonical task name}
+```
+
+If old-name and canonical-name rows both exist for the same model, task, and
+variant, the canonical-name row is preferred. This prevents the same task from
+entering the ranking twice and corrupting the Borda population.
 
 ## SQL Recipes
 
-以降の SQL は、DuckDB だけで viewer と同じ leaderboard を再現するための
-雛形です。実際には `selected_benchmarks` と `excluded_tasks` を YAML 設定
-から組み立ててください。
+The following SQL snippets show how to reproduce the viewer's leaderboard
+directly in DuckDB. In a real viewer, build `selected_benchmarks` and
+`excluded_tasks` from `config/viewer/*.yaml`.
 
-### 1. schema 確認
+### 1. Inspect Schema
 
 ```sql
 DESCRIBE task_results;
@@ -358,10 +381,10 @@ DESCRIBE model_scores;
 DESCRIBE borda_task_scores;
 ```
 
-### 2. benchmark view の leaderboard
+### 2. Benchmark View Leaderboard
 
-単一 benchmark view はこの形で引けます。例では `MNanoBEIR` を表示し、
-variant は base のみ、除外 task なしにしています。
+Use this pattern for a single benchmark view. This example displays
+`MNanoBEIR`, base rows only, with no excluded tasks.
 
 ```sql
 WITH
@@ -516,7 +539,7 @@ FROM ranked
 ORDER BY borda_rank ASC, mean_rank ASC, lower(model_name) ASC;
 ```
 
-variant を含める場合は `params` を変更します。
+To include variants, change `params`:
 
 ```sql
 SELECT
@@ -525,11 +548,10 @@ SELECT
   false AS include_other_variants
 ```
 
-### 3. Overall view の leaderboard
+### 3. Overall View Leaderboard
 
-`Overall` のように raw task をそのまま使う場合は、前節の
-`selected_benchmarks` に Overall 対象 benchmark を並べます。その上で
-`model_agg` を次の形に変更します。
+For an `Overall` view that uses raw tasks, put the overall benchmarks into
+`selected_benchmarks` and replace `model_agg` with this version:
 
 ```sql
 benchmark_means AS (
@@ -581,14 +603,14 @@ model_agg AS (
 )
 ```
 
-最終 `SELECT` では `macro_mean` と `micro_mean` をそのまま返します。Overall
-の `mean_rank` は `mean_score = macro_mean` の rank です。
+The final result should return both `macro_mean` and `micro_mean`. `mean_rank`
+for overall views ranks `mean_score`, which is `macro_mean`.
 
-### 4. OverallGrouped の leaderboard
+### 4. OverallGrouped Leaderboard
 
-`OverallGrouped` は、benchmark ごとに raw task を group に平均してから
-leaderboard を計算します。例の `overall_components` は
-`config/viewer/overall.yaml` から生成してください。
+`OverallGrouped` first averages raw tasks into benchmark-local groups, then
+computes Borda and means. Generate `overall_components` from
+`config/viewer/overall.yaml`.
 
 ```sql
 WITH
@@ -740,17 +762,17 @@ grouped_rows AS (
 )
 ```
 
-この `grouped_rows` を、benchmark view SQL の `source_rows` の代わりに使って
-`expected` 以降を同じように計算します。Overall なので最終 aggregation は
-前節の `macro_mean` / `micro_mean` 付き `model_agg` を使います。
+Use `grouped_rows` in place of `source_rows`, then reuse `expected` and later
+CTEs from the benchmark-view query. Because this is an overall view, use the
+overall `model_agg` with `macro_mean` and `micro_mean`.
 
-### 5. score group の横持ち metric 列
+### 5. Score Group Columns
 
-benchmark view では、ranking とは別に score group 列を出せます。たとえば
-MNanoBEIR の `lang_mean` は `dataset_name` ごとの平均を列として出します。
+Benchmark views can show additional score group columns that do not affect
+ranking. For example, MNanoBEIR `lang_mean` groups by `dataset_name`.
 
-UI で pivot するなら、SQL は long format のまま返すのが扱いやすいです。
-`complete_rows` は benchmark leaderboard SQL の CTE を流用してください。
+For UI rendering, long format is usually easier than SQL pivoting. Reuse
+`complete_rows` from the benchmark leaderboard query:
 
 ```sql
 SELECT
@@ -763,10 +785,11 @@ GROUP BY model_key, dataset_name
 ORDER BY metric_column, lower(model_name);
 ```
 
-`task_mean` の場合は `dataset_name` を `task_name` に置き換えます。その他の
-`group_by` も `Viewer 設定` の対応表と同じです。
+For `task_mean`, replace `dataset_name` with `task_name`. Other `group_by`
+values follow the mapping in the viewer configuration section.
 
-DuckDB 側で横持ちにする場合は、列一覧を先に決めてから `PIVOT` します。
+If you need a wide table in DuckDB, decide the column list first and use
+`PIVOT`:
 
 ```sql
 SELECT *
@@ -777,10 +800,10 @@ PIVOT (
 );
 ```
 
-### 6. model/run metadata
+### 6. Model and Run Metadata
 
-task 結果に紐づく runtime 情報は `task_results` だけでも表示できます。run 単位
-の summary を出したい場合は `runs` を使います。
+Task rows already contain enough metadata for most leaderboard tables. Use
+`runs` when you need run-level summaries:
 
 ```sql
 SELECT
@@ -805,10 +828,10 @@ FROM runs
 ORDER BY lower(model_name);
 ```
 
-### 7. task detail drilldown
+### 7. Task Detail Drilldown
 
-leaderboard 行をクリックして task 別 score を見せる場合は、
-`task_results` を model と view 条件で引きます。
+When a user opens a leaderboard row, query task-level details from
+`task_results` using the same view and variant constraints:
 
 ```sql
 SELECT
@@ -832,13 +855,13 @@ WHERE model_name = 'example/model'
 ORDER BY dataset_name, task_name;
 ```
 
-variant 表示時は `model_name` だけでなく `embedding_variant_name` も条件に
-入れてください。
+When variants are displayed, include `embedding_variant_name` in the lookup,
+not just `model_name`.
 
-### 8. variant facet 用の候補値
+### 8. Variant Facet Values
 
-dimension と quantization の filter UI を作る場合は、leaderboard と同じ
-view/variant 条件をかけたうえで候補値を出します。
+For dimension and quantization filter UI, compute options from the same
+view/variant population used by the leaderboard:
 
 ```sql
 SELECT DISTINCT
@@ -859,24 +882,26 @@ WHERE benchmark = 'MNanoBEIR'
 ORDER BY quant_filter_value;
 ```
 
-UI で filter を適用するときは、base rows を残すかどうかを明示してください。
-現行 viewer は「表示 variant の候補を ranking に含めた後、画面上で行を隠す」
-という動きです。filter は ranking の母集団そのものを変える用途ではなく、表示
-を絞る用途です。
+The current viewer applies facet filters as display filters after the ranking
+population has been selected. They should not silently change the ranking
+population unless the UI makes that behavior explicit.
 
-## Viewer を作るときの最小 checklist
+## Minimal Viewer Checklist
 
-1. `config/viewer/*.yaml` を読み、view 名から対象 benchmark と除外 task を決める。
-2. `task_results` から `benchmark`, `score IS NOT NULL`, variant 条件、
-   `excluded_tasks` を適用して source rows を作る。
-3. benchmark view なら raw rows のまま、OverallGrouped なら group_by で集約する。
-4. expected task set を作り、complete model だけを残す。
-5. task ごとに score 降順 `RANK()` を計算し、Borda score を出す。
-6. model ごとに `borda_score`, `mean_score`, `task_count`, parameter/runtime
-   metadata を集計する。
-7. Overall view では `macro_mean` と `micro_mean` を分け、`mean_score` には
-   `macro_mean` を使う。
-8. benchmark view の追加列が必要なら `score_groups` の `group_by` で
-   long format の metric values を作り、UI 側で pivot する。
-9. sort は `borda_rank ASC` をデフォルトにし、metric 列 sort は missing を
-   後ろに送る。
+1. Read `config/viewer/*.yaml` and resolve the selected view into benchmark
+   names and excluded tasks.
+2. Query `task_results` with benchmark, `score IS NOT NULL`, variant, and
+   excluded-task filters.
+3. For benchmark views, use raw rows. For grouped overall views, aggregate by
+   the configured `group_by` key.
+4. Build the expected task set and keep only complete models.
+5. Rank each task by score descending and compute per-task Borda scores.
+6. Aggregate per model into `borda_score`, `mean_score`, `task_count`, and
+   metadata columns.
+7. For overall views, return both `macro_mean` and `micro_mean`, and use
+   `macro_mean` as `mean_score`.
+8. For benchmark metric columns, compute score-group values in long format and
+   pivot in the UI if needed.
+9. Default sort should be `borda_rank ASC`. Metric-column sorts should place
+   missing values after present values.
+
