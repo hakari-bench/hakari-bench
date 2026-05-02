@@ -410,6 +410,65 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "uint8" in inferred_quant_response.text
 
 
+def test_variant_display_names_stay_unique_when_dimension_and_quantization_collide(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.80,
+                10,
+                12,
+                8192,
+                "quantize_int8_docs",
+                768,
+                "int8",
+            ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.70,
+                10,
+                12,
+                8192,
+                "sparse_query_max_active_dims_8_sparse_docs_max_active_dims_64_quantize_int8_docs",
+                768,
+                "int8",
+            ),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.60, 20, 24, 4096, None, 512, None),
+        ],
+        include_embedding_variant_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA", include_quantization_variants=True)
+
+    assert [row.model_name for row in result.rows] == [
+        "model/a (768 dims)",
+        "model/a (768 dims, int8, quantize_int8_docs)",
+        "model/a (768 dims, int8, sparse_query_max_active_dims_8_sparse_docs_max_active_dims_64_quantize_int8_docs)",
+        "model/b (512 dims)",
+    ]
+    assert all(row.borda_score >= 0.0 for row in result.rows)
+
+
 def test_model_filter_matches_any_whitespace_separated_token_case_insensitively(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
