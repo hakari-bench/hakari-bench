@@ -69,6 +69,7 @@ class LeaderboardResult(BaseModel):
     available_view_labels: dict[str, str]
     include_quantization_variants: bool = False
     include_truncate_variants: bool = False
+    include_other_variants: bool = False
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
     metric_columns: list[str]
@@ -105,6 +106,7 @@ class LeaderboardService:
         score_group_name: str | None = None,
         include_quantization_variants: bool = False,
         include_truncate_variants: bool = False,
+        include_other_variants: bool = False,
     ) -> LeaderboardResult:
         overall = self.config.overall_for_view(view_name)
         benchmarks = self.config.benchmarks_for_view(view_name)
@@ -115,6 +117,7 @@ class LeaderboardService:
             benchmarks,
             include_quantization_variants=include_quantization_variants,
             include_truncate_variants=include_truncate_variants,
+            include_other_variants=include_other_variants,
         )
         rows = _exclude_configured_tasks(rows, self.config)
         if overall is not None:
@@ -136,6 +139,7 @@ class LeaderboardService:
             available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
             include_quantization_variants=include_quantization_variants,
             include_truncate_variants=include_truncate_variants,
+            include_other_variants=include_other_variants,
             score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
             selected_score_group=(
                 ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
@@ -151,6 +155,7 @@ class LeaderboardService:
         *,
         include_quantization_variants: bool,
         include_truncate_variants: bool,
+        include_other_variants: bool,
     ) -> list[TaskScore]:
         if not self.duckdb_path.exists():
             return []
@@ -160,7 +165,7 @@ class LeaderboardService:
             variant_name_expr = _column_or_null(columns, "embedding_variant_name")
             embedding_dim_expr = _column_or_null(columns, "embedding_dim")
             quantization_expr = _column_or_null(columns, "quantization")
-            include_any_variants = include_quantization_variants or include_truncate_variants
+            include_any_variants = include_quantization_variants or include_truncate_variants or include_other_variants
             variant_filter = (
                 ""
                 if include_any_variants or "embedding_variant_name" not in columns
@@ -193,7 +198,7 @@ class LeaderboardService:
             con.close()
 
         task_scores: list[TaskScore] = []
-        include_any_variants = include_quantization_variants or include_truncate_variants
+        include_any_variants = include_quantization_variants or include_truncate_variants or include_other_variants
         for row in result:
             embedding_variant_name = str(row[11]) if row[11] is not None else None
             embedding_dim = _int_or_none(row[12])
@@ -203,6 +208,7 @@ class LeaderboardService:
                 quantization=quantization,
                 include_quantization_variants=include_quantization_variants,
                 include_truncate_variants=include_truncate_variants,
+                include_other_variants=include_other_variants,
             ):
                 continue
             task_scores.append(
@@ -436,13 +442,19 @@ def _include_variant_row(
     quantization: str | None,
     include_quantization_variants: bool,
     include_truncate_variants: bool,
+    include_other_variants: bool,
 ) -> bool:
     if embedding_variant_name is None:
         return True
     normalized_name = embedding_variant_name.lower()
     is_quantization = quantization is not None or "quantize" in normalized_name
     is_truncate = "truncate" in normalized_name
-    return (include_quantization_variants and is_quantization) or (include_truncate_variants and is_truncate)
+    is_other = not is_quantization and not is_truncate
+    return (
+        (include_quantization_variants and is_quantization)
+        or (include_truncate_variants and is_truncate)
+        or (include_other_variants and is_other)
+    )
 
 
 def _select_score_group(

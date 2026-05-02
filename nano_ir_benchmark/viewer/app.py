@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from html import escape
 from pathlib import Path
 from typing import cast
@@ -25,6 +26,18 @@ class ViewerAppConfig(BaseModel):
     config_dir: Path = Path("config/viewer")
 
 
+QueryValue = str | list[str]
+QueryState = dict[str, QueryValue]
+
+
+@dataclass(frozen=True)
+class FilterState:
+    model_filter: str = ""
+    filters_active: bool = False
+    dim_filters: tuple[str, ...] = ()
+    quant_filters: tuple[str, ...] = ()
+
+
 def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewer")):
     from fastapi import FastAPI, Query
     from fastapi.responses import HTMLResponse
@@ -41,6 +54,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         variants: bool = Query(default=False),
         quantization: bool = Query(default=False),
         truncate: bool = Query(default=False),
+        other_variant: bool = Query(default=False),
+        filters: bool = Query(default=False),
+        dim_filter: list[str] | None = Query(default=None),
+        quant_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
     ) -> str:
         store.ensure_current()
@@ -53,6 +70,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             variants=variants,
             quantization=quantization,
             truncate=truncate,
+            other_variant=other_variant,
+            filters=filters,
+            dim_filter=dim_filter,
+            quant_filter=quant_filter,
             model_filter=model_filter,
         )
         return render_page(viewer_config=viewer_config, duckdb_path=store.path, initial_query=initial_query)
@@ -66,6 +87,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         variants: bool = Query(default=False),
         quantization: bool = Query(default=False),
         truncate: bool = Query(default=False),
+        other_variant: bool = Query(default=False),
+        filters: bool = Query(default=False),
+        dim_filter: list[str] | None = Query(default=None),
+        quant_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
     ) -> HTMLResponse:
         store.ensure_current()
@@ -78,15 +103,20 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             variants=variants,
             quantization=quantization,
             truncate=truncate,
+            other_variant=other_variant,
+            filters=filters,
+            dim_filter=dim_filter,
+            quant_filter=quant_filter,
             model_filter=model_filter,
         )
-        view = state_query["view"]
-        sort = state_query["sort"]
-        direction = state_query["direction"]
-        group = state_query.get("group")
+        view = _query_string(state_query["view"])
+        sort = _query_string(state_query["sort"])
+        direction = _query_string(state_query["direction"])
+        group = _optional_query_string(state_query.get("group"))
         include_quantization_variants = state_query.get("quantization") == "1"
         include_truncate_variants = state_query.get("truncate") == "1"
-        model_filter = state_query.get("model_filter", "")
+        include_other_variants = state_query.get("other_variant") == "1"
+        filter_state = _filter_state_from_query(state_query)
         service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
         result = service.get_leaderboard(
             view,
@@ -95,15 +125,16 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             score_group_name=group,
             include_quantization_variants=include_quantization_variants,
             include_truncate_variants=include_truncate_variants,
+            include_other_variants=include_other_variants,
         )
-        content = render_leaderboard(result=result, sort=sort, direction=direction, model_filter=model_filter)
-        return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query)}"})
+        content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
+        return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}"})
 
     return app
 
 
-def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query: dict[str, str] | None = None) -> str:
-    query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"})
+def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query: QueryState | None = None) -> str:
+    query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -134,12 +165,19 @@ def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query
 </html>"""
 
 
-def render_leaderboard(*, result: LeaderboardResult, sort: str, direction: str, model_filter: str = "") -> str:
+def render_leaderboard(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState | None = None,
+) -> str:
+    filter_state = filter_state or FilterState()
     return f"""
 <div>
-  {render_tabs(result=result, sort=sort, direction=direction, model_filter=model_filter)}
-  {render_controls(result=result, sort=sort, direction=direction, model_filter=model_filter)}
-  {render_score_groups(result=result, sort=sort, direction=direction, model_filter=model_filter)}
+  {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+  {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+  {render_score_groups(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
     <div>
       <h2 class="text-lg font-semibold">{escape(result.view_label)}</h2>
@@ -148,15 +186,16 @@ def render_leaderboard(*, result: LeaderboardResult, sort: str, direction: str, 
   </div>
   <div class="overflow-x-auto border border-zinc-200 bg-white">
     <table class="min-w-full border-collapse text-sm">
-      {render_table_head(result=result, sort=sort, direction=direction, model_filter=model_filter)}
-      {render_table_body(result=result, model_filter=model_filter)}
+      {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+      {render_table_body(result=result, filter_state=filter_state)}
     </table>
   </div>
 </div>
 """
 
 
-def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, model_filter: str = "") -> str:
+def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
+    filter_state = filter_state or FilterState()
     buttons: list[str] = []
     for view_name in result.available_views:
         active = view_name == result.view_name
@@ -168,9 +207,9 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, model_f
         )
         tab_sort = "borda_rank" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = _state_payload(result=result, sort=tab_sort, direction=tab_direction, model_filter=model_filter)
+        query_payload = _state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         query_payload["view"] = view_name
-        query = urlencode(query_payload)
+        query = urlencode(query_payload, doseq=True)
         buttons.append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -181,27 +220,47 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, model_f
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Benchmark views">{''.join(buttons)}</nav>"""
 
 
-def render_controls(*, result: LeaderboardResult, sort: str, direction: str, model_filter: str = "") -> str:
+def render_controls(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
+    filter_state = filter_state or FilterState()
     quantization_checked = " checked" if result.include_quantization_variants else ""
     truncate_checked = " checked" if result.include_truncate_variants else ""
-    hidden_fields = [
+    other_variant_checked = " checked" if result.include_other_variants else ""
+    state_fields = [
         ("view", result.view_name),
         ("sort", sort),
         ("direction", direction),
     ]
     if result.selected_score_group is not None:
-        hidden_fields.append(("group", result.selected_score_group.name))
-    hidden_html = "".join(
-        f"""<input type="hidden" name="{escape(name)}" value="{escape(value)}">""" for name, value in hidden_fields
+        state_fields.append(("group", result.selected_score_group.name))
+    display_hidden_html = _hidden_inputs(state_fields + _active_filter_hidden_fields(filter_state))
+    filter_hidden_fields = [*state_fields, ("filters", "1"), ("model_filter", filter_state.model_filter)]
+    if result.include_quantization_variants:
+        filter_hidden_fields.append(("quantization", "1"))
+    if result.include_truncate_variants:
+        filter_hidden_fields.append(("truncate", "1"))
+    if result.include_other_variants:
+        filter_hidden_fields.append(("other_variant", "1"))
+    filter_hidden_html = _hidden_inputs(filter_hidden_fields)
+    dim_options = _dim_filter_options(result.rows)
+    quant_options = _quant_filter_options(result.rows)
+    selected_dims = _selected_filter_values(
+        options=dim_options,
+        selected=filter_state.dim_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_quants = _selected_filter_values(
+        options=quant_options,
+        selected=filter_state.quant_filters,
+        filters_active=filter_state.filters_active,
     )
     return f"""
-    <form class="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-zinc-700"
-          hx-get="/leaderboard" hx-push-url="true"
-          hx-target="#leaderboard-panel" hx-swap="innerHTML"
-          hx-trigger="change from:input[type='checkbox'], input changed delay:700ms from:input[name='model_filter']">
-      {hidden_html}
-      <div class="flex flex-wrap items-center gap-3">
-        <span class="font-medium text-zinc-800">Variants:</span>
+    <div class="mb-4 flex flex-wrap items-start gap-x-6 gap-y-3 text-sm text-zinc-700">
+      <form class="flex flex-wrap items-center gap-x-5 gap-y-2"
+            hx-get="/leaderboard" hx-push-url="true"
+            hx-target="#leaderboard-panel" hx-swap="innerHTML"
+            hx-trigger="change from:input[type='checkbox'], input changed delay:700ms from:input[name='model_filter']">
+        {display_hidden_html}
+        <span class="font-medium text-zinc-800">Display:</span>
         <label class="inline-flex items-center gap-2">
           <input type="checkbox" name="quantization" value="1" class="h-4 w-4 accent-cyan-700"{quantization_checked}>
           <span>Quantization</span>
@@ -210,18 +269,32 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, mod
           <input type="checkbox" name="truncate" value="1" class="h-4 w-4 accent-cyan-700"{truncate_checked}>
           <span>Truncate dims</span>
         </label>
-      </div>
-      <label class="flex min-w-64 items-center gap-2">
-        <span class="font-medium text-zinc-800">Model name</span>
-        <input type="search" name="model_filter" value="{escape(model_filter)}"
-               class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
-               autocomplete="off">
-      </label>
-    </form>
+        <label class="inline-flex items-center gap-2">
+          <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
+          <span>Other variants</span>
+        </label>
+        <label class="flex min-w-64 items-center gap-2">
+          <span class="font-medium text-zinc-800">Model name</span>
+          <input type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
+                 class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
+                 autocomplete="off">
+        </label>
+      </form>
+      <form class="flex flex-wrap items-start gap-3"
+            hx-get="/leaderboard" hx-push-url="true"
+            hx-target="#leaderboard-panel" hx-swap="innerHTML"
+            hx-trigger="change from:input[type='checkbox']">
+        {filter_hidden_html}
+        <span class="pt-1 font-medium text-zinc-800">Filters:</span>
+        {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims)}
+        {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants)}
+      </form>
+    </div>
     """
 
 
-def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str, model_filter: str = "") -> str:
+def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
+    filter_state = filter_state or FilterState()
     if len(result.score_groups) <= 1 or result.selected_score_group is None:
         return ""
     buttons: list[str] = []
@@ -232,9 +305,9 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
             if active
             else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
         )
-        query_payload = _state_payload(result=result, sort="borda_rank", direction="asc", model_filter=model_filter)
+        query_payload = _state_payload(result=result, sort="borda_rank", direction="asc", filter_state=filter_state)
         query_payload["group"] = score_group.name
-        query = urlencode(query_payload)
+        query = urlencode(query_payload, doseq=True)
         page_url = _page_url(query_payload)
         buttons.append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
@@ -246,7 +319,8 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Score groups">{''.join(buttons)}</nav>"""
 
 
-def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, model_filter: str = "") -> str:
+def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
+    filter_state = filter_state or FilterState()
     columns = [
         ("borda_rank", "Borda", "asc", "right", False),
         ("mean_rank", "Mean", "asc", "right", False),
@@ -280,8 +354,8 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, m
     for key, label, default_direction, align, is_metric in columns:
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
         indicator = " ▲" if sort == key and direction == "asc" else " ▼" if sort == key else ""
-        query_payload = _state_payload(result=result, sort=key, direction=next_direction, model_filter=model_filter)
-        query = urlencode(query_payload)
+        query_payload = _state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
+        query = urlencode(query_payload, doseq=True)
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
         th_spacing = "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 normal-case" if is_metric else "px-3 uppercase"
@@ -298,13 +372,30 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, m
     return f"<thead><tr>{''.join(heads)}</tr></thead>"
 
 
-def render_table_body(*, result: LeaderboardResult, model_filter: str = "") -> str:
+def render_table_body(*, result: LeaderboardResult, filter_state: FilterState | None = None) -> str:
+    filter_state = filter_state or FilterState()
     if not result.rows:
         return """<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="12">No complete results found.</td></tr></tbody>"""
     body_rows = []
-    normalized_filter = _active_model_filter(model_filter)
+    normalized_filter = _active_model_filter(filter_state.model_filter)
+    dim_options = _dim_filter_options(result.rows)
+    quant_options = _quant_filter_options(result.rows)
+    selected_dims = _selected_filter_values(
+        options=dim_options,
+        selected=filter_state.dim_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_quants = _selected_filter_values(
+        options=quant_options,
+        selected=filter_state.quant_filters,
+        filters_active=filter_state.filters_active,
+    )
     for row in result.rows:
-        hidden = bool(normalized_filter and normalized_filter not in row.model_name.lower())
+        hidden = (
+            bool(normalized_filter and normalized_filter not in row.model_name.lower())
+            or _dim_bucket(row.embedding_dim) not in selected_dims
+            or _quant_bucket(row.quantization) not in selected_quants
+        )
         row_class = "border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
         mean_cells = (
@@ -374,6 +465,109 @@ def _active_model_filter(model_filter: str) -> str:
     return normalized if len(normalized) >= 3 else ""
 
 
+def _render_filter_details(
+    *,
+    name: str,
+    summary: str,
+    options: list[tuple[str, str]],
+    selected_values: set[str],
+) -> str:
+    checkboxes = []
+    for value, label in options:
+        checked = " checked" if value in selected_values else ""
+        checkboxes.append(
+            f"""<label class="flex items-center gap-2 whitespace-nowrap px-2 py-1">
+              <input type="checkbox" name="{escape(name)}" value="{escape(value)}" class="h-4 w-4 accent-cyan-700"{checked}>
+              <span>{escape(label)}</span>
+            </label>"""
+        )
+    return f"""
+      <details class="border border-zinc-300 bg-white">
+        <summary class="cursor-pointer px-2 py-1 font-medium text-zinc-800">{escape(summary)}</summary>
+        <div class="max-h-60 min-w-36 overflow-auto border-t border-zinc-200 py-1">
+          {''.join(checkboxes)}
+        </div>
+      </details>
+    """
+
+
+def _dim_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
+    buckets = {_dim_bucket(row.embedding_dim) for row in rows}
+    return sorted(
+        ((bucket, _dim_bucket_label(bucket)) for bucket in buckets),
+        key=lambda item: _dim_bucket_sort_key(item[0]),
+    )
+
+
+def _quant_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
+    buckets = {_quant_bucket(row.quantization) for row in rows}
+    return sorted(
+        ((bucket, _quant_bucket_label(bucket)) for bucket in buckets),
+        key=lambda item: _quant_bucket_sort_key(item[0]),
+    )
+
+
+def _selected_filter_values(
+    *,
+    options: list[tuple[str, str]],
+    selected: tuple[str, ...],
+    filters_active: bool,
+) -> set[str]:
+    available = {value for value, _ in options}
+    if not filters_active:
+        return available
+    return {value for value in selected if value in available}
+
+
+def _dim_bucket(value: int | None) -> str:
+    if value is None:
+        return "__unknown__"
+    if value >= 1025:
+        return "1025+"
+    return str(value)
+
+
+def _dim_bucket_label(bucket: str) -> str:
+    if bucket == "__unknown__":
+        return "Unknown"
+    if bucket == "1025+":
+        return "1025~ dims"
+    return f"{int(bucket):,} dims"
+
+
+def _dim_bucket_sort_key(bucket: str) -> tuple[int, int]:
+    if bucket == "__unknown__":
+        return (1, 0)
+    if bucket == "1025+":
+        return (0, 1025)
+    return (0, int(bucket))
+
+
+def _quant_bucket(value: str | None) -> str:
+    return value or "__none__"
+
+
+def _quant_bucket_label(bucket: str) -> str:
+    return "Original" if bucket == "__none__" else bucket
+
+
+def _quant_bucket_sort_key(bucket: str) -> tuple[int, str]:
+    return (0, "") if bucket == "__none__" else (1, bucket)
+
+
+def _hidden_inputs(fields: list[tuple[str, str]]) -> str:
+    return "".join(f"""<input type="hidden" name="{escape(name)}" value="{escape(value)}">""" for name, value in fields)
+
+
+def _active_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
+    if not filter_state.filters_active:
+        return []
+    fields = [("filters", "1")]
+    fields.extend(("dim_filter", value) for value in filter_state.dim_filters)
+    fields.extend(("quant_filter", value) for value in filter_state.quant_filters)
+    return fields
+
+
 def _next_direction(*, key: str, sort: str, direction: str, default_direction: str) -> str:
     if key != sort:
         return default_direction
@@ -415,17 +609,24 @@ def _state_payload(
     result: LeaderboardResult,
     sort: str,
     direction: str,
-    model_filter: str = "",
-) -> dict[str, str]:
-    query_payload = {"view": result.view_name, "sort": sort, "direction": direction}
+    filter_state: FilterState | None = None,
+) -> QueryState:
+    filter_state = filter_state or FilterState()
+    query_payload: QueryState = {"view": result.view_name, "sort": sort, "direction": direction}
     if result.selected_score_group is not None:
         query_payload["group"] = result.selected_score_group.name
     if result.include_quantization_variants:
         query_payload["quantization"] = "1"
     if result.include_truncate_variants:
         query_payload["truncate"] = "1"
-    if model_filter:
-        query_payload["model_filter"] = model_filter
+    if result.include_other_variants:
+        query_payload["other_variant"] = "1"
+    if filter_state.model_filter:
+        query_payload["model_filter"] = filter_state.model_filter
+    if filter_state.filters_active:
+        query_payload["filters"] = "1"
+        query_payload["dim_filter"] = list(filter_state.dim_filters)
+        query_payload["quant_filter"] = list(filter_state.quant_filters)
     return query_payload
 
 
@@ -439,8 +640,12 @@ def _state_query(
     variants: bool,
     quantization: bool,
     truncate: bool,
+    other_variant: bool,
+    filters: bool,
+    dim_filter: list[str] | None,
+    quant_filter: list[str] | None,
     model_filter: str,
-) -> dict[str, str]:
+) -> QueryState:
     if view not in viewer_config.view_names:
         view = viewer_config.overall.name
     if sort not in SORT_COLUMNS and not sort.startswith("metric:"):
@@ -450,22 +655,62 @@ def _state_query(
     if variants:
         quantization = True
         truncate = True
+        other_variant = True
 
-    query = {"view": view, "sort": sort, "direction": direction}
+    query: QueryState = {"view": view, "sort": sort, "direction": direction}
     if group:
         query["group"] = group
     if quantization:
         query["quantization"] = "1"
     if truncate:
         query["truncate"] = "1"
+    if other_variant:
+        query["other_variant"] = "1"
+    if filters:
+        query["filters"] = "1"
+        query["dim_filter"] = _normalized_query_values(dim_filter)
+        query["quant_filter"] = _normalized_query_values(quant_filter)
     model_filter = model_filter.strip()
     if model_filter:
         query["model_filter"] = model_filter
     return query
 
 
-def _page_url(query: dict[str, str]) -> str:
-    return escape(f"/?{urlencode(query)}", quote=True)
+def _filter_state_from_query(query: QueryState) -> FilterState:
+    return FilterState(
+        model_filter=str(query.get("model_filter", "")),
+        filters_active=query.get("filters") == "1",
+        dim_filters=tuple(_query_values(query.get("dim_filter"))),
+        quant_filters=tuple(_query_values(query.get("quant_filter"))),
+    )
+
+
+def _normalized_query_values(values: list[str] | None) -> list[str]:
+    if values is None:
+        return []
+    return [value for value in values if value]
+
+
+def _query_values(value: QueryValue | None) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return value
+    return [value]
+
+
+def _query_string(value: QueryValue) -> str:
+    return value[0] if isinstance(value, list) and value else str(value)
+
+
+def _optional_query_string(value: QueryValue | None) -> str | None:
+    if value is None:
+        return None
+    return _query_string(value)
+
+
+def _page_url(query: QueryState) -> str:
+    return escape(f"/?{urlencode(query, doseq=True)}", quote=True)
 
 
 def _leaderboard_url(query: str) -> str:

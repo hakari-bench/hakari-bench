@@ -277,6 +277,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192, "quantize_uint8_docs", 768, "uint8"),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.85, 10, 12, 8192, "truncate_dim_512", 512, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.82, 10, 12, 8192, "truncate_dim_256_quantize_int8_docs", 256, "int8"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.75, 10, 12, 8192, "custom_variant", 2048, None),
             ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 20, 24, 4096, None, 512, None),
         ],
         include_embedding_variant_columns=True,
@@ -295,6 +296,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         include_quantization_variants=True,
         include_truncate_variants=True,
     )
+    other_variant_result = service.get_leaderboard("BenchA", include_other_variants=True)
 
     assert [row.model_name for row in base_result.rows] == ["model/a", "model/b"]
     assert [row.model_name for row in quantization_result.rows] == [
@@ -318,12 +320,21 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     ]
     assert all_variant_result.rows[2].embedding_dim == 256
     assert all_variant_result.rows[2].quantization == "int8"
+    assert [row.model_name for row in other_variant_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (2048 dims)",
+        "model/b (512 dims)",
+    ]
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
     response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=model%2Fb")
 
     assert response.status_code == 200
-    assert "Variants:" in response.text
+    assert "Display:" in response.text
+    assert "Other variants" in response.text
+    assert "Filters:" in response.text
+    assert ">Dims</summary>" in response.text
+    assert ">Quantization</summary>" in response.text
     assert "Truncate dims" in response.text
     assert 'name="model_filter"' in response.text
     assert 'value="model/b"' in response.text
@@ -337,12 +348,28 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Dims" in response.text
     assert "Quantization" in response.text
     assert "delay:700ms" in response.text
+    assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
 
     short_filter_response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=mo")
 
     assert short_filter_response.status_code == 200
     assert 'value="mo"' in short_filter_response.text
     assert 'data-filter-hidden="true"' not in short_filter_response.text
+
+    facet_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&quantization=1&truncate=1&other_variant=1"
+        "&filters=1&dim_filter=768&dim_filter=1025%2B&quant_filter=uint8"
+    )
+
+    assert facet_response.status_code == 200
+    assert 'name="other_variant" value="1" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
+    assert 'name="dim_filter" value="768" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
+    assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
+    assert "1025~ dims" in facet_response.text
+    assert 'name="quant_filter" value="uint8" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
+    assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
+    assert 'data-filter-hidden="true"' in facet_response.text
 
 
 def test_individual_leaderboard_uses_simple_task_mean() -> None:
