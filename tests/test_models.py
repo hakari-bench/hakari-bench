@@ -88,6 +88,9 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
             trust_remote_code=True,
             late_interaction_query_length=64,
             late_interaction_document_length=300,
+            late_interaction_query_prefix="[QueryMarker]",
+            late_interaction_document_prefix="[DocumentMarker]",
+            late_interaction_attend_to_expansion_tokens=True,
         )
     )
 
@@ -101,6 +104,9 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
             "model_kwargs": {"torch_dtype": torch.float32},
             "query_length": 64,
             "document_length": 300,
+            "query_prefix": "[QueryMarker]",
+            "document_prefix": "[DocumentMarker]",
+            "attend_to_expansion_tokens": True,
         }
     ]
 

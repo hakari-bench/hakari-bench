@@ -179,18 +179,51 @@ def test_parse_args_accepts_late_interaction_options() -> None:
             "64",
             "--late-interaction-document-length",
             "300",
+            "--late-interaction-query-prefix",
+            "[QueryMarker]",
+            "--late-interaction-document-prefix",
+            "[DocumentMarker]",
+            "--late-interaction-attend-to-expansion-tokens",
             "--late-interaction-exact-doc-batch-size",
             "16",
             "--late-interaction-exact-query-batch-size",
             "4",
+            "--embedding-variant",
+            "truncate_dim:96,64",
         ]
     )
 
     assert args.model_type == "late-interaction"
     assert args.late_interaction_query_length == 64
     assert args.late_interaction_document_length == 300
+    assert args.late_interaction_query_prefix == "[QueryMarker]"
+    assert args.late_interaction_document_prefix == "[DocumentMarker]"
+    assert args.late_interaction_attend_to_expansion_tokens is True
     assert args.late_interaction_exact_doc_batch_size == 16
     assert args.late_interaction_exact_query_batch_size == 4
+    assert args.embedding_variants == [
+        _pipeline_variant("truncate_dim_96", _truncate_step(96)),
+        _pipeline_variant("truncate_dim_64", _truncate_step(64)),
+    ]
+
+
+def test_parse_args_rejects_late_interaction_quantized_embedding_variant() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "--model",
+                "jinaai/jina-colbert-v2",
+                "--model-type",
+                "late-interaction",
+                "--embedding-variant",
+                "quantize:int8",
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected late-interaction to reject non-truncate embedding variants.")
 
 
 def test_parse_args_rejects_sparse_max_active_dims_for_dense_model() -> None:
@@ -233,7 +266,7 @@ def test_parse_args_accepts_embedding_variants() -> None:
             "--model",
             "hotchpotch/model",
             "--embedding-variant",
-            "truncate:256,truncate:128",
+            "truncate_dim:256,128",
         ]
     )
 
@@ -250,7 +283,7 @@ def test_parse_args_accepts_compact_truncate_embedding_variants() -> None:
             "--model",
             "hotchpotch/model",
             "--embedding-variant",
-            "truncate:512,256,128",
+            "truncate_dim:512,256,128",
         ]
     )
 
@@ -264,6 +297,41 @@ def test_parse_args_accepts_compact_truncate_embedding_variants() -> None:
         256,
         128,
     ]
+
+
+def test_parse_args_accepts_truncate_dim_embedding_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "truncate_dim:512,256",
+        ]
+    )
+
+    assert [variant["name"] for variant in args.embedding_variants] == [
+        "truncate_dim_512",
+        "truncate_dim_256",
+    ]
+
+
+def test_parse_args_rejects_legacy_truncate_embedding_variant_spellings() -> None:
+    for value in ["truncate:512", "truncate=512", "truncate-dim:512", "truncate-dim=512"]:
+        try:
+            parse_args(
+                [
+                    "evaluate",
+                    "--model",
+                    "hotchpotch/model",
+                    "--embedding-variant",
+                    value,
+                ]
+            )
+        except SystemExit as exc:
+            assert exc.code == 2
+        else:
+            raise AssertionError(f"Expected legacy embedding variant spelling to be rejected: {value}")
 
 
 def test_parse_args_accepts_sparse_max_active_dims_embedding_variants() -> None:
@@ -389,7 +457,7 @@ def test_parse_args_accepts_embedding_variant_cross_product() -> None:
             "--model",
             "hotchpotch/model",
             "--embedding-variant-cross",
-            "truncate:256,128,64",
+            "truncate_dim:256,128,64",
             "quantize:int8,ubinary",
         ]
     )

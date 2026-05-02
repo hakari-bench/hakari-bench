@@ -343,6 +343,7 @@ def evaluate_late_interaction_task(
     exact_doc_batch_size: int = 128,
     exact_query_batch_size: int = 8,
     aggregate_metric: str = "ndcg@10",
+    embedding_variants: list[dict[str, Any]] | None = None,
 ) -> TaskEvaluation:
     if exact_doc_batch_size <= 0:
         raise ValueError("Late-interaction exact doc batch size must be positive.")
@@ -417,7 +418,7 @@ def evaluate_late_interaction_task(
     metric_seconds = time.perf_counter() - metric_start
     aggregate_metric_value = _aggregate_metric_value_for(metrics, aggregate_metric)
 
-    timing = {
+    base_timing = {
         "query_embedding_seconds": float(query_seconds),
         "corpus_embedding_seconds": float(corpus_seconds),
         "score_and_topk_seconds": float(score_seconds),
@@ -452,14 +453,107 @@ def evaluate_late_interaction_task(
             "best_distance": distance_name,
             "best_score_name": score_name,
         },
-        timing=timing,
+        timing=base_timing,
         aggregate_metric=aggregate_metric,
     )
     embedding_evaluation["index"] = index_payload
+    embedding_evaluations = [embedding_evaluation]
+
+    variant_score_seconds = 0.0
+    variant_metric_seconds = 0.0
+    for variant in embedding_variants or []:
+        variant_name = str(variant["name"])
+        variant_query_embeddings, variant_corpus_embeddings = _apply_embedding_variant_pair(
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            variant=variant,
+        )
+        variant_score_start = time.perf_counter()
+        variant_rankings = _rank_late_interaction_exact_maxsim(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=variant_query_embeddings,
+            corpus_embeddings=variant_corpus_embeddings,
+            top_k=ranking_depth,
+            doc_batch_size=exact_doc_batch_size,
+            query_batch_size=exact_query_batch_size,
+            device=device,
+            show_progress=show_progress,
+        )
+        variant_score_elapsed = time.perf_counter() - variant_score_start
+        variant_score_seconds += variant_score_elapsed
+
+        variant_metric_start = time.perf_counter()
+        variant_score_name = f"{score_name}_{variant_name}"
+        variant_metrics = compute_ir_metrics(
+            rankings=variant_rankings,
+            qrels=dataset.qrels,
+            evaluator_name=dataset.evaluator_name,
+            score_name=variant_score_name,
+        )
+        variant_metric_elapsed = time.perf_counter() - variant_metric_start
+        variant_metric_seconds += variant_metric_elapsed
+        variant_aggregate_metric_value = _aggregate_metric_value_for(variant_metrics, aggregate_metric)
+        variant_timing = {
+            "query_embedding_seconds": 0.0,
+            "corpus_embedding_seconds": 0.0,
+            "score_and_topk_seconds": float(variant_score_elapsed),
+            "metric_compute_seconds": float(variant_metric_elapsed),
+            "pure_compute_seconds": float(variant_score_elapsed + variant_metric_elapsed),
+        }
+        variant_evaluation = _embedding_evaluation_payload(
+            name=variant_name,
+            transform=dict(variant["transform"]),
+            embedding_dimensions=_embedding_dimensions(variant_query_embeddings, variant_corpus_embeddings),
+            embedding_metadata=_embedding_metadata(variant_query_embeddings, variant_corpus_embeddings),
+            scoring={
+                "distance_evaluations": [
+                    {
+                        "distance": distance_name,
+                        "score_name": variant_score_name,
+                        "aggregate_metric": aggregate_metric,
+                        "aggregate_metric_value": variant_aggregate_metric_value,
+                        "metrics": variant_metrics,
+                        "timing": {
+                            "score_and_topk_seconds": float(variant_score_elapsed),
+                            "metric_compute_seconds": float(variant_metric_elapsed),
+                            "pure_compute_seconds": float(variant_score_elapsed + variant_metric_elapsed),
+                        },
+                    }
+                ],
+                "metrics": variant_metrics,
+                "aggregate_metric_value": variant_aggregate_metric_value,
+                "best_score": variant_aggregate_metric_value,
+                "best_distance": distance_name,
+                "best_score_name": variant_score_name,
+            },
+            timing=variant_timing,
+            aggregate_metric=aggregate_metric,
+        )
+        variant_evaluation["index"] = {
+            **index_payload,
+            "timing": {
+                "index_build_or_load_seconds": 0.0,
+                "retrieve_seconds": float(variant_score_elapsed),
+            },
+        }
+        embedding_evaluations.append(variant_evaluation)
+
+    total_timing = {
+        "query_embedding_seconds": float(query_seconds),
+        "corpus_embedding_seconds": float(corpus_seconds),
+        "score_and_topk_seconds": float(score_seconds),
+        "metric_compute_seconds": float(metric_seconds),
+        "embedding_variant_score_and_topk_seconds": float(variant_score_seconds),
+        "embedding_variant_metric_compute_seconds": float(variant_metric_seconds),
+        "pure_compute_seconds": float(
+            query_seconds + corpus_seconds + score_seconds + metric_seconds + variant_score_seconds + variant_metric_seconds
+        ),
+    }
 
     return TaskEvaluation(
         metrics=metrics,
-        timing=timing,
+        timing=total_timing,
         embedding_conversion={
             "query": _embedding_conversion_payload(
                 text_count=len(query_texts),
@@ -472,7 +566,7 @@ def evaluate_late_interaction_task(
                 seconds=corpus_seconds,
             ),
         },
-        embedding_evaluations=[embedding_evaluation],
+        embedding_evaluations=embedding_evaluations,
     )
 
 
@@ -857,6 +951,8 @@ def _apply_embedding_pipeline_step_pair(
 def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
     if dim <= 0:
         raise ValueError("Truncate dimension must be positive.")
+    if _is_late_interaction_embedding(embeddings):
+        return _truncate_late_interaction_embeddings(embeddings, dim)
     if sparse.issparse(embeddings):
         if dim > embeddings.shape[1]:
             raise ValueError(f"Cannot truncate embeddings with dimension {embeddings.shape[1]} to {dim}.")
@@ -869,6 +965,25 @@ def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
     if dim > matrix.shape[1]:
         raise ValueError(f"Cannot truncate embeddings with dimension {matrix.shape[1]} to {dim}.")
     return matrix[:, :dim]
+
+
+def _truncate_late_interaction_embeddings(embeddings: Any, dim: int) -> Any:
+    if isinstance(embeddings, list | tuple):
+        return [_truncate_late_interaction_embedding(embedding, dim) for embedding in embeddings]
+    return _truncate_late_interaction_embedding(embeddings, dim)
+
+
+def _truncate_late_interaction_embedding(embedding: Any, dim: int) -> Any:
+    shape = _shape_list(embedding)
+    if len(shape) < 2:
+        raise ValueError(f"Late-interaction embeddings must be at least 2D, got shape {shape}.")
+    embedding_dim = int(shape[-1])
+    if dim > embedding_dim:
+        raise ValueError(f"Cannot truncate late-interaction embeddings with dimension {embedding_dim} to {dim}.")
+    if isinstance(embedding, torch.Tensor):
+        return embedding[..., :dim]
+    matrix = np.asarray(embedding)
+    return matrix[..., :dim]
 
 
 def _limit_sparse_active_dims(embeddings: Any, *, max_active_dims: int) -> sparse.csr_matrix:

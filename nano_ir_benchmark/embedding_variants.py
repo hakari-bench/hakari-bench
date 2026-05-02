@@ -114,13 +114,7 @@ def _parse_embedding_variant_cross(values: list[str]) -> list[dict[str, Any]]:
 
 
 def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> tuple[dict[str, Any], str]:
-    if token.startswith("truncate:"):
-        dim_value = token.split(":", 1)[1]
-        return _truncate_variant(token=token, dim_value=dim_value), "truncate"
-    elif token.startswith("truncate="):
-        dim_value = token.split("=", 1)[1]
-        return _truncate_variant(token=token, dim_value=dim_value), "truncate"
-    elif token.startswith("truncate_dim:"):
+    if token.startswith("truncate_dim:"):
         dim_value = token.split(":", 1)[1]
         return _truncate_variant(token=token, dim_value=dim_value), "truncate"
     elif token.startswith("truncate_dim="):
@@ -201,7 +195,7 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
     else:
         raise ValueError(
             "Unsupported embedding variant "
-            f"'{token}'. Supported syntax: truncate:DIM, sparse-max-active-dims:DIM, "
+            f"'{token}'. Supported syntax: truncate_dim:DIM, sparse-max-active-dims:DIM, "
             "quantize:PRECISION, or quantize-both:PRECISION"
         )
 

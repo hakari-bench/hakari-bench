@@ -163,6 +163,7 @@ def run_or_load_task(
             exact_query_batch_size=int(late_interaction_payload["exact"]["query_batch_size"]),
             device=args.device,
             aggregate_metric=args.aggregate_metric,
+            embedding_variants=getattr(args, "embedding_variants", []),
         )
     else:
         evaluation = evaluate_dense_task(
@@ -252,6 +253,9 @@ def _late_interaction_config_from_args(args: Any) -> dict[str, Any]:
         "scoring": "exact_maxsim",
         "query_length": getattr(args, "late_interaction_query_length", None),
         "document_length": getattr(args, "late_interaction_document_length", None),
+        "query_prefix": getattr(args, "late_interaction_query_prefix", None),
+        "document_prefix": getattr(args, "late_interaction_document_prefix", None),
+        "attend_to_expansion_tokens": getattr(args, "late_interaction_attend_to_expansion_tokens", None),
         "exact": {
             "doc_batch_size": int(args.late_interaction_exact_doc_batch_size),
             "query_batch_size": int(args.late_interaction_exact_query_batch_size),

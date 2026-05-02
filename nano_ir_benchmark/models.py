@@ -22,6 +22,9 @@ class ModelLoadConfig:
     max_seq_length: int | None = None
     late_interaction_query_length: int | None = None
     late_interaction_document_length: int | None = None
+    late_interaction_query_prefix: str | None = None
+    late_interaction_document_prefix: str | None = None
+    late_interaction_attend_to_expansion_tokens: bool | None = None
 
 
 def resolve_torch_dtype(dtype: str) -> torch.dtype:
@@ -122,6 +125,12 @@ def load_model(config: ModelLoadConfig) -> Any:
             kwargs["query_length"] = config.late_interaction_query_length
         if config.late_interaction_document_length is not None:
             kwargs["document_length"] = config.late_interaction_document_length
+        if config.late_interaction_query_prefix is not None:
+            kwargs["query_prefix"] = config.late_interaction_query_prefix
+        if config.late_interaction_document_prefix is not None:
+            kwargs["document_prefix"] = config.late_interaction_document_prefix
+        if config.late_interaction_attend_to_expansion_tokens is not None:
+            kwargs["attend_to_expansion_tokens"] = config.late_interaction_attend_to_expansion_tokens
         model = _import_pylate_colbert()(config.model_name_or_path, **kwargs)
         _set_model_dtype(model, config.dtype)
         _set_attn_implementation(model, attn_implementation)

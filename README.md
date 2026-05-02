@@ -69,7 +69,7 @@ uv run nano-ir-bench evaluate \
 
 These variants keep the top absolute-value dimensions per query/document row
 and record each derived result under `evaluation.embedding_evaluations`, like
-dense `truncate:` variants.
+dense `truncate_dim:` variants.
 
 Sparse embeddings can also use `quantize:int8,ubinary` variants. For sparse
 `int8`, non-zero weights are scalar-quantized with a corpus-derived value range
@@ -139,7 +139,7 @@ base embedding run:
 uv run nano-ir-bench evaluate \
   --model example/matryoshka-embedding-model \
   --dataset NanoMTEB \
-  --embedding-variant truncate:512,256
+  --embedding-variant truncate_dim:512,256
 ```
 
 ### Truncated Dimensions With Quantization
@@ -151,9 +151,9 @@ quantization variants, and their cross product:
 uv run nano-ir-bench evaluate \
   --model example/matryoshka-embedding-model \
   --dataset NanoMTEB \
-  --embedding-variant truncate:256,128,64 \
+  --embedding-variant truncate_dim:256,128,64 \
   --embedding-variant quantize:int8,ubinary \
-  --embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary
+  --embedding-variant-cross truncate_dim:256,128,64 quantize:int8,ubinary
 ```
 
 All three groups answer different questions: standalone truncation measures the

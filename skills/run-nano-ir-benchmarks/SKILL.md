@@ -1,6 +1,6 @@
 ---
 name: run-nano-ir-benchmarks
-description: Workflow for measuring models with the nano-ir-bench project. Use when Codex is asked to benchmark or evaluate embedding models on NanoIR/Nano* datasets, choose prompt/truncate-dim/attention options, schedule GPU benchmark jobs, compare BM25, or refresh DuckDB and HTML leaderboard reports.
+description: Workflow for measuring models with the nano-ir-bench project. Use when Codex is asked to benchmark or evaluate embedding models on NanoIR/Nano* datasets, choose prompt/truncate-dim CLI option, truncate_dim variants, attention options, schedule GPU benchmark jobs, compare BM25, or refresh DuckDB and HTML leaderboard reports.
 ---
 
 # Run NanoIR Benchmarks
@@ -24,7 +24,10 @@ For every specified model:
 - Check whether the model is a Sentence Transformers model with prompt configuration. Prefer its built-in prompt config when present.
 - If no usable Sentence Transformers prompt config exists, inspect the Hugging Face model card first, then relevant articles or papers for retrieval prefixes such as query/document/passage instructions.
 - Record and use explicit retrieval prefixes when the model card or paper requires them, for example via `--query-prompt`, `--corpus-prompt`, `--query-prompt-name`, or `--corpus-prompt-name`.
-- Investigate Matryoshka support. If the model card or paper documents supported dimensions, prefer simultaneous derived evaluations with `--embedding-variant truncate:DIM` over separate reruns.
+- For ColBERT/late-interaction models, assume model-specific query and document prefixes probably exist until checked. Read the model card, README, and PyLate documentation before running. Check whether prefixes must be passed at model initialization, not just during `encode`; PyLate ColBERT models may need options such as `query_prefix`, `document_prefix`, `attend_to_expansion_tokens`, `query_length`, `document_length`, and `trust_remote_code`. Do not benchmark a ColBERT model with blank/default prefixes until the model documentation says that is correct.
+- For `jinaai/jina-colbert-v2`, the documented PyLate initialization uses `query_prefix="[QueryMarker]"`, `document_prefix="[DocumentMarker]"`, `attend_to_expansion_tokens=True`, and `trust_remote_code=True`. Use `--late-interaction-query-prefix "[QueryMarker]"`, `--late-interaction-document-prefix "[DocumentMarker]"`, `--late-interaction-attend-to-expansion-tokens`, and `--trust-remote-code` unless the current model card says otherwise.
+- Investigate Matryoshka support. If the model card or paper documents supported dimensions, prefer simultaneous derived evaluations with `--embedding-variant truncate_dim:DIM` over separate reruns.
+- For ColBERT/late-interaction models, also check whether token embeddings are Matryoshka-compatible. This runner supports post-encode late-interaction token-dimension truncation with `--embedding-variant truncate_dim:DIM`, reusing the one encoded multi-vector output and re-running only MaxSim scoring for variants. For `jinaai/jina-colbert-v2`, evaluate the documented 96 and 64 dimensional variants with `--embedding-variant truncate_dim:96,64`.
 - For sparse/SPLADE-style models, use `--model-type sparse`. When evaluating
   sparsity trade-offs, prefer post-encode variants over separate reruns:
   `--embedding-variant sparse-max-active-dims:256,128,64` for symmetric
@@ -40,7 +43,7 @@ For every specified model:
   those standalone variants with the cross product.
 - Unless the user explicitly says not to, include post-encode docs-only quantization variants with `--embedding-variant quantize:int8,ubinary`. These variants quantize corpus/document embeddings while keeping query embeddings at the model's original floating-point precision. They do not require model-side quantized inference support and are useful even when the model is not Matryoshka-capable.
 - For sparse/SPLADE-style models, also include `--embedding-variant quantize:int8,ubinary` by default unless the user explicitly says not to. Sparse `int8` preserves sparse indices and quantizes only non-zero weights with a corpus-derived value range before dequantized sparse scoring; sparse `ubinary` preserves sparse indices and scores non-zero dimensions as an unweighted presence vector.
-- If Matryoshka dimensions are requested or documented, evaluate all three related groups: standalone dimensions, standalone quantization, and the dimension x quantization cross product. For example, use `--embedding-variant truncate:256,128,64`, `--embedding-variant quantize:int8,ubinary`, and `--embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary`. This is "all" because standalone dimensions isolate the dimension trade-off, standalone quantization isolates the quantization trade-off at the original dimension, and the cross product measures combined trade-offs such as `128dim x int8` and `64dim x ubinary`.
+- If Matryoshka dimensions are requested or documented, evaluate all three related groups: standalone dimensions, standalone quantization, and the dimension x quantization cross product. For example, use `--embedding-variant truncate_dim:256,128,64`, `--embedding-variant quantize:int8,ubinary`, and `--embedding-variant-cross truncate_dim:256,128,64 quantize:int8,ubinary`. This is "all" because standalone dimensions isolate the dimension trade-off, standalone quantization isolates the quantization trade-off at the original dimension, and the cross product measures combined trade-offs such as `128dim x int8` and `64dim x ubinary`.
 - Do not quantize query embeddings for the standard quantization run. Only use `quantize-both:` when the user explicitly asks for symmetric query+document quantization.
 - Do not use evaluation queries for scalar quantization calibration. The benchmark uses corpus-derived ranges for `int8`/`uint8`; using query values for buckets would be a transductive test-set adaptation.
 - Check whether `--trust-remote-code` is required.
@@ -83,7 +86,7 @@ inference pass:
 uv run nano-ir-bench evaluate \
   --model MODEL_NAME \
   --dataset DATASET_NAME \
-  --embedding-variant truncate:512,256
+  --embedding-variant truncate_dim:512,256
 ```
 
 For standard post-encode quantization, include docs-only `int8` and `ubinary`
@@ -113,9 +116,9 @@ quantization, and their cross product:
 uv run nano-ir-bench evaluate \
   --model MODEL_NAME \
   --dataset DATASET_NAME \
-  --embedding-variant truncate:256,128,64 \
+  --embedding-variant truncate_dim:256,128,64 \
   --embedding-variant quantize:int8,ubinary \
-  --embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary
+  --embedding-variant-cross truncate_dim:256,128,64 quantize:int8,ubinary
 ```
 
 The benchmark implementation normalizes all of these derived evaluations into a
@@ -123,7 +126,7 @@ single post-encode pipeline path, so the model is still encoded once and cross
 variants add only the transform/scoring work needed for each derived embedding.
 
 For sparse/SPLADE-style models, use sparse max-active-dimension variants instead
-of dense `truncate:` variants. Symmetric query+document sparsity limits:
+of dense `truncate_dim:` variants. Symmetric query+document sparsity limits:
 
 ```bash
 uv run nano-ir-bench evaluate \

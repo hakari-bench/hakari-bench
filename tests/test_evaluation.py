@@ -814,6 +814,34 @@ def test_evaluate_late_interaction_task_can_score_exact_maxsim() -> None:
     }
 
 
+def test_evaluate_late_interaction_task_truncates_variants_after_single_encode() -> None:
+    model = FakeLateInteractionModel()
+
+    result = evaluate_late_interaction_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        exact_doc_batch_size=2,
+        exact_query_batch_size=2,
+        device="cpu",
+        aggregate_metric="ndcg@10",
+        embedding_variants=[_pipeline_variant("truncate_dim_1", _truncate_step(1))],
+    )
+
+    assert len(model.calls) == 2
+    assert [item["name"] for item in result.embedding_evaluations] == ["base", "truncate_dim_1"]
+    truncate_eval = result.embedding_evaluations[1]
+    assert truncate_eval["embedding_dimensions"] == {"dim": 1}
+    assert truncate_eval["embedding_metadata"]["representation_type"] == "late_interaction"
+    assert truncate_eval["embedding_metadata"]["dimensions"] == {"dim": 1}
+    assert "ToyData_test_late_interaction_exact_maxsim_truncate_dim_1_ndcg@10" in truncate_eval["metrics"]
+
+
 def test_result_path_layout() -> None:
     path = result_path_for_task(
         output_dir=Path("output/results"),
