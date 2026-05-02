@@ -1192,7 +1192,7 @@ dev = [
     { name = "tox-uv", specifier = ">=1.35.1" },
     { name = "ty", specifier = ">=0.0.32" },
 ]
-pylate = [{ name = "pylate", editable = "../../../lightonai/pylate" }]
+pylate = [{ name = "pylate", git = "https://github.com/lightonai/pylate.git?rev=1f1f47cee5df35ebe6fd2286a0a205a1523e4119" }]
 viewer = [
     { name = "duckdb", specifier = ">=1.5.2" },
     { name = "fastapi", specifier = ">=0.136.1" },
@@ -1815,7 +1815,8 @@ wheels = [
 
 [[package]]
 name = "pylate"
-source = { editable = "../../../lightonai/pylate" }
+version = "1.4.0"
+source = { git = "https://github.com/lightonai/pylate.git?rev=1f1f47cee5df35ebe6fd2286a0a205a1523e4119#1f1f47cee5df35ebe6fd2286a0a205a1523e4119" }
 dependencies = [
     { name = "accelerate" },
     { name = "datasets" },
@@ -1826,51 +1827,6 @@ dependencies = [
     { name = "sentence-transformers" },
     { name = "transformers" },
     { name = "ujson" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "accelerate", specifier = ">=0.31.0" },
-    { name = "batched", marker = "extra == 'api'", specifier = ">=0.1.2" },
-    { name = "batched", marker = "extra == 'dev'", specifier = ">=0.1.2" },
-    { name = "beir", marker = "extra == 'dev'", specifier = ">=2.0.0" },
-    { name = "beir", marker = "extra == 'eval'", specifier = ">=2.0.0" },
-    { name = "datasets", specifier = ">=2.20.0" },
-    { name = "einops", marker = "extra == 'dev'", specifier = ">=0.8.1" },
-    { name = "fast-plaid", specifier = ">=1.2.4.260,<=1.3.0.290" },
-    { name = "fastapi", marker = "extra == 'api'", specifier = ">=0.114.1" },
-    { name = "fastapi", marker = "extra == 'dev'", specifier = ">=0.114.1" },
-    { name = "fastkmeans", specifier = "==0.5.0" },
-    { name = "ninja", specifier = "==1.11.1.4" },
-    { name = "pandas", specifier = ">=2.2.1" },
-    { name = "pandas", marker = "extra == 'dev'", specifier = ">=2.2.1" },
-    { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.1.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.2.1" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5.0.0" },
-    { name = "pytest-rerunfailures", marker = "extra == 'dev'", specifier = ">=15.0.0" },
-    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.6.0" },
-    { name = "ranx", marker = "extra == 'dev'", specifier = ">=0.3.16" },
-    { name = "ranx", marker = "extra == 'eval'", specifier = ">=0.3.16" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.4.9" },
-    { name = "scann", marker = "extra == 'scann'", specifier = ">=1.4.2" },
-    { name = "sentence-transformers", specifier = "==5.3.0" },
-    { name = "transformers", specifier = ">=4.41.0,<=5.3.0" },
-    { name = "typos", marker = "extra == 'dev'", specifier = ">=0.11.0" },
-    { name = "ujson", specifier = "==5.10.0" },
-    { name = "uvicorn", marker = "extra == 'api'", specifier = ">=0.30.6" },
-    { name = "uvicorn", marker = "extra == 'dev'", specifier = ">=0.30.6" },
-    { name = "voyager", marker = "extra == 'dev'", specifier = ">=2.0.9" },
-    { name = "voyager", marker = "extra == 'voyager'", specifier = ">=2.0.9" },
-]
-provides-extras = ["dev", "eval", "api", "voyager", "scann"]
-
-[package.metadata.requires-dev]
-docs = [
-    { name = "mkdocs-awesome-pages-plugin", specifier = "==2.9.3" },
-    { name = "mkdocs-charts-plugin", specifier = "==0.0.10" },
-    { name = "mkdocs-jupyter", specifier = "==0.24.8" },
-    { name = "mkdocs-material", specifier = "==9.5.32" },
-    { name = "numpydoc", specifier = "==1.8.0" },
 ]
 
 [[package]]

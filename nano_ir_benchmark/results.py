@@ -149,7 +149,7 @@ def run_or_load_task(
             rerank_top_n=args.rerank_top_n,
         )
     elif args.model_type == "late-interaction":
-        late_interaction_payload = _late_interaction_config_for_task(args=args, task=task)
+        late_interaction_payload = _late_interaction_config_from_args(args)
         evaluation = evaluate_late_interaction_task(
             model=model,
             dataset=dataset,
@@ -159,19 +159,8 @@ def run_or_load_task(
             corpus_prompt=args.corpus_prompt,
             query_prompt_name=args.query_prompt_name,
             corpus_prompt_name=args.corpus_prompt_name,
-            index_folder=Path(late_interaction_payload["index_folder"]),
-            index_name=str(late_interaction_payload["index_name"]),
-            index_backend=str(late_interaction_payload["index_backend"]),
-            index_use_fast=bool(late_interaction_payload["index_use_fast"]),
-            index_override=bool(late_interaction_payload["index_override"]),
-            retrieval_top_k=int(late_interaction_payload["retrieval_top_k"]),
-            pool_factor=int(late_interaction_payload["pool_factor"]),
-            nbits=int(late_interaction_payload["plaid"]["nbits"]),
-            kmeans_niters=int(late_interaction_payload["plaid"]["kmeans_niters"]),
-            n_ivf_probe=int(late_interaction_payload["plaid"]["n_ivf_probe"]),
-            n_full_scores=int(late_interaction_payload["plaid"]["n_full_scores"]),
-            n_samples_kmeans=late_interaction_payload["plaid"]["n_samples_kmeans"],
-            index_batch_size=int(late_interaction_payload["plaid"]["index_batch_size"]),
+            exact_doc_batch_size=int(late_interaction_payload["exact"]["doc_batch_size"]),
+            exact_query_batch_size=int(late_interaction_payload["exact"]["query_batch_size"]),
             device=args.device,
             aggregate_metric=args.aggregate_metric,
         )
@@ -258,28 +247,14 @@ def run_or_load_task(
     return TaskRunResult(task=task, cache_hit=False, output_path=output_path, payload=payload)
 
 
-def _late_interaction_config_for_task(*, args: Any, task: EvalTask) -> dict[str, Any]:
-    index_root = Path(args.late_interaction_index_dir or Path(args.output_dir) / "_late_interaction_indexes")
-    index_folder = index_root / safe_path_part(args.model) / safe_path_part(task.dataset_id)
+def _late_interaction_config_from_args(args: Any) -> dict[str, Any]:
     return {
-        "backend": "pylate",
-        "scoring": "maxsim",
-        "index_backend": args.late_interaction_index_backend,
-        "index_use_fast": True,
-        "index_override": bool(args.override),
-        "index_folder": str(index_folder),
-        "index_name": safe_path_part(task.task_name),
-        "retrieval_top_k": int(args.late_interaction_retrieval_top_k),
-        "pool_factor": int(args.late_interaction_pool_factor),
+        "scoring": "exact_maxsim",
         "query_length": getattr(args, "late_interaction_query_length", None),
         "document_length": getattr(args, "late_interaction_document_length", None),
-        "plaid": {
-            "nbits": int(args.late_interaction_plaid_nbits),
-            "kmeans_niters": int(args.late_interaction_plaid_kmeans_niters),
-            "n_ivf_probe": int(args.late_interaction_plaid_n_ivf_probe),
-            "n_full_scores": int(args.late_interaction_plaid_n_full_scores),
-            "n_samples_kmeans": args.late_interaction_plaid_n_samples_kmeans,
-            "index_batch_size": int(args.late_interaction_plaid_index_batch_size),
+        "exact": {
+            "doc_batch_size": int(args.late_interaction_exact_doc_batch_size),
+            "query_batch_size": int(args.late_interaction_exact_query_batch_size),
         },
     }
 

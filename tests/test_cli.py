@@ -179,18 +179,18 @@ def test_parse_args_accepts_late_interaction_options() -> None:
             "64",
             "--late-interaction-document-length",
             "300",
-            "--late-interaction-retrieval-top-k",
-            "200",
-            "--late-interaction-index-dir",
-            "tmp/pylate-indexes",
+            "--late-interaction-exact-doc-batch-size",
+            "16",
+            "--late-interaction-exact-query-batch-size",
+            "4",
         ]
     )
 
     assert args.model_type == "late-interaction"
     assert args.late_interaction_query_length == 64
     assert args.late_interaction_document_length == 300
-    assert args.late_interaction_retrieval_top_k == 200
-    assert args.late_interaction_index_dir == "tmp/pylate-indexes"
+    assert args.late_interaction_exact_doc_batch_size == 16
+    assert args.late_interaction_exact_query_batch_size == 4
 
 
 def test_parse_args_rejects_sparse_max_active_dims_for_dense_model() -> None:

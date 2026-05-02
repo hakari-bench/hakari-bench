@@ -1,20 +1,20 @@
 from __future__ import annotations
 
 import inspect
-import importlib
 import time
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Literal, cast
 
 import numpy as np
 import torch
 from scipy import sparse
+from tqdm.auto import tqdm
 
 from nano_ir_benchmark.datasets import EvalTask
 from nano_ir_benchmark.metrics import compute_ir_metrics
 
 QuantizationPrecision = Literal["int8", "uint8", "binary", "ubinary"]
+LATE_INTERACTION_RANKING_DEPTH = 100
 
 
 @dataclass(frozen=True)
@@ -339,28 +339,15 @@ def evaluate_late_interaction_task(
     corpus_prompt: str | None,
     query_prompt_name: str | None,
     corpus_prompt_name: str | None,
-    index_folder: Path,
-    index_name: str,
-    index_backend: str,
-    index_use_fast: bool,
-    index_override: bool,
-    retrieval_top_k: int,
-    pool_factor: int,
-    nbits: int,
-    kmeans_niters: int,
-    n_ivf_probe: int,
-    n_full_scores: int,
-    n_samples_kmeans: int | None,
-    index_batch_size: int,
     device: str | None,
+    exact_doc_batch_size: int = 128,
+    exact_query_batch_size: int = 8,
     aggregate_metric: str = "ndcg@10",
 ) -> TaskEvaluation:
-    if index_backend != "plaid":
-        raise ValueError(f"Unsupported late-interaction index backend: {index_backend}")
-    if retrieval_top_k <= 0:
-        raise ValueError("Late-interaction retrieval top-k must be positive.")
-    if pool_factor <= 0:
-        raise ValueError("Late-interaction pool factor must be positive.")
+    if exact_doc_batch_size <= 0:
+        raise ValueError("Late-interaction exact doc batch size must be positive.")
+    if exact_query_batch_size <= 0:
+        raise ValueError("Late-interaction exact query batch size must be positive.")
 
     query_ids = list(dataset.queries)
     corpus_ids = list(dataset.corpus)
@@ -376,7 +363,6 @@ def evaluate_late_interaction_task(
         prompt=query_prompt,
         prompt_name=query_prompt_name,
         is_query=True,
-        pool_factor=1,
     )
     query_seconds = time.perf_counter() - query_start
 
@@ -389,51 +375,44 @@ def evaluate_late_interaction_task(
         prompt=corpus_prompt,
         prompt_name=corpus_prompt_name,
         is_query=False,
-        pool_factor=pool_factor,
     )
     corpus_seconds = time.perf_counter() - corpus_start
 
-    index_start = time.perf_counter()
-    index_folder.mkdir(parents=True, exist_ok=True)
-    plaid_index = _import_pylate_plaid_index()(
-        index_folder=str(index_folder),
-        index_name=index_name,
-        override=index_override,
-        use_fast=index_use_fast,
-        nbits=nbits,
-        kmeans_niters=kmeans_niters,
-        n_ivf_probe=n_ivf_probe,
-        n_full_scores=n_full_scores,
-        n_samples_kmeans=n_samples_kmeans,
-        batch_size=index_batch_size,
-        show_progress=show_progress,
-        device=device,
-    )
-    if not _pylate_index_is_indexed(plaid_index):
-        plaid_index.add_documents(documents_ids=corpus_ids, documents_embeddings=corpus_embeddings)
-    index_seconds = time.perf_counter() - index_start
-
+    ranking_depth = min(LATE_INTERACTION_RANKING_DEPTH, len(corpus_ids))
     score_start = time.perf_counter()
-    retriever = _import_pylate_colbert_retriever()(index=plaid_index)
-    retrieval_k = min(retrieval_top_k, len(corpus_ids))
-    scores = retriever.retrieve(
-        queries_embeddings=query_embeddings,
-        k=retrieval_k,
-        batch_size=batch_size,
+    rankings = _rank_late_interaction_exact_maxsim(
+        query_ids=query_ids,
+        corpus_ids=corpus_ids,
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        top_k=ranking_depth,
+        doc_batch_size=exact_doc_batch_size,
+        query_batch_size=exact_query_batch_size,
         device=device,
+        show_progress=show_progress,
     )
-    rankings = {
-        query_id: [str(item["id"]) for item in query_scores]
-        for query_id, query_scores in zip(query_ids, scores, strict=True)
-    }
     score_seconds = time.perf_counter() - score_start
+    index_payload = {
+        "backend": "exact",
+        "library": "torch",
+        "index_type": "none",
+        "ranking_depth": ranking_depth,
+        "exact_doc_batch_size": exact_doc_batch_size,
+        "exact_query_batch_size": exact_query_batch_size,
+        "timing": {
+            "index_build_or_load_seconds": 0.0,
+            "retrieve_seconds": float(score_seconds),
+        },
+    }
+    score_name = "late_interaction_exact_maxsim"
+    distance_name = "exact_maxsim"
 
     metric_start = time.perf_counter()
     metrics = compute_ir_metrics(
         rankings=rankings,
         qrels=dataset.qrels,
         evaluator_name=dataset.evaluator_name,
-        score_name="late_interaction_maxsim",
+        score_name=score_name,
     )
     metric_seconds = time.perf_counter() - metric_start
     aggregate_metric_value = _aggregate_metric_value_for(metrics, aggregate_metric)
@@ -441,32 +420,11 @@ def evaluate_late_interaction_task(
     timing = {
         "query_embedding_seconds": float(query_seconds),
         "corpus_embedding_seconds": float(corpus_seconds),
-        "score_and_topk_seconds": float(score_seconds + index_seconds),
+        "score_and_topk_seconds": float(score_seconds),
         "metric_compute_seconds": float(metric_seconds),
         "embedding_variant_score_and_topk_seconds": 0.0,
         "embedding_variant_metric_compute_seconds": 0.0,
-        "pure_compute_seconds": float(query_seconds + corpus_seconds + index_seconds + score_seconds + metric_seconds),
-    }
-    index_payload = {
-        "backend": index_backend,
-        "library": "pylate",
-        "index_type": "PLAID",
-        "use_fast": index_use_fast,
-        "index_folder": str(index_folder),
-        "index_name": index_name,
-        "retrieval_top_k": retrieval_top_k,
-        "effective_retrieval_top_k": retrieval_k,
-        "pool_factor": pool_factor,
-        "nbits": nbits,
-        "kmeans_niters": kmeans_niters,
-        "n_ivf_probe": n_ivf_probe,
-        "n_full_scores": n_full_scores,
-        "n_samples_kmeans": n_samples_kmeans,
-        "index_batch_size": index_batch_size,
-        "timing": {
-            "index_build_or_load_seconds": float(index_seconds),
-            "retrieve_seconds": float(score_seconds),
-        },
+        "pure_compute_seconds": float(query_seconds + corpus_seconds + score_seconds + metric_seconds),
     }
     embedding_evaluation = _embedding_evaluation_payload(
         name="base",
@@ -476,23 +434,23 @@ def evaluate_late_interaction_task(
         scoring={
             "distance_evaluations": [
                 {
-                    "distance": "maxsim",
-                    "score_name": "late_interaction_maxsim",
+                    "distance": distance_name,
+                    "score_name": score_name,
                     "aggregate_metric": aggregate_metric,
                     "aggregate_metric_value": aggregate_metric_value,
                     "metrics": metrics,
                     "timing": {
-                        "score_and_topk_seconds": float(score_seconds + index_seconds),
+                        "score_and_topk_seconds": float(score_seconds),
                         "metric_compute_seconds": float(metric_seconds),
-                        "pure_compute_seconds": float(index_seconds + score_seconds + metric_seconds),
+                        "pure_compute_seconds": float(score_seconds + metric_seconds),
                     },
                 }
             ],
             "metrics": metrics,
             "aggregate_metric_value": aggregate_metric_value,
             "best_score": aggregate_metric_value,
-            "best_distance": "maxsim",
-            "best_score_name": "late_interaction_maxsim",
+            "best_distance": distance_name,
+            "best_score_name": score_name,
         },
         timing=timing,
         aggregate_metric=aggregate_metric,
@@ -518,23 +476,6 @@ def evaluate_late_interaction_task(
     )
 
 
-def _import_pylate_plaid_index() -> Any:
-    return getattr(importlib.import_module("pylate.indexes"), "PLAID")
-
-
-def _import_pylate_colbert_retriever() -> Any:
-    return getattr(importlib.import_module("pylate.retrieve"), "ColBERT")
-
-
-def _pylate_index_is_indexed(index: Any) -> bool:
-    if hasattr(index, "is_indexed"):
-        return bool(index.is_indexed)
-    inner_index = getattr(index, "_index", None)
-    if inner_index is not None and hasattr(inner_index, "is_indexed"):
-        return bool(inner_index.is_indexed)
-    return False
-
-
 def _encode_late_interaction(
     model: Any,
     *,
@@ -544,20 +485,99 @@ def _encode_late_interaction(
     prompt: str | None,
     prompt_name: str | None,
     is_query: bool,
-    pool_factor: int,
 ) -> Any:
     kwargs: dict[str, Any] = {
         "batch_size": batch_size,
         "show_progress_bar": show_progress,
         "is_query": is_query,
     }
-    if not is_query:
-        kwargs["pool_factor"] = pool_factor
     if prompt is not None:
         kwargs["prompt"] = prompt
     elif prompt_name is not None:
         kwargs["prompt_name"] = prompt_name
     return model.encode(sentences, **kwargs)
+
+
+def _rank_late_interaction_exact_maxsim(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    top_k: int,
+    doc_batch_size: int,
+    query_batch_size: int,
+    device: str | None,
+    show_progress: bool = False,
+) -> dict[str, list[str]]:
+    if top_k <= 0:
+        raise ValueError("Exact MaxSim top-k must be positive.")
+    if doc_batch_size <= 0:
+        raise ValueError("Exact MaxSim doc batch size must be positive.")
+    if query_batch_size <= 0:
+        raise ValueError("Exact MaxSim query batch size must be positive.")
+    score_device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
+    query_tensors = [_to_late_interaction_tensor(embedding, device=score_device) for embedding in query_embeddings]
+    all_scores = torch.empty((len(query_ids), len(corpus_ids)), dtype=torch.float32)
+    doc_ranges = range(0, len(corpus_ids), doc_batch_size)
+    for doc_start in tqdm(doc_ranges, desc="Exact MaxSim document batches", disable=not show_progress):
+        doc_end = min(doc_start + doc_batch_size, len(corpus_ids))
+        batch_doc_embeddings = [
+            _to_late_interaction_tensor(embedding, device=score_device)
+            for embedding in corpus_embeddings[doc_start:doc_end]
+        ]
+        for query_start in range(0, len(query_ids), query_batch_size):
+            query_end = min(query_start + query_batch_size, len(query_ids))
+            scores = _exact_maxsim_scores_for_queries(
+                query_tensors[query_start:query_end],
+                batch_doc_embeddings,
+            )
+            all_scores[query_start:query_end, doc_start:doc_end] = scores
+
+    rankings: dict[str, list[str]] = {}
+    for query_index, query_id in enumerate(query_ids):
+        query_scores = all_scores[query_index].tolist()
+        ranked_indices = sorted(range(len(corpus_ids)), key=lambda index: (-query_scores[index], corpus_ids[index]))
+        rankings[query_id] = [corpus_ids[index] for index in ranked_indices[:top_k]]
+    return rankings
+
+
+def _to_late_interaction_tensor(embedding: Any, *, device: torch.device) -> torch.Tensor:
+    if isinstance(embedding, torch.Tensor):
+        tensor = embedding.detach()
+        if tensor.dtype is torch.bfloat16:
+            tensor = tensor.float()
+        return tensor.to(device=device, dtype=torch.float32)
+    return torch.as_tensor(np.asarray(embedding), dtype=torch.float32, device=device)
+
+
+def _exact_maxsim_scores_for_queries(
+    query_embeddings: list[torch.Tensor],
+    document_embeddings: list[torch.Tensor],
+) -> torch.Tensor:
+    if not query_embeddings:
+        return torch.empty((0, len(document_embeddings)), dtype=torch.float32)
+    if not document_embeddings:
+        return torch.empty((len(query_embeddings), 0), dtype=torch.float32)
+    for query_embedding in query_embeddings:
+        if query_embedding.ndim != 2:
+            raise ValueError(f"Query late-interaction embedding must be 2D, got shape {tuple(query_embedding.shape)}.")
+
+    padded_queries = torch.nn.utils.rnn.pad_sequence(query_embeddings, batch_first=True, padding_value=0.0)
+    padded_docs = torch.nn.utils.rnn.pad_sequence(document_embeddings, batch_first=True, padding_value=0.0)
+    query_lengths = torch.as_tensor([query.shape[0] for query in query_embeddings], device=padded_queries.device)
+    doc_lengths = torch.as_tensor([document.shape[0] for document in document_embeddings], device=padded_docs.device)
+    query_positions = torch.arange(padded_queries.shape[1], device=padded_queries.device)
+    doc_positions = torch.arange(padded_docs.shape[1], device=padded_docs.device)
+    valid_query_tokens = query_positions.unsqueeze(0) < query_lengths.unsqueeze(1)
+    valid_doc_tokens = doc_positions.unsqueeze(0) < doc_lengths.unsqueeze(1)
+
+    with torch.no_grad():
+        scores = torch.einsum("bth,qsh->bqts", padded_docs, padded_queries)
+        scores = scores.masked_fill(~valid_doc_tokens[:, None, :, None], -torch.inf)
+        maxsim = scores.max(dim=2).values
+        maxsim = maxsim.masked_fill(~valid_query_tokens[None, :, :], 0.0)
+        return maxsim.sum(dim=2).T.detach().cpu()
 
 
 def _encode(

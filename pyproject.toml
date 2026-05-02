@@ -51,7 +51,7 @@ exclude = ["config*", "tests*"]
 package = true
 
 [tool.uv.sources]
-pylate = { path = "../../../lightonai/pylate", editable = true }
+pylate = { git = "https://github.com/lightonai/pylate.git", rev = "1f1f47cee5df35ebe6fd2286a0a205a1523e4119" }
 
 [dependency-groups]
 dev = [

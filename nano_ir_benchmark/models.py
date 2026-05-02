@@ -177,7 +177,6 @@ def collect_runtime_environment() -> dict[str, Any]:
                 "numpy",
                 "scipy",
                 "pylate",
-                "fast-plaid",
             ]
         },
         "cuda": {

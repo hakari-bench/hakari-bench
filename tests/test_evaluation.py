@@ -232,36 +232,6 @@ class FakeLateInteractionModel:
         ]
 
 
-class FakePylateIndex:
-    created: list["FakePylateIndex"] = []
-
-    def __init__(self, **kwargs: object) -> None:
-        self.kwargs = kwargs
-        self.documents_ids: list[str] = []
-        self.documents_embeddings: list[np.ndarray] = []
-        self.is_indexed = False
-        FakePylateIndex.created.append(self)
-
-    def add_documents(self, *, documents_ids: list[str], documents_embeddings: list[np.ndarray]) -> "FakePylateIndex":
-        self.documents_ids = documents_ids
-        self.documents_embeddings = documents_embeddings
-        self.is_indexed = True
-        return self
-
-
-class FakePylateRetriever:
-    def __init__(self, *, index: FakePylateIndex) -> None:
-        self.index = index
-
-    def retrieve(self, *, queries_embeddings: list[np.ndarray], k: int, **kwargs: object) -> list[list[dict[str, object]]]:
-        assert kwargs["batch_size"] == 2
-        assert k == 3
-        return [
-            [{"id": "d1", "score": 2.0}, {"id": "d3", "score": 0.1}, {"id": "d2", "score": 0.0}],
-            [{"id": "d2", "score": 2.0}, {"id": "d1", "score": 0.2}, {"id": "d3", "score": 0.0}],
-        ]
-
-
 def test_evaluate_dense_task_uses_default_prompt_config_when_not_overridden() -> None:
     model = FakeDenseModel()
 
@@ -799,10 +769,7 @@ def test_evaluate_reranker_task_uses_candidate_top_n() -> None:
     assert result.metrics["ToyData_test_reranker_ndcg@10"] == pytest.approx(0.5)
 
 
-def test_evaluate_late_interaction_task_uses_pylate_index(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    FakePylateIndex.created.clear()
-    monkeypatch.setattr(evaluation_module, "_import_pylate_plaid_index", lambda: FakePylateIndex)
-    monkeypatch.setattr(evaluation_module, "_import_pylate_colbert_retriever", lambda: FakePylateRetriever)
+def test_evaluate_late_interaction_task_can_score_exact_maxsim() -> None:
     model = FakeLateInteractionModel()
 
     result = evaluate_late_interaction_task(
@@ -814,39 +781,37 @@ def test_evaluate_late_interaction_task_uses_pylate_index(monkeypatch: pytest.Mo
         corpus_prompt="doc: ",
         query_prompt_name="query",
         corpus_prompt_name=None,
-        index_folder=tmp_path,
-        index_name="toy",
-        index_backend="plaid",
-        index_use_fast=True,
-        index_override=True,
-        retrieval_top_k=100,
-        pool_factor=2,
-        nbits=4,
-        kmeans_niters=4,
-        n_ivf_probe=8,
-        n_full_scores=8192,
-        n_samples_kmeans=None,
-        index_batch_size=262144,
+        exact_doc_batch_size=2,
+        exact_query_batch_size=2,
         device="cpu",
         aggregate_metric="ndcg@10",
     )
 
-    assert result.metrics["ToyData_test_late_interaction_maxsim_ndcg@10"] == pytest.approx(1.0)
+    assert result.metrics["ToyData_test_late_interaction_exact_maxsim_ndcg@10"] == pytest.approx(1.0)
     assert model.calls[0]["is_query"] is True
     assert model.calls[0]["prompt_name"] == "query"
     assert model.calls[1]["is_query"] is False
     assert model.calls[1]["prompt"] == "doc: "
-    assert model.calls[1]["pool_factor"] == 2
-    assert FakePylateIndex.created[0].documents_ids == ["d1", "d2", "d3"]
     assert result.embedding_conversion["query"]["text_count"] == 2
     assert result.embedding_conversion["docs"]["text_count"] == 3
     base = result.embedding_evaluations[0]
-    assert base["best_distance"] == "maxsim"
+    assert base["best_distance"] == "exact_maxsim"
+    assert base["best_score_name"] == "late_interaction_exact_maxsim"
     assert base["embedding_metadata"]["representation_type"] == "late_interaction"
     assert base["embedding_metadata"]["dimension_format"] == "multi_vector"
     assert base["embedding_metadata"]["dimensions"] == {"dim": 2}
-    assert base["index"]["backend"] == "plaid"
-    assert base["index"]["retrieval_top_k"] == 100
+    assert base["index"] == {
+        "backend": "exact",
+        "library": "torch",
+        "index_type": "none",
+        "ranking_depth": 3,
+        "exact_doc_batch_size": 2,
+        "exact_query_batch_size": 2,
+        "timing": {
+            "index_build_or_load_seconds": pytest.approx(0.0),
+            "retrieve_seconds": pytest.approx(result.timing["score_and_topk_seconds"]),
+        },
+    }
 
 
 def test_result_path_layout() -> None:

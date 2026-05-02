@@ -102,18 +102,10 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--corpus-task", default=None)
     evaluate.add_argument("--candidate-subset-name", default="bm25")
     evaluate.add_argument("--rerank-top-n", type=int, default=100)
-    evaluate.add_argument("--late-interaction-index-dir", default=None)
-    evaluate.add_argument("--late-interaction-index-backend", default="plaid", choices=["plaid"])
-    evaluate.add_argument("--late-interaction-retrieval-top-k", type=int, default=100)
     evaluate.add_argument("--late-interaction-query-length", type=int, default=None)
     evaluate.add_argument("--late-interaction-document-length", type=int, default=None)
-    evaluate.add_argument("--late-interaction-pool-factor", type=int, default=1)
-    evaluate.add_argument("--late-interaction-plaid-nbits", type=int, default=4)
-    evaluate.add_argument("--late-interaction-plaid-kmeans-niters", type=int, default=4)
-    evaluate.add_argument("--late-interaction-plaid-n-ivf-probe", type=int, default=8)
-    evaluate.add_argument("--late-interaction-plaid-n-full-scores", type=int, default=8192)
-    evaluate.add_argument("--late-interaction-plaid-n-samples-kmeans", type=int, default=None)
-    evaluate.add_argument("--late-interaction-plaid-index-batch-size", type=int, default=1 << 18)
+    evaluate.add_argument("--late-interaction-exact-doc-batch-size", type=int, default=128)
+    evaluate.add_argument("--late-interaction-exact-query-batch-size", type=int, default=8)
     evaluate.add_argument("--output-dir", default="output/results")
     evaluate.add_argument("--override", action="store_true")
     evaluate.add_argument("--aggregate-metric", default="ndcg@10")
@@ -194,10 +186,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error("--embedding-variant is not supported with --model-type late-interaction.")
         if args.truncate_dim is not None:
             parser.error("--truncate-dim is not supported with --model-type late-interaction.")
-        if args.late_interaction_retrieval_top_k <= 0:
-            parser.error("--late-interaction-retrieval-top-k must be positive.")
-        if args.late_interaction_pool_factor <= 0:
-            parser.error("--late-interaction-pool-factor must be positive.")
+        if args.late_interaction_exact_doc_batch_size <= 0:
+            parser.error("--late-interaction-exact-doc-batch-size must be positive.")
+        if args.late_interaction_exact_query_batch_size <= 0:
+            parser.error("--late-interaction-exact-query-batch-size must be positive.")
     if args.command == "evaluate" and args.dataset is None and not args.collection:
         args.dataset = ["hakari-bench/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:
