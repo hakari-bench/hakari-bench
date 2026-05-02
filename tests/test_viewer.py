@@ -36,6 +36,8 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
     assert config.view_names[: len(expected_overall_benchmarks) + 1] == ["Overall", *expected_overall_benchmarks]
     assert "NanoJMTEB" in config.view_names
     assert "NanoJMTEB" not in config.overall.benchmarks
+    assert "NanoCMTEB" in config.view_names
+    assert "NanoCMTEB" not in config.overall.benchmarks
     mnanobeir = config.benchmark_for_view("MNanoBEIR")
     assert mnanobeir is not None
     assert [group.name for group in mnanobeir.resolved_score_groups] == ["task_mean", "lang_mean"]

@@ -23,6 +23,7 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoRTEB").dataset_id == "hotchpotch/NanoRTEB"
     assert registry.get_dataset("NanoMTEB").dataset_id == "hotchpotch/NanoMTEB"
     assert registry.get_dataset("NanoMMTEB").dataset_id == "hotchpotch/NanoMMTEB"
+    assert registry.get_dataset("NanoCMTEB").dataset_id == "hotchpotch/NanoCMTEB"
     assert registry.get_dataset("NanoLongEmbed").dataset_id == "hotchpotch/NanoLongEmbed"
     assert registry.get_dataset("NanoCoIR").dataset_id == "hotchpotch/NanoCoIR"
     assert registry.get_dataset("NanoIFIR").dataset_id == "hotchpotch/NanoIFIR"
@@ -79,6 +80,23 @@ def test_resolve_eval_tasks_for_builtin_nanommteb_uses_declared_splits() -> None
         ("NanoMMTEB", "NanoCovid"),
         ("NanoMMTEB", "NanoNews21Instruction"),
         ("NanoMMTEB", "NanoMIRACLRetrievalHardNegatives"),
+    ]
+
+
+def test_resolve_eval_tasks_for_builtin_nanocmteb_uses_declared_splits() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoCMTEB"], collection_values=[], split_values=[])
+
+    assert [(task.dataset_name, task.split_name) for task in tasks] == [
+        ("NanoCMTEB", "NanoT2Retrieval"),
+        ("NanoCMTEB", "NanoMMarcoRetrieval"),
+        ("NanoCMTEB", "NanoDuRetrieval"),
+        ("NanoCMTEB", "NanoCovidRetrieval"),
+        ("NanoCMTEB", "NanoCmedqaRetrieval"),
+        ("NanoCMTEB", "NanoEcomRetrieval"),
+        ("NanoCMTEB", "NanoMedicalRetrieval"),
+        ("NanoCMTEB", "NanoVideoRetrieval"),
     ]
 
 

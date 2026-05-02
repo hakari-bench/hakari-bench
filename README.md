@@ -5,7 +5,7 @@ NanoIR Benchmark is a library, viewer, and leaderboard project for evaluating sm
 Nano-style information retrieval benchmark runner for SentenceTransformers-compatible models.
 
 Built-in dataset definitions include `NanoBEIR-en`, `NanoMIRACL`, `NanoMLDR`,
-`NanoJMTEB`, `NanoRTEB`, `NanoMTEB`, `NanoMMTEB`, `NanoLongEmbed`, and
+`NanoJMTEB`, `NanoRTEB`, `NanoMTEB`, `NanoCMTEB`, `NanoMMTEB`, `NanoLongEmbed`, and
 `NanoCoIR`.
 
 ## Example
