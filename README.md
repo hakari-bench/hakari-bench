@@ -71,10 +71,9 @@ These variants keep the top absolute-value dimensions per query/document row
 and record each derived result under `evaluation.embedding_evaluations`, like
 dense `truncate:` variants.
 
-Sparse embeddings can also use `quantize-docs:int8,ubinary` variants. For sparse
-`int8`, non-zero weights are scalar-quantized with a corpus-derived value range
-and dequantized for scoring. For sparse `ubinary`, non-zero dimensions are
-scored as an unweighted sparse presence vector.
+Sparse embeddings intentionally do not support quantized embedding variants in
+the CLI. Use max-active-dimension variants for sparse footprint and latency
+trade-off checks.
 
 ## Embedding variants
 

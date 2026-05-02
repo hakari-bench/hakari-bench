@@ -401,6 +401,56 @@ def test_parse_args_accepts_query_and_docs_sparse_max_active_dims_cross_product(
     ]
 
 
+def test_parse_args_rejects_quantized_embedding_variants_for_sparse_model() -> None:
+    rejected_specs = [
+        "quantize:int8",
+        "quantize-docs:int8",
+        "quantize-both:int8",
+        "quantize-code:int8",
+        "quantize-sample:int8:128",
+        "usearch:int8",
+        "usearch-rescore:binary",
+    ]
+
+    for spec in rejected_specs:
+        try:
+            parse_args(
+                [
+                    "evaluate",
+                    "--model",
+                    "naver/splade-v3",
+                    "--model-type",
+                    "sparse",
+                    "--embedding-variant",
+                    spec,
+                ]
+            )
+        except SystemExit as exc:
+            assert exc.code == 2
+        else:
+            raise AssertionError(f"Expected sparse model to reject quantized embedding variant {spec!r}.")
+
+
+def test_parse_args_rejects_quantized_cross_embedding_variants_for_sparse_model() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "--model",
+                "naver/splade-v3",
+                "--model-type",
+                "sparse",
+                "--embedding-variant-cross",
+                "sparse-max-active-dims:128",
+                "quantize:int8",
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected sparse model to reject quantized cross embedding variants.")
+
+
 def test_parse_args_accepts_quantized_embedding_variants() -> None:
     args = parse_args(
         [

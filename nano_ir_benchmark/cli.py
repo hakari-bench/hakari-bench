@@ -70,6 +70,7 @@ def build_parser() -> argparse.ArgumentParser:
             "quantize-code:PRECISION for raw scalar code scoring, "
             "quantize-sample:PRECISION:SAMPLE_SIZE for sample-calibrated scalar quantization, "
             "or usearch[:|-rescore:]PRECISION for exact usearch search. "
+            "Quantized variants are supported for dense models only. "
             "Example: --embedding-variant truncate:256,truncate:128 --embedding-variant quantize:int8,ubinary"
         ),
     )
@@ -182,6 +183,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error(str(exc))
         if args.model_type == "dense" and not args.no_quantize and not has_explicit_embedding_variants:
             args.embedding_variants = default_dense_quantized_embedding_variants()
+        if args.model_type == "sparse" and _embedding_variants_use_quantization(args.embedding_variants):
+            parser.error(
+                "--model-type sparse does not support quantized embedding variants. "
+                "Use sparse max-active-dims variants instead."
+            )
         delattr(args, "embedding_variant_values")
         delattr(args, "embedding_variant_cross_values")
     if args.command == "evaluate" and args.sparse_max_active_dims is not None:
@@ -202,6 +208,22 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     elif args.command == "build-bm25" and args.dataset is None:
         args.dataset = []
     return args
+
+
+def _embedding_variants_use_quantization(variants: list[dict[str, Any]]) -> bool:
+    return any(_embedding_variant_uses_quantization(variant) for variant in variants)
+
+
+def _embedding_variant_uses_quantization(variant: dict[str, Any]) -> bool:
+    transform = variant.get("transform")
+    if not isinstance(transform, dict):
+        return False
+    if transform.get("type") == "quantize":
+        return True
+    steps = transform.get("steps")
+    if not isinstance(steps, list):
+        return False
+    return any(isinstance(step, dict) and step.get("type") == "quantize" for step in steps)
 
 
 def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:

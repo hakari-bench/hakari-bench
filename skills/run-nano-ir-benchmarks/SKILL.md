@@ -40,7 +40,7 @@ For every specified model:
   those standalone variants with the cross product.
 - Dense models automatically run exact usearch `int8` and binary quantized search variants when no embedding variants are explicitly specified. Use `--no-quantize` only when the user wants to suppress those automatic dense variants.
 - For dense models, `--embedding-variant quantize:int8,ubinary` is a compatibility shorthand for exact usearch quantized search. `ubinary` maps to the binary usearch representation. usearch receives pre-quantized SentenceTransformers codes and does not perform calibration.
-- For sparse/SPLADE-style models, use `--embedding-variant quantize-docs:int8,ubinary` only when explicitly requested. Sparse `int8` preserves sparse indices and quantizes only non-zero weights with a corpus-derived value range before dequantized sparse scoring; sparse `ubinary` preserves sparse indices and scores non-zero dimensions as an unweighted presence vector.
+- Do not add quantized embedding variants for sparse/SPLADE-style models. Sparse quantization is intentionally unsupported in the CLI; use max-active-dimension variants for sparse footprint and latency trade-offs.
 - If Matryoshka dimensions are requested or documented, evaluate all three related groups: standalone dimensions, standalone quantization, and the dimension x quantization cross product. For example, use `--embedding-variant truncate:256,128,64`, `--embedding-variant quantize:int8,ubinary`, and `--embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary`. This is "all" because standalone dimensions isolate the dimension trade-off, standalone quantization isolates the quantization trade-off at the original dimension, and the cross product measures combined trade-offs such as `128dim x int8` and `64dim x ubinary`.
 - Only use `quantize-docs:` for docs-only dequantized storage probes and `quantize-both:` when the user explicitly asks for symmetric query+document quantization.
 - Do not use evaluation queries for scalar quantization calibration. The benchmark uses corpus-derived ranges for `int8`/`uint8`; using query values for buckets would be a transductive test-set adaptation.
@@ -150,19 +150,8 @@ If only the full query x docs grid is requested, the standalone query-only and
 docs-only variants may be omitted. The base no-limit result is always included
 as `evaluation.embedding_evaluations[0]`.
 
-For sparse models, include docs-only quantization with `quantize-docs:` when
-the user asks for sparse quantization comparisons:
-
-```bash
-uv run nano-ir-bench evaluate \
-  --model MODEL_NAME \
-  --model-type sparse \
-  --dataset DATASET_NAME \
-  --embedding-variant sparse-query-max-active-dims:8,16,32 \
-  --embedding-variant sparse-docs-max-active-dims:64,128,256 \
-  --embedding-variant quantize-docs:int8,ubinary \
-  --embedding-variant-cross sparse-query-max-active-dims:8,16,32 sparse-docs-max-active-dims:64,128,256
-```
+If the user asks for sparse quantization, explain that it is intentionally
+unsupported in the CLI and use sparse max-active-dimension comparisons instead.
 
 For BM25:
 
