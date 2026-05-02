@@ -81,11 +81,11 @@ benchmarks:
   - name: NanoBuiltBench
     label: NanoBuiltBench
     include_in_overall: true
-  - name: NanoMTEB
-    label: NanoMTEB
-    include_in_overall: false
   - name: NanoCMTEB
     label: NanoCMTEB
+    include_in_overall: true
+  - name: NanoMTEB
+    label: NanoMTEB
     include_in_overall: false
   - name: NanoMIRACL
     label: NanoMIRACL
