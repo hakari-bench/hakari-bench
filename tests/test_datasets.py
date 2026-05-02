@@ -132,14 +132,14 @@ def test_resolve_eval_tasks_for_builtin_nanojmteb_uses_declared_splits() -> None
         ("NanoJMTEB", "NanoJaCWIR"),
         ("NanoJMTEB", "NanoJaGovFaqs"),
         ("NanoJMTEB", "NanoJaqket"),
-        ("NanoJMTEB", "NanoJaMIRACL"),
-        ("NanoJMTEB", "NanoJaMintaka"),
-        ("NanoJMTEB", "NanoJaMrTidy"),
-        ("NanoJMTEB", "NanoJaMultiLongDoc"),
-        ("NanoJMTEB", "NanoJaNLPJournalAbsArticle"),
-        ("NanoJMTEB", "NanoJaNLPJournalAbsIntro"),
-        ("NanoJMTEB", "NanoJaNLPJournalTitleAbs"),
-        ("NanoJMTEB", "NanoJaNLPJournalTitleIntro"),
+        ("NanoJMTEB", "NanoMIRACL"),
+        ("NanoJMTEB", "NanoMintaka"),
+        ("NanoJMTEB", "NanoMrTidy"),
+        ("NanoJMTEB", "NanoMultiLongDoc"),
+        ("NanoJMTEB", "NanoNLPJournalAbsArticle"),
+        ("NanoJMTEB", "NanoNLPJournalAbsIntro"),
+        ("NanoJMTEB", "NanoNLPJournalTitleAbs"),
+        ("NanoJMTEB", "NanoNLPJournalTitleIntro"),
     ]
 
 

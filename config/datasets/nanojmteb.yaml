@@ -9,11 +9,11 @@ splits:
   - NanoJaCWIR
   - NanoJaGovFaqs
   - NanoJaqket
-  - NanoJaMIRACL
-  - NanoJaMintaka
-  - NanoJaMrTidy
-  - NanoJaMultiLongDoc
-  - NanoJaNLPJournalAbsArticle
-  - NanoJaNLPJournalAbsIntro
-  - NanoJaNLPJournalTitleAbs
-  - NanoJaNLPJournalTitleIntro
+  - NanoMIRACL
+  - NanoMintaka
+  - NanoMrTidy
+  - NanoMultiLongDoc
+  - NanoNLPJournalAbsArticle
+  - NanoNLPJournalAbsIntro
+  - NanoNLPJournalTitleAbs
+  - NanoNLPJournalTitleIntro
