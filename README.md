@@ -90,9 +90,6 @@ by default. The benchmark first converts SentenceTransformers embeddings to the
 stored codes, then passes those codes to usearch; usearch does not calibrate or
 requantize embeddings. Use `--no-quantize` to run only the base dense result.
 
-`quantize:int8,ubinary` is a shorthand for these usearch variants. `ubinary` is
-kept as a compatibility alias and maps to the binary usearch representation.
-
 ```bash
 uv run nano-ir-bench evaluate \
   --model example/embedding-model \
@@ -106,14 +103,13 @@ uv run nano-ir-bench evaluate \
   --no-quantize
 ```
 
-For explicit dense runs, `quantize:` and `usearch:` are equivalent for supported
-precisions:
+For explicit dense runs, use `usearch:`:
 
 ```bash
 uv run nano-ir-bench evaluate \
   --model example/embedding-model \
   --dataset NanoMTEB \
-  --embedding-variant quantize:int8,ubinary
+  --embedding-variant usearch:int8,binary
 ```
 
 To rerank quantized candidates with the source float embeddings, use
@@ -125,50 +121,6 @@ uv run nano-ir-bench evaluate \
   --model example/embedding-model \
   --dataset NanoMTEB \
   --embedding-variant usearch-rescore:int8,binary
-```
-
-If a docs-only dequantized storage probe is explicitly needed, use
-`quantize-docs:`. Query embeddings remain float, scalar document codes are
-dequantized for scoring, and packed binary document codes are unpacked to sign
-vectors.
-
-```bash
-uv run nano-ir-bench evaluate \
-  --model example/embedding-model \
-  --dataset NanoMTEB \
-  --embedding-variant quantize-docs:int8,ubinary
-```
-
-If a symmetric query-and-document quantization comparison is explicitly needed,
-use `quantize-both:`:
-
-```bash
-uv run nano-ir-bench evaluate \
-  --model example/embedding-model \
-  --dataset NanoMTEB \
-  --embedding-variant quantize-both:int8,ubinary
-```
-
-For diagnostics, `quantize-code:int8` quantizes both query and document
-embeddings with corpus-derived ranges and ranks by the stored scalar code
-values instead of dequantized float vectors:
-
-```bash
-uv run nano-ir-bench evaluate \
-  --model example/embedding-model \
-  --dataset NanoMTEB \
-  --embedding-variant quantize-code:int8
-```
-
-To test calibration sensitivity, `quantize-sample:int8:N` computes scalar
-quantization ranges from a deterministic corpus sample of `N` embeddings
-instead of the full corpus:
-
-```bash
-uv run nano-ir-bench evaluate \
-  --model example/embedding-model \
-  --dataset NanoMTEB \
-  --embedding-variant quantize-sample:int8:128
 ```
 
 ### Truncated Dimensions
@@ -193,15 +145,15 @@ uv run nano-ir-bench evaluate \
   --model example/matryoshka-embedding-model \
   --dataset NanoMTEB \
   --embedding-variant truncate:256,128,64 \
-  --embedding-variant quantize:int8,ubinary \
-  --embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary
+  --embedding-variant usearch:int8,binary \
+  --embedding-variant-cross truncate:256,128,64 usearch:int8,binary
 ```
 
 All three groups answer different questions: standalone truncation measures the
-dimension trade-off, standalone quantization measures the quantization trade-off
-at the original dimension, and the cross product measures the combined
+dimension trade-off, standalone quantized search measures the quantization
+trade-off at the original dimension, and the cross product measures the combined
 dimension-and-quantization trade-off such as `128dim x int8` or
-`64dim x ubinary`.
+`64dim x binary`.
 
 Each task JSON keeps the base result in `metrics` and records the base and
 derived results under `evaluation.embedding_evaluations`. Every entry includes

@@ -22,44 +22,6 @@ def _sparse_max_active_dims_step(max_active_dims: int, *, target: str = "query_a
     }
 
 
-def _quantize_step(
-    precision: str,
-    *,
-    target: str = "corpus",
-    calibration_sample_size: int | None = None,
-) -> dict[str, object]:
-    parameters: dict[str, object] = {
-        "precision": precision,
-        "target": target,
-        "method": "corpus_only" if target == "corpus" else "query_and_corpus",
-    }
-    if precision in {"int8", "uint8"}:
-        parameters["calibration"] = "corpus_sample" if calibration_sample_size is not None else "corpus"
-    if calibration_sample_size is not None:
-        parameters["calibration_sample_size"] = calibration_sample_size
-        parameters["calibration_sample_seed"] = 13
-    return {
-        "type": "quantize",
-        "algorithm": "sentence_transformers_embedding_quantization",
-        "parameters": parameters,
-    }
-
-
-def _quantize_code_step(precision: str) -> dict[str, object]:
-    parameters: dict[str, object] = {
-        "precision": precision,
-        "target": "query_and_corpus",
-        "method": "query_and_corpus",
-        "calibration": "corpus",
-        "score_representation": "quantized_code_float32",
-    }
-    return {
-        "type": "quantize",
-        "algorithm": "sentence_transformers_embedding_quantization",
-        "parameters": parameters,
-    }
-
-
 def _usearch_step(precision: str, *, rescore: bool = False) -> dict[str, object]:
     parameters: dict[str, object] = {
         "precision": precision,
@@ -67,7 +29,7 @@ def _usearch_step(precision: str, *, rescore: bool = False) -> dict[str, object]
         "method": "query_and_corpus",
         "score_representation": "usearch_exact_rescore" if rescore else "usearch_exact",
     }
-    if precision in {"int8", "uint8"}:
+    if precision == "int8":
         parameters["calibration"] = "corpus"
     return {
         "type": "quantize",
@@ -451,103 +413,30 @@ def test_parse_args_rejects_quantized_cross_embedding_variants_for_sparse_model(
         raise AssertionError("Expected sparse model to reject quantized cross embedding variants.")
 
 
-def test_parse_args_accepts_quantized_embedding_variants() -> None:
-    args = parse_args(
-        [
-            "evaluate",
-            "--model",
-            "hotchpotch/model",
-            "--embedding-variant",
-            "quantize:int8,ubinary",
-        ]
-    )
-
-    assert args.embedding_variants == [
-        _pipeline_variant("usearch_int8", _usearch_step("int8")),
-        _pipeline_variant("usearch_binary", _usearch_step("binary")),
+def test_parse_args_rejects_legacy_quantize_embedding_variants() -> None:
+    rejected_specs = [
+        "quantize:int8",
+        "quantize-docs:int8",
+        "quantize-both:int8",
+        "quantize-code:int8",
+        "quantize-sample:int8:128",
     ]
 
-
-def test_parse_args_accepts_quantized_binary_alias_for_usearch() -> None:
-    args = parse_args(
-        [
-            "evaluate",
-            "--model",
-            "hotchpotch/model",
-            "--embedding-variant",
-            "quantize:binary",
-        ]
-    )
-
-    assert args.embedding_variants == [
-        _pipeline_variant("usearch_binary", _usearch_step("binary")),
-    ]
-
-
-def test_parse_args_accepts_explicit_docs_only_quantized_embedding_variants() -> None:
-    args = parse_args(
-        [
-            "evaluate",
-            "--model",
-            "hotchpotch/model",
-            "--embedding-variant",
-            "quantize-docs:int8,ubinary",
-        ]
-    )
-
-    assert args.embedding_variants == [
-        _pipeline_variant("quantize_int8_docs", _quantize_step("int8")),
-        _pipeline_variant("quantize_ubinary_docs", _quantize_step("ubinary")),
-    ]
-
-
-def test_parse_args_accepts_explicit_query_and_corpus_quantized_embedding_variants() -> None:
-    args = parse_args(
-        [
-            "evaluate",
-            "--model",
-            "hotchpotch/model",
-            "--embedding-variant",
-            "quantize-both:int8,ubinary",
-        ]
-    )
-
-    assert args.embedding_variants == [
-        _pipeline_variant("quantize_int8_both", _quantize_step("int8", target="query_and_corpus")),
-        _pipeline_variant("quantize_ubinary_both", _quantize_step("ubinary", target="query_and_corpus")),
-    ]
-
-
-def test_parse_args_accepts_quantized_code_scoring_embedding_variants() -> None:
-    args = parse_args(
-        [
-            "evaluate",
-            "--model",
-            "hotchpotch/model",
-            "--embedding-variant",
-            "quantize-code:int8",
-        ]
-    )
-
-    assert args.embedding_variants == [
-        _pipeline_variant("quantize_int8_code", _quantize_code_step("int8")),
-    ]
-
-
-def test_parse_args_accepts_sample_calibrated_quantized_embedding_variants() -> None:
-    args = parse_args(
-        [
-            "evaluate",
-            "--model",
-            "hotchpotch/model",
-            "--embedding-variant",
-            "quantize-sample:int8:128",
-        ]
-    )
-
-    assert args.embedding_variants == [
-        _pipeline_variant("quantize_int8_sample_128_docs", _quantize_step("int8", calibration_sample_size=128)),
-    ]
+    for spec in rejected_specs:
+        try:
+            parse_args(
+                [
+                    "evaluate",
+                    "--model",
+                    "hotchpotch/model",
+                    "--embedding-variant",
+                    spec,
+                ]
+            )
+        except SystemExit as exc:
+            assert exc.code == 2
+        else:
+            raise AssertionError(f"Expected legacy quantize variant {spec!r} to be rejected.")
 
 
 def test_parse_args_accepts_usearch_embedding_variants() -> None:
@@ -579,7 +468,7 @@ def test_parse_args_accepts_embedding_variant_cross_product() -> None:
             "hotchpotch/model",
             "--embedding-variant-cross",
             "truncate:256,128,64",
-            "quantize:int8,ubinary",
+            "usearch:int8,binary",
         ]
     )
 

@@ -39,11 +39,9 @@ For every specified model:
   Base, query-only, docs-only, and query x docs comparisons require combining
   those standalone variants with the cross product.
 - Dense models automatically run exact usearch `int8` and binary quantized search variants when no embedding variants are explicitly specified. Use `--no-quantize` only when the user wants to suppress those automatic dense variants.
-- For dense models, `--embedding-variant quantize:int8,ubinary` is a compatibility shorthand for exact usearch quantized search. `ubinary` maps to the binary usearch representation. usearch receives pre-quantized SentenceTransformers codes and does not perform calibration.
+- For dense models, use `--embedding-variant usearch:int8,binary` when quantized search variants must be listed explicitly. usearch receives pre-quantized SentenceTransformers codes and does not perform calibration.
 - Do not add quantized embedding variants for sparse/SPLADE-style models. Sparse quantization is intentionally unsupported in the CLI; use max-active-dimension variants for sparse footprint and latency trade-offs.
-- If Matryoshka dimensions are requested or documented, evaluate all three related groups: standalone dimensions, standalone quantization, and the dimension x quantization cross product. For example, use `--embedding-variant truncate:256,128,64`, `--embedding-variant quantize:int8,ubinary`, and `--embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary`. This is "all" because standalone dimensions isolate the dimension trade-off, standalone quantization isolates the quantization trade-off at the original dimension, and the cross product measures combined trade-offs such as `128dim x int8` and `64dim x ubinary`.
-- Only use `quantize-docs:` for docs-only dequantized storage probes and `quantize-both:` when the user explicitly asks for symmetric query+document quantization.
-- Do not use evaluation queries for scalar quantization calibration. The benchmark uses corpus-derived ranges for `int8`/`uint8`; using query values for buckets would be a transductive test-set adaptation.
+- If Matryoshka dimensions are requested or documented, evaluate all three related groups: standalone dimensions, standalone quantized search, and the dimension x quantized search cross product. For example, use `--embedding-variant truncate:256,128,64`, `--embedding-variant usearch:int8,binary`, and `--embedding-variant-cross truncate:256,128,64 usearch:int8,binary`. This is "all" because standalone dimensions isolate the dimension trade-off, standalone quantized search isolates the quantization trade-off at the original dimension, and the cross product measures combined trade-offs such as `128dim x int8` and `64dim x binary`.
 - Check whether `--trust-remote-code` is required.
 - Check the model's default maximum sequence length, but do not override it unless the user explicitly asks.
 - When a benchmark should be reproducible against a specific dataset state, use `--dataset-revision REV`; otherwise verify that the output JSON records the resolved Hugging Face dataset SHA.
@@ -97,25 +95,16 @@ uv run nano-ir-bench evaluate \
   --dataset DATASET_NAME
 ```
 
-Only use symmetric query+document quantization when explicitly requested:
-
-```bash
-uv run nano-ir-bench evaluate \
-  --model MODEL_NAME \
-  --dataset DATASET_NAME \
-  --embedding-variant quantize-both:int8,ubinary
-```
-
 When dimensions are part of the run, include standalone dimensions, standalone
-quantization, and their cross product:
+quantized search, and their cross product:
 
 ```bash
 uv run nano-ir-bench evaluate \
   --model MODEL_NAME \
   --dataset DATASET_NAME \
   --embedding-variant truncate:256,128,64 \
-  --embedding-variant quantize:int8,ubinary \
-  --embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary
+  --embedding-variant usearch:int8,binary \
+  --embedding-variant-cross truncate:256,128,64 usearch:int8,binary
 ```
 
 The benchmark implementation normalizes all of these derived evaluations into a

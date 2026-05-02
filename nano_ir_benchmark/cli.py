@@ -64,14 +64,10 @@ def build_parser() -> argparse.ArgumentParser:
         default=[],
         help=(
             "Derived embedding evaluation spec. Repeat or comma-separate. "
-            "Current syntax: truncate:DIM, quantize:PRECISION for exact usearch quantized search, "
-            "quantize-docs:PRECISION for docs-only quantization, "
-            "quantize-both:PRECISION for query+docs quantization, "
-            "quantize-code:PRECISION for raw scalar code scoring, "
-            "quantize-sample:PRECISION:SAMPLE_SIZE for sample-calibrated scalar quantization, "
-            "or usearch[:|-rescore:]PRECISION for exact usearch search. "
+            "Current syntax: truncate:DIM, sparse-max-active-dims:DIM, "
+            "usearch:PRECISION, or usearch-rescore:PRECISION. "
             "Quantized variants are supported for dense models only. "
-            "Example: --embedding-variant truncate:256,truncate:128 --embedding-variant quantize:int8,ubinary"
+            "Example: --embedding-variant truncate:256,truncate:128 --embedding-variant usearch:int8,binary"
         ),
     )
     evaluate.add_argument(
@@ -83,7 +79,7 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="SPEC",
         help=(
             "Cross product of derived embedding specs, normalized into pipeline variants. "
-            "Example: --embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary"
+            "Example: --embedding-variant-cross truncate:256,128,64 usearch:int8,binary"
         ),
     )
     evaluate.add_argument(
