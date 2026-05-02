@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+import torch
 from scipy import sparse
 
 import nano_ir_benchmark.evaluation as evaluation_module
@@ -137,6 +138,58 @@ class FakeSparseModel:
         return sparse.csr_matrix(
             [[1.0, 0.0, 0.0, 1.0], [0.0, 2.0, 0.0, 0.0], [0.0, 0.0, 4.0, 0.0]]
         )
+
+
+class FakeSentenceTransformersSparseModel:
+    similarity_fn_name = "dot"
+
+    def __init__(self) -> None:
+        self.query_calls: list[dict[str, object]] = []
+        self.document_calls: list[dict[str, object]] = []
+
+    def encode_query(
+        self,
+        sentences: list[str],
+        *,
+        batch_size: int,
+        show_progress_bar: bool,
+        convert_to_tensor: bool = True,
+        convert_to_sparse_tensor: bool = True,
+        save_to_cpu: bool = False,
+    ) -> torch.Tensor:
+        self.query_calls.append(
+            {
+                "sentences": sentences,
+                "batch_size": batch_size,
+                "show_progress_bar": show_progress_bar,
+                "convert_to_tensor": convert_to_tensor,
+                "convert_to_sparse_tensor": convert_to_sparse_tensor,
+                "save_to_cpu": save_to_cpu,
+            }
+        )
+        return torch.tensor([[1.0, 0.0, 0.0, 2.0], [0.0, 3.0, 0.0, 0.0]]).to_sparse()
+
+    def encode_document(
+        self,
+        sentences: list[str],
+        *,
+        batch_size: int,
+        show_progress_bar: bool,
+        convert_to_tensor: bool = True,
+        convert_to_sparse_tensor: bool = True,
+        save_to_cpu: bool = False,
+    ) -> torch.Tensor:
+        self.document_calls.append(
+            {
+                "sentences": sentences,
+                "batch_size": batch_size,
+                "show_progress_bar": show_progress_bar,
+                "convert_to_tensor": convert_to_tensor,
+                "convert_to_sparse_tensor": convert_to_sparse_tensor,
+                "save_to_cpu": save_to_cpu,
+            }
+        )
+        return torch.tensor([[1.0, 0.0, 0.0, 1.0], [0.0, 2.0, 0.0, 0.0], [0.0, 0.0, 4.0, 0.0]]).to_sparse()
 
 
 class FakeReranker:
@@ -499,10 +552,43 @@ def test_evaluate_dense_task_records_sparse_embedding_metadata() -> None:
     assert base["embedding_metadata"]["query"]["shape"] == [2, 4]
     assert base["embedding_metadata"]["query"]["nnz_total"] == 3
     assert base["embedding_metadata"]["query"]["nnz_mean"] == pytest.approx(1.5)
+    assert base["embedding_metadata"]["query"]["nnz_median"] == pytest.approx(1.5)
     assert base["embedding_metadata"]["query"]["density"] == pytest.approx(3 / 8)
     assert base["embedding_metadata"]["corpus"]["shape"] == [3, 4]
     assert base["embedding_metadata"]["corpus"]["nnz_total"] == 4
+    assert base["embedding_metadata"]["corpus"]["nnz_median"] == pytest.approx(1.0)
     assert base["embedding_metadata"]["corpus"]["nnz_max"] == 2
+
+
+def test_evaluate_dense_task_requests_sparse_tensor_output_for_sparse_encoder() -> None:
+    model = FakeSentenceTransformersSparseModel()
+
+    result = evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+    )
+
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+    assert model.query_calls[0]["convert_to_tensor"] is True
+    assert model.query_calls[0]["convert_to_sparse_tensor"] is True
+    assert model.query_calls[0]["save_to_cpu"] is True
+    assert model.document_calls[0]["convert_to_tensor"] is True
+    assert model.document_calls[0]["convert_to_sparse_tensor"] is True
+    assert model.document_calls[0]["save_to_cpu"] is True
+    base = result.embedding_evaluations[0]
+    assert base["embedding_metadata"]["representation_type"] == "sparse"
+    assert base["embedding_metadata"]["dimension_format"] == "sparse_vector"
+    assert base["embedding_metadata"]["query"]["nnz_total"] == 3
+    assert base["embedding_metadata"]["query"]["nnz_median"] == pytest.approx(1.5)
+    assert base["embedding_metadata"]["corpus"]["nnz_total"] == 4
+    assert base["embedding_metadata"]["corpus"]["nnz_median"] == pytest.approx(1.0)
 
 
 def test_evaluate_reranker_task_uses_candidate_top_n() -> None:
