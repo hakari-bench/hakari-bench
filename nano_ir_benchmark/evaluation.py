@@ -33,6 +33,29 @@ class TaskEvaluation:
 
 
 @dataclass(frozen=True)
+class EmbeddingEncodeRequest:
+    role: str
+    sentences: list[str]
+    batch_size: int
+    show_progress: bool
+    prompt: str | None
+    prompt_name: str | None
+    task: str | None
+    truncate_dim: int | None
+
+
+@dataclass(frozen=True)
+class EmbeddingPostprocessPlan:
+    steps: list[dict[str, Any]]
+
+    @property
+    def transform(self) -> dict[str, Any]:
+        if not self.steps:
+            return {"type": "identity", "algorithm": "none", "parameters": {}}
+        return {"type": "pipeline", "steps": self.steps}
+
+
+@dataclass(frozen=True)
 class QuantizedEmbeddingMatrix:
     values: np.ndarray
     precision: str
@@ -141,7 +164,8 @@ def evaluate_dense_task(
     query_task: str | None = None,
     corpus_task: str | None = None,
     truncate_dim: int | None = None,
-    sparse_max_active_dims: int | None = None,
+    truncate_sparse_query_max_dims: int | None = None,
+    truncate_sparse_docs_max_dims: int | None = None,
     embedding_variants: list[dict[str, Any]] | None = None,
     aggregate_metric: str = "ndcg@10",
 ) -> TaskEvaluation:
@@ -153,32 +177,45 @@ def evaluate_dense_task(
     query_start = time.perf_counter()
     query_embeddings = _encode(
         model,
-        role="query",
-        sentences=query_texts,
-        batch_size=batch_size,
-        show_progress=show_progress,
-        prompt=query_prompt,
-        prompt_name=query_prompt_name,
-        task=query_task,
-        truncate_dim=truncate_dim,
-        sparse_max_active_dims=sparse_max_active_dims,
+        EmbeddingEncodeRequest(
+            role="query",
+            sentences=query_texts,
+            batch_size=batch_size,
+            show_progress=show_progress,
+            prompt=query_prompt,
+            prompt_name=query_prompt_name,
+            task=query_task,
+            truncate_dim=truncate_dim,
+        ),
     )
     query_seconds = time.perf_counter() - query_start
 
     corpus_start = time.perf_counter()
     corpus_embeddings = _encode(
         model,
-        role="document",
-        sentences=corpus_texts,
-        batch_size=batch_size,
-        show_progress=show_progress,
-        prompt=corpus_prompt,
-        prompt_name=corpus_prompt_name,
-        task=corpus_task,
-        truncate_dim=truncate_dim,
-        sparse_max_active_dims=sparse_max_active_dims,
+        EmbeddingEncodeRequest(
+            role="document",
+            sentences=corpus_texts,
+            batch_size=batch_size,
+            show_progress=show_progress,
+            prompt=corpus_prompt,
+            prompt_name=corpus_prompt_name,
+            task=corpus_task,
+            truncate_dim=truncate_dim,
+        ),
     )
     corpus_seconds = time.perf_counter() - corpus_start
+
+    base_postprocess = _build_base_embedding_postprocess_plan(
+        truncate_sparse_query_max_dims=truncate_sparse_query_max_dims,
+        truncate_sparse_docs_max_dims=truncate_sparse_docs_max_dims,
+    )
+    if base_postprocess.steps:
+        query_embeddings, corpus_embeddings = _apply_embedding_pipeline_pair(
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            steps=base_postprocess.steps,
+        )
 
     preferred_score_name = _score_name(getattr(model, "similarity_fn_name", "cosine"))
     base_scoring = _score_embedding_distances(
@@ -216,7 +253,7 @@ def evaluate_dense_task(
     embedding_evaluations = [
         _embedding_evaluation_payload(
             name="base",
-            transform={"type": "identity", "algorithm": "none", "parameters": {}},
+            transform=base_postprocess.transform,
             embedding_dimensions=_embedding_dimensions(query_embeddings, corpus_embeddings),
             embedding_metadata=_embedding_metadata(query_embeddings, corpus_embeddings),
             scoring=base_scoring,
@@ -329,30 +366,23 @@ def evaluate_reranker_task(
 
 def _encode(
     model: Any,
-    *,
-    role: str,
-    sentences: list[str],
-    batch_size: int,
-    show_progress: bool,
-    prompt: str | None,
-    prompt_name: str | None,
-    task: str | None,
-    truncate_dim: int | None,
-    sparse_max_active_dims: int | None,
+    request: EmbeddingEncodeRequest,
 ) -> Any:
-    encode_fn = None if task is not None else getattr(model, "encode_query" if role == "query" else "encode_document", None)
+    encode_fn = None
+    if request.task is None:
+        encode_fn = getattr(model, "encode_query" if request.role == "query" else "encode_document", None)
     if encode_fn is None:
         encode_fn = model.encode
 
-    kwargs: dict[str, Any] = {"batch_size": batch_size, "show_progress_bar": show_progress}
-    if prompt is not None:
-        kwargs["prompt"] = prompt
-    elif prompt_name is not None:
-        kwargs["prompt_name"] = prompt_name
-    if task is not None:
-        kwargs["task"] = task
-    if truncate_dim is not None:
-        kwargs["truncate_dim"] = truncate_dim
+    kwargs: dict[str, Any] = {"batch_size": request.batch_size, "show_progress_bar": request.show_progress}
+    if request.prompt is not None:
+        kwargs["prompt"] = request.prompt
+    elif request.prompt_name is not None:
+        kwargs["prompt_name"] = request.prompt_name
+    if request.task is not None:
+        kwargs["task"] = request.task
+    if request.truncate_dim is not None:
+        kwargs["truncate_dim"] = request.truncate_dim
 
     if _accepts_encode_parameter(encode_fn, "convert_to_sparse_tensor"):
         sparse_kwargs: dict[str, Any] = {
@@ -361,19 +391,12 @@ def _encode(
         }
         if _accepts_encode_parameter(encode_fn, "save_to_cpu"):
             sparse_kwargs["save_to_cpu"] = True
-        if sparse_max_active_dims is not None:
-            if not _accepts_encode_parameter(encode_fn, "max_active_dims"):
-                raise ValueError("Sparse max active dims requires an encoder with max_active_dims support.")
-            sparse_kwargs["max_active_dims"] = sparse_max_active_dims
-        return encode_fn(sentences, **sparse_kwargs, **kwargs)
-
-    if sparse_max_active_dims is not None:
-        raise ValueError("Sparse max active dims can only be used with sparse encoder outputs.")
+        return encode_fn(request.sentences, **sparse_kwargs, **kwargs)
 
     try:
-        return encode_fn(sentences, convert_to_numpy=True, **kwargs)
+        return encode_fn(request.sentences, convert_to_numpy=True, **kwargs)
     except TypeError:
-        return encode_fn(sentences, **kwargs)
+        return encode_fn(request.sentences, **kwargs)
 
 
 def _accepts_encode_parameter(encode_fn: Any, name: str) -> bool:
@@ -520,6 +543,27 @@ def _metric_score_name(*, distance: str, variant_name: str | None) -> str:
     return f"{distance}_{variant_name}"
 
 
+def _build_base_embedding_postprocess_plan(
+    *,
+    truncate_sparse_query_max_dims: int | None,
+    truncate_sparse_docs_max_dims: int | None,
+) -> EmbeddingPostprocessPlan:
+    steps: list[dict[str, Any]] = []
+    if truncate_sparse_query_max_dims is not None:
+        steps.append(_truncate_sparse_max_dims_step(max_dims=truncate_sparse_query_max_dims, target="query"))
+    if truncate_sparse_docs_max_dims is not None:
+        steps.append(_truncate_sparse_max_dims_step(max_dims=truncate_sparse_docs_max_dims, target="corpus"))
+    return EmbeddingPostprocessPlan(steps=steps)
+
+
+def _truncate_sparse_max_dims_step(*, max_dims: int, target: str) -> dict[str, Any]:
+    return {
+        "type": "truncate_sparse_max_dims",
+        "algorithm": "top_abs_values_per_row",
+        "parameters": {"max_dims": int(max_dims), "target": target},
+    }
+
+
 def _apply_embedding_variant_pair(
     *,
     query_embeddings: Any,
@@ -569,24 +613,24 @@ def _apply_embedding_pipeline_step_pair(
     if step_type == "truncate":
         dim = int(step.get("parameters", {}).get("dim"))
         return _truncate_embeddings(query_embeddings, dim), _truncate_embeddings(corpus_embeddings, dim)
-    if step_type == "sparse_max_active_dims":
-        max_active_dims = int(step.get("parameters", {}).get("max_active_dims"))
+    if step_type == "truncate_sparse_max_dims":
+        max_dims = int(step.get("parameters", {}).get("max_dims"))
         target = str(step.get("parameters", {}).get("target") or "query_and_corpus")
         if target == "query":
             return (
-                _limit_sparse_active_dims(query_embeddings, max_active_dims=max_active_dims),
+                _limit_sparse_active_dims(query_embeddings, max_active_dims=max_dims),
                 corpus_embeddings,
             )
         if target == "corpus":
             return (
                 query_embeddings,
-                _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_active_dims),
+                _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_dims),
             )
         if target != "query_and_corpus":
-            raise ValueError(f"Unsupported sparse max active dims target: {target}")
+            raise ValueError(f"Unsupported sparse truncation target: {target}")
         return (
-            _limit_sparse_active_dims(query_embeddings, max_active_dims=max_active_dims),
-            _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_active_dims),
+            _limit_sparse_active_dims(query_embeddings, max_active_dims=max_dims),
+            _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_dims),
         )
     if step_type == "quantize":
         precision = str(step.get("parameters", {}).get("precision"))
@@ -620,9 +664,9 @@ def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
 
 def _limit_sparse_active_dims(embeddings: Any, *, max_active_dims: int) -> sparse.csr_matrix:
     if max_active_dims <= 0:
-        raise ValueError("Sparse max active dims must be positive.")
+        raise ValueError("Sparse truncation max dims must be positive.")
     if not _is_sparse_embedding(embeddings):
-        raise ValueError("Sparse max active dims variants are only supported for sparse embeddings.")
+        raise ValueError("Sparse truncation variants are only supported for sparse embeddings.")
 
     matrix = _to_scipy_csr_matrix(embeddings)
     if matrix.shape[0] == 0 or matrix.nnz == 0:

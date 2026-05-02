@@ -38,7 +38,9 @@ AGGREGATED_CONFIG_KEYS = [
     "corpus_prompt_name",
     "query_task",
     "corpus_task",
-    "sparse_max_active_dims",
+    "truncate_sparse_query_max_dims",
+    "truncate_sparse_docs_max_dims",
+    "sparse_truncation",
 ]
 PROMPT_CONFIG_KEYS = [
     "query_prompt",
@@ -154,7 +156,8 @@ def run_or_load_task(
             query_task=getattr(args, "query_task", None),
             corpus_task=getattr(args, "corpus_task", None),
             truncate_dim=args.truncate_dim,
-            sparse_max_active_dims=getattr(args, "sparse_max_active_dims", None),
+            truncate_sparse_query_max_dims=getattr(args, "truncate_sparse_query_max_dims", None),
+            truncate_sparse_docs_max_dims=getattr(args, "truncate_sparse_docs_max_dims", None),
             embedding_variants=getattr(args, "embedding_variants", []),
             aggregate_metric=args.aggregate_metric,
         )
@@ -193,7 +196,9 @@ def run_or_load_task(
             "query_task": getattr(args, "query_task", None),
             "corpus_task": getattr(args, "corpus_task", None),
             "truncate_dim": args.truncate_dim,
-            "sparse_max_active_dims": getattr(args, "sparse_max_active_dims", None),
+            "truncate_sparse_query_max_dims": getattr(args, "truncate_sparse_query_max_dims", None),
+            "truncate_sparse_docs_max_dims": getattr(args, "truncate_sparse_docs_max_dims", None),
+            "sparse_truncation": _sparse_truncation_payload(args),
             "embedding_variants": getattr(args, "embedding_variants", []),
             "dataset_revision": getattr(args, "dataset_revision", None),
             "candidate_subset_name": args.candidate_subset_name if args.model_type in {"bm25", "reranker"} else None,
@@ -365,6 +370,19 @@ def _numeric(value: Any, *, fallback: Any = None) -> float | None:
     return None
 
 
+def _sparse_truncation_payload(args: Any) -> dict[str, Any] | None:
+    query_limit = getattr(args, "truncate_sparse_query_max_dims", None)
+    corpus_limit = getattr(args, "truncate_sparse_docs_max_dims", None)
+    if query_limit is None and corpus_limit is None:
+        return None
+    return {
+        "algorithm": "top_abs_values_per_row",
+        "query_max_dims": query_limit,
+        "corpus_max_dims": corpus_limit,
+        "source": "post_encode_pipeline",
+    }
+
+
 def _summarize_split_config(value: Any) -> dict[str, Any]:
     if not isinstance(value, dict):
         return {}
@@ -380,9 +398,17 @@ def _aggregate_split_configs(*, args: Any, results: list[TaskRunResult]) -> dict
             summaries["aggregate_metric"],
             getattr(args, "aggregate_metric", None),
         ),
-        "sparse_max_active_dims": _representative_config_value(
-            summaries["sparse_max_active_dims"],
-            getattr(args, "sparse_max_active_dims", None),
+        "truncate_sparse_query_max_dims": _representative_config_value(
+            summaries["truncate_sparse_query_max_dims"],
+            getattr(args, "truncate_sparse_query_max_dims", None),
+        ),
+        "truncate_sparse_docs_max_dims": _representative_config_value(
+            summaries["truncate_sparse_docs_max_dims"],
+            getattr(args, "truncate_sparse_docs_max_dims", None),
+        ),
+        "sparse_truncation": _representative_config_value(
+            summaries["sparse_truncation"],
+            _sparse_truncation_payload(args),
         ),
         "prompt_summary": {key: summaries[key] for key in PROMPT_CONFIG_KEYS},
     }

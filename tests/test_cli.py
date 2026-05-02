@@ -14,11 +14,15 @@ def _truncate_step(dim: int) -> dict[str, object]:
     return {"type": "truncate", "algorithm": "dimension_slice", "parameters": {"dim": dim}}
 
 
-def _sparse_max_active_dims_step(max_active_dims: int, *, target: str = "query_and_corpus") -> dict[str, object]:
+def _truncate_sparse_max_dims_step(
+    max_dims: int,
+    *,
+    target: str = "query_and_corpus",
+) -> dict[str, object]:
     return {
-        "type": "sparse_max_active_dims",
+        "type": "truncate_sparse_max_dims",
         "algorithm": "top_abs_values_per_row",
-        "parameters": {"max_active_dims": max_active_dims, "target": target},
+        "parameters": {"max_dims": max_dims, "target": target},
     }
 
 
@@ -150,7 +154,7 @@ def test_parse_args_accepts_prompt_and_reranker_options() -> None:
     assert args.rerank_top_n == 50
 
 
-def test_parse_args_accepts_sparse_max_active_dims_for_sparse_model() -> None:
+def test_parse_args_accepts_query_and_docs_truncate_sparse_max_dims() -> None:
     args = parse_args(
         [
             "evaluate",
@@ -158,22 +162,62 @@ def test_parse_args_accepts_sparse_max_active_dims_for_sparse_model() -> None:
             "naver/splade-v3",
             "--model-type",
             "sparse",
-            "--sparse-max-active-dims",
+            "--truncate-sparse-query-max-dims",
+            "32",
+            "--truncate-sparse-docs-max-dims",
             "128",
         ]
     )
 
-    assert args.model_type == "sparse"
-    assert args.sparse_max_active_dims == 128
+    assert args.truncate_sparse_query_max_dims == 32
+    assert args.truncate_sparse_docs_max_dims == 128
 
 
-def test_parse_args_rejects_sparse_max_active_dims_for_dense_model() -> None:
+def test_parse_args_rejects_symmetric_truncate_sparse_max_dims() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "--model",
+                "naver/splade-v3",
+                "--model-type",
+                "sparse",
+                "--truncate-sparse-max-dims",
+                "128",
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected symmetric truncate sparse max dims option to be rejected.")
+
+
+def test_parse_args_rejects_truncate_sparse_query_max_dims_for_dense_model() -> None:
     try:
         parse_args(
             [
                 "evaluate",
                 "--model",
                 "hotchpotch/model",
+                "--truncate-sparse-query-max-dims",
+                "128",
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected --truncate-sparse-query-max-dims to require --model-type sparse.")
+
+
+def test_parse_args_rejects_legacy_sparse_max_active_dims_alias() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "--model",
+                "naver/splade-v3",
+                "--model-type",
+                "sparse",
                 "--sparse-max-active-dims",
                 "128",
             ]
@@ -181,7 +225,7 @@ def test_parse_args_rejects_sparse_max_active_dims_for_dense_model() -> None:
     except SystemExit as exc:
         assert exc.code == 2
     else:
-        raise AssertionError("Expected --sparse-max-active-dims to require --model-type sparse.")
+        raise AssertionError("Expected legacy sparse max active dims option to be rejected.")
 
 
 def test_parse_args_accepts_dataset_revision() -> None:
@@ -240,7 +284,7 @@ def test_parse_args_accepts_compact_truncate_embedding_variants() -> None:
     ]
 
 
-def test_parse_args_accepts_sparse_max_active_dims_embedding_variants() -> None:
+def test_parse_args_accepts_query_truncate_sparse_max_dims_embedding_variants() -> None:
     args = parse_args(
         [
             "evaluate",
@@ -249,17 +293,55 @@ def test_parse_args_accepts_sparse_max_active_dims_embedding_variants() -> None:
             "--model-type",
             "sparse",
             "--embedding-variant",
-            "sparse-max-active-dims:128,64",
+            "truncate-sparse-query-max-dims:128,64",
         ]
     )
 
     assert args.embedding_variants == [
-        _pipeline_variant("sparse_max_active_dims_128", _sparse_max_active_dims_step(128)),
-        _pipeline_variant("sparse_max_active_dims_64", _sparse_max_active_dims_step(64)),
+        _pipeline_variant("truncate_sparse_query_max_dims_128", _truncate_sparse_max_dims_step(128, target="query")),
+        _pipeline_variant("truncate_sparse_query_max_dims_64", _truncate_sparse_max_dims_step(64, target="query")),
     ]
 
 
-def test_parse_args_accepts_query_and_docs_sparse_max_active_dims_cross_product() -> None:
+def test_parse_args_rejects_symmetric_truncate_sparse_max_dims_embedding_variant() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "--model",
+                "naver/splade-v3",
+                "--model-type",
+                "sparse",
+                "--embedding-variant",
+                "truncate-sparse-max-dims:128",
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected symmetric truncate sparse max dims embedding variant to be rejected.")
+
+
+def test_parse_args_rejects_legacy_sparse_max_active_dims_embedding_variant() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "--model",
+                "naver/splade-v3",
+                "--model-type",
+                "sparse",
+                "--embedding-variant",
+                "sparse-max-active-dims:128",
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected legacy sparse max active dims embedding variant to be rejected.")
+
+
+def test_parse_args_accepts_query_and_docs_truncate_sparse_max_dims_cross_product() -> None:
     args = parse_args(
         [
             "evaluate",
@@ -268,56 +350,56 @@ def test_parse_args_accepts_query_and_docs_sparse_max_active_dims_cross_product(
             "--model-type",
             "sparse",
             "--embedding-variant-cross",
-            "sparse-query-max-active-dims:8,16,32",
-            "sparse-docs-max-active-dims:64,128,256",
+            "truncate-sparse-query-max-dims:8,16,32",
+            "truncate-sparse-docs-max-dims:64,128,256",
         ]
     )
 
     assert args.embedding_variants == [
         _pipeline_variant(
-            "sparse_query_max_active_dims_8_sparse_docs_max_active_dims_64",
-            _sparse_max_active_dims_step(8, target="query"),
-            _sparse_max_active_dims_step(64, target="corpus"),
+            "truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_64",
+            _truncate_sparse_max_dims_step(8, target="query"),
+            _truncate_sparse_max_dims_step(64, target="corpus"),
         ),
         _pipeline_variant(
-            "sparse_query_max_active_dims_8_sparse_docs_max_active_dims_128",
-            _sparse_max_active_dims_step(8, target="query"),
-            _sparse_max_active_dims_step(128, target="corpus"),
+            "truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_128",
+            _truncate_sparse_max_dims_step(8, target="query"),
+            _truncate_sparse_max_dims_step(128, target="corpus"),
         ),
         _pipeline_variant(
-            "sparse_query_max_active_dims_8_sparse_docs_max_active_dims_256",
-            _sparse_max_active_dims_step(8, target="query"),
-            _sparse_max_active_dims_step(256, target="corpus"),
+            "truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_256",
+            _truncate_sparse_max_dims_step(8, target="query"),
+            _truncate_sparse_max_dims_step(256, target="corpus"),
         ),
         _pipeline_variant(
-            "sparse_query_max_active_dims_16_sparse_docs_max_active_dims_64",
-            _sparse_max_active_dims_step(16, target="query"),
-            _sparse_max_active_dims_step(64, target="corpus"),
+            "truncate_sparse_query_max_dims_16_truncate_sparse_docs_max_dims_64",
+            _truncate_sparse_max_dims_step(16, target="query"),
+            _truncate_sparse_max_dims_step(64, target="corpus"),
         ),
         _pipeline_variant(
-            "sparse_query_max_active_dims_16_sparse_docs_max_active_dims_128",
-            _sparse_max_active_dims_step(16, target="query"),
-            _sparse_max_active_dims_step(128, target="corpus"),
+            "truncate_sparse_query_max_dims_16_truncate_sparse_docs_max_dims_128",
+            _truncate_sparse_max_dims_step(16, target="query"),
+            _truncate_sparse_max_dims_step(128, target="corpus"),
         ),
         _pipeline_variant(
-            "sparse_query_max_active_dims_16_sparse_docs_max_active_dims_256",
-            _sparse_max_active_dims_step(16, target="query"),
-            _sparse_max_active_dims_step(256, target="corpus"),
+            "truncate_sparse_query_max_dims_16_truncate_sparse_docs_max_dims_256",
+            _truncate_sparse_max_dims_step(16, target="query"),
+            _truncate_sparse_max_dims_step(256, target="corpus"),
         ),
         _pipeline_variant(
-            "sparse_query_max_active_dims_32_sparse_docs_max_active_dims_64",
-            _sparse_max_active_dims_step(32, target="query"),
-            _sparse_max_active_dims_step(64, target="corpus"),
+            "truncate_sparse_query_max_dims_32_truncate_sparse_docs_max_dims_64",
+            _truncate_sparse_max_dims_step(32, target="query"),
+            _truncate_sparse_max_dims_step(64, target="corpus"),
         ),
         _pipeline_variant(
-            "sparse_query_max_active_dims_32_sparse_docs_max_active_dims_128",
-            _sparse_max_active_dims_step(32, target="query"),
-            _sparse_max_active_dims_step(128, target="corpus"),
+            "truncate_sparse_query_max_dims_32_truncate_sparse_docs_max_dims_128",
+            _truncate_sparse_max_dims_step(32, target="query"),
+            _truncate_sparse_max_dims_step(128, target="corpus"),
         ),
         _pipeline_variant(
-            "sparse_query_max_active_dims_32_sparse_docs_max_active_dims_256",
-            _sparse_max_active_dims_step(32, target="query"),
-            _sparse_max_active_dims_step(256, target="corpus"),
+            "truncate_sparse_query_max_dims_32_truncate_sparse_docs_max_dims_256",
+            _truncate_sparse_max_dims_step(32, target="query"),
+            _truncate_sparse_max_dims_step(256, target="corpus"),
         ),
     ]
 

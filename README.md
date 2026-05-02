@@ -40,19 +40,22 @@ uv run nano-ir-bench evaluate \
   --dataset NanoBEIR-en
 ```
 
-For SPLADE-style sparsity and latency trade-off checks, limit the number of
-active dimensions per query/document embedding with `--sparse-max-active-dims`:
+For SPLADE-style sparsity and latency trade-off checks, explicitly truncate
+query and/or document sparse rows to their top weighted dimensions after
+encoding:
 
 ```bash
 uv run nano-ir-bench evaluate \
   --model naver/splade-v3 \
   --model-type sparse \
   --dataset NanoBEIR-en \
-  --sparse-max-active-dims 128
+  --truncate-sparse-query-max-dims 32 \
+  --truncate-sparse-docs-max-dims 128
 ```
 
-The selected limit is written to result JSON under
-`config.sparse_max_active_dims` and summarized in `all.json`. Sparse embedding
+The selected limits are written to result JSON under
+`config.truncate_sparse_query_max_dims`, `config.truncate_sparse_docs_max_dims`,
+and `config.sparse_truncation`, then summarized in `all.json`. Sparse embedding
 metadata records `nnz_total`, `nnz_mean`, `nnz_median`, `nnz_max`, and
 `density` for queries and documents.
 
@@ -64,7 +67,9 @@ uv run nano-ir-bench evaluate \
   --model naver/splade-v3 \
   --model-type sparse \
   --dataset NanoBEIR-en \
-  --embedding-variant sparse-max-active-dims:256,128,64
+  --embedding-variant truncate-sparse-query-max-dims:8,16,32 \
+  --embedding-variant truncate-sparse-docs-max-dims:64,128,256 \
+  --embedding-variant-cross truncate-sparse-query-max-dims:8,16,32 truncate-sparse-docs-max-dims:64,128,256
 ```
 
 These variants keep the top absolute-value dimensions per query/document row

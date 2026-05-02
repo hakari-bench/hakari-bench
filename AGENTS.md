@@ -63,7 +63,9 @@ uv run ty check
   adapter is implemented.
 - Default dtype is `bf16`. Keep `--dtype`, `--trust-remote-code`,
   `--flash-attn2`, `--attn-implementation`, `--device`,
-  `--model-max-seq-length`, and `--truncate-dim` explicit CLI options.
+  `--model-max-seq-length`, `--truncate-dim`,
+  `--truncate-sparse-query-max-dims`, and `--truncate-sparse-docs-max-dims`
+  explicit CLI options.
 - Do not shorten model max sequence length for benchmark runs just to avoid
   slow execution or memory pressure. Use the model's default/configured maximum
   length unless the user explicitly requests a different value. If memory errors

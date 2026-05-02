@@ -26,16 +26,15 @@ For every specified model:
 - Record and use explicit retrieval prefixes when the model card or paper requires them, for example via `--query-prompt`, `--corpus-prompt`, `--query-prompt-name`, or `--corpus-prompt-name`.
 - Investigate Matryoshka support. If the model card or paper documents supported dimensions, prefer simultaneous derived evaluations with `--embedding-variant truncate:DIM` over separate reruns.
 - For sparse/SPLADE-style models, use `--model-type sparse`. When evaluating
-  sparsity trade-offs, prefer post-encode variants over separate reruns:
-  `--embedding-variant sparse-max-active-dims:256,128,64` for symmetric
-  query+document limits, or query/docs-specific variants when asymmetric
-  limits are requested.
+  sparsity trade-offs, prefer post-encode query/docs-specific variants over
+  separate reruns. Do not use a symmetric sparse truncation option; explicitly
+  choose query, docs, or both.
 - For sparse models, query and document active dimensions can be varied
-  independently. Use `--embedding-variant sparse-query-max-active-dims:8,16,32`
+  independently. Use `--embedding-variant truncate-sparse-query-max-dims:8,16,32`
   for query-only limits, `--embedding-variant
-  sparse-docs-max-active-dims:64,128,256` for docs-only limits, and use
-  `--embedding-variant-cross sparse-query-max-active-dims:8,16,32
-  sparse-docs-max-active-dims:64,128,256` for a full query x docs grid.
+  truncate-sparse-docs-max-dims:64,128,256` for docs-only limits, and use
+  `--embedding-variant-cross truncate-sparse-query-max-dims:8,16,32
+  truncate-sparse-docs-max-dims:64,128,256` for a full query x docs grid.
   Base, query-only, docs-only, and query x docs comparisons require combining
   those standalone variants with the cross product.
 - Unless the user explicitly says not to, include post-encode docs-only quantization variants with `--embedding-variant quantize:int8,ubinary`. These variants quantize corpus/document embeddings while keeping query embeddings at the model's original floating-point precision. They do not require model-side quantized inference support and are useful even when the model is not Matryoshka-capable.
@@ -122,28 +121,17 @@ The benchmark implementation normalizes all of these derived evaluations into a
 single post-encode pipeline path, so the model is still encoded once and cross
 variants add only the transform/scoring work needed for each derived embedding.
 
-For sparse/SPLADE-style models, use sparse max-active-dimension variants instead
-of dense `truncate:` variants. Symmetric query+document sparsity limits:
+For sparse/SPLADE-style models, use query/docs-specific sparse truncation
+variants instead of dense `truncate:` variants:
 
 ```bash
 uv run nano-ir-bench evaluate \
   --model MODEL_NAME \
   --model-type sparse \
   --dataset DATASET_NAME \
-  --embedding-variant sparse-max-active-dims:256,128,64
-```
-
-When query and document limits should differ, use query/docs-specific variants
-and their cross product:
-
-```bash
-uv run nano-ir-bench evaluate \
-  --model MODEL_NAME \
-  --model-type sparse \
-  --dataset DATASET_NAME \
-  --embedding-variant sparse-query-max-active-dims:8,16,32 \
-  --embedding-variant sparse-docs-max-active-dims:64,128,256 \
-  --embedding-variant-cross sparse-query-max-active-dims:8,16,32 sparse-docs-max-active-dims:64,128,256
+  --embedding-variant truncate-sparse-query-max-dims:8,16,32 \
+  --embedding-variant truncate-sparse-docs-max-dims:64,128,256 \
+  --embedding-variant-cross truncate-sparse-query-max-dims:8,16,32 truncate-sparse-docs-max-dims:64,128,256
 ```
 
 If only the full query x docs grid is requested, the standalone query-only and
@@ -158,10 +146,10 @@ uv run nano-ir-bench evaluate \
   --model MODEL_NAME \
   --model-type sparse \
   --dataset DATASET_NAME \
-  --embedding-variant sparse-query-max-active-dims:8,16,32 \
-  --embedding-variant sparse-docs-max-active-dims:64,128,256 \
+  --embedding-variant truncate-sparse-query-max-dims:8,16,32 \
+  --embedding-variant truncate-sparse-docs-max-dims:64,128,256 \
   --embedding-variant quantize:int8,ubinary \
-  --embedding-variant-cross sparse-query-max-active-dims:8,16,32 sparse-docs-max-active-dims:64,128,256
+  --embedding-variant-cross truncate-sparse-query-max-dims:8,16,32 truncate-sparse-docs-max-dims:64,128,256
 ```
 
 For BM25:
