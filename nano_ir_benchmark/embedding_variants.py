@@ -6,6 +6,49 @@ from typing import Any
 
 QUANTIZE_PRECISIONS = {"int8", "uint8", "binary", "ubinary"}
 QUANTIZE_TARGETS = {"corpus", "query_and_corpus"}
+SPARSE_MAX_ACTIVE_DIMS_PREFIXES = (
+    "sparse-max-active-dims:",
+    "sparse_max_active_dims:",
+    "max-active-dims:",
+    "max_active_dims:",
+    "sparse-topk:",
+    "sparse_topk:",
+)
+SPARSE_MAX_ACTIVE_DIMS_EQUALS_PREFIXES = tuple(prefix.replace(":", "=") for prefix in SPARSE_MAX_ACTIVE_DIMS_PREFIXES)
+SPARSE_QUERY_MAX_ACTIVE_DIMS_PREFIXES = (
+    "sparse-query-max-active-dims:",
+    "sparse_query_max_active_dims:",
+    "query-sparse-max-active-dims:",
+    "query_sparse_max_active_dims:",
+    "query-max-active-dims:",
+    "query_max_active_dims:",
+    "sparse-query-topk:",
+    "sparse_query_topk:",
+)
+SPARSE_QUERY_MAX_ACTIVE_DIMS_EQUALS_PREFIXES = tuple(
+    prefix.replace(":", "=") for prefix in SPARSE_QUERY_MAX_ACTIVE_DIMS_PREFIXES
+)
+SPARSE_DOCS_MAX_ACTIVE_DIMS_PREFIXES = (
+    "sparse-docs-max-active-dims:",
+    "sparse_docs_max_active_dims:",
+    "sparse-corpus-max-active-dims:",
+    "sparse_corpus_max_active_dims:",
+    "docs-sparse-max-active-dims:",
+    "docs_sparse_max_active_dims:",
+    "corpus-sparse-max-active-dims:",
+    "corpus_sparse_max_active_dims:",
+    "docs-max-active-dims:",
+    "docs_max_active_dims:",
+    "corpus-max-active-dims:",
+    "corpus_max_active_dims:",
+    "sparse-docs-topk:",
+    "sparse_docs_topk:",
+    "sparse-corpus-topk:",
+    "sparse_corpus_topk:",
+)
+SPARSE_DOCS_MAX_ACTIVE_DIMS_EQUALS_PREFIXES = tuple(
+    prefix.replace(":", "=") for prefix in SPARSE_DOCS_MAX_ACTIVE_DIMS_PREFIXES
+)
 
 
 def parse_embedding_variants(
@@ -86,6 +129,52 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
     elif current_kind == "truncate" and _is_integer_token(token):
         dim_value = token
         return _truncate_variant(token=token, dim_value=dim_value), "truncate"
+    elif token.startswith(SPARSE_QUERY_MAX_ACTIVE_DIMS_PREFIXES):
+        dim_value = token.split(":", 1)[1]
+        return _sparse_max_active_dims_variant(
+            token=token,
+            dim_value=dim_value,
+            target="query",
+        ), "sparse_max_active_dims:query"
+    elif token.startswith(SPARSE_QUERY_MAX_ACTIVE_DIMS_EQUALS_PREFIXES):
+        dim_value = token.split("=", 1)[1]
+        return _sparse_max_active_dims_variant(
+            token=token,
+            dim_value=dim_value,
+            target="query",
+        ), "sparse_max_active_dims:query"
+    elif token.startswith(SPARSE_DOCS_MAX_ACTIVE_DIMS_PREFIXES):
+        dim_value = token.split(":", 1)[1]
+        return _sparse_max_active_dims_variant(
+            token=token,
+            dim_value=dim_value,
+            target="corpus",
+        ), "sparse_max_active_dims:corpus"
+    elif token.startswith(SPARSE_DOCS_MAX_ACTIVE_DIMS_EQUALS_PREFIXES):
+        dim_value = token.split("=", 1)[1]
+        return _sparse_max_active_dims_variant(
+            token=token,
+            dim_value=dim_value,
+            target="corpus",
+        ), "sparse_max_active_dims:corpus"
+    elif token.startswith(SPARSE_MAX_ACTIVE_DIMS_PREFIXES):
+        dim_value = token.split(":", 1)[1]
+        return _sparse_max_active_dims_variant(
+            token=token,
+            dim_value=dim_value,
+            target="query_and_corpus",
+        ), "sparse_max_active_dims:query_and_corpus"
+    elif token.startswith(SPARSE_MAX_ACTIVE_DIMS_EQUALS_PREFIXES):
+        dim_value = token.split("=", 1)[1]
+        return _sparse_max_active_dims_variant(
+            token=token,
+            dim_value=dim_value,
+            target="query_and_corpus",
+        ), "sparse_max_active_dims:query_and_corpus"
+    elif current_kind is not None and current_kind.startswith("sparse_max_active_dims:") and _is_integer_token(token):
+        dim_value = token
+        target = current_kind.split(":", 1)[1]
+        return _sparse_max_active_dims_variant(token=token, dim_value=dim_value, target=target), current_kind
     elif token.startswith(("quantize-docs:", "quantize_docs:", "quantize-corpus:", "quantize_corpus:")):
         precision = token.split(":", 1)[1]
         return _quantize_variant(token=token, precision=precision, target="corpus"), "quantize:corpus"
@@ -112,7 +201,8 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
     else:
         raise ValueError(
             "Unsupported embedding variant "
-            f"'{token}'. Supported syntax: truncate:DIM, quantize:PRECISION, or quantize-both:PRECISION"
+            f"'{token}'. Supported syntax: truncate:DIM, sparse-max-active-dims:DIM, "
+            "quantize:PRECISION, or quantize-both:PRECISION"
         )
 
 
@@ -135,6 +225,33 @@ def _truncate_variant(*, token: str, dim_value: str) -> dict[str, Any]:
                 "type": "truncate",
                 "algorithm": "dimension_slice",
                 "parameters": {"dim": dim},
+            }
+        ),
+    }
+
+
+def _sparse_max_active_dims_variant(*, token: str, dim_value: str, target: str) -> dict[str, Any]:
+    try:
+        max_active_dims = int(dim_value)
+    except ValueError as exc:
+        raise ValueError(f"Embedding variant '{token}' has a non-integer sparse max active dims value.") from exc
+    if max_active_dims <= 0:
+        raise ValueError(f"Embedding variant '{token}' must use a positive sparse max active dims value.")
+    if target not in {"query", "corpus", "query_and_corpus"}:
+        raise ValueError(f"Embedding variant '{token}' has unsupported sparse max active dims target {target!r}.")
+
+    name_prefix = {
+        "query": "sparse_query_max_active_dims",
+        "corpus": "sparse_docs_max_active_dims",
+        "query_and_corpus": "sparse_max_active_dims",
+    }[target]
+    return {
+        "name": f"{name_prefix}_{max_active_dims}",
+        "transform": _pipeline_transform(
+            {
+                "type": "sparse_max_active_dims",
+                "algorithm": "top_abs_values_per_row",
+                "parameters": {"max_active_dims": max_active_dims, "target": target},
             }
         ),
     }

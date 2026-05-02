@@ -52,6 +52,27 @@ class QuantizedEmbeddingMatrix:
         return self.values.dtype
 
 
+@dataclass(frozen=True)
+class QuantizedSparseEmbeddingMatrix:
+    matrix: sparse.csr_matrix
+    precision: str
+    original_dim: int
+    algorithm: str
+    method: str
+    side: str
+    score_representation: str
+    ranges_source: str | None = None
+    value_range: tuple[float, float] | None = None
+
+    @property
+    def shape(self) -> tuple[int, ...]:
+        return self.matrix.shape
+
+    @property
+    def dtype(self) -> np.dtype:
+        return self.matrix.dtype
+
+
 def load_ir_dataset(
     task: EvalTask,
     *,
@@ -120,6 +141,7 @@ def evaluate_dense_task(
     query_task: str | None = None,
     corpus_task: str | None = None,
     truncate_dim: int | None = None,
+    sparse_max_active_dims: int | None = None,
     embedding_variants: list[dict[str, Any]] | None = None,
     aggregate_metric: str = "ndcg@10",
 ) -> TaskEvaluation:
@@ -139,6 +161,7 @@ def evaluate_dense_task(
         prompt_name=query_prompt_name,
         task=query_task,
         truncate_dim=truncate_dim,
+        sparse_max_active_dims=sparse_max_active_dims,
     )
     query_seconds = time.perf_counter() - query_start
 
@@ -153,6 +176,7 @@ def evaluate_dense_task(
         prompt_name=corpus_prompt_name,
         task=corpus_task,
         truncate_dim=truncate_dim,
+        sparse_max_active_dims=sparse_max_active_dims,
     )
     corpus_seconds = time.perf_counter() - corpus_start
 
@@ -314,6 +338,7 @@ def _encode(
     prompt_name: str | None,
     task: str | None,
     truncate_dim: int | None,
+    sparse_max_active_dims: int | None,
 ) -> Any:
     encode_fn = None if task is not None else getattr(model, "encode_query" if role == "query" else "encode_document", None)
     if encode_fn is None:
@@ -330,13 +355,20 @@ def _encode(
         kwargs["truncate_dim"] = truncate_dim
 
     if _accepts_encode_parameter(encode_fn, "convert_to_sparse_tensor"):
-        sparse_kwargs = {
+        sparse_kwargs: dict[str, Any] = {
             "convert_to_tensor": True,
             "convert_to_sparse_tensor": True,
         }
         if _accepts_encode_parameter(encode_fn, "save_to_cpu"):
             sparse_kwargs["save_to_cpu"] = True
+        if sparse_max_active_dims is not None:
+            if not _accepts_encode_parameter(encode_fn, "max_active_dims"):
+                raise ValueError("Sparse max active dims requires an encoder with max_active_dims support.")
+            sparse_kwargs["max_active_dims"] = sparse_max_active_dims
         return encode_fn(sentences, **sparse_kwargs, **kwargs)
+
+    if sparse_max_active_dims is not None:
+        raise ValueError("Sparse max active dims can only be used with sparse encoder outputs.")
 
     try:
         return encode_fn(sentences, convert_to_numpy=True, **kwargs)
@@ -537,6 +569,25 @@ def _apply_embedding_pipeline_step_pair(
     if step_type == "truncate":
         dim = int(step.get("parameters", {}).get("dim"))
         return _truncate_embeddings(query_embeddings, dim), _truncate_embeddings(corpus_embeddings, dim)
+    if step_type == "sparse_max_active_dims":
+        max_active_dims = int(step.get("parameters", {}).get("max_active_dims"))
+        target = str(step.get("parameters", {}).get("target") or "query_and_corpus")
+        if target == "query":
+            return (
+                _limit_sparse_active_dims(query_embeddings, max_active_dims=max_active_dims),
+                corpus_embeddings,
+            )
+        if target == "corpus":
+            return (
+                query_embeddings,
+                _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_active_dims),
+            )
+        if target != "query_and_corpus":
+            raise ValueError(f"Unsupported sparse max active dims target: {target}")
+        return (
+            _limit_sparse_active_dims(query_embeddings, max_active_dims=max_active_dims),
+            _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_active_dims),
+        )
     if step_type == "quantize":
         precision = str(step.get("parameters", {}).get("precision"))
         target = str(step.get("parameters", {}).get("target") or "corpus")
@@ -567,6 +618,39 @@ def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
     return matrix[:, :dim]
 
 
+def _limit_sparse_active_dims(embeddings: Any, *, max_active_dims: int) -> sparse.csr_matrix:
+    if max_active_dims <= 0:
+        raise ValueError("Sparse max active dims must be positive.")
+    if not _is_sparse_embedding(embeddings):
+        raise ValueError("Sparse max active dims variants are only supported for sparse embeddings.")
+
+    matrix = _to_scipy_csr_matrix(embeddings)
+    if matrix.shape[0] == 0 or matrix.nnz == 0:
+        return matrix.copy()
+
+    indptr = matrix.indptr
+    selected_indices: list[np.ndarray] = []
+    selected_data: list[np.ndarray] = []
+    new_indptr = [0]
+    for row_index in range(matrix.shape[0]):
+        start = int(indptr[row_index])
+        end = int(indptr[row_index + 1])
+        row_indices = matrix.indices[start:end]
+        row_data = matrix.data[start:end]
+        if row_data.size > max_active_dims:
+            order = np.lexsort((row_indices, -np.abs(row_data)))
+            keep = np.sort(order[:max_active_dims])
+            row_indices = row_indices[keep]
+            row_data = row_data[keep]
+        selected_indices.append(row_indices)
+        selected_data.append(row_data)
+        new_indptr.append(new_indptr[-1] + int(row_data.size))
+
+    indices = np.concatenate(selected_indices) if selected_indices else np.array([], dtype=matrix.indices.dtype)
+    data = np.concatenate(selected_data) if selected_data else np.array([], dtype=matrix.data.dtype)
+    return sparse.csr_matrix((data, indices, np.asarray(new_indptr, dtype=matrix.indptr.dtype)), shape=matrix.shape)
+
+
 def _quantize_embedding_pair(
     *,
     query_embeddings: Any,
@@ -576,7 +660,13 @@ def _quantize_embedding_pair(
     algorithm: str,
 ) -> tuple[Any, Any]:
     if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
-        raise ValueError("Quantized embedding variants are only supported for dense embeddings.")
+        return _quantize_sparse_embedding_pair(
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            precision=precision,
+            target=target,
+            algorithm=algorithm,
+        )
     if precision not in {"int8", "uint8", "binary", "ubinary"}:
         raise ValueError(f"Unsupported quantization precision: {precision}")
     precision_literal = cast(QuantizationPrecision, precision)
@@ -642,6 +732,99 @@ def _quantize_embedding_pair(
             ranges=ranges.astype(np.float32, copy=True) if ranges is not None else None,
         ),
         corpus_quantized,
+    )
+
+
+def _quantize_sparse_embedding_pair(
+    *,
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    precision: str,
+    target: str,
+    algorithm: str,
+) -> tuple[Any, Any]:
+    if precision not in {"int8", "uint8", "binary", "ubinary"}:
+        raise ValueError(f"Unsupported quantization precision: {precision}")
+    precision_literal = cast(QuantizationPrecision, precision)
+    target = _normalize_quantization_target(target)
+    method = "corpus_only" if target == "corpus" else "query_and_corpus"
+
+    query_matrix = _to_scipy_csr_matrix(query_embeddings)
+    corpus_matrix = _to_scipy_csr_matrix(corpus_embeddings)
+    if query_matrix.shape[1] != corpus_matrix.shape[1]:
+        raise ValueError(
+            f"Cannot quantize query dimension {query_matrix.shape[1]} with corpus dimension {corpus_matrix.shape[1]}."
+        )
+
+    value_range = None
+    if precision_literal in {"int8", "uint8"}:
+        if corpus_matrix.nnz == 0:
+            raise ValueError("Cannot calibrate quantized sparse embeddings from a corpus with no non-zero values.")
+        value_range = (float(np.min(corpus_matrix.data)), float(np.max(corpus_matrix.data)))
+
+    corpus_quantized = _quantize_sparse_matrix(
+        corpus_matrix,
+        precision=precision_literal,
+        algorithm=algorithm,
+        method=method,
+        side="corpus",
+        value_range=value_range,
+    )
+    if target == "corpus":
+        return query_embeddings, corpus_quantized
+    return (
+        _quantize_sparse_matrix(
+            query_matrix,
+            precision=precision_literal,
+            algorithm=algorithm,
+            method=method,
+            side="query",
+            value_range=value_range,
+        ),
+        corpus_quantized,
+    )
+
+
+def _quantize_sparse_matrix(
+    matrix: sparse.csr_matrix,
+    *,
+    precision: QuantizationPrecision,
+    algorithm: str,
+    method: str,
+    side: str,
+    value_range: tuple[float, float] | None,
+) -> QuantizedSparseEmbeddingMatrix:
+    matrix = matrix.copy().astype(np.float32)
+    ranges_source = None
+    score_representation = "sparse_float32"
+    if precision in {"int8", "uint8"}:
+        if value_range is None:
+            raise ValueError(f"Missing sparse quantization value range for precision: {precision}")
+        starts = value_range[0]
+        step = (value_range[1] - value_range[0]) / 255
+        if step == 0:
+            step = 1.0
+        buckets = (matrix.data - starts) / step
+        if precision == "uint8":
+            matrix.data = np.rint(np.clip(buckets, 0, 255)).astype(np.uint8)
+        else:
+            matrix.data = np.rint(np.clip(buckets - 128, -128, 127)).astype(np.int8)
+        ranges_source = "corpus"
+        score_representation = "dequantized_sparse_float32"
+    elif precision in {"binary", "ubinary"}:
+        matrix.data = np.ones_like(matrix.data, dtype=np.uint8 if precision == "ubinary" else np.int8)
+        score_representation = "sparse_nonzero_indicator_float32"
+
+    return QuantizedSparseEmbeddingMatrix(
+        matrix=matrix,
+        precision=precision,
+        original_dim=int(matrix.shape[1]),
+        algorithm=algorithm,
+        method=method,
+        side=side,
+        score_representation=score_representation,
+        ranges_source=ranges_source,
+        value_range=value_range,
     )
 
 
@@ -755,30 +938,44 @@ def _dimension_format(*, query_embeddings: Any, corpus_embeddings: Any, represen
 
 def _embedding_side_metadata(embeddings: Any) -> dict[str, Any]:
     metadata: dict[str, Any] = {"shape": _shape_list(embeddings)}
-    if _is_quantized_embedding_matrix(embeddings):
-        metadata["value_dtype"] = str(embeddings.values.dtype)
-        quantization = {
-            "precision": embeddings.precision,
-            "algorithm": embeddings.algorithm,
-            "original_dim": embeddings.original_dim,
-            "stored_dim": _stored_embedding_dimension(embeddings),
-            "score_representation": _quantized_score_representation(embeddings),
-            "method": embeddings.method,
-            "side": embeddings.side,
-        }
-        if embeddings.ranges_source is not None:
-            quantization["ranges_source"] = embeddings.ranges_source
-        metadata["quantization"] = quantization
+    if _is_quantized_embedding_matrix(embeddings) or _is_quantized_sparse_embedding_matrix(embeddings):
+        metadata["value_dtype"] = str(embeddings.dtype)
+        metadata["quantization"] = _quantization_metadata(embeddings)
     if _is_sparse_embedding(embeddings):
         metadata.update(_sparse_embedding_stats(embeddings))
     return metadata
+
+
+def _quantization_metadata(embeddings: QuantizedEmbeddingMatrix | QuantizedSparseEmbeddingMatrix) -> dict[str, Any]:
+    if isinstance(embeddings, QuantizedSparseEmbeddingMatrix):
+        score_representation = embeddings.score_representation
+    else:
+        score_representation = _quantized_score_representation(embeddings)
+    quantization: dict[str, Any] = {
+        "precision": embeddings.precision,
+        "algorithm": embeddings.algorithm,
+        "original_dim": embeddings.original_dim,
+        "stored_dim": _stored_embedding_dimension(embeddings),
+        "score_representation": score_representation,
+        "method": embeddings.method,
+        "side": embeddings.side,
+    }
+    if embeddings.ranges_source is not None:
+        quantization["ranges_source"] = embeddings.ranges_source
+    if isinstance(embeddings, QuantizedSparseEmbeddingMatrix) and embeddings.value_range is not None:
+        quantization["value_range"] = list(embeddings.value_range)
+    return quantization
 
 
 def _sparse_embedding_stats(embeddings: Any) -> dict[str, Any]:
     shape = _shape_list(embeddings)
     row_count = int(shape[0]) if shape else 0
     total_size = int(np.prod(shape)) if shape else 0
-    if sparse.issparse(embeddings):
+    if _is_quantized_sparse_embedding_matrix(embeddings):
+        matrix = embeddings.matrix
+        row_nnz = np.diff(matrix.indptr)
+        nnz_total = int(matrix.nnz)
+    elif sparse.issparse(embeddings):
         matrix = sparse.csr_matrix(embeddings)
         row_nnz = np.diff(matrix.indptr)
         nnz_total = int(matrix.nnz)
@@ -809,7 +1006,7 @@ def _sparse_embedding_stats(embeddings: Any) -> dict[str, Any]:
 
 
 def _is_sparse_embedding(embeddings: Any) -> bool:
-    return sparse.issparse(embeddings) or _is_torch_sparse_embedding(embeddings)
+    return sparse.issparse(embeddings) or _is_torch_sparse_embedding(embeddings) or _is_quantized_sparse_embedding_matrix(embeddings)
 
 
 def _is_torch_sparse_embedding(embeddings: Any) -> bool:
@@ -819,6 +1016,8 @@ def _is_torch_sparse_embedding(embeddings: Any) -> bool:
 
 
 def _to_scipy_csr_matrix(embeddings: Any) -> sparse.csr_matrix:
+    if _is_quantized_sparse_embedding_matrix(embeddings):
+        return _dequantize_sparse_matrix(embeddings)
     if sparse.issparse(embeddings):
         return sparse.csr_matrix(embeddings)
     if not _is_torch_sparse_embedding(embeddings):
@@ -854,8 +1053,33 @@ def _to_scipy_csr_matrix(embeddings: Any) -> sparse.csr_matrix:
     return sparse.csr_matrix((values, (rows, cols)), shape=matrix_shape)
 
 
+def _dequantize_sparse_matrix(embeddings: QuantizedSparseEmbeddingMatrix) -> sparse.csr_matrix:
+    matrix = embeddings.matrix.copy()
+    if embeddings.precision in {"binary", "ubinary"}:
+        matrix.data = np.ones_like(matrix.data, dtype=np.float32)
+        return matrix
+    if embeddings.precision not in {"int8", "uint8"}:
+        matrix.data = matrix.data.astype(np.float32, copy=False)
+        return matrix
+    if embeddings.value_range is None:
+        raise ValueError(f"Quantized sparse {embeddings.precision} embeddings are missing value ranges.")
+    starts = embeddings.value_range[0]
+    step = (embeddings.value_range[1] - embeddings.value_range[0]) / 255
+    if step == 0:
+        step = 1.0
+    buckets = matrix.data.astype(np.float32)
+    if embeddings.precision == "int8":
+        buckets = buckets + 128
+    matrix.data = buckets * step + starts
+    return matrix
+
+
 def _is_quantized_embedding_matrix(embeddings: Any) -> bool:
     return isinstance(embeddings, QuantizedEmbeddingMatrix)
+
+
+def _is_quantized_sparse_embedding_matrix(embeddings: Any) -> bool:
+    return isinstance(embeddings, QuantizedSparseEmbeddingMatrix)
 
 
 def _is_scalar_quantized(embeddings: Any) -> bool:

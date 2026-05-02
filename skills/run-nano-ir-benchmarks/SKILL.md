@@ -25,6 +25,19 @@ For every specified model:
 - If no usable Sentence Transformers prompt config exists, inspect the Hugging Face model card first, then relevant articles or papers for retrieval prefixes such as query/document/passage instructions.
 - Record and use explicit retrieval prefixes when the model card or paper requires them, for example via `--query-prompt`, `--corpus-prompt`, `--query-prompt-name`, or `--corpus-prompt-name`.
 - Investigate Matryoshka support. If the model card or paper documents supported dimensions, prefer simultaneous derived evaluations with `--embedding-variant truncate:DIM` over separate reruns.
+- For sparse/SPLADE-style models, use `--model-type sparse`. When evaluating
+  sparsity trade-offs, prefer post-encode variants over separate reruns:
+  `--embedding-variant sparse-max-active-dims:256,128,64` for symmetric
+  query+document limits, or query/docs-specific variants when asymmetric
+  limits are requested.
+- For sparse models, query and document active dimensions can be varied
+  independently. Use `--embedding-variant sparse-query-max-active-dims:8,16,32`
+  for query-only limits, `--embedding-variant
+  sparse-docs-max-active-dims:64,128,256` for docs-only limits, and use
+  `--embedding-variant-cross sparse-query-max-active-dims:8,16,32
+  sparse-docs-max-active-dims:64,128,256` for a full query x docs grid.
+  Base, query-only, docs-only, and query x docs comparisons require combining
+  those standalone variants with the cross product.
 - Unless the user explicitly says not to, include post-encode docs-only quantization variants with `--embedding-variant quantize:int8,ubinary`. These variants quantize corpus/document embeddings while keeping query embeddings at the model's original floating-point precision. They do not require model-side quantized inference support and are useful even when the model is not Matryoshka-capable.
 - If Matryoshka dimensions are requested or documented, evaluate all three related groups: standalone dimensions, standalone quantization, and the dimension x quantization cross product. For example, use `--embedding-variant truncate:256,128,64`, `--embedding-variant quantize:int8,ubinary`, and `--embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary`. This is "all" because standalone dimensions isolate the dimension trade-off, standalone quantization isolates the quantization trade-off at the original dimension, and the cross product measures combined trade-offs such as `128dim x int8` and `64dim x ubinary`.
 - Do not quantize query embeddings for the standard quantization run. Only use `quantize-both:` when the user explicitly asks for symmetric query+document quantization.
@@ -107,6 +120,34 @@ uv run nano-ir-bench evaluate \
 The benchmark implementation normalizes all of these derived evaluations into a
 single post-encode pipeline path, so the model is still encoded once and cross
 variants add only the transform/scoring work needed for each derived embedding.
+
+For sparse/SPLADE-style models, use sparse max-active-dimension variants instead
+of dense `truncate:` variants. Symmetric query+document sparsity limits:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model MODEL_NAME \
+  --model-type sparse \
+  --dataset DATASET_NAME \
+  --embedding-variant sparse-max-active-dims:256,128,64
+```
+
+When query and document limits should differ, use query/docs-specific variants
+and their cross product:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model MODEL_NAME \
+  --model-type sparse \
+  --dataset DATASET_NAME \
+  --embedding-variant sparse-query-max-active-dims:8,16,32 \
+  --embedding-variant sparse-docs-max-active-dims:64,128,256 \
+  --embedding-variant-cross sparse-query-max-active-dims:8,16,32 sparse-docs-max-active-dims:64,128,256
+```
+
+If only the full query x docs grid is requested, the standalone query-only and
+docs-only variants may be omitted. The base no-limit result is always included
+as `evaluation.embedding_evaluations[0]`.
 
 For BM25:
 

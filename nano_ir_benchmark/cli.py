@@ -52,6 +52,12 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--model-max-seq-length", type=int, default=None)
     evaluate.add_argument("--truncate-dim", type=int, default=None)
     evaluate.add_argument(
+        "--sparse-max-active-dims",
+        type=int,
+        default=None,
+        help="Limit active sparse dimensions per embedding when using --model-type sparse.",
+    )
+    evaluate.add_argument(
         "--embedding-variant",
         dest="embedding_variant_values",
         action="append",
@@ -166,6 +172,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error(str(exc))
         delattr(args, "embedding_variant_values")
         delattr(args, "embedding_variant_cross_values")
+    if args.command == "evaluate" and args.sparse_max_active_dims is not None:
+        if args.model_type != "sparse":
+            parser.error("--sparse-max-active-dims requires --model-type sparse.")
+        if args.sparse_max_active_dims <= 0:
+            parser.error("--sparse-max-active-dims must be positive.")
     if args.command == "evaluate" and args.dataset is None and not args.collection:
         args.dataset = ["hakari-bench/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:
