@@ -2,41 +2,41 @@ name: MNanoBEIR
 datasets:
   - NanoBEIR-en
   - name: NanoBEIR-ar
-    dataset_id: lightonai/NanoBEIR-ar
+    dataset_id: hakari-bench/NanoBEIR-ar
     benchmark_kind: nanobeir
   - name: NanoBEIR-de
-    dataset_id: lightonai/NanoBEIR-de
+    dataset_id: hakari-bench/NanoBEIR-de
     benchmark_kind: nanobeir
   - name: NanoBEIR-es
-    dataset_id: lightonai/NanoBEIR-es
+    dataset_id: hakari-bench/NanoBEIR-es
     benchmark_kind: nanobeir
   - name: NanoBEIR-it
-    dataset_id: lightonai/NanoBEIR-it
+    dataset_id: hakari-bench/NanoBEIR-it
     benchmark_kind: nanobeir
   - name: NanoBEIR-fr
-    dataset_id: lightonai/NanoBEIR-fr
+    dataset_id: hakari-bench/NanoBEIR-fr
     benchmark_kind: nanobeir
   - name: NanoBEIR-pt
-    dataset_id: lightonai/NanoBEIR-pt
+    dataset_id: hakari-bench/NanoBEIR-pt
     benchmark_kind: nanobeir
   - name: NanoBEIR-no
-    dataset_id: lightonai/NanoBEIR-no
+    dataset_id: hakari-bench/NanoBEIR-no
     benchmark_kind: nanobeir
   - name: NanoBEIR-sv
-    dataset_id: lightonai/NanoBEIR-sv
+    dataset_id: hakari-bench/NanoBEIR-sv
     benchmark_kind: nanobeir
   - name: NanoBEIR-sr
-    dataset_id: Serbian-AI-Society/NanoBEIR-sr
+    dataset_id: hakari-bench/NanoBEIR-sr
     benchmark_kind: nanobeir
   - name: NanoBEIR-ko
-    dataset_id: LiquidAI/NanoBEIR-ko
+    dataset_id: hakari-bench/NanoBEIR-ko
     benchmark_kind: nanobeir
   - name: NanoBEIR-ja
-    dataset_id: LiquidAI/NanoBEIR-ja
+    dataset_id: hakari-bench/NanoBEIR-ja
     benchmark_kind: nanobeir
   - name: NanoBEIR-vi
-    dataset_id: sionic-ai/NanoBEIR-vi
+    dataset_id: hakari-bench/NanoBEIR-vi
     benchmark_kind: nanobeir
   - name: NanoBEIR-th
-    dataset_id: sionic-ai/NanoBEIR-th
+    dataset_id: hakari-bench/NanoBEIR-th
     benchmark_kind: nanobeir

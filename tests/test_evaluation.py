@@ -11,7 +11,7 @@ from scipy import sparse
 import nano_ir_benchmark.evaluation as evaluation_module
 from nano_ir_benchmark.datasets import EvalTask, NanoDatasetSpec
 from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
-from nano_ir_benchmark.results import build_all_payload, result_path_for_task, run_or_load_task, safe_path_part
+from nano_ir_benchmark.results import TaskRunResult, build_all_payload, result_path_for_task, run_or_load_task, safe_path_part
 
 
 def _pipeline_variant(name: str, *steps: dict[str, object]) -> dict[str, object]:
@@ -765,6 +765,71 @@ def test_build_all_payload_includes_split_and_total_durations(tmp_path: Path) ->
     assert payload["totals"]["duration_seconds_including_dataset_load_this_run"] == pytest.approx(
         result.payload["evaluation"]["duration_seconds_including_dataset_load"]
     )
+
+
+def test_build_all_payload_aggregates_prompt_config_from_cached_splits(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="cl-nagoya/ruri-v3-30m",
+        model_type="dense",
+        batch_size=8,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        query_task=None,
+        corpus_task=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+    )
+    cached_payload = {
+        "target": {"dataset_revision": {"resolved": "toy/data@sha"}},
+        "config": {
+            "batch_size": 4,
+            "aggregate_metric": "ndcg@10",
+            "query_prompt": "検索クエリ: ",
+            "corpus_prompt": "検索文書: ",
+            "query_prompt_name": None,
+            "corpus_prompt_name": None,
+            "query_task": None,
+            "corpus_task": None,
+        },
+        "evaluation": {
+            "aggregate_metric": "ndcg@10",
+            "aggregate_metric_value": 1.0,
+            "timing": {},
+        },
+    }
+    result = TaskRunResult(
+        task=task,
+        cache_hit=True,
+        output_path=tmp_path / "task.json",
+        payload=cached_payload,
+    )
+
+    payload = build_all_payload(
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "cl-nagoya/ruri-v3-30m"},
+        results=[result],
+    )
+
+    assert payload["cli_args"]["query_prompt"] is None
+    assert payload["config"]["query_prompt"] == "検索クエリ: "
+    assert payload["config"]["corpus_prompt"] == "検索文書: "
+    assert payload["config"]["batch_size"] == 4
+    assert payload["config"]["prompt_summary"]["query_prompt"] == {
+        "consistent": True,
+        "value": "検索クエリ: ",
+        "values": [{"value": "検索クエリ: ", "count": 1}],
+    }
+    assert payload["splits"][0]["config"]["query_prompt"] == "検索クエリ: "
+    assert payload["splits"][0]["config"]["corpus_prompt"] == "検索文書: "
 
 
 def test_build_all_payload_uses_task_model_metadata_when_consistent(tmp_path: Path) -> None:

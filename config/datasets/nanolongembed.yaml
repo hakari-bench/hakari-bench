@@ -1,5 +1,5 @@
 name: NanoLongEmbed
-dataset_id: hotchpotch/NanoLongEmbed
+dataset_id: hakari-bench/NanoLongEmbed
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries

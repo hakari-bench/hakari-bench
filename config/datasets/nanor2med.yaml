@@ -1,5 +1,5 @@
 name: NanoR2MED
-dataset_id: hotchpotch/NanoR2MED
+dataset_id: hakari-bench/NanoR2MED
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries

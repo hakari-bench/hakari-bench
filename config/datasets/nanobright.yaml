@@ -1,5 +1,5 @@
 name: NanoBRIGHT
-dataset_id: hotchpotch/NanoBRIGHT
+dataset_id: hakari-bench/NanoBRIGHT
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries

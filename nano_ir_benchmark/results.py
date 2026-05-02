@@ -29,6 +29,24 @@ TIMING_KEYS = [
     "embedding_variant_metric_compute_seconds",
     "pure_compute_seconds",
 ]
+AGGREGATED_CONFIG_KEYS = [
+    "batch_size",
+    "aggregate_metric",
+    "query_prompt",
+    "corpus_prompt",
+    "query_prompt_name",
+    "corpus_prompt_name",
+    "query_task",
+    "corpus_task",
+]
+PROMPT_CONFIG_KEYS = [
+    "query_prompt",
+    "corpus_prompt",
+    "query_prompt_name",
+    "corpus_prompt_name",
+    "query_task",
+    "corpus_task",
+]
 
 
 @dataclass(frozen=True)
@@ -281,6 +299,7 @@ def build_all_payload(
                 "wall_seconds": wall_seconds,
                 "aggregate_metric": evaluation.get("aggregate_metric"),
                 "aggregate_metric_value": aggregate_value,
+                "config": _summarize_split_config(result.payload.get("config")),
                 "embedding_conversion": evaluation.get("embedding_conversion"),
                 "embedding_evaluations": _summarize_embedding_evaluations(evaluation.get("embedding_evaluations")),
                 "bm25": result.payload.get("config", {}).get("bm25"),
@@ -301,6 +320,7 @@ def build_all_payload(
         "model": resolved_model_metadata,
         "environment": environment,
         "cli_args": vars(args),
+        "config": _aggregate_split_configs(args=args, results=results),
         "aggregate_metric": args.aggregate_metric,
         "totals": {
             "target_count": len({entry["dataset_id"] for entry in splits}),
@@ -340,6 +360,51 @@ def _numeric(value: Any, *, fallback: Any = None) -> float | None:
     if isinstance(fallback, int | float):
         return float(fallback)
     return None
+
+
+def _summarize_split_config(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        return {}
+    return {key: value.get(key) for key in AGGREGATED_CONFIG_KEYS}
+
+
+def _aggregate_split_configs(*, args: Any, results: list[TaskRunResult]) -> dict[str, Any]:
+    summaries = {key: _summarize_config_value(results, key) for key in AGGREGATED_CONFIG_KEYS}
+    payload = {
+        "source": "per_split_result_config",
+        "batch_size": _representative_config_value(summaries["batch_size"], getattr(args, "batch_size", None)),
+        "aggregate_metric": _representative_config_value(
+            summaries["aggregate_metric"],
+            getattr(args, "aggregate_metric", None),
+        ),
+        "prompt_summary": {key: summaries[key] for key in PROMPT_CONFIG_KEYS},
+    }
+    for key in PROMPT_CONFIG_KEYS:
+        payload[key] = _representative_config_value(summaries[key], getattr(args, key, None))
+    return payload
+
+
+def _representative_config_value(summary: dict[str, Any], fallback: Any) -> Any:
+    if summary.get("consistent"):
+        return summary.get("value")
+    return fallback
+
+
+def _summarize_config_value(results: list[TaskRunResult], key: str) -> dict[str, Any]:
+    values_by_identity: dict[str, dict[str, Any]] = {}
+    for result in results:
+        config = result.payload.get("config")
+        value = config.get(key) if isinstance(config, dict) else None
+        identity = json.dumps(value, ensure_ascii=False, sort_keys=True)
+        entry = values_by_identity.setdefault(identity, {"value": value, "count": 0})
+        entry["count"] += 1
+    values = sorted(values_by_identity.values(), key=lambda item: (-int(item["count"]), json.dumps(item["value"], ensure_ascii=False)))
+    consistent = len(values) == 1
+    return {
+        "consistent": consistent,
+        "value": values[0]["value"] if consistent and values else None,
+        "values": values,
+    }
 
 
 def _summarize_embedding_evaluations(value: Any) -> list[dict[str, Any]]:

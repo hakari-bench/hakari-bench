@@ -16,6 +16,7 @@ TARGET_BENCHMARKS = [
     "NanoJMTEB",
     "NanoRTEB",
     "NanoMTEB",
+    "NanoCMTEB",
     "NanoMMTEB",
     "NanoMIRACL",
     "NanoMLDR",

@@ -1,5 +1,5 @@
 name: NanoIFIR
-dataset_id: hotchpotch/NanoIFIR
+dataset_id: hakari-bench/NanoIFIR
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries

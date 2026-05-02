@@ -83,6 +83,8 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
     assert "NanoCodeSearchNet" not in config.view_names
     assert "NanoJMTEB" in config.view_names
     assert "NanoJMTEB" not in config.overall.benchmark_names
+    assert "NanoCMTEB" in config.view_names
+    assert "NanoCMTEB" not in config.overall.benchmark_names
     nano_law = config.benchmark_for_view("NanoLaw")
     assert nano_law is not None
     assert "NanoAILACasedocs" in nano_law.excluded_tasks

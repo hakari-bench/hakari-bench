@@ -126,4 +126,5 @@ output/results/{model_name}/all.json
   `config/dataset_collections/mnanobeir.yaml`.
 - Built-in dataset names should stay consistent across docs, configs, and tests:
   `NanoBEIR-en`, `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`,
-  `NanoRTEB`, `NanoMTEB`, `NanoMMTEB`, `NanoLongEmbed`, and `NanoCoIR`.
+  `NanoRTEB`, `NanoMTEB`, `NanoCMTEB`, `NanoMMTEB`, `NanoLongEmbed`, and
+  `NanoCoIR`.

@@ -167,7 +167,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         delattr(args, "embedding_variant_values")
         delattr(args, "embedding_variant_cross_values")
     if args.command == "evaluate" and args.dataset is None and not args.collection:
-        args.dataset = ["sentence-transformers/NanoBEIR-en"]
+        args.dataset = ["hakari-bench/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:
         args.dataset = []
     if args.command == "evaluate" and args.model_type == "bm25" and args.model is None:
@@ -175,7 +175,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     if args.command == "evaluate" and args.model_type != "bm25" and args.model is None:
         parser.error("--model is required unless --model-type bm25 is used.")
     if args.command == "build-bm25" and args.dataset is None and not args.collection:
-        args.dataset = ["sentence-transformers/NanoBEIR-en"]
+        args.dataset = ["hakari-bench/NanoBEIR-en"]
     elif args.command == "build-bm25" and args.dataset is None:
         args.dataset = []
     return args

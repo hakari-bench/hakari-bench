@@ -1,5 +1,5 @@
 name: NanoMTEB
-dataset_id: hotchpotch/NanoMTEB
+dataset_id: hakari-bench/NanoMTEB
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries
