@@ -27,6 +27,55 @@ For Hugging Face datasets, each task JSON records the resolved dataset repo
 revision under `target.dataset_revision`. Use `--dataset-revision REV` to pin a
 specific branch, tag, or commit; the resolved commit SHA is still stored.
 
+## Sparse encoders
+
+Sparse SentenceTransformers models can be evaluated with `--model-type sparse`.
+NanoIR Benchmark requests sparse tensor output from `SparseEncoder` models and
+keeps sparse embeddings in a sparse matrix format for scoring.
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model naver/splade-v3 \
+  --model-type sparse \
+  --dataset NanoBEIR-en
+```
+
+For SPLADE-style sparsity and latency trade-off checks, limit the number of
+active dimensions per query/document embedding with `--sparse-max-active-dims`:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model naver/splade-v3 \
+  --model-type sparse \
+  --dataset NanoBEIR-en \
+  --sparse-max-active-dims 128
+```
+
+The selected limit is written to result JSON under
+`config.sparse_max_active_dims` and summarized in `all.json`. Sparse embedding
+metadata records `nnz_total`, `nnz_mean`, `nnz_median`, `nnz_max`, and
+`density` for queries and documents.
+
+To compare multiple sparsity limits from one full sparse model encode, use
+post-encode embedding variants:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model naver/splade-v3 \
+  --model-type sparse \
+  --dataset NanoBEIR-en \
+  --embedding-variant sparse-max-active-dims:256,128,64
+```
+
+These variants keep the top absolute-value dimensions per query/document row
+and record each derived result under `evaluation.embedding_evaluations`, like
+dense `truncate:` variants.
+
+Sparse embeddings can also use `quantize:int8,ubinary` variants. For sparse
+`int8`, non-zero weights are scalar-quantized with a corpus-derived value range
+and dequantized for scoring. For sparse `ubinary`, non-zero dimensions are
+scored as an unweighted sparse presence vector.
+
 ## Embedding variants
 
 Derived embedding variants can be evaluated together with the base embedding
