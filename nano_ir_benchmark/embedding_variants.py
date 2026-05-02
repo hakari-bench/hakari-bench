@@ -9,6 +9,7 @@ QUANTIZE_CODE_PRECISIONS = {"int8", "uint8"}
 QUANTIZE_TARGETS = {"corpus", "query_and_corpus"}
 QUANTIZE_CODE_SCORE_REPRESENTATION = "quantized_code_float32"
 USEARCH_PRECISIONS = {"int8", "binary"}
+USEARCH_PRECISION_ALIASES = {"int8": "int8", "binary": "binary", "ubinary": "binary"}
 USEARCH_SCORE_REPRESENTATION = "usearch_exact"
 USEARCH_RESCORE_SCORE_REPRESENTATION = "usearch_exact_rescore"
 SPARSE_MAX_ACTIVE_DIMS_PREFIXES = (
@@ -79,6 +80,10 @@ def parse_embedding_variants(
         for variant in _parse_embedding_variant_cross(cross_group):
             add_variant(variant)
     return variants
+
+
+def default_dense_quantized_embedding_variants() -> list[dict[str, Any]]:
+    return parse_embedding_variants(["usearch:int8,binary"])
 
 
 def _split_tokens(value: str) -> list[str]:
@@ -250,10 +255,13 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
         )
     elif token.startswith("quantize:"):
         precision = token.split(":", 1)[1]
-        return _quantize_variant(token=token, precision=precision, target="corpus"), "quantize:corpus"
+        return _quantize_shorthand_variant(token=token, precision=precision)
     elif token.startswith("quantize="):
         precision = token.split("=", 1)[1]
-        return _quantize_variant(token=token, precision=precision, target="corpus"), "quantize:corpus"
+        return _quantize_shorthand_variant(token=token, precision=precision)
+    elif current_kind == "quantize:usearch" and token in QUANTIZE_PRECISIONS:
+        variant, _current_kind = _quantize_shorthand_variant(token=token, precision=token)
+        return variant, current_kind
     elif current_kind is not None and current_kind.startswith("quantize:") and token in QUANTIZE_PRECISIONS:
         target = current_kind.split(":", 1)[1]
         if target not in QUANTIZE_TARGETS:
@@ -269,7 +277,7 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
             ),
             current_kind,
         )
-    elif current_kind is not None and current_kind.startswith("usearch:") and token in USEARCH_PRECISIONS:
+    elif current_kind is not None and current_kind.startswith("usearch:") and token in USEARCH_PRECISION_ALIASES:
         rescore = current_kind.split(":", 1)[1] == "rescore"
         return _usearch_variant(token=token, precision=token, rescore=rescore), current_kind
     else:
@@ -447,10 +455,26 @@ def _quantize_variant(
     }
 
 
+def _quantize_shorthand_variant(*, token: str, precision: str) -> tuple[dict[str, Any], str]:
+    if precision in USEARCH_PRECISION_ALIASES:
+        return _usearch_variant(token=token, precision=precision, rescore=False), "quantize:usearch"
+    return _quantize_variant(token=token, precision=precision, target="corpus"), "quantize:corpus"
+
+
+def _canonical_usearch_precision(*, token: str, precision: str) -> str:
+    try:
+        return USEARCH_PRECISION_ALIASES[precision]
+    except KeyError as exc:
+        raise ValueError(
+            f"Embedding variant '{token}' has unsupported usearch precision {precision!r}. "
+            f"Supported usearch precisions are: {', '.join(sorted(USEARCH_PRECISION_ALIASES))}."
+        ) from exc
+
+
 def _usearch_variant(*, token: str, precision: str, rescore: bool) -> dict[str, Any]:
     return _quantize_variant(
         token=token,
-        precision=precision,
+        precision=_canonical_usearch_precision(token=token, precision=precision),
         target="query_and_corpus",
         score_representation=USEARCH_RESCORE_SCORE_REPRESENTATION if rescore else USEARCH_SCORE_REPRESENTATION,
     )

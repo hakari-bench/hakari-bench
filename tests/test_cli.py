@@ -84,6 +84,46 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.dtype == "bf16"
     assert args.dataset == ["hakari-bench/NanoBEIR-en"]
     assert args.output_dir == "output/results"
+    assert args.embedding_variants == [
+        _pipeline_variant("usearch_int8", _usearch_step("int8")),
+        _pipeline_variant("usearch_binary", _usearch_step("binary")),
+    ]
+
+
+def test_parse_args_can_disable_default_dense_quantized_variants() -> None:
+    args = parse_args(["evaluate", "--model", "hotchpotch/model", "--no-quantize"])
+
+    assert args.embedding_variants == []
+
+
+def test_parse_args_does_not_add_default_quantized_variants_to_sparse_models() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "naver/splade-v3",
+            "--model-type",
+            "sparse",
+        ]
+    )
+
+    assert args.embedding_variants == []
+
+
+def test_parse_args_does_not_add_default_quantized_variants_when_variants_are_explicit() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "truncate:256",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _pipeline_variant("truncate_dim_256", _truncate_step(256)),
+    ]
 
 
 def test_parse_args_allows_bm25_evaluation_without_model_name() -> None:
@@ -373,6 +413,39 @@ def test_parse_args_accepts_quantized_embedding_variants() -> None:
     )
 
     assert args.embedding_variants == [
+        _pipeline_variant("usearch_int8", _usearch_step("int8")),
+        _pipeline_variant("usearch_binary", _usearch_step("binary")),
+    ]
+
+
+def test_parse_args_accepts_quantized_binary_alias_for_usearch() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "quantize:binary",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _pipeline_variant("usearch_binary", _usearch_step("binary")),
+    ]
+
+
+def test_parse_args_accepts_explicit_docs_only_quantized_embedding_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "quantize-docs:int8,ubinary",
+        ]
+    )
+
+    assert args.embedding_variants == [
         _pipeline_variant("quantize_int8_docs", _quantize_step("int8")),
         _pipeline_variant("quantize_ubinary_docs", _quantize_step("ubinary")),
     ]
@@ -464,12 +537,12 @@ def test_parse_args_accepts_embedding_variant_cross_product() -> None:
     # single variants. This keeps evaluation on one code path instead of adding
     # a separate truncate x quantize branch.
     assert args.embedding_variants == [
-        _pipeline_variant("truncate_dim_256_quantize_int8_docs", _truncate_step(256), _quantize_step("int8")),
-        _pipeline_variant("truncate_dim_256_quantize_ubinary_docs", _truncate_step(256), _quantize_step("ubinary")),
-        _pipeline_variant("truncate_dim_128_quantize_int8_docs", _truncate_step(128), _quantize_step("int8")),
-        _pipeline_variant("truncate_dim_128_quantize_ubinary_docs", _truncate_step(128), _quantize_step("ubinary")),
-        _pipeline_variant("truncate_dim_64_quantize_int8_docs", _truncate_step(64), _quantize_step("int8")),
-        _pipeline_variant("truncate_dim_64_quantize_ubinary_docs", _truncate_step(64), _quantize_step("ubinary")),
+        _pipeline_variant("truncate_dim_256_usearch_int8", _truncate_step(256), _usearch_step("int8")),
+        _pipeline_variant("truncate_dim_256_usearch_binary", _truncate_step(256), _usearch_step("binary")),
+        _pipeline_variant("truncate_dim_128_usearch_int8", _truncate_step(128), _usearch_step("int8")),
+        _pipeline_variant("truncate_dim_128_usearch_binary", _truncate_step(128), _usearch_step("binary")),
+        _pipeline_variant("truncate_dim_64_usearch_int8", _truncate_step(64), _usearch_step("int8")),
+        _pipeline_variant("truncate_dim_64_usearch_binary", _truncate_step(64), _usearch_step("binary")),
     ]
 
 

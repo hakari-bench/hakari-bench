@@ -15,7 +15,7 @@ from nano_ir_benchmark.bm25 import (
     run_or_load_bm25_task,
 )
 from nano_ir_benchmark.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
-from nano_ir_benchmark.embedding_variants import parse_embedding_variants
+from nano_ir_benchmark.embedding_variants import default_dense_quantized_embedding_variants, parse_embedding_variants
 from nano_ir_benchmark.evaluation import LoadedIrDataset, load_ir_dataset
 from nano_ir_benchmark.models import (
     ModelLoadConfig,
@@ -64,7 +64,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=[],
         help=(
             "Derived embedding evaluation spec. Repeat or comma-separate. "
-            "Current syntax: truncate:DIM, quantize:PRECISION for docs-only quantization, "
+            "Current syntax: truncate:DIM, quantize:PRECISION for exact usearch quantized search, "
+            "quantize-docs:PRECISION for docs-only quantization, "
             "quantize-both:PRECISION for query+docs quantization, "
             "quantize-code:PRECISION for raw scalar code scoring, "
             "quantize-sample:PRECISION:SAMPLE_SIZE for sample-calibrated scalar quantization, "
@@ -83,6 +84,11 @@ def build_parser() -> argparse.ArgumentParser:
             "Cross product of derived embedding specs, normalized into pipeline variants. "
             "Example: --embedding-variant-cross truncate:256,128,64 quantize:int8,ubinary"
         ),
+    )
+    evaluate.add_argument(
+        "--no-quantize",
+        action="store_true",
+        help="Disable automatic dense usearch int8/binary quantized variants.",
     )
 
     evaluate.add_argument(
@@ -166,6 +172,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = build_parser()
     args = parser.parse_args(argv)
     if args.command == "evaluate":
+        has_explicit_embedding_variants = bool(args.embedding_variant_values or args.embedding_variant_cross_values)
         try:
             args.embedding_variants = parse_embedding_variants(
                 args.embedding_variant_values,
@@ -173,6 +180,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             )
         except ValueError as exc:
             parser.error(str(exc))
+        if args.model_type == "dense" and not args.no_quantize and not has_explicit_embedding_variants:
+            args.embedding_variants = default_dense_quantized_embedding_variants()
         delattr(args, "embedding_variant_values")
         delattr(args, "embedding_variant_cross_values")
     if args.command == "evaluate" and args.sparse_max_active_dims is not None:

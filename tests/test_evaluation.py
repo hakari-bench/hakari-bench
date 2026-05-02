@@ -699,6 +699,66 @@ def test_usearch_int8_rescore_reranks_candidates_with_source_float_embeddings() 
     assert rescore_rankings["q1"] == ["d1", "d2"]
 
 
+def test_usearch_rescore_retrieves_top_100_quantized_candidates(monkeypatch) -> None:
+    candidate_counts: list[int] = []
+
+    def fake_rescore_usearch_candidates(
+        *,
+        query_ids,
+        corpus_ids,
+        candidate_indices,
+        query_embeddings,
+        corpus_embeddings,
+        score_name,
+        final_count,
+    ):
+        _ = query_embeddings, corpus_embeddings, score_name
+        candidate_counts.append(int(candidate_indices.shape[1]))
+        return {str(query_ids[0]): [str(corpus_id) for corpus_id in corpus_ids[:final_count]]}
+
+    monkeypatch.setattr(evaluation_module, "_rescore_usearch_candidates", fake_rescore_usearch_candidates)
+    ranges = np.array([[0.0, 0.0], [1.0, 1.0]], dtype=np.float32)
+    query_quantized = QuantizedEmbeddingMatrix(
+        values=np.array([[127, 127]], dtype=np.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="query",
+        ranges_source="corpus",
+        ranges=ranges,
+        rounding="truncate",
+        score_representation="usearch_exact_rescore",
+        source_values=np.array([[1.0, 1.0]], dtype=np.float32),
+    )
+    corpus_values = np.tile(np.array([[127, 127], [0, 0]], dtype=np.int8), (75, 1))
+    corpus_quantized = QuantizedEmbeddingMatrix(
+        values=corpus_values,
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="corpus",
+        ranges_source="corpus",
+        ranges=ranges,
+        rounding="truncate",
+        score_representation="usearch_exact_rescore",
+        source_values=corpus_values.astype(np.float32),
+    )
+
+    evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=[f"d{index}" for index in range(150)],
+        query_embeddings=query_quantized,
+        corpus_embeddings=corpus_quantized,
+        score_name="dot",
+    )
+
+    assert candidate_counts == [100]
+    assert evaluation_module._quantization_metadata(corpus_quantized)["candidate_top_k"] == 100
+    assert "rescore_multiplier" not in evaluation_module._quantization_metadata(corpus_quantized)
+
+
 def test_usearch_binary_ranks_by_hamming_distance() -> None:
     query_embeddings = np.array([[1.0, -1.0]], dtype=np.float32)
     corpus_embeddings = np.array([[1.0, -1.0], [-1.0, 1.0]], dtype=np.float32)

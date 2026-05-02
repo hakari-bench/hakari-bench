@@ -71,7 +71,7 @@ These variants keep the top absolute-value dimensions per query/document row
 and record each derived result under `evaluation.embedding_evaluations`, like
 dense `truncate:` variants.
 
-Sparse embeddings can also use `quantize:int8,ubinary` variants. For sparse
+Sparse embeddings can also use `quantize-docs:int8,ubinary` variants. For sparse
 `int8`, non-zero weights are scalar-quantized with a corpus-derived value range
 and dequantized for scoring. For sparse `ubinary`, non-zero dimensions are
 scored as an unweighted sparse presence vector.
@@ -86,12 +86,29 @@ inference behavior.
 
 ### Quantization
 
-Post-encode `int8` and `ubinary` quantization is recommended even for models
-that do not support Matryoshka dimensions. It measures the retrieval quality
-loss from storage/search-friendly document embedding formats without requiring
-model support for quantized inference. By default, `quantize:` uses docs-only
-quantization: corpus/document embeddings are quantized, while query embeddings
-remain at the model's original floating-point precision.
+Dense evaluation runs exact usearch `int8` and binary quantized search variants
+by default. The benchmark first converts SentenceTransformers embeddings to the
+stored codes, then passes those codes to usearch; usearch does not calibrate or
+requantize embeddings. Use `--no-quantize` to run only the base dense result.
+
+`quantize:int8,ubinary` is a shorthand for these usearch variants. `ubinary` is
+kept as a compatibility alias and maps to the binary usearch representation.
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/embedding-model \
+  --dataset NanoMTEB
+```
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/embedding-model \
+  --dataset NanoMTEB \
+  --no-quantize
+```
+
+For explicit dense runs, `quantize:` and `usearch:` are equivalent for supported
+precisions:
 
 ```bash
 uv run nano-ir-bench evaluate \
@@ -100,25 +117,28 @@ uv run nano-ir-bench evaluate \
   --embedding-variant quantize:int8,ubinary
 ```
 
-`int8` and `uint8` variants use ranges computed from the current corpus
-embeddings. Query embeddings are not used for calibration and are not quantized
-in the default docs-only mode. For scoring, scalar quantized document values are
-dequantized back to approximate `float32` vectors before similarity search, so
-ranking does not compare raw bucket ids as if they were embedding coordinates.
-`binary` and `ubinary` document variants are stored as packed binary vectors and
-scored through unpacked sign vectors.
+To rerank quantized candidates with the source float embeddings, use
+`usearch-rescore:`. Rescore retrieves the top 100 quantized candidates and
+reranks only those candidates; it does not re-embed documents.
 
-This quantization evaluation is an offline quality probe, not a full search
-engine simulation. It measures how much retrieval quality changes when document
-embeddings are stored in lower-precision forms. During scoring, NanoIR Benchmark
-uses exact matrix scoring over score-time representations: scalar quantized
-documents are dequantized to approximate `float32`, and binary documents are
-unpacked to `-1/+1` sign vectors. It does not currently benchmark an ANN index,
-SIMD/GPU int8 dot kernels, packed binary Hamming/XNOR kernels, product
-quantization, index build time, memory locality, or backend-specific recall
-loss. Use these numbers as a model-level quantization tolerance signal; use a
-real index backend benchmark when production search-engine latency, memory, or
-ANN recall is the question.
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/embedding-model \
+  --dataset NanoMTEB \
+  --embedding-variant usearch-rescore:int8,binary
+```
+
+If a docs-only dequantized storage probe is explicitly needed, use
+`quantize-docs:`. Query embeddings remain float, scalar document codes are
+dequantized for scoring, and packed binary document codes are unpacked to sign
+vectors.
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/embedding-model \
+  --dataset NanoMTEB \
+  --embedding-variant quantize-docs:int8,ubinary
+```
 
 If a symmetric query-and-document quantization comparison is explicitly needed,
 use `quantize-both:`:
@@ -150,20 +170,6 @@ uv run nano-ir-bench evaluate \
   --model example/embedding-model \
   --dataset NanoMTEB \
   --embedding-variant quantize-sample:int8:128
-```
-
-To benchmark exact usearch candidate generation over pre-quantized vectors, use
-`usearch:`. The benchmark quantizes SentenceTransformers embeddings first and
-passes those stored codes to usearch, so usearch does not perform calibration.
-`usearch-rescore:` retrieves quantized candidates, then reranks them with the
-source float embeddings:
-
-```bash
-uv run nano-ir-bench evaluate \
-  --model example/embedding-model \
-  --dataset NanoMTEB \
-  --embedding-variant usearch:int8,binary \
-  --embedding-variant usearch-rescore:int8,binary
 ```
 
 ### Truncated Dimensions

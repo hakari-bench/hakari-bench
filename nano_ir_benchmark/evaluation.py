@@ -16,7 +16,6 @@ QuantizationPrecision = Literal["int8", "uint8", "binary", "ubinary"]
 USEARCH_SCORE_REPRESENTATION = "usearch_exact"
 USEARCH_RESCORE_SCORE_REPRESENTATION = "usearch_exact_rescore"
 USEARCH_CANDIDATE_TOP_K = 100
-USEARCH_RESCORE_MULTIPLIER = 2
 
 
 @dataclass(frozen=True)
@@ -1061,8 +1060,6 @@ def _quantization_metadata(embeddings: QuantizedEmbeddingMatrix | QuantizedSpars
         quantization["search_exact"] = True
         quantization["candidate_top_k"] = USEARCH_CANDIDATE_TOP_K
         quantization["rescore"] = score_representation == USEARCH_RESCORE_SCORE_REPRESENTATION
-        if score_representation == USEARCH_RESCORE_SCORE_REPRESENTATION:
-            quantization["rescore_multiplier"] = USEARCH_RESCORE_MULTIPLIER
     if isinstance(embeddings, QuantizedSparseEmbeddingMatrix) and embeddings.value_range is not None:
         quantization["value_range"] = list(embeddings.value_range)
     return quantization
@@ -1367,8 +1364,6 @@ def _rank_usearch_quantized(
     rescore = query_score_representation == USEARCH_RESCORE_SCORE_REPRESENTATION
     final_count = min(len(corpus_ids), USEARCH_CANDIDATE_TOP_K)
     search_count = final_count
-    if rescore:
-        search_count = min(len(corpus_ids), final_count * USEARCH_RESCORE_MULTIPLIER)
 
     query_values, corpus_values, ndim, metric, dtype = _usearch_index_inputs(query_embeddings, corpus_embeddings)
     index = Index(ndim=ndim, metric=metric, dtype=dtype)
