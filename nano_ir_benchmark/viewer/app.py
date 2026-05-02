@@ -298,11 +298,11 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         ),
     )
     return f"""
-    <div class="mb-4 flex flex-wrap items-start gap-x-6 gap-y-3 text-sm text-zinc-700">
-      <form class="flex flex-wrap items-center gap-x-5 gap-y-2"
+    <div class="mb-4 text-sm text-zinc-700">
+      <form id="display-controls" class="flex flex-wrap items-center gap-x-5 gap-y-2"
             hx-get="/leaderboard" hx-push-url="true"
             hx-target="#leaderboard-panel" hx-swap="innerHTML"
-            hx-trigger="change from:input[type='checkbox'], input changed delay:700ms from:input[name='model_filter']">
+            hx-trigger="change">
         {display_hidden_html}
         <span class="font-medium text-zinc-800">Display:</span>
         <label class="inline-flex items-center gap-2">
@@ -321,18 +321,22 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
           <span class="font-medium text-zinc-800">Model name</span>
           <input type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
                  class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
+                 hx-get="/leaderboard" hx-include="#display-controls" hx-push-url="true"
+                 hx-target="#leaderboard-panel" hx-swap="innerHTML" hx-trigger="input changed delay:700ms"
                  autocomplete="off">
         </label>
       </form>
-      <form class="flex flex-wrap items-start gap-3"
-            hx-get="/leaderboard" hx-push-url="true"
-            hx-target="#leaderboard-panel" hx-swap="innerHTML"
-            hx-trigger="change from:input[type='checkbox']">
-        {filter_hidden_html}
-        <span class="pt-1 font-medium text-zinc-800">Filters:</span>
-        {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
-        {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
-      </form>
+      <div class="mt-3 flex flex-wrap items-start gap-3">
+        <p class="pt-1 font-medium text-zinc-800">Filters:</p>
+        <form id="facet-filters" class="flex flex-wrap items-start gap-3"
+              hx-get="/leaderboard" hx-push-url="true"
+              hx-target="#leaderboard-panel" hx-swap="innerHTML"
+              hx-trigger="change">
+          {filter_hidden_html}
+          {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
+          {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
+        </form>
+      </div>
     </div>
     """
 
@@ -720,6 +724,12 @@ def _state_query(
         quantization = True
         truncate = True
         other_variant = True
+    dim_filters = _normalized_query_values(dim_filter)
+    quant_filters = _normalized_query_values(quant_filter)
+    if filters and dim_filters:
+        truncate = True
+    if filters and any(value != "__none__" for value in quant_filters):
+        quantization = True
 
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
     if group:
@@ -732,8 +742,8 @@ def _state_query(
         query["other_variant"] = "1"
     if filters:
         query["filters"] = "1"
-        query["dim_filter"] = _normalized_query_values(dim_filter)
-        query["quant_filter"] = _normalized_query_values(quant_filter)
+        query["dim_filter"] = dim_filters
+        query["quant_filter"] = quant_filters
     model_filter = model_filter.strip()
     if model_filter:
         query["model_filter"] = model_filter

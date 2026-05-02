@@ -275,6 +275,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         [
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192, "quantize_uint8_docs", 768, "uint8"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.83, 10, 12, 8192, "truncate_dim_384", 384, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.85, 10, 12, 8192, "truncate_dim_512", 512, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.82, 10, 12, 8192, "truncate_dim_256_quantize_int8_docs", 256, "int8"),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.75, 10, 12, 8192, "custom_variant", 2048, None),
@@ -308,18 +309,20 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert [row.model_name for row in truncate_result.rows] == [
         "model/a (768 dims)",
         "model/a (512 dims)",
+        "model/a (384 dims)",
         "model/a (256 dims, int8)",
         "model/b (512 dims)",
     ]
     assert [row.model_name for row in all_variant_result.rows] == [
         "model/a (768 dims)",
         "model/a (512 dims)",
+        "model/a (384 dims)",
         "model/a (256 dims, int8)",
         "model/a (768 dims, uint8)",
         "model/b (512 dims)",
     ]
-    assert all_variant_result.rows[2].embedding_dim == 256
-    assert all_variant_result.rows[2].quantization == "int8"
+    assert all_variant_result.rows[3].embedding_dim == 256
+    assert all_variant_result.rows[3].quantization == "int8"
     assert [row.model_name for row in other_variant_result.rows] == [
         "model/a (768 dims)",
         "model/a (2048 dims)",
@@ -333,12 +336,18 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Display:" in response.text
     assert "Other variants" in response.text
     assert "Filters:" in response.text
+    assert '<div class="mt-3 flex flex-wrap items-start gap-3">' in response.text
     assert ">Dims</summary>" in response.text
     assert ">Quantization</summary>" in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
     assert response.text.count(">All</button>") == 2
     assert response.text.count(">None</button>") == 2
+    assert 'id="display-controls"' in response.text
+    assert 'id="facet-filters"' in response.text
+    assert 'from:input[type=' not in response.text
+    assert 'hx-trigger="change"' in response.text
+    assert 'hx-include="#display-controls"' in response.text
     assert "Truncate dims" in response.text
     assert 'name="model_filter"' in response.text
     assert 'value="model/b"' in response.text
@@ -377,6 +386,23 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "dim_filter=1025%2B" in facet_response.text
     assert "quant_filter=uint8" in facet_response.text
     assert 'data-filter-hidden="true"' in facet_response.text
+
+    inferred_truncate_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&filters=1&dim_filter=384&quant_filter=__none__"
+    )
+
+    assert inferred_truncate_response.status_code == 200
+    assert 'name="truncate" value="1" class="h-4 w-4 accent-cyan-700" checked' in inferred_truncate_response.text
+    assert "384 dims" in inferred_truncate_response.text
+    assert "model/a" in inferred_truncate_response.text
+
+    inferred_quant_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&filters=1&dim_filter=768&quant_filter=uint8"
+    )
+
+    assert inferred_quant_response.status_code == 200
+    assert 'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked' in inferred_quant_response.text
+    assert "uint8" in inferred_quant_response.text
 
 
 def test_individual_leaderboard_uses_simple_task_mean() -> None:
