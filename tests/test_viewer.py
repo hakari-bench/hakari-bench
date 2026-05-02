@@ -30,6 +30,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoChemTEB",
         "NanoR2MED",
         "NanoBuiltBench",
+        "NanoCMTEB",
     ]
 
     assert config.overall.benchmark_names == expected_overall_benchmarks
@@ -51,6 +52,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoChemTEB",
         "NanoR2MED",
         "NanoBuiltBench",
+        "NanoCMTEB",
         "NanoMTEB",
         "NanoMIRACL",
         "NanoJMTEB",
@@ -74,6 +76,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "benchmark",
         "benchmark",
         "benchmark",
+        "benchmark",
     ]
     assert config.view_names[: len(expected_overall_benchmarks) + 2] == [
         "Overall",
@@ -84,7 +87,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
     assert "NanoJMTEB" in config.view_names
     assert "NanoJMTEB" not in config.overall.benchmark_names
     assert "NanoCMTEB" in config.view_names
-    assert "NanoCMTEB" not in config.overall.benchmark_names
+    assert "NanoCMTEB" in config.overall.benchmark_names
     nano_law = config.benchmark_for_view("NanoLaw")
     assert nano_law is not None
     assert "NanoAILACasedocs" in nano_law.excluded_tasks
