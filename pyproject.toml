@@ -51,6 +51,13 @@ exclude = ["config*", "tests*"]
 package = true
 
 [tool.uv.sources]
+# Use the upstream Git source until PyPI metadata can resolve with this project.
+# PyPI pylate==1.4.0 is the intended version, but its published metadata pins
+# transformers<=4.56.2, which conflicts with this project's huggingface-hub>=1.12.0
+# when uv resolves all supported extras and Python/platform splits. Remove this
+# source override and change the pylate group to `pylate>=1.4.0` once a PyPI
+# release relaxes that transformers cap, or if this project lowers its
+# huggingface-hub constraint to match the PyPI metadata.
 pylate = { git = "https://github.com/lightonai/pylate.git", rev = "1f1f47cee5df35ebe6fd2286a0a205a1523e4119" }
 
 [dependency-groups]
