@@ -68,9 +68,41 @@ def test_load_model_passes_dense_options(monkeypatch: pytest.MonkeyPatch) -> Non
     ]
 
 
-def test_load_model_late_interaction_is_reserved() -> None:
-    with pytest.raises(NotImplementedError):
-        load_model(ModelLoadConfig(model_name_or_path="x", model_type="late-interaction"))
+def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[dict[str, object]] = []
+
+    class FakeColBERT(torch.nn.Module):
+        def __init__(self, model_name_or_path: str, **kwargs: object) -> None:
+            super().__init__()
+            calls.append({"model_name_or_path": model_name_or_path, **kwargs})
+            self.projection = torch.nn.Linear(2, 2)
+
+    monkeypatch.setattr("nano_ir_benchmark.models._import_pylate_colbert", lambda: FakeColBERT)
+
+    model = load_model(
+        ModelLoadConfig(
+            model_name_or_path="lightonai/GTE-ModernColBERT-v1",
+            model_type="late-interaction",
+            dtype="fp32",
+            device="cpu",
+            trust_remote_code=True,
+            late_interaction_query_length=64,
+            late_interaction_document_length=300,
+        )
+    )
+
+    assert isinstance(model, FakeColBERT)
+    assert model.projection.weight.dtype is torch.float32
+    assert calls == [
+        {
+            "model_name_or_path": "lightonai/GTE-ModernColBERT-v1",
+            "device": "cpu",
+            "trust_remote_code": True,
+            "model_kwargs": {"torch_dtype": torch.float32},
+            "query_length": 64,
+            "document_length": 300,
+        }
+    ]
 
 
 def test_collect_model_metadata_counts_parameters() -> None:
@@ -117,6 +149,27 @@ def test_collect_model_metadata_counts_active_parameters_from_st_model_attribute
     assert metadata["active_parameters"] == 18
 
 
+def test_collect_model_metadata_records_late_interaction_metadata() -> None:
+    model = _FakeLateInteractionModel()
+    args = _metadata_args()
+    args.model_type = "late-interaction"
+
+    metadata = collect_model_metadata(model, args)
+
+    assert metadata["backend_library"] == "pylate"
+    assert metadata["similarity_fn_name"] == "MaxSim"
+    assert metadata["late_interaction"] == {
+        "architecture": "colbert",
+        "scoring": "maxsim",
+        "query_prefix": "[Q] ",
+        "document_prefix": "[D] ",
+        "query_length": 32,
+        "document_length": 300,
+        "do_query_expansion": True,
+        "attend_to_expansion_tokens": False,
+    }
+
+
 def _metadata_args() -> argparse.Namespace:
     return argparse.Namespace(
         model="toy",
@@ -138,6 +191,21 @@ class _FakeSentenceTransformerLike(torch.nn.Module):
         module = self._modules[str(index)]
         assert isinstance(module, torch.nn.Module)
         return module
+
+
+class _FakeLateInteractionModel(torch.nn.Module):
+    similarity_fn_name = "MaxSim"
+    max_seq_length = None
+    query_prefix = "[Q] "
+    document_prefix = "[D] "
+    query_length = 32
+    document_length = 300
+    do_query_expansion = True
+    attend_to_expansion_tokens = False
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.projection = torch.nn.Linear(2, 2)
 
 
 class _FakeTransformerModule(torch.nn.Module):

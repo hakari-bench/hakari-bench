@@ -18,10 +18,10 @@ dependencies = [
     "pystemmer>=3.0.0",
     "pyyaml>=6.0.3",
     "scipy>=1.17.1",
-    "sentence-transformers>=5.4",
+    "sentence-transformers>=5,<6",
     "sentencepiece>=0.2.1",
     "torch>=2.9,<2.10",
-    "transformers>=5,<6",
+    "transformers>=4,<6",
 ]
 
 [build-system]
@@ -50,6 +50,9 @@ exclude = ["config*", "tests*"]
 [tool.uv]
 package = true
 
+[tool.uv.sources]
+pylate = { path = "../../../lightonai/pylate", editable = true }
+
 [dependency-groups]
 dev = [
     "pytest>=9.0.3",
@@ -68,6 +71,9 @@ viewer = [
 all = [
     { include-group = "dev" },
     { include-group = "viewer" },
+]
+pylate = [
+    "pylate",
 ]
 
 [tool.tox]

@@ -20,6 +20,8 @@ class ModelLoadConfig:
     device: str | None = None
     trust_remote_code: bool = False
     max_seq_length: int | None = None
+    late_interaction_query_length: int | None = None
+    late_interaction_document_length: int | None = None
 
 
 def resolve_torch_dtype(dtype: str) -> torch.dtype:
@@ -63,10 +65,11 @@ def _import_cross_encoder() -> Any:
     return getattr(importlib.import_module("sentence_transformers"), "CrossEncoder")
 
 
-def load_model(config: ModelLoadConfig) -> Any:
-    if config.model_type == "late-interaction":
-        raise NotImplementedError("Late-interaction models are reserved for a future adapter.")
+def _import_pylate_colbert() -> Any:
+    return getattr(importlib.import_module("pylate.models"), "ColBERT")
 
+
+def load_model(config: ModelLoadConfig) -> Any:
     model_kwargs = _model_kwargs(config)
     attn_implementation = resolve_attn_implementation(
         attn_implementation=config.attn_implementation,
@@ -105,6 +108,21 @@ def load_model(config: ModelLoadConfig) -> Any:
         if config.max_seq_length is not None:
             kwargs["max_length"] = config.max_seq_length
         model = _import_cross_encoder()(config.model_name_or_path, **kwargs)
+        _set_model_dtype(model, config.dtype)
+        _set_attn_implementation(model, attn_implementation)
+        return model
+
+    if config.model_type == "late-interaction":
+        kwargs: dict[str, Any] = {
+            "device": config.device,
+            "trust_remote_code": config.trust_remote_code,
+            "model_kwargs": model_kwargs,
+        }
+        if config.late_interaction_query_length is not None:
+            kwargs["query_length"] = config.late_interaction_query_length
+        if config.late_interaction_document_length is not None:
+            kwargs["document_length"] = config.late_interaction_document_length
+        model = _import_pylate_colbert()(config.model_name_or_path, **kwargs)
         _set_model_dtype(model, config.dtype)
         _set_attn_implementation(model, attn_implementation)
         return model
@@ -151,7 +169,16 @@ def collect_runtime_environment() -> dict[str, Any]:
         "platform": platform.platform(),
         "package_versions": {
             package: _version_or_none(package)
-            for package in ["torch", "transformers", "sentence-transformers", "datasets", "numpy", "scipy"]
+            for package in [
+                "torch",
+                "transformers",
+                "sentence-transformers",
+                "datasets",
+                "numpy",
+                "scipy",
+                "pylate",
+                "fast-plaid",
+            ]
         },
         "cuda": {
             "is_available": torch.cuda.is_available(),
@@ -181,7 +208,7 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
         total_parameters=total_parameters,
         embedding_parameters=embedding_parameters,
     )
-    return {
+    payload: dict[str, Any] = {
         "model_type": args.model_type,
         "name_or_path": args.model,
         "device": args.device,
@@ -191,7 +218,7 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
             flash_attn2=args.flash_attn2,
         ),
         "trust_remote_code": args.trust_remote_code,
-        "backend_library": "sentence-transformers",
+        "backend_library": "pylate" if args.model_type == "late-interaction" else "sentence-transformers",
         "max_seq_length": getattr(model, "max_seq_length", getattr(model, "max_length", None)),
         "similarity_fn_name": str(getattr(model, "similarity_fn_name", "")) or None,
         "prompts": getattr(model, "prompts", None),
@@ -202,6 +229,18 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
         "transformer_parameters": active_parameters,
         "active_parameters": active_parameters,
     }
+    if args.model_type == "late-interaction":
+        payload["late_interaction"] = {
+            "architecture": "colbert",
+            "scoring": "maxsim",
+            "query_prefix": getattr(model, "query_prefix", None),
+            "document_prefix": getattr(model, "document_prefix", None),
+            "query_length": getattr(model, "query_length", None),
+            "document_length": getattr(model, "document_length", None),
+            "do_query_expansion": getattr(model, "do_query_expansion", None),
+            "attend_to_expansion_tokens": getattr(model, "attend_to_expansion_tokens", None),
+        }
+    return payload
 
 
 def _parameter_counts(model: Any) -> tuple[int | None, int | None, int | None]:

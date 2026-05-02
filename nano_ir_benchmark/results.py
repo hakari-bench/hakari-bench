@@ -18,7 +18,12 @@ from nano_ir_benchmark.bm25 import (
     resolve_bm25_config_for_queries,
 )
 from nano_ir_benchmark.datasets import EvalTask, resolve_dataset_revision
-from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
+from nano_ir_benchmark.evaluation import (
+    LoadedIrDataset,
+    evaluate_dense_task,
+    evaluate_late_interaction_task,
+    evaluate_reranker_task,
+)
 
 TIMING_KEYS = [
     "query_embedding_seconds",
@@ -39,6 +44,7 @@ AGGREGATED_CONFIG_KEYS = [
     "query_task",
     "corpus_task",
     "sparse_max_active_dims",
+    "late_interaction",
 ]
 PROMPT_CONFIG_KEYS = [
     "query_prompt",
@@ -106,6 +112,7 @@ def run_or_load_task(
     started_at = datetime.now(timezone.utc)
     start = time.perf_counter()
     bm25_payload: dict[str, Any] | None = None
+    late_interaction_payload: dict[str, Any] | None = None
     payload_model_metadata = model_metadata
     if args.model_type == "bm25":
         raw_bm25_config = bm25_config_from_args(args)
@@ -140,6 +147,33 @@ def run_or_load_task(
             batch_size=args.batch_size,
             show_progress=args.show_progress,
             rerank_top_n=args.rerank_top_n,
+        )
+    elif args.model_type == "late-interaction":
+        late_interaction_payload = _late_interaction_config_for_task(args=args, task=task)
+        evaluation = evaluate_late_interaction_task(
+            model=model,
+            dataset=dataset,
+            batch_size=args.batch_size,
+            show_progress=args.show_progress,
+            query_prompt=args.query_prompt,
+            corpus_prompt=args.corpus_prompt,
+            query_prompt_name=args.query_prompt_name,
+            corpus_prompt_name=args.corpus_prompt_name,
+            index_folder=Path(late_interaction_payload["index_folder"]),
+            index_name=str(late_interaction_payload["index_name"]),
+            index_backend=str(late_interaction_payload["index_backend"]),
+            index_use_fast=bool(late_interaction_payload["index_use_fast"]),
+            index_override=bool(late_interaction_payload["index_override"]),
+            retrieval_top_k=int(late_interaction_payload["retrieval_top_k"]),
+            pool_factor=int(late_interaction_payload["pool_factor"]),
+            nbits=int(late_interaction_payload["plaid"]["nbits"]),
+            kmeans_niters=int(late_interaction_payload["plaid"]["kmeans_niters"]),
+            n_ivf_probe=int(late_interaction_payload["plaid"]["n_ivf_probe"]),
+            n_full_scores=int(late_interaction_payload["plaid"]["n_full_scores"]),
+            n_samples_kmeans=late_interaction_payload["plaid"]["n_samples_kmeans"],
+            index_batch_size=int(late_interaction_payload["plaid"]["index_batch_size"]),
+            device=args.device,
+            aggregate_metric=args.aggregate_metric,
         )
     else:
         evaluation = evaluate_dense_task(
@@ -198,6 +232,7 @@ def run_or_load_task(
             "dataset_revision": getattr(args, "dataset_revision", None),
             "candidate_subset_name": args.candidate_subset_name if args.model_type in {"bm25", "reranker"} else None,
             "rerank_top_n": args.rerank_top_n if args.model_type == "reranker" else None,
+            "late_interaction": late_interaction_payload if args.model_type == "late-interaction" else None,
             "bm25": bm25_payload,
         },
         "evaluation": {
@@ -221,6 +256,32 @@ def run_or_load_task(
     }
     _write_json(output_path, payload)
     return TaskRunResult(task=task, cache_hit=False, output_path=output_path, payload=payload)
+
+
+def _late_interaction_config_for_task(*, args: Any, task: EvalTask) -> dict[str, Any]:
+    index_root = Path(args.late_interaction_index_dir or Path(args.output_dir) / "_late_interaction_indexes")
+    index_folder = index_root / safe_path_part(args.model) / safe_path_part(task.dataset_id)
+    return {
+        "backend": "pylate",
+        "scoring": "maxsim",
+        "index_backend": args.late_interaction_index_backend,
+        "index_use_fast": True,
+        "index_override": bool(args.override),
+        "index_folder": str(index_folder),
+        "index_name": safe_path_part(task.task_name),
+        "retrieval_top_k": int(args.late_interaction_retrieval_top_k),
+        "pool_factor": int(args.late_interaction_pool_factor),
+        "query_length": getattr(args, "late_interaction_query_length", None),
+        "document_length": getattr(args, "late_interaction_document_length", None),
+        "plaid": {
+            "nbits": int(args.late_interaction_plaid_nbits),
+            "kmeans_niters": int(args.late_interaction_plaid_kmeans_niters),
+            "n_ivf_probe": int(args.late_interaction_plaid_n_ivf_probe),
+            "n_full_scores": int(args.late_interaction_plaid_n_full_scores),
+            "n_samples_kmeans": args.late_interaction_plaid_n_samples_kmeans,
+            "index_batch_size": int(args.late_interaction_plaid_index_batch_size),
+        },
+    }
 
 
 def aggregate_metric_value_for(metrics: dict[str, float], suffix: str) -> float:
@@ -384,6 +445,7 @@ def _aggregate_split_configs(*, args: Any, results: list[TaskRunResult]) -> dict
             summaries["sparse_max_active_dims"],
             getattr(args, "sparse_max_active_dims", None),
         ),
+        "late_interaction": summaries["late_interaction"],
         "prompt_summary": {key: summaries[key] for key in PROMPT_CONFIG_KEYS},
     }
     for key in PROMPT_CONFIG_KEYS:
@@ -432,6 +494,7 @@ def _summarize_embedding_evaluations(value: Any) -> list[dict[str, Any]]:
                 "best_score": item.get("best_score"),
                 "best_distance": item.get("best_distance"),
                 "best_score_name": item.get("best_score_name"),
+                "index": item.get("index"),
                 "distance_evaluations": _summarize_distance_evaluations(item.get("distance_evaluations")),
             }
         )

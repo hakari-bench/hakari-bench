@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import inspect
+import importlib
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Literal, cast
 
 import numpy as np
@@ -325,6 +327,237 @@ def evaluate_reranker_task(
             "pure_compute_seconds": float(score_seconds + metric_seconds),
         },
     )
+
+
+def evaluate_late_interaction_task(
+    *,
+    model: Any,
+    dataset: LoadedIrDataset,
+    batch_size: int,
+    show_progress: bool,
+    query_prompt: str | None,
+    corpus_prompt: str | None,
+    query_prompt_name: str | None,
+    corpus_prompt_name: str | None,
+    index_folder: Path,
+    index_name: str,
+    index_backend: str,
+    index_use_fast: bool,
+    index_override: bool,
+    retrieval_top_k: int,
+    pool_factor: int,
+    nbits: int,
+    kmeans_niters: int,
+    n_ivf_probe: int,
+    n_full_scores: int,
+    n_samples_kmeans: int | None,
+    index_batch_size: int,
+    device: str | None,
+    aggregate_metric: str = "ndcg@10",
+) -> TaskEvaluation:
+    if index_backend != "plaid":
+        raise ValueError(f"Unsupported late-interaction index backend: {index_backend}")
+    if retrieval_top_k <= 0:
+        raise ValueError("Late-interaction retrieval top-k must be positive.")
+    if pool_factor <= 0:
+        raise ValueError("Late-interaction pool factor must be positive.")
+
+    query_ids = list(dataset.queries)
+    corpus_ids = list(dataset.corpus)
+    query_texts = [dataset.queries[query_id] for query_id in query_ids]
+    corpus_texts = [dataset.corpus[corpus_id] for corpus_id in corpus_ids]
+
+    query_start = time.perf_counter()
+    query_embeddings = _encode_late_interaction(
+        model,
+        sentences=query_texts,
+        batch_size=batch_size,
+        show_progress=show_progress,
+        prompt=query_prompt,
+        prompt_name=query_prompt_name,
+        is_query=True,
+        pool_factor=1,
+    )
+    query_seconds = time.perf_counter() - query_start
+
+    corpus_start = time.perf_counter()
+    corpus_embeddings = _encode_late_interaction(
+        model,
+        sentences=corpus_texts,
+        batch_size=batch_size,
+        show_progress=show_progress,
+        prompt=corpus_prompt,
+        prompt_name=corpus_prompt_name,
+        is_query=False,
+        pool_factor=pool_factor,
+    )
+    corpus_seconds = time.perf_counter() - corpus_start
+
+    index_start = time.perf_counter()
+    index_folder.mkdir(parents=True, exist_ok=True)
+    plaid_index = _import_pylate_plaid_index()(
+        index_folder=str(index_folder),
+        index_name=index_name,
+        override=index_override,
+        use_fast=index_use_fast,
+        nbits=nbits,
+        kmeans_niters=kmeans_niters,
+        n_ivf_probe=n_ivf_probe,
+        n_full_scores=n_full_scores,
+        n_samples_kmeans=n_samples_kmeans,
+        batch_size=index_batch_size,
+        show_progress=show_progress,
+        device=device,
+    )
+    if not _pylate_index_is_indexed(plaid_index):
+        plaid_index.add_documents(documents_ids=corpus_ids, documents_embeddings=corpus_embeddings)
+    index_seconds = time.perf_counter() - index_start
+
+    score_start = time.perf_counter()
+    retriever = _import_pylate_colbert_retriever()(index=plaid_index)
+    retrieval_k = min(retrieval_top_k, len(corpus_ids))
+    scores = retriever.retrieve(
+        queries_embeddings=query_embeddings,
+        k=retrieval_k,
+        batch_size=batch_size,
+        device=device,
+    )
+    rankings = {
+        query_id: [str(item["id"]) for item in query_scores]
+        for query_id, query_scores in zip(query_ids, scores, strict=True)
+    }
+    score_seconds = time.perf_counter() - score_start
+
+    metric_start = time.perf_counter()
+    metrics = compute_ir_metrics(
+        rankings=rankings,
+        qrels=dataset.qrels,
+        evaluator_name=dataset.evaluator_name,
+        score_name="late_interaction_maxsim",
+    )
+    metric_seconds = time.perf_counter() - metric_start
+    aggregate_metric_value = _aggregate_metric_value_for(metrics, aggregate_metric)
+
+    timing = {
+        "query_embedding_seconds": float(query_seconds),
+        "corpus_embedding_seconds": float(corpus_seconds),
+        "score_and_topk_seconds": float(score_seconds + index_seconds),
+        "metric_compute_seconds": float(metric_seconds),
+        "embedding_variant_score_and_topk_seconds": 0.0,
+        "embedding_variant_metric_compute_seconds": 0.0,
+        "pure_compute_seconds": float(query_seconds + corpus_seconds + index_seconds + score_seconds + metric_seconds),
+    }
+    index_payload = {
+        "backend": index_backend,
+        "library": "pylate",
+        "index_type": "PLAID",
+        "use_fast": index_use_fast,
+        "index_folder": str(index_folder),
+        "index_name": index_name,
+        "retrieval_top_k": retrieval_top_k,
+        "effective_retrieval_top_k": retrieval_k,
+        "pool_factor": pool_factor,
+        "nbits": nbits,
+        "kmeans_niters": kmeans_niters,
+        "n_ivf_probe": n_ivf_probe,
+        "n_full_scores": n_full_scores,
+        "n_samples_kmeans": n_samples_kmeans,
+        "index_batch_size": index_batch_size,
+        "timing": {
+            "index_build_or_load_seconds": float(index_seconds),
+            "retrieve_seconds": float(score_seconds),
+        },
+    }
+    embedding_evaluation = _embedding_evaluation_payload(
+        name="base",
+        transform={"type": "identity", "algorithm": "none", "parameters": {}},
+        embedding_dimensions=_embedding_dimensions(query_embeddings, corpus_embeddings),
+        embedding_metadata=_embedding_metadata(query_embeddings, corpus_embeddings),
+        scoring={
+            "distance_evaluations": [
+                {
+                    "distance": "maxsim",
+                    "score_name": "late_interaction_maxsim",
+                    "aggregate_metric": aggregate_metric,
+                    "aggregate_metric_value": aggregate_metric_value,
+                    "metrics": metrics,
+                    "timing": {
+                        "score_and_topk_seconds": float(score_seconds + index_seconds),
+                        "metric_compute_seconds": float(metric_seconds),
+                        "pure_compute_seconds": float(index_seconds + score_seconds + metric_seconds),
+                    },
+                }
+            ],
+            "metrics": metrics,
+            "aggregate_metric_value": aggregate_metric_value,
+            "best_score": aggregate_metric_value,
+            "best_distance": "maxsim",
+            "best_score_name": "late_interaction_maxsim",
+        },
+        timing=timing,
+        aggregate_metric=aggregate_metric,
+    )
+    embedding_evaluation["index"] = index_payload
+
+    return TaskEvaluation(
+        metrics=metrics,
+        timing=timing,
+        embedding_conversion={
+            "query": _embedding_conversion_payload(
+                text_count=len(query_texts),
+                batch_size=batch_size,
+                seconds=query_seconds,
+            ),
+            "docs": _embedding_conversion_payload(
+                text_count=len(corpus_texts),
+                batch_size=batch_size,
+                seconds=corpus_seconds,
+            ),
+        },
+        embedding_evaluations=[embedding_evaluation],
+    )
+
+
+def _import_pylate_plaid_index() -> Any:
+    return getattr(importlib.import_module("pylate.indexes"), "PLAID")
+
+
+def _import_pylate_colbert_retriever() -> Any:
+    return getattr(importlib.import_module("pylate.retrieve"), "ColBERT")
+
+
+def _pylate_index_is_indexed(index: Any) -> bool:
+    if hasattr(index, "is_indexed"):
+        return bool(index.is_indexed)
+    inner_index = getattr(index, "_index", None)
+    if inner_index is not None and hasattr(inner_index, "is_indexed"):
+        return bool(inner_index.is_indexed)
+    return False
+
+
+def _encode_late_interaction(
+    model: Any,
+    *,
+    sentences: list[str],
+    batch_size: int,
+    show_progress: bool,
+    prompt: str | None,
+    prompt_name: str | None,
+    is_query: bool,
+    pool_factor: int,
+) -> Any:
+    kwargs: dict[str, Any] = {
+        "batch_size": batch_size,
+        "show_progress_bar": show_progress,
+        "is_query": is_query,
+    }
+    if not is_query:
+        kwargs["pool_factor"] = pool_factor
+    if prompt is not None:
+        kwargs["prompt"] = prompt
+    elif prompt_name is not None:
+        kwargs["prompt_name"] = prompt_name
+    return model.encode(sentences, **kwargs)
 
 
 def _encode(
@@ -915,6 +1148,8 @@ def _embedding_metadata(query_embeddings: Any, corpus_embeddings: Any) -> dict[s
 def _embedding_representation_type(query_embeddings: Any, corpus_embeddings: Any) -> str:
     if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
         return "sparse"
+    if _is_late_interaction_embedding(query_embeddings) or _is_late_interaction_embedding(corpus_embeddings):
+        return "late_interaction"
     query_shape = _shape_list(query_embeddings)
     corpus_shape = _shape_list(corpus_embeddings)
     if _is_late_interaction_shape(query_shape) or _is_late_interaction_shape(corpus_shape):
@@ -938,6 +1173,8 @@ def _dimension_format(*, query_embeddings: Any, corpus_embeddings: Any, represen
 
 def _embedding_side_metadata(embeddings: Any) -> dict[str, Any]:
     metadata: dict[str, Any] = {"shape": _shape_list(embeddings)}
+    if _is_late_interaction_embedding(embeddings):
+        metadata.update(_late_interaction_embedding_stats(embeddings))
     if _is_quantized_embedding_matrix(embeddings) or _is_quantized_sparse_embedding_matrix(embeddings):
         metadata["value_dtype"] = str(embeddings.dtype)
         metadata["quantization"] = _quantization_metadata(embeddings)
@@ -1102,9 +1339,47 @@ def _is_late_interaction_shape(shape: list[int]) -> bool:
     return len(shape) >= 3
 
 
+def _is_late_interaction_embedding(embeddings: Any) -> bool:
+    if isinstance(embeddings, torch.Tensor | np.ndarray):
+        return len(getattr(embeddings, "shape", ())) >= 3
+    if not isinstance(embeddings, list | tuple) or not embeddings:
+        return False
+    first_shape = _shape_list(embeddings[0])
+    return len(first_shape) == 2
+
+
+def _late_interaction_embedding_stats(embeddings: Any) -> dict[str, Any]:
+    token_counts: list[int] = []
+    value_dtype = None
+    for embedding in list(embeddings):
+        shape = _shape_list(embedding)
+        if len(shape) >= 2:
+            token_counts.append(int(shape[0]))
+        if value_dtype is None and hasattr(embedding, "dtype"):
+            value_dtype = str(embedding.dtype)
+    metadata: dict[str, Any] = {
+        "sequence_count": len(embeddings),
+        "token_count_min": int(np.min(token_counts)) if token_counts else 0,
+        "token_count_mean": float(np.mean(token_counts)) if token_counts else 0.0,
+        "token_count_median": float(np.median(token_counts)) if token_counts else 0.0,
+        "token_count_max": int(np.max(token_counts)) if token_counts else 0,
+    }
+    if value_dtype is not None:
+        metadata["value_dtype"] = value_dtype
+    return metadata
+
+
 def _embedding_dimension(embeddings: Any) -> int | None:
     if _is_quantized_embedding_matrix(embeddings):
         return int(embeddings.original_dim)
+    if _is_late_interaction_embedding(embeddings):
+        if isinstance(embeddings, torch.Tensor | np.ndarray):
+            return int(embeddings.shape[-1])
+        for embedding in embeddings:
+            shape = _shape_list(embedding)
+            if len(shape) >= 2:
+                return int(shape[-1])
+        return None
     shape = _shape_list(embeddings)
     if len(shape) < 2:
         return None
@@ -1121,6 +1396,15 @@ def _stored_embedding_dimension(embeddings: Any) -> int | None:
 def _shape_list(embeddings: Any) -> list[int]:
     if _is_quantized_embedding_matrix(embeddings):
         return [int(dimension) for dimension in embeddings.values.shape]
+    if isinstance(embeddings, list | tuple):
+        if not embeddings:
+            return [0]
+        child_shapes = [_shape_list(embedding) for embedding in embeddings]
+        if child_shapes and all(len(shape) == 2 for shape in child_shapes):
+            token_counts = [shape[0] for shape in child_shapes]
+            dims = {shape[1] for shape in child_shapes}
+            if len(dims) == 1:
+                return [len(child_shapes), max(token_counts), next(iter(dims))]
     shape = getattr(embeddings, "shape", None)
     if shape is None:
         try:
