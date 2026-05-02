@@ -18,6 +18,9 @@ description: Workflow for measuring models with the nano-ir-bench project. Use w
 
 For every specified model:
 
+- Read `docs/model_specific_benchmarking_notes.md` before choosing prompts,
+  attention implementation, Transformers version, or compatibility fallbacks.
+  Follow its model-specific notes when they apply.
 - Check whether the model is a Sentence Transformers model with prompt configuration. Prefer its built-in prompt config when present.
 - If no usable Sentence Transformers prompt config exists, inspect the Hugging Face model card first, then relevant articles or papers for retrieval prefixes such as query/document/passage instructions.
 - Record and use explicit retrieval prefixes when the model card or paper requires them, for example via `--query-prompt`, `--corpus-prompt`, `--query-prompt-name`, or `--corpus-prompt-name`.
