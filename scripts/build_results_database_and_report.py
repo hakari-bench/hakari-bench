@@ -63,6 +63,9 @@ class TaskResult:
     evaluated_at_utc: str | None
     duration_seconds_including_dataset_load: float | None
     wall_seconds: float | None
+    embedding_variant_name: str | None = None
+    embedding_dim: int | None = None
+    quantization: str | None = None
 
 
 def main() -> None:
@@ -73,9 +76,10 @@ def main() -> None:
     args = parser.parse_args()
 
     rows, runs, metric_rows = load_results(args.results_dir)
-    standings, borda_rows = compute_standings(rows)
+    base_rows = [row for row in rows if row.embedding_variant_name is None]
+    standings, borda_rows = compute_standings(base_rows)
     write_duckdb(args.duckdb_path, runs=runs, rows=rows, metric_rows=metric_rows, standings=standings, borda_rows=borda_rows)
-    write_html(args.html_output, duckdb_path=args.duckdb_path, rows=rows, runs=runs, standings=standings)
+    write_html(args.html_output, duckdb_path=args.duckdb_path, rows=base_rows, runs=runs, standings=standings)
 
 
 def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, Any]], list[dict[str, Any]]]:
@@ -138,38 +142,64 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
         dataset_revision_requested = _dataset_revision_value(target.get("dataset_revision"), key="requested")
         task_name = str(target.get("task_name") or target.get("split_name") or "")
         task_key = f"{benchmark}::{dataset_id}::{task_name}"
+        common: dict[str, Any] = {
+            "model_dir": model_dir,
+            "model_name": model_name,
+            "benchmark": benchmark,
+            "dataset_id": dataset_id,
+            "dataset_revision": dataset_revision,
+            "dataset_revision_requested": dataset_revision_requested,
+            "dataset_name": str(target.get("dataset_name") or ""),
+            "split_name": target.get("split_name"),
+            "task_name": task_name,
+            "task_key": task_key,
+            "result_path": str(result_path),
+            "active_parameters": _int_or_none(model.get("active_parameters")) if isinstance(model, dict) else None,
+            "total_parameters": _int_or_none(model.get("total_parameters")) if isinstance(model, dict) else None,
+            "max_seq_length": _int_or_none(model.get("max_seq_length")) if isinstance(model, dict) else None,
+            "dtype": model.get("dtype") if isinstance(model, dict) else None,
+            "attn_implementation": model.get("attn_implementation") if isinstance(model, dict) else None,
+            "torch_version": package_versions.get("torch"),
+            "transformers_version": package_versions.get("transformers"),
+            "sentence_transformers_version": package_versions.get("sentence-transformers"),
+            "started_at_utc": evaluation.get("started_at_utc"),
+            "finished_at_utc": evaluation.get("finished_at_utc"),
+            "evaluated_at_utc": evaluation.get("evaluated_at_utc"),
+            "duration_seconds_including_dataset_load": _float_or_none(
+                evaluation.get("duration_seconds_including_dataset_load")
+            ),
+            "wall_seconds": _float_or_none(evaluation.get("wall_seconds")),
+        }
+        embedding_evaluations = _embedding_evaluations(
+            evaluation.get("embedding_evaluations") or task_payload.get("embedding_evaluations")
+        )
+        base_embedding = _embedding_evaluation_named(embedding_evaluations, "base")
         rows.append(
             TaskResult(
-                model_dir=model_dir,
-                model_name=model_name,
-                benchmark=benchmark,
-                dataset_id=dataset_id,
-                dataset_revision=dataset_revision,
-                dataset_revision_requested=dataset_revision_requested,
-                dataset_name=str(target.get("dataset_name") or ""),
-                split_name=target.get("split_name"),
-                task_name=task_name,
-                task_key=task_key,
+                **common,
                 score=float(score),
                 aggregate_metric=evaluation.get("aggregate_metric"),
-                result_path=str(result_path),
-                active_parameters=_int_or_none(model.get("active_parameters")) if isinstance(model, dict) else None,
-                total_parameters=_int_or_none(model.get("total_parameters")) if isinstance(model, dict) else None,
-                max_seq_length=_int_or_none(model.get("max_seq_length")) if isinstance(model, dict) else None,
-                dtype=model.get("dtype") if isinstance(model, dict) else None,
-                attn_implementation=model.get("attn_implementation") if isinstance(model, dict) else None,
-                torch_version=package_versions.get("torch"),
-                transformers_version=package_versions.get("transformers"),
-                sentence_transformers_version=package_versions.get("sentence-transformers"),
-                started_at_utc=evaluation.get("started_at_utc"),
-                finished_at_utc=evaluation.get("finished_at_utc"),
-                evaluated_at_utc=evaluation.get("evaluated_at_utc"),
-                duration_seconds_including_dataset_load=_float_or_none(
-                    evaluation.get("duration_seconds_including_dataset_load")
-                ),
-                wall_seconds=_float_or_none(evaluation.get("wall_seconds")),
+                embedding_dim=_embedding_dim(base_embedding),
+                quantization=_quantization_precision(base_embedding),
             )
         )
+        for embedding_evaluation in embedding_evaluations:
+            variant_name = embedding_evaluation.get("name")
+            if not isinstance(variant_name, str) or variant_name == "base":
+                continue
+            variant_score = embedding_evaluation.get("aggregate_metric_value")
+            if not isinstance(variant_score, int | float):
+                continue
+            rows.append(
+                TaskResult(
+                    **common,
+                    score=float(variant_score),
+                    aggregate_metric=embedding_evaluation.get("aggregate_metric") or evaluation.get("aggregate_metric"),
+                    embedding_variant_name=variant_name,
+                    embedding_dim=_embedding_dim(embedding_evaluation),
+                    quantization=_quantization_precision(embedding_evaluation),
+                )
+            )
         for metric_name, metric_value in task_payload.get("metrics", {}).items():
             if isinstance(metric_value, int | float):
                 metric_rows.append(
@@ -196,6 +226,50 @@ def benchmark_name(dataset_id: Any, dataset_name: Any) -> str:
         if name in value:
             return name
     return "Other"
+
+
+def _embedding_evaluations(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, dict)]
+
+
+def _embedding_evaluation_named(items: list[dict[str, Any]], name: str) -> dict[str, Any] | None:
+    for item in items:
+        if item.get("name") == name:
+            return item
+    return None
+
+
+def _embedding_dim(item: dict[str, Any] | None) -> int | None:
+    if item is None:
+        return None
+    dimensions = item.get("embedding_dimensions")
+    if not isinstance(dimensions, dict):
+        return None
+    return _int_or_none(dimensions.get("dim"))
+
+
+def _quantization_precision(item: dict[str, Any] | None) -> str | None:
+    if item is None:
+        return None
+    metadata = item.get("embedding_metadata")
+    if isinstance(metadata, dict):
+        for key in ("query", "corpus"):
+            side = metadata.get(key)
+            if not isinstance(side, dict):
+                continue
+            quantization = side.get("quantization")
+            if isinstance(quantization, dict) and quantization.get("precision"):
+                return str(quantization["precision"])
+    transform = item.get("transform")
+    if isinstance(transform, dict):
+        for step in transform.get("steps", []):
+            if isinstance(step, dict) and step.get("type") == "quantize" and step.get("parameters"):
+                parameters = step["parameters"]
+                if isinstance(parameters, dict) and parameters.get("precision"):
+                    return str(parameters["precision"])
+    return None
 
 
 def compute_standings(rows: list[TaskResult]) -> tuple[dict[str, list[dict[str, Any]]], list[dict[str, Any]]]:
@@ -350,6 +424,7 @@ def write_duckdb(
                 dataset_name VARCHAR, split_name VARCHAR, task_name VARCHAR, task_key VARCHAR,
                 score DOUBLE, score_100 DOUBLE, aggregate_metric VARCHAR, result_path VARCHAR,
                 active_parameters BIGINT, total_parameters BIGINT, max_seq_length INTEGER, dtype VARCHAR,
+                embedding_variant_name VARCHAR, embedding_dim INTEGER, quantization VARCHAR,
                 attn_implementation VARCHAR, torch_version VARCHAR, transformers_version VARCHAR,
                 sentence_transformers_version VARCHAR, started_at_utc VARCHAR, finished_at_utc VARCHAR,
                 evaluated_at_utc VARCHAR, duration_seconds_including_dataset_load DOUBLE, wall_seconds DOUBLE
@@ -357,7 +432,7 @@ def write_duckdb(
             """
         )
         con.executemany(
-            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 (
                     row.model_dir,
@@ -378,6 +453,9 @@ def write_duckdb(
                     row.total_parameters,
                     row.max_seq_length,
                     row.dtype,
+                    row.embedding_variant_name,
+                    row.embedding_dim,
+                    row.quantization,
                     row.attn_implementation,
                     row.torch_version,
                     row.transformers_version,

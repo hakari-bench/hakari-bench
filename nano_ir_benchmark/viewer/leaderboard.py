@@ -8,7 +8,7 @@ from typing import Any, Iterable, Literal
 import duckdb
 from pydantic import BaseModel, ConfigDict, Field
 
-from nano_ir_benchmark.viewer.config import ScoreGroupConfig, ViewerConfig
+from nano_ir_benchmark.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
 
 SortDirection = Literal["asc", "desc"]
 
@@ -26,6 +26,9 @@ class TaskScore:
     active_parameters: int | None
     total_parameters: int | None
     max_seq_length: int | None
+    embedding_variant_name: str | None = None
+    embedding_dim: int | None = None
+    quantization: str | None = None
 
 
 class LeaderboardRow(BaseModel):
@@ -42,6 +45,8 @@ class LeaderboardRow(BaseModel):
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
+    embedding_dim: int | None = None
+    quantization: str | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
 
 
@@ -61,6 +66,10 @@ class LeaderboardResult(BaseModel):
     expected_tasks: int
     rows: list[LeaderboardRow]
     available_views: list[str]
+    available_view_labels: dict[str, str]
+    include_quantization_variants: bool = False
+    include_truncate_variants: bool = False
+    include_other_variants: bool = False
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
     metric_columns: list[str]
@@ -78,6 +87,8 @@ SORT_COLUMNS = {
     "active_parameters",
     "total_parameters",
     "max_seq_length",
+    "embedding_dim",
+    "quantization",
 }
 
 
@@ -93,12 +104,24 @@ class LeaderboardService:
         sort: str = "borda_rank",
         direction: SortDirection = "asc",
         score_group_name: str | None = None,
+        include_quantization_variants: bool = False,
+        include_truncate_variants: bool = False,
+        include_other_variants: bool = False,
     ) -> LeaderboardResult:
+        overall = self.config.overall_for_view(view_name)
         benchmarks = self.config.benchmarks_for_view(view_name)
-        is_overall = view_name == self.config.overall.name
+        is_overall = overall is not None
         score_groups = [] if is_overall else _score_groups_for_view(self.config, view_name)
         selected_score_group = _select_score_group(score_groups, score_group_name)
-        rows = self._load_task_scores(benchmarks)
+        rows = self._load_task_scores(
+            benchmarks,
+            include_quantization_variants=include_quantization_variants,
+            include_truncate_variants=include_truncate_variants,
+            include_other_variants=include_other_variants,
+        )
+        rows = _exclude_configured_tasks(rows, self.config)
+        if overall is not None:
+            rows = _aggregate_overall_scores(rows, overall)
         metric_columns = _metric_columns(rows, selected_score_group) if selected_score_group is not None else []
         leaderboard_rows = compute_leaderboard_rows(
             rows,
@@ -113,6 +136,10 @@ class LeaderboardService:
             expected_tasks=len({row.task_key for row in rows}),
             rows=sort_rows(leaderboard_rows, sort=sort, direction=direction),
             available_views=self.config.view_names,
+            available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
+            include_quantization_variants=include_quantization_variants,
+            include_truncate_variants=include_truncate_variants,
+            include_other_variants=include_other_variants,
             score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
             selected_score_group=(
                 ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
@@ -122,48 +149,91 @@ class LeaderboardService:
             metric_columns=metric_columns,
         )
 
-    def _load_task_scores(self, benchmarks: list[str]) -> list[TaskScore]:
+    def _load_task_scores(
+        self,
+        benchmarks: list[str],
+        *,
+        include_quantization_variants: bool,
+        include_truncate_variants: bool,
+        include_other_variants: bool,
+    ) -> list[TaskScore]:
         if not self.duckdb_path.exists():
             return []
-        placeholders = ", ".join("?" for _ in benchmarks)
-        query = f"""
-            SELECT
-                model_name,
-                benchmark,
-                dataset_id,
-                dataset_name,
-                COALESCE(split_name, '') AS split_name,
-                task_name,
-                task_key,
-                score,
-                active_parameters,
-                total_parameters,
-                max_seq_length
-            FROM task_results
-            WHERE benchmark IN ({placeholders})
-              AND score IS NOT NULL
-        """
         con = duckdb.connect(str(self.duckdb_path), read_only=True)
         try:
+            columns = _table_columns(con, "task_results")
+            variant_name_expr = _column_or_null(columns, "embedding_variant_name")
+            embedding_dim_expr = _column_or_null(columns, "embedding_dim")
+            quantization_expr = _column_or_null(columns, "quantization")
+            include_any_variants = include_quantization_variants or include_truncate_variants or include_other_variants
+            variant_filter = (
+                ""
+                if include_any_variants or "embedding_variant_name" not in columns
+                else "AND embedding_variant_name IS NULL"
+            )
+            placeholders = ", ".join("?" for _ in benchmarks)
+            query = f"""
+                SELECT
+                    model_name,
+                    benchmark,
+                    dataset_id,
+                    dataset_name,
+                    COALESCE(split_name, '') AS split_name,
+                    task_name,
+                    task_key,
+                    score,
+                    active_parameters,
+                    total_parameters,
+                    max_seq_length,
+                    {variant_name_expr} AS embedding_variant_name,
+                    {embedding_dim_expr} AS embedding_dim,
+                    {quantization_expr} AS quantization
+                FROM task_results
+                WHERE benchmark IN ({placeholders})
+                  AND score IS NOT NULL
+                  {variant_filter}
+            """
             result = con.execute(query, benchmarks).fetchall()
         finally:
             con.close()
-        return [
-            TaskScore(
-                model_name=str(row[0]),
-                benchmark=str(row[1]),
-                dataset_id=str(row[2]),
-                dataset_name=str(row[3]),
-                split_name=str(row[4]),
-                task_name=str(row[5]),
-                task_key=str(row[6]),
-                score=float(row[7]),
-                active_parameters=_int_or_none(row[8]),
-                total_parameters=_int_or_none(row[9]),
-                max_seq_length=_int_or_none(row[10]),
+
+        task_scores: list[TaskScore] = []
+        include_any_variants = include_quantization_variants or include_truncate_variants or include_other_variants
+        for row in result:
+            embedding_variant_name = str(row[11]) if row[11] is not None else None
+            embedding_dim = _int_or_none(row[12])
+            quantization = str(row[13]) if row[13] is not None else None
+            if not _include_variant_row(
+                embedding_variant_name=embedding_variant_name,
+                quantization=quantization,
+                include_quantization_variants=include_quantization_variants,
+                include_truncate_variants=include_truncate_variants,
+                include_other_variants=include_other_variants,
+            ):
+                continue
+            task_scores.append(
+                TaskScore(
+                    model_name=(
+                        _display_model_name(str(row[0]), embedding_dim=embedding_dim, quantization=quantization)
+                        if include_any_variants
+                        else str(row[0])
+                    ),
+                    benchmark=str(row[1]),
+                    dataset_id=str(row[2]),
+                    dataset_name=str(row[3]),
+                    split_name=str(row[4]),
+                    task_name=str(row[5]),
+                    task_key=str(row[6]),
+                    score=float(row[7]),
+                    active_parameters=_int_or_none(row[8]),
+                    total_parameters=_int_or_none(row[9]),
+                    max_seq_length=_int_or_none(row[10]),
+                    embedding_variant_name=embedding_variant_name,
+                    embedding_dim=embedding_dim,
+                    quantization=quantization,
+                )
             )
-            for row in result
-        ]
+        return task_scores
 
 
 def compute_leaderboard_rows(
@@ -214,6 +284,8 @@ def compute_leaderboard_rows(
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
+                embedding_dim=first.embedding_dim,
+                quantization=first.quantization,
                 metric_values=metric_values,
             )
         )
@@ -280,9 +352,109 @@ def _group_by_benchmark(rows: list[TaskScore]) -> dict[str, list[TaskScore]]:
     return grouped
 
 
+def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> list[TaskScore]:
+    component_by_benchmark = {component.name: component for component in overall.benchmark_components}
+    if not any(component.group_by is not None for component in component_by_benchmark.values()):
+        return rows
+
+    expected_raw_tasks: dict[str, set[str]] = defaultdict(set)
+    raw_tasks_by_model_benchmark: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for row in rows:
+        expected_raw_tasks[row.benchmark].add(row.task_key)
+        raw_tasks_by_model_benchmark[(row.model_name, row.benchmark)].add(row.task_key)
+
+    aggregate_inputs: dict[tuple[str, str, str], list[TaskScore]] = defaultdict(list)
+    for row in rows:
+        component = component_by_benchmark[row.benchmark]
+        model_benchmark = (row.model_name, row.benchmark)
+        if raw_tasks_by_model_benchmark[model_benchmark] != expected_raw_tasks[row.benchmark]:
+            continue
+        aggregate_key = _score_group_key(row, component.group_by or "task_key")
+        aggregate_inputs[(row.model_name, row.benchmark, aggregate_key)].append(row)
+
+    aggregated: list[TaskScore] = []
+    for (model_name, benchmark, aggregate_key), aggregate_rows in aggregate_inputs.items():
+        first = aggregate_rows[0]
+        aggregated.append(
+            TaskScore(
+                model_name=model_name,
+                benchmark=benchmark,
+                dataset_id=benchmark,
+                dataset_name=benchmark,
+                split_name="",
+                task_name=aggregate_key,
+                task_key=f"{benchmark}::{aggregate_key}",
+                score=_mean(row.score for row in aggregate_rows),
+                active_parameters=first.active_parameters,
+                total_parameters=first.total_parameters,
+                max_seq_length=first.max_seq_length,
+                embedding_variant_name=first.embedding_variant_name,
+                embedding_dim=first.embedding_dim,
+                quantization=first.quantization,
+            )
+        )
+    return aggregated
+
+
+def _exclude_configured_tasks(rows: list[TaskScore], config: ViewerConfig) -> list[TaskScore]:
+    excluded_by_benchmark = {
+        benchmark.name: set(benchmark.excluded_tasks)
+        for benchmark in config.benchmarks
+        if benchmark.excluded_tasks
+    }
+    if not excluded_by_benchmark:
+        return rows
+    return [
+        row
+        for row in rows
+        if row.task_name not in excluded_by_benchmark.get(row.benchmark, set())
+        and row.task_key not in excluded_by_benchmark.get(row.benchmark, set())
+    ]
+
+
 def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGroupConfig]:
     benchmark = config.benchmark_for_view(view_name)
     return benchmark.resolved_score_groups if benchmark is not None else []
+
+
+def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:
+    return {str(row[0]) for row in con.execute(f"DESCRIBE {table}").fetchall()}
+
+
+def _column_or_null(columns: set[str], column: str) -> str:
+    return column if column in columns else "NULL"
+
+
+def _display_model_name(model_name: str, *, embedding_dim: int | None, quantization: str | None) -> str:
+    details = []
+    if embedding_dim is not None:
+        details.append(f"{embedding_dim} dims")
+    if quantization:
+        details.append(quantization)
+    if not details:
+        return model_name
+    return f"{model_name} ({', '.join(details)})"
+
+
+def _include_variant_row(
+    *,
+    embedding_variant_name: str | None,
+    quantization: str | None,
+    include_quantization_variants: bool,
+    include_truncate_variants: bool,
+    include_other_variants: bool,
+) -> bool:
+    if embedding_variant_name is None:
+        return True
+    normalized_name = embedding_variant_name.lower()
+    is_quantization = quantization is not None or "quantize" in normalized_name
+    is_truncate = "truncate" in normalized_name
+    is_other = not is_quantization and not is_truncate
+    return (
+        (include_quantization_variants and is_quantization)
+        or (include_truncate_variants and is_truncate)
+        or (include_other_variants and is_other)
+    )
 
 
 def _select_score_group(
@@ -318,6 +490,8 @@ def _metric_values(
 
 
 def _score_group_key(row: TaskScore, group_by: str) -> str:
+    if group_by == "task_key":
+        return row.task_key
     if group_by == "dataset_name":
         return row.dataset_name
     if group_by == "dataset_id":

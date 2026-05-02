@@ -32,12 +32,62 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoBuiltBench",
     ]
 
-    assert config.overall.benchmarks == expected_overall_benchmarks
-    assert config.view_names[: len(expected_overall_benchmarks) + 1] == ["Overall", *expected_overall_benchmarks]
+    assert config.overall.benchmark_names == expected_overall_benchmarks
+    grouped_overall = config.overall_for_view("OverallGrouped")
+    assert grouped_overall is not None
+    assert [component.name for component in grouped_overall.benchmark_components] == [
+        "MNanoBEIR",
+        "NanoRTEB",
+        "NanoMMTEB",
+        "NanoMLDR",
+        "NanoLongEmbed",
+        "NanoCoIR",
+        "NanoIFIR",
+        "NanoLaw",
+        "NanoMedical",
+        "NanoRARb",
+        "NanoBRIGHT",
+        "NanoCodeRAG",
+        "NanoChemTEB",
+        "NanoR2MED",
+        "NanoBuiltBench",
+        "NanoMTEB",
+        "NanoMIRACL",
+        "NanoJMTEB",
+    ]
+    assert [component.group_by for component in grouped_overall.benchmark_components] == [
+        "task_name",
+        "task_name",
+        "task_name",
+        "benchmark",
+        "benchmark",
+        "task_name",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+        "benchmark",
+    ]
+    assert config.view_names[: len(expected_overall_benchmarks) + 2] == [
+        "Overall",
+        "OverallGrouped",
+        *expected_overall_benchmarks,
+    ]
+    assert "NanoCodeSearchNet" not in config.view_names
     assert "NanoJMTEB" in config.view_names
-    assert "NanoJMTEB" not in config.overall.benchmarks
+    assert "NanoJMTEB" not in config.overall.benchmark_names
     assert "NanoCMTEB" in config.view_names
-    assert "NanoCMTEB" not in config.overall.benchmarks
+    assert "NanoCMTEB" not in config.overall.benchmark_names
+    nano_law = config.benchmark_for_view("NanoLaw")
+    assert nano_law is not None
+    assert "NanoAILACasedocs" in nano_law.excluded_tasks
     mnanobeir = config.benchmark_for_view("MNanoBEIR")
     assert mnanobeir is not None
     assert [group.name for group in mnanobeir.resolved_score_groups] == ["task_mean", "lang_mean"]
@@ -87,6 +137,302 @@ benchmarks:
     assert result.rows[0].task_count == 3
     assert result.rows[0].macro_mean == 77.5
     assert result.rows[0].micro_mean == 80.0
+
+
+def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task1", "task-ja-1", 0.80, 10, 12, 8192),
+            ("model/a", "BenchTask", "bench/task-en", "BenchTask-en", "en", "task1", "task-en-1", 0.60, 10, 12, 8192),
+            ("model/a", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task2", "task-ja-2", 0.50, 10, 12, 8192),
+            ("model/a", "BenchMean", "bench/mean", "BenchMean", "m1", "m1", "mean-1", 0.90, 10, 12, 8192),
+            ("model/a", "BenchMean", "bench/mean", "BenchMean", "m2", "m2", "mean-2", 0.70, 10, 12, 8192),
+            ("model/b", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task1", "task-ja-1", 0.60, 20, 24, 4096),
+            ("model/b", "BenchTask", "bench/task-en", "BenchTask-en", "en", "task1", "task-en-1", 0.40, 20, 24, 4096),
+            ("model/b", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task2", "task-ja-2", 0.90, 20, 24, 4096),
+            ("model/b", "BenchMean", "bench/mean", "BenchMean", "m1", "m1", "mean-1", 0.50, 20, 24, 4096),
+            ("model/b", "BenchMean", "bench/mean", "BenchMean", "m2", "m2", "mean-2", 0.50, 20, 24, 4096),
+            ("model/incomplete", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task1", "task-ja-1", 1.00, 30, 36, 2048),
+            ("model/incomplete", "BenchTask", "bench/task-en", "BenchTask-en", "en", "task1", "task-en-1", 1.00, 30, 36, 2048),
+            ("model/incomplete", "BenchTask", "bench/task-ja", "BenchTask-ja", "ja", "task2", "task-ja-2", 1.00, 30, 36, 2048),
+            ("model/incomplete", "BenchMean", "bench/mean", "BenchMean", "m1", "m1", "mean-1", 1.00, 30, 36, 2048),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: BenchTask
+  - name: BenchMean
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+overalls:
+  - name: Overall
+    label: Overall
+    benchmarks:
+      - BenchTask
+      - BenchMean
+  - name: OverallGrouped
+    label: Overall Grouped
+    benchmarks:
+      - name: BenchTask
+        group_by: task_name
+      - name: BenchMean
+        group_by: benchmark
+""".strip(),
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("OverallGrouped")
+
+    assert result.expected_tasks == 3
+    assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
+    by_model = {row.model_name: row for row in result.rows}
+    assert by_model["model/a"].task_count == 3
+    assert by_model["model/a"].borda_score == 100 * 2 / 3
+    assert by_model["model/b"].borda_score == 100 / 3
+    assert by_model["model/a"].micro_mean == (70 + 50 + 80) / 3
+    assert by_model["model/a"].macro_mean == 70.0
+
+    from fastapi.testclient import TestClient
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=OverallGrouped")
+
+    assert response.status_code == 200
+    assert "Overall Grouped" in response.text
+
+
+def test_configured_excluded_tasks_are_not_used_in_leaderboards(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "keep", "keep", "BenchA::keep", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "drop", "drop", "BenchA::drop", 0.10, 10, 12, 8192),
+            ("model/a", "BenchB", "bench/b", "BenchB", "b1", "b1", "BenchB::b1", 0.80, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "keep", "keep", "BenchA::keep", 0.70, 20, 24, 4096),
+            ("model/b", "BenchA", "bench/a", "BenchA", "drop", "drop", "BenchA::drop", 1.00, 20, 24, 4096),
+            ("model/b", "BenchB", "bench/b", "BenchB", "b1", "b1", "BenchB::b1", 0.60, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: BenchA
+    excluded_tasks:
+      - drop
+  - name: BenchB
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+overalls:
+  - name: Overall
+    label: Overall
+    benchmarks:
+      - BenchA
+      - BenchB
+  - name: OverallGrouped
+    label: Overall Grouped
+    benchmarks:
+      - name: BenchA
+        group_by: benchmark
+      - name: BenchB
+        group_by: benchmark
+""".strip(),
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    bench_result = service.get_leaderboard("BenchA")
+    overall_result = service.get_leaderboard("Overall")
+    grouped_result = service.get_leaderboard("OverallGrouped")
+
+    assert bench_result.expected_tasks == 1
+    assert bench_result.metric_columns == ["keep"]
+    assert bench_result.rows[0].model_name == "model/a"
+    assert overall_result.expected_tasks == 2
+    assert overall_result.rows[0].micro_mean == 85.0
+    assert grouped_result.expected_tasks == 2
+    assert grouped_result.rows[0].micro_mean == 85.0
+
+
+def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192, "quantize_uint8_docs", 768, "uint8"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.83, 10, 12, 8192, "truncate_dim_384", 384, None),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.85, 10, 12, 8192, "truncate_dim_512", 512, None),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.82, 10, 12, 8192, "truncate_dim_256_quantize_int8_docs", 256, "int8"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.75, 10, 12, 8192, "custom_variant", 2048, None),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 20, 24, 4096, None, 512, None),
+        ],
+        include_embedding_variant_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    base_result = service.get_leaderboard("BenchA")
+    quantization_result = service.get_leaderboard("BenchA", include_quantization_variants=True)
+    truncate_result = service.get_leaderboard("BenchA", include_truncate_variants=True)
+    all_variant_result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+    )
+    other_variant_result = service.get_leaderboard("BenchA", include_other_variants=True)
+
+    assert [row.model_name for row in base_result.rows] == ["model/a", "model/b"]
+    assert [row.model_name for row in quantization_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (256 dims, int8)",
+        "model/a (768 dims, uint8)",
+        "model/b (512 dims)",
+    ]
+    assert [row.model_name for row in truncate_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (512 dims)",
+        "model/a (384 dims)",
+        "model/a (256 dims, int8)",
+        "model/b (512 dims)",
+    ]
+    assert [row.model_name for row in all_variant_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (512 dims)",
+        "model/a (384 dims)",
+        "model/a (256 dims, int8)",
+        "model/a (768 dims, uint8)",
+        "model/b (512 dims)",
+    ]
+    assert all_variant_result.rows[3].embedding_dim == 256
+    assert all_variant_result.rows[3].quantization == "int8"
+    assert [row.model_name for row in other_variant_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (2048 dims)",
+        "model/b (512 dims)",
+    ]
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=model%2Fb")
+
+    assert response.status_code == 200
+    assert "Display:" in response.text
+    assert "Other variants" in response.text
+    assert "Filters:" in response.text
+    assert '<div class="mt-3 flex flex-wrap items-start gap-3">' in response.text
+    assert ">Dims</summary>" in response.text
+    assert ">Quantization</summary>" in response.text
+    assert "grid-cols-2" in response.text
+    assert "sm:grid-cols-3" in response.text
+    assert response.text.count(">All</button>") == 2
+    assert response.text.count(">None</button>") == 2
+    assert 'id="display-controls"' in response.text
+    assert 'id="facet-filters"' in response.text
+    assert 'from:input[type=' not in response.text
+    assert 'hx-trigger="change"' in response.text
+    assert 'hx-include="#display-controls"' in response.text
+    assert "Truncate dims" in response.text
+    assert 'name="model_filter"' in response.text
+    assert 'value="model/b"' in response.text
+    assert "model/a (768 dims, uint8)" not in response.text
+    assert "model/a" in response.text
+    assert "bg-cyan-50" in response.text
+    assert "768 dims" in response.text
+    assert "bg-amber-50" in response.text
+    assert "uint8" in response.text
+    assert 'data-filter-hidden="true"' in response.text
+    assert "Dims" in response.text
+    assert "Quantization" in response.text
+    assert "delay:700ms" in response.text
+    assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
+
+    short_filter_response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=mo")
+
+    assert short_filter_response.status_code == 200
+    assert 'value="mo"' in short_filter_response.text
+    assert 'data-filter-hidden="true"' not in short_filter_response.text
+
+    facet_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&quantization=1&truncate=1&other_variant=1"
+        "&filters=1&dim_filter=768&dim_filter=1025%2B&quant_filter=uint8"
+    )
+
+    assert facet_response.status_code == 200
+    assert 'name="other_variant" value="1" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
+    assert 'name="dim_filter" value="768" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
+    assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
+    assert "1025~ dims" in facet_response.text
+    assert 'name="quant_filter" value="uint8" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
+    assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
+    assert "dim_filter=768" in facet_response.text
+    assert "dim_filter=1025%2B" in facet_response.text
+    assert "quant_filter=uint8" in facet_response.text
+    assert 'data-filter-hidden="true"' in facet_response.text
+
+    inferred_truncate_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&filters=1&dim_filter=384&quant_filter=__none__"
+    )
+
+    assert inferred_truncate_response.status_code == 200
+    assert 'name="truncate" value="1" class="h-4 w-4 accent-cyan-700" checked' in inferred_truncate_response.text
+    assert "384 dims" in inferred_truncate_response.text
+    assert "model/a" in inferred_truncate_response.text
+
+    inferred_quant_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&filters=1&dim_filter=768&quant_filter=uint8"
+    )
+
+    assert inferred_quant_response.status_code == 200
+    assert 'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked' in inferred_quant_response.text
+    assert "uint8" in inferred_quant_response.text
+
+
+def test_model_filter_matches_any_whitespace_separated_token_case_insensitively(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("google/gemma-embed", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("Qwen/Qwen3-Embedding", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+            ("other/model", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&model_filter=GeMmA%20qwen")
+
+    assert response.status_code == 200
+    assert 'value="GeMmA qwen"' in response.text
+    assert "google/gemma-embed" in response.text
+    assert "Qwen/Qwen3-Embedding" in response.text
+    assert "other/model" in response.text
+    assert response.text.count('data-filter-hidden="true"') == 1
 
 
 def test_individual_leaderboard_uses_simple_task_mean() -> None:
@@ -293,27 +639,43 @@ benchmarks:
 
 def _write_task_results(
     db_path: Path,
-    rows: list[tuple[str, str, str, str, str, str, str, float, int, int, int]],
+    rows: list[tuple],
+    *,
+    include_embedding_variant_columns: bool = False,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
+        variant_columns = (
+            [
+                "embedding_variant_name VARCHAR",
+                "embedding_dim INTEGER",
+                "quantization VARCHAR",
+            ]
+            if include_embedding_variant_columns
+            else []
+        )
+        columns = [
+            "model_name VARCHAR",
+            "benchmark VARCHAR",
+            "dataset_id VARCHAR",
+            "dataset_name VARCHAR",
+            "split_name VARCHAR",
+            "task_name VARCHAR",
+            "task_key VARCHAR",
+            "score DOUBLE",
+            "active_parameters BIGINT",
+            "total_parameters BIGINT",
+            "max_seq_length INTEGER",
+            *variant_columns,
+        ]
         con.execute(
-            """
+            f"""
             CREATE TABLE task_results (
-                model_name VARCHAR,
-                benchmark VARCHAR,
-                dataset_id VARCHAR,
-                dataset_name VARCHAR,
-                split_name VARCHAR,
-                task_name VARCHAR,
-                task_key VARCHAR,
-                score DOUBLE,
-                active_parameters BIGINT,
-                total_parameters BIGINT,
-                max_seq_length INTEGER
+                {", ".join(columns)}
             )
             """
         )
-        con.executemany("INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
+        placeholders = ", ".join("?" for _ in rows[0])
+        con.executemany(f"INSERT INTO task_results VALUES ({placeholders})", rows)
     finally:
         con.close()
