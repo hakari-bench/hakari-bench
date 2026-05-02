@@ -58,12 +58,40 @@ def _numpy_step(precision: str, *, rescore: bool = False) -> dict[str, object]:
     }
 
 
+def _torch_step(precision: str, *, rescore: bool = False, device: str | None = None) -> dict[str, object]:
+    parameters: dict[str, object] = {
+        "precision": precision,
+        "target": "query_and_corpus",
+        "method": "query_and_corpus",
+        "score_representation": "torch_exact_rescore" if rescore else "torch_exact",
+    }
+    if precision == "int8":
+        parameters["calibration"] = "corpus"
+    if device is not None:
+        parameters["search_device"] = device
+    return {
+        "type": "quantize",
+        "algorithm": "sentence_transformers_embedding_quantization",
+        "parameters": parameters,
+    }
+
+
 def _usearch_variant(name: str, precision: str, *, rescore: bool = False) -> dict[str, object]:
     return _pipeline_variant(name, _normalize_step(), _usearch_step(precision, rescore=rescore))
 
 
 def _numpy_variant(name: str, precision: str, *, rescore: bool = False) -> dict[str, object]:
     return _pipeline_variant(name, _normalize_step(), _numpy_step(precision, rescore=rescore))
+
+
+def _torch_variant(
+    name: str,
+    precision: str,
+    *,
+    rescore: bool = False,
+    device: str | None = None,
+) -> dict[str, object]:
+    return _pipeline_variant(name, _normalize_step(), _torch_step(precision, rescore=rescore, device=device))
 
 
 def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
@@ -508,6 +536,46 @@ def test_parse_args_accepts_numpy_embedding_variants() -> None:
         _numpy_variant("numpy_binary", "binary"),
         _numpy_variant("numpy_int8_rescore", "int8", rescore=True),
         _numpy_variant("numpy_binary_rescore", "binary", rescore=True),
+    ]
+
+
+def test_parse_args_accepts_torch_embedding_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "torch:int8,binary",
+            "--embedding-variant",
+            "torch-rescore:int8,binary",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _torch_variant("torch_int8", "int8"),
+        _torch_variant("torch_binary", "binary"),
+        _torch_variant("torch_int8_rescore", "int8", rescore=True),
+        _torch_variant("torch_binary_rescore", "binary", rescore=True),
+    ]
+
+
+def test_parse_args_accepts_cuda_embedding_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "cuda:int8",
+            "--embedding-variant",
+            "cuda-rescore:binary",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _torch_variant("cuda_int8", "int8", device="cuda"),
+        _torch_variant("cuda_binary_rescore", "binary", rescore=True, device="cuda"),
     ]
 
 

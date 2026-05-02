@@ -9,6 +9,8 @@ USEARCH_SCORE_REPRESENTATION = "usearch_exact"
 USEARCH_RESCORE_SCORE_REPRESENTATION = "usearch_exact_rescore"
 NUMPY_SCORE_REPRESENTATION = "numpy_exact"
 NUMPY_RESCORE_SCORE_REPRESENTATION = "numpy_exact_rescore"
+TORCH_SCORE_REPRESENTATION = "torch_exact"
+TORCH_RESCORE_SCORE_REPRESENTATION = "torch_exact_rescore"
 NORMALIZE_TOKENS = {"normalize", "l2-normalize", "l2_normalize"}
 SPARSE_MAX_ACTIVE_DIMS_PREFIXES = (
     "sparse-max-active-dims:",
@@ -202,18 +204,37 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
     elif token.startswith("numpy:"):
         precision = token.split(":", 1)[1]
         return _numpy_variant(token=token, precision=precision, rescore=False), "numpy:no_rescore"
+    elif token.startswith("torch-rescore:"):
+        precision = token.split(":", 1)[1]
+        return _torch_variant(token=token, precision=precision, rescore=True), "torch:rescore"
+    elif token.startswith("torch:"):
+        precision = token.split(":", 1)[1]
+        return _torch_variant(token=token, precision=precision, rescore=False), "torch:no_rescore"
+    elif token.startswith("cuda-rescore:"):
+        precision = token.split(":", 1)[1]
+        return _torch_variant(token=token, precision=precision, rescore=True, name_prefix="cuda", device="cuda"), "cuda:rescore"
+    elif token.startswith("cuda:"):
+        precision = token.split(":", 1)[1]
+        return _torch_variant(token=token, precision=precision, rescore=False, name_prefix="cuda", device="cuda"), "cuda:no_rescore"
     elif current_kind is not None and current_kind.startswith("usearch:") and token in USEARCH_PRECISIONS:
         rescore = current_kind.split(":", 1)[1] == "rescore"
         return _usearch_variant(token=token, precision=token, rescore=rescore), current_kind
     elif current_kind is not None and current_kind.startswith("numpy:") and token in USEARCH_PRECISIONS:
         rescore = current_kind.split(":", 1)[1] == "rescore"
         return _numpy_variant(token=token, precision=token, rescore=rescore), current_kind
+    elif current_kind is not None and current_kind.startswith("torch:") and token in USEARCH_PRECISIONS:
+        rescore = current_kind.split(":", 1)[1] == "rescore"
+        return _torch_variant(token=token, precision=token, rescore=rescore), current_kind
+    elif current_kind is not None and current_kind.startswith("cuda:") and token in USEARCH_PRECISIONS:
+        rescore = current_kind.split(":", 1)[1] == "rescore"
+        return _torch_variant(token=token, precision=token, rescore=rescore, name_prefix="cuda", device="cuda"), current_kind
     else:
         raise ValueError(
             "Unsupported embedding variant "
             f"'{token}'. Supported syntax: truncate:DIM, sparse-max-active-dims:DIM, "
             "normalize, usearch:PRECISION, usearch-rescore:PRECISION, numpy:PRECISION, "
-            "or numpy-rescore:PRECISION"
+            "numpy-rescore:PRECISION, torch:PRECISION, torch-rescore:PRECISION, cuda:PRECISION, "
+            "or cuda-rescore:PRECISION"
         )
 
 
@@ -372,6 +393,45 @@ def _numpy_variant(*, token: str, precision: str, rescore: bool) -> dict[str, An
         parameters["calibration"] = "corpus"
 
     name = f"numpy_{precision}_rescore" if rescore else f"numpy_{precision}"
+    return {
+        "name": name,
+        "transform": _pipeline_transform(
+            _normalize_step(),
+            {
+                "type": "quantize",
+                "algorithm": "sentence_transformers_embedding_quantization",
+                "parameters": parameters,
+            }
+        ),
+    }
+
+
+def _torch_variant(
+    *,
+    token: str,
+    precision: str,
+    rescore: bool,
+    name_prefix: str = "torch",
+    device: str | None = None,
+) -> dict[str, Any]:
+    if precision not in USEARCH_PRECISIONS:
+        raise ValueError(
+            f"Embedding variant '{token}' has unsupported torch precision {precision!r}. "
+            f"Supported torch precisions are: {', '.join(sorted(USEARCH_PRECISIONS))}."
+        )
+    score_representation = TORCH_RESCORE_SCORE_REPRESENTATION if rescore else TORCH_SCORE_REPRESENTATION
+    parameters: dict[str, Any] = {
+        "precision": precision,
+        "target": "query_and_corpus",
+        "method": "query_and_corpus",
+        "score_representation": score_representation,
+    }
+    if precision == "int8":
+        parameters["calibration"] = "corpus"
+    if device is not None:
+        parameters["search_device"] = device
+
+    name = f"{name_prefix}_{precision}_rescore" if rescore else f"{name_prefix}_{precision}"
     return {
         "name": name,
         "transform": _pipeline_transform(

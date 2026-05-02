@@ -119,7 +119,13 @@ candidates with the already-computed source float embeddings; it does not
 re-embed documents.
 
 For backend diagnostics, `numpy:` and `numpy-rescore:` run the same normalized
-exact quantized full scan in NumPy instead of usearch:
+exact quantized full scan on CPU with NumPy instead of usearch. `torch:` and
+`torch-rescore:` run the same scan with PyTorch tensors and keep computation on
+the tensor device, so CUDA SentenceTransformers outputs stay on CUDA. Use
+`cuda:` and `cuda-rescore:` to force the PyTorch diagnostic backend onto CUDA.
+Torch CUDA scoring casts stored int8 and binary codes to float32 for matrix
+multiplication because regular PyTorch CUDA matmul does not expose integer
+accumulation for these tensors.
 
 ```bash
 uv run nano-ir-bench evaluate \
@@ -128,7 +134,9 @@ uv run nano-ir-bench evaluate \
   --embedding-variant usearch:int8,binary \
   --embedding-variant usearch-rescore:int8,binary \
   --embedding-variant numpy:int8,binary \
-  --embedding-variant numpy-rescore:int8,binary
+  --embedding-variant numpy-rescore:int8,binary \
+  --embedding-variant torch:int8,binary \
+  --embedding-variant torch-rescore:int8,binary
 ```
 
 ### Truncated Dimensions

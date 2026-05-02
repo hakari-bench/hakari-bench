@@ -17,10 +17,13 @@ USEARCH_SCORE_REPRESENTATION = "usearch_exact"
 USEARCH_RESCORE_SCORE_REPRESENTATION = "usearch_exact_rescore"
 NUMPY_SCORE_REPRESENTATION = "numpy_exact"
 NUMPY_RESCORE_SCORE_REPRESENTATION = "numpy_exact_rescore"
+TORCH_SCORE_REPRESENTATION = "torch_exact"
+TORCH_RESCORE_SCORE_REPRESENTATION = "torch_exact_rescore"
 USEARCH_CANDIDATE_TOP_K = 100
 QUANTIZED_RESCORE_SCORE_REPRESENTATIONS = {
     USEARCH_RESCORE_SCORE_REPRESENTATION,
     NUMPY_RESCORE_SCORE_REPRESENTATION,
+    TORCH_RESCORE_SCORE_REPRESENTATION,
 }
 
 
@@ -43,24 +46,25 @@ class TaskEvaluation:
 
 @dataclass(frozen=True)
 class QuantizedEmbeddingMatrix:
-    values: np.ndarray
+    values: Any
     precision: str
     original_dim: int
     algorithm: str
     method: str
     side: str
     ranges_source: str | None = None
-    ranges: np.ndarray | None = None
+    ranges: Any | None = None
     rounding: str | None = None
     score_representation: str | None = None
-    source_values: np.ndarray | None = None
+    source_values: Any | None = None
+    binary_encoding: str | None = None
 
     @property
     def shape(self) -> tuple[int, ...]:
-        return self.values.shape
+        return tuple(int(dimension) for dimension in self.values.shape)
 
     @property
-    def dtype(self) -> np.dtype:
+    def dtype(self) -> Any:
         return self.values.dtype
 
 
@@ -140,6 +144,7 @@ def evaluate_dense_task(
     corpus_ids = list(dataset.corpus)
     query_texts = [dataset.queries[query_id] for query_id in query_ids]
     corpus_texts = [dataset.corpus[corpus_id] for corpus_id in corpus_ids]
+    prefer_tensor_embeddings = _embedding_variants_use_torch_quantized_scoring(embedding_variants or [])
 
     query_start = time.perf_counter()
     query_embeddings = _encode(
@@ -153,6 +158,7 @@ def evaluate_dense_task(
         task=query_task,
         truncate_dim=truncate_dim,
         sparse_max_active_dims=sparse_max_active_dims,
+        prefer_tensor=prefer_tensor_embeddings,
     )
     query_seconds = time.perf_counter() - query_start
 
@@ -168,6 +174,7 @@ def evaluate_dense_task(
         task=corpus_task,
         truncate_dim=truncate_dim,
         sparse_max_active_dims=sparse_max_active_dims,
+        prefer_tensor=prefer_tensor_embeddings,
     )
     corpus_seconds = time.perf_counter() - corpus_start
 
@@ -330,6 +337,7 @@ def _encode(
     task: str | None,
     truncate_dim: int | None,
     sparse_max_active_dims: int | None,
+    prefer_tensor: bool = False,
 ) -> Any:
     encode_fn = None if task is not None else getattr(model, "encode_query" if role == "query" else "encode_document", None)
     if encode_fn is None:
@@ -361,6 +369,12 @@ def _encode(
     if sparse_max_active_dims is not None:
         raise ValueError("Sparse max active dims can only be used with sparse encoder outputs.")
 
+    if prefer_tensor:
+        try:
+            return encode_fn(sentences, convert_to_tensor=True, **kwargs)
+        except TypeError:
+            pass
+
     try:
         return encode_fn(sentences, convert_to_numpy=True, **kwargs)
     except TypeError:
@@ -372,6 +386,31 @@ def _accepts_encode_parameter(encode_fn: Any, name: str) -> bool:
         return name in inspect.signature(encode_fn).parameters
     except (TypeError, ValueError):
         return False
+
+
+def _embedding_variants_use_torch_quantized_scoring(variants: list[dict[str, Any]]) -> bool:
+    return any(_embedding_variant_uses_torch_quantized_scoring(variant) for variant in variants)
+
+
+def _embedding_variant_uses_torch_quantized_scoring(variant: dict[str, Any]) -> bool:
+    transform = variant.get("transform")
+    if not isinstance(transform, dict):
+        return False
+    steps = transform.get("steps")
+    if not isinstance(steps, list):
+        return False
+    for step in steps:
+        if not isinstance(step, dict) or step.get("type") != "quantize":
+            continue
+        parameters = step.get("parameters", {})
+        if not isinstance(parameters, dict):
+            continue
+        score_representation = _normalize_quantized_dense_score_representation(
+            cast(str | None, parameters.get("score_representation"))
+        )
+        if score_representation in {TORCH_SCORE_REPRESENTATION, TORCH_RESCORE_SCORE_REPRESENTATION}:
+            return True
+    return False
 
 
 def _embedding_conversion_payload(*, text_count: int, batch_size: int, seconds: float) -> dict[str, int | float | None]:
@@ -589,6 +628,7 @@ def _apply_embedding_pipeline_step_pair(
         precision = str(parameters.get("precision"))
         target = str(parameters.get("target") or "query_and_corpus")
         score_representation = parameters.get("score_representation")
+        search_device = parameters.get("search_device")
         return _quantize_embedding_pair(
             query_embeddings=query_embeddings,
             corpus_embeddings=corpus_embeddings,
@@ -596,6 +636,7 @@ def _apply_embedding_pipeline_step_pair(
             target=target,
             algorithm=str(step.get("algorithm") or "sentence_transformers_embedding_quantization"),
             score_representation=str(score_representation) if score_representation is not None else None,
+            search_device=str(search_device) if search_device is not None else None,
         )
     raise ValueError(f"Unsupported embedding variant pipeline step: {step_type}")
 
@@ -620,6 +661,8 @@ def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
 def _normalize_embeddings(embeddings: Any) -> Any:
     if _is_sparse_embedding(embeddings):
         return _sparse_l2_normalize(_to_scipy_csr_matrix(embeddings))
+    if isinstance(embeddings, torch.Tensor):
+        return _torch_l2_normalize(embeddings.detach().float())
     return _l2_normalize(_to_numpy_float32(embeddings))
 
 
@@ -664,6 +707,7 @@ def _quantize_embedding_pair(
     target: str = "query_and_corpus",
     algorithm: str,
     score_representation: str | None = None,
+    search_device: str | None = None,
 ) -> tuple[Any, Any]:
     score_representation = _normalize_quantized_dense_score_representation(score_representation)
     if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
@@ -679,9 +723,20 @@ def _quantize_embedding_pair(
         USEARCH_RESCORE_SCORE_REPRESENTATION,
         NUMPY_SCORE_REPRESENTATION,
         NUMPY_RESCORE_SCORE_REPRESENTATION,
+        TORCH_SCORE_REPRESENTATION,
+        TORCH_RESCORE_SCORE_REPRESENTATION,
     }:
         if precision_literal not in {"int8", "binary"}:
             raise ValueError("Quantized search scoring requires int8 or binary quantization.")
+    if score_representation in {TORCH_SCORE_REPRESENTATION, TORCH_RESCORE_SCORE_REPRESENTATION}:
+        return _quantize_torch_embedding_pair(
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            precision=precision_literal,
+            algorithm=algorithm,
+            score_representation=score_representation,
+            search_device=search_device,
+        )
     method = "query_and_corpus"
 
     query_matrix = _to_numpy_float32(query_embeddings)
@@ -749,6 +804,129 @@ def _quantize_embedding_pair(
     )
 
 
+def _quantize_torch_embedding_pair(
+    *,
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    precision: QuantizationPrecision,
+    algorithm: str,
+    score_representation: str,
+    search_device: str | None,
+) -> tuple[QuantizedEmbeddingMatrix, QuantizedEmbeddingMatrix]:
+    method = "query_and_corpus"
+    device = _resolve_torch_search_device(query_embeddings, corpus_embeddings, search_device=search_device)
+    query_matrix = _to_torch_float32(query_embeddings, device=device)
+    corpus_matrix = _to_torch_float32(corpus_embeddings, device=device)
+    if query_matrix.ndim != 2 or corpus_matrix.ndim != 2:
+        raise ValueError("Quantized embedding variants require 2D dense embeddings.")
+    if query_matrix.shape[1] != corpus_matrix.shape[1]:
+        raise ValueError(
+            f"Cannot quantize query dimension {query_matrix.shape[1]} with corpus dimension {corpus_matrix.shape[1]}."
+        )
+
+    ranges = None
+    ranges_source = None
+    if precision == "int8":
+        if corpus_matrix.shape[0] == 0:
+            raise ValueError("Cannot calibrate quantized embeddings from an empty corpus.")
+        ranges_source = "corpus"
+        ranges = torch.stack((torch.min(corpus_matrix, dim=0).values, torch.max(corpus_matrix, dim=0).values))
+
+    original_dim = int(query_matrix.shape[1])
+    binary_encoding = None
+    if precision == "binary":
+        corpus_values = _pack_binary_embeddings_torch(corpus_matrix)
+        query_values = _pack_binary_embeddings_torch(query_matrix)
+        binary_encoding = "unpacked_bits"
+    else:
+        if ranges is None:
+            raise ValueError(f"Missing scalar quantization ranges for precision: {precision}")
+        corpus_values = _quantize_scalar_embeddings_torch(corpus_matrix, precision=precision, ranges=ranges)
+        query_values = _quantize_scalar_embeddings_torch(query_matrix, precision=precision, ranges=ranges)
+
+    corpus_quantized = QuantizedEmbeddingMatrix(
+        values=corpus_values,
+        precision=precision,
+        original_dim=original_dim,
+        algorithm=algorithm,
+        method=method,
+        side="corpus",
+        ranges_source=ranges_source,
+        ranges=ranges.detach().clone() if ranges is not None else None,
+        rounding="truncate" if precision == "int8" else None,
+        score_representation=score_representation,
+        source_values=corpus_matrix.detach().clone()
+        if score_representation in QUANTIZED_RESCORE_SCORE_REPRESENTATIONS
+        else None,
+        binary_encoding=binary_encoding,
+    )
+    return (
+        QuantizedEmbeddingMatrix(
+            values=query_values,
+            precision=precision,
+            original_dim=original_dim,
+            algorithm=algorithm,
+            method=method,
+            side="query",
+            ranges_source=ranges_source,
+            ranges=ranges.detach().clone() if ranges is not None else None,
+            rounding="truncate" if precision == "int8" else None,
+            score_representation=score_representation,
+            source_values=query_matrix.detach().clone()
+            if score_representation in QUANTIZED_RESCORE_SCORE_REPRESENTATIONS
+            else None,
+            binary_encoding=binary_encoding,
+        ),
+        corpus_quantized,
+    )
+
+
+def _resolve_torch_search_device(
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    *,
+    search_device: str | None,
+) -> torch.device:
+    if search_device is not None:
+        device = torch.device(search_device)
+        if device.type == "cuda" and not torch.cuda.is_available():
+            raise ValueError("CUDA quantized search was requested, but torch.cuda.is_available() is false.")
+        return device
+    if isinstance(query_embeddings, torch.Tensor):
+        return query_embeddings.device
+    if isinstance(corpus_embeddings, torch.Tensor):
+        return corpus_embeddings.device
+    return torch.device("cpu")
+
+
+def _to_torch_float32(embeddings: Any, *, device: torch.device | None = None) -> torch.Tensor:
+    if isinstance(embeddings, torch.Tensor):
+        tensor = embeddings.detach()
+        if device is not None:
+            tensor = tensor.to(device=device)
+        return tensor.float()
+    return torch.as_tensor(np.asarray(embeddings), dtype=torch.float32, device=device)
+
+
+def _quantize_scalar_embeddings_torch(
+    embeddings: torch.Tensor,
+    *,
+    precision: QuantizationPrecision,
+    ranges: torch.Tensor,
+) -> torch.Tensor:
+    starts = ranges[0, :]
+    steps = (ranges[1, :] - ranges[0, :]) / 255
+    steps = torch.where(steps == 0, torch.ones_like(steps), steps)
+    buckets = (embeddings - starts) / steps
+    if precision == "int8":
+        return torch.clamp(buckets - 128, min=-128, max=127).to(torch.int8)
+    raise ValueError(f"Unsupported scalar quantization precision: {precision}")
+
+
+def _pack_binary_embeddings_torch(embeddings: torch.Tensor) -> torch.Tensor:
+    return (embeddings > 0).to(torch.int8)
+
+
 def _normalize_quantization_target(target: str) -> str:
     normalized = target.strip().lower().replace("-", "_")
     if normalized in {"both", "query_and_corpus", "query_corpus", "query_and_document", "query_and_docs"}:
@@ -768,6 +946,10 @@ def _normalize_quantized_dense_score_representation(value: str | None) -> str | 
         return NUMPY_SCORE_REPRESENTATION
     if normalized in {"numpy_rescore", "numpy_exact_rescore"}:
         return NUMPY_RESCORE_SCORE_REPRESENTATION
+    if normalized in {"torch", "torch_exact", "cuda", "cuda_exact"}:
+        return TORCH_SCORE_REPRESENTATION
+    if normalized in {"torch_rescore", "torch_exact_rescore", "cuda_rescore", "cuda_exact_rescore"}:
+        return TORCH_RESCORE_SCORE_REPRESENTATION
     raise ValueError(f"Unsupported quantized dense score representation: {value}")
 
 
@@ -798,10 +980,12 @@ def _dequantize_scalar_embeddings(embeddings: QuantizedEmbeddingMatrix) -> np.nd
         raise ValueError(f"Cannot scalar-dequantize precision: {embeddings.precision}")
     if embeddings.ranges is None:
         raise ValueError(f"Quantized {embeddings.precision} embeddings are missing dequantization ranges.")
-    starts = embeddings.ranges[0, :]
-    steps = (embeddings.ranges[1, :] - embeddings.ranges[0, :]) / 255
+    ranges = _to_numpy_float32(embeddings.ranges)
+    values = _quantized_values_numpy(embeddings)
+    starts = ranges[0, :]
+    steps = (ranges[1, :] - ranges[0, :]) / 255
     steps = np.where(steps == 0, 1, steps)
-    buckets = embeddings.values.astype(np.float32)
+    buckets = values.astype(np.float32)
     if embeddings.precision == "int8":
         buckets = buckets + 128
     return buckets * steps + starts
@@ -859,6 +1043,8 @@ def _dimension_format(*, query_embeddings: Any, corpus_embeddings: Any, represen
         return "packed_binary_vector"
     if query_packed or corpus_packed:
         return "mixed_single_and_packed_binary_vector"
+    if _is_unpacked_binary_quantized(query_embeddings) and _is_unpacked_binary_quantized(corpus_embeddings):
+        return "binary_bit_vector"
     if representation_type == "sparse":
         return "sparse_vector"
     if representation_type == "late_interaction":
@@ -891,6 +1077,8 @@ def _quantization_metadata(embeddings: QuantizedEmbeddingMatrix) -> dict[str, An
         quantization["ranges_source"] = embeddings.ranges_source
     if embeddings.rounding is not None:
         quantization["rounding"] = embeddings.rounding
+    if embeddings.binary_encoding is not None:
+        quantization["binary_encoding"] = embeddings.binary_encoding
     if score_representation in {USEARCH_SCORE_REPRESENTATION, USEARCH_RESCORE_SCORE_REPRESENTATION}:
         quantization["search_backend"] = "usearch"
         quantization["search_exact"] = True
@@ -901,6 +1089,13 @@ def _quantization_metadata(embeddings: QuantizedEmbeddingMatrix) -> dict[str, An
         quantization["search_exact"] = True
         quantization["candidate_top_k"] = USEARCH_CANDIDATE_TOP_K
         quantization["rescore"] = score_representation == NUMPY_RESCORE_SCORE_REPRESENTATION
+    if score_representation in {TORCH_SCORE_REPRESENTATION, TORCH_RESCORE_SCORE_REPRESENTATION}:
+        quantization["search_backend"] = "torch"
+        quantization["search_exact"] = True
+        quantization["candidate_top_k"] = USEARCH_CANDIDATE_TOP_K
+        quantization["rescore"] = score_representation == TORCH_RESCORE_SCORE_REPRESENTATION
+        if isinstance(embeddings.values, torch.Tensor):
+            quantization["search_device"] = str(embeddings.values.device)
     return quantization
 
 
@@ -988,12 +1183,31 @@ def _is_quantized_embedding_matrix(embeddings: Any) -> bool:
     return isinstance(embeddings, QuantizedEmbeddingMatrix)
 
 
+def _quantized_values_numpy(embeddings: QuantizedEmbeddingMatrix) -> np.ndarray:
+    values = embeddings.values
+    if isinstance(values, torch.Tensor):
+        return values.detach().cpu().numpy()
+    return np.asarray(values)
+
+
 def _is_scalar_quantized(embeddings: Any) -> bool:
     return _is_quantized_embedding_matrix(embeddings) and embeddings.precision == "int8"
 
 
 def _is_packed_binary_quantized(embeddings: Any) -> bool:
-    return _is_quantized_embedding_matrix(embeddings) and embeddings.precision == "binary"
+    return (
+        _is_quantized_embedding_matrix(embeddings)
+        and embeddings.precision == "binary"
+        and embeddings.binary_encoding != "unpacked_bits"
+    )
+
+
+def _is_unpacked_binary_quantized(embeddings: Any) -> bool:
+    return (
+        _is_quantized_embedding_matrix(embeddings)
+        and embeddings.precision == "binary"
+        and embeddings.binary_encoding == "unpacked_bits"
+    )
 
 
 def _quantized_score_representation(embeddings: QuantizedEmbeddingMatrix) -> str:
@@ -1044,7 +1258,7 @@ def _to_numpy_float32(embeddings: Any) -> np.ndarray:
     if _is_packed_binary_quantized(embeddings):
         return _unpack_binary_quantized_embeddings_as_sign_float32(embeddings)
     if _is_quantized_embedding_matrix(embeddings):
-        return embeddings.values.astype(np.float32, copy=False)
+        return _quantized_values_numpy(embeddings).astype(np.float32, copy=False)
     if isinstance(embeddings, torch.Tensor):
         if embeddings.dtype is torch.bfloat16:
             embeddings = embeddings.float()
@@ -1081,6 +1295,16 @@ def _uses_numpy_quantized_scoring(query_embeddings: Any, corpus_embeddings: Any)
     return bool(score_representations & {NUMPY_SCORE_REPRESENTATION, NUMPY_RESCORE_SCORE_REPRESENTATION})
 
 
+def _uses_torch_quantized_scoring(query_embeddings: Any, corpus_embeddings: Any) -> bool:
+    if not _is_quantized_embedding_matrix(query_embeddings) or not _is_quantized_embedding_matrix(corpus_embeddings):
+        return False
+    score_representations = {
+        _quantized_score_representation(query_embeddings),
+        _quantized_score_representation(corpus_embeddings),
+    }
+    return bool(score_representations & {TORCH_SCORE_REPRESENTATION, TORCH_RESCORE_SCORE_REPRESENTATION})
+
+
 def _rank_by_similarity(
     *,
     query_ids: list[str],
@@ -1110,6 +1334,15 @@ def _rank_by_similarity(
 
     if _uses_numpy_quantized_scoring(query_embeddings, corpus_embeddings):
         return _rank_numpy_quantized(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=cast(QuantizedEmbeddingMatrix, query_embeddings),
+            corpus_embeddings=cast(QuantizedEmbeddingMatrix, corpus_embeddings),
+            score_name=score_name,
+        )
+
+    if _uses_torch_quantized_scoring(query_embeddings, corpus_embeddings):
+        return _rank_torch_quantized(
             query_ids=query_ids,
             corpus_ids=corpus_ids,
             query_embeddings=cast(QuantizedEmbeddingMatrix, query_embeddings),
@@ -1270,6 +1503,101 @@ def _numpy_quantized_candidate_indices(
     raise ValueError(f"Unsupported numpy quantization precision: {query_embeddings.precision}")
 
 
+def _rank_torch_quantized(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: QuantizedEmbeddingMatrix,
+    corpus_embeddings: QuantizedEmbeddingMatrix,
+    score_name: str,
+) -> dict[str, list[str]]:
+    if query_embeddings.precision != corpus_embeddings.precision:
+        raise ValueError(
+            f"Cannot rank torch embeddings with query precision {query_embeddings.precision} "
+            f"and corpus precision {corpus_embeddings.precision}."
+        )
+    if query_embeddings.original_dim != corpus_embeddings.original_dim:
+        raise ValueError(
+            f"Cannot rank torch embeddings with query dimension {query_embeddings.original_dim} "
+            f"and corpus dimension {corpus_embeddings.original_dim}."
+        )
+    query_score_representation = _quantized_score_representation(query_embeddings)
+    corpus_score_representation = _quantized_score_representation(corpus_embeddings)
+    if query_score_representation != corpus_score_representation:
+        raise ValueError(
+            f"Cannot rank torch embeddings with query score representation {query_score_representation} "
+            f"and corpus score representation {corpus_score_representation}."
+        )
+
+    final_count = min(len(corpus_ids), USEARCH_CANDIDATE_TOP_K)
+    indices = _torch_quantized_candidate_indices(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        corpus_ids=corpus_ids,
+        count=final_count,
+    )
+    if query_score_representation == TORCH_RESCORE_SCORE_REPRESENTATION:
+        return _rescore_torch_quantized_candidates(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            candidate_indices=indices,
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            score_name=score_name,
+            final_count=final_count,
+        )
+
+    indices_cpu = indices.detach().cpu().numpy()
+    rankings: dict[str, list[str]] = {}
+    for query_index, query_id in enumerate(query_ids):
+        rankings[query_id] = [corpus_ids[int(index)] for index in indices_cpu[query_index, :final_count]]
+    return rankings
+
+
+def _torch_quantized_candidate_indices(
+    *,
+    query_embeddings: QuantizedEmbeddingMatrix,
+    corpus_embeddings: QuantizedEmbeddingMatrix,
+    corpus_ids: list[str],
+    count: int,
+) -> torch.Tensor:
+    query_values = _quantized_values_torch(query_embeddings)
+    corpus_values = _quantized_values_torch(corpus_embeddings, device=query_values.device)
+    if query_embeddings.precision == "int8":
+        scores = query_values.float() @ corpus_values.float().T
+        return _torch_top_k_indices_by_scores(scores=scores, corpus_ids=corpus_ids, count=count)
+    if query_embeddings.precision == "binary":
+        query_bits = query_values.float()
+        corpus_bits = corpus_values.float()
+        shared_bits = query_bits @ corpus_bits.T
+        query_active_bits = torch.sum(query_bits, dim=1, keepdim=True)
+        corpus_active_bits = torch.sum(corpus_bits, dim=1, keepdim=True).T
+        distances = query_active_bits + corpus_active_bits - (2 * shared_bits)
+        return _torch_top_k_indices_by_scores(scores=-distances, corpus_ids=corpus_ids, count=count)
+    raise ValueError(f"Unsupported torch quantization precision: {query_embeddings.precision}")
+
+
+def _quantized_values_torch(
+    embeddings: QuantizedEmbeddingMatrix,
+    *,
+    device: torch.device | None = None,
+) -> torch.Tensor:
+    values = embeddings.values
+    if isinstance(values, torch.Tensor):
+        tensor = values.detach()
+        return tensor.to(device=device) if device is not None else tensor
+    return torch.as_tensor(values, device=device)
+
+
+def _torch_top_k_indices_by_scores(*, scores: torch.Tensor, corpus_ids: list[str], count: int) -> torch.Tensor:
+    if count <= 0 or scores.shape[0] == 0:
+        return torch.empty((int(scores.shape[0]), 0), dtype=torch.long, device=scores.device)
+    lexical_indices = torch.as_tensor(_corpus_lexical_indices(corpus_ids), dtype=torch.long, device=scores.device)
+    lexical_scores = scores.index_select(1, lexical_indices)
+    sorted_positions = torch.argsort(lexical_scores, dim=1, descending=True, stable=True)
+    return lexical_indices[sorted_positions[:, :count]]
+
+
 def _top_k_indices_by_scores(*, scores: np.ndarray, corpus_ids: list[str], count: int) -> np.ndarray:
     if count <= 0 or scores.shape[0] == 0:
         return np.zeros((scores.shape[0], 0), dtype=np.int64)
@@ -1284,6 +1612,10 @@ def _corpus_tie_break_order(corpus_ids: list[str]) -> np.ndarray:
     tie_order = np.empty(len(corpus_ids), dtype=np.int64)
     tie_order[lexical_order] = np.arange(len(corpus_ids), dtype=np.int64)
     return tie_order
+
+
+def _corpus_lexical_indices(corpus_ids: list[str]) -> np.ndarray:
+    return np.argsort(np.asarray(corpus_ids)).astype(np.int64, copy=False)
 
 
 def _usearch_index_inputs(
@@ -1310,8 +1642,9 @@ def _usearch_index_inputs(
 
 
 def _binary_quantized_values_as_uint8(embeddings: QuantizedEmbeddingMatrix) -> np.ndarray:
-    if embeddings.precision == "binary":
-        return (embeddings.values.astype(np.int16) + 128).astype(np.uint8)
+    if embeddings.precision == "binary" and embeddings.binary_encoding != "unpacked_bits":
+        values = _quantized_values_numpy(embeddings)
+        return (values.astype(np.int16) + 128).astype(np.uint8)
     raise ValueError(f"Expected binary quantized embeddings, got {embeddings.precision}.")
 
 
@@ -1350,6 +1683,44 @@ def _rescore_quantized_candidates(
     return rankings
 
 
+def _rescore_torch_quantized_candidates(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    candidate_indices: torch.Tensor,
+    query_embeddings: QuantizedEmbeddingMatrix,
+    corpus_embeddings: QuantizedEmbeddingMatrix,
+    score_name: str,
+    final_count: int,
+) -> dict[str, list[str]]:
+    if query_embeddings.source_values is None or corpus_embeddings.source_values is None:
+        raise ValueError("Torch quantized rescore requires source float embeddings.")
+    query_matrix = _to_torch_float32(query_embeddings.source_values)
+    corpus_matrix = _to_torch_float32(corpus_embeddings.source_values, device=query_matrix.device)
+    if score_name == "cosine":
+        query_matrix = _torch_l2_normalize(query_matrix)
+        corpus_matrix = _torch_l2_normalize(corpus_matrix)
+
+    rankings: dict[str, list[str]] = {}
+    for query_index, query_id in enumerate(query_ids):
+        candidates = candidate_indices[query_index]
+        candidates = candidates[candidates >= 0].to(device=query_matrix.device, dtype=torch.long)
+        if score_name == "euclidean":
+            scores = -torch.linalg.vector_norm(corpus_matrix.index_select(0, candidates) - query_matrix[query_index], dim=1)
+        elif score_name == "manhattan":
+            scores = -torch.sum(torch.abs(corpus_matrix.index_select(0, candidates) - query_matrix[query_index]), dim=1)
+        else:
+            scores = corpus_matrix.index_select(0, candidates) @ query_matrix[query_index]
+        candidates_cpu = candidates.detach().cpu().numpy().tolist()
+        scores_cpu = scores.detach().cpu().numpy().tolist()
+        ordered = sorted(
+            zip(candidates_cpu, scores_cpu, strict=True),
+            key=lambda item: (-float(item[1]), corpus_ids[int(item[0])]),
+        )
+        rankings[query_id] = [corpus_ids[int(index)] for index, _score in ordered[:final_count]]
+    return rankings
+
+
 def _rescore_usearch_candidates(**kwargs: Any) -> dict[str, list[str]]:
     return _rescore_quantized_candidates(**kwargs)
 
@@ -1377,7 +1748,10 @@ def _rank_packed_binary(
 
 
 def _unpack_binary_quantized_embeddings(embeddings: QuantizedEmbeddingMatrix) -> np.ndarray:
-    packed = embeddings.values
+    values = _quantized_values_numpy(embeddings)
+    if embeddings.binary_encoding == "unpacked_bits":
+        return values.astype(np.uint8, copy=False)[:, : embeddings.original_dim]
+    packed = values
     if embeddings.precision == "binary":
         packed = (packed.astype(np.int16) + 128).astype(np.uint8)
     return np.unpackbits(packed, axis=1)[:, : embeddings.original_dim]
@@ -1441,6 +1815,12 @@ def _scores_to_rankings(*, query_ids: list[str], corpus_ids: list[str], scores: 
 def _l2_normalize(matrix: np.ndarray) -> np.ndarray:
     norms = np.linalg.norm(matrix, axis=1, keepdims=True)
     norms[norms == 0.0] = 1.0
+    return matrix / norms
+
+
+def _torch_l2_normalize(matrix: torch.Tensor) -> torch.Tensor:
+    norms = torch.linalg.vector_norm(matrix, dim=1, keepdim=True)
+    norms = torch.where(norms == 0.0, torch.ones_like(norms), norms)
     return matrix / norms
 
 

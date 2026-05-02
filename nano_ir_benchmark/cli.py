@@ -66,7 +66,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Derived embedding evaluation spec. Repeat or comma-separate. "
             "Current syntax: truncate:DIM, sparse-max-active-dims:DIM, "
             "normalize, usearch:PRECISION, usearch-rescore:PRECISION, numpy:PRECISION, "
-            "or numpy-rescore:PRECISION. "
+            "numpy-rescore:PRECISION, torch:PRECISION, torch-rescore:PRECISION, cuda:PRECISION, "
+            "or cuda-rescore:PRECISION. "
             "Quantized variants are supported for dense models only. "
             "Example: --embedding-variant truncate:256,truncate:128 --embedding-variant usearch:int8,binary"
         ),

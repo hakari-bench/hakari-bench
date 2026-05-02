@@ -72,12 +72,40 @@ def _numpy_step(precision: str, *, rescore: bool = False) -> dict[str, object]:
     }
 
 
+def _torch_step(precision: str, *, rescore: bool = False, device: str | None = None) -> dict[str, object]:
+    parameters: dict[str, object] = {
+        "precision": precision,
+        "target": "query_and_corpus",
+        "method": "query_and_corpus",
+        "score_representation": "torch_exact_rescore" if rescore else "torch_exact",
+    }
+    if precision == "int8":
+        parameters["calibration"] = "corpus"
+    if device is not None:
+        parameters["search_device"] = device
+    return {
+        "type": "quantize",
+        "algorithm": "sentence_transformers_embedding_quantization",
+        "parameters": parameters,
+    }
+
+
 def _usearch_variant(name: str, precision: str, *, rescore: bool = False) -> dict[str, object]:
     return _pipeline_variant(name, _normalize_step(), _usearch_step(precision, rescore=rescore))
 
 
 def _numpy_variant(name: str, precision: str, *, rescore: bool = False) -> dict[str, object]:
     return _pipeline_variant(name, _normalize_step(), _numpy_step(precision, rescore=rescore))
+
+
+def _torch_variant(
+    name: str,
+    precision: str,
+    *,
+    rescore: bool = False,
+    device: str | None = None,
+) -> dict[str, object]:
+    return _pipeline_variant(name, _normalize_step(), _torch_step(precision, rescore=rescore, device=device))
 
 
 def _toy_task() -> EvalTask:
@@ -558,6 +586,25 @@ def test_embedding_pipeline_can_l2_normalize_dense_embeddings() -> None:
     )
 
 
+def test_embedding_pipeline_keeps_torch_normalize_on_device() -> None:
+    query_embeddings = torch.tensor([[3.0, 4.0], [0.0, 0.0]], dtype=torch.float32)
+    corpus_embeddings = torch.tensor([[0.0, 5.0], [12.0, 5.0]], dtype=torch.float32)
+
+    normalized_query, normalized_corpus = evaluation_module._apply_embedding_pipeline_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        steps=[_normalize_step()],
+    )
+
+    assert isinstance(normalized_query, torch.Tensor)
+    assert isinstance(normalized_corpus, torch.Tensor)
+    assert normalized_query.device == query_embeddings.device
+    assert normalized_corpus.device == corpus_embeddings.device
+    torch.testing.assert_close(normalized_query[0], torch.tensor([0.6, 0.8]))
+    torch.testing.assert_close(normalized_query[1], torch.tensor([0.0, 0.0]))
+    torch.testing.assert_close(torch.linalg.vector_norm(normalized_corpus, dim=1), torch.ones(2))
+
+
 def test_embedding_pipeline_normalizes_before_quantization_rescore_sources() -> None:
     query_embeddings = np.array([[3.0, 4.0]], dtype=np.float32)
     corpus_embeddings = np.array([[0.0, 5.0], [12.0, 5.0]], dtype=np.float32)
@@ -854,6 +901,196 @@ def test_numpy_rescore_retrieves_top_100_quantized_candidates(monkeypatch) -> No
     assert evaluation_module._quantization_metadata(corpus_quantized)["rescore"] is True
 
 
+def test_torch_int8_ranks_like_numpy_quantized_code_dot_product() -> None:
+    numpy_query = QuantizedEmbeddingMatrix(
+        values=np.array([[-102, -102]], dtype=np.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="query",
+        ranges_source="corpus",
+        ranges=np.array([[0.0, 0.0], [1.0, 1.0]], dtype=np.float32),
+        rounding="truncate",
+        score_representation="numpy_exact",
+    )
+    numpy_corpus = QuantizedEmbeddingMatrix(
+        values=np.array([[-102, -102], [-128, -128]], dtype=np.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="corpus",
+        ranges_source="corpus",
+        ranges=np.array([[0.0, 0.0], [1.0, 1.0]], dtype=np.float32),
+        rounding="truncate",
+        score_representation="numpy_exact",
+    )
+    torch_query = QuantizedEmbeddingMatrix(
+        values=torch.tensor([[-102, -102]], dtype=torch.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="query",
+        ranges_source="corpus",
+        ranges=torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.float32),
+        rounding="truncate",
+        score_representation="torch_exact",
+    )
+    torch_corpus = QuantizedEmbeddingMatrix(
+        values=torch.tensor([[-102, -102], [-128, -128]], dtype=torch.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="corpus",
+        ranges_source="corpus",
+        ranges=torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.float32),
+        rounding="truncate",
+        score_representation="torch_exact",
+    )
+
+    numpy_rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d1", "d2"],
+        query_embeddings=numpy_query,
+        corpus_embeddings=numpy_corpus,
+        score_name="cosine",
+    )
+    torch_rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d1", "d2"],
+        query_embeddings=torch_query,
+        corpus_embeddings=torch_corpus,
+        score_name="cosine",
+    )
+
+    assert torch_rankings == numpy_rankings == {"q1": ["d2", "d1"]}
+    metadata = evaluation_module._quantization_metadata(torch_corpus)
+    assert metadata["search_backend"] == "torch"
+    assert metadata["search_device"] == "cpu"
+
+
+def test_torch_binary_ranks_like_numpy_hamming_distance() -> None:
+    query_embeddings = torch.tensor([[1.0, -1.0]], dtype=torch.float32)
+    corpus_embeddings = torch.tensor([[1.0, -1.0], [-1.0, 1.0]], dtype=torch.float32)
+
+    torch_query, torch_corpus = evaluation_module._quantize_embedding_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        precision="binary",
+        target="query_and_corpus",
+        algorithm="sentence_transformers_embedding_quantization",
+        score_representation="torch_exact",
+    )
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d1", "d2"],
+        query_embeddings=torch_query,
+        corpus_embeddings=torch_corpus,
+        score_name="dot",
+    )
+
+    assert rankings["q1"] == ["d1", "d2"]
+    assert isinstance(torch_query.values, torch.Tensor)
+    assert torch_query.values.shape == (1, 2)
+    assert evaluation_module._quantization_metadata(torch_corpus)["binary_encoding"] == "unpacked_bits"
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not available")
+def test_cuda_quantized_search_keeps_values_on_cuda() -> None:
+    query_embeddings = torch.tensor([[1.0, 0.0]], dtype=torch.float32, device="cuda")
+    corpus_embeddings = torch.tensor([[1.0, 0.0], [0.0, 1.0]], dtype=torch.float32, device="cuda")
+
+    cuda_query, cuda_corpus = evaluation_module._quantize_embedding_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        precision="int8",
+        target="query_and_corpus",
+        algorithm="sentence_transformers_embedding_quantization",
+        score_representation="torch_exact",
+        search_device="cuda",
+    )
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d1", "d2"],
+        query_embeddings=cuda_query,
+        corpus_embeddings=cuda_corpus,
+        score_name="dot",
+    )
+
+    assert isinstance(cuda_query.values, torch.Tensor)
+    assert isinstance(cuda_corpus.values, torch.Tensor)
+    assert cuda_query.values.device.type == "cuda"
+    assert cuda_corpus.values.device.type == "cuda"
+    assert rankings["q1"] == ["d1", "d2"]
+    assert evaluation_module._quantization_metadata(cuda_corpus)["search_device"].startswith("cuda")
+
+
+def test_torch_rescore_retrieves_top_100_quantized_candidates(monkeypatch) -> None:
+    candidate_counts: list[int] = []
+
+    def fake_rescore_torch_quantized_candidates(
+        *,
+        query_ids,
+        corpus_ids,
+        candidate_indices,
+        query_embeddings,
+        corpus_embeddings,
+        score_name,
+        final_count,
+    ):
+        _ = query_embeddings, corpus_embeddings, score_name
+        candidate_counts.append(int(candidate_indices.shape[1]))
+        return {str(query_ids[0]): [str(corpus_id) for corpus_id in corpus_ids[:final_count]]}
+
+    monkeypatch.setattr(
+        evaluation_module,
+        "_rescore_torch_quantized_candidates",
+        fake_rescore_torch_quantized_candidates,
+    )
+    query_quantized = QuantizedEmbeddingMatrix(
+        values=torch.tensor([[127, 127]], dtype=torch.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="query",
+        ranges_source="corpus",
+        ranges=torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.float32),
+        rounding="truncate",
+        score_representation="torch_exact_rescore",
+        source_values=torch.tensor([[1.0, 1.0]], dtype=torch.float32),
+    )
+    corpus_values = torch.tensor([[127, 127], [0, 0]], dtype=torch.int8).repeat(75, 1)
+    corpus_quantized = QuantizedEmbeddingMatrix(
+        values=corpus_values,
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="corpus",
+        ranges_source="corpus",
+        ranges=torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.float32),
+        rounding="truncate",
+        score_representation="torch_exact_rescore",
+        source_values=corpus_values.to(torch.float32),
+    )
+
+    evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=[f"d{index}" for index in range(150)],
+        query_embeddings=query_quantized,
+        corpus_embeddings=corpus_quantized,
+        score_name="dot",
+    )
+
+    assert candidate_counts == [100]
+    assert evaluation_module._quantization_metadata(corpus_quantized)["candidate_top_k"] == 100
+    assert evaluation_module._quantization_metadata(corpus_quantized)["rescore"] is True
+
+
 def test_evaluate_dense_task_uses_single_pipeline_path_for_all_embedding_variants(monkeypatch) -> None:
     model = FakeDenseModel()
     pipeline_calls: list[list[str]] = []
@@ -892,6 +1129,26 @@ def test_evaluate_dense_task_uses_single_pipeline_path_for_all_embedding_variant
     assert len(model.query_calls) == 1
     assert len(model.document_calls) == 1
     assert pipeline_calls == [["truncate"], ["normalize", "quantize"], ["truncate", "normalize", "quantize"]]
+
+
+def test_evaluate_dense_task_requests_tensor_embeddings_for_torch_quantized_variants() -> None:
+    model = FakeDenseModel()
+
+    evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        embedding_variants=[_torch_variant("torch_int8", "int8")],
+    )
+
+    assert model.query_calls[0]["convert_to_tensor"] is True
+    assert model.document_calls[0]["convert_to_tensor"] is True
 
 
 def test_evaluate_dense_task_records_sparse_embedding_metadata() -> None:
