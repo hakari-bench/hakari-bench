@@ -65,7 +65,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Derived embedding evaluation spec. Repeat or comma-separate. "
             "Current syntax: truncate:DIM, sparse-max-active-dims:DIM, "
-            "usearch:PRECISION, or usearch-rescore:PRECISION. "
+            "normalize, usearch:PRECISION, usearch-rescore:PRECISION, numpy:PRECISION, "
+            "or numpy-rescore:PRECISION. "
             "Quantized variants are supported for dense models only. "
             "Example: --embedding-variant truncate:256,truncate:128 --embedding-variant usearch:int8,binary"
         ),
@@ -85,7 +86,7 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument(
         "--no-quantize",
         action="store_true",
-        help="Disable automatic dense usearch int8/binary quantized variants.",
+        help="Disable automatic dense usearch int8/binary quantized and top-100 rescore variants.",
     )
 
     evaluate.add_argument(

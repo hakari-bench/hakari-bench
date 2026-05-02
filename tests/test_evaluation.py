@@ -28,6 +28,10 @@ def _truncate_step(dim: int) -> dict[str, object]:
     return {"type": "truncate", "algorithm": "dimension_slice", "parameters": {"dim": dim}}
 
 
+def _normalize_step() -> dict[str, object]:
+    return {"type": "normalize", "algorithm": "l2", "parameters": {}}
+
+
 def _sparse_max_active_dims_step(max_active_dims: int, *, target: str = "query_and_corpus") -> dict[str, object]:
     return {
         "type": "sparse_max_active_dims",
@@ -50,6 +54,30 @@ def _usearch_step(precision: str, *, rescore: bool = False) -> dict[str, object]
         "algorithm": "sentence_transformers_embedding_quantization",
         "parameters": parameters,
     }
+
+
+def _numpy_step(precision: str, *, rescore: bool = False) -> dict[str, object]:
+    parameters: dict[str, object] = {
+        "precision": precision,
+        "target": "query_and_corpus",
+        "method": "query_and_corpus",
+        "score_representation": "numpy_exact_rescore" if rescore else "numpy_exact",
+    }
+    if precision == "int8":
+        parameters["calibration"] = "corpus"
+    return {
+        "type": "quantize",
+        "algorithm": "sentence_transformers_embedding_quantization",
+        "parameters": parameters,
+    }
+
+
+def _usearch_variant(name: str, precision: str, *, rescore: bool = False) -> dict[str, object]:
+    return _pipeline_variant(name, _normalize_step(), _usearch_step(precision, rescore=rescore))
+
+
+def _numpy_variant(name: str, precision: str, *, rescore: bool = False) -> dict[str, object]:
+    return _pipeline_variant(name, _normalize_step(), _numpy_step(precision, rescore=rescore))
 
 
 def _toy_task() -> EvalTask:
@@ -391,8 +419,10 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
         corpus_prompt_name=None,
         truncate_dim=None,
         embedding_variants=[
-            _pipeline_variant("usearch_int8", _usearch_step("int8")),
-            _pipeline_variant("usearch_binary", _usearch_step("binary")),
+            _usearch_variant("usearch_int8", "int8"),
+            _usearch_variant("usearch_binary", "binary"),
+            _usearch_variant("usearch_int8_rescore", "int8", rescore=True),
+            _usearch_variant("usearch_binary_rescore", "binary", rescore=True),
         ],
     )
 
@@ -405,6 +435,8 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
         "base",
         "usearch_int8",
         "usearch_binary",
+        "usearch_int8_rescore",
+        "usearch_binary_rescore",
     ]
     int8_eval = result.embedding_evaluations[1]
     assert int8_eval["aggregate_metric_value"] == pytest.approx(1.0)
@@ -438,6 +470,24 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
     assert binary_eval["embedding_metadata"]["corpus"]["quantization"]["precision"] == "binary"
     assert binary_eval["embedding_metadata"]["corpus"]["quantization"]["score_representation"] == "usearch_exact"
     assert "ToyData_test_dot_usearch_binary_ndcg@10" in binary_eval["metrics"]
+
+    int8_rescore_eval = result.embedding_evaluations[3]
+    assert int8_rescore_eval["aggregate_metric_value"] == pytest.approx(1.0)
+    assert int8_rescore_eval["embedding_metadata"]["corpus"]["quantization"]["score_representation"] == (
+        "usearch_exact_rescore"
+    )
+    assert int8_rescore_eval["embedding_metadata"]["corpus"]["quantization"]["candidate_top_k"] == 100
+    assert int8_rescore_eval["embedding_metadata"]["corpus"]["quantization"]["rescore"] is True
+    assert "ToyData_test_dot_usearch_int8_rescore_ndcg@10" in int8_rescore_eval["metrics"]
+
+    binary_rescore_eval = result.embedding_evaluations[4]
+    assert binary_rescore_eval["aggregate_metric_value"] == pytest.approx(1.0)
+    assert binary_rescore_eval["embedding_metadata"]["corpus"]["quantization"]["score_representation"] == (
+        "usearch_exact_rescore"
+    )
+    assert binary_rescore_eval["embedding_metadata"]["corpus"]["quantization"]["candidate_top_k"] == 100
+    assert binary_rescore_eval["embedding_metadata"]["corpus"]["quantization"]["rescore"] is True
+    assert "ToyData_test_dot_usearch_binary_rescore_ndcg@10" in binary_rescore_eval["metrics"]
 
 
 def test_quantize_int8_uses_sentence_transformers_truncating_bucket_cast() -> None:
@@ -487,6 +537,46 @@ def test_quantize_int8_query_and_corpus_mode_clips_query_outliers() -> None:
         np.array([[1.0, -1.0]], dtype=np.float32),
         atol=1e-6,
     )
+
+
+def test_embedding_pipeline_can_l2_normalize_dense_embeddings() -> None:
+    query_embeddings = np.array([[3.0, 4.0], [0.0, 0.0]], dtype=np.float32)
+    corpus_embeddings = np.array([[0.0, 5.0], [12.0, 5.0]], dtype=np.float32)
+
+    normalized_query, normalized_corpus = evaluation_module._apply_embedding_pipeline_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        steps=[_normalize_step()],
+    )
+
+    np.testing.assert_allclose(normalized_query[0], np.array([0.6, 0.8], dtype=np.float32), atol=1e-6)
+    np.testing.assert_allclose(normalized_query[1], np.array([0.0, 0.0], dtype=np.float32), atol=1e-6)
+    np.testing.assert_allclose(
+        np.linalg.norm(normalized_corpus, axis=1),
+        np.ones(2, dtype=np.float32),
+        atol=1e-6,
+    )
+
+
+def test_embedding_pipeline_normalizes_before_quantization_rescore_sources() -> None:
+    query_embeddings = np.array([[3.0, 4.0]], dtype=np.float32)
+    corpus_embeddings = np.array([[0.0, 5.0], [12.0, 5.0]], dtype=np.float32)
+
+    query_quantized, corpus_quantized = evaluation_module._apply_embedding_pipeline_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        steps=[
+            _normalize_step(),
+            _usearch_step("int8", rescore=True),
+        ],
+    )
+
+    assert query_quantized.score_representation == "usearch_exact_rescore"
+    assert corpus_quantized.score_representation == "usearch_exact_rescore"
+    assert query_quantized.source_values is not None
+    assert corpus_quantized.source_values is not None
+    np.testing.assert_allclose(np.linalg.norm(query_quantized.source_values, axis=1), [1.0], atol=1e-6)
+    np.testing.assert_allclose(np.linalg.norm(corpus_quantized.source_values, axis=1), [1.0, 1.0], atol=1e-6)
 
 
 def test_usearch_int8_rescore_reranks_candidates_with_source_float_embeddings() -> None:
@@ -644,6 +734,126 @@ def test_usearch_binary_ranks_by_hamming_distance() -> None:
     assert rankings["q1"] == ["d1", "d2"]
 
 
+def test_numpy_int8_ranks_by_quantized_code_dot_product() -> None:
+    query_quantized = QuantizedEmbeddingMatrix(
+        values=np.array([[-102, -102]], dtype=np.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="query",
+        ranges_source="corpus",
+        ranges=np.array([[0.0, 0.0], [1.0, 1.0]], dtype=np.float32),
+        rounding="truncate",
+        score_representation="numpy_exact",
+    )
+    corpus_quantized = QuantizedEmbeddingMatrix(
+        values=np.array([[-102, -102], [-128, -128]], dtype=np.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="corpus",
+        ranges_source="corpus",
+        ranges=np.array([[0.0, 0.0], [1.0, 1.0]], dtype=np.float32),
+        rounding="truncate",
+        score_representation="numpy_exact",
+    )
+
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d1", "d2"],
+        query_embeddings=query_quantized,
+        corpus_embeddings=corpus_quantized,
+        score_name="cosine",
+    )
+
+    assert rankings["q1"] == ["d2", "d1"]
+
+
+def test_numpy_binary_ranks_by_hamming_distance() -> None:
+    query_embeddings = np.array([[1.0, -1.0]], dtype=np.float32)
+    corpus_embeddings = np.array([[1.0, -1.0], [-1.0, 1.0]], dtype=np.float32)
+
+    query_quantized, corpus_quantized = evaluation_module._quantize_embedding_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        precision="binary",
+        target="query_and_corpus",
+        algorithm="sentence_transformers_embedding_quantization",
+        score_representation="numpy_exact",
+    )
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d1", "d2"],
+        query_embeddings=query_quantized,
+        corpus_embeddings=corpus_quantized,
+        score_name="dot",
+    )
+
+    assert rankings["q1"] == ["d1", "d2"]
+    assert evaluation_module._quantization_metadata(corpus_quantized)["search_backend"] == "numpy"
+
+
+def test_numpy_rescore_retrieves_top_100_quantized_candidates(monkeypatch) -> None:
+    candidate_counts: list[int] = []
+
+    def fake_rescore_quantized_candidates(
+        *,
+        query_ids,
+        corpus_ids,
+        candidate_indices,
+        query_embeddings,
+        corpus_embeddings,
+        score_name,
+        final_count,
+    ):
+        _ = query_embeddings, corpus_embeddings, score_name
+        candidate_counts.append(int(candidate_indices.shape[1]))
+        return {str(query_ids[0]): [str(corpus_id) for corpus_id in corpus_ids[:final_count]]}
+
+    monkeypatch.setattr(evaluation_module, "_rescore_quantized_candidates", fake_rescore_quantized_candidates)
+    query_quantized = QuantizedEmbeddingMatrix(
+        values=np.array([[127, 127]], dtype=np.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="query",
+        ranges_source="corpus",
+        ranges=np.array([[0.0, 0.0], [1.0, 1.0]], dtype=np.float32),
+        rounding="truncate",
+        score_representation="numpy_exact_rescore",
+        source_values=np.array([[1.0, 1.0]], dtype=np.float32),
+    )
+    corpus_values = np.tile(np.array([[127, 127], [0, 0]], dtype=np.int8), (75, 1))
+    corpus_quantized = QuantizedEmbeddingMatrix(
+        values=corpus_values,
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="corpus",
+        ranges_source="corpus",
+        ranges=np.array([[0.0, 0.0], [1.0, 1.0]], dtype=np.float32),
+        rounding="truncate",
+        score_representation="numpy_exact_rescore",
+        source_values=corpus_values.astype(np.float32),
+    )
+
+    evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=[f"d{index}" for index in range(150)],
+        query_embeddings=query_quantized,
+        corpus_embeddings=corpus_quantized,
+        score_name="dot",
+    )
+
+    assert candidate_counts == [100]
+    assert evaluation_module._quantization_metadata(corpus_quantized)["candidate_top_k"] == 100
+    assert evaluation_module._quantization_metadata(corpus_quantized)["rescore"] is True
+
+
 def test_evaluate_dense_task_uses_single_pipeline_path_for_all_embedding_variants(monkeypatch) -> None:
     model = FakeDenseModel()
     pipeline_calls: list[list[str]] = []
@@ -671,8 +881,8 @@ def test_evaluate_dense_task_uses_single_pipeline_path_for_all_embedding_variant
         truncate_dim=None,
         embedding_variants=[
             _pipeline_variant("truncate_dim_1", _truncate_step(1)),
-            _pipeline_variant("usearch_int8", _usearch_step("int8")),
-            _pipeline_variant("truncate_dim_1_usearch_binary", _truncate_step(1), _usearch_step("binary")),
+            _usearch_variant("usearch_int8", "int8"),
+            _pipeline_variant("truncate_dim_1_usearch_binary", _truncate_step(1), _normalize_step(), _usearch_step("binary")),
         ],
     )
 
@@ -681,7 +891,7 @@ def test_evaluate_dense_task_uses_single_pipeline_path_for_all_embedding_variant
     # path instead of adding transform-specific branches or extra model encodes.
     assert len(model.query_calls) == 1
     assert len(model.document_calls) == 1
-    assert pipeline_calls == [["truncate"], ["quantize"], ["truncate", "quantize"]]
+    assert pipeline_calls == [["truncate"], ["normalize", "quantize"], ["truncate", "normalize", "quantize"]]
 
 
 def test_evaluate_dense_task_records_sparse_embedding_metadata() -> None:
@@ -822,7 +1032,7 @@ def test_evaluate_dense_task_rejects_quantized_sparse_embedding_variants_after_e
             corpus_prompt_name=None,
             truncate_dim=None,
             embedding_variants=[
-                _pipeline_variant("usearch_int8", _usearch_step("int8")),
+                _usearch_variant("usearch_int8", "int8"),
             ],
         )
 

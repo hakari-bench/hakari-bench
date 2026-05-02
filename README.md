@@ -85,9 +85,10 @@ inference behavior.
 
 ### Quantization
 
-Dense evaluation runs exact usearch `int8` and binary quantized search variants
-by default. The benchmark first converts SentenceTransformers embeddings to the
-stored codes, then passes those codes to usearch; usearch does not calibrate or
+Dense evaluation runs exact usearch `int8` and binary quantized search variants,
+plus top-100 float rescoring for both variants, by default. The benchmark first
+L2-normalizes SentenceTransformers embeddings, converts them to the stored
+codes, then passes those codes to usearch; usearch does not calibrate or
 requantize embeddings. Use `--no-quantize` to run only the base dense result.
 
 ```bash
@@ -103,24 +104,31 @@ uv run nano-ir-bench evaluate \
   --no-quantize
 ```
 
-For explicit dense runs, use `usearch:`:
+For explicit dense runs, use `usearch:` and `usearch-rescore:`:
 
 ```bash
 uv run nano-ir-bench evaluate \
   --model example/embedding-model \
   --dataset NanoMTEB \
-  --embedding-variant usearch:int8,binary
+  --embedding-variant usearch:int8,binary \
+  --embedding-variant usearch-rescore:int8,binary
 ```
 
-To rerank quantized candidates with the source float embeddings, use
-`usearch-rescore:`. Rescore retrieves the top 100 quantized candidates and
-reranks only those candidates; it does not re-embed documents.
+Rescore retrieves the top 100 quantized candidates and reranks only those
+candidates with the already-computed source float embeddings; it does not
+re-embed documents.
+
+For backend diagnostics, `numpy:` and `numpy-rescore:` run the same normalized
+exact quantized full scan in NumPy instead of usearch:
 
 ```bash
 uv run nano-ir-bench evaluate \
   --model example/embedding-model \
   --dataset NanoMTEB \
-  --embedding-variant usearch-rescore:int8,binary
+  --embedding-variant usearch:int8,binary \
+  --embedding-variant usearch-rescore:int8,binary \
+  --embedding-variant numpy:int8,binary \
+  --embedding-variant numpy-rescore:int8,binary
 ```
 
 ### Truncated Dimensions
@@ -146,14 +154,17 @@ uv run nano-ir-bench evaluate \
   --dataset NanoMTEB \
   --embedding-variant truncate:256,128,64 \
   --embedding-variant usearch:int8,binary \
-  --embedding-variant-cross truncate:256,128,64 usearch:int8,binary
+  --embedding-variant usearch-rescore:int8,binary \
+  --embedding-variant-cross truncate:256,128,64 usearch:int8,binary \
+  --embedding-variant-cross truncate:256,128,64 usearch-rescore:int8,binary
 ```
 
 All three groups answer different questions: standalone truncation measures the
 dimension trade-off, standalone quantized search measures the quantization
 trade-off at the original dimension, and the cross product measures the combined
 dimension-and-quantization trade-off such as `128dim x int8` or
-`64dim x binary`.
+`64dim x binary`. The `usearch-rescore` variants record the same candidate set
+after reranking the top 100 quantized hits with source float embeddings.
 
 Each task JSON keeps the base result in `metrics` and records the base and
 derived results under `evaluation.embedding_evaluations`. Every entry includes

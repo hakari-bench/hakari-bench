@@ -14,6 +14,10 @@ def _truncate_step(dim: int) -> dict[str, object]:
     return {"type": "truncate", "algorithm": "dimension_slice", "parameters": {"dim": dim}}
 
 
+def _normalize_step() -> dict[str, object]:
+    return {"type": "normalize", "algorithm": "l2", "parameters": {}}
+
+
 def _sparse_max_active_dims_step(max_active_dims: int, *, target: str = "query_and_corpus") -> dict[str, object]:
     return {
         "type": "sparse_max_active_dims",
@@ -38,6 +42,30 @@ def _usearch_step(precision: str, *, rescore: bool = False) -> dict[str, object]
     }
 
 
+def _numpy_step(precision: str, *, rescore: bool = False) -> dict[str, object]:
+    parameters: dict[str, object] = {
+        "precision": precision,
+        "target": "query_and_corpus",
+        "method": "query_and_corpus",
+        "score_representation": "numpy_exact_rescore" if rescore else "numpy_exact",
+    }
+    if precision == "int8":
+        parameters["calibration"] = "corpus"
+    return {
+        "type": "quantize",
+        "algorithm": "sentence_transformers_embedding_quantization",
+        "parameters": parameters,
+    }
+
+
+def _usearch_variant(name: str, precision: str, *, rescore: bool = False) -> dict[str, object]:
+    return _pipeline_variant(name, _normalize_step(), _usearch_step(precision, rescore=rescore))
+
+
+def _numpy_variant(name: str, precision: str, *, rescore: bool = False) -> dict[str, object]:
+    return _pipeline_variant(name, _normalize_step(), _numpy_step(precision, rescore=rescore))
+
+
 def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     args = parse_args(["evaluate", "--model", "hotchpotch/model"])
 
@@ -47,8 +75,10 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.dataset == ["hakari-bench/NanoBEIR-en"]
     assert args.output_dir == "output/results"
     assert args.embedding_variants == [
-        _pipeline_variant("usearch_int8", _usearch_step("int8")),
-        _pipeline_variant("usearch_binary", _usearch_step("binary")),
+        _usearch_variant("usearch_int8", "int8"),
+        _usearch_variant("usearch_binary", "binary"),
+        _usearch_variant("usearch_int8_rescore", "int8", rescore=True),
+        _usearch_variant("usearch_binary_rescore", "binary", rescore=True),
     ]
 
 
@@ -453,10 +483,47 @@ def test_parse_args_accepts_usearch_embedding_variants() -> None:
     )
 
     assert args.embedding_variants == [
-        _pipeline_variant("usearch_int8", _usearch_step("int8")),
-        _pipeline_variant("usearch_binary", _usearch_step("binary")),
-        _pipeline_variant("usearch_int8_rescore", _usearch_step("int8", rescore=True)),
-        _pipeline_variant("usearch_binary_rescore", _usearch_step("binary", rescore=True)),
+        _usearch_variant("usearch_int8", "int8"),
+        _usearch_variant("usearch_binary", "binary"),
+        _usearch_variant("usearch_int8_rescore", "int8", rescore=True),
+        _usearch_variant("usearch_binary_rescore", "binary", rescore=True),
+    ]
+
+
+def test_parse_args_accepts_numpy_embedding_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "numpy:int8,binary",
+            "--embedding-variant",
+            "numpy-rescore:int8,binary",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _numpy_variant("numpy_int8", "int8"),
+        _numpy_variant("numpy_binary", "binary"),
+        _numpy_variant("numpy_int8_rescore", "int8", rescore=True),
+        _numpy_variant("numpy_binary_rescore", "binary", rescore=True),
+    ]
+
+
+def test_parse_args_accepts_normalize_embedding_variant() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "normalize",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _pipeline_variant("normalize", _normalize_step()),
     ]
 
 
@@ -476,12 +543,36 @@ def test_parse_args_accepts_embedding_variant_cross_product() -> None:
     # single variants. This keeps evaluation on one code path instead of adding
     # a separate truncate x quantize branch.
     assert args.embedding_variants == [
-        _pipeline_variant("truncate_dim_256_usearch_int8", _truncate_step(256), _usearch_step("int8")),
-        _pipeline_variant("truncate_dim_256_usearch_binary", _truncate_step(256), _usearch_step("binary")),
-        _pipeline_variant("truncate_dim_128_usearch_int8", _truncate_step(128), _usearch_step("int8")),
-        _pipeline_variant("truncate_dim_128_usearch_binary", _truncate_step(128), _usearch_step("binary")),
-        _pipeline_variant("truncate_dim_64_usearch_int8", _truncate_step(64), _usearch_step("int8")),
-        _pipeline_variant("truncate_dim_64_usearch_binary", _truncate_step(64), _usearch_step("binary")),
+        _pipeline_variant("truncate_dim_256_usearch_int8", _truncate_step(256), _normalize_step(), _usearch_step("int8")),
+        _pipeline_variant(
+            "truncate_dim_256_usearch_binary", _truncate_step(256), _normalize_step(), _usearch_step("binary")
+        ),
+        _pipeline_variant("truncate_dim_128_usearch_int8", _truncate_step(128), _normalize_step(), _usearch_step("int8")),
+        _pipeline_variant(
+            "truncate_dim_128_usearch_binary", _truncate_step(128), _normalize_step(), _usearch_step("binary")
+        ),
+        _pipeline_variant("truncate_dim_64_usearch_int8", _truncate_step(64), _normalize_step(), _usearch_step("int8")),
+        _pipeline_variant(
+            "truncate_dim_64_usearch_binary", _truncate_step(64), _normalize_step(), _usearch_step("binary")
+        ),
+    ]
+
+
+def test_parse_args_accepts_normalize_quantized_cross_product() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant-cross",
+            "normalize",
+            "usearch:int8,binary",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _pipeline_variant("normalize_usearch_int8", _normalize_step(), _usearch_step("int8")),
+        _pipeline_variant("normalize_usearch_binary", _normalize_step(), _usearch_step("binary")),
     ]
 
 
