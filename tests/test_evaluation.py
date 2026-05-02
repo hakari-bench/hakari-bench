@@ -11,7 +11,12 @@ from scipy import sparse
 
 import nano_ir_benchmark.evaluation as evaluation_module
 from nano_ir_benchmark.datasets import EvalTask, NanoDatasetSpec
-from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
+from nano_ir_benchmark.evaluation import (
+    LoadedIrDataset,
+    QuantizedEmbeddingMatrix,
+    evaluate_dense_task,
+    evaluate_reranker_task,
+)
 from nano_ir_benchmark.results import TaskRunResult, build_all_payload, result_path_for_task, run_or_load_task, safe_path_part
 
 
@@ -31,11 +36,50 @@ def _sparse_max_active_dims_step(max_active_dims: int, *, target: str = "query_a
     }
 
 
-def _quantize_step(precision: str, *, target: str = "corpus") -> dict[str, object]:
+def _quantize_step(
+    precision: str,
+    *,
+    target: str = "corpus",
+    calibration_sample_size: int | None = None,
+) -> dict[str, object]:
     parameters: dict[str, object] = {
         "precision": precision,
         "target": target,
         "method": "corpus_only" if target == "corpus" else "query_and_corpus",
+    }
+    if precision in {"int8", "uint8"}:
+        parameters["calibration"] = "corpus_sample" if calibration_sample_size is not None else "corpus"
+    if calibration_sample_size is not None:
+        parameters["calibration_sample_size"] = calibration_sample_size
+        parameters["calibration_sample_seed"] = 13
+    return {
+        "type": "quantize",
+        "algorithm": "sentence_transformers_embedding_quantization",
+        "parameters": parameters,
+    }
+
+
+def _quantize_code_step(precision: str) -> dict[str, object]:
+    parameters: dict[str, object] = {
+        "precision": precision,
+        "target": "query_and_corpus",
+        "method": "query_and_corpus",
+        "calibration": "corpus",
+        "score_representation": "quantized_code_float32",
+    }
+    return {
+        "type": "quantize",
+        "algorithm": "sentence_transformers_embedding_quantization",
+        "parameters": parameters,
+    }
+
+
+def _usearch_step(precision: str, *, rescore: bool = False) -> dict[str, object]:
+    parameters: dict[str, object] = {
+        "precision": precision,
+        "target": "query_and_corpus",
+        "method": "query_and_corpus",
+        "score_representation": "usearch_exact_rescore" if rescore else "usearch_exact",
     }
     if precision in {"int8", "uint8"}:
         parameters["calibration"] = "corpus"
@@ -418,6 +462,7 @@ def test_evaluate_dense_task_quantizes_embedding_variants_after_encoding() -> No
         "score_representation": "dequantized_float32",
         "method": "corpus_only",
         "side": "corpus",
+        "rounding": "truncate",
     }
 
     ubinary_eval = result.embedding_evaluations[2]
@@ -460,7 +505,7 @@ def test_quantize_int8_defaults_to_corpus_only_and_keeps_query_float() -> None:
     assert corpus_quantized.ranges_source == "corpus"
     assert corpus_quantized.method == "corpus_only"
     assert corpus_quantized.side == "corpus"
-    assert corpus_quantized.values.tolist() == [[127, -128], [-128, 127]]
+    assert corpus_quantized.values.tolist() == [[126, -128], [-128, 126]]
     np.testing.assert_allclose(
         evaluation_module._to_numpy_float32(query_result),
         query_embeddings,
@@ -469,8 +514,46 @@ def test_quantize_int8_defaults_to_corpus_only_and_keeps_query_float() -> None:
     np.testing.assert_allclose(
         evaluation_module._to_numpy_float32(corpus_quantized),
         corpus_embeddings,
-        atol=1e-6,
+        atol=0.01,
     )
+
+
+def test_quantize_int8_uses_sentence_transformers_truncating_bucket_cast() -> None:
+    query_embeddings = np.array([[0.492]], dtype=np.float32)
+    corpus_embeddings = np.array([[0.0], [1.0], [0.492]], dtype=np.float32)
+
+    _query_result, corpus_quantized = evaluation_module._quantize_embedding_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        precision="int8",
+        algorithm="sentence_transformers_embedding_quantization",
+    )
+
+    # SentenceTransformers quantize_embeddings casts bucket values directly to
+    # int8 rather than rounding to nearest. Keep parity so benchmark variants
+    # do not look better than the library's documented scalar quantization.
+    assert corpus_quantized.values[:, 0].tolist() == [-128, 126, -2]
+    assert corpus_quantized.rounding == "truncate"
+
+
+def test_quantize_int8_can_calibrate_from_corpus_sample() -> None:
+    query_embeddings = np.array([[10.0]], dtype=np.float32)
+    corpus_embeddings = np.array([[0.0], [1.0], [10.0]], dtype=np.float32)
+
+    _query_result, corpus_quantized = evaluation_module._quantize_embedding_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        precision="int8",
+        algorithm="sentence_transformers_embedding_quantization",
+        calibration_sample_size=2,
+        calibration_sample_seed=1,
+    )
+
+    np.testing.assert_allclose(corpus_quantized.ranges, np.array([[0.0], [1.0]], dtype=np.float32))
+    assert corpus_quantized.ranges_source == "corpus_sample"
+    assert corpus_quantized.calibration_sample_size == 2
+    assert corpus_quantized.calibration_sample_seed == 1
+    assert corpus_quantized.values[:, 0].tolist() == [-128, 126, 127]
 
 
 def test_quantize_int8_query_and_corpus_mode_clips_query_outliers() -> None:
@@ -495,12 +578,148 @@ def test_quantize_int8_query_and_corpus_mode_clips_query_outliers() -> None:
     assert corpus_quantized.method == "query_and_corpus"
     assert corpus_quantized.side == "corpus"
     assert query_quantized.values.tolist() == [[127, -128]]
-    assert corpus_quantized.values.tolist() == [[127, -128], [-128, 127]]
+    assert corpus_quantized.values.tolist() == [[126, -128], [-128, 126]]
     np.testing.assert_allclose(
         evaluation_module._to_numpy_float32(query_quantized),
         np.array([[1.0, -1.0]], dtype=np.float32),
         atol=1e-6,
     )
+
+
+def test_quantized_code_scoring_ranks_without_dequantizing_scalar_embeddings() -> None:
+    ranges = np.array([[0.0, 0.0], [1.0, 1.0]], dtype=np.float32)
+    query_quantized = QuantizedEmbeddingMatrix(
+        values=np.array([[-102, -102]], dtype=np.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="query",
+        ranges_source="corpus",
+        ranges=ranges,
+        rounding="truncate",
+        score_representation="quantized_code_float32",
+    )
+    corpus_quantized = QuantizedEmbeddingMatrix(
+        values=np.array([[-102, -102], [-128, -128]], dtype=np.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="corpus",
+        ranges_source="corpus",
+        ranges=ranges,
+        rounding="truncate",
+        score_representation="quantized_code_float32",
+    )
+
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d1", "d2"],
+        query_embeddings=query_quantized,
+        corpus_embeddings=corpus_quantized,
+        score_name="dot",
+    )
+
+    # In dequantized space d1 is closer to q1, but raw int8 code dot product
+    # promotes the all-low bucket d2. This locks the diagnostic code-score path
+    # to the stored quantized values rather than the float reconstruction.
+    assert rankings["q1"] == ["d2", "d1"]
+
+
+def test_usearch_int8_rescore_reranks_candidates_with_source_float_embeddings() -> None:
+    ranges = np.array([[0.0, 0.0], [1.0, 1.0]], dtype=np.float32)
+    query_quantized = QuantizedEmbeddingMatrix(
+        values=np.array([[-102, -102]], dtype=np.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="query",
+        ranges_source="corpus",
+        ranges=ranges,
+        rounding="truncate",
+        score_representation="usearch_exact",
+    )
+    corpus_quantized = QuantizedEmbeddingMatrix(
+        values=np.array([[-102, -102], [-128, -128]], dtype=np.int8),
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="corpus",
+        ranges_source="corpus",
+        ranges=ranges,
+        rounding="truncate",
+        score_representation="usearch_exact",
+    )
+    no_rescore_rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d1", "d2"],
+        query_embeddings=query_quantized,
+        corpus_embeddings=corpus_quantized,
+        score_name="dot",
+    )
+
+    query_rescore = QuantizedEmbeddingMatrix(
+        values=query_quantized.values,
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="query",
+        ranges_source="corpus",
+        ranges=ranges,
+        rounding="truncate",
+        score_representation="usearch_exact_rescore",
+        source_values=np.array([[0.1, 0.1]], dtype=np.float32),
+    )
+    corpus_rescore = QuantizedEmbeddingMatrix(
+        values=corpus_quantized.values,
+        precision="int8",
+        original_dim=2,
+        algorithm="sentence_transformers_embedding_quantization",
+        method="query_and_corpus",
+        side="corpus",
+        ranges_source="corpus",
+        ranges=ranges,
+        rounding="truncate",
+        score_representation="usearch_exact_rescore",
+        source_values=np.array([[0.1, 0.1], [0.0, 0.0]], dtype=np.float32),
+    )
+    rescore_rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d1", "d2"],
+        query_embeddings=query_rescore,
+        corpus_embeddings=corpus_rescore,
+        score_name="dot",
+    )
+
+    assert no_rescore_rankings["q1"] == ["d2", "d1"]
+    assert rescore_rankings["q1"] == ["d1", "d2"]
+
+
+def test_usearch_binary_ranks_by_hamming_distance() -> None:
+    query_embeddings = np.array([[1.0, -1.0]], dtype=np.float32)
+    corpus_embeddings = np.array([[1.0, -1.0], [-1.0, 1.0]], dtype=np.float32)
+
+    query_quantized, corpus_quantized = evaluation_module._quantize_embedding_pair(
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        precision="binary",
+        target="query_and_corpus",
+        algorithm="sentence_transformers_embedding_quantization",
+        score_representation="usearch_exact",
+    )
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d1", "d2"],
+        query_embeddings=query_quantized,
+        corpus_embeddings=corpus_quantized,
+        score_name="dot",
+    )
+
+    assert rankings["q1"] == ["d1", "d2"]
 
 
 def test_evaluate_dense_task_uses_single_pipeline_path_for_all_embedding_variants(monkeypatch) -> None:

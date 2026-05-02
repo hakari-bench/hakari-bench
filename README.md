@@ -130,6 +130,42 @@ uv run nano-ir-bench evaluate \
   --embedding-variant quantize-both:int8,ubinary
 ```
 
+For diagnostics, `quantize-code:int8` quantizes both query and document
+embeddings with corpus-derived ranges and ranks by the stored scalar code
+values instead of dequantized float vectors:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/embedding-model \
+  --dataset NanoMTEB \
+  --embedding-variant quantize-code:int8
+```
+
+To test calibration sensitivity, `quantize-sample:int8:N` computes scalar
+quantization ranges from a deterministic corpus sample of `N` embeddings
+instead of the full corpus:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/embedding-model \
+  --dataset NanoMTEB \
+  --embedding-variant quantize-sample:int8:128
+```
+
+To benchmark exact usearch candidate generation over pre-quantized vectors, use
+`usearch:`. The benchmark quantizes SentenceTransformers embeddings first and
+passes those stored codes to usearch, so usearch does not perform calibration.
+`usearch-rescore:` retrieves quantized candidates, then reranks them with the
+source float embeddings:
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model example/embedding-model \
+  --dataset NanoMTEB \
+  --embedding-variant usearch:int8,binary \
+  --embedding-variant usearch-rescore:int8,binary
+```
+
 ### Truncated Dimensions
 
 Matryoshka-style truncated embedding dimensions can be evaluated from the same

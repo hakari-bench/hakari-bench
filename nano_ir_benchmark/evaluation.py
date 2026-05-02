@@ -13,6 +13,10 @@ from nano_ir_benchmark.datasets import EvalTask
 from nano_ir_benchmark.metrics import compute_ir_metrics
 
 QuantizationPrecision = Literal["int8", "uint8", "binary", "ubinary"]
+USEARCH_SCORE_REPRESENTATION = "usearch_exact"
+USEARCH_RESCORE_SCORE_REPRESENTATION = "usearch_exact_rescore"
+USEARCH_CANDIDATE_TOP_K = 100
+USEARCH_RESCORE_MULTIPLIER = 2
 
 
 @dataclass(frozen=True)
@@ -42,6 +46,11 @@ class QuantizedEmbeddingMatrix:
     side: str
     ranges_source: str | None = None
     ranges: np.ndarray | None = None
+    rounding: str | None = None
+    score_representation: str | None = None
+    calibration_sample_size: int | None = None
+    calibration_sample_seed: int | None = None
+    source_values: np.ndarray | None = None
 
     @property
     def shape(self) -> tuple[int, ...]:
@@ -63,6 +72,7 @@ class QuantizedSparseEmbeddingMatrix:
     score_representation: str
     ranges_source: str | None = None
     value_range: tuple[float, float] | None = None
+    rounding: str | None = None
 
     @property
     def shape(self) -> tuple[int, ...]:
@@ -589,14 +599,21 @@ def _apply_embedding_pipeline_step_pair(
             _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_active_dims),
         )
     if step_type == "quantize":
-        precision = str(step.get("parameters", {}).get("precision"))
-        target = str(step.get("parameters", {}).get("target") or "corpus")
+        parameters = step.get("parameters", {})
+        precision = str(parameters.get("precision"))
+        target = str(parameters.get("target") or "corpus")
+        score_representation = parameters.get("score_representation")
+        calibration_sample_size = parameters.get("calibration_sample_size")
+        calibration_sample_seed = parameters.get("calibration_sample_seed")
         return _quantize_embedding_pair(
             query_embeddings=query_embeddings,
             corpus_embeddings=corpus_embeddings,
             precision=precision,
             target=target,
             algorithm=str(step.get("algorithm") or "sentence_transformers_embedding_quantization"),
+            score_representation=str(score_representation) if score_representation is not None else None,
+            calibration_sample_size=int(calibration_sample_size) if calibration_sample_size is not None else None,
+            calibration_sample_seed=int(calibration_sample_seed) if calibration_sample_seed is not None else 13,
         )
     raise ValueError(f"Unsupported embedding variant pipeline step: {step_type}")
 
@@ -658,8 +675,16 @@ def _quantize_embedding_pair(
     precision: str,
     target: str = "corpus",
     algorithm: str,
+    score_representation: str | None = None,
+    calibration_sample_size: int | None = None,
+    calibration_sample_seed: int = 13,
 ) -> tuple[Any, Any]:
+    score_representation = _normalize_quantized_dense_score_representation(score_representation)
     if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
+        if score_representation is not None:
+            raise ValueError("Quantized dense score representations are not supported for sparse embeddings.")
+        if calibration_sample_size is not None:
+            raise ValueError("Sample calibration is not supported for sparse quantized embeddings.")
         return _quantize_sparse_embedding_pair(
             query_embeddings=query_embeddings,
             corpus_embeddings=corpus_embeddings,
@@ -671,6 +696,20 @@ def _quantize_embedding_pair(
         raise ValueError(f"Unsupported quantization precision: {precision}")
     precision_literal = cast(QuantizationPrecision, precision)
     target = _normalize_quantization_target(target)
+    if score_representation == "quantized_code_float32" and target != "query_and_corpus":
+        raise ValueError("Quantized code scoring requires query_and_corpus quantization.")
+    if score_representation == "quantized_code_float32" and precision_literal not in {"int8", "uint8"}:
+        raise ValueError("Quantized code scoring requires int8 or uint8 scalar quantization.")
+    if score_representation in {USEARCH_SCORE_REPRESENTATION, USEARCH_RESCORE_SCORE_REPRESENTATION}:
+        if target != "query_and_corpus":
+            raise ValueError("usearch scoring requires query_and_corpus quantization.")
+        if precision_literal not in {"int8", "binary"}:
+            raise ValueError("usearch scoring requires int8 or binary quantization.")
+    if calibration_sample_size is not None:
+        if precision_literal not in {"int8", "uint8"}:
+            raise ValueError("Sample calibration requires int8 or uint8 scalar quantization.")
+        if calibration_sample_size <= 0:
+            raise ValueError("Calibration sample size must be positive.")
     method = "corpus_only" if target == "corpus" else "query_and_corpus"
 
     query_matrix = _to_numpy_float32(query_embeddings)
@@ -687,11 +726,27 @@ def _quantize_embedding_pair(
     if precision_literal in {"int8", "uint8"}:
         if corpus_matrix.shape[0] == 0:
             raise ValueError("Cannot calibrate quantized embeddings from an empty corpus.")
+        calibration_matrix = corpus_matrix
+        effective_calibration_sample_size = None
+        effective_calibration_sample_seed = None
+        if calibration_sample_size is not None and calibration_sample_size < corpus_matrix.shape[0]:
+            effective_calibration_sample_size = int(calibration_sample_size)
+            effective_calibration_sample_seed = int(calibration_sample_seed)
+            rng = np.random.default_rng(effective_calibration_sample_seed)
+            indices = np.sort(
+                rng.choice(corpus_matrix.shape[0], size=effective_calibration_sample_size, replace=False)
+            )
+            calibration_matrix = corpus_matrix[indices]
+            ranges_source = "corpus_sample"
+        else:
+            ranges_source = "corpus"
         # Strict evaluation should not adapt quantization buckets to the eval
         # queries. Use corpus-only ranges, then clip query outliers to prevent
         # numpy int8/uint8 casts from wrapping values outside those ranges.
-        ranges = np.vstack((np.min(corpus_matrix, axis=0), np.max(corpus_matrix, axis=0)))
-        ranges_source = "corpus"
+        ranges = np.vstack((np.min(calibration_matrix, axis=0), np.max(calibration_matrix, axis=0)))
+    else:
+        effective_calibration_sample_size = None
+        effective_calibration_sample_seed = None
 
     original_dim = int(query_matrix.shape[1])
     if precision_literal in {"binary", "ubinary"}:
@@ -717,6 +772,13 @@ def _quantize_embedding_pair(
         side="corpus",
         ranges_source=ranges_source,
         ranges=ranges.astype(np.float32, copy=True) if ranges is not None else None,
+        rounding="truncate" if precision_literal in {"int8", "uint8"} else None,
+        score_representation=score_representation,
+        calibration_sample_size=effective_calibration_sample_size,
+        calibration_sample_seed=effective_calibration_sample_seed,
+        source_values=corpus_matrix.astype(np.float32, copy=True)
+        if score_representation == USEARCH_RESCORE_SCORE_REPRESENTATION
+        else None,
     )
     if query_values is None:
         return query_embeddings, corpus_quantized
@@ -730,6 +792,13 @@ def _quantize_embedding_pair(
             side="query",
             ranges_source=ranges_source,
             ranges=ranges.astype(np.float32, copy=True) if ranges is not None else None,
+            rounding="truncate" if precision_literal in {"int8", "uint8"} else None,
+            score_representation=score_representation,
+            calibration_sample_size=effective_calibration_sample_size,
+            calibration_sample_seed=effective_calibration_sample_seed,
+            source_values=query_matrix.astype(np.float32, copy=True)
+            if score_representation == USEARCH_RESCORE_SCORE_REPRESENTATION
+            else None,
         ),
         corpus_quantized,
     )
@@ -806,9 +875,9 @@ def _quantize_sparse_matrix(
             step = 1.0
         buckets = (matrix.data - starts) / step
         if precision == "uint8":
-            matrix.data = np.rint(np.clip(buckets, 0, 255)).astype(np.uint8)
+            matrix.data = np.clip(buckets, 0, 255).astype(np.uint8)
         else:
-            matrix.data = np.rint(np.clip(buckets - 128, -128, 127)).astype(np.int8)
+            matrix.data = np.clip(buckets - 128, -128, 127).astype(np.int8)
         ranges_source = "corpus"
         score_representation = "dequantized_sparse_float32"
     elif precision in {"binary", "ubinary"}:
@@ -825,6 +894,7 @@ def _quantize_sparse_matrix(
         score_representation=score_representation,
         ranges_source=ranges_source,
         value_range=value_range,
+        rounding="truncate" if precision in {"int8", "uint8"} else None,
     )
 
 
@@ -835,6 +905,21 @@ def _normalize_quantization_target(target: str) -> str:
     if normalized in {"both", "query_and_corpus", "query_corpus", "query_and_document", "query_and_docs"}:
         return "query_and_corpus"
     raise ValueError(f"Unsupported quantization target: {target}")
+
+
+def _normalize_quantized_dense_score_representation(value: str | None) -> str | None:
+    if value is None:
+        return None
+    normalized = value.strip().lower().replace("-", "_")
+    if normalized in {"dequantized", "dequantized_float32"}:
+        return None
+    if normalized in {"code", "raw_code", "quantized_code", "quantized_code_float32"}:
+        return "quantized_code_float32"
+    if normalized in {"usearch", "usearch_exact"}:
+        return USEARCH_SCORE_REPRESENTATION
+    if normalized in {"usearch_rescore", "usearch_exact_rescore"}:
+        return USEARCH_RESCORE_SCORE_REPRESENTATION
+    raise ValueError(f"Unsupported quantized dense score representation: {value}")
 
 
 def _quantize_scalar_embeddings(
@@ -848,9 +933,9 @@ def _quantize_scalar_embeddings(
     steps = np.where(steps == 0, 1, steps)
     buckets = (embeddings - starts) / steps
     if precision == "uint8":
-        return np.rint(np.clip(buckets, 0, 255)).astype(np.uint8)
+        return np.clip(buckets, 0, 255).astype(np.uint8)
     if precision == "int8":
-        return np.rint(np.clip(buckets - 128, -128, 127)).astype(np.int8)
+        return np.clip(buckets - 128, -128, 127).astype(np.int8)
     raise ValueError(f"Unsupported scalar quantization precision: {precision}")
 
 
@@ -962,6 +1047,22 @@ def _quantization_metadata(embeddings: QuantizedEmbeddingMatrix | QuantizedSpars
     }
     if embeddings.ranges_source is not None:
         quantization["ranges_source"] = embeddings.ranges_source
+    if embeddings.rounding is not None:
+        quantization["rounding"] = embeddings.rounding
+    if isinstance(embeddings, QuantizedEmbeddingMatrix) and embeddings.calibration_sample_size is not None:
+        quantization["calibration_sample_size"] = embeddings.calibration_sample_size
+    if isinstance(embeddings, QuantizedEmbeddingMatrix) and embeddings.calibration_sample_seed is not None:
+        quantization["calibration_sample_seed"] = embeddings.calibration_sample_seed
+    if (
+        isinstance(embeddings, QuantizedEmbeddingMatrix)
+        and score_representation in {USEARCH_SCORE_REPRESENTATION, USEARCH_RESCORE_SCORE_REPRESENTATION}
+    ):
+        quantization["search_backend"] = "usearch"
+        quantization["search_exact"] = True
+        quantization["candidate_top_k"] = USEARCH_CANDIDATE_TOP_K
+        quantization["rescore"] = score_representation == USEARCH_RESCORE_SCORE_REPRESENTATION
+        if score_representation == USEARCH_RESCORE_SCORE_REPRESENTATION:
+            quantization["rescore_multiplier"] = USEARCH_RESCORE_MULTIPLIER
     if isinstance(embeddings, QuantizedSparseEmbeddingMatrix) and embeddings.value_range is not None:
         quantization["value_range"] = list(embeddings.value_range)
     return quantization
@@ -1091,6 +1192,8 @@ def _is_packed_binary_quantized(embeddings: Any) -> bool:
 
 
 def _quantized_score_representation(embeddings: QuantizedEmbeddingMatrix) -> str:
+    if embeddings.score_representation is not None:
+        return embeddings.score_representation
     if embeddings.precision in {"int8", "uint8"}:
         return "dequantized_float32"
     if embeddings.precision in {"binary", "ubinary"}:
@@ -1153,6 +1256,25 @@ def _score_name(value: Any) -> str:
     return value
 
 
+def _uses_quantized_scalar_code_scoring(query_embeddings: Any, corpus_embeddings: Any) -> bool:
+    return (
+        _is_scalar_quantized(query_embeddings)
+        and _is_scalar_quantized(corpus_embeddings)
+        and _quantized_score_representation(query_embeddings) == "quantized_code_float32"
+        and _quantized_score_representation(corpus_embeddings) == "quantized_code_float32"
+    )
+
+
+def _uses_usearch_quantized_scoring(query_embeddings: Any, corpus_embeddings: Any) -> bool:
+    if not _is_quantized_embedding_matrix(query_embeddings) or not _is_quantized_embedding_matrix(corpus_embeddings):
+        return False
+    score_representations = {
+        _quantized_score_representation(query_embeddings),
+        _quantized_score_representation(corpus_embeddings),
+    }
+    return bool(score_representations & {USEARCH_SCORE_REPRESENTATION, USEARCH_RESCORE_SCORE_REPRESENTATION})
+
+
 def _rank_by_similarity(
     *,
     query_ids: list[str],
@@ -1171,6 +1293,24 @@ def _rank_by_similarity(
             corpus_embeddings=corpus_embeddings,
         )
 
+    if _uses_quantized_scalar_code_scoring(query_embeddings, corpus_embeddings):
+        return _rank_quantized_scalar_codes(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=cast(QuantizedEmbeddingMatrix, query_embeddings),
+            corpus_embeddings=cast(QuantizedEmbeddingMatrix, corpus_embeddings),
+            score_name=score_name,
+        )
+
+    if _uses_usearch_quantized_scoring(query_embeddings, corpus_embeddings):
+        return _rank_usearch_quantized(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=cast(QuantizedEmbeddingMatrix, query_embeddings),
+            corpus_embeddings=cast(QuantizedEmbeddingMatrix, corpus_embeddings),
+            score_name=score_name,
+        )
+
     if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
         return _rank_sparse(
             query_ids=query_ids,
@@ -1182,6 +1322,166 @@ def _rank_by_similarity(
 
     query_matrix = _to_numpy_float32(query_embeddings)
     corpus_matrix = _to_numpy_float32(corpus_embeddings)
+    if score_name == "cosine":
+        query_matrix = _l2_normalize(query_matrix)
+        corpus_matrix = _l2_normalize(corpus_matrix)
+        scores = query_matrix @ corpus_matrix.T
+    elif score_name == "euclidean":
+        scores = -np.linalg.norm(query_matrix[:, None, :] - corpus_matrix[None, :, :], axis=2)
+    elif score_name == "manhattan":
+        scores = -np.abs(query_matrix[:, None, :] - corpus_matrix[None, :, :]).sum(axis=2)
+    else:
+        scores = query_matrix @ corpus_matrix.T
+
+    return _scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+
+
+def _rank_usearch_quantized(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: QuantizedEmbeddingMatrix,
+    corpus_embeddings: QuantizedEmbeddingMatrix,
+    score_name: str,
+) -> dict[str, list[str]]:
+    from usearch.index import Index
+
+    if query_embeddings.precision != corpus_embeddings.precision:
+        raise ValueError(
+            f"Cannot rank usearch embeddings with query precision {query_embeddings.precision} "
+            f"and corpus precision {corpus_embeddings.precision}."
+        )
+    if query_embeddings.original_dim != corpus_embeddings.original_dim:
+        raise ValueError(
+            f"Cannot rank usearch embeddings with query dimension {query_embeddings.original_dim} "
+            f"and corpus dimension {corpus_embeddings.original_dim}."
+        )
+    query_score_representation = _quantized_score_representation(query_embeddings)
+    corpus_score_representation = _quantized_score_representation(corpus_embeddings)
+    if query_score_representation != corpus_score_representation:
+        raise ValueError(
+            f"Cannot rank usearch embeddings with query score representation {query_score_representation} "
+            f"and corpus score representation {corpus_score_representation}."
+        )
+
+    rescore = query_score_representation == USEARCH_RESCORE_SCORE_REPRESENTATION
+    final_count = min(len(corpus_ids), USEARCH_CANDIDATE_TOP_K)
+    search_count = final_count
+    if rescore:
+        search_count = min(len(corpus_ids), final_count * USEARCH_RESCORE_MULTIPLIER)
+
+    query_values, corpus_values, ndim, metric, dtype = _usearch_index_inputs(query_embeddings, corpus_embeddings)
+    index = Index(ndim=ndim, metric=metric, dtype=dtype)
+    index.add(np.arange(len(corpus_values)), corpus_values)
+    matches = index.search(query_values, count=search_count, exact=True)
+    indices = np.asarray(matches.keys)
+    if indices.ndim < 2:
+        indices = np.atleast_2d(indices)
+
+    if rescore:
+        return _rescore_usearch_candidates(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            candidate_indices=indices[:, :search_count],
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            score_name=score_name,
+            final_count=final_count,
+        )
+
+    rankings: dict[str, list[str]] = {}
+    for query_index, query_id in enumerate(query_ids):
+        rankings[query_id] = [corpus_ids[int(index)] for index in indices[query_index, :final_count]]
+    return rankings
+
+
+def _usearch_index_inputs(
+    query_embeddings: QuantizedEmbeddingMatrix,
+    corpus_embeddings: QuantizedEmbeddingMatrix,
+) -> tuple[np.ndarray, np.ndarray, int, str, str]:
+    if query_embeddings.precision == "int8":
+        return (
+            query_embeddings.values.astype(np.int8, copy=False),
+            corpus_embeddings.values.astype(np.int8, copy=False),
+            int(corpus_embeddings.values.shape[1]),
+            "ip",
+            "i8",
+        )
+    if query_embeddings.precision == "binary":
+        return (
+            _binary_quantized_values_as_uint8(query_embeddings),
+            _binary_quantized_values_as_uint8(corpus_embeddings),
+            int(query_embeddings.original_dim),
+            "hamming",
+            "b1",
+        )
+    raise ValueError(f"Unsupported usearch quantization precision: {query_embeddings.precision}")
+
+
+def _binary_quantized_values_as_uint8(embeddings: QuantizedEmbeddingMatrix) -> np.ndarray:
+    if embeddings.precision == "ubinary":
+        return embeddings.values.astype(np.uint8, copy=False)
+    if embeddings.precision == "binary":
+        return (embeddings.values.astype(np.int16) + 128).astype(np.uint8)
+    raise ValueError(f"Expected binary quantized embeddings, got {embeddings.precision}.")
+
+
+def _rescore_usearch_candidates(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    candidate_indices: np.ndarray,
+    query_embeddings: QuantizedEmbeddingMatrix,
+    corpus_embeddings: QuantizedEmbeddingMatrix,
+    score_name: str,
+    final_count: int,
+) -> dict[str, list[str]]:
+    if query_embeddings.source_values is None or corpus_embeddings.source_values is None:
+        raise ValueError("usearch rescore requires source float embeddings.")
+    query_matrix = query_embeddings.source_values.astype(np.float32, copy=False)
+    corpus_matrix = corpus_embeddings.source_values.astype(np.float32, copy=False)
+    if score_name == "cosine":
+        query_matrix = _l2_normalize(query_matrix)
+        corpus_matrix = _l2_normalize(corpus_matrix)
+
+    rankings: dict[str, list[str]] = {}
+    for query_index, query_id in enumerate(query_ids):
+        candidates = [int(index) for index in candidate_indices[query_index] if int(index) >= 0]
+        if score_name == "euclidean":
+            scores = -np.linalg.norm(corpus_matrix[candidates] - query_matrix[query_index], axis=1)
+        elif score_name == "manhattan":
+            scores = -np.abs(corpus_matrix[candidates] - query_matrix[query_index]).sum(axis=1)
+        else:
+            scores = corpus_matrix[candidates] @ query_matrix[query_index]
+        ordered = sorted(
+            zip(candidates, scores, strict=True),
+            key=lambda item: (-float(item[1]), corpus_ids[item[0]]),
+        )
+        rankings[query_id] = [corpus_ids[index] for index, _score in ordered[:final_count]]
+    return rankings
+
+
+def _rank_quantized_scalar_codes(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: QuantizedEmbeddingMatrix,
+    corpus_embeddings: QuantizedEmbeddingMatrix,
+    score_name: str,
+) -> dict[str, list[str]]:
+    if query_embeddings.precision != corpus_embeddings.precision:
+        raise ValueError(
+            f"Cannot rank quantized codes with query precision {query_embeddings.precision} "
+            f"and corpus precision {corpus_embeddings.precision}."
+        )
+    if query_embeddings.original_dim != corpus_embeddings.original_dim:
+        raise ValueError(
+            f"Cannot rank quantized codes with query dimension {query_embeddings.original_dim} "
+            f"and corpus dimension {corpus_embeddings.original_dim}."
+        )
+
+    query_matrix = query_embeddings.values.astype(np.float32, copy=False)
+    corpus_matrix = corpus_embeddings.values.astype(np.float32, copy=False)
     if score_name == "cosine":
         query_matrix = _l2_normalize(query_matrix)
         corpus_matrix = _l2_normalize(corpus_matrix)

@@ -65,7 +65,10 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Derived embedding evaluation spec. Repeat or comma-separate. "
             "Current syntax: truncate:DIM, quantize:PRECISION for docs-only quantization, "
-            "or quantize-both:PRECISION for query+docs quantization. "
+            "quantize-both:PRECISION for query+docs quantization, "
+            "quantize-code:PRECISION for raw scalar code scoring, "
+            "quantize-sample:PRECISION:SAMPLE_SIZE for sample-calibrated scalar quantization, "
+            "or usearch[:|-rescore:]PRECISION for exact usearch search. "
             "Example: --embedding-variant truncate:256,truncate:128 --embedding-variant quantize:int8,ubinary"
         ),
     )

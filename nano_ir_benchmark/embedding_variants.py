@@ -5,7 +5,12 @@ from itertools import product
 from typing import Any
 
 QUANTIZE_PRECISIONS = {"int8", "uint8", "binary", "ubinary"}
+QUANTIZE_CODE_PRECISIONS = {"int8", "uint8"}
 QUANTIZE_TARGETS = {"corpus", "query_and_corpus"}
+QUANTIZE_CODE_SCORE_REPRESENTATION = "quantized_code_float32"
+USEARCH_PRECISIONS = {"int8", "binary"}
+USEARCH_SCORE_REPRESENTATION = "usearch_exact"
+USEARCH_RESCORE_SCORE_REPRESENTATION = "usearch_exact_rescore"
 SPARSE_MAX_ACTIVE_DIMS_PREFIXES = (
     "sparse-max-active-dims:",
     "sparse_max_active_dims:",
@@ -187,6 +192,62 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
     elif token.startswith(("quantize-both=", "quantize_both=", "quantize-query-corpus=", "quantize_query_corpus=")):
         precision = token.split("=", 1)[1]
         return _quantize_variant(token=token, precision=precision, target="query_and_corpus"), "quantize:query_and_corpus"
+    elif token.startswith(("usearch-rescore:", "usearch_rescore:")):
+        precision = token.split(":", 1)[1]
+        return _usearch_variant(token=token, precision=precision, rescore=True), "usearch:rescore"
+    elif token.startswith(("usearch-rescore=", "usearch_rescore=")):
+        precision = token.split("=", 1)[1]
+        return _usearch_variant(token=token, precision=precision, rescore=True), "usearch:rescore"
+    elif token.startswith("usearch:"):
+        precision = token.split(":", 1)[1]
+        return _usearch_variant(token=token, precision=precision, rescore=False), "usearch:no_rescore"
+    elif token.startswith("usearch="):
+        precision = token.split("=", 1)[1]
+        return _usearch_variant(token=token, precision=precision, rescore=False), "usearch:no_rescore"
+    elif token.startswith(("quantize-code:", "quantize_code:", "quantize-search:", "quantize_search:")):
+        precision = token.split(":", 1)[1]
+        return (
+            _quantize_variant(
+                token=token,
+                precision=precision,
+                target="query_and_corpus",
+                score_representation=QUANTIZE_CODE_SCORE_REPRESENTATION,
+            ),
+            "quantize_code",
+        )
+    elif token.startswith(("quantize-code=", "quantize_code=", "quantize-search=", "quantize_search=")):
+        precision = token.split("=", 1)[1]
+        return (
+            _quantize_variant(
+                token=token,
+                precision=precision,
+                target="query_and_corpus",
+                score_representation=QUANTIZE_CODE_SCORE_REPRESENTATION,
+            ),
+            "quantize_code",
+        )
+    elif token.startswith(("quantize-sample:", "quantize_sample:", "quantize-calib:", "quantize_calib:")):
+        precision, sample_size = _parse_quantize_sample_value(token=token, value=token.split(":", 1)[1])
+        return (
+            _quantize_variant(
+                token=token,
+                precision=precision,
+                target="corpus",
+                calibration_sample_size=sample_size,
+            ),
+            "quantize_sample",
+        )
+    elif token.startswith(("quantize-sample=", "quantize_sample=", "quantize-calib=", "quantize_calib=")):
+        precision, sample_size = _parse_quantize_sample_value(token=token, value=token.split("=", 1)[1])
+        return (
+            _quantize_variant(
+                token=token,
+                precision=precision,
+                target="corpus",
+                calibration_sample_size=sample_size,
+            ),
+            "quantize_sample",
+        )
     elif token.startswith("quantize:"):
         precision = token.split(":", 1)[1]
         return _quantize_variant(token=token, precision=precision, target="corpus"), "quantize:corpus"
@@ -198,16 +259,45 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
         if target not in QUANTIZE_TARGETS:
             raise ValueError(f"Unsupported quantization target in parser state: {target}")
         return _quantize_variant(token=token, precision=token, target=target), current_kind
+    elif current_kind == "quantize_code" and token in QUANTIZE_CODE_PRECISIONS:
+        return (
+            _quantize_variant(
+                token=token,
+                precision=token,
+                target="query_and_corpus",
+                score_representation=QUANTIZE_CODE_SCORE_REPRESENTATION,
+            ),
+            current_kind,
+        )
+    elif current_kind is not None and current_kind.startswith("usearch:") and token in USEARCH_PRECISIONS:
+        rescore = current_kind.split(":", 1)[1] == "rescore"
+        return _usearch_variant(token=token, precision=token, rescore=rescore), current_kind
     else:
         raise ValueError(
             "Unsupported embedding variant "
             f"'{token}'. Supported syntax: truncate:DIM, sparse-max-active-dims:DIM, "
-            "quantize:PRECISION, or quantize-both:PRECISION"
+            "quantize:PRECISION, quantize-both:PRECISION, quantize-code:PRECISION, "
+            "quantize-sample:PRECISION:SAMPLE_SIZE, usearch:PRECISION, "
+            "or usearch-rescore:PRECISION"
         )
 
 
 def _is_integer_token(token: str) -> bool:
     return token.isdigit() or (token.startswith("+") and token[1:].isdigit())
+
+
+def _parse_quantize_sample_value(*, token: str, value: str) -> tuple[str, int]:
+    parts = value.split(":")
+    if len(parts) != 2:
+        raise ValueError(f"Embedding variant '{token}' must use quantize-sample:PRECISION:SAMPLE_SIZE.")
+    precision, sample_size_value = parts
+    try:
+        sample_size = int(sample_size_value)
+    except ValueError as exc:
+        raise ValueError(f"Embedding variant '{token}' has a non-integer calibration sample size.") from exc
+    if sample_size <= 0:
+        raise ValueError(f"Embedding variant '{token}' must use a positive calibration sample size.")
+    return precision, sample_size
 
 
 def _truncate_variant(*, token: str, dim_value: str) -> dict[str, Any]:
@@ -277,7 +367,14 @@ def _pipeline_steps(variant: dict[str, Any]) -> list[dict[str, Any]]:
     return steps
 
 
-def _quantize_variant(*, token: str, precision: str, target: str) -> dict[str, Any]:
+def _quantize_variant(
+    *,
+    token: str,
+    precision: str,
+    target: str,
+    score_representation: str | None = None,
+    calibration_sample_size: int | None = None,
+) -> dict[str, Any]:
     if precision not in QUANTIZE_PRECISIONS:
         raise ValueError(
             f"Embedding variant '{token}' has unsupported quantization precision {precision!r}. "
@@ -288,15 +385,58 @@ def _quantize_variant(*, token: str, precision: str, target: str) -> dict[str, A
             f"Embedding variant '{token}' has unsupported quantization target {target!r}. "
             f"Supported targets are: {', '.join(sorted(QUANTIZE_TARGETS))}."
         )
+    if score_representation == QUANTIZE_CODE_SCORE_REPRESENTATION:
+        if precision not in QUANTIZE_CODE_PRECISIONS:
+            raise ValueError(
+                f"Embedding variant '{token}' has unsupported code scoring precision {precision!r}. "
+                f"Supported code scoring precisions are: {', '.join(sorted(QUANTIZE_CODE_PRECISIONS))}."
+            )
+        if target != "query_and_corpus":
+            raise ValueError(f"Embedding variant '{token}' must quantize both query and corpus for code scoring.")
+    elif score_representation in {USEARCH_SCORE_REPRESENTATION, USEARCH_RESCORE_SCORE_REPRESENTATION}:
+        if precision not in USEARCH_PRECISIONS:
+            raise ValueError(
+                f"Embedding variant '{token}' has unsupported usearch precision {precision!r}. "
+                f"Supported usearch precisions are: {', '.join(sorted(USEARCH_PRECISIONS))}."
+            )
+        if target != "query_and_corpus":
+            raise ValueError(f"Embedding variant '{token}' must quantize both query and corpus for usearch scoring.")
+    elif score_representation is not None:
+        raise ValueError(f"Embedding variant '{token}' has unsupported score representation {score_representation!r}.")
+    if calibration_sample_size is not None:
+        if precision not in QUANTIZE_CODE_PRECISIONS:
+            raise ValueError(
+                f"Embedding variant '{token}' has unsupported sample calibration precision {precision!r}. "
+                f"Supported sample calibration precisions are: {', '.join(sorted(QUANTIZE_CODE_PRECISIONS))}."
+            )
+        if target != "corpus":
+            raise ValueError(f"Embedding variant '{token}' supports sample calibration for docs-only quantization.")
 
     method = "corpus_only" if target == "corpus" else "query_and_corpus"
-    suffix = "docs" if target == "corpus" else "both"
+    if calibration_sample_size is not None:
+        suffix = f"sample_{calibration_sample_size}_docs"
+    elif score_representation == QUANTIZE_CODE_SCORE_REPRESENTATION:
+        suffix = "code"
+    elif score_representation == USEARCH_SCORE_REPRESENTATION:
+        suffix = "usearch"
+    elif score_representation == USEARCH_RESCORE_SCORE_REPRESENTATION:
+        suffix = "usearch_rescore"
+    else:
+        suffix = "docs" if target == "corpus" else "both"
     parameters: dict[str, Any] = {"precision": precision, "target": target, "method": method}
     if precision in {"int8", "uint8"}:
-        parameters["calibration"] = "corpus"
+        parameters["calibration"] = "corpus_sample" if calibration_sample_size is not None else "corpus"
+    if score_representation is not None:
+        parameters["score_representation"] = score_representation
+    if calibration_sample_size is not None:
+        parameters["calibration_sample_size"] = calibration_sample_size
+        parameters["calibration_sample_seed"] = 13
 
+    name = f"usearch_{precision}" if suffix == "usearch" else f"quantize_{precision}_{suffix}"
+    if suffix == "usearch_rescore":
+        name = f"usearch_{precision}_rescore"
     return {
-        "name": f"quantize_{precision}_{suffix}",
+        "name": name,
         "transform": _pipeline_transform(
             {
                 "type": "quantize",
@@ -305,3 +445,12 @@ def _quantize_variant(*, token: str, precision: str, target: str) -> dict[str, A
             }
         ),
     }
+
+
+def _usearch_variant(*, token: str, precision: str, rescore: bool) -> dict[str, Any]:
+    return _quantize_variant(
+        token=token,
+        precision=precision,
+        target="query_and_corpus",
+        score_representation=USEARCH_RESCORE_SCORE_REPRESENTATION if rescore else USEARCH_SCORE_REPRESENTATION,
+    )
