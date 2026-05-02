@@ -1,10 +1,17 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 import duckdb
 from pydantic import BaseModel, ConfigDict
+
+from nano_ir_benchmark.viewer.task_names import (
+    canonical_split_name,
+    canonical_task_key,
+    canonical_task_name,
+    is_legacy_task_alias,
+)
 
 
 class TaskResultRecord(BaseModel):
@@ -26,6 +33,7 @@ class TaskResultRecord(BaseModel):
     embedding_variant_name: str | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
+    uses_legacy_task_alias: bool = False
 
 
 class TaskResultsRepository:
@@ -82,16 +90,45 @@ class TaskResultsRepository:
                 WHERE benchmark IN ({placeholders})
                   AND score IS NOT NULL
                   {variant_filter}
+                ORDER BY benchmark, dataset_id, task_name, model_name, embedding_variant_name IS NOT NULL, embedding_variant_name
             """
             cursor = con.execute(query, benchmarks)
             field_names = [str(description[0]) for description in cursor.description]
-            return [_task_result_record(field_names, row) for row in cursor.fetchall()]
+            return _dedupe_task_result_records(_task_result_record(field_names, row) for row in cursor.fetchall())
         finally:
             con.close()
 
 
 def _task_result_record(field_names: list[str], row: tuple[Any, ...]) -> TaskResultRecord:
-    return TaskResultRecord.model_validate(dict(zip(field_names, row, strict=True)))
+    payload = dict(zip(field_names, row, strict=True))
+    benchmark = str(payload["benchmark"])
+    dataset_id = str(payload["dataset_id"])
+    raw_task_name = str(payload["task_name"])
+    task_name = canonical_task_name(benchmark, raw_task_name)
+    uses_legacy_task_alias = is_legacy_task_alias(benchmark, raw_task_name)
+    payload["split_name"] = canonical_split_name(benchmark, payload.get("split_name"))
+    payload["task_name"] = task_name
+    payload["uses_legacy_task_alias"] = uses_legacy_task_alias
+    if uses_legacy_task_alias:
+        payload["task_key"] = canonical_task_key(benchmark=benchmark, dataset_id=dataset_id, task_name=task_name)
+    return TaskResultRecord.model_validate(payload)
+
+
+def _dedupe_task_result_records(records: Iterable[TaskResultRecord]) -> list[TaskResultRecord]:
+    deduped: dict[tuple[str, str, str, str | None, int | None, str | None], TaskResultRecord] = {}
+    for record in records:
+        key = (
+            record.model_name,
+            record.benchmark,
+            record.task_key,
+            record.embedding_variant_name,
+            record.embedding_dim,
+            record.quantization,
+        )
+        current = deduped.get(key)
+        if current is None or (current.uses_legacy_task_alias and not record.uses_legacy_task_alias):
+            deduped[key] = record
+    return list(deduped.values())
 
 
 def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:

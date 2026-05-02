@@ -289,6 +289,8 @@ complete model rule などの leaderboard semantics を `LeaderboardService` 側
 - view が要求した `benchmark` だけを読む。
 - variant 表示が不要なときは `embedding_variant_name IS NULL` の base rows だけを読む。
 - 古い DuckDB に variant 列がない場合は、該当 DTO field を `NULL` として返す。
+- 旧 NanoJMTEB task 名を現行名へ正規化し、旧名と新名の結果が混在する場合は
+  新名の行を優先する。
 
 概念的には次の SQL です。
 
@@ -316,6 +318,29 @@ WHERE benchmark IN ('MNanoBEIR', 'NanoRTEB')
 
 `embedding_variant_name` などの variant 列が存在しない古い DB では、現行
 viewer はそれらを `NULL` として扱います。
+
+### NanoJMTEB task name aliases
+
+NanoJMTEB の一部 split/task 名は `NanoJa...` 付きの旧名から、`Nano...` の現行名
+へ変更されています。viewer と DuckDB/report 生成スクリプトは、旧 result JSON
+や古い DuckDB を読めるように次の alias を現行名へ正規化します。
+
+| legacy name | canonical name |
+| --- | --- |
+| `NanoJaMIRACL` | `NanoMIRACL` |
+| `NanoJaMintaka` | `NanoMintaka` |
+| `NanoJaMrTidy` | `NanoMrTidy` |
+| `NanoJaMultiLongDoc` | `NanoMultiLongDoc` |
+| `NanoJaNLPJournalAbsArticle` | `NanoNLPJournalAbsArticle` |
+| `NanoJaNLPJournalAbsIntro` | `NanoNLPJournalAbsIntro` |
+| `NanoJaNLPJournalTitleAbs` | `NanoNLPJournalTitleAbs` |
+| `NanoJaNLPJournalTitleIntro` | `NanoNLPJournalTitleIntro` |
+
+正規化後の `task_key` は
+`NanoJMTEB::hakari-bench/NanoJMTEB::{canonical task name}` です。旧名と新名が
+同じ model/task/variant として同時に存在する場合は、現行名の行を優先します。
+これは同じ task が二重に ranking に入って Borda の母集団が壊れるのを防ぐため
+です。
 
 ## SQL Recipes
 
