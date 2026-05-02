@@ -103,10 +103,32 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.dataset == ["hakari-bench/NanoBEIR-en"]
     assert args.output_dir == "output/results"
     assert args.embedding_variants == [
+        _torch_variant("torch_int8", "int8"),
+        _torch_variant("torch_binary", "binary"),
+        _torch_variant("torch_int8_rescore", "int8", rescore=True),
+        _torch_variant("torch_binary_rescore", "binary", rescore=True),
+    ]
+
+
+def test_parse_args_defaults_to_usearch_quantized_variants_on_cpu() -> None:
+    args = parse_args(["evaluate", "--model", "hotchpotch/model", "--device", "cpu"])
+
+    assert args.embedding_variants == [
         _usearch_variant("usearch_int8", "int8"),
         _usearch_variant("usearch_binary", "binary"),
         _usearch_variant("usearch_int8_rescore", "int8", rescore=True),
         _usearch_variant("usearch_binary_rescore", "binary", rescore=True),
+    ]
+
+
+def test_parse_args_defaults_to_cuda_quantized_variants_on_cuda() -> None:
+    args = parse_args(["evaluate", "--model", "hotchpotch/model", "--device", "cuda"])
+
+    assert args.embedding_variants == [
+        _torch_variant("cuda_int8", "int8", device="cuda"),
+        _torch_variant("cuda_binary", "binary", device="cuda"),
+        _torch_variant("cuda_int8_rescore", "int8", rescore=True, device="cuda"),
+        _torch_variant("cuda_binary_rescore", "binary", rescore=True, device="cuda"),
     ]
 
 

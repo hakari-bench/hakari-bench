@@ -85,11 +85,19 @@ inference behavior.
 
 ### Quantization
 
-Dense evaluation runs exact usearch `int8` and binary quantized search variants,
-plus top-100 float rescoring for both variants, by default. The benchmark first
-L2-normalizes SentenceTransformers embeddings, converts them to the stored
-codes, then passes those codes to usearch; usearch does not calibrate or
-requantize embeddings. Use `--no-quantize` to run only the base dense result.
+When dense or sparse SentenceTransformers models run on a non-CPU device, the
+benchmark keeps base scoring on PyTorch tensors and performs exact score/top-k
+work on that device. Dense single-vector, sparse tensor, and late-interaction
+tensor shapes use this path; CPU model runs continue to use the NumPy/SciPy
+paths.
+
+Dense evaluation automatically runs normalized `int8` and binary quantized
+search variants, plus top-100 float rescoring for both variants. CPU runs use
+exact usearch variants by default. Non-CPU runs use PyTorch tensor variants by
+default, and `--device cuda` forces the `cuda:` variants. The benchmark first
+L2-normalizes SentenceTransformers embeddings and converts them to stored codes;
+usearch does not calibrate or requantize embeddings. Use `--no-quantize` to run
+only the base dense result.
 
 ```bash
 uv run nano-ir-bench evaluate \

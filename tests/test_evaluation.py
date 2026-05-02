@@ -159,6 +159,29 @@ class FakeDenseModel:
         return np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]])
 
 
+class FakeCudaDenseModel:
+    similarity_fn_name = "dot"
+    prompts = {"query": "query: ", "document": "document: "}
+    default_prompt_name = None
+    device = torch.device("cuda")
+
+    def __init__(self) -> None:
+        self.query_calls: list[dict[str, object]] = []
+        self.document_calls: list[dict[str, object]] = []
+
+    def encode_query(self, sentences: list[str], **kwargs: object) -> np.ndarray | torch.Tensor:
+        self.query_calls.append({"sentences": sentences, **kwargs})
+        if kwargs.get("convert_to_tensor"):
+            return torch.tensor([[1.0, 0.0], [0.0, 1.0]], dtype=torch.float32)
+        return np.array([[1.0, 0.0], [0.0, 1.0]], dtype=np.float32)
+
+    def encode_document(self, sentences: list[str], **kwargs: object) -> np.ndarray | torch.Tensor:
+        self.document_calls.append({"sentences": sentences, **kwargs})
+        if kwargs.get("convert_to_tensor"):
+            return torch.tensor([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]], dtype=torch.float32)
+        return np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]], dtype=np.float32)
+
+
 class FakeScaleSensitiveDenseModel:
     similarity_fn_name = "dot"
 
@@ -266,6 +289,10 @@ class FakeSentenceTransformersSparseModel:
         return torch.tensor([[1.0, 0.0, 0.0, 1.0], [0.0, 2.0, 0.0, 0.0], [0.0, 0.0, 4.0, 0.0]]).to_sparse()
 
 
+class FakeCudaSentenceTransformersSparseModel(FakeSentenceTransformersSparseModel):
+    device = torch.device("cuda")
+
+
 class FakeReranker:
     def predict(self, pairs: list[tuple[str, str]], **kwargs: object) -> list[float]:
         return [1.0 if pair in {("cat query", "cat doc"), ("dog query", "dog doc")} else 0.0 for pair in pairs]
@@ -290,6 +317,27 @@ def test_evaluate_dense_task_uses_default_prompt_config_when_not_overridden() ->
     assert model.query_calls[0]["sentences"] == ["cat query", "dog query"]
     assert "prompt" not in model.query_calls[0]
     assert "prompt_name" not in model.query_calls[0]
+
+
+def test_evaluate_dense_task_requests_tensor_embeddings_for_cuda_models_by_default() -> None:
+    model = FakeCudaDenseModel()
+
+    result = evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=8,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+    )
+
+    assert model.query_calls[0]["convert_to_tensor"] is True
+    assert model.document_calls[0]["convert_to_tensor"] is True
+    assert result.embedding_evaluations[0]["embedding_metadata"]["query"]["device"] == "cpu"
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
 
 
 def test_evaluate_dense_task_explicit_prompts_take_precedence() -> None:
@@ -584,6 +632,46 @@ def test_embedding_pipeline_can_l2_normalize_dense_embeddings() -> None:
         np.ones(2, dtype=np.float32),
         atol=1e-6,
     )
+
+
+def test_torch_dense_rank_by_similarity_does_not_convert_to_numpy(monkeypatch) -> None:
+    def fail_to_numpy(embeddings):
+        raise AssertionError(f"Unexpected NumPy conversion for {type(embeddings).__name__}")
+
+    monkeypatch.setattr(evaluation_module, "_to_numpy_float32", fail_to_numpy)
+    query_embeddings = torch.tensor([[1.0, 0.0], [0.0, 1.0]], dtype=torch.float32)
+    corpus_embeddings = torch.tensor([[0.0, 1.0], [1.0, 0.0], [-1.0, 0.0]], dtype=torch.float32)
+
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1", "q2"],
+        corpus_ids=["d2", "d1", "d3"],
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        score_name="dot",
+    )
+
+    assert rankings["q1"] == ["d1", "d2", "d3"]
+    assert rankings["q2"] == ["d2", "d1", "d3"]
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not available")
+def test_cuda_dense_rank_by_similarity_keeps_scoring_on_cuda(monkeypatch) -> None:
+    def fail_to_numpy(embeddings):
+        raise AssertionError(f"Unexpected NumPy conversion for {type(embeddings).__name__}")
+
+    monkeypatch.setattr(evaluation_module, "_to_numpy_float32", fail_to_numpy)
+    query_embeddings = torch.tensor([[1.0, 0.0]], dtype=torch.float32, device="cuda")
+    corpus_embeddings = torch.tensor([[0.0, 1.0], [1.0, 0.0]], dtype=torch.float32, device="cuda")
+
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1"],
+        corpus_ids=["d2", "d1"],
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        score_name="dot",
+    )
+
+    assert rankings["q1"] == ["d1", "d2"]
 
 
 def test_embedding_pipeline_keeps_torch_normalize_on_device() -> None:
@@ -998,6 +1086,78 @@ def test_torch_binary_ranks_like_numpy_hamming_distance() -> None:
     assert evaluation_module._quantization_metadata(torch_corpus)["binary_encoding"] == "unpacked_bits"
 
 
+def test_torch_sparse_rank_by_similarity_does_not_convert_to_scipy(monkeypatch) -> None:
+    def fail_to_scipy(embeddings):
+        raise AssertionError(f"Unexpected SciPy conversion for {type(embeddings).__name__}")
+
+    monkeypatch.setattr(evaluation_module, "_to_scipy_csr_matrix", fail_to_scipy)
+    query_embeddings = torch.tensor([[1.0, 0.0, 2.0], [0.0, 3.0, 0.0]], dtype=torch.float32).to_sparse()
+    corpus_embeddings = torch.tensor(
+        [[1.0, 0.0, 1.0], [0.0, 2.0, 0.0], [0.0, 0.0, 4.0]], dtype=torch.float32
+    ).to_sparse()
+
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1", "q2"],
+        corpus_ids=["d1", "d2", "d3"],
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        score_name="dot",
+    )
+
+    assert rankings["q1"] == ["d3", "d1", "d2"]
+    assert rankings["q2"] == ["d2", "d1", "d3"]
+
+
+def test_torch_sparse_max_active_dims_does_not_convert_to_scipy(monkeypatch) -> None:
+    def fail_to_scipy(embeddings):
+        raise AssertionError(f"Unexpected SciPy conversion for {type(embeddings).__name__}")
+
+    monkeypatch.setattr(evaluation_module, "_to_scipy_csr_matrix", fail_to_scipy)
+    embeddings = torch.tensor([[1.0, 0.0, -3.0], [0.0, 2.0, 4.0]], dtype=torch.float32).to_sparse()
+
+    limited = evaluation_module._limit_sparse_active_dims(embeddings, max_active_dims=1)
+
+    assert isinstance(limited, torch.Tensor)
+    assert limited.is_sparse
+    torch.testing.assert_close(
+        limited.to_dense(),
+        torch.tensor([[0.0, 0.0, -3.0], [0.0, 0.0, 4.0]], dtype=torch.float32),
+    )
+
+
+def test_torch_late_interaction_rank_by_similarity_uses_maxsim_without_numpy(monkeypatch) -> None:
+    def fail_to_numpy(embeddings):
+        raise AssertionError(f"Unexpected NumPy conversion for {type(embeddings).__name__}")
+
+    monkeypatch.setattr(evaluation_module, "_to_numpy_float32", fail_to_numpy)
+    query_embeddings = torch.tensor(
+        [
+            [[1.0, 0.0], [0.0, 1.0]],
+            [[-1.0, 0.0], [0.0, -1.0]],
+        ],
+        dtype=torch.float32,
+    )
+    corpus_embeddings = torch.tensor(
+        [
+            [[1.0, 0.0], [0.0, 1.0]],
+            [[-1.0, 0.0], [0.0, -1.0]],
+            [[0.0, 1.0], [1.0, 0.0]],
+        ],
+        dtype=torch.float32,
+    )
+
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1", "q2"],
+        corpus_ids=["d1", "d2", "d3"],
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        score_name="dot",
+    )
+
+    assert rankings["q1"] == ["d1", "d3", "d2"]
+    assert rankings["q2"] == ["d2", "d1", "d3"]
+
+
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not available")
 def test_cuda_quantized_search_keeps_values_on_cuda() -> None:
     query_embeddings = torch.tensor([[1.0, 0.0]], dtype=torch.float32, device="cuda")
@@ -1312,6 +1472,25 @@ def test_evaluate_dense_task_passes_sparse_max_active_dims_to_sparse_encoder() -
 
     assert model.query_calls[0]["max_active_dims"] == 64
     assert model.document_calls[0]["max_active_dims"] == 64
+
+
+def test_evaluate_dense_task_keeps_sparse_encoder_outputs_on_device_for_cuda_models() -> None:
+    model = FakeCudaSentenceTransformersSparseModel()
+
+    evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+    )
+
+    assert model.query_calls[0]["save_to_cpu"] is False
+    assert model.document_calls[0]["save_to_cpu"] is False
 
 
 def test_evaluate_reranker_task_uses_candidate_top_n() -> None:

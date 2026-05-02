@@ -82,8 +82,10 @@ def parse_embedding_variants(
     return variants
 
 
-def default_dense_quantized_embedding_variants() -> list[dict[str, Any]]:
-    return parse_embedding_variants(["usearch:int8,binary", "usearch-rescore:int8,binary"])
+def default_dense_quantized_embedding_variants(*, backend: str = "torch") -> list[dict[str, Any]]:
+    if backend not in {"usearch", "torch", "cuda"}:
+        raise ValueError(f"Unsupported default dense quantized backend: {backend}")
+    return parse_embedding_variants([f"{backend}:int8,binary", f"{backend}-rescore:int8,binary"])
 
 
 def _split_tokens(value: str) -> list[str]:

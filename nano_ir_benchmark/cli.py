@@ -87,7 +87,7 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument(
         "--no-quantize",
         action="store_true",
-        help="Disable automatic dense usearch int8/binary quantized and top-100 rescore variants.",
+        help="Disable automatic dense int8/binary quantized and top-100 rescore variants.",
     )
 
     evaluate.add_argument(
@@ -180,7 +180,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         except ValueError as exc:
             parser.error(str(exc))
         if args.model_type == "dense" and not args.no_quantize and not has_explicit_embedding_variants:
-            args.embedding_variants = default_dense_quantized_embedding_variants()
+            args.embedding_variants = default_dense_quantized_embedding_variants(
+                backend=_default_dense_quantized_backend(args.device)
+            )
         if args.model_type == "sparse" and _embedding_variants_use_quantization(args.embedding_variants):
             parser.error(
                 "--model-type sparse does not support quantized embedding variants. "
@@ -210,6 +212,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def _embedding_variants_use_quantization(variants: list[dict[str, Any]]) -> bool:
     return any(_embedding_variant_uses_quantization(variant) for variant in variants)
+
+
+def _default_dense_quantized_backend(device: str | None) -> str:
+    normalized = str(device or "").strip().lower()
+    if normalized == "cpu" or normalized.startswith("cpu:"):
+        return "usearch"
+    if normalized == "cuda" or normalized.startswith("cuda:"):
+        return "cuda"
+    return "torch"
 
 
 def _embedding_variant_uses_quantization(variant: dict[str, Any]) -> bool:

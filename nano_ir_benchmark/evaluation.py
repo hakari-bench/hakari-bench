@@ -144,7 +144,9 @@ def evaluate_dense_task(
     corpus_ids = list(dataset.corpus)
     query_texts = [dataset.queries[query_id] for query_id in query_ids]
     corpus_texts = [dataset.corpus[corpus_id] for corpus_id in corpus_ids]
-    prefer_tensor_embeddings = _embedding_variants_use_torch_quantized_scoring(embedding_variants or [])
+    prefer_tensor_embeddings = _model_prefers_tensor_scoring(model) or _embedding_variants_use_torch_quantized_scoring(
+        embedding_variants or []
+    )
 
     query_start = time.perf_counter()
     query_embeddings = _encode(
@@ -359,7 +361,7 @@ def _encode(
             "convert_to_sparse_tensor": True,
         }
         if _accepts_encode_parameter(encode_fn, "save_to_cpu"):
-            sparse_kwargs["save_to_cpu"] = True
+            sparse_kwargs["save_to_cpu"] = not _model_prefers_tensor_scoring(model)
         if sparse_max_active_dims is not None:
             if not _accepts_encode_parameter(encode_fn, "max_active_dims"):
                 raise ValueError("Sparse max active dims requires an encoder with max_active_dims support.")
@@ -386,6 +388,40 @@ def _accepts_encode_parameter(encode_fn: Any, name: str) -> bool:
         return name in inspect.signature(encode_fn).parameters
     except (TypeError, ValueError):
         return False
+
+
+def _model_prefers_tensor_scoring(model: Any) -> bool:
+    device_type = _model_device_type(model)
+    return device_type is not None and device_type != "cpu"
+
+
+def _model_device_type(model: Any) -> str | None:
+    for attr_name in ("device", "_target_device"):
+        device_type = _device_type(getattr(model, attr_name, None))
+        if device_type is not None:
+            return device_type
+
+    parameters = getattr(model, "parameters", None)
+    if callable(parameters):
+        try:
+            first_parameter = next(iter(parameters()))
+        except StopIteration:
+            return None
+        except Exception:
+            return None
+        return _device_type(getattr(first_parameter, "device", None))
+    return None
+
+
+def _device_type(value: Any) -> str | None:
+    if value is None:
+        return None
+    try:
+        return torch.device(value).type
+    except (TypeError, RuntimeError, ValueError):
+        pass
+    device_type = getattr(value, "type", None)
+    return str(device_type) if device_type is not None else None
 
 
 def _embedding_variants_use_torch_quantized_scoring(variants: list[dict[str, Any]]) -> bool:
@@ -659,6 +695,8 @@ def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
 
 
 def _normalize_embeddings(embeddings: Any) -> Any:
+    if _is_torch_sparse_embedding(embeddings):
+        return _torch_sparse_l2_normalize(embeddings)
     if _is_sparse_embedding(embeddings):
         return _sparse_l2_normalize(_to_scipy_csr_matrix(embeddings))
     if isinstance(embeddings, torch.Tensor):
@@ -666,11 +704,13 @@ def _normalize_embeddings(embeddings: Any) -> Any:
     return _l2_normalize(_to_numpy_float32(embeddings))
 
 
-def _limit_sparse_active_dims(embeddings: Any, *, max_active_dims: int) -> sparse.csr_matrix:
+def _limit_sparse_active_dims(embeddings: Any, *, max_active_dims: int) -> Any:
     if max_active_dims <= 0:
         raise ValueError("Sparse max active dims must be positive.")
     if not _is_sparse_embedding(embeddings):
         raise ValueError("Sparse max active dims variants are only supported for sparse embeddings.")
+    if _is_torch_sparse_embedding(embeddings):
+        return _limit_torch_sparse_active_dims(embeddings, max_active_dims=max_active_dims)
 
     matrix = _to_scipy_csr_matrix(embeddings)
     if matrix.shape[0] == 0 or matrix.nnz == 0:
@@ -697,6 +737,44 @@ def _limit_sparse_active_dims(embeddings: Any, *, max_active_dims: int) -> spars
     indices = np.concatenate(selected_indices) if selected_indices else np.array([], dtype=matrix.indices.dtype)
     data = np.concatenate(selected_data) if selected_data else np.array([], dtype=matrix.data.dtype)
     return sparse.csr_matrix((data, indices, np.asarray(new_indptr, dtype=matrix.indptr.dtype)), shape=matrix.shape)
+
+
+def _limit_torch_sparse_active_dims(embeddings: torch.Tensor, *, max_active_dims: int) -> torch.Tensor:
+    matrix = _to_torch_sparse_coo_matrix(embeddings)
+    if matrix.shape[0] == 0 or matrix._nnz() == 0:
+        return matrix.clone()
+
+    row_indices = matrix.indices()[0]
+    col_indices = matrix.indices()[1]
+    values = matrix.values()
+    selected_indices: list[torch.Tensor] = []
+    selected_values: list[torch.Tensor] = []
+    for row_index in range(int(matrix.shape[0])):
+        row_mask = row_indices == row_index
+        row_positions = torch.nonzero(row_mask, as_tuple=False).flatten()
+        if row_positions.numel() > max_active_dims:
+            row_cols = col_indices.index_select(0, row_positions)
+            row_values = values.index_select(0, row_positions)
+            column_order = torch.argsort(row_cols, stable=True)
+            row_positions = row_positions.index_select(0, column_order)
+            row_values = row_values.index_select(0, column_order)
+            value_order = torch.argsort(torch.abs(row_values), descending=True, stable=True)[:max_active_dims]
+            row_positions = torch.sort(row_positions.index_select(0, value_order)).values
+        selected_indices.append(matrix.indices().index_select(1, row_positions))
+        selected_values.append(values.index_select(0, row_positions))
+
+    if selected_indices:
+        indices = torch.cat(selected_indices, dim=1)
+        limited_values = torch.cat(selected_values, dim=0)
+    else:
+        indices = torch.empty((2, 0), dtype=torch.long, device=matrix.device)
+        limited_values = torch.empty((0,), dtype=values.dtype, device=matrix.device)
+    return torch.sparse_coo_tensor(
+        indices,
+        limited_values,
+        size=tuple(int(dimension) for dimension in matrix.shape),
+        device=matrix.device,
+    ).coalesce()
 
 
 def _quantize_embedding_pair(
@@ -1054,6 +1132,9 @@ def _dimension_format(*, query_embeddings: Any, corpus_embeddings: Any, represen
 
 def _embedding_side_metadata(embeddings: Any) -> dict[str, Any]:
     metadata: dict[str, Any] = {"shape": _shape_list(embeddings)}
+    if isinstance(embeddings, torch.Tensor):
+        metadata["value_dtype"] = str(embeddings.dtype)
+        metadata["device"] = str(embeddings.device)
     if _is_quantized_embedding_matrix(embeddings):
         metadata["value_dtype"] = str(embeddings.dtype)
         metadata["quantization"] = _quantization_metadata(embeddings)
@@ -1305,6 +1386,28 @@ def _uses_torch_quantized_scoring(query_embeddings: Any, corpus_embeddings: Any)
     return bool(score_representations & {TORCH_SCORE_REPRESENTATION, TORCH_RESCORE_SCORE_REPRESENTATION})
 
 
+def _is_torch_dense_pair(query_embeddings: Any, corpus_embeddings: Any) -> bool:
+    return (
+        isinstance(query_embeddings, torch.Tensor)
+        and isinstance(corpus_embeddings, torch.Tensor)
+        and not _is_torch_sparse_embedding(query_embeddings)
+        and not _is_torch_sparse_embedding(corpus_embeddings)
+        and query_embeddings.ndim == 2
+        and corpus_embeddings.ndim == 2
+    )
+
+
+def _is_torch_late_interaction_pair(query_embeddings: Any, corpus_embeddings: Any) -> bool:
+    return (
+        isinstance(query_embeddings, torch.Tensor)
+        and isinstance(corpus_embeddings, torch.Tensor)
+        and not _is_torch_sparse_embedding(query_embeddings)
+        and not _is_torch_sparse_embedding(corpus_embeddings)
+        and query_embeddings.ndim >= 3
+        and corpus_embeddings.ndim >= 3
+    )
+
+
 def _rank_by_similarity(
     *,
     query_ids: list[str],
@@ -1350,7 +1453,33 @@ def _rank_by_similarity(
             score_name=score_name,
         )
 
+    if _is_torch_late_interaction_pair(query_embeddings, corpus_embeddings):
+        return _rank_torch_late_interaction(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=cast(torch.Tensor, query_embeddings),
+            corpus_embeddings=cast(torch.Tensor, corpus_embeddings),
+            score_name=score_name,
+        )
+
+    if _is_torch_dense_pair(query_embeddings, corpus_embeddings):
+        return _rank_torch_dense(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=cast(torch.Tensor, query_embeddings),
+            corpus_embeddings=cast(torch.Tensor, corpus_embeddings),
+            score_name=score_name,
+        )
+
     if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
+        if _is_torch_sparse_embedding(query_embeddings) or _is_torch_sparse_embedding(corpus_embeddings):
+            return _rank_torch_sparse(
+                query_ids=query_ids,
+                corpus_ids=corpus_ids,
+                query_embeddings=query_embeddings,
+                corpus_embeddings=corpus_embeddings,
+                score_name=score_name,
+            )
         return _rank_sparse(
             query_ids=query_ids,
             corpus_ids=corpus_ids,
@@ -1373,6 +1502,67 @@ def _rank_by_similarity(
         scores = query_matrix @ corpus_matrix.T
 
     return _scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+
+
+def _rank_torch_dense(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: torch.Tensor,
+    corpus_embeddings: torch.Tensor,
+    score_name: str,
+) -> dict[str, list[str]]:
+    query_matrix = _to_torch_float32(query_embeddings)
+    corpus_matrix = _to_torch_float32(corpus_embeddings, device=query_matrix.device)
+    if score_name == "cosine":
+        query_matrix = _torch_l2_normalize(query_matrix)
+        corpus_matrix = _torch_l2_normalize(corpus_matrix)
+        scores = query_matrix @ corpus_matrix.T
+    elif score_name == "euclidean":
+        scores = -torch.linalg.vector_norm(query_matrix[:, None, :] - corpus_matrix[None, :, :], dim=2)
+    elif score_name == "manhattan":
+        scores = -torch.sum(torch.abs(query_matrix[:, None, :] - corpus_matrix[None, :, :]), dim=2)
+    else:
+        scores = query_matrix @ corpus_matrix.T
+    return _torch_scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+
+
+def _rank_torch_late_interaction(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: torch.Tensor,
+    corpus_embeddings: torch.Tensor,
+    score_name: str,
+) -> dict[str, list[str]]:
+    query_matrix = _to_torch_float32(query_embeddings)
+    corpus_matrix = _to_torch_float32(corpus_embeddings, device=query_matrix.device)
+    if query_matrix.shape[-1] != corpus_matrix.shape[-1]:
+        raise ValueError(
+            f"Cannot rank late-interaction embeddings with query dimension {query_matrix.shape[-1]} "
+            f"and corpus dimension {corpus_matrix.shape[-1]}."
+        )
+    if score_name == "cosine":
+        query_matrix = torch.nn.functional.normalize(query_matrix, p=2, dim=-1)
+        corpus_matrix = torch.nn.functional.normalize(corpus_matrix, p=2, dim=-1)
+    elif score_name != "dot":
+        raise ValueError(f"Late-interaction scoring supports cosine or dot, got {score_name}.")
+
+    if corpus_matrix.shape[0] == 0:
+        scores = torch.empty((int(query_matrix.shape[0]), 0), dtype=torch.float32, device=query_matrix.device)
+        return _torch_scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+
+    rows: list[torch.Tensor] = []
+    corpus_chunk_size = 1024
+    for query_tokens in query_matrix:
+        chunk_scores: list[torch.Tensor] = []
+        for corpus_start in range(0, int(corpus_matrix.shape[0]), corpus_chunk_size):
+            corpus_chunk = corpus_matrix[corpus_start : corpus_start + corpus_chunk_size]
+            similarities = torch.einsum("ld,cmd->clm", query_tokens, corpus_chunk)
+            chunk_scores.append(torch.max(similarities, dim=2).values.sum(dim=1))
+        rows.append(torch.cat(chunk_scores, dim=0))
+    scores = torch.stack(rows, dim=0) if rows else torch.empty((0, len(corpus_ids)), device=corpus_matrix.device)
+    return _torch_scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
 
 
 def _rank_usearch_quantized(
@@ -1783,6 +1973,28 @@ def _rank_sparse(
     return _sparse_scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
 
 
+def _rank_torch_sparse(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    score_name: str,
+) -> dict[str, list[str]]:
+    device = query_embeddings.device if isinstance(query_embeddings, torch.Tensor) else corpus_embeddings.device
+    query_matrix = _to_torch_sparse_coo_matrix(query_embeddings, device=device)
+    corpus_matrix = _to_torch_sparse_coo_matrix(corpus_embeddings, device=device)
+    if query_matrix.shape[1] < corpus_matrix.shape[1]:
+        query_matrix = _resize_torch_sparse_columns(query_matrix, int(corpus_matrix.shape[1]))
+    elif corpus_matrix.shape[1] < query_matrix.shape[1]:
+        corpus_matrix = _resize_torch_sparse_columns(corpus_matrix, int(query_matrix.shape[1]))
+    if score_name == "cosine":
+        query_matrix = _torch_sparse_l2_normalize(query_matrix)
+        corpus_matrix = _torch_sparse_l2_normalize(corpus_matrix)
+    scores = torch.sparse.mm(query_matrix, corpus_matrix.transpose(0, 1)).to_dense()
+    return _torch_scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+
+
 def _sparse_scores_to_rankings(
     *,
     query_ids: list[str],
@@ -1812,6 +2024,15 @@ def _scores_to_rankings(*, query_ids: list[str], corpus_ids: list[str], scores: 
     return rankings
 
 
+def _torch_scores_to_rankings(*, query_ids: list[str], corpus_ids: list[str], scores: torch.Tensor) -> dict[str, list[str]]:
+    indices = _torch_top_k_indices_by_scores(scores=scores, corpus_ids=corpus_ids, count=len(corpus_ids))
+    indices_cpu = indices.detach().cpu().numpy()
+    rankings: dict[str, list[str]] = {}
+    for query_index, query_id in enumerate(query_ids):
+        rankings[query_id] = [corpus_ids[int(index)] for index in indices_cpu[query_index]]
+    return rankings
+
+
 def _l2_normalize(matrix: np.ndarray) -> np.ndarray:
     norms = np.linalg.norm(matrix, axis=1, keepdims=True)
     norms[norms == 0.0] = 1.0
@@ -1822,6 +2043,56 @@ def _torch_l2_normalize(matrix: torch.Tensor) -> torch.Tensor:
     norms = torch.linalg.vector_norm(matrix, dim=1, keepdim=True)
     norms = torch.where(norms == 0.0, torch.ones_like(norms), norms)
     return matrix / norms
+
+
+def _to_torch_sparse_coo_matrix(embeddings: Any, *, device: torch.device | None = None) -> torch.Tensor:
+    if isinstance(embeddings, torch.Tensor):
+        tensor = embeddings.detach()
+        if device is not None:
+            tensor = tensor.to(device=device)
+        if not _is_torch_sparse_embedding(tensor):
+            tensor = tensor.to_sparse()
+        if bool(getattr(tensor, "is_sparse_csr", False)):
+            tensor = tensor.to_sparse_coo()
+        if tensor.ndim != 2:
+            raise ValueError(f"Sparse embedding matrix must be 2D, got shape {tuple(tensor.shape)}.")
+        return tensor.coalesce().float()
+    if not sparse.issparse(embeddings):
+        raise TypeError(f"Expected a sparse embedding matrix, got {type(embeddings).__name__}.")
+
+    matrix = sparse.coo_matrix(embeddings)
+    indices = torch.as_tensor(np.vstack((matrix.row, matrix.col)), dtype=torch.long, device=device)
+    values = torch.as_tensor(matrix.data, dtype=torch.float32, device=device)
+    return torch.sparse_coo_tensor(indices, values, size=matrix.shape, device=device).coalesce()
+
+
+def _resize_torch_sparse_columns(matrix: torch.Tensor, columns: int) -> torch.Tensor:
+    if columns < matrix.shape[1]:
+        raise ValueError(f"Cannot shrink sparse matrix from {matrix.shape[1]} to {columns} columns.")
+    matrix = _to_torch_sparse_coo_matrix(matrix)
+    return torch.sparse_coo_tensor(
+        matrix.indices(),
+        matrix.values(),
+        size=(int(matrix.shape[0]), columns),
+        device=matrix.device,
+    ).coalesce()
+
+
+def _torch_sparse_l2_normalize(matrix: torch.Tensor) -> torch.Tensor:
+    matrix = _to_torch_sparse_coo_matrix(matrix)
+    row_indices = matrix.indices()[0]
+    values = matrix.values()
+    row_square_sums = torch.zeros(int(matrix.shape[0]), dtype=values.dtype, device=values.device)
+    row_square_sums.scatter_add_(0, row_indices, values * values)
+    row_norms = torch.sqrt(row_square_sums)
+    row_norms = torch.where(row_norms == 0.0, torch.ones_like(row_norms), row_norms)
+    normalized_values = values / row_norms.index_select(0, row_indices)
+    return torch.sparse_coo_tensor(
+        matrix.indices(),
+        normalized_values,
+        size=tuple(int(dimension) for dimension in matrix.shape),
+        device=matrix.device,
+    ).coalesce()
 
 
 def _sparse_l2_normalize(matrix: sparse.csr_matrix) -> sparse.csr_matrix:

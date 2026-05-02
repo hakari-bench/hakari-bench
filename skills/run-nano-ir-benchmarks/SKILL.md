@@ -38,9 +38,10 @@ For every specified model:
   sparse-docs-max-active-dims:64,128,256` for a full query x docs grid.
   Base, query-only, docs-only, and query x docs comparisons require combining
   those standalone variants with the cross product.
-- Dense models automatically run exact usearch `int8` and binary quantized search variants and top-100 float-rescored variants when no embedding variants are explicitly specified. Use `--no-quantize` only when the user wants to suppress those automatic dense variants.
+- Dense models automatically run normalized `int8` and binary quantized search variants and top-100 float-rescored variants when no embedding variants are explicitly specified. CPU runs use exact usearch variants by default; non-CPU runs use PyTorch tensor variants by default, and `--device cuda` forces the `cuda:` variants. Use `--no-quantize` only when the user wants to suppress those automatic dense variants.
+- When SentenceTransformers models run on a non-CPU device, base dense/sparse/late-interaction tensor scoring should stay on PyTorch tensors and score/top-k on that device. CPU model runs keep using the NumPy/SciPy paths.
 - For dense models, use `--embedding-variant usearch:int8,binary` and `--embedding-variant usearch-rescore:int8,binary` when quantized search variants must be listed explicitly. Quantized variants L2-normalize embeddings before quantization; usearch receives pre-quantized SentenceTransformers codes and does not perform calibration. Rescore reranks the top 100 quantized candidates with the normalized source float embeddings and does not re-embed documents.
-- Use `--embedding-variant numpy:int8,binary` and `--embedding-variant numpy-rescore:int8,binary` only for CPU backend diagnostics against usearch. Use `--embedding-variant torch:int8,binary` and `--embedding-variant torch-rescore:int8,binary` to run the same exact scan with PyTorch tensors on their current device. Use `cuda:int8,binary` or `cuda-rescore:int8,binary` when the diagnostic path must force CUDA. Torch CUDA scoring casts stored int8 and binary codes to float32 for matmul because regular PyTorch CUDA matmul does not expose integer accumulation for these tensors. These diagnostic variants are not the default benchmark path.
+- Use `--embedding-variant numpy:int8,binary` and `--embedding-variant numpy-rescore:int8,binary` only for CPU backend diagnostics against usearch. Use `--embedding-variant torch:int8,binary` and `--embedding-variant torch-rescore:int8,binary` to run the same exact scan with PyTorch tensors on their current device. Use `cuda:int8,binary` or `cuda-rescore:int8,binary` when the path must force CUDA. Torch CUDA scoring casts stored int8 and binary codes to float32 for matmul because regular PyTorch CUDA matmul does not expose integer accumulation for these tensors.
 - Do not add quantized embedding variants for sparse/SPLADE-style models. Sparse quantization is intentionally unsupported in the CLI; use max-active-dimension variants for sparse footprint and latency trade-offs.
 - If Matryoshka dimensions are requested or documented, evaluate all three related groups: standalone dimensions, standalone quantized search, and the dimension x quantized search cross product. For example, use `--embedding-variant truncate:256,128,64`, `--embedding-variant usearch:int8,binary`, `--embedding-variant usearch-rescore:int8,binary`, `--embedding-variant-cross truncate:256,128,64 usearch:int8,binary`, and `--embedding-variant-cross truncate:256,128,64 usearch-rescore:int8,binary`. This is "all" because standalone dimensions isolate the dimension trade-off, standalone quantized search isolates the quantization trade-off at the original dimension, and the cross product measures combined trade-offs such as `128dim x int8` and `64dim x binary`, with and without top-100 float rescore.
 - Check whether `--trust-remote-code` is required.
@@ -88,7 +89,7 @@ uv run nano-ir-bench evaluate \
 
 For dense models, standard post-encode quantized search is automatic when no
 embedding variants are specified. Add `--no-quantize` only when the user asks
-for the base result without automatic usearch `int8` and binary variants or
+for the base result without automatic `int8` and binary variants or
 their top-100 float-rescored variants:
 
 ```bash
