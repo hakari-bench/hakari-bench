@@ -39,6 +39,9 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
+        quantization: bool = Query(default=False),
+        truncate: bool = Query(default=False),
+        model_filter: str = Query(default=""),
     ) -> str:
         store.ensure_current()
         initial_query = _state_query(
@@ -48,6 +51,9 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             direction=direction,
             group=group,
             variants=variants,
+            quantization=quantization,
+            truncate=truncate,
+            model_filter=model_filter,
         )
         return render_page(viewer_config=viewer_config, duckdb_path=store.path, initial_query=initial_query)
 
@@ -58,7 +64,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
-    ) -> str:
+        quantization: bool = Query(default=False),
+        truncate: bool = Query(default=False),
+        model_filter: str = Query(default=""),
+    ) -> HTMLResponse:
         store.ensure_current()
         state_query = _state_query(
             viewer_config=viewer_config,
@@ -67,20 +76,28 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             direction=direction,
             group=group,
             variants=variants,
+            quantization=quantization,
+            truncate=truncate,
+            model_filter=model_filter,
         )
         view = state_query["view"]
         sort = state_query["sort"]
         direction = state_query["direction"]
         group = state_query.get("group")
+        include_quantization_variants = state_query.get("quantization") == "1"
+        include_truncate_variants = state_query.get("truncate") == "1"
+        model_filter = state_query.get("model_filter", "")
         service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
         result = service.get_leaderboard(
             view,
             sort=sort,
             direction=cast(SortDirection, direction),
             score_group_name=group,
-            include_embedding_variants=variants,
+            include_quantization_variants=include_quantization_variants,
+            include_truncate_variants=include_truncate_variants,
         )
-        return render_leaderboard(result=result, sort=sort, direction=direction)
+        content = render_leaderboard(result=result, sort=sort, direction=direction, model_filter=model_filter)
+        return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query)}"})
 
     return app
 
@@ -117,12 +134,12 @@ def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query
 </html>"""
 
 
-def render_leaderboard(*, result: LeaderboardResult, sort: str, direction: str) -> str:
+def render_leaderboard(*, result: LeaderboardResult, sort: str, direction: str, model_filter: str = "") -> str:
     return f"""
 <div>
-  {render_tabs(result=result, sort=sort, direction=direction)}
-  {render_variant_toggle(result=result, sort=sort, direction=direction)}
-  {render_score_groups(result=result, sort=sort, direction=direction)}
+  {render_tabs(result=result, sort=sort, direction=direction, model_filter=model_filter)}
+  {render_controls(result=result, sort=sort, direction=direction, model_filter=model_filter)}
+  {render_score_groups(result=result, sort=sort, direction=direction, model_filter=model_filter)}
   <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
     <div>
       <h2 class="text-lg font-semibold">{escape(result.view_label)}</h2>
@@ -131,15 +148,15 @@ def render_leaderboard(*, result: LeaderboardResult, sort: str, direction: str) 
   </div>
   <div class="overflow-x-auto border border-zinc-200 bg-white">
     <table class="min-w-full border-collapse text-sm">
-      {render_table_head(result=result, sort=sort, direction=direction)}
-      {render_table_body(result=result)}
+      {render_table_head(result=result, sort=sort, direction=direction, model_filter=model_filter)}
+      {render_table_body(result=result, model_filter=model_filter)}
     </table>
   </div>
 </div>
 """
 
 
-def render_tabs(*, result: LeaderboardResult, sort: str, direction: str) -> str:
+def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, model_filter: str = "") -> str:
     buttons: list[str] = []
     for view_name in result.available_views:
         active = view_name == result.view_name
@@ -151,9 +168,8 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str) -> str:
         )
         tab_sort = "borda_rank" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = {"view": view_name, "sort": tab_sort, "direction": tab_direction}
-        if result.include_embedding_variants:
-            query_payload["variants"] = "1"
+        query_payload = _state_payload(result=result, sort=tab_sort, direction=tab_direction, model_filter=model_filter)
+        query_payload["view"] = view_name
         query = urlencode(query_payload)
         buttons.append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
@@ -165,25 +181,47 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str) -> str:
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Benchmark views">{''.join(buttons)}</nav>"""
 
 
-def render_variant_toggle(*, result: LeaderboardResult, sort: str, direction: str) -> str:
-    query_payload = {"view": result.view_name, "sort": sort, "direction": direction}
+def render_controls(*, result: LeaderboardResult, sort: str, direction: str, model_filter: str = "") -> str:
+    quantization_checked = " checked" if result.include_quantization_variants else ""
+    truncate_checked = " checked" if result.include_truncate_variants else ""
+    hidden_fields = [
+        ("view", result.view_name),
+        ("sort", sort),
+        ("direction", direction),
+    ]
     if result.selected_score_group is not None:
-        query_payload["group"] = result.selected_score_group.name
-    if not result.include_embedding_variants:
-        query_payload["variants"] = "1"
-    query = urlencode(query_payload)
-    checked = " checked" if result.include_embedding_variants else ""
+        hidden_fields.append(("group", result.selected_score_group.name))
+    hidden_html = "".join(
+        f"""<input type="hidden" name="{escape(name)}" value="{escape(value)}">""" for name, value in hidden_fields
+    )
     return f"""
-    <label class="mb-4 inline-flex items-center gap-2 text-sm text-zinc-700">
-      <input type="checkbox" class="h-4 w-4 accent-cyan-700"{checked}
-             hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-             hx-target="#leaderboard-panel" hx-swap="innerHTML" hx-trigger="change">
-      <span>Include variants</span>
-    </label>
+    <form class="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-zinc-700"
+          hx-get="/leaderboard" hx-push-url="true"
+          hx-target="#leaderboard-panel" hx-swap="innerHTML"
+          hx-trigger="change from:input[type='checkbox'], input changed delay:700ms from:input[name='model_filter']">
+      {hidden_html}
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="font-medium text-zinc-800">Variants:</span>
+        <label class="inline-flex items-center gap-2">
+          <input type="checkbox" name="quantization" value="1" class="h-4 w-4 accent-cyan-700"{quantization_checked}>
+          <span>Quantization</span>
+        </label>
+        <label class="inline-flex items-center gap-2">
+          <input type="checkbox" name="truncate" value="1" class="h-4 w-4 accent-cyan-700"{truncate_checked}>
+          <span>Truncate dims</span>
+        </label>
+      </div>
+      <label class="flex min-w-64 items-center gap-2">
+        <span class="font-medium text-zinc-800">Model name</span>
+        <input type="search" name="model_filter" value="{escape(model_filter)}"
+               class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
+               autocomplete="off">
+      </label>
+    </form>
     """
 
 
-def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str) -> str:
+def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str, model_filter: str = "") -> str:
     if len(result.score_groups) <= 1 or result.selected_score_group is None:
         return ""
     buttons: list[str] = []
@@ -194,9 +232,8 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str)
             if active
             else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
         )
-        query_payload = {"view": result.view_name, "sort": "borda_rank", "direction": "asc", "group": score_group.name}
-        if result.include_embedding_variants:
-            query_payload["variants"] = "1"
+        query_payload = _state_payload(result=result, sort="borda_rank", direction="asc", model_filter=model_filter)
+        query_payload["group"] = score_group.name
         query = urlencode(query_payload)
         page_url = _page_url(query_payload)
         buttons.append(
@@ -209,7 +246,7 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str)
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Score groups">{''.join(buttons)}</nav>"""
 
 
-def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -> str:
+def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, model_filter: str = "") -> str:
     columns = [
         ("borda_rank", "Borda", "asc", "right", False),
         ("mean_rank", "Mean", "asc", "right", False),
@@ -243,11 +280,7 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -
     for key, label, default_direction, align, is_metric in columns:
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
         indicator = " ▲" if sort == key and direction == "asc" else " ▼" if sort == key else ""
-        query_payload = {"view": result.view_name, "sort": key, "direction": next_direction}
-        if result.selected_score_group is not None:
-            query_payload["group"] = result.selected_score_group.name
-        if result.include_embedding_variants:
-            query_payload["variants"] = "1"
+        query_payload = _state_payload(result=result, sort=key, direction=next_direction, model_filter=model_filter)
         query = urlencode(query_payload)
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
@@ -265,11 +298,15 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str) -
     return f"<thead><tr>{''.join(heads)}</tr></thead>"
 
 
-def render_table_body(*, result: LeaderboardResult) -> str:
+def render_table_body(*, result: LeaderboardResult, model_filter: str = "") -> str:
     if not result.rows:
         return """<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="12">No complete results found.</td></tr></tbody>"""
     body_rows = []
+    normalized_filter = _active_model_filter(model_filter)
     for row in result.rows:
+        hidden = bool(normalized_filter and normalized_filter not in row.model_name.lower())
+        row_class = "border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
+        hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
         mean_cells = (
             f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.macro_mean)}</td>
                 <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
@@ -277,10 +314,10 @@ def render_table_body(*, result: LeaderboardResult) -> str:
             else f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score)}</td>"""
         )
         body_rows.append(
-            f"""<tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
+            f"""<tr class="{row_class}"{hidden_attrs}>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
-              <td class="whitespace-nowrap px-3 py-2 font-medium">{escape(row.model_name)}</td>
+              {_render_model_name_cell(row)}
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
               {_render_metric_cells(result=result, row=row)}
@@ -301,6 +338,40 @@ def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> s
         f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
         for column in result.metric_columns
     )
+
+
+def _render_model_name_cell(row: LeaderboardRow) -> str:
+    details = _model_variant_details(row)
+    model_name = row.model_name
+    if details:
+        suffix = f" ({', '.join(details)})"
+        if model_name.endswith(suffix):
+            model_name = model_name[: -len(suffix)]
+    badges = []
+    if row.embedding_dim is not None:
+        badges.append(
+            f"""<span class="inline-flex items-center border border-cyan-200 bg-cyan-50 px-1.5 py-0.5 text-xs font-medium text-cyan-800">{escape(f"{row.embedding_dim:,} dims")}</span>"""
+        )
+    if row.quantization:
+        badges.append(
+            f"""<span class="inline-flex items-center border border-amber-200 bg-amber-50 px-1.5 py-0.5 text-xs font-medium text-amber-800">{escape(row.quantization)}</span>"""
+        )
+    badge_html = f"""<span class="ml-2 inline-flex flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
+    return f"""<td class="whitespace-nowrap px-3 py-2 font-medium">{escape(model_name)}{badge_html}</td>"""
+
+
+def _model_variant_details(row: LeaderboardRow) -> list[str]:
+    details = []
+    if row.embedding_dim is not None:
+        details.append(f"{row.embedding_dim} dims")
+    if row.quantization:
+        details.append(row.quantization)
+    return details
+
+
+def _active_model_filter(model_filter: str) -> str:
+    normalized = model_filter.strip().lower()
+    return normalized if len(normalized) >= 3 else ""
 
 
 def _next_direction(*, key: str, sort: str, direction: str, default_direction: str) -> str:
@@ -339,6 +410,25 @@ def _metric_column_label(column: str) -> str:
     return column.removeprefix("Nano")
 
 
+def _state_payload(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    model_filter: str = "",
+) -> dict[str, str]:
+    query_payload = {"view": result.view_name, "sort": sort, "direction": direction}
+    if result.selected_score_group is not None:
+        query_payload["group"] = result.selected_score_group.name
+    if result.include_quantization_variants:
+        query_payload["quantization"] = "1"
+    if result.include_truncate_variants:
+        query_payload["truncate"] = "1"
+    if model_filter:
+        query_payload["model_filter"] = model_filter
+    return query_payload
+
+
 def _state_query(
     *,
     viewer_config: ViewerConfig,
@@ -347,6 +437,9 @@ def _state_query(
     direction: str,
     group: str | None,
     variants: bool,
+    quantization: bool,
+    truncate: bool,
+    model_filter: str,
 ) -> dict[str, str]:
     if view not in viewer_config.view_names:
         view = viewer_config.overall.name
@@ -354,12 +447,20 @@ def _state_query(
         sort = "borda_rank"
     if direction not in {"asc", "desc"}:
         direction = "asc"
+    if variants:
+        quantization = True
+        truncate = True
 
     query = {"view": view, "sort": sort, "direction": direction}
     if group:
         query["group"] = group
-    if variants:
-        query["variants"] = "1"
+    if quantization:
+        query["quantization"] = "1"
+    if truncate:
+        query["truncate"] = "1"
+    model_filter = model_filter.strip()
+    if model_filter:
+        query["model_filter"] = model_filter
     return query
 
 

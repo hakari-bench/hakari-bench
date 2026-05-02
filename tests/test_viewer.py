@@ -275,6 +275,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         [
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192, "quantize_uint8_docs", 768, "uint8"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.85, 10, 12, 8192, "truncate_dim_512", 512, None),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.82, 10, 12, 8192, "truncate_dim_256_quantize_int8_docs", 256, "int8"),
             ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 20, 24, 4096, None, 512, None),
         ],
         include_embedding_variant_columns=True,
@@ -285,26 +287,62 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    base_result = service.get_leaderboard("BenchA", include_embedding_variants=False)
-    variant_result = service.get_leaderboard("BenchA", include_embedding_variants=True)
+    base_result = service.get_leaderboard("BenchA")
+    quantization_result = service.get_leaderboard("BenchA", include_quantization_variants=True)
+    truncate_result = service.get_leaderboard("BenchA", include_truncate_variants=True)
+    all_variant_result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+    )
 
     assert [row.model_name for row in base_result.rows] == ["model/a", "model/b"]
-    assert [row.model_name for row in variant_result.rows] == [
+    assert [row.model_name for row in quantization_result.rows] == [
         "model/a (768 dims)",
+        "model/a (256 dims, int8)",
         "model/a (768 dims, uint8)",
         "model/b (512 dims)",
     ]
-    assert variant_result.rows[1].embedding_dim == 768
-    assert variant_result.rows[1].quantization == "uint8"
+    assert [row.model_name for row in truncate_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (512 dims)",
+        "model/a (256 dims, int8)",
+        "model/b (512 dims)",
+    ]
+    assert [row.model_name for row in all_variant_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (512 dims)",
+        "model/a (256 dims, int8)",
+        "model/a (768 dims, uint8)",
+        "model/b (512 dims)",
+    ]
+    assert all_variant_result.rows[2].embedding_dim == 256
+    assert all_variant_result.rows[2].quantization == "int8"
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=BenchA&variants=1")
+    response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=model%2Fb")
 
     assert response.status_code == 200
-    assert "Include variants" in response.text
-    assert "model/a (768 dims, uint8)" in response.text
+    assert "Variants:" in response.text
+    assert "Truncate dims" in response.text
+    assert 'name="model_filter"' in response.text
+    assert 'value="model/b"' in response.text
+    assert "model/a (768 dims, uint8)" not in response.text
+    assert "model/a" in response.text
+    assert "bg-cyan-50" in response.text
+    assert "768 dims" in response.text
+    assert "bg-amber-50" in response.text
+    assert "uint8" in response.text
+    assert 'data-filter-hidden="true"' in response.text
     assert "Dims" in response.text
     assert "Quantization" in response.text
+    assert "delay:700ms" in response.text
+
+    short_filter_response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=mo")
+
+    assert short_filter_response.status_code == 200
+    assert 'value="mo"' in short_filter_response.text
+    assert 'data-filter-hidden="true"' not in short_filter_response.text
 
 
 def test_individual_leaderboard_uses_simple_task_mean() -> None:

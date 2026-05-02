@@ -67,7 +67,8 @@ class LeaderboardResult(BaseModel):
     rows: list[LeaderboardRow]
     available_views: list[str]
     available_view_labels: dict[str, str]
-    include_embedding_variants: bool = False
+    include_quantization_variants: bool = False
+    include_truncate_variants: bool = False
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
     metric_columns: list[str]
@@ -102,14 +103,19 @@ class LeaderboardService:
         sort: str = "borda_rank",
         direction: SortDirection = "asc",
         score_group_name: str | None = None,
-        include_embedding_variants: bool = False,
+        include_quantization_variants: bool = False,
+        include_truncate_variants: bool = False,
     ) -> LeaderboardResult:
         overall = self.config.overall_for_view(view_name)
         benchmarks = self.config.benchmarks_for_view(view_name)
         is_overall = overall is not None
         score_groups = [] if is_overall else _score_groups_for_view(self.config, view_name)
         selected_score_group = _select_score_group(score_groups, score_group_name)
-        rows = self._load_task_scores(benchmarks, include_embedding_variants=include_embedding_variants)
+        rows = self._load_task_scores(
+            benchmarks,
+            include_quantization_variants=include_quantization_variants,
+            include_truncate_variants=include_truncate_variants,
+        )
         rows = _exclude_configured_tasks(rows, self.config)
         if overall is not None:
             rows = _aggregate_overall_scores(rows, overall)
@@ -128,7 +134,8 @@ class LeaderboardService:
             rows=sort_rows(leaderboard_rows, sort=sort, direction=direction),
             available_views=self.config.view_names,
             available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
-            include_embedding_variants=include_embedding_variants,
+            include_quantization_variants=include_quantization_variants,
+            include_truncate_variants=include_truncate_variants,
             score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
             selected_score_group=(
                 ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
@@ -138,7 +145,13 @@ class LeaderboardService:
             metric_columns=metric_columns,
         )
 
-    def _load_task_scores(self, benchmarks: list[str], *, include_embedding_variants: bool) -> list[TaskScore]:
+    def _load_task_scores(
+        self,
+        benchmarks: list[str],
+        *,
+        include_quantization_variants: bool,
+        include_truncate_variants: bool,
+    ) -> list[TaskScore]:
         if not self.duckdb_path.exists():
             return []
         con = duckdb.connect(str(self.duckdb_path), read_only=True)
@@ -147,9 +160,10 @@ class LeaderboardService:
             variant_name_expr = _column_or_null(columns, "embedding_variant_name")
             embedding_dim_expr = _column_or_null(columns, "embedding_dim")
             quantization_expr = _column_or_null(columns, "quantization")
+            include_any_variants = include_quantization_variants or include_truncate_variants
             variant_filter = (
                 ""
-                if include_embedding_variants or "embedding_variant_name" not in columns
+                if include_any_variants or "embedding_variant_name" not in columns
                 else "AND embedding_variant_name IS NULL"
             )
             placeholders = ", ".join("?" for _ in benchmarks)
@@ -177,31 +191,43 @@ class LeaderboardService:
             result = con.execute(query, benchmarks).fetchall()
         finally:
             con.close()
-        return [
-            TaskScore(
-                model_name=_display_model_name(
-                    str(row[0]),
-                    embedding_dim=_int_or_none(row[12]),
-                    quantization=str(row[13]) if row[13] is not None else None,
+
+        task_scores: list[TaskScore] = []
+        include_any_variants = include_quantization_variants or include_truncate_variants
+        for row in result:
+            embedding_variant_name = str(row[11]) if row[11] is not None else None
+            embedding_dim = _int_or_none(row[12])
+            quantization = str(row[13]) if row[13] is not None else None
+            if not _include_variant_row(
+                embedding_variant_name=embedding_variant_name,
+                quantization=quantization,
+                include_quantization_variants=include_quantization_variants,
+                include_truncate_variants=include_truncate_variants,
+            ):
+                continue
+            task_scores.append(
+                TaskScore(
+                    model_name=(
+                        _display_model_name(str(row[0]), embedding_dim=embedding_dim, quantization=quantization)
+                        if include_any_variants
+                        else str(row[0])
+                    ),
+                    benchmark=str(row[1]),
+                    dataset_id=str(row[2]),
+                    dataset_name=str(row[3]),
+                    split_name=str(row[4]),
+                    task_name=str(row[5]),
+                    task_key=str(row[6]),
+                    score=float(row[7]),
+                    active_parameters=_int_or_none(row[8]),
+                    total_parameters=_int_or_none(row[9]),
+                    max_seq_length=_int_or_none(row[10]),
+                    embedding_variant_name=embedding_variant_name,
+                    embedding_dim=embedding_dim,
+                    quantization=quantization,
                 )
-                if include_embedding_variants
-                else str(row[0]),
-                benchmark=str(row[1]),
-                dataset_id=str(row[2]),
-                dataset_name=str(row[3]),
-                split_name=str(row[4]),
-                task_name=str(row[5]),
-                task_key=str(row[6]),
-                score=float(row[7]),
-                active_parameters=_int_or_none(row[8]),
-                total_parameters=_int_or_none(row[9]),
-                max_seq_length=_int_or_none(row[10]),
-                embedding_variant_name=str(row[11]) if row[11] is not None else None,
-                embedding_dim=_int_or_none(row[12]),
-                quantization=str(row[13]) if row[13] is not None else None,
             )
-            for row in result
-        ]
+        return task_scores
 
 
 def compute_leaderboard_rows(
@@ -402,6 +428,21 @@ def _display_model_name(model_name: str, *, embedding_dim: int | None, quantizat
     if not details:
         return model_name
     return f"{model_name} ({', '.join(details)})"
+
+
+def _include_variant_row(
+    *,
+    embedding_variant_name: str | None,
+    quantization: str | None,
+    include_quantization_variants: bool,
+    include_truncate_variants: bool,
+) -> bool:
+    if embedding_variant_name is None:
+        return True
+    normalized_name = embedding_variant_name.lower()
+    is_quantization = quantization is not None or "quantize" in normalized_name
+    is_truncate = "truncate" in normalized_name
+    return (include_quantization_variants and is_quantization) or (include_truncate_variants and is_truncate)
 
 
 def _select_score_group(
