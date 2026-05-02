@@ -253,6 +253,50 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         selected=filter_state.quant_filters,
         filters_active=filter_state.filters_active,
     )
+    dim_all_query = _state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=True,
+            dim_filters=tuple(value for value, _ in dim_options),
+            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+        ),
+    )
+    dim_none_query = _state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=True,
+            dim_filters=(),
+            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+        ),
+    )
+    quant_all_query = _state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=True,
+            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
+            quant_filters=tuple(value for value, _ in quant_options),
+        ),
+    )
+    quant_none_query = _state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=True,
+            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
+            quant_filters=(),
+        ),
+    )
     return f"""
     <div class="mb-4 flex flex-wrap items-start gap-x-6 gap-y-3 text-sm text-zinc-700">
       <form class="flex flex-wrap items-center gap-x-5 gap-y-2"
@@ -286,8 +330,8 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             hx-trigger="change from:input[type='checkbox']">
         {filter_hidden_html}
         <span class="pt-1 font-medium text-zinc-800">Filters:</span>
-        {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims)}
-        {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants)}
+        {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
+        {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
       </form>
     </div>
     """
@@ -471,21 +515,37 @@ def _render_filter_details(
     summary: str,
     options: list[tuple[str, str]],
     selected_values: set[str],
+    all_query: QueryState,
+    none_query: QueryState,
 ) -> str:
     checkboxes = []
     for value, label in options:
         checked = " checked" if value in selected_values else ""
         checkboxes.append(
-            f"""<label class="flex items-center gap-2 whitespace-nowrap px-2 py-1">
+            f"""<label class="flex min-w-0 items-center gap-2 whitespace-nowrap px-2 py-1">
               <input type="checkbox" name="{escape(name)}" value="{escape(value)}" class="h-4 w-4 accent-cyan-700"{checked}>
               <span>{escape(label)}</span>
             </label>"""
         )
+    all_url = _leaderboard_url(urlencode(all_query, doseq=True))
+    none_url = _leaderboard_url(urlencode(none_query, doseq=True))
+    all_page_url = _page_url(all_query)
+    none_page_url = _page_url(none_query)
     return f"""
       <details class="border border-zinc-300 bg-white">
         <summary class="cursor-pointer px-2 py-1 font-medium text-zinc-800">{escape(summary)}</summary>
-        <div class="max-h-60 min-w-36 overflow-auto border-t border-zinc-200 py-1">
-          {''.join(checkboxes)}
+        <div class="border-t border-zinc-200 p-2">
+          <div class="mb-2 flex gap-1">
+            <button type="button" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
+                    hx-get="{all_url}" hx-push-url="{all_page_url}"
+                    hx-target="#leaderboard-panel" hx-swap="innerHTML">All</button>
+            <button type="button" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
+                    hx-get="{none_url}" hx-push-url="{none_page_url}"
+                    hx-target="#leaderboard-panel" hx-swap="innerHTML">None</button>
+          </div>
+          <div class="grid max-h-60 min-w-64 grid-cols-2 gap-x-2 gap-y-1 overflow-auto sm:grid-cols-3">
+            {''.join(checkboxes)}
+          </div>
         </div>
       </details>
     """
@@ -517,6 +577,10 @@ def _selected_filter_values(
     if not filters_active:
         return available
     return {value for value in selected if value in available}
+
+
+def _ordered_selected_values(options: list[tuple[str, str]], selected_values: set[str]) -> list[str]:
+    return [value for value, _ in options if value in selected_values]
 
 
 def _dim_bucket(value: int | None) -> str:

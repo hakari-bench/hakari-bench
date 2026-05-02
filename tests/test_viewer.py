@@ -335,6 +335,10 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Filters:" in response.text
     assert ">Dims</summary>" in response.text
     assert ">Quantization</summary>" in response.text
+    assert "grid-cols-2" in response.text
+    assert "sm:grid-cols-3" in response.text
+    assert response.text.count(">All</button>") == 2
+    assert response.text.count(">None</button>") == 2
     assert "Truncate dims" in response.text
     assert 'name="model_filter"' in response.text
     assert 'value="model/b"' in response.text
@@ -369,6 +373,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "1025~ dims" in facet_response.text
     assert 'name="quant_filter" value="uint8" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
+    assert "dim_filter=768" in facet_response.text
+    assert "dim_filter=1025%2B" in facet_response.text
+    assert "quant_filter=uint8" in facet_response.text
     assert 'data-filter-hidden="true"' in facet_response.text
 
 
