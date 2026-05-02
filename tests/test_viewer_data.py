@@ -117,6 +117,84 @@ def test_task_results_repository_can_fetch_embedding_variant_rows_when_requested
     ]
 
 
+def test_task_results_repository_canonicalizes_legacy_nanojmteb_task_names(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "model/a",
+                "NanoJMTEB",
+                "hakari-bench/NanoJMTEB",
+                "NanoJMTEB",
+                "NanoJaMIRACL",
+                "NanoJaMIRACL",
+                "NanoJMTEB::hakari-bench/NanoJMTEB::NanoJaMIRACL",
+                0.90,
+                10,
+                12,
+                8192,
+            ),
+        ],
+        include_embedding_variant_columns=False,
+    )
+
+    records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["NanoJMTEB"],
+        include_embedding_variants=False,
+    )
+
+    assert records[0].split_name == "NanoMIRACL"
+    assert records[0].task_name == "NanoMIRACL"
+    assert records[0].task_key == "NanoJMTEB::hakari-bench/NanoJMTEB::NanoMIRACL"
+    assert records[0].uses_legacy_task_alias is True
+
+
+def test_task_results_repository_prefers_new_nanojmteb_task_name_when_aliases_collide(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "model/a",
+                "NanoJMTEB",
+                "hakari-bench/NanoJMTEB",
+                "NanoJMTEB",
+                "NanoJaMIRACL",
+                "NanoJaMIRACL",
+                "NanoJMTEB::hakari-bench/NanoJMTEB::NanoJaMIRACL",
+                0.10,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "NanoJMTEB",
+                "hakari-bench/NanoJMTEB",
+                "NanoJMTEB",
+                "NanoMIRACL",
+                "NanoMIRACL",
+                "NanoJMTEB::hakari-bench/NanoJMTEB::NanoMIRACL",
+                0.90,
+                10,
+                12,
+                8192,
+            ),
+        ],
+        include_embedding_variant_columns=False,
+    )
+
+    records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["NanoJMTEB"],
+        include_embedding_variants=False,
+    )
+
+    assert [(record.task_name, record.score, record.uses_legacy_task_alias) for record in records] == [
+        ("NanoMIRACL", 0.90, False)
+    ]
+
+
 def _write_task_results(
     db_path: Path,
     rows: list[tuple],

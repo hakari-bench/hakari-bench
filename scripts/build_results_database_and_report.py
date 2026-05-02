@@ -10,6 +10,13 @@ from typing import Any
 
 import duckdb
 
+from nano_ir_benchmark.viewer.task_names import (
+    canonical_metric_name,
+    canonical_split_name,
+    canonical_task_key,
+    canonical_task_name,
+)
+
 
 TARGET_BENCHMARKS = [
     "MNanoBEIR",
@@ -140,8 +147,13 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
         dataset_id = str(target.get("dataset_id") or "")
         dataset_revision = _dataset_revision_value(target.get("dataset_revision"), key="resolved")
         dataset_revision_requested = _dataset_revision_value(target.get("dataset_revision"), key="requested")
-        task_name = str(target.get("task_name") or target.get("split_name") or "")
-        task_key = f"{benchmark}::{dataset_id}::{task_name}"
+        raw_task_name = str(target.get("task_name") or target.get("split_name") or "")
+        task_name = canonical_task_name(benchmark, raw_task_name)
+        split_name = canonical_split_name(
+            benchmark,
+            str(target["split_name"]) if target.get("split_name") is not None else None,
+        )
+        task_key = canonical_task_key(benchmark=benchmark, dataset_id=dataset_id, task_name=task_name)
         common: dict[str, Any] = {
             "model_dir": model_dir,
             "model_name": model_name,
@@ -150,7 +162,7 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
             "dataset_revision": dataset_revision,
             "dataset_revision_requested": dataset_revision_requested,
             "dataset_name": str(target.get("dataset_name") or ""),
-            "split_name": target.get("split_name"),
+            "split_name": split_name,
             "task_name": task_name,
             "task_key": task_key,
             "result_path": str(result_path),
@@ -209,13 +221,13 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
                         "benchmark": benchmark,
                         "dataset_id": dataset_id,
                         "task_name": task_name,
-                        "metric_name": metric_name,
+                        "metric_name": canonical_metric_name(benchmark, metric_name),
                         "metric_value": float(metric_value),
                         "result_path": str(result_path),
                     }
                 )
 
-    return rows, runs, metric_rows
+    return _dedupe_task_results(rows), runs, _dedupe_metric_rows(metric_rows)
 
 
 def benchmark_name(dataset_id: Any, dataset_name: Any) -> str:
@@ -226,6 +238,60 @@ def benchmark_name(dataset_id: Any, dataset_name: Any) -> str:
         if name in value:
             return name
     return "Other"
+
+
+def _dedupe_task_results(rows: list[TaskResult]) -> list[TaskResult]:
+    deduped: dict[tuple[str, str, str, str, str, str | None, int | None, str | None], TaskResult] = {}
+    for row in rows:
+        key = (
+            row.model_dir,
+            row.model_name,
+            row.benchmark,
+            row.dataset_id,
+            row.task_key,
+            row.embedding_variant_name,
+            row.embedding_dim,
+            row.quantization,
+        )
+        current = deduped.get(key)
+        if current is None or _prefer_task_result(row, current):
+            deduped[key] = row
+    return list(deduped.values())
+
+
+def _prefer_task_result(candidate: TaskResult, current: TaskResult) -> bool:
+    return _result_path_stem_matches_task(candidate) and not _result_path_stem_matches_task(current)
+
+
+def _result_path_stem_matches_task(row: TaskResult) -> bool:
+    return Path(row.result_path).stem == row.task_name
+
+
+def _dedupe_metric_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    deduped: dict[tuple[Any, ...], dict[str, Any]] = {}
+    for row in rows:
+        key = (
+            row.get("model_dir"),
+            row.get("model_name"),
+            row.get("benchmark"),
+            row.get("dataset_id"),
+            row.get("task_name"),
+            row.get("metric_name"),
+        )
+        current = deduped.get(key)
+        if current is None or _prefer_metric_row(row, current):
+            deduped[key] = row
+    return list(deduped.values())
+
+
+def _prefer_metric_row(candidate: dict[str, Any], current: dict[str, Any]) -> bool:
+    return _metric_result_path_stem_matches_task(candidate) and not _metric_result_path_stem_matches_task(current)
+
+
+def _metric_result_path_stem_matches_task(row: dict[str, Any]) -> bool:
+    result_path = row.get("result_path")
+    task_name = row.get("task_name")
+    return isinstance(result_path, str) and isinstance(task_name, str) and Path(result_path).stem == task_name
 
 
 def _embedding_evaluations(value: Any) -> list[dict[str, Any]]:
