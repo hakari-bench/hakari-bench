@@ -162,6 +162,23 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
     ]
 
 
+def test_load_results_canonicalizes_legacy_nanojmteb_task_names(tmp_path: Path) -> None:
+    model_dir = tmp_path / "model"
+    task_dir = model_dir / "hotchpotch__NanoJMTEB"
+    task_dir.mkdir(parents=True)
+    _write_task_json(task_dir / "NanoJaMIRACL.json", task_name="NanoJaMIRACL", score=0.10)
+    _write_task_json(task_dir / "NanoMIRACL.json", task_name="NanoMIRACL", score=0.90)
+
+    rows, _, metric_rows = report.load_results(tmp_path)
+
+    assert [(row.task_name, row.task_key, row.score) for row in rows] == [
+        ("NanoMIRACL", "NanoJMTEB::hakari-bench/NanoJMTEB::NanoMIRACL", 0.90)
+    ]
+    assert [(row["task_name"], row["metric_name"], row["metric_value"]) for row in metric_rows] == [
+        ("NanoMIRACL", "NanoMIRACL_ndcg@10", 0.90)
+    ]
+
+
 def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
     row = report.TaskResult(
         model_dir="model",
@@ -227,3 +244,23 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
         )
     finally:
         con.close()
+
+
+def _write_task_json(path: Path, *, task_name: str, score: float) -> None:
+    path.write_text(
+        json.dumps(
+            {
+                "model": {"name_or_path": "example/model"},
+                "environment": {"package_versions": {}},
+                "target": {
+                    "dataset_name": "NanoJMTEB",
+                    "dataset_id": "hakari-bench/NanoJMTEB",
+                    "split_name": task_name,
+                    "task_name": task_name,
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": score},
+                "metrics": {f"{task_name}_ndcg@10": score},
+            }
+        ),
+        encoding="utf-8",
+    )

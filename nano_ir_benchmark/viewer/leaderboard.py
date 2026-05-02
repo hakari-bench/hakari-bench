@@ -5,10 +5,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Literal
 
-import duckdb
 from pydantic import BaseModel, ConfigDict, Field
 
 from nano_ir_benchmark.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
+from nano_ir_benchmark.viewer.data import TaskResultRecord, TaskResultsRepository
 
 SortDirection = Literal["asc", "desc"]
 
@@ -94,8 +94,8 @@ SORT_COLUMNS = {
 
 class LeaderboardService:
     def __init__(self, *, duckdb_path: Path, config: ViewerConfig) -> None:
-        self.duckdb_path = duckdb_path
         self.config = config
+        self.task_results_repository = TaskResultsRepository(duckdb_path)
 
     def get_leaderboard(
         self,
@@ -157,80 +157,41 @@ class LeaderboardService:
         include_truncate_variants: bool,
         include_other_variants: bool,
     ) -> list[TaskScore]:
-        if not self.duckdb_path.exists():
-            return []
-        con = duckdb.connect(str(self.duckdb_path), read_only=True)
-        try:
-            columns = _table_columns(con, "task_results")
-            variant_name_expr = _column_or_null(columns, "embedding_variant_name")
-            embedding_dim_expr = _column_or_null(columns, "embedding_dim")
-            quantization_expr = _column_or_null(columns, "quantization")
-            include_any_variants = include_quantization_variants or include_truncate_variants or include_other_variants
-            variant_filter = (
-                ""
-                if include_any_variants or "embedding_variant_name" not in columns
-                else "AND embedding_variant_name IS NULL"
-            )
-            placeholders = ", ".join("?" for _ in benchmarks)
-            query = f"""
-                SELECT
-                    model_name,
-                    benchmark,
-                    dataset_id,
-                    dataset_name,
-                    COALESCE(split_name, '') AS split_name,
-                    task_name,
-                    task_key,
-                    score,
-                    active_parameters,
-                    total_parameters,
-                    max_seq_length,
-                    {variant_name_expr} AS embedding_variant_name,
-                    {embedding_dim_expr} AS embedding_dim,
-                    {quantization_expr} AS quantization
-                FROM task_results
-                WHERE benchmark IN ({placeholders})
-                  AND score IS NOT NULL
-                  {variant_filter}
-            """
-            result = con.execute(query, benchmarks).fetchall()
-        finally:
-            con.close()
-
         task_scores: list[TaskScore] = []
         include_any_variants = include_quantization_variants or include_truncate_variants or include_other_variants
-        for row in result:
-            embedding_variant_name = str(row[11]) if row[11] is not None else None
-            embedding_dim = _int_or_none(row[12])
-            quantization = str(row[13]) if row[13] is not None else None
-            if not _include_variant_row(
-                embedding_variant_name=embedding_variant_name,
-                quantization=quantization,
+        records = self.task_results_repository.fetch_task_results(
+            benchmarks=benchmarks,
+            include_embedding_variants=include_any_variants,
+        )
+        filtered_records = [
+            record
+            for record in records
+            if _include_variant_row(
+                embedding_variant_name=record.embedding_variant_name,
+                quantization=record.quantization,
                 include_quantization_variants=include_quantization_variants,
                 include_truncate_variants=include_truncate_variants,
                 include_other_variants=include_other_variants,
-            ):
-                continue
+            )
+        ]
+        model_names = _record_display_model_names(filtered_records, include_variant_details=include_any_variants)
+        for record, model_name in zip(filtered_records, model_names, strict=True):
             task_scores.append(
                 TaskScore(
-                    model_name=(
-                        _display_model_name(str(row[0]), embedding_dim=embedding_dim, quantization=quantization)
-                        if include_any_variants
-                        else str(row[0])
-                    ),
-                    benchmark=str(row[1]),
-                    dataset_id=str(row[2]),
-                    dataset_name=str(row[3]),
-                    split_name=str(row[4]),
-                    task_name=str(row[5]),
-                    task_key=str(row[6]),
-                    score=float(row[7]),
-                    active_parameters=_int_or_none(row[8]),
-                    total_parameters=_int_or_none(row[9]),
-                    max_seq_length=_int_or_none(row[10]),
-                    embedding_variant_name=embedding_variant_name,
-                    embedding_dim=embedding_dim,
-                    quantization=quantization,
+                    model_name=model_name,
+                    benchmark=record.benchmark,
+                    dataset_id=record.dataset_id,
+                    dataset_name=record.dataset_name,
+                    split_name=record.split_name,
+                    task_name=record.task_name,
+                    task_key=record.task_key,
+                    score=record.score,
+                    active_parameters=record.active_parameters,
+                    total_parameters=record.total_parameters,
+                    max_seq_length=record.max_seq_length,
+                    embedding_variant_name=record.embedding_variant_name,
+                    embedding_dim=record.embedding_dim,
+                    quantization=record.quantization,
                 )
             )
         return task_scores
@@ -417,20 +378,51 @@ def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGr
     return benchmark.resolved_score_groups if benchmark is not None else []
 
 
-def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:
-    return {str(row[0]) for row in con.execute(f"DESCRIBE {table}").fetchall()}
+def _record_display_model_names(records: list[TaskResultRecord], *, include_variant_details: bool) -> list[str]:
+    if not include_variant_details:
+        return [record.model_name for record in records]
+
+    base_names = [
+        _display_model_name(
+            record.model_name,
+            embedding_dim=record.embedding_dim,
+            quantization=record.quantization,
+        )
+        for record in records
+    ]
+    variant_names_by_display: dict[str, set[str]] = defaultdict(set)
+    for record, base_name in zip(records, base_names, strict=True):
+        variant_names_by_display[base_name].add(record.embedding_variant_name or "base")
+
+    return [
+        (
+            _display_model_name(
+                record.model_name,
+                embedding_dim=record.embedding_dim,
+                quantization=record.quantization,
+                variant_name=record.embedding_variant_name or "base",
+            )
+            if len(variant_names_by_display[base_name]) > 1
+            else base_name
+        )
+        for record, base_name in zip(records, base_names, strict=True)
+    ]
 
 
-def _column_or_null(columns: set[str], column: str) -> str:
-    return column if column in columns else "NULL"
-
-
-def _display_model_name(model_name: str, *, embedding_dim: int | None, quantization: str | None) -> str:
+def _display_model_name(
+    model_name: str,
+    *,
+    embedding_dim: int | None,
+    quantization: str | None,
+    variant_name: str | None = None,
+) -> str:
     details = []
     if embedding_dim is not None:
         details.append(f"{embedding_dim} dims")
     if quantization:
         details.append(quantization)
+    if variant_name:
+        details.append(variant_name)
     if not details:
         return model_name
     return f"{model_name} ({', '.join(details)})"
@@ -506,7 +498,3 @@ def _score_group_key(row: TaskScore, group_by: str) -> str:
 def _mean(values: Iterable[float]) -> float:
     vals = list(values)
     return sum(vals) / len(vals) if vals else 0.0
-
-
-def _int_or_none(value: object) -> int | None:
-    return int(value) if isinstance(value, int | float) else None
