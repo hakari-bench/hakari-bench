@@ -182,6 +182,42 @@ class FakeCudaDenseModel:
         return np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]], dtype=np.float32)
 
 
+class FakeCudaLateInteractionModel:
+    similarity_fn_name = "dot"
+    device = torch.device("cuda")
+
+    def __init__(self) -> None:
+        self.query_calls: list[dict[str, object]] = []
+        self.document_calls: list[dict[str, object]] = []
+
+    def encode_query(self, sentences: list[str], **kwargs: object) -> np.ndarray | torch.Tensor:
+        self.query_calls.append({"sentences": sentences, **kwargs})
+        values = np.array(
+            [
+                [[1.0, 0.0], [0.0, 1.0]],
+                [[-1.0, 0.0], [0.0, -1.0]],
+            ],
+            dtype=np.float32,
+        )
+        if kwargs.get("convert_to_tensor"):
+            return torch.from_numpy(values)
+        return values
+
+    def encode_document(self, sentences: list[str], **kwargs: object) -> np.ndarray | torch.Tensor:
+        self.document_calls.append({"sentences": sentences, **kwargs})
+        values = np.array(
+            [
+                [[1.0, 0.0], [0.0, 1.0]],
+                [[-1.0, 0.0], [0.0, -1.0]],
+                [[0.0, 1.0], [1.0, 0.0]],
+            ],
+            dtype=np.float32,
+        )
+        if kwargs.get("convert_to_tensor"):
+            return torch.from_numpy(values)
+        return values
+
+
 class FakeScaleSensitiveDenseModel:
     similarity_fn_name = "dot"
 
@@ -337,6 +373,28 @@ def test_evaluate_dense_task_requests_tensor_embeddings_for_cuda_models_by_defau
     assert model.query_calls[0]["convert_to_tensor"] is True
     assert model.document_calls[0]["convert_to_tensor"] is True
     assert result.embedding_evaluations[0]["embedding_metadata"]["query"]["device"] == "cpu"
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+
+
+def test_evaluate_dense_task_score_device_cpu_uses_numpy_embeddings_for_cuda_models() -> None:
+    model = FakeCudaDenseModel()
+
+    result = evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=8,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        score_device="cpu",
+    )
+
+    assert model.query_calls[0]["convert_to_numpy"] is True
+    assert model.document_calls[0]["convert_to_numpy"] is True
+    assert "device" not in result.embedding_evaluations[0]["embedding_metadata"]["query"]
     assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
 
 
@@ -1158,6 +1216,56 @@ def test_torch_late_interaction_rank_by_similarity_uses_maxsim_without_numpy(mon
     assert rankings["q2"] == ["d2", "d1", "d3"]
 
 
+def test_numpy_late_interaction_rank_by_similarity_uses_maxsim() -> None:
+    query_embeddings = np.array(
+        [
+            [[1.0, 0.0], [0.0, 1.0]],
+            [[-1.0, 0.0], [0.0, -1.0]],
+        ],
+        dtype=np.float32,
+    )
+    corpus_embeddings = np.array(
+        [
+            [[1.0, 0.0], [0.0, 1.0]],
+            [[-1.0, 0.0], [0.0, -1.0]],
+            [[0.0, 1.0], [1.0, 0.0]],
+        ],
+        dtype=np.float32,
+    )
+
+    rankings = evaluation_module._rank_by_similarity(
+        query_ids=["q1", "q2"],
+        corpus_ids=["d1", "d2", "d3"],
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        score_name="dot",
+    )
+
+    assert rankings["q1"] == ["d1", "d3", "d2"]
+    assert rankings["q2"] == ["d2", "d1", "d3"]
+
+
+def test_evaluate_dense_task_score_device_cpu_uses_numpy_late_interaction_embeddings() -> None:
+    model = FakeCudaLateInteractionModel()
+
+    result = evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=8,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        score_device="cpu",
+    )
+
+    assert model.query_calls[0]["convert_to_numpy"] is True
+    assert model.document_calls[0]["convert_to_numpy"] is True
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+
+
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not available")
 def test_cuda_quantized_search_keeps_values_on_cuda() -> None:
     query_embeddings = torch.tensor([[1.0, 0.0]], dtype=torch.float32, device="cuda")
@@ -1493,6 +1601,26 @@ def test_evaluate_dense_task_keeps_sparse_encoder_outputs_on_device_for_cuda_mod
     assert model.document_calls[0]["save_to_cpu"] is False
 
 
+def test_evaluate_dense_task_score_device_cpu_saves_sparse_encoder_outputs_to_cpu() -> None:
+    model = FakeCudaSentenceTransformersSparseModel()
+
+    evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        score_device="cpu",
+    )
+
+    assert model.query_calls[0]["save_to_cpu"] is True
+    assert model.document_calls[0]["save_to_cpu"] is True
+
+
 def test_evaluate_reranker_task_uses_candidate_top_n() -> None:
     result = evaluate_reranker_task(
         model=FakeReranker(),
@@ -1699,6 +1827,42 @@ def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) 
     assert "metrics" not in split_variants[0]["distance_evaluations"][0]
     assert split_variants[1]["embedding_dimensions"] == {"dim": 1}
     assert "metrics" not in split_variants[1]
+
+
+def test_run_or_load_task_records_score_device(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        sparse_max_active_dims=None,
+        embedding_variants=[],
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        score_device="cpu",
+        override=False,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeCudaDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    assert result.payload["config"]["score_device"] == "cpu"
+    base_metadata = result.payload["evaluation"]["embedding_evaluations"][0]["embedding_metadata"]
+    assert "device" not in base_metadata["query"]
 
 
 def test_run_or_load_task_records_sparse_max_active_dims(tmp_path: Path) -> None:

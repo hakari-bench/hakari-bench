@@ -75,6 +75,14 @@ Sparse embeddings intentionally do not support quantized embedding variants in
 the CLI. Use max-active-dimension variants for sparse footprint and latency
 trade-off checks.
 
+## Late interaction / ColBERT
+
+ColBERT-style models can be evaluated with `--model-type late-interaction`.
+The adapter loads Hugging Face `AutoModel`/`AutoTokenizer`, emits token
+embeddings, applies a ColBERT `linear.weight` projection when present, and
+scores query/document token matrices with MaxSim. Use `--score-device cpu` to
+compare the CUDA MaxSim scorer against the CPU NumPy scorer.
+
 ## Embedding variants
 
 Derived embedding variants can be evaluated together with the base embedding
@@ -89,7 +97,8 @@ When dense or sparse SentenceTransformers models run on a non-CPU device, the
 benchmark keeps base scoring on PyTorch tensors and performs exact score/top-k
 work on that device. Dense single-vector, sparse tensor, and late-interaction
 tensor shapes use this path; CPU model runs continue to use the NumPy/SciPy
-paths.
+paths. Use `--score-device cpu` to force post-encode score/top-k matrix work
+onto CPU, which is useful for checking CUDA and CPU scoring parity.
 
 Dense evaluation automatically runs normalized `int8` and binary quantized
 search variants, plus top-100 float rescoring for both variants. CPU runs use

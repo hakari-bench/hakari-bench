@@ -39,6 +39,7 @@ AGGREGATED_CONFIG_KEYS = [
     "query_task",
     "corpus_task",
     "sparse_max_active_dims",
+    "score_device",
 ]
 PROMPT_CONFIG_KEYS = [
     "query_prompt",
@@ -157,6 +158,7 @@ def run_or_load_task(
             sparse_max_active_dims=getattr(args, "sparse_max_active_dims", None),
             embedding_variants=getattr(args, "embedding_variants", []),
             aggregate_metric=args.aggregate_metric,
+            score_device=getattr(args, "score_device", "auto"),
         )
     elapsed = time.perf_counter() - start
     finished_at = datetime.now(timezone.utc)
@@ -194,6 +196,7 @@ def run_or_load_task(
             "corpus_task": getattr(args, "corpus_task", None),
             "truncate_dim": args.truncate_dim,
             "sparse_max_active_dims": getattr(args, "sparse_max_active_dims", None),
+            "score_device": getattr(args, "score_device", "auto"),
             "embedding_variants": getattr(args, "embedding_variants", []),
             "dataset_revision": getattr(args, "dataset_revision", None),
             "candidate_subset_name": args.candidate_subset_name if args.model_type in {"bm25", "reranker"} else None,

@@ -48,6 +48,12 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--attn-implementation", default=None)
     evaluate.add_argument("--flash-attn2", action="store_true")
     evaluate.add_argument("--device", default=None)
+    evaluate.add_argument(
+        "--score-device",
+        default="auto",
+        choices=["auto", "cpu"],
+        help="Device policy for post-encode score/top-k matrix work. Use cpu to force CPU NumPy/SciPy scoring.",
+    )
     evaluate.add_argument("--trust-remote-code", action="store_true")
     evaluate.add_argument("--model-max-seq-length", type=int, default=None)
     evaluate.add_argument("--truncate-dim", type=int, default=None)
@@ -181,7 +187,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error(str(exc))
         if args.model_type == "dense" and not args.no_quantize and not has_explicit_embedding_variants:
             args.embedding_variants = default_dense_quantized_embedding_variants(
-                backend=_default_dense_quantized_backend(args.device)
+                backend=_default_dense_quantized_backend(args.device, args.score_device)
             )
         if args.model_type == "sparse" and _embedding_variants_use_quantization(args.embedding_variants):
             parser.error(
@@ -214,7 +220,9 @@ def _embedding_variants_use_quantization(variants: list[dict[str, Any]]) -> bool
     return any(_embedding_variant_uses_quantization(variant) for variant in variants)
 
 
-def _default_dense_quantized_backend(device: str | None) -> str:
+def _default_dense_quantized_backend(device: str | None, score_device: str = "auto") -> str:
+    if score_device == "cpu":
+        return "usearch"
     normalized = str(device or "").strip().lower()
     if normalized == "cpu" or normalized.startswith("cpu:"):
         return "usearch"

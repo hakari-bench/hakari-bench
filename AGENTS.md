@@ -71,8 +71,8 @@ uv run ty check
 - `sparse` uses SentenceTransformers `SparseEncoder`.
 - `reranker` uses SentenceTransformers `CrossEncoder` and requires a candidate
   subset such as `bm25`; `--rerank-top-n` limits the candidates to rerank.
-- `late-interaction` is currently reserved and should continue to raise until an
-  adapter is implemented.
+- `late-interaction` uses a minimal ColBERT-style AutoModel adapter that emits
+  token embeddings and scores them with MaxSim.
 - Default dtype is `bf16`. Keep `--dtype`, `--trust-remote-code`,
   `--flash-attn2`, `--attn-implementation`, `--device`,
   `--model-max-seq-length`, and `--truncate-dim` explicit CLI options.

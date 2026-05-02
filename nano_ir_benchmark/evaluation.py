@@ -139,13 +139,15 @@ def evaluate_dense_task(
     sparse_max_active_dims: int | None = None,
     embedding_variants: list[dict[str, Any]] | None = None,
     aggregate_metric: str = "ndcg@10",
+    score_device: str = "auto",
 ) -> TaskEvaluation:
     query_ids = list(dataset.queries)
     corpus_ids = list(dataset.corpus)
     query_texts = [dataset.queries[query_id] for query_id in query_ids]
     corpus_texts = [dataset.corpus[corpus_id] for corpus_id in corpus_ids]
-    prefer_tensor_embeddings = _model_prefers_tensor_scoring(model) or _embedding_variants_use_torch_quantized_scoring(
-        embedding_variants or []
+    force_cpu_scoring = score_device == "cpu"
+    prefer_tensor_embeddings = not force_cpu_scoring and (
+        _model_prefers_tensor_scoring(model) or _embedding_variants_use_torch_quantized_scoring(embedding_variants or [])
     )
 
     query_start = time.perf_counter()
@@ -161,6 +163,7 @@ def evaluate_dense_task(
         truncate_dim=truncate_dim,
         sparse_max_active_dims=sparse_max_active_dims,
         prefer_tensor=prefer_tensor_embeddings,
+        score_device=score_device,
     )
     query_seconds = time.perf_counter() - query_start
 
@@ -177,6 +180,7 @@ def evaluate_dense_task(
         truncate_dim=truncate_dim,
         sparse_max_active_dims=sparse_max_active_dims,
         prefer_tensor=prefer_tensor_embeddings,
+        score_device=score_device,
     )
     corpus_seconds = time.perf_counter() - corpus_start
 
@@ -340,6 +344,7 @@ def _encode(
     truncate_dim: int | None,
     sparse_max_active_dims: int | None,
     prefer_tensor: bool = False,
+    score_device: str = "auto",
 ) -> Any:
     encode_fn = None if task is not None else getattr(model, "encode_query" if role == "query" else "encode_document", None)
     if encode_fn is None:
@@ -361,7 +366,7 @@ def _encode(
             "convert_to_sparse_tensor": True,
         }
         if _accepts_encode_parameter(encode_fn, "save_to_cpu"):
-            sparse_kwargs["save_to_cpu"] = not _model_prefers_tensor_scoring(model)
+            sparse_kwargs["save_to_cpu"] = score_device == "cpu" or not _model_prefers_tensor_scoring(model)
         if sparse_max_active_dims is not None:
             if not _accepts_encode_parameter(encode_fn, "max_active_dims"):
                 raise ValueError("Sparse max active dims requires an encoder with max_active_dims support.")
@@ -1408,6 +1413,15 @@ def _is_torch_late_interaction_pair(query_embeddings: Any, corpus_embeddings: An
     )
 
 
+def _is_numpy_late_interaction_pair(query_embeddings: Any, corpus_embeddings: Any) -> bool:
+    return (
+        isinstance(query_embeddings, np.ndarray)
+        and isinstance(corpus_embeddings, np.ndarray)
+        and query_embeddings.ndim >= 3
+        and corpus_embeddings.ndim >= 3
+    )
+
+
 def _rank_by_similarity(
     *,
     query_ids: list[str],
@@ -1459,6 +1473,15 @@ def _rank_by_similarity(
             corpus_ids=corpus_ids,
             query_embeddings=cast(torch.Tensor, query_embeddings),
             corpus_embeddings=cast(torch.Tensor, corpus_embeddings),
+            score_name=score_name,
+        )
+
+    if _is_numpy_late_interaction_pair(query_embeddings, corpus_embeddings):
+        return _rank_numpy_late_interaction(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=cast(np.ndarray, query_embeddings),
+            corpus_embeddings=cast(np.ndarray, corpus_embeddings),
             score_name=score_name,
         )
 
@@ -1563,6 +1586,66 @@ def _rank_torch_late_interaction(
         rows.append(torch.cat(chunk_scores, dim=0))
     scores = torch.stack(rows, dim=0) if rows else torch.empty((0, len(corpus_ids)), device=corpus_matrix.device)
     return _torch_scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+
+
+def _rank_numpy_late_interaction(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: np.ndarray,
+    corpus_embeddings: np.ndarray,
+    score_name: str,
+) -> dict[str, list[str]]:
+    query_matrix = _to_numpy_float32(query_embeddings)
+    corpus_matrix = _to_numpy_float32(corpus_embeddings)
+    if query_matrix.shape[-1] != corpus_matrix.shape[-1]:
+        raise ValueError(
+            f"Cannot rank late-interaction embeddings with query dimension {query_matrix.shape[-1]} "
+            f"and corpus dimension {corpus_matrix.shape[-1]}."
+        )
+    if score_name == "cosine":
+        query_matrix = _l2_normalize(query_matrix)
+        corpus_matrix = _l2_normalize(corpus_matrix)
+    elif score_name != "dot":
+        raise ValueError(f"Late-interaction scoring supports cosine or dot, got {score_name}.")
+
+    if corpus_matrix.shape[0] == 0:
+        return _scores_to_rankings(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            scores=np.empty((query_matrix.shape[0], 0), dtype=np.float32),
+        )
+
+    corpus_chunk_size = 1024
+    query_chunk_size = _numpy_late_interaction_query_chunk_size(
+        query_matrix=query_matrix,
+        corpus_matrix=corpus_matrix,
+        corpus_chunk_size=corpus_chunk_size,
+    )
+    rows: list[np.ndarray] = []
+    for query_start in range(0, int(query_matrix.shape[0]), query_chunk_size):
+        query_chunk = query_matrix[query_start : query_start + query_chunk_size]
+        corpus_scores: list[np.ndarray] = []
+        for corpus_start in range(0, int(corpus_matrix.shape[0]), corpus_chunk_size):
+            corpus_chunk = corpus_matrix[corpus_start : corpus_start + corpus_chunk_size]
+            similarities = np.einsum("qld,cmd->qclm", query_chunk, corpus_chunk, optimize=True)
+            corpus_scores.append(np.max(similarities, axis=3).sum(axis=2))
+        rows.append(np.concatenate(corpus_scores, axis=1))
+    scores = np.concatenate(rows, axis=0) if rows else np.empty((0, len(corpus_ids)), dtype=np.float32)
+    return _scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+
+
+def _numpy_late_interaction_query_chunk_size(
+    *,
+    query_matrix: np.ndarray,
+    corpus_matrix: np.ndarray,
+    corpus_chunk_size: int,
+) -> int:
+    target_bytes = 256 * 1024 * 1024
+    bytes_per_score_block = int(query_matrix.shape[1]) * corpus_chunk_size * int(corpus_matrix.shape[1]) * 4
+    if bytes_per_score_block <= 0:
+        return 1
+    return max(1, min(int(query_matrix.shape[0]), target_bytes // bytes_per_score_block))
 
 
 def _rank_usearch_quantized(
