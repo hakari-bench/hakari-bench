@@ -1,5 +1,5 @@
 name: NanoLaw
-dataset_id: hotchpotch/NanoLaw
+dataset_id: hakari-bench/NanoLaw
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries

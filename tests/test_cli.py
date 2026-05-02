@@ -35,7 +35,7 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.command == "evaluate"
     assert args.model_type == "dense"
     assert args.dtype == "bf16"
-    assert args.dataset == ["sentence-transformers/NanoBEIR-en"]
+    assert args.dataset == ["hakari-bench/NanoBEIR-en"]
     assert args.output_dir == "output/results"
 
 

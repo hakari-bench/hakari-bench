@@ -1,5 +1,5 @@
 name: NanoCoIR
-dataset_id: hotchpotch/NanoCoIR
+dataset_id: hakari-bench/NanoCoIR
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries

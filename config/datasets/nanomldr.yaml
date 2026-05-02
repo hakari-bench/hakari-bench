@@ -1,5 +1,5 @@
 name: NanoMLDR
-dataset_id: hotchpotch/NanoMLDR
+dataset_id: hakari-bench/NanoMLDR
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries

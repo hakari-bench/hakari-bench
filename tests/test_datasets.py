@@ -16,25 +16,25 @@ from nano_ir_benchmark.datasets import (
 def test_builtin_registry_contains_requested_benchmarks() -> None:
     registry = DatasetRegistry.load_builtin()
 
-    assert registry.get_dataset("NanoBEIR-en").dataset_id == "sentence-transformers/NanoBEIR-en"
-    assert registry.get_dataset("NanoMIRACL").dataset_id == "hotchpotch/NanoMIRACL"
-    assert registry.get_dataset("NanoMLDR").dataset_id == "hotchpotch/NanoMLDR"
-    assert registry.get_dataset("NanoJMTEB").dataset_id == "hotchpotch/NanoJMTEB"
-    assert registry.get_dataset("NanoRTEB").dataset_id == "hotchpotch/NanoRTEB"
-    assert registry.get_dataset("NanoMTEB").dataset_id == "hotchpotch/NanoMTEB"
-    assert registry.get_dataset("NanoMMTEB").dataset_id == "hotchpotch/NanoMMTEB"
-    assert registry.get_dataset("NanoCMTEB").dataset_id == "hotchpotch/NanoCMTEB"
-    assert registry.get_dataset("NanoLongEmbed").dataset_id == "hotchpotch/NanoLongEmbed"
-    assert registry.get_dataset("NanoCoIR").dataset_id == "hotchpotch/NanoCoIR"
-    assert registry.get_dataset("NanoIFIR").dataset_id == "hotchpotch/NanoIFIR"
-    assert registry.get_dataset("NanoLaw").dataset_id == "hotchpotch/NanoLaw"
-    assert registry.get_dataset("NanoMedical").dataset_id == "hotchpotch/NanoMedical"
-    assert registry.get_dataset("NanoRARb").dataset_id == "hotchpotch/NanoRARb"
-    assert registry.get_dataset("NanoBRIGHT").dataset_id == "hotchpotch/NanoBRIGHT"
-    assert registry.get_dataset("NanoCodeRAG").dataset_id == "hotchpotch/NanoCodeRAG"
-    assert registry.get_dataset("NanoChemTEB").dataset_id == "hotchpotch/NanoChemTEB"
-    assert registry.get_dataset("NanoR2MED").dataset_id == "hotchpotch/NanoR2MED"
-    assert registry.get_dataset("NanoBuiltBench").dataset_id == "hotchpotch/NanoBuiltBench"
+    assert registry.get_dataset("NanoBEIR-en").dataset_id == "hakari-bench/NanoBEIR-en"
+    assert registry.get_dataset("NanoMIRACL").dataset_id == "hakari-bench/NanoMIRACL"
+    assert registry.get_dataset("NanoMLDR").dataset_id == "hakari-bench/NanoMLDR"
+    assert registry.get_dataset("NanoJMTEB").dataset_id == "hakari-bench/NanoJMTEB"
+    assert registry.get_dataset("NanoRTEB").dataset_id == "hakari-bench/NanoRTEB"
+    assert registry.get_dataset("NanoMTEB").dataset_id == "hakari-bench/NanoMTEB"
+    assert registry.get_dataset("NanoMMTEB").dataset_id == "hakari-bench/NanoMMTEB"
+    assert registry.get_dataset("NanoCMTEB").dataset_id == "hakari-bench/NanoCMTEB"
+    assert registry.get_dataset("NanoLongEmbed").dataset_id == "hakari-bench/NanoLongEmbed"
+    assert registry.get_dataset("NanoCoIR").dataset_id == "hakari-bench/NanoCoIR"
+    assert registry.get_dataset("NanoIFIR").dataset_id == "hakari-bench/NanoIFIR"
+    assert registry.get_dataset("NanoLaw").dataset_id == "hakari-bench/NanoLaw"
+    assert registry.get_dataset("NanoMedical").dataset_id == "hakari-bench/NanoMedical"
+    assert registry.get_dataset("NanoRARb").dataset_id == "hakari-bench/NanoRARb"
+    assert registry.get_dataset("NanoBRIGHT").dataset_id == "hakari-bench/NanoBRIGHT"
+    assert registry.get_dataset("NanoCodeRAG").dataset_id == "hakari-bench/NanoCodeRAG"
+    assert registry.get_dataset("NanoChemTEB").dataset_id == "hakari-bench/NanoChemTEB"
+    assert registry.get_dataset("NanoR2MED").dataset_id == "hakari-bench/NanoR2MED"
+    assert registry.get_dataset("NanoBuiltBench").dataset_id == "hakari-bench/NanoBuiltBench"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
 
 
@@ -308,7 +308,7 @@ def test_resolve_eval_tasks_expands_mnanobeir_collection() -> None:
     tasks = resolve_eval_tasks(registry=registry, dataset_values=[], collection_values=["MNanoBEIR"], split_values=["msmarco"])
 
     assert len(tasks) == 14
-    assert tasks[0].dataset_id == "sentence-transformers/NanoBEIR-en"
+    assert tasks[0].dataset_id == "hakari-bench/NanoBEIR-en"
     assert tasks[0].split_name == "NanoMSMARCO"
     assert tasks[0].task_name == "msmarco"
 
@@ -322,7 +322,7 @@ def test_resolve_eval_tasks_accepts_direct_dataset_id(monkeypatch: pytest.Monkey
 
     tasks = resolve_eval_tasks(
         registry=registry,
-        dataset_values=["hotchpotch/NanoMIRACL"],
+        dataset_values=["hakari-bench/NanoMIRACL"],
         collection_values=[],
         split_values=[],
     )

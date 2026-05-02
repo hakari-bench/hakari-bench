@@ -1,5 +1,5 @@
 name: NanoChemTEB
-dataset_id: hotchpotch/NanoChemTEB
+dataset_id: hakari-bench/NanoChemTEB
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries

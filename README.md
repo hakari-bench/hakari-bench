@@ -13,7 +13,7 @@ Built-in dataset definitions include `NanoBEIR-en`, `NanoMIRACL`, `NanoMLDR`,
 ```bash
 uv run nano-ir-bench evaluate \
   --model hotchpotch/bekko-embedding-pico-beta-unir-v7 \
-  --dataset sentence-transformers/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-en \
   --dtype bf16
 ```
 

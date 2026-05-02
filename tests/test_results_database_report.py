@@ -10,27 +10,27 @@ from scripts import build_results_database_and_report as report
 
 def test_nanojmteb_is_a_ranked_benchmark() -> None:
     assert "NanoJMTEB" in report.TARGET_BENCHMARKS
-    assert report.benchmark_name("hotchpotch/NanoJMTEB", "NanoJMTEB") == "NanoJMTEB"
+    assert report.benchmark_name("hakari-bench/NanoJMTEB", "NanoJMTEB") == "NanoJMTEB"
 
 
 def test_nanorteb_is_a_ranked_benchmark() -> None:
     assert "NanoRTEB" in report.TARGET_BENCHMARKS
-    assert report.benchmark_name("hotchpotch/NanoRTEB", "NanoRTEB") == "NanoRTEB"
+    assert report.benchmark_name("hakari-bench/NanoRTEB", "NanoRTEB") == "NanoRTEB"
 
 
 def test_nanolongembed_is_a_ranked_benchmark() -> None:
     assert "NanoLongEmbed" in report.TARGET_BENCHMARKS
-    assert report.benchmark_name("hotchpotch/NanoLongEmbed", "NanoLongEmbed") == "NanoLongEmbed"
+    assert report.benchmark_name("hakari-bench/NanoLongEmbed", "NanoLongEmbed") == "NanoLongEmbed"
 
 
 def test_nanocoir_is_a_ranked_benchmark() -> None:
     assert "NanoCoIR" in report.TARGET_BENCHMARKS
-    assert report.benchmark_name("hotchpotch/NanoCoIR", "NanoCoIR") == "NanoCoIR"
+    assert report.benchmark_name("hakari-bench/NanoCoIR", "NanoCoIR") == "NanoCoIR"
 
 
 def test_nanocmteb_is_a_ranked_benchmark() -> None:
     assert "NanoCMTEB" in report.TARGET_BENCHMARKS
-    assert report.benchmark_name("hotchpotch/NanoCMTEB", "NanoCMTEB") == "NanoCMTEB"
+    assert report.benchmark_name("hakari-bench/NanoCMTEB", "NanoCMTEB") == "NanoCMTEB"
 
 
 def test_load_results_reads_task_json_not_only_all_json(tmp_path: Path) -> None:
@@ -57,7 +57,7 @@ def test_load_results_reads_task_json_not_only_all_json(tmp_path: Path) -> None:
                 },
                 "target": {
                     "dataset_name": "NanoJMTEB",
-                    "dataset_id": "hotchpotch/NanoJMTEB",
+                    "dataset_id": "hakari-bench/NanoJMTEB",
                     "dataset_revision": {
                         "requested": None,
                         "resolved": "dataset-sha",
@@ -110,13 +110,13 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
         model_dir="model",
         model_name="example/model",
         benchmark="NanoJMTEB",
-        dataset_id="hotchpotch/NanoJMTEB",
+        dataset_id="hakari-bench/NanoJMTEB",
         dataset_revision="dataset-sha",
         dataset_revision_requested="main",
         dataset_name="NanoJMTEB",
         split_name="NanoJaCWIR",
         task_name="NanoJaCWIR",
-        task_key="NanoJMTEB::hotchpotch/NanoJMTEB::NanoJaCWIR",
+        task_key="NanoJMTEB::hakari-bench/NanoJMTEB::NanoJaCWIR",
         score=0.42,
         aggregate_metric="ndcg@10",
         result_path="result.json",
@@ -151,7 +151,7 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
                 "model_dir": "model",
                 "model_name": "example/model",
                 "benchmark": "NanoJMTEB",
-                "dataset_id": "hotchpotch/NanoJMTEB",
+                "dataset_id": "hakari-bench/NanoJMTEB",
                 "task_name": "NanoJaCWIR",
                 "metric_name": "NanoJaCWIR_ndcg@10",
                 "metric_value": 0.42,

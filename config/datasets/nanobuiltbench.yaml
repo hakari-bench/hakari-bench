@@ -1,5 +1,5 @@
 name: NanoBuiltBench
-dataset_id: hotchpotch/NanoBuiltBench
+dataset_id: hakari-bench/NanoBuiltBench
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries

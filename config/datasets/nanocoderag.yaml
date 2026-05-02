@@ -1,5 +1,5 @@
 name: NanoCodeRAG
-dataset_id: hotchpotch/NanoCodeRAG
+dataset_id: hakari-bench/NanoCodeRAG
 benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries
