@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import time
 from dataclasses import dataclass, field
 from typing import Any, Literal, cast
@@ -328,10 +329,26 @@ def _encode(
     if truncate_dim is not None:
         kwargs["truncate_dim"] = truncate_dim
 
+    if _accepts_encode_parameter(encode_fn, "convert_to_sparse_tensor"):
+        sparse_kwargs = {
+            "convert_to_tensor": True,
+            "convert_to_sparse_tensor": True,
+        }
+        if _accepts_encode_parameter(encode_fn, "save_to_cpu"):
+            sparse_kwargs["save_to_cpu"] = True
+        return encode_fn(sentences, **sparse_kwargs, **kwargs)
+
     try:
         return encode_fn(sentences, convert_to_numpy=True, **kwargs)
     except TypeError:
         return encode_fn(sentences, **kwargs)
+
+
+def _accepts_encode_parameter(encode_fn: Any, name: str) -> bool:
+    try:
+        return name in inspect.signature(encode_fn).parameters
+    except (TypeError, ValueError):
+        return False
 
 
 def _embedding_conversion_payload(*, text_count: int, batch_size: int, seconds: float) -> dict[str, int | float | None]:
@@ -765,24 +782,76 @@ def _sparse_embedding_stats(embeddings: Any) -> dict[str, Any]:
         matrix = sparse.csr_matrix(embeddings)
         row_nnz = np.diff(matrix.indptr)
         nnz_total = int(matrix.nnz)
-    elif isinstance(embeddings, torch.Tensor) and embeddings.is_sparse:
-        coalesced = embeddings.coalesce()
-        row_indices = coalesced.indices()[0].detach().cpu().numpy() if coalesced._nnz() else np.array([], dtype=np.int64)
-        row_nnz = np.bincount(row_indices, minlength=row_count)
-        nnz_total = int(coalesced._nnz())
+    elif _is_torch_sparse_embedding(embeddings):
+        if not embeddings.is_sparse:
+            matrix = _to_scipy_csr_matrix(embeddings)
+            row_nnz = np.diff(matrix.indptr)
+            nnz_total = int(matrix.nnz)
+        else:
+            coalesced = embeddings.coalesce()
+            row_indices = (
+                coalesced.indices()[0].detach().cpu().numpy()
+                if coalesced._nnz()
+                else np.array([], dtype=np.int64)
+            )
+            row_nnz = np.bincount(row_indices, minlength=row_count)
+            nnz_total = int(coalesced._nnz())
     else:
         return {}
 
     return {
         "nnz_total": nnz_total,
         "nnz_mean": float(np.mean(row_nnz)) if row_count else 0.0,
+        "nnz_median": float(np.median(row_nnz)) if row_count else 0.0,
         "nnz_max": int(np.max(row_nnz)) if row_count else 0,
         "density": float(nnz_total / total_size) if total_size else 0.0,
     }
 
 
 def _is_sparse_embedding(embeddings: Any) -> bool:
-    return sparse.issparse(embeddings) or (isinstance(embeddings, torch.Tensor) and embeddings.is_sparse)
+    return sparse.issparse(embeddings) or _is_torch_sparse_embedding(embeddings)
+
+
+def _is_torch_sparse_embedding(embeddings: Any) -> bool:
+    return isinstance(embeddings, torch.Tensor) and (
+        embeddings.is_sparse or bool(getattr(embeddings, "is_sparse_csr", False))
+    )
+
+
+def _to_scipy_csr_matrix(embeddings: Any) -> sparse.csr_matrix:
+    if sparse.issparse(embeddings):
+        return sparse.csr_matrix(embeddings)
+    if not _is_torch_sparse_embedding(embeddings):
+        raise TypeError(f"Expected a sparse embedding matrix, got {type(embeddings).__name__}.")
+
+    tensor = embeddings.detach()
+    if bool(getattr(tensor, "is_sparse_csr", False)):
+        tensor = tensor.cpu()
+        return sparse.csr_matrix(
+            (
+                tensor.values().float().numpy(),
+                tensor.col_indices().numpy(),
+                tensor.crow_indices().numpy(),
+            ),
+            shape=tuple(int(dimension) for dimension in tensor.shape),
+        )
+
+    coalesced = tensor.coalesce().cpu()
+    shape = tuple(int(dimension) for dimension in coalesced.shape)
+    if len(shape) == 1:
+        indices = coalesced.indices()[0].numpy() if coalesced._nnz() else np.array([], dtype=np.int64)
+        rows = np.zeros_like(indices)
+        cols = indices
+        matrix_shape = (1, shape[0])
+    elif len(shape) == 2:
+        indices = coalesced.indices().numpy() if coalesced._nnz() else np.empty((2, 0), dtype=np.int64)
+        rows = indices[0]
+        cols = indices[1]
+        matrix_shape = shape
+    else:
+        raise ValueError(f"Sparse embedding matrix must be 1D or 2D, got shape {shape}.")
+    values = coalesced.values().float().numpy() if coalesced._nnz() else np.array([], dtype=np.float32)
+    return sparse.csr_matrix((values, (rows, cols)), shape=matrix_shape)
 
 
 def _is_quantized_embedding_matrix(embeddings: Any) -> bool:
@@ -878,7 +947,7 @@ def _rank_by_similarity(
             corpus_embeddings=corpus_embeddings,
         )
 
-    if sparse.issparse(query_embeddings) or sparse.issparse(corpus_embeddings):
+    if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
         return _rank_sparse(
             query_ids=query_ids,
             corpus_ids=corpus_ids,
@@ -947,8 +1016,8 @@ def _rank_sparse(
     corpus_embeddings: Any,
     score_name: str,
 ) -> dict[str, list[str]]:
-    query_matrix = sparse.csr_matrix(query_embeddings)
-    corpus_matrix = sparse.csr_matrix(corpus_embeddings)
+    query_matrix = _to_scipy_csr_matrix(query_embeddings)
+    corpus_matrix = _to_scipy_csr_matrix(corpus_embeddings)
     if query_matrix.shape[1] < corpus_matrix.shape[1]:
         query_matrix.resize((query_matrix.shape[0], corpus_matrix.shape[1]))
     elif corpus_matrix.shape[1] < query_matrix.shape[1]:
@@ -956,8 +1025,26 @@ def _rank_sparse(
     if score_name == "cosine":
         query_matrix = _sparse_l2_normalize(query_matrix)
         corpus_matrix = _sparse_l2_normalize(corpus_matrix)
-    scores = (query_matrix @ corpus_matrix.T).toarray()
-    return _scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+    scores = (query_matrix @ corpus_matrix.T).tocsr()
+    return _sparse_scores_to_rankings(query_ids=query_ids, corpus_ids=corpus_ids, scores=scores)
+
+
+def _sparse_scores_to_rankings(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    scores: sparse.csr_matrix,
+) -> dict[str, list[str]]:
+    rankings: dict[str, list[str]] = {}
+    for query_index, query_id in enumerate(query_ids):
+        row = scores.getrow(query_index)
+        score_by_index = {int(index): float(score) for index, score in zip(row.indices, row.data, strict=True)}
+        ordered_indices = sorted(
+            range(len(corpus_ids)),
+            key=lambda corpus_index: (-score_by_index.get(corpus_index, 0.0), corpus_ids[corpus_index]),
+        )
+        rankings[query_id] = [corpus_ids[index] for index in ordered_indices]
+    return rankings
 
 
 def _scores_to_rankings(*, query_ids: list[str], corpus_ids: list[str], scores: np.ndarray) -> dict[str, list[str]]:
@@ -982,4 +1069,4 @@ def _sparse_l2_normalize(matrix: sparse.csr_matrix) -> sparse.csr_matrix:
     inv_norms = np.ones_like(norms)
     nonzero = norms > 0.0
     inv_norms[nonzero] = 1.0 / norms[nonzero]
-    return sparse.diags(inv_norms) @ matrix
+    return (sparse.diags(inv_norms) @ matrix).tocsr()
