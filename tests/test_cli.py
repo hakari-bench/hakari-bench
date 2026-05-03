@@ -480,6 +480,54 @@ def test_parse_args_rejects_quantized_cross_embedding_variants_for_sparse_model(
         raise AssertionError("Expected sparse model to reject quantized cross embedding variants.")
 
 
+def test_parse_args_rejects_quantized_embedding_variants_for_all_non_dense_models() -> None:
+    model_args_by_type = {
+        "late-interaction": ["--model", "hotchpotch/colbert-model"],
+        "reranker": ["--model", "hotchpotch/reranker"],
+        "bm25": [],
+    }
+
+    for model_type, model_args in model_args_by_type.items():
+        for spec in ["int8", "binary", "rescore:int8", "binary-rescore"]:
+            try:
+                parse_args(
+                    [
+                        "evaluate",
+                        *model_args,
+                        "--model-type",
+                        model_type,
+                        "--embedding-variant",
+                        spec,
+                    ]
+                )
+            except SystemExit as exc:
+                assert exc.code == 2
+            else:
+                raise AssertionError(
+                    f"Expected {model_type} model to reject quantized embedding variant {spec!r}."
+                )
+
+
+def test_parse_args_rejects_quantized_cross_embedding_variants_for_non_dense_models() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "--model",
+                "hotchpotch/colbert-model",
+                "--model-type",
+                "late-interaction",
+                "--embedding-variant-cross",
+                "truncate:128",
+                "int8",
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected late-interaction model to reject quantized cross embedding variants.")
+
+
 def test_parse_args_rejects_legacy_quantize_and_backend_prefixed_embedding_variants() -> None:
     rejected_specs = [
         "quantize:int8",

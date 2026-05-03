@@ -195,10 +195,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         if args.model_type == "dense" and not args.no_quantize and not has_explicit_embedding_variants:
             args.embedding_variants = default_dense_quantized_embedding_variants()
         _apply_score_device_to_quantized_variants(args.embedding_variants, score_device=args.score_device)
-        if args.model_type == "sparse" and _embedding_variants_use_quantization(args.embedding_variants):
+        if args.model_type != "dense" and _embedding_variants_use_quantization(args.embedding_variants):
             parser.error(
-                "--model-type sparse does not support quantized embedding variants. "
-                "Use sparse max-active-dims variants instead."
+                f"--model-type {args.model_type} does not support quantized embedding variants. "
+                "Quantized embedding variants are supported for dense models only."
             )
         delattr(args, "embedding_variant_values")
         delattr(args, "embedding_variant_cross_values")
