@@ -1500,13 +1500,61 @@ def test_run_or_load_task_records_dataset_revision(tmp_path: Path, monkeypatch: 
         "source": "huggingface_hub",
     }
 
-    all_payload = build_all_payload(
+
+def test_run_or_load_task_records_task_metadata(tmp_path: Path) -> None:
+    spec = NanoDatasetSpec(
+        name="ToyData",
+        dataset_id="toy/data",
+        metadata={
+            "language": "en",
+            "category": "natural_language",
+            "short_description": "Toy dataset.",
+            "description": "Toy dataset metadata.",
+        },
+        task_metadata={
+            "test": {
+                "language": "en",
+                "category": "natural_language",
+                "short_description": "Toy task.",
+                "description": "Toy task metadata.",
+                "citation_keys": ["toy2024"],
+            }
+        },
+    )
+    task = EvalTask(dataset=spec, split_name="test", task_name="test")
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
         args=args,
         environment={"package_versions": {}},
         model_metadata={"name_or_path": "hotchpotch/model"},
-        results=[result],
+        dataset_loader=lambda _: _toy_dataset(),
     )
-    assert all_payload["splits"][0]["dataset_revision"]["resolved"] == "toy/data@sha"
+
+    assert result.payload["target"]["metadata"] == {
+        "language": "en",
+        "category": "natural_language",
+        "short_description": "Toy task.",
+        "description": "Toy task metadata.",
+        "citation_keys": ["toy2024"],
+    }
 
 
 def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) -> None:

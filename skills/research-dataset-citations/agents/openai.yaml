@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Dataset Citations"
+  short_description: "Audit dataset citation metadata."
+  default_prompt: "Research citation sources for dataset tasks and update benchmark YAML metadata."

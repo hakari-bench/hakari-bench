@@ -7,6 +7,8 @@ import pytest
 from nano_ir_benchmark.datasets import (
     DatasetRegistry,
     NanoDatasetSpec,
+    REFERENCE_SOURCE_CONFIDENCE_LABELS,
+    validate_builtin_metadata,
     resolve_dataset_revision,
     resolve_dataset_splits,
     resolve_eval_tasks,
@@ -411,3 +413,200 @@ datasets:
 
     assert registry.get_dataset("Toy").dataset_id == "local/toy"
     assert registry.get_collection("ToyCollection").datasets == ["Toy"]
+
+
+def test_registry_preserves_dataset_and_task_metadata(tmp_path: Path) -> None:
+    (tmp_path / "datasets").mkdir()
+    (tmp_path / "dataset_collections").mkdir()
+    (tmp_path / "datasets" / "toy.yaml").write_text(
+        """
+name: Toy
+dataset_id: local/toy
+metadata:
+  language: en
+  category: natural_language
+  short_description: Toy retrieval group.
+  description: Toy dataset used to verify metadata loading.
+  references:
+    - title: Toy Paper
+      authors: [Ada Example]
+      year: 2024
+      url: https://example.com/toy
+  citation_keys: [toy2024]
+  bibtex: |
+    @misc{toy2024,
+      title = {Toy Paper},
+      year = {2024}
+    }
+splits: [a]
+task_metadata:
+  a:
+    language: en
+    category: natural_language
+    short_description: Toy split.
+    description: Toy split metadata survives loading and task resolution.
+    query_text_stats:
+      count: 2
+      min_chars: 3
+      max_chars: 5
+      mean_chars: 4.0
+      median_chars: 4.0
+    document_text_stats:
+      count: 3
+      min_chars: 8
+      max_chars: 10
+      mean_chars: 9.0
+      median_chars: 9.0
+""".strip(),
+        encoding="utf-8",
+    )
+    (tmp_path / "dataset_collections" / "toy_collection.yaml").write_text(
+        """
+name: ToyCollection
+metadata:
+  language: en
+  category: natural_language
+  short_description: Toy collection.
+  description: Toy collection metadata survives loading.
+datasets:
+  - Toy
+  - name: InlineToy
+    dataset_id: local/inline-toy
+    metadata:
+      language: en
+      category: natural_language
+      short_description: Inline toy.
+      description: Inline dataset metadata survives collection loading.
+    splits: [inline]
+    task_metadata:
+      inline:
+        language: en
+        category: natural_language
+        short_description: Inline toy split.
+        description: Inline toy task metadata survives loading.
+""".strip(),
+        encoding="utf-8",
+    )
+
+    registry = DatasetRegistry.load_from_root(tmp_path)
+    toy = registry.get_dataset("Toy")
+    inline = registry.get_dataset("InlineToy")
+    collection = registry.get_collection("ToyCollection")
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["Toy"], collection_values=[], split_values=[])
+
+    assert toy.metadata is not None
+    assert toy.task_metadata is not None
+    assert inline.metadata is not None
+    assert collection.metadata is not None
+    assert toy.metadata["citation_keys"] == ["toy2024"]
+    assert toy.task_metadata["a"]["query_text_stats"]["median_chars"] == 4.0
+    assert inline.metadata["short_description"] == "Inline toy."
+    assert collection.metadata["short_description"] == "Toy collection."
+    assert tasks[0].metadata["short_description"] == "Toy split."
+
+
+def test_builtin_metadata_is_complete_and_valid() -> None:
+    errors = validate_builtin_metadata()
+
+    assert errors == []
+
+
+def test_metadata_validation_rejects_unknown_category() -> None:
+    spec = NanoDatasetSpec(
+        name="Toy",
+        dataset_id="local/toy",
+        metadata={
+            "language": "en",
+            "category": "other",
+            "short_description": "Toy.",
+            "description": "Toy metadata with an invalid category.",
+        },
+    )
+
+    errors = spec.validate_metadata()
+
+    assert errors == ["Toy metadata has invalid category 'other'."]
+
+
+def test_metadata_validation_requires_reference_is_paper_boolean() -> None:
+    spec = NanoDatasetSpec(
+        name="Toy",
+        dataset_id="local/toy",
+        metadata={
+            "language": "en",
+            "category": "natural_language",
+            "short_description": "Toy.",
+            "description": "Toy metadata with references.",
+            "references": [
+                {
+                    "title": "Toy Paper",
+                    "authors": ["A. Author"],
+                    "year": 2024,
+                    "url": "https://example.com/paper",
+                    "source_confidence": "probably_correct",
+                },
+                {
+                    "title": "Toy Blog",
+                    "authors": ["B. Author"],
+                    "year": 2024,
+                    "url": "https://example.com/blog",
+                    "is_paper": "no",
+                    "source_confidence": "probably_correct",
+                },
+            ],
+        },
+    )
+
+    errors = spec.validate_metadata()
+
+    assert errors == [
+        "Toy metadata references[0] is missing is_paper.",
+        "Toy metadata references[1].is_paper must be boolean.",
+    ]
+
+
+def test_metadata_validation_requires_reference_source_confidence_label() -> None:
+    spec = NanoDatasetSpec(
+        name="Toy",
+        dataset_id="local/toy",
+        metadata={
+            "language": "en",
+            "category": "natural_language",
+            "short_description": "Toy.",
+            "description": "Toy metadata with references.",
+            "references": [
+                {
+                    "title": "Toy Paper",
+                    "authors": ["A. Author"],
+                    "year": 2024,
+                    "url": "https://example.com/paper",
+                    "is_paper": True,
+                },
+                {
+                    "title": "Toy Blog",
+                    "authors": ["B. Author"],
+                    "year": 2024,
+                    "url": "https://example.com/blog",
+                    "is_paper": False,
+                    "source_confidence": "unchecked",
+                },
+            ],
+        },
+    )
+
+    errors = spec.validate_metadata()
+
+    assert errors == [
+        "Toy metadata references[0] is missing source_confidence.",
+        "Toy metadata references[1].source_confidence has invalid label 'unchecked'.",
+    ]
+
+
+def test_reference_source_confidence_labels_are_documented() -> None:
+    assert set(REFERENCE_SOURCE_CONFIDENCE_LABELS) == {
+        "source_uncertain",
+        "probably_correct",
+        "definitive_paper_link",
+        "human_verified",
+    }
+    assert "AI agents must not assign this label" in REFERENCE_SOURCE_CONFIDENCE_LABELS["human_verified"]
