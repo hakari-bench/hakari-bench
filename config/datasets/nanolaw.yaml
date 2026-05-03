@@ -42,6 +42,7 @@ metadata:
     year: 2019
     url: https://ceur-ws.org/Vol-2517/T1-1.pdf
     is_paper: true
+    source_confidence: definitive_paper_link
   - title: Plain English Summarization of Contracts
     authors:
     - Laura Manor
@@ -49,6 +50,7 @@ metadata:
     year: 2019
     url: https://aclanthology.org/W19-2201/
     is_paper: true
+    source_confidence: definitive_paper_link
   - title: 'GerDaLIR: A German Dataset for Legal Information Retrieval'
     authors:
     - Marco Wrzalik
@@ -56,6 +58,7 @@ metadata:
     year: 2021
     url: https://aclanthology.org/2021.nllp-1.13/
     is_paper: true
+    source_confidence: definitive_paper_link
   - title: 'LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset'
     authors:
     - Haitao Li
@@ -67,13 +70,54 @@ metadata:
     year: 2023
     url: https://arxiv.org/abs/2310.17609
     is_paper: true
+    source_confidence: definitive_paper_link
   - title: 'LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in
       Large Language Models'
     authors:
-    - Neel Guha et al.
+    - Neel Guha
+    - Julian Nyarko
+    - Daniel E. Ho
+    - Christopher Ré
+    - Adam Chilton
+    - Aditya Narayana
+    - Alex Chohlas-Wood
+    - Austin Peters
+    - Brandon Waldon
+    - Daniel N. Rockmore
+    - Diego Zambrano
+    - Dmitry Talisman
+    - Enam Hoque
+    - Faiz Surani
+    - Frank Fagan
+    - Galit Sarfaty
+    - Gregory M. Dickinson
+    - Haggai Porat
+    - Jason Hegland
+    - Jessica Wu
+    - Joe Nudell
+    - Joel Niklaus
+    - John Nay
+    - Jonathan H. Choi
+    - Kevin Tobia
+    - Margaret Hagan
+    - Megan Ma
+    - Michael A. Livermore
+    - Nikon Rasumov-Rahe
+    - Nils Holzenberger
+    - Noam Kolt
+    - Peter Henderson
+    - Sean Rehaag
+    - Sharad Goel
+    - Shang Gao
+    - Spencer Williams
+    - Sunny Gandhi
+    - Tom Zur
+    - Varun Iyer
+    - Zehua Li
     year: 2023
     url: https://arxiv.org/abs/2308.11462
     is_paper: true
+    source_confidence: definitive_paper_link
   - title: Towards Intelligent Legal Advisors for Document Retrieval and Question-Answering
       in German Legal Documents
     authors:
@@ -85,6 +129,7 @@ metadata:
     year: 2021
     url: https://doi.org/10.1109/AIKE52691.2021.00011
     is_paper: true
+    source_confidence: definitive_paper_link
   bibtex: "@inproceedings{bhattacharya2020aila,
   title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
   author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
@@ -107,7 +152,7 @@ metadata:
     \ Ai and Yixiao Ma and Yiqun Liu},\n  eprint = {2310.17609},\n  primaryClass = {cs.CL},\n\
     \  title = {LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset},\n  year = {2023},\n\
     }\n\n\n@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel Guha and\
-    \ Julian Nyarko and Daniel E. Ho and Christopher Re and Adam Chilton and Aditya Narayana\
+    \ Julian Nyarko and Daniel E. Ho and Christopher Ré and Adam Chilton and Aditya Narayana\
     \ and Alex Chohlas-Wood and Austin Peters and Brandon Waldon and Daniel N. Rockmore and\
     \ Diego Zambrano and Dmitry Talisman and Enam Hoque and Faiz Surani and Frank Fagan and\
     \ Galit Sarfaty and Gregory M. Dickinson and Haggai Porat and Jason Hegland and Jessica\
@@ -145,6 +190,7 @@ task_metadata:
       year: 2019
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{bhattacharya2020aila,
   title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
   author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
@@ -187,6 +233,7 @@ task_metadata:
       year: 2019
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{bhattacharya2020aila,
   title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
   author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
@@ -224,6 +271,7 @@ task_metadata:
       year: 2019
       url: https://aclanthology.org/W19-2201/
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{manor2019plain,\n  author = {Laura Manor and Junyi Jessy Li},\n\
       \  booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2019},\n\
       \  pages = {1--11},\n  publisher = {Association for Computational Linguistics},\n  title\
@@ -258,6 +306,7 @@ task_metadata:
       year: 2021
       url: https://aclanthology.org/2021.nllp-1.13/
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{wrzalik2021gerdalir,\n  author = {Marco Wrzalik and Dirk Krechel},\n\
       \  booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2021},\n\
       \  pages = {123--128},\n  publisher = {Association for Computational Linguistics},\n\
@@ -295,6 +344,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2310.17609
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@misc{li2023lecardv2,\n  archivePrefix = {arXiv},\n  author = {Haitao Li and\
       \ Yunqiu Shao and Yueyue Wu and Qingyao Ai and Yixiao Ma and Yiqun Liu},\n  eprint =\
       \ {2310.17609},\n  primaryClass = {cs.CL},\n  title = {LeCaRDv2: A Large-Scale Chinese\
@@ -320,16 +370,78 @@ task_metadata:
       contracts QA task formulation.
     citation_keys:
     - guha2023legalbench
+    - hendrycks2021cuad
+    - koreeda2021contractnli
     references:
     - title: 'LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning
         in Large Language Models'
       authors:
-      - Neel Guha et al.
+      - Neel Guha
+      - Julian Nyarko
+      - Daniel E. Ho
+      - Christopher Ré
+      - Adam Chilton
+      - Aditya Narayana
+      - Alex Chohlas-Wood
+      - Austin Peters
+      - Brandon Waldon
+      - Daniel N. Rockmore
+      - Diego Zambrano
+      - Dmitry Talisman
+      - Enam Hoque
+      - Faiz Surani
+      - Frank Fagan
+      - Galit Sarfaty
+      - Gregory M. Dickinson
+      - Haggai Porat
+      - Jason Hegland
+      - Jessica Wu
+      - Joe Nudell
+      - Joel Niklaus
+      - John Nay
+      - Jonathan H. Choi
+      - Kevin Tobia
+      - Margaret Hagan
+      - Megan Ma
+      - Michael A. Livermore
+      - Nikon Rasumov-Rahe
+      - Nils Holzenberger
+      - Noam Kolt
+      - Peter Henderson
+      - Sean Rehaag
+      - Sharad Goel
+      - Shang Gao
+      - Spencer Williams
+      - Sunny Gandhi
+      - Tom Zur
+      - Varun Iyer
+      - Zehua Li
       year: 2023
       url: https://arxiv.org/abs/2308.11462
       is_paper: true
+      source_confidence: definitive_paper_link
+    - title: 'CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review'
+      authors:
+      - Dan Hendrycks
+      - Collin Burns
+      - Anya Chen
+      - Spencer Ball
+      year: 2021
+      url: https://arxiv.org/abs/2103.06268
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2103.06268
+    - title: 'ContractNLI: A Dataset for Document-level Natural Language Inference for Contracts'
+      authors:
+      - Yuta Koreeda
+      - Christopher D. Manning
+      year: 2021
+      url: https://arxiv.org/abs/2110.01799
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2110.01799
     bibtex: "@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel Guha\
-      \ and Julian Nyarko and Daniel E. Ho and Christopher Re and Adam Chilton and Aditya\
+      \ and Julian Nyarko and Daniel E. Ho and Christopher Ré and Adam Chilton and Aditya\
       \ Narayana and Alex Chohlas-Wood and Austin Peters and Brandon Waldon and Daniel N.\
       \ Rockmore and Diego Zambrano and Dmitry Talisman and Enam Hoque and Faiz Surani and\
       \ Frank Fagan and Galit Sarfaty and Gregory M. Dickinson and Haggai Porat and Jason\
@@ -364,12 +476,52 @@ task_metadata:
     - title: 'LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning
         in Large Language Models'
       authors:
-      - Neel Guha et al.
+      - Neel Guha
+      - Julian Nyarko
+      - Daniel E. Ho
+      - Christopher Ré
+      - Adam Chilton
+      - Aditya Narayana
+      - Alex Chohlas-Wood
+      - Austin Peters
+      - Brandon Waldon
+      - Daniel N. Rockmore
+      - Diego Zambrano
+      - Dmitry Talisman
+      - Enam Hoque
+      - Faiz Surani
+      - Frank Fagan
+      - Galit Sarfaty
+      - Gregory M. Dickinson
+      - Haggai Porat
+      - Jason Hegland
+      - Jessica Wu
+      - Joe Nudell
+      - Joel Niklaus
+      - John Nay
+      - Jonathan H. Choi
+      - Kevin Tobia
+      - Margaret Hagan
+      - Megan Ma
+      - Michael A. Livermore
+      - Nikon Rasumov-Rahe
+      - Nils Holzenberger
+      - Noam Kolt
+      - Peter Henderson
+      - Sean Rehaag
+      - Sharad Goel
+      - Shang Gao
+      - Spencer Williams
+      - Sunny Gandhi
+      - Tom Zur
+      - Varun Iyer
+      - Zehua Li
       year: 2023
       url: https://arxiv.org/abs/2308.11462
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel Guha\
-      \ and Julian Nyarko and Daniel E. Ho and Christopher Re and Adam Chilton and Aditya\
+      \ and Julian Nyarko and Daniel E. Ho and Christopher Ré and Adam Chilton and Aditya\
       \ Narayana and Alex Chohlas-Wood and Austin Peters and Brandon Waldon and Daniel N.\
       \ Rockmore and Diego Zambrano and Dmitry Talisman and Enam Hoque and Faiz Surani and\
       \ Frank Fagan and Galit Sarfaty and Gregory M. Dickinson and Haggai Porat and Jason\
@@ -412,6 +564,7 @@ task_metadata:
       year: 2021
       url: https://doi.org/10.1109/AIKE52691.2021.00011
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{hoppe2021legalquad,\n  author = {Christoph Hoppe and David Pelkmann\
       \ and Nico Migenda and Daniel Hotte and Wolfram Schenck},\n  booktitle = {2021 IEEE\
       \ Fourth International Conference on Artificial Intelligence and Knowledge Engineering},\n\

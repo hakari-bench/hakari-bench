@@ -27,6 +27,7 @@ metadata:
     year: 2021
     url: https://arxiv.org/abs/2104.08663
     is_paper: true
+    source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2104.08663
   - title: 'NanoBEIR: Smaller BEIR dataset subsets'
     authors:
@@ -34,6 +35,7 @@ metadata:
     year: 2024
     url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
     is_paper: false
+    source_confidence: probably_correct
   bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
     \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
     \ = {Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks\
@@ -64,6 +66,7 @@ task_metadata:
       year: 2021
       url: https://arxiv.org/abs/2012.00614
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2012.00614
     bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
       \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and Boyd-Graber,\
@@ -105,6 +108,7 @@ task_metadata:
       year: 2017
       url: https://doi.org/10.1145/3077136.3080751
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.1145/3077136.3080751
     bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
       \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong, Chenyan\
@@ -142,6 +146,7 @@ task_metadata:
       year: 2018
       url: https://aclanthology.org/N18-1074/
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.18653/v1/N18-1074
     bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset for\
       \ Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
@@ -182,6 +187,7 @@ task_metadata:
       year: 2018
       url: https://doi.org/10.1145/3184558.3192301
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.1145/3184558.3192301
     bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial Opinion\
       \ Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh, Siegfried\
@@ -223,6 +229,7 @@ task_metadata:
       year: 2018
       url: https://aclanthology.org/D18-1259/
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.18653/v1/D18-1259
     bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
       \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
@@ -263,6 +270,7 @@ task_metadata:
       year: 2016
       url: https://arxiv.org/abs/1611.09268
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.1611.09268
     bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
       \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and Song,\
@@ -294,15 +302,16 @@ task_metadata:
     - title: A Full-Text Learning to Rank Dataset for Medical Information Retrieval
       authors:
       - Vera Boteva
-      - Demian Gholipour
+      - Demian Gholipour Ghalandari
       - Artem Sokolov
       - Stefan Riezler
       year: 2016
       url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.1007/978-3-319-30671-1_58
     bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank Dataset\
-      \ for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour, Demian\
+      \ for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour Ghalandari, Demian\
       \ and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information Retrieval},\n\
       \  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
       \  doi = {10.1007/978-3-319-30671-1_58}\n}\n"
@@ -340,9 +349,26 @@ task_metadata:
       - Illia Polosukhin
       - Jacob Devlin
       - Kenton Lee
+
+      - Kristina Toutanova
+
+      - Llion Jones
+
+      - Matthew Kelcey
+
+      - Ming-Wei Chang
+
+      - Andrew M. Dai
+
+      - Jakob Uszkoreit
+
+      - Quoc Le
+
+      - Slav Petrov
       year: 2019
       url: https://aclanthology.org/Q19-1026/
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00276
     bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for Question\
       \ Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield,\
@@ -384,6 +410,7 @@ task_metadata:
       year: 2017
       url: https://kaggle.com/competitions/quora-question-pairs
       is_paper: false
+      source_confidence: probably_correct
     bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author =\
       \ {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil and\
       \ tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -420,6 +447,7 @@ task_metadata:
       year: 2020
       url: https://aclanthology.org/2020.acl-main.207/
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.18653/v1/2020.acl-main.207
     bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
       \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
@@ -457,6 +485,7 @@ task_metadata:
       year: 2018
       url: https://aclanthology.org/P18-1023/
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.18653/v1/P18-1023
     bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
       \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
@@ -496,6 +525,7 @@ task_metadata:
       year: 2020
       url: https://aclanthology.org/2020.emnlp-main.609/
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.18653/v1/2020.emnlp-main.609
     bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
       \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
@@ -527,20 +557,20 @@ task_metadata:
     - title: Touche20-Argument-Retrieval-for-Controversial-Questions
       authors:
       - Martin Potthast
+      - Lukas Gienapp
+      - Henning Wachsmuth
       - Matthias Hagen
-      - Benno Stein
-      - Maik Froebe
+      - Maik Fröbe
       - Alexander Bondarenko
-      - Nandan Thakur
-      - Ehsan Kamalloo
-      - Jimmy Lin
+      - Yamen Ajjour
+      - Benno Stein
       year: 2022
       url: https://doi.org/10.5281/zenodo.6862281
       is_paper: false
+      source_confidence: probably_correct
       doi: 10.5281/zenodo.6862281
     bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
-      \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
-      \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
+      \  author = {Potthast, Martin and Gienapp, Lukas and Wachsmuth, Henning and Hagen, Matthias\n      \ and Fröbe, Maik and Bondarenko, Alexander and Ajjour, Yamen and Stein, Benno},\n\
       \  year = {2022},\n  url = {https://doi.org/10.5281/zenodo.6862281},\n  doi = {10.5281/zenodo.6862281}\n\
       }\n"
     query_text_stats:

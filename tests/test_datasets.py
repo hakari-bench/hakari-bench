@@ -7,6 +7,7 @@ import pytest
 from nano_ir_benchmark.datasets import (
     DatasetRegistry,
     NanoDatasetSpec,
+    REFERENCE_SOURCE_CONFIDENCE_LABELS,
     validate_builtin_metadata,
     resolve_dataset_revision,
     resolve_dataset_splits,
@@ -542,6 +543,7 @@ def test_metadata_validation_requires_reference_is_paper_boolean() -> None:
                     "authors": ["A. Author"],
                     "year": 2024,
                     "url": "https://example.com/paper",
+                    "source_confidence": "probably_correct",
                 },
                 {
                     "title": "Toy Blog",
@@ -549,6 +551,7 @@ def test_metadata_validation_requires_reference_is_paper_boolean() -> None:
                     "year": 2024,
                     "url": "https://example.com/blog",
                     "is_paper": "no",
+                    "source_confidence": "probably_correct",
                 },
             ],
         },
@@ -560,3 +563,50 @@ def test_metadata_validation_requires_reference_is_paper_boolean() -> None:
         "Toy metadata references[0] is missing is_paper.",
         "Toy metadata references[1].is_paper must be boolean.",
     ]
+
+
+def test_metadata_validation_requires_reference_source_confidence_label() -> None:
+    spec = NanoDatasetSpec(
+        name="Toy",
+        dataset_id="local/toy",
+        metadata={
+            "language": "en",
+            "category": "natural_language",
+            "short_description": "Toy.",
+            "description": "Toy metadata with references.",
+            "references": [
+                {
+                    "title": "Toy Paper",
+                    "authors": ["A. Author"],
+                    "year": 2024,
+                    "url": "https://example.com/paper",
+                    "is_paper": True,
+                },
+                {
+                    "title": "Toy Blog",
+                    "authors": ["B. Author"],
+                    "year": 2024,
+                    "url": "https://example.com/blog",
+                    "is_paper": False,
+                    "source_confidence": "unchecked",
+                },
+            ],
+        },
+    )
+
+    errors = spec.validate_metadata()
+
+    assert errors == [
+        "Toy metadata references[0] is missing source_confidence.",
+        "Toy metadata references[1].source_confidence has invalid label 'unchecked'.",
+    ]
+
+
+def test_reference_source_confidence_labels_are_documented() -> None:
+    assert set(REFERENCE_SOURCE_CONFIDENCE_LABELS) == {
+        "source_uncertain",
+        "probably_correct",
+        "definitive_paper_link",
+        "human_verified",
+    }
+    assert "AI agents must not assign this label" in REFERENCE_SOURCE_CONFIDENCE_LABELS["human_verified"]

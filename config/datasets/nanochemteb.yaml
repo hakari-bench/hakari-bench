@@ -33,6 +33,7 @@ metadata:
     year: 2024
     url: https://arxiv.org/abs/2412.00532
     is_paper: true
+    source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2412.00532
   - title: 'ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings'
     authors:
@@ -46,6 +47,7 @@ metadata:
     year: 2025
     url: https://arxiv.org/abs/2508.01643
     is_paper: true
+    source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2508.01643
   bibtex: "@article{kasmaee2024chemteb,\n  author = {Kasmaee, Ali Shiraee and Khodadad, Mohammad\
     \ and Saloot, Mohammad Arshi and Sherck, Nicholas and Dokas, Stephen and Mahyar, Hamidreza\
@@ -81,6 +83,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2412.00532
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2412.00532
     - title: 'Natural Questions: A Benchmark for Question Answering Research'
       authors:
@@ -89,10 +92,23 @@ task_metadata:
       - Olivia Redfield
       - Michael Collins
       - Ankur Parikh
-      - et al.
+      - Chris Alberti
+      - Danielle Epstein
+      - Illia Polosukhin
+      - Jacob Devlin
+      - Kenton Lee
+      - Kristina Toutanova
+      - Llion Jones
+      - Matthew Kelcey
+      - Ming-Wei Chang
+      - Andrew M. Dai
+      - Jakob Uszkoreit
+      - Quoc Le
+      - Slav Petrov
       year: 2019
-      url: https://aclanthology.org/Q19-1026
+      url: https://aclanthology.org/Q19-1026/
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{kasmaee2024chemteb,\n  author = {Kasmaee, Ali Shiraee and Khodadad,\
       \ Mohammad and Saloot, Mohammad Arshi and Sherck, Nicholas and Dokas, Stephen and Mahyar,\
       \ Hamidreza and Samiee, Soheila},\n  journal = {arXiv preprint arXiv:2412.00532},\n\
@@ -102,7 +118,7 @@ task_metadata:
       \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and others},\n  journal\
       \ = {Transactions of the Association for Computational Linguistics},\n  title = {Natural\
       \ Questions: A Benchmark for Question Answering Research},\n  year = {2019},\n  url\
-      \ = {https://aclanthology.org/Q19-1026}\n}\n"
+      \ = {https://aclanthology.org/Q19-1026/}\n}\n"
     query_text_stats:
       count: 27
       min_chars: 33
@@ -138,6 +154,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2412.00532
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2412.00532
     - title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering'
       authors:
@@ -151,6 +168,7 @@ task_metadata:
       year: 2018
       url: https://aclanthology.org/D18-1259
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.18653/v1/D18-1259
     bibtex: "@article{kasmaee2024chemteb,\n  author = {Kasmaee, Ali Shiraee and Khodadad,\
       \ Mohammad and Saloot, Mohammad Arshi and Sherck, Nicholas and Dokas, Stephen and Mahyar,\
@@ -196,6 +214,7 @@ task_metadata:
       year: 2025
       url: https://arxiv.org/abs/2508.01643
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2508.01643
     bibtex: "@article{kasmaee2025chembed,\n  author = {Kasmaee, Ali Shiraee and Khodadad,\
       \ Mohammad and Astaraki, Mehdi and Saloot, Mohammad Arshi and Sherck, Nicholas and Mahyar,\

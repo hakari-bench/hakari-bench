@@ -25,6 +25,7 @@ metadata:
     year: 2024
     url: https://arxiv.org/abs/2411.12056
     is_paper: true
+    source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2411.12056
   bibtex: "@article{shahinmoghadam2024benchmarking,\n  author = {Shahinmoghadam, Mehrzad and\
     \ Motamedi, Ali},\n  journal = {arXiv preprint arXiv:2411.12056},\n  title = {Benchmarking\
@@ -47,6 +48,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2411.12056
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2411.12056
     bibtex: "@article{shahinmoghadam2024benchmarking,\n  author = {Shahinmoghadam, Mehrzad\
       \ and Motamedi, Ali},\n  journal = {arXiv preprint arXiv:2411.12056},\n  title = {Benchmarking\
@@ -80,6 +82,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2411.12056
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2411.12056
     bibtex: "@article{shahinmoghadam2024benchmarking,\n  author = {Shahinmoghadam, Mehrzad\
       \ and Motamedi, Ali},\n  journal = {arXiv preprint arXiv:2411.12056},\n  title = {Benchmarking\

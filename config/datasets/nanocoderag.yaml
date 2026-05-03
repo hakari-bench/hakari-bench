@@ -29,14 +29,15 @@ metadata:
     - Yiqing Xie
     - Graham Neubig
     - Daniel Fried
-    year: 2024
-    url: https://arxiv.org/abs/2406.14497
+    year: 2025
+    url: https://aclanthology.org/2025.findings-naacl.176/
     is_paper: true
-    doi: 10.48550/arXiv.2406.14497
+    source_confidence: definitive_paper_link
+    doi: 10.18653/v1/2025.findings-naacl.176
   bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
     \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
     \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
-    \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://arxiv.org/abs/2406.14497},\n\
+    \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
     \  year = {2024}\n}\n"
 task_metadata:
   NanoCodeRAGLibraryDocumentationSolutions:
@@ -57,14 +58,15 @@ task_metadata:
       - Yiqing Xie
       - Graham Neubig
       - Daniel Fried
-      year: 2024
-      url: https://arxiv.org/abs/2406.14497
+      year: 2025
+      url: https://aclanthology.org/2025.findings-naacl.176/
       is_paper: true
-      doi: 10.48550/arXiv.2406.14497
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.findings-naacl.176
     bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
       \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
       \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
-      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://arxiv.org/abs/2406.14497},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
       \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
@@ -96,14 +98,15 @@ task_metadata:
       - Yiqing Xie
       - Graham Neubig
       - Daniel Fried
-      year: 2024
-      url: https://arxiv.org/abs/2406.14497
+      year: 2025
+      url: https://aclanthology.org/2025.findings-naacl.176/
       is_paper: true
-      doi: 10.48550/arXiv.2406.14497
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.findings-naacl.176
     bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
       \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
       \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
-      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://arxiv.org/abs/2406.14497},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
       \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
@@ -135,14 +138,15 @@ task_metadata:
       - Yiqing Xie
       - Graham Neubig
       - Daniel Fried
-      year: 2024
-      url: https://arxiv.org/abs/2406.14497
+      year: 2025
+      url: https://aclanthology.org/2025.findings-naacl.176/
       is_paper: true
-      doi: 10.48550/arXiv.2406.14497
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.findings-naacl.176
     bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
       \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
       \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
-      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://arxiv.org/abs/2406.14497},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
       \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
@@ -173,14 +177,15 @@ task_metadata:
       - Yiqing Xie
       - Graham Neubig
       - Daniel Fried
-      year: 2024
-      url: https://arxiv.org/abs/2406.14497
+      year: 2025
+      url: https://aclanthology.org/2025.findings-naacl.176/
       is_paper: true
-      doi: 10.48550/arXiv.2406.14497
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.findings-naacl.176
     bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
       \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
       \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
-      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://arxiv.org/abs/2406.14497},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
       \  year = {2024}\n}\n"
     query_text_stats:
       count: 200

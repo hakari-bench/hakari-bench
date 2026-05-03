@@ -33,6 +33,8 @@ metadata:
     year: 2025
     url: https://aclanthology.org/2025.naacl-long.511/
     is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.18653/v1/2025.naacl-long.511
   bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for Evaluating\
     \ Instruction-Following in Expert-Domain Information Retrieval},\n  author = {Tingyu Song\
     \ and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings of the\
@@ -60,6 +62,8 @@ task_metadata:
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.naacl-long.511
     - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance'
       authors:
       - Paheli Bhattacharya
@@ -72,6 +76,7 @@ task_metadata:
       year: 2019
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -119,6 +124,8 @@ task_metadata:
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.naacl-long.511
     - title: Overview of the TREC 2015 Clinical Decision Support Track
       authors:
       - Kirk Roberts
@@ -128,6 +135,7 @@ task_metadata:
       year: 2015
       url: https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -171,6 +179,8 @@ task_metadata:
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.naacl-long.511
     - title: 'WWW''18 Open Challenge: Financial Opinion Mining and Question Answering'
       authors:
       - Macedo Maia
@@ -183,6 +193,7 @@ task_metadata:
       year: 2018
       url: https://doi.org/10.1145/3184558.3192301
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -225,6 +236,8 @@ task_metadata:
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.naacl-long.511
     - title: 'Overview of the FIRE 2017 IRLeD Track: Information Retrieval from Legal
         Documents'
       authors:
@@ -236,6 +249,7 @@ task_metadata:
       year: 2017
       url: https://ceur-ws.org/Vol-2036/T3-1.pdf
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -279,15 +293,18 @@ task_metadata:
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.naacl-long.511
     - title: 'NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval'
       authors:
       - Vera Boteva
-      - Demian Gholipour
+      - Demian Gholipour Ghalandari
       - Artem Sokolov
       - Stefan Riezler
       year: 2016
       url: https://link.springer.com/chapter/10.1007/978-3-319-30671-1_58
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -330,6 +347,8 @@ task_metadata:
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.naacl-long.511
     - title: Overview of the TREC 2017 Precision Medicine Track
       authors:
       - Kirk Roberts
@@ -342,6 +361,7 @@ task_metadata:
       year: 2017
       url: https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -385,6 +405,8 @@ task_metadata:
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.naacl-long.511
     - title: 'SciFact: A Dataset and Benchmark for Scientific Claim Verification'
       authors:
       - David Wadden
@@ -397,6 +419,7 @@ task_metadata:
       year: 2020
       url: https://aclanthology.org/2020.emnlp-main.609/
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\

@@ -40,6 +40,24 @@ NANOBEIR_SPLIT_MAPPING: dict[str, str] = {
 VALID_METADATA_CATEGORIES = {"natural_language", "code"}
 REQUIRED_METADATA_FIELDS = {"language", "category", "short_description", "description"}
 TEXT_STATS_FIELDS = {"count", "min_chars", "max_chars", "mean_chars", "median_chars"}
+REFERENCE_SOURCE_CONFIDENCE_LABELS = {
+    "source_uncertain": (
+        "The source may be relevant, but the citation-to-task relationship is not established well enough "
+        "to rely on without further review."
+    ),
+    "probably_correct": (
+        "The source appears to be the right task or dataset source based on upstream metadata, local MTEB data, "
+        "dataset cards, or web search, but some uncertainty remains."
+    ),
+    "definitive_paper_link": (
+        "The source is a paper, official proceedings page, DOI landing page, arXiv page, or comparable scholarly "
+        "record that clearly corresponds to the task or dataset."
+    ),
+    "human_verified": (
+        "A human reviewer explicitly checked and approved the source. AI agents must not assign this label."
+    ),
+}
+VALID_REFERENCE_SOURCE_CONFIDENCE = set(REFERENCE_SOURCE_CONFIDENCE_LABELS)
 
 
 @dataclass(frozen=True)
@@ -314,6 +332,16 @@ def _validate_metadata_mapping(metadata: dict[str, Any], *, context: str) -> lis
                     errors.append(f"{context} references[{index}] is missing is_paper.")
                 elif not isinstance(reference_mapping["is_paper"], bool):
                     errors.append(f"{context} references[{index}].is_paper must be boolean.")
+                source_confidence = reference_mapping.get("source_confidence")
+                if "source_confidence" not in reference_mapping:
+                    errors.append(f"{context} references[{index}] is missing source_confidence.")
+                elif not isinstance(source_confidence, str):
+                    errors.append(f"{context} references[{index}].source_confidence must be string.")
+                elif source_confidence not in VALID_REFERENCE_SOURCE_CONFIDENCE:
+                    errors.append(
+                        f"{context} references[{index}].source_confidence has invalid label "
+                        f"{source_confidence!r}."
+                    )
 
     for stats_key in ("query_text_stats", "document_text_stats"):
         stats = metadata.get(stats_key)

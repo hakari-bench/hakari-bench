@@ -45,6 +45,7 @@ metadata:
     year: 2025
     url: https://arxiv.org/abs/2502.13595
     is_paper: true
+    source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2502.13595
   bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual Text Embedding\
     \ Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac and Kerboua, Imene and\
@@ -67,19 +68,20 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     bibtex: "@misc{li2024coir,\n  archiveprefix = {arXiv},\n  author = {Li, Xiangyang and\
       \ Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Yin, Yichun and Zhang, Hao and Liu,\
       \ Yong and Wang, Yasheng and Tang, Ruiming},\n  eprint = {2407.02883},\n  primaryclass\
       \ = {cs.IR},\n  title = {CoIR: A Comprehensive Benchmark for Code Information Retrieval\
-      \ Models},\n  url = {https://arxiv.org/abs/2407.02883},\n  year = {2024}\n}\n"
+      \ Models},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072},\n  year = {2024}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 61
@@ -110,6 +112,7 @@ task_metadata:
       year: 2025
       url: https://arxiv.org/abs/2410.22839
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2410.22839
     bibtex: "@article{holm2025danoliteracy,\n  author = {Holm, Soren Vejlgaard and Hansen,\
       \ Lars Kai and Nielsen, Martin Carsten},\n  journal = {Proceedings of the Joint 25th\
@@ -150,6 +153,7 @@ task_metadata:
       year: 2019
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{bhattacharya2020aila,
   title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
   author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
@@ -188,6 +192,7 @@ task_metadata:
       year: 2018
       url: https://aclanthology.org/P18-1023/
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.18653/v1/P18-1023
     bibtex: "@inproceedings{wachsmuth2018retrieval,\n  author = {Wachsmuth, Henning and Syed,\
       \ Shahbaz and Stein, Benno},\n  booktitle = {ACL},\n  title = {Retrieval of the Best\
@@ -226,6 +231,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2307.16883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2307.16883
     bibtex: "@article{kamalloo2023hagrid,\n  author = {Kamalloo, Ehsan and Jafari, Aref and\
       \ Zhang, Xinyu and Thakur, Nandan and Lin, Jimmy},\n  journal = {arXiv:2307.16883},\n\
@@ -264,6 +270,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2308.11462
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@misc{guha2023legalbench,\n  archiveprefix = {arXiv},\n  author = {Guha, Neel\
       \ and Nyarko, Julian and Ho, Daniel E. and Re, Christopher},\n  eprint = {2308.11462},\n\
       \  primaryclass = {cs.CL},\n  title = {LegalBench: A Collaboratively Built Benchmark\
@@ -300,8 +307,9 @@ task_metadata:
       - Furu Wei
       - Sujian Li
       year: 2024
-      url: https://arxiv.org/abs/2404.12096
+      url: https://aclanthology.org/2024.emnlp-main.47/
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
       \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
       \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
@@ -338,6 +346,7 @@ task_metadata:
       year: 2020
       url: https://aclanthology.org/2020.acl-main.207/
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.18653/v1/2020.acl-main.207
     bibtex: "@inproceedings{cohan2020specter,\n  author = {Cohan, Arman and Feldman, Sergey\
       \ and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {ACL},\n  title\
@@ -376,6 +385,7 @@ task_metadata:
       year: 2021
       url: https://arxiv.org/abs/2104.05832
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2104.05832
     - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
@@ -385,6 +395,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{mirzaee2021spartqa,\n  author = {Mirzaee, Roshanak and Faghihi, Hossein\
       \ Rajaby and Ning, Qiang and Kordjamshidi, Parisa},\n  journal = {arXiv preprint arXiv:2104.05832},\n\
       \  title = {SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning},\n\
@@ -424,6 +435,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2306.08952
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
       - Chenghao Xiao
@@ -432,6 +444,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{tan2023tempreason,\n  author = {Tan, Qingyu and Ng, Hwee Tou and Bing,\
       \ Lidong},\n  journal = {arXiv preprint arXiv:2306.08952},\n  title = {Towards Benchmarking\
       \ and Improving the Temporal Reasoning Capability of Large Language Models},\n  year\
@@ -470,6 +483,7 @@ task_metadata:
       year: 2021
       url: https://arxiv.org/abs/1907.10641
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
       - Chenghao Xiao
@@ -478,6 +492,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{sakaguchi2021winogrande,\n  author = {Sakaguchi, Keisuke and Le Bras,\
       \ Ronan and Bhagavatula, Chandra and Choi, Yejin},\n  journal = {Communications of the\
       \ ACM},\n  number = {9},\n  pages = {99--106},\n  title = {WinoGrande: An Adversarial\
@@ -524,6 +539,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2308.16884
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{bandarkar2023belebele,\n  author = {Bandarkar, Lucas and Liang, Davis\
       \ and Muller, Benjamin and Artetxe, Mikel and Shukla, Satya Narayan and Husa, Donald\
       \ and Goyal, Naman and Krishnan, Abhinandan and Zettlemoyer, Luke and Khabsa, Madian},\n\
@@ -562,6 +578,7 @@ task_metadata:
       year: 2019
       url: https://arxiv.org/abs/1910.07475
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{lewis2019mlqa,\n  author = {Lewis, Patrick and Oguz, Barlas and Rinott,\
       \ Ruty and Riedel, Sebastian and Schwenk, Holger},\n  journal = {arXiv preprint arXiv:1910.07475},\n\
       \  title = {MLQA: Evaluating Cross-lingual Extractive Question Answering},\n  year =\
@@ -597,6 +614,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2304.01412
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{lu2023statcan,\n  author = {Lu, Xing Han and Reddy, Siva and de\
       \ Vries, Harm},\n  booktitle = {Proceedings of the 17th Conference of the European Chapter\
       \ of the Association for Computational Linguistics},\n  pages = {2799--2829},\n  title\
@@ -630,6 +648,7 @@ task_metadata:
       year: 2024
       url: https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
       is_paper: false
+      source_confidence: probably_correct
     bibtex: "@misc{ellamind2024wikipediaretrieval,\n  author = {{EllaMind contributors}},\n\
       \  title = {Wikipedia 2023-11 Retrieval Multilingual Queries},\n  url = {https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries},\n\
       \  year = {2024}\n}\n"
@@ -669,6 +688,7 @@ task_metadata:
       year: 2022
       url: https://arxiv.org/abs/2203.03367
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@misc{long2022multicpr,\n  archiveprefix = {arXiv},\n  author = {Long, Dingkun\
       \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
       \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  eprint = {2203.03367},\n\
@@ -710,6 +730,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2403.15246
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@misc{weller2024followir,\n  archiveprefix = {arXiv},\n  author = {Weller, Orion\
       \ and Chang, Benjamin and MacAvaney, Sean and Lo, Kyle and Cohan, Arman and Van Durme,\
       \ Benjamin and Lawrie, Dawn and Soldaini, Luca},\n  eprint = {2403.15246},\n  primaryclass\
@@ -751,6 +772,7 @@ task_metadata:
       year: 2023
       url: https://doi.org/10.1162/tacl_a_00595
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
       \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\

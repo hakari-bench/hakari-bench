@@ -40,6 +40,7 @@ metadata:
     year: 2025
     url: https://ipsj.ixsq.nii.ac.jp/records/2004356
     is_paper: true
+    source_confidence: definitive_paper_link
   bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding\
     \ Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe and Ohagi, Masaya\
     \ and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n\
@@ -68,12 +69,14 @@ task_metadata:
       year: 2025
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'JaCWIR: Japanese Casual Web IR'
       authors:
       - Yuichi Tateno
       year: 2024
       url: https://huggingface.co/datasets/hotchpotch/JaCWIR
       is_paper: false
+      source_confidence: probably_correct
     bibtex: "@misc{jmteb_lite,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan\
       \ and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n  howpublished\
       \ = {\\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},\n  title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},
@@ -114,6 +117,7 @@ task_metadata:
       year: 2025
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{li2025jmteb,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan\
       \ and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n  title\
       \ = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},\n  year\
@@ -153,6 +157,7 @@ task_metadata:
       year: 2025
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'JAQKET: Construction of a Japanese QA Dataset Based on Quiz Questions'
       authors:
       - Masatoshi Suzuki
@@ -163,6 +168,7 @@ task_metadata:
       year: 2020
       url: https://www.anlp.jp/proceedings/annual_meeting/2020/pdf_dir/P2-24.pdf
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@misc{jmteb_lite,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan\
       \ and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n  howpublished\
       \ = {\\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},\n  title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},
@@ -209,6 +215,7 @@ task_metadata:
       year: 2023
       url: https://doi.org/10.1162/tacl_a_00595
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
     - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight
         Version'
@@ -222,6 +229,7 @@ task_metadata:
       year: 2025
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{zhang2023miracl,\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
       \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
       \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  doi = {10.1162/tacl_a_00595},\n\
@@ -263,6 +271,7 @@ task_metadata:
       year: 2022
       url: https://aclanthology.org/2022.coling-1.138
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@inproceedings{sen2022mintaka,\n  author = {Sen, Priyanka and Aji, Alham Fikri\
       \ and Saffari, Amir},\n  booktitle = {Proceedings of the 29th International Conference\
       \ on Computational Linguistics},\n  pages = {1604--1619},\n  title = {Mintaka: A Complex,\
@@ -303,6 +312,7 @@ task_metadata:
       year: 2025
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval'
       authors:
       - Xinyu Zhang
@@ -312,6 +322,7 @@ task_metadata:
       year: 2021
       url: https://arxiv.org/abs/2108.08787
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@misc{jmteb_lite,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan\
       \ and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n  howpublished\
       \ = {\\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},\n  title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},
@@ -341,22 +352,23 @@ task_metadata:
     citation_keys:
     - bgem3
     references:
-    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
         Embeddings Through Self-Knowledge Distillation'
       authors:
-      - Jianlv Chen
+      - Jianlyu Chen
       - Shitao Xiao
       - Peitian Zhang
       - Kun Luo
       - Defu Lian
       - Zheng Liu
       year: 2024
-      url: https://arxiv.org/abs/2402.03216
+      url: https://aclanthology.org/2024.findings-acl.137/
       is_paper: true
-    bibtex: "@misc{chen2024bgem3,\n  archiveprefix = {arXiv},\n  author = {Chen, Jianlv and\
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    bibtex: "@misc{chen2024bgem3,\n  archiveprefix = {arXiv},\n  author = {Chen, Jianlyu and\
       \ Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and Liu, Zheng},\n  eprint\
-      \ = {2402.03216},\n  primaryclass = {cs.CL},\n  title = {BGE M3-Embedding: Multi-Lingual,\
-      \ Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n\
+      \ = {2402.03216},\n  primaryclass = {cs.CL},\n  title = {M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n\
       \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
@@ -392,6 +404,7 @@ task_metadata:
       year: 2025
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{li2025jmteb,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan\
       \ and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n  title\
       \ = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},\n  year\
@@ -430,6 +443,7 @@ task_metadata:
       year: 2025
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{li2025jmteb,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan\
       \ and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n  title\
       \ = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},\n  year\
@@ -468,6 +482,7 @@ task_metadata:
       year: 2025
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{li2025jmteb,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan\
       \ and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n  title\
       \ = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},\n  year\
@@ -506,6 +521,7 @@ task_metadata:
       year: 2025
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{li2025jmteb,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan\
       \ and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n  title\
       \ = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},\n  year\

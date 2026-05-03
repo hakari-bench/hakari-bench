@@ -41,6 +41,7 @@ metadata:
     year: 2024
     url: https://arxiv.org/abs/2404.06347
     is_paper: true
+    source_confidence: definitive_paper_link
   bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
     \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal = {arXiv\
     \ preprint arXiv:2404.06347},\n  year = {2024}\n}\n"
@@ -63,6 +64,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge
       authors:
       - Peter Clark
@@ -75,6 +77,7 @@ task_metadata:
       year: 2018
       url: https://arxiv.org/abs/1803.05457
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.1803.05457
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
@@ -114,6 +117,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Abductive Commonsense Reasoning
       authors:
       - Chandra Bhagavatula
@@ -128,6 +132,7 @@ task_metadata:
       year: 2019
       url: https://arxiv.org/abs/1908.05739
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{bhagavatula2019abductive,\n\
@@ -165,6 +170,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'HellaSwag: Can a Machine Really Finish Your Sentence?'
       authors:
       - Rowan Zellers
@@ -175,6 +181,7 @@ task_metadata:
       year: 2019
       url: https://arxiv.org/abs/1905.07830
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{zellers2019hellaswag,\n\
@@ -211,6 +218,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'WinoGrande: An Adversarial Winograd Schema Challenge at Scale'
       authors:
       - Keisuke Sakaguchi
@@ -220,6 +228,7 @@ task_metadata:
       year: 2021
       url: https://arxiv.org/abs/1907.10641
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{sakaguchi2021winogrande,\n\
@@ -256,6 +265,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'PIQA: Reasoning about Physical Commonsense in Natural Language'
       authors:
       - Yonatan Bisk
@@ -265,6 +275,7 @@ task_metadata:
       year: 2020
       url: https://arxiv.org/abs/1911.11641
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@inproceedings{bisk2020piqa,\n\
@@ -302,6 +313,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'SocialIQA: Commonsense Reasoning about Social Interactions'
       authors:
       - Maarten Sap
@@ -312,6 +324,7 @@ task_metadata:
       year: 2019
       url: https://arxiv.org/abs/1904.09728
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{sap2019socialiqa,\n\
@@ -348,6 +361,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real
         Tasks'
       authors:
@@ -358,6 +372,7 @@ task_metadata:
       year: 2020
       url: https://ojs.aaai.org/index.php/AAAI/article/view/6398
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@inproceedings{rogers2020quail,\n\
@@ -395,6 +410,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning'
       authors:
       - Roshanak Mirzaee
@@ -404,6 +420,7 @@ task_metadata:
       year: 2021
       url: https://arxiv.org/abs/2104.05832
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{mirzaee2021spartqa,\n\
@@ -440,6 +457,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
         Language Models
       authors:
@@ -449,6 +467,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2306.08952
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
@@ -485,6 +504,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
         Language Models
       authors:
@@ -494,6 +514,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2306.08952
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
@@ -530,6 +551,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
         Language Models
       authors:
@@ -539,6 +561,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2306.08952
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
@@ -575,6 +598,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
         Language Models
       authors:
@@ -584,6 +608,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2306.08952
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
@@ -620,6 +645,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
         Language Models
       authors:
@@ -629,6 +655,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2306.08952
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
@@ -665,6 +692,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
         Language Models
       authors:
@@ -674,6 +702,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2306.08952
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
@@ -710,6 +739,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
         Language Models
       authors:
@@ -719,6 +749,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2306.08952
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
@@ -756,6 +787,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'CodeSearchNet Challenge: Evaluating the State of Semantic Code Search'
       authors:
       - Hamel Husain
@@ -766,6 +798,7 @@ task_metadata:
       year: 2019
       url: https://arxiv.org/abs/1909.09436
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'OctoPack: Instruction Tuning Code Large Language Models'
       authors:
       - Niklas Muennighoff
@@ -781,6 +814,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2308.07124
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{husain2019codesearchnet,\n\
@@ -824,6 +858,7 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Training Verifiers to Solve Math Word Problems
       authors:
       - Karl Cobbe
@@ -839,6 +874,7 @@ task_metadata:
       year: 2021
       url: https://arxiv.org/abs/2110.14168
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: Measuring Mathematical Problem Solving With the MATH Dataset
       authors:
       - Dan Hendrycks
@@ -852,6 +888,7 @@ task_metadata:
       year: 2021
       url: https://arxiv.org/abs/2103.03874
       is_paper: true
+      source_confidence: definitive_paper_link
     - title: 'MetaMath: Bootstrap Your Own Mathematical Questions for Large Language Models'
       authors:
       - Longhui Yu
@@ -867,6 +904,7 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2309.12284
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
       \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{cobbe2021gsm8k,\n\

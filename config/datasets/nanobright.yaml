@@ -49,14 +49,19 @@ metadata:
     - Quan Shi
     - Zachary S. Siegel
     - Michael Tang
-    - et al.
+    - Ruoxi Sun
+    - Jinsung Yoon
+    - Sercan O. Arik
+    - Danqi Chen
+    - Tao Yu
     year: 2024
     url: https://arxiv.org/abs/2407.12883
     is_paper: true
+    source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2407.12883
   bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
     \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-    \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint arXiv:2407.12883},\n\
+    \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint arXiv:2407.12883},\n\
     \  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval},\n\
     \  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
 task_metadata:
@@ -81,14 +86,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -124,14 +134,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -167,14 +182,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -210,14 +230,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -253,14 +278,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -296,14 +326,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -339,14 +374,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -382,14 +422,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -425,14 +470,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -468,14 +518,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -511,14 +566,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -554,14 +614,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -597,14 +662,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -640,14 +710,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -683,14 +758,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -726,14 +806,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -769,14 +854,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -812,14 +902,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -855,14 +950,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
@@ -898,14 +998,19 @@ task_metadata:
       - Quan Shi
       - Zachary S. Siegel
       - Michael Tang
-      - et al.
+      - Ruoxi Sun
+      - Jinsung Yoon
+      - Sercan O. Arik
+      - Danqi Chen
+      - Tao Yu
       year: 2024
       url: https://arxiv.org/abs/2407.12883
       is_paper: true
+      source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
       \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:

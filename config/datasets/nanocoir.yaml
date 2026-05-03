@@ -31,19 +31,19 @@ metadata:
     - Kuicai Dong
     - Yi Quan Lee
     - Wei Xia
-    - Yichun Yin
     - Hao Zhang
-    - Yong Liu
+    - Xinyi Dai
     - Yasheng Wang
     - Ruiming Tang
-    year: 2024
-    url: https://arxiv.org/abs/2407.02883
+    year: 2025
+    url: https://aclanthology.org/2025.acl-long.1072/
     is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.18653/v1/2025.acl-long.1072
   bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-    \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-    \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+    \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
     \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-    \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n"
+    \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n"
 task_metadata:
   NanoApps:
     language: en
@@ -61,14 +61,15 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     - title: Measuring Coding Challenge Competence With APPS
       authors:
       - Dan Hendrycks
@@ -85,11 +86,11 @@ task_metadata:
       year: 2021
       url: https://arxiv.org/abs/2105.09938
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-      \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
       \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-      \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n\n@article{hendrycks2021apps,\n\
+      \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@article{hendrycks2021apps,\n\
       \  title = {Measuring Coding Challenge Competence With APPS},\n  author = {Dan Hendrycks\
       \ and Steven Basart and Saurav Kadavath and Mantas Mazeika and Akul Arora and Ethan\
       \ Guo and Collin Burns and Samir Puranik and Horace He and Dawn Song and Jacob Steinhardt},\n\
@@ -122,14 +123,15 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     - title: 'OpenCodeInterpreter: Integrating Code Generation with Execution and Refinement'
       authors:
       - Tianyu Zheng
@@ -143,11 +145,11 @@ task_metadata:
       year: 2024
       url: https://arxiv.org/abs/2402.14658
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-      \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
       \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-      \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n\n@misc{zheng2024opencodeinterpreter,\n\
+      \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@misc{zheng2024opencodeinterpreter,\n\
       \  title = {OpenCodeInterpreter: Integrating Code Generation with Execution and Refinement},\n\
       \  author = {Tianyu Zheng and Ge Zhang and Tianhao Shen and Xueling Liu and Bill Yuchen\
       \ Lin and Jie Fu and Wenhu Chen and Xiang Yue},\n  year = {2024},\n  eprint = {2402.14658},\n\
@@ -179,19 +181,19 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-      \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
       \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-      \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n"
+      \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 57
@@ -220,14 +222,15 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     - title: 'CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation'
       authors:
       - Weixiang Yan
@@ -236,16 +239,17 @@ task_metadata:
       - Qian Chen
       - Wen Wang
       year: 2023
-      url: https://arxiv.org/abs/2310.04951
+      url: https://aclanthology.org/2023.findings-emnlp.337/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.findings-emnlp.337
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-      \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
       \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-      \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n\n@misc{yan2023codetransocean,\n\
+      \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@misc{yan2023codetransocean,\n\
       \  title = {CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation},\n\
       \  author = {Weixiang Yan and Yuchen Tian and Yunzhe Li and Qian Chen and Wen Wang},\n\
-      \  year = {2023},\n  eprint = {2310.04951},\n  archivePrefix = {arXiv},\n  url = {https://arxiv.org/abs/2310.04951}\n\
+      \  year = {2023},\n  eprint = {2310.04951},\n  archivePrefix = {arXiv},\n  url = {https://aclanthology.org/2023.findings-emnlp.337/},\n  doi = {10.18653/v1/2023.findings-emnlp.337}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -275,14 +279,15 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     - title: 'CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation'
       authors:
       - Weixiang Yan
@@ -291,16 +296,17 @@ task_metadata:
       - Qian Chen
       - Wen Wang
       year: 2023
-      url: https://arxiv.org/abs/2310.04951
+      url: https://aclanthology.org/2023.findings-emnlp.337/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.findings-emnlp.337
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-      \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
       \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-      \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n\n@misc{yan2023codetransocean,\n\
+      \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@misc{yan2023codetransocean,\n\
       \  title = {CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation},\n\
       \  author = {Weixiang Yan and Yuchen Tian and Yunzhe Li and Qian Chen and Wen Wang},\n\
-      \  year = {2023},\n  eprint = {2310.04951},\n  archivePrefix = {arXiv},\n  url = {https://arxiv.org/abs/2310.04951}\n\
+      \  year = {2023},\n  eprint = {2310.04951},\n  archivePrefix = {arXiv},\n  url = {https://aclanthology.org/2023.findings-emnlp.337/},\n  doi = {10.18653/v1/2023.findings-emnlp.337}\n\
       }\n"
     query_text_stats:
       count: 50
@@ -330,14 +336,15 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     - title: 'CoSQA: 20,000+ Web Queries for Code Search and Question Answering'
       authors:
       - Junjie Huang
@@ -349,17 +356,18 @@ task_metadata:
       - Ming Zhou
       - Nan Duan
       year: 2021
-      url: https://arxiv.org/abs/2105.13239
+      url: https://aclanthology.org/2021.acl-long.442/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2021.acl-long.442
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-      \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
       \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-      \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n\n@misc{huang2021cosqa,\n\
+      \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@misc{huang2021cosqa,\n\
       \  title = {CoSQA: 20,000+ Web Queries for Code Search and Question Answering},\n  author\
       \ = {Junjie Huang and Duyu Tang and Linjun Shou and Ming Gong and Ke Xu and Daxin Jiang\
       \ and Ming Zhou and Nan Duan},\n  year = {2021},\n  eprint = {2105.13239},\n  archivePrefix\
-      \ = {arXiv},\n  url = {https://arxiv.org/abs/2105.13239}\n}\n"
+      \ = {arXiv},\n  url = {https://aclanthology.org/2021.acl-long.442/},\n  doi = {10.18653/v1/2021.acl-long.442}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 18
@@ -387,19 +395,19 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-      \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
       \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-      \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n"
+      \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 61
@@ -428,14 +436,15 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     - title: 'Synthetic-Text-To-SQL: A synthetic dataset for training language models to generate
         SQL queries from natural language prompts'
       authors:
@@ -451,11 +460,11 @@ task_metadata:
       year: 2024
       url: https://huggingface.co/datasets/gretelai/synthetic_text_to_sql
       is_paper: false
+      source_confidence: probably_correct
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-      \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
       \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-      \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n\n@software{gretel2024syntheticsql,\n\
+      \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@software{gretel2024syntheticsql,\n\
       \  title = {Synthetic-Text-To-SQL: A synthetic dataset for training language models\
       \ to generate SQL queries from natural language prompts},\n  author = {Yev Meyer and\
       \ Marjan Emadi and Dhruv Nathawani and Lipika Ramaswamy and Kendrick Boyd and Maarten\
@@ -490,14 +499,15 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     - title: 'CodeSearchNet Challenge: Evaluating the State of Semantic Code Search'
       authors:
       - Hamel Husain
@@ -508,11 +518,11 @@ task_metadata:
       year: 2019
       url: https://arxiv.org/abs/1909.09436
       is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-      \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
       \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-      \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n\n@article{husain2019codesearchnet,\n\
+      \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@article{husain2019codesearchnet,\n\
       \  title = {{CodeSearchNet} Challenge: Evaluating the State of Semantic Code Search},\n\
       \  author = {Hamel Husain and Ho-Hsiang Wu and Tiferet Gazit and Miltiadis Allamanis\
       \ and Marc Brockschmidt},\n  journal = {arXiv preprint arXiv:1909.09436},\n  year =\
@@ -544,19 +554,19 @@ task_metadata:
       - Kuicai Dong
       - Yi Quan Lee
       - Wei Xia
-      - Yichun Yin
       - Hao Zhang
-      - Yong Liu
+      - Xinyi Dai
       - Yasheng Wang
       - Ruiming Tang
-      year: 2024
-      url: https://arxiv.org/abs/2407.02883
+      year: 2025
+      url: https://aclanthology.org/2025.acl-long.1072/
       is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.acl-long.1072
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
-      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
-      \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
+      \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\n    \ Xia and Hao Zhang and Xinyi Dai and Yasheng Wang and Ruiming Tang},\n\
       \  year = {2024},\n  eprint = {2407.02883},\n  archivePrefix = {arXiv},\n  primaryClass\
-      \ = {cs.IR},\n  url = {https://arxiv.org/abs/2407.02883}\n}\n"
+      \ = {cs.IR},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 47
