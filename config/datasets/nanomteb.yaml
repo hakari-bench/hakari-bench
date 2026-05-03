@@ -6,12 +6,350 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-  - NanoArguAna
-  - NanoCQADupstackGaming
-  - NanoCQADupstackUnix
-  - NanoClimateFEVERHardNegatives
-  - NanoFEVERHardNegatives
-  - NanoFiQA2018
-  - NanoHotpotQAHardNegatives
-  - NanoSCIDOCS
-  - NanoTouche2020
+- NanoArguAna
+- NanoCQADupstackGaming
+- NanoCQADupstackUnix
+- NanoClimateFEVERHardNegatives
+- NanoFEVERHardNegatives
+- NanoFiQA2018
+- NanoHotpotQAHardNegatives
+- NanoSCIDOCS
+- NanoTouche2020
+metadata:
+  language: en
+  category: natural_language
+  short_description: NanoMTEB retrieval benchmark group.
+  description: NanoMTEB is a Nano-style information retrieval benchmark group. It
+    evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - muennighoff2023mteb
+  references:
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    authors:
+    - Niklas Muennighoff
+    - Nouamane Tazi
+    - Loic Magne
+    - Nils Reimers
+    year: 2023
+    url: https://arxiv.org/abs/2210.07316
+    doi: 10.48550/arXiv.2210.07316
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
+    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
+    \ and Reimers, Nils},\n  year = {2023}\n}\n"
+task_metadata:
+  NanoArguAna:
+    language: en
+    category: natural_language
+    short_description: NanoArguAna retrieval task.
+    description: NanoArguAna is a retrieval task in NanoMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - muennighoff2023mteb
+    references:
+    - title: 'MTEB: Massive Text Embedding Benchmark'
+      authors:
+      - Niklas Muennighoff
+      - Nouamane Tazi
+      - Loic Magne
+      - Nils Reimers
+      year: 2023
+      url: https://arxiv.org/abs/2210.07316
+      doi: 10.48550/arXiv.2210.07316
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
+      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 358
+      max_chars: 5500
+      mean_chars: 1201.995
+      median_chars: 1007.5
+    document_text_stats:
+      count: 8626
+      min_chars: 2
+      max_chars: 6673
+      mean_chars: 1029.2971249710179
+      median_chars: 927.0
+  NanoCQADupstackGaming:
+    language: en
+    category: natural_language
+    short_description: NanoCQADupstackGaming retrieval task.
+    description: NanoCQADupstackGaming is a retrieval task in NanoMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - muennighoff2023mteb
+    references:
+    - title: 'MTEB: Massive Text Embedding Benchmark'
+      authors:
+      - Niklas Muennighoff
+      - Nouamane Tazi
+      - Loic Magne
+      - Nils Reimers
+      year: 2023
+      url: https://arxiv.org/abs/2210.07316
+      doi: 10.48550/arXiv.2210.07316
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
+      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 100
+      mean_chars: 47.62
+      median_chars: 45.0
+    document_text_stats:
+      count: 10000
+      min_chars: 46
+      max_chars: 15437
+      mean_chars: 480.1093
+      median_chars: 386.0
+  NanoCQADupstackUnix:
+    language: en
+    category: natural_language
+    short_description: NanoCQADupstackUnix retrieval task.
+    description: NanoCQADupstackUnix is a retrieval task in NanoMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - muennighoff2023mteb
+    references:
+    - title: 'MTEB: Massive Text Embedding Benchmark'
+      authors:
+      - Niklas Muennighoff
+      - Nouamane Tazi
+      - Loic Magne
+      - Nils Reimers
+      year: 2023
+      url: https://arxiv.org/abs/2210.07316
+      doi: 10.48550/arXiv.2210.07316
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
+      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 100
+      mean_chars: 49.205
+      median_chars: 46.0
+    document_text_stats:
+      count: 10000
+      min_chars: 68
+      max_chars: 30610
+      mean_chars: 968.1361
+      median_chars: 601.5
+  NanoClimateFEVERHardNegatives:
+    language: en
+    category: natural_language
+    short_description: NanoClimateFEVERHardNegatives retrieval task.
+    description: NanoClimateFEVERHardNegatives is a retrieval task in NanoMTEB. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - muennighoff2023mteb
+    references:
+    - title: 'MTEB: Massive Text Embedding Benchmark'
+      authors:
+      - Niklas Muennighoff
+      - Nouamane Tazi
+      - Loic Magne
+      - Nils Reimers
+      year: 2023
+      url: https://arxiv.org/abs/2210.07316
+      doi: 10.48550/arXiv.2210.07316
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
+      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 35
+      max_chars: 300
+      mean_chars: 114.965
+      median_chars: 109.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 32688
+      mean_chars: 1115.081
+      median_chars: 920.5
+  NanoFEVERHardNegatives:
+    language: en
+    category: natural_language
+    short_description: NanoFEVERHardNegatives retrieval task.
+    description: NanoFEVERHardNegatives is a retrieval task in NanoMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - muennighoff2023mteb
+    references:
+    - title: 'MTEB: Massive Text Embedding Benchmark'
+      authors:
+      - Niklas Muennighoff
+      - Nouamane Tazi
+      - Loic Magne
+      - Nils Reimers
+      year: 2023
+      url: https://arxiv.org/abs/2210.07316
+      doi: 10.48550/arXiv.2210.07316
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
+      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 21
+      max_chars: 141
+      mean_chars: 50.565
+      median_chars: 46.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 6028
+      mean_chars: 565.1118
+      median_chars: 372.0
+  NanoFiQA2018:
+    language: en
+    category: natural_language
+    short_description: NanoFiQA2018 retrieval task.
+    description: NanoFiQA2018 is a retrieval task in NanoMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - muennighoff2023mteb
+    references:
+    - title: 'MTEB: Massive Text Embedding Benchmark'
+      authors:
+      - Niklas Muennighoff
+      - Nouamane Tazi
+      - Loic Magne
+      - Nils Reimers
+      year: 2023
+      url: https://arxiv.org/abs/2210.07316
+      doi: 10.48550/arXiv.2210.07316
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
+      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 19
+      max_chars: 140
+      mean_chars: 61.695
+      median_chars: 63.0
+    document_text_stats:
+      count: 10000
+      min_chars: 6
+      max_chars: 13080
+      mean_chars: 780.3921
+      median_chars: 531.0
+  NanoHotpotQAHardNegatives:
+    language: en
+    category: natural_language
+    short_description: NanoHotpotQAHardNegatives retrieval task.
+    description: NanoHotpotQAHardNegatives is a retrieval task in NanoMTEB. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - muennighoff2023mteb
+    references:
+    - title: 'MTEB: Massive Text Embedding Benchmark'
+      authors:
+      - Niklas Muennighoff
+      - Nouamane Tazi
+      - Loic Magne
+      - Nils Reimers
+      year: 2023
+      url: https://arxiv.org/abs/2210.07316
+      doi: 10.48550/arXiv.2210.07316
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
+      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 34
+      max_chars: 238
+      mean_chars: 95.83
+      median_chars: 89.5
+    document_text_stats:
+      count: 10000
+      min_chars: 53
+      max_chars: 1837
+      mean_chars: 420.2337
+      median_chars: 377.0
+  NanoSCIDOCS:
+    language: en
+    category: natural_language
+    short_description: NanoSCIDOCS retrieval task.
+    description: NanoSCIDOCS is a retrieval task in NanoMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - muennighoff2023mteb
+    references:
+    - title: 'MTEB: Massive Text Embedding Benchmark'
+      authors:
+      - Niklas Muennighoff
+      - Nouamane Tazi
+      - Loic Magne
+      - Nils Reimers
+      year: 2023
+      url: https://arxiv.org/abs/2210.07316
+      doi: 10.48550/arXiv.2210.07316
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
+      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 30
+      max_chars: 192
+      mean_chars: 69.79
+      median_chars: 67.0
+    document_text_stats:
+      count: 10000
+      min_chars: 19
+      max_chars: 10169
+      mean_chars: 1201.6931
+      median_chars: 1101.0
+  NanoTouche2020:
+    language: en
+    category: natural_language
+    short_description: NanoTouche2020 retrieval task.
+    description: NanoTouche2020 is a retrieval task in NanoMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - muennighoff2023mteb
+    references:
+    - title: 'MTEB: Massive Text Embedding Benchmark'
+      authors:
+      - Niklas Muennighoff
+      - Nouamane Tazi
+      - Loic Magne
+      - Nils Reimers
+      year: 2023
+      url: https://arxiv.org/abs/2210.07316
+      doi: 10.48550/arXiv.2210.07316
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
+      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    query_text_stats:
+      count: 49
+      min_chars: 16
+      max_chars: 83
+      mean_chars: 43.42857142857143
+      median_chars: 40.0
+    document_text_stats:
+      count: 10000
+      min_chars: 99
+      max_chars: 37100
+      mean_chars: 2820.951
+      median_chars: 1962.0

@@ -177,6 +177,7 @@ def run_or_load_task(
             "dataset_revision": dataset_revision,
             "split_name": task.split_name,
             "task_name": task.task_name,
+            "metadata": task.metadata,
             "corpus_config": task.dataset.corpus_config,
             "queries_config": task.dataset.queries_config,
             "qrels_config": task.dataset.qrels_config,

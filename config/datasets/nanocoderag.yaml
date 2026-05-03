@@ -6,7 +6,150 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-  - NanoCodeRAGLibraryDocumentationSolutions
-  - NanoCodeRAGOnlineTutorials
-  - NanoCodeRAGProgrammingSolutions
-  - NanoCodeRAGStackoverflowPosts
+- NanoCodeRAGLibraryDocumentationSolutions
+- NanoCodeRAGOnlineTutorials
+- NanoCodeRAGProgrammingSolutions
+- NanoCodeRAGStackoverflowPosts
+metadata:
+  language: en
+  category: code
+  short_description: NanoCodeRAG retrieval benchmark group.
+  description: NanoCodeRAG is a Nano-style information retrieval benchmark group.
+    It evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - nanoirbench2026
+  references:
+  - title: 'NanoCodeRAG: Nano information retrieval benchmark subset'
+    authors:
+    - Nano IR Benchmark contributors
+    year: 2026
+    url: https://huggingface.co/hakari-bench
+  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+task_metadata:
+  NanoCodeRAGLibraryDocumentationSolutions:
+    language: en
+    category: code
+    short_description: NanoCodeRAGLibraryDocumentationSolutions retrieval task.
+    description: NanoCodeRAGLibraryDocumentationSolutions is a retrieval task in NanoCodeRAG.
+      Queries must be matched to relevant corpus documents, so scores reflect how
+      well a model represents task-specific intent, document semantics, and hard negative
+      distinctions in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCodeRAG: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 40
+      max_chars: 43706
+      mean_chars: 397.43
+      median_chars: 110.0
+    document_text_stats:
+      count: 8683
+      min_chars: 13
+      max_chars: 81071
+      mean_chars: 2045.703098007601
+      median_chars: 765.0
+  NanoCodeRAGOnlineTutorials:
+    language: en
+    category: code
+    short_description: NanoCodeRAGOnlineTutorials retrieval task.
+    description: NanoCodeRAGOnlineTutorials is a retrieval task in NanoCodeRAG. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCodeRAG: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 151
+      mean_chars: 51.905
+      median_chars: 47.0
+    document_text_stats:
+      count: 9997
+      min_chars: 17
+      max_chars: 477365
+      mean_chars: 5722.545863759127
+      median_chars: 3419.0
+  NanoCodeRAGProgrammingSolutions:
+    language: en
+    category: code
+    short_description: NanoCodeRAGProgrammingSolutions retrieval task.
+    description: NanoCodeRAGProgrammingSolutions is a retrieval task in NanoCodeRAG.
+      Queries must be matched to relevant corpus documents, so scores reflect how
+      well a model represents task-specific intent, document semantics, and hard negative
+      distinctions in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCodeRAG: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 11
+      max_chars: 158
+      mean_chars: 78.28
+      median_chars: 78.0
+    document_text_stats:
+      count: 984
+      min_chars: 29
+      max_chars: 1331
+      mean_chars: 189.0538617886179
+      median_chars: 148.5
+  NanoCodeRAGStackoverflowPosts:
+    language: en
+    category: code
+    short_description: NanoCodeRAGStackoverflowPosts retrieval task.
+    description: NanoCodeRAGStackoverflowPosts is a retrieval task in NanoCodeRAG.
+      Queries must be matched to relevant corpus documents, so scores reflect how
+      well a model represents task-specific intent, document semantics, and hard negative
+      distinctions in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCodeRAG: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 25
+      max_chars: 601
+      mean_chars: 209.835
+      median_chars: 185.5
+    document_text_stats:
+      count: 10000
+      min_chars: 29
+      max_chars: 161615
+      mean_chars: 4735.0462
+      median_chars: 2864.5

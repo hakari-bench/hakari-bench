@@ -6,11 +6,278 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-  - NanoR2MEDBiology
-  - NanoR2MEDBioinformatics
-  - NanoR2MEDMedicalSciences
-  - NanoR2MEDMedXpertQAExam
-  - NanoR2MEDMedQADiag
-  - NanoR2MEDPMCTreatment
-  - NanoR2MEDPMCClinical
-  - NanoR2MEDIIYiClinical
+- NanoR2MEDBiology
+- NanoR2MEDBioinformatics
+- NanoR2MEDMedicalSciences
+- NanoR2MEDMedXpertQAExam
+- NanoR2MEDMedQADiag
+- NanoR2MEDPMCTreatment
+- NanoR2MEDPMCClinical
+- NanoR2MEDIIYiClinical
+metadata:
+  language: en
+  category: natural_language
+  short_description: NanoR2MED retrieval benchmark group.
+  description: NanoR2MED is a Nano-style information retrieval benchmark group. It
+    evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - nanoirbench2026
+  references:
+  - title: 'NanoR2MED: Nano information retrieval benchmark subset'
+    authors:
+    - Nano IR Benchmark contributors
+    year: 2026
+    url: https://huggingface.co/hakari-bench
+  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+task_metadata:
+  NanoR2MEDBiology:
+    language: en
+    category: natural_language
+    short_description: NanoR2MEDBiology retrieval task.
+    description: NanoR2MEDBiology is a retrieval task in NanoR2MED. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoR2MED: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 103
+      min_chars: 89
+      max_chars: 2195
+      mean_chars: 523.0291262135922
+      median_chars: 440.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 31130
+      mean_chars: 474.0668
+      median_chars: 397.0
+  NanoR2MEDBioinformatics:
+    language: en
+    category: natural_language
+    short_description: NanoR2MEDBioinformatics retrieval task.
+    description: NanoR2MEDBioinformatics is a retrieval task in NanoR2MED. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoR2MED: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 77
+      min_chars: 197
+      max_chars: 4984
+      mean_chars: 890.3246753246754
+      median_chars: 727.0
+    document_text_stats:
+      count: 10000
+      min_chars: 109
+      max_chars: 13214
+      mean_chars: 666.8386
+      median_chars: 679.0
+  NanoR2MEDMedicalSciences:
+    language: en
+    category: natural_language
+    short_description: NanoR2MEDMedicalSciences retrieval task.
+    description: NanoR2MEDMedicalSciences is a retrieval task in NanoR2MED. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoR2MED: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 88
+      min_chars: 148
+      max_chars: 2535
+      mean_chars: 477.625
+      median_chars: 378.0
+    document_text_stats:
+      count: 10000
+      min_chars: 76
+      max_chars: 6564
+      mean_chars: 678.5968
+      median_chars: 679.0
+  NanoR2MEDMedXpertQAExam:
+    language: en
+    category: natural_language
+    short_description: NanoR2MEDMedXpertQAExam retrieval task.
+    description: NanoR2MEDMedXpertQAExam is a retrieval task in NanoR2MED. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoR2MED: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 97
+      min_chars: 223
+      max_chars: 2334
+      mean_chars: 928.4432989690722
+      median_chars: 879.0
+    document_text_stats:
+      count: 10000
+      min_chars: 119
+      max_chars: 1000
+      mean_chars: 723.8511
+      median_chars: 767.0
+  NanoR2MEDMedQADiag:
+    language: en
+    category: natural_language
+    short_description: NanoR2MEDMedQADiag retrieval task.
+    description: NanoR2MEDMedQADiag is a retrieval task in NanoR2MED. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoR2MED: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 118
+      min_chars: 204
+      max_chars: 1591
+      mean_chars: 706.7372881355932
+      median_chars: 630.0
+    document_text_stats:
+      count: 10000
+      min_chars: 15
+      max_chars: 999
+      mean_chars: 791.422
+      median_chars: 882.0
+  NanoR2MEDPMCTreatment:
+    language: en
+    category: natural_language
+    short_description: NanoR2MEDPMCTreatment retrieval task.
+    description: NanoR2MEDPMCTreatment is a retrieval task in NanoR2MED. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoR2MED: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 150
+      min_chars: 991
+      max_chars: 2637
+      mean_chars: 1755.8266666666666
+      median_chars: 1750.5
+    document_text_stats:
+      count: 10000
+      min_chars: 42
+      max_chars: 8758
+      mean_chars: 726.6314
+      median_chars: 608.0
+  NanoR2MEDPMCClinical:
+    language: en
+    category: natural_language
+    short_description: NanoR2MEDPMCClinical retrieval task.
+    description: NanoR2MEDPMCClinical is a retrieval task in NanoR2MED. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoR2MED: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 114
+      min_chars: 338
+      max_chars: 1361
+      mean_chars: 827.6754385964912
+      median_chars: 832.0
+    document_text_stats:
+      count: 10000
+      min_chars: 283
+      max_chars: 7217
+      mean_chars: 2103.4971
+      median_chars: 2131.0
+  NanoR2MEDIIYiClinical:
+    language: en
+    category: natural_language
+    short_description: NanoR2MEDIIYiClinical retrieval task.
+    description: NanoR2MEDIIYiClinical is a retrieval task in NanoR2MED. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoR2MED: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 129
+      min_chars: 719
+      max_chars: 7894
+      mean_chars: 2584.1007751937987
+      median_chars: 2523.0
+    document_text_stats:
+      count: 10000
+      min_chars: 262
+      max_chars: 47230
+      mean_chars: 5042.3094
+      median_chars: 4280.5

@@ -6,20 +6,566 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-  - NanoARCChallenge
-  - NanoAlphaNLI
-  - NanoHellaSwag
-  - NanoWinoGrande
-  - NanoPIQA
-  - NanoSIQA
-  - NanoQuail
-  - NanoSpartQA
-  - NanoTempReasonL1
-  - NanoTempReasonL2Pure
-  - NanoTempReasonL2Fact
-  - NanoTempReasonL2Context
-  - NanoTempReasonL3Pure
-  - NanoTempReasonL3Fact
-  - NanoTempReasonL3Context
-  - NanoRARbCode
-  - NanoRARbMath
+- NanoARCChallenge
+- NanoAlphaNLI
+- NanoHellaSwag
+- NanoWinoGrande
+- NanoPIQA
+- NanoSIQA
+- NanoQuail
+- NanoSpartQA
+- NanoTempReasonL1
+- NanoTempReasonL2Pure
+- NanoTempReasonL2Fact
+- NanoTempReasonL2Context
+- NanoTempReasonL3Pure
+- NanoTempReasonL3Fact
+- NanoTempReasonL3Context
+- NanoRARbCode
+- NanoRARbMath
+metadata:
+  language: en
+  category: natural_language
+  short_description: NanoRARb retrieval benchmark group.
+  description: NanoRARb is a Nano-style information retrieval benchmark group. It
+    evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - nanoirbench2026
+  references:
+  - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    authors:
+    - Nano IR Benchmark contributors
+    year: 2026
+    url: https://huggingface.co/hakari-bench
+  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+task_metadata:
+  NanoARCChallenge:
+    language: en
+    category: natural_language
+    short_description: NanoARCChallenge retrieval task.
+    description: NanoARCChallenge is a retrieval task in NanoRARb. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 27
+      max_chars: 398
+      mean_chars: 126.66
+      median_chars: 108.5
+    document_text_stats:
+      count: 9350
+      min_chars: 1
+      max_chars: 192
+      mean_chars: 30.94235294117647
+      median_chars: 30.0
+  NanoAlphaNLI:
+    language: en
+    category: natural_language
+    short_description: NanoAlphaNLI retrieval task.
+    description: NanoAlphaNLI is a retrieval task in NanoRARb. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 56
+      max_chars: 149
+      mean_chars: 103.79
+      median_chars: 102.5
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 155
+      mean_chars: 43.8436
+      median_chars: 42.0
+  NanoHellaSwag:
+    language: en
+    category: natural_language
+    short_description: NanoHellaSwag retrieval task.
+    description: NanoHellaSwag is a retrieval task in NanoRARb. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 30
+      max_chars: 231
+      mean_chars: 114.68
+      median_chars: 115.5
+    document_text_stats:
+      count: 10000
+      min_chars: 6
+      max_chars: 365
+      mean_chars: 62.1517
+      median_chars: 55.0
+  NanoWinoGrande:
+    language: en
+    category: natural_language
+    short_description: NanoWinoGrande retrieval task.
+    description: NanoWinoGrande is a retrieval task in NanoRARb. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 79
+      max_chars: 166
+      mean_chars: 111.975
+      median_chars: 110.0
+    document_text_stats:
+      count: 5095
+      min_chars: 2
+      max_chars: 31
+      mean_chars: 7.68243375858685
+      median_chars: 7.0
+  NanoPIQA:
+    language: en
+    category: natural_language
+    short_description: NanoPIQA retrieval task.
+    description: NanoPIQA is a retrieval task in NanoRARb. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 4
+      max_chars: 106
+      mean_chars: 37.89
+      median_chars: 37.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 1163
+      mean_chars: 98.01
+      median_chars: 65.0
+  NanoSIQA:
+    language: en
+    category: natural_language
+    short_description: NanoSIQA retrieval task.
+    description: NanoSIQA is a retrieval task in NanoRARb. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 70
+      max_chars: 220
+      mean_chars: 126.94
+      median_chars: 124.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 152
+      mean_chars: 21.509
+      median_chars: 19.0
+  NanoQuail:
+    language: en
+    category: natural_language
+    short_description: NanoQuail retrieval task.
+    description: NanoQuail is a retrieval task in NanoRARb. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 1546
+      max_chars: 2085
+      mean_chars: 1813.755
+      median_chars: 1823.5
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 160
+      mean_chars: 25.0175
+      median_chars: 22.0
+  NanoSpartQA:
+    language: en
+    category: natural_language
+    short_description: NanoSpartQA retrieval task.
+    description: NanoSpartQA is a retrieval task in NanoRARb. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 429
+      max_chars: 1306
+      mean_chars: 654.85
+      median_chars: 621.0
+    document_text_stats:
+      count: 1592
+      min_chars: 6
+      max_chars: 90
+      mean_chars: 49.79711055276382
+      median_chars: 55.0
+  NanoTempReasonL1:
+    language: en
+    category: natural_language
+    short_description: NanoTempReasonL1 retrieval task.
+    description: NanoTempReasonL1 is a retrieval task in NanoRARb. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 39
+      max_chars: 53
+      mean_chars: 49.875
+      median_chars: 51.0
+    document_text_stats:
+      count: 10000
+      min_chars: 8
+      max_chars: 9
+      mean_chars: 8.9975
+      median_chars: 9.0
+  NanoTempReasonL2Pure:
+    language: en
+    category: natural_language
+    short_description: NanoTempReasonL2Pure retrieval task.
+    description: NanoTempReasonL2Pure is a retrieval task in NanoRARb. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 40
+      max_chars: 71
+      mean_chars: 52.955
+      median_chars: 53.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.9135
+      median_chars: 17.0
+  NanoTempReasonL2Fact:
+    language: en
+    category: natural_language
+    short_description: NanoTempReasonL2Fact retrieval task.
+    description: NanoTempReasonL2Fact is a retrieval task in NanoRARb. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 324
+      max_chars: 4822
+      mean_chars: 1744.39
+      median_chars: 672.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.9135
+      median_chars: 17.0
+  NanoTempReasonL2Context:
+    language: en
+    category: natural_language
+    short_description: NanoTempReasonL2Context retrieval task.
+    description: NanoTempReasonL2Context is a retrieval task in NanoRARb. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 737
+      max_chars: 75421
+      mean_chars: 28755.18
+      median_chars: 6562.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.9135
+      median_chars: 17.0
+  NanoTempReasonL3Pure:
+    language: en
+    category: natural_language
+    short_description: NanoTempReasonL3Pure retrieval task.
+    description: NanoTempReasonL3Pure is a retrieval task in NanoRARb. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 43
+      max_chars: 115
+      mean_chars: 65.13
+      median_chars: 62.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.8842
+      median_chars: 17.0
+  NanoTempReasonL3Fact:
+    language: en
+    category: natural_language
+    short_description: NanoTempReasonL3Fact retrieval task.
+    description: NanoTempReasonL3Fact is a retrieval task in NanoRARb. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 320
+      max_chars: 4791
+      mean_chars: 1981.07
+      median_chars: 836.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.8842
+      median_chars: 17.0
+  NanoTempReasonL3Context:
+    language: en
+    category: natural_language
+    short_description: NanoTempReasonL3Context retrieval task.
+    description: NanoTempReasonL3Context is a retrieval task in NanoRARb. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 733
+      max_chars: 75390
+      mean_chars: 31804.13
+      median_chars: 7032.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.8842
+      median_chars: 17.0
+  NanoRARbCode:
+    language: en
+    category: code
+    short_description: NanoRARbCode retrieval task.
+    description: NanoRARbCode is a retrieval task in NanoRARb. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 161
+      max_chars: 1409
+      mean_chars: 470.08
+      median_chars: 430.5
+    document_text_stats:
+      count: 10000
+      min_chars: 11
+      max_chars: 2151
+      mean_chars: 255.998
+      median_chars: 244.0
+  NanoRARbMath:
+    language: en
+    category: natural_language
+    short_description: NanoRARbMath retrieval task.
+    description: NanoRARbMath is a retrieval task in NanoRARb. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 29
+      max_chars: 795
+      mean_chars: 201.325
+      median_chars: 166.5
+    document_text_stats:
+      count: 10000
+      min_chars: 26
+      max_chars: 5313
+      mean_chars: 481.3339
+      median_chars: 386.5

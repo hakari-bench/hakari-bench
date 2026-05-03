@@ -37,6 +37,10 @@ NANOBEIR_SPLIT_MAPPING: dict[str, str] = {
     "touche2020": "NanoTouche2020",
 }
 
+VALID_METADATA_CATEGORIES = {"natural_language", "code"}
+REQUIRED_METADATA_FIELDS = {"language", "category", "short_description", "description"}
+TEXT_STATS_FIELDS = {"count", "min_chars", "max_chars", "mean_chars", "median_chars"}
+
 
 @dataclass(frozen=True)
 class NanoDatasetSpec:
@@ -49,6 +53,8 @@ class NanoDatasetSpec:
     benchmark_kind: str = "nano"
     splits: list[str] | None = None
     split_mapping: dict[str, str] | None = None
+    metadata: dict[str, Any] | None = None
+    task_metadata: dict[str, dict[str, Any]] | None = None
 
     @property
     def effective_split_mapping(self) -> dict[str, str] | None:
@@ -58,11 +64,28 @@ class NanoDatasetSpec:
             return dict(NANOBEIR_SPLIT_MAPPING)
         return None
 
+    def metadata_for_task(self, *, split_name: str, task_name: str) -> dict[str, Any]:
+        metadata = dict(self.metadata or {})
+        task_metadata = self.task_metadata or {}
+        selected = task_metadata.get(task_name) or task_metadata.get(split_name) or {}
+        metadata.update(selected)
+        return metadata
+
+    def validate_metadata(self) -> list[str]:
+        errors = _validate_metadata_mapping(self.metadata or {}, context=f"{self.name} metadata")
+        for task_name, metadata in sorted((self.task_metadata or {}).items()):
+            errors.extend(_validate_metadata_mapping(metadata, context=f"{self.name}/{task_name} metadata"))
+        return errors
+
 
 @dataclass(frozen=True)
 class DatasetCollectionSpec:
     name: str
     datasets: list[str]
+    metadata: dict[str, Any] | None = None
+
+    def validate_metadata(self) -> list[str]:
+        return _validate_metadata_mapping(self.metadata or {}, context=f"{self.name} collection metadata")
 
 
 @dataclass(frozen=True)
@@ -83,6 +106,10 @@ class EvalTask:
     def evaluator_name(self) -> str:
         return f"{self.dataset.name}_{self.task_name}"
 
+    @property
+    def metadata(self) -> dict[str, Any]:
+        return self.dataset.metadata_for_task(split_name=self.split_name, task_name=self.task_name)
+
 
 def _normalize_key(value: str) -> str:
     return value.strip().lower()
@@ -97,6 +124,29 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise ValueError(f"YAML file must contain a mapping: {path}")
     return data
+
+
+def _optional_metadata_mapping(data: dict[str, Any], key: str, *, source: str) -> dict[str, Any] | None:
+    value = data.get(key)
+    if value is None:
+        return None
+    if not isinstance(value, dict):
+        raise ValueError(f"{source} has invalid {key}; expected mapping.")
+    return cast(dict[str, Any], value)
+
+
+def _task_metadata_from_mapping(data: dict[str, Any], *, source: str) -> dict[str, dict[str, Any]] | None:
+    value = data.get("task_metadata")
+    if value is None:
+        return None
+    if not isinstance(value, dict):
+        raise ValueError(f"{source} has invalid task_metadata; expected mapping.")
+    task_metadata: dict[str, dict[str, Any]] = {}
+    for task_name, metadata in value.items():
+        if not isinstance(metadata, dict):
+            raise ValueError(f"{source} has invalid task_metadata.{task_name}; expected mapping.")
+        task_metadata[str(task_name)] = cast(dict[str, Any], metadata)
+    return task_metadata
 
 
 def _dataset_from_mapping(data: dict[str, Any], *, source: str) -> NanoDatasetSpec:
@@ -123,6 +173,8 @@ def _dataset_from_mapping(data: dict[str, Any], *, source: str) -> NanoDatasetSp
         benchmark_kind=str(data.get("benchmark_kind", "nano")),
         splits=[str(split) for split in splits] if splits is not None else None,
         split_mapping={str(key): str(value) for key, value in split_mapping.items()} if split_mapping else None,
+        metadata=_optional_metadata_mapping(data, "metadata", source=source),
+        task_metadata=_task_metadata_from_mapping(data, source=source),
     )
 
 
@@ -144,7 +196,11 @@ def _collection_from_mapping(data: dict[str, Any], *, registry: DatasetRegistry,
             dataset_names.append(dataset.name)
             continue
         raise ValueError(f"Unsupported dataset entry in {source}: {raw!r}")
-    return DatasetCollectionSpec(name=str(data["name"]), datasets=dataset_names)
+    return DatasetCollectionSpec(
+        name=str(data["name"]),
+        datasets=dataset_names,
+        metadata=_optional_metadata_mapping(data, "metadata", source=source),
+    )
 
 
 class DatasetRegistry:
@@ -211,6 +267,73 @@ def infer_dataset_spec(dataset_id: str) -> NanoDatasetSpec:
     name = _repo_name(dataset_id)
     benchmark_kind = "nanobeir" if name.lower().startswith("nanobeir-") else "nano"
     return NanoDatasetSpec(name=name, dataset_id=dataset_id, benchmark_kind=benchmark_kind)
+
+
+def _validate_metadata_mapping(metadata: dict[str, Any], *, context: str) -> list[str]:
+    errors: list[str] = []
+    missing = sorted(REQUIRED_METADATA_FIELDS - set(metadata))
+    if missing:
+        errors.append(f"{context} is missing required fields: {missing}.")
+
+    language = metadata.get("language")
+    if isinstance(language, str):
+        if language != "multilingual" and len(language) != 2:
+            errors.append(f"{context} has invalid language '{language}'.")
+    elif language is not None or "language" in metadata:
+        errors.append(f"{context} has invalid language {language!r}.")
+
+    category = metadata.get("category")
+    if isinstance(category, str):
+        if category not in VALID_METADATA_CATEGORIES:
+            errors.append(f"{context} has invalid category '{category}'.")
+    elif category is not None or "category" in metadata:
+        errors.append(f"{context} has invalid category {category!r}.")
+
+    short_description = metadata.get("short_description")
+    if isinstance(short_description, str):
+        if len(short_description) > 140:
+            errors.append(f"{context} short_description exceeds 140 characters.")
+    elif short_description is not None or "short_description" in metadata:
+        errors.append(f"{context} has invalid short_description {short_description!r}.")
+
+    description = metadata.get("description")
+    if not isinstance(description, str) and (description is not None or "description" in metadata):
+        errors.append(f"{context} has invalid description {description!r}.")
+
+    for stats_key in ("query_text_stats", "document_text_stats"):
+        stats = metadata.get(stats_key)
+        if stats is None:
+            continue
+        if not isinstance(stats, dict):
+            errors.append(f"{context} has invalid {stats_key}; expected mapping.")
+            continue
+        missing_stats = sorted(TEXT_STATS_FIELDS - set(stats))
+        if missing_stats:
+            errors.append(f"{context} {stats_key} is missing fields: {missing_stats}.")
+        for key in TEXT_STATS_FIELDS & set(stats):
+            if not isinstance(stats[key], int | float):
+                errors.append(f"{context} {stats_key}.{key} must be numeric.")
+    return errors
+
+
+def validate_builtin_metadata() -> list[str]:
+    registry = DatasetRegistry.load_builtin()
+    errors: list[str] = []
+    datasets = sorted({id(dataset): dataset for dataset in registry._datasets_by_key.values()}.values(), key=lambda item: item.name)
+    collections = sorted(
+        {id(collection): collection for collection in registry._collections_by_key.values()}.values(),
+        key=lambda item: item.name,
+    )
+    for dataset in datasets:
+        errors.extend(dataset.validate_metadata())
+        task_metadata = dataset.task_metadata or {}
+        for split_name in dataset.splits or list((dataset.effective_split_mapping or {}).values()):
+            task_name = _task_name_for_split(dataset, split_name)
+            if task_name not in task_metadata and split_name not in task_metadata:
+                errors.append(f"{dataset.name}/{task_name} metadata is missing.")
+    for collection in collections:
+        errors.extend(collection.validate_metadata())
+    return errors
 
 
 def resolve_dataset_splits(spec: NanoDatasetSpec) -> list[str]:

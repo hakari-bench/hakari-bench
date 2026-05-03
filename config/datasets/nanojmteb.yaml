@@ -6,14 +6,458 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-  - NanoJaCWIR
-  - NanoJaGovFaqs
-  - NanoJaqket
-  - NanoMIRACL
-  - NanoMintaka
-  - NanoMrTidy
-  - NanoMultiLongDoc
-  - NanoNLPJournalAbsArticle
-  - NanoNLPJournalAbsIntro
-  - NanoNLPJournalTitleAbs
-  - NanoNLPJournalTitleIntro
+- NanoJaCWIR
+- NanoJaGovFaqs
+- NanoJaqket
+- NanoMIRACL
+- NanoMintaka
+- NanoMrTidy
+- NanoMultiLongDoc
+- NanoNLPJournalAbsArticle
+- NanoNLPJournalAbsIntro
+- NanoNLPJournalTitleAbs
+- NanoNLPJournalTitleIntro
+metadata:
+  language: ja
+  category: natural_language
+  short_description: NanoJMTEB retrieval benchmark group.
+  description: NanoJMTEB is a Nano-style information retrieval benchmark group. It
+    evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - li2025jmteb
+  references:
+  - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its
+      Lightweight Version'
+    authors:
+    - Shengzhe Li
+    - Masaya Ohagi
+    - Ryokan Ri
+    - Akihiko Fukuchi
+    - Tomohide Shibata
+    - Daisuke Kawahara
+    year: 2025
+    url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+  bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+    \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+    \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+    \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+task_metadata:
+  NanoJaCWIR:
+    language: ja
+    category: natural_language
+    short_description: NanoJaCWIR retrieval task.
+    description: NanoJaCWIR is a retrieval task in NanoJMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 14
+      max_chars: 107
+      mean_chars: 33.795
+      median_chars: 31.5
+    document_text_stats:
+      count: 10000
+      min_chars: 142
+      max_chars: 252
+      mean_chars: 187.0093
+      median_chars: 185.0
+  NanoJaGovFaqs:
+    language: ja
+    category: natural_language
+    short_description: NanoJaGovFaqs retrieval task.
+    description: NanoJaGovFaqs is a retrieval task in NanoJMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 11
+      max_chars: 433
+      mean_chars: 60.155
+      median_chars: 44.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 2934
+      mean_chars: 193.7102
+      median_chars: 137.0
+  NanoJaqket:
+    language: ja
+    category: natural_language
+    short_description: NanoJaqket retrieval task.
+    description: NanoJaqket is a retrieval task in NanoJMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 27
+      max_chars: 98
+      mean_chars: 52.985
+      median_chars: 52.0
+    document_text_stats:
+      count: 10000
+      min_chars: 8
+      max_chars: 139335
+      mean_chars: 4381.4384
+      median_chars: 1751.0
+  NanoMIRACL:
+    language: ja
+    category: natural_language
+    short_description: NanoMIRACL retrieval task.
+    description: NanoMIRACL is a retrieval task in NanoJMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 8
+      max_chars: 43
+      mean_chars: 17.5
+      median_chars: 17.0
+    document_text_stats:
+      count: 10000
+      min_chars: 6
+      max_chars: 2016
+      mean_chars: 161.8757
+      median_chars: 131.0
+  NanoMintaka:
+    language: ja
+    category: natural_language
+    short_description: NanoMintaka retrieval task.
+    description: NanoMintaka is a retrieval task in NanoJMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 68
+      mean_chars: 35.185
+      median_chars: 34.0
+    document_text_stats:
+      count: 1592
+      min_chars: 1
+      max_chars: 71
+      mean_chars: 9.167713567839195
+      median_chars: 9.0
+  NanoMrTidy:
+    language: ja
+    category: natural_language
+    short_description: NanoMrTidy retrieval task.
+    description: NanoMrTidy is a retrieval task in NanoJMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 7
+      max_chars: 44
+      mean_chars: 18.44
+      median_chars: 17.5
+    document_text_stats:
+      count: 10000
+      min_chars: 5
+      max_chars: 5272
+      mean_chars: 183.4976
+      median_chars: 142.0
+  NanoMultiLongDoc:
+    language: ja
+    category: natural_language
+    short_description: NanoMultiLongDoc retrieval task.
+    description: NanoMultiLongDoc is a retrieval task in NanoJMTEB. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 6
+      max_chars: 416
+      mean_chars: 55.73
+      median_chars: 44.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1244
+      max_chars: 234887
+      mean_chars: 14479.4331
+      median_chars: 13069.5
+  NanoNLPJournalAbsArticle:
+    language: ja
+    category: natural_language
+    short_description: NanoNLPJournalAbsArticle retrieval task.
+    description: NanoNLPJournalAbsArticle is a retrieval task in NanoJMTEB. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 120
+      max_chars: 950
+      mean_chars: 494.52
+      median_chars: 486.0
+    document_text_stats:
+      count: 637
+      min_chars: 8537
+      max_chars: 92725
+      mean_chars: 28330.390894819466
+      median_chars: 26570.0
+  NanoNLPJournalAbsIntro:
+    language: ja
+    category: natural_language
+    short_description: NanoNLPJournalAbsIntro retrieval task.
+    description: NanoNLPJournalAbsIntro is a retrieval task in NanoJMTEB. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 120
+      max_chars: 950
+      mean_chars: 494.52
+      median_chars: 486.0
+    document_text_stats:
+      count: 637
+      min_chars: 304
+      max_chars: 9565
+      mean_chars: 2148.0376766091053
+      median_chars: 1990.0
+  NanoNLPJournalTitleAbs:
+    language: ja
+    category: natural_language
+    short_description: NanoNLPJournalTitleAbs retrieval task.
+    description: NanoNLPJournalTitleAbs is a retrieval task in NanoJMTEB. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 5
+      max_chars: 71
+      mean_chars: 27.02
+      median_chars: 26.0
+    document_text_stats:
+      count: 637
+      min_chars: 18
+      max_chars: 1290
+      mean_chars: 461.51962323390893
+      median_chars: 436.0
+  NanoNLPJournalTitleIntro:
+    language: ja
+    category: natural_language
+    short_description: NanoNLPJournalTitleIntro retrieval task.
+    description: NanoNLPJournalTitleIntro is a retrieval task in NanoJMTEB. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2025jmteb
+    references:
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
+      authors:
+      - Shengzhe Li
+      - Masaya Ohagi
+      - Ryokan Ri
+      - Akihiko Fukuchi
+      - Tomohide Shibata
+      - Daisuke Kawahara
+      year: 2025
+      url: https://ipsj.ixsq.nii.ac.jp/records/2004356
+    bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+      \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+      \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+      \ and Kawahara, Daisuke},\n  year = {2025}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 5
+      max_chars: 71
+      mean_chars: 27.02
+      median_chars: 26.0
+    document_text_stats:
+      count: 637
+      min_chars: 304
+      max_chars: 9565
+      mean_chars: 2148.0376766091053
+      median_chars: 1990.0

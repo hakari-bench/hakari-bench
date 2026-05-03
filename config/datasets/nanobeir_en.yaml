@@ -5,3 +5,537 @@ corpus_config: corpus
 queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
+metadata:
+  language: en
+  category: natural_language
+  short_description: NanoBEIR-en retrieval benchmark group.
+  description: NanoBEIR-en is a Nano-style information retrieval benchmark group.
+    It evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - thakur2021beir
+  references:
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    authors:
+    - Nandan Thakur
+    - Nils Reimers
+    - Andreas Rueckle
+    - Abhishek Srivastava
+    - Iryna Gurevych
+    year: 2021
+    url: https://arxiv.org/abs/2104.08663
+    doi: 10.48550/arXiv.2104.08663
+  bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+    \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+    \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+    \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+    }\n"
+task_metadata:
+  NanoClimateFEVER:
+    language: en
+    category: natural_language
+    short_description: NanoClimateFEVER retrieval task.
+    description: NanoClimateFEVER is a retrieval task in NanoBEIR-en. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 38
+      max_chars: 265
+      mean_chars: 128.4
+      median_chars: 124.0
+    document_text_stats:
+      count: 3408
+      min_chars: 33
+      max_chars: 6619
+      mean_chars: 1619.531690140845
+      median_chars: 1461.0
+  NanoDBPedia:
+    language: en
+    category: natural_language
+    short_description: NanoDBPedia retrieval task.
+    description: NanoDBPedia is a retrieval task in NanoBEIR-en. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 8
+      max_chars: 63
+      mean_chars: 33.1
+      median_chars: 33.5
+    document_text_stats:
+      count: 6045
+      min_chars: 1
+      max_chars: 1390
+      mean_chars: 336.30669975186106
+      median_chars: 369.0
+  NanoFEVER:
+    language: en
+    category: natural_language
+    short_description: NanoFEVER retrieval task.
+    description: NanoFEVER is a retrieval task in NanoBEIR-en. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 17
+      max_chars: 83
+      mean_chars: 45.42
+      median_chars: 43.0
+    document_text_stats:
+      count: 4996
+      min_chars: 25
+      max_chars: 8491
+      mean_chars: 1228.7119695756605
+      median_chars: 1041.0
+  NanoFiQA2018:
+    language: en
+    category: natural_language
+    short_description: NanoFiQA2018 retrieval task.
+    description: NanoFiQA2018 is a retrieval task in NanoBEIR-en. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 18
+      max_chars: 97
+      mean_chars: 58.52
+      median_chars: 55.0
+    document_text_stats:
+      count: 4571
+      min_chars: 30
+      max_chars: 10506
+      mean_chars: 904.9466199956246
+      median_chars: 655.0
+  NanoHotpotQA:
+    language: en
+    category: natural_language
+    short_description: NanoHotpotQA retrieval task.
+    description: NanoHotpotQA is a retrieval task in NanoBEIR-en. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 37
+      max_chars: 184
+      mean_chars: 88.34
+      median_chars: 82.5
+    document_text_stats:
+      count: 5090
+      min_chars: 24
+      max_chars: 2079
+      mean_chars: 349.6349705304519
+      median_chars: 299.0
+  NanoMSMARCO:
+    language: en
+    category: natural_language
+    short_description: NanoMSMARCO retrieval task.
+    description: NanoMSMARCO is a retrieval task in NanoBEIR-en. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 13
+      max_chars: 101
+      mean_chars: 32.22
+      median_chars: 29.0
+    document_text_stats:
+      count: 5043
+      min_chars: 32
+      max_chars: 990
+      mean_chars: 330.159825500694
+      median_chars: 298.0
+  NanoNFCorpus:
+    language: en
+    category: natural_language
+    short_description: NanoNFCorpus retrieval task.
+    description: NanoNFCorpus is a retrieval task in NanoBEIR-en. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 4
+      max_chars: 53
+      mean_chars: 21.04
+      median_chars: 16.5
+    document_text_stats:
+      count: 2953
+      min_chars: 90
+      max_chars: 9939
+      mean_chars: 1512.7301049779885
+      median_chars: 1532.0
+  NanoNQ:
+    language: en
+    category: natural_language
+    short_description: NanoNQ retrieval task.
+    description: NanoNQ is a retrieval task in NanoBEIR-en. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 32
+      max_chars: 83
+      mean_chars: 47.04
+      median_chars: 42.5
+    document_text_stats:
+      count: 5035
+      min_chars: 1
+      max_chars: 6138
+      mean_chars: 525.5958291956306
+      median_chars: 443.0
+  NanoQuoraRetrieval:
+    language: en
+    category: natural_language
+    short_description: NanoQuoraRetrieval retrieval task.
+    description: NanoQuoraRetrieval is a retrieval task in NanoBEIR-en. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 19
+      max_chars: 139
+      mean_chars: 47.96
+      median_chars: 43.5
+    document_text_stats:
+      count: 5046
+      min_chars: 2
+      max_chars: 332
+      mean_chars: 54.808164883075705
+      median_chars: 47.0
+  NanoSCIDOCS:
+    language: en
+    category: natural_language
+    short_description: NanoSCIDOCS retrieval task.
+    description: NanoSCIDOCS is a retrieval task in NanoBEIR-en. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 38
+      max_chars: 143
+      mean_chars: 72.78
+      median_chars: 71.5
+    document_text_stats:
+      count: 1866
+      min_chars: 28
+      max_chars: 10000
+      mean_chars: 1093.8322615219722
+      median_chars: 996.0
+  NanoArguAna:
+    language: en
+    category: natural_language
+    short_description: NanoArguAna retrieval task.
+    description: NanoArguAna is a retrieval task in NanoBEIR-en. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 504
+      max_chars: 2164
+      mean_chars: 1201.78
+      median_chars: 1170.5
+    document_text_stats:
+      count: 3635
+      min_chars: 70
+      max_chars: 6673
+      mean_chars: 1011.7914718019257
+      median_chars: 904.0
+  NanoSciFact:
+    language: en
+    category: natural_language
+    short_description: NanoSciFact retrieval task.
+    description: NanoSciFact is a retrieval task in NanoBEIR-en. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 37
+      max_chars: 200
+      mean_chars: 95.8
+      median_chars: 92.5
+    document_text_stats:
+      count: 2919
+      min_chars: 260
+      max_chars: 10000
+      mean_chars: 1431.2343268242548
+      median_chars: 1344.0
+  NanoTouche2020:
+    language: en
+    category: natural_language
+    short_description: NanoTouche2020 retrieval task.
+    description: NanoTouche2020 is a retrieval task in NanoBEIR-en. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - thakur2021beir
+    references:
+    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+        Retrieval Models'
+      authors:
+      - Nandan Thakur
+      - Nils Reimers
+      - Andreas Rueckle
+      - Abhishek Srivastava
+      - Iryna Gurevych
+      year: 2021
+      url: https://arxiv.org/abs/2104.08663
+      doi: 10.48550/arXiv.2104.08663
+    bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers\
+      \ and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n\
+      \  title = {{BEIR}: A Heterogeneous Benchmark for Zero-shot Evaluation of Information\
+      \ Retrieval Models},\n  year = {2021},\n  url = {https://openreview.net/forum?id=wCu6T5xFjeJ}\n\
+      }\n"
+    query_text_stats:
+      count: 49
+      min_chars: 16
+      max_chars: 83
+      mean_chars: 43.42857142857143
+      median_chars: 40.0
+    document_text_stats:
+      count: 5745
+      min_chars: 3
+      max_chars: 37100
+      mean_chars: 2142.56953872933
+      median_chars: 989.0

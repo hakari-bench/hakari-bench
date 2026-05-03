@@ -6,21 +6,711 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-  - NanoStackOverflowQA
-  - NanoTwitterHjerne
-  - NanoAILAStatutes
-  - NanoArguAna
-  - NanoHagrid
-  - NanoLegalBenchCorporateLobbying
-  - NanoLEMBPasskey
-  - NanoSCIDOCS
-  - NanoSpartQA
-  - NanoTempReasonL1
-  - NanoWinoGrande
-  - NanoBelebele
-  - NanoMLQA
-  - NanoStatcanDialogueDataset
-  - NanoWikipediaRetrievalMultilingual
-  - NanoCovid
-  - NanoNews21Instruction
-  - NanoMIRACLRetrievalHardNegatives
+- NanoStackOverflowQA
+- NanoTwitterHjerne
+- NanoAILAStatutes
+- NanoArguAna
+- NanoHagrid
+- NanoLegalBenchCorporateLobbying
+- NanoLEMBPasskey
+- NanoSCIDOCS
+- NanoSpartQA
+- NanoTempReasonL1
+- NanoWinoGrande
+- NanoBelebele
+- NanoMLQA
+- NanoStatcanDialogueDataset
+- NanoWikipediaRetrievalMultilingual
+- NanoCovid
+- NanoNews21Instruction
+- NanoMIRACLRetrievalHardNegatives
+metadata:
+  language: multilingual
+  category: natural_language
+  short_description: NanoMMTEB retrieval benchmark group.
+  description: NanoMMTEB is a Nano-style information retrieval benchmark group. It
+    evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - enevoldsen2025mmteb
+  references:
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    authors:
+    - Kenneth Enevoldsen
+    - Isaac Chung
+    - Imene Kerboua
+    - Marton Kardos
+    - Ashwin Mathur
+    year: 2025
+    url: https://arxiv.org/abs/2502.13595
+    doi: 10.48550/arXiv.2502.13595
+  bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual Text\
+    \ Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac and\
+    \ Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n}\n"
+task_metadata:
+  NanoStackOverflowQA:
+    language: multilingual
+    category: code
+    short_description: NanoStackOverflowQA retrieval task.
+    description: NanoStackOverflowQA is a retrieval task in NanoMMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 61
+      max_chars: 15121
+      mean_chars: 1361.805
+      median_chars: 908.5
+    document_text_stats:
+      count: 10000
+      min_chars: 29
+      max_chars: 46027
+      mean_chars: 1218.0589
+      median_chars: 730.0
+  NanoTwitterHjerne:
+    language: multilingual
+    category: natural_language
+    short_description: NanoTwitterHjerne retrieval task.
+    description: NanoTwitterHjerne is a retrieval task in NanoMMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 77
+      min_chars: 48
+      max_chars: 383
+      mean_chars: 165.75324675324674
+      median_chars: 148.0
+    document_text_stats:
+      count: 262
+      min_chars: 16
+      max_chars: 595
+      mean_chars: 128.7709923664122
+      median_chars: 119.0
+  NanoAILAStatutes:
+    language: multilingual
+    category: natural_language
+    short_description: NanoAILAStatutes retrieval task.
+    description: NanoAILAStatutes is a retrieval task in NanoMMTEB. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 1174
+      max_chars: 5936
+      mean_chars: 3038.42
+      median_chars: 3063.0
+    document_text_stats:
+      count: 82
+      min_chars: 162
+      max_chars: 26037
+      mean_chars: 1972.6341463414635
+      median_chars: 898.0
+  NanoArguAna:
+    language: multilingual
+    category: natural_language
+    short_description: NanoArguAna retrieval task.
+    description: NanoArguAna is a retrieval task in NanoMMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 358
+      max_chars: 5500
+      mean_chars: 1201.995
+      median_chars: 1007.5
+    document_text_stats:
+      count: 8626
+      min_chars: 2
+      max_chars: 6673
+      mean_chars: 1029.2971249710179
+      median_chars: 927.0
+  NanoHagrid:
+    language: multilingual
+    category: natural_language
+    short_description: NanoHagrid retrieval task.
+    description: NanoHagrid is a retrieval task in NanoMMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 122
+      mean_chars: 38.36
+      median_chars: 36.0
+    document_text_stats:
+      count: 493
+      min_chars: 27
+      max_chars: 1205
+      mean_chars: 229.56795131845843
+      median_chars: 133.0
+  NanoLegalBenchCorporateLobbying:
+    language: multilingual
+    category: natural_language
+    short_description: NanoLegalBenchCorporateLobbying retrieval task.
+    description: NanoLegalBenchCorporateLobbying is a retrieval task in NanoMMTEB.
+      Queries must be matched to relevant corpus documents, so scores reflect how
+      well a model represents task-specific intent, document semantics, and hard negative
+      distinctions in a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 41
+      max_chars: 733
+      mean_chars: 179.67
+      median_chars: 155.0
+    document_text_stats:
+      count: 319
+      min_chars: 136
+      max_chars: 11450
+      mean_chars: 1157.2131661442006
+      median_chars: 1033.0
+  NanoLEMBPasskey:
+    language: multilingual
+    category: natural_language
+    short_description: NanoLEMBPasskey retrieval task.
+    description: NanoLEMBPasskey is a retrieval task in NanoMMTEB. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 100
+      min_chars: 33
+      max_chars: 45
+      mean_chars: 37.8
+      median_chars: 38.0
+    document_text_stats:
+      count: 800
+      min_chars: 866
+      max_chars: 116395
+      mean_chars: 28956.68
+      median_chars: 10883.0
+  NanoSCIDOCS:
+    language: multilingual
+    category: natural_language
+    short_description: NanoSCIDOCS retrieval task.
+    description: NanoSCIDOCS is a retrieval task in NanoMMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 30
+      max_chars: 192
+      mean_chars: 69.79
+      median_chars: 67.0
+    document_text_stats:
+      count: 10000
+      min_chars: 19
+      max_chars: 10169
+      mean_chars: 1201.6931
+      median_chars: 1101.0
+  NanoSpartQA:
+    language: multilingual
+    category: natural_language
+    short_description: NanoSpartQA retrieval task.
+    description: NanoSpartQA is a retrieval task in NanoMMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 429
+      max_chars: 1306
+      mean_chars: 654.85
+      median_chars: 621.0
+    document_text_stats:
+      count: 1592
+      min_chars: 6
+      max_chars: 90
+      mean_chars: 49.79711055276382
+      median_chars: 55.0
+  NanoTempReasonL1:
+    language: multilingual
+    category: natural_language
+    short_description: NanoTempReasonL1 retrieval task.
+    description: NanoTempReasonL1 is a retrieval task in NanoMMTEB. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 39
+      max_chars: 53
+      mean_chars: 49.875
+      median_chars: 51.0
+    document_text_stats:
+      count: 10000
+      min_chars: 8
+      max_chars: 9
+      mean_chars: 8.9975
+      median_chars: 9.0
+  NanoWinoGrande:
+    language: multilingual
+    category: natural_language
+    short_description: NanoWinoGrande retrieval task.
+    description: NanoWinoGrande is a retrieval task in NanoMMTEB. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 79
+      max_chars: 166
+      mean_chars: 111.975
+      median_chars: 110.0
+    document_text_stats:
+      count: 5095
+      min_chars: 2
+      max_chars: 31
+      mean_chars: 7.68243375858685
+      median_chars: 7.0
+  NanoBelebele:
+    language: multilingual
+    category: natural_language
+    short_description: NanoBelebele retrieval task.
+    description: NanoBelebele is a retrieval task in NanoMMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 28
+      max_chars: 155
+      mean_chars: 81.72
+      median_chars: 82.5
+    document_text_stats:
+      count: 10000
+      min_chars: 92
+      max_chars: 1708
+      mean_chars: 471.7556
+      median_chars: 450.0
+  NanoMLQA:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMLQA retrieval task.
+    description: NanoMLQA is a retrieval task in NanoMMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 7
+      max_chars: 96
+      mean_chars: 44.06
+      median_chars: 44.0
+    document_text_stats:
+      count: 10000
+      min_chars: 51
+      max_chars: 6976
+      mean_chars: 752.8756
+      median_chars: 547.0
+  NanoStatcanDialogueDataset:
+    language: multilingual
+    category: natural_language
+    short_description: NanoStatcanDialogueDataset retrieval task.
+    description: NanoStatcanDialogueDataset is a retrieval task in NanoMMTEB. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 133
+      max_chars: 3304
+      mean_chars: 784.915
+      median_chars: 579.0
+    document_text_stats:
+      count: 10000
+      min_chars: 257
+      max_chars: 398046
+      mean_chars: 7234.3434
+      median_chars: 2209.5
+  NanoWikipediaRetrievalMultilingual:
+    language: multilingual
+    category: natural_language
+    short_description: NanoWikipediaRetrievalMultilingual retrieval task.
+    description: NanoWikipediaRetrievalMultilingual is a retrieval task in NanoMMTEB.
+      Queries must be matched to relevant corpus documents, so scores reflect how
+      well a model represents task-specific intent, document semantics, and hard negative
+      distinctions in a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 19
+      max_chars: 129
+      mean_chars: 59.16
+      median_chars: 55.0
+    document_text_stats:
+      count: 10000
+      min_chars: 100
+      max_chars: 4869
+      mean_chars: 383.4116
+      median_chars: 301.0
+  NanoCovid:
+    language: multilingual
+    category: natural_language
+    short_description: NanoCovid retrieval task.
+    description: NanoCovid is a retrieval task in NanoMMTEB. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 10
+      max_chars: 57
+      mean_chars: 25.735
+      median_chars: 24.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 15408
+      mean_chars: 409.3471
+      median_chars: 275.0
+  NanoNews21Instruction:
+    language: multilingual
+    category: natural_language
+    short_description: NanoNews21Instruction retrieval task.
+    description: NanoNews21Instruction is a retrieval task in NanoMMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 6
+      min_chars: 43
+      max_chars: 107
+      mean_chars: 67.0
+      median_chars: 65.5
+    document_text_stats:
+      count: 10000
+      min_chars: 5
+      max_chars: 3293
+      mean_chars: 2293.1444
+      median_chars: 2471.0
+  NanoMIRACLRetrievalHardNegatives:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMIRACLRetrievalHardNegatives retrieval task.
+    description: NanoMIRACLRetrievalHardNegatives is a retrieval task in NanoMMTEB.
+      Queries must be matched to relevant corpus documents, so scores reflect how
+      well a model represents task-specific intent, document semantics, and hard negative
+      distinctions in a compact Nano benchmark setting.
+    citation_keys:
+    - enevoldsen2025mmteb
+    references:
+    - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+      authors:
+      - Kenneth Enevoldsen
+      - Isaac Chung
+      - Imene Kerboua
+      - Marton Kardos
+      - Ashwin Mathur
+      year: 2025
+      url: https://arxiv.org/abs/2502.13595
+      doi: 10.48550/arXiv.2502.13595
+    bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+      \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+      \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  year = {2025}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 8
+      max_chars: 98
+      mean_chars: 37.215
+      median_chars: 35.5
+    document_text_stats:
+      count: 10000
+      min_chars: 7
+      max_chars: 48551
+      mean_chars: 497.3043
+      median_chars: 403.0

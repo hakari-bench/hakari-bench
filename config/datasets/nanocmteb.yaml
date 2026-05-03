@@ -6,11 +6,278 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-  - NanoT2Retrieval
-  - NanoMMarcoRetrieval
-  - NanoDuRetrieval
-  - NanoCovidRetrieval
-  - NanoCmedqaRetrieval
-  - NanoEcomRetrieval
-  - NanoMedicalRetrieval
-  - NanoVideoRetrieval
+- NanoT2Retrieval
+- NanoMMarcoRetrieval
+- NanoDuRetrieval
+- NanoCovidRetrieval
+- NanoCmedqaRetrieval
+- NanoEcomRetrieval
+- NanoMedicalRetrieval
+- NanoVideoRetrieval
+metadata:
+  language: zh
+  category: natural_language
+  short_description: NanoCMTEB retrieval benchmark group.
+  description: NanoCMTEB is a Nano-style information retrieval benchmark group. It
+    evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - nanoirbench2026
+  references:
+  - title: 'NanoCMTEB: Nano information retrieval benchmark subset'
+    authors:
+    - Nano IR Benchmark contributors
+    year: 2026
+    url: https://huggingface.co/hakari-bench
+  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+task_metadata:
+  NanoT2Retrieval:
+    language: zh
+    category: natural_language
+    short_description: NanoT2Retrieval retrieval task.
+    description: NanoT2Retrieval is a retrieval task in NanoCMTEB. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCMTEB: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 5
+      max_chars: 19
+      mean_chars: 10.74
+      median_chars: 10.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 41949
+      mean_chars: 913.4993
+      median_chars: 482.5
+  NanoMMarcoRetrieval:
+    language: zh
+    category: natural_language
+    short_description: NanoMMarcoRetrieval retrieval task.
+    description: NanoMMarcoRetrieval is a retrieval task in NanoCMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCMTEB: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 4
+      max_chars: 61
+      mean_chars: 10.09
+      median_chars: 9.0
+    document_text_stats:
+      count: 10000
+      min_chars: 15
+      max_chars: 541
+      mean_chars: 113.8547
+      median_chars: 101.0
+  NanoDuRetrieval:
+    language: zh
+    category: natural_language
+    short_description: NanoDuRetrieval retrieval task.
+    description: NanoDuRetrieval is a retrieval task in NanoCMTEB. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCMTEB: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 4
+      max_chars: 24
+      mean_chars: 9.125
+      median_chars: 9.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 33125
+      mean_chars: 397.3869
+      median_chars: 280.0
+  NanoCovidRetrieval:
+    language: zh
+    category: natural_language
+    short_description: NanoCovidRetrieval retrieval task.
+    description: NanoCovidRetrieval is a retrieval task in NanoCMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCMTEB: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 10
+      max_chars: 57
+      mean_chars: 25.735
+      median_chars: 24.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 15408
+      mean_chars: 409.3471
+      median_chars: 275.0
+  NanoCmedqaRetrieval:
+    language: zh
+    category: natural_language
+    short_description: NanoCmedqaRetrieval retrieval task.
+    description: NanoCmedqaRetrieval is a retrieval task in NanoCMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCMTEB: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 11
+      max_chars: 151
+      mean_chars: 51.995
+      median_chars: 44.0
+    document_text_stats:
+      count: 10000
+      min_chars: 4
+      max_chars: 4341
+      mean_chars: 157.5694
+      median_chars: 112.0
+  NanoEcomRetrieval:
+    language: zh
+    category: natural_language
+    short_description: NanoEcomRetrieval retrieval task.
+    description: NanoEcomRetrieval is a retrieval task in NanoCMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCMTEB: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 3
+      max_chars: 18
+      mean_chars: 6.885
+      median_chars: 6.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 98
+      mean_chars: 33.0862
+      median_chars: 31.0
+  NanoMedicalRetrieval:
+    language: zh
+    category: natural_language
+    short_description: NanoMedicalRetrieval retrieval task.
+    description: NanoMedicalRetrieval is a retrieval task in NanoCMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCMTEB: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 6
+      max_chars: 74
+      mean_chars: 18.12
+      median_chars: 16.0
+    document_text_stats:
+      count: 10000
+      min_chars: 10
+      max_chars: 512
+      mean_chars: 119.7008
+      median_chars: 101.0
+  NanoVideoRetrieval:
+    language: zh
+    category: natural_language
+    short_description: NanoVideoRetrieval retrieval task.
+    description: NanoVideoRetrieval is a retrieval task in NanoCMTEB. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoCMTEB: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 3
+      max_chars: 17
+      mean_chars: 7.07
+      median_chars: 6.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 1220
+      mean_chars: 30.5164
+      median_chars: 24.0

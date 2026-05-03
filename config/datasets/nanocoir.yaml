@@ -6,13 +6,342 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-  - NanoApps
-  - NanoCodeFeedbackMT
-  - NanoCodeFeedbackST
-  - NanoCodeTransOceanContest
-  - NanoCodeTransOceanDL
-  - NanoCosQA
-  - NanoStackOverflowQA
-  - NanoSyntheticText2SQL
-  - NanoCodeSearchNet
-  - NanoCodeSearchNetCCR
+- NanoApps
+- NanoCodeFeedbackMT
+- NanoCodeFeedbackST
+- NanoCodeTransOceanContest
+- NanoCodeTransOceanDL
+- NanoCosQA
+- NanoStackOverflowQA
+- NanoSyntheticText2SQL
+- NanoCodeSearchNet
+- NanoCodeSearchNetCCR
+metadata:
+  language: en
+  category: natural_language
+  short_description: NanoCoIR retrieval benchmark group.
+  description: NanoCoIR is a Nano-style information retrieval benchmark group. It
+    evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - li2024coir
+  references:
+  - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+    authors:
+    - CoIR authors
+    year: 2024
+    url: https://arxiv.org/abs/2407.02883
+  bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+    \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+    }\n"
+task_metadata:
+  NanoApps:
+    language: en
+    category: code
+    short_description: NanoApps retrieval task.
+    description: NanoApps is a retrieval task in NanoCoIR. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - li2024coir
+    references:
+    - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+      authors:
+      - CoIR authors
+      year: 2024
+      url: https://arxiv.org/abs/2407.02883
+    bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+      \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 411
+      max_chars: 4088
+      mean_chars: 1675.415
+      median_chars: 1589.0
+    document_text_stats:
+      count: 8754
+      min_chars: 5
+      max_chars: 289048
+      mean_chars: 573.1170893305917
+      median_chars: 331.0
+  NanoCodeFeedbackMT:
+    language: en
+    category: code
+    short_description: NanoCodeFeedbackMT retrieval task.
+    description: NanoCodeFeedbackMT is a retrieval task in NanoCoIR. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2024coir
+    references:
+    - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+      authors:
+      - CoIR authors
+      year: 2024
+      url: https://arxiv.org/abs/2407.02883
+    bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+      \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 285
+      max_chars: 21256
+      mean_chars: 4468.625
+      median_chars: 3662.5
+    document_text_stats:
+      count: 10000
+      min_chars: 5
+      max_chars: 9402
+      mean_chars: 1468.1565
+      median_chars: 1373.0
+  NanoCodeFeedbackST:
+    language: en
+    category: code
+    short_description: NanoCodeFeedbackST retrieval task.
+    description: NanoCodeFeedbackST is a retrieval task in NanoCoIR. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2024coir
+    references:
+    - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+      authors:
+      - CoIR authors
+      year: 2024
+      url: https://arxiv.org/abs/2407.02883
+    bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+      \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 57
+      max_chars: 3406
+      mean_chars: 730.515
+      median_chars: 598.5
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 11353
+      mean_chars: 1538.7276
+      median_chars: 1407.0
+  NanoCodeTransOceanContest:
+    language: en
+    category: code
+    short_description: NanoCodeTransOceanContest retrieval task.
+    description: NanoCodeTransOceanContest is a retrieval task in NanoCoIR. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2024coir
+    references:
+    - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+      authors:
+      - CoIR authors
+      year: 2024
+      url: https://arxiv.org/abs/2407.02883
+    bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+      \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 7
+      max_chars: 4142
+      mean_chars: 1009.56
+      median_chars: 755.5
+    document_text_stats:
+      count: 1008
+      min_chars: 16
+      max_chars: 10876
+      mean_chars: 1528.720238095238
+      median_chars: 1118.5
+  NanoCodeTransOceanDL:
+    language: en
+    category: code
+    short_description: NanoCodeTransOceanDL retrieval task.
+    description: NanoCodeTransOceanDL is a retrieval task in NanoCoIR. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2024coir
+    references:
+    - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+      authors:
+      - CoIR authors
+      year: 2024
+      url: https://arxiv.org/abs/2407.02883
+    bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+      \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+      }\n"
+    query_text_stats:
+      count: 50
+      min_chars: 376
+      max_chars: 8285
+      mean_chars: 2153.8
+      median_chars: 1440.0
+    document_text_stats:
+      count: 266
+      min_chars: 57
+      max_chars: 8468
+      mean_chars: 1644.9924812030076
+      median_chars: 1314.0
+  NanoCosQA:
+    language: en
+    category: natural_language
+    short_description: NanoCosQA retrieval task.
+    description: NanoCosQA is a retrieval task in NanoCoIR. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - li2024coir
+    references:
+    - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+      authors:
+      - CoIR authors
+      year: 2024
+      url: https://arxiv.org/abs/2407.02883
+    bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+      \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 73
+      mean_chars: 36.1
+      median_chars: 35.0
+    document_text_stats:
+      count: 6267
+      min_chars: 87
+      max_chars: 6395
+      mean_chars: 307.6144885910324
+      median_chars: 258.0
+  NanoStackOverflowQA:
+    language: en
+    category: code
+    short_description: NanoStackOverflowQA retrieval task.
+    description: NanoStackOverflowQA is a retrieval task in NanoCoIR. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2024coir
+    references:
+    - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+      authors:
+      - CoIR authors
+      year: 2024
+      url: https://arxiv.org/abs/2407.02883
+    bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+      \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 61
+      max_chars: 15121
+      mean_chars: 1361.805
+      median_chars: 908.5
+    document_text_stats:
+      count: 10000
+      min_chars: 29
+      max_chars: 46027
+      mean_chars: 1218.0589
+      median_chars: 730.0
+  NanoSyntheticText2SQL:
+    language: en
+    category: code
+    short_description: NanoSyntheticText2SQL retrieval task.
+    description: NanoSyntheticText2SQL is a retrieval task in NanoCoIR. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2024coir
+    references:
+    - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+      authors:
+      - CoIR authors
+      year: 2024
+      url: https://arxiv.org/abs/2407.02883
+    bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+      \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 49
+      max_chars: 188
+      mean_chars: 102.935
+      median_chars: 99.0
+    document_text_stats:
+      count: 10000
+      min_chars: 20
+      max_chars: 730
+      mean_chars: 130.6048
+      median_chars: 111.0
+  NanoCodeSearchNet:
+    language: en
+    category: code
+    short_description: NanoCodeSearchNet retrieval task.
+    description: NanoCodeSearchNet is a retrieval task in NanoCoIR. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - li2024coir
+    references:
+    - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+      authors:
+      - CoIR authors
+      year: 2024
+      url: https://arxiv.org/abs/2407.02883
+    bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+      \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 83
+      max_chars: 3345
+      mean_chars: 636.265
+      median_chars: 434.0
+    document_text_stats:
+      count: 10000
+      min_chars: 8
+      max_chars: 2610
+      mean_chars: 86.072
+      median_chars: 65.0
+  NanoCodeSearchNetCCR:
+    language: en
+    category: code
+    short_description: NanoCodeSearchNetCCR retrieval task.
+    description: NanoCodeSearchNetCCR is a retrieval task in NanoCoIR. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - li2024coir
+    references:
+    - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+      authors:
+      - CoIR authors
+      year: 2024
+      url: https://arxiv.org/abs/2407.02883
+    bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code\
+      \ Information Retrieval Models},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.02883}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 47
+      max_chars: 2240
+      mean_chars: 372.82
+      median_chars: 237.0
+    document_text_stats:
+      count: 10000
+      min_chars: 23
+      max_chars: 1849
+      mean_chars: 158.4226
+      median_chars: 99.0

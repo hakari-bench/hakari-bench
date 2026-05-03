@@ -6,9 +6,214 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-  - NanoNarrativeQA
-  - NanoSummScreenFD
-  - NanoQMSum
-  - Nano2WikiMultihopQA
-  - NanoPasskey
-  - NanoNeedle
+- NanoNarrativeQA
+- NanoSummScreenFD
+- NanoQMSum
+- Nano2WikiMultihopQA
+- NanoPasskey
+- NanoNeedle
+metadata:
+  language: en
+  category: natural_language
+  short_description: NanoLongEmbed retrieval benchmark group.
+  description: NanoLongEmbed is a Nano-style information retrieval benchmark group.
+    It evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - nanoirbench2026
+  references:
+  - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+    authors:
+    - Nano IR Benchmark contributors
+    year: 2026
+    url: https://huggingface.co/hakari-bench
+  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+task_metadata:
+  NanoNarrativeQA:
+    language: en
+    category: natural_language
+    short_description: NanoNarrativeQA retrieval task.
+    description: NanoNarrativeQA is a retrieval task in NanoLongEmbed. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 113
+      mean_chars: 49.315
+      median_chars: 47.5
+    document_text_stats:
+      count: 355
+      min_chars: 21215
+      max_chars: 1874085
+      mean_chars: 326752.9971830986
+      median_chars: 252633.0
+  NanoSummScreenFD:
+    language: en
+    category: natural_language
+    short_description: NanoSummScreenFD retrieval task.
+    description: NanoSummScreenFD is a retrieval task in NanoLongEmbed. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 159
+      max_chars: 2327
+      mean_chars: 600.665
+      median_chars: 507.0
+    document_text_stats:
+      count: 336
+      min_chars: 8768
+      max_chars: 91515
+      mean_chars: 30854.32738095238
+      median_chars: 29210.0
+  NanoQMSum:
+    language: en
+    category: natural_language
+    short_description: NanoQMSum retrieval task.
+    description: NanoQMSum is a retrieval task in NanoLongEmbed. Queries must be matched
+      to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 84
+      max_chars: 1177
+      mean_chars: 446.325
+      median_chars: 410.5
+    document_text_stats:
+      count: 197
+      min_chars: 6428
+      max_chars: 147260
+      mean_chars: 53335.817258883246
+      median_chars: 50063.0
+  Nano2WikiMultihopQA:
+    language: en
+    category: natural_language
+    short_description: Nano2WikiMultihopQA retrieval task.
+    description: Nano2WikiMultihopQA is a retrieval task in NanoLongEmbed. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 36
+      max_chars: 108
+      mean_chars: 67.515
+      median_chars: 65.5
+    document_text_stats:
+      count: 300
+      min_chars: 5796
+      max_chars: 75837
+      mean_chars: 37445.60333333333
+      median_chars: 31645.5
+  NanoPasskey:
+    language: en
+    category: natural_language
+    short_description: NanoPasskey retrieval task.
+    description: NanoPasskey is a retrieval task in NanoLongEmbed. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 100
+      min_chars: 33
+      max_chars: 45
+      mean_chars: 37.8
+      median_chars: 38.0
+    document_text_stats:
+      count: 800
+      min_chars: 866
+      max_chars: 116395
+      mean_chars: 28956.68
+      median_chars: 10883.0
+  NanoNeedle:
+    language: en
+    category: natural_language
+    short_description: NanoNeedle retrieval task.
+    description: NanoNeedle is a retrieval task in NanoLongEmbed. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 98
+      min_chars: 25
+      max_chars: 83
+      mean_chars: 58.98979591836735
+      median_chars: 60.5
+    document_text_stats:
+      count: 800
+      min_chars: 954
+      max_chars: 141849
+      mean_chars: 35246.1175
+      median_chars: 12934.5

@@ -6,23 +6,662 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-  - NanoBrightBiology
-  - NanoBrightEarthScience
-  - NanoBrightEconomics
-  - NanoBrightPsychology
-  - NanoBrightRobotics
-  - NanoBrightStackoverflow
-  - NanoBrightSustainableLiving
-  - NanoBrightPony
-  - NanoBrightLeetcode
-  - NanoBrightAops
-  - NanoBrightTheoremQATheorems
-  - NanoBrightTheoremQAQuestions
-  - NanoBrightBiologyLong
-  - NanoBrightEarthScienceLong
-  - NanoBrightEconomicsLong
-  - NanoBrightPsychologyLong
-  - NanoBrightRoboticsLong
-  - NanoBrightStackoverflowLong
-  - NanoBrightSustainableLivingLong
-  - NanoBrightPonyLong
+- NanoBrightBiology
+- NanoBrightEarthScience
+- NanoBrightEconomics
+- NanoBrightPsychology
+- NanoBrightRobotics
+- NanoBrightStackoverflow
+- NanoBrightSustainableLiving
+- NanoBrightPony
+- NanoBrightLeetcode
+- NanoBrightAops
+- NanoBrightTheoremQATheorems
+- NanoBrightTheoremQAQuestions
+- NanoBrightBiologyLong
+- NanoBrightEarthScienceLong
+- NanoBrightEconomicsLong
+- NanoBrightPsychologyLong
+- NanoBrightRoboticsLong
+- NanoBrightStackoverflowLong
+- NanoBrightSustainableLivingLong
+- NanoBrightPonyLong
+metadata:
+  language: en
+  category: natural_language
+  short_description: NanoBRIGHT retrieval benchmark group.
+  description: NanoBRIGHT is a Nano-style information retrieval benchmark group. It
+    evaluates embedding and retrieval models by ranking corpus documents for each
+    query using compact task splits designed for fast, repeatable benchmarking.
+  citation_keys:
+  - nanoirbench2026
+  references:
+  - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    authors:
+    - Nano IR Benchmark contributors
+    year: 2026
+    url: https://huggingface.co/hakari-bench
+  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+task_metadata:
+  NanoBrightBiology:
+    language: en
+    category: natural_language
+    short_description: NanoBrightBiology retrieval task.
+    description: NanoBrightBiology is a retrieval task in NanoBRIGHT. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 103
+      min_chars: 89
+      max_chars: 2195
+      mean_chars: 523.0291262135922
+      median_chars: 440.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 31130
+      mean_chars: 473.9342
+      median_chars: 397.0
+  NanoBrightEarthScience:
+    language: en
+    category: natural_language
+    short_description: NanoBrightEarthScience retrieval task.
+    description: NanoBrightEarthScience is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 116
+      min_chars: 83
+      max_chars: 1565
+      mean_chars: 476.7068965517241
+      median_chars: 400.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 233622
+      mean_chars: 716.2489
+      median_chars: 222.0
+  NanoBrightEconomics:
+    language: en
+    category: natural_language
+    short_description: NanoBrightEconomics retrieval task.
+    description: NanoBrightEconomics is a retrieval task in NanoBRIGHT. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 103
+      min_chars: 164
+      max_chars: 2223
+      mean_chars: 739.5728155339806
+      median_chars: 646.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 39672
+      mean_chars: 532.5738
+      median_chars: 167.0
+  NanoBrightPsychology:
+    language: en
+    category: natural_language
+    short_description: NanoBrightPsychology retrieval task.
+    description: NanoBrightPsychology is a retrieval task in NanoBRIGHT. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 101
+      min_chars: 166
+      max_chars: 2334
+      mean_chars: 693.1584158415842
+      median_chars: 580.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 53215
+      mean_chars: 504.4673
+      median_chars: 162.5
+  NanoBrightRobotics:
+    language: en
+    category: natural_language
+    short_description: NanoBrightRobotics retrieval task.
+    description: NanoBrightRobotics is a retrieval task in NanoBRIGHT. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 101
+      min_chars: 165
+      max_chars: 19341
+      mean_chars: 2179.4455445544554
+      median_chars: 855.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 12758
+      mean_chars: 382.3519
+      median_chars: 103.0
+  NanoBrightStackoverflow:
+    language: en
+    category: code
+    short_description: NanoBrightStackoverflow retrieval task.
+    description: NanoBrightStackoverflow is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 117
+      min_chars: 185
+      max_chars: 12432
+      mean_chars: 1292.965811965812
+      median_chars: 959.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 4000
+      mean_chars: 1120.6261
+      median_chars: 209.0
+  NanoBrightSustainableLiving:
+    language: en
+    category: natural_language
+    short_description: NanoBrightSustainableLiving retrieval task.
+    description: NanoBrightSustainableLiving is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 108
+      min_chars: 158
+      max_chars: 2843
+      mean_chars: 682.8425925925926
+      median_chars: 569.5
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 63827
+      mean_chars: 733.6211
+      median_chars: 550.0
+  NanoBrightPony:
+    language: en
+    category: natural_language
+    short_description: NanoBrightPony retrieval task.
+    description: NanoBrightPony is a retrieval task in NanoBRIGHT. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 112
+      min_chars: 182
+      max_chars: 946
+      mean_chars: 388.9732142857143
+      median_chars: 348.0
+    document_text_stats:
+      count: 6183
+      min_chars: 5
+      max_chars: 2583
+      mean_chars: 306.50072780203783
+      median_chars: 218.0
+  NanoBrightLeetcode:
+    language: en
+    category: code
+    short_description: NanoBrightLeetcode retrieval task.
+    description: NanoBrightLeetcode is a retrieval task in NanoBRIGHT. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 142
+      min_chars: 422
+      max_chars: 3964
+      mean_chars: 1459.3028169014085
+      median_chars: 1403.5
+    document_text_stats:
+      count: 10000
+      min_chars: 104
+      max_chars: 43594
+      mean_chars: 1079.6235
+      median_chars: 680.5
+  NanoBrightAops:
+    language: en
+    category: code
+    short_description: NanoBrightAops retrieval task.
+    description: NanoBrightAops is a retrieval task in NanoBRIGHT. Queries must be
+      matched to relevant corpus documents, so scores reflect how well a model represents
+      task-specific intent, document semantics, and hard negative distinctions in
+      a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 111
+      min_chars: 85
+      max_chars: 1166
+      mean_chars: 319.6126126126126
+      median_chars: 296.0
+    document_text_stats:
+      count: 10000
+      min_chars: 111
+      max_chars: 3087
+      mean_chars: 549.0736
+      median_chars: 514.0
+  NanoBrightTheoremQATheorems:
+    language: en
+    category: natural_language
+    short_description: NanoBrightTheoremQATheorems retrieval task.
+    description: NanoBrightTheoremQATheorems is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 76
+      min_chars: 159
+      max_chars: 846
+      mean_chars: 415.61842105263156
+      median_chars: 385.5
+    document_text_stats:
+      count: 10000
+      min_chars: 74
+      max_chars: 13196
+      mean_chars: 401.121
+      median_chars: 338.0
+  NanoBrightTheoremQAQuestions:
+    language: en
+    category: natural_language
+    short_description: NanoBrightTheoremQAQuestions retrieval task.
+    description: NanoBrightTheoremQAQuestions is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 194
+      min_chars: 84
+      max_chars: 1255
+      mean_chars: 425.63917525773195
+      median_chars: 415.5
+    document_text_stats:
+      count: 10000
+      min_chars: 111
+      max_chars: 2392
+      mean_chars: 543.4251
+      median_chars: 512.0
+  NanoBrightBiologyLong:
+    language: en
+    category: natural_language
+    short_description: NanoBrightBiologyLong retrieval task.
+    description: NanoBrightBiologyLong is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 103
+      min_chars: 89
+      max_chars: 2195
+      mean_chars: 523.0291262135922
+      median_chars: 440.0
+    document_text_stats:
+      count: 498
+      min_chars: 142
+      max_chars: 1324201
+      mean_chars: 36923.73092369478
+      median_chars: 19261.0
+  NanoBrightEarthScienceLong:
+    language: en
+    category: natural_language
+    short_description: NanoBrightEarthScienceLong retrieval task.
+    description: NanoBrightEarthScienceLong is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 116
+      min_chars: 83
+      max_chars: 1565
+      mean_chars: 476.7068965517241
+      median_chars: 400.0
+    document_text_stats:
+      count: 587
+      min_chars: 28
+      max_chars: 2627262
+      mean_chars: 70649.63202725723
+      median_chars: 19448.0
+  NanoBrightEconomicsLong:
+    language: en
+    category: natural_language
+    short_description: NanoBrightEconomicsLong retrieval task.
+    description: NanoBrightEconomicsLong is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 103
+      min_chars: 164
+      max_chars: 2223
+      mean_chars: 739.5728155339806
+      median_chars: 646.0
+    document_text_stats:
+      count: 515
+      min_chars: 43
+      max_chars: 429507
+      mean_chars: 38615.970873786406
+      median_chars: 23858.0
+  NanoBrightPsychologyLong:
+    language: en
+    category: natural_language
+    short_description: NanoBrightPsychologyLong retrieval task.
+    description: NanoBrightPsychologyLong is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 101
+      min_chars: 166
+      max_chars: 2334
+      mean_chars: 693.1584158415842
+      median_chars: 580.0
+    document_text_stats:
+      count: 509
+      min_chars: 23
+      max_chars: 669575
+      mean_chars: 40097.47347740668
+      median_chars: 20506.0
+  NanoBrightRoboticsLong:
+    language: en
+    category: natural_language
+    short_description: NanoBrightRoboticsLong retrieval task.
+    description: NanoBrightRoboticsLong is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 101
+      min_chars: 165
+      max_chars: 19341
+      mean_chars: 2179.4455445544554
+      median_chars: 855.0
+    document_text_stats:
+      count: 505
+      min_chars: 117
+      max_chars: 3589928
+      mean_chars: 35895.2
+      median_chars: 16155.0
+  NanoBrightStackoverflowLong:
+    language: en
+    category: code
+    short_description: NanoBrightStackoverflowLong retrieval task.
+    description: NanoBrightStackoverflowLong is a retrieval task in NanoBRIGHT. Queries
+      must be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 117
+      min_chars: 185
+      max_chars: 12432
+      mean_chars: 1292.965811965812
+      median_chars: 959.0
+    document_text_stats:
+      count: 1846
+      min_chars: 41
+      max_chars: 9182738
+      mean_chars: 77578.43770314193
+      median_chars: 4687.5
+  NanoBrightSustainableLivingLong:
+    language: en
+    category: natural_language
+    short_description: NanoBrightSustainableLivingLong retrieval task.
+    description: NanoBrightSustainableLivingLong is a retrieval task in NanoBRIGHT.
+      Queries must be matched to relevant corpus documents, so scores reflect how
+      well a model represents task-specific intent, document semantics, and hard negative
+      distinctions in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 108
+      min_chars: 158
+      max_chars: 2843
+      mean_chars: 682.8425925925926
+      median_chars: 569.5
+    document_text_stats:
+      count: 551
+      min_chars: 30
+      max_chars: 5732344
+      mean_chars: 38204.29945553539
+      median_chars: 16808.0
+  NanoBrightPonyLong:
+    language: en
+    category: natural_language
+    short_description: NanoBrightPonyLong retrieval task.
+    description: NanoBrightPonyLong is a retrieval task in NanoBRIGHT. Queries must
+      be matched to relevant corpus documents, so scores reflect how well a model
+      represents task-specific intent, document semantics, and hard negative distinctions
+      in a compact Nano benchmark setting.
+    citation_keys:
+    - nanoirbench2026
+    references:
+    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+      authors:
+      - Nano IR Benchmark contributors
+      year: 2026
+      url: https://huggingface.co/hakari-bench
+    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
+      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
+      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    query_text_stats:
+      count: 112
+      min_chars: 182
+      max_chars: 946
+      mean_chars: 388.9732142857143
+      median_chars: 348.0
+    document_text_stats:
+      count: 577
+      min_chars: 28
+      max_chars: 108885
+      mean_chars: 3553.1282495667247
+      median_chars: 1091.0
