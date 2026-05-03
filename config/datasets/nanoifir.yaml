@@ -100,6 +100,7 @@ task_metadata:
       for treatment, diagnosis, or trial-oriented needs.
     citation_keys:
     - song2025ifir
+    - roberts2015treccds
     references:
     - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
         Information Retrieval'
@@ -110,12 +111,24 @@ task_metadata:
       - Yilun Zhao
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
+    - title: Overview of the TREC 2015 Clinical Decision Support Track
+      authors:
+      - Kirk Roberts
+      - Matthew S. Simpson
+      - Ellen M. Voorhees
+      - William R. Hersh
+      year: 2015
+      url: https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
       \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      }\n\n@inproceedings{roberts2015treccds,\n  title = {Overview of the TREC 2015 Clinical\
+      \ Decision Support Track},\n  author = {Kirk Roberts and Matthew S. Simpson and Ellen\
+      \ M. Voorhees and William R. Hersh},\n  booktitle = {Proceedings of The Twenty-Fourth\
+      \ Text REtrieval Conference},\n  year = {2015},\n  url = {https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf}\n\
       }\n"
     query_text_stats:
       count: 42
@@ -189,6 +202,7 @@ task_metadata:
       expert-domain retrieval subset.
     citation_keys:
     - song2025ifir
+    - mandal2017fireirled
     references:
     - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
         Information Retrieval'
@@ -199,13 +213,27 @@ task_metadata:
       - Yilun Zhao
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
+    - title: 'Overview of the FIRE 2017 IRLeD Track: Information Retrieval from Legal
+        Documents'
+      authors:
+      - Arpan Mandal
+      - Kripabandhu Ghosh
+      - Arnab Bhattacharya
+      - Arindam Pal
+      - Saptarshi Ghosh
+      year: 2017
+      url: https://sites.google.com/view/fire2017irled
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
       \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
-      }\n"
+      }\n\n@inproceedings{mandal2017fireirled,\n  title = {Overview of the FIRE 2017 IRLeD\
+      \ Track: Information Retrieval from Legal Documents},\n  author = {Arpan Mandal and\
+      \ Kripabandhu Ghosh and Arnab Bhattacharya and Arindam Pal and Saptarshi Ghosh},\n\
+      \  booktitle = {CEUR Workshop Proceedings},\n  volume = {2036},\n  pages = {63--68},\n\
+      \  year = {2017},\n  url = {https://sites.google.com/view/fire2017irled}\n}\n"
     query_text_stats:
       count: 167
       min_chars: 1783
@@ -275,6 +303,7 @@ task_metadata:
       information for doctor-like queries.
     citation_keys:
     - song2025ifir
+    - roberts2017trecpm
     references:
     - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
         Information Retrieval'
@@ -285,13 +314,28 @@ task_metadata:
       - Yilun Zhao
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
+    - title: Overview of the TREC 2017 Precision Medicine Track
+      authors:
+      - Kirk Roberts
+      - Dina Demner-Fushman
+      - Ellen M. Voorhees
+      - William R. Hersh
+      - Steven Bedrick
+      - Alexander J. Lazar
+      - Shubham Pant
+      year: 2017
+      url: https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
       \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
-      }\n"
+      }\n\n@inproceedings{roberts2017trecpm,\n  title = {Overview of the TREC 2017 Precision\
+      \ Medicine Track},\n  author = {Kirk Roberts and Dina Demner-Fushman and Ellen M. Voorhees\
+      \ and William R. Hersh and Steven Bedrick and Alexander J. Lazar and Shubham Pant},\n\
+      \  booktitle = {Proceedings of The Twenty-Sixth Text REtrieval Conference},\n  year\
+      \ = {2017},\n  url = {https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf}\n}\n"
     query_text_stats:
       count: 59
       min_chars: 118

@@ -26,7 +26,7 @@ metadata:
     - Ali Shiraee Kasmaee
     - Mohammad Khodadad
     - Mohammad Arshi Saloot
-    - Nick Sherck
+    - Nicholas Sherck
     - Stephen Dokas
     - Hamidreza Mahyar
     - Soheila Samiee
@@ -46,7 +46,7 @@ metadata:
     url: https://arxiv.org/abs/2508.01643
     doi: 10.48550/arXiv.2508.01643
   bibtex: "@article{kasmaee2024chemteb,\n  author = {Kasmaee, Ali Shiraee and Khodadad, Mohammad\
-    \ and Saloot, Mohammad Arshi and Sherck, Nick and Dokas, Stephen and Mahyar, Hamidreza\
+    \ and Saloot, Mohammad Arshi and Sherck, Nicholas and Dokas, Stephen and Mahyar, Hamidreza\
     \ and Samiee, Soheila},\n  journal = {arXiv preprint arXiv:2412.00532},\n  title = {ChemTEB:\
     \ Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance \\& Efficiency\
     \ on a Specific Domain},\n  year = {2024},\n  url = {https://arxiv.org/abs/2412.00532}\n\
@@ -72,7 +72,7 @@ task_metadata:
       - Ali Shiraee Kasmaee
       - Mohammad Khodadad
       - Mohammad Arshi Saloot
-      - Nick Sherck
+      - Nicholas Sherck
       - Stephen Dokas
       - Hamidreza Mahyar
       - Soheila Samiee
@@ -90,7 +90,7 @@ task_metadata:
       year: 2019
       url: https://aclanthology.org/Q19-1026
     bibtex: "@article{kasmaee2024chemteb,\n  author = {Kasmaee, Ali Shiraee and Khodadad,\
-      \ Mohammad and Saloot, Mohammad Arshi and Sherck, Nick and Dokas, Stephen and Mahyar,\
+      \ Mohammad and Saloot, Mohammad Arshi and Sherck, Nicholas and Dokas, Stephen and Mahyar,\
       \ Hamidreza and Samiee, Soheila},\n  journal = {arXiv preprint arXiv:2412.00532},\n\
       \  title = {ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models\
       \ Performance \\& Efficiency on a Specific Domain},\n  year = {2024},\n  url = {https://arxiv.org/abs/2412.00532}\n\
@@ -127,7 +127,7 @@ task_metadata:
       - Ali Shiraee Kasmaee
       - Mohammad Khodadad
       - Mohammad Arshi Saloot
-      - Nick Sherck
+      - Nicholas Sherck
       - Stephen Dokas
       - Hamidreza Mahyar
       - Soheila Samiee
@@ -147,7 +147,7 @@ task_metadata:
       url: https://aclanthology.org/D18-1259
       doi: 10.18653/v1/D18-1259
     bibtex: "@article{kasmaee2024chemteb,\n  author = {Kasmaee, Ali Shiraee and Khodadad,\
-      \ Mohammad and Saloot, Mohammad Arshi and Sherck, Nick and Dokas, Stephen and Mahyar,\
+      \ Mohammad and Saloot, Mohammad Arshi and Sherck, Nicholas and Dokas, Stephen and Mahyar,\
       \ Hamidreza and Samiee, Soheila},\n  journal = {arXiv preprint arXiv:2412.00532},\n\
       \  title = {ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models\
       \ Performance \\& Efficiency on a Specific Domain},\n  year = {2024},\n  url = {https://arxiv.org/abs/2412.00532}\n\

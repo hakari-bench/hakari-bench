@@ -306,7 +306,7 @@ task_metadata:
       median_chars: 1314.0
   NanoCosQA:
     language: en
-    category: natural_language
+    category: code
     short_description: Web-query-to-code retrieval.
     description: Uses CoSQA web queries to retrieve relevant Python code, testing short natural-language
       code search with lexical and semantic gaps.
@@ -445,7 +445,7 @@ task_metadata:
       \ to generate SQL queries from natural language prompts},\n  author = {Yev Meyer and\
       \ Marjan Emadi and Dhruv Nathawani and Lipika Ramaswamy and Kendrick Boyd and Maarten\
       \ Van Segbroeck and Matthew Grossman and Piotr Mlocek and Drew Newberry},\n  year =\
-      \ {2024},\n  url = {https://huggingface.co/datasets/gretelai/synthetic-text-to-sql}\n\
+      \ {2024},\n  url = {https://huggingface.co/datasets/gretelai/synthetic_text_to_sql}\n\
       }\n"
     query_text_stats:
       count: 200

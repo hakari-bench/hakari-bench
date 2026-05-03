@@ -667,7 +667,7 @@ task_metadata:
       HealthCareMagic dataset.
     citation_keys:
     - rteb2025
-    - chatdoctor2023healthcaremagic
+    - li2023chatdoctor
     references:
     - title: 'Introducing RTEB: A New Standard for Retrieval Evaluation'
       authors:
@@ -679,18 +679,25 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
-    - title: 'ChatDoctor HealthCareMagic: Medical Question-Answer Retrieval Dataset'
+    - title: 'ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI
+        (LLaMA) Using Medical Domain Knowledge'
       authors:
-      - ChatDoctor dataset contributors
+      - Yunxiang Li
+      - Zihan Li
+      - Kai Zhang
+      - Ruilong Dan
+      - Steve Jiang
+      - You Zhang
       year: 2023
-      url: https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k
+      url: https://arxiv.org/abs/2303.14070
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@misc{chatdoctor2023healthcaremagic,\n  title = {ChatDoctor HealthCareMagic: Medical\
-      \ Question-Answer Retrieval Dataset},\n  author = {ChatDoctor dataset contributors},\n\
-      \  year = {2023},\n  url = {https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k}\n\
-      }\n"
+      }\n\n@misc{li2023chatdoctor,\n  title = {ChatDoctor: A Medical Chat Model Fine-Tuned\
+      \ on a Large Language Model Meta-AI (LLaMA) Using Medical Domain Knowledge},\n  author\
+      \ = {Yunxiang Li and Zihan Li and Kai Zhang and Ruilong Dan and Steve Jiang and You\
+      \ Zhang},\n  year = {2023},\n  eprint = {2303.14070},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2303.14070}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 12
@@ -711,7 +718,7 @@ task_metadata:
       using the English subset in NanoRTEB.
     citation_keys:
     - rteb2025
-    - curev1
+    - sheikh2025cure
     references:
     - title: 'Introducing RTEB: A New Standard for Retrieval Evaluation'
       authors:
@@ -723,17 +730,25 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
-    - title: 'CUREv1: Medical query-passage retrieval dataset'
+    - title: 'CURE: A Dataset for Clinical Understanding and Retrieval Evaluation'
       authors:
-      - CUREv1 dataset contributors
-      year: 2024
-      url: https://huggingface.co/datasets/clinia/CUREv1
+      - Nadia Athar Sheikh
+      - Daniel Buades Marcos
+      - Anne-Laure Jousse
+      - Akintunde Oladipo
+      - Olivier Rousseau
+      - Jimmy Lin
+      year: 2025
+      url: https://doi.org/10.1145/3711896.3737435
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@misc{curev1,\n  title = {CUREv1: Medical query-passage retrieval dataset},\n \
-      \ author = {CUREv1 dataset contributors},\n  year = {2024},\n  url = {https://huggingface.co/datasets/clinia/CUREv1}\n\
-      }\n"
+      }\n\n@inproceedings{sheikh2025cure,\n  author = {Nadia Athar Sheikh and Daniel Buades\
+      \ Marcos and Anne-Laure Jousse and Akintunde Oladipo and Olivier Rousseau and Jimmy\
+      \ Lin},\n  booktitle = {Proceedings of the 31st ACM SIGKDD Conference on Knowledge\
+      \ Discovery and Data Mining V.2},\n  doi = {10.1145/3711896.3737435},\n  pages = {1417--1428},\n\
+      \  title = {CURE: A Dataset for Clinical Understanding and Retrieval Evaluation},\n\
+      \  year = {2025}\n}\n"
     query_text_stats:
       count: 182
       min_chars: 21

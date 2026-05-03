@@ -66,8 +66,8 @@ task_metadata:
     language: en
     category: natural_language
     short_description: Built asset entity description reranking.
-    description: Candidate built asset entity descriptions are reranked against queries describing
-      entity types or classes from classification systems such as IFC and Uniclass.
+    description: Built asset entity descriptions used as queries are reranked against candidate
+      entity type or class descriptions from classification systems such as IFC and Uniclass.
     citation_keys:
     - shahinmoghadam2024benchmarking
     references:

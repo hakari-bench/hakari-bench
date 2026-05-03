@@ -172,10 +172,12 @@ task_metadata:
       - Shahbaz Syed
       - Benno Stein
       year: 2018
-      url: http://argumentation.bplaced.net/arguana/data
+      url: https://aclanthology.org/P18-1023/
+      doi: 10.18653/v1/P18-1023
     bibtex: "@inproceedings{wachsmuth2018retrieval,\n  author = {Wachsmuth, Henning and Syed,\
       \ Shahbaz and Stein, Benno},\n  booktitle = {ACL},\n  title = {Retrieval of the Best\
-      \ Counterargument without Prior Topic Knowledge},\n  year = {2018}\n}\n"
+      \ Counterargument without Prior Topic Knowledge},\n  year = {2018},\n  url = {https://aclanthology.org/P18-1023/},\n\
+      \  doi = {10.18653/v1/P18-1023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 358

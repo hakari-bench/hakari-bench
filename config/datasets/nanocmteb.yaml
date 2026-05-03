@@ -92,6 +92,7 @@ task_metadata:
       passages translated or adapted from MS MARCO-style resources.
     citation_keys:
     - cpack
+    - bonifacio2021mmarco
     references:
     - title: 'C-Pack: Packaged Resources To Advance General Chinese Embedding'
       authors:
@@ -103,11 +104,26 @@ task_metadata:
       - Jian-Yun Nie
       year: 2024
       url: https://arxiv.org/abs/2309.07597
+    - title: 'mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset'
+      authors:
+      - Luiz Henrique Bonifacio
+      - Vitor Jeronymo
+      - Hugo Queiroz Abonizio
+      - Israel Campiotti
+      - Marzieh Fadaee
+      - Roberto Lotufo
+      - Rodrigo Nogueira
+      year: 2021
+      url: https://arxiv.org/abs/2108.13897
     bibtex: "@misc{xiao2024cpack,\n  archiveprefix = {arXiv},\n  author = {Xiao, Shitao and\
       \ Liu, Zheng and Zhang, Peitian and Muennighoff, Niklas and Lian, Defu and Nie, Jian-Yun},\n\
       \  eprint = {2309.07597},\n  primaryclass = {cs.CL},\n  title = {C-Pack: Packaged Resources\
       \ To Advance General Chinese Embedding},\n  url = {https://arxiv.org/abs/2309.07597},\n\
-      \  year = {2024}\n}\n"
+      \  year = {2024}\n}\n\n@article{bonifacio2021mmarco,\n  author = {Luiz Henrique Bonifacio\
+      \ and Vitor Jeronymo and Hugo Queiroz Abonizio and Israel Campiotti and Marzieh Fadaee\
+      \ and Roberto Lotufo and Rodrigo Nogueira},\n  journal = {arXiv preprint arXiv:2108.13897},\n\
+      \  title = {mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset},\n\
+      \  year = {2021},\n  url = {https://arxiv.org/abs/2108.13897}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 4
@@ -211,6 +227,7 @@ task_metadata:
       relevant replies.
     citation_keys:
     - dureader
+    - zhang2018cmedqav2
     references:
     - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from
         Web Search Engine'
@@ -225,12 +242,26 @@ task_metadata:
       - Haifeng Wang
       year: 2022
       url: https://arxiv.org/abs/2203.10232
+    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer
+        Selection
+      authors:
+      - Sheng Zhang
+      - Xin Zhang
+      - Hui Wang
+      - Liang Guo
+      - Shanshan Liu
+      year: 2018
+      url: https://doi.org/10.1109/ACCESS.2018.2883637
     bibtex: "@misc{qiu2022dureaderretrieval,\n  archiveprefix = {arXiv},\n  author = {Qiu,\
       \ Yifu and Li, Hongyu and Qu, Yingqi and Chen, Ying and She, Qiaoqiao and Liu, Jing\
       \ and Wu, Hua and Wang, Haifeng},\n  eprint = {2203.10232},\n  primaryclass = {cs.CL},\n\
       \  title = {DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval\
       \ from Web Search Engine},\n  url = {https://arxiv.org/abs/2203.10232},\n  year = {2022}\n\
-      }\n"
+      }\n\n@article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and Hui Wang\
+      \ and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n  journal\
+      \ = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale Attentive Interaction\
+      \ Networks for Chinese Medical Question Answer Selection},\n  volume = {6},\n  year\
+      \ = {2018}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 11
