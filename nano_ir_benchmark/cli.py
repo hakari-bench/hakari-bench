@@ -15,7 +15,12 @@ from nano_ir_benchmark.bm25 import (
     run_or_load_bm25_task,
 )
 from nano_ir_benchmark.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
-from nano_ir_benchmark.embedding_variants import default_dense_quantized_embedding_variants, parse_embedding_variants
+from nano_ir_benchmark.embedding_variants import (
+    TORCH_RESCORE_SCORE_REPRESENTATION,
+    TORCH_SCORE_REPRESENTATION,
+    default_dense_quantized_embedding_variants,
+    parse_embedding_variants,
+)
 from nano_ir_benchmark.evaluation import LoadedIrDataset, load_ir_dataset
 from nano_ir_benchmark.models import (
     ModelLoadConfig,
@@ -51,8 +56,11 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument(
         "--score-device",
         default="auto",
-        choices=["auto", "cpu"],
-        help="Device policy for post-encode score/top-k matrix work. Use cpu to force CPU NumPy/SciPy scoring.",
+        choices=["auto", "cpu", "cuda"],
+        help=(
+            "Device policy for post-encode score/top-k matrix work. "
+            "Use cpu or cuda to force supported matrix work onto that device."
+        ),
     )
     evaluate.add_argument("--trust-remote-code", action="store_true")
     evaluate.add_argument("--model-max-seq-length", type=int, default=None)
@@ -71,11 +79,10 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Derived embedding evaluation spec. Repeat or comma-separate. "
             "Current syntax: truncate:DIM, sparse-max-active-dims:DIM, "
-            "normalize, usearch:PRECISION, usearch-rescore:PRECISION, numpy:PRECISION, "
-            "numpy-rescore:PRECISION, torch:PRECISION, torch-rescore:PRECISION, cuda:PRECISION, "
-            "or cuda-rescore:PRECISION. "
+            "normalize, int8, binary, rescore:int8, rescore:binary, int8-rescore, "
+            "or binary-rescore. "
             "Quantized variants are supported for dense models only. "
-            "Example: --embedding-variant truncate:256,truncate:128 --embedding-variant usearch:int8,binary"
+            "Example: --embedding-variant truncate:256,truncate:128 --embedding-variant int8,binary"
         ),
     )
     evaluate.add_argument(
@@ -87,7 +94,7 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="SPEC",
         help=(
             "Cross product of derived embedding specs, normalized into pipeline variants. "
-            "Example: --embedding-variant-cross truncate:256,128,64 usearch:int8,binary"
+            "Example: --embedding-variant-cross truncate:256,128,64 int8,binary"
         ),
     )
     evaluate.add_argument(
@@ -186,9 +193,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         except ValueError as exc:
             parser.error(str(exc))
         if args.model_type == "dense" and not args.no_quantize and not has_explicit_embedding_variants:
-            args.embedding_variants = default_dense_quantized_embedding_variants(
-                backend=_default_dense_quantized_backend(args.device, args.score_device)
-            )
+            args.embedding_variants = default_dense_quantized_embedding_variants()
+        _apply_score_device_to_quantized_variants(args.embedding_variants, score_device=args.score_device)
         if args.model_type == "sparse" and _embedding_variants_use_quantization(args.embedding_variants):
             parser.error(
                 "--model-type sparse does not support quantized embedding variants. "
@@ -220,27 +226,38 @@ def _embedding_variants_use_quantization(variants: list[dict[str, Any]]) -> bool
     return any(_embedding_variant_uses_quantization(variant) for variant in variants)
 
 
-def _default_dense_quantized_backend(device: str | None, score_device: str = "auto") -> str:
-    if score_device == "cpu":
-        return "usearch"
-    normalized = str(device or "").strip().lower()
-    if normalized == "cpu" or normalized.startswith("cpu:"):
-        return "usearch"
-    if normalized == "cuda" or normalized.startswith("cuda:"):
-        return "cuda"
-    return "torch"
+def _apply_score_device_to_quantized_variants(variants: list[dict[str, Any]], *, score_device: str) -> None:
+    if score_device == "auto":
+        return
+    for variant in variants:
+        for step in _embedding_variant_steps(variant):
+            if step.get("type") != "quantize":
+                continue
+            parameters = step.get("parameters")
+            if not isinstance(parameters, dict):
+                continue
+            if parameters.get("score_representation") not in {
+                TORCH_SCORE_REPRESENTATION,
+                TORCH_RESCORE_SCORE_REPRESENTATION,
+            }:
+                continue
+            parameters["search_device"] = score_device
 
 
 def _embedding_variant_uses_quantization(variant: dict[str, Any]) -> bool:
+    return any(step.get("type") == "quantize" for step in _embedding_variant_steps(variant))
+
+
+def _embedding_variant_steps(variant: dict[str, Any]) -> list[dict[str, Any]]:
     transform = variant.get("transform")
     if not isinstance(transform, dict):
-        return False
+        return []
     if transform.get("type") == "quantize":
-        return True
+        return [transform]
     steps = transform.get("steps")
     if not isinstance(steps, list):
-        return False
-    return any(isinstance(step, dict) and step.get("type") == "quantize" for step in steps)
+        return []
+    return [step for step in steps if isinstance(step, dict)]
 
 
 def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:

@@ -101,12 +101,12 @@ paths. Use `--score-device cpu` to force post-encode score/top-k matrix work
 onto CPU, which is useful for checking CUDA and CPU scoring parity.
 
 Dense evaluation automatically runs normalized `int8` and binary quantized
-search variants, plus top-100 float rescoring for both variants. CPU runs use
-exact usearch variants by default. Non-CPU runs use PyTorch tensor variants by
-default, and `--device cuda` forces the `cuda:` variants. The benchmark first
-L2-normalizes SentenceTransformers embeddings and converts them to stored codes;
-usearch does not calibrate or requantize embeddings. Use `--no-quantize` to run
-only the base dense result.
+search variants, plus top-100 float rescoring for both variants. The benchmark
+first L2-normalizes SentenceTransformers embeddings and converts them to stored
+codes, then uses exact PyTorch matrix scoring for the quantized top-k. The
+post-encode score device follows `--score-device`: `auto` keeps tensor scoring
+on the model output device, while `cpu` or `cuda` force quantized search matrix
+work to that device. Use `--no-quantize` to run only the base dense result.
 
 ```bash
 uv run nano-ir-bench evaluate \
@@ -121,40 +121,24 @@ uv run nano-ir-bench evaluate \
   --no-quantize
 ```
 
-For explicit dense runs, use `usearch:` and `usearch-rescore:`:
+For explicit dense runs, use `int8,binary` and `rescore:int8,binary`:
 
 ```bash
 uv run nano-ir-bench evaluate \
   --model example/embedding-model \
   --dataset NanoMTEB \
-  --embedding-variant usearch:int8,binary \
-  --embedding-variant usearch-rescore:int8,binary
+  --embedding-variant int8,binary \
+  --embedding-variant rescore:int8,binary
 ```
 
 Rescore retrieves the top 100 quantized candidates and reranks only those
 candidates with the already-computed source float embeddings; it does not
 re-embed documents.
 
-For backend diagnostics, `numpy:` and `numpy-rescore:` run the same normalized
-exact quantized full scan on CPU with NumPy instead of usearch. `torch:` and
-`torch-rescore:` run the same scan with PyTorch tensors and keep computation on
-the tensor device, so CUDA SentenceTransformers outputs stay on CUDA. Use
-`cuda:` and `cuda-rescore:` to force the PyTorch diagnostic backend onto CUDA.
-Torch CUDA scoring casts stored int8 and binary codes to float32 for matrix
-multiplication because regular PyTorch CUDA matmul does not expose integer
-accumulation for these tensors.
-
-```bash
-uv run nano-ir-bench evaluate \
-  --model example/embedding-model \
-  --dataset NanoMTEB \
-  --embedding-variant usearch:int8,binary \
-  --embedding-variant usearch-rescore:int8,binary \
-  --embedding-variant numpy:int8,binary \
-  --embedding-variant numpy-rescore:int8,binary \
-  --embedding-variant torch:int8,binary \
-  --embedding-variant torch-rescore:int8,binary
-```
+For CUDA/CPU scorer diagnostics, keep the same variant names and change only
+`--score-device cpu` or `--score-device cuda`. Torch CUDA scoring casts stored
+int8 and binary codes to float32 for matrix multiplication because regular
+PyTorch CUDA matmul does not expose integer accumulation for these tensors.
 
 ### Truncated Dimensions
 
@@ -178,17 +162,17 @@ uv run nano-ir-bench evaluate \
   --model example/matryoshka-embedding-model \
   --dataset NanoMTEB \
   --embedding-variant truncate:256,128,64 \
-  --embedding-variant usearch:int8,binary \
-  --embedding-variant usearch-rescore:int8,binary \
-  --embedding-variant-cross truncate:256,128,64 usearch:int8,binary \
-  --embedding-variant-cross truncate:256,128,64 usearch-rescore:int8,binary
+  --embedding-variant int8,binary \
+  --embedding-variant rescore:int8,binary \
+  --embedding-variant-cross truncate:256,128,64 int8,binary \
+  --embedding-variant-cross truncate:256,128,64 rescore:int8,binary
 ```
 
 All three groups answer different questions: standalone truncation measures the
 dimension trade-off, standalone quantized search measures the quantization
 trade-off at the original dimension, and the cross product measures the combined
 dimension-and-quantization trade-off such as `128dim x int8` or
-`64dim x binary`. The `usearch-rescore` variants record the same candidate set
+`64dim x binary`. The rescore variants record the same candidate set
 after reranking the top 100 quantized hits with source float embeddings.
 
 Each task JSON keeps the base result in `metrics` and records the base and

@@ -26,39 +26,7 @@ def _sparse_max_active_dims_step(max_active_dims: int, *, target: str = "query_a
     }
 
 
-def _usearch_step(precision: str, *, rescore: bool = False) -> dict[str, object]:
-    parameters: dict[str, object] = {
-        "precision": precision,
-        "target": "query_and_corpus",
-        "method": "query_and_corpus",
-        "score_representation": "usearch_exact_rescore" if rescore else "usearch_exact",
-    }
-    if precision == "int8":
-        parameters["calibration"] = "corpus"
-    return {
-        "type": "quantize",
-        "algorithm": "sentence_transformers_embedding_quantization",
-        "parameters": parameters,
-    }
-
-
-def _numpy_step(precision: str, *, rescore: bool = False) -> dict[str, object]:
-    parameters: dict[str, object] = {
-        "precision": precision,
-        "target": "query_and_corpus",
-        "method": "query_and_corpus",
-        "score_representation": "numpy_exact_rescore" if rescore else "numpy_exact",
-    }
-    if precision == "int8":
-        parameters["calibration"] = "corpus"
-    return {
-        "type": "quantize",
-        "algorithm": "sentence_transformers_embedding_quantization",
-        "parameters": parameters,
-    }
-
-
-def _torch_step(precision: str, *, rescore: bool = False, device: str | None = None) -> dict[str, object]:
+def _quantized_step(precision: str, *, rescore: bool = False, device: str | None = None) -> dict[str, object]:
     parameters: dict[str, object] = {
         "precision": precision,
         "target": "query_and_corpus",
@@ -76,22 +44,14 @@ def _torch_step(precision: str, *, rescore: bool = False, device: str | None = N
     }
 
 
-def _usearch_variant(name: str, precision: str, *, rescore: bool = False) -> dict[str, object]:
-    return _pipeline_variant(name, _normalize_step(), _usearch_step(precision, rescore=rescore))
-
-
-def _numpy_variant(name: str, precision: str, *, rescore: bool = False) -> dict[str, object]:
-    return _pipeline_variant(name, _normalize_step(), _numpy_step(precision, rescore=rescore))
-
-
-def _torch_variant(
+def _quantized_variant(
     name: str,
     precision: str,
     *,
     rescore: bool = False,
     device: str | None = None,
 ) -> dict[str, object]:
-    return _pipeline_variant(name, _normalize_step(), _torch_step(precision, rescore=rescore, device=device))
+    return _pipeline_variant(name, _normalize_step(), _quantized_step(precision, rescore=rescore, device=device))
 
 
 def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
@@ -104,44 +64,56 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.dataset == ["hakari-bench/NanoBEIR-en"]
     assert args.output_dir == "output/results"
     assert args.embedding_variants == [
-        _torch_variant("torch_int8", "int8"),
-        _torch_variant("torch_binary", "binary"),
-        _torch_variant("torch_int8_rescore", "int8", rescore=True),
-        _torch_variant("torch_binary_rescore", "binary", rescore=True),
+        _quantized_variant("int8", "int8"),
+        _quantized_variant("binary", "binary"),
+        _quantized_variant("int8_rescore", "int8", rescore=True),
+        _quantized_variant("binary_rescore", "binary", rescore=True),
     ]
 
 
-def test_parse_args_defaults_to_usearch_quantized_variants_on_cpu() -> None:
+def test_parse_args_defaults_to_quantized_variants_on_cpu() -> None:
     args = parse_args(["evaluate", "--model", "hotchpotch/model", "--device", "cpu"])
 
     assert args.embedding_variants == [
-        _usearch_variant("usearch_int8", "int8"),
-        _usearch_variant("usearch_binary", "binary"),
-        _usearch_variant("usearch_int8_rescore", "int8", rescore=True),
-        _usearch_variant("usearch_binary_rescore", "binary", rescore=True),
+        _quantized_variant("int8", "int8"),
+        _quantized_variant("binary", "binary"),
+        _quantized_variant("int8_rescore", "int8", rescore=True),
+        _quantized_variant("binary_rescore", "binary", rescore=True),
     ]
 
 
-def test_parse_args_defaults_to_cuda_quantized_variants_on_cuda() -> None:
+def test_parse_args_defaults_to_quantized_variants_on_cuda() -> None:
     args = parse_args(["evaluate", "--model", "hotchpotch/model", "--device", "cuda"])
 
     assert args.embedding_variants == [
-        _torch_variant("cuda_int8", "int8", device="cuda"),
-        _torch_variant("cuda_binary", "binary", device="cuda"),
-        _torch_variant("cuda_int8_rescore", "int8", rescore=True, device="cuda"),
-        _torch_variant("cuda_binary_rescore", "binary", rescore=True, device="cuda"),
+        _quantized_variant("int8", "int8"),
+        _quantized_variant("binary", "binary"),
+        _quantized_variant("int8_rescore", "int8", rescore=True),
+        _quantized_variant("binary_rescore", "binary", rescore=True),
     ]
 
 
-def test_parse_args_score_device_cpu_uses_cpu_quantized_variants() -> None:
+def test_parse_args_score_device_cpu_forces_cpu_quantized_matrix_work() -> None:
     args = parse_args(["evaluate", "--model", "hotchpotch/model", "--device", "cuda", "--score-device", "cpu"])
 
     assert args.score_device == "cpu"
     assert args.embedding_variants == [
-        _usearch_variant("usearch_int8", "int8"),
-        _usearch_variant("usearch_binary", "binary"),
-        _usearch_variant("usearch_int8_rescore", "int8", rescore=True),
-        _usearch_variant("usearch_binary_rescore", "binary", rescore=True),
+        _quantized_variant("int8", "int8", device="cpu"),
+        _quantized_variant("binary", "binary", device="cpu"),
+        _quantized_variant("int8_rescore", "int8", rescore=True, device="cpu"),
+        _quantized_variant("binary_rescore", "binary", rescore=True, device="cpu"),
+    ]
+
+
+def test_parse_args_score_device_cuda_forces_cuda_quantized_matrix_work() -> None:
+    args = parse_args(["evaluate", "--model", "hotchpotch/model", "--device", "cpu", "--score-device", "cuda"])
+
+    assert args.score_device == "cuda"
+    assert args.embedding_variants == [
+        _quantized_variant("int8", "int8", device="cuda"),
+        _quantized_variant("binary", "binary", device="cuda"),
+        _quantized_variant("int8_rescore", "int8", rescore=True, device="cuda"),
+        _quantized_variant("binary_rescore", "binary", rescore=True, device="cuda"),
     ]
 
 
@@ -458,13 +430,15 @@ def test_parse_args_accepts_query_and_docs_sparse_max_active_dims_cross_product(
 
 def test_parse_args_rejects_quantized_embedding_variants_for_sparse_model() -> None:
     rejected_specs = [
+        "int8",
+        "binary",
+        "rescore:int8",
+        "binary-rescore",
         "quantize:int8",
         "quantize-docs:int8",
         "quantize-both:int8",
         "quantize-code:int8",
         "quantize-sample:int8:128",
-        "usearch:int8",
-        "usearch-rescore:binary",
     ]
 
     for spec in rejected_specs:
@@ -497,7 +471,7 @@ def test_parse_args_rejects_quantized_cross_embedding_variants_for_sparse_model(
                 "sparse",
                 "--embedding-variant-cross",
                 "sparse-max-active-dims:128",
-                "quantize:int8",
+                "int8",
             ]
         )
     except SystemExit as exc:
@@ -506,13 +480,21 @@ def test_parse_args_rejects_quantized_cross_embedding_variants_for_sparse_model(
         raise AssertionError("Expected sparse model to reject quantized cross embedding variants.")
 
 
-def test_parse_args_rejects_legacy_quantize_embedding_variants() -> None:
+def test_parse_args_rejects_legacy_quantize_and_backend_prefixed_embedding_variants() -> None:
     rejected_specs = [
         "quantize:int8",
         "quantize-docs:int8",
         "quantize-both:int8",
         "quantize-code:int8",
         "quantize-sample:int8:128",
+        "usearch:int8",
+        "usearch-rescore:binary",
+        "numpy:int8",
+        "numpy-rescore:binary",
+        "torch:int8",
+        "torch-rescore:binary",
+        "cuda:int8",
+        "cuda-rescore:binary",
     ]
 
     for spec in rejected_specs:
@@ -529,88 +511,46 @@ def test_parse_args_rejects_legacy_quantize_embedding_variants() -> None:
         except SystemExit as exc:
             assert exc.code == 2
         else:
-            raise AssertionError(f"Expected legacy quantize variant {spec!r} to be rejected.")
+            raise AssertionError(f"Expected legacy/backend-prefixed variant {spec!r} to be rejected.")
 
 
-def test_parse_args_accepts_usearch_embedding_variants() -> None:
+def test_parse_args_accepts_quantized_embedding_variants() -> None:
     args = parse_args(
         [
             "evaluate",
             "--model",
             "hotchpotch/model",
             "--embedding-variant",
-            "usearch:int8,binary",
+            "int8,binary",
             "--embedding-variant",
-            "usearch-rescore:int8,binary",
+            "rescore:int8,binary",
         ]
     )
 
     assert args.embedding_variants == [
-        _usearch_variant("usearch_int8", "int8"),
-        _usearch_variant("usearch_binary", "binary"),
-        _usearch_variant("usearch_int8_rescore", "int8", rescore=True),
-        _usearch_variant("usearch_binary_rescore", "binary", rescore=True),
+        _quantized_variant("int8", "int8"),
+        _quantized_variant("binary", "binary"),
+        _quantized_variant("int8_rescore", "int8", rescore=True),
+        _quantized_variant("binary_rescore", "binary", rescore=True),
     ]
 
 
-def test_parse_args_accepts_numpy_embedding_variants() -> None:
+def test_parse_args_accepts_suffix_rescore_quantized_embedding_variants() -> None:
     args = parse_args(
         [
             "evaluate",
             "--model",
             "hotchpotch/model",
             "--embedding-variant",
-            "numpy:int8,binary",
+            "int8-rescore",
             "--embedding-variant",
-            "numpy-rescore:int8,binary",
+            "binary_rescore",
         ]
     )
 
     assert args.embedding_variants == [
-        _numpy_variant("numpy_int8", "int8"),
-        _numpy_variant("numpy_binary", "binary"),
-        _numpy_variant("numpy_int8_rescore", "int8", rescore=True),
-        _numpy_variant("numpy_binary_rescore", "binary", rescore=True),
-    ]
-
-
-def test_parse_args_accepts_torch_embedding_variants() -> None:
-    args = parse_args(
-        [
-            "evaluate",
-            "--model",
-            "hotchpotch/model",
-            "--embedding-variant",
-            "torch:int8,binary",
-            "--embedding-variant",
-            "torch-rescore:int8,binary",
-        ]
-    )
-
-    assert args.embedding_variants == [
-        _torch_variant("torch_int8", "int8"),
-        _torch_variant("torch_binary", "binary"),
-        _torch_variant("torch_int8_rescore", "int8", rescore=True),
-        _torch_variant("torch_binary_rescore", "binary", rescore=True),
-    ]
-
-
-def test_parse_args_accepts_cuda_embedding_variants() -> None:
-    args = parse_args(
-        [
-            "evaluate",
-            "--model",
-            "hotchpotch/model",
-            "--embedding-variant",
-            "cuda:int8",
-            "--embedding-variant",
-            "cuda-rescore:binary",
-        ]
-    )
-
-    assert args.embedding_variants == [
-        _torch_variant("cuda_int8", "int8", device="cuda"),
-        _torch_variant("cuda_binary_rescore", "binary", rescore=True, device="cuda"),
+        _quantized_variant("int8_rescore", "int8", rescore=True),
+        _quantized_variant("binary_rescore", "binary", rescore=True),
     ]
 
 
@@ -638,7 +578,7 @@ def test_parse_args_accepts_embedding_variant_cross_product() -> None:
             "hotchpotch/model",
             "--embedding-variant-cross",
             "truncate:256,128,64",
-            "usearch:int8,binary",
+            "int8,binary",
         ]
     )
 
@@ -646,18 +586,12 @@ def test_parse_args_accepts_embedding_variant_cross_product() -> None:
     # single variants. This keeps evaluation on one code path instead of adding
     # a separate truncate x quantize branch.
     assert args.embedding_variants == [
-        _pipeline_variant("truncate_dim_256_usearch_int8", _truncate_step(256), _normalize_step(), _usearch_step("int8")),
-        _pipeline_variant(
-            "truncate_dim_256_usearch_binary", _truncate_step(256), _normalize_step(), _usearch_step("binary")
-        ),
-        _pipeline_variant("truncate_dim_128_usearch_int8", _truncate_step(128), _normalize_step(), _usearch_step("int8")),
-        _pipeline_variant(
-            "truncate_dim_128_usearch_binary", _truncate_step(128), _normalize_step(), _usearch_step("binary")
-        ),
-        _pipeline_variant("truncate_dim_64_usearch_int8", _truncate_step(64), _normalize_step(), _usearch_step("int8")),
-        _pipeline_variant(
-            "truncate_dim_64_usearch_binary", _truncate_step(64), _normalize_step(), _usearch_step("binary")
-        ),
+        _pipeline_variant("truncate_dim_256_int8", _truncate_step(256), _normalize_step(), _quantized_step("int8")),
+        _pipeline_variant("truncate_dim_256_binary", _truncate_step(256), _normalize_step(), _quantized_step("binary")),
+        _pipeline_variant("truncate_dim_128_int8", _truncate_step(128), _normalize_step(), _quantized_step("int8")),
+        _pipeline_variant("truncate_dim_128_binary", _truncate_step(128), _normalize_step(), _quantized_step("binary")),
+        _pipeline_variant("truncate_dim_64_int8", _truncate_step(64), _normalize_step(), _quantized_step("int8")),
+        _pipeline_variant("truncate_dim_64_binary", _truncate_step(64), _normalize_step(), _quantized_step("binary")),
     ]
 
 
@@ -669,13 +603,13 @@ def test_parse_args_accepts_normalize_quantized_cross_product() -> None:
             "hotchpotch/model",
             "--embedding-variant-cross",
             "normalize",
-            "usearch:int8,binary",
+            "int8,binary",
         ]
     )
 
     assert args.embedding_variants == [
-        _pipeline_variant("normalize_usearch_int8", _normalize_step(), _usearch_step("int8")),
-        _pipeline_variant("normalize_usearch_binary", _normalize_step(), _usearch_step("binary")),
+        _pipeline_variant("normalize_int8", _normalize_step(), _quantized_step("int8")),
+        _pipeline_variant("normalize_binary", _normalize_step(), _quantized_step("binary")),
     ]
 
 
