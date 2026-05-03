@@ -300,6 +300,21 @@ def _validate_metadata_mapping(metadata: dict[str, Any], *, context: str) -> lis
     if not isinstance(description, str) and (description is not None or "description" in metadata):
         errors.append(f"{context} has invalid description {description!r}.")
 
+    references = metadata.get("references")
+    if references is not None:
+        if not isinstance(references, list):
+            errors.append(f"{context} has invalid references; expected list.")
+        else:
+            for index, reference in enumerate(references):
+                if not isinstance(reference, dict):
+                    errors.append(f"{context} references[{index}] must be a mapping.")
+                    continue
+                reference_mapping = cast(dict[str, Any], reference)
+                if "is_paper" not in reference_mapping:
+                    errors.append(f"{context} references[{index}] is missing is_paper.")
+                elif not isinstance(reference_mapping["is_paper"], bool):
+                    errors.append(f"{context} references[{index}].is_paper must be boolean.")
+
     for stats_key in ("query_text_stats", "document_text_stats"):
         stats = metadata.get(stats_key)
         if stats is None:

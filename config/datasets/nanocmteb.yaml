@@ -35,6 +35,7 @@ metadata:
     - Jian-Yun Nie
     year: 2024
     url: https://arxiv.org/abs/2309.07597
+    is_paper: true
   bibtex: "@misc{xiao2024cpack,\n  archiveprefix = {arXiv},\n  author = {Xiao, Shitao and\
     \ Liu, Zheng and Zhang, Peitian and Muennighoff, Niklas and Lian, Defu and Nie, Jian-Yun},\n\
     \  eprint = {2309.07597},\n  primaryclass = {cs.CL},\n  title = {C-Pack: Packaged Resources\
@@ -66,6 +67,7 @@ task_metadata:
       - Jin Ma
       year: 2023
       url: https://arxiv.org/abs/2304.03679
+      is_paper: true
     bibtex: "@misc{xie2023t2ranking,\n  archiveprefix = {arXiv},\n  author = {Xie, Xiaohui\
       \ and Dong, Qian and Wang, Bingning and Lv, Feiyang and Yao, Ting and Gan, Weinan and\
       \ Wu, Zhijing and Li, Xiangsheng and Li, Haitao and Liu, Yiqun and Ma, Jin},\n  eprint\
@@ -104,6 +106,7 @@ task_metadata:
       - Jian-Yun Nie
       year: 2024
       url: https://arxiv.org/abs/2309.07597
+      is_paper: true
     - title: 'mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset'
       authors:
       - Luiz Henrique Bonifacio
@@ -115,6 +118,7 @@ task_metadata:
       - Rodrigo Nogueira
       year: 2021
       url: https://arxiv.org/abs/2108.13897
+      is_paper: true
     bibtex: "@misc{xiao2024cpack,\n  archiveprefix = {arXiv},\n  author = {Xiao, Shitao and\
       \ Liu, Zheng and Zhang, Peitian and Muennighoff, Niklas and Lian, Defu and Nie, Jian-Yun},\n\
       \  eprint = {2309.07597},\n  primaryclass = {cs.CL},\n  title = {C-Pack: Packaged Resources\
@@ -158,6 +162,7 @@ task_metadata:
       - Haifeng Wang
       year: 2022
       url: https://arxiv.org/abs/2203.10232
+      is_paper: true
     bibtex: "@misc{qiu2022dureaderretrieval,\n  archiveprefix = {arXiv},\n  author = {Qiu,\
       \ Yifu and Li, Hongyu and Qu, Yingqi and Chen, Ying and She, Qiaoqiao and Liu, Jing\
       \ and Wu, Hua and Wang, Haifeng},\n  eprint = {2203.10232},\n  primaryclass = {cs.CL},\n\
@@ -200,6 +205,7 @@ task_metadata:
       - Ping Yang
       year: 2022
       url: https://arxiv.org/abs/2203.03367
+      is_paper: true
     bibtex: "@misc{long2022multicpr,\n  archiveprefix = {arXiv},\n  author = {Long, Dingkun\
       \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
       \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  eprint = {2203.03367},\n\
@@ -242,6 +248,7 @@ task_metadata:
       - Haifeng Wang
       year: 2022
       url: https://arxiv.org/abs/2203.10232
+      is_paper: true
     - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer
         Selection
       authors:
@@ -252,6 +259,7 @@ task_metadata:
       - Shanshan Liu
       year: 2018
       url: https://doi.org/10.1109/ACCESS.2018.2883637
+      is_paper: true
     bibtex: "@misc{qiu2022dureaderretrieval,\n  archiveprefix = {arXiv},\n  author = {Qiu,\
       \ Yifu and Li, Hongyu and Qu, Yingqi and Chen, Ying and She, Qiaoqiao and Liu, Jing\
       \ and Wu, Hua and Wang, Haifeng},\n  eprint = {2203.10232},\n  primaryclass = {cs.CL},\n\
@@ -298,6 +306,7 @@ task_metadata:
       - Ping Yang
       year: 2022
       url: https://arxiv.org/abs/2203.03367
+      is_paper: true
     bibtex: "@misc{long2022multicpr,\n  archiveprefix = {arXiv},\n  author = {Long, Dingkun\
       \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
       \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  eprint = {2203.03367},\n\
@@ -339,6 +348,7 @@ task_metadata:
       - Ping Yang
       year: 2022
       url: https://arxiv.org/abs/2203.03367
+      is_paper: true
     bibtex: "@misc{long2022multicpr,\n  archiveprefix = {arXiv},\n  author = {Long, Dingkun\
       \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
       \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  eprint = {2203.03367},\n\
@@ -380,6 +390,7 @@ task_metadata:
       - Ping Yang
       year: 2022
       url: https://arxiv.org/abs/2203.03367
+      is_paper: true
     bibtex: "@misc{long2022multicpr,\n  archiveprefix = {arXiv},\n  author = {Long, Dingkun\
       \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
       \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  eprint = {2203.03367},\n\

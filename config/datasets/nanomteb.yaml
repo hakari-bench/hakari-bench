@@ -33,6 +33,7 @@ metadata:
     - Nils Reimers
     year: 2023
     url: https://arxiv.org/abs/2210.07316
+    is_paper: true
     doi: 10.48550/arXiv.2210.07316
   bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
     \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
@@ -57,6 +58,7 @@ task_metadata:
       - Benno Stein
       year: 2018
       url: https://aclanthology.org/P18-1023/
+      is_paper: true
       doi: 10.18653/v1/P18-1023
     bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
       \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
@@ -91,6 +93,7 @@ task_metadata:
       - Timothy Baldwin
       year: 2015
       url: https://doi.org/10.1145/2838931.2838934
+      is_paper: true
       doi: 10.1145/2838931.2838934
     bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
       \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris\
@@ -126,6 +129,7 @@ task_metadata:
       - Timothy Baldwin
       year: 2015
       url: https://doi.org/10.1145/2838931.2838934
+      is_paper: true
       doi: 10.1145/2838931.2838934
     bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
       \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris\
@@ -163,6 +167,7 @@ task_metadata:
       - Nils Reimers
       year: 2023
       url: https://arxiv.org/abs/2210.07316
+      is_paper: true
       doi: 10.48550/arXiv.2210.07316
     - title: 'CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims'
       authors:
@@ -173,6 +178,7 @@ task_metadata:
       - Markus Leippold
       year: 2021
       url: https://arxiv.org/abs/2012.00614
+      is_paper: true
       doi: 10.48550/arXiv.2012.00614
     bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
       \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
@@ -213,6 +219,7 @@ task_metadata:
       - Nils Reimers
       year: 2023
       url: https://arxiv.org/abs/2210.07316
+      is_paper: true
       doi: 10.48550/arXiv.2210.07316
     - title: 'FEVER: a Large-scale Dataset for Fact Extraction and Verification'
       authors:
@@ -222,6 +229,7 @@ task_metadata:
       - Arpit Mittal
       year: 2018
       url: https://aclanthology.org/N18-1074/
+      is_paper: true
       doi: 10.18653/v1/N18-1074
     bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
       \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
@@ -264,6 +272,7 @@ task_metadata:
       - Alexandra Balahur
       year: 2018
       url: https://doi.org/10.1145/3184558.3192301
+      is_paper: true
       doi: 10.1145/3184558.3192301
     bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial Opinion\
       \ Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh, Siegfried\
@@ -302,6 +311,7 @@ task_metadata:
       - Nils Reimers
       year: 2023
       url: https://arxiv.org/abs/2210.07316
+      is_paper: true
       doi: 10.48550/arXiv.2210.07316
     - title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering'
       authors:
@@ -314,6 +324,7 @@ task_metadata:
       - Christopher D. Manning
       year: 2018
       url: https://aclanthology.org/D18-1259/
+      is_paper: true
       doi: 10.18653/v1/D18-1259
     bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
       \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
@@ -355,6 +366,7 @@ task_metadata:
       - Daniel S. Weld
       year: 2020
       url: https://aclanthology.org/2020.acl-main.207/
+      is_paper: true
       doi: 10.18653/v1/2020.acl-main.207
     bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
       \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
@@ -395,6 +407,7 @@ task_metadata:
       - Jimmy Lin
       year: 2022
       url: https://doi.org/10.5281/zenodo.6862281
+      is_paper: false
       doi: 10.5281/zenodo.6862281
     bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
       \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\

@@ -27,6 +27,7 @@ metadata:
     - Jimmy Lin
     year: 2023
     url: https://aclanthology.org/2023.tacl-1.63/
+    is_paper: true
     doi: 10.1162/tacl_a_00595
   bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
     \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -59,6 +60,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -102,6 +104,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -145,6 +148,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -188,6 +192,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -231,6 +236,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -274,6 +280,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -317,6 +324,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -360,6 +368,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -403,6 +412,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -446,6 +456,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -489,6 +500,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -532,6 +544,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -575,6 +588,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -618,6 +632,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -661,6 +676,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -704,6 +720,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -747,6 +764,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
@@ -790,6 +808,7 @@ task_metadata:
       - Jimmy Lin
       year: 2023
       url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
       \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\

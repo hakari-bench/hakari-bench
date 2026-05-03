@@ -39,6 +39,7 @@ metadata:
     - Tom Aarsen
     year: 2025
     url: https://huggingface.co/blog/rteb
+    is_paper: false
   bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval Evaluation},\n\
     \  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin and Isaac Chung and\
     \ Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -64,7 +65,9 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
-    - title: AILA 2019 Precedent & Statute Retrieval Task
+      is_paper: false
+    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal
+        Assistance'
       authors:
       - Paheli Bhattacharya
       - Kripabandhu Ghosh
@@ -73,16 +76,17 @@ task_metadata:
       - Parth Mehta
       - Arnab Bhattacharya
       - Prasenjit Majumder
-      year: 2020
-      url: https://doi.org/10.5281/zenodo.4063986
+      year: 2019
+      url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@dataset{aila2019retrieval,\n  title = {AILA 2019 Precedent and Statute Retrieval\
-      \ Task},\n  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh\
-      \ and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},\n\
-      \  publisher = {Zenodo},\n  year = {2020},\n  doi = {10.5281/zenodo.4063986},\n  url\
-      \ = {https://doi.org/10.5281/zenodo.4063986}\n}\n"
+      }\n\n@inproceedings{aila2019retrieval,\n  title = {Overview of the FIRE 2019 AILA Track:\
+      \ Artificial Intelligence for Legal Assistance},\n  author = {Paheli Bhattacharya and\
+      \ Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya\
+      \ and Prasenjit Majumder},\n  booktitle = {CEUR Workshop Proceedings},\n  volume =\
+      \ {2517},\n  year = {2019},\n  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}\n}\n"
     query_text_stats:
       count: 50
       min_chars: 1174
@@ -115,7 +119,9 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
-    - title: AILA 2019 Precedent & Statute Retrieval Task
+      is_paper: false
+    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal
+        Assistance'
       authors:
       - Paheli Bhattacharya
       - Kripabandhu Ghosh
@@ -124,16 +130,17 @@ task_metadata:
       - Parth Mehta
       - Arnab Bhattacharya
       - Prasenjit Majumder
-      year: 2020
-      url: https://doi.org/10.5281/zenodo.4063986
+      year: 2019
+      url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@dataset{aila2019retrieval,\n  title = {AILA 2019 Precedent and Statute Retrieval\
-      \ Task},\n  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh\
-      \ and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},\n\
-      \  publisher = {Zenodo},\n  year = {2020},\n  doi = {10.5281/zenodo.4063986},\n  url\
-      \ = {https://doi.org/10.5281/zenodo.4063986}\n}\n"
+      }\n\n@inproceedings{aila2019retrieval,\n  title = {Overview of the FIRE 2019 AILA Track:\
+      \ Artificial Intelligence for Legal Assistance},\n  author = {Paheli Bhattacharya and\
+      \ Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya\
+      \ and Prasenjit Majumder},\n  booktitle = {CEUR Workshop Proceedings},\n  volume =\
+      \ {2517},\n  year = {2019},\n  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}\n}\n"
     query_text_stats:
       count: 50
       min_chars: 1174
@@ -166,12 +173,14 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: Plain English Summarization of Contracts
       authors:
       - Laura Manor
       - Junyi Jessy Li
       year: 2019
       url: https://aclanthology.org/W19-2201/
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -211,6 +220,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: 'FinanceBench: A New Benchmark for Financial Question Answering'
       authors:
       - Pranab Islam
@@ -223,6 +233,7 @@ task_metadata:
       - Nino Garcia
       year: 2023
       url: https://arxiv.org/abs/2311.11944
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -262,6 +273,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and Detection
       authors:
       - Biyang Guo
@@ -274,6 +286,7 @@ task_metadata:
       - Yupeng Wu
       year: 2023
       url: https://arxiv.org/abs/2301.07597
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -313,6 +326,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: 'FinQA: A Dataset of Numerical Reasoning over Financial Data'
       authors:
       - Zhiyu Chen
@@ -328,6 +342,7 @@ task_metadata:
       - William Yang Wang
       year: 2021
       url: https://aclanthology.org/2021.emnlp-main.300/
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -369,6 +384,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: Measuring Coding Challenge Competence With APPS
       authors:
       - Dan Hendrycks
@@ -384,6 +400,7 @@ task_metadata:
       - Jacob Steinhardt
       year: 2021
       url: https://arxiv.org/abs/2105.09938
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -424,6 +441,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: 'DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation'
       authors:
       - Yuhang Lai
@@ -438,6 +456,7 @@ task_metadata:
       - Tao Yu
       year: 2022
       url: https://arxiv.org/abs/2211.11501
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -477,6 +496,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: Evaluating Large Language Models Trained on Code
       authors:
       - Mark Chen
@@ -489,6 +509,7 @@ task_metadata:
       - Yuri Burda
       year: 2021
       url: https://arxiv.org/abs/2107.03374
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -528,6 +549,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: Program Synthesis with Large Language Models
       authors:
       - Jacob Austin
@@ -542,6 +564,7 @@ task_metadata:
       - Quoc Le
       year: 2021
       url: https://arxiv.org/abs/2108.07732
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -581,6 +604,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: 'Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement
         Learning'
       authors:
@@ -589,6 +613,7 @@ task_metadata:
       - Richard Socher
       year: 2017
       url: https://arxiv.org/abs/1709.00103
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -628,6 +653,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: 'FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical
         Documents'
       authors:
@@ -639,6 +665,7 @@ task_metadata:
       - Andrew Drozdov
       year: 2025
       url: https://arxiv.org/abs/2504.13128
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -679,6 +706,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: 'ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI
         (LLaMA) Using Medical Domain Knowledge'
       authors:
@@ -690,6 +718,7 @@ task_metadata:
       - You Zhang
       year: 2023
       url: https://arxiv.org/abs/2303.14070
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
@@ -730,6 +759,7 @@ task_metadata:
       - Tom Aarsen
       year: 2025
       url: https://huggingface.co/blog/rteb
+      is_paper: false
     - title: 'CURE: A Dataset for Clinical Understanding and Retrieval Evaluation'
       authors:
       - Nadia Athar Sheikh
@@ -740,6 +770,7 @@ task_metadata:
       - Jimmy Lin
       year: 2025
       url: https://doi.org/10.1145/3711896.3737435
+      is_paper: true
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
       \ and Isaac Chung and Zoltan Fodi and Tom Aarsen},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\

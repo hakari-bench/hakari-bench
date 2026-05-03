@@ -32,6 +32,7 @@ metadata:
     - Zheng Liu
     year: 2025
     url: https://arxiv.org/abs/2505.14558
+    is_paper: true
   bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao Zhou and Zheng Liu},\n  journal\
     \ = {arXiv preprint arXiv:2505.14558},\n  title = {R2MED: A Benchmark for Reasoning-Driven\
     \ Medical Retrieval},\n  year = {2025},\n}\n"
@@ -53,6 +54,7 @@ task_metadata:
       - Zheng Liu
       year: 2025
       url: https://arxiv.org/abs/2505.14558
+      is_paper: true
     bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao Zhou and Zheng Liu},\n  journal\
       \ = {arXiv preprint arXiv:2505.14558},\n  title = {R2MED: A Benchmark for Reasoning-Driven\
       \ Medical Retrieval},\n  year = {2025},\n}\n"
@@ -85,6 +87,7 @@ task_metadata:
       - Zheng Liu
       year: 2025
       url: https://arxiv.org/abs/2505.14558
+      is_paper: true
     bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao Zhou and Zheng Liu},\n  journal\
       \ = {arXiv preprint arXiv:2505.14558},\n  title = {R2MED: A Benchmark for Reasoning-Driven\
       \ Medical Retrieval},\n  year = {2025},\n}\n"
@@ -117,6 +120,7 @@ task_metadata:
       - Zheng Liu
       year: 2025
       url: https://arxiv.org/abs/2505.14558
+      is_paper: true
     bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao Zhou and Zheng Liu},\n  journal\
       \ = {arXiv preprint arXiv:2505.14558},\n  title = {R2MED: A Benchmark for Reasoning-Driven\
       \ Medical Retrieval},\n  year = {2025},\n}\n"
@@ -149,6 +153,7 @@ task_metadata:
       - Zheng Liu
       year: 2025
       url: https://arxiv.org/abs/2505.14558
+      is_paper: true
     bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao Zhou and Zheng Liu},\n  journal\
       \ = {arXiv preprint arXiv:2505.14558},\n  title = {R2MED: A Benchmark for Reasoning-Driven\
       \ Medical Retrieval},\n  year = {2025},\n}\n"
@@ -181,6 +186,7 @@ task_metadata:
       - Zheng Liu
       year: 2025
       url: https://arxiv.org/abs/2505.14558
+      is_paper: true
     bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao Zhou and Zheng Liu},\n  journal\
       \ = {arXiv preprint arXiv:2505.14558},\n  title = {R2MED: A Benchmark for Reasoning-Driven\
       \ Medical Retrieval},\n  year = {2025},\n}\n"
@@ -213,6 +219,7 @@ task_metadata:
       - Zheng Liu
       year: 2025
       url: https://arxiv.org/abs/2505.14558
+      is_paper: true
     bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao Zhou and Zheng Liu},\n  journal\
       \ = {arXiv preprint arXiv:2505.14558},\n  title = {R2MED: A Benchmark for Reasoning-Driven\
       \ Medical Retrieval},\n  year = {2025},\n}\n"
@@ -245,6 +252,7 @@ task_metadata:
       - Zheng Liu
       year: 2025
       url: https://arxiv.org/abs/2505.14558
+      is_paper: true
     bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao Zhou and Zheng Liu},\n  journal\
       \ = {arXiv preprint arXiv:2505.14558},\n  title = {R2MED: A Benchmark for Reasoning-Driven\
       \ Medical Retrieval},\n  year = {2025},\n}\n"
@@ -277,6 +285,7 @@ task_metadata:
       - Zheng Liu
       year: 2025
       url: https://arxiv.org/abs/2505.14558
+      is_paper: true
     bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao Zhou and Zheng Liu},\n  journal\
       \ = {arXiv preprint arXiv:2505.14558},\n  title = {R2MED: A Benchmark for Reasoning-Driven\
       \ Medical Retrieval},\n  year = {2025},\n}\n"

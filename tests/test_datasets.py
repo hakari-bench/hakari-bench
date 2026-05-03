@@ -525,3 +525,38 @@ def test_metadata_validation_rejects_unknown_category() -> None:
     errors = spec.validate_metadata()
 
     assert errors == ["Toy metadata has invalid category 'other'."]
+
+
+def test_metadata_validation_requires_reference_is_paper_boolean() -> None:
+    spec = NanoDatasetSpec(
+        name="Toy",
+        dataset_id="local/toy",
+        metadata={
+            "language": "en",
+            "category": "natural_language",
+            "short_description": "Toy.",
+            "description": "Toy metadata with references.",
+            "references": [
+                {
+                    "title": "Toy Paper",
+                    "authors": ["A. Author"],
+                    "year": 2024,
+                    "url": "https://example.com/paper",
+                },
+                {
+                    "title": "Toy Blog",
+                    "authors": ["B. Author"],
+                    "year": 2024,
+                    "url": "https://example.com/blog",
+                    "is_paper": "no",
+                },
+            ],
+        },
+    )
+
+    errors = spec.validate_metadata()
+
+    assert errors == [
+        "Toy metadata references[0] is missing is_paper.",
+        "Toy metadata references[1].is_paper must be boolean.",
+    ]

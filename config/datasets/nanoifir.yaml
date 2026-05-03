@@ -32,6 +32,7 @@ metadata:
     - Yilun Zhao
     year: 2025
     url: https://aclanthology.org/2025.naacl-long.511/
+    is_paper: true
   bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for Evaluating\
     \ Instruction-Following in Expert-Domain Information Retrieval},\n  author = {Tingyu Song\
     \ and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings of the\
@@ -58,7 +59,8 @@ task_metadata:
       - Yilun Zhao
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
-    - title: AILA 2019 Precedent & Statute Retrieval Task
+      is_paper: true
+    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance'
       authors:
       - Paheli Bhattacharya
       - Kripabandhu Ghosh
@@ -67,19 +69,24 @@ task_metadata:
       - Parth Mehta
       - Arnab Bhattacharya
       - Prasenjit Majumder
-      year: 2020
-      url: https://doi.org/10.5281/zenodo.4063986
+      year: 2019
+      url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+      is_paper: true
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
       \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
-      }\n\n@dataset{aila2019retrieval,\n  title = {AILA 2019 Precedent and Statute Retrieval\
-      \ Task},\n  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh\
-      \ and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},\n\
-      \  publisher = {Zenodo},\n  year = {2020},\n  doi = {10.5281/zenodo.4063986},\n  url\
-      \ = {https://doi.org/10.5281/zenodo.4063986}\n}\n"
+      }\n\n@inproceedings{aila2019retrieval,
+  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
+  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
+  booktitle = {CEUR Workshop Proceedings},
+  volume = {2517},
+  year = {2019},
+  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
+}
+"
     query_text_stats:
       count: 40
       min_chars: 1174
@@ -111,6 +118,7 @@ task_metadata:
       - Yilun Zhao
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
+      is_paper: true
     - title: Overview of the TREC 2015 Clinical Decision Support Track
       authors:
       - Kirk Roberts
@@ -119,6 +127,7 @@ task_metadata:
       - William R. Hersh
       year: 2015
       url: https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf
+      is_paper: true
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -161,6 +170,7 @@ task_metadata:
       - Yilun Zhao
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
+      is_paper: true
     - title: 'WWW''18 Open Challenge: Financial Opinion Mining and Question Answering'
       authors:
       - Macedo Maia
@@ -171,7 +181,8 @@ task_metadata:
       - Manel Zarrouk
       - Alexandra Balahur
       year: 2018
-      url: https://sites.google.com/view/fiqa/
+      url: https://doi.org/10.1145/3184558.3192301
+      is_paper: true
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -181,7 +192,7 @@ task_metadata:
       }\n\n@inproceedings{maia2018fiqa,\n  title = {WWW'18 Open Challenge: Financial Opinion\
       \ Mining and Question Answering},\n  author = {Macedo Maia and Siegfried Handschuh and\
       \ Andre Freitas and Brian Davis and Ross McDermott and Manel Zarrouk and Alexandra Balahur},\n\
-      \  year = {2018},\n  url = {https://sites.google.com/view/fiqa/}\n}\n"
+      \  year = {2018},\n  url = {https://doi.org/10.1145/3184558.3192301}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 22
@@ -213,6 +224,7 @@ task_metadata:
       - Yilun Zhao
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
+      is_paper: true
     - title: 'Overview of the FIRE 2017 IRLeD Track: Information Retrieval from Legal
         Documents'
       authors:
@@ -222,7 +234,8 @@ task_metadata:
       - Arindam Pal
       - Saptarshi Ghosh
       year: 2017
-      url: https://sites.google.com/view/fire2017irled
+      url: https://ceur-ws.org/Vol-2036/T3-1.pdf
+      is_paper: true
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -233,7 +246,7 @@ task_metadata:
       \ Track: Information Retrieval from Legal Documents},\n  author = {Arpan Mandal and\
       \ Kripabandhu Ghosh and Arnab Bhattacharya and Arindam Pal and Saptarshi Ghosh},\n\
       \  booktitle = {CEUR Workshop Proceedings},\n  volume = {2036},\n  pages = {63--68},\n\
-      \  year = {2017},\n  url = {https://sites.google.com/view/fire2017irled}\n}\n"
+      \  year = {2017},\n  url = {https://ceur-ws.org/Vol-2036/T3-1.pdf}\n}\n"
     query_text_stats:
       count: 167
       min_chars: 1783
@@ -265,6 +278,7 @@ task_metadata:
       - Yilun Zhao
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
+      is_paper: true
     - title: 'NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval'
       authors:
       - Vera Boteva
@@ -273,6 +287,7 @@ task_metadata:
       - Stefan Riezler
       year: 2016
       url: https://link.springer.com/chapter/10.1007/978-3-319-30671-1_58
+      is_paper: true
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -314,6 +329,7 @@ task_metadata:
       - Yilun Zhao
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
+      is_paper: true
     - title: Overview of the TREC 2017 Precision Medicine Track
       authors:
       - Kirk Roberts
@@ -325,6 +341,7 @@ task_metadata:
       - Shubham Pant
       year: 2017
       url: https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf
+      is_paper: true
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
@@ -367,6 +384,7 @@ task_metadata:
       - Yilun Zhao
       year: 2025
       url: https://aclanthology.org/2025.naacl-long.511/
+      is_paper: true
     - title: 'SciFact: A Dataset and Benchmark for Scientific Claim Verification'
       authors:
       - David Wadden
@@ -378,6 +396,7 @@ task_metadata:
       - Hannaneh Hajishirzi
       year: 2020
       url: https://aclanthology.org/2020.emnlp-main.609/
+      is_paper: true
     bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
       \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\

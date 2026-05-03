@@ -45,6 +45,7 @@ metadata:
     - Jimmy Lin
     year: 2025
     url: https://doi.org/10.1145/3711896.3737435
+    is_paper: true
   - title: A Full-Text Learning to Rank Dataset for Medical Information Retrieval
     authors:
     - Vera Boteva
@@ -53,6 +54,7 @@ metadata:
     - Stefan Riezler
     year: 2016
     url: http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+    is_paper: true
   - title: 'Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID'
     authors:
     - Kirk Roberts
@@ -66,6 +68,7 @@ metadata:
     - William R. Hersh
     year: 2021
     url: https://arxiv.org/abs/2104.09632
+    is_paper: true
   - title: 'BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language'
     authors:
     - Konrad Wojtasik
@@ -75,6 +78,7 @@ metadata:
     - Maciej Piasecki
     year: 2024
     url: https://arxiv.org/abs/2305.19840
+    is_paper: true
   - title: 'Fact or Fiction: Verifying Scientific Claims'
     authors:
     - David Wadden
@@ -86,17 +90,20 @@ metadata:
     - Hannaneh Hajishirzi
     year: 2020
     url: https://aclanthology.org/2020.emnlp-main.609/
+    is_paper: true
   - title: A Question-Entailment Approach to Question Answering
     authors:
     - Asma Ben Abacha
     - Dina Demner-Fushman
     year: 2019
     url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4
+    is_paper: true
   - title: publichealth-qa
     authors:
     - Xing Han Lu
     year: 2024
     url: https://huggingface.co/datasets/xhluca/publichealth-qa
+    is_paper: false
   - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from
       Web Search Engine'
     authors:
@@ -110,6 +117,7 @@ metadata:
     - Haifeng Wang
     year: 2022
     url: https://arxiv.org/abs/2203.10232
+    is_paper: true
   - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer
       Selection
     authors:
@@ -120,6 +128,7 @@ metadata:
     - Shanshan Liu
     year: 2018
     url: https://doi.org/10.1109/ACCESS.2018.2883637
+    is_paper: true
   bibtex: "@inproceedings{sheikh2025cure,\n  author = {Nadia Athar Sheikh and Daniel Buades Marcos\
     \ and Anne-Laure Jousse and Akintunde Oladipo and Olivier Rousseau and Jimmy Lin},\n\
     \  booktitle = {Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery and\
@@ -170,6 +179,7 @@ task_metadata:
       - Jimmy Lin
       year: 2025
       url: https://doi.org/10.1145/3711896.3737435
+      is_paper: true
     bibtex: "@inproceedings{sheikh2025cure,\n  author = {Nadia Athar Sheikh and Daniel Buades Marcos\
       \ and Anne-Laure Jousse and Akintunde Oladipo and Olivier Rousseau and Jimmy Lin},\n\
       \  booktitle = {Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery\
@@ -205,6 +215,7 @@ task_metadata:
       - Stefan Riezler
       year: 2016
       url: http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+      is_paper: true
     bibtex: "@inproceedings{boteva2016nfcorpus,\n  author = {Vera Boteva and Demian Gholipour\
       \ and Artem Sokolov and Stefan Riezler},\n  booktitle = {Proceedings of the 38th European\
       \ Conference on Information Retrieval},\n  title = {A Full-Text Learning to Rank Dataset\
@@ -244,6 +255,7 @@ task_metadata:
       - William R. Hersh
       year: 2021
       url: https://arxiv.org/abs/2104.09632
+      is_paper: true
     bibtex: "@misc{roberts2021searching,\n  archivePrefix = {arXiv},\n  author = {Kirk Roberts\
       \ and Tasmeer Alam and Steven Bedrick and Dina Demner-Fushman and Kyle Lo and Ian Soboroff\
       \ and Ellen Voorhees and Lucy Lu Wang and William R. Hersh},\n  eprint = {2104.09632},\n\
@@ -280,6 +292,7 @@ task_metadata:
       - Maciej Piasecki
       year: 2024
       url: https://arxiv.org/abs/2305.19840
+      is_paper: true
     - title: 'Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID'
       authors:
       - Kirk Roberts
@@ -293,6 +306,7 @@ task_metadata:
       - William R. Hersh
       year: 2021
       url: https://arxiv.org/abs/2104.09632
+      is_paper: true
     bibtex: "@misc{wojtasik2024beirpl,\n  archivePrefix = {arXiv},\n  author = {Konrad Wojtasik\
       \ and Vadim Shishkin and Kacper Wolowiec and Arkadiusz Janz and Maciej Piasecki},\n\
       \  eprint = {2305.19840},\n  primaryClass = {cs.IR},\n  title = {BEIR-PL: Zero Shot\
@@ -334,6 +348,7 @@ task_metadata:
       - Hannaneh Hajishirzi
       year: 2020
       url: https://aclanthology.org/2020.emnlp-main.609/
+      is_paper: true
     bibtex: "@inproceedings{wadden2020fact,\n  author = {David Wadden and Shanchuan Lin and\
       \ Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen and Arman Cohan and Hannaneh Hajishirzi},\n\
       \  booktitle = {Proceedings of the 2020 Conference on Empirical Methods in Natural Language\
@@ -370,6 +385,7 @@ task_metadata:
       - Maciej Piasecki
       year: 2024
       url: https://arxiv.org/abs/2305.19840
+      is_paper: true
     - title: 'Fact or Fiction: Verifying Scientific Claims'
       authors:
       - David Wadden
@@ -381,6 +397,7 @@ task_metadata:
       - Hannaneh Hajishirzi
       year: 2020
       url: https://aclanthology.org/2020.emnlp-main.609/
+      is_paper: true
     bibtex: "@misc{wojtasik2024beirpl,\n  archivePrefix = {arXiv},\n  author = {Konrad Wojtasik\
       \ and Vadim Shishkin and Kacper Wolowiec and Arkadiusz Janz and Maciej Piasecki},\n\
       \  eprint = {2305.19840},\n  primaryClass = {cs.IR},\n  title = {BEIR-PL: Zero Shot\
@@ -417,6 +434,7 @@ task_metadata:
       - Dina Demner-Fushman
       year: 2019
       url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4
+      is_paper: true
     bibtex: "@article{benabacha2019question,\n  author = {Asma Ben Abacha and Dina Demner-Fushman},\n\
       \  doi = {10.1186/s12859-019-3119-4},\n  journal = {BMC Bioinformatics},\n  number =\
       \ {1},\n  pages = {511},\n  title = {A Question-Entailment Approach to Question Answering},\n\
@@ -447,6 +465,7 @@ task_metadata:
       - Xing Han Lu
       year: 2024
       url: https://huggingface.co/datasets/xhluca/publichealth-qa
+      is_paper: false
     bibtex: "@misc{lu2024publichealthqa,\n  author = {Xing Han Lu},\n  doi = {10.57967/hf/2247},\n\
       \  publisher = {Hugging Face},\n  title = {publichealth-qa},\n  url = {https://huggingface.co/datasets/xhluca/publichealth-qa},\n\
       \  year = {2024},\n}\n"
@@ -485,6 +504,7 @@ task_metadata:
       - Haifeng Wang
       year: 2022
       url: https://arxiv.org/abs/2203.10232
+      is_paper: true
     - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer
         Selection
       authors:
@@ -495,6 +515,7 @@ task_metadata:
       - Shanshan Liu
       year: 2018
       url: https://doi.org/10.1109/ACCESS.2018.2883637
+      is_paper: true
     bibtex: "@misc{qiu2022dureaderretrieval,\n  archivePrefix = {arXiv},\n  author = {Yifu\
       \ Qiu and Hongyu Li and Yingqi Qu and Ying Chen and Qiaoqiao She and Jing Liu and Hua\
       \ Wu and Haifeng Wang},\n  eprint = {2203.10232},\n  primaryClass = {cs.CL},\n  title\
@@ -535,6 +556,7 @@ task_metadata:
       - Shanshan Liu
       year: 2018
       url: https://doi.org/10.1109/ACCESS.2018.2883637
+      is_paper: true
     bibtex: "@article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and Hui Wang\
       \ and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n  journal\
       \ = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale Attentive Interaction\

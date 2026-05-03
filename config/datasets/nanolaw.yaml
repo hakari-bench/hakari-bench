@@ -30,7 +30,7 @@ metadata:
   - guha2023legalbench
   - hoppe2021legalquad
   references:
-  - title: AILA 2019 Precedent and Statute Retrieval Task
+  - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance'
     authors:
     - Paheli Bhattacharya
     - Kripabandhu Ghosh
@@ -39,20 +39,23 @@ metadata:
     - Parth Mehta
     - Arnab Bhattacharya
     - Prasenjit Majumder
-    year: 2020
-    url: https://doi.org/10.5281/zenodo.4063986
+    year: 2019
+    url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+    is_paper: true
   - title: Plain English Summarization of Contracts
     authors:
     - Laura Manor
     - Junyi Jessy Li
     year: 2019
     url: https://aclanthology.org/W19-2201/
+    is_paper: true
   - title: 'GerDaLIR: A German Dataset for Legal Information Retrieval'
     authors:
     - Marco Wrzalik
     - Dirk Krechel
     year: 2021
     url: https://aclanthology.org/2021.nllp-1.13/
+    is_paper: true
   - title: 'LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset'
     authors:
     - Haitao Li
@@ -63,12 +66,14 @@ metadata:
     - Yiqun Liu
     year: 2023
     url: https://arxiv.org/abs/2310.17609
+    is_paper: true
   - title: 'LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in
       Large Language Models'
     authors:
     - Neel Guha et al.
     year: 2023
     url: https://arxiv.org/abs/2308.11462
+    is_paper: true
   - title: Towards Intelligent Legal Advisors for Document Retrieval and Question-Answering
       in German Legal Documents
     authors:
@@ -79,10 +84,16 @@ metadata:
     - Wolfram Schenck
     year: 2021
     url: https://doi.org/10.1109/AIKE52691.2021.00011
-  bibtex: "@dataset{bhattacharya2020aila,\n  author = {Paheli Bhattacharya and Kripabandhu\
-    \ Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and\
-    \ Prasenjit Majumder},\n  doi = {10.5281/zenodo.4063986},\n  publisher = {Zenodo},\n \
-    \ title = {AILA 2019 Precedent and Statute Retrieval Task},\n  year = {2020},\n}\n\n\n\
+    is_paper: true
+  bibtex: "@inproceedings{bhattacharya2020aila,
+  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
+  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
+  booktitle = {CEUR Workshop Proceedings},
+  volume = {2517},
+  year = {2019},
+  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
+}
+\n\n\
     @inproceedings{manor2019plain,\n  author = {Laura Manor and Junyi Jessy Li},\n  booktitle\
     \ = {Proceedings of the Natural Legal Language Processing Workshop 2019},\n  pages = {1--11},\n\
     \  publisher = {Association for Computational Linguistics},\n  title = {Plain English\
@@ -122,7 +133,7 @@ task_metadata:
     citation_keys:
     - bhattacharya2020aila
     references:
-    - title: AILA 2019 Precedent and Statute Retrieval Task
+    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance'
       authors:
       - Paheli Bhattacharya
       - Kripabandhu Ghosh
@@ -131,12 +142,18 @@ task_metadata:
       - Parth Mehta
       - Arnab Bhattacharya
       - Prasenjit Majumder
-      year: 2020
-      url: https://doi.org/10.5281/zenodo.4063986
-    bibtex: "@dataset{bhattacharya2020aila,\n  author = {Paheli Bhattacharya and Kripabandhu\
-      \ Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and\
-      \ Prasenjit Majumder},\n  doi = {10.5281/zenodo.4063986},\n  publisher = {Zenodo},\n\
-      \  title = {AILA 2019 Precedent and Statute Retrieval Task},\n  year = {2020},\n}\n"
+      year: 2019
+      url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+      is_paper: true
+    bibtex: "@inproceedings{bhattacharya2020aila,
+  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
+  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
+  booktitle = {CEUR Workshop Proceedings},
+  volume = {2517},
+  year = {2019},
+  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
+}
+"
     query_text_stats:
       count: 50
       min_chars: 1174
@@ -158,7 +175,7 @@ task_metadata:
     citation_keys:
     - bhattacharya2020aila
     references:
-    - title: AILA 2019 Precedent and Statute Retrieval Task
+    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance'
       authors:
       - Paheli Bhattacharya
       - Kripabandhu Ghosh
@@ -167,12 +184,18 @@ task_metadata:
       - Parth Mehta
       - Arnab Bhattacharya
       - Prasenjit Majumder
-      year: 2020
-      url: https://doi.org/10.5281/zenodo.4063986
-    bibtex: "@dataset{bhattacharya2020aila,\n  author = {Paheli Bhattacharya and Kripabandhu\
-      \ Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and\
-      \ Prasenjit Majumder},\n  doi = {10.5281/zenodo.4063986},\n  publisher = {Zenodo},\n\
-      \  title = {AILA 2019 Precedent and Statute Retrieval Task},\n  year = {2020},\n}\n"
+      year: 2019
+      url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+      is_paper: true
+    bibtex: "@inproceedings{bhattacharya2020aila,
+  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
+  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
+  booktitle = {CEUR Workshop Proceedings},
+  volume = {2517},
+  year = {2019},
+  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
+}
+"
     query_text_stats:
       count: 50
       min_chars: 1174
@@ -200,6 +223,7 @@ task_metadata:
       - Junyi Jessy Li
       year: 2019
       url: https://aclanthology.org/W19-2201/
+      is_paper: true
     bibtex: "@inproceedings{manor2019plain,\n  author = {Laura Manor and Junyi Jessy Li},\n\
       \  booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2019},\n\
       \  pages = {1--11},\n  publisher = {Association for Computational Linguistics},\n  title\
@@ -233,6 +257,7 @@ task_metadata:
       - Dirk Krechel
       year: 2021
       url: https://aclanthology.org/2021.nllp-1.13/
+      is_paper: true
     bibtex: "@inproceedings{wrzalik2021gerdalir,\n  author = {Marco Wrzalik and Dirk Krechel},\n\
       \  booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2021},\n\
       \  pages = {123--128},\n  publisher = {Association for Computational Linguistics},\n\
@@ -269,6 +294,7 @@ task_metadata:
       - Yiqun Liu
       year: 2023
       url: https://arxiv.org/abs/2310.17609
+      is_paper: true
     bibtex: "@misc{li2023lecardv2,\n  archivePrefix = {arXiv},\n  author = {Haitao Li and\
       \ Yunqiu Shao and Yueyue Wu and Qingyao Ai and Yixiao Ma and Yiqun Liu},\n  eprint =\
       \ {2310.17609},\n  primaryClass = {cs.CL},\n  title = {LeCaRDv2: A Large-Scale Chinese\
@@ -301,6 +327,7 @@ task_metadata:
       - Neel Guha et al.
       year: 2023
       url: https://arxiv.org/abs/2308.11462
+      is_paper: true
     bibtex: "@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel Guha\
       \ and Julian Nyarko and Daniel E. Ho and Christopher Re and Adam Chilton and Aditya\
       \ Narayana and Alex Chohlas-Wood and Austin Peters and Brandon Waldon and Daniel N.\
@@ -340,6 +367,7 @@ task_metadata:
       - Neel Guha et al.
       year: 2023
       url: https://arxiv.org/abs/2308.11462
+      is_paper: true
     bibtex: "@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel Guha\
       \ and Julian Nyarko and Daniel E. Ho and Christopher Re and Adam Chilton and Aditya\
       \ Narayana and Alex Chohlas-Wood and Austin Peters and Brandon Waldon and Daniel N.\
@@ -383,6 +411,7 @@ task_metadata:
       - Wolfram Schenck
       year: 2021
       url: https://doi.org/10.1109/AIKE52691.2021.00011
+      is_paper: true
     bibtex: "@inproceedings{hoppe2021legalquad,\n  author = {Christoph Hoppe and David Pelkmann\
       \ and Nico Migenda and Daniel Hotte and Wolfram Schenck},\n  booktitle = {2021 IEEE\
       \ Fourth International Conference on Artificial Intelligence and Knowledge Engineering},\n\

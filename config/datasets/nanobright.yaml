@@ -52,6 +52,7 @@ metadata:
     - et al.
     year: 2024
     url: https://arxiv.org/abs/2407.12883
+    is_paper: true
     doi: 10.48550/arXiv.2407.12883
   bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
     \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -83,6 +84,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -125,6 +127,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -167,6 +170,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -209,6 +213,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -251,6 +256,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -293,6 +299,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -335,6 +342,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -377,6 +385,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -419,6 +428,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -461,6 +471,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -503,6 +514,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -545,6 +557,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -587,6 +600,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -629,6 +643,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -671,6 +686,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -713,6 +729,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -755,6 +772,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -797,6 +815,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -839,6 +858,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
@@ -881,6 +901,7 @@ task_metadata:
       - et al.
       year: 2024
       url: https://arxiv.org/abs/2407.12883
+      is_paper: true
       doi: 10.48550/arXiv.2407.12883
     bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\

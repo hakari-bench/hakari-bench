@@ -38,6 +38,7 @@ metadata:
     - Ruiming Tang
     year: 2024
     url: https://arxiv.org/abs/2407.02883
+    is_paper: true
   bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
     \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
     \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
@@ -67,6 +68,7 @@ task_metadata:
       - Ruiming Tang
       year: 2024
       url: https://arxiv.org/abs/2407.02883
+      is_paper: true
     - title: Measuring Coding Challenge Competence With APPS
       authors:
       - Dan Hendrycks
@@ -82,6 +84,7 @@ task_metadata:
       - Jacob Steinhardt
       year: 2021
       url: https://arxiv.org/abs/2105.09938
+      is_paper: true
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
       \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
       \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
@@ -126,6 +129,7 @@ task_metadata:
       - Ruiming Tang
       year: 2024
       url: https://arxiv.org/abs/2407.02883
+      is_paper: true
     - title: 'OpenCodeInterpreter: Integrating Code Generation with Execution and Refinement'
       authors:
       - Tianyu Zheng
@@ -138,6 +142,7 @@ task_metadata:
       - Xiang Yue
       year: 2024
       url: https://arxiv.org/abs/2402.14658
+      is_paper: true
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
       \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
       \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
@@ -181,6 +186,7 @@ task_metadata:
       - Ruiming Tang
       year: 2024
       url: https://arxiv.org/abs/2407.02883
+      is_paper: true
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
       \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
       \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
@@ -221,6 +227,7 @@ task_metadata:
       - Ruiming Tang
       year: 2024
       url: https://arxiv.org/abs/2407.02883
+      is_paper: true
     - title: 'CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation'
       authors:
       - Weixiang Yan
@@ -230,6 +237,7 @@ task_metadata:
       - Wen Wang
       year: 2023
       url: https://arxiv.org/abs/2310.04951
+      is_paper: true
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
       \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
       \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
@@ -274,6 +282,7 @@ task_metadata:
       - Ruiming Tang
       year: 2024
       url: https://arxiv.org/abs/2407.02883
+      is_paper: true
     - title: 'CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation'
       authors:
       - Weixiang Yan
@@ -283,6 +292,7 @@ task_metadata:
       - Wen Wang
       year: 2023
       url: https://arxiv.org/abs/2310.04951
+      is_paper: true
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
       \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
       \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
@@ -327,6 +337,7 @@ task_metadata:
       - Ruiming Tang
       year: 2024
       url: https://arxiv.org/abs/2407.02883
+      is_paper: true
     - title: 'CoSQA: 20,000+ Web Queries for Code Search and Question Answering'
       authors:
       - Junjie Huang
@@ -339,6 +350,7 @@ task_metadata:
       - Nan Duan
       year: 2021
       url: https://arxiv.org/abs/2105.13239
+      is_paper: true
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
       \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
       \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
@@ -382,6 +394,7 @@ task_metadata:
       - Ruiming Tang
       year: 2024
       url: https://arxiv.org/abs/2407.02883
+      is_paper: true
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
       \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
       \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
@@ -422,6 +435,7 @@ task_metadata:
       - Ruiming Tang
       year: 2024
       url: https://arxiv.org/abs/2407.02883
+      is_paper: true
     - title: 'Synthetic-Text-To-SQL: A synthetic dataset for training language models to generate
         SQL queries from natural language prompts'
       authors:
@@ -436,6 +450,7 @@ task_metadata:
       - Drew Newberry
       year: 2024
       url: https://huggingface.co/datasets/gretelai/synthetic_text_to_sql
+      is_paper: false
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
       \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
       \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
@@ -482,6 +497,7 @@ task_metadata:
       - Ruiming Tang
       year: 2024
       url: https://arxiv.org/abs/2407.02883
+      is_paper: true
     - title: 'CodeSearchNet Challenge: Evaluating the State of Semantic Code Search'
       authors:
       - Hamel Husain
@@ -491,6 +507,7 @@ task_metadata:
       - Marc Brockschmidt
       year: 2019
       url: https://arxiv.org/abs/1909.09436
+      is_paper: true
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
       \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
       \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\
@@ -534,6 +551,7 @@ task_metadata:
       - Ruiming Tang
       year: 2024
       url: https://arxiv.org/abs/2407.02883
+      is_paper: true
     bibtex: "@misc{li2024coir,\n  title = {CoIR: A Comprehensive Benchmark for Code Information\
       \ Retrieval Models},\n  author = {Xiangyang Li and Kuicai Dong and Yi Quan Lee and Wei\
       \ Xia and Yichun Yin and Hao Zhang and Yong Liu and Yasheng Wang and Ruiming Tang},\n\

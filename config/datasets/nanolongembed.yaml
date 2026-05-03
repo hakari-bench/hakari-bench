@@ -33,6 +33,7 @@ metadata:
     - Sujian Li
     year: 2024
     url: https://arxiv.org/abs/2404.12096
+    is_paper: true
     doi: 10.48550/arXiv.2404.12096
   bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang, Nan\
     \ and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv preprint\
@@ -60,6 +61,7 @@ task_metadata:
       - Sujian Li
       year: 2024
       url: https://arxiv.org/abs/2404.12096
+      is_paper: true
       doi: 10.48550/arXiv.2404.12096
     - title: The NarrativeQA Reading Comprehension Challenge
       authors:
@@ -72,6 +74,7 @@ task_metadata:
       - Edward Grefenstette
       year: 2018
       url: https://aclanthology.org/Q18-1023
+      is_paper: true
       doi: 10.1162/tacl_a_00023
     bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
       \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
@@ -115,6 +118,7 @@ task_metadata:
       - Sujian Li
       year: 2024
       url: https://arxiv.org/abs/2404.12096
+      is_paper: true
       doi: 10.48550/arXiv.2404.12096
     - title: 'SummScreen: A Dataset for Abstractive Screenplay Summarization'
       authors:
@@ -124,6 +128,7 @@ task_metadata:
       - Kevin Gimpel
       year: 2022
       url: https://aclanthology.org/2022.acl-long.589
+      is_paper: true
       doi: 10.18653/v1/2022.acl-long.589
     bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
       \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
@@ -168,6 +173,7 @@ task_metadata:
       - Sujian Li
       year: 2024
       url: https://arxiv.org/abs/2404.12096
+      is_paper: true
       doi: 10.48550/arXiv.2404.12096
     - title: 'QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization'
       authors:
@@ -184,6 +190,7 @@ task_metadata:
       - Dragomir Radev
       year: 2021
       url: https://aclanthology.org/2021.naacl-main.472
+      is_paper: true
       doi: 10.18653/v1/2021.naacl-main.472
     bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
       \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
@@ -229,6 +236,7 @@ task_metadata:
       - Sujian Li
       year: 2024
       url: https://arxiv.org/abs/2404.12096
+      is_paper: true
       doi: 10.48550/arXiv.2404.12096
     - title: Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning
         Steps
@@ -239,6 +247,7 @@ task_metadata:
       - Akiko Aizawa
       year: 2020
       url: https://aclanthology.org/2020.coling-main.580
+      is_paper: true
     bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
       \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
       \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
@@ -280,6 +289,7 @@ task_metadata:
       - Sujian Li
       year: 2024
       url: https://arxiv.org/abs/2404.12096
+      is_paper: true
       doi: 10.48550/arXiv.2404.12096
     bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
       \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
@@ -318,6 +328,7 @@ task_metadata:
       - Sujian Li
       year: 2024
       url: https://arxiv.org/abs/2404.12096
+      is_paper: true
       doi: 10.48550/arXiv.2404.12096
     bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
       \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\

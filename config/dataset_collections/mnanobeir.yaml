@@ -26,12 +26,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -41,6 +43,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -77,6 +80,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -88,12 +92,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -142,6 +148,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -153,12 +160,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -205,6 +214,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -216,12 +226,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -270,6 +282,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -281,12 +294,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -336,6 +351,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -347,12 +363,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -401,6 +419,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -412,12 +431,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -462,7 +483,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -474,16 +496,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -531,6 +555,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -542,12 +567,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -597,6 +624,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -607,12 +635,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -658,6 +688,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -669,12 +700,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -719,6 +752,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -730,12 +764,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -784,6 +820,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -795,12 +832,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -849,6 +888,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -860,12 +900,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -915,12 +957,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -930,6 +974,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -966,6 +1011,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -977,12 +1023,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -1031,6 +1079,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1042,12 +1091,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -1094,6 +1145,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1105,12 +1157,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -1159,6 +1213,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1170,12 +1225,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -1225,6 +1282,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1236,12 +1294,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -1290,6 +1350,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1301,12 +1362,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -1351,7 +1414,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1363,16 +1427,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -1420,6 +1486,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1431,12 +1498,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -1486,6 +1555,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -1496,12 +1566,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -1547,6 +1619,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1558,12 +1631,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -1608,6 +1683,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1619,12 +1695,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -1673,6 +1751,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1684,12 +1763,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -1738,6 +1819,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1749,12 +1831,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -1804,12 +1888,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -1819,6 +1905,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -1855,6 +1942,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1866,12 +1954,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -1920,6 +2010,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1931,12 +2022,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -1983,6 +2076,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -1994,12 +2088,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -2048,6 +2144,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2059,12 +2156,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -2114,6 +2213,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2125,12 +2225,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -2179,6 +2281,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2190,12 +2293,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -2240,7 +2345,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2252,16 +2358,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -2309,6 +2417,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2320,12 +2429,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -2375,6 +2486,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -2385,12 +2497,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -2436,6 +2550,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2447,12 +2562,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -2497,6 +2614,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2508,12 +2626,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -2562,6 +2682,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2573,12 +2694,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -2627,6 +2750,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2638,12 +2762,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -2693,12 +2819,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -2708,6 +2836,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -2744,6 +2873,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2755,12 +2885,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -2809,6 +2941,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2820,12 +2953,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -2872,6 +3007,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2883,12 +3019,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -2937,6 +3075,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -2948,12 +3087,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -3003,6 +3144,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3014,12 +3156,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -3068,6 +3212,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3079,12 +3224,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -3129,7 +3276,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3141,16 +3289,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -3198,6 +3348,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3209,12 +3360,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -3264,6 +3417,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -3274,12 +3428,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -3325,6 +3481,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3336,12 +3493,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -3386,6 +3545,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3397,12 +3557,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -3451,6 +3613,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3462,12 +3625,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -3516,6 +3681,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3527,12 +3693,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -3582,12 +3750,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -3597,6 +3767,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -3633,6 +3804,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3644,12 +3816,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -3698,6 +3872,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3709,12 +3884,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -3761,6 +3938,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3772,12 +3950,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -3826,6 +4006,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3837,12 +4018,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -3892,6 +4075,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3903,12 +4087,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -3957,6 +4143,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -3968,12 +4155,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -4018,7 +4207,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4030,16 +4220,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -4087,6 +4279,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4098,12 +4291,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -4153,6 +4348,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -4163,12 +4359,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -4214,6 +4412,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4225,12 +4424,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -4275,6 +4476,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4286,12 +4488,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -4340,6 +4544,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4351,12 +4556,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -4405,6 +4612,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4416,12 +4624,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -4471,12 +4681,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -4486,6 +4698,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -4522,6 +4735,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4533,12 +4747,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -4587,6 +4803,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4598,12 +4815,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -4650,6 +4869,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4661,12 +4881,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -4715,6 +4937,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4726,12 +4949,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -4781,6 +5006,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4792,12 +5018,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -4846,6 +5074,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4857,12 +5086,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -4907,7 +5138,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4919,16 +5151,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -4976,6 +5210,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -4987,12 +5222,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -5042,6 +5279,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -5052,12 +5290,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -5103,6 +5343,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5114,12 +5355,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -5164,6 +5407,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5175,12 +5419,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -5229,6 +5475,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5240,12 +5487,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -5295,6 +5544,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5306,12 +5556,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -5361,12 +5613,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -5376,6 +5630,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -5412,6 +5667,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5423,12 +5679,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -5477,6 +5735,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5488,12 +5747,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -5540,6 +5801,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5551,12 +5813,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -5605,6 +5869,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5616,12 +5881,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -5671,6 +5938,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5682,12 +5950,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -5736,6 +6006,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5747,12 +6018,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -5797,7 +6070,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5809,16 +6083,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -5866,6 +6142,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -5877,12 +6154,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -5932,6 +6211,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -5942,12 +6222,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -5993,6 +6275,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6004,12 +6287,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -6054,6 +6339,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6065,12 +6351,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -6119,6 +6407,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6130,12 +6419,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -6185,6 +6476,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6196,12 +6488,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -6251,12 +6545,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -6266,6 +6562,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -6302,6 +6599,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6313,12 +6611,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -6367,6 +6667,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6378,12 +6679,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -6430,6 +6733,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6441,12 +6745,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -6495,6 +6801,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6506,12 +6813,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -6561,6 +6870,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6572,12 +6882,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -6626,6 +6938,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6637,12 +6950,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -6687,7 +7002,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6699,16 +7015,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -6756,6 +7074,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6767,12 +7086,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -6822,6 +7143,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -6832,12 +7154,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -6883,6 +7207,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6894,12 +7219,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -6944,6 +7271,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -6955,12 +7283,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -7009,6 +7339,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7020,12 +7351,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -7074,6 +7407,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7085,12 +7419,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -7140,12 +7476,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -7155,6 +7493,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -7191,6 +7530,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7202,12 +7542,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -7256,6 +7598,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7267,12 +7610,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -7319,6 +7664,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7330,12 +7676,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -7384,6 +7732,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7395,12 +7744,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -7450,6 +7801,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7461,12 +7813,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -7515,6 +7869,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7526,12 +7881,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -7576,7 +7933,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7588,16 +7946,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -7645,6 +8005,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7656,12 +8017,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -7711,6 +8074,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -7721,12 +8085,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -7772,6 +8138,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7783,12 +8150,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -7833,6 +8202,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7844,12 +8214,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -7898,6 +8270,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7909,12 +8282,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -7963,6 +8338,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -7974,12 +8350,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -8029,12 +8407,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -8044,6 +8424,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -8080,6 +8461,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8091,12 +8473,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -8145,6 +8529,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8156,12 +8541,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -8208,6 +8595,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8219,12 +8607,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -8273,6 +8663,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8284,12 +8675,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -8339,6 +8732,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8350,12 +8744,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -8404,6 +8800,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8415,12 +8812,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -8465,7 +8864,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8477,16 +8877,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -8534,6 +8936,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8545,12 +8948,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -8600,6 +9005,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -8610,12 +9016,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -8661,6 +9069,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8672,12 +9081,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -8722,6 +9133,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8733,12 +9145,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -8787,6 +9201,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8798,12 +9213,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -8852,6 +9269,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8863,12 +9281,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -8918,12 +9338,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -8933,6 +9355,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -8969,6 +9392,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -8980,12 +9404,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -9034,6 +9460,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9045,12 +9472,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -9097,6 +9526,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9108,12 +9538,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -9162,6 +9594,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9173,12 +9606,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -9228,6 +9663,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9239,12 +9675,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -9293,6 +9731,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9304,12 +9743,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -9354,7 +9795,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9366,16 +9808,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -9423,6 +9867,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9434,12 +9879,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -9489,6 +9936,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -9499,12 +9947,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -9550,6 +10000,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9561,12 +10012,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -9611,6 +10064,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9622,12 +10076,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -9676,6 +10132,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9687,12 +10144,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -9742,6 +10201,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9753,12 +10213,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -9808,12 +10270,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -9823,6 +10287,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -9859,6 +10324,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9870,12 +10336,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -9924,6 +10392,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9935,12 +10404,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -9987,6 +10458,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -9998,12 +10470,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -10052,6 +10526,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10063,12 +10538,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -10118,6 +10595,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10129,12 +10607,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -10183,6 +10663,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10194,12 +10675,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -10244,7 +10727,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10256,16 +10740,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -10313,6 +10799,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10324,12 +10811,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -10379,6 +10868,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -10389,12 +10879,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -10440,6 +10932,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10451,12 +10944,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -10501,6 +10996,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10512,12 +11008,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -10566,6 +11064,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10577,12 +11076,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -10632,6 +11133,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10643,12 +11145,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -10698,12 +11202,14 @@ datasets:
       - Iryna Gurevych
       year: 2021
       url: https://arxiv.org/abs/2104.08663
+      is_paper: true
       doi: 10.48550/arXiv.2104.08663
     - title: 'NanoBEIR: Smaller BEIR dataset subsets'
       authors:
       - Zeta Alpha
       year: 2024
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+      is_paper: false
     - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
       authors:
       - Kenneth Enevoldsen
@@ -10713,6 +11219,7 @@ datasets:
       - Ashwin Mathur
       year: 2025
       url: https://arxiv.org/abs/2502.13595
+      is_paper: true
       doi: 10.48550/arXiv.2502.13595
     bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
       \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\
@@ -10749,6 +11256,7 @@ datasets:
         - Markus Leippold
         year: 2021
         url: https://arxiv.org/abs/2012.00614
+        is_paper: true
         doi: 10.48550/arXiv.2012.00614
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10760,12 +11268,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{diggelmann2021climatefever,\n  title = {{CLIMATE-FEVER}: A Dataset for\
         \ Verification of Real-World Climate Claims},\n  author = {Diggelmann, Thomas and\
         \ Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano and Leippold,\
@@ -10814,6 +11324,7 @@ datasets:
         - Jamie Callan
         year: 2017
         url: https://doi.org/10.1145/3077136.3080751
+        is_paper: true
         doi: 10.1145/3077136.3080751
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10825,12 +11336,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{hasibi2017dbpedia,\n  title = {{DBpedia}-Entity V2: A Test Collection\
         \ for Entity Search},\n  author = {Hasibi, Faegheh and Nikolaev, Fedor and Xiong,\
         \ Chenyan and Balog, Krisztian and Bratsberg, Svein Erik and Kotov, Alexander and\
@@ -10877,6 +11390,7 @@ datasets:
         - Arpit Mittal
         year: 2018
         url: https://aclanthology.org/N18-1074/
+        is_paper: true
         doi: 10.18653/v1/N18-1074
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10888,12 +11402,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
         \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas\
         \ and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings\
@@ -10942,6 +11458,7 @@ datasets:
         - Alexandra Balahur
         year: 2018
         url: https://doi.org/10.1145/3184558.3192301
+        is_paper: true
         doi: 10.1145/3184558.3192301
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -10953,12 +11470,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial\
         \ Opinion Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh,\
         \ Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel\
@@ -11008,6 +11527,7 @@ datasets:
         - Christopher D. Manning
         year: 2018
         url: https://aclanthology.org/D18-1259/
+        is_paper: true
         doi: 10.18653/v1/D18-1259
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -11019,12 +11539,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
         \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi, Peng\
         \ and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov,\
@@ -11073,6 +11595,7 @@ datasets:
         - Li Deng
         year: 2016
         url: https://arxiv.org/abs/1611.09268
+        is_paper: true
         doi: 10.48550/arXiv.1611.09268
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -11084,12 +11607,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{nguyen2016msmarco,\n  title = {{MS MARCO}: A Human Generated Machine\
         \ Reading Comprehension Dataset},\n  author = {Nguyen, Tri and Rosenberg, Mir and\
         \ Song, Xia and Gao, Jianfeng and Tiwary, Saurabh and Majumder, Rangan and Deng, Li},\n\
@@ -11134,7 +11659,8 @@ datasets:
         - Artem Sokolov
         - Stefan Riezler
         year: 2016
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+        is_paper: true
         doi: 10.1007/978-3-319-30671-1_58
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -11146,16 +11672,18 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{boteva2016nfcorpus,\n  title = {A Full-Text Learning to Rank\
         \ Dataset for Medical Information Retrieval},\n  author = {Boteva, Vera and Gholipour,\
         \ Demian and Sokolov, Artem and Riezler, Stefan},\n  booktitle = {Advances in Information\
-        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/},\n\
+        \ Retrieval},\n  year = {2016},\n  url = {https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
         \  doi = {10.1007/978-3-319-30671-1_58}\n}\n@inproceedings{thakur2021beir,\n  author\
         \ = {Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava\
         \ and Iryna Gurevych},\n  booktitle = {Thirty-fifth Conference on Neural Information\
@@ -11203,6 +11731,7 @@ datasets:
         - Kenton Lee
         year: 2019
         url: https://aclanthology.org/Q19-1026/
+        is_paper: true
         doi: 10.1162/tacl_a_00276
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -11214,12 +11743,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
         \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
         \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and\
@@ -11269,6 +11800,7 @@ datasets:
         - tomtung
         year: 2017
         url: https://kaggle.com/competitions/quora-question-pairs
+        is_paper: false
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
         authors:
@@ -11279,12 +11811,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
         \ = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil\
         \ and tomtung},\n  year = {2017},\n  url = {https://kaggle.com/competitions/quora-question-pairs}\n\
@@ -11329,6 +11863,7 @@ datasets:
         - Daniel S. Weld
         year: 2020
         url: https://aclanthology.org/2020.acl-main.207/
+        is_paper: true
         doi: 10.18653/v1/2020.acl-main.207
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -11340,12 +11875,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
         \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
         \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
@@ -11390,6 +11927,7 @@ datasets:
         - Benno Stein
         year: 2018
         url: https://aclanthology.org/P18-1023/
+        is_paper: true
         doi: 10.18653/v1/P18-1023
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -11401,12 +11939,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
         \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
         \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url\
@@ -11455,6 +11995,7 @@ datasets:
         - Hannaneh Hajishirzi
         year: 2020
         url: https://aclanthology.org/2020.emnlp-main.609/
+        is_paper: true
         doi: 10.18653/v1/2020.emnlp-main.609
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -11466,12 +12007,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@inproceedings{wadden2020scifact,\n  title = {Fact or Fiction: Verifying Scientific\
         \ Claims},\n  author = {Wadden, David and Lin, Shanchuan and Lo, Kyle and Wang, Lucy\
         \ Lu and van Zuylen, Madeleine and Cohan, Arman and Hajishirzi, Hannaneh},\n  booktitle\
@@ -11520,6 +12063,7 @@ datasets:
         - Jimmy Lin
         year: 2022
         url: https://doi.org/10.5281/zenodo.6862281
+        is_paper: false
         doi: 10.5281/zenodo.6862281
       - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval
           Models'
@@ -11531,12 +12075,14 @@ datasets:
         - Iryna Gurevych
         year: 2021
         url: https://arxiv.org/abs/2104.08663
+        is_paper: true
         doi: 10.48550/arXiv.2104.08663
       - title: 'NanoBEIR: Smaller BEIR dataset subsets'
         authors:
         - Zeta Alpha
         year: 2024
         url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+        is_paper: false
       bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
         \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
         \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
@@ -11583,12 +12129,14 @@ metadata:
     - Iryna Gurevych
     year: 2021
     url: https://arxiv.org/abs/2104.08663
+    is_paper: true
     doi: 10.48550/arXiv.2104.08663
   - title: 'NanoBEIR: Smaller BEIR dataset subsets'
     authors:
     - Zeta Alpha
     year: 2024
     url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    is_paper: false
   - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
     authors:
     - Kenneth Enevoldsen
@@ -11598,6 +12146,7 @@ metadata:
     - Ashwin Mathur
     year: 2025
     url: https://arxiv.org/abs/2502.13595
+    is_paper: true
     doi: 10.48550/arXiv.2502.13595
   bibtex: "@inproceedings{thakur2021beir,\n  author = {Nandan Thakur and Nils Reimers and\
     \ Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych},\n  booktitle\

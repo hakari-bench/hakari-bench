@@ -31,6 +31,7 @@ metadata:
     - Daniel Fried
     year: 2024
     url: https://arxiv.org/abs/2406.14497
+    is_paper: true
     doi: 10.48550/arXiv.2406.14497
   bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
     \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
@@ -58,6 +59,7 @@ task_metadata:
       - Daniel Fried
       year: 2024
       url: https://arxiv.org/abs/2406.14497
+      is_paper: true
       doi: 10.48550/arXiv.2406.14497
     bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
       \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
@@ -96,6 +98,7 @@ task_metadata:
       - Daniel Fried
       year: 2024
       url: https://arxiv.org/abs/2406.14497
+      is_paper: true
       doi: 10.48550/arXiv.2406.14497
     bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
       \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
@@ -134,6 +137,7 @@ task_metadata:
       - Daniel Fried
       year: 2024
       url: https://arxiv.org/abs/2406.14497
+      is_paper: true
       doi: 10.48550/arXiv.2406.14497
     bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
       \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
@@ -171,6 +175,7 @@ task_metadata:
       - Daniel Fried
       year: 2024
       url: https://arxiv.org/abs/2406.14497
+      is_paper: true
       doi: 10.48550/arXiv.2406.14497
     bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
       \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
