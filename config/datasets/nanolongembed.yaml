@@ -15,41 +15,73 @@ splits:
 metadata:
   language: en
   category: natural_language
-  short_description: NanoLongEmbed retrieval benchmark group.
-  description: NanoLongEmbed is a Nano-style information retrieval benchmark group.
-    It evaluates embedding and retrieval models by ranking corpus documents for each
-    query using compact task splits designed for fast, repeatable benchmarking.
+  short_description: Nano subset of the LongEmbed long-context retrieval benchmark.
+  description: NanoLongEmbed evaluates long-context retrieval with compact subsets of LongEmbed
+    tasks. It includes real-world long-document QA and summarization retrieval tasks plus
+    synthetic passkey and needle retrieval settings.
   citation_keys:
-  - nanoirbench2026
+  - zhu2024longembed
   references:
-  - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+  - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
     authors:
-    - Nano IR Benchmark contributors
-    year: 2026
-    url: https://huggingface.co/hakari-bench
-  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    - Dawei Zhu
+    - Liang Wang
+    - Nan Yang
+    - Yifan Song
+    - Wenhao Wu
+    - Furu Wei
+    - Sujian Li
+    year: 2024
+    url: https://arxiv.org/abs/2404.12096
+    doi: 10.48550/arXiv.2404.12096
+  bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang, Nan\
+    \ and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv preprint\
+    \ arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for Long Context\
+    \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2404.12096}\n}\n"
 task_metadata:
   NanoNarrativeQA:
     language: en
     category: natural_language
-    short_description: NanoNarrativeQA retrieval task.
-    description: NanoNarrativeQA is a retrieval task in NanoLongEmbed. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: NarrativeQA long-document retrieval.
+    description: Questions from NarrativeQA are matched to long narrative documents such as
+      books and movie scripts.
     citation_keys:
-    - nanoirbench2026
+    - zhu2024longembed
+    - kocisky2018narrativeqa
     references:
-    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://arxiv.org/abs/2404.12096
+      doi: 10.48550/arXiv.2404.12096
+    - title: The NarrativeQA Reading Comprehension Challenge
+      authors:
+      - Tomas Kocisky
+      - Jonathan Schwarz
+      - Phil Blunsom
+      - Chris Dyer
+      - Karl Moritz Hermann
+      - Gabor Melis
+      - Edward Grefenstette
+      year: 2018
+      url: https://aclanthology.org/Q18-1023
+      doi: 10.1162/tacl_a_00023
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2404.12096}\n\
+      }\n@article{kocisky2018narrativeqa,\n  author = {Kocisky, Tomas and Schwarz, Jonathan\
+      \ and Blunsom, Phil and Dyer, Chris and Hermann, Karl Moritz and Melis, Gabor and Grefenstette,\
+      \ Edward},\n  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  title = {The NarrativeQA Reading Comprehension Challenge},\n  year = {2018},\n  url\
+      \ = {https://aclanthology.org/Q18-1023},\n  doi = {10.1162/tacl_a_00023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 15
@@ -65,22 +97,44 @@ task_metadata:
   NanoSummScreenFD:
     language: en
     category: natural_language
-    short_description: NanoSummScreenFD retrieval task.
-    description: NanoSummScreenFD is a retrieval task in NanoLongEmbed. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: SummScreen screenplay retrieval.
+    description: Queries from the SummScreen ForeverDreaming subset are matched to long screenplay
+      or transcript documents.
     citation_keys:
-    - nanoirbench2026
+    - zhu2024longembed
+    - chen2022summscreen
     references:
-    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://arxiv.org/abs/2404.12096
+      doi: 10.48550/arXiv.2404.12096
+    - title: 'SummScreen: A Dataset for Abstractive Screenplay Summarization'
+      authors:
+      - Mingda Chen
+      - Zewei Chu
+      - Sam Wiseman
+      - Kevin Gimpel
+      year: 2022
+      url: https://aclanthology.org/2022.acl-long.589
+      doi: 10.18653/v1/2022.acl-long.589
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2404.12096}\n\
+      }\n@inproceedings{chen2022summscreen,\n  author = {Chen, Mingda and Chu, Zewei and Wiseman,\
+      \ Sam and Gimpel, Kevin},\n  booktitle = {Proceedings of the 60th Annual Meeting of\
+      \ the Association for Computational Linguistics (Volume 1: Long Papers)},\n  title =\
+      \ {SummScreen: A Dataset for Abstractive Screenplay Summarization},\n  year = {2022},\n\
+      \  url = {https://aclanthology.org/2022.acl-long.589},\n  doi = {10.18653/v1/2022.acl-long.589}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 159
@@ -96,22 +150,52 @@ task_metadata:
   NanoQMSum:
     language: en
     category: natural_language
-    short_description: NanoQMSum retrieval task.
-    description: NanoQMSum is a retrieval task in NanoLongEmbed. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: QMSum meeting transcript retrieval.
+    description: Query-focused meeting summarization requests are matched to the relevant
+      long meeting transcripts.
     citation_keys:
-    - nanoirbench2026
+    - zhu2024longembed
+    - zhong2021qmsum
     references:
-    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://arxiv.org/abs/2404.12096
+      doi: 10.48550/arXiv.2404.12096
+    - title: 'QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization'
+      authors:
+      - Ming Zhong
+      - Da Yin
+      - Tao Yu
+      - Ahmad Zaidi
+      - Mutethia Mutuma
+      - Rahul Jha
+      - Ahmed Hassan Awadallah
+      - Asli Celikyilmaz
+      - Yang Liu
+      - Xipeng Qiu
+      - Dragomir Radev
+      year: 2021
+      url: https://aclanthology.org/2021.naacl-main.472
+      doi: 10.18653/v1/2021.naacl-main.472
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2404.12096}\n\
+      }\n@inproceedings{zhong2021qmsum,\n  author = {Zhong, Ming and Yin, Da and Yu, Tao and\
+      \ Zaidi, Ahmad and Mutuma, Mutethia and Jha, Rahul and Awadallah, Ahmed Hassan and Celikyilmaz,\
+      \ Asli and Liu, Yang and Qiu, Xipeng and Radev, Dragomir},\n  booktitle = {Proceedings\
+      \ of the 2021 Conference of the North American Chapter of the Association for Computational\
+      \ Linguistics: Human Language Technologies},\n  title = {QMSum: A New Benchmark for\
+      \ Query-based Multi-domain Meeting Summarization},\n  year = {2021},\n  url = {https://aclanthology.org/2021.naacl-main.472},\n\
+      \  doi = {10.18653/v1/2021.naacl-main.472}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 84
@@ -127,22 +211,43 @@ task_metadata:
   Nano2WikiMultihopQA:
     language: en
     category: natural_language
-    short_description: Nano2WikiMultihopQA retrieval task.
-    description: Nano2WikiMultihopQA is a retrieval task in NanoLongEmbed. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: 2WikiMultiHopQA retrieval.
+    description: Multi-hop questions are matched to Wikipedia-derived documents that contain
+      the needed evidence.
     citation_keys:
-    - nanoirbench2026
+    - zhu2024longembed
+    - ho2020constructing
     references:
-    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://arxiv.org/abs/2404.12096
+      doi: 10.48550/arXiv.2404.12096
+    - title: Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning
+        Steps
+      authors:
+      - Xanh Ho
+      - Anh-Khoa Duong Nguyen
+      - Saku Sugawara
+      - Akiko Aizawa
+      year: 2020
+      url: https://aclanthology.org/2020.coling-main.580
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2404.12096}\n\
+      }\n@inproceedings{ho2020constructing,\n  author = {Ho, Xanh and Nguyen, Anh-Khoa Duong\
+      \ and Sugawara, Saku and Aizawa, Akiko},\n  booktitle = {Proceedings of the 28th International\
+      \ Conference on Computational Linguistics},\n  title = {Constructing A Multi-hop QA\
+      \ Dataset for Comprehensive Evaluation of Reasoning Steps},\n  year = {2020},\n  url\
+      \ = {https://aclanthology.org/2020.coling-main.580}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 36
@@ -158,22 +263,29 @@ task_metadata:
   NanoPasskey:
     language: en
     category: natural_language
-    short_description: NanoPasskey retrieval task.
-    description: NanoPasskey is a retrieval task in NanoLongEmbed. Queries must be
-      matched to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Synthetic passkey retrieval.
+    description: Synthetic LongEmbed task where a query must retrieve the long context containing
+      the requested passkey.
     citation_keys:
-    - nanoirbench2026
+    - zhu2024longembed
     references:
-    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://arxiv.org/abs/2404.12096
+      doi: 10.48550/arXiv.2404.12096
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2404.12096}\n\
+      }\n"
     query_text_stats:
       count: 100
       min_chars: 33
@@ -189,22 +301,29 @@ task_metadata:
   NanoNeedle:
     language: en
     category: natural_language
-    short_description: NanoNeedle retrieval task.
-    description: NanoNeedle is a retrieval task in NanoLongEmbed. Queries must be
-      matched to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Synthetic needle retrieval.
+    description: Synthetic LongEmbed task where a query must retrieve the long document containing
+      a target needle passage.
     citation_keys:
-    - nanoirbench2026
+    - zhu2024longembed
     references:
-    - title: 'NanoLongEmbed: Nano information retrieval benchmark subset'
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://arxiv.org/abs/2404.12096
+      doi: 10.48550/arXiv.2404.12096
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2404.12096}\n\
+      }\n"
     query_text_stats:
       count: 98
       min_chars: 25

@@ -22,40 +22,86 @@ splits:
 metadata:
   language: multilingual
   category: natural_language
-  short_description: NanoMLDR retrieval benchmark group.
-  description: NanoMLDR is a Nano-style information retrieval benchmark group. It
-    evaluates embedding and retrieval models by ranking corpus documents for each
-    query using compact task splits designed for fast, repeatable benchmarking.
+  short_description: Compact multilingual long-document retrieval benchmark.
+  description: NanoMLDR is a compact version of the MLDR multilingual long-document retrieval
+    benchmark. It evaluates retrieval of long documents across 13 languages using question-document
+    pairs from the MLDR task.
   citation_keys:
-  - chen2024mldr
+  - chen2024bgem3
+  - shitao2024mldr
   references:
-  - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+  - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text Embeddings
+      Through Self-Knowledge Distillation'
     authors:
-    - MLDR authors
+    - Jianlv Chen
+    - Shitao Xiao
+    - Peitian Zhang
+    - Kun Luo
+    - Defu Lian
+    - Zheng Liu
+    year: 2024
+    url: https://arxiv.org/abs/2402.03216
+    doi: 10.48550/arXiv.2402.03216
+  - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+    authors:
+    - Shitao Xiao
+    - Jianlv Chen
+    - Peitian Zhang
+    - Kun Luo
+    - Defu Lian
+    - Zheng Liu
     year: 2024
     url: https://huggingface.co/datasets/Shitao/MLDR
-  bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-    \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
-    }\n"
+  bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author =\
+    \ {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and Liu,\
+    \ Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n  url\
+    \ = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n}\n@misc{shitao2024mldr,\n\
+    \  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n  author = {Xiao,\
+    \ Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian, Defu and Liu, Zheng},\n\
+    \  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n}\n"
 task_metadata:
   ar:
     language: ar
     category: natural_language
-    short_description: ar retrieval task.
-    description: ar is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: Arabic long-document retrieval task.
+    description: The Arabic split of NanoMLDR evaluates long-document retrieval for Arabic
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 150
@@ -72,21 +118,44 @@ task_metadata:
   de:
     language: de
     category: natural_language
-    short_description: de retrieval task.
-    description: de is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: German long-document retrieval task.
+    description: The German split of NanoMLDR evaluates long-document retrieval for German
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 117
@@ -103,21 +172,44 @@ task_metadata:
   en:
     language: en
     category: natural_language
-    short_description: en retrieval task.
-    description: en is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: English long-document retrieval task.
+    description: The English split of NanoMLDR evaluates long-document retrieval for English
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -134,21 +226,44 @@ task_metadata:
   es:
     language: es
     category: natural_language
-    short_description: es retrieval task.
-    description: es is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: Spanish long-document retrieval task.
+    description: The Spanish split of NanoMLDR evaluates long-document retrieval for Spanish
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 176
@@ -165,21 +280,44 @@ task_metadata:
   fr:
     language: fr
     category: natural_language
-    short_description: fr retrieval task.
-    description: fr is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: French long-document retrieval task.
+    description: The French split of NanoMLDR evaluates long-document retrieval for French
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 152
@@ -196,21 +334,44 @@ task_metadata:
   hi:
     language: hi
     category: natural_language
-    short_description: hi retrieval task.
-    description: hi is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: Hindi long-document retrieval task.
+    description: The Hindi split of NanoMLDR evaluates long-document retrieval for Hindi queries.
+      Models must rank lengthy corpus documents for question-style information needs in the
+      compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 159
@@ -227,21 +388,44 @@ task_metadata:
   it:
     language: it
     category: natural_language
-    short_description: it retrieval task.
-    description: it is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: Italian long-document retrieval task.
+    description: The Italian split of NanoMLDR evaluates long-document retrieval for Italian
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 158
@@ -258,21 +442,44 @@ task_metadata:
   ja:
     language: ja
     category: natural_language
-    short_description: ja retrieval task.
-    description: ja is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: Japanese long-document retrieval task.
+    description: The Japanese split of NanoMLDR evaluates long-document retrieval for Japanese
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 148
@@ -289,21 +496,44 @@ task_metadata:
   ko:
     language: ko
     category: natural_language
-    short_description: ko retrieval task.
-    description: ko is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: Korean long-document retrieval task.
+    description: The Korean split of NanoMLDR evaluates long-document retrieval for Korean
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 177
@@ -320,21 +550,44 @@ task_metadata:
   pt:
     language: pt
     category: natural_language
-    short_description: pt retrieval task.
-    description: pt is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: Portuguese long-document retrieval task.
+    description: The Portuguese split of NanoMLDR evaluates long-document retrieval for Portuguese
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 141
@@ -351,21 +604,44 @@ task_metadata:
   ru:
     language: ru
     category: natural_language
-    short_description: ru retrieval task.
-    description: ru is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: Russian long-document retrieval task.
+    description: The Russian split of NanoMLDR evaluates long-document retrieval for Russian
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 160
@@ -382,21 +658,44 @@ task_metadata:
   th:
     language: th
     category: natural_language
-    short_description: th retrieval task.
-    description: th is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: Thai long-document retrieval task.
+    description: The Thai split of NanoMLDR evaluates long-document retrieval for Thai queries.
+      Models must rank lengthy corpus documents for question-style information needs in the
+      compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 151
@@ -413,21 +712,44 @@ task_metadata:
   zh:
     language: zh
     category: natural_language
-    short_description: zh retrieval task.
-    description: zh is a retrieval task in NanoMLDR. Queries must be matched to relevant
-      corpus documents, so scores reflect how well a model represents task-specific
-      intent, document semantics, and hard negative distinctions in a compact Nano
-      benchmark setting.
+    short_description: Chinese long-document retrieval task.
+    description: The Chinese split of NanoMLDR evaluates long-document retrieval for Chinese
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
     citation_keys:
-    - chen2024mldr
+    - chen2024bgem3
+    - shitao2024mldr
     references:
-    - title: 'MLDR: A Multilingual Long-Document Retrieval Benchmark'
+    - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
       authors:
-      - MLDR authors
+      - Jianlv Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://arxiv.org/abs/2402.03216
+      doi: 10.48550/arXiv.2402.03216
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlv Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
       year: 2024
       url: https://huggingface.co/datasets/Shitao/MLDR
-    bibtex: "@misc{chen2024mldr,\n  title = {MLDR: A Multilingual Long-Document Retrieval\
-      \ Benchmark},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlv and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.03216},\n  doi = {10.48550/arXiv.2402.03216}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlv and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
       }\n"
     query_text_stats:
       count: 200

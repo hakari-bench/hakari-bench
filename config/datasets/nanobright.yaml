@@ -29,41 +29,66 @@ splits:
 metadata:
   language: en
   category: natural_language
-  short_description: NanoBRIGHT retrieval benchmark group.
-  description: NanoBRIGHT is a Nano-style information retrieval benchmark group. It
-    evaluates embedding and retrieval models by ranking corpus documents for each
-    query using compact task splits designed for fast, repeatable benchmarking.
+  short_description: Nano subset of the BRIGHT reasoning-intensive retrieval benchmark.
+  description: NanoBRIGHT is a compact subset of BRIGHT for evaluating reasoning-intensive
+    retrieval. It covers StackExchange, programming, mathematical reasoning, theorem, and
+    long-document variants where queries must retrieve cited or semantically corresponding
+    documents.
   citation_keys:
-  - nanoirbench2026
+  - su2024bright
   references:
-  - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
     authors:
-    - Nano IR Benchmark contributors
-    year: 2026
-    url: https://huggingface.co/hakari-bench
-  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    - Hongjin Su
+    - Howard Yen
+    - Mengzhou Xia
+    - Weijia Shi
+    - Niklas Muennighoff
+    - Han-yu Wang
+    - Haisu Liu
+    - Quan Shi
+    - Zachary S. Siegel
+    - Michael Tang
+    - et al.
+    year: 2024
+    url: https://arxiv.org/abs/2407.12883
+    doi: 10.48550/arXiv.2407.12883
+  bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+    \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+    \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint arXiv:2407.12883},\n\
+    \  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval},\n\
+    \  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
 task_metadata:
   NanoBrightBiology:
     language: en
     category: natural_language
-    short_description: NanoBrightBiology retrieval task.
-    description: NanoBrightBiology is a retrieval task in NanoBRIGHT. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Biology StackExchange citation retrieval.
+    description: Queries are Biology StackExchange posts; systems retrieve web documents cited
+      by relevant answers.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 89
@@ -79,22 +104,33 @@ task_metadata:
   NanoBrightEarthScience:
     language: en
     category: natural_language
-    short_description: NanoBrightEarthScience retrieval task.
-    description: NanoBrightEarthScience is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Earth Science StackExchange citation retrieval.
+    description: Queries are Earth Science StackExchange posts; systems retrieve web documents
+      cited by relevant answers.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 116
       min_chars: 83
@@ -110,22 +146,33 @@ task_metadata:
   NanoBrightEconomics:
     language: en
     category: natural_language
-    short_description: NanoBrightEconomics retrieval task.
-    description: NanoBrightEconomics is a retrieval task in NanoBRIGHT. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Economics StackExchange citation retrieval.
+    description: Queries are Economics StackExchange posts; systems retrieve web documents
+      cited by relevant answers.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 164
@@ -141,22 +188,33 @@ task_metadata:
   NanoBrightPsychology:
     language: en
     category: natural_language
-    short_description: NanoBrightPsychology retrieval task.
-    description: NanoBrightPsychology is a retrieval task in NanoBRIGHT. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Psychology StackExchange citation retrieval.
+    description: Queries are Psychology StackExchange posts; systems retrieve web documents
+      cited by relevant answers.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 166
@@ -172,22 +230,33 @@ task_metadata:
   NanoBrightRobotics:
     language: en
     category: natural_language
-    short_description: NanoBrightRobotics retrieval task.
-    description: NanoBrightRobotics is a retrieval task in NanoBRIGHT. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Robotics StackExchange citation retrieval.
+    description: Queries are Robotics StackExchange posts; systems retrieve web documents
+      cited by relevant answers.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 165
@@ -203,22 +272,33 @@ task_metadata:
   NanoBrightStackoverflow:
     language: en
     category: code
-    short_description: NanoBrightStackoverflow retrieval task.
-    description: NanoBrightStackoverflow is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Stack Overflow citation retrieval.
+    description: Queries are Stack Overflow posts; systems retrieve web documents cited by
+      relevant answers.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 117
       min_chars: 185
@@ -234,22 +314,33 @@ task_metadata:
   NanoBrightSustainableLiving:
     language: en
     category: natural_language
-    short_description: NanoBrightSustainableLiving retrieval task.
-    description: NanoBrightSustainableLiving is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Sustainable Living StackExchange citation retrieval.
+    description: Queries are Sustainable Living StackExchange posts; systems retrieve web
+      documents cited by relevant answers.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 108
       min_chars: 158
@@ -264,23 +355,34 @@ task_metadata:
       median_chars: 550.0
   NanoBrightPony:
     language: en
-    category: natural_language
-    short_description: NanoBrightPony retrieval task.
-    description: NanoBrightPony is a retrieval task in NanoBRIGHT. Queries must be
-      matched to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    category: code
+    short_description: Pony programming language documentation retrieval.
+    description: Queries about the Pony programming language are matched to relevant syntax
+      documentation passages.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 112
       min_chars: 182
@@ -296,22 +398,33 @@ task_metadata:
   NanoBrightLeetcode:
     language: en
     category: code
-    short_description: NanoBrightLeetcode retrieval task.
-    description: NanoBrightLeetcode is a retrieval task in NanoBRIGHT. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Algorithmic programming problem retrieval.
+    description: Queries are coding problems; systems retrieve similar algorithmic problems
+      that share solution techniques.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 142
       min_chars: 422
@@ -326,23 +439,34 @@ task_metadata:
       median_chars: 680.5
   NanoBrightAops:
     language: en
-    category: code
-    short_description: NanoBrightAops retrieval task.
-    description: NanoBrightAops is a retrieval task in NanoBRIGHT. Queries must be
-      matched to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    category: natural_language
+    short_description: Math Olympiad problem retrieval.
+    description: Queries are mathematical problems from Art of Problem Solving; systems retrieve
+      similar problems.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 111
       min_chars: 85
@@ -358,22 +482,33 @@ task_metadata:
   NanoBrightTheoremQATheorems:
     language: en
     category: natural_language
-    short_description: NanoBrightTheoremQATheorems retrieval task.
-    description: NanoBrightTheoremQATheorems is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Theorem definition and proof retrieval.
+    description: Queries are mathematical problems; systems retrieve relevant theorem definitions
+      and proofs from ProofWiki.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 76
       min_chars: 159
@@ -389,22 +524,33 @@ task_metadata:
   NanoBrightTheoremQAQuestions:
     language: en
     category: natural_language
-    short_description: NanoBrightTheoremQAQuestions retrieval task.
-    description: NanoBrightTheoremQAQuestions is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: TheoremQA scenario question retrieval.
+    description: Queries are theorem questions rephrased as real-world scenarios; systems
+      retrieve relevant ProofWiki theorem definitions.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 194
       min_chars: 84
@@ -420,22 +566,33 @@ task_metadata:
   NanoBrightBiologyLong:
     language: en
     category: natural_language
-    short_description: NanoBrightBiologyLong retrieval task.
-    description: NanoBrightBiologyLong is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Long-document Biology StackExchange citation retrieval.
+    description: Long-document variant of the Biology StackExchange BRIGHT task, retrieving
+      cited web documents with long source documents.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 89
@@ -451,22 +608,33 @@ task_metadata:
   NanoBrightEarthScienceLong:
     language: en
     category: natural_language
-    short_description: NanoBrightEarthScienceLong retrieval task.
-    description: NanoBrightEarthScienceLong is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Long-document Earth Science citation retrieval.
+    description: Long-document variant of the Earth Science StackExchange BRIGHT task, retrieving
+      cited web documents with long source documents.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 116
       min_chars: 83
@@ -482,22 +650,33 @@ task_metadata:
   NanoBrightEconomicsLong:
     language: en
     category: natural_language
-    short_description: NanoBrightEconomicsLong retrieval task.
-    description: NanoBrightEconomicsLong is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Long-document Economics citation retrieval.
+    description: Long-document variant of the Economics StackExchange BRIGHT task, retrieving
+      cited web documents with long source documents.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 164
@@ -513,22 +692,33 @@ task_metadata:
   NanoBrightPsychologyLong:
     language: en
     category: natural_language
-    short_description: NanoBrightPsychologyLong retrieval task.
-    description: NanoBrightPsychologyLong is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Long-document Psychology citation retrieval.
+    description: Long-document variant of the Psychology StackExchange BRIGHT task, retrieving
+      cited web documents with long source documents.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 166
@@ -544,22 +734,33 @@ task_metadata:
   NanoBrightRoboticsLong:
     language: en
     category: natural_language
-    short_description: NanoBrightRoboticsLong retrieval task.
-    description: NanoBrightRoboticsLong is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Long-document Robotics citation retrieval.
+    description: Long-document variant of the Robotics StackExchange BRIGHT task, retrieving
+      cited web documents with long source documents.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 165
@@ -575,22 +776,33 @@ task_metadata:
   NanoBrightStackoverflowLong:
     language: en
     category: code
-    short_description: NanoBrightStackoverflowLong retrieval task.
-    description: NanoBrightStackoverflowLong is a retrieval task in NanoBRIGHT. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Long-document Stack Overflow citation retrieval.
+    description: Long-document variant of the Stack Overflow BRIGHT task, retrieving cited
+      web documents with long source documents.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 117
       min_chars: 185
@@ -606,22 +818,33 @@ task_metadata:
   NanoBrightSustainableLivingLong:
     language: en
     category: natural_language
-    short_description: NanoBrightSustainableLivingLong retrieval task.
-    description: NanoBrightSustainableLivingLong is a retrieval task in NanoBRIGHT.
-      Queries must be matched to relevant corpus documents, so scores reflect how
-      well a model represents task-specific intent, document semantics, and hard negative
-      distinctions in a compact Nano benchmark setting.
+    short_description: Long-document Sustainable Living citation retrieval.
+    description: Long-document variant of the Sustainable Living StackExchange BRIGHT task,
+      retrieving cited web documents with long source documents.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 108
       min_chars: 158
@@ -636,23 +859,34 @@ task_metadata:
       median_chars: 16808.0
   NanoBrightPonyLong:
     language: en
-    category: natural_language
-    short_description: NanoBrightPonyLong retrieval task.
-    description: NanoBrightPonyLong is a retrieval task in NanoBRIGHT. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    category: code
+    short_description: Long-document Pony documentation retrieval.
+    description: Long-document variant of the Pony programming language task, retrieving relevant
+      syntax documentation passages.
     citation_keys:
-    - nanoirbench2026
+    - su2024bright
     references:
-    - title: 'NanoBRIGHT: Nano information retrieval benchmark subset'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Hongjin Su
+      - Howard Yen
+      - Mengzhou Xia
+      - Weijia Shi
+      - Niklas Muennighoff
+      - Han-yu Wang
+      - Haisu Liu
+      - Quan Shi
+      - Zachary S. Siegel
+      - Michael Tang
+      - et al.
+      year: 2024
+      url: https://arxiv.org/abs/2407.12883
+      doi: 10.48550/arXiv.2407.12883
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
+      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
+      \ and Siegel, Zachary S. and Tang, Michael and others},\n  journal = {arXiv preprint\
+      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
     query_text_stats:
       count: 112
       min_chars: 182

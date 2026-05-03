@@ -18,10 +18,10 @@ splits:
 metadata:
   language: en
   category: natural_language
-  short_description: NanoMTEB retrieval benchmark group.
-  description: NanoMTEB is a Nano-style information retrieval benchmark group. It
-    evaluates embedding and retrieval models by ranking corpus documents for each
-    query using compact task splits designed for fast, repeatable benchmarking.
+  short_description: Compact MTEB English retrieval benchmark.
+  description: NanoMTEB is a compact English retrieval benchmark aligned with the MTEB retrieval
+    evaluation suite. It combines small BEIR-style and hard-negative retrieval splits for
+    efficient embedding-model comparison.
   citation_keys:
   - muennighoff2023mteb
   references:
@@ -34,33 +34,34 @@ metadata:
     year: 2023
     url: https://arxiv.org/abs/2210.07316
     doi: 10.48550/arXiv.2210.07316
-  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
-    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
-    \ and Reimers, Nils},\n  year = {2023}\n}\n"
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
+    \ Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n  doi\
+    \ = {10.48550/arXiv.2210.07316}\n}\n"
 task_metadata:
   NanoArguAna:
     language: en
     category: natural_language
-    short_description: NanoArguAna retrieval task.
-    description: NanoArguAna is a retrieval task in NanoMTEB. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Argument retrieval over counterargument pairs.
+    description: A compact ArguAna split where each query is an argument and relevant documents
+      are strong counterarguments. It tests whether retrieval models capture argumentative
+      stance and semantic opposition beyond lexical overlap. This split is the compact NanoArguAna
+      subset used by NanoMTEB.
     citation_keys:
-    - muennighoff2023mteb
+    - wachsmuth2018arguana
     references:
-    - title: 'MTEB: Massive Text Embedding Benchmark'
+    - title: Retrieval of the Best Counterargument without Prior Topic Knowledge
       authors:
-      - Niklas Muennighoff
-      - Nouamane Tazi
-      - Loic Magne
-      - Nils Reimers
-      year: 2023
-      url: https://arxiv.org/abs/2210.07316
-      doi: 10.48550/arXiv.2210.07316
-    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
-      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
-      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+      - Henning Wachsmuth
+      - Shahbaz Syed
+      - Benno Stein
+      year: 2018
+      url: https://aclanthology.org/P18-1023/
+      doi: 10.18653/v1/P18-1023
+    bibtex: "@inproceedings{wachsmuth2018arguana,\n  title = {Retrieval of the Best Counterargument\
+      \ without Prior Topic Knowledge},\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
+      \ and Stein, Benno},\n  booktitle = {Proceedings of ACL},\n  year = {2018},\n  url =\
+      \ {https://aclanthology.org/P18-1023/},\n  doi = {10.18653/v1/P18-1023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 358
@@ -76,26 +77,26 @@ task_metadata:
   NanoCQADupstackGaming:
     language: en
     category: natural_language
-    short_description: NanoCQADupstackGaming retrieval task.
-    description: NanoCQADupstackGaming is a retrieval task in NanoMTEB. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Duplicate question retrieval for gaming Q&A.
+    description: A compact CQADupStack retrieval split from the gaming Stack Exchange community.
+      It tests duplicate-question retrieval for user-generated technical and hobbyist Q&A.
+      This split is the compact NanoCQADupstackGaming subset used by NanoMTEB.
     citation_keys:
-    - muennighoff2023mteb
+    - hoogeveen2015cqadupstack
     references:
-    - title: 'MTEB: Massive Text Embedding Benchmark'
+    - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
       authors:
-      - Niklas Muennighoff
-      - Nouamane Tazi
-      - Loic Magne
-      - Nils Reimers
-      year: 2023
-      url: https://arxiv.org/abs/2210.07316
-      doi: 10.48550/arXiv.2210.07316
-    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
-      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
-      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+      - Doris Hoogeveen
+      - Karin M. Verspoor
+      - Timothy Baldwin
+      year: 2015
+      url: https://doi.org/10.1145/2838931.2838934
+      doi: 10.1145/2838931.2838934
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris\
+      \ and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n\
+      \  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 15
@@ -111,26 +112,26 @@ task_metadata:
   NanoCQADupstackUnix:
     language: en
     category: natural_language
-    short_description: NanoCQADupstackUnix retrieval task.
-    description: NanoCQADupstackUnix is a retrieval task in NanoMTEB. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Duplicate question retrieval for Unix Q&A.
+    description: A compact CQADupStack retrieval split from the Unix Stack Exchange community.
+      It tests duplicate-question retrieval for command-line and systems-administration questions.
+      This split is the compact NanoCQADupstackUnix subset used by NanoMTEB.
     citation_keys:
-    - muennighoff2023mteb
+    - hoogeveen2015cqadupstack
     references:
-    - title: 'MTEB: Massive Text Embedding Benchmark'
+    - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
       authors:
-      - Niklas Muennighoff
-      - Nouamane Tazi
-      - Loic Magne
-      - Nils Reimers
-      year: 2023
-      url: https://arxiv.org/abs/2210.07316
-      doi: 10.48550/arXiv.2210.07316
-    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
-      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
-      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+      - Doris Hoogeveen
+      - Karin M. Verspoor
+      - Timothy Baldwin
+      year: 2015
+      url: https://doi.org/10.1145/2838931.2838934
+      doi: 10.1145/2838931.2838934
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris\
+      \ and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n\
+      \  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 15
@@ -146,13 +147,13 @@ task_metadata:
   NanoClimateFEVERHardNegatives:
     language: en
     category: natural_language
-    short_description: NanoClimateFEVERHardNegatives retrieval task.
-    description: NanoClimateFEVERHardNegatives is a retrieval task in NanoMTEB. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Climate claim retrieval with hard negatives.
+    description: A NanoMTEB hard-negative variant of Climate-FEVER. Queries are climate claims,
+      and models must rank supporting or refuting evidence above semantically close but non-relevant
+      candidates. This split is the compact NanoClimateFEVERHardNegatives subset used by NanoMTEB.
     citation_keys:
     - muennighoff2023mteb
+    - diggelmann2021climatefever
     references:
     - title: 'MTEB: Massive Text Embedding Benchmark'
       authors:
@@ -163,9 +164,24 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2210.07316
       doi: 10.48550/arXiv.2210.07316
-    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
-      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
-      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    - title: 'CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims'
+      authors:
+      - Thomas Diggelmann
+      - Jordan Boyd-Graber
+      - Jannis Bulian
+      - Massimiliano Ciaramita
+      - Markus Leippold
+      year: 2021
+      url: https://arxiv.org/abs/2012.00614
+      doi: 10.48550/arXiv.2012.00614
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
+      \ Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n \
+      \ doi = {10.48550/arXiv.2210.07316}\n}\n@misc{diggelmann2021climatefever,\n  title =\
+      \ {{CLIMATE-FEVER}: A Dataset for Verification of Real-World Climate Claims},\n  author\
+      \ = {Diggelmann, Thomas and Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano\
+      \ and Leippold, Markus},\n  year = {2021},\n  url = {https://arxiv.org/abs/2012.00614},\n\
+      \  doi = {10.48550/arXiv.2012.00614}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 35
@@ -181,13 +197,13 @@ task_metadata:
   NanoFEVERHardNegatives:
     language: en
     category: natural_language
-    short_description: NanoFEVERHardNegatives retrieval task.
-    description: NanoFEVERHardNegatives is a retrieval task in NanoMTEB. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: FEVER evidence retrieval with hard negatives.
+    description: A NanoMTEB hard-negative variant of FEVER. The task keeps the claim-to-Wikipedia-evidence
+      framing while emphasizing difficult non-relevant candidates near the gold evidence.
+      This split is the compact NanoFEVERHardNegatives subset used by NanoMTEB.
     citation_keys:
     - muennighoff2023mteb
+    - thorne2018fever
     references:
     - title: 'MTEB: Massive Text Embedding Benchmark'
       authors:
@@ -198,9 +214,23 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2210.07316
       doi: 10.48550/arXiv.2210.07316
-    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
-      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
-      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    - title: 'FEVER: a Large-scale Dataset for Fact Extraction and Verification'
+      authors:
+      - James Thorne
+      - Andreas Vlachos
+      - Christos Christodoulopoulos
+      - Arpit Mittal
+      year: 2018
+      url: https://aclanthology.org/N18-1074/
+      doi: 10.18653/v1/N18-1074
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
+      \ Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n \
+      \ doi = {10.48550/arXiv.2210.07316}\n}\n@inproceedings{thorne2018fever,\n  title = {{FEVER}:\
+      \ a Large-scale Dataset for Fact Extraction and Verification},\n  author = {Thorne,\
+      \ James and Vlachos, Andreas and Christodoulopoulos, Christos and Mittal, Arpit},\n\
+      \  booktitle = {Proceedings of NAACL-HLT},\n  year = {2018},\n  url = {https://aclanthology.org/N18-1074/},\n\
+      \  doi = {10.18653/v1/N18-1074}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 21
@@ -216,26 +246,31 @@ task_metadata:
   NanoFiQA2018:
     language: en
     category: natural_language
-    short_description: NanoFiQA2018 retrieval task.
-    description: NanoFiQA2018 is a retrieval task in NanoMTEB. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Financial opinion question answering retrieval.
+    description: A compact FiQA-2018 retrieval split focused on finance-domain questions and
+      opinion-bearing answers. It tests retrieval under specialized financial terminology
+      and user question phrasing. This split is the compact NanoFiQA2018 subset used by NanoMTEB.
     citation_keys:
-    - muennighoff2023mteb
+    - maia2018fiqa
     references:
-    - title: 'MTEB: Massive Text Embedding Benchmark'
+    - title: 'WWW''18 Open Challenge: Financial Opinion Mining and Question Answering'
       authors:
-      - Niklas Muennighoff
-      - Nouamane Tazi
-      - Loic Magne
-      - Nils Reimers
-      year: 2023
-      url: https://arxiv.org/abs/2210.07316
-      doi: 10.48550/arXiv.2210.07316
-    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
-      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
-      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+      - Macedo Maia
+      - Siegfried Handschuh
+      - Andre Freitas
+      - Brian Davis
+      - Ross McDermott
+      - Manel Zarrouk
+      - Alexandra Balahur
+      year: 2018
+      url: https://doi.org/10.1145/3184558.3192301
+      doi: 10.1145/3184558.3192301
+    bibtex: "@inproceedings{maia2018fiqa,\n  title = {{WWW}'18 Open Challenge: Financial Opinion\
+      \ Mining and Question Answering},\n  author = {Maia, Macedo and Handschuh, Siegfried\
+      \ and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel and Balahur,\
+      \ Alexandra},\n  booktitle = {The 2018 Web Conference Companion},\n  year = {2018},\n\
+      \  url = {https://doi.org/10.1145/3184558.3192301},\n  doi = {10.1145/3184558.3192301}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 19
@@ -251,13 +286,13 @@ task_metadata:
   NanoHotpotQAHardNegatives:
     language: en
     category: natural_language
-    short_description: NanoHotpotQAHardNegatives retrieval task.
-    description: NanoHotpotQAHardNegatives is a retrieval task in NanoMTEB. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: HotpotQA retrieval with hard negatives.
+    description: A NanoMTEB hard-negative variant of HotpotQA. Models retrieve Wikipedia evidence
+      for multi-hop questions while separating true evidence from close distractor passages.
+      This split is the compact NanoHotpotQAHardNegatives subset used by NanoMTEB.
     citation_keys:
     - muennighoff2023mteb
+    - yang2018hotpotqa
     references:
     - title: 'MTEB: Massive Text Embedding Benchmark'
       authors:
@@ -268,9 +303,27 @@ task_metadata:
       year: 2023
       url: https://arxiv.org/abs/2210.07316
       doi: 10.48550/arXiv.2210.07316
-    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
-      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
-      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+    - title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering'
+      authors:
+      - Zhilin Yang
+      - Peng Qi
+      - Saizheng Zhang
+      - Yoshua Bengio
+      - William W. Cohen
+      - Ruslan Salakhutdinov
+      - Christopher D. Manning
+      year: 2018
+      url: https://aclanthology.org/D18-1259/
+      doi: 10.18653/v1/D18-1259
+    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
+      \ Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n \
+      \ doi = {10.48550/arXiv.2210.07316}\n}\n@inproceedings{yang2018hotpotqa,\n  title =\
+      \ {{HotpotQA}: A Dataset for Diverse, Explainable Multi-hop Question Answering},\n \
+      \ author = {Yang, Zhilin and Qi, Peng and Zhang, Saizheng and Bengio, Yoshua and Cohen,\
+      \ William W. and Salakhutdinov, Ruslan and Manning, Christopher D.},\n  booktitle =\
+      \ {Proceedings of EMNLP},\n  year = {2018},\n  url = {https://aclanthology.org/D18-1259/},\n\
+      \  doi = {10.18653/v1/D18-1259}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 34
@@ -286,26 +339,28 @@ task_metadata:
   NanoSCIDOCS:
     language: en
     category: natural_language
-    short_description: NanoSCIDOCS retrieval task.
-    description: NanoSCIDOCS is a retrieval task in NanoMTEB. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Scientific document retrieval from SCIDOCS.
+    description: A compact SCIDOCS retrieval split over scientific papers. It evaluates retrieval
+      of related academic documents using citation-informed scholarly relevance signals. This
+      split is the compact NanoSCIDOCS subset used by NanoMTEB.
     citation_keys:
-    - muennighoff2023mteb
+    - cohan2020specter
     references:
-    - title: 'MTEB: Massive Text Embedding Benchmark'
+    - title: 'SPECTER: Document-level Representation Learning using Citation-informed Transformers'
       authors:
-      - Niklas Muennighoff
-      - Nouamane Tazi
-      - Loic Magne
-      - Nils Reimers
-      year: 2023
-      url: https://arxiv.org/abs/2210.07316
-      doi: 10.48550/arXiv.2210.07316
-    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
-      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
-      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+      - Arman Cohan
+      - Sergey Feldman
+      - Iz Beltagy
+      - Doug Downey
+      - Daniel S. Weld
+      year: 2020
+      url: https://aclanthology.org/2020.acl-main.207/
+      doi: 10.18653/v1/2020.acl-main.207
+    bibtex: "@inproceedings{cohan2020specter,\n  title = {{SPECTER}: Document-level Representation\
+      \ Learning using Citation-informed Transformers},\n  author = {Cohan, Arman and Feldman,\
+      \ Sergey and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {Proceedings\
+      \ of ACL},\n  year = {2020},\n  url = {https://aclanthology.org/2020.acl-main.207/},\n\
+      \  doi = {10.18653/v1/2020.acl-main.207}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 30
@@ -321,26 +376,31 @@ task_metadata:
   NanoTouche2020:
     language: en
     category: natural_language
-    short_description: NanoTouche2020 retrieval task.
-    description: NanoTouche2020 is a retrieval task in NanoMTEB. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Argument retrieval for controversial questions.
+    description: A compact Touche 2020 argument-retrieval split. Queries are controversial
+      questions, and relevant documents provide arguments that address the topic. This split
+      is the compact NanoTouche2020 subset used by NanoMTEB.
     citation_keys:
-    - muennighoff2023mteb
+    - potthast2022touche20
     references:
-    - title: 'MTEB: Massive Text Embedding Benchmark'
+    - title: Touche20-Argument-Retrieval-for-Controversial-Questions
       authors:
-      - Niklas Muennighoff
-      - Nouamane Tazi
-      - Loic Magne
-      - Nils Reimers
-      year: 2023
-      url: https://arxiv.org/abs/2210.07316
-      doi: 10.48550/arXiv.2210.07316
-    bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {MTEB: Massive Text Embedding\
-      \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne,\
-      \ Loic and Reimers, Nils},\n  year = {2023}\n}\n"
+      - Martin Potthast
+      - Matthias Hagen
+      - Benno Stein
+      - Maik Froebe
+      - Alexander Bondarenko
+      - Nandan Thakur
+      - Ehsan Kamalloo
+      - Jimmy Lin
+      year: 2022
+      url: https://doi.org/10.5281/zenodo.6862281
+      doi: 10.5281/zenodo.6862281
+    bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
+      \  author = {Potthast, Martin and Hagen, Matthias and Stein, Benno and Froebe, Maik\
+      \ and Bondarenko, Alexander and Thakur, Nandan and Kamalloo, Ehsan and Lin, Jimmy},\n\
+      \  year = {2022},\n  url = {https://doi.org/10.5281/zenodo.6862281},\n  doi = {10.5281/zenodo.6862281}\n\
+      }\n"
     query_text_stats:
       count: 49
       min_chars: 16

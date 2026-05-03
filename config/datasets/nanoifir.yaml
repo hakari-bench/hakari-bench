@@ -16,41 +16,70 @@ splits:
 metadata:
   language: en
   category: natural_language
-  short_description: NanoIFIR retrieval benchmark group.
-  description: NanoIFIR is a Nano-style information retrieval benchmark group. It
-    evaluates embedding and retrieval models by ranking corpus documents for each
-    query using compact task splits designed for fast, repeatable benchmarking.
+  short_description: Nano subset of the IFIR instruction-following retrieval benchmark.
+  description: NanoIFIR samples IFIR expert-domain instruction-following retrieval tasks,
+    testing whether retrievers respect nuanced legal, medical, finance, and scientific search
+    instructions.
   citation_keys:
-  - nanoirbench2026
+  - song2025ifir
   references:
-  - title: 'NanoIFIR: Nano information retrieval benchmark subset'
+  - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
+      Information Retrieval'
     authors:
-    - Nano IR Benchmark contributors
-    year: 2026
-    url: https://huggingface.co/hakari-bench
-  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    - Tingyu Song
+    - Guo Gan
+    - Mingsheng Shang
+    - Yilun Zhao
+    year: 2025
+    url: https://aclanthology.org/2025.naacl-long.511/
+  bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for Evaluating\
+    \ Instruction-Following in Expert-Domain Information Retrieval},\n  author = {Tingyu Song\
+    \ and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings of the\
+    \ 2025 Conference of the Nations of the Americas Chapter of the Association for Computational\
+    \ Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  pages = {10186--10204},\n\
+    \  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n}\n"
 task_metadata:
   NanoIFIRAila:
     language: en
     category: natural_language
-    short_description: NanoIFIRAila retrieval task.
-    description: NanoIFIRAila is a retrieval task in NanoIFIR. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: IFIR legal AILA retrieval.
+    description: Uses IFIR legal instructions over AILA-style legal documents to test retrieval
+      under lawyer or legal-assistant information needs.
     citation_keys:
-    - nanoirbench2026
+    - song2025ifir
+    - aila2019retrieval
     references:
-    - title: 'NanoIFIR: Nano information retrieval benchmark subset'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
+        Information Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Tingyu Song
+      - Guo Gan
+      - Mingsheng Shang
+      - Yilun Zhao
+      year: 2025
+      url: https://aclanthology.org/2025.naacl-long.511/
+    - title: AILA 2019 Precedent & Statute Retrieval Task
+      authors:
+      - Paheli Bhattacharya
+      - Kripabandhu Ghosh
+      - Saptarshi Ghosh
+      - Arindam Pal
+      - Parth Mehta
+      - Arnab Bhattacharya
+      - Prasenjit Majumder
+      year: 2020
+      url: https://doi.org/10.5281/zenodo.4063986
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
+      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
+      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
+      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
+      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      }\n\n@dataset{aila2019retrieval,\n  title = {AILA 2019 Precedent and Statute Retrieval\
+      \ Task},\n  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh\
+      \ and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},\n\
+      \  publisher = {Zenodo},\n  year = {2020},\n  doi = {10.5281/zenodo.4063986},\n  url\
+      \ = {https://doi.org/10.5281/zenodo.4063986}\n}\n"
     query_text_stats:
       count: 40
       min_chars: 1174
@@ -66,22 +95,28 @@ task_metadata:
   NanoIFIRCds:
     language: en
     category: natural_language
-    short_description: NanoIFIRCds retrieval task.
-    description: NanoIFIRCds is a retrieval task in NanoIFIR. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: IFIR clinical-decision retrieval.
+    description: Uses IFIR medical instructions to retrieve clinical decision-support documents
+      for treatment, diagnosis, or trial-oriented needs.
     citation_keys:
-    - nanoirbench2026
+    - song2025ifir
     references:
-    - title: 'NanoIFIR: Nano information retrieval benchmark subset'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
+        Information Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Tingyu Song
+      - Guo Gan
+      - Mingsheng Shang
+      - Yilun Zhao
+      year: 2025
+      url: https://aclanthology.org/2025.naacl-long.511/
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
+      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
+      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
+      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
+      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      }\n"
     query_text_stats:
       count: 42
       min_chars: 136
@@ -97,22 +132,43 @@ task_metadata:
   NanoIFIRFiQA:
     language: en
     category: natural_language
-    short_description: NanoIFIRFiQA retrieval task.
-    description: NanoIFIRFiQA is a retrieval task in NanoIFIR. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: IFIR financial advice retrieval.
+    description: Uses IFIR financial instructions over FiQA-style material to retrieve documents
+      matching nuanced personal finance questions.
     citation_keys:
-    - nanoirbench2026
+    - song2025ifir
+    - maia2018fiqa
     references:
-    - title: 'NanoIFIR: Nano information retrieval benchmark subset'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
+        Information Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Tingyu Song
+      - Guo Gan
+      - Mingsheng Shang
+      - Yilun Zhao
+      year: 2025
+      url: https://aclanthology.org/2025.naacl-long.511/
+    - title: 'WWW''18 Open Challenge: Financial Opinion Mining and Question Answering'
+      authors:
+      - Macedo Maia
+      - Siegfried Handschuh
+      - Andre Freitas
+      - Brian Davis
+      - Ross McDermott
+      - Manel Zarrouk
+      - Alexandra Balahur
+      year: 2018
+      url: https://sites.google.com/view/fiqa/
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
+      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
+      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
+      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
+      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      }\n\n@inproceedings{maia2018fiqa,\n  title = {WWW'18 Open Challenge: Financial Opinion\
+      \ Mining and Question Answering},\n  author = {Macedo Maia and Siegfried Handschuh and\
+      \ Andre Freitas and Brian Davis and Ross McDermott and Manel Zarrouk and Alexandra Balahur},\n\
+      \  year = {2018},\n  url = {https://sites.google.com/view/fiqa/}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 22
@@ -128,22 +184,28 @@ task_metadata:
   NanoIFIRFire:
     language: en
     category: natural_language
-    short_description: NanoIFIRFire retrieval task.
-    description: NanoIFIRFire is a retrieval task in NanoIFIR. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: IFIR legal FIRE retrieval.
+    description: Uses IFIR legal instructions to retrieve relevant legal documents in a FIRE-derived
+      expert-domain retrieval subset.
     citation_keys:
-    - nanoirbench2026
+    - song2025ifir
     references:
-    - title: 'NanoIFIR: Nano information retrieval benchmark subset'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
+        Information Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Tingyu Song
+      - Guo Gan
+      - Mingsheng Shang
+      - Yilun Zhao
+      year: 2025
+      url: https://aclanthology.org/2025.naacl-long.511/
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
+      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
+      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
+      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
+      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      }\n"
     query_text_stats:
       count: 167
       min_chars: 1783
@@ -159,22 +221,40 @@ task_metadata:
   NanoIFIRNFCorpus:
     language: en
     category: natural_language
-    short_description: NanoIFIRNFCorpus retrieval task.
-    description: NanoIFIRNFCorpus is a retrieval task in NanoIFIR. Queries must be
-      matched to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: IFIR medical literature retrieval.
+    description: Uses IFIR instructions over NFCorpus-style medical and nutrition literature
+      for student or researcher information needs.
     citation_keys:
-    - nanoirbench2026
+    - song2025ifir
+    - boteva2016nfcorpus
     references:
-    - title: 'NanoIFIR: Nano information retrieval benchmark subset'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
+        Information Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Tingyu Song
+      - Guo Gan
+      - Mingsheng Shang
+      - Yilun Zhao
+      year: 2025
+      url: https://aclanthology.org/2025.naacl-long.511/
+    - title: 'NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval'
+      authors:
+      - Vera Boteva
+      - Demian Gholipour
+      - Artem Sokolov
+      - Stefan Riezler
+      year: 2016
+      url: https://link.springer.com/chapter/10.1007/978-3-319-30671-1_58
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
+      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
+      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
+      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
+      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      }\n\n@inproceedings{boteva2016nfcorpus,\n  title = {NFCorpus: A Full-Text Learning to\
+      \ Rank Dataset for Medical Information Retrieval},\n  author = {Vera Boteva and Demian\
+      \ Gholipour and Artem Sokolov and Stefan Riezler},\n  booktitle = {Advances in Information\
+      \ Retrieval},\n  pages = {688--694},\n  year = {2016}\n}\n"
     query_text_stats:
       count: 86
       min_chars: 16
@@ -190,22 +270,28 @@ task_metadata:
   NanoIFIRPm:
     language: en
     category: natural_language
-    short_description: NanoIFIRPm retrieval task.
-    description: NanoIFIRPm is a retrieval task in NanoIFIR. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: IFIR precision-medicine retrieval.
+    description: Uses IFIR medical instructions to retrieve treatment, diagnosis, or clinical-trial
+      information for doctor-like queries.
     citation_keys:
-    - nanoirbench2026
+    - song2025ifir
     references:
-    - title: 'NanoIFIR: Nano information retrieval benchmark subset'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
+        Information Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Tingyu Song
+      - Guo Gan
+      - Mingsheng Shang
+      - Yilun Zhao
+      year: 2025
+      url: https://aclanthology.org/2025.naacl-long.511/
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
+      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
+      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
+      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
+      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      }\n"
     query_text_stats:
       count: 59
       min_chars: 118
@@ -221,22 +307,44 @@ task_metadata:
   NanoIFIRScifact:
     language: en
     category: natural_language
-    short_description: NanoIFIRScifact retrieval task.
-    description: NanoIFIRScifact is a retrieval task in NanoIFIR. Queries must be
-      matched to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: IFIR scientific literature retrieval.
+    description: Uses IFIR scientific instructions over SciFact-style literature to retrieve
+      papers relevant to research claims or questions.
     citation_keys:
-    - nanoirbench2026
+    - song2025ifir
+    - wadden2020scifact
     references:
-    - title: 'NanoIFIR: Nano information retrieval benchmark subset'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
+        Information Retrieval'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Tingyu Song
+      - Guo Gan
+      - Mingsheng Shang
+      - Yilun Zhao
+      year: 2025
+      url: https://aclanthology.org/2025.naacl-long.511/
+    - title: 'SciFact: A Dataset and Benchmark for Scientific Claim Verification'
+      authors:
+      - David Wadden
+      - Shanchuan Lin
+      - Kyle Lo
+      - Lucy Lu Wang
+      - Madeleine van Zuylen
+      - Arman Cohan
+      - Hannaneh Hajishirzi
+      year: 2020
+      url: https://aclanthology.org/2020.emnlp-main.609/
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
+      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
+      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
+      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
+      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      }\n\n@inproceedings{wadden2020scifact,\n  title = {SciFact: A Dataset and Benchmark\
+      \ for Scientific Claim Verification},\n  author = {David Wadden and Shanchuan Lin and\
+      \ Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen and Arman Cohan and Hannaneh Hajishirzi},\n\
+      \  booktitle = {Proceedings of EMNLP},\n  year = {2020},\n  url = {https://aclanthology.org/2020.emnlp-main.609/}\n\
+      }\n"
     query_text_stats:
       count: 43
       min_chars: 33

@@ -13,41 +13,57 @@ splits:
 metadata:
   language: en
   category: code
-  short_description: NanoCodeRAG retrieval benchmark group.
-  description: NanoCodeRAG is a Nano-style information retrieval benchmark group.
-    It evaluates embedding and retrieval models by ranking corpus documents for each
-    query using compact task splits designed for fast, repeatable benchmarking.
+  short_description: Nano subset of CodeRAG-Bench code retrieval tasks.
+  description: NanoCodeRAG evaluates retrieval for code retrieval-augmented generation. Its
+    compact task splits cover programming solutions, online tutorials, library documentation,
+    and Stack Overflow posts.
   citation_keys:
-  - nanoirbench2026
+  - wang2024coderagbench
   references:
-  - title: 'NanoCodeRAG: Nano information retrieval benchmark subset'
+  - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
     authors:
-    - Nano IR Benchmark contributors
-    year: 2026
-    url: https://huggingface.co/hakari-bench
-  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    - Zora Zhiruo Wang
+    - Akari Asai
+    - Xinyan Velocity Yu
+    - Frank F. Xu
+    - Yiqing Xie
+    - Graham Neubig
+    - Daniel Fried
+    year: 2024
+    url: https://arxiv.org/abs/2406.14497
+    doi: 10.48550/arXiv.2406.14497
+  bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
+    \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
+    \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
+    \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://arxiv.org/abs/2406.14497},\n\
+    \  year = {2024}\n}\n"
 task_metadata:
   NanoCodeRAGLibraryDocumentationSolutions:
     language: en
     category: code
-    short_description: NanoCodeRAGLibraryDocumentationSolutions retrieval task.
-    description: NanoCodeRAGLibraryDocumentationSolutions is a retrieval task in NanoCodeRAG.
-      Queries must be matched to relevant corpus documents, so scores reflect how
-      well a model represents task-specific intent, document semantics, and hard negative
-      distinctions in a compact Nano benchmark setting.
+    short_description: Python library documentation retrieval.
+    description: Code-related queries are matched to relevant Python library documentation
+      sections from CodeRAG-Bench.
     citation_keys:
-    - nanoirbench2026
+    - wang2024coderagbench
     references:
-    - title: 'NanoCodeRAG: Nano information retrieval benchmark subset'
+    - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Zora Zhiruo Wang
+      - Akari Asai
+      - Xinyan Velocity Yu
+      - Frank F. Xu
+      - Yiqing Xie
+      - Graham Neubig
+      - Daniel Fried
+      year: 2024
+      url: https://arxiv.org/abs/2406.14497
+      doi: 10.48550/arXiv.2406.14497
+    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
+      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
+      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://arxiv.org/abs/2406.14497},\n\
+      \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 40
@@ -63,22 +79,29 @@ task_metadata:
   NanoCodeRAGOnlineTutorials:
     language: en
     category: code
-    short_description: NanoCodeRAGOnlineTutorials retrieval task.
-    description: NanoCodeRAGOnlineTutorials is a retrieval task in NanoCodeRAG. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Online programming tutorial retrieval.
+    description: Code-related queries are matched to relevant online programming tutorial
+      documents from CodeRAG-Bench.
     citation_keys:
-    - nanoirbench2026
+    - wang2024coderagbench
     references:
-    - title: 'NanoCodeRAG: Nano information retrieval benchmark subset'
+    - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Zora Zhiruo Wang
+      - Akari Asai
+      - Xinyan Velocity Yu
+      - Frank F. Xu
+      - Yiqing Xie
+      - Graham Neubig
+      - Daniel Fried
+      year: 2024
+      url: https://arxiv.org/abs/2406.14497
+      doi: 10.48550/arXiv.2406.14497
+    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
+      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
+      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://arxiv.org/abs/2406.14497},\n\
+      \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 17
@@ -94,22 +117,29 @@ task_metadata:
   NanoCodeRAGProgrammingSolutions:
     language: en
     category: code
-    short_description: NanoCodeRAGProgrammingSolutions retrieval task.
-    description: NanoCodeRAGProgrammingSolutions is a retrieval task in NanoCodeRAG.
-      Queries must be matched to relevant corpus documents, so scores reflect how
-      well a model represents task-specific intent, document semantics, and hard negative
-      distinctions in a compact Nano benchmark setting.
+    short_description: Programming solution retrieval.
+    description: Code-related queries are matched to relevant programming solution documents
+      from CodeRAG-Bench.
     citation_keys:
-    - nanoirbench2026
+    - wang2024coderagbench
     references:
-    - title: 'NanoCodeRAG: Nano information retrieval benchmark subset'
+    - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Zora Zhiruo Wang
+      - Akari Asai
+      - Xinyan Velocity Yu
+      - Frank F. Xu
+      - Yiqing Xie
+      - Graham Neubig
+      - Daniel Fried
+      year: 2024
+      url: https://arxiv.org/abs/2406.14497
+      doi: 10.48550/arXiv.2406.14497
+    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
+      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
+      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://arxiv.org/abs/2406.14497},\n\
+      \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 11
@@ -125,22 +155,28 @@ task_metadata:
   NanoCodeRAGStackoverflowPosts:
     language: en
     category: code
-    short_description: NanoCodeRAGStackoverflowPosts retrieval task.
-    description: NanoCodeRAGStackoverflowPosts is a retrieval task in NanoCodeRAG.
-      Queries must be matched to relevant corpus documents, so scores reflect how
-      well a model represents task-specific intent, document semantics, and hard negative
-      distinctions in a compact Nano benchmark setting.
+    short_description: Stack Overflow post retrieval.
+    description: Code-related queries are matched to relevant Stack Overflow posts from CodeRAG-Bench.
     citation_keys:
-    - nanoirbench2026
+    - wang2024coderagbench
     references:
-    - title: 'NanoCodeRAG: Nano information retrieval benchmark subset'
+    - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Zora Zhiruo Wang
+      - Akari Asai
+      - Xinyan Velocity Yu
+      - Frank F. Xu
+      - Yiqing Xie
+      - Graham Neubig
+      - Daniel Fried
+      year: 2024
+      url: https://arxiv.org/abs/2406.14497
+      doi: 10.48550/arXiv.2406.14497
+    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
+      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
+      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://arxiv.org/abs/2406.14497},\n\
+      \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 25

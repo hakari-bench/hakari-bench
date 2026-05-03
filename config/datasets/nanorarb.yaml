@@ -26,41 +26,59 @@ splits:
 metadata:
   language: en
   category: natural_language
-  short_description: NanoRARb retrieval benchmark group.
-  description: NanoRARb is a Nano-style information retrieval benchmark group. It
-    evaluates embedding and retrieval models by ranking corpus documents for each
-    query using compact task splits designed for fast, repeatable benchmarking.
+  short_description: Nano subset of the RAR-b reasoning-as-retrieval benchmark.
+  description: NanoRARb converts reasoning benchmarks into retrieval tasks, evaluating whether
+    retrievers can rank the correct answer or solution for commonsense, temporal, math, and
+    code reasoning queries.
   citation_keys:
-  - nanoirbench2026
+  - xiao2024rarb
   references:
-  - title: 'NanoRARb: Nano information retrieval benchmark subset'
+  - title: 'RAR-b: Reasoning as Retrieval Benchmark'
     authors:
-    - Nano IR Benchmark contributors
-    year: 2026
-    url: https://huggingface.co/hakari-bench
-  bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-    \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-    \  url = {https://huggingface.co/hakari-bench}\n}\n"
+    - Chenghao Xiao
+    - G. Thomas Hudson
+    - Noura Al Moubayed
+    year: 2024
+    url: https://arxiv.org/abs/2404.06347
+  bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+    \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal = {arXiv\
+    \ preprint arXiv:2404.06347},\n  year = {2024}\n}\n"
 task_metadata:
   NanoARCChallenge:
     language: en
     category: natural_language
-    short_description: NanoARCChallenge retrieval task.
-    description: NanoARCChallenge is a retrieval task in NanoRARb. Queries must be
-      matched to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: ARC-Challenge reasoning retrieval.
+    description: Retrieves the correct answer option for AI2 ARC-Challenge science questions
+      recast as reasoning-as-retrieval.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - clark2018arc
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge
+      authors:
+      - Peter Clark
+      - Isaac Cowhey
+      - Oren Etzioni
+      - Tushar Khot
+      - Ashish Sabharwal
+      - Carissa Schoenick
+      - Oyvind Tafjord
+      year: 2018
+      url: https://allenai.org/data/arc
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{clark2018arc,\n\
+      \  title = {Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge},\n\
+      \  author = {Peter Clark and Isaac Cowhey and Oren Etzioni and Tushar Khot and Ashish\
+      \ Sabharwal and Carissa Schoenick and Oyvind Tafjord},\n  journal = {arXiv preprint\
+      \ arXiv:1803.05457},\n  year = {2018}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 27
@@ -76,22 +94,40 @@ task_metadata:
   NanoAlphaNLI:
     language: en
     category: natural_language
-    short_description: NanoAlphaNLI retrieval task.
-    description: NanoAlphaNLI is a retrieval task in NanoRARb. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Abductive commonsense retrieval.
+    description: Retrieves the most plausible explanatory hypothesis connecting the observed
+      beginning and ending of an AlphaNLI story.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - bhagavatula2019abductive
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: Abductive Commonsense Reasoning
+      authors:
+      - Chandra Bhagavatula
+      - Ronan Le Bras
+      - Chaitanya Malaviya
+      - Keisuke Sakaguchi
+      - Ari Holtzman
+      - Hannah Rashkin
+      - Doug Downey
+      - Scott Wen-tau Yih
+      - Yejin Choi
+      year: 2019
+      url: https://arxiv.org/abs/1908.05739
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{bhagavatula2019abductive,\n\
+      \  title = {Abductive Commonsense Reasoning},\n  author = {Chandra Bhagavatula and Ronan\
+      \ Le Bras and Chaitanya Malaviya and Keisuke Sakaguchi and Ari Holtzman and Hannah Rashkin\
+      \ and Doug Downey and Scott Wen-tau Yih and Yejin Choi},\n  journal = {arXiv preprint\
+      \ arXiv:1908.05739},\n  year = {2019}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 56
@@ -107,22 +143,35 @@ task_metadata:
   NanoHellaSwag:
     language: en
     category: natural_language
-    short_description: NanoHellaSwag retrieval task.
-    description: NanoHellaSwag is a retrieval task in NanoRARb. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: HellaSwag ending retrieval.
+    description: Retrieves the plausible continuation for an unfinished activity context from
+      HellaSwag.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - zellers2019hellaswag
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: 'HellaSwag: Can a Machine Really Finish Your Sentence?'
+      authors:
+      - Rowan Zellers
+      - Ari Holtzman
+      - Yonatan Bisk
+      - Ali Farhadi
+      - Yejin Choi
+      year: 2019
+      url: https://arxiv.org/abs/1905.07830
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{zellers2019hellaswag,\n\
+      \  title = {HellaSwag: Can a Machine Really Finish Your Sentence?},\n  author = {Rowan\
+      \ Zellers and Ari Holtzman and Yonatan Bisk and Ali Farhadi and Yejin Choi},\n  journal\
+      \ = {arXiv preprint arXiv:1905.07830},\n  year = {2019}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 30
@@ -138,22 +187,35 @@ task_metadata:
   NanoWinoGrande:
     language: en
     category: natural_language
-    short_description: NanoWinoGrande retrieval task.
-    description: NanoWinoGrande is a retrieval task in NanoRARb. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: WinoGrande pronoun reasoning retrieval.
+    description: Retrieves the answer that resolves a Winograd-style pronoun or masked referent
+      in WinoGrande.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - sakaguchi2021winogrande
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: 'WinoGrande: An Adversarial Winograd Schema Challenge at Scale'
+      authors:
+      - Keisuke Sakaguchi
+      - Ronan Le Bras
+      - Chandra Bhagavatula
+      - Yejin Choi
+      year: 2021
+      url: https://winogrande.allenai.org/
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{sakaguchi2021winogrande,\n\
+      \  title = {WinoGrande: An Adversarial Winograd Schema Challenge at Scale},\n  author\
+      \ = {Keisuke Sakaguchi and Ronan Le Bras and Chandra Bhagavatula and Yejin Choi},\n\
+      \  journal = {Communications of the ACM},\n  volume = {64},\n  number = {9},\n  pages\
+      \ = {99--106},\n  year = {2021}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 79
@@ -169,22 +231,34 @@ task_metadata:
   NanoPIQA:
     language: en
     category: natural_language
-    short_description: NanoPIQA retrieval task.
-    description: NanoPIQA is a retrieval task in NanoRARb. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Physical commonsense solution retrieval.
+    description: Retrieves the likely solution for a physical commonsense goal from PIQA.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - bisk2020piqa
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: 'PIQA: Reasoning about Physical Commonsense in Natural Language'
+      authors:
+      - Yonatan Bisk
+      - Rowan Zellers
+      - Jianfeng Gao
+      - Yejin Choi
+      year: 2020
+      url: https://arxiv.org/abs/1911.11641
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@inproceedings{bisk2020piqa,\n\
+      \  title = {PIQA: Reasoning about Physical Commonsense in Natural Language},\n  author\
+      \ = {Yonatan Bisk and Rowan Zellers and Jianfeng Gao and Yejin Choi},\n  booktitle =\
+      \ {Proceedings of the AAAI Conference on Artificial Intelligence},\n  volume = {34},\n\
+      \  number = {05},\n  pages = {7432--7439},\n  year = {2020}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 4
@@ -200,22 +274,35 @@ task_metadata:
   NanoSIQA:
     language: en
     category: natural_language
-    short_description: NanoSIQA retrieval task.
-    description: NanoSIQA is a retrieval task in NanoRARb. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Social commonsense answer retrieval.
+    description: Retrieves the correct answer for SocialIQA questions about social situations
+      and likely intentions or effects.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - sap2019socialiqa
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: 'SocialIQA: Commonsense Reasoning about Social Interactions'
+      authors:
+      - Maarten Sap
+      - Hannah Rashkin
+      - Derek Chen
+      - Ronan Le Bras
+      - Yejin Choi
+      year: 2019
+      url: https://arxiv.org/abs/1904.09728
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{sap2019socialiqa,\n\
+      \  title = {SocialIQA: Commonsense Reasoning about Social Interactions},\n  author =\
+      \ {Maarten Sap and Hannah Rashkin and Derek Chen and Ronan Le Bras and Yejin Choi},\n\
+      \  journal = {arXiv preprint arXiv:1904.09728},\n  year = {2019}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 70
@@ -231,22 +318,36 @@ task_metadata:
   NanoQuail:
     language: en
     category: natural_language
-    short_description: NanoQuail retrieval task.
-    description: NanoQuail is a retrieval task in NanoRARb. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: QuAIL reading-comprehension answer retrieval.
+    description: Retrieves answers for QuAIL questions that require comprehension and prerequisite
+      reasoning over passages.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - rogers2020quail
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: 'Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real
+        Tasks'
+      authors:
+      - Anna Rogers
+      - Olga Kovaleva
+      - Matthew Downey
+      - Anna Rumshisky
+      year: 2020
+      url: https://ojs.aaai.org/index.php/AAAI/article/view/6398
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@inproceedings{rogers2020quail,\n\
+      \  title = {Getting Closer to AI Complete Question Answering: A Set of Prerequisite\
+      \ Real Tasks},\n  author = {Anna Rogers and Olga Kovaleva and Matthew Downey and Anna\
+      \ Rumshisky},\n  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},\n\
+      \  volume = {34},\n  number = {05},\n  pages = {8722--8731},\n  year = {2020}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 1546
@@ -262,22 +363,34 @@ task_metadata:
   NanoSpartQA:
     language: en
     category: natural_language
-    short_description: NanoSpartQA retrieval task.
-    description: NanoSpartQA is a retrieval task in NanoRARb. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Spatial reasoning answer retrieval.
+    description: Retrieves correct answers for SpartQA spatial reasoning questions grounded
+      in textual scenes.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - mirzaee2021spartqa
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: 'SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning'
+      authors:
+      - Roshanak Mirzaee
+      - Hossein Rajaby Faghihi
+      - Qiang Ning
+      - Parisa Kordjamshidi
+      year: 2021
+      url: https://arxiv.org/abs/2104.05832
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{mirzaee2021spartqa,\n\
+      \  title = {SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning},\n\
+      \  author = {Roshanak Mirzaee and Hossein Rajaby Faghihi and Qiang Ning and Parisa Kordjamshidi},\n\
+      \  journal = {arXiv preprint arXiv:2104.05832},\n  year = {2021}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 429
@@ -293,22 +406,34 @@ task_metadata:
   NanoTempReasonL1:
     language: en
     category: natural_language
-    short_description: NanoTempReasonL1 retrieval task.
-    description: NanoTempReasonL1 is a retrieval task in NanoRARb. Queries must be
-      matched to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Temporal reasoning level-1 retrieval.
+    description: Retrieves answers for TempReason level-1 temporal questions with minimal
+      additional evidence.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - tan2023tempreason
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
+        Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability of\
+      \ Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong Bing},\n\
+      \  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 39
@@ -324,22 +449,34 @@ task_metadata:
   NanoTempReasonL2Pure:
     language: en
     category: natural_language
-    short_description: NanoTempReasonL2Pure retrieval task.
-    description: NanoTempReasonL2Pure is a retrieval task in NanoRARb. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Temporal reasoning level-2 pure retrieval.
+    description: Retrieves answers for TempReason level-2 temporal questions without supplied
+      supporting facts or context.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - tan2023tempreason
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
+        Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability of\
+      \ Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong Bing},\n\
+      \  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 40
@@ -355,22 +492,34 @@ task_metadata:
   NanoTempReasonL2Fact:
     language: en
     category: natural_language
-    short_description: NanoTempReasonL2Fact retrieval task.
-    description: NanoTempReasonL2Fact is a retrieval task in NanoRARb. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Temporal reasoning level-2 fact retrieval.
+    description: Retrieves answers for TempReason level-2 questions where the query includes
+      supporting facts.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - tan2023tempreason
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
+        Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability of\
+      \ Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong Bing},\n\
+      \  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 324
@@ -386,22 +535,34 @@ task_metadata:
   NanoTempReasonL2Context:
     language: en
     category: natural_language
-    short_description: NanoTempReasonL2Context retrieval task.
-    description: NanoTempReasonL2Context is a retrieval task in NanoRARb. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Temporal reasoning level-2 context retrieval.
+    description: Retrieves answers for TempReason level-2 questions with longer factual context
+      in the query.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - tan2023tempreason
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
+        Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability of\
+      \ Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong Bing},\n\
+      \  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 737
@@ -417,22 +578,34 @@ task_metadata:
   NanoTempReasonL3Pure:
     language: en
     category: natural_language
-    short_description: NanoTempReasonL3Pure retrieval task.
-    description: NanoTempReasonL3Pure is a retrieval task in NanoRARb. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Temporal reasoning level-3 pure retrieval.
+    description: Retrieves answers for harder TempReason level-3 temporal questions without
+      extra facts or context.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - tan2023tempreason
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
+        Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability of\
+      \ Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong Bing},\n\
+      \  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 43
@@ -448,22 +621,34 @@ task_metadata:
   NanoTempReasonL3Fact:
     language: en
     category: natural_language
-    short_description: NanoTempReasonL3Fact retrieval task.
-    description: NanoTempReasonL3Fact is a retrieval task in NanoRARb. Queries must
-      be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Temporal reasoning level-3 fact retrieval.
+    description: Retrieves answers for harder TempReason level-3 questions that include supporting
+      facts.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - tan2023tempreason
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
+        Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability of\
+      \ Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong Bing},\n\
+      \  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 320
@@ -479,22 +664,34 @@ task_metadata:
   NanoTempReasonL3Context:
     language: en
     category: natural_language
-    short_description: NanoTempReasonL3Context retrieval task.
-    description: NanoTempReasonL3Context is a retrieval task in NanoRARb. Queries
-      must be matched to relevant corpus documents, so scores reflect how well a model
-      represents task-specific intent, document semantics, and hard negative distinctions
-      in a compact Nano benchmark setting.
+    short_description: Temporal reasoning level-3 context retrieval.
+    description: Retrieves answers for harder TempReason level-3 questions with long contextual
+      evidence.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - tan2023tempreason
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
+        Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability of\
+      \ Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong Bing},\n\
+      \  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 733
@@ -510,22 +707,55 @@ task_metadata:
   NanoRARbCode:
     language: en
     category: code
-    short_description: NanoRARbCode retrieval task.
-    description: NanoRARbCode is a retrieval task in NanoRARb. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Pooled code reasoning retrieval.
+    description: Retrieves code answers for RAR-b programming problems drawn from code reasoning
+      and code-search sources.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - husain2019codesearchnet
+    - muennighoff2023octopack
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: 'CodeSearchNet Challenge: Evaluating the State of Semantic Code Search'
+      authors:
+      - Hamel Husain
+      - Ho-Hsiang Wu
+      - Tiferet Gazit
+      - Miltiadis Allamanis
+      - Marc Brockschmidt
+      year: 2019
+      url: https://arxiv.org/abs/1909.09436
+    - title: 'OctoPack: Instruction Tuning Code Large Language Models'
+      authors:
+      - Niklas Muennighoff
+      - Qian Liu
+      - Armel Zebaze
+      - Qinkai Zheng
+      - Binyuan Hui
+      - Terry Yue Zhuo
+      - Swayam Singh
+      - Xiangru Tang
+      - Leandro von Werra
+      - Shayne Longpre
+      year: 2023
+      url: https://arxiv.org/abs/2308.07124
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{husain2019codesearchnet,\n\
+      \  title = {{CodeSearchNet} Challenge: Evaluating the State of Semantic Code Search},\n\
+      \  author = {Hamel Husain and Ho-Hsiang Wu and Tiferet Gazit and Miltiadis Allamanis\
+      \ and Marc Brockschmidt},\n  journal = {arXiv preprint arXiv:1909.09436},\n  year =\
+      \ {2019}\n}\n\n@article{muennighoff2023octopack,\n  title = {OctoPack: Instruction Tuning\
+      \ Code Large Language Models},\n  author = {Niklas Muennighoff and Qian Liu and Armel\
+      \ Zebaze and Qinkai Zheng and Binyuan Hui and Terry Yue Zhuo and Swayam Singh and Xiangru\
+      \ Tang and Leandro von Werra and Shayne Longpre},\n  journal = {arXiv preprint arXiv:2308.07124},\n\
+      \  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 161
@@ -541,22 +771,77 @@ task_metadata:
   NanoRARbMath:
     language: en
     category: natural_language
-    short_description: NanoRARbMath retrieval task.
-    description: NanoRARbMath is a retrieval task in NanoRARb. Queries must be matched
-      to relevant corpus documents, so scores reflect how well a model represents
-      task-specific intent, document semantics, and hard negative distinctions in
-      a compact Nano benchmark setting.
+    short_description: Pooled math reasoning retrieval.
+    description: Retrieves final answers or solutions for RAR-b math problems pooled from
+      GSM8K, MATH, and MetaMath-style sources.
     citation_keys:
-    - nanoirbench2026
+    - xiao2024rarb
+    - cobbe2021gsm8k
+    - hendrycks2021math
+    - yu2023metamath
     references:
-    - title: 'NanoRARb: Nano information retrieval benchmark subset'
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
-      - Nano IR Benchmark contributors
-      year: 2026
-      url: https://huggingface.co/hakari-bench
-    bibtex: "@misc{nanoirbench2026,\n  title = {Nano information retrieval benchmark\
-      \ subsets},\n  author = {Nano IR Benchmark contributors},\n  year = {2026},\n\
-      \  url = {https://huggingface.co/hakari-bench}\n}\n"
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+    - title: Training Verifiers to Solve Math Word Problems
+      authors:
+      - Karl Cobbe
+      - Vineet Kosaraju
+      - Mohammad Bavarian
+      - Mark Chen
+      - Heewoo Jun
+      - Lukasz Kaiser
+      - Matthias Plappert
+      - Jerry Tworek
+      - Jacob Hilton
+      - Reiichiro Nakano
+      year: 2021
+      url: https://arxiv.org/abs/2110.14168
+    - title: Measuring Mathematical Problem Solving With the MATH Dataset
+      authors:
+      - Dan Hendrycks
+      - Collin Burns
+      - Saurav Kadavath
+      - Akul Arora
+      - Steven Basart
+      - Eric Tang
+      - Dawn Song
+      - Jacob Steinhardt
+      year: 2021
+      url: https://arxiv.org/abs/2103.03874
+    - title: 'MetaMath: Bootstrap Your Own Mathematical Questions for Large Language Models'
+      authors:
+      - Longhui Yu
+      - Weisen Jiang
+      - Han Shi
+      - Jincheng Yu
+      - Zhengying Liu
+      - Yu Zhang
+      - James T. Kwok
+      - Zhenguo Li
+      - Adrian Weller
+      - Weiyang Liu
+      year: 2023
+      url: https://arxiv.org/abs/2309.12284
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal =\
+      \ {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{cobbe2021gsm8k,\n\
+      \  title = {Training Verifiers to Solve Math Word Problems},\n  author = {Karl Cobbe\
+      \ and Vineet Kosaraju and Mohammad Bavarian and Mark Chen and Heewoo Jun and Lukasz\
+      \ Kaiser and Matthias Plappert and Jerry Tworek and Jacob Hilton and Reiichiro Nakano},\n\
+      \  journal = {arXiv preprint arXiv:2110.14168},\n  year = {2021}\n}\n\n@article{hendrycks2021math,\n\
+      \  title = {Measuring Mathematical Problem Solving With the MATH Dataset},\n  author\
+      \ = {Dan Hendrycks and Collin Burns and Saurav Kadavath and Akul Arora and Steven Basart\
+      \ and Eric Tang and Dawn Song and Jacob Steinhardt},\n  journal = {arXiv preprint arXiv:2103.03874},\n\
+      \  year = {2021}\n}\n\n@article{yu2023metamath,\n  title = {MetaMath: Bootstrap Your\
+      \ Own Mathematical Questions for Large Language Models},\n  author = {Longhui Yu and\
+      \ Weisen Jiang and Han Shi and Jincheng Yu and Zhengying Liu and Yu Zhang and James\
+      \ T. Kwok and Zhenguo Li and Adrian Weller and Weiyang Liu},\n  journal = {arXiv preprint\
+      \ arXiv:2309.12284},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 29
