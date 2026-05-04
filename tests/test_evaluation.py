@@ -294,6 +294,25 @@ class FakeReranker:
         return [1.0 if pair in {("cat query", "cat doc"), ("dog query", "dog doc")} else 0.0 for pair in pairs]
 
 
+class FakeRankReranker:
+    def rank(self, query: str, documents: list[str], **kwargs: object) -> list[dict[str, object]]:
+        del kwargs
+        scored = [
+            (index, 1.0 if document.startswith(query.split()[0]) else 0.0)
+            for index, document in enumerate(documents)
+        ]
+        return [
+            {"corpus_id": index, "score": score}
+            for index, score in sorted(scored, key=lambda item: (-item[1], item[0]))
+        ]
+
+
+class FakeCallableReranker:
+    def __call__(self, pairs: list[tuple[str, str]], **kwargs: object) -> list[float]:
+        del kwargs
+        return [1.0 if pair in {("cat query", "cat doc"), ("dog query", "dog doc")} else 0.0 for pair in pairs]
+
+
 def test_evaluate_dense_task_uses_default_prompt_config_when_not_overridden() -> None:
     model = FakeDenseModel()
 
@@ -1368,6 +1387,81 @@ def test_evaluate_reranker_task_uses_candidate_top_n() -> None:
     assert result.metrics["ToyData_test_reranker_ndcg@10"] == pytest.approx(0.5)
 
 
+def test_evaluate_reranker_task_supports_rank_api() -> None:
+    result = evaluate_reranker_task(
+        model=FakeRankReranker(),
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        rerank_top_n=2,
+    )
+
+    assert result.metrics["ToyData_test_reranker_ndcg@10"] == pytest.approx(1.0)
+
+
+def test_evaluate_reranker_task_supports_callable_api() -> None:
+    result = evaluate_reranker_task(
+        model=FakeCallableReranker(),
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        rerank_top_n=2,
+    )
+
+    assert result.metrics["ToyData_test_reranker_ndcg@10"] == pytest.approx(1.0)
+
+
+def test_evaluate_dense_task_records_bm25_top_n_reranking_metrics() -> None:
+    result = evaluate_dense_task(
+        model=FakeDenseModel(),
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        rerank_top_n=1,
+    )
+
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+    assert result.rerank_aggregate_metric_value == pytest.approx(0.5)
+    assert result.reranking_evaluations[0]["status"] == "available"
+    assert result.reranking_evaluations[0]["rerank_top_n"] == 1
+    assert result.reranking_evaluations[0]["aggregate_metric_value"] == pytest.approx(0.5)
+    assert result.reranking_evaluations[0]["best_score_name"] == "dot_bm25_top1_rerank"
+    assert result.rerank_metrics["ToyData_test_dot_bm25_top1_rerank_ndcg@10"] == pytest.approx(0.5)
+
+
+def test_evaluate_dense_task_skips_bm25_reranking_without_candidates() -> None:
+    result = evaluate_dense_task(
+        model=FakeDenseModel(),
+        dataset=_toy_dataset_without_candidates(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        rerank_top_n=100,
+    )
+
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+    assert result.rerank_metrics == {}
+    assert result.rerank_aggregate_metric_value is None
+    assert result.reranking_evaluations == [
+        {
+            "name": "bm25_top_100",
+            "source": "dataset_candidate_subset",
+            "status": "skipped",
+            "reason": "candidate_subset_unavailable",
+            "rerank_top_n": 100,
+        }
+    ]
+
+
 def test_result_path_layout() -> None:
     path = result_path_for_task(
         output_dir=Path("output/results"),
@@ -1562,6 +1656,57 @@ def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) 
     assert "metrics" not in split_variants[0]["distance_evaluations"][0]
     assert split_variants[1]["embedding_dimensions"] == {"dim": 1}
     assert "metrics" not in split_variants[1]
+
+
+def test_run_or_load_task_records_embedding_model_reranking_evaluations(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        embedding_variants=[],
+        candidate_subset_name="bm25",
+        rerank_top_n=1,
+        aggregate_metric="ndcg@10",
+        override=False,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    evaluation = result.payload["evaluation"]
+    assert evaluation["aggregate_metric_value"] == pytest.approx(1.0)
+    assert evaluation["rerank_aggregate_metric_value"] == pytest.approx(0.5)
+    assert evaluation["reranking_evaluations"][0]["best_score_name"] == "dot_bm25_top1_rerank"
+    assert result.payload["rerank_metrics"]["ToyData_test_dot_bm25_top1_rerank_ndcg@10"] == pytest.approx(0.5)
+    assert result.payload["config"]["candidate_subset_name"] == "bm25"
+    assert result.payload["config"]["rerank_top_n"] == 1
+
+    all_payload = build_all_payload(
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"name_or_path": "hotchpotch/model"},
+        results=[result],
+    )
+
+    assert all_payload["totals"]["aggregate_metric_mean"] == pytest.approx(1.0)
+    assert all_payload["totals"]["rerank_aggregate_metric_mean"] == pytest.approx(0.5)
+    assert all_payload["splits"][0]["rerank_aggregate_metric_value"] == pytest.approx(0.5)
+    assert all_payload["splits"][0]["reranking_evaluations"][0]["status"] == "available"
+    assert "metrics" not in all_payload["splits"][0]["reranking_evaluations"][0]["distance_evaluations"][0]
 
 
 def test_run_or_load_task_records_score_device(tmp_path: Path) -> None:

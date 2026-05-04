@@ -121,6 +121,16 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--corpus-prompt-name", default=None)
     evaluate.add_argument("--query-task", default=None)
     evaluate.add_argument("--corpus-task", default=None)
+    evaluate.add_argument(
+        "--cross-encoder-kwargs-json",
+        default=None,
+        help="JSON object of extra constructor kwargs for SentenceTransformers CrossEncoder reranker models.",
+    )
+    evaluate.add_argument(
+        "--reranker-score-kwargs-json",
+        default=None,
+        help="JSON object of extra kwargs passed to reranker rank/predict calls.",
+    )
     evaluate.add_argument("--candidate-subset-name", default="bm25")
     evaluate.add_argument("--rerank-top-n", type=int, default=100)
     evaluate.add_argument("--output-dir", default="output/results")
@@ -202,11 +212,28 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             )
         delattr(args, "embedding_variant_values")
         delattr(args, "embedding_variant_cross_values")
+        try:
+            args.cross_encoder_kwargs = _parse_json_object_arg(
+                args.cross_encoder_kwargs_json,
+                option_name="--cross-encoder-kwargs-json",
+            )
+            args.reranker_score_kwargs = _parse_json_object_arg(
+                args.reranker_score_kwargs_json,
+                option_name="--reranker-score-kwargs-json",
+            )
+        except ValueError as exc:
+            parser.error(str(exc))
+        delattr(args, "cross_encoder_kwargs_json")
+        delattr(args, "reranker_score_kwargs_json")
+        if args.model_type != "reranker" and (args.cross_encoder_kwargs or args.reranker_score_kwargs):
+            parser.error("--cross-encoder-kwargs-json and --reranker-score-kwargs-json require --model-type reranker.")
     if args.command == "evaluate" and args.sparse_max_active_dims is not None:
         if args.model_type != "sparse":
             parser.error("--sparse-max-active-dims requires --model-type sparse.")
         if args.sparse_max_active_dims <= 0:
             parser.error("--sparse-max-active-dims must be positive.")
+    if args.command == "evaluate" and args.rerank_top_n <= 0:
+        parser.error("--rerank-top-n must be positive.")
     if args.command == "evaluate" and args.dataset is None and not args.collection:
         args.dataset = ["hakari-bench/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:
@@ -260,6 +287,18 @@ def _embedding_variant_steps(variant: dict[str, Any]) -> list[dict[str, Any]]:
     return [step for step in steps if isinstance(step, dict)]
 
 
+def _parse_json_object_arg(value: str | None, *, option_name: str) -> dict[str, Any]:
+    if value is None:
+        return {}
+    try:
+        parsed = json.loads(value)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"{option_name} must be a valid JSON object: {exc}") from exc
+    if not isinstance(parsed, dict):
+        raise ValueError(f"{option_name} must be a JSON object.")
+    return parsed
+
+
 def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     run_started_at = datetime.now(timezone.utc)
     run_start = time.perf_counter()
@@ -292,6 +331,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 device=args.device,
                 trust_remote_code=args.trust_remote_code,
                 max_seq_length=args.model_max_seq_length,
+                cross_encoder_kwargs=getattr(args, "cross_encoder_kwargs", {}),
             )
         )
         model_metadata = collect_model_metadata(model, args)
@@ -438,7 +478,7 @@ def _load_dataset_for_args(args: argparse.Namespace, task: EvalTask) -> LoadedIr
     model_type = getattr(args, "model_type", None)
     candidate_subset_name = (
         (getattr(args, "candidate_subset_name", None) or task.dataset.candidate_config)
-        if model_type in {"bm25", "reranker"}
+        if model_type in {"dense", "sparse", "late-interaction", "bm25", "reranker"}
         else None
     )
     return load_ir_dataset(

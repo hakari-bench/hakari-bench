@@ -13,9 +13,11 @@ Built-in dataset definitions include `NanoBEIR-en`, `NanoMIRACL`, `NanoMLDR`,
 ```bash
 uv run nano-ir-bench evaluate \
   --model hotchpotch/bekko-embedding-pico-beta-unir-v7 \
-  --dataset hakari-bench/NanoBEIR-en \
-  --dtype bf16
+  --dataset hakari-bench/NanoBEIR-en
 ```
+
+The default model dtype is `bf16`; pass `--dtype fp32` or `--dtype fp16` only
+when a run needs an explicit override.
 
 Results are written under:
 
@@ -189,6 +191,34 @@ applicable. Dense embedding evaluations score both `cosine` and `dot`, store
 both entries in `distance_evaluations`, and copy the better aggregate result to
 `metrics`, `aggregate_metric_value`, `best_score`, `best_distance`, and
 `best_score_name`.
+
+## BM25 top-100 reranking
+
+Dense, sparse, and late-interaction evaluations also report BM25 top-100
+reranking by default when the dataset provides the `bm25` candidate subset. The
+model is still encoded and scored through the normal full-corpus path; the
+reranking metrics are computed by filtering the model's ranking to each query's
+BM25 candidates, so no second model inference is required.
+
+The full-corpus result remains the main aggregate. Reranking results are stored
+separately under `rerank_metrics`, `evaluation.rerank_aggregate_metric_value`,
+and `evaluation.reranking_evaluations`; `all.json` adds
+`totals.rerank_aggregate_metric_mean`. If BM25 candidates are unavailable, the
+full-corpus evaluation still succeeds and reranking is recorded as skipped.
+
+CrossEncoder-style reranker models can be evaluated directly with
+`--model-type reranker`. They score only the BM25 candidate subset and support
+models exposing `rank`, `predict`, or a callable pair-scoring API.
+
+```bash
+uv run nano-ir-bench evaluate \
+  --model nreimers/mmarco-mMiniLMv2-L6-H384-v1 \
+  --model-type reranker \
+  --dataset NanoRTEB \
+  --candidate-subset-name bm25 \
+  --rerank-top-n 100 \
+  --batch-size 32
+```
 
 ## BM25
 

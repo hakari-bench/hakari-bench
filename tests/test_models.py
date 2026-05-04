@@ -135,6 +135,48 @@ def test_load_model_late_interaction_returns_colbert_adapter(monkeypatch: pytest
     assert calls[1]["model"] == "answerdotai/answerai-colbert-small-v1"
 
 
+def test_load_model_reranker_passes_cross_encoder_kwargs(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[dict[str, object]] = []
+
+    class FakeCrossEncoder(torch.nn.Module):
+        def __init__(self, model_name_or_path: str, **kwargs: object) -> None:
+            super().__init__()
+            calls.append({"model_name_or_path": model_name_or_path, **kwargs})
+            self.model = torch.nn.Linear(2, 1)
+
+    monkeypatch.setattr("nano_ir_benchmark.models._import_cross_encoder", lambda: FakeCrossEncoder)
+
+    model = load_model(
+        ModelLoadConfig(
+            model_name_or_path="Qwen/Qwen3-Reranker-0.6B",
+            model_type="reranker",
+            dtype="bf16",
+            device="cuda:0",
+            trust_remote_code=True,
+            cross_encoder_kwargs={
+                "prompts": {"retrieval": "Retrieve relevant passages"},
+                "default_prompt_name": "retrieval",
+                "model_kwargs": {"attn_implementation": "sdpa"},
+            },
+        )
+    )
+
+    assert isinstance(model, FakeCrossEncoder)
+    assert calls == [
+        {
+            "model_name_or_path": "Qwen/Qwen3-Reranker-0.6B",
+            "prompts": {"retrieval": "Retrieve relevant passages"},
+            "default_prompt_name": "retrieval",
+            "device": "cuda:0",
+            "trust_remote_code": True,
+            "model_kwargs": {
+                "torch_dtype": torch.bfloat16,
+                "attn_implementation": "sdpa",
+            },
+        }
+    ]
+
+
 def test_collect_model_metadata_counts_parameters() -> None:
     model = torch.nn.Sequential(torch.nn.Linear(3, 2), torch.nn.Linear(2, 1))
     args = argparse.Namespace(

@@ -20,6 +20,7 @@ class ModelLoadConfig:
     device: str | None = None
     trust_remote_code: bool = False
     max_seq_length: int | None = None
+    cross_encoder_kwargs: dict[str, Any] | None = None
 
 
 def resolve_torch_dtype(dtype: str) -> torch.dtype:
@@ -236,12 +237,16 @@ def load_model(config: ModelLoadConfig) -> Any:
         return model
 
     if config.model_type == "reranker":
-        kwargs: dict[str, Any] = {
-            "device": config.device,
-            "trust_remote_code": config.trust_remote_code,
-            "model_kwargs": model_kwargs,
-        }
-        if config.max_seq_length is not None:
+        kwargs: dict[str, Any] = dict(config.cross_encoder_kwargs or {})
+        extra_model_kwargs = kwargs.pop("model_kwargs", None)
+        if extra_model_kwargs is not None:
+            if not isinstance(extra_model_kwargs, dict):
+                raise ValueError("cross_encoder_kwargs.model_kwargs must be an object.")
+            model_kwargs = {**model_kwargs, **extra_model_kwargs}
+        kwargs.setdefault("device", config.device)
+        kwargs.setdefault("trust_remote_code", config.trust_remote_code)
+        kwargs["model_kwargs"] = model_kwargs
+        if config.max_seq_length is not None and "max_length" not in kwargs:
             kwargs["max_length"] = config.max_seq_length
         model = _import_cross_encoder()(config.model_name_or_path, **kwargs)
         _set_model_dtype(model, config.dtype)
