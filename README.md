@@ -80,10 +80,13 @@ trade-off checks.
 ## Late interaction / ColBERT
 
 ColBERT-style models can be evaluated with `--model-type late-interaction`.
-The adapter loads Hugging Face `AutoModel`/`AutoTokenizer`, emits token
-embeddings, applies a ColBERT `linear.weight` projection when present, and
-scores query/document token matrices with MaxSim. Use `--score-device cpu` to
-compare the CUDA MaxSim scorer against the CPU NumPy scorer.
+The runner loads these models through PyLate ColBERT and scores query/document
+token matrices with exact MaxSim. Model-specific prefixes and sequence lengths
+can be passed with `--late-interaction-query-prefix`,
+`--late-interaction-document-prefix`, `--late-interaction-query-length`, and
+`--late-interaction-document-length`. Use
+`--late-interaction-exact-doc-batch-size` and
+`--late-interaction-exact-query-batch-size` to tune exact MaxSim memory use.
 
 ## Embedding variants
 

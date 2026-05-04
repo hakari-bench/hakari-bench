@@ -133,6 +133,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     evaluate.add_argument("--candidate-subset-name", default="bm25")
     evaluate.add_argument("--rerank-top-n", type=int, default=100)
+    evaluate.add_argument("--late-interaction-query-length", type=int, default=None)
+    evaluate.add_argument("--late-interaction-document-length", type=int, default=None)
+    evaluate.add_argument("--late-interaction-query-prefix", default=None)
+    evaluate.add_argument("--late-interaction-document-prefix", default=None)
+    evaluate.add_argument("--late-interaction-attend-to-expansion-tokens", action="store_true", default=None)
+    evaluate.add_argument("--late-interaction-exact-doc-batch-size", type=int, default=128)
+    evaluate.add_argument("--late-interaction-exact-query-batch-size", type=int, default=8)
     evaluate.add_argument("--output-dir", default="output/results")
     evaluate.add_argument("--override", action="store_true")
     evaluate.add_argument("--aggregate-metric", default="ndcg@10")
@@ -234,6 +241,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error("--sparse-max-active-dims must be positive.")
     if args.command == "evaluate" and args.rerank_top_n <= 0:
         parser.error("--rerank-top-n must be positive.")
+    if args.command == "evaluate" and args.model_type == "late-interaction":
+        if args.embedding_variants and not _late_interaction_embedding_variants_are_supported(args.embedding_variants):
+            parser.error("--model-type late-interaction supports only truncate embedding variants.")
+        if args.truncate_dim is not None:
+            parser.error("--truncate-dim is not supported with --model-type late-interaction.")
+        if args.late_interaction_exact_doc_batch_size <= 0:
+            parser.error("--late-interaction-exact-doc-batch-size must be positive.")
+        if args.late_interaction_exact_query_batch_size <= 0:
+            parser.error("--late-interaction-exact-query-batch-size must be positive.")
     if args.command == "evaluate" and args.dataset is None and not args.collection:
         args.dataset = ["hakari-bench/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:
@@ -332,6 +348,15 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 trust_remote_code=args.trust_remote_code,
                 max_seq_length=args.model_max_seq_length,
                 cross_encoder_kwargs=getattr(args, "cross_encoder_kwargs", {}),
+                late_interaction_query_length=getattr(args, "late_interaction_query_length", None),
+                late_interaction_document_length=getattr(args, "late_interaction_document_length", None),
+                late_interaction_query_prefix=getattr(args, "late_interaction_query_prefix", None),
+                late_interaction_document_prefix=getattr(args, "late_interaction_document_prefix", None),
+                late_interaction_attend_to_expansion_tokens=getattr(
+                    args,
+                    "late_interaction_attend_to_expansion_tokens",
+                    None,
+                ),
             )
         )
         model_metadata = collect_model_metadata(model, args)
@@ -496,6 +521,19 @@ def _load_cached_task(*, args: argparse.Namespace, task: EvalTask) -> TaskRunRes
         output_path=output_path,
         payload=json.loads(output_path.read_text(encoding="utf-8")),
     )
+
+
+def _late_interaction_embedding_variants_are_supported(variants: list[dict[str, Any]]) -> bool:
+    for variant in variants:
+        transform = variant.get("transform", {})
+        if transform.get("type") != "pipeline":
+            return False
+        steps = transform.get("steps")
+        if not isinstance(steps, list) or not steps:
+            return False
+        if any(step.get("type") != "truncate" for step in steps):
+            return False
+    return True
 
 
 def main(argv: list[str] | None = None) -> None:

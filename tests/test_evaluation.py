@@ -15,6 +15,7 @@ from nano_ir_benchmark.evaluation import (
     LoadedIrDataset,
     QuantizedEmbeddingMatrix,
     evaluate_dense_task,
+    evaluate_late_interaction_task,
     evaluate_reranker_task,
 )
 from nano_ir_benchmark.results import TaskRunResult, build_all_payload, result_path_for_task, run_or_load_task, safe_path_part
@@ -292,6 +293,24 @@ class FakeCudaSentenceTransformersSparseModel(FakeSentenceTransformersSparseMode
 class FakeReranker:
     def predict(self, pairs: list[tuple[str, str]], **kwargs: object) -> list[float]:
         return [1.0 if pair in {("cat query", "cat doc"), ("dog query", "dog doc")} else 0.0 for pair in pairs]
+
+
+class FakeLateInteractionModel:
+    def __init__(self) -> None:
+        self.calls: list[dict[str, object]] = []
+
+    def encode(self, sentences: list[str], **kwargs: object) -> list[np.ndarray]:
+        self.calls.append({"sentences": sentences, **kwargs})
+        if kwargs["is_query"]:
+            return [
+                np.array([[1.0, 0.0], [0.5, 0.0]], dtype=np.float32),
+                np.array([[0.0, 1.0], [0.0, 0.5]], dtype=np.float32),
+            ]
+        return [
+            np.array([[1.0, 0.0]], dtype=np.float32),
+            np.array([[0.0, 1.0]], dtype=np.float32),
+            np.array([[-1.0, 0.0]], dtype=np.float32),
+        ]
 
 
 class FakeRankReranker:
@@ -1409,6 +1428,79 @@ def test_evaluate_reranker_task_supports_callable_api() -> None:
     )
 
     assert result.metrics["ToyData_test_reranker_ndcg@10"] == pytest.approx(1.0)
+
+
+def test_evaluate_late_interaction_task_can_score_exact_maxsim() -> None:
+    model = FakeLateInteractionModel()
+
+    result = evaluate_late_interaction_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt="doc: ",
+        query_prompt_name="query",
+        corpus_prompt_name=None,
+        exact_doc_batch_size=2,
+        exact_query_batch_size=2,
+        device="cpu",
+        aggregate_metric="ndcg@10",
+    )
+
+    assert result.metrics["ToyData_test_late_interaction_exact_maxsim_ndcg@10"] == pytest.approx(1.0)
+    assert model.calls[0]["is_query"] is True
+    assert model.calls[0]["prompt_name"] == "query"
+    assert model.calls[1]["is_query"] is False
+    assert model.calls[1]["prompt"] == "doc: "
+    assert result.embedding_conversion["query"]["text_count"] == 2
+    assert result.embedding_conversion["docs"]["text_count"] == 3
+    base = result.embedding_evaluations[0]
+    assert base["best_distance"] == "exact_maxsim"
+    assert base["best_score_name"] == "late_interaction_exact_maxsim"
+    assert base["embedding_metadata"]["representation_type"] == "late_interaction"
+    assert base["embedding_metadata"]["dimension_format"] == "multi_vector"
+    assert base["embedding_metadata"]["dimensions"] == {"dim": 2}
+    assert base["index"] == {
+        "backend": "exact",
+        "library": "torch",
+        "index_type": "none",
+        "ranking_depth": 3,
+        "exact_doc_batch_size": 2,
+        "exact_query_batch_size": 2,
+        "timing": {
+            "index_build_or_load_seconds": pytest.approx(0.0),
+            "retrieve_seconds": pytest.approx(result.timing["score_and_topk_seconds"]),
+        },
+    }
+
+
+def test_evaluate_late_interaction_task_truncates_variants_after_single_encode() -> None:
+    model = FakeLateInteractionModel()
+
+    result = evaluate_late_interaction_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        exact_doc_batch_size=2,
+        exact_query_batch_size=2,
+        device="cpu",
+        aggregate_metric="ndcg@10",
+        embedding_variants=[_pipeline_variant("truncate_dim_1", _truncate_step(1))],
+    )
+
+    assert len(model.calls) == 2
+    assert [item["name"] for item in result.embedding_evaluations] == ["base", "truncate_dim_1"]
+    truncate_eval = result.embedding_evaluations[1]
+    assert truncate_eval["embedding_dimensions"] == {"dim": 1}
+    assert truncate_eval["embedding_metadata"]["representation_type"] == "late_interaction"
+    assert truncate_eval["embedding_metadata"]["dimensions"] == {"dim": 1}
+    assert "ToyData_test_late_interaction_exact_maxsim_truncate_dim_1_ndcg@10" in truncate_eval["metrics"]
 
 
 def test_evaluate_dense_task_records_bm25_top_n_reranking_metrics() -> None:

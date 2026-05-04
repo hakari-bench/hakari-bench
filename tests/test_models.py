@@ -1,14 +1,11 @@
 from __future__ import annotations
 
 import argparse
-from types import SimpleNamespace
 
-import numpy as np
 import pytest
 import torch
 
 from nano_ir_benchmark.models import (
-    ColbertLateInteractionAdapter,
     ModelLoadConfig,
     collect_model_metadata,
     load_model,
@@ -71,68 +68,47 @@ def test_load_model_passes_dense_options(monkeypatch: pytest.MonkeyPatch) -> Non
     ]
 
 
-def test_load_model_late_interaction_returns_colbert_adapter(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[dict[str, object]] = []
 
-    class FakeTokenizer:
-        model_max_length = 16
-
-        def __call__(self, texts: list[str], **kwargs: object) -> dict[str, torch.Tensor]:
-            calls.append({"texts": texts, **kwargs})
-            return {
-                "input_ids": torch.ones((len(texts), 2), dtype=torch.long),
-                "attention_mask": torch.ones((len(texts), 2), dtype=torch.long),
-            }
-
-    class FakeAutoTokenizer:
-        @classmethod
-        def from_pretrained(cls, model_name_or_path: str, **kwargs: object) -> FakeTokenizer:
-            calls.append({"tokenizer": model_name_or_path, **kwargs})
-            return FakeTokenizer()
-
-    class FakeBackbone(torch.nn.Module):
-        def __init__(self) -> None:
+    class FakeColBERT(torch.nn.Module):
+        def __init__(self, model_name_or_path: str, **kwargs: object) -> None:
             super().__init__()
-            self.embeddings = torch.nn.Embedding(2, 2)
+            calls.append({"model_name_or_path": model_name_or_path, **kwargs})
+            self.projection = torch.nn.Linear(2, 2)
 
-        def forward(self, **kwargs: object) -> SimpleNamespace:
-            input_ids = kwargs["input_ids"]
-            assert isinstance(input_ids, torch.Tensor)
-            batch = int(input_ids.shape[0])
-            hidden = torch.tensor([[[3.0, 4.0], [0.0, 2.0]]], dtype=torch.float32).repeat(batch, 1, 1)
-            return SimpleNamespace(last_hidden_state=hidden.to(input_ids.device))
-
-    class FakeAutoModel:
-        @classmethod
-        def from_pretrained(cls, model_name_or_path: str, **kwargs: object) -> FakeBackbone:
-            calls.append({"model": model_name_or_path, **kwargs})
-            return FakeBackbone()
-
-    projection = torch.nn.Linear(2, 2, bias=False)
-    projection.weight.data.copy_(torch.eye(2))
-
-    monkeypatch.setattr("nano_ir_benchmark.models._import_auto_tokenizer", lambda: FakeAutoTokenizer)
-    monkeypatch.setattr("nano_ir_benchmark.models._import_auto_model", lambda: FakeAutoModel)
-    monkeypatch.setattr("nano_ir_benchmark.models._load_colbert_projection_from_hub", lambda *_, **__: projection)
+    monkeypatch.setattr("nano_ir_benchmark.models._import_pylate_colbert", lambda: FakeColBERT)
 
     model = load_model(
         ModelLoadConfig(
-            model_name_or_path="answerdotai/answerai-colbert-small-v1",
+            model_name_or_path="lightonai/GTE-ModernColBERT-v1",
             model_type="late-interaction",
             dtype="fp32",
             device="cpu",
             trust_remote_code=True,
+            late_interaction_query_length=64,
+            late_interaction_document_length=300,
+            late_interaction_query_prefix="[QueryMarker]",
+            late_interaction_document_prefix="[DocumentMarker]",
+            late_interaction_attend_to_expansion_tokens=True,
         )
     )
 
-    assert isinstance(model, ColbertLateInteractionAdapter)
-    assert model.similarity_fn_name == "dot"
-    embeddings = model.encode(["hello"], convert_to_numpy=True)
-    assert isinstance(embeddings, np.ndarray)
-    assert embeddings.shape == (1, 2, 2)
-    np.testing.assert_allclose(np.linalg.norm(embeddings[0], axis=1), [1.0, 1.0], atol=1e-6)
-    assert calls[0] == {"tokenizer": "answerdotai/answerai-colbert-small-v1", "trust_remote_code": True}
-    assert calls[1]["model"] == "answerdotai/answerai-colbert-small-v1"
+    assert isinstance(model, FakeColBERT)
+    assert model.projection.weight.dtype is torch.float32
+    assert calls == [
+        {
+            "model_name_or_path": "lightonai/GTE-ModernColBERT-v1",
+            "device": "cpu",
+            "trust_remote_code": True,
+            "model_kwargs": {"torch_dtype": torch.float32},
+            "query_length": 64,
+            "document_length": 300,
+            "query_prefix": "[QueryMarker]",
+            "document_prefix": "[DocumentMarker]",
+            "attend_to_expansion_tokens": True,
+        }
+    ]
 
 
 def test_load_model_reranker_passes_cross_encoder_kwargs(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -221,6 +197,27 @@ def test_collect_model_metadata_counts_active_parameters_from_st_model_attribute
     assert metadata["active_parameters"] == 18
 
 
+def test_collect_model_metadata_records_late_interaction_metadata() -> None:
+    model = _FakeLateInteractionModel()
+    args = _metadata_args()
+    args.model_type = "late-interaction"
+
+    metadata = collect_model_metadata(model, args)
+
+    assert metadata["backend_library"] == "pylate"
+    assert metadata["similarity_fn_name"] == "MaxSim"
+    assert metadata["late_interaction"] == {
+        "architecture": "colbert",
+        "scoring": "maxsim",
+        "query_prefix": "[Q] ",
+        "document_prefix": "[D] ",
+        "query_length": 32,
+        "document_length": 300,
+        "do_query_expansion": True,
+        "attend_to_expansion_tokens": False,
+    }
+
+
 def _metadata_args() -> argparse.Namespace:
     return argparse.Namespace(
         model="toy",
@@ -242,6 +239,21 @@ class _FakeSentenceTransformerLike(torch.nn.Module):
         module = self._modules[str(index)]
         assert isinstance(module, torch.nn.Module)
         return module
+
+
+class _FakeLateInteractionModel(torch.nn.Module):
+    similarity_fn_name = "MaxSim"
+    max_seq_length = None
+    query_prefix = "[Q] "
+    document_prefix = "[D] "
+    query_length = 32
+    document_length = 300
+    do_query_expansion = True
+    attend_to_expansion_tokens = False
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.projection = torch.nn.Linear(2, 2)
 
 
 class _FakeTransformerModule(torch.nn.Module):

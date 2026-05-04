@@ -18,7 +18,12 @@ from nano_ir_benchmark.bm25 import (
     resolve_bm25_config_for_queries,
 )
 from nano_ir_benchmark.datasets import EvalTask, resolve_dataset_revision
-from nano_ir_benchmark.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task
+from nano_ir_benchmark.evaluation import (
+    LoadedIrDataset,
+    evaluate_dense_task,
+    evaluate_late_interaction_task,
+    evaluate_reranker_task,
+)
 
 TIMING_KEYS = [
     "query_embedding_seconds",
@@ -42,6 +47,7 @@ AGGREGATED_CONFIG_KEYS = [
     "corpus_task",
     "sparse_max_active_dims",
     "score_device",
+    "late_interaction",
 ]
 PROMPT_CONFIG_KEYS = [
     "query_prompt",
@@ -109,6 +115,7 @@ def run_or_load_task(
     started_at = datetime.now(timezone.utc)
     start = time.perf_counter()
     bm25_payload: dict[str, Any] | None = None
+    late_interaction_payload: dict[str, Any] | None = None
     payload_model_metadata = model_metadata
     if args.model_type == "bm25":
         raw_bm25_config = bm25_config_from_args(args)
@@ -145,6 +152,23 @@ def run_or_load_task(
             rerank_top_n=args.rerank_top_n,
             aggregate_metric=args.aggregate_metric,
             score_kwargs=getattr(args, "reranker_score_kwargs", {}),
+        )
+    elif args.model_type == "late-interaction":
+        late_interaction_payload = _late_interaction_config_from_args(args)
+        evaluation = evaluate_late_interaction_task(
+            model=model,
+            dataset=dataset,
+            batch_size=args.batch_size,
+            show_progress=args.show_progress,
+            query_prompt=args.query_prompt,
+            corpus_prompt=args.corpus_prompt,
+            query_prompt_name=args.query_prompt_name,
+            corpus_prompt_name=args.corpus_prompt_name,
+            exact_doc_batch_size=int(late_interaction_payload["exact"]["doc_batch_size"]),
+            exact_query_batch_size=int(late_interaction_payload["exact"]["query_batch_size"]),
+            device=args.device,
+            aggregate_metric=args.aggregate_metric,
+            embedding_variants=getattr(args, "embedding_variants", []),
         )
     else:
         evaluation = evaluate_dense_task(
@@ -217,6 +241,7 @@ def run_or_load_task(
             "rerank_top_n": args.rerank_top_n
             if args.model_type in {"dense", "sparse", "late-interaction", "reranker"}
             else None,
+            "late_interaction": late_interaction_payload if args.model_type == "late-interaction" else None,
             "bm25": bm25_payload,
         },
         "evaluation": {
@@ -251,6 +276,21 @@ def aggregate_metric_value_for(metrics: dict[str, float], suffix: str) -> float:
     if not values:
         raise ValueError(f"No metric ending with '{suffix}' found. Available metrics: {sorted(metrics)}")
     return float(np.mean(values))
+
+
+def _late_interaction_config_from_args(args: Any) -> dict[str, Any]:
+    return {
+        "scoring": "exact_maxsim",
+        "query_length": getattr(args, "late_interaction_query_length", None),
+        "document_length": getattr(args, "late_interaction_document_length", None),
+        "query_prefix": getattr(args, "late_interaction_query_prefix", None),
+        "document_prefix": getattr(args, "late_interaction_document_prefix", None),
+        "attend_to_expansion_tokens": getattr(args, "late_interaction_attend_to_expansion_tokens", None),
+        "exact": {
+            "doc_batch_size": int(args.late_interaction_exact_doc_batch_size),
+            "query_batch_size": int(args.late_interaction_exact_query_batch_size),
+        },
+    }
 
 
 def build_all_payload(
@@ -423,6 +463,7 @@ def _aggregate_split_configs(*, args: Any, results: list[TaskRunResult]) -> dict
             summaries["rerank_top_n"],
             getattr(args, "rerank_top_n", None),
         ),
+        "late_interaction": summaries["late_interaction"],
         "prompt_summary": {key: summaries[key] for key in PROMPT_CONFIG_KEYS},
     }
     for key in PROMPT_CONFIG_KEYS:
@@ -471,6 +512,7 @@ def _summarize_embedding_evaluations(value: Any) -> list[dict[str, Any]]:
                 "best_score": item.get("best_score"),
                 "best_distance": item.get("best_distance"),
                 "best_score_name": item.get("best_score_name"),
+                "index": item.get("index"),
                 "distance_evaluations": _summarize_distance_evaluations(item.get("distance_evaluations")),
                 "reranking_evaluation": _summarize_reranking_evaluation(item.get("reranking_evaluation")),
             }
