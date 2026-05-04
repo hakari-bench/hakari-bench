@@ -37,6 +37,7 @@ wordseg = [
     "jieba>=0.42.1",
     "kiwipiepy>=0.22.2",
     "pythainlp>=5.2.0",
+    "pyvi>=0.1.1",
     "unidic-lite>=1.0.8",
 ]
 

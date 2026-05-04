@@ -39,6 +39,7 @@ WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES: dict[str, tuple[str, ...]] = {
     "zh": ("jieba",),
     "th": ("pythainlp.tokenize",),
     "ko": ("kiwipiepy",),
+    "vi": ("pyvi.ViTokenizer",),
 }
 _ENGLISH_STOPWORDS = frozenset(
     {
@@ -613,6 +614,29 @@ def _build_wordseg_splitter(
 
         return splitter
 
+    if language == "vi":
+        pyvi_tokenizer_module = _load_wordseg_module(
+            "pyvi.ViTokenizer",
+            language=language,
+            module_loader=module_loader,
+        )
+        raw_tokenize_fn = getattr(pyvi_tokenizer_module, "tokenize", None)
+        if raw_tokenize_fn is None:
+            raw_tokenize_fn = getattr(getattr(pyvi_tokenizer_module, "ViTokenizer"), "tokenize")
+        tokenize_fn = cast(Callable[[str], str], raw_tokenize_fn)
+
+        def splitter(text: str) -> list[str]:
+            return _tokenize_chunked(
+                text,
+                lambda chunk: [
+                    token.lower()
+                    for token in str(tokenize_fn(chunk)).split()
+                    if token and _has_token_text(token)
+                ],
+            )
+
+        return splitter
+
     raise ValueError(
         f"wordseg tokenizer does not support language '{language}'. "
         f"Supported languages: {sorted(WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES)}"
@@ -633,6 +657,10 @@ def _load_wordseg_module(
             f"Missing dependencies for wordseg language '{language}': {dependencies}. "
             "Install them with `uv sync --extra wordseg` or install the matching optional packages."
         ) from exc
+
+
+def _has_token_text(token: str) -> bool:
+    return any(char.isalnum() for char in token)
 
 
 def _tokenize_chunked(text: str, tokenize_chunk: Callable[[str], list[str]]) -> list[str]:

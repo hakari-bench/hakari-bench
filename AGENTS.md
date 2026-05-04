@@ -100,6 +100,7 @@ uv run ty check
   `english_regex`, `english_porter`, `english_porter_stop`, and `wordseg`.
 - `wordseg` support is optional. Keep language-specific dependencies behind the
   `wordseg` extra and lazy-load them only when the tokenizer is selected.
+  Current wordseg languages are `ja`, `zh`, `th`, `ko`, and `vi`.
 - Persist the resolved BM25 source, backend, algorithm, tokenizer, and candidate
   subset metadata in result JSON under `config.bm25` and `model.bm25`.
 

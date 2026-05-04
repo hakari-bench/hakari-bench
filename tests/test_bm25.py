@@ -88,6 +88,18 @@ def test_resolve_bm25_config_auto_selects_wordseg_for_supported_language() -> No
     assert config.auto_detection_language_counts == {"ja": 10}
 
 
+def test_resolve_bm25_config_auto_selects_wordseg_for_vietnamese() -> None:
+    config = resolve_bm25_config_for_queries(
+        BM25Config(tokenizer=None),
+        {"q1": "thành phố hồ chí minh", "q2": "truy xuất thông tin"},
+        detector=lambda _: {"lang": "vi", "score": 0.99},
+    )
+
+    assert config.tokenizer == "wordseg"
+    assert config.tokenizer_name == "vi"
+    assert config.auto_detected_language == "vi"
+
+
 def test_resolve_bm25_config_auto_selects_regex_for_other_languages() -> None:
     config = resolve_bm25_config_for_queries(
         BM25Config(tokenizer=None),
@@ -208,6 +220,23 @@ def test_tokenize_texts_supports_wordseg_korean_with_lazy_loader() -> None:
     splitter = _build_wordseg_splitter("ko", module_loader=module_loader)
 
     assert splitter("한국어") == ["한국", "어"]
+
+
+def test_tokenize_texts_supports_wordseg_vietnamese_with_lazy_loader() -> None:
+    class _PyviTokenizerModule:
+        @staticmethod
+        def tokenize(text: str) -> str:
+            _ = text
+            return "xin_chao THÀNH_PHỐ !"
+
+    def module_loader(module_name: str) -> object:
+        if module_name == "pyvi.ViTokenizer":
+            return _PyviTokenizerModule()
+        raise AssertionError(module_name)
+
+    splitter = _build_wordseg_splitter("vi", module_loader=module_loader)
+
+    assert splitter("xin chao thanh pho") == ["xin_chao", "thành_phố"]
 
 
 def test_tokenize_texts_requires_wordseg_language() -> None:

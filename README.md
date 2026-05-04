@@ -272,7 +272,7 @@ uv run nano-ir-bench build-bm25 \
 ```
 
 The current mapping is `ja` = `fugashi` + `unidic-lite`, `zh` = `jieba`,
-`th` = `pythainlp`, and `ko` = `kiwipiepy`.
+`th` = `pythainlp`, `ko` = `kiwipiepy`, and `vi` = `pyvi`.
 
 ## Viewer
 
