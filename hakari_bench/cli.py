@@ -11,6 +11,7 @@ from hakari_bench.bm25 import (
     BM25BuildResult,
     bm25_config_name,
     bm25_config_from_args,
+    bm25_config_payload,
     collect_bm25_metadata,
     run_or_load_bm25_task,
 )
@@ -30,11 +31,10 @@ from hakari_bench.models import (
 )
 from hakari_bench.results import (
     TaskRunResult,
-    build_all_payload,
+    build_run_summary_payload,
     result_path_for_task,
     run_or_load_task,
     safe_path_part,
-    write_all_payload,
 )
 
 
@@ -93,6 +93,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     candidate_methods = build_candidates.add_subparsers(dest="candidate_method", required=True)
     build_bm25 = candidate_methods.add_parser("bm25", help="Build BM25 candidate files.")
+    _add_params_arg(build_bm25)
     _add_dataset_args(build_bm25, action="build")
     build_bm25.add_argument("--candidates-dir", default="output/candidates/bm25")
     build_bm25.add_argument("--overwrite", action="store_true")
@@ -320,6 +321,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             delattr(args, "reranker_inference_kwargs_json")
         if args.model_type != "reranker" and (args.cross_encoder_kwargs or args.reranker_score_kwargs):
             parser.error("--reranker-init-kwargs-json and --reranker-inference-kwargs-json require evaluate reranker.")
+    if args.command == "build-candidates":
+        try:
+            _apply_build_candidates_params_json(args)
+        except ValueError as exc:
+            parser.error(str(exc))
     if args.command == "evaluate":
         truncate_sparse_values = {
             "--sparse-query-max-active-dims": getattr(args, "sparse_query_max_active_dims", None),
@@ -353,6 +359,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         parser.error("--model is required unless evaluate bm25 is used.")
     if args.command == "build-candidates":
         _bridge_new_bm25_args(args)
+        args.output_dir = args.candidates_dir
+        args.override = args.overwrite
     if args.command == "build-candidates" and args.dataset is None and not args.collection:
         args.dataset = ["hakari-bench/NanoBEIR-en"]
     elif args.command == "build-candidates" and args.dataset is None:
@@ -435,12 +443,7 @@ def _apply_evaluate_params_json(args: argparse.Namespace) -> None:
     raw = getattr(args, "params_json", None)
     if raw is None:
         return
-    try:
-        payload = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"--params-json must be valid JSON: {exc}") from exc
-    if not isinstance(payload, dict):
-        raise ValueError("--params-json must be a JSON object.")
+    payload = _parse_params_json(raw)
     _reject_unknown_keys(
         payload,
         allowed={"model", "target", "runtime", "output", "prompts", "reranker", "sparse", "embedding", "bm25", "late_interaction"},
@@ -456,6 +459,27 @@ def _apply_evaluate_params_json(args: argparse.Namespace) -> None:
     _apply_embedding_params(args, _params_section(payload, "embedding"))
     _apply_bm25_params(args, _params_section(payload, "bm25"))
     _apply_late_interaction_params(args, _params_section(payload, "late_interaction"))
+
+
+def _apply_build_candidates_params_json(args: argparse.Namespace) -> None:
+    raw = getattr(args, "params_json", None)
+    if raw is None:
+        return
+    payload = _parse_params_json(raw)
+    _reject_unknown_keys(payload, allowed={"target", "output", "bm25"}, path="params")
+    _apply_target_params(args, _params_section(payload, "target"))
+    _apply_build_candidates_output_params(args, _params_section(payload, "output"))
+    _apply_bm25_params(args, _params_section(payload, "bm25"))
+
+
+def _parse_params_json(raw: str) -> dict[str, Any]:
+    try:
+        payload = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"--params-json must be valid JSON: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise ValueError("--params-json must be a JSON object.")
+    return payload
 
 
 def _params_section(payload: dict[str, Any], key: str) -> dict[str, Any]:
@@ -525,6 +549,14 @@ def _apply_output_params(args: argparse.Namespace, value: dict[str, Any]) -> Non
     _reject_unknown_keys(value, allowed={"results_dir", "candidates_dir", "overwrite"}, path="params.output")
     if "results_dir" in value:
         args.results_dir = _string_param(value["results_dir"], "params.output.results_dir")
+    if "candidates_dir" in value:
+        args.candidates_dir = _string_param(value["candidates_dir"], "params.output.candidates_dir")
+    if "overwrite" in value:
+        args.overwrite = _bool_param(value["overwrite"], "params.output.overwrite")
+
+
+def _apply_build_candidates_output_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(value, allowed={"candidates_dir", "overwrite"}, path="params.output")
     if "candidates_dir" in value:
         args.candidates_dir = _string_param(value["candidates_dir"], "params.output.candidates_dir")
     if "overwrite" in value:
@@ -824,7 +856,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         model_metadata = results[0].payload["model"]
 
     run_finished_at = datetime.now(timezone.utc)
-    all_payload = build_all_payload(
+    run_summary_payload = build_run_summary_payload(
         args=args,
         environment=environment,
         model_metadata=model_metadata,
@@ -833,21 +865,19 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         run_finished_at_utc=run_finished_at.isoformat(),
         run_wall_seconds=float(time.perf_counter() - run_start),
     )
-    all_path = write_all_payload(output_dir=output_dir, model_id=args.model_id, payload=all_payload)
     print(
         json.dumps(
             {
-                "aggregate_metric": args.aggregate_metric,
-                "aggregate_metric_mean": all_payload["totals"]["aggregate_metric_mean"],
-                "all_json": str(all_path),
-                "evaluated_count": all_payload["totals"]["evaluated_count"],
-                "cache_hit_count": all_payload["totals"]["cache_hit_count"],
+                "primary_metric": args.aggregate_metric,
+                "primary_metric_mean": run_summary_payload["totals"]["aggregate_metric_mean"],
+                "evaluated_count": run_summary_payload["totals"]["evaluated_count"],
+                "cache_hit_count": run_summary_payload["totals"]["cache_hit_count"],
             },
             ensure_ascii=False,
             indent=2,
         )
     )
-    return all_payload
+    return run_summary_payload
 
 
 def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
@@ -866,9 +896,9 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
 
     payload = {
         "generated_at_utc": results[-1].payload.get("generated_at_utc") if results else None,
-        "output_dir": args.output_dir,
+        "candidates_dir": args.output_dir,
         "config": {
-            "bm25": vars(args),
+            "bm25": bm25_config_payload(config),
         },
         "totals": {
             "split_count": len(results),
@@ -890,13 +920,11 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
         ],
     }
     config_name = safe_path_part(bm25_config_name(config))
-    all_path = Path(args.output_dir) / config_name / "all.json"
-    all_path.parent.mkdir(parents=True, exist_ok=True)
-    all_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(
         json.dumps(
             {
-                "all_json": str(all_path),
+                "candidate_config": config_name,
+                "candidates_dir": args.output_dir,
                 "evaluated_count": payload["totals"]["evaluated_count"],
                 "cache_hit_count": payload["totals"]["cache_hit_count"],
             },
@@ -916,7 +944,7 @@ def run_web(args: argparse.Namespace) -> None:
     location = resolve_duckdb_location(
         data_dir=Path(args.data_dir),
         duckdb_path=Path(args.duckdb_path) if args.duckdb_path else None,
-        source_output_dir=Path(args.source_output_dir) if args.source_output_dir else None,
+        source_results_dir=Path(args.source_results_dir) if args.source_results_dir else None,
         source_duckdb_path=Path(args.source_duckdb_path) if args.source_duckdb_path else None,
     )
     store = LocalDuckDbStore(location)
@@ -971,7 +999,7 @@ def main(argv: list[str] | None = None) -> None:
     if args.command == "evaluate":
         run_evaluate(args)
         return
-    if args.command == "build-bm25":
+    if args.command == "build-candidates":
         run_build_bm25(args)
         return
     if args.command == "web":

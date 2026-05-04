@@ -33,7 +33,7 @@ def test_nanocmteb_is_a_ranked_benchmark() -> None:
     assert report.benchmark_name("hakari-bench/NanoCMTEB", "NanoCMTEB") == "NanoCMTEB"
 
 
-def test_load_results_reads_task_json_not_only_all_json(tmp_path: Path) -> None:
+def test_load_results_reads_task_json_without_aggregate_file(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
     task_path = model_dir / "hakari-bench__NanoJMTEB" / "NanoJaCWIR.json"
     task_path.parent.mkdir(parents=True)
@@ -41,7 +41,7 @@ def test_load_results_reads_task_json_not_only_all_json(tmp_path: Path) -> None:
         json.dumps(
             {
                 "model": {
-                    "name_or_path": "example/model",
+                    "id": "example/model",
                     "active_parameters": 3,
                     "total_parameters": 5,
                     "max_seq_length": 8192,
@@ -76,17 +76,6 @@ def test_load_results_reads_task_json_not_only_all_json(tmp_path: Path) -> None:
         ),
         encoding="utf-8",
     )
-    (model_dir / "all.json").write_text(
-        json.dumps(
-            {
-                "model": {"name_or_path": "example/model"},
-                "environment": {"package_versions": {}},
-                "totals": {"split_count": 0},
-                "splits": [],
-            }
-        ),
-        encoding="utf-8",
-    )
 
     rows, _, metric_rows = report.load_results(tmp_path)
 
@@ -97,6 +86,74 @@ def test_load_results_reads_task_json_not_only_all_json(tmp_path: Path) -> None:
     assert rows[0].active_parameters == 3
     assert rows[0].total_parameters == 5
     assert len(metric_rows) == 1
+
+
+def test_load_results_builds_runs_from_task_json_without_all_json(tmp_path: Path) -> None:
+    task_dir = tmp_path / "local__model_A" / "hakari-bench__NanoJMTEB"
+    task_dir.mkdir(parents=True)
+    (task_dir / "NanoJaCWIR.json").write_text(
+        json.dumps(
+            {
+                "generated_at_utc": "2026-05-04T00:00:00+00:00",
+                "model": {
+                    "id": "local/model_A",
+                    "active_parameters": 3,
+                    "total_parameters": 5,
+                    "max_seq_length": 8192,
+                    "dtype": "bf16",
+                    "attn_implementation": "flash_attention_2",
+                },
+                "environment": {
+                    "package_versions": {
+                        "torch": "2.9.1",
+                        "transformers": "4.57.6",
+                        "sentence-transformers": "5.4.1",
+                    }
+                },
+                "target": {
+                    "dataset_name": "NanoJMTEB",
+                    "dataset_id": "hakari-bench/NanoJMTEB",
+                    "split_name": "NanoJaCWIR",
+                    "task_name": "NanoJaCWIR",
+                },
+                "evaluation": {
+                    "aggregate_metric": "ndcg@10",
+                    "aggregate_metric_value": 0.42,
+                    "started_at_utc": "2026-05-04T00:00:01+00:00",
+                    "finished_at_utc": "2026-05-04T00:00:03+00:00",
+                },
+                "metrics": {"NanoJaCWIR_ndcg@10": 0.42},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    rows, runs, _ = report.load_results(tmp_path)
+
+    assert len(rows) == 1
+    assert runs == [
+        {
+            "model_dir": "local__model_A",
+            "model_name": "local/model_A",
+            "all_json_path": None,
+            "generated_at_utc": "2026-05-04T00:00:00+00:00",
+            "started_at_utc": "2026-05-04T00:00:01+00:00",
+            "finished_at_utc": "2026-05-04T00:00:03+00:00",
+            "target_count": 1,
+            "split_count": 1,
+            "cache_hit_count": None,
+            "evaluated_count": None,
+            "aggregate_metric_mean": 0.42,
+            "active_parameters": 3,
+            "total_parameters": 5,
+            "max_seq_length": 8192,
+            "dtype": "bf16",
+            "attn_implementation": "flash_attention_2",
+            "torch_version": "2.9.1",
+            "transformers_version": "4.57.6",
+            "sentence_transformers_version": "5.4.1",
+        }
+    ]
 
 
 def test_render_html_includes_total_parameters_column() -> None:
@@ -112,7 +169,7 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
     task_path.write_text(
         json.dumps(
             {
-                "model": {"name_or_path": "example/model"},
+                "model": {"id": "example/model"},
                 "environment": {"package_versions": {}},
                 "target": {
                     "dataset_name": "NanoJMTEB",
@@ -149,11 +206,6 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
         ),
         encoding="utf-8",
     )
-    (model_dir / "all.json").write_text(
-        json.dumps({"model": {"name_or_path": "example/model"}, "environment": {"package_versions": {}}, "totals": {}}),
-        encoding="utf-8",
-    )
-
     rows, _, _ = report.load_results(tmp_path)
 
     assert [(row.embedding_variant_name, row.score, row.embedding_dim, row.quantization) for row in rows] == [
@@ -250,7 +302,7 @@ def _write_task_json(path: Path, *, task_name: str, score: float) -> None:
     path.write_text(
         json.dumps(
             {
-                "model": {"name_or_path": "example/model"},
+                "model": {"id": "example/model"},
                 "environment": {"package_versions": {}},
                 "target": {
                     "dataset_name": "NanoJMTEB",

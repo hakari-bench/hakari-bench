@@ -86,10 +86,6 @@ def result_path_for_task(*, output_dir: Path, model_id: str, task: EvalTask) -> 
     )
 
 
-def model_output_dir(*, output_dir: Path, model_id: str) -> Path:
-    return output_dir / safe_path_part(model_id)
-
-
 def run_or_load_task(
     *,
     task: EvalTask,
@@ -302,7 +298,7 @@ def _late_interaction_config_from_args(args: Any) -> dict[str, Any]:
     }
 
 
-def build_all_payload(
+def build_run_summary_payload(
     *,
     args: Any,
     environment: dict[str, Any],
@@ -424,12 +420,6 @@ def build_all_payload(
         },
         "splits": splits,
     }
-
-
-def write_all_payload(*, output_dir: Path, model_id: str, payload: dict[str, Any]) -> Path:
-    path = model_output_dir(output_dir=output_dir, model_id=model_id) / "all.json"
-    _write_json(path, payload)
-    return path
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:

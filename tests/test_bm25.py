@@ -240,7 +240,7 @@ def test_tokenize_texts_supports_wordseg_vietnamese_with_lazy_loader() -> None:
 
 
 def test_tokenize_texts_requires_wordseg_language() -> None:
-    with pytest.raises(ValueError, match="requires --bm25-tokenizer-name"):
+    with pytest.raises(ValueError, match="requires --bm25-wordseg-language"):
         tokenize_texts(["東京タワー"], tokenizer="wordseg")
 
 

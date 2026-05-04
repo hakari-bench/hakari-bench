@@ -18,7 +18,7 @@ from hakari_bench.evaluation import (
     evaluate_late_interaction_task,
     evaluate_reranker_task,
 )
-from hakari_bench.results import TaskRunResult, build_all_payload, result_path_for_task, run_or_load_task, safe_path_part
+from hakari_bench.results import TaskRunResult, build_run_summary_payload, result_path_for_task, run_or_load_task, safe_path_part
 
 
 def _pipeline_variant(name: str, *steps: dict[str, object]) -> dict[str, object]:
@@ -1605,7 +1605,7 @@ def test_run_or_load_task_skips_existing_json(tmp_path: Path) -> None:
         model=FakeDenseModel(),
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 
@@ -1637,7 +1637,7 @@ def test_run_or_load_task_records_evaluation_timestamps_and_durations(tmp_path: 
         model=FakeDenseModel(),
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 
@@ -1689,7 +1689,7 @@ def test_run_or_load_task_records_dataset_revision(tmp_path: Path, monkeypatch: 
         model=FakeDenseModel(),
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 
@@ -1743,7 +1743,7 @@ def test_run_or_load_task_records_task_metadata(tmp_path: Path) -> None:
         model=FakeDenseModel(),
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 
@@ -1781,7 +1781,7 @@ def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) 
         model=FakeDenseModel(),
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 
@@ -1794,13 +1794,13 @@ def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) 
     assert [item["distance"] for item in embedding_evaluations[1]["distance_evaluations"]] == ["dot", "cosine"]
     assert result.payload["metrics"] == embedding_evaluations[0]["metrics"]
 
-    all_payload = build_all_payload(
+    run_summary_payload = build_run_summary_payload(
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         results=[result],
     )
-    split_variants = all_payload["splits"][0]["embedding_evaluations"]
+    split_variants = run_summary_payload["splits"][0]["embedding_evaluations"]
     assert [item["name"] for item in split_variants] == ["base", "truncate_dim_1"]
     assert split_variants[0]["embedding_dimensions"] == {"dim": 2}
     assert split_variants[0]["embedding_metadata"]["representation_type"] == "dense"
@@ -1836,7 +1836,7 @@ def test_run_or_load_task_records_embedding_model_reranking_evaluations(tmp_path
         model=FakeDenseModel(),
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 
@@ -1848,18 +1848,18 @@ def test_run_or_load_task_records_embedding_model_reranking_evaluations(tmp_path
     assert result.payload["config"]["candidate_ranking"] == "bm25"
     assert result.payload["config"]["rerank_top_k"] == 1
 
-    all_payload = build_all_payload(
+    run_summary_payload = build_run_summary_payload(
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         results=[result],
     )
 
-    assert all_payload["totals"]["aggregate_metric_mean"] == pytest.approx(1.0)
-    assert all_payload["totals"]["rerank_aggregate_metric_mean"] == pytest.approx(0.5)
-    assert all_payload["splits"][0]["rerank_aggregate_metric_value"] == pytest.approx(0.5)
-    assert all_payload["splits"][0]["reranking_evaluations"][0]["status"] == "available"
-    assert "metrics" not in all_payload["splits"][0]["reranking_evaluations"][0]["distance_evaluations"][0]
+    assert run_summary_payload["totals"]["aggregate_metric_mean"] == pytest.approx(1.0)
+    assert run_summary_payload["totals"]["rerank_aggregate_metric_mean"] == pytest.approx(0.5)
+    assert run_summary_payload["splits"][0]["rerank_aggregate_metric_value"] == pytest.approx(0.5)
+    assert run_summary_payload["splits"][0]["reranking_evaluations"][0]["status"] == "available"
+    assert "metrics" not in run_summary_payload["splits"][0]["reranking_evaluations"][0]["distance_evaluations"][0]
 
 
 def test_run_or_load_task_records_score_device(tmp_path: Path) -> None:
@@ -1890,7 +1890,7 @@ def test_run_or_load_task_records_score_device(tmp_path: Path) -> None:
         model=FakeCudaDenseModel(),
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 
@@ -1928,7 +1928,7 @@ def test_run_or_load_task_records_truncate_sparse_max_dims(tmp_path: Path) -> No
         model=model,
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "naver/splade-v3"},
+        model_metadata={"id": "naver/splade-v3"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 
@@ -1943,25 +1943,25 @@ def test_run_or_load_task_records_truncate_sparse_max_dims(tmp_path: Path) -> No
         "source": "post_encode_pipeline",
     }
 
-    all_payload = build_all_payload(
+    run_summary_payload = build_run_summary_payload(
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "naver/splade-v3"},
+        model_metadata={"id": "naver/splade-v3"},
         results=[result],
     )
-    assert all_payload["config"]["sparse_query_max_active_dims"] == 32
-    assert all_payload["config"]["sparse_document_max_active_dims"] == 128
-    assert all_payload["config"]["sparse_truncation"] == {
+    assert run_summary_payload["config"]["sparse_query_max_active_dims"] == 32
+    assert run_summary_payload["config"]["sparse_document_max_active_dims"] == 128
+    assert run_summary_payload["config"]["sparse_truncation"] == {
         "algorithm": "top_abs_values_per_row",
         "query_max_active_dims": 32,
         "document_max_active_dims": 128,
         "source": "post_encode_pipeline",
     }
-    assert all_payload["splits"][0]["config"]["sparse_query_max_active_dims"] == 32
-    assert all_payload["splits"][0]["config"]["sparse_document_max_active_dims"] == 128
+    assert run_summary_payload["splits"][0]["config"]["sparse_query_max_active_dims"] == 32
+    assert run_summary_payload["splits"][0]["config"]["sparse_document_max_active_dims"] == 128
 
 
-def test_build_all_payload_includes_split_and_total_durations(tmp_path: Path) -> None:
+def test_build_run_summary_payload_includes_split_and_total_durations(tmp_path: Path) -> None:
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
@@ -1984,14 +1984,14 @@ def test_build_all_payload_includes_split_and_total_durations(tmp_path: Path) ->
         model=FakeDenseModel(),
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 
-    payload = build_all_payload(
+    payload = build_run_summary_payload(
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "hotchpotch/model"},
+        model_metadata={"id": "hotchpotch/model"},
         results=[result],
         run_started_at_utc="2026-04-27T00:00:00+00:00",
         run_finished_at_utc="2026-04-27T00:00:01+00:00",
@@ -2015,7 +2015,7 @@ def test_build_all_payload_includes_split_and_total_durations(tmp_path: Path) ->
     )
 
 
-def test_build_all_payload_aggregates_prompt_config_from_cached_splits(tmp_path: Path) -> None:
+def test_build_run_summary_payload_aggregates_prompt_config_from_cached_splits(tmp_path: Path) -> None:
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
@@ -2060,10 +2060,10 @@ def test_build_all_payload_aggregates_prompt_config_from_cached_splits(tmp_path:
         payload=cached_payload,
     )
 
-    payload = build_all_payload(
+    payload = build_run_summary_payload(
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "cl-nagoya/ruri-v3-30m"},
+        model_metadata={"id": "cl-nagoya/ruri-v3-30m"},
         results=[result],
     )
 
@@ -2080,7 +2080,7 @@ def test_build_all_payload_aggregates_prompt_config_from_cached_splits(tmp_path:
     assert payload["splits"][0]["config"]["document_prompt"] == "検索文書: "
 
 
-def test_build_all_payload_uses_task_model_metadata_when_consistent(tmp_path: Path) -> None:
+def test_build_run_summary_payload_uses_task_model_metadata_when_consistent(tmp_path: Path) -> None:
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
@@ -2109,14 +2109,14 @@ def test_build_all_payload_uses_task_model_metadata_when_consistent(tmp_path: Pa
         model=None,
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "stale"},
+        model_metadata={"id": "stale"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 
-    payload = build_all_payload(
+    payload = build_run_summary_payload(
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "stale"},
+        model_metadata={"id": "stale"},
         results=[result],
     )
 
@@ -2157,7 +2157,7 @@ def test_run_or_load_task_records_auto_bm25_config(tmp_path: Path, monkeypatch: 
         model=None,
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "bm25/bm25s-okapi-auto"},
+        model_metadata={"id": "bm25/bm25s-okapi-auto"},
         dataset_loader=lambda _: _toy_dataset_without_candidates(),
     )
 
@@ -2198,7 +2198,7 @@ def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -
         model=None,
         args=args,
         environment={"package_versions": {}},
-        model_metadata={"name_or_path": "bm25/bm25s-okapi-auto"},
+        model_metadata={"id": "bm25/bm25s-okapi-auto"},
         dataset_loader=lambda _: _toy_dataset(),
     )
 

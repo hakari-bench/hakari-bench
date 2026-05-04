@@ -65,18 +65,19 @@ uv run ty check
 
 ## Model Loading
 
-- The default model type is `dense`, loaded with `SentenceTransformer`.
-- Supported `--model-type` values are `dense`, `sparse`, `reranker`,
+- The default evaluation method is `evaluate dense`, loaded with
+  `SentenceTransformer`.
+- Supported evaluation method subcommands are `dense`, `sparse`, `reranker`,
   `late-interaction`, and `bm25`.
 - `sparse` uses SentenceTransformers `SparseEncoder`.
 - `reranker` uses SentenceTransformers `CrossEncoder` and requires a candidate
-  subset such as `bm25`; `--rerank-top-n` limits the candidates to rerank.
+  ranking such as `bm25`; `--rerank-top-k` limits the candidates to rerank.
 - `late-interaction` uses PyLate ColBERT and scores query/document token
   embeddings with exact MaxSim.
 - Default dtype is `bf16`. Keep `--dtype`, `--trust-remote-code`,
   `--flash-attn2`, `--attn-implementation`, `--device`,
   `--model-max-seq-length`, `--truncate-dim`,
-  `--truncate-sparse-query-max-dims`, and `--truncate-sparse-docs-max-dims`
+  `--sparse-query-max-active-dims`, and `--sparse-document-max-active-dims`
   explicit CLI options.
 - Do not shorten model max sequence length for benchmark runs just to avoid
   slow execution or memory pressure. Use the model's default/configured maximum
@@ -91,7 +92,7 @@ uv run ty check
 
 - BM25 evaluation supports two sources:
   - If an evaluation dataset has the selected candidate subset
-    (`--candidate-subset-name`, default `bm25`), use that ranking as the BM25
+    (`--candidate-ranking`, default `bm25`), use that ranking as the BM25
     baseline.
   - If the subset is unavailable, compute BM25 locally with `bm25s`.
 - Local BM25 uses `bm25s` with the standard Okapi-style Robertson method.
@@ -111,16 +112,12 @@ uv run ty check
 - Per-task result files are written below:
 
 ```text
-output/results/{model_name}/{huggingface_dataset_name}/{split_or_task}.json
+output/results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
 ```
 
-- Aggregate results are written to:
-
-```text
-output/results/{model_name}/all.json
-```
-
-- Existing result files should be skipped unless `--override` is provided.
+- Run-level summaries are derived from per-task result JSON when building the
+  DuckDB database; do not write aggregate `all.json` files.
+- Existing result files should be skipped unless `--overwrite` is provided.
 - Result JSON should preserve as much runtime detail as practical, including
   batch size, dtype, package versions, torch/CUDA info, prompts, total
   parameters, trainable parameters, embedding parameters, transformer/active

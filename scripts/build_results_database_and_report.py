@@ -91,40 +91,9 @@ def main() -> None:
 
 def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, Any]], list[dict[str, Any]]]:
     rows: list[TaskResult] = []
-    runs: list[dict[str, Any]] = []
+    run_accumulators: dict[str, dict[str, Any]] = {}
     metric_rows: list[dict[str, Any]] = []
 
-    for all_path in sorted(results_dir.glob("*/all.json")):
-        payload = json.loads(all_path.read_text(encoding="utf-8"))
-        model = payload.get("model", {})
-        environment = payload.get("environment", {})
-        package_versions = environment.get("package_versions", {})
-        totals = payload.get("totals", {})
-        model_dir = all_path.parent.name
-        model_name = str(model.get("name_or_path") or model_dir)
-        runs.append(
-            {
-                "model_dir": model_dir,
-                "model_name": model_name,
-                "all_json_path": str(all_path),
-                "generated_at_utc": payload.get("generated_at_utc"),
-                "started_at_utc": payload.get("run", {}).get("started_at_utc"),
-                "finished_at_utc": payload.get("run", {}).get("finished_at_utc"),
-                "target_count": totals.get("target_count"),
-                "split_count": totals.get("split_count"),
-                "cache_hit_count": totals.get("cache_hit_count"),
-                "evaluated_count": totals.get("evaluated_count"),
-                "aggregate_metric_mean": totals.get("aggregate_metric_mean"),
-                "active_parameters": model.get("active_parameters"),
-                "total_parameters": model.get("total_parameters"),
-                "max_seq_length": model.get("max_seq_length"),
-                "dtype": model.get("dtype"),
-                "attn_implementation": model.get("attn_implementation"),
-                "torch_version": package_versions.get("torch"),
-                "transformers_version": package_versions.get("transformers"),
-                "sentence_transformers_version": package_versions.get("sentence-transformers"),
-            }
-        )
     for result_path in sorted(results_dir.glob("*/*/*.json")):
         task_payload = json.loads(result_path.read_text(encoding="utf-8"))
         target = task_payload.get("target", {})
@@ -143,7 +112,7 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
         environment = task_payload.get("environment", {})
         package_versions = environment.get("package_versions", {}) if isinstance(environment, dict) else {}
         model_dir = result_path.relative_to(results_dir).parts[0]
-        model_name = str(model.get("name_or_path") or model_dir) if isinstance(model, dict) else model_dir
+        model_name = _model_name_from_payload(model, model_dir=model_dir)
         dataset_id = str(target.get("dataset_id") or "")
         dataset_revision = _dataset_revision_value(target.get("dataset_revision"), key="resolved")
         dataset_revision_requested = _dataset_revision_value(target.get("dataset_revision"), key="requested")
@@ -154,6 +123,17 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
             str(target["split_name"]) if target.get("split_name") is not None else None,
         )
         task_key = canonical_task_key(benchmark=benchmark, dataset_id=dataset_id, task_name=task_name)
+        _accumulate_run(
+            run_accumulators,
+            model_dir=model_dir,
+            model_name=model_name,
+            model=model if isinstance(model, dict) else {},
+            package_versions=package_versions,
+            target=target,
+            evaluation=evaluation,
+            generated_at_utc=task_payload.get("generated_at_utc"),
+            score=float(score),
+        )
         common: dict[str, Any] = {
             "model_dir": model_dir,
             "model_name": model_name,
@@ -227,7 +207,105 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
                     }
                 )
 
-    return _dedupe_task_results(rows), runs, _dedupe_metric_rows(metric_rows)
+    return _dedupe_task_results(rows), _runs_from_task_results(run_accumulators), _dedupe_metric_rows(metric_rows)
+
+
+def _model_name_from_payload(model: Any, *, model_dir: str) -> str:
+    if not isinstance(model, dict):
+        return model_dir
+    return str(model.get("id") or model_dir)
+
+
+def _accumulate_run(
+    accumulators: dict[str, dict[str, Any]],
+    *,
+    model_dir: str,
+    model_name: str,
+    model: dict[str, Any],
+    package_versions: dict[str, Any],
+    target: dict[str, Any],
+    evaluation: dict[str, Any],
+    generated_at_utc: Any,
+    score: float,
+) -> None:
+    accumulator = accumulators.setdefault(
+        model_dir,
+        {
+            "model_dir": model_dir,
+            "model_name": model_name,
+            "all_json_path": None,
+            "generated_at_utc": None,
+            "started_at_values": [],
+            "finished_at_values": [],
+            "targets": set(),
+            "split_count": 0,
+            "cache_hit_values": [],
+            "scores": [],
+            "active_parameters": _int_or_none(model.get("active_parameters")),
+            "total_parameters": _int_or_none(model.get("total_parameters")),
+            "max_seq_length": _int_or_none(model.get("max_seq_length")),
+            "dtype": model.get("dtype"),
+            "attn_implementation": model.get("attn_implementation"),
+            "torch_version": package_versions.get("torch"),
+            "transformers_version": package_versions.get("transformers"),
+            "sentence_transformers_version": package_versions.get("sentence-transformers"),
+        },
+    )
+    accumulator["model_name"] = model_name
+    accumulator["generated_at_utc"] = _max_string(accumulator.get("generated_at_utc"), generated_at_utc)
+    _append_string(accumulator["started_at_values"], evaluation.get("started_at_utc"))
+    _append_string(accumulator["finished_at_values"], evaluation.get("finished_at_utc"))
+    dataset_id = target.get("dataset_id")
+    if dataset_id is not None:
+        accumulator["targets"].add(str(dataset_id))
+    accumulator["split_count"] += 1
+    if isinstance(evaluation.get("cache_hit"), bool):
+        accumulator["cache_hit_values"].append(evaluation["cache_hit"])
+    accumulator["scores"].append(score)
+
+
+def _runs_from_task_results(accumulators: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    runs: list[dict[str, Any]] = []
+    for model_dir in sorted(accumulators):
+        item = accumulators[model_dir]
+        cache_hit_values = item["cache_hit_values"]
+        cache_hit_count = sum(1 for value in cache_hit_values if value) if cache_hit_values else None
+        evaluated_count = sum(1 for value in cache_hit_values if not value) if cache_hit_values else None
+        scores = item["scores"]
+        runs.append(
+            {
+                "model_dir": item["model_dir"],
+                "model_name": item["model_name"],
+                "all_json_path": item["all_json_path"],
+                "generated_at_utc": item["generated_at_utc"],
+                "started_at_utc": min(item["started_at_values"]) if item["started_at_values"] else None,
+                "finished_at_utc": max(item["finished_at_values"]) if item["finished_at_values"] else None,
+                "target_count": len(item["targets"]),
+                "split_count": item["split_count"],
+                "cache_hit_count": cache_hit_count,
+                "evaluated_count": evaluated_count,
+                "aggregate_metric_mean": float(sum(scores) / len(scores)) if scores else None,
+                "active_parameters": item["active_parameters"],
+                "total_parameters": item["total_parameters"],
+                "max_seq_length": item["max_seq_length"],
+                "dtype": item["dtype"],
+                "attn_implementation": item["attn_implementation"],
+                "torch_version": item["torch_version"],
+                "transformers_version": item["transformers_version"],
+                "sentence_transformers_version": item["sentence_transformers_version"],
+            }
+        )
+    return runs
+
+
+def _append_string(values: list[str], value: Any) -> None:
+    if isinstance(value, str):
+        values.append(value)
+
+
+def _max_string(current: Any, candidate: Any) -> str | None:
+    values = [value for value in (current, candidate) if isinstance(value, str)]
+    return max(values) if values else None
 
 
 def benchmark_name(dataset_id: Any, dataset_name: Any) -> str:

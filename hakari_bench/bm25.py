@@ -546,7 +546,7 @@ def _tokenize_with_transformer(texts: Sequence[str], tokenizer_name: str) -> lis
 def _tokenize_with_wordseg(texts: Sequence[str], language: str | None) -> list[list[str]]:
     if language is None:
         raise ValueError(
-            "wordseg tokenizer requires --bm25-tokenizer-name with one of "
+            "wordseg tokenizer requires --bm25-wordseg-language with one of "
             f"{sorted(WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES)}."
         )
     splitter = _build_wordseg_splitter(_normalize_wordseg_language(language))

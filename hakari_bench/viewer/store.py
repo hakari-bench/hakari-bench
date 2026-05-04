@@ -42,20 +42,20 @@ def resolve_duckdb_location(
     *,
     data_dir: Path,
     duckdb_path: Path | None,
-    source_output_dir: Path | None,
+    source_results_dir: Path | None,
     source_duckdb_path: Path | None,
 ) -> DuckDbLocation:
     local_path = duckdb_path or data_dir / DEFAULT_DUCKDB_NAME
-    source_path = source_duckdb_path or _source_from_output_dir(source_output_dir) or _discover_source_duckdb()
+    source_path = source_duckdb_path or _source_from_results_dir(source_results_dir) or _discover_source_duckdb()
     if source_path is not None and source_path.resolve() == local_path.resolve():
         source_path = None
     return DuckDbLocation(local_path=local_path, source_path=source_path)
 
 
-def _source_from_output_dir(source_output_dir: Path | None) -> Path | None:
-    if source_output_dir is None:
+def _source_from_results_dir(source_results_dir: Path | None) -> Path | None:
+    if source_results_dir is None:
         return None
-    candidate = source_output_dir / "results" / DEFAULT_DUCKDB_NAME
+    candidate = source_results_dir / DEFAULT_DUCKDB_NAME
     return candidate if candidate.exists() else None
 
 

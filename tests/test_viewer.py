@@ -638,11 +638,27 @@ def test_resolve_duckdb_location_defaults_to_hakari_bench_name(tmp_path: Path) -
     location = resolve_duckdb_location(
         data_dir=tmp_path,
         duckdb_path=None,
-        source_output_dir=None,
+        source_results_dir=None,
         source_duckdb_path=None,
     )
 
     assert location.local_path == tmp_path / "hakari_bench.duckdb"
+
+
+def test_resolve_duckdb_location_uses_source_results_dir(tmp_path: Path) -> None:
+    source_results_dir = tmp_path / "results"
+    source_results_dir.mkdir()
+    source_duckdb = source_results_dir / "hakari_bench.duckdb"
+    source_duckdb.write_bytes(b"duckdb")
+
+    location = resolve_duckdb_location(
+        data_dir=tmp_path / "viewer",
+        duckdb_path=None,
+        source_results_dir=source_results_dir,
+        source_duckdb_path=None,
+    )
+
+    assert location.source_path == source_duckdb
 
 
 def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:

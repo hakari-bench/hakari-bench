@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import argparse
+import json
 
 from hakari_bench.cli import build_parser, parse_args
 from hakari_bench.datasets import EvalTask, NanoDatasetSpec
+from hakari_bench.results import TaskRunResult
 
 
 def _pipeline_variant(name: str, *steps: dict[str, object]) -> dict[str, object]:
@@ -341,6 +343,35 @@ def test_parse_args_accepts_build_bm25_options() -> None:
     assert args.bm25_stemmer_language == "french"
 
 
+def test_parse_args_accepts_build_bm25_params_json() -> None:
+    args = parse_args(
+        [
+            "build-candidates",
+            "bm25",
+            "--params-json",
+            json.dumps(
+                {
+                    "target": {"datasets": ["NanoMLDR"], "splits": ["ja"]},
+                    "output": {"candidates_dir": "output/custom-candidates", "overwrite": True},
+                    "bm25": {"top_k": 50, "tokenizer": "wordseg", "wordseg_language": "ja"},
+                }
+            ),
+        ]
+    )
+
+    assert args.command == "build-candidates"
+    assert args.candidate_method == "bm25"
+    assert args.dataset == ["NanoMLDR"]
+    assert args.split == ["ja"]
+    assert args.candidates_dir == "output/custom-candidates"
+    assert args.output_dir == "output/custom-candidates"
+    assert args.overwrite is True
+    assert args.override is True
+    assert args.bm25_top_k == 50
+    assert args.bm25_tokenizer == "wordseg"
+    assert args.bm25_wordseg_language == "ja"
+
+
 def test_parse_args_accepts_web_viewer_options() -> None:
     args = parse_args(["web", "--host", "0.0.0.0", "--port", "28090", "--data-dir", "output/viewer"])
 
@@ -408,7 +439,7 @@ def test_parse_args_rejects_non_positive_rerank_top_n() -> None:
     except SystemExit as exc:
         assert exc.code == 2
     else:
-        raise AssertionError("Expected --rerank-top-n 0 to be rejected.")
+        raise AssertionError("Expected --rerank-top-k 0 to be rejected.")
 
 
 def test_parse_args_accepts_query_and_docs_truncate_sparse_max_dims() -> None:
@@ -445,7 +476,7 @@ def test_parse_args_rejects_sparse_query_max_active_dims_for_dense_model() -> No
     except SystemExit as exc:
         assert exc.code == 2
     else:
-        raise AssertionError("Expected --truncate-sparse-query-max-dims to require --model-type sparse.")
+        raise AssertionError("Expected --sparse-query-max-active-dims to require evaluate sparse.")
 
 
 def test_parse_args_rejects_legacy_sparse_max_active_dims_alias() -> None:
@@ -908,3 +939,93 @@ def test_load_dataset_for_args_uses_candidate_subset_for_candidate_aware_models(
         ("bm25", "bm25"),
         ("reranker", "bm25"),
     ]
+
+
+def test_run_evaluate_does_not_write_all_json(monkeypatch, tmp_path) -> None:
+    from hakari_bench.cli import run_evaluate
+
+    task = EvalTask(
+        dataset=NanoDatasetSpec(
+            name="Toy",
+            dataset_id="toy/data",
+            corpus_config="corpus",
+            queries_config="queries",
+            qrels_config="qrels",
+        ),
+        split_name="test",
+        task_name="test",
+    )
+    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--results-dir", str(tmp_path)])
+
+    monkeypatch.setattr("hakari_bench.cli.DatasetRegistry.load_builtin", lambda: object())
+    monkeypatch.setattr("hakari_bench.cli.resolve_eval_tasks", lambda **_: [task])
+    monkeypatch.setattr("hakari_bench.cli.collect_runtime_environment", lambda: {"package_versions": {}})
+    monkeypatch.setattr("hakari_bench.cli.load_model", lambda _: object())
+    monkeypatch.setattr(
+        "hakari_bench.cli.collect_model_metadata",
+        lambda _model, parsed_args: {
+            "method": parsed_args.model_type,
+            "id": parsed_args.model_id,
+            "source": parsed_args.model_source,
+        },
+    )
+
+    def fake_run_or_load_task(**kwargs) -> TaskRunResult:
+        output_path = tmp_path / "hotchpotch__model" / "toy__data" / "test.json"
+        return TaskRunResult(
+            task=kwargs["task"],
+            cache_hit=False,
+            output_path=output_path,
+            payload={
+                "model": {"id": "hotchpotch/model"},
+                "target": {"dataset_revision": {"resolved": "toy-sha"}},
+                "config": {"batch_size": 32, "primary_metric": "ndcg@10"},
+                "evaluation": {"aggregate_metric_value": 1.0, "timing": {}},
+            },
+        )
+
+    monkeypatch.setattr("hakari_bench.cli.run_or_load_task", fake_run_or_load_task)
+
+    run_evaluate(args)
+
+    assert not (tmp_path / "hotchpotch__model" / "all.json").exists()
+
+
+def test_run_build_bm25_returns_candidate_summary_without_aggregate_file(monkeypatch, tmp_path) -> None:
+    from hakari_bench.bm25 import BM25BuildResult
+    from hakari_bench.cli import run_build_bm25
+
+    task = EvalTask(
+        dataset=NanoDatasetSpec(
+            name="Toy",
+            dataset_id="toy/data",
+            corpus_config="corpus",
+            queries_config="queries",
+            qrels_config="qrels",
+        ),
+        split_name="test",
+        task_name="test",
+    )
+    args = parse_args(["build-candidates", "bm25", "--candidates-dir", str(tmp_path), "--bm25-top-k", "10"])
+
+    monkeypatch.setattr("hakari_bench.cli.DatasetRegistry.load_builtin", lambda: object())
+    monkeypatch.setattr("hakari_bench.cli.resolve_eval_tasks", lambda **_: [task])
+    monkeypatch.setattr("hakari_bench.cli._load_dataset_for_args", lambda _args, _task: object())
+
+    def fake_run_or_load_bm25_task(**kwargs) -> BM25BuildResult:
+        return BM25BuildResult(
+            task=kwargs["task"],
+            cache_hit=False,
+            output_path=tmp_path / "bm25s-okapi-auto" / "toy__data" / "test.json",
+            payload={"generated_at_utc": "2026-05-04T00:00:00+00:00", "config": {"top_k": 10}},
+        )
+
+    monkeypatch.setattr("hakari_bench.cli.run_or_load_bm25_task", fake_run_or_load_bm25_task)
+
+    payload = run_build_bm25(args)
+
+    assert payload["candidates_dir"] == str(tmp_path)
+    assert "output_dir" not in payload
+    assert payload["config"]["bm25"]["top_k"] == 10
+    assert "override" not in payload["config"]["bm25"]
+    assert not (tmp_path / "bm25s-okapi-auto" / "all.json").exists()

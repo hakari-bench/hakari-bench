@@ -19,10 +19,10 @@ Use the retrieval prompts documented by the model card:
 Example:
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate dense \
   --model cl-nagoya/ruri-v3-310m \
   --query-prompt '検索クエリ: ' \
-  --corpus-prompt '検索文書: '
+  --document-prompt '検索文書: '
 ```
 
 Runtime notes:
@@ -62,10 +62,10 @@ Use the standard E5 retrieval prefixes:
 Example:
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate dense \
   --model intfloat/multilingual-e5-base \
   --query-prompt 'query: ' \
-  --corpus-prompt 'passage: '
+  --document-prompt 'passage: '
 ```
 
 Notes:

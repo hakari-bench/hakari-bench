@@ -11,7 +11,7 @@ Built-in dataset definitions include `NanoBEIR-en`, `NanoMIRACL`, `NanoMLDR`,
 ## Example
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate dense \
   --model hotchpotch/bekko-embedding-pico-beta-unir-v7 \
   --dataset hakari-bench/NanoBEIR-en
 ```
@@ -22,23 +22,48 @@ when a run needs an explicit override.
 Results are written under:
 
 ```text
-output/results/{model_name}/{dataset_name}/{split_or_task}.json
+output/results/{model_id}/{dataset_name}/{split_or_task}.json
 ```
 
 For Hugging Face datasets, each task JSON records the resolved dataset repo
 revision under `target.dataset_revision`. Use `--dataset-revision REV` to pin a
 specific branch, tag, or commit; the resolved commit SHA is still stored.
 
+Local model paths can be evaluated directly. Use `--model-alias` to choose the
+stable model id used in result paths and JSON. If the alias does not contain a
+slash, `local/` is prepended automatically.
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model /local_model_A/ \
+  --model-alias model_A \
+  --collection MNanoBEIR
+```
+
+The result JSON records this as `model.id = "local/model_A"` and
+`model.source = {"type": "local_path", "path": "/local_model_A"}`.
+
+Most evaluate options can also be supplied as a structured JSON object:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --params-json '{
+    "model": {"source": "/local_model_A/", "alias": "local/model_A"},
+    "target": {"collections": ["MNanoBEIR"]},
+    "runtime": {"batch_size": 16, "dtype": "fp16"},
+    "output": {"results_dir": "output/results", "overwrite": true}
+  }'
+```
+
 ## Sparse encoders
 
-Sparse SentenceTransformers models can be evaluated with `--model-type sparse`.
+Sparse SentenceTransformers models can be evaluated with `evaluate sparse`.
 HAKARI-Bench requests sparse tensor output from `SparseEncoder` models and
 keeps sparse embeddings in a sparse matrix format for scoring.
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate sparse \
   --model naver/splade-v3 \
-  --model-type sparse \
   --dataset NanoBEIR-en
 ```
 
@@ -47,31 +72,29 @@ query and/or document sparse rows to their top weighted dimensions after
 encoding:
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate sparse \
   --model naver/splade-v3 \
-  --model-type sparse \
   --dataset NanoBEIR-en \
-  --truncate-sparse-query-max-dims 32 \
-  --truncate-sparse-docs-max-dims 128
+  --sparse-query-max-active-dims 32 \
+  --sparse-document-max-active-dims 128
 ```
 
 The selected limits are written to result JSON under
-`config.truncate_sparse_query_max_dims`, `config.truncate_sparse_docs_max_dims`,
-and `config.sparse_truncation`, then summarized in `all.json`. Sparse embedding
-metadata records `nnz_total`, `nnz_mean`, `nnz_median`, `nnz_max`, and
-`density` for queries and documents.
+`config.sparse_query_max_active_dims`,
+`config.sparse_document_max_active_dims`, and `config.sparse_truncation`.
+Sparse embedding metadata records `nnz_total`, `nnz_mean`, `nnz_median`,
+`nnz_max`, and `density` for queries and documents.
 
 To compare multiple sparsity limits from one full sparse model encode, use
 post-encode embedding variants:
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate sparse \
   --model naver/splade-v3 \
-  --model-type sparse \
   --dataset NanoBEIR-en \
-  --embedding-variant truncate-sparse-query-max-dims:8,16,32 \
-  --embedding-variant truncate-sparse-docs-max-dims:64,128,256 \
-  --embedding-variant-cross truncate-sparse-query-max-dims:8,16,32 truncate-sparse-docs-max-dims:64,128,256
+  --embedding-variant sparse-query-max-active-dims:8,16,32 \
+  --embedding-variant sparse-document-max-active-dims:64,128,256 \
+  --embedding-variant-grid sparse-query-max-active-dims:8,16,32 sparse-document-max-active-dims:64,128,256
 ```
 
 These variants keep the top absolute-value dimensions per query/document row
@@ -84,7 +107,7 @@ latency trade-off checks.
 
 ## Late interaction / ColBERT
 
-ColBERT-style models can be evaluated with `--model-type late-interaction`.
+ColBERT-style models can be evaluated with `evaluate late-interaction`.
 The runner loads these models through PyLate ColBERT and scores query/document
 token matrices with exact MaxSim. Model-specific prefixes and sequence lengths
 can be passed with `--late-interaction-query-prefix`,
@@ -107,34 +130,35 @@ When dense or sparse SentenceTransformers models run on a non-CPU device, the
 benchmark keeps base scoring on PyTorch tensors and performs exact score/top-k
 work on that device. Dense single-vector, sparse tensor, and late-interaction
 tensor shapes use this path; CPU model runs continue to use the NumPy/SciPy
-paths. Use `--score-device cpu` to force post-encode score/top-k matrix work
+paths. Use `--retrieval-score-device cpu` to force post-encode score/top-k matrix work
 onto CPU, which is useful for checking CUDA and CPU scoring parity.
 
 Dense evaluation automatically runs normalized `int8` and binary quantized
 search variants, plus top-100 float rescoring for both variants. The benchmark
 first L2-normalizes SentenceTransformers embeddings and converts them to stored
 codes, then uses exact PyTorch matrix scoring for the quantized top-k. The
-post-encode score device follows `--score-device`: `auto` keeps tensor scoring
+post-encode score device follows `--retrieval-score-device`: `auto` keeps tensor scoring
 on the model output device, while `cpu` or `cuda` force quantized search matrix
-work to that device. Use `--no-quantize` to run only the base dense result.
+work to that device. Use `--no-default-embedding-variants` to run only the base
+dense result.
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate dense \
   --model example/embedding-model \
   --dataset NanoMTEB
 ```
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate dense \
   --model example/embedding-model \
   --dataset NanoMTEB \
-  --no-quantize
+  --no-default-embedding-variants
 ```
 
 For explicit dense runs, use `int8,binary` and `rescore:int8,binary`:
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate dense \
   --model example/embedding-model \
   --dataset NanoMTEB \
   --embedding-variant int8,binary \
@@ -146,7 +170,7 @@ candidates with the already-computed source float embeddings; it does not
 re-embed documents.
 
 For CUDA/CPU scorer diagnostics, keep the same variant names and change only
-`--score-device cpu` or `--score-device cuda`. Torch CUDA scoring casts stored
+`--retrieval-score-device cpu` or `--retrieval-score-device cuda`. Torch CUDA scoring casts stored
 int8 and binary codes to float32 for matrix multiplication because regular
 PyTorch CUDA matmul does not expose integer accumulation for these tensors.
 
@@ -156,7 +180,7 @@ Matryoshka-style truncated embedding dimensions can be evaluated from the same
 base embedding run:
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate dense \
   --model example/matryoshka-embedding-model \
   --dataset NanoMTEB \
   --embedding-variant truncate:512,256
@@ -168,14 +192,14 @@ When evaluating dimensions, run the standalone truncation variants, standalone
 quantization variants, and their cross product:
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate dense \
   --model example/matryoshka-embedding-model \
   --dataset NanoMTEB \
   --embedding-variant truncate:256,128,64 \
   --embedding-variant int8,binary \
   --embedding-variant rescore:int8,binary \
-  --embedding-variant-cross truncate:256,128,64 int8,binary \
-  --embedding-variant-cross truncate:256,128,64 rescore:int8,binary
+  --embedding-variant-grid truncate:256,128,64 int8,binary \
+  --embedding-variant-grid truncate:256,128,64 rescore:int8,binary
 ```
 
 All three groups answer different questions: standalone truncation measures the
@@ -210,47 +234,49 @@ BM25 candidates, so no second model inference is required.
 
 The full-corpus result remains the main aggregate. Reranking results are stored
 separately under `rerank_metrics`, `evaluation.rerank_aggregate_metric_value`,
-and `evaluation.reranking_evaluations`; `all.json` adds
-`totals.rerank_aggregate_metric_mean`. If BM25 candidates are unavailable, the
-full-corpus evaluation still succeeds and reranking is recorded as skipped.
+and `evaluation.reranking_evaluations`. The CLI prints a JSON summary with
+`primary_metric_mean` and task counts after the run. If BM25 candidates are
+unavailable, the full-corpus evaluation still succeeds and reranking is
+recorded as skipped.
 
 CrossEncoder-style reranker models can be evaluated directly with
-`--model-type reranker`. They score only the BM25 candidate subset and support
+`evaluate reranker`. They score only the BM25 candidate subset and support
 models exposing `rank`, `predict`, or a callable pair-scoring API.
 
 ```bash
-uv run hakari-bench evaluate \
+uv run hakari-bench evaluate reranker \
   --model nreimers/mmarco-mMiniLMv2-L6-H384-v1 \
-  --model-type reranker \
   --dataset NanoRTEB \
-  --candidate-subset-name bm25 \
-  --rerank-top-n 100 \
+  --candidate-ranking bm25 \
+  --rerank-top-k 100 \
   --batch-size 32
 ```
 
 ## BM25
 
 BM25 can be evaluated directly. If the dataset provides a candidate subset named
-by `--candidate-subset-name` (default: `bm25`), that ranking is used as the BM25
+by `--candidate-ranking` (default: `bm25`), that ranking is used as the BM25
 baseline. If the subset is unavailable, BM25 is computed locally.
 
 ```bash
-uv run hakari-bench evaluate \
-  --model-type bm25 \
+uv run hakari-bench evaluate bm25 \
   --dataset NanoMLDR \
   --split ja \
-  --top-k 100
+  --bm25-top-k 100
 ```
 
 BM25 candidate files can also be generated for reranking workflows:
 
 ```bash
-uv run hakari-bench build-bm25 \
+uv run hakari-bench build-candidates bm25 \
   --dataset NanoMLDR \
   --split ja \
   --bm25-tokenizer english_porter_stop \
-  --top-k 100
+  --bm25-top-k 100
 ```
+
+`build-candidates bm25` also accepts `--params-json` with `target`, `output`,
+and `bm25` sections.
 
 BM25 scoring uses `bm25s` with the standard Okapi-style Robertson method.
 Available tokenizers are `regex`, `whitespace`, `transformer`, `stemmer`,
@@ -269,14 +295,14 @@ extra before using it:
 uv sync --extra wordseg
 ```
 
-Supported `wordseg` language values are passed via `--bm25-tokenizer-name`:
+Supported `wordseg` language values are passed via `--bm25-wordseg-language`:
 
 ```bash
-uv run hakari-bench build-bm25 \
+uv run hakari-bench build-candidates bm25 \
   --dataset NanoMLDR \
   --split ja \
   --bm25-tokenizer wordseg \
-  --bm25-tokenizer-name ja
+  --bm25-wordseg-language ja
 ```
 
 The current mapping is `ja` = `fugashi` + `unidic-lite`, `zh` = `jieba`,
@@ -303,9 +329,9 @@ uv run hakari-bench web
 ```
 
 By default, it binds to `127.0.0.1:8000` and keeps
-`output/viewer/hakari_bench.duckdb` synchronized from the benchmark output
+`output/viewer/hakari_bench.duckdb` synchronized from the benchmark results
 DuckDB when a page is loaded. Use `--host 0.0.0.0 --port 28090` for remote
-access, or pass `--source-output-dir` / `--source-duckdb-path` to point at a
+access, or pass `--source-results-dir` / `--source-duckdb-path` to point at a
 different source.
 
 ## Achievements

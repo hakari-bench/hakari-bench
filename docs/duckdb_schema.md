@@ -23,7 +23,6 @@ uv run python scripts/build_results_database_and_report.py \
 
 The input files are:
 
-- `output/results/{model_dir}/all.json`: model/run-level summaries.
 - `output/results/{model_dir}/{dataset_name}/{split_or_task}.json`:
   task-level benchmark results.
 
@@ -32,6 +31,8 @@ The input files are:
 `task_results`. The base embedding result is stored as a row where
 `embedding_variant_name IS NULL`. Derived embedding results from
 `evaluation.embedding_evaluations` are stored as additional variant rows.
+Run-level rows in `runs` are derived from these task JSON files; no aggregate
+JSON file is required.
 
 Start the web viewer with:
 
@@ -40,8 +41,10 @@ uv run hakari-bench web
 ```
 
 By default, the viewer reads `output/viewer/hakari_bench.duckdb`. On each page
-load, it copies a newer source database from the benchmark output directory
-when one is available.
+load, it copies a newer source database from the benchmark results directory
+when one is available. Use `--source-results-dir` to point at another results
+directory containing `hakari_bench.duckdb`, or `--source-duckdb-path` for an
+explicit database path.
 
 ## Viewer Configuration
 
@@ -87,7 +90,7 @@ one model, one benchmark task, and one embedding variant. Base results use
 | column | type | meaning |
 | --- | --- | --- |
 | `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
-| `model_name` | `VARCHAR` | `model.name_or_path` from result JSON, or `model_dir` when absent. |
+| `model_name` | `VARCHAR` | `model.id` from result JSON, or `model_dir` when absent. |
 | `benchmark` | `VARCHAR` | Viewer benchmark group, such as `MNanoBEIR` or `NanoJMTEB`. |
 | `dataset_id` | `VARCHAR` | `target.dataset_id`, usually a Hugging Face dataset repo. |
 | `dataset_revision` | `VARCHAR` | Resolved dataset revision, usually a commit SHA. |
@@ -119,23 +122,23 @@ one model, one benchmark task, and one embedding variant. Base results use
 
 ### `runs`
 
-`runs` is built from `all.json` and stores model/run-level summaries. It is not
-used for rank computation, but it is useful for model metadata and run
+`runs` is built from task JSON files and stores model/run-level summaries. It
+is not used for rank computation, but it is useful for model metadata and run
 completeness displays.
 
 | column | type | meaning |
 | --- | --- | --- |
 | `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
-| `model_name` | `VARCHAR` | `model.name_or_path` from `all.json`. |
-| `all_json_path` | `VARCHAR` | Source `all.json` path. |
-| `generated_at_utc` | `VARCHAR` | `all.json` generation time. |
-| `started_at_utc` | `VARCHAR` | Run start time. |
-| `finished_at_utc` | `VARCHAR` | Run finish time. |
-| `target_count` | `INTEGER` | Number of target datasets/tasks. |
-| `split_count` | `INTEGER` | Number of splits/tasks. |
-| `cache_hit_count` | `INTEGER` | Number of cache hits. |
-| `evaluated_count` | `INTEGER` | Number of evaluated tasks. |
-| `aggregate_metric_mean` | `DOUBLE` | Aggregate metric mean from `all.json`. |
+| `model_name` | `VARCHAR` | `model.id` from task JSON, or `model_dir` when absent. |
+| `all_json_path` | `VARCHAR` | Always `NULL`; retained only as a nullable schema column. |
+| `generated_at_utc` | `VARCHAR` | Latest task JSON generation time for the model. |
+| `started_at_utc` | `VARCHAR` | Earliest task evaluation start time for the model. |
+| `finished_at_utc` | `VARCHAR` | Latest task evaluation finish time for the model. |
+| `target_count` | `INTEGER` | Number of distinct target datasets. |
+| `split_count` | `INTEGER` | Number of task result JSON files. |
+| `cache_hit_count` | `INTEGER` | Number of task cache hits when task JSON contains `evaluation.cache_hit`; otherwise `NULL`. |
+| `evaluated_count` | `INTEGER` | Number of evaluated tasks when task JSON contains `evaluation.cache_hit`; otherwise `NULL`. |
+| `aggregate_metric_mean` | `DOUBLE` | Mean of task `evaluation.aggregate_metric_value` values. |
 | `active_parameters` | `BIGINT` | Model active parameter count. |
 | `total_parameters` | `BIGINT` | Model total parameter count. |
 | `max_seq_length` | `INTEGER` | Model maximum sequence length. |
@@ -904,4 +907,3 @@ population unless the UI makes that behavior explicit.
    pivot in the UI if needed.
 9. Default sort should be `borda_rank ASC`. Metric-column sorts should place
    missing values after present values.
-
