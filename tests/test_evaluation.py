@@ -732,6 +732,7 @@ def test_candidate_subset_rank_by_similarity_scores_only_candidate_documents() -
     assert rankings == {"q1": ["d1", "d3"], "q2": ["d2", "d1"]}
 
 
+@pytest.mark.filterwarnings("ignore:Sparse CSR tensor support is in beta state.*:UserWarning")
 def test_candidate_subset_rank_by_similarity_supports_torch_sparse_csr() -> None:
     rankings = evaluation_module._rank_candidate_subset_by_similarity(
         query_ids=["q1", "q2"],
