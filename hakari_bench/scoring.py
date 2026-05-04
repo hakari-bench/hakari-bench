@@ -50,3 +50,50 @@ def rank_candidate_subset_by_similarity(
         )
         rankings[query_id] = ranked[query_id]
     return rankings
+
+
+def candidate_coverage_for_qrels(
+    *,
+    qrels: dict[str, set[str]],
+    candidates: dict[str, list[str]],
+    top_k: int,
+) -> dict[str, int | float | None]:
+    if top_k <= 0:
+        raise ValueError("top_k must be positive.")
+    query_with_relevance_count = 0
+    covered_query_count = 0
+    relevant_count = 0
+    covered_relevant_count = 0
+    for query_id, relevant_ids in qrels.items():
+        if not relevant_ids:
+            continue
+        query_with_relevance_count += 1
+        relevant_count += len(relevant_ids)
+        candidate_ids = _deduped_top_k(candidates.get(query_id, []), top_k=top_k)
+        covered_ids = relevant_ids.intersection(candidate_ids)
+        if covered_ids:
+            covered_query_count += 1
+            covered_relevant_count += len(covered_ids)
+    return {
+        "top_k": int(top_k),
+        "query_count": len(qrels),
+        "query_with_relevance_count": query_with_relevance_count,
+        "covered_query_count": covered_query_count,
+        "query_coverage": (
+            covered_query_count / query_with_relevance_count if query_with_relevance_count else None
+        ),
+        "relevant_count": relevant_count,
+        "covered_relevant_count": covered_relevant_count,
+        "relevant_coverage": covered_relevant_count / relevant_count if relevant_count else None,
+    }
+
+
+def _deduped_top_k(values: list[str], *, top_k: int) -> set[str]:
+    seen: set[str] = set()
+    for value in values:
+        if value in seen:
+            continue
+        seen.add(value)
+        if len(seen) >= top_k:
+            break
+    return seen

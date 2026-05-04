@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from hakari_bench.scoring import rank_candidate_subset_by_similarity
+from hakari_bench.scoring import candidate_coverage_for_qrels, rank_candidate_subset_by_similarity
 
 
 def test_rank_candidate_subset_scores_only_deduped_candidate_rows() -> None:
@@ -51,3 +51,29 @@ def test_rank_candidate_subset_rejects_non_positive_top_n() -> None:
             rerank_top_n=0,
             rank_by_similarity=lambda **kwargs: {"q1": ["d1"]},
         )
+
+
+def test_candidate_coverage_for_qrels_counts_top_k_relevance_recall() -> None:
+    coverage = candidate_coverage_for_qrels(
+        qrels={
+            "q1": {"d1", "d2"},
+            "q2": {"d3"},
+            "q3": set(),
+        },
+        candidates={
+            "q1": ["d9", "d1", "d1", "d2"],
+            "q2": ["d4", "d5"],
+        },
+        top_k=2,
+    )
+
+    assert coverage == {
+        "top_k": 2,
+        "query_count": 3,
+        "query_with_relevance_count": 2,
+        "covered_query_count": 1,
+        "query_coverage": 0.5,
+        "relevant_count": 3,
+        "covered_relevant_count": 1,
+        "relevant_coverage": 1 / 3,
+    }

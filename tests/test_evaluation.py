@@ -1578,6 +1578,16 @@ def test_evaluate_dense_task_records_bm25_top_n_reranking_metrics() -> None:
     assert result.reranking_evaluations[0]["rerank_top_n"] == 1
     assert result.reranking_evaluations[0]["aggregate_metric_value"] == pytest.approx(0.5)
     assert result.reranking_evaluations[0]["best_score_name"] == "dot_bm25_top1_rerank"
+    assert result.reranking_evaluations[0]["candidate_coverage"] == {
+        "top_k": 1,
+        "query_count": 2,
+        "query_with_relevance_count": 2,
+        "covered_query_count": 1,
+        "query_coverage": 0.5,
+        "relevant_count": 2,
+        "covered_relevant_count": 1,
+        "relevant_coverage": 0.5,
+    }
     assert result.rerank_metrics["ToyData_test_dot_bm25_top1_rerank_ndcg@10"] == pytest.approx(0.5)
 
 

@@ -565,6 +565,7 @@ def _summarize_reranking_evaluation(value: Any) -> dict[str, Any]:
         "best_score": value.get("best_score"),
         "best_distance": value.get("best_distance"),
         "best_score_name": value.get("best_score_name"),
+        "candidate_coverage": value.get("candidate_coverage"),
         "distance_evaluations": _summarize_distance_evaluations(value.get("distance_evaluations")),
     }
 

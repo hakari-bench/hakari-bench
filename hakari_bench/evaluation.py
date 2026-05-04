@@ -13,6 +13,7 @@ from tqdm.auto import tqdm
 from hakari_bench.datasets import EvalTask
 from hakari_bench.embedding_matrix import QuantizedEmbeddingMatrix
 from hakari_bench.metrics import compute_ir_metrics
+from hakari_bench.scoring import candidate_coverage_for_qrels
 from hakari_bench.scoring import rank_candidate_subset_by_similarity
 
 QuantizationPrecision = Literal["int8", "binary"]
@@ -325,6 +326,11 @@ def evaluate_reranker_task(
         score_name="reranker",
     )
     metric_seconds = time.perf_counter() - metric_start
+    candidate_coverage = candidate_coverage_for_qrels(
+        qrels=dataset.qrels,
+        candidates=dataset.candidates,
+        top_k=rerank_top_n,
+    )
     return TaskEvaluation(
         metrics=metrics,
         rerank_metrics=metrics,
@@ -340,6 +346,7 @@ def evaluate_reranker_task(
                 "best_distance": "reranker",
                 "best_score_name": "reranker",
                 "metrics": metrics,
+                "candidate_coverage": candidate_coverage,
             }
         ],
         rerank_aggregate_metric_value=_aggregate_metric_value_for(metrics, aggregate_metric),
@@ -1022,6 +1029,11 @@ def _score_embedding_distances(
     distance_evaluations: list[dict[str, Any]] = []
     rerank_distance_evaluations: list[dict[str, Any]] = []
     rerank_metrics_by_distance: list[dict[str, float]] = []
+    candidate_coverage = (
+        candidate_coverage_for_qrels(qrels=qrels, candidates=candidates, top_k=rerank_top_n)
+        if candidates is not None
+        else None
+    )
     score_seconds = 0.0
     metric_seconds = 0.0
     for distance in _distance_names(preferred_score_name):
@@ -1106,6 +1118,7 @@ def _score_embedding_distances(
         rerank_distance_evaluations,
         rerank_top_n=rerank_top_n,
         aggregate_metric=aggregate_metric,
+        candidate_coverage=candidate_coverage,
     )
     return {
         "distance_evaluations": distance_evaluations,
@@ -1149,6 +1162,7 @@ def _candidate_reranking_evaluation(
     *,
     rerank_top_n: int,
     aggregate_metric: str,
+    candidate_coverage: dict[str, int | float | None] | None = None,
 ) -> dict[str, Any]:
     name = f"bm25_top_{rerank_top_n}"
     if not distance_evaluations:
@@ -1160,7 +1174,7 @@ def _candidate_reranking_evaluation(
             "rerank_top_n": int(rerank_top_n),
         }
     best = max(distance_evaluations, key=lambda item: float(item["aggregate_metric_value"]))
-    return {
+    payload = {
         "name": name,
         "source": "dataset_candidate_subset",
         "status": "available",
@@ -1173,6 +1187,9 @@ def _candidate_reranking_evaluation(
         "distance_evaluations": distance_evaluations,
         "metrics": best["metrics"],
     }
+    if candidate_coverage is not None:
+        payload["candidate_coverage"] = candidate_coverage
+    return payload
 
 
 def _merge_metric_dicts(metrics_by_distance: list[dict[str, float]]) -> dict[str, float]:
