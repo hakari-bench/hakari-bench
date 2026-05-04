@@ -1,0 +1,44 @@
+name: NanoMTEB-German
+dataset_id: hakari-bench/NanoMTEB-German
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoGerDaLIR
+- NanoGermanDPR
+- NanoGermanGovService
+- NanoGermanQuAD
+- NanoXMarket
+metadata:
+  language: de
+  category: natural_language
+  short_description: German NanoMTEB retrieval benchmark.
+  description: NanoMTEB-German is a compact German retrieval benchmark aligned with MTEB-style task families.
+task_metadata:
+  NanoGerDaLIR:
+    language: de
+    category: natural_language
+    short_description: NanoGerDaLIR retrieval task.
+    description: NanoGerDaLIR is a compact retrieval task included in NanoMTEB-German.
+  NanoGermanDPR:
+    language: de
+    category: natural_language
+    short_description: NanoGermanDPR retrieval task.
+    description: NanoGermanDPR is a compact retrieval task included in NanoMTEB-German.
+  NanoGermanGovService:
+    language: de
+    category: natural_language
+    short_description: NanoGermanGovService retrieval task.
+    description: NanoGermanGovService is a compact retrieval task included in NanoMTEB-German.
+  NanoGermanQuAD:
+    language: de
+    category: natural_language
+    short_description: NanoGermanQuAD retrieval task.
+    description: NanoGermanQuAD is a compact retrieval task included in NanoMTEB-German.
+  NanoXMarket:
+    language: de
+    category: natural_language
+    short_description: NanoXMarket retrieval task.
+    description: NanoXMarket is a compact retrieval task included in NanoMTEB-German.

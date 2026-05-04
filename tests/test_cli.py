@@ -290,6 +290,12 @@ def test_parse_args_allows_bm25_evaluation_without_model_name() -> None:
     assert args.model == "bm25/bm25s-okapi-english_porter_stop"
     assert args.model_id == "bm25/bm25s-okapi-english_porter_stop"
     assert args.bm25_tokenizer == "english_porter_stop"
+    assert args.truncate_dim is None
+    assert args.trust_remote_code is False
+    assert args.query_prompt is None
+    assert args.document_prompt is None
+    assert args.query_prompt_name is None
+    assert args.document_prompt_name is None
 
 
 def test_parse_args_defaults_bm25_tokenizer_to_auto_when_omitted() -> None:

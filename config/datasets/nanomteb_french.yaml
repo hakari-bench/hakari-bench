@@ -1,0 +1,44 @@
+name: NanoMTEB-French
+dataset_id: hakari-bench/NanoMTEB-French
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoAlloprof
+- NanoBSARDV2
+- NanoFQuAD
+- NanoSyntec
+- NanoXPQAFr
+metadata:
+  language: fr
+  category: natural_language
+  short_description: French NanoMTEB retrieval benchmark.
+  description: NanoMTEB-French is a compact French retrieval benchmark aligned with MTEB-style task families.
+task_metadata:
+  NanoAlloprof:
+    language: fr
+    category: natural_language
+    short_description: NanoAlloprof retrieval task.
+    description: NanoAlloprof is a compact retrieval task included in NanoMTEB-French.
+  NanoBSARDV2:
+    language: fr
+    category: natural_language
+    short_description: NanoBSARDV2 retrieval task.
+    description: NanoBSARDV2 is a compact retrieval task included in NanoMTEB-French.
+  NanoFQuAD:
+    language: fr
+    category: natural_language
+    short_description: NanoFQuAD retrieval task.
+    description: NanoFQuAD is a compact retrieval task included in NanoMTEB-French.
+  NanoSyntec:
+    language: fr
+    category: natural_language
+    short_description: NanoSyntec retrieval task.
+    description: NanoSyntec is a compact retrieval task included in NanoMTEB-French.
+  NanoXPQAFr:
+    language: fr
+    category: natural_language
+    short_description: NanoXPQAFr retrieval task.
+    description: NanoXPQAFr is a compact retrieval task included in NanoMTEB-French.

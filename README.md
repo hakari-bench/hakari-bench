@@ -6,7 +6,8 @@ Nano-style information retrieval benchmark runner for SentenceTransformers-compa
 
 Built-in dataset definitions include `NanoBEIR-en`, `NanoMIRACL`, `NanoMLDR`,
 `NanoJMTEB`, `NanoRTEB`, `NanoMTEB`, `NanoCMTEB`, `NanoMMTEB`, `NanoLongEmbed`, and
-`NanoCoIR`.
+`NanoCoIR`. Additional Nano benchmark configs include `NanoBIRCO`, `NanoDAPFAM`,
+and language-specific `NanoMTEB-*` datasets.
 
 ## Example
 

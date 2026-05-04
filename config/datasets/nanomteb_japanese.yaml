@@ -1,0 +1,81 @@
+name: NanoMTEB-Japanese
+dataset_id: hakari-bench/NanoMTEB-Japanese
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoJaCWIR
+- NanoJaGovFaqs
+- NanoJaqket
+- NanoMIRACL
+- NanoMintaka
+- NanoMrTidy
+- NanoMultiLongDoc
+- NanoNLPJournalAbsArticle
+- NanoNLPJournalAbsIntro
+- NanoNLPJournalTitleAbs
+- NanoNLPJournalTitleIntro
+metadata:
+  language: ja
+  category: natural_language
+  short_description: Japanese NanoMTEB retrieval benchmark.
+  description: NanoMTEB-Japanese is a compact Japanese retrieval benchmark aligned with MTEB-style task
+    families.
+task_metadata:
+  NanoJaCWIR:
+    language: ja
+    category: natural_language
+    short_description: NanoJaCWIR retrieval task.
+    description: NanoJaCWIR is a compact retrieval task included in NanoMTEB-Japanese.
+  NanoJaGovFaqs:
+    language: ja
+    category: natural_language
+    short_description: NanoJaGovFaqs retrieval task.
+    description: NanoJaGovFaqs is a compact retrieval task included in NanoMTEB-Japanese.
+  NanoJaqket:
+    language: ja
+    category: natural_language
+    short_description: NanoJaqket retrieval task.
+    description: NanoJaqket is a compact retrieval task included in NanoMTEB-Japanese.
+  NanoMIRACL:
+    language: ja
+    category: natural_language
+    short_description: NanoMIRACL retrieval task.
+    description: NanoMIRACL is a compact retrieval task included in NanoMTEB-Japanese.
+  NanoMintaka:
+    language: ja
+    category: natural_language
+    short_description: NanoMintaka retrieval task.
+    description: NanoMintaka is a compact retrieval task included in NanoMTEB-Japanese.
+  NanoMrTidy:
+    language: ja
+    category: natural_language
+    short_description: NanoMrTidy retrieval task.
+    description: NanoMrTidy is a compact retrieval task included in NanoMTEB-Japanese.
+  NanoMultiLongDoc:
+    language: ja
+    category: natural_language
+    short_description: NanoMultiLongDoc retrieval task.
+    description: NanoMultiLongDoc is a compact retrieval task included in NanoMTEB-Japanese.
+  NanoNLPJournalAbsArticle:
+    language: ja
+    category: natural_language
+    short_description: NanoNLPJournalAbsArticle retrieval task.
+    description: NanoNLPJournalAbsArticle is a compact retrieval task included in NanoMTEB-Japanese.
+  NanoNLPJournalAbsIntro:
+    language: ja
+    category: natural_language
+    short_description: NanoNLPJournalAbsIntro retrieval task.
+    description: NanoNLPJournalAbsIntro is a compact retrieval task included in NanoMTEB-Japanese.
+  NanoNLPJournalTitleAbs:
+    language: ja
+    category: natural_language
+    short_description: NanoNLPJournalTitleAbs retrieval task.
+    description: NanoNLPJournalTitleAbs is a compact retrieval task included in NanoMTEB-Japanese.
+  NanoNLPJournalTitleIntro:
+    language: ja
+    category: natural_language
+    short_description: NanoNLPJournalTitleIntro retrieval task.
+    description: NanoNLPJournalTitleIntro is a compact retrieval task included in NanoMTEB-Japanese.
