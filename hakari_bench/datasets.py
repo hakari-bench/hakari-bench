@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import importlib
-from importlib.resources import as_file, files
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -218,9 +217,7 @@ class DatasetRegistry:
 
     @classmethod
     def load_builtin(cls) -> DatasetRegistry:
-        config_root = files("hakari_bench").joinpath("config")
-        with as_file(config_root) as root:
-            return cls.load_from_root(root)
+        return cls.load_from_root(Path("config"))
 
     @classmethod
     def load_from_root(cls, root: Path) -> DatasetRegistry:

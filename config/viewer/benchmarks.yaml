@@ -90,6 +90,6 @@ benchmarks:
   - name: NanoMIRACL
     label: NanoMIRACL
     include_in_overall: false
-  - name: NanoJMTEB
-    label: NanoJMTEB
+  - name: NanoMTEB-Japanese
+    label: NanoMTEB-Japanese
     include_in_overall: false

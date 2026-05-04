@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from importlib.resources import files
 from pathlib import Path
 
 import pytest
@@ -22,7 +21,7 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoBEIR-en").dataset_id == "hakari-bench/NanoBEIR-en"
     assert registry.get_dataset("NanoMIRACL").dataset_id == "hakari-bench/NanoMIRACL"
     assert registry.get_dataset("NanoMLDR").dataset_id == "hakari-bench/NanoMLDR"
-    assert registry.get_dataset("NanoJMTEB").dataset_id == "hakari-bench/NanoJMTEB"
+    assert registry.get_dataset("NanoMTEB-Japanese").dataset_id == "hakari-bench/NanoMTEB-Japanese"
     assert registry.get_dataset("NanoRTEB").dataset_id == "hakari-bench/NanoRTEB"
     assert registry.get_dataset("NanoMTEB").dataset_id == "hakari-bench/NanoMTEB"
     assert registry.get_dataset("NanoMMTEB").dataset_id == "hakari-bench/NanoMMTEB"
@@ -45,24 +44,12 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
 
 
-def test_builtin_config_is_packaged_with_library() -> None:
-    config_root = files("hakari_bench").joinpath("config")
+def test_builtin_config_lives_in_repo_config() -> None:
+    config_root = Path("config")
 
     assert config_root.joinpath("datasets", "nanobeir_en.yaml").is_file()
     assert config_root.joinpath("dataset_collections", "mnanobeir.yaml").is_file()
     assert config_root.joinpath("viewer", "benchmarks.yaml").is_file()
-
-
-def test_packaged_builtin_config_matches_repo_config() -> None:
-    repo_config = Path("config")
-    packaged_config = Path("hakari_bench/config")
-
-    assert sorted(path.relative_to(repo_config) for path in repo_config.rglob("*.yaml")) == sorted(
-        path.relative_to(packaged_config) for path in packaged_config.rglob("*.yaml")
-    )
-    for repo_path in repo_config.rglob("*.yaml"):
-        packaged_path = packaged_config / repo_path.relative_to(repo_config)
-        assert packaged_path.read_text(encoding="utf-8") == repo_path.read_text(encoding="utf-8")
 
 
 def test_resolve_eval_tasks_for_builtin_nanomteb_uses_declared_splits() -> None:
@@ -150,23 +137,23 @@ def test_resolve_eval_tasks_for_builtin_nanorteb_uses_declared_splits() -> None:
     ]
 
 
-def test_resolve_eval_tasks_for_builtin_nanojmteb_uses_declared_splits() -> None:
+def test_resolve_eval_tasks_for_builtin_nanomteb_japanese_uses_declared_splits() -> None:
     registry = DatasetRegistry.load_builtin()
 
-    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoJMTEB"], collection_values=[], split_values=[])
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMTEB-Japanese"], collection_values=[], split_values=[])
 
     assert [(task.dataset_name, task.split_name) for task in tasks] == [
-        ("NanoJMTEB", "NanoJaCWIR"),
-        ("NanoJMTEB", "NanoJaGovFaqs"),
-        ("NanoJMTEB", "NanoJaqket"),
-        ("NanoJMTEB", "NanoMIRACL"),
-        ("NanoJMTEB", "NanoMintaka"),
-        ("NanoJMTEB", "NanoMrTidy"),
-        ("NanoJMTEB", "NanoMultiLongDoc"),
-        ("NanoJMTEB", "NanoNLPJournalAbsArticle"),
-        ("NanoJMTEB", "NanoNLPJournalAbsIntro"),
-        ("NanoJMTEB", "NanoNLPJournalTitleAbs"),
-        ("NanoJMTEB", "NanoNLPJournalTitleIntro"),
+        ("NanoMTEB-Japanese", "NanoJaCWIR"),
+        ("NanoMTEB-Japanese", "NanoJaGovFaqs"),
+        ("NanoMTEB-Japanese", "NanoJaqket"),
+        ("NanoMTEB-Japanese", "NanoMIRACL"),
+        ("NanoMTEB-Japanese", "NanoMintaka"),
+        ("NanoMTEB-Japanese", "NanoMrTidy"),
+        ("NanoMTEB-Japanese", "NanoMultiLongDoc"),
+        ("NanoMTEB-Japanese", "NanoNLPJournalAbsArticle"),
+        ("NanoMTEB-Japanese", "NanoNLPJournalAbsIntro"),
+        ("NanoMTEB-Japanese", "NanoNLPJournalTitleAbs"),
+        ("NanoMTEB-Japanese", "NanoNLPJournalTitleIntro"),
     ]
 
 

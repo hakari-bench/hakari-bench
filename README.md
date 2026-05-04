@@ -5,7 +5,7 @@ HAKARI-Bench is a library, viewer, and leaderboard project for evaluating small 
 Nano-style information retrieval benchmark runner for SentenceTransformers-compatible models.
 
 Built-in dataset definitions include `NanoBEIR-en`, `MNanoBEIR`,
-`NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`, `NanoRTEB`, `NanoMTEB`,
+`NanoMIRACL`, `NanoMLDR`, `NanoMTEB-Japanese`, `NanoRTEB`, `NanoMTEB`,
 `NanoCMTEB`, `NanoMMTEB`, `NanoLongEmbed`, `NanoCoIR`, `NanoIFIR`,
 `NanoLaw`, `NanoMedical`, `NanoRARb`, `NanoBRIGHT`, `NanoCodeRAG`,
 `NanoChemTEB`, `NanoR2MED`, `NanoBuiltBench`, `NanoBIRCO`, `NanoDAPFAM`,

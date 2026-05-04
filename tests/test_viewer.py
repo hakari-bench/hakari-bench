@@ -56,7 +56,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoCMTEB",
         "NanoMTEB",
         "NanoMIRACL",
-        "NanoJMTEB",
+        "NanoMTEB-Japanese",
     ]
     assert [component.group_by for component in grouped_overall.benchmark_components] == [
         "task_name",
@@ -85,8 +85,8 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         *expected_overall_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
-    assert "NanoJMTEB" in config.view_names
-    assert "NanoJMTEB" not in config.overall.benchmark_names
+    assert "NanoMTEB-Japanese" in config.view_names
+    assert "NanoMTEB-Japanese" not in config.overall.benchmark_names
     assert "NanoCMTEB" in config.view_names
     assert "NanoCMTEB" in config.overall.benchmark_names
     nano_law = config.benchmark_for_view("NanoLaw")
@@ -170,7 +170,7 @@ def test_overall_leaderboard_requires_all_configured_benchmark_tasks(tmp_path: P
 benchmarks:
   - name: BenchA
   - name: BenchB
-  - name: NanoJMTEB
+  - name: NanoMTEB-Japanese
     include_in_overall: false
 """.strip(),
         encoding="utf-8",

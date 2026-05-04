@@ -106,7 +106,7 @@ one model, one benchmark task, and one embedding variant. Base results use
 | --- | --- | --- |
 | `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
 | `model_name` | `VARCHAR` | `model.id` from result JSON, or `model_dir` when absent. |
-| `benchmark` | `VARCHAR` | Viewer benchmark group, such as `MNanoBEIR` or `NanoJMTEB`. |
+| `benchmark` | `VARCHAR` | Viewer benchmark group, such as `MNanoBEIR` or `NanoMTEB-Japanese`. |
 | `dataset_id` | `VARCHAR` | `target.dataset_id`, usually a Hugging Face dataset repo. |
 | `dataset_revision` | `VARCHAR` | Resolved dataset revision, usually a commit SHA. |
 | `dataset_revision_requested` | `VARCHAR` | Requested revision from the run, or `NULL` when not specified. |
@@ -389,8 +389,6 @@ choices:
 - Read only benchmarks requested by the selected view.
 - Read only base rows when variants are not requested.
 - Select missing variant columns as `NULL` for old DuckDB files.
-- Canonicalize legacy NanoJMTEB task names and prefer canonical-name rows when
-  old and new task names are both present.
 
 Conceptually, it runs this query:
 
@@ -418,33 +416,6 @@ WHERE benchmark IN ('MNanoBEIR', 'NanoRTEB')
 
 For older databases without `embedding_variant_name`, `embedding_dim`, or
 `quantization`, the viewer treats those fields as `NULL`.
-
-### NanoJMTEB Task Name Aliases
-
-Some NanoJMTEB split/task names changed from legacy `NanoJa...` names to
-canonical `Nano...` names. The viewer and the DuckDB/report generation script
-normalize these aliases so old result JSON and old DuckDB files remain usable.
-
-| legacy name | canonical name |
-| --- | --- |
-| `NanoJaMIRACL` | `NanoMIRACL` |
-| `NanoJaMintaka` | `NanoMintaka` |
-| `NanoJaMrTidy` | `NanoMrTidy` |
-| `NanoJaMultiLongDoc` | `NanoMultiLongDoc` |
-| `NanoJaNLPJournalAbsArticle` | `NanoNLPJournalAbsArticle` |
-| `NanoJaNLPJournalAbsIntro` | `NanoNLPJournalAbsIntro` |
-| `NanoJaNLPJournalTitleAbs` | `NanoNLPJournalTitleAbs` |
-| `NanoJaNLPJournalTitleIntro` | `NanoNLPJournalTitleIntro` |
-
-The canonical task key is:
-
-```text
-NanoJMTEB::hakari-bench/NanoJMTEB::{canonical task name}
-```
-
-If old-name and canonical-name rows both exist for the same model, task, and
-variant, the canonical-name row is preferred. This prevents the same task from
-entering the ranking twice and corrupting the Borda population.
 
 ## SQL Recipes
 

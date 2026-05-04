@@ -8,9 +8,7 @@ from pydantic import BaseModel, ConfigDict
 
 from hakari_bench.viewer.task_names import (
     canonical_split_name,
-    canonical_task_key,
     canonical_task_name,
-    is_legacy_task_alias,
 )
 
 
@@ -33,7 +31,6 @@ class TaskResultRecord(BaseModel):
     embedding_variant_name: str | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
-    uses_legacy_task_alias: bool = False
 
 
 class TaskResultsRepository:
@@ -102,15 +99,10 @@ class TaskResultsRepository:
 def _task_result_record(field_names: list[str], row: tuple[Any, ...]) -> TaskResultRecord:
     payload = dict(zip(field_names, row, strict=True))
     benchmark = str(payload["benchmark"])
-    dataset_id = str(payload["dataset_id"])
     raw_task_name = str(payload["task_name"])
     task_name = canonical_task_name(benchmark, raw_task_name)
-    uses_legacy_task_alias = is_legacy_task_alias(benchmark, raw_task_name)
     payload["split_name"] = canonical_split_name(benchmark, payload.get("split_name"))
     payload["task_name"] = task_name
-    payload["uses_legacy_task_alias"] = uses_legacy_task_alias
-    if uses_legacy_task_alias:
-        payload["task_key"] = canonical_task_key(benchmark=benchmark, dataset_id=dataset_id, task_name=task_name)
     return TaskResultRecord.model_validate(payload)
 
 
@@ -126,7 +118,7 @@ def _dedupe_task_result_records(records: Iterable[TaskResultRecord]) -> list[Tas
             record.quantization,
         )
         current = deduped.get(key)
-        if current is None or (current.uses_legacy_task_alias and not record.uses_legacy_task_alias):
+        if current is None:
             deduped[key] = record
     return list(deduped.values())
 

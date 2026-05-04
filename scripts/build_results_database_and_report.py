@@ -20,9 +20,9 @@ from hakari_bench.viewer.task_names import (
 from hakari_bench.warehouse_schema import DatasetMetadataRow, MetricLongRow, TaskDiagnosticRow, TaskResultRow
 
 
-TARGET_BENCHMARKS = [
+TARGET_BENCHMARKS: list[str] = [
     "MNanoBEIR",
-    "NanoJMTEB",
+    "NanoMTEB-Japanese",
     "NanoRTEB",
     "NanoMTEB",
     "NanoCMTEB",
