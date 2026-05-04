@@ -314,6 +314,8 @@ def test_parse_args_allows_bm25_evaluation_without_model_name() -> None:
         [
             "evaluate",
             "bm25",
+            "--bm25-source",
+            "computed",
             "--bm25-tokenizer",
             "english_porter_stop",
         ]
@@ -327,7 +329,8 @@ def test_parse_args_allows_bm25_evaluation_without_model_name() -> None:
 def test_parse_args_defaults_bm25_tokenizer_to_auto_when_omitted() -> None:
     args = parse_args(["evaluate", "bm25"])
 
-    assert args.model == "bm25/bm25s-okapi-auto"
+    assert args.model == "bm25/dataset-bm25"
+    assert args.bm25_source == "dataset"
     assert args.bm25_tokenizer is None
 
 
@@ -336,6 +339,8 @@ def test_parse_args_accepts_wordseg_bm25_tokenizer() -> None:
         [
             "evaluate",
             "bm25",
+            "--bm25-source",
+            "computed",
             "--bm25-tokenizer",
             "wordseg",
             "--bm25-wordseg-language",
@@ -346,6 +351,15 @@ def test_parse_args_accepts_wordseg_bm25_tokenizer() -> None:
     assert args.model == "bm25/bm25s-okapi-wordseg-ja"
     assert args.bm25_tokenizer == "wordseg"
     assert args.bm25_wordseg_language == "ja"
+
+
+def test_parse_args_rejects_bm25_tokenizer_with_dataset_source() -> None:
+    try:
+        parse_args(["evaluate", "bm25", "--bm25-tokenizer", "english_porter_stop"])
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected dataset-source BM25 evaluation to reject tokenizer options.")
 
 
 def test_parse_args_accepts_build_bm25_options() -> None:
@@ -418,6 +432,22 @@ def test_parse_args_rejects_build_bm25_output_results_dir_params_json() -> None:
         assert exc.code == 2
     else:
         raise AssertionError("Expected build-candidates params JSON to reject results_dir.")
+
+
+def test_parse_args_rejects_build_bm25_source_params_json() -> None:
+    try:
+        parse_args(
+            [
+                "build-candidates",
+                "bm25",
+                "--params-json",
+                json.dumps({"bm25": {"source": "computed"}}),
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected build-candidates params JSON to reject bm25.source.")
 
 
 def test_parse_args_accepts_web_viewer_options() -> None:

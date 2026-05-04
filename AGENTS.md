@@ -91,10 +91,14 @@ uv run --group all ty check
 ## BM25 Behavior
 
 - BM25 evaluation supports two sources:
-  - If an evaluation dataset has the selected candidate subset
-    (`--candidate-ranking`, default `bm25`), use that ranking as the BM25
+  - By default, read the selected dataset candidate subset
+    (`--candidate-ranking`, default `bm25`) and use that ranking as the BM25
     baseline.
-  - If the subset is unavailable, compute BM25 locally with `bm25s`.
+  - Use local `bm25s` computation only when explicitly requested with
+    `--bm25-source computed`, or from `build-candidates bm25` when generating
+    BM25 candidate subsets.
+- If the default dataset subset is unavailable, fail with an actionable error
+  instead of silently recomputing BM25 locally.
 - Local BM25 uses `bm25s` with the standard Okapi-style Robertson method.
 - If `--bm25-tokenizer` is omitted for local BM25, auto-select the tokenizer by
   sampling 10 queries and detecting language with `fast-langdetect`: use

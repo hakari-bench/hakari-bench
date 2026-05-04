@@ -27,6 +27,7 @@ BM25Tokenizer = Literal[
     "english_porter_stop",
     "wordseg",
 ]
+BM25EvaluationSource = Literal["dataset_candidate_subset", "computed_bm25s"]
 
 _BM25_ALGORITHM_NAME = "okapi"
 _BM25S_OKAPI_METHOD = "robertson"
@@ -204,14 +205,21 @@ def collect_bm25_metadata(
     }
 
 
-def evaluate_bm25_task(*, dataset: Any, config: BM25Config) -> Any:
+def evaluate_bm25_task(
+    *,
+    dataset: Any,
+    config: BM25Config,
+    source: BM25EvaluationSource = "dataset_candidate_subset",
+) -> Any:
     from hakari_bench.evaluation import TaskEvaluation
 
     score_start = time.perf_counter()
-    if dataset.candidates is None:
-        rankings = rank_bm25_candidates(corpus=dataset.corpus, queries=dataset.queries, config=config)
-        score_name = "bm25_bm25s_okapi"
-    else:
+    if source == "dataset_candidate_subset":
+        if dataset.candidates is None:
+            raise ValueError(
+                "BM25 dataset-source evaluation requires a candidate subset such as bm25. "
+                "Use --bm25-source computed to recompute BM25 locally with bm25s."
+            )
         rankings = rank_dataset_candidates(
             queries=dataset.queries,
             corpus=dataset.corpus,
@@ -219,6 +227,11 @@ def evaluate_bm25_task(*, dataset: Any, config: BM25Config) -> Any:
             top_k=config.top_k,
         )
         score_name = "bm25_dataset_subset"
+    elif source == "computed_bm25s":
+        rankings = rank_bm25_candidates(corpus=dataset.corpus, queries=dataset.queries, config=config)
+        score_name = "bm25_bm25s_okapi"
+    else:
+        raise ValueError(f"Unsupported BM25 evaluation source: {source!r}.")
     score_seconds = time.perf_counter() - score_start
 
     metric_start = time.perf_counter()

@@ -2144,7 +2144,7 @@ def test_build_run_summary_payload_uses_task_model_metadata_when_consistent(tmp_
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
-        model="bm25/bm25s-okapi-auto",
+        model="bm25/dataset-bm25",
         model_type="bm25",
         batch_size=2,
         show_progress=False,
@@ -2154,6 +2154,7 @@ def test_build_run_summary_payload_uses_task_model_metadata_when_consistent(tmp_
         corpus_prompt_name=None,
         truncate_dim=None,
         candidate_subset_name="bm25",
+        bm25_source="dataset",
         rerank_top_n=100,
         aggregate_metric="ndcg@10",
         override=False,
@@ -2197,6 +2198,7 @@ def test_run_or_load_task_records_auto_bm25_config(tmp_path: Path, monkeypatch: 
         corpus_prompt_name=None,
         truncate_dim=None,
         candidate_subset_name="bm25",
+        bm25_source="computed",
         rerank_top_n=100,
         aggregate_metric="ndcg@10",
         override=False,
@@ -2232,7 +2234,7 @@ def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
-        model="bm25/bm25s-okapi-auto",
+        model="bm25/dataset-bm25",
         model_type="bm25",
         batch_size=2,
         show_progress=False,
@@ -2242,6 +2244,7 @@ def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -
         corpus_prompt_name=None,
         truncate_dim=None,
         candidate_subset_name="bm25",
+        bm25_source="dataset",
         rerank_top_n=100,
         aggregate_metric="ndcg@10",
         override=False,
@@ -2267,3 +2270,40 @@ def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -
     assert result.payload["config"]["bm25"]["candidate_ranking"] == "bm25"
     assert result.payload["model"]["bm25"]["source"] == "dataset_candidate_subset"
     assert result.payload["evaluation"]["aggregate_metric_value"] == pytest.approx(0.5)
+
+
+def test_run_or_load_task_requires_dataset_bm25_source_candidates(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="bm25/dataset-bm25",
+        model_type="bm25",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        bm25_source="dataset",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+        bm25_tokenizer=None,
+        bm25_tokenizer_name=None,
+        bm25_stemmer_algorithm="english",
+        bm25_k1=1.5,
+        bm25_b=0.75,
+        top_k=1,
+    )
+
+    with pytest.raises(ValueError, match="--bm25-source computed"):
+        run_or_load_task(
+            task=task,
+            model=None,
+            args=args,
+            environment={"package_versions": {}},
+            model_metadata={"id": "bm25/dataset-bm25"},
+            dataset_loader=lambda _: _toy_dataset_without_candidates(),
+        )

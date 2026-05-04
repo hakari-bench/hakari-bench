@@ -122,15 +122,21 @@ def run_or_load_task(
     payload_model_metadata = model_metadata
     if args.model_type == "bm25":
         raw_bm25_config = bm25_config_from_args(args)
-        bm25_source = "dataset_candidate_subset" if dataset.candidates is not None else "computed_bm25s"
-        bm25_candidate_subset_name = (
-            args.candidate_subset_name if dataset.candidates is not None else None
-        )
-        bm25_config = (
-            raw_bm25_config
-            if dataset.candidates is not None
-            else resolve_bm25_config_for_queries(raw_bm25_config, dataset.queries)
-        )
+        requested_bm25_source = getattr(args, "bm25_source", "dataset")
+        if requested_bm25_source == "computed":
+            bm25_source = "computed_bm25s"
+            bm25_candidate_subset_name = None
+            bm25_config = resolve_bm25_config_for_queries(raw_bm25_config, dataset.queries)
+        else:
+            if dataset.candidates is None:
+                raise ValueError(
+                    "BM25 evaluation defaults to the dataset candidate subset, but the selected "
+                    f"candidate ranking {args.candidate_subset_name!r} is unavailable. "
+                    "Use --bm25-source computed to recompute BM25 locally with bm25s."
+                )
+            bm25_source = "dataset_candidate_subset"
+            bm25_candidate_subset_name = args.candidate_subset_name
+            bm25_config = raw_bm25_config
         bm25_payload = bm25_config_payload(
             bm25_config,
             source=bm25_source,
@@ -145,6 +151,7 @@ def run_or_load_task(
         evaluation = evaluate_bm25_task(
             dataset=dataset,
             config=bm25_config,
+            source=bm25_source,
         )
     elif args.model_type == "reranker":
         evaluation = evaluate_reranker_task(

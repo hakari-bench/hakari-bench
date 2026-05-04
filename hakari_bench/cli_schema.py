@@ -98,6 +98,26 @@ class EmbeddingParams(ParamsModel):
 
 
 class BM25Params(ParamsModel):
+    source: Literal["dataset", "computed"] | None = None
+    top_k: int | None = Field(default=None, gt=0)
+    tokenizer: Literal[
+        "regex",
+        "whitespace",
+        "transformer",
+        "stemmer",
+        "english_regex",
+        "english_porter",
+        "english_porter_stop",
+        "wordseg",
+    ] | None = None
+    tokenizer_model: str | None = None
+    wordseg_language: str | None = None
+    stemmer_language: str | None = None
+    k1: float | None = None
+    b: float | None = None
+
+
+class BuildCandidatesBM25Params(ParamsModel):
     top_k: int | None = Field(default=None, gt=0)
     tokenizer: Literal[
         "regex",
@@ -142,4 +162,4 @@ class EvaluateParamsJson(ParamsModel):
 class BuildCandidatesParamsJson(ParamsModel):
     target: TargetParams | None = None
     output: BuildCandidatesOutputParams | None = None
-    bm25: BM25Params | None = None
+    bm25: BuildCandidatesBM25Params | None = None

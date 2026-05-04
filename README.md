@@ -261,12 +261,26 @@ uv run hakari-bench evaluate reranker \
 
 BM25 can be evaluated directly. If the dataset provides a candidate subset named
 by `--candidate-ranking` (default: `bm25`), that ranking is used as the BM25
-baseline. If the subset is unavailable, BM25 is computed locally.
+baseline. This is the default because built-in HAKARI-Bench datasets are
+expected to ship BM25 candidate subsets. If the selected subset is unavailable,
+the run fails with an explicit error instead of silently changing the baseline.
 
 ```bash
 uv run hakari-bench evaluate bm25 \
   --dataset NanoMLDR \
   --split ja \
+  --bm25-top-k 100
+```
+
+Use `--bm25-source computed` only when generating BM25 subsets or intentionally
+recomputing BM25 with the local `bm25s` implementation:
+
+```bash
+uv run hakari-bench evaluate bm25 \
+  --dataset NanoMLDR \
+  --split ja \
+  --bm25-source computed \
+  --bm25-tokenizer english_porter_stop \
   --bm25-top-k 100
 ```
 
@@ -283,11 +297,12 @@ uv run hakari-bench build-candidates bm25 \
 `build-candidates bm25` also accepts `--params-json` with `target`, `output`,
 and `bm25` sections.
 
-BM25 scoring uses `bm25s` with the standard Okapi-style Robertson method.
-Available tokenizers are `regex`, `whitespace`, `transformer`, `stemmer`,
-`english_regex`, `english_porter`, `english_porter_stop`, and `wordseg`. The
-default is `auto`: 10 query texts are sampled deterministically and detected
-with `fast-langdetect`. If the detected language supports `wordseg`, BM25 uses
+Local BM25 scoring uses `bm25s` with the standard Okapi-style Robertson method.
+Available tokenizers for `--bm25-source computed` and `build-candidates bm25`
+are `regex`, `whitespace`, `transformer`, `stemmer`, `english_regex`,
+`english_porter`, `english_porter_stop`, and `wordseg`. The local default is
+`auto`: 10 query texts are sampled deterministically and detected with
+`fast-langdetect`. If the detected language supports `wordseg`, BM25 uses
 `wordseg`; otherwise it uses `regex`.
 
 The resolved BM25 algorithm and tokenizer are written to each result JSON under
