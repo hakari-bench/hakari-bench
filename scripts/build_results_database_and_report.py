@@ -10,13 +10,14 @@ from typing import Any
 
 import duckdb
 
+from hakari_bench.datasets import DatasetRegistry
 from hakari_bench.viewer.task_names import (
     canonical_metric_name,
     canonical_split_name,
     canonical_task_key,
     canonical_task_name,
 )
-from hakari_bench.warehouse_schema import MetricLongRow, TaskDiagnosticRow, TaskResultRow
+from hakari_bench.warehouse_schema import DatasetMetadataRow, MetricLongRow, TaskDiagnosticRow, TaskResultRow
 
 
 TARGET_BENCHMARKS = [
@@ -46,6 +47,7 @@ WAREHOUSE_TABLES = (
     "task_results",
     "metrics_long",
     "task_diagnostics",
+    "dataset_metadata",
     "model_scores",
     "borda_task_scores",
 )
@@ -67,7 +69,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    rows, runs, metric_rows, diagnostic_rows = load_results(args.results_dir)
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows = load_results(args.results_dir)
     base_rows = [row for row in rows if row.embedding_variant_name is None]
     standings, borda_rows = compute_standings(base_rows)
     write_duckdb(
@@ -76,6 +78,7 @@ def main() -> None:
         rows=rows,
         metric_rows=metric_rows,
         diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
         standings=standings,
         borda_rows=borda_rows,
     )
@@ -86,11 +89,19 @@ def main() -> None:
 
 def load_results(
     results_dir: Path,
-) -> tuple[list[TaskResult], list[dict[str, Any]], list[MetricLongRow], list[TaskDiagnosticRow]]:
+) -> tuple[
+    list[TaskResult],
+    list[dict[str, Any]],
+    list[MetricLongRow],
+    list[TaskDiagnosticRow],
+    list[DatasetMetadataRow],
+]:
     rows: list[TaskResult] = []
     run_accumulators: dict[str, dict[str, Any]] = {}
     metric_rows: list[MetricLongRow] = []
     diagnostic_rows: list[TaskDiagnosticRow] = []
+    dataset_metadata_rows: list[DatasetMetadataRow] = []
+    registry = DatasetRegistry.load_builtin()
 
     for result_path in sorted(results_dir.glob("*/*/*.json")):
         task_payload = json.loads(result_path.read_text(encoding="utf-8"))
@@ -184,6 +195,7 @@ def load_results(
                 base_score=float(score),
             )
         )
+        dataset_metadata_rows.append(_dataset_metadata_row(common=common, registry=registry))
         for embedding_evaluation in embedding_evaluations:
             variant_name = embedding_evaluation.get("name")
             if not isinstance(variant_name, str) or variant_name == "base":
@@ -221,6 +233,7 @@ def load_results(
         _runs_from_task_results(run_accumulators),
         _dedupe_metric_rows(metric_rows),
         _dedupe_task_diagnostic_rows(diagnostic_rows),
+        _dedupe_dataset_metadata_rows(dataset_metadata_rows),
     )
 
 
@@ -394,6 +407,56 @@ def _dedupe_task_diagnostic_rows(rows: list[TaskDiagnosticRow]) -> list[TaskDiag
 
 def _diagnostic_result_path_stem_matches_task(row: TaskDiagnosticRow) -> bool:
     return Path(row.result_path).stem == row.task_name
+
+
+def _dedupe_dataset_metadata_rows(rows: list[DatasetMetadataRow]) -> list[DatasetMetadataRow]:
+    deduped: dict[str, DatasetMetadataRow] = {}
+    for row in rows:
+        deduped[row.task_key] = row
+    return list(deduped.values())
+
+
+def _dataset_metadata_row(*, common: dict[str, Any], registry: DatasetRegistry) -> DatasetMetadataRow:
+    metadata = _metadata_for_common_task(common=common, registry=registry)
+    query_stats = metadata.get("query_text_stats")
+    query_stats = query_stats if isinstance(query_stats, dict) else {}
+    document_stats = metadata.get("document_text_stats")
+    document_stats = document_stats if isinstance(document_stats, dict) else {}
+    citation_keys = metadata.get("citation_keys")
+    references = metadata.get("references")
+    return DatasetMetadataRow(
+        benchmark=str(common["benchmark"]),
+        dataset_id=str(common["dataset_id"]),
+        dataset_name=str(common["dataset_name"]),
+        split_name=_str_or_none(common.get("split_name")),
+        task_name=str(common["task_name"]),
+        task_key=str(common["task_key"]),
+        language=_str_or_none(metadata.get("language")),
+        category=_str_or_none(metadata.get("category")),
+        short_description=_str_or_none(metadata.get("short_description")),
+        citation_count=len(citation_keys) if isinstance(citation_keys, list) else None,
+        reference_count=len(references) if isinstance(references, list) else None,
+        has_bibtex=bool(metadata.get("bibtex")) if "bibtex" in metadata else None,
+        query_count=_int_or_none(query_stats.get("count")),
+        document_count=_int_or_none(document_stats.get("count")),
+        query_mean_chars=_float_or_none(query_stats.get("mean_chars")),
+        document_mean_chars=_float_or_none(document_stats.get("mean_chars")),
+    )
+
+
+def _metadata_for_common_task(*, common: dict[str, Any], registry: DatasetRegistry) -> dict[str, Any]:
+    for dataset_key in (common.get("dataset_id"), common.get("dataset_name")):
+        if not isinstance(dataset_key, str) or not dataset_key:
+            continue
+        try:
+            dataset = registry.get_dataset(dataset_key)
+        except KeyError:
+            continue
+        return dataset.metadata_for_task(
+            split_name=str(common.get("split_name") or ""),
+            task_name=str(common.get("task_name") or ""),
+        )
+    return {}
 
 
 def _task_diagnostic_row(
@@ -602,6 +665,7 @@ def write_duckdb(
     rows: list[TaskResult],
     metric_rows: Sequence[MetricLongRow | dict[str, Any]],
     diagnostic_rows: Sequence[TaskDiagnosticRow | dict[str, Any]] = (),
+    dataset_metadata_rows: Sequence[DatasetMetadataRow | dict[str, Any]] = (),
     standings: dict[str, list[dict[str, Any]]],
     borda_rows: list[dict[str, Any]],
 ) -> None:
@@ -613,6 +677,10 @@ def write_duckdb(
     normalized_diagnostic_rows = [
         row if isinstance(row, TaskDiagnosticRow) else TaskDiagnosticRow.model_validate(row)
         for row in diagnostic_rows
+    ]
+    normalized_dataset_metadata_rows = [
+        row if isinstance(row, DatasetMetadataRow) else DatasetMetadataRow.model_validate(row)
+        for row in dataset_metadata_rows
     ]
     con = duckdb.connect(str(db_path))
     try:
@@ -709,6 +777,22 @@ def write_duckdb(
             con.executemany(
                 "INSERT INTO task_diagnostics VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [row.duckdb_values() for row in normalized_diagnostic_rows],
+            )
+        con.execute(
+            """
+            CREATE TABLE dataset_metadata (
+                benchmark VARCHAR, dataset_id VARCHAR, dataset_name VARCHAR, split_name VARCHAR,
+                task_name VARCHAR, task_key VARCHAR, language VARCHAR, category VARCHAR,
+                short_description VARCHAR, citation_count INTEGER, reference_count INTEGER,
+                has_bibtex BOOLEAN, query_count INTEGER, document_count INTEGER,
+                query_mean_chars DOUBLE, document_mean_chars DOUBLE
+            )
+            """
+        )
+        if normalized_dataset_metadata_rows:
+            con.executemany(
+                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [row.duckdb_values() for row in normalized_dataset_metadata_rows],
             )
         score_rows = [row for view_rows in standings.values() for row in view_rows]
         con.execute(

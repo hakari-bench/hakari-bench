@@ -163,3 +163,42 @@ class TaskDiagnosticRow(WarehouseModel):
             self.wall_seconds,
             self.duration_seconds_including_dataset_load,
         )
+
+
+class DatasetMetadataRow(WarehouseModel):
+    benchmark: str
+    dataset_id: str
+    dataset_name: str
+    split_name: str | None = None
+    task_name: str
+    task_key: str
+    language: str | None = None
+    category: str | None = None
+    short_description: str | None = None
+    citation_count: int | None = None
+    reference_count: int | None = None
+    has_bibtex: bool | None = None
+    query_count: int | None = None
+    document_count: int | None = None
+    query_mean_chars: float | None = None
+    document_mean_chars: float | None = None
+
+    def duckdb_values(self) -> tuple[object, ...]:
+        return (
+            self.benchmark,
+            self.dataset_id,
+            self.dataset_name,
+            self.split_name,
+            self.task_name,
+            self.task_key,
+            self.language,
+            self.category,
+            self.short_description,
+            self.citation_count,
+            self.reference_count,
+            self.has_bibtex,
+            self.query_count,
+            self.document_count,
+            self.query_mean_chars,
+            self.document_mean_chars,
+        )

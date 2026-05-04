@@ -80,7 +80,7 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
-    rows, _, metric_rows, diagnostic_rows = report.load_results(tmp_path)
+    rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows = report.load_results(tmp_path)
 
     assert len(rows) == 1
     assert rows[0].benchmark == "NanoJMTEB"
@@ -91,6 +91,11 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert len(metric_rows) == 1
     assert len(diagnostic_rows) == 1
     assert diagnostic_rows[0].base_score == 0.42
+    assert len(dataset_metadata_rows) == 1
+    assert dataset_metadata_rows[0].language == "ja"
+    assert dataset_metadata_rows[0].category == "natural_language"
+    assert dataset_metadata_rows[0].citation_count is not None
+    assert dataset_metadata_rows[0].query_count == 200
 
 
 def test_task_result_row_schema_rejects_unknown_fields() -> None:
@@ -189,7 +194,7 @@ def test_load_results_extracts_task_diagnostics(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
-    _, _, _, diagnostic_rows = report.load_results(tmp_path)
+    _, _, _, diagnostic_rows, _ = report.load_results(tmp_path)
 
     assert len(diagnostic_rows) == 1
     row = diagnostic_rows[0]
@@ -241,7 +246,7 @@ def test_load_results_builds_runs_from_task_json(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
-    rows, runs, _, _ = report.load_results(tmp_path)
+    rows, runs, _, _, _ = report.load_results(tmp_path)
 
     assert len(rows) == 1
     assert runs == [
@@ -318,7 +323,7 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
         ),
         encoding="utf-8",
     )
-    rows, _, _, _ = report.load_results(tmp_path)
+    rows, _, _, _, _ = report.load_results(tmp_path)
 
     assert [(row.embedding_variant_name, row.score, row.embedding_dim, row.quantization) for row in rows] == [
         (None, 0.42, 768, None),
@@ -333,7 +338,7 @@ def test_load_results_canonicalizes_legacy_nanojmteb_task_names(tmp_path: Path) 
     _write_task_json(task_dir / "NanoJaMIRACL.json", task_name="NanoJaMIRACL", score=0.10)
     _write_task_json(task_dir / "NanoMIRACL.json", task_name="NanoMIRACL", score=0.90)
 
-    rows, _, metric_rows, _ = report.load_results(tmp_path)
+    rows, _, metric_rows, _, _ = report.load_results(tmp_path)
 
     assert [(row.task_name, row.task_key, row.score) for row in rows] == [
         ("NanoMIRACL", "NanoJMTEB::hakari-bench/NanoJMTEB::NanoMIRACL", 0.90)
@@ -488,6 +493,7 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
 
     assert sorted(path.name for path in parquet_dir.glob("*.parquet")) == [
         "borda_task_scores.parquet",
+        "dataset_metadata.parquet",
         "metrics_long.parquet",
         "model_scores.parquet",
         "runs.parquet",

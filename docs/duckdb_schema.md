@@ -6,7 +6,8 @@ data in DuckDB and how a viewer should query that data.
 The main source table for the HTMX leaderboard viewer is `task_results`.
 `runs` contains run-level metadata, `metrics_long` contains detailed task
 metrics, `task_diagnostics` contains analysis-oriented rerank, candidate, and
-latency fields, and `model_scores` / `borda_task_scores` are precomputed tables used
+latency fields, `dataset_metadata` exposes YAML task metadata for language,
+category, citation, and text-stat analysis, and `model_scores` / `borda_task_scores` are precomputed tables used
 by the static HTML report. The current HTMX viewer does not read
 `model_scores`; it computes the leaderboard from `task_results` on each
 request.
@@ -38,7 +39,7 @@ JSON file is required.
 
 When `--parquet-output-dir` is provided, the generator also writes Parquet
 snapshots for the canonical tables: `runs`, `task_results`, `metrics_long`,
-`task_diagnostics`, `model_scores`, and `borda_task_scores`. These files are intended for notebooks,
+`task_diagnostics`, `dataset_metadata`, `model_scores`, and `borda_task_scores`. These files are intended for notebooks,
 ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
 not need the mutable DuckDB database file.
 
@@ -209,6 +210,31 @@ leaderboard ranking.
 | `pure_compute_seconds` | `DOUBLE` | Compute duration excluding dataset load. |
 | `wall_seconds` | `DOUBLE` | Task evaluation wall time. |
 | `duration_seconds_including_dataset_load` | `DOUBLE` | End-to-end task duration including dataset loading. |
+
+### `dataset_metadata`
+
+`dataset_metadata` is derived from built-in dataset YAML and keyed by
+`task_key`. Join it to `task_results` or `task_diagnostics` to score models by
+language, category, citation coverage, or text length profile.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `benchmark` | `VARCHAR` | Benchmark group. |
+| `dataset_id` | `VARCHAR` | Dataset id. |
+| `dataset_name` | `VARCHAR` | Dataset name. |
+| `split_name` | `VARCHAR` | Split name. |
+| `task_name` | `VARCHAR` | Task name. |
+| `task_key` | `VARCHAR` | Ranking task identity. |
+| `language` | `VARCHAR` | Metadata language code, or `multilingual`. |
+| `category` | `VARCHAR` | Metadata category, such as `natural_language` or `code`. |
+| `short_description` | `VARCHAR` | Short human-readable task description. |
+| `citation_count` | `INTEGER` | Number of citation keys recorded for the task. |
+| `reference_count` | `INTEGER` | Number of reference entries recorded for the task. |
+| `has_bibtex` | `BOOLEAN` | Whether the task metadata includes BibTeX. |
+| `query_count` | `INTEGER` | Query count from YAML text stats. |
+| `document_count` | `INTEGER` | Corpus document count from YAML text stats. |
+| `query_mean_chars` | `DOUBLE` | Mean query length in characters. |
+| `document_mean_chars` | `DOUBLE` | Mean document length in characters. |
 
 ### `model_scores`
 
@@ -426,6 +452,7 @@ DESCRIBE task_results;
 DESCRIBE runs;
 DESCRIBE metrics_long;
 DESCRIBE task_diagnostics;
+DESCRIBE dataset_metadata;
 DESCRIBE model_scores;
 DESCRIBE borda_task_scores;
 ```
