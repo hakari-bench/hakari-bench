@@ -15,19 +15,117 @@ metadata:
   short_description: Spanish NanoMTEB retrieval benchmark.
   description: NanoMTEB-Spanish is a compact Spanish retrieval benchmark aligned with MTEB-style task
     families.
+  citation_keys:
+  - muennighoff2023mteb
+  references:
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    authors:
+    - Niklas Muennighoff
+    - Nouamane Tazi
+    - Loic Magne
+    - Nils Reimers
+    year: 2023
+    url: https://arxiv.org/abs/2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2210.07316
+  bibtex: |
+    @inproceedings{muennighoff2023mteb,
+      title = {{MTEB}: Massive Text Embedding Benchmark},
+      author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},
+      year = {2023},
+      url = {https://arxiv.org/abs/2210.07316},
+      doi = {10.48550/arXiv.2210.07316}
+    }
 task_metadata:
   NanoSpanishPassageS2P:
     language: es
     category: natural_language
-    short_description: NanoSpanishPassageS2P retrieval task.
-    description: NanoSpanishPassageS2P is a compact retrieval task included in NanoMTEB-Spanish.
+    short_description: Spanish health passage retrieval.
+    description: A compact sentence-to-passage retrieval split from a Spanish health-related web
+      passage retrieval test collection.
+    citation_keys:
+    - kamateri2019spanishpassage
+    references:
+    - title: A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related Resources
+      authors:
+      - Eleni Kamateri
+      - Theodora Tsikrika
+      - Spyridon Symeonidis
+      - Stefanos Vrochidis
+      - Wolfgang Minker
+      - Yiannis Kompatsiaris
+      year: 2019
+      url: https://doi.org/10.1007/978-3-030-15719-7_19
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/978-3-030-15719-7_19
+    bibtex: |
+      @inproceedings{kamateri2019spanishpassage,
+        title = {A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related Resources},
+        author = {Kamateri, Eleni and Tsikrika, Theodora and Symeonidis, Spyridon and Vrochidis, Stefanos and Minker, Wolfgang and Kompatsiaris, Yiannis},
+        booktitle = {Advances in Information Retrieval},
+        year = {2019},
+        url = {https://doi.org/10.1007/978-3-030-15719-7_19},
+        doi = {10.1007/978-3-030-15719-7_19}
+      }
   NanoSpanishPassageS2S:
     language: es
     category: natural_language
-    short_description: NanoSpanishPassageS2S retrieval task.
-    description: NanoSpanishPassageS2S is a compact retrieval task included in NanoMTEB-Spanish.
+    short_description: Spanish health sentence retrieval.
+    description: A compact sentence-to-sentence retrieval split from a Spanish health-related web
+      passage retrieval test collection.
+    citation_keys:
+    - kamateri2019spanishpassage
+    references:
+    - title: A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related Resources
+      authors:
+      - Eleni Kamateri
+      - Theodora Tsikrika
+      - Spyridon Symeonidis
+      - Stefanos Vrochidis
+      - Wolfgang Minker
+      - Yiannis Kompatsiaris
+      year: 2019
+      url: https://doi.org/10.1007/978-3-030-15719-7_19
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/978-3-030-15719-7_19
+    bibtex: |
+      @inproceedings{kamateri2019spanishpassage,
+        title = {A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related Resources},
+        author = {Kamateri, Eleni and Tsikrika, Theodora and Symeonidis, Spyridon and Vrochidis, Stefanos and Minker, Wolfgang and Kompatsiaris, Yiannis},
+        booktitle = {Advances in Information Retrieval},
+        year = {2019},
+        url = {https://doi.org/10.1007/978-3-030-15719-7_19},
+        doi = {10.1007/978-3-030-15719-7_19}
+      }
   NanoXPQAEs:
     language: es
     category: natural_language
-    short_description: NanoXPQAEs retrieval task.
-    description: NanoXPQAEs is a compact retrieval task included in NanoMTEB-Spanish.
+    short_description: Spanish xPQA product question retrieval.
+    description: A compact Spanish xPQA retrieval split for selecting product information that
+      answers customer questions.
+    citation_keys:
+    - shen2023xpqa
+    references:
+    - title: 'xPQA: Cross-Lingual Product Question Answering in 12 Languages'
+      authors:
+      - Xiaoyu Shen
+      - Akari Asai
+      - Bill Byrne
+      - Adria De Gispert
+      year: 2023
+      url: https://aclanthology.org/2023.acl-industry.12/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-industry.12
+    bibtex: |
+      @inproceedings{shen2023xpqa,
+        title = {x{PQA}: Cross-Lingual Product Question Answering in 12 Languages},
+        author = {Shen, Xiaoyu and Asai, Akari and Byrne, Bill and De Gispert, Adria},
+        booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 5: Industry Track)},
+        year = {2023},
+        url = {https://aclanthology.org/2023.acl-industry.12/},
+        doi = {10.18653/v1/2023.acl-industry.12}
+      }

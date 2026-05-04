@@ -25,75 +25,309 @@ metadata:
   category: natural_language
   short_description: Vietnamese NanoMTEB retrieval benchmark.
   description: NanoMTEB-Vietnamese is a compact Vietnamese retrieval benchmark aligned with MTEB-style
-    task families.
+    task families and VN-MTEB translated retrieval datasets.
+  citation_keys:
+  - muennighoff2023mteb
+  - pham2026vnmteb
+  references:
+  - &mteb_ref
+    title: 'MTEB: Massive Text Embedding Benchmark'
+    authors:
+    - Niklas Muennighoff
+    - Nouamane Tazi
+    - Loic Magne
+    - Nils Reimers
+    year: 2023
+    url: https://arxiv.org/abs/2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2210.07316
+  - &vnmteb_ref
+    title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    authors:
+    - Loc Pham
+    - Tung Luu
+    - Thu Vo
+    - Minh Nguyen
+    - Viet Hoang
+    year: 2026
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.18653/v1/2026.findings-eacl.86
+  bibtex: |
+    @inproceedings{muennighoff2023mteb,
+      title = {{MTEB}: Massive Text Embedding Benchmark},
+      author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},
+      year = {2023},
+      url = {https://arxiv.org/abs/2210.07316},
+      doi = {10.48550/arXiv.2210.07316}
+    }
+    @inproceedings{pham2026vnmteb,
+      title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
+      author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
+      booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
+      year = {2026},
+      url = {https://aclanthology.org/2026.findings-eacl.86/},
+      doi = {10.18653/v1/2026.findings-eacl.86}
+    }
 task_metadata:
   NanoCQADupstackAndroidVN:
     language: vi
     category: natural_language
-    short_description: NanoCQADupstackAndroidVN retrieval task.
-    description: NanoCQADupstackAndroidVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese duplicate question retrieval for Android Q&A.
+    description: A compact VN-MTEB translation of the CQADupStack Android duplicate-question
+      retrieval task.
+    citation_keys: &vnmteb_cqadup_keys
+    - pham2026vnmteb
+    - hoogeveen2015cqadupstack
+    references: &vnmteb_cqadup_refs
+    - *vnmteb_ref
+    - &cqadupstack_ref
+      title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+      authors:
+      - Doris Hoogeveen
+      - Karin M. Verspoor
+      - Timothy Baldwin
+      year: 2015
+      url: https://doi.org/10.1145/2838931.2838934
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1145/2838931.2838934
+    bibtex: &vnmteb_cqadup_bib |
+      @inproceedings{pham2026vnmteb,
+        title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
+        author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
+        booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
+        year = {2026},
+        url = {https://aclanthology.org/2026.findings-eacl.86/},
+        doi = {10.18653/v1/2026.findings-eacl.86}
+      }
+      @inproceedings{hoogeveen2015cqadupstack,
+        title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},
+        author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},
+        booktitle = {Proceedings of ADCS},
+        year = {2015},
+        url = {https://doi.org/10.1145/2838931.2838934},
+        doi = {10.1145/2838931.2838934}
+      }
   NanoCQADupstackGisVN:
     language: vi
     category: natural_language
-    short_description: NanoCQADupstackGisVN retrieval task.
-    description: NanoCQADupstackGisVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese duplicate question retrieval for GIS Q&A.
+    description: A compact VN-MTEB translation of the CQADupStack GIS duplicate-question
+      retrieval task.
+    citation_keys: *vnmteb_cqadup_keys
+    references: *vnmteb_cqadup_refs
+    bibtex: *vnmteb_cqadup_bib
   NanoCQADupstackMathematicaVN:
     language: vi
     category: natural_language
-    short_description: NanoCQADupstackMathematicaVN retrieval task.
-    description: NanoCQADupstackMathematicaVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese duplicate question retrieval for Mathematica Q&A.
+    description: A compact VN-MTEB translation of the CQADupStack Mathematica duplicate-question
+      retrieval task.
+    citation_keys: *vnmteb_cqadup_keys
+    references: *vnmteb_cqadup_refs
+    bibtex: *vnmteb_cqadup_bib
   NanoCQADupstackPhysicsVN:
     language: vi
     category: natural_language
-    short_description: NanoCQADupstackPhysicsVN retrieval task.
-    description: NanoCQADupstackPhysicsVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese duplicate question retrieval for physics Q&A.
+    description: A compact VN-MTEB translation of the CQADupStack physics duplicate-question
+      retrieval task.
+    citation_keys: *vnmteb_cqadup_keys
+    references: *vnmteb_cqadup_refs
+    bibtex: *vnmteb_cqadup_bib
   NanoCQADupstackProgrammersVN:
     language: vi
     category: natural_language
-    short_description: NanoCQADupstackProgrammersVN retrieval task.
-    description: NanoCQADupstackProgrammersVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese duplicate question retrieval for programmers Q&A.
+    description: A compact VN-MTEB translation of the CQADupStack programmers duplicate-question
+      retrieval task.
+    citation_keys: *vnmteb_cqadup_keys
+    references: *vnmteb_cqadup_refs
+    bibtex: *vnmteb_cqadup_bib
   NanoCQADupstackStatsVN:
     language: vi
     category: natural_language
-    short_description: NanoCQADupstackStatsVN retrieval task.
-    description: NanoCQADupstackStatsVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese duplicate question retrieval for statistics Q&A.
+    description: A compact VN-MTEB translation of the CQADupStack statistics duplicate-question
+      retrieval task.
+    citation_keys: *vnmteb_cqadup_keys
+    references: *vnmteb_cqadup_refs
+    bibtex: *vnmteb_cqadup_bib
   NanoCQADupstackTexVN:
     language: vi
     category: natural_language
-    short_description: NanoCQADupstackTexVN retrieval task.
-    description: NanoCQADupstackTexVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese duplicate question retrieval for TeX Q&A.
+    description: A compact VN-MTEB translation of the CQADupStack TeX duplicate-question
+      retrieval task.
+    citation_keys: *vnmteb_cqadup_keys
+    references: *vnmteb_cqadup_refs
+    bibtex: *vnmteb_cqadup_bib
   NanoCQADupstackWebmastersVN:
     language: vi
     category: natural_language
-    short_description: NanoCQADupstackWebmastersVN retrieval task.
-    description: NanoCQADupstackWebmastersVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese duplicate question retrieval for webmasters Q&A.
+    description: A compact VN-MTEB translation of the CQADupStack webmasters duplicate-question
+      retrieval task.
+    citation_keys: *vnmteb_cqadup_keys
+    references: *vnmteb_cqadup_refs
+    bibtex: *vnmteb_cqadup_bib
   NanoCQADupstackWordpressVN:
     language: vi
     category: natural_language
-    short_description: NanoCQADupstackWordpressVN retrieval task.
-    description: NanoCQADupstackWordpressVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese duplicate question retrieval for WordPress Q&A.
+    description: A compact VN-MTEB translation of the CQADupStack WordPress duplicate-question
+      retrieval task.
+    citation_keys: *vnmteb_cqadup_keys
+    references: *vnmteb_cqadup_refs
+    bibtex: *vnmteb_cqadup_bib
   NanoFEVERVN:
     language: vi
     category: natural_language
-    short_description: NanoFEVERVN retrieval task.
-    description: NanoFEVERVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese FEVER evidence retrieval.
+    description: A compact VN-MTEB translation of FEVER claim-to-Wikipedia evidence retrieval.
+    citation_keys: &vnmteb_fever_keys
+    - pham2026vnmteb
+    - thorne2018fever
+    references: &vnmteb_fever_refs
+    - *vnmteb_ref
+    - &fever_ref
+      title: 'FEVER: a Large-scale Dataset for Fact Extraction and Verification'
+      authors:
+      - James Thorne
+      - Andreas Vlachos
+      - Christos Christodoulopoulos
+      - Arpit Mittal
+      year: 2018
+      url: https://aclanthology.org/N18-1074/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/N18-1074
+    bibtex: &vnmteb_fever_bib |
+      @inproceedings{pham2026vnmteb,
+        title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
+        author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
+        booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
+        year = {2026},
+        url = {https://aclanthology.org/2026.findings-eacl.86/},
+        doi = {10.18653/v1/2026.findings-eacl.86}
+      }
+      @inproceedings{thorne2018fever,
+        title = {{FEVER}: a Large-scale Dataset for Fact Extraction and Verification},
+        author = {Thorne, James and Vlachos, Andreas and Christodoulopoulos, Christos and Mittal, Arpit},
+        booktitle = {Proceedings of NAACL-HLT},
+        year = {2018},
+        url = {https://aclanthology.org/N18-1074/},
+        doi = {10.18653/v1/N18-1074}
+      }
   NanoNQVN:
     language: vi
     category: natural_language
-    short_description: NanoNQVN retrieval task.
-    description: NanoNQVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese Natural Questions retrieval.
+    description: A compact VN-MTEB translation of Natural Questions Wikipedia retrieval.
+    citation_keys: &vnmteb_nq_keys
+    - pham2026vnmteb
+    - kwiatkowski2019nq
+    references: &vnmteb_nq_refs
+    - *vnmteb_ref
+    - &nq_ref
+      title: 'Natural Questions: A Benchmark for Question Answering Research'
+      authors:
+      - Tom Kwiatkowski
+      - Jennimaria Palomaki
+      - Olivia Redfield
+      - Michael Collins
+      - Ankur Parikh
+      - Chris Alberti
+      - Danielle Epstein
+      - Illia Polosukhin
+      - Jacob Devlin
+      - Kenton Lee
+      - Kristina Toutanova
+      - Llion Jones
+      - Matthew Kelcey
+      - Ming-Wei Chang
+      - Andrew M. Dai
+      - Jakob Uszkoreit
+      - Quoc Le
+      - Slav Petrov
+      year: 2019
+      url: https://aclanthology.org/Q19-1026/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00276
+    bibtex: &vnmteb_nq_bib |
+      @inproceedings{pham2026vnmteb,
+        title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
+        author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
+        booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
+        year = {2026},
+        url = {https://aclanthology.org/2026.findings-eacl.86/},
+        doi = {10.18653/v1/2026.findings-eacl.86}
+      }
+      @article{kwiatkowski2019nq,
+        title = {Natural Questions: A Benchmark for Question Answering Research},
+        author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and others},
+        journal = {Transactions of the Association for Computational Linguistics},
+        volume = {7},
+        pages = {452--466},
+        year = {2019},
+        url = {https://aclanthology.org/Q19-1026/},
+        doi = {10.1162/tacl_a_00276}
+      }
   NanoNanoFEVERVN:
     language: vi
     category: natural_language
-    short_description: NanoNanoFEVERVN retrieval task.
-    description: NanoNanoFEVERVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese nano FEVER evidence retrieval.
+    description: A smaller compact VN-MTEB translation of FEVER claim-to-Wikipedia evidence
+      retrieval.
+    citation_keys: *vnmteb_fever_keys
+    references: *vnmteb_fever_refs
+    bibtex: *vnmteb_fever_bib
   NanoNanoNQVN:
     language: vi
     category: natural_language
-    short_description: NanoNanoNQVN retrieval task.
-    description: NanoNanoNQVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese nano Natural Questions retrieval.
+    description: A smaller compact VN-MTEB translation of Natural Questions Wikipedia retrieval.
+    citation_keys: *vnmteb_nq_keys
+    references: *vnmteb_nq_refs
+    bibtex: *vnmteb_nq_bib
   NanoQuoraVN:
     language: vi
     category: natural_language
-    short_description: NanoQuoraVN retrieval task.
-    description: NanoQuoraVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+    short_description: Vietnamese duplicate question retrieval from Quora pairs.
+    description: A compact VN-MTEB translation of Quora duplicate-question retrieval.
+    citation_keys:
+    - pham2026vnmteb
+    - quora2017questionpairs
+    references:
+    - *vnmteb_ref
+    - title: Quora Question Pairs
+      authors:
+      - DataCanary
+      - hilfialkaff
+      - Lili Jiang
+      - Meg Risdal
+      - Nikhil Dandekar
+      - tomtung
+      year: 2017
+      url: https://kaggle.com/competitions/quora-question-pairs
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: |
+      @inproceedings{pham2026vnmteb,
+        title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
+        author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
+        booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
+        year = {2026},
+        url = {https://aclanthology.org/2026.findings-eacl.86/},
+        doi = {10.18653/v1/2026.findings-eacl.86}
+      }
+      @misc{quora2017questionpairs,
+        title = {Quora Question Pairs},
+        author = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil and tomtung},
+        year = {2017},
+        url = {https://kaggle.com/competitions/quora-question-pairs}
+      }

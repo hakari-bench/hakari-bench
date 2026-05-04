@@ -50,194 +50,498 @@ metadata:
   short_description: Cross-lingual NanoMTEB retrieval benchmark.
   description: NanoMTEB-Xlingual is a compact cross-lingual retrieval benchmark aligned with MTEB-style
     task families.
+  citation_keys:
+  - muennighoff2023mteb
+  references:
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    authors:
+    - Niklas Muennighoff
+    - Nouamane Tazi
+    - Loic Magne
+    - Nils Reimers
+    year: 2023
+    url: https://arxiv.org/abs/2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2210.07316
+  bibtex: |
+    @inproceedings{muennighoff2023mteb,
+      title = {{MTEB}: Massive Text Embedding Benchmark},
+      author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},
+      year = {2023},
+      url = {https://arxiv.org/abs/2210.07316},
+      doi = {10.48550/arXiv.2210.07316}
+    }
 task_metadata:
   NanoEuroPIRQEN:
     language: multilingual
     category: natural_language
-    short_description: NanoEuroPIRQEN retrieval task.
-    description: NanoEuroPIRQEN is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: English EuroPIRQ legal retrieval.
+    description: A compact EuroPIRQ retrieval split over English DGT-Acquis-derived legal passages
+      and synthetic queries.
+    citation_keys: &europirq_keys
+    - herranen2025europirq
+    - steinberger2014euparallel
+    references: &europirq_refs
+    - title: 'EuroPIRQ: European Parallel Information Retrieval Queries'
+      authors:
+      - Elias Herranen
+      year: 2025
+      url: https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - &euparallel_ref
+      title: An Overview of the European Union's Highly Multilingual Parallel Corpora
+      authors:
+      - Ralf Steinberger
+      - Mohamed Ebrahim
+      - Alexandros Poulis
+      - Manuel Carrasco-Benitez
+      - Patrick Schluter
+      - Marek Przybyszewski
+      - Signe Gilbro
+      year: 2014
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
+    bibtex: &europirq_bib |
+      @misc{herranen2025europirq,
+        title = {{EuroPIRQ}: European Parallel Information Retrieval Queries},
+        author = {Herranen, Elias},
+        publisher = {Hugging Face},
+        year = {2025},
+        url = {https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval}
+      }
+      @article{steinberger2014euparallel,
+        title = {An Overview of the European Union's Highly Multilingual Parallel Corpora},
+        author = {Steinberger, Ralf and Ebrahim, Mohamed and Poulis, Alexandros and Carrasco-Benitez, Manuel and Schluter, Patrick and Przybyszewski, Marek and Gilbro, Signe},
+        journal = {Language Resources and Evaluation},
+        volume = {48},
+        number = {4},
+        pages = {679--707},
+        year = {2014},
+        url = {https://doi.org/10.1007/s10579-014-9277-0},
+        doi = {10.1007/s10579-014-9277-0}
+      }
   NanoEuroPIRQFI:
     language: multilingual
     category: natural_language
-    short_description: NanoEuroPIRQFI retrieval task.
-    description: NanoEuroPIRQFI is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Finnish EuroPIRQ legal retrieval.
+    description: A compact EuroPIRQ retrieval split over Finnish DGT-Acquis-derived legal passages
+      and synthetic queries.
+    citation_keys: *europirq_keys
+    references: *europirq_refs
+    bibtex: *europirq_bib
   NanoEuroPIRQPT:
     language: multilingual
     category: natural_language
-    short_description: NanoEuroPIRQPT retrieval task.
-    description: NanoEuroPIRQPT is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Portuguese EuroPIRQ legal retrieval.
+    description: A compact EuroPIRQ retrieval split over Portuguese DGT-Acquis-derived legal passages
+      and synthetic queries.
+    citation_keys: *europirq_keys
+    references: *europirq_refs
+    bibtex: *europirq_bib
   NanoIndicQAAS:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQAAS retrieval task.
-    description: NanoIndicQAAS is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Assamese IndicQA context retrieval.
+    description: A compact Assamese IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: &indicqa_keys
+    - doddapaneni2023indic
+    references: &indicqa_refs
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora, Benchmark and Models for Indic Languages'
+      authors:
+      - Sumanth Doddapaneni
+      - Rahul Aralikatte
+      - Gowtham Ramesh
+      - Shreya Goyal
+      - Mitesh M. Khapra
+      - Anoop Kunchukuttan
+      - Pratyush Kumar
+      year: 2023
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
+    bibtex: &indicqa_bib |
+      @inproceedings{doddapaneni2023indic,
+        title = {Towards Leaving No {Indic} Language Behind: Building Monolingual Corpora, Benchmark and Models for {Indic} Languages},
+        author = {Doddapaneni, Sumanth and Aralikatte, Rahul and Ramesh, Gowtham and Goyal, Shreya and Khapra, Mitesh M. and Kunchukuttan, Anoop and Kumar, Pratyush},
+        booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
+        year = {2023},
+        url = {https://aclanthology.org/2023.acl-long.693/},
+        doi = {10.18653/v1/2023.acl-long.693}
+      }
   NanoIndicQABN:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQABN retrieval task.
-    description: NanoIndicQABN is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Bengali IndicQA context retrieval.
+    description: A compact Bengali IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: *indicqa_keys
+    references: *indicqa_refs
+    bibtex: *indicqa_bib
   NanoIndicQAGU:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQAGU retrieval task.
-    description: NanoIndicQAGU is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Gujarati IndicQA context retrieval.
+    description: A compact Gujarati IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: *indicqa_keys
+    references: *indicqa_refs
+    bibtex: *indicqa_bib
   NanoIndicQAHI:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQAHI retrieval task.
-    description: NanoIndicQAHI is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Hindi IndicQA context retrieval.
+    description: A compact Hindi IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: *indicqa_keys
+    references: *indicqa_refs
+    bibtex: *indicqa_bib
   NanoIndicQAKN:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQAKN retrieval task.
-    description: NanoIndicQAKN is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Kannada IndicQA context retrieval.
+    description: A compact Kannada IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: *indicqa_keys
+    references: *indicqa_refs
+    bibtex: *indicqa_bib
   NanoIndicQAML:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQAML retrieval task.
-    description: NanoIndicQAML is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Malayalam IndicQA context retrieval.
+    description: A compact Malayalam IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: *indicqa_keys
+    references: *indicqa_refs
+    bibtex: *indicqa_bib
   NanoIndicQAMR:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQAMR retrieval task.
-    description: NanoIndicQAMR is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Marathi IndicQA context retrieval.
+    description: A compact Marathi IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: *indicqa_keys
+    references: *indicqa_refs
+    bibtex: *indicqa_bib
   NanoIndicQAOR:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQAOR retrieval task.
-    description: NanoIndicQAOR is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Odia IndicQA context retrieval.
+    description: A compact Odia IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: *indicqa_keys
+    references: *indicqa_refs
+    bibtex: *indicqa_bib
   NanoIndicQAPA:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQAPA retrieval task.
-    description: NanoIndicQAPA is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Punjabi IndicQA context retrieval.
+    description: A compact Punjabi IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: *indicqa_keys
+    references: *indicqa_refs
+    bibtex: *indicqa_bib
   NanoIndicQATA:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQATA retrieval task.
-    description: NanoIndicQATA is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Tamil IndicQA context retrieval.
+    description: A compact Tamil IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: *indicqa_keys
+    references: *indicqa_refs
+    bibtex: *indicqa_bib
   NanoIndicQATE:
     language: multilingual
     category: natural_language
-    short_description: NanoIndicQATE retrieval task.
-    description: NanoIndicQATE is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Telugu IndicQA context retrieval.
+    description: A compact Telugu IndicQA retrieval split repurposed from cloze-style reading
+      comprehension questions and contexts.
+    citation_keys: *indicqa_keys
+    references: *indicqa_refs
+    bibtex: *indicqa_bib
   NanoMuPLeREL:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeREL retrieval task.
-    description: NanoMuPLeREL is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Greek MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Greek
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: &mupler_keys
+    - herranen2026mupler
+    - steinberger2014euparallel
+    references: &mupler_refs
+    - title: 'MuPLeR: Multilingual Parallel Legal Retrieval'
+      authors:
+      - Elias Herranen
+      year: 2026
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - *euparallel_ref
+    bibtex: &mupler_bib |
+      @misc{herranen2026mupler,
+        title = {{MuPLeR}: Multilingual Parallel Legal Retrieval},
+        author = {Herranen, Elias},
+        publisher = {Hugging Face},
+        year = {2026},
+        url = {https://huggingface.co/datasets/mteb/MuPLeR-retrieval}
+      }
+      @article{steinberger2014euparallel,
+        title = {An Overview of the European Union's Highly Multilingual Parallel Corpora},
+        author = {Steinberger, Ralf and Ebrahim, Mohamed and Poulis, Alexandros and Carrasco-Benitez, Manuel and Schluter, Patrick and Przybyszewski, Marek and Gilbro, Signe},
+        journal = {Language Resources and Evaluation},
+        volume = {48},
+        number = {4},
+        pages = {679--707},
+        year = {2014},
+        url = {https://doi.org/10.1007/s10579-014-9277-0},
+        doi = {10.1007/s10579-014-9277-0}
+      }
   NanoMuPLeREN:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeREN retrieval task.
-    description: NanoMuPLeREN is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: English MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over English
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRES:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRES retrieval task.
-    description: NanoMuPLeRES is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Spanish MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Spanish
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRFI:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRFI retrieval task.
-    description: NanoMuPLeRFI is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Finnish MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Finnish
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRFR:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRFR retrieval task.
-    description: NanoMuPLeRFR is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: French MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over French
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRIT:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRIT retrieval task.
-    description: NanoMuPLeRIT is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Italian MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Italian
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRLT:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRLT retrieval task.
-    description: NanoMuPLeRLT is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Lithuanian MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Lithuanian
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRLV:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRLV retrieval task.
-    description: NanoMuPLeRLV is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Latvian MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Latvian
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRNL:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRNL retrieval task.
-    description: NanoMuPLeRNL is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Dutch MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Dutch
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRPL:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRPL retrieval task.
-    description: NanoMuPLeRPL is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Polish MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Polish
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRPT:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRPT retrieval task.
-    description: NanoMuPLeRPT is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Portuguese MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Portuguese
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRSK:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRSK retrieval task.
-    description: NanoMuPLeRSK is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Slovak MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Slovak
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRSL:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRSL retrieval task.
-    description: NanoMuPLeRSL is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Slovenian MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Slovenian
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoMuPLeRSV:
     language: multilingual
     category: natural_language
-    short_description: NanoMuPLeRSV retrieval task.
-    description: NanoMuPLeRSV is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: Swedish MuPLeR legal retrieval.
+    description: A compact MuPLeR multilingual parallel legal retrieval split over Swedish
+      DGT-Acquis-derived passages and synthetic queries.
+    citation_keys: *mupler_keys
+    references: *mupler_refs
+    bibtex: *mupler_bib
   NanoNeuCLIR2022Fa:
     language: multilingual
     category: natural_language
-    short_description: NanoNeuCLIR2022Fa retrieval task.
-    description: NanoNeuCLIR2022Fa is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: TREC 2022 NeuCLIR Persian news retrieval.
+    description: A compact TREC 2022 NeuCLIR split for retrieving Persian news documents with
+      English-language topics.
+    citation_keys: &neuclir2022_keys
+    - lawrie2023neuclir2022
+    references: &neuclir2022_refs
+    - title: Overview of the TREC 2022 NeuCLIR Track
+      authors:
+      - Dawn Lawrie
+      - Sean MacAvaney
+      - James Mayfield
+      - Paul McNamee
+      - Douglas W. Oard
+      - Luca Soldaini
+      - Eugene Yang
+      year: 2023
+      url: https://arxiv.org/abs/2304.12367
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2304.12367
+    bibtex: &neuclir2022_bib |
+      @misc{lawrie2023neuclir2022,
+        title = {Overview of the {TREC} 2022 {NeuCLIR} Track},
+        author = {Lawrie, Dawn and MacAvaney, Sean and Mayfield, James and McNamee, Paul and Oard, Douglas W. and Soldaini, Luca and Yang, Eugene},
+        year = {2023},
+        url = {https://arxiv.org/abs/2304.12367},
+        doi = {10.48550/arXiv.2304.12367}
+      }
   NanoNeuCLIR2022FaHardNegatives:
     language: multilingual
     category: natural_language
-    short_description: NanoNeuCLIR2022FaHardNegatives retrieval task.
-    description: NanoNeuCLIR2022FaHardNegatives is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: TREC 2022 NeuCLIR Persian hard-negative retrieval.
+    description: A compact hard-negative TREC 2022 NeuCLIR split for retrieving Persian news
+      documents with English-language topics.
+    citation_keys: *neuclir2022_keys
+    references: *neuclir2022_refs
+    bibtex: *neuclir2022_bib
   NanoNeuCLIR2022Ru:
     language: multilingual
     category: natural_language
-    short_description: NanoNeuCLIR2022Ru retrieval task.
-    description: NanoNeuCLIR2022Ru is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: TREC 2022 NeuCLIR Russian news retrieval.
+    description: A compact TREC 2022 NeuCLIR split for retrieving Russian news documents with
+      English-language topics.
+    citation_keys: *neuclir2022_keys
+    references: *neuclir2022_refs
+    bibtex: *neuclir2022_bib
   NanoNeuCLIR2022RuHardNegatives:
     language: multilingual
     category: natural_language
-    short_description: NanoNeuCLIR2022RuHardNegatives retrieval task.
-    description: NanoNeuCLIR2022RuHardNegatives is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: TREC 2022 NeuCLIR Russian hard-negative retrieval.
+    description: A compact hard-negative TREC 2022 NeuCLIR split for retrieving Russian news
+      documents with English-language topics.
+    citation_keys: *neuclir2022_keys
+    references: *neuclir2022_refs
+    bibtex: *neuclir2022_bib
   NanoNeuCLIR2022Zh:
     language: multilingual
     category: natural_language
-    short_description: NanoNeuCLIR2022Zh retrieval task.
-    description: NanoNeuCLIR2022Zh is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: TREC 2022 NeuCLIR Chinese news retrieval.
+    description: A compact TREC 2022 NeuCLIR split for retrieving Chinese news documents with
+      English-language topics.
+    citation_keys: *neuclir2022_keys
+    references: *neuclir2022_refs
+    bibtex: *neuclir2022_bib
   NanoNeuCLIR2022ZhHardNegatives:
     language: multilingual
     category: natural_language
-    short_description: NanoNeuCLIR2022ZhHardNegatives retrieval task.
-    description: NanoNeuCLIR2022ZhHardNegatives is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: TREC 2022 NeuCLIR Chinese hard-negative retrieval.
+    description: A compact hard-negative TREC 2022 NeuCLIR split for retrieving Chinese news
+      documents with English-language topics.
+    citation_keys: *neuclir2022_keys
+    references: *neuclir2022_refs
+    bibtex: *neuclir2022_bib
   NanoWMT19DeFr:
     language: multilingual
     category: natural_language
-    short_description: NanoWMT19DeFr retrieval task.
-    description: NanoWMT19DeFr is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: WMT19 German-French semantic discrimination.
+    description: A compact cross-lingual semantic discrimination split derived from WMT19 German-French
+      parallel data and adversarial target-language distractors.
+    citation_keys: &clsd_keys
+    - michail2023clsd
+    references: &clsd_refs
+    - title: Cross-Lingual Semantic Discrimination WMT19/21
+      authors:
+      - Andrianos Michail
+      year: 2023
+      url: https://huggingface.co/datasets/Andrianos/clsd_wmt19_21
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: &clsd_bib |
+      @misc{michail2023clsd,
+        title = {Cross-Lingual Semantic Discrimination WMT19/21},
+        author = {Michail, Andrianos},
+        publisher = {Hugging Face},
+        year = {2023},
+        url = {https://huggingface.co/datasets/Andrianos/clsd_wmt19_21}
+      }
   NanoWMT19FrDe:
     language: multilingual
     category: natural_language
-    short_description: NanoWMT19FrDe retrieval task.
-    description: NanoWMT19FrDe is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: WMT19 French-German semantic discrimination.
+    description: A compact cross-lingual semantic discrimination split derived from WMT19 French-German
+      parallel data and adversarial target-language distractors.
+    citation_keys: *clsd_keys
+    references: *clsd_refs
+    bibtex: *clsd_bib
   NanoWMT21DeFr:
     language: multilingual
     category: natural_language
-    short_description: NanoWMT21DeFr retrieval task.
-    description: NanoWMT21DeFr is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: WMT21 German-French semantic discrimination.
+    description: A compact cross-lingual semantic discrimination split derived from WMT21 German-French
+      parallel data and adversarial target-language distractors.
+    citation_keys: *clsd_keys
+    references: *clsd_refs
+    bibtex: *clsd_bib
   NanoWMT21FrDe:
     language: multilingual
     category: natural_language
-    short_description: NanoWMT21FrDe retrieval task.
-    description: NanoWMT21FrDe is a compact retrieval task included in NanoMTEB-Xlingual.
+    short_description: WMT21 French-German semantic discrimination.
+    description: A compact cross-lingual semantic discrimination split derived from WMT21 French-German
+      parallel data and adversarial target-language distractors.
+    citation_keys: *clsd_keys
+    references: *clsd_refs
+    bibtex: *clsd_bib

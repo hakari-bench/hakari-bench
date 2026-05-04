@@ -15,30 +15,175 @@ metadata:
   language: fr
   category: natural_language
   short_description: French NanoMTEB retrieval benchmark.
-  description: NanoMTEB-French is a compact French retrieval benchmark aligned with MTEB-style task families.
+  description: NanoMTEB-French is a compact French retrieval benchmark aligned with MTEB-style task families and MTEB-French retrieval resources.
+  citation_keys:
+  - muennighoff2023mteb
+  - ciancone2024mtebfrench
+  references:
+  - &mteb_reference
+    title: 'MTEB: Massive Text Embedding Benchmark'
+    authors:
+    - Niklas Muennighoff
+    - Nouamane Tazi
+    - Loic Magne
+    - Nils Reimers
+    year: 2023
+    url: https://arxiv.org/abs/2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2210.07316
+  - &mtebfrench_reference
+    title: 'MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis'
+    authors:
+    - Mathieu Ciancone
+    - Imene Kerboua
+    - Marion Schaeffer
+    - Wissam Siblini
+    year: 2024
+    url: https://arxiv.org/abs/2405.20468
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2405.20468
+  bibtex: |
+    @inproceedings{muennighoff2023mteb,
+      title = {{MTEB}: Massive Text Embedding Benchmark},
+      author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},
+      year = {2023},
+      url = {https://arxiv.org/abs/2210.07316},
+      doi = {10.48550/arXiv.2210.07316}
+    }
+
+    @misc{ciancone2024mtebfrench,
+      title = {{MTEB-French}: Resources for French Sentence Embedding Evaluation and Analysis},
+      author = {Ciancone, Mathieu and Kerboua, Imene and Schaeffer, Marion and Siblini, Wissam},
+      year = {2024},
+      url = {https://arxiv.org/abs/2405.20468},
+      doi = {10.48550/arXiv.2405.20468}
+    }
 task_metadata:
   NanoAlloprof:
     language: fr
     category: natural_language
-    short_description: NanoAlloprof retrieval task.
-    description: NanoAlloprof is a compact retrieval task included in NanoMTEB-French.
+    short_description: French educational question-answer retrieval.
+    description: A compact Alloprof retrieval task over French educational questions and reference answers from Quebec.
+    citation_keys:
+    - lefebvre2023alloprof
+    references:
+    - title: 'Alloprof: a new French question-answer education dataset and its use in an information retrieval case study'
+      authors:
+      - Antoine Lefebvre-Brossard
+      - Stephane Gazaille
+      - Michel C. Desmarais
+      year: 2023
+      url: https://arxiv.org/abs/2302.07738
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2302.07738
+    bibtex: |
+      @misc{lefebvre2023alloprof,
+        title = {Alloprof: a new French question-answer education dataset and its use in an information retrieval case study},
+        author = {Lefebvre-Brossard, Antoine and Gazaille, Stephane and Desmarais, Michel C.},
+        year = {2023},
+        url = {https://arxiv.org/abs/2302.07738},
+        doi = {10.48550/arXiv.2302.07738}
+      }
   NanoBSARDV2:
     language: fr
     category: natural_language
-    short_description: NanoBSARDV2 retrieval task.
-    description: NanoBSARDV2 is a compact retrieval task included in NanoMTEB-French.
+    short_description: French statutory article retrieval.
+    description: A compact BSARD v2 retrieval task for matching French legal questions to Belgian statutory articles.
+    citation_keys:
+    - louis2022statutory
+    references:
+    - title: A Statutory Article Retrieval Dataset in French
+      authors:
+      - Antoine Louis
+      - Gerasimos Spanakis
+      year: 2022
+      url: https://aclanthology.org/2022.acl-long.468/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2022.acl-long.468
+    bibtex: |
+      @inproceedings{louis2022statutory,
+        title = {A Statutory Article Retrieval Dataset in French},
+        author = {Louis, Antoine and Spanakis, Gerasimos},
+        booktitle = {Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics},
+        year = {2022},
+        url = {https://aclanthology.org/2022.acl-long.468/},
+        doi = {10.18653/v1/2022.acl-long.468}
+      }
   NanoFQuAD:
     language: fr
     category: natural_language
-    short_description: NanoFQuAD retrieval task.
-    description: NanoFQuAD is a compact retrieval task included in NanoMTEB-French.
+    short_description: French Wikipedia QA context retrieval.
+    description: A compact FQuAD retrieval task for retrieving French Wikipedia contexts that answer questions.
+    citation_keys:
+    - dhoffschmidt2020fquad
+    references:
+    - title: 'FQuAD: French Question Answering Dataset'
+      authors:
+      - Martin d'Hoffschmidt
+      - Wacim Belblidia
+      - Quentin Heinrich
+      - Tom Brendle
+      - Maxime Vidal
+      year: 2020
+      url: https://aclanthology.org/2020.findings-emnlp.107/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2020.findings-emnlp.107
+    bibtex: |
+      @inproceedings{dhoffschmidt2020fquad,
+        title = {{FQuAD}: French Question Answering Dataset},
+        author = {d'Hoffschmidt, Martin and Belblidia, Wacim and Heinrich, Quentin and Brendle, Tom and Vidal, Maxime},
+        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2020},
+        year = {2020},
+        url = {https://aclanthology.org/2020.findings-emnlp.107/},
+        doi = {10.18653/v1/2020.findings-emnlp.107}
+      }
   NanoSyntec:
     language: fr
     category: natural_language
-    short_description: NanoSyntec retrieval task.
-    description: NanoSyntec is a compact retrieval task included in NanoMTEB-French.
+    short_description: French Syntec collective-agreement retrieval.
+    description: A compact legal retrieval task built from the Syntec collective bargaining agreement and introduced with MTEB-French.
+    citation_keys:
+    - ciancone2024mtebfrench
+    references:
+    - *mtebfrench_reference
+    bibtex: |
+      @misc{ciancone2024mtebfrench,
+        title = {{MTEB-French}: Resources for French Sentence Embedding Evaluation and Analysis},
+        author = {Ciancone, Mathieu and Kerboua, Imene and Schaeffer, Marion and Siblini, Wissam},
+        year = {2024},
+        url = {https://arxiv.org/abs/2405.20468},
+        doi = {10.48550/arXiv.2405.20468}
+      }
   NanoXPQAFr:
     language: fr
     category: natural_language
-    short_description: NanoXPQAFr retrieval task.
-    description: NanoXPQAFr is a compact retrieval task included in NanoMTEB-French.
+    short_description: French product question-answer retrieval.
+    description: A compact French xPQA split for cross-lingual product question answering and candidate retrieval.
+    citation_keys:
+    - shen2023xpqa
+    references:
+    - title: 'xPQA: Cross-Lingual Product Question Answering in 12 Languages'
+      authors:
+      - Xiaoyu Shen
+      - Akari Asai
+      - Bill Byrne
+      - Adria De Gispert
+      year: 2023
+      url: https://aclanthology.org/2023.acl-industry.12/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-industry.12
+    bibtex: |
+      @inproceedings{shen2023xpqa,
+        title = {{xPQA}: Cross-Lingual Product Question Answering in 12 Languages},
+        author = {Shen, Xiaoyu and Asai, Akari and Byrne, Bill and De Gispert, Adria},
+        booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 5: Industry Track)},
+        year = {2023},
+        url = {https://aclanthology.org/2023.acl-industry.12/},
+        doi = {10.18653/v1/2023.acl-industry.12}
+      }

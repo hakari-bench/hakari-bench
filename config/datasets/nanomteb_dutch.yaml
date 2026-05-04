@@ -29,100 +29,478 @@ metadata:
   language: nl
   category: natural_language
   short_description: Dutch NanoMTEB retrieval benchmark.
-  description: NanoMTEB-Dutch is a compact Dutch retrieval benchmark aligned with MTEB-style task families.
+  description: NanoMTEB-Dutch is a compact Dutch retrieval benchmark aligned with MTEB-style task families, including Dutch-native and translated retrieval tasks.
+  citation_keys:
+  - muennighoff2023mteb
+  - banar2025mtebnl
+  references:
+  - &mteb_reference
+    title: 'MTEB: Massive Text Embedding Benchmark'
+    authors:
+    - Niklas Muennighoff
+    - Nouamane Tazi
+    - Loic Magne
+    - Nils Reimers
+    year: 2023
+    url: https://arxiv.org/abs/2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2210.07316
+  - &mtebnl_reference
+    title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+    authors:
+    - Nikolay Banar
+    - Ehsan Lotfi
+    - Jens Van Nooten
+    - Cristina Arhiliuc
+    - Marija Kliocaite
+    - Walter Daelemans
+    year: 2025
+    url: https://arxiv.org/abs/2509.12340
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2509.12340
+  bibtex: |
+    @inproceedings{muennighoff2023mteb,
+      title = {{MTEB}: Massive Text Embedding Benchmark},
+      author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},
+      year = {2023},
+      url = {https://arxiv.org/abs/2210.07316},
+      doi = {10.48550/arXiv.2210.07316}
+    }
+
+    @misc{banar2025mtebnl,
+      title = {{MTEB-NL} and {E5-NL}: Embedding Benchmark and Models for Dutch},
+      author = {Banar, Nikolay and Lotfi, Ehsan and Van Nooten, Jens and Arhiliuc, Cristina and Kliocaite, Marija and Daelemans, Walter},
+      year = {2025},
+      url = {https://arxiv.org/abs/2509.12340},
+      doi = {10.48550/arXiv.2509.12340}
+    }
 task_metadata:
   NanoCQADupstackAndroidNL:
     language: nl
     category: natural_language
-    short_description: NanoCQADupstackAndroidNL retrieval task.
-    description: NanoCQADupstackAndroidNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch duplicate-question retrieval for Android Q&A.
+    description: A compact Dutch-translated CQADupStack Android split for duplicate question retrieval in community Q&A.
+    citation_keys:
+    - hoogeveen2015cqadupstack
+    - lotfi2025beirnl
+    references:
+    - &cqadupstack_reference
+      title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+      authors:
+      - Doris Hoogeveen
+      - Karin M. Verspoor
+      - Timothy Baldwin
+      year: 2015
+      url: https://doi.org/10.1145/2838931.2838934
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1145/2838931.2838934
+    - &beirnl_reference
+      title: 'BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language'
+      authors:
+      - Ehsan Lotfi
+      - Nikolay Banar
+      - Walter Daelemans
+      year: 2025
+      url: https://aclanthology.org/2025.bucc-1.5/
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: &cqadupstack_nl_bibtex |
+      @inproceedings{hoogeveen2015cqadupstack,
+        title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},
+        author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},
+        booktitle = {Proceedings of ADCS},
+        year = {2015},
+        url = {https://doi.org/10.1145/2838931.2838934},
+        doi = {10.1145/2838931.2838934}
+      }
+
+      @inproceedings{lotfi2025beirnl,
+        title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch Language},
+        author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},
+        booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable Corpora},
+        year = {2025},
+        url = {https://aclanthology.org/2025.bucc-1.5/}
+      }
   NanoCQADupstackEnglishNL:
     language: nl
     category: natural_language
-    short_description: NanoCQADupstackEnglishNL retrieval task.
-    description: NanoCQADupstackEnglishNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch duplicate-question retrieval for English Q&A.
+    description: A compact Dutch-translated CQADupStack English split for duplicate question retrieval in community Q&A.
+    citation_keys:
+    - hoogeveen2015cqadupstack
+    - lotfi2025beirnl
+    references:
+    - *cqadupstack_reference
+    - *beirnl_reference
+    bibtex: *cqadupstack_nl_bibtex
   NanoCQADupstackGisNL:
     language: nl
     category: natural_language
-    short_description: NanoCQADupstackGisNL retrieval task.
-    description: NanoCQADupstackGisNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch duplicate-question retrieval for GIS Q&A.
+    description: A compact Dutch-translated CQADupStack GIS split for duplicate question retrieval in community Q&A.
+    citation_keys:
+    - hoogeveen2015cqadupstack
+    - lotfi2025beirnl
+    references:
+    - *cqadupstack_reference
+    - *beirnl_reference
+    bibtex: *cqadupstack_nl_bibtex
   NanoCQADupstackMathematicaNL:
     language: nl
     category: natural_language
-    short_description: NanoCQADupstackMathematicaNL retrieval task.
-    description: NanoCQADupstackMathematicaNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch duplicate-question retrieval for Mathematica Q&A.
+    description: A compact Dutch-translated CQADupStack Mathematica split for duplicate question retrieval in community Q&A.
+    citation_keys:
+    - hoogeveen2015cqadupstack
+    - lotfi2025beirnl
+    references:
+    - *cqadupstack_reference
+    - *beirnl_reference
+    bibtex: *cqadupstack_nl_bibtex
   NanoCQADupstackPhysicsNL:
     language: nl
     category: natural_language
-    short_description: NanoCQADupstackPhysicsNL retrieval task.
-    description: NanoCQADupstackPhysicsNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch duplicate-question retrieval for physics Q&A.
+    description: A compact Dutch-translated CQADupStack Physics split for duplicate question retrieval in community Q&A.
+    citation_keys:
+    - hoogeveen2015cqadupstack
+    - lotfi2025beirnl
+    references:
+    - *cqadupstack_reference
+    - *beirnl_reference
+    bibtex: *cqadupstack_nl_bibtex
   NanoCQADupstackProgrammersNL:
     language: nl
     category: natural_language
-    short_description: NanoCQADupstackProgrammersNL retrieval task.
-    description: NanoCQADupstackProgrammersNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch duplicate-question retrieval for programmers Q&A.
+    description: A compact Dutch-translated CQADupStack Programmers split for duplicate question retrieval in community Q&A.
+    citation_keys:
+    - hoogeveen2015cqadupstack
+    - lotfi2025beirnl
+    references:
+    - *cqadupstack_reference
+    - *beirnl_reference
+    bibtex: *cqadupstack_nl_bibtex
   NanoCQADupstackStatsNL:
     language: nl
     category: natural_language
-    short_description: NanoCQADupstackStatsNL retrieval task.
-    description: NanoCQADupstackStatsNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch duplicate-question retrieval for statistics Q&A.
+    description: A compact Dutch-translated CQADupStack Stats split for duplicate question retrieval in community Q&A.
+    citation_keys:
+    - hoogeveen2015cqadupstack
+    - lotfi2025beirnl
+    references:
+    - *cqadupstack_reference
+    - *beirnl_reference
+    bibtex: *cqadupstack_nl_bibtex
   NanoCQADupstackTexNL:
     language: nl
     category: natural_language
-    short_description: NanoCQADupstackTexNL retrieval task.
-    description: NanoCQADupstackTexNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch duplicate-question retrieval for TeX Q&A.
+    description: A compact Dutch-translated CQADupStack TeX split for duplicate question retrieval in community Q&A.
+    citation_keys:
+    - hoogeveen2015cqadupstack
+    - lotfi2025beirnl
+    references:
+    - *cqadupstack_reference
+    - *beirnl_reference
+    bibtex: *cqadupstack_nl_bibtex
   NanoCQADupstackWebmastersNL:
     language: nl
     category: natural_language
-    short_description: NanoCQADupstackWebmastersNL retrieval task.
-    description: NanoCQADupstackWebmastersNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch duplicate-question retrieval for webmaster Q&A.
+    description: A compact Dutch-translated CQADupStack Webmasters split for duplicate question retrieval in community Q&A.
+    citation_keys:
+    - hoogeveen2015cqadupstack
+    - lotfi2025beirnl
+    references:
+    - *cqadupstack_reference
+    - *beirnl_reference
+    bibtex: *cqadupstack_nl_bibtex
   NanoCQADupstackWordpressNL:
     language: nl
     category: natural_language
-    short_description: NanoCQADupstackWordpressNL retrieval task.
-    description: NanoCQADupstackWordpressNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch duplicate-question retrieval for WordPress Q&A.
+    description: A compact Dutch-translated CQADupStack WordPress split for duplicate question retrieval in community Q&A.
+    citation_keys:
+    - hoogeveen2015cqadupstack
+    - lotfi2025beirnl
+    references:
+    - *cqadupstack_reference
+    - *beirnl_reference
+    bibtex: *cqadupstack_nl_bibtex
   NanoDutchNewsArticles:
     language: nl
     category: natural_language
-    short_description: NanoDutchNewsArticles retrieval task.
-    description: NanoDutchNewsArticles is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch news article retrieval from NOS titles.
+    description: A compact retrieval task built from Dutch NOS news articles, retrieving article content from titles.
+    citation_keys:
+    - scheijen2022dutchnewsarticles
+    references:
+    - title: Dutch News Articles
+      authors:
+      - Max Scheijen
+      year: 2022
+      url: https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: |
+      @misc{scheijen2022dutchnewsarticles,
+        title = {Dutch News Articles},
+        author = {Scheijen, Max},
+        year = {2022},
+        url = {https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles}
+      }
   NanoFEVERNL:
     language: nl
     category: natural_language
-    short_description: NanoFEVERNL retrieval task.
-    description: NanoFEVERNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch-translated FEVER evidence retrieval.
+    description: A compact Dutch-translated FEVER split for retrieving Wikipedia evidence for fact-verification claims.
+    citation_keys:
+    - thorne2018fever
+    - lotfi2025beirnl
+    references:
+    - &fever_reference
+      title: 'FEVER: a Large-scale Dataset for Fact Extraction and VERification'
+      authors:
+      - James Thorne
+      - Andreas Vlachos
+      - Christos Christodoulopoulos
+      - Arpit Mittal
+      year: 2018
+      url: https://aclanthology.org/N18-1074/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/N18-1074
+    - *beirnl_reference
+    bibtex: |
+      @inproceedings{thorne2018fever,
+        title = {{FEVER}: a Large-scale Dataset for Fact Extraction and {VER}ification},
+        author = {Thorne, James and Vlachos, Andreas and Christodoulopoulos, Christos and Mittal, Arpit},
+        booktitle = {Proceedings of NAACL-HLT},
+        year = {2018},
+        url = {https://aclanthology.org/N18-1074/},
+        doi = {10.18653/v1/N18-1074}
+      }
+
+      @inproceedings{lotfi2025beirnl,
+        title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch Language},
+        author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},
+        booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable Corpora},
+        year = {2025},
+        url = {https://aclanthology.org/2025.bucc-1.5/}
+      }
   NanoLegalQANL:
     language: nl
     category: natural_language
-    short_description: NanoLegalQANL retrieval task.
-    description: NanoLegalQANL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch legal QA attribution retrieval.
+    description: A compact retrieval task for Dutch legal question answering with attributions to relevant law articles.
+    citation_keys:
+    - redelaar2024attributed
+    references:
+    - title: Attributed Question Answering for Preconditions in the Dutch Law
+      authors:
+      - Felicia Redelaar
+      - Romy Van Drie
+      - Suzan Verberne
+      - Maaike De Boer
+      year: 2024
+      url: https://aclanthology.org/2024.nllp-1.12/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.nllp-1.12
+    bibtex: |
+      @inproceedings{redelaar2024attributed,
+        title = {Attributed Question Answering for Preconditions in the Dutch Law},
+        author = {Redelaar, Felicia and Van Drie, Romy and Verberne, Suzan and De Boer, Maaike},
+        booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2024},
+        year = {2024},
+        url = {https://aclanthology.org/2024.nllp-1.12/},
+        doi = {10.18653/v1/2024.nllp-1.12}
+      }
   NanoNQNL:
     language: nl
     category: natural_language
-    short_description: NanoNQNL retrieval task.
-    description: NanoNQNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch-translated Natural Questions retrieval.
+    description: A compact Dutch-translated Natural Questions split for retrieving Wikipedia passages that answer questions.
+    citation_keys:
+    - kwiatkowski2019natural
+    - lotfi2025beirnl
+    references:
+    - title: 'Natural Questions: a Benchmark for Question Answering Research'
+      authors:
+      - Tom Kwiatkowski
+      - Jennimaria Palomaki
+      - Olivia Redfield
+      - Michael Collins
+      - Ankur Parikh
+      - Chris Alberti
+      - Danielle Epstein
+      - Illia Polosukhin
+      - Jacob Devlin
+      - Kenton Lee
+      - Kristina Toutanova
+      - Llion Jones
+      - Matthew Kelcey
+      - Ming-Wei Chang
+      - Andrew M. Dai
+      - Jakob Uszkoreit
+      - Quoc Le
+      - Slav Petrov
+      year: 2019
+      url: https://aclanthology.org/Q19-1026/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00276
+    - *beirnl_reference
+    bibtex: |
+      @article{kwiatkowski2019natural,
+        title = {Natural Questions: a Benchmark for Question Answering Research},
+        author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and Toutanova, Kristina and Jones, Llion and Kelcey, Matthew and Chang, Ming-Wei and Dai, Andrew M. and Uszkoreit, Jakob and Le, Quoc and Petrov, Slav},
+        journal = {Transactions of the Association for Computational Linguistics},
+        year = {2019},
+        url = {https://aclanthology.org/Q19-1026/},
+        doi = {10.1162/tacl_a_00276}
+      }
+
+      @inproceedings{lotfi2025beirnl,
+        title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch Language},
+        author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},
+        booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable Corpora},
+        year = {2025},
+        url = {https://aclanthology.org/2025.bucc-1.5/}
+      }
   NanoOpenTender:
     language: nl
     category: natural_language
-    short_description: NanoOpenTender retrieval task.
-    description: NanoOpenTender is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch tender-call retrieval from titles.
+    description: A compact OpenTender retrieval task over Belgian and Dutch tender calls in Dutch.
+    citation_keys:
+    - banar2025mtebnl
+    references:
+    - *mtebnl_reference
+    bibtex: |
+      @misc{banar2025mtebnl,
+        title = {{MTEB-NL} and {E5-NL}: Embedding Benchmark and Models for Dutch},
+        author = {Banar, Nikolay and Lotfi, Ehsan and Van Nooten, Jens and Arhiliuc, Cristina and Kliocaite, Marija and Daelemans, Walter},
+        year = {2025},
+        url = {https://arxiv.org/abs/2509.12340},
+        doi = {10.48550/arXiv.2509.12340}
+      }
   NanoQuoraNL:
     language: nl
     category: natural_language
-    short_description: NanoQuoraNL retrieval task.
-    description: NanoQuoraNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch-translated duplicate Quora question retrieval.
+    description: A compact Dutch-translated Quora duplicate question retrieval task.
+    citation_keys:
+    - quora2017questionpairs
+    - lotfi2025beirnl
+    references:
+    - title: Quora Question Pairs
+      authors:
+      - Quora
+      year: 2017
+      url: https://www.kaggle.com/datasets/quora/question-pairs-dataset
+      is_paper: false
+      source_confidence: probably_correct
+    - *beirnl_reference
+    bibtex: |
+      @misc{quora2017questionpairs,
+        title = {Quora Question Pairs},
+        author = {{Quora}},
+        year = {2017},
+        url = {https://www.kaggle.com/datasets/quora/question-pairs-dataset}
+      }
+
+      @inproceedings{lotfi2025beirnl,
+        title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch Language},
+        author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},
+        booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable Corpora},
+        year = {2025},
+        url = {https://aclanthology.org/2025.bucc-1.5/}
+      }
   NanoVABB:
     language: nl
     category: natural_language
-    short_description: NanoVABB retrieval task.
-    description: NanoVABB is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Flemish academic bibliography abstract retrieval.
+    description: A compact retrieval task built from VABB-SHW edition 14, retrieving academic abstracts from titles.
+    citation_keys:
+    - aspeslagh2024vabb
+    references:
+    - title: 'VABB-SHW: Dataset of Flemish Academic Bibliography for the Social Sciences and Humanities (edition 14)'
+      authors:
+      - Pieter Aspeslagh
+      - Raf Guns
+      - Tim C. E. Engels
+      year: 2024
+      url: https://zenodo.org/records/14214806
+      is_paper: false
+      source_confidence: probably_correct
+      doi: 10.5281/zenodo.14214806
+    bibtex: |
+      @dataset{aspeslagh2024vabb,
+        title = {{VABB-SHW}: Dataset of Flemish Academic Bibliography for the Social Sciences and Humanities (edition 14)},
+        author = {Aspeslagh, Pieter and Guns, Raf and Engels, Tim C. E.},
+        publisher = {Zenodo},
+        year = {2024},
+        url = {https://zenodo.org/records/14214806},
+        doi = {10.5281/zenodo.14214806}
+      }
   NanoWebFAQNL:
     language: nl
     category: natural_language
-    short_description: NanoWebFAQNL retrieval task.
-    description: NanoWebFAQNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch WebFAQ question-answer retrieval.
+    description: A compact Dutch split of WebFAQ for retrieving FAQ answers from natural questions.
+    citation_keys:
+    - dinzinger2025webfaq
+    references:
+    - &webfaq_reference
+      title: 'WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval'
+      authors:
+      - Michael Dinzinger
+      - Laura Caspari
+      - Kanishka Ghosh Dastidar
+      - Jelena Mitrovic
+      - Michael Granitzer
+      year: 2025
+      url: https://arxiv.org/abs/2502.20936
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2502.20936
+    bibtex: |
+      @misc{dinzinger2025webfaq,
+        title = {{WebFAQ}: A Multilingual Collection of Natural {Q&A} Datasets for Dense Retrieval},
+        author = {Dinzinger, Michael and Caspari, Laura and Ghosh Dastidar, Kanishka and Mitrovic, Jelena and Granitzer, Michael},
+        year = {2025},
+        url = {https://arxiv.org/abs/2502.20936},
+        doi = {10.48550/arXiv.2502.20936}
+      }
   NanobBSARDNL:
     language: nl
     category: natural_language
-    short_description: NanobBSARDNL retrieval task.
-    description: NanobBSARDNL is a compact retrieval task included in NanoMTEB-Dutch.
+    short_description: Dutch statutory article retrieval from bBSARD.
+    description: A compact Dutch bBSARD split for retrieving Belgian statutory articles relevant to legal questions.
+    citation_keys:
+    - lotfi2025bbsard
+    references:
+    - title: 'Bilingual BSARD: Extending Statutory Article Retrieval to Dutch'
+      authors:
+      - Ehsan Lotfi
+      - Nikolay Banar
+      - Nerses Yuzbashyan
+      - Walter Daelemans
+      year: 2025
+      url: https://aclanthology.org/2025.regnlp-1.3/
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: |
+      @inproceedings{lotfi2025bbsard,
+        title = {Bilingual {BSARD}: Extending Statutory Article Retrieval to Dutch},
+        author = {Lotfi, Ehsan and Banar, Nikolay and Yuzbashyan, Nerses and Daelemans, Walter},
+        booktitle = {Proceedings of the 1st Regulatory NLP Workshop},
+        year = {2025},
+        url = {https://aclanthology.org/2025.regnlp-1.3/}
+      }
