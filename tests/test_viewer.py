@@ -5,6 +5,7 @@ import time
 from pathlib import Path
 
 import duckdb
+import pytest
 
 from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, create_app
 from hakari_bench.viewer.config import load_viewer_config
@@ -94,6 +95,58 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
     mnanobeir = config.benchmark_for_view("MNanoBEIR")
     assert mnanobeir is not None
     assert [group.name for group in mnanobeir.resolved_score_groups] == ["task_mean", "lang_mean"]
+
+
+def test_viewer_config_rejects_unknown_group_by(tmp_path: Path) -> None:
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: BenchA
+    score_groups:
+      - name: invalid
+        group_by: language
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+name: Overall
+label: Overall
+benchmarks:
+  - BenchA
+""".strip(),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="language"):
+        load_viewer_config(config_dir)
+
+
+def test_viewer_config_rejects_unknown_yaml_keys(tmp_path: Path) -> None:
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: BenchA
+    typo: true
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+name: Overall
+label: Overall
+benchmarks:
+  - BenchA
+""".strip(),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="typo"):
+        load_viewer_config(config_dir)
 
 
 def test_overall_leaderboard_requires_all_configured_benchmark_tasks(tmp_path: Path) -> None:

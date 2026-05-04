@@ -84,8 +84,8 @@ Main `benchmarks.yaml` fields:
 | `benchmark` | `task_results.benchmark` |
 | `task_name` | `task_results.task_name` |
 
-Unknown `group_by` values are treated like `task_name` by the current
-implementation.
+Unknown `group_by` values and unknown YAML keys are rejected at viewer config
+load time.
 
 ## Table Overview
 
