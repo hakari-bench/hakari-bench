@@ -15,6 +15,7 @@ from hakari_bench.bm25 import (
     collect_bm25_metadata,
     run_or_load_bm25_task,
 )
+from hakari_bench.cli_schema import BuildCandidatesParamsJson, EvaluateParamsJson
 from hakari_bench.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
 from hakari_bench.embedding_variants import (
     TORCH_RESCORE_SCORE_REPRESENTATION,
@@ -443,12 +444,7 @@ def _apply_evaluate_params_json(args: argparse.Namespace) -> None:
     raw = getattr(args, "params_json", None)
     if raw is None:
         return
-    payload = _parse_params_json(raw)
-    _reject_unknown_keys(
-        payload,
-        allowed={"model", "target", "runtime", "output", "prompts", "reranker", "sparse", "embedding", "bm25", "late_interaction"},
-        path="params",
-    )
+    payload = _parse_evaluate_params_json(raw)
     _apply_model_params(args, _params_section(payload, "model"))
     _apply_target_params(args, _params_section(payload, "target"))
     _apply_runtime_params(args, _params_section(payload, "runtime"))
@@ -465,21 +461,24 @@ def _apply_build_candidates_params_json(args: argparse.Namespace) -> None:
     raw = getattr(args, "params_json", None)
     if raw is None:
         return
-    payload = _parse_params_json(raw)
-    _reject_unknown_keys(payload, allowed={"target", "output", "bm25"}, path="params")
+    payload = _parse_build_candidates_params_json(raw)
     _apply_target_params(args, _params_section(payload, "target"))
     _apply_build_candidates_output_params(args, _params_section(payload, "output"))
     _apply_bm25_params(args, _params_section(payload, "bm25"))
 
 
-def _parse_params_json(raw: str) -> dict[str, Any]:
+def _parse_evaluate_params_json(raw: str) -> dict[str, Any]:
     try:
-        payload = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"--params-json must be valid JSON: {exc}") from exc
-    if not isinstance(payload, dict):
-        raise ValueError("--params-json must be a JSON object.")
-    return payload
+        return EvaluateParamsJson.model_validate_json(raw).model_dump(exclude_none=True)
+    except ValueError as exc:
+        raise ValueError(f"--params-json is invalid: {exc}") from exc
+
+
+def _parse_build_candidates_params_json(raw: str) -> dict[str, Any]:
+    try:
+        return BuildCandidatesParamsJson.model_validate_json(raw).model_dump(exclude_none=True)
+    except ValueError as exc:
+        raise ValueError(f"--params-json is invalid: {exc}") from exc
 
 
 def _params_section(payload: dict[str, Any], key: str) -> dict[str, Any]:

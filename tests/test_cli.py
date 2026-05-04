@@ -138,6 +138,38 @@ def test_parse_args_rejects_unknown_params_json_key() -> None:
         raise AssertionError("Expected unknown params JSON keys to be rejected.")
 
 
+def test_parse_args_rejects_unknown_nested_params_json_key() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "dense",
+                "--params-json",
+                '{"model":{"source":"hotchpotch/model"},"runtime":{"batch_size":16,"unknown":true}}',
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected unknown nested params JSON keys to be rejected.")
+
+
+def test_parse_args_rejects_invalid_params_json_values() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "dense",
+                "--params-json",
+                '{"model":{"source":"hotchpotch/model"},"runtime":{"dtype":"float16","batch_size":true}}',
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected invalid params JSON values to be rejected.")
+
+
 def test_parser_uses_hakari_bench_identity() -> None:
     parser = build_parser()
 
@@ -370,6 +402,22 @@ def test_parse_args_accepts_build_bm25_params_json() -> None:
     assert args.bm25_top_k == 50
     assert args.bm25_tokenizer == "wordseg"
     assert args.bm25_wordseg_language == "ja"
+
+
+def test_parse_args_rejects_build_bm25_output_results_dir_params_json() -> None:
+    try:
+        parse_args(
+            [
+                "build-candidates",
+                "bm25",
+                "--params-json",
+                json.dumps({"output": {"results_dir": "output/results"}}),
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected build-candidates params JSON to reject results_dir.")
 
 
 def test_parse_args_accepts_web_viewer_options() -> None:
