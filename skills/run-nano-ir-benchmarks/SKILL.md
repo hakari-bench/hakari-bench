@@ -27,15 +27,16 @@ For every specified model:
 - Investigate Matryoshka support. If the model card or paper documents supported dimensions, prefer simultaneous derived evaluations with `--embedding-variant truncate:DIM` over separate reruns.
 - For sparse/SPLADE-style models, use `--model-type sparse`. When evaluating
   sparsity trade-offs, prefer post-encode variants over separate reruns:
-  `--embedding-variant sparse-max-active-dims:256,128,64` for symmetric
-  query+document limits, or query/docs-specific variants when asymmetric
-  limits are requested.
+  `--embedding-variant truncate-sparse-query-max-dims:8,16,32` for query-only
+  limits and `--embedding-variant truncate-sparse-docs-max-dims:64,128,256`
+  for document-only limits.
 - For sparse models, query and document active dimensions can be varied
-  independently. Use `--embedding-variant sparse-query-max-active-dims:8,16,32`
-  for query-only limits, `--embedding-variant
-  sparse-docs-max-active-dims:64,128,256` for docs-only limits, and use
-  `--embedding-variant-cross sparse-query-max-active-dims:8,16,32
-  sparse-docs-max-active-dims:64,128,256` for a full query x docs grid.
+  independently. Use `--embedding-variant
+  truncate-sparse-query-max-dims:8,16,32` for query-only limits,
+  `--embedding-variant truncate-sparse-docs-max-dims:64,128,256` for
+  docs-only limits, and use `--embedding-variant-cross
+  truncate-sparse-query-max-dims:8,16,32
+  truncate-sparse-docs-max-dims:64,128,256` for a full query x docs grid.
   Base, query-only, docs-only, and query x docs comparisons require combining
   those standalone variants with the cross product.
 - Dense models automatically run normalized `int8` and binary quantized search variants and top-100 float-rescored variants when no embedding variants are explicitly specified. Quantized search uses exact PyTorch matrix scoring; `--score-device auto` keeps scoring on the model output device, and `--score-device cpu` or `--score-device cuda` forces the post-encode matrix work to that device. Use `--no-quantize` only when the user wants to suppress those automatic dense variants.
@@ -43,7 +44,7 @@ For every specified model:
 - Late-interaction/ColBERT runs use PyLate ColBERT and exact MaxSim scoring. Check model-specific query/document prefixes, sequence lengths, `--trust-remote-code`, and `--late-interaction-attend-to-expansion-tokens` before running.
 - For `jinaai/jina-colbert-v2`, the documented PyLate initialization uses `query_prefix="[QueryMarker]"`, `document_prefix="[DocumentMarker]"`, `attend_to_expansion_tokens=True`, and `trust_remote_code=True`. Use `--late-interaction-query-prefix "[QueryMarker]"`, `--late-interaction-document-prefix "[DocumentMarker]"`, `--late-interaction-attend-to-expansion-tokens`, and `--trust-remote-code` unless the current model card says otherwise.
 - For dense models, use `--embedding-variant int8,binary` and `--embedding-variant rescore:int8,binary` when quantized search variants must be listed explicitly. Quantized variants L2-normalize embeddings before quantization, convert them to SentenceTransformers-compatible stored codes, and score those codes with exact PyTorch matrix operations. Rescore reranks the top 100 quantized candidates with the normalized source float embeddings and does not re-embed documents.
-- Do not add quantized embedding variants for sparse/SPLADE-style models. Sparse quantization is intentionally unsupported in the CLI; use max-active-dimension variants for sparse footprint and latency trade-offs.
+- Do not add quantized embedding variants for sparse/SPLADE-style models. Sparse quantization is intentionally unsupported in the CLI; use post-encode sparse truncation variants for sparse footprint and latency trade-offs.
 - If Matryoshka dimensions are requested or documented, evaluate all three related groups: standalone dimensions, standalone quantized search, and the dimension x quantized search cross product. For example, use `--embedding-variant truncate:256,128,64`, `--embedding-variant int8,binary`, `--embedding-variant rescore:int8,binary`, `--embedding-variant-cross truncate:256,128,64 int8,binary`, and `--embedding-variant-cross truncate:256,128,64 rescore:int8,binary`. This is "all" because standalone dimensions isolate the dimension trade-off, standalone quantized search isolates the quantization trade-off at the original dimension, and the cross product measures combined trade-offs such as `128dim x int8` and `64dim x binary`, with and without top-100 float rescore.
 - Check whether `--trust-remote-code` is required.
 - Check the model's default maximum sequence length, but do not override it unless the user explicitly asks.
@@ -117,15 +118,15 @@ The benchmark implementation converts all of these derived evaluations into a
 single post-encode pipeline path, so the model is still encoded once and cross
 variants add only the transform/scoring work needed for each derived embedding.
 
-For sparse/SPLADE-style models, use sparse max-active-dimension variants instead
-of dense `truncate:` variants. Symmetric query+document sparsity limits:
+For sparse/SPLADE-style models, use post-encode sparse truncation variants
+instead of dense `truncate:` variants. Query-only sparsity limits:
 
 ```bash
 uv run nano-ir-bench evaluate \
   --model MODEL_NAME \
   --model-type sparse \
   --dataset DATASET_NAME \
-  --embedding-variant sparse-max-active-dims:256,128,64
+  --embedding-variant truncate-sparse-query-max-dims:8,16,32
 ```
 
 When query and document limits should differ, use query/docs-specific variants
@@ -136,9 +137,9 @@ uv run nano-ir-bench evaluate \
   --model MODEL_NAME \
   --model-type sparse \
   --dataset DATASET_NAME \
-  --embedding-variant sparse-query-max-active-dims:8,16,32 \
-  --embedding-variant sparse-docs-max-active-dims:64,128,256 \
-  --embedding-variant-cross sparse-query-max-active-dims:8,16,32 sparse-docs-max-active-dims:64,128,256
+  --embedding-variant truncate-sparse-query-max-dims:8,16,32 \
+  --embedding-variant truncate-sparse-docs-max-dims:64,128,256 \
+  --embedding-variant-cross truncate-sparse-query-max-dims:8,16,32 truncate-sparse-docs-max-dims:64,128,256
 ```
 
 If only the full query x docs grid is requested, the standalone query-only and
@@ -146,7 +147,7 @@ docs-only variants may be omitted. The base no-limit result is always included
 as `evaluation.embedding_evaluations[0]`.
 
 If the user asks for sparse quantization, explain that it is intentionally
-unsupported in the CLI and use sparse max-active-dimension comparisons instead.
+unsupported in the CLI and use sparse truncation comparisons instead.
 
 For BM25:
 

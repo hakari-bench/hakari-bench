@@ -71,11 +71,13 @@ uv run ty check
 - `sparse` uses SentenceTransformers `SparseEncoder`.
 - `reranker` uses SentenceTransformers `CrossEncoder` and requires a candidate
   subset such as `bm25`; `--rerank-top-n` limits the candidates to rerank.
-- `late-interaction` uses a minimal ColBERT-style AutoModel adapter that emits
-  token embeddings and scores them with MaxSim.
+- `late-interaction` uses PyLate ColBERT and scores query/document token
+  embeddings with exact MaxSim.
 - Default dtype is `bf16`. Keep `--dtype`, `--trust-remote-code`,
   `--flash-attn2`, `--attn-implementation`, `--device`,
-  `--model-max-seq-length`, and `--truncate-dim` explicit CLI options.
+  `--model-max-seq-length`, `--truncate-dim`,
+  `--truncate-sparse-query-max-dims`, and `--truncate-sparse-docs-max-dims`
+  explicit CLI options.
 - Do not shorten model max sequence length for benchmark runs just to avoid
   slow execution or memory pressure. Use the model's default/configured maximum
   length unless the user explicitly requests a different value. If memory errors

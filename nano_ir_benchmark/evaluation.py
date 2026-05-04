@@ -135,7 +135,8 @@ def evaluate_dense_task(
     query_task: str | None = None,
     corpus_task: str | None = None,
     truncate_dim: int | None = None,
-    sparse_max_active_dims: int | None = None,
+    truncate_sparse_query_max_dims: int | None = None,
+    truncate_sparse_docs_max_dims: int | None = None,
     embedding_variants: list[dict[str, Any]] | None = None,
     aggregate_metric: str = "ndcg@10",
     score_device: str = "auto",
@@ -164,7 +165,6 @@ def evaluate_dense_task(
         prompt_name=query_prompt_name,
         task=query_task,
         truncate_dim=truncate_dim,
-        sparse_max_active_dims=sparse_max_active_dims,
         prefer_tensor=prefer_tensor_embeddings,
         score_device=score_device,
     )
@@ -181,13 +181,22 @@ def evaluate_dense_task(
         prompt_name=corpus_prompt_name,
         task=corpus_task,
         truncate_dim=truncate_dim,
-        sparse_max_active_dims=sparse_max_active_dims,
         prefer_tensor=prefer_tensor_embeddings,
         score_device=score_device,
     )
     corpus_seconds = time.perf_counter() - corpus_start
     query_embeddings = _move_embeddings_for_score_device(query_embeddings, score_device=score_device)
     corpus_embeddings = _move_embeddings_for_score_device(corpus_embeddings, score_device=score_device)
+    base_postprocess_steps = _base_sparse_truncation_steps(
+        truncate_sparse_query_max_dims=truncate_sparse_query_max_dims,
+        truncate_sparse_docs_max_dims=truncate_sparse_docs_max_dims,
+    )
+    if base_postprocess_steps:
+        query_embeddings, corpus_embeddings = _apply_embedding_pipeline_pair(
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            steps=base_postprocess_steps,
+        )
 
     preferred_score_name = _score_name(getattr(model, "similarity_fn_name", "cosine"))
     base_scoring = _score_embedding_distances(
@@ -227,7 +236,7 @@ def evaluate_dense_task(
     embedding_evaluations = [
         _embedding_evaluation_payload(
             name="base",
-            transform={"type": "identity", "algorithm": "none", "parameters": {}},
+            transform=_postprocess_transform(base_postprocess_steps),
             embedding_dimensions=_embedding_dimensions(query_embeddings, corpus_embeddings),
             embedding_metadata=_embedding_metadata(query_embeddings, corpus_embeddings),
             scoring=base_scoring,
@@ -724,7 +733,6 @@ def _encode(
     prompt_name: str | None,
     task: str | None,
     truncate_dim: int | None,
-    sparse_max_active_dims: int | None,
     prefer_tensor: bool = False,
     score_device: str = "auto",
 ) -> Any:
@@ -751,14 +759,7 @@ def _encode(
             sparse_kwargs["save_to_cpu"] = score_device == "cpu" or (
                 score_device != "cuda" and not _model_prefers_tensor_scoring(model)
             )
-        if sparse_max_active_dims is not None:
-            if not _accepts_encode_parameter(encode_fn, "max_active_dims"):
-                raise ValueError("Sparse max active dims requires an encoder with max_active_dims support.")
-            sparse_kwargs["max_active_dims"] = sparse_max_active_dims
         return encode_fn(sentences, **sparse_kwargs, **kwargs)
-
-    if sparse_max_active_dims is not None:
-        raise ValueError("Sparse max active dims can only be used with sparse encoder outputs.")
 
     if prefer_tensor:
         try:
@@ -1212,6 +1213,33 @@ def _metric_score_name(*, distance: str, variant_name: str | None) -> str:
     return f"{distance}_{variant_name}"
 
 
+def _base_sparse_truncation_steps(
+    *,
+    truncate_sparse_query_max_dims: int | None,
+    truncate_sparse_docs_max_dims: int | None,
+) -> list[dict[str, Any]]:
+    steps: list[dict[str, Any]] = []
+    if truncate_sparse_query_max_dims is not None:
+        steps.append(_truncate_sparse_max_dims_step(max_dims=truncate_sparse_query_max_dims, target="query"))
+    if truncate_sparse_docs_max_dims is not None:
+        steps.append(_truncate_sparse_max_dims_step(max_dims=truncate_sparse_docs_max_dims, target="corpus"))
+    return steps
+
+
+def _truncate_sparse_max_dims_step(*, max_dims: int, target: str) -> dict[str, Any]:
+    return {
+        "type": "truncate_sparse_max_dims",
+        "algorithm": "top_abs_values_per_row",
+        "parameters": {"max_dims": int(max_dims), "target": target},
+    }
+
+
+def _postprocess_transform(steps: list[dict[str, Any]]) -> dict[str, Any]:
+    if not steps:
+        return {"type": "identity", "algorithm": "none", "parameters": {}}
+    return {"type": "pipeline", "steps": steps}
+
+
 def _apply_embedding_variant_pair(
     *,
     query_embeddings: Any,
@@ -1266,24 +1294,24 @@ def _apply_embedding_pipeline_step_pair(
         if algorithm != "l2":
             raise ValueError(f"Unsupported normalize algorithm: {algorithm}")
         return _normalize_embeddings(query_embeddings), _normalize_embeddings(corpus_embeddings)
-    if step_type == "sparse_max_active_dims":
-        max_active_dims = int(step.get("parameters", {}).get("max_active_dims"))
+    if step_type == "truncate_sparse_max_dims":
+        max_dims = int(step.get("parameters", {}).get("max_dims"))
         target = str(step.get("parameters", {}).get("target") or "query_and_corpus")
         if target == "query":
             return (
-                _limit_sparse_active_dims(query_embeddings, max_active_dims=max_active_dims),
+                _limit_sparse_active_dims(query_embeddings, max_active_dims=max_dims),
                 corpus_embeddings,
             )
         if target == "corpus":
             return (
                 query_embeddings,
-                _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_active_dims),
+                _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_dims),
             )
         if target != "query_and_corpus":
-            raise ValueError(f"Unsupported sparse max active dims target: {target}")
+            raise ValueError(f"Unsupported sparse truncation target: {target}")
         return (
-            _limit_sparse_active_dims(query_embeddings, max_active_dims=max_active_dims),
-            _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_active_dims),
+            _limit_sparse_active_dims(query_embeddings, max_active_dims=max_dims),
+            _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_dims),
         )
     if step_type == "quantize":
         parameters = step.get("parameters", {})
@@ -1353,9 +1381,9 @@ def _normalize_embeddings(embeddings: Any) -> Any:
 
 def _limit_sparse_active_dims(embeddings: Any, *, max_active_dims: int) -> Any:
     if max_active_dims <= 0:
-        raise ValueError("Sparse max active dims must be positive.")
+        raise ValueError("Sparse truncation max dims must be positive.")
     if not _is_sparse_embedding(embeddings):
-        raise ValueError("Sparse max active dims variants are only supported for sparse embeddings.")
+        raise ValueError("Sparse truncation variants are only supported for sparse embeddings.")
     if _is_torch_sparse_embedding(embeddings):
         return _limit_torch_sparse_active_dims(embeddings, max_active_dims=max_active_dims)
 

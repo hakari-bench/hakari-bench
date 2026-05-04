@@ -66,10 +66,16 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--model-max-seq-length", type=int, default=None)
     evaluate.add_argument("--truncate-dim", type=int, default=None)
     evaluate.add_argument(
-        "--sparse-max-active-dims",
+        "--truncate-sparse-query-max-dims",
         type=int,
         default=None,
-        help="Limit active sparse dimensions per embedding when using --model-type sparse.",
+        help="Post-encode truncate active sparse dimensions per query embedding.",
+    )
+    evaluate.add_argument(
+        "--truncate-sparse-docs-max-dims",
+        type=int,
+        default=None,
+        help="Post-encode truncate active sparse dimensions per document embedding.",
     )
     evaluate.add_argument(
         "--embedding-variant",
@@ -78,7 +84,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=[],
         help=(
             "Derived embedding evaluation spec. Repeat or comma-separate. "
-            "Current syntax: truncate:DIM, sparse-max-active-dims:DIM, "
+            "Current syntax: truncate:DIM, truncate-sparse-query-max-dims:DIM, "
+            "truncate-sparse-docs-max-dims:DIM, "
             "normalize, int8, binary, rescore:int8, rescore:binary, int8-rescore, "
             "or binary-rescore. "
             "Quantized variants are supported for dense models only. "
@@ -234,11 +241,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         delattr(args, "reranker_score_kwargs_json")
         if args.model_type != "reranker" and (args.cross_encoder_kwargs or args.reranker_score_kwargs):
             parser.error("--cross-encoder-kwargs-json and --reranker-score-kwargs-json require --model-type reranker.")
-    if args.command == "evaluate" and args.sparse_max_active_dims is not None:
-        if args.model_type != "sparse":
-            parser.error("--sparse-max-active-dims requires --model-type sparse.")
-        if args.sparse_max_active_dims <= 0:
-            parser.error("--sparse-max-active-dims must be positive.")
+    if args.command == "evaluate":
+        truncate_sparse_values = {
+            "--truncate-sparse-query-max-dims": args.truncate_sparse_query_max_dims,
+            "--truncate-sparse-docs-max-dims": args.truncate_sparse_docs_max_dims,
+        }
+        if any(value is not None for value in truncate_sparse_values.values()) and args.model_type != "sparse":
+            parser.error("Sparse truncation options require --model-type sparse.")
+        for option_name, value in truncate_sparse_values.items():
+            if value is not None and value <= 0:
+                parser.error(f"{option_name} must be positive.")
     if args.command == "evaluate" and args.rerank_top_n <= 0:
         parser.error("--rerank-top-n must be positive.")
     if args.command == "evaluate" and args.model_type == "late-interaction":

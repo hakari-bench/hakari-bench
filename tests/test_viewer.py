@@ -444,7 +444,7 @@ def test_variant_display_names_stay_unique_when_dimension_and_quantization_colli
                 10,
                 12,
                 8192,
-                "sparse_query_max_active_dims_8_sparse_docs_max_active_dims_64_quantize_int8_docs",
+                "truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_64_quantize_int8_docs",
                 768,
                 "int8",
             ),
@@ -463,7 +463,7 @@ def test_variant_display_names_stay_unique_when_dimension_and_quantization_colli
     assert [row.model_name for row in result.rows] == [
         "model/a (768 dims)",
         "model/a (768 dims, int8, quantize_int8_docs)",
-        "model/a (768 dims, int8, sparse_query_max_active_dims_8_sparse_docs_max_active_dims_64_quantize_int8_docs)",
+        "model/a (768 dims, int8, truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_64_quantize_int8_docs)",
         "model/b (512 dims)",
     ]
     assert all(row.borda_score >= 0.0 for row in result.rows)

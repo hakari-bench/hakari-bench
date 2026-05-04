@@ -33,11 +33,11 @@ def _normalize_step() -> dict[str, object]:
     return {"type": "normalize", "algorithm": "l2", "parameters": {}}
 
 
-def _sparse_max_active_dims_step(max_active_dims: int, *, target: str = "query_and_corpus") -> dict[str, object]:
+def _truncate_sparse_max_dims_step(max_dims: int, *, target: str = "query") -> dict[str, object]:
     return {
-        "type": "sparse_max_active_dims",
+        "type": "truncate_sparse_max_dims",
         "algorithm": "top_abs_values_per_row",
-        "parameters": {"max_active_dims": max_active_dims, "target": target},
+        "parameters": {"max_dims": max_dims, "target": target},
     }
 
 
@@ -939,7 +939,7 @@ def test_torch_sparse_rank_by_similarity_does_not_convert_to_scipy(monkeypatch) 
     assert rankings["q2"] == ["d2", "d1", "d3"]
 
 
-def test_torch_sparse_max_active_dims_does_not_convert_to_scipy(monkeypatch) -> None:
+def test_torch_sparse_truncation_does_not_convert_to_scipy(monkeypatch) -> None:
     def fail_to_scipy(embeddings):
         raise AssertionError(f"Unexpected SciPy conversion for {type(embeddings).__name__}")
 
@@ -1252,7 +1252,7 @@ def test_evaluate_dense_task_requests_sparse_tensor_output_for_sparse_encoder() 
     assert base["embedding_metadata"]["corpus"]["nnz_median"] == pytest.approx(1.0)
 
 
-def test_evaluate_dense_task_scores_sparse_max_active_dims_variants_without_extra_encoding() -> None:
+def test_evaluate_dense_task_scores_query_truncate_sparse_max_dims_variants_without_extra_encoding() -> None:
     model = FakeSentenceTransformersSparseModel()
 
     result = evaluate_dense_task(
@@ -1266,24 +1266,24 @@ def test_evaluate_dense_task_scores_sparse_max_active_dims_variants_without_extr
         corpus_prompt_name=None,
         truncate_dim=None,
         embedding_variants=[
-            _pipeline_variant("sparse_max_active_dims_1", _sparse_max_active_dims_step(1)),
+            _pipeline_variant("truncate_sparse_query_max_dims_1", _truncate_sparse_max_dims_step(1)),
         ],
     )
 
     assert len(model.query_calls) == 1
     assert len(model.document_calls) == 1
     variant = result.embedding_evaluations[1]
-    assert variant["name"] == "sparse_max_active_dims_1"
+    assert variant["name"] == "truncate_sparse_query_max_dims_1"
     assert variant["embedding_dimensions"] == {"dim": 4}
     assert variant["embedding_metadata"]["representation_type"] == "sparse"
     assert variant["embedding_metadata"]["query"]["nnz_total"] == 2
     assert variant["embedding_metadata"]["query"]["nnz_max"] == 1
-    assert variant["embedding_metadata"]["corpus"]["nnz_total"] == 3
-    assert variant["embedding_metadata"]["corpus"]["nnz_max"] == 1
-    assert "ToyData_test_dot_sparse_max_active_dims_1_ndcg@10" in variant["metrics"]
+    assert variant["embedding_metadata"]["corpus"]["nnz_total"] == 4
+    assert variant["embedding_metadata"]["corpus"]["nnz_max"] == 2
+    assert "ToyData_test_dot_truncate_sparse_query_max_dims_1_ndcg@10" in variant["metrics"]
 
 
-def test_evaluate_dense_task_scores_query_and_docs_sparse_max_active_dims_variants() -> None:
+def test_evaluate_dense_task_scores_query_and_docs_truncate_sparse_max_dims_variants() -> None:
     model = FakeSentenceTransformersSparseModel()
 
     result = evaluate_dense_task(
@@ -1298,9 +1298,9 @@ def test_evaluate_dense_task_scores_query_and_docs_sparse_max_active_dims_varian
         truncate_dim=None,
         embedding_variants=[
             _pipeline_variant(
-                "sparse_query_max_active_dims_1_sparse_docs_max_active_dims_1",
-                _sparse_max_active_dims_step(1, target="query"),
-                _sparse_max_active_dims_step(1, target="corpus"),
+                "truncate_sparse_query_max_dims_1_truncate_sparse_docs_max_dims_1",
+                _truncate_sparse_max_dims_step(1, target="query"),
+                _truncate_sparse_max_dims_step(1, target="corpus"),
             ),
         ],
     )
@@ -1308,7 +1308,7 @@ def test_evaluate_dense_task_scores_query_and_docs_sparse_max_active_dims_varian
     assert len(model.query_calls) == 1
     assert len(model.document_calls) == 1
     variant = result.embedding_evaluations[1]
-    assert variant["name"] == "sparse_query_max_active_dims_1_sparse_docs_max_active_dims_1"
+    assert variant["name"] == "truncate_sparse_query_max_dims_1_truncate_sparse_docs_max_dims_1"
     assert variant["embedding_metadata"]["query"]["nnz_total"] == 2
     assert variant["embedding_metadata"]["query"]["nnz_max"] == 1
     assert variant["embedding_metadata"]["corpus"]["nnz_total"] == 3
@@ -1335,10 +1335,10 @@ def test_evaluate_dense_task_rejects_quantized_sparse_embedding_variants_after_e
         )
 
 
-def test_evaluate_dense_task_passes_sparse_max_active_dims_to_sparse_encoder() -> None:
+def test_evaluate_dense_task_truncates_sparse_active_dims_after_encoding() -> None:
     model = FakeSentenceTransformersSparseModel()
 
-    evaluate_dense_task(
+    result = evaluate_dense_task(
         model=model,
         dataset=_toy_dataset(),
         batch_size=4,
@@ -1348,11 +1348,24 @@ def test_evaluate_dense_task_passes_sparse_max_active_dims_to_sparse_encoder() -
         query_prompt_name=None,
         corpus_prompt_name=None,
         truncate_dim=None,
-        sparse_max_active_dims=64,
+        truncate_sparse_query_max_dims=1,
+        truncate_sparse_docs_max_dims=1,
     )
 
-    assert model.query_calls[0]["max_active_dims"] == 64
-    assert model.document_calls[0]["max_active_dims"] == 64
+    assert model.query_calls[0]["max_active_dims"] is None
+    assert model.document_calls[0]["max_active_dims"] is None
+    base = result.embedding_evaluations[0]
+    assert base["transform"] == {
+        "type": "pipeline",
+        "steps": [
+            _truncate_sparse_max_dims_step(1, target="query"),
+            _truncate_sparse_max_dims_step(1, target="corpus"),
+        ],
+    }
+    assert base["embedding_metadata"]["query"]["nnz_total"] == 2
+    assert base["embedding_metadata"]["query"]["nnz_max"] == 1
+    assert base["embedding_metadata"]["corpus"]["nnz_total"] == 3
+    assert base["embedding_metadata"]["corpus"]["nnz_max"] == 1
 
 
 def test_evaluate_dense_task_keeps_sparse_encoder_outputs_on_device_for_cuda_models() -> None:
@@ -1862,7 +1875,8 @@ def test_run_or_load_task_records_score_device(tmp_path: Path) -> None:
         query_prompt_name=None,
         corpus_prompt_name=None,
         truncate_dim=None,
-        sparse_max_active_dims=None,
+        truncate_sparse_query_max_dims=None,
+        truncate_sparse_docs_max_dims=None,
         embedding_variants=[],
         candidate_subset_name="bm25",
         rerank_top_n=100,
@@ -1885,7 +1899,7 @@ def test_run_or_load_task_records_score_device(tmp_path: Path) -> None:
     assert "device" not in base_metadata["query"]
 
 
-def test_run_or_load_task_records_sparse_max_active_dims(tmp_path: Path) -> None:
+def test_run_or_load_task_records_truncate_sparse_max_dims(tmp_path: Path) -> None:
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
@@ -1898,11 +1912,13 @@ def test_run_or_load_task_records_sparse_max_active_dims(tmp_path: Path) -> None
         query_prompt_name=None,
         corpus_prompt_name=None,
         truncate_dim=None,
-        sparse_max_active_dims=64,
+        truncate_sparse_query_max_dims=32,
+        truncate_sparse_docs_max_dims=128,
         embedding_variants=[],
         candidate_subset_name="bm25",
         rerank_top_n=100,
         aggregate_metric="ndcg@10",
+        score_device="auto",
         override=False,
     )
     model = FakeSentenceTransformersSparseModel()
@@ -1916,9 +1932,16 @@ def test_run_or_load_task_records_sparse_max_active_dims(tmp_path: Path) -> None
         dataset_loader=lambda _: _toy_dataset(),
     )
 
-    assert model.query_calls[0]["max_active_dims"] == 64
-    assert model.document_calls[0]["max_active_dims"] == 64
-    assert result.payload["config"]["sparse_max_active_dims"] == 64
+    assert model.query_calls[0]["max_active_dims"] is None
+    assert model.document_calls[0]["max_active_dims"] is None
+    assert result.payload["config"]["truncate_sparse_query_max_dims"] == 32
+    assert result.payload["config"]["truncate_sparse_docs_max_dims"] == 128
+    assert result.payload["config"]["sparse_truncation"] == {
+        "algorithm": "top_abs_values_per_row",
+        "query_max_dims": 32,
+        "corpus_max_dims": 128,
+        "source": "post_encode_pipeline",
+    }
 
     all_payload = build_all_payload(
         args=args,
@@ -1926,8 +1949,16 @@ def test_run_or_load_task_records_sparse_max_active_dims(tmp_path: Path) -> None
         model_metadata={"name_or_path": "naver/splade-v3"},
         results=[result],
     )
-    assert all_payload["config"]["sparse_max_active_dims"] == 64
-    assert all_payload["splits"][0]["config"]["sparse_max_active_dims"] == 64
+    assert all_payload["config"]["truncate_sparse_query_max_dims"] == 32
+    assert all_payload["config"]["truncate_sparse_docs_max_dims"] == 128
+    assert all_payload["config"]["sparse_truncation"] == {
+        "algorithm": "top_abs_values_per_row",
+        "query_max_dims": 32,
+        "corpus_max_dims": 128,
+        "source": "post_encode_pipeline",
+    }
+    assert all_payload["splits"][0]["config"]["truncate_sparse_query_max_dims"] == 32
+    assert all_payload["splits"][0]["config"]["truncate_sparse_docs_max_dims"] == 128
 
 
 def test_build_all_payload_includes_split_and_total_durations(tmp_path: Path) -> None:
