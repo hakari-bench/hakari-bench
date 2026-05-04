@@ -243,6 +243,10 @@ def test_parse_args_accepts_prompt_and_reranker_options() -> None:
             "retrieval",
             "--corpus-prompt",
             "passage: ",
+            "--cross-encoder-kwargs-json",
+            '{"prompts":{"retrieval":"Retrieve relevant passages"},"default_prompt_name":"retrieval"}',
+            "--reranker-score-kwargs-json",
+            '{"prompt_name":"retrieval"}',
             "--rerank-top-n",
             "50",
         ]
@@ -253,7 +257,48 @@ def test_parse_args_accepts_prompt_and_reranker_options() -> None:
     assert args.query_task == "retrieval"
     assert args.corpus_task == "retrieval"
     assert args.corpus_prompt == "passage: "
+    assert args.cross_encoder_kwargs == {
+        "prompts": {"retrieval": "Retrieve relevant passages"},
+        "default_prompt_name": "retrieval",
+    }
+    assert args.reranker_score_kwargs == {"prompt_name": "retrieval"}
     assert args.rerank_top_n == 50
+
+
+def test_parse_args_rejects_cross_encoder_kwargs_for_dense_model() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "--model",
+                "hotchpotch/model",
+                "--cross-encoder-kwargs-json",
+                '{"default_prompt_name":"query"}',
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected cross encoder kwargs to require reranker model type.")
+
+
+def test_parse_args_rejects_non_positive_rerank_top_n() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "--model",
+                "hotchpotch/reranker",
+                "--model-type",
+                "reranker",
+                "--rerank-top-n",
+                "0",
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected --rerank-top-n 0 to be rejected.")
 
 
 def test_parse_args_accepts_sparse_max_active_dims_for_sparse_model() -> None:
@@ -668,10 +713,10 @@ def test_parse_args_does_not_mix_default_dataset_into_collection() -> None:
     assert args.collection == ["MNanoBEIR"]
 
 
-def test_load_dataset_for_args_uses_candidate_subset_for_bm25(monkeypatch) -> None:
+def test_load_dataset_for_args_uses_candidate_subset_for_candidate_aware_models(monkeypatch) -> None:
     from nano_ir_benchmark.cli import _load_dataset_for_args
 
-    calls: list[str | None] = []
+    calls: list[tuple[str, str | None]] = []
 
     def fake_load_ir_dataset(
         task: EvalTask,
@@ -681,7 +726,7 @@ def test_load_dataset_for_args_uses_candidate_subset_for_bm25(monkeypatch) -> No
     ) -> object:
         _ = task
         assert revision == "abc123"
-        calls.append(candidate_subset_name)
+        calls.append((current_model_type, candidate_subset_name))
         return object()
 
     monkeypatch.setattr("nano_ir_benchmark.cli.load_ir_dataset", fake_load_ir_dataset)
@@ -698,9 +743,16 @@ def test_load_dataset_for_args_uses_candidate_subset_for_bm25(monkeypatch) -> No
         task_name="test",
     )
 
-    _load_dataset_for_args(
-        argparse.Namespace(model_type="bm25", candidate_subset_name="bm25", dataset_revision="abc123"),
-        task,
-    )
+    for current_model_type in ["dense", "sparse", "late-interaction", "bm25", "reranker"]:
+        _load_dataset_for_args(
+            argparse.Namespace(model_type=current_model_type, candidate_subset_name="bm25", dataset_revision="abc123"),
+            task,
+        )
 
-    assert calls == ["bm25"]
+    assert calls == [
+        ("dense", "bm25"),
+        ("sparse", "bm25"),
+        ("late-interaction", "bm25"),
+        ("bm25", "bm25"),
+        ("reranker", "bm25"),
+    ]

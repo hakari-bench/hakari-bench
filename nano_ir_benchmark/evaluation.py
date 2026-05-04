@@ -36,6 +36,9 @@ class TaskEvaluation:
     timing: dict[str, float]
     embedding_conversion: dict[str, Any] = field(default_factory=dict)
     embedding_evaluations: list[dict[str, Any]] = field(default_factory=list)
+    rerank_metrics: dict[str, float] = field(default_factory=dict)
+    reranking_evaluations: list[dict[str, Any]] = field(default_factory=list)
+    rerank_aggregate_metric_value: float | None = None
 
 
 @dataclass(frozen=True)
@@ -134,6 +137,7 @@ def evaluate_dense_task(
     embedding_variants: list[dict[str, Any]] | None = None,
     aggregate_metric: str = "ndcg@10",
     score_device: str = "auto",
+    rerank_top_n: int = 100,
 ) -> TaskEvaluation:
     query_ids = list(dataset.queries)
     corpus_ids = list(dataset.corpus)
@@ -194,6 +198,8 @@ def evaluate_dense_task(
         preferred_score_name=preferred_score_name,
         variant_name=None,
         aggregate_metric=aggregate_metric,
+        candidates=dataset.candidates,
+        rerank_top_n=rerank_top_n,
     )
     score_seconds = float(base_scoring["score_seconds"])
     metric_seconds = float(base_scoring["metric_seconds"])
@@ -246,6 +252,8 @@ def evaluate_dense_task(
             preferred_score_name=preferred_score_name,
             variant_name=str(variant["name"]),
             aggregate_metric=aggregate_metric,
+            candidates=dataset.candidates,
+            rerank_top_n=rerank_top_n,
         )
         variant_score_elapsed = float(variant_scoring["score_seconds"])
         variant_score_seconds += variant_score_elapsed
@@ -272,6 +280,9 @@ def evaluate_dense_task(
 
     return TaskEvaluation(
         metrics=cast(dict[str, float], base_scoring["metrics"]),
+        rerank_metrics=cast(dict[str, float], base_scoring["rerank_metrics"]),
+        reranking_evaluations=[cast(dict[str, Any], base_scoring["reranking_evaluation"])],
+        rerank_aggregate_metric_value=cast(float | None, base_scoring["rerank_aggregate_metric_value"]),
         timing={
             "query_embedding_seconds": float(query_seconds),
             "corpus_embedding_seconds": float(corpus_seconds),
@@ -295,6 +306,8 @@ def evaluate_reranker_task(
     batch_size: int,
     show_progress: bool,
     rerank_top_n: int,
+    aggregate_metric: str = "ndcg@10",
+    score_kwargs: dict[str, Any] | None = None,
 ) -> TaskEvaluation:
     if dataset.candidates is None:
         raise ValueError("Reranker evaluation requires a candidate subset such as bm25.")
@@ -304,10 +317,15 @@ def evaluate_reranker_task(
     for query_id, query_text in dataset.queries.items():
         candidate_ids = [doc_id for doc_id in dataset.candidates.get(query_id, []) if doc_id in dataset.corpus]
         candidate_ids = candidate_ids[:rerank_top_n]
-        pairs = [(query_text, dataset.corpus[doc_id]) for doc_id in candidate_ids]
-        scores = _predict_scores(model, pairs=pairs, batch_size=batch_size, show_progress=show_progress)
-        ranked = sorted(zip(candidate_ids, scores), key=lambda item: (-float(item[1]), item[0]))
-        rankings[query_id] = [doc_id for doc_id, _score in ranked]
+        rankings[query_id] = _rank_with_reranker_model(
+            model,
+            query=query_text,
+            candidate_ids=candidate_ids,
+            documents=[dataset.corpus[doc_id] for doc_id in candidate_ids],
+            batch_size=batch_size,
+            show_progress=show_progress,
+            score_kwargs=score_kwargs or {},
+        )
     score_seconds = time.perf_counter() - score_start
 
     metric_start = time.perf_counter()
@@ -320,6 +338,22 @@ def evaluate_reranker_task(
     metric_seconds = time.perf_counter() - metric_start
     return TaskEvaluation(
         metrics=metrics,
+        rerank_metrics=metrics,
+        reranking_evaluations=[
+            {
+                "name": f"bm25_top_{rerank_top_n}",
+                "source": "dataset_candidate_subset",
+                "status": "available",
+                "rerank_top_n": int(rerank_top_n),
+                "aggregate_metric": aggregate_metric,
+                "aggregate_metric_value": _aggregate_metric_value_for(metrics, aggregate_metric),
+                "best_score": _aggregate_metric_value_for(metrics, aggregate_metric),
+                "best_distance": "reranker",
+                "best_score_name": "reranker",
+                "metrics": metrics,
+            }
+        ],
+        rerank_aggregate_metric_value=_aggregate_metric_value_for(metrics, aggregate_metric),
         timing={
             "query_embedding_seconds": 0.0,
             "corpus_embedding_seconds": 0.0,
@@ -480,13 +514,129 @@ def _embedding_conversion_payload(*, text_count: int, batch_size: int, seconds: 
     }
 
 
-def _predict_scores(model: Any, *, pairs: list[tuple[str, str]], batch_size: int, show_progress: bool) -> list[float]:
+def _rank_with_reranker_model(
+    model: Any,
+    *,
+    query: str,
+    candidate_ids: list[str],
+    documents: list[str],
+    batch_size: int,
+    show_progress: bool,
+    score_kwargs: dict[str, Any] | None = None,
+) -> list[str]:
+    if not candidate_ids:
+        return []
+    score_kwargs = score_kwargs or {}
+
+    rank_fn = getattr(model, "rank", None)
+    if callable(rank_fn):
+        raw_rankings = _call_with_supported_kwargs(
+            rank_fn,
+            query,
+            documents,
+            top_k=None,
+            return_documents=False,
+            batch_size=batch_size,
+            show_progress_bar=show_progress,
+            **score_kwargs,
+        )
+        parsed = _parse_rank_results(raw_rankings, candidate_ids=candidate_ids)
+        if parsed:
+            return parsed
+
+    pairs = [(query, document) for document in documents]
+    scores = _predict_scores(
+        model,
+        pairs=pairs,
+        batch_size=batch_size,
+        show_progress=show_progress,
+        score_kwargs=score_kwargs,
+    )
+    ranked = sorted(zip(candidate_ids, scores, strict=True), key=lambda item: (-float(item[1]), item[0]))
+    return [doc_id for doc_id, _score in ranked]
+
+
+def _parse_rank_results(raw_rankings: Any, *, candidate_ids: list[str]) -> list[str]:
+    if raw_rankings is None:
+        return []
+    parsed: list[tuple[str, float | None, int]] = []
+    for position, item in enumerate(list(raw_rankings)):
+        if isinstance(item, dict):
+            raw_corpus_id = item.get("corpus_id")
+            raw_score = item.get("score")
+        else:
+            raw_corpus_id = getattr(item, "corpus_id", None)
+            raw_score = getattr(item, "score", None)
+        doc_id = _candidate_id_from_rank_corpus_id(raw_corpus_id, candidate_ids=candidate_ids)
+        if doc_id is None:
+            continue
+        score = float(raw_score) if isinstance(raw_score, int | float) else None
+        parsed.append((doc_id, score, position))
+    if not parsed:
+        return []
+    if any(score is not None for _doc_id, score, _position in parsed):
+        parsed.sort(key=lambda item: (-(float("-inf") if item[1] is None else float(item[1])), item[0]))
+    else:
+        parsed.sort(key=lambda item: item[2])
+    return [doc_id for doc_id, _score, _position in parsed]
+
+
+def _candidate_id_from_rank_corpus_id(raw_corpus_id: Any, *, candidate_ids: list[str]) -> str | None:
+    if isinstance(raw_corpus_id, int):
+        return candidate_ids[raw_corpus_id] if 0 <= raw_corpus_id < len(candidate_ids) else None
+    if isinstance(raw_corpus_id, str):
+        if raw_corpus_id in candidate_ids:
+            return raw_corpus_id
+        if raw_corpus_id.isdigit():
+            index = int(raw_corpus_id)
+            return candidate_ids[index] if 0 <= index < len(candidate_ids) else None
+    return None
+
+
+def _predict_scores(
+    model: Any,
+    *,
+    pairs: list[tuple[str, str]],
+    batch_size: int,
+    show_progress: bool,
+    score_kwargs: dict[str, Any] | None = None,
+) -> list[float]:
     if not pairs:
         return []
-    raw_scores = model.predict(pairs, batch_size=batch_size, show_progress_bar=show_progress)
+    score_kwargs = score_kwargs or {}
+    predict_fn = getattr(model, "predict", None)
+    if callable(predict_fn):
+        raw_scores = _call_with_supported_kwargs(
+            predict_fn,
+            pairs,
+            batch_size=batch_size,
+            show_progress_bar=show_progress,
+            **score_kwargs,
+        )
+    elif callable(model):
+        raw_scores = _call_with_supported_kwargs(
+            model,
+            pairs,
+            batch_size=batch_size,
+            show_progress_bar=show_progress,
+            **score_kwargs,
+        )
+    else:
+        raise ValueError("Reranker model must expose rank, predict, or be callable.")
     if isinstance(raw_scores, torch.Tensor):
         raw_scores = raw_scores.detach().cpu().float().numpy()
     return [float(score) for score in np.asarray(raw_scores).reshape(-1).tolist()]
+
+
+def _call_with_supported_kwargs(fn: Any, *args: Any, **kwargs: Any) -> Any:
+    try:
+        signature = inspect.signature(fn)
+    except (TypeError, ValueError):
+        return fn(*args, **kwargs)
+    if any(parameter.kind is inspect.Parameter.VAR_KEYWORD for parameter in signature.parameters.values()):
+        return fn(*args, **kwargs)
+    supported_kwargs = {key: value for key, value in kwargs.items() if key in signature.parameters}
+    return fn(*args, **supported_kwargs)
 
 
 def _embedding_evaluation_payload(
@@ -514,6 +664,8 @@ def _embedding_evaluation_payload(
     }
     if embedding_metadata is not None:
         payload["embedding_metadata"] = embedding_metadata
+    if "reranking_evaluation" in scoring:
+        payload["reranking_evaluation"] = scoring["reranking_evaluation"]
     return payload
 
 
@@ -536,8 +688,12 @@ def _score_embedding_distances(
     preferred_score_name: str,
     variant_name: str | None,
     aggregate_metric: str,
+    candidates: dict[str, list[str]] | None = None,
+    rerank_top_n: int = 100,
 ) -> dict[str, Any]:
     distance_evaluations: list[dict[str, Any]] = []
+    rerank_distance_evaluations: list[dict[str, Any]] = []
+    rerank_metrics_by_distance: list[dict[str, float]] = []
     score_seconds = 0.0
     metric_seconds = 0.0
     for distance in _distance_names(preferred_score_name):
@@ -564,6 +720,40 @@ def _score_embedding_distances(
         metric_elapsed = time.perf_counter() - metric_start
         metric_seconds += metric_elapsed
 
+        if candidates is not None:
+            rerank_score_name = f"{metric_score_name}_bm25_top{rerank_top_n}_rerank"
+            rerank_metric_start = time.perf_counter()
+            rerank_rankings = _filter_rankings_to_candidate_prefix(
+                rankings=rankings,
+                candidates=candidates,
+                corpus_ids=corpus_ids,
+                rerank_top_n=rerank_top_n,
+            )
+            rerank_metrics = compute_ir_metrics(
+                rankings=rerank_rankings,
+                qrels=qrels,
+                evaluator_name=evaluator_name,
+                score_name=rerank_score_name,
+            )
+            rerank_metric_elapsed = time.perf_counter() - rerank_metric_start
+            metric_seconds += rerank_metric_elapsed
+            rerank_aggregate_metric_value = _aggregate_metric_value_for(rerank_metrics, aggregate_metric)
+            rerank_distance_evaluations.append(
+                {
+                    "distance": distance,
+                    "score_name": rerank_score_name,
+                    "aggregate_metric": aggregate_metric,
+                    "aggregate_metric_value": rerank_aggregate_metric_value,
+                    "metrics": rerank_metrics,
+                    "timing": {
+                        "score_and_topk_seconds": 0.0,
+                        "metric_compute_seconds": float(rerank_metric_elapsed),
+                        "pure_compute_seconds": float(rerank_metric_elapsed),
+                    },
+                }
+            )
+            rerank_metrics_by_distance.append(rerank_metrics)
+
         aggregate_metric_value = _aggregate_metric_value_for(metrics, aggregate_metric)
         distance_evaluations.append(
             {
@@ -581,6 +771,11 @@ def _score_embedding_distances(
         )
 
     best = max(distance_evaluations, key=lambda item: float(item["aggregate_metric_value"]))
+    reranking_evaluation = _candidate_reranking_evaluation(
+        rerank_distance_evaluations,
+        rerank_top_n=rerank_top_n,
+        aggregate_metric=aggregate_metric,
+    )
     return {
         "distance_evaluations": distance_evaluations,
         "metrics": best["metrics"],
@@ -588,9 +783,70 @@ def _score_embedding_distances(
         "best_score": best["aggregate_metric_value"],
         "best_distance": best["distance"],
         "best_score_name": best["score_name"],
+        "rerank_metrics": _merge_metric_dicts(rerank_metrics_by_distance),
+        "rerank_aggregate_metric_value": reranking_evaluation.get("aggregate_metric_value"),
+        "reranking_evaluation": reranking_evaluation,
         "score_seconds": score_seconds,
         "metric_seconds": metric_seconds,
     }
+
+
+def _filter_rankings_to_candidate_prefix(
+    *,
+    rankings: dict[str, list[str]],
+    candidates: dict[str, list[str]],
+    corpus_ids: list[str],
+    rerank_top_n: int,
+) -> dict[str, list[str]]:
+    corpus_id_set = set(corpus_ids)
+    filtered: dict[str, list[str]] = {}
+    for query_id, ranking in rankings.items():
+        candidate_ids = [
+            doc_id
+            for doc_id in candidates.get(query_id, [])
+            if doc_id in corpus_id_set
+        ][:rerank_top_n]
+        candidate_set = set(candidate_ids)
+        filtered[query_id] = [doc_id for doc_id in ranking if doc_id in candidate_set]
+    return filtered
+
+
+def _candidate_reranking_evaluation(
+    distance_evaluations: list[dict[str, Any]],
+    *,
+    rerank_top_n: int,
+    aggregate_metric: str,
+) -> dict[str, Any]:
+    name = f"bm25_top_{rerank_top_n}"
+    if not distance_evaluations:
+        return {
+            "name": name,
+            "source": "dataset_candidate_subset",
+            "status": "skipped",
+            "reason": "candidate_subset_unavailable",
+            "rerank_top_n": int(rerank_top_n),
+        }
+    best = max(distance_evaluations, key=lambda item: float(item["aggregate_metric_value"]))
+    return {
+        "name": name,
+        "source": "dataset_candidate_subset",
+        "status": "available",
+        "rerank_top_n": int(rerank_top_n),
+        "aggregate_metric": aggregate_metric,
+        "aggregate_metric_value": best["aggregate_metric_value"],
+        "best_score": best["aggregate_metric_value"],
+        "best_distance": best["distance"],
+        "best_score_name": best["score_name"],
+        "distance_evaluations": distance_evaluations,
+        "metrics": best["metrics"],
+    }
+
+
+def _merge_metric_dicts(metrics_by_distance: list[dict[str, float]]) -> dict[str, float]:
+    merged: dict[str, float] = {}
+    for metrics in metrics_by_distance:
+        merged.update(metrics)
+    return merged
 
 
 def _distance_names(preferred_score_name: str) -> list[str]:

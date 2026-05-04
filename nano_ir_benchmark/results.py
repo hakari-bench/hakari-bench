@@ -32,6 +32,8 @@ TIMING_KEYS = [
 AGGREGATED_CONFIG_KEYS = [
     "batch_size",
     "aggregate_metric",
+    "candidate_subset_name",
+    "rerank_top_n",
     "query_prompt",
     "corpus_prompt",
     "query_prompt_name",
@@ -141,6 +143,8 @@ def run_or_load_task(
             batch_size=args.batch_size,
             show_progress=args.show_progress,
             rerank_top_n=args.rerank_top_n,
+            aggregate_metric=args.aggregate_metric,
+            score_kwargs=getattr(args, "reranker_score_kwargs", {}),
         )
     else:
         evaluation = evaluate_dense_task(
@@ -159,6 +163,7 @@ def run_or_load_task(
             embedding_variants=getattr(args, "embedding_variants", []),
             aggregate_metric=args.aggregate_metric,
             score_device=getattr(args, "score_device", "auto"),
+            rerank_top_n=args.rerank_top_n,
         )
     elapsed = time.perf_counter() - start
     finished_at = datetime.now(timezone.utc)
@@ -199,9 +204,19 @@ def run_or_load_task(
             "sparse_max_active_dims": getattr(args, "sparse_max_active_dims", None),
             "score_device": getattr(args, "score_device", "auto"),
             "embedding_variants": getattr(args, "embedding_variants", []),
+            "cross_encoder_kwargs": getattr(args, "cross_encoder_kwargs", {})
+            if args.model_type == "reranker"
+            else {},
+            "reranker_score_kwargs": getattr(args, "reranker_score_kwargs", {})
+            if args.model_type == "reranker"
+            else {},
             "dataset_revision": getattr(args, "dataset_revision", None),
-            "candidate_subset_name": args.candidate_subset_name if args.model_type in {"bm25", "reranker"} else None,
-            "rerank_top_n": args.rerank_top_n if args.model_type == "reranker" else None,
+            "candidate_subset_name": args.candidate_subset_name
+            if args.model_type in {"dense", "sparse", "late-interaction", "bm25", "reranker"}
+            else None,
+            "rerank_top_n": args.rerank_top_n
+            if args.model_type in {"dense", "sparse", "late-interaction", "reranker"}
+            else None,
             "bm25": bm25_payload,
         },
         "evaluation": {
@@ -220,8 +235,11 @@ def run_or_load_task(
             "timing": evaluation.timing,
             "embedding_conversion": evaluation.embedding_conversion,
             "embedding_evaluations": evaluation.embedding_evaluations,
+            "rerank_aggregate_metric_value": evaluation.rerank_aggregate_metric_value,
+            "reranking_evaluations": evaluation.reranking_evaluations,
         },
         "metrics": evaluation.metrics,
+        "rerank_metrics": evaluation.rerank_metrics,
     }
     _write_json(output_path, payload)
     return TaskRunResult(task=task, cache_hit=False, output_path=output_path, payload=payload)
@@ -246,6 +264,7 @@ def build_all_payload(
     run_wall_seconds: float | None = None,
 ) -> dict[str, Any]:
     aggregate_values: list[float] = []
+    rerank_aggregate_values: list[float] = []
     timing_all = {key: 0.0 for key in TIMING_KEYS}
     timing_this_run = {key: 0.0 for key in TIMING_KEYS}
     dataset_load_seconds_all = 0.0
@@ -262,6 +281,9 @@ def build_all_payload(
         aggregate_value = evaluation.get("aggregate_metric_value")
         if isinstance(aggregate_value, int | float):
             aggregate_values.append(float(aggregate_value))
+        rerank_aggregate_value = evaluation.get("rerank_aggregate_metric_value")
+        if isinstance(rerank_aggregate_value, int | float):
+            rerank_aggregate_values.append(float(rerank_aggregate_value))
         timing = evaluation.get("timing", {})
         if isinstance(timing, dict):
             for key in TIMING_KEYS:
@@ -306,9 +328,11 @@ def build_all_payload(
                 "wall_seconds": wall_seconds,
                 "aggregate_metric": evaluation.get("aggregate_metric"),
                 "aggregate_metric_value": aggregate_value,
+                "rerank_aggregate_metric_value": rerank_aggregate_value,
                 "config": _summarize_split_config(result.payload.get("config")),
                 "embedding_conversion": evaluation.get("embedding_conversion"),
                 "embedding_evaluations": _summarize_embedding_evaluations(evaluation.get("embedding_evaluations")),
+                "reranking_evaluations": _summarize_reranking_evaluations(evaluation.get("reranking_evaluations")),
                 "bm25": result.payload.get("config", {}).get("bm25"),
             }
         )
@@ -335,6 +359,9 @@ def build_all_payload(
             "cache_hit_count": sum(1 for result in results if result.cache_hit),
             "evaluated_count": sum(1 for result in results if not result.cache_hit),
             "aggregate_metric_mean": float(np.mean(aggregate_values)) if aggregate_values else None,
+            "rerank_aggregate_metric_mean": float(np.mean(rerank_aggregate_values))
+            if rerank_aggregate_values
+            else None,
             "dataset_load_seconds_this_run": dataset_load_seconds_this_run,
             "dataset_load_seconds_all_splits": dataset_load_seconds_all,
             "duration_seconds_excluding_dataset_load_this_run": duration_excluding_load_this_run,
@@ -388,6 +415,14 @@ def _aggregate_split_configs(*, args: Any, results: list[TaskRunResult]) -> dict
             summaries["sparse_max_active_dims"],
             getattr(args, "sparse_max_active_dims", None),
         ),
+        "candidate_subset_name": _representative_config_value(
+            summaries["candidate_subset_name"],
+            getattr(args, "candidate_subset_name", None),
+        ),
+        "rerank_top_n": _representative_config_value(
+            summaries["rerank_top_n"],
+            getattr(args, "rerank_top_n", None),
+        ),
         "prompt_summary": {key: summaries[key] for key in PROMPT_CONFIG_KEYS},
     }
     for key in PROMPT_CONFIG_KEYS:
@@ -437,9 +472,39 @@ def _summarize_embedding_evaluations(value: Any) -> list[dict[str, Any]]:
                 "best_distance": item.get("best_distance"),
                 "best_score_name": item.get("best_score_name"),
                 "distance_evaluations": _summarize_distance_evaluations(item.get("distance_evaluations")),
+                "reranking_evaluation": _summarize_reranking_evaluation(item.get("reranking_evaluation")),
             }
         )
     return summaries
+
+
+def _summarize_reranking_evaluations(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    summaries: list[dict[str, Any]] = []
+    for item in value:
+        summary = _summarize_reranking_evaluation(item)
+        if summary:
+            summaries.append(summary)
+    return summaries
+
+
+def _summarize_reranking_evaluation(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        return {}
+    return {
+        "name": value.get("name"),
+        "source": value.get("source"),
+        "status": value.get("status"),
+        "reason": value.get("reason"),
+        "rerank_top_n": value.get("rerank_top_n"),
+        "aggregate_metric": value.get("aggregate_metric"),
+        "aggregate_metric_value": value.get("aggregate_metric_value"),
+        "best_score": value.get("best_score"),
+        "best_distance": value.get("best_distance"),
+        "best_score_name": value.get("best_score_name"),
+        "distance_evaluations": _summarize_distance_evaluations(value.get("distance_evaluations")),
+    }
 
 
 def _summarize_distance_evaluations(value: Any) -> list[dict[str, Any]]:
