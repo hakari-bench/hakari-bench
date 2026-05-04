@@ -18,7 +18,8 @@ Build the DuckDB database from benchmark JSON output:
 uv run python scripts/build_results_database_and_report.py \
   --results-dir output/results \
   --duckdb-path output/results/hakari_bench.duckdb \
-  --html-output output/results/report.html
+  --html-output output/results/report.html \
+  --parquet-output-dir output/results/parquet
 ```
 
 The input files are:
@@ -33,6 +34,12 @@ The input files are:
 `evaluation.embedding_evaluations` are stored as additional variant rows.
 Run-level rows in `runs` are derived from these task JSON files; no aggregate
 JSON file is required.
+
+When `--parquet-output-dir` is provided, the generator also writes Parquet
+snapshots for the canonical tables: `runs`, `task_results`, `metrics_long`,
+`model_scores`, and `borda_task_scores`. These files are intended for notebooks,
+ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
+not need the mutable DuckDB database file.
 
 Start the web viewer with:
 

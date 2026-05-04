@@ -40,6 +40,7 @@ TARGET_BENCHMARKS = [
     "NanoBuiltBench",
 ]
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
+WAREHOUSE_TABLES = ("runs", "task_results", "metrics_long", "model_scores", "borda_task_scores")
 
 
 @dataclass(frozen=True)
@@ -80,12 +81,20 @@ def main() -> None:
     parser.add_argument("--results-dir", type=Path, default=Path("output/results"))
     parser.add_argument("--duckdb-path", type=Path, default=Path("output/results/hakari_bench.duckdb"))
     parser.add_argument("--html-output", type=Path, required=True)
+    parser.add_argument(
+        "--parquet-output-dir",
+        type=Path,
+        default=None,
+        help="Optional directory for Parquet snapshots of the canonical DuckDB tables.",
+    )
     args = parser.parse_args()
 
     rows, runs, metric_rows = load_results(args.results_dir)
     base_rows = [row for row in rows if row.embedding_variant_name is None]
     standings, borda_rows = compute_standings(base_rows)
     write_duckdb(args.duckdb_path, runs=runs, rows=rows, metric_rows=metric_rows, standings=standings, borda_rows=borda_rows)
+    if args.parquet_output_dir is not None:
+        export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
     write_html(args.html_output, duckdb_path=args.duckdb_path, rows=base_rows, runs=runs, standings=standings)
 
 
@@ -693,6 +702,19 @@ def write_duckdb(
                 for row in borda_rows
             ],
         )
+    finally:
+        con.close()
+
+
+def export_duckdb_tables_to_parquet(db_path: Path, output_dir: Path) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        for table in WAREHOUSE_TABLES:
+            output_path = output_dir / f"{table}.parquet"
+            if output_path.exists():
+                output_path.unlink()
+            con.execute(f"COPY (SELECT * FROM {table}) TO ? (FORMAT PARQUET)", [str(output_path)])
     finally:
         con.close()
 
