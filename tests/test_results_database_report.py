@@ -35,7 +35,7 @@ def test_nanocmteb_is_a_ranked_benchmark() -> None:
 
 def test_load_results_reads_task_json_not_only_all_json(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
-    task_path = model_dir / "hotchpotch__NanoJMTEB" / "NanoJaCWIR.json"
+    task_path = model_dir / "hakari-bench__NanoJMTEB" / "NanoJaCWIR.json"
     task_path.parent.mkdir(parents=True)
     task_path.write_text(
         json.dumps(
@@ -107,7 +107,7 @@ def test_render_html_includes_total_parameters_column() -> None:
 
 def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
-    task_path = model_dir / "hotchpotch__NanoJMTEB" / "NanoJaCWIR.json"
+    task_path = model_dir / "hakari-bench__NanoJMTEB" / "NanoJaCWIR.json"
     task_path.parent.mkdir(parents=True)
     task_path.write_text(
         json.dumps(
@@ -116,7 +116,7 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
                 "environment": {"package_versions": {}},
                 "target": {
                     "dataset_name": "NanoJMTEB",
-                    "dataset_id": "hotchpotch/NanoJMTEB",
+                    "dataset_id": "hakari-bench/NanoJMTEB",
                     "split_name": "NanoJaCWIR",
                     "task_name": "NanoJaCWIR",
                 },
@@ -164,7 +164,7 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
 
 def test_load_results_canonicalizes_legacy_nanojmteb_task_names(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
-    task_dir = model_dir / "hotchpotch__NanoJMTEB"
+    task_dir = model_dir / "hakari-bench__NanoJMTEB"
     task_dir.mkdir(parents=True)
     _write_task_json(task_dir / "NanoJaMIRACL.json", task_name="NanoJaMIRACL", score=0.10)
     _write_task_json(task_dir / "NanoMIRACL.json", task_name="NanoMIRACL", score=0.90)
