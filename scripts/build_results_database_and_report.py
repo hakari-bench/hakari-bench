@@ -233,7 +233,6 @@ def _accumulate_run(
         {
             "model_dir": model_dir,
             "model_name": model_name,
-            "all_json_path": None,
             "generated_at_utc": None,
             "started_at_values": [],
             "finished_at_values": [],
@@ -276,7 +275,6 @@ def _runs_from_task_results(accumulators: dict[str, dict[str, Any]]) -> list[dic
             {
                 "model_dir": item["model_dir"],
                 "model_name": item["model_name"],
-                "all_json_path": item["all_json_path"],
                 "generated_at_utc": item["generated_at_utc"],
                 "started_at_utc": min(item["started_at_values"]) if item["started_at_values"] else None,
                 "finished_at_utc": max(item["finished_at_values"]) if item["finished_at_values"] else None,
@@ -524,7 +522,7 @@ def write_duckdb(
         con.execute(
             """
             CREATE TABLE runs (
-                model_dir VARCHAR, model_name VARCHAR, all_json_path VARCHAR,
+                model_dir VARCHAR, model_name VARCHAR,
                 generated_at_utc VARCHAR, started_at_utc VARCHAR, finished_at_utc VARCHAR,
                 target_count INTEGER, split_count INTEGER, cache_hit_count INTEGER, evaluated_count INTEGER,
                 aggregate_metric_mean DOUBLE, active_parameters BIGINT, total_parameters BIGINT,
@@ -534,12 +532,11 @@ def write_duckdb(
             """
         )
         con.executemany(
-            "INSERT INTO runs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO runs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 (
                     item.get("model_dir"),
                     item.get("model_name"),
-                    item.get("all_json_path"),
                     item.get("generated_at_utc"),
                     item.get("started_at_utc"),
                     item.get("finished_at_utc"),

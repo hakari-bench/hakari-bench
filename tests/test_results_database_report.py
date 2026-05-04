@@ -33,7 +33,7 @@ def test_nanocmteb_is_a_ranked_benchmark() -> None:
     assert report.benchmark_name("hakari-bench/NanoCMTEB", "NanoCMTEB") == "NanoCMTEB"
 
 
-def test_load_results_reads_task_json_without_aggregate_file(tmp_path: Path) -> None:
+def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
     task_path = model_dir / "hakari-bench__NanoJMTEB" / "NanoJaCWIR.json"
     task_path.parent.mkdir(parents=True)
@@ -88,7 +88,7 @@ def test_load_results_reads_task_json_without_aggregate_file(tmp_path: Path) -> 
     assert len(metric_rows) == 1
 
 
-def test_load_results_builds_runs_from_task_json_without_all_json(tmp_path: Path) -> None:
+def test_load_results_builds_runs_from_task_json(tmp_path: Path) -> None:
     task_dir = tmp_path / "local__model_A" / "hakari-bench__NanoJMTEB"
     task_dir.mkdir(parents=True)
     (task_dir / "NanoJaCWIR.json").write_text(
@@ -135,7 +135,6 @@ def test_load_results_builds_runs_from_task_json_without_all_json(tmp_path: Path
         {
             "model_dir": "local__model_A",
             "model_name": "local/model_A",
-            "all_json_path": None,
             "generated_at_utc": "2026-05-04T00:00:00+00:00",
             "started_at_utc": "2026-05-04T00:00:01+00:00",
             "finished_at_utc": "2026-05-04T00:00:03+00:00",
@@ -290,6 +289,27 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
 
     con = duckdb.connect(str(db_path))
     try:
+        run_columns = [row[1] for row in con.execute("PRAGMA table_info('runs')").fetchall()]
+        assert run_columns == [
+            "model_dir",
+            "model_name",
+            "generated_at_utc",
+            "started_at_utc",
+            "finished_at_utc",
+            "target_count",
+            "split_count",
+            "cache_hit_count",
+            "evaluated_count",
+            "aggregate_metric_mean",
+            "active_parameters",
+            "total_parameters",
+            "max_seq_length",
+            "dtype",
+            "attn_implementation",
+            "torch_version",
+            "transformers_version",
+            "sentence_transformers_version",
+        ]
         assert con.execute("SELECT dataset_revision, dataset_revision_requested FROM task_results").fetchone() == (
             "dataset-sha",
             "main",

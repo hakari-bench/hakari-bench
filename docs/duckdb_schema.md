@@ -130,7 +130,6 @@ completeness displays.
 | --- | --- | --- |
 | `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
 | `model_name` | `VARCHAR` | `model.id` from task JSON, or `model_dir` when absent. |
-| `all_json_path` | `VARCHAR` | Always `NULL`; retained only as a nullable schema column. |
 | `generated_at_utc` | `VARCHAR` | Latest task JSON generation time for the model. |
 | `started_at_utc` | `VARCHAR` | Earliest task evaluation start time for the model. |
 | `finished_at_utc` | `VARCHAR` | Latest task evaluation finish time for the model. |
@@ -811,7 +810,6 @@ Task rows already contain enough metadata for most leaderboard tables. Use
 ```sql
 SELECT
   model_name,
-  all_json_path,
   generated_at_utc,
   started_at_utc,
   finished_at_utc,

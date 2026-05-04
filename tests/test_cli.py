@@ -941,7 +941,7 @@ def test_load_dataset_for_args_uses_candidate_subset_for_candidate_aware_models(
     ]
 
 
-def test_run_evaluate_does_not_write_all_json(monkeypatch, tmp_path) -> None:
+def test_run_evaluate_returns_run_summary_payload(monkeypatch, tmp_path) -> None:
     from hakari_bench.cli import run_evaluate
 
     task = EvalTask(
@@ -986,12 +986,13 @@ def test_run_evaluate_does_not_write_all_json(monkeypatch, tmp_path) -> None:
 
     monkeypatch.setattr("hakari_bench.cli.run_or_load_task", fake_run_or_load_task)
 
-    run_evaluate(args)
+    summary = run_evaluate(args)
 
-    assert not (tmp_path / "hotchpotch__model" / "all.json").exists()
+    assert summary["totals"]["evaluated_count"] == 1
+    assert summary["totals"]["aggregate_metric_mean"] == 1.0
 
 
-def test_run_build_bm25_returns_candidate_summary_without_aggregate_file(monkeypatch, tmp_path) -> None:
+def test_run_build_bm25_returns_candidate_summary(monkeypatch, tmp_path) -> None:
     from hakari_bench.bm25 import BM25BuildResult
     from hakari_bench.cli import run_build_bm25
 
@@ -1028,4 +1029,3 @@ def test_run_build_bm25_returns_candidate_summary_without_aggregate_file(monkeyp
     assert "output_dir" not in payload
     assert payload["config"]["bm25"]["top_k"] == 10
     assert "override" not in payload["config"]["bm25"]
-    assert not (tmp_path / "bm25s-okapi-auto" / "all.json").exists()
