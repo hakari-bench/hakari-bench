@@ -711,6 +711,48 @@ def test_torch_dense_rank_by_similarity_does_not_convert_to_numpy(monkeypatch) -
     assert rankings["q2"] == ["d2", "d1", "d3"]
 
 
+def test_candidate_subset_rank_by_similarity_scores_only_candidate_documents() -> None:
+    rankings = evaluation_module._rank_candidate_subset_by_similarity(
+        query_ids=["q1", "q2"],
+        corpus_ids=["d1", "d2", "d3"],
+        query_embeddings=np.array([[1.0, 0.0], [0.0, 1.0]], dtype=np.float32),
+        corpus_embeddings=np.array(
+            [
+                [1.0, 0.0],
+                [0.0, 1.0],
+                [-1.0, 0.0],
+            ],
+            dtype=np.float32,
+        ),
+        candidates={"q1": ["d3", "d1"], "q2": ["d1", "d2"]},
+        score_name="dot",
+        rerank_top_n=2,
+    )
+
+    assert rankings == {"q1": ["d1", "d3"], "q2": ["d2", "d1"]}
+
+
+def test_candidate_subset_rank_by_similarity_supports_torch_sparse_csr() -> None:
+    rankings = evaluation_module._rank_candidate_subset_by_similarity(
+        query_ids=["q1", "q2"],
+        corpus_ids=["d1", "d2", "d3"],
+        query_embeddings=torch.tensor([[1.0, 0.0], [0.0, 1.0]]).to_sparse_csr(),
+        corpus_embeddings=torch.tensor(
+            [
+                [1.0, 0.0],
+                [0.0, 1.0],
+                [-1.0, 0.0],
+            ],
+            dtype=torch.float32,
+        ).to_sparse_csr(),
+        candidates={"q1": ["d3", "d1"], "q2": ["d1", "d2"]},
+        score_name="dot",
+        rerank_top_n=2,
+    )
+
+    assert rankings == {"q1": ["d1", "d3"], "q2": ["d2", "d1"]}
+
+
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not available")
 def test_cuda_dense_rank_by_similarity_keeps_scoring_on_cuda(monkeypatch) -> None:
     def fail_to_numpy(embeddings):

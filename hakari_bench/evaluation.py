@@ -1073,10 +1073,13 @@ def _score_embedding_distances(
         if candidates is not None:
             rerank_score_name = f"{metric_score_name}_bm25_top{rerank_top_n}_rerank"
             rerank_metric_start = time.perf_counter()
-            rerank_rankings = _filter_rankings_to_candidate_prefix(
-                rankings=rankings,
-                candidates=candidates,
+            rerank_rankings = _rank_candidate_subset_by_similarity(
+                query_ids=query_ids,
                 corpus_ids=corpus_ids,
+                query_embeddings=query_embeddings,
+                corpus_embeddings=corpus_embeddings,
+                candidates=candidates,
+                score_name=distance,
                 rerank_top_n=rerank_top_n,
             )
             rerank_metrics = compute_ir_metrics(
@@ -1141,24 +1144,47 @@ def _score_embedding_distances(
     }
 
 
-def _filter_rankings_to_candidate_prefix(
+def _rank_candidate_subset_by_similarity(
     *,
-    rankings: dict[str, list[str]],
-    candidates: dict[str, list[str]],
+    query_ids: list[str],
     corpus_ids: list[str],
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    candidates: dict[str, list[str]],
+    score_name: str,
     rerank_top_n: int,
 ) -> dict[str, list[str]]:
-    corpus_id_set = set(corpus_ids)
-    filtered: dict[str, list[str]] = {}
-    for query_id, ranking in rankings.items():
-        candidate_ids = [
-            doc_id
-            for doc_id in candidates.get(query_id, [])
-            if doc_id in corpus_id_set
-        ][:rerank_top_n]
-        candidate_set = set(candidate_ids)
-        filtered[query_id] = [doc_id for doc_id in ranking if doc_id in candidate_set]
-    return filtered
+    if rerank_top_n <= 0:
+        raise ValueError("rerank_top_n must be positive.")
+    corpus_index_by_id = {corpus_id: index for index, corpus_id in enumerate(corpus_ids)}
+    rankings: dict[str, list[str]] = {}
+    for query_index, query_id in enumerate(query_ids):
+        candidate_indices: list[int] = []
+        candidate_ids: list[str] = []
+        seen: set[str] = set()
+        for candidate_id in candidates.get(query_id, []):
+            if candidate_id in seen:
+                continue
+            corpus_index = corpus_index_by_id.get(candidate_id)
+            if corpus_index is None:
+                continue
+            seen.add(candidate_id)
+            candidate_indices.append(corpus_index)
+            candidate_ids.append(candidate_id)
+            if len(candidate_ids) >= rerank_top_n:
+                break
+        if not candidate_ids:
+            rankings[query_id] = []
+            continue
+        ranked = _rank_by_similarity(
+            query_ids=[query_id],
+            corpus_ids=candidate_ids,
+            query_embeddings=_take_embedding_rows(query_embeddings, [query_index]),
+            corpus_embeddings=_take_embedding_rows(corpus_embeddings, candidate_indices),
+            score_name=score_name,
+        )
+        rankings[query_id] = ranked[query_id]
+    return rankings
 
 
 def _candidate_reranking_evaluation(
@@ -1348,6 +1374,43 @@ def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
     if dim > matrix.shape[1]:
         raise ValueError(f"Cannot truncate embeddings with dimension {matrix.shape[1]} to {dim}.")
     return matrix[:, :dim]
+
+
+def _take_embedding_rows(embeddings: Any, indices: list[int]) -> Any:
+    if isinstance(embeddings, QuantizedEmbeddingMatrix):
+        return QuantizedEmbeddingMatrix(
+            values=_take_embedding_rows(embeddings.values, indices),
+            precision=embeddings.precision,
+            original_dim=embeddings.original_dim,
+            algorithm=embeddings.algorithm,
+            method=embeddings.method,
+            side=embeddings.side,
+            ranges_source=embeddings.ranges_source,
+            ranges=embeddings.ranges,
+            rounding=embeddings.rounding,
+            score_representation=embeddings.score_representation,
+            source_values=(
+                _take_embedding_rows(embeddings.source_values, indices)
+                if embeddings.source_values is not None
+                else None
+            ),
+            binary_encoding=embeddings.binary_encoding,
+        )
+    if isinstance(embeddings, torch.Tensor):
+        index_tensor = torch.as_tensor(indices, dtype=torch.long, device=embeddings.device)
+        if embeddings.layout == torch.sparse_csr:
+            return embeddings.to_sparse_coo().index_select(0, index_tensor)
+        return embeddings.index_select(0, index_tensor)
+    if sparse.issparse(embeddings):
+        return embeddings[indices]
+    if isinstance(embeddings, np.ndarray):
+        return embeddings[indices]
+    if isinstance(embeddings, list | tuple):
+        return [embeddings[index] for index in indices]
+    try:
+        return embeddings[indices]
+    except Exception as exc:
+        raise TypeError(f"Unsupported embedding type for row selection: {type(embeddings).__name__}") from exc
 
 
 def _truncate_late_interaction_embeddings(embeddings: Any, dim: int) -> Any:
