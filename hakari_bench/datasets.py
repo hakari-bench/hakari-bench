@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import importlib
+from importlib.resources import as_file, files
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, cast
 
 import yaml
+
+from hakari_bench.config_schema import DatasetCollectionConfigModel, DatasetConfigFileModel, DatasetConfigModel
 
 try:
     HfApi: Any = getattr(importlib.import_module("huggingface_hub"), "HfApi")
@@ -144,81 +147,60 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     return data
 
 
-def _optional_metadata_mapping(data: dict[str, Any], key: str, *, source: str) -> dict[str, Any] | None:
-    value = data.get(key)
-    if value is None:
-        return None
-    if not isinstance(value, dict):
-        raise ValueError(f"{source} has invalid {key}; expected mapping.")
-    return cast(dict[str, Any], value)
-
-
-def _task_metadata_from_mapping(data: dict[str, Any], *, source: str) -> dict[str, dict[str, Any]] | None:
-    value = data.get("task_metadata")
-    if value is None:
-        return None
-    if not isinstance(value, dict):
-        raise ValueError(f"{source} has invalid task_metadata; expected mapping.")
-    task_metadata: dict[str, dict[str, Any]] = {}
-    for task_name, metadata in value.items():
-        if not isinstance(metadata, dict):
-            raise ValueError(f"{source} has invalid task_metadata.{task_name}; expected mapping.")
-        task_metadata[str(task_name)] = cast(dict[str, Any], metadata)
-    return task_metadata
+def _dataset_from_config(config: DatasetConfigModel) -> NanoDatasetSpec:
+    return NanoDatasetSpec(
+        name=config.name,
+        dataset_id=config.dataset_id,
+        corpus_config=config.corpus_config,
+        queries_config=config.queries_config,
+        qrels_config=config.qrels_config,
+        candidate_config=config.candidate_config,
+        benchmark_kind=config.benchmark_kind,
+        splits=list(config.splits) if config.splits is not None else None,
+        split_mapping=dict(config.split_mapping) if config.split_mapping else None,
+        metadata=dict(config.metadata) if config.metadata is not None else None,
+        task_metadata=(
+            {task_name: dict(metadata) for task_name, metadata in config.task_metadata.items()}
+            if config.task_metadata is not None
+            else None
+        ),
+    )
 
 
 def _dataset_from_mapping(data: dict[str, Any], *, source: str) -> NanoDatasetSpec:
-    required = {"name", "dataset_id"}
-    missing = required - set(data)
-    if missing:
-        raise ValueError(f"Dataset spec {source} is missing required keys: {sorted(missing)}")
+    try:
+        config = DatasetConfigModel.model_validate(data)
+    except Exception as exc:
+        raise ValueError(f"Dataset spec {source} is invalid: {exc}") from exc
+    return _dataset_from_config(config)
 
-    splits = data.get("splits")
-    if splits is not None and not isinstance(splits, list):
-        raise ValueError(f"Dataset spec {source} has invalid splits; expected list.")
 
-    split_mapping = data.get("split_mapping")
-    if split_mapping is not None and not isinstance(split_mapping, dict):
-        raise ValueError(f"Dataset spec {source} has invalid split_mapping; expected mapping.")
-
-    return NanoDatasetSpec(
-        name=str(data["name"]),
-        dataset_id=str(data["dataset_id"]),
-        corpus_config=str(data.get("corpus_config", "corpus")),
-        queries_config=str(data.get("queries_config", "queries")),
-        qrels_config=str(data.get("qrels_config", "qrels")),
-        candidate_config=None if data.get("candidate_config") is None else str(data.get("candidate_config", "bm25")),
-        benchmark_kind=str(data.get("benchmark_kind", "nano")),
-        splits=[str(split) for split in splits] if splits is not None else None,
-        split_mapping={str(key): str(value) for key, value in split_mapping.items()} if split_mapping else None,
-        metadata=_optional_metadata_mapping(data, "metadata", source=source),
-        task_metadata=_task_metadata_from_mapping(data, source=source),
+def _collection_from_config(
+    config: DatasetCollectionConfigModel,
+    *,
+    registry: DatasetRegistry,
+) -> DatasetCollectionSpec:
+    dataset_names: list[str] = []
+    for raw in config.datasets:
+        if isinstance(raw, str):
+            dataset_names.append(raw)
+            continue
+        dataset = _dataset_from_config(raw)
+        registry.add_dataset(dataset)
+        dataset_names.append(dataset.name)
+    return DatasetCollectionSpec(
+        name=config.name,
+        datasets=dataset_names,
+        metadata=dict(config.metadata) if config.metadata is not None else None,
     )
 
 
 def _collection_from_mapping(data: dict[str, Any], *, registry: DatasetRegistry, source: str) -> DatasetCollectionSpec:
-    if "name" not in data or "datasets" not in data:
-        raise ValueError(f"Collection spec {source} must include name and datasets.")
-    raw_datasets = data["datasets"]
-    if not isinstance(raw_datasets, list):
-        raise ValueError(f"Collection spec {source} has invalid datasets; expected list.")
-
-    dataset_names: list[str] = []
-    for index, raw in enumerate(raw_datasets):
-        if isinstance(raw, str):
-            dataset_names.append(raw)
-            continue
-        if isinstance(raw, dict):
-            dataset = _dataset_from_mapping(cast(dict[str, Any], raw), source=f"{source}:datasets[{index}]")
-            registry.add_dataset(dataset)
-            dataset_names.append(dataset.name)
-            continue
-        raise ValueError(f"Unsupported dataset entry in {source}: {raw!r}")
-    return DatasetCollectionSpec(
-        name=str(data["name"]),
-        datasets=dataset_names,
-        metadata=_optional_metadata_mapping(data, "metadata", source=source),
-    )
+    try:
+        config = DatasetCollectionConfigModel.model_validate(data)
+    except Exception as exc:
+        raise ValueError(f"Collection spec {source} is invalid: {exc}") from exc
+    return _collection_from_config(config, registry=registry)
 
 
 class DatasetRegistry:
@@ -236,7 +218,9 @@ class DatasetRegistry:
 
     @classmethod
     def load_builtin(cls) -> DatasetRegistry:
-        return cls.load_from_root(Path(__file__).resolve().parents[1] / "config")
+        config_root = files("hakari_bench").joinpath("config")
+        with as_file(config_root) as root:
+            return cls.load_from_root(root)
 
     @classmethod
     def load_from_root(cls, root: Path) -> DatasetRegistry:
@@ -246,10 +230,12 @@ class DatasetRegistry:
             for path in sorted(dataset_dir.glob("*.yaml")):
                 data = _load_yaml(path)
                 if "datasets" in data:
-                    for index, raw in enumerate(data["datasets"]):
-                        if not isinstance(raw, dict):
-                            raise ValueError(f"Dataset list entry in {path} must be a mapping.")
-                        registry.add_dataset(_dataset_from_mapping(raw, source=f"{path}:datasets[{index}]"))
+                    try:
+                        config_file = DatasetConfigFileModel.model_validate(data)
+                    except Exception as exc:
+                        raise ValueError(f"Dataset config file {path} is invalid: {exc}") from exc
+                    for raw in config_file.datasets:
+                        registry.add_dataset(_dataset_from_config(raw))
                 else:
                     registry.add_dataset(_dataset_from_mapping(data, source=str(path)))
 

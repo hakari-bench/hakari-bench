@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from importlib.resources import as_file, files
 from pathlib import Path
 from typing import Any
 
@@ -110,6 +111,11 @@ class ViewerConfig(BaseModel):
 
 
 def load_viewer_config(config_dir: Path = Path("config/viewer")) -> ViewerConfig:
+    if config_dir == Path("config/viewer") and not config_dir.exists():
+        config_root = files("hakari_bench").joinpath("config", "viewer")
+        with as_file(config_root) as root:
+            return load_viewer_config(root)
+
     benchmarks_path = config_dir / "benchmarks.yaml"
     overall_path = config_dir / "overall.yaml"
     benchmarks_payload = yaml.safe_load(benchmarks_path.read_text(encoding="utf-8"))

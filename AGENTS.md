@@ -58,9 +58,9 @@ uv run tox
 For quicker iteration, use:
 
 ```bash
-uv run pytest -q
+uv run --group all pytest -q
 uv run ruff check .
-uv run ty check
+uv run --group all ty check
 ```
 
 ## Model Loading

@@ -1,0 +1,201 @@
+name: NanoCodeRAG
+dataset_id: hakari-bench/NanoCodeRAG
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoCodeRAGLibraryDocumentationSolutions
+- NanoCodeRAGOnlineTutorials
+- NanoCodeRAGProgrammingSolutions
+- NanoCodeRAGStackoverflowPosts
+metadata:
+  language: en
+  category: code
+  short_description: Nano subset of CodeRAG-Bench code retrieval tasks.
+  description: NanoCodeRAG evaluates retrieval for code retrieval-augmented generation. Its
+    compact task splits cover programming solutions, online tutorials, library documentation,
+    and Stack Overflow posts.
+  citation_keys:
+  - wang2024coderagbench
+  references:
+  - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
+    authors:
+    - Zora Zhiruo Wang
+    - Akari Asai
+    - Xinyan Velocity Yu
+    - Frank F. Xu
+    - Yiqing Xie
+    - Graham Neubig
+    - Daniel Fried
+    year: 2025
+    url: https://aclanthology.org/2025.findings-naacl.176/
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.18653/v1/2025.findings-naacl.176
+  bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
+    \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
+    \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
+    \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
+    \  year = {2024}\n}\n"
+task_metadata:
+  NanoCodeRAGLibraryDocumentationSolutions:
+    language: en
+    category: code
+    short_description: Python library documentation retrieval.
+    description: Code-related queries are matched to relevant Python library documentation
+      sections from CodeRAG-Bench.
+    citation_keys:
+    - wang2024coderagbench
+    references:
+    - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
+      authors:
+      - Zora Zhiruo Wang
+      - Akari Asai
+      - Xinyan Velocity Yu
+      - Frank F. Xu
+      - Yiqing Xie
+      - Graham Neubig
+      - Daniel Fried
+      year: 2025
+      url: https://aclanthology.org/2025.findings-naacl.176/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.findings-naacl.176
+    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
+      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
+      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
+      \  year = {2024}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 40
+      max_chars: 43706
+      mean_chars: 397.43
+      median_chars: 110.0
+    document_text_stats:
+      count: 8683
+      min_chars: 13
+      max_chars: 81071
+      mean_chars: 2045.703098007601
+      median_chars: 765.0
+  NanoCodeRAGOnlineTutorials:
+    language: en
+    category: code
+    short_description: Online programming tutorial retrieval.
+    description: Code-related queries are matched to relevant online programming tutorial
+      documents from CodeRAG-Bench.
+    citation_keys:
+    - wang2024coderagbench
+    references:
+    - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
+      authors:
+      - Zora Zhiruo Wang
+      - Akari Asai
+      - Xinyan Velocity Yu
+      - Frank F. Xu
+      - Yiqing Xie
+      - Graham Neubig
+      - Daniel Fried
+      year: 2025
+      url: https://aclanthology.org/2025.findings-naacl.176/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.findings-naacl.176
+    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
+      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
+      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
+      \  year = {2024}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 151
+      mean_chars: 51.905
+      median_chars: 47.0
+    document_text_stats:
+      count: 9997
+      min_chars: 17
+      max_chars: 477365
+      mean_chars: 5722.545863759127
+      median_chars: 3419.0
+  NanoCodeRAGProgrammingSolutions:
+    language: en
+    category: code
+    short_description: Programming solution retrieval.
+    description: Code-related queries are matched to relevant programming solution documents
+      from CodeRAG-Bench.
+    citation_keys:
+    - wang2024coderagbench
+    references:
+    - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
+      authors:
+      - Zora Zhiruo Wang
+      - Akari Asai
+      - Xinyan Velocity Yu
+      - Frank F. Xu
+      - Yiqing Xie
+      - Graham Neubig
+      - Daniel Fried
+      year: 2025
+      url: https://aclanthology.org/2025.findings-naacl.176/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.findings-naacl.176
+    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
+      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
+      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
+      \  year = {2024}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 11
+      max_chars: 158
+      mean_chars: 78.28
+      median_chars: 78.0
+    document_text_stats:
+      count: 984
+      min_chars: 29
+      max_chars: 1331
+      mean_chars: 189.0538617886179
+      median_chars: 148.5
+  NanoCodeRAGStackoverflowPosts:
+    language: en
+    category: code
+    short_description: Stack Overflow post retrieval.
+    description: Code-related queries are matched to relevant Stack Overflow posts from CodeRAG-Bench.
+    citation_keys:
+    - wang2024coderagbench
+    references:
+    - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
+      authors:
+      - Zora Zhiruo Wang
+      - Akari Asai
+      - Xinyan Velocity Yu
+      - Frank F. Xu
+      - Yiqing Xie
+      - Graham Neubig
+      - Daniel Fried
+      year: 2025
+      url: https://aclanthology.org/2025.findings-naacl.176/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2025.findings-naacl.176
+    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
+      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
+      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
+      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
+      \  year = {2024}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 25
+      max_chars: 601
+      mean_chars: 209.835
+      median_chars: 185.5
+    document_text_stats:
+      count: 10000
+      min_chars: 29
+      max_chars: 161615
+      mean_chars: 4735.0462
+      median_chars: 2864.5

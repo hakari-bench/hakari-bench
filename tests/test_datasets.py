@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
@@ -38,6 +39,26 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoR2MED").dataset_id == "hakari-bench/NanoR2MED"
     assert registry.get_dataset("NanoBuiltBench").dataset_id == "hakari-bench/NanoBuiltBench"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
+
+
+def test_builtin_config_is_packaged_with_library() -> None:
+    config_root = files("hakari_bench").joinpath("config")
+
+    assert config_root.joinpath("datasets", "nanobeir_en.yaml").is_file()
+    assert config_root.joinpath("dataset_collections", "mnanobeir.yaml").is_file()
+    assert config_root.joinpath("viewer", "benchmarks.yaml").is_file()
+
+
+def test_packaged_builtin_config_matches_repo_config() -> None:
+    repo_config = Path("config")
+    packaged_config = Path("hakari_bench/config")
+
+    assert sorted(path.relative_to(repo_config) for path in repo_config.rglob("*.yaml")) == sorted(
+        path.relative_to(packaged_config) for path in packaged_config.rglob("*.yaml")
+    )
+    for repo_path in repo_config.rglob("*.yaml"):
+        packaged_path = packaged_config / repo_path.relative_to(repo_config)
+        assert packaged_path.read_text(encoding="utf-8") == repo_path.read_text(encoding="utf-8")
 
 
 def test_resolve_eval_tasks_for_builtin_nanomteb_uses_declared_splits() -> None:
@@ -413,6 +434,21 @@ datasets:
 
     assert registry.get_dataset("Toy").dataset_id == "local/toy"
     assert registry.get_collection("ToyCollection").datasets == ["Toy"]
+
+
+def test_registry_rejects_unknown_dataset_config_keys(tmp_path: Path) -> None:
+    (tmp_path / "datasets").mkdir()
+    (tmp_path / "datasets" / "toy.yaml").write_text(
+        """
+name: Toy
+dataset_id: local/toy
+unknown_key: value
+""".strip(),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="unknown_key"):
+        DatasetRegistry.load_from_root(tmp_path)
 
 
 def test_registry_preserves_dataset_and_task_metadata(tmp_path: Path) -> None:

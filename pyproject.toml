@@ -15,6 +15,7 @@ dependencies = [
     "numpy>=2.4.4",
     "peft>=0.19.1",
     "protobuf>=6.33.2",
+    "pydantic>=2.13.3",
     "pystemmer>=3.0.0",
     "pyyaml>=6.0.3",
     "scipy>=1.17.1",
@@ -47,6 +48,9 @@ pythonpath = ["."]
 [tool.setuptools.packages.find]
 include = ["hakari_bench*"]
 exclude = ["config*", "tests*"]
+
+[tool.setuptools.package-data]
+hakari_bench = ["config/**/*.yaml"]
 
 [tool.uv]
 package = true

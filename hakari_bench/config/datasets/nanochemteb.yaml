@@ -1,0 +1,235 @@
+name: NanoChemTEB
+dataset_id: hakari-bench/NanoChemTEB
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoChemNQ
+- NanoChemHotpotQA
+- NanoChemRxiv
+metadata:
+  language: en
+  category: natural_language
+  short_description: Nano subset of ChemTEB chemical-domain retrieval tasks.
+  description: NanoChemTEB is a compact retrieval subset of ChemTEB for chemical-domain text
+    embeddings. It includes chemistry-focused question answering retrieval tasks and a ChemRxiv
+    literature retrieval task.
+  citation_keys:
+  - kasmaee2024chemteb
+  - kasmaee2025chembed
+  references:
+  - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance
+      & Efficiency on a Specific Domain'
+    authors:
+    - Ali Shiraee Kasmaee
+    - Mohammad Khodadad
+    - Mohammad Arshi Saloot
+    - Nicholas Sherck
+    - Stephen Dokas
+    - Hamidreza Mahyar
+    - Soheila Samiee
+    year: 2024
+    url: https://arxiv.org/abs/2412.00532
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2412.00532
+  - title: 'ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings'
+    authors:
+    - Ali Shiraee Kasmaee
+    - Mohammad Khodadad
+    - Mehdi Astaraki
+    - Mohammad Arshi Saloot
+    - Nicholas Sherck
+    - Hamidreza Mahyar
+    - Soheila Samiee
+    year: 2025
+    url: https://arxiv.org/abs/2508.01643
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2508.01643
+  bibtex: "@article{kasmaee2024chemteb,\n  author = {Kasmaee, Ali Shiraee and Khodadad, Mohammad\
+    \ and Saloot, Mohammad Arshi and Sherck, Nicholas and Dokas, Stephen and Mahyar, Hamidreza\
+    \ and Samiee, Soheila},\n  journal = {arXiv preprint arXiv:2412.00532},\n  title = {ChemTEB:\
+    \ Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance \\& Efficiency\
+    \ on a Specific Domain},\n  year = {2024},\n  url = {https://arxiv.org/abs/2412.00532}\n\
+    }\n@article{kasmaee2025chembed,\n  author = {Kasmaee, Ali Shiraee and Khodadad, Mohammad\
+    \ and Astaraki, Mehdi and Saloot, Mohammad Arshi and Sherck, Nicholas and Mahyar, Hamidreza\
+    \ and Samiee, Soheila},\n  journal = {arXiv preprint arXiv:2508.01643},\n  title = {ChEmbed:\
+    \ Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings},\n  year\
+    \ = {2025},\n  url = {https://arxiv.org/abs/2508.01643}\n}\n"
+task_metadata:
+  NanoChemNQ:
+    language: en
+    category: natural_language
+    short_description: Chemical-domain Natural Questions retrieval.
+    description: Chemistry-focused question answering retrieval task in ChemTEB, with queries
+      matched to relevant passages.
+    citation_keys:
+    - kasmaee2024chemteb
+    - kwiatkowski2019natural
+    references:
+    - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models
+        Performance & Efficiency on a Specific Domain'
+      authors:
+      - Ali Shiraee Kasmaee
+      - Mohammad Khodadad
+      - Mohammad Arshi Saloot
+      - Nicholas Sherck
+      - Stephen Dokas
+      - Hamidreza Mahyar
+      - Soheila Samiee
+      year: 2024
+      url: https://arxiv.org/abs/2412.00532
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2412.00532
+    - title: 'Natural Questions: A Benchmark for Question Answering Research'
+      authors:
+      - Tom Kwiatkowski
+      - Jennimaria Palomaki
+      - Olivia Redfield
+      - Michael Collins
+      - Ankur Parikh
+      - Chris Alberti
+      - Danielle Epstein
+      - Illia Polosukhin
+      - Jacob Devlin
+      - Kenton Lee
+      - Kristina Toutanova
+      - Llion Jones
+      - Matthew Kelcey
+      - Ming-Wei Chang
+      - Andrew M. Dai
+      - Jakob Uszkoreit
+      - Quoc Le
+      - Slav Petrov
+      year: 2019
+      url: https://aclanthology.org/Q19-1026/
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{kasmaee2024chemteb,\n  author = {Kasmaee, Ali Shiraee and Khodadad,\
+      \ Mohammad and Saloot, Mohammad Arshi and Sherck, Nicholas and Dokas, Stephen and Mahyar,\
+      \ Hamidreza and Samiee, Soheila},\n  journal = {arXiv preprint arXiv:2412.00532},\n\
+      \  title = {ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models\
+      \ Performance \\& Efficiency on a Specific Domain},\n  year = {2024},\n  url = {https://arxiv.org/abs/2412.00532}\n\
+      }\n@article{kwiatkowski2019natural,\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria\
+      \ and Redfield, Olivia and Collins, Michael and Parikh, Ankur and others},\n  journal\
+      \ = {Transactions of the Association for Computational Linguistics},\n  title = {Natural\
+      \ Questions: A Benchmark for Question Answering Research},\n  year = {2019},\n  url\
+      \ = {https://aclanthology.org/Q19-1026/}\n}\n"
+    query_text_stats:
+      count: 27
+      min_chars: 33
+      max_chars: 87
+      mean_chars: 54.0
+      median_chars: 50.0
+    document_text_stats:
+      count: 10000
+      min_chars: 17
+      max_chars: 2801
+      mean_chars: 481.2438
+      median_chars: 411.0
+  NanoChemHotpotQA:
+    language: en
+    category: natural_language
+    short_description: Chemical-domain multi-hop QA retrieval.
+    description: Chemistry-focused multi-hop question answering retrieval task in ChemTEB,
+      with queries matched to relevant evidence passages.
+    citation_keys:
+    - kasmaee2024chemteb
+    - yang2018hotpotqa
+    references:
+    - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models
+        Performance & Efficiency on a Specific Domain'
+      authors:
+      - Ali Shiraee Kasmaee
+      - Mohammad Khodadad
+      - Mohammad Arshi Saloot
+      - Nicholas Sherck
+      - Stephen Dokas
+      - Hamidreza Mahyar
+      - Soheila Samiee
+      year: 2024
+      url: https://arxiv.org/abs/2412.00532
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2412.00532
+    - title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering'
+      authors:
+      - Zhilin Yang
+      - Peng Qi
+      - Saizheng Zhang
+      - Yoshua Bengio
+      - William Cohen
+      - Ruslan Salakhutdinov
+      - Christopher D. Manning
+      year: 2018
+      url: https://aclanthology.org/D18-1259
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/D18-1259
+    bibtex: "@article{kasmaee2024chemteb,\n  author = {Kasmaee, Ali Shiraee and Khodadad,\
+      \ Mohammad and Saloot, Mohammad Arshi and Sherck, Nicholas and Dokas, Stephen and Mahyar,\
+      \ Hamidreza and Samiee, Soheila},\n  journal = {arXiv preprint arXiv:2412.00532},\n\
+      \  title = {ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models\
+      \ Performance \\& Efficiency on a Specific Domain},\n  year = {2024},\n  url = {https://arxiv.org/abs/2412.00532}\n\
+      }\n@inproceedings{yang2018hotpotqa,\n  author = {Yang, Zhilin and Qi, Peng and Zhang,\
+      \ Saizheng and Bengio, Yoshua and Cohen, William and Salakhutdinov, Ruslan and Manning,\
+      \ Christopher D.},\n  booktitle = {Proceedings of the 2018 Conference on Empirical Methods\
+      \ in Natural Language Processing},\n  title = {HotpotQA: A Dataset for Diverse, Explainable\
+      \ Multi-hop Question Answering},\n  year = {2018},\n  url = {https://aclanthology.org/D18-1259},\n\
+      \  doi = {10.18653/v1/D18-1259}\n}\n"
+    query_text_stats:
+      count: 18
+      min_chars: 46
+      max_chars: 179
+      mean_chars: 104.22222222222223
+      median_chars: 104.5
+    document_text_stats:
+      count: 10000
+      min_chars: 36
+      max_chars: 2661
+      mean_chars: 402.3997
+      median_chars: 349.0
+  NanoChemRxiv:
+    language: en
+    category: natural_language
+    short_description: ChemRxiv literature retrieval.
+    description: Retrieval over ChemRxiv papers where LLM-synthesized queries are matched
+      to specific paper paragraphs.
+    citation_keys:
+    - kasmaee2025chembed
+    references:
+    - title: 'ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings'
+      authors:
+      - Ali Shiraee Kasmaee
+      - Mohammad Khodadad
+      - Mehdi Astaraki
+      - Mohammad Arshi Saloot
+      - Nicholas Sherck
+      - Hamidreza Mahyar
+      - Soheila Samiee
+      year: 2025
+      url: https://arxiv.org/abs/2508.01643
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2508.01643
+    bibtex: "@article{kasmaee2025chembed,\n  author = {Kasmaee, Ali Shiraee and Khodadad,\
+      \ Mohammad and Astaraki, Mehdi and Saloot, Mohammad Arshi and Sherck, Nicholas and Mahyar,\
+      \ Hamidreza and Samiee, Soheila},\n  journal = {arXiv preprint arXiv:2508.01643},\n\
+      \  title = {ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text\
+      \ Embeddings},\n  year = {2025},\n  url = {https://arxiv.org/abs/2508.01643}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 68
+      max_chars: 189
+      mean_chars: 111.705
+      median_chars: 109.0
+    document_text_stats:
+      count: 10000
+      min_chars: 196
+      max_chars: 13746
+      mean_chars: 1079.0728
+      median_chars: 852.5

@@ -1,0 +1,821 @@
+name: NanoMLDR
+dataset_id: hakari-bench/NanoMLDR
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- ar
+- de
+- en
+- es
+- fr
+- hi
+- it
+- ja
+- ko
+- pt
+- ru
+- th
+- zh
+metadata:
+  language: multilingual
+  category: natural_language
+  short_description: Compact multilingual long-document retrieval benchmark.
+  description: NanoMLDR is a compact version of the MLDR multilingual long-document retrieval
+    benchmark. It evaluates retrieval of long documents across 13 languages using question-document
+    pairs from the MLDR task.
+  citation_keys:
+  - chen2024bgem3
+  - shitao2024mldr
+  references:
+  - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings
+      Through Self-Knowledge Distillation'
+    authors:
+    - Jianlyu Chen
+    - Shitao Xiao
+    - Peitian Zhang
+    - Kun Luo
+    - Defu Lian
+    - Zheng Liu
+    year: 2024
+    url: https://aclanthology.org/2024.findings-acl.137/
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.18653/v1/2024.findings-acl.137
+  - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+    authors:
+    - Shitao Xiao
+    - Jianlyu Chen
+    - Peitian Zhang
+    - Kun Luo
+    - Defu Lian
+    - Zheng Liu
+    year: 2024
+    url: https://huggingface.co/datasets/Shitao/MLDR
+    is_paper: false
+    source_confidence: probably_correct
+  bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author =\
+    \ {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and Liu,\
+    \ Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n  url\
+    \ = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n}\n@misc{shitao2024mldr,\n\
+    \  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n  author = {Xiao,\
+    \ Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian, Defu and Liu, Zheng},\n\
+    \  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n}\n"
+task_metadata:
+  ar:
+    language: ar
+    category: natural_language
+    short_description: Arabic long-document retrieval task.
+    description: The Arabic split of NanoMLDR evaluates long-document retrieval for Arabic
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 150
+      min_chars: 21
+      max_chars: 171
+      mean_chars: 71.08666666666667
+      median_chars: 68.0
+    document_text_stats:
+      count: 4766
+      min_chars: 1770
+      max_chars: 140481
+      mean_chars: 12006.825010490978
+      median_chars: 7420.0
+  de:
+    language: de
+    category: natural_language
+    short_description: German long-document retrieval task.
+    description: The German split of NanoMLDR evaluates long-document retrieval for German
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 117
+      min_chars: 26
+      max_chars: 174
+      mean_chars: 81.46153846153847
+      median_chars: 76.0
+    document_text_stats:
+      count: 5046
+      min_chars: 104
+      max_chars: 92210
+      mean_chars: 12343.197582243361
+      median_chars: 5965.5
+  en:
+    language: en
+    category: natural_language
+    short_description: English long-document retrieval task.
+    description: The English split of NanoMLDR evaluates long-document retrieval for English
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 129
+      mean_chars: 64.06
+      median_chars: 60.5
+    document_text_stats:
+      count: 10000
+      min_chars: 2994
+      max_chars: 287603
+      mean_chars: 27991.8974
+      median_chars: 26471.5
+  es:
+    language: es
+    category: natural_language
+    short_description: Spanish long-document retrieval task.
+    description: The Spanish split of NanoMLDR evaluates long-document retrieval for Spanish
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 176
+      min_chars: 40
+      max_chars: 222
+      mean_chars: 120.26136363636364
+      median_chars: 114.5
+    document_text_stats:
+      count: 3312
+      min_chars: 2609
+      max_chars: 270188
+      mean_chars: 12539.897644927536
+      median_chars: 7764.0
+  fr:
+    language: fr
+    category: natural_language
+    short_description: French long-document retrieval task.
+    description: The French split of NanoMLDR evaluates long-document retrieval for French
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 152
+      min_chars: 44
+      max_chars: 271
+      mean_chars: 119.92105263157895
+      median_chars: 117.0
+    document_text_stats:
+      count: 3059
+      min_chars: 2065
+      max_chars: 202471
+      mean_chars: 11534.147433801896
+      median_chars: 6837.0
+  hi:
+    language: hi
+    category: natural_language
+    short_description: Hindi long-document retrieval task.
+    description: The Hindi split of NanoMLDR evaluates long-document retrieval for Hindi queries.
+      Models must rank lengthy corpus documents for question-style information needs in the
+      compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 159
+      min_chars: 14
+      max_chars: 320
+      mean_chars: 79.18238993710692
+      median_chars: 73.0
+    document_text_stats:
+      count: 2858
+      min_chars: 2392
+      max_chars: 223373
+      mean_chars: 11900.811406578026
+      median_chars: 7343.5
+  it:
+    language: it
+    category: natural_language
+    short_description: Italian long-document retrieval task.
+    description: The Italian split of NanoMLDR evaluates long-document retrieval for Italian
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 158
+      min_chars: 16
+      max_chars: 226
+      mean_chars: 98.16455696202532
+      median_chars: 95.0
+    document_text_stats:
+      count: 3116
+      min_chars: 2460
+      max_chars: 120575
+      mean_chars: 14374.384467265725
+      median_chars: 9444.5
+  ja:
+    language: ja
+    category: natural_language
+    short_description: Japanese long-document retrieval task.
+    description: The Japanese split of NanoMLDR evaluates long-document retrieval for Japanese
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 148
+      min_chars: 8
+      max_chars: 273
+      mean_chars: 51.7027027027027
+      median_chars: 42.0
+    document_text_stats:
+      count: 3112
+      min_chars: 1244
+      max_chars: 127839
+      mean_chars: 5384.6217866323905
+      median_chars: 3409.0
+  ko:
+    language: ko
+    category: natural_language
+    short_description: Korean long-document retrieval task.
+    description: The Korean split of NanoMLDR evaluates long-document retrieval for Korean
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 177
+      min_chars: 8
+      max_chars: 329
+      mean_chars: 55.271186440677965
+      median_chars: 47.0
+    document_text_stats:
+      count: 3087
+      min_chars: 1424
+      max_chars: 85820
+      mean_chars: 5915.235827664399
+      median_chars: 3605.0
+  pt:
+    language: pt
+    category: natural_language
+    short_description: Portuguese long-document retrieval task.
+    description: The Portuguese split of NanoMLDR evaluates long-document retrieval for Portuguese
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 141
+      min_chars: 37
+      max_chars: 199
+      mean_chars: 110.99290780141844
+      median_chars: 105.0
+    document_text_stats:
+      count: 3028
+      min_chars: 3007
+      max_chars: 132737
+      mean_chars: 14744.681307793924
+      median_chars: 9476.5
+  ru:
+    language: ru
+    category: natural_language
+    short_description: Russian long-document retrieval task.
+    description: The Russian split of NanoMLDR evaluates long-document retrieval for Russian
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 160
+      min_chars: 34
+      max_chars: 413
+      mean_chars: 92.89375
+      median_chars: 85.5
+    document_text_stats:
+      count: 3125
+      min_chars: 2862
+      max_chars: 150560
+      mean_chars: 14163.52224
+      median_chars: 9517.0
+  th:
+    language: th
+    category: natural_language
+    short_description: Thai long-document retrieval task.
+    description: The Thai split of NanoMLDR evaluates long-document retrieval for Thai queries.
+      Models must rank lengthy corpus documents for question-style information needs in the
+      compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 151
+      min_chars: 22
+      max_chars: 220
+      mean_chars: 85.25165562913908
+      median_chars: 78.0
+    document_text_stats:
+      count: 3199
+      min_chars: 36
+      max_chars: 60054
+      mean_chars: 4994.82150672085
+      median_chars: 1561.0
+  zh:
+    language: zh
+    category: natural_language
+    short_description: Chinese long-document retrieval task.
+    description: The Chinese split of NanoMLDR evaluates long-document retrieval for Chinese
+      queries. Models must rank lengthy corpus documents for question-style information needs
+      in the compact MLDR setting.
+    citation_keys:
+    - chen2024bgem3
+    - shitao2024mldr
+    references:
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text
+        Embeddings Through Self-Knowledge Distillation'
+      authors:
+      - Jianlyu Chen
+      - Shitao Xiao
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.137/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.137
+    - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+      authors:
+      - Shitao Xiao
+      - Jianlyu Chen
+      - Peitian Zhang
+      - Kun Luo
+      - Defu Lian
+      - Zheng Liu
+      year: 2024
+      url: https://huggingface.co/datasets/Shitao/MLDR
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+      \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
+      \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
+      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
+      }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
+      \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
+      \ Defu and Liu, Zheng},\n  year = {2024},\n  url = {https://huggingface.co/datasets/Shitao/MLDR}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 8
+      max_chars: 66
+      mean_chars: 20.675
+      median_chars: 19.0
+    document_text_stats:
+      count: 7877
+      min_chars: 6268
+      max_chars: 278468
+      mean_chars: 12307.310524311286
+      median_chars: 10222.0

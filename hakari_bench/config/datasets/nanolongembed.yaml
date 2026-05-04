@@ -1,0 +1,360 @@
+name: NanoLongEmbed
+dataset_id: hakari-bench/NanoLongEmbed
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoNarrativeQA
+- NanoSummScreenFD
+- NanoQMSum
+- Nano2WikiMultihopQA
+- NanoPasskey
+- NanoNeedle
+metadata:
+  language: en
+  category: natural_language
+  short_description: Nano subset of the LongEmbed long-context retrieval benchmark.
+  description: NanoLongEmbed evaluates long-context retrieval with compact subsets of LongEmbed
+    tasks. It includes real-world long-document QA and summarization retrieval tasks plus
+    synthetic passkey and needle retrieval settings.
+  citation_keys:
+  - zhu2024longembed
+  references:
+  - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+    authors:
+    - Dawei Zhu
+    - Liang Wang
+    - Nan Yang
+    - Yifan Song
+    - Wenhao Wu
+    - Furu Wei
+    - Sujian Li
+    year: 2024
+    url: https://aclanthology.org/2024.emnlp-main.47/
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.18653/v1/2024.emnlp-main.47
+  bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang, Nan\
+    \ and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv preprint\
+    \ arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for Long Context\
+    \ Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n}\n"
+task_metadata:
+  NanoNarrativeQA:
+    language: en
+    category: natural_language
+    short_description: NarrativeQA long-document retrieval.
+    description: Questions from NarrativeQA are matched to long narrative documents such as
+      books and movie scripts.
+    citation_keys:
+    - zhu2024longembed
+    - kocisky2018narrativeqa
+    references:
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+      authors:
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://aclanthology.org/2024.emnlp-main.47/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.emnlp-main.47
+    - title: The NarrativeQA Reading Comprehension Challenge
+      authors:
+      - Tomas Kocisky
+      - Jonathan Schwarz
+      - Phil Blunsom
+      - Chris Dyer
+      - Karl Moritz Hermann
+      - Gabor Melis
+      - Edward Grefenstette
+      year: 2018
+      url: https://aclanthology.org/Q18-1023
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00023
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
+      }\n@article{kocisky2018narrativeqa,\n  author = {Kocisky, Tomas and Schwarz, Jonathan\
+      \ and Blunsom, Phil and Dyer, Chris and Hermann, Karl Moritz and Melis, Gabor and Grefenstette,\
+      \ Edward},\n  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  title = {The NarrativeQA Reading Comprehension Challenge},\n  year = {2018},\n  url\
+      \ = {https://aclanthology.org/Q18-1023},\n  doi = {10.1162/tacl_a_00023}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 113
+      mean_chars: 49.315
+      median_chars: 47.5
+    document_text_stats:
+      count: 355
+      min_chars: 21215
+      max_chars: 1874085
+      mean_chars: 326752.9971830986
+      median_chars: 252633.0
+  NanoSummScreenFD:
+    language: en
+    category: natural_language
+    short_description: SummScreen screenplay retrieval.
+    description: Queries from the SummScreen ForeverDreaming subset are matched to long screenplay
+      or transcript documents.
+    citation_keys:
+    - zhu2024longembed
+    - chen2022summscreen
+    references:
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+      authors:
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://aclanthology.org/2024.emnlp-main.47/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.emnlp-main.47
+    - title: 'SummScreen: A Dataset for Abstractive Screenplay Summarization'
+      authors:
+      - Mingda Chen
+      - Zewei Chu
+      - Sam Wiseman
+      - Kevin Gimpel
+      year: 2022
+      url: https://aclanthology.org/2022.acl-long.589
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2022.acl-long.589
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
+      }\n@inproceedings{chen2022summscreen,\n  author = {Chen, Mingda and Chu, Zewei and Wiseman,\
+      \ Sam and Gimpel, Kevin},\n  booktitle = {Proceedings of the 60th Annual Meeting of\
+      \ the Association for Computational Linguistics (Volume 1: Long Papers)},\n  title =\
+      \ {SummScreen: A Dataset for Abstractive Screenplay Summarization},\n  year = {2022},\n\
+      \  url = {https://aclanthology.org/2022.acl-long.589},\n  doi = {10.18653/v1/2022.acl-long.589}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 159
+      max_chars: 2327
+      mean_chars: 600.665
+      median_chars: 507.0
+    document_text_stats:
+      count: 336
+      min_chars: 8768
+      max_chars: 91515
+      mean_chars: 30854.32738095238
+      median_chars: 29210.0
+  NanoQMSum:
+    language: en
+    category: natural_language
+    short_description: QMSum meeting transcript retrieval.
+    description: Query-focused meeting summarization requests are matched to the relevant
+      long meeting transcripts.
+    citation_keys:
+    - zhu2024longembed
+    - zhong2021qmsum
+    references:
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+      authors:
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://aclanthology.org/2024.emnlp-main.47/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.emnlp-main.47
+    - title: 'QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization'
+      authors:
+      - Ming Zhong
+      - Da Yin
+      - Tao Yu
+      - Ahmad Zaidi
+      - Mutethia Mutuma
+      - Rahul Jha
+      - Ahmed Hassan Awadallah
+      - Asli Celikyilmaz
+      - Yang Liu
+      - Xipeng Qiu
+      - Dragomir Radev
+      year: 2021
+      url: https://aclanthology.org/2021.naacl-main.472
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2021.naacl-main.472
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
+      }\n@inproceedings{zhong2021qmsum,\n  author = {Zhong, Ming and Yin, Da and Yu, Tao and\
+      \ Zaidi, Ahmad and Mutuma, Mutethia and Jha, Rahul and Awadallah, Ahmed Hassan and Celikyilmaz,\
+      \ Asli and Liu, Yang and Qiu, Xipeng and Radev, Dragomir},\n  booktitle = {Proceedings\
+      \ of the 2021 Conference of the North American Chapter of the Association for Computational\
+      \ Linguistics: Human Language Technologies},\n  title = {QMSum: A New Benchmark for\
+      \ Query-based Multi-domain Meeting Summarization},\n  year = {2021},\n  url = {https://aclanthology.org/2021.naacl-main.472},\n\
+      \  doi = {10.18653/v1/2021.naacl-main.472}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 84
+      max_chars: 1177
+      mean_chars: 446.325
+      median_chars: 410.5
+    document_text_stats:
+      count: 197
+      min_chars: 6428
+      max_chars: 147260
+      mean_chars: 53335.817258883246
+      median_chars: 50063.0
+  Nano2WikiMultihopQA:
+    language: en
+    category: natural_language
+    short_description: 2WikiMultiHopQA retrieval.
+    description: Multi-hop questions are matched to Wikipedia-derived documents that contain
+      the needed evidence.
+    citation_keys:
+    - zhu2024longembed
+    - ho2020constructing
+    references:
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+      authors:
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://aclanthology.org/2024.emnlp-main.47/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.emnlp-main.47
+    - title: Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning
+        Steps
+      authors:
+      - Xanh Ho
+      - Anh-Khoa Duong Nguyen
+      - Saku Sugawara
+      - Akiko Aizawa
+      year: 2020
+      url: https://aclanthology.org/2020.coling-main.580
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
+      }\n@inproceedings{ho2020constructing,\n  author = {Ho, Xanh and Nguyen, Anh-Khoa Duong\
+      \ and Sugawara, Saku and Aizawa, Akiko},\n  booktitle = {Proceedings of the 28th International\
+      \ Conference on Computational Linguistics},\n  title = {Constructing A Multi-hop QA\
+      \ Dataset for Comprehensive Evaluation of Reasoning Steps},\n  year = {2020},\n  url\
+      \ = {https://aclanthology.org/2020.coling-main.580}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 36
+      max_chars: 108
+      mean_chars: 67.515
+      median_chars: 65.5
+    document_text_stats:
+      count: 300
+      min_chars: 5796
+      max_chars: 75837
+      mean_chars: 37445.60333333333
+      median_chars: 31645.5
+  NanoPasskey:
+    language: en
+    category: natural_language
+    short_description: Synthetic passkey retrieval.
+    description: Synthetic LongEmbed task where a query must retrieve the long context containing
+      the requested passkey.
+    citation_keys:
+    - zhu2024longembed
+    references:
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+      authors:
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://aclanthology.org/2024.emnlp-main.47/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.emnlp-main.47
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
+      }\n"
+    query_text_stats:
+      count: 100
+      min_chars: 33
+      max_chars: 45
+      mean_chars: 37.8
+      median_chars: 38.0
+    document_text_stats:
+      count: 800
+      min_chars: 866
+      max_chars: 116395
+      mean_chars: 28956.68
+      median_chars: 10883.0
+  NanoNeedle:
+    language: en
+    category: natural_language
+    short_description: Synthetic needle retrieval.
+    description: Synthetic LongEmbed task where a query must retrieve the long document containing
+      a target needle passage.
+    citation_keys:
+    - zhu2024longembed
+    references:
+    - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+      authors:
+      - Dawei Zhu
+      - Liang Wang
+      - Nan Yang
+      - Yifan Song
+      - Wenhao Wu
+      - Furu Wei
+      - Sujian Li
+      year: 2024
+      url: https://aclanthology.org/2024.emnlp-main.47/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.emnlp-main.47
+    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
+      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
+      }\n"
+    query_text_stats:
+      count: 98
+      min_chars: 25
+      max_chars: 83
+      mean_chars: 58.98979591836735
+      median_chars: 60.5
+    document_text_stats:
+      count: 800
+      min_chars: 954
+      max_chars: 141849
+      mean_chars: 35246.1175
+      median_chars: 12934.5
