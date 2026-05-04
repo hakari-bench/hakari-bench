@@ -11,6 +11,8 @@ from scipy import sparse
 from tqdm.auto import tqdm
 
 from hakari_bench.datasets import EvalTask
+from hakari_bench.embedding_matrix import QuantizedEmbeddingMatrix
+from hakari_bench.embedding_matrix import take_embedding_rows as _take_embedding_rows
 from hakari_bench.metrics import compute_ir_metrics
 
 QuantizationPrecision = Literal["int8", "binary"]
@@ -41,30 +43,6 @@ class TaskEvaluation:
     rerank_metrics: dict[str, float] = field(default_factory=dict)
     reranking_evaluations: list[dict[str, Any]] = field(default_factory=list)
     rerank_aggregate_metric_value: float | None = None
-
-
-@dataclass(frozen=True)
-class QuantizedEmbeddingMatrix:
-    values: Any
-    precision: str
-    original_dim: int
-    algorithm: str
-    method: str
-    side: str
-    ranges_source: str | None = None
-    ranges: Any | None = None
-    rounding: str | None = None
-    score_representation: str | None = None
-    source_values: Any | None = None
-    binary_encoding: str | None = None
-
-    @property
-    def shape(self) -> tuple[int, ...]:
-        return tuple(int(dimension) for dimension in self.values.shape)
-
-    @property
-    def dtype(self) -> Any:
-        return self.values.dtype
 
 
 def load_ir_dataset(
@@ -1374,43 +1352,6 @@ def _truncate_embeddings(embeddings: Any, dim: int) -> Any:
     if dim > matrix.shape[1]:
         raise ValueError(f"Cannot truncate embeddings with dimension {matrix.shape[1]} to {dim}.")
     return matrix[:, :dim]
-
-
-def _take_embedding_rows(embeddings: Any, indices: list[int]) -> Any:
-    if isinstance(embeddings, QuantizedEmbeddingMatrix):
-        return QuantizedEmbeddingMatrix(
-            values=_take_embedding_rows(embeddings.values, indices),
-            precision=embeddings.precision,
-            original_dim=embeddings.original_dim,
-            algorithm=embeddings.algorithm,
-            method=embeddings.method,
-            side=embeddings.side,
-            ranges_source=embeddings.ranges_source,
-            ranges=embeddings.ranges,
-            rounding=embeddings.rounding,
-            score_representation=embeddings.score_representation,
-            source_values=(
-                _take_embedding_rows(embeddings.source_values, indices)
-                if embeddings.source_values is not None
-                else None
-            ),
-            binary_encoding=embeddings.binary_encoding,
-        )
-    if isinstance(embeddings, torch.Tensor):
-        index_tensor = torch.as_tensor(indices, dtype=torch.long, device=embeddings.device)
-        if embeddings.layout == torch.sparse_csr:
-            return embeddings.to_sparse_coo().index_select(0, index_tensor)
-        return embeddings.index_select(0, index_tensor)
-    if sparse.issparse(embeddings):
-        return embeddings[indices]
-    if isinstance(embeddings, np.ndarray):
-        return embeddings[indices]
-    if isinstance(embeddings, list | tuple):
-        return [embeddings[index] for index in indices]
-    try:
-        return embeddings[indices]
-    except Exception as exc:
-        raise TypeError(f"Unsupported embedding type for row selection: {type(embeddings).__name__}") from exc
 
 
 def _truncate_late_interaction_embeddings(embeddings: Any, dim: int) -> Any:
