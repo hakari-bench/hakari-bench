@@ -5,6 +5,7 @@ import re
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from hashlib import sha256
 from pathlib import Path
 from typing import Any, Callable
 
@@ -271,8 +272,39 @@ def run_or_load_task(
         "metrics": evaluation.metrics,
         "rerank_metrics": evaluation.rerank_metrics,
     }
+    payload["experiment_manifest"] = build_experiment_manifest(payload)
     _write_json(output_path, payload)
     return TaskRunResult(task=task, cache_hit=False, output_path=output_path, payload=payload)
+
+
+def build_experiment_manifest(payload: dict[str, Any]) -> dict[str, Any]:
+    fingerprint_payload = {
+        "model": payload.get("model"),
+        "target": payload.get("target"),
+        "config": payload.get("config"),
+        "environment": payload.get("environment"),
+    }
+    fingerprint = sha256(_canonical_json_bytes(fingerprint_payload)).hexdigest()
+    model = payload.get("model")
+    target = payload.get("target")
+    config = payload.get("config")
+    return {
+        "schema_version": 1,
+        "fingerprint_sha256": fingerprint,
+        "model_id": model.get("id") if isinstance(model, dict) else None,
+        "method": model.get("method") if isinstance(model, dict) else None,
+        "dataset_id": target.get("dataset_id") if isinstance(target, dict) else None,
+        "dataset_revision": target.get("dataset_revision") if isinstance(target, dict) else None,
+        "split_name": target.get("split_name") if isinstance(target, dict) else None,
+        "task_name": target.get("task_name") if isinstance(target, dict) else None,
+        "primary_metric": config.get("primary_metric") if isinstance(config, dict) else None,
+        "candidate_ranking": config.get("candidate_ranking") if isinstance(config, dict) else None,
+        "rerank_top_k": config.get("rerank_top_k") if isinstance(config, dict) else None,
+    }
+
+
+def _canonical_json_bytes(value: Any) -> bytes:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
 
 
 def aggregate_metric_value_for(metrics: dict[str, float], suffix: str) -> float:

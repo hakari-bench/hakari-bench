@@ -1750,6 +1750,13 @@ def test_run_or_load_task_records_dataset_revision(tmp_path: Path, monkeypatch: 
         "resolved": "toy/data@sha",
         "source": "huggingface_hub",
     }
+    manifest = result.payload["experiment_manifest"]
+    assert manifest["schema_version"] == 1
+    assert manifest["model_id"] == "hotchpotch/model"
+    assert manifest["dataset_id"] == "toy/data"
+    assert manifest["dataset_revision"] == result.payload["target"]["dataset_revision"]
+    assert manifest["candidate_ranking"] == "bm25"
+    assert len(manifest["fingerprint_sha256"]) == 64
 
 
 def test_run_or_load_task_records_task_metadata(tmp_path: Path) -> None:

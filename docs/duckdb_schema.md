@@ -37,6 +37,12 @@ The input files are:
 Run-level rows in `runs` are derived from these task JSON files; no aggregate
 JSON file is required.
 
+Each new task JSON includes `experiment_manifest`, a compact reproducibility
+record with a SHA-256 fingerprint over model metadata, target metadata, runtime
+config, and environment metadata. `task_results.experiment_fingerprint` copies
+that fingerprint into DuckDB for SQL-based run comparison. Older JSON files
+leave this column `NULL`.
+
 When `--parquet-output-dir` is provided, the generator also writes Parquet
 snapshots for the canonical tables: `runs`, `task_results`, `metrics_long`,
 `task_diagnostics`, `dataset_metadata`, `model_scores`, and `borda_task_scores`. These files are intended for notebooks,
@@ -112,6 +118,7 @@ one model, one benchmark task, and one embedding variant. Base results use
 | `score_100` | `DOUBLE` | `score * 100.0`, used for display. |
 | `aggregate_metric` | `VARCHAR` | `evaluation.aggregate_metric`, such as `ndcg@10`. |
 | `result_path` | `VARCHAR` | Source task JSON path. |
+| `experiment_fingerprint` | `VARCHAR` | SHA-256 fingerprint from `experiment_manifest`, derived from model, target, config, and environment metadata. |
 | `active_parameters` | `BIGINT` | Active parameter count, or `NULL` if unavailable. |
 | `total_parameters` | `BIGINT` | Total parameter count, or `NULL` if unavailable. |
 | `max_seq_length` | `INTEGER` | Model maximum sequence length. |

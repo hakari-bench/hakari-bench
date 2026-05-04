@@ -21,6 +21,7 @@ class TaskResultRow(WarehouseModel):
     score: float
     aggregate_metric: str | None = None
     result_path: str
+    experiment_fingerprint: str | None = None
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
@@ -58,6 +59,7 @@ class TaskResultRow(WarehouseModel):
             self.score_100,
             self.aggregate_metric,
             self.result_path,
+            self.experiment_fingerprint,
             self.active_parameters,
             self.total_parameters,
             self.max_seq_length,

@@ -58,6 +58,7 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
                         "sentence-transformers": "5.4.1",
                     }
                 },
+                "experiment_manifest": {"fingerprint_sha256": "abc123"},
                 "target": {
                     "dataset_name": "NanoJMTEB",
                     "dataset_id": "hakari-bench/NanoJMTEB",
@@ -86,6 +87,7 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert rows[0].benchmark == "NanoJMTEB"
     assert rows[0].score == 0.42
     assert rows[0].dataset_revision == "dataset-sha"
+    assert rows[0].experiment_fingerprint == "abc123"
     assert rows[0].active_parameters == 3
     assert rows[0].total_parameters == 5
     assert len(metric_rows) == 1

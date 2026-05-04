@@ -123,6 +123,8 @@ def load_results(
         model = task_payload.get("model", {})
         environment = task_payload.get("environment", {})
         package_versions = environment.get("package_versions", {}) if isinstance(environment, dict) else {}
+        experiment_manifest = task_payload.get("experiment_manifest", {})
+        experiment_manifest = experiment_manifest if isinstance(experiment_manifest, dict) else {}
         model_dir = result_path.relative_to(results_dir).parts[0]
         model_name = _model_name_from_payload(model, model_dir=model_dir)
         dataset_id = str(target.get("dataset_id") or "")
@@ -158,6 +160,7 @@ def load_results(
             "task_name": task_name,
             "task_key": task_key,
             "result_path": str(result_path),
+            "experiment_fingerprint": _str_or_none(experiment_manifest.get("fingerprint_sha256")),
             "active_parameters": _int_or_none(model.get("active_parameters")) if isinstance(model, dict) else None,
             "total_parameters": _int_or_none(model.get("total_parameters")) if isinstance(model, dict) else None,
             "max_seq_length": _int_or_none(model.get("max_seq_length")) if isinstance(model, dict) else None,
@@ -731,6 +734,7 @@ def write_duckdb(
                 dataset_id VARCHAR, dataset_revision VARCHAR, dataset_revision_requested VARCHAR,
                 dataset_name VARCHAR, split_name VARCHAR, task_name VARCHAR, task_key VARCHAR,
                 score DOUBLE, score_100 DOUBLE, aggregate_metric VARCHAR, result_path VARCHAR,
+                experiment_fingerprint VARCHAR,
                 active_parameters BIGINT, total_parameters BIGINT, max_seq_length INTEGER, dtype VARCHAR,
                 embedding_variant_name VARCHAR, embedding_dim INTEGER, quantization VARCHAR,
                 attn_implementation VARCHAR, torch_version VARCHAR, transformers_version VARCHAR,
@@ -740,7 +744,7 @@ def write_duckdb(
             """
         )
         con.executemany(
-            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [row.duckdb_values() for row in rows],
         )
         con.execute(
