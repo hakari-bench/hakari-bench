@@ -4,8 +4,11 @@ import json
 from pathlib import Path
 
 import duckdb
+import pytest
+from pydantic import ValidationError
 
 from scripts import build_results_database_and_report as report
+from hakari_bench.warehouse_schema import MetricLongRow, TaskResultRow
 
 
 def test_nanojmteb_is_a_ranked_benchmark() -> None:
@@ -86,6 +89,48 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert rows[0].active_parameters == 3
     assert rows[0].total_parameters == 5
     assert len(metric_rows) == 1
+
+
+def test_task_result_row_schema_rejects_unknown_fields() -> None:
+    with pytest.raises(ValidationError, match="unexpected"):
+        TaskResultRow.model_validate(
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoJMTEB",
+                "dataset_id": "hakari-bench/NanoJMTEB",
+                "dataset_name": "NanoJMTEB",
+                "task_name": "NanoJaCWIR",
+                "task_key": "NanoJMTEB::hakari-bench/NanoJMTEB::NanoJaCWIR",
+                "score": 0.42,
+                "result_path": "result.json",
+                "unexpected": True,
+            }
+        )
+
+
+def test_metric_long_row_schema_exports_duckdb_values() -> None:
+    row = MetricLongRow(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="NanoJMTEB",
+        dataset_id="hakari-bench/NanoJMTEB",
+        task_name="NanoJaCWIR",
+        metric_name="NanoJaCWIR_ndcg@10",
+        metric_value=0.42,
+        result_path="result.json",
+    )
+
+    assert row.duckdb_values() == (
+        "model",
+        "example/model",
+        "NanoJMTEB",
+        "hakari-bench/NanoJMTEB",
+        "NanoJaCWIR",
+        "NanoJaCWIR_ndcg@10",
+        0.42,
+        "result.json",
+    )
 
 
 def test_load_results_builds_runs_from_task_json(tmp_path: Path) -> None:
@@ -225,7 +270,7 @@ def test_load_results_canonicalizes_legacy_nanojmteb_task_names(tmp_path: Path) 
     assert [(row.task_name, row.task_key, row.score) for row in rows] == [
         ("NanoMIRACL", "NanoJMTEB::hakari-bench/NanoJMTEB::NanoMIRACL", 0.90)
     ]
-    assert [(row["task_name"], row["metric_name"], row["metric_value"]) for row in metric_rows] == [
+    assert [(row.task_name, row.metric_name, row.metric_value) for row in metric_rows] == [
         ("NanoMIRACL", "NanoMIRACL_ndcg@10", 0.90)
     ]
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 from collections import defaultdict
-from dataclasses import dataclass
+from collections.abc import Sequence
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -16,6 +16,7 @@ from hakari_bench.viewer.task_names import (
     canonical_task_key,
     canonical_task_name,
 )
+from hakari_bench.warehouse_schema import MetricLongRow, TaskResultRow
 
 
 TARGET_BENCHMARKS = [
@@ -43,37 +44,7 @@ VIEWS = ["Overall", *TARGET_BENCHMARKS]
 WAREHOUSE_TABLES = ("runs", "task_results", "metrics_long", "model_scores", "borda_task_scores")
 
 
-@dataclass(frozen=True)
-class TaskResult:
-    model_dir: str
-    model_name: str
-    benchmark: str
-    dataset_id: str
-    dataset_revision: str | None
-    dataset_revision_requested: str | None
-    dataset_name: str
-    split_name: str | None
-    task_name: str
-    task_key: str
-    score: float
-    aggregate_metric: str | None
-    result_path: str
-    active_parameters: int | None
-    total_parameters: int | None
-    max_seq_length: int | None
-    dtype: str | None
-    attn_implementation: str | None
-    torch_version: str | None
-    transformers_version: str | None
-    sentence_transformers_version: str | None
-    started_at_utc: str | None
-    finished_at_utc: str | None
-    evaluated_at_utc: str | None
-    duration_seconds_including_dataset_load: float | None
-    wall_seconds: float | None
-    embedding_variant_name: str | None = None
-    embedding_dim: int | None = None
-    quantization: str | None = None
+TaskResult = TaskResultRow
 
 
 def main() -> None:
@@ -98,10 +69,10 @@ def main() -> None:
     write_html(args.html_output, duckdb_path=args.duckdb_path, rows=base_rows, runs=runs, standings=standings)
 
 
-def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, Any]], list[dict[str, Any]]]:
+def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, Any]], list[MetricLongRow]]:
     rows: list[TaskResult] = []
     run_accumulators: dict[str, dict[str, Any]] = {}
-    metric_rows: list[dict[str, Any]] = []
+    metric_rows: list[MetricLongRow] = []
 
     for result_path in sorted(results_dir.glob("*/*/*.json")):
         task_payload = json.loads(result_path.read_text(encoding="utf-8"))
@@ -204,16 +175,16 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
         for metric_name, metric_value in task_payload.get("metrics", {}).items():
             if isinstance(metric_value, int | float):
                 metric_rows.append(
-                    {
-                        "model_dir": model_dir,
-                        "model_name": model_name,
-                        "benchmark": benchmark,
-                        "dataset_id": dataset_id,
-                        "task_name": task_name,
-                        "metric_name": canonical_metric_name(benchmark, metric_name),
-                        "metric_value": float(metric_value),
-                        "result_path": str(result_path),
-                    }
+                    MetricLongRow(
+                        model_dir=model_dir,
+                        model_name=model_name,
+                        benchmark=benchmark,
+                        dataset_id=dataset_id,
+                        task_name=task_name,
+                        metric_name=canonical_metric_name(benchmark, metric_name),
+                        metric_value=float(metric_value),
+                        result_path=str(result_path),
+                    )
                 )
 
     return _dedupe_task_results(rows), _runs_from_task_results(run_accumulators), _dedupe_metric_rows(metric_rows)
@@ -352,16 +323,16 @@ def _result_path_stem_matches_task(row: TaskResult) -> bool:
     return Path(row.result_path).stem == row.task_name
 
 
-def _dedupe_metric_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    deduped: dict[tuple[Any, ...], dict[str, Any]] = {}
+def _dedupe_metric_rows(rows: list[MetricLongRow]) -> list[MetricLongRow]:
+    deduped: dict[tuple[Any, ...], MetricLongRow] = {}
     for row in rows:
         key = (
-            row.get("model_dir"),
-            row.get("model_name"),
-            row.get("benchmark"),
-            row.get("dataset_id"),
-            row.get("task_name"),
-            row.get("metric_name"),
+            row.model_dir,
+            row.model_name,
+            row.benchmark,
+            row.dataset_id,
+            row.task_name,
+            row.metric_name,
         )
         current = deduped.get(key)
         if current is None or _prefer_metric_row(row, current):
@@ -369,14 +340,12 @@ def _dedupe_metric_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return list(deduped.values())
 
 
-def _prefer_metric_row(candidate: dict[str, Any], current: dict[str, Any]) -> bool:
+def _prefer_metric_row(candidate: MetricLongRow, current: MetricLongRow) -> bool:
     return _metric_result_path_stem_matches_task(candidate) and not _metric_result_path_stem_matches_task(current)
 
 
-def _metric_result_path_stem_matches_task(row: dict[str, Any]) -> bool:
-    result_path = row.get("result_path")
-    task_name = row.get("task_name")
-    return isinstance(result_path, str) and isinstance(task_name, str) and Path(result_path).stem == task_name
+def _metric_result_path_stem_matches_task(row: MetricLongRow) -> bool:
+    return Path(row.result_path).stem == row.task_name
 
 
 def _embedding_evaluations(value: Any) -> list[dict[str, Any]]:
@@ -519,11 +488,15 @@ def write_duckdb(
     *,
     runs: list[dict[str, Any]],
     rows: list[TaskResult],
-    metric_rows: list[dict[str, Any]],
+    metric_rows: Sequence[MetricLongRow | dict[str, Any]],
     standings: dict[str, list[dict[str, Any]]],
     borda_rows: list[dict[str, Any]],
 ) -> None:
     db_path.parent.mkdir(parents=True, exist_ok=True)
+    normalized_metric_rows = [
+        row if isinstance(row, MetricLongRow) else MetricLongRow.model_validate(row)
+        for row in metric_rows
+    ]
     con = duckdb.connect(str(db_path))
     try:
         for table in ["runs", "task_results", "metrics_long", "model_scores", "borda_task_scores"]:
@@ -583,41 +556,7 @@ def write_duckdb(
         )
         con.executemany(
             "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-                (
-                    row.model_dir,
-                    row.model_name,
-                    row.benchmark,
-                    row.dataset_id,
-                    row.dataset_revision,
-                    row.dataset_revision_requested,
-                    row.dataset_name,
-                    row.split_name,
-                    row.task_name,
-                    row.task_key,
-                    row.score,
-                    row.score * 100.0,
-                    row.aggregate_metric,
-                    row.result_path,
-                    row.active_parameters,
-                    row.total_parameters,
-                    row.max_seq_length,
-                    row.dtype,
-                    row.embedding_variant_name,
-                    row.embedding_dim,
-                    row.quantization,
-                    row.attn_implementation,
-                    row.torch_version,
-                    row.transformers_version,
-                    row.sentence_transformers_version,
-                    row.started_at_utc,
-                    row.finished_at_utc,
-                    row.evaluated_at_utc,
-                    row.duration_seconds_including_dataset_load,
-                    row.wall_seconds,
-                )
-                for row in rows
-            ],
+            [row.duckdb_values() for row in rows],
         )
         con.execute(
             """
@@ -629,19 +568,7 @@ def write_duckdb(
         )
         con.executemany(
             "INSERT INTO metrics_long VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-                (
-                    row.get("model_dir"),
-                    row.get("model_name"),
-                    row.get("benchmark"),
-                    row.get("dataset_id"),
-                    row.get("task_name"),
-                    row.get("metric_name"),
-                    row.get("metric_value"),
-                    row.get("result_path"),
-                )
-                for row in metric_rows
-            ],
+            [row.duckdb_values() for row in normalized_metric_rows],
         )
         score_rows = [row for view_rows in standings.values() for row in view_rows]
         con.execute(
