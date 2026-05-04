@@ -38,6 +38,10 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoChemTEB").dataset_id == "hakari-bench/NanoChemTEB"
     assert registry.get_dataset("NanoR2MED").dataset_id == "hakari-bench/NanoR2MED"
     assert registry.get_dataset("NanoBuiltBench").dataset_id == "hakari-bench/NanoBuiltBench"
+    assert registry.get_dataset("NanoBIRCO").dataset_id == "hakari-bench/NanoBIRCO"
+    assert registry.get_dataset("NanoDAPFAM").dataset_id == "hakari-bench/NanoDAPFAM"
+    assert registry.get_dataset("NanoMTEB-Dutch").dataset_id == "hakari-bench/NanoMTEB-Dutch"
+    assert registry.get_dataset("NanoMTEB-Xlingual").dataset_id == "hakari-bench/NanoMTEB-Xlingual"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
 
 

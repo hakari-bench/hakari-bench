@@ -1,0 +1,128 @@
+name: NanoMTEB-Dutch
+dataset_id: hakari-bench/NanoMTEB-Dutch
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoCQADupstackAndroidNL
+- NanoCQADupstackEnglishNL
+- NanoCQADupstackGisNL
+- NanoCQADupstackMathematicaNL
+- NanoCQADupstackPhysicsNL
+- NanoCQADupstackProgrammersNL
+- NanoCQADupstackStatsNL
+- NanoCQADupstackTexNL
+- NanoCQADupstackWebmastersNL
+- NanoCQADupstackWordpressNL
+- NanoDutchNewsArticles
+- NanoFEVERNL
+- NanoLegalQANL
+- NanoNQNL
+- NanoOpenTender
+- NanoQuoraNL
+- NanoVABB
+- NanoWebFAQNL
+- NanobBSARDNL
+metadata:
+  language: nl
+  category: natural_language
+  short_description: Dutch NanoMTEB retrieval benchmark.
+  description: NanoMTEB-Dutch is a compact Dutch retrieval benchmark aligned with MTEB-style task families.
+task_metadata:
+  NanoCQADupstackAndroidNL:
+    language: nl
+    category: natural_language
+    short_description: NanoCQADupstackAndroidNL retrieval task.
+    description: NanoCQADupstackAndroidNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoCQADupstackEnglishNL:
+    language: nl
+    category: natural_language
+    short_description: NanoCQADupstackEnglishNL retrieval task.
+    description: NanoCQADupstackEnglishNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoCQADupstackGisNL:
+    language: nl
+    category: natural_language
+    short_description: NanoCQADupstackGisNL retrieval task.
+    description: NanoCQADupstackGisNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoCQADupstackMathematicaNL:
+    language: nl
+    category: natural_language
+    short_description: NanoCQADupstackMathematicaNL retrieval task.
+    description: NanoCQADupstackMathematicaNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoCQADupstackPhysicsNL:
+    language: nl
+    category: natural_language
+    short_description: NanoCQADupstackPhysicsNL retrieval task.
+    description: NanoCQADupstackPhysicsNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoCQADupstackProgrammersNL:
+    language: nl
+    category: natural_language
+    short_description: NanoCQADupstackProgrammersNL retrieval task.
+    description: NanoCQADupstackProgrammersNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoCQADupstackStatsNL:
+    language: nl
+    category: natural_language
+    short_description: NanoCQADupstackStatsNL retrieval task.
+    description: NanoCQADupstackStatsNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoCQADupstackTexNL:
+    language: nl
+    category: natural_language
+    short_description: NanoCQADupstackTexNL retrieval task.
+    description: NanoCQADupstackTexNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoCQADupstackWebmastersNL:
+    language: nl
+    category: natural_language
+    short_description: NanoCQADupstackWebmastersNL retrieval task.
+    description: NanoCQADupstackWebmastersNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoCQADupstackWordpressNL:
+    language: nl
+    category: natural_language
+    short_description: NanoCQADupstackWordpressNL retrieval task.
+    description: NanoCQADupstackWordpressNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoDutchNewsArticles:
+    language: nl
+    category: natural_language
+    short_description: NanoDutchNewsArticles retrieval task.
+    description: NanoDutchNewsArticles is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoFEVERNL:
+    language: nl
+    category: natural_language
+    short_description: NanoFEVERNL retrieval task.
+    description: NanoFEVERNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoLegalQANL:
+    language: nl
+    category: natural_language
+    short_description: NanoLegalQANL retrieval task.
+    description: NanoLegalQANL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoNQNL:
+    language: nl
+    category: natural_language
+    short_description: NanoNQNL retrieval task.
+    description: NanoNQNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoOpenTender:
+    language: nl
+    category: natural_language
+    short_description: NanoOpenTender retrieval task.
+    description: NanoOpenTender is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoQuoraNL:
+    language: nl
+    category: natural_language
+    short_description: NanoQuoraNL retrieval task.
+    description: NanoQuoraNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoVABB:
+    language: nl
+    category: natural_language
+    short_description: NanoVABB retrieval task.
+    description: NanoVABB is a compact retrieval task included in NanoMTEB-Dutch.
+  NanoWebFAQNL:
+    language: nl
+    category: natural_language
+    short_description: NanoWebFAQNL retrieval task.
+    description: NanoWebFAQNL is a compact retrieval task included in NanoMTEB-Dutch.
+  NanobBSARDNL:
+    language: nl
+    category: natural_language
+    short_description: NanobBSARDNL retrieval task.
+    description: NanobBSARDNL is a compact retrieval task included in NanoMTEB-Dutch.

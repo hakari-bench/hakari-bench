@@ -1,0 +1,99 @@
+name: NanoMTEB-Vietnamese
+dataset_id: hakari-bench/NanoMTEB-Vietnamese
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoCQADupstackAndroidVN
+- NanoCQADupstackGisVN
+- NanoCQADupstackMathematicaVN
+- NanoCQADupstackPhysicsVN
+- NanoCQADupstackProgrammersVN
+- NanoCQADupstackStatsVN
+- NanoCQADupstackTexVN
+- NanoCQADupstackWebmastersVN
+- NanoCQADupstackWordpressVN
+- NanoFEVERVN
+- NanoNQVN
+- NanoNanoFEVERVN
+- NanoNanoNQVN
+- NanoQuoraVN
+metadata:
+  language: vi
+  category: natural_language
+  short_description: Vietnamese NanoMTEB retrieval benchmark.
+  description: NanoMTEB-Vietnamese is a compact Vietnamese retrieval benchmark aligned with MTEB-style
+    task families.
+task_metadata:
+  NanoCQADupstackAndroidVN:
+    language: vi
+    category: natural_language
+    short_description: NanoCQADupstackAndroidVN retrieval task.
+    description: NanoCQADupstackAndroidVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoCQADupstackGisVN:
+    language: vi
+    category: natural_language
+    short_description: NanoCQADupstackGisVN retrieval task.
+    description: NanoCQADupstackGisVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoCQADupstackMathematicaVN:
+    language: vi
+    category: natural_language
+    short_description: NanoCQADupstackMathematicaVN retrieval task.
+    description: NanoCQADupstackMathematicaVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoCQADupstackPhysicsVN:
+    language: vi
+    category: natural_language
+    short_description: NanoCQADupstackPhysicsVN retrieval task.
+    description: NanoCQADupstackPhysicsVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoCQADupstackProgrammersVN:
+    language: vi
+    category: natural_language
+    short_description: NanoCQADupstackProgrammersVN retrieval task.
+    description: NanoCQADupstackProgrammersVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoCQADupstackStatsVN:
+    language: vi
+    category: natural_language
+    short_description: NanoCQADupstackStatsVN retrieval task.
+    description: NanoCQADupstackStatsVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoCQADupstackTexVN:
+    language: vi
+    category: natural_language
+    short_description: NanoCQADupstackTexVN retrieval task.
+    description: NanoCQADupstackTexVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoCQADupstackWebmastersVN:
+    language: vi
+    category: natural_language
+    short_description: NanoCQADupstackWebmastersVN retrieval task.
+    description: NanoCQADupstackWebmastersVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoCQADupstackWordpressVN:
+    language: vi
+    category: natural_language
+    short_description: NanoCQADupstackWordpressVN retrieval task.
+    description: NanoCQADupstackWordpressVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoFEVERVN:
+    language: vi
+    category: natural_language
+    short_description: NanoFEVERVN retrieval task.
+    description: NanoFEVERVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoNQVN:
+    language: vi
+    category: natural_language
+    short_description: NanoNQVN retrieval task.
+    description: NanoNQVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoNanoFEVERVN:
+    language: vi
+    category: natural_language
+    short_description: NanoNanoFEVERVN retrieval task.
+    description: NanoNanoFEVERVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoNanoNQVN:
+    language: vi
+    category: natural_language
+    short_description: NanoNanoNQVN retrieval task.
+    description: NanoNanoNQVN is a compact retrieval task included in NanoMTEB-Vietnamese.
+  NanoQuoraVN:
+    language: vi
+    category: natural_language
+    short_description: NanoQuoraVN retrieval task.
+    description: NanoQuoraVN is a compact retrieval task included in NanoMTEB-Vietnamese.

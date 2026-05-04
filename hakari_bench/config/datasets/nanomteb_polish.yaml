@@ -1,0 +1,110 @@
+name: NanoMTEB-Polish
+dataset_id: hakari-bench/NanoMTEB-Polish
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoCQADupstackAndroidPL
+- NanoCQADupstackEnglishPL
+- NanoCQADupstackGisPL
+- NanoCQADupstackMathematicaPL
+- NanoCQADupstackPhysicsPL
+- NanoCQADupstackProgrammersPL
+- NanoCQADupstackStatsPL
+- NanoCQADupstackTexPL
+- NanoCQADupstackWebmastersPL
+- NanoCQADupstackWordpressPL
+- NanoFiQAPL
+- NanoNQPL
+- NanoNQPLHardNegatives
+- NanoPUGG
+- NanoQuoraPL
+- NanoQuoraPLHardNegatives
+metadata:
+  language: pl
+  category: natural_language
+  short_description: Polish NanoMTEB retrieval benchmark.
+  description: NanoMTEB-Polish is a compact Polish retrieval benchmark aligned with MTEB-style task families.
+task_metadata:
+  NanoCQADupstackAndroidPL:
+    language: pl
+    category: natural_language
+    short_description: NanoCQADupstackAndroidPL retrieval task.
+    description: NanoCQADupstackAndroidPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoCQADupstackEnglishPL:
+    language: pl
+    category: natural_language
+    short_description: NanoCQADupstackEnglishPL retrieval task.
+    description: NanoCQADupstackEnglishPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoCQADupstackGisPL:
+    language: pl
+    category: natural_language
+    short_description: NanoCQADupstackGisPL retrieval task.
+    description: NanoCQADupstackGisPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoCQADupstackMathematicaPL:
+    language: pl
+    category: natural_language
+    short_description: NanoCQADupstackMathematicaPL retrieval task.
+    description: NanoCQADupstackMathematicaPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoCQADupstackPhysicsPL:
+    language: pl
+    category: natural_language
+    short_description: NanoCQADupstackPhysicsPL retrieval task.
+    description: NanoCQADupstackPhysicsPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoCQADupstackProgrammersPL:
+    language: pl
+    category: natural_language
+    short_description: NanoCQADupstackProgrammersPL retrieval task.
+    description: NanoCQADupstackProgrammersPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoCQADupstackStatsPL:
+    language: pl
+    category: natural_language
+    short_description: NanoCQADupstackStatsPL retrieval task.
+    description: NanoCQADupstackStatsPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoCQADupstackTexPL:
+    language: pl
+    category: natural_language
+    short_description: NanoCQADupstackTexPL retrieval task.
+    description: NanoCQADupstackTexPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoCQADupstackWebmastersPL:
+    language: pl
+    category: natural_language
+    short_description: NanoCQADupstackWebmastersPL retrieval task.
+    description: NanoCQADupstackWebmastersPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoCQADupstackWordpressPL:
+    language: pl
+    category: natural_language
+    short_description: NanoCQADupstackWordpressPL retrieval task.
+    description: NanoCQADupstackWordpressPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoFiQAPL:
+    language: pl
+    category: natural_language
+    short_description: NanoFiQAPL retrieval task.
+    description: NanoFiQAPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoNQPL:
+    language: pl
+    category: natural_language
+    short_description: NanoNQPL retrieval task.
+    description: NanoNQPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoNQPLHardNegatives:
+    language: pl
+    category: natural_language
+    short_description: NanoNQPLHardNegatives retrieval task.
+    description: NanoNQPLHardNegatives is a compact retrieval task included in NanoMTEB-Polish.
+  NanoPUGG:
+    language: pl
+    category: natural_language
+    short_description: NanoPUGG retrieval task.
+    description: NanoPUGG is a compact retrieval task included in NanoMTEB-Polish.
+  NanoQuoraPL:
+    language: pl
+    category: natural_language
+    short_description: NanoQuoraPL retrieval task.
+    description: NanoQuoraPL is a compact retrieval task included in NanoMTEB-Polish.
+  NanoQuoraPLHardNegatives:
+    language: pl
+    category: natural_language
+    short_description: NanoQuoraPLHardNegatives retrieval task.
+    description: NanoQuoraPLHardNegatives is a compact retrieval task included in NanoMTEB-Polish.

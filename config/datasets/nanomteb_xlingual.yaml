@@ -1,0 +1,243 @@
+name: NanoMTEB-Xlingual
+dataset_id: hakari-bench/NanoMTEB-Xlingual
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoEuroPIRQEN
+- NanoEuroPIRQFI
+- NanoEuroPIRQPT
+- NanoIndicQAAS
+- NanoIndicQABN
+- NanoIndicQAGU
+- NanoIndicQAHI
+- NanoIndicQAKN
+- NanoIndicQAML
+- NanoIndicQAMR
+- NanoIndicQAOR
+- NanoIndicQAPA
+- NanoIndicQATA
+- NanoIndicQATE
+- NanoMuPLeREL
+- NanoMuPLeREN
+- NanoMuPLeRES
+- NanoMuPLeRFI
+- NanoMuPLeRFR
+- NanoMuPLeRIT
+- NanoMuPLeRLT
+- NanoMuPLeRLV
+- NanoMuPLeRNL
+- NanoMuPLeRPL
+- NanoMuPLeRPT
+- NanoMuPLeRSK
+- NanoMuPLeRSL
+- NanoMuPLeRSV
+- NanoNeuCLIR2022Fa
+- NanoNeuCLIR2022FaHardNegatives
+- NanoNeuCLIR2022Ru
+- NanoNeuCLIR2022RuHardNegatives
+- NanoNeuCLIR2022Zh
+- NanoNeuCLIR2022ZhHardNegatives
+- NanoWMT19DeFr
+- NanoWMT19FrDe
+- NanoWMT21DeFr
+- NanoWMT21FrDe
+metadata:
+  language: multilingual
+  category: natural_language
+  short_description: Cross-lingual NanoMTEB retrieval benchmark.
+  description: NanoMTEB-Xlingual is a compact cross-lingual retrieval benchmark aligned with MTEB-style
+    task families.
+task_metadata:
+  NanoEuroPIRQEN:
+    language: multilingual
+    category: natural_language
+    short_description: NanoEuroPIRQEN retrieval task.
+    description: NanoEuroPIRQEN is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoEuroPIRQFI:
+    language: multilingual
+    category: natural_language
+    short_description: NanoEuroPIRQFI retrieval task.
+    description: NanoEuroPIRQFI is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoEuroPIRQPT:
+    language: multilingual
+    category: natural_language
+    short_description: NanoEuroPIRQPT retrieval task.
+    description: NanoEuroPIRQPT is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQAAS:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQAAS retrieval task.
+    description: NanoIndicQAAS is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQABN:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQABN retrieval task.
+    description: NanoIndicQABN is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQAGU:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQAGU retrieval task.
+    description: NanoIndicQAGU is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQAHI:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQAHI retrieval task.
+    description: NanoIndicQAHI is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQAKN:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQAKN retrieval task.
+    description: NanoIndicQAKN is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQAML:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQAML retrieval task.
+    description: NanoIndicQAML is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQAMR:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQAMR retrieval task.
+    description: NanoIndicQAMR is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQAOR:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQAOR retrieval task.
+    description: NanoIndicQAOR is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQAPA:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQAPA retrieval task.
+    description: NanoIndicQAPA is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQATA:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQATA retrieval task.
+    description: NanoIndicQATA is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoIndicQATE:
+    language: multilingual
+    category: natural_language
+    short_description: NanoIndicQATE retrieval task.
+    description: NanoIndicQATE is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeREL:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeREL retrieval task.
+    description: NanoMuPLeREL is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeREN:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeREN retrieval task.
+    description: NanoMuPLeREN is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRES:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRES retrieval task.
+    description: NanoMuPLeRES is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRFI:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRFI retrieval task.
+    description: NanoMuPLeRFI is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRFR:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRFR retrieval task.
+    description: NanoMuPLeRFR is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRIT:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRIT retrieval task.
+    description: NanoMuPLeRIT is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRLT:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRLT retrieval task.
+    description: NanoMuPLeRLT is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRLV:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRLV retrieval task.
+    description: NanoMuPLeRLV is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRNL:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRNL retrieval task.
+    description: NanoMuPLeRNL is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRPL:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRPL retrieval task.
+    description: NanoMuPLeRPL is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRPT:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRPT retrieval task.
+    description: NanoMuPLeRPT is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRSK:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRSK retrieval task.
+    description: NanoMuPLeRSK is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRSL:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRSL retrieval task.
+    description: NanoMuPLeRSL is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoMuPLeRSV:
+    language: multilingual
+    category: natural_language
+    short_description: NanoMuPLeRSV retrieval task.
+    description: NanoMuPLeRSV is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoNeuCLIR2022Fa:
+    language: multilingual
+    category: natural_language
+    short_description: NanoNeuCLIR2022Fa retrieval task.
+    description: NanoNeuCLIR2022Fa is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoNeuCLIR2022FaHardNegatives:
+    language: multilingual
+    category: natural_language
+    short_description: NanoNeuCLIR2022FaHardNegatives retrieval task.
+    description: NanoNeuCLIR2022FaHardNegatives is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoNeuCLIR2022Ru:
+    language: multilingual
+    category: natural_language
+    short_description: NanoNeuCLIR2022Ru retrieval task.
+    description: NanoNeuCLIR2022Ru is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoNeuCLIR2022RuHardNegatives:
+    language: multilingual
+    category: natural_language
+    short_description: NanoNeuCLIR2022RuHardNegatives retrieval task.
+    description: NanoNeuCLIR2022RuHardNegatives is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoNeuCLIR2022Zh:
+    language: multilingual
+    category: natural_language
+    short_description: NanoNeuCLIR2022Zh retrieval task.
+    description: NanoNeuCLIR2022Zh is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoNeuCLIR2022ZhHardNegatives:
+    language: multilingual
+    category: natural_language
+    short_description: NanoNeuCLIR2022ZhHardNegatives retrieval task.
+    description: NanoNeuCLIR2022ZhHardNegatives is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoWMT19DeFr:
+    language: multilingual
+    category: natural_language
+    short_description: NanoWMT19DeFr retrieval task.
+    description: NanoWMT19DeFr is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoWMT19FrDe:
+    language: multilingual
+    category: natural_language
+    short_description: NanoWMT19FrDe retrieval task.
+    description: NanoWMT19FrDe is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoWMT21DeFr:
+    language: multilingual
+    category: natural_language
+    short_description: NanoWMT21DeFr retrieval task.
+    description: NanoWMT21DeFr is a compact retrieval task included in NanoMTEB-Xlingual.
+  NanoWMT21FrDe:
+    language: multilingual
+    category: natural_language
+    short_description: NanoWMT21FrDe retrieval task.
+    description: NanoWMT21FrDe is a compact retrieval task included in NanoMTEB-Xlingual.

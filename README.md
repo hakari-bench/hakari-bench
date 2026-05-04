@@ -8,7 +8,8 @@ Built-in dataset definitions include `NanoBEIR-en`, `MNanoBEIR`,
 `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`, `NanoRTEB`, `NanoMTEB`,
 `NanoCMTEB`, `NanoMMTEB`, `NanoLongEmbed`, `NanoCoIR`, `NanoIFIR`,
 `NanoLaw`, `NanoMedical`, `NanoRARb`, `NanoBRIGHT`, `NanoCodeRAG`,
-`NanoChemTEB`, `NanoR2MED`, and `NanoBuiltBench`.
+`NanoChemTEB`, `NanoR2MED`, `NanoBuiltBench`, `NanoBIRCO`, `NanoDAPFAM`,
+and language-specific `NanoMTEB-*` datasets.
 
 ## Example
 

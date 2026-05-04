@@ -1,0 +1,32 @@
+name: NanoMTEB-Thai
+dataset_id: hakari-bench/NanoMTEB-Thai
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoMKQATh
+- NanoWebFAQTh
+- NanoXQuADTh
+metadata:
+  language: th
+  category: natural_language
+  short_description: Thai NanoMTEB retrieval benchmark.
+  description: NanoMTEB-Thai is a compact Thai retrieval benchmark aligned with MTEB-style task families.
+task_metadata:
+  NanoMKQATh:
+    language: th
+    category: natural_language
+    short_description: NanoMKQATh retrieval task.
+    description: NanoMKQATh is a compact retrieval task included in NanoMTEB-Thai.
+  NanoWebFAQTh:
+    language: th
+    category: natural_language
+    short_description: NanoWebFAQTh retrieval task.
+    description: NanoWebFAQTh is a compact retrieval task included in NanoMTEB-Thai.
+  NanoXQuADTh:
+    language: th
+    category: natural_language
+    short_description: NanoXQuADTh retrieval task.
+    description: NanoXQuADTh is a compact retrieval task included in NanoMTEB-Thai.

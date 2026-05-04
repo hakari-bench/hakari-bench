@@ -1,0 +1,123 @@
+name: NanoDAPFAM
+dataset_id: hakari-bench/NanoDAPFAM
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoDAPFAMAllTitlAbsClmToFullText
+- NanoDAPFAMAllTitlAbsClmToTitlAbs
+- NanoDAPFAMAllTitlAbsClmToTitlAbsClm
+- NanoDAPFAMAllTitlAbsToFullText
+- NanoDAPFAMAllTitlAbsToTitlAbs
+- NanoDAPFAMAllTitlAbsToTitlAbsClm
+- NanoDAPFAMInTitlAbsClmToFullText
+- NanoDAPFAMInTitlAbsClmToTitlAbs
+- NanoDAPFAMInTitlAbsClmToTitlAbsClm
+- NanoDAPFAMInTitlAbsToFullText
+- NanoDAPFAMInTitlAbsToTitlAbs
+- NanoDAPFAMInTitlAbsToTitlAbsClm
+- NanoDAPFAMOutTitlAbsClmToFullText
+- NanoDAPFAMOutTitlAbsClmToTitlAbs
+- NanoDAPFAMOutTitlAbsClmToTitlAbsClm
+- NanoDAPFAMOutTitlAbsToFullText
+- NanoDAPFAMOutTitlAbsToTitlAbs
+- NanoDAPFAMOutTitlAbsToTitlAbsClm
+metadata:
+  language: en
+  category: natural_language
+  short_description: Nano subset of patent-family retrieval tasks.
+  description: NanoDAPFAM evaluates patent-family retrieval with query and corpus variants based on titles,
+    abstracts, claims, and full text.
+task_metadata:
+  NanoDAPFAMAllTitlAbsClmToFullText:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMAllTitlAbsClmToFullText retrieval task.
+    description: NanoDAPFAMAllTitlAbsClmToFullText is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMAllTitlAbsClmToTitlAbs:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMAllTitlAbsClmToTitlAbs retrieval task.
+    description: NanoDAPFAMAllTitlAbsClmToTitlAbs is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMAllTitlAbsClmToTitlAbsClm:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMAllTitlAbsClmToTitlAbsClm retrieval task.
+    description: NanoDAPFAMAllTitlAbsClmToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMAllTitlAbsToFullText:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMAllTitlAbsToFullText retrieval task.
+    description: NanoDAPFAMAllTitlAbsToFullText is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMAllTitlAbsToTitlAbs:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMAllTitlAbsToTitlAbs retrieval task.
+    description: NanoDAPFAMAllTitlAbsToTitlAbs is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMAllTitlAbsToTitlAbsClm:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMAllTitlAbsToTitlAbsClm retrieval task.
+    description: NanoDAPFAMAllTitlAbsToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMInTitlAbsClmToFullText:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMInTitlAbsClmToFullText retrieval task.
+    description: NanoDAPFAMInTitlAbsClmToFullText is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMInTitlAbsClmToTitlAbs:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMInTitlAbsClmToTitlAbs retrieval task.
+    description: NanoDAPFAMInTitlAbsClmToTitlAbs is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMInTitlAbsClmToTitlAbsClm:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMInTitlAbsClmToTitlAbsClm retrieval task.
+    description: NanoDAPFAMInTitlAbsClmToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMInTitlAbsToFullText:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMInTitlAbsToFullText retrieval task.
+    description: NanoDAPFAMInTitlAbsToFullText is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMInTitlAbsToTitlAbs:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMInTitlAbsToTitlAbs retrieval task.
+    description: NanoDAPFAMInTitlAbsToTitlAbs is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMInTitlAbsToTitlAbsClm:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMInTitlAbsToTitlAbsClm retrieval task.
+    description: NanoDAPFAMInTitlAbsToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMOutTitlAbsClmToFullText:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMOutTitlAbsClmToFullText retrieval task.
+    description: NanoDAPFAMOutTitlAbsClmToFullText is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMOutTitlAbsClmToTitlAbs:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMOutTitlAbsClmToTitlAbs retrieval task.
+    description: NanoDAPFAMOutTitlAbsClmToTitlAbs is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMOutTitlAbsClmToTitlAbsClm:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMOutTitlAbsClmToTitlAbsClm retrieval task.
+    description: NanoDAPFAMOutTitlAbsClmToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMOutTitlAbsToFullText:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMOutTitlAbsToFullText retrieval task.
+    description: NanoDAPFAMOutTitlAbsToFullText is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMOutTitlAbsToTitlAbs:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMOutTitlAbsToTitlAbs retrieval task.
+    description: NanoDAPFAMOutTitlAbsToTitlAbs is a compact DAPFAM patent-family retrieval task.
+  NanoDAPFAMOutTitlAbsToTitlAbsClm:
+    language: en
+    category: natural_language
+    short_description: NanoDAPFAMOutTitlAbsToTitlAbsClm retrieval task.
+    description: NanoDAPFAMOutTitlAbsToTitlAbsClm is a compact DAPFAM patent-family retrieval task.

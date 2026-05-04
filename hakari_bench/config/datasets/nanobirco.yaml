@@ -1,0 +1,45 @@
+name: NanoBIRCO
+dataset_id: hakari-bench/NanoBIRCO
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoBIRCOArguAna
+- NanoBIRCOClinicalTrial
+- NanoBIRCODorisMae
+- NanoBIRCORelic
+- NanoBIRCOWTB
+metadata:
+  language: en
+  category: natural_language
+  short_description: Nano subset of BIRCO retrieval tasks.
+  description: NanoBIRCO is a compact benchmark for evaluating retrieval across heterogeneous BIRCO task
+    families.
+task_metadata:
+  NanoBIRCOArguAna:
+    language: en
+    category: natural_language
+    short_description: NanoBIRCOArguAna retrieval task.
+    description: NanoBIRCOArguAna is a compact BIRCO retrieval task.
+  NanoBIRCOClinicalTrial:
+    language: en
+    category: natural_language
+    short_description: NanoBIRCOClinicalTrial retrieval task.
+    description: NanoBIRCOClinicalTrial is a compact BIRCO retrieval task.
+  NanoBIRCODorisMae:
+    language: en
+    category: natural_language
+    short_description: NanoBIRCODorisMae retrieval task.
+    description: NanoBIRCODorisMae is a compact BIRCO retrieval task.
+  NanoBIRCORelic:
+    language: en
+    category: natural_language
+    short_description: NanoBIRCORelic retrieval task.
+    description: NanoBIRCORelic is a compact BIRCO retrieval task.
+  NanoBIRCOWTB:
+    language: en
+    category: natural_language
+    short_description: NanoBIRCOWTB retrieval task.
+    description: NanoBIRCOWTB is a compact BIRCO retrieval task.
