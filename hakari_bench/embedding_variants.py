@@ -8,33 +8,19 @@ QUANTIZED_PRECISIONS = {"int8", "binary"}
 TORCH_SCORE_REPRESENTATION = "torch_exact"
 TORCH_RESCORE_SCORE_REPRESENTATION = "torch_exact_rescore"
 NORMALIZE_TOKENS = {"normalize", "l2-normalize", "l2_normalize"}
-TRUNCATE_SPARSE_QUERY_MAX_DIMS_PREFIXES = (
-    "truncate-sparse-query-max-dims:",
-    "truncate_sparse_query_max_dims:",
-    "truncate-query-sparse-max-dims:",
-    "truncate_query_sparse_max_dims:",
-    "truncate-sparse-query-topk:",
-    "truncate_sparse_query_topk:",
+SPARSE_QUERY_MAX_ACTIVE_DIMS_PREFIXES = (
+    "sparse-query-max-active-dims:",
+    "sparse_query_max_active_dims:",
 )
-TRUNCATE_SPARSE_QUERY_MAX_DIMS_EQUALS_PREFIXES = tuple(
-    prefix.replace(":", "=") for prefix in TRUNCATE_SPARSE_QUERY_MAX_DIMS_PREFIXES
+SPARSE_QUERY_MAX_ACTIVE_DIMS_EQUALS_PREFIXES = tuple(
+    prefix.replace(":", "=") for prefix in SPARSE_QUERY_MAX_ACTIVE_DIMS_PREFIXES
 )
-TRUNCATE_SPARSE_DOCS_MAX_DIMS_PREFIXES = (
-    "truncate-sparse-docs-max-dims:",
-    "truncate_sparse_docs_max_dims:",
-    "truncate-sparse-corpus-max-dims:",
-    "truncate_sparse_corpus_max_dims:",
-    "truncate-docs-sparse-max-dims:",
-    "truncate_docs_sparse_max_dims:",
-    "truncate-corpus-sparse-max-dims:",
-    "truncate_corpus_sparse_max_dims:",
-    "truncate-sparse-docs-topk:",
-    "truncate_sparse_docs_topk:",
-    "truncate-sparse-corpus-topk:",
-    "truncate_sparse_corpus_topk:",
+SPARSE_DOCUMENT_MAX_ACTIVE_DIMS_PREFIXES = (
+    "sparse-document-max-active-dims:",
+    "sparse_document_max_active_dims:",
 )
-TRUNCATE_SPARSE_DOCS_MAX_DIMS_EQUALS_PREFIXES = tuple(
-    prefix.replace(":", "=") for prefix in TRUNCATE_SPARSE_DOCS_MAX_DIMS_PREFIXES
+SPARSE_DOCUMENT_MAX_ACTIVE_DIMS_EQUALS_PREFIXES = tuple(
+    prefix.replace(":", "=") for prefix in SPARSE_DOCUMENT_MAX_ACTIVE_DIMS_PREFIXES
 )
 
 
@@ -85,13 +71,13 @@ def _parse_embedding_variant_value(
 
 def _parse_embedding_variant_cross(values: list[str]) -> list[dict[str, Any]]:
     if len(values) < 2:
-        raise ValueError("--embedding-variant-cross requires at least two variant specs.")
+        raise ValueError("--embedding-variant-grid requires at least two variant specs.")
 
     variant_groups: list[list[dict[str, Any]]] = []
     for value in values:
         variants, _current_kind = _parse_embedding_variant_value(value)
         if not variants:
-            raise ValueError("--embedding-variant-cross received an empty variant spec.")
+            raise ValueError("--embedding-variant-grid received an empty variant spec.")
         variant_groups.append(variants)
 
     crossed: list[dict[str, Any]] = []
@@ -127,37 +113,37 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
     elif current_kind == "truncate" and _is_integer_token(token):
         dim_value = token
         return _truncate_variant(token=token, dim_value=dim_value), "truncate"
-    elif token.startswith(TRUNCATE_SPARSE_QUERY_MAX_DIMS_PREFIXES):
+    elif token.startswith(SPARSE_QUERY_MAX_ACTIVE_DIMS_PREFIXES):
         dim_value = token.split(":", 1)[1]
         return _truncate_sparse_max_dims_variant(
             token=token,
             dim_value=dim_value,
             target="query",
-        ), "truncate_sparse_max_dims:query"
-    elif token.startswith(TRUNCATE_SPARSE_QUERY_MAX_DIMS_EQUALS_PREFIXES):
+        ), "sparse_max_active_dims:query"
+    elif token.startswith(SPARSE_QUERY_MAX_ACTIVE_DIMS_EQUALS_PREFIXES):
         dim_value = token.split("=", 1)[1]
         return _truncate_sparse_max_dims_variant(
             token=token,
             dim_value=dim_value,
             target="query",
-        ), "truncate_sparse_max_dims:query"
-    elif token.startswith(TRUNCATE_SPARSE_DOCS_MAX_DIMS_PREFIXES):
+        ), "sparse_max_active_dims:query"
+    elif token.startswith(SPARSE_DOCUMENT_MAX_ACTIVE_DIMS_PREFIXES):
         dim_value = token.split(":", 1)[1]
         return _truncate_sparse_max_dims_variant(
             token=token,
             dim_value=dim_value,
             target="corpus",
-        ), "truncate_sparse_max_dims:corpus"
-    elif token.startswith(TRUNCATE_SPARSE_DOCS_MAX_DIMS_EQUALS_PREFIXES):
+        ), "sparse_max_active_dims:corpus"
+    elif token.startswith(SPARSE_DOCUMENT_MAX_ACTIVE_DIMS_EQUALS_PREFIXES):
         dim_value = token.split("=", 1)[1]
         return _truncate_sparse_max_dims_variant(
             token=token,
             dim_value=dim_value,
             target="corpus",
-        ), "truncate_sparse_max_dims:corpus"
+        ), "sparse_max_active_dims:corpus"
     elif (
         current_kind is not None
-        and current_kind.startswith("truncate_sparse_max_dims:")
+        and current_kind.startswith("sparse_max_active_dims:")
         and _is_integer_token(token)
     ):
         dim_value = token
@@ -179,8 +165,8 @@ def _parse_embedding_variant(token: str, *, current_kind: str | None = None) -> 
     else:
         raise ValueError(
             "Unsupported embedding variant "
-            f"'{token}'. Supported syntax: truncate:DIM, truncate-sparse-query-max-dims:DIM, "
-            "truncate-sparse-docs-max-dims:DIM, "
+            f"'{token}'. Supported syntax: truncate:DIM, sparse-query-max-active-dims:DIM, "
+            "sparse-document-max-active-dims:DIM, "
             "normalize, int8, binary, rescore:int8, rescore:binary, int8-rescore, "
             "or binary-rescore"
         )
@@ -236,8 +222,8 @@ def _truncate_sparse_max_dims_variant(*, token: str, dim_value: str, target: str
         raise ValueError(f"Embedding variant '{token}' has unsupported sparse max dims target {target!r}.")
 
     name_prefix = {
-        "query": "truncate_sparse_query_max_dims",
-        "corpus": "truncate_sparse_docs_max_dims",
+        "query": "sparse_query_max_active_dims",
+        "corpus": "sparse_document_max_active_dims",
     }[target]
     return {
         "name": f"{name_prefix}_{max_dims}",

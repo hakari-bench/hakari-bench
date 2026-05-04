@@ -43,127 +43,59 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     evaluate = subparsers.add_parser("evaluate", help="Evaluate a model on Nano-style IR datasets.")
-    evaluate.add_argument("--model", default=None, help="Hugging Face model id or local model path.")
-    evaluate.add_argument(
-        "--model-type",
-        default="dense",
-        choices=["dense", "sparse", "reranker", "late-interaction", "bm25"],
-    )
-    evaluate.add_argument("--dtype", default="bf16", choices=["bf16", "fp16", "fp32"])
-    evaluate.add_argument("--attn-implementation", default=None)
-    evaluate.add_argument("--flash-attn2", action="store_true")
-    evaluate.add_argument("--device", default=None)
-    evaluate.add_argument(
-        "--score-device",
-        default="auto",
-        choices=["auto", "cpu", "cuda"],
-        help=(
-            "Device policy for post-encode score/top-k matrix work. "
-            "Use cpu or cuda to force supported matrix work onto that device."
-        ),
-    )
-    evaluate.add_argument("--trust-remote-code", action="store_true")
-    evaluate.add_argument("--model-max-seq-length", type=int, default=None)
-    evaluate.add_argument("--truncate-dim", type=int, default=None)
-    evaluate.add_argument(
-        "--truncate-sparse-query-max-dims",
-        type=int,
-        default=None,
-        help="Post-encode truncate active sparse dimensions per query embedding.",
-    )
-    evaluate.add_argument(
-        "--truncate-sparse-docs-max-dims",
-        type=int,
-        default=None,
-        help="Post-encode truncate active sparse dimensions per document embedding.",
-    )
-    evaluate.add_argument(
-        "--embedding-variant",
-        dest="embedding_variant_values",
-        action="append",
-        default=[],
-        help=(
-            "Derived embedding evaluation spec. Repeat or comma-separate. "
-            "Current syntax: truncate:DIM, truncate-sparse-query-max-dims:DIM, "
-            "truncate-sparse-docs-max-dims:DIM, "
-            "normalize, int8, binary, rescore:int8, rescore:binary, int8-rescore, "
-            "or binary-rescore. "
-            "Quantized variants are supported for dense models only. "
-            "Example: --embedding-variant truncate:256,truncate:128 --embedding-variant int8,binary"
-        ),
-    )
-    evaluate.add_argument(
-        "--embedding-variant-cross",
-        dest="embedding_variant_cross_values",
-        action="append",
-        nargs="+",
-        default=[],
-        metavar="SPEC",
-        help=(
-            "Cross product of derived embedding specs, normalized into pipeline variants. "
-            "Example: --embedding-variant-cross truncate:256,128,64 int8,binary"
-        ),
-    )
-    evaluate.add_argument(
-        "--no-quantize",
-        action="store_true",
-        help="Disable automatic dense int8/binary quantized and top-100 rescore variants.",
-    )
+    evaluate_methods = evaluate.add_subparsers(dest="model_type", required=True)
+    dense = evaluate_methods.add_parser("dense", help="Evaluate a dense embedding model.")
+    _add_evaluate_model_args(dense)
+    _add_evaluate_runtime_args(dense)
+    _add_embedding_variant_args(dense)
+    _add_dataset_args(dense, action="evaluate")
+    _add_prompt_args(dense)
+    _add_candidate_args(dense)
+    _add_output_args(dense, results_default="output/results")
 
-    evaluate.add_argument(
-        "--dataset",
-        action="append",
-        default=None,
-        help="Dataset name/id. Repeat or pass comma-separated values.",
-    )
-    evaluate.add_argument("--collection", action="append", default=[], help="Dataset collection name.")
-    evaluate.add_argument("--split", action="append", default=[], help="Split/task name. Repeat or comma-separate.")
-    evaluate.add_argument("--dataset-revision", default=None, help="Hugging Face dataset revision to evaluate.")
+    sparse = evaluate_methods.add_parser("sparse", help="Evaluate a sparse embedding model.")
+    _add_evaluate_model_args(sparse)
+    _add_evaluate_runtime_args(sparse)
+    _add_sparse_args(sparse)
+    _add_embedding_variant_args(sparse)
+    _add_dataset_args(sparse, action="evaluate")
+    _add_prompt_args(sparse)
+    _add_candidate_args(sparse)
+    _add_output_args(sparse, results_default="output/results")
 
-    evaluate.add_argument("--batch-size", type=int, default=32)
-    evaluate.add_argument("--show-progress", action="store_true")
-    evaluate.add_argument("--query-prompt", default=None)
-    evaluate.add_argument("--corpus-prompt", default=None)
-    evaluate.add_argument("--query-prompt-name", default=None)
-    evaluate.add_argument("--corpus-prompt-name", default=None)
-    evaluate.add_argument("--query-task", default=None)
-    evaluate.add_argument("--corpus-task", default=None)
-    evaluate.add_argument(
-        "--cross-encoder-kwargs-json",
-        default=None,
-        help="JSON object of extra constructor kwargs for SentenceTransformers CrossEncoder reranker models.",
-    )
-    evaluate.add_argument(
-        "--reranker-score-kwargs-json",
-        default=None,
-        help="JSON object of extra kwargs passed to reranker rank/predict calls.",
-    )
-    evaluate.add_argument("--candidate-subset-name", default="bm25")
-    evaluate.add_argument("--rerank-top-n", type=int, default=100)
-    evaluate.add_argument("--late-interaction-query-length", type=int, default=None)
-    evaluate.add_argument("--late-interaction-document-length", type=int, default=None)
-    evaluate.add_argument("--late-interaction-query-prefix", default=None)
-    evaluate.add_argument("--late-interaction-document-prefix", default=None)
-    evaluate.add_argument("--late-interaction-attend-to-expansion-tokens", action="store_true", default=None)
-    evaluate.add_argument("--late-interaction-exact-doc-batch-size", type=int, default=128)
-    evaluate.add_argument("--late-interaction-exact-query-batch-size", type=int, default=8)
-    evaluate.add_argument("--output-dir", default="output/results")
-    evaluate.add_argument("--override", action="store_true")
-    evaluate.add_argument("--aggregate-metric", default="ndcg@10")
-    _add_bm25_args(evaluate)
+    reranker = evaluate_methods.add_parser("reranker", help="Evaluate a reranker model.")
+    _add_evaluate_model_args(reranker)
+    _add_evaluate_runtime_args(reranker)
+    _add_dataset_args(reranker, action="evaluate")
+    _add_reranker_args(reranker)
+    _add_candidate_args(reranker)
+    _add_output_args(reranker, results_default="output/results")
 
-    build_bm25 = subparsers.add_parser("build-bm25", help="Build BM25 candidate files for Nano-style datasets.")
-    build_bm25.add_argument(
-        "--dataset",
-        action="append",
-        default=None,
-        help="Dataset name/id. Repeat or pass comma-separated values.",
+    late_interaction = evaluate_methods.add_parser("late-interaction", help="Evaluate a late-interaction model.")
+    _add_evaluate_model_args(late_interaction)
+    _add_evaluate_runtime_args(late_interaction)
+    _add_embedding_variant_args(late_interaction)
+    _add_dataset_args(late_interaction, action="evaluate")
+    _add_prompt_args(late_interaction)
+    _add_late_interaction_args(late_interaction)
+    _add_output_args(late_interaction, results_default="output/results")
+
+    bm25 = evaluate_methods.add_parser("bm25", help="Evaluate BM25 rankings.")
+    _add_params_arg(bm25)
+    _add_dataset_args(bm25, action="evaluate")
+    _add_candidate_args(bm25)
+    _add_output_args(bm25, results_default="output/results")
+    _add_bm25_args(bm25)
+
+    build_candidates = subparsers.add_parser(
+        "build-candidates",
+        help="Build candidate ranking files for Nano-style datasets.",
     )
-    build_bm25.add_argument("--collection", action="append", default=[], help="Dataset collection name.")
-    build_bm25.add_argument("--split", action="append", default=[], help="Split/task name. Repeat or comma-separate.")
-    build_bm25.add_argument("--dataset-revision", default=None, help="Hugging Face dataset revision to build from.")
-    build_bm25.add_argument("--output-dir", default="output/bm25")
-    build_bm25.add_argument("--override", action="store_true")
+    candidate_methods = build_candidates.add_subparsers(dest="candidate_method", required=True)
+    build_bm25 = candidate_methods.add_parser("bm25", help="Build BM25 candidate files.")
+    _add_dataset_args(build_bm25, action="build")
+    build_bm25.add_argument("--candidates-dir", default="output/candidates/bm25")
+    build_bm25.add_argument("--overwrite", action="store_true")
     build_bm25.add_argument("--show-progress", action="store_true")
     _add_bm25_args(build_bm25)
 
@@ -173,17 +105,155 @@ def build_parser() -> argparse.ArgumentParser:
     web.add_argument("--data-dir", default="output/viewer", help="Local viewer data/cache directory.")
     web.add_argument("--duckdb-path", default=None, help="Local DuckDB path. Defaults to DATA_DIR/hakari_bench.duckdb.")
     web.add_argument(
-        "--source-output-dir",
-        default="../hakari-bench/output",
-        help="Source benchmark output directory containing results/hakari_bench.duckdb.",
+        "--source-results-dir",
+        default="../hakari-bench/output/results",
+        help="Source benchmark results directory containing hakari_bench.duckdb.",
     )
     web.add_argument("--source-duckdb-path", default=None, help="Explicit source DuckDB path to copy from.")
     web.add_argument("--viewer-config-dir", default="config/viewer", help="Viewer YAML config directory.")
     return parser
 
 
+def _add_params_arg(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--params-json", default=None, help="Structured JSON parameters for this command.")
+
+
+def _add_evaluate_model_args(parser: argparse.ArgumentParser) -> None:
+    _add_params_arg(parser)
+    parser.add_argument("--model", default=None, help="Hugging Face model id or local model path.")
+    parser.add_argument("--model-alias", default=None, help="Display/storage alias for a local model path.")
+
+
+def _add_evaluate_runtime_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--dtype", default="bf16", choices=["bf16", "fp16", "fp32"])
+    parser.add_argument("--attn-implementation", default=None)
+    parser.add_argument("--flash-attn2", action="store_true")
+    parser.add_argument("--device", default=None)
+    parser.add_argument(
+        "--retrieval-score-device",
+        default="auto",
+        choices=["auto", "cpu", "cuda"],
+        help=(
+            "Device policy for post-encode retrieval score/top-k matrix work. "
+            "Use cpu or cuda to force supported matrix work onto that device."
+        ),
+    )
+    parser.add_argument("--trust-remote-code", action="store_true")
+    parser.add_argument("--model-max-seq-length", type=int, default=None)
+    parser.add_argument("--truncate-dim", type=int, default=None)
+
+
+def _add_sparse_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--sparse-query-max-active-dims",
+        type=int,
+        default=None,
+        help="Post-encode maximum active sparse dimensions per query embedding.",
+    )
+    parser.add_argument(
+        "--sparse-document-max-active-dims",
+        type=int,
+        default=None,
+        help="Post-encode maximum active sparse dimensions per document embedding.",
+    )
+
+
+def _add_embedding_variant_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--embedding-variant",
+        dest="embedding_variant_values",
+        action="append",
+        default=[],
+        help=(
+            "Derived embedding evaluation spec. Repeat or comma-separate. "
+            "Current syntax: truncate:DIM, sparse-query-max-active-dims:DIM, "
+            "sparse-document-max-active-dims:DIM, normalize, int8, binary, "
+            "rescore:int8, rescore:binary, int8-rescore, or binary-rescore."
+        ),
+    )
+    parser.add_argument(
+        "--embedding-variant-grid",
+        dest="embedding_variant_grid_values",
+        action="append",
+        nargs="+",
+        default=[],
+        metavar="SPEC",
+        help=(
+            "Grid product of derived embedding specs, normalized into pipeline variants. "
+            "Example: --embedding-variant-grid truncate:256,128,64 int8,binary"
+        ),
+    )
+    parser.add_argument(
+        "--no-default-embedding-variants",
+        action="store_true",
+        help="Disable automatic dense int8/binary quantized and top-100 rescore variants.",
+    )
+
+
+def _add_dataset_args(parser: argparse.ArgumentParser, *, action: str) -> None:
+    verb = "evaluate" if action == "evaluate" else "build from"
+    parser.add_argument(
+        "--dataset",
+        action="append",
+        default=None,
+        help="Dataset name/id. Repeat or pass comma-separated values.",
+    )
+    parser.add_argument("--collection", action="append", default=[], help="Dataset collection name.")
+    parser.add_argument("--split", action="append", default=[], help="Split/task name. Repeat or comma-separate.")
+    parser.add_argument("--dataset-revision", default=None, help=f"Hugging Face dataset revision to {verb}.")
+
+
+def _add_execution_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--show-progress", action="store_true")
+
+
+def _add_prompt_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--query-prompt", default=None)
+    parser.add_argument("--document-prompt", default=None)
+    parser.add_argument("--query-prompt-name", default=None)
+    parser.add_argument("--document-prompt-name", default=None)
+    parser.add_argument("--query-encode-task", default=None)
+    parser.add_argument("--document-encode-task", default=None)
+
+
+def _add_reranker_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--reranker-init-kwargs-json",
+        default=None,
+        help="JSON object of extra constructor kwargs for SentenceTransformers CrossEncoder reranker models.",
+    )
+    parser.add_argument(
+        "--reranker-inference-kwargs-json",
+        default=None,
+        help="JSON object of extra kwargs passed to reranker rank/predict calls.",
+    )
+
+
+def _add_candidate_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--candidate-ranking", default="bm25")
+    parser.add_argument("--rerank-top-k", type=int, default=100)
+
+
+def _add_late_interaction_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--late-interaction-query-length", type=int, default=None)
+    parser.add_argument("--late-interaction-document-length", type=int, default=None)
+    parser.add_argument("--late-interaction-query-prefix", default=None)
+    parser.add_argument("--late-interaction-document-prefix", default=None)
+    parser.add_argument("--late-interaction-attend-to-expansion-tokens", action="store_true", default=None)
+    parser.add_argument("--late-interaction-exact-doc-batch-size", type=int, default=128)
+    parser.add_argument("--late-interaction-exact-query-batch-size", type=int, default=8)
+
+
+def _add_output_args(parser: argparse.ArgumentParser, *, results_default: str) -> None:
+    _add_execution_args(parser)
+    parser.add_argument("--results-dir", default=results_default)
+    parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--primary-metric", default="ndcg@10")
+
+
 def _add_bm25_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--top-k", type=int, default=100, help="Number of BM25 candidates per query.")
+    parser.add_argument("--bm25-top-k", type=int, default=100, help="Number of BM25 candidates per query.")
     parser.add_argument(
         "--bm25-tokenizer",
         default=None,
@@ -198,8 +268,9 @@ def _add_bm25_args(parser: argparse.ArgumentParser) -> None:
             "wordseg",
         ],
     )
-    parser.add_argument("--bm25-tokenizer-name", default=None)
-    parser.add_argument("--bm25-stemmer-algorithm", default="english")
+    parser.add_argument("--bm25-tokenizer-model", default=None)
+    parser.add_argument("--bm25-wordseg-language", default=None)
+    parser.add_argument("--bm25-stemmer-language", default="english")
     parser.add_argument("--bm25-k1", type=float, default=1.5)
     parser.add_argument("--bm25-b", type=float, default=0.75)
 
@@ -208,56 +279,64 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = build_parser()
     args = parser.parse_args(argv)
     if args.command == "evaluate":
-        has_explicit_embedding_variants = bool(args.embedding_variant_values or args.embedding_variant_cross_values)
+        try:
+            _apply_evaluate_params_json(args)
+        except ValueError as exc:
+            parser.error(str(exc))
+        _apply_model_identity(args)
+        _bridge_new_evaluate_args(args)
+        has_explicit_embedding_variants = bool(args.embedding_variant_values or args.embedding_variant_grid_values)
         try:
             args.embedding_variants = parse_embedding_variants(
                 args.embedding_variant_values,
-                args.embedding_variant_cross_values,
+                args.embedding_variant_grid_values,
             )
         except ValueError as exc:
             parser.error(str(exc))
-        if args.model_type == "dense" and not args.no_quantize and not has_explicit_embedding_variants:
+        if args.model_type == "dense" and not args.no_default_embedding_variants and not has_explicit_embedding_variants:
             args.embedding_variants = default_dense_quantized_embedding_variants()
-        _apply_score_device_to_quantized_variants(args.embedding_variants, score_device=args.score_device)
+        _apply_score_device_to_quantized_variants(args.embedding_variants, score_device=args.retrieval_score_device)
         if args.model_type != "dense" and _embedding_variants_use_quantization(args.embedding_variants):
             parser.error(
-                f"--model-type {args.model_type} does not support quantized embedding variants. "
+                f"evaluate {args.model_type} does not support quantized embedding variants. "
                 "Quantized embedding variants are supported for dense models only."
             )
         delattr(args, "embedding_variant_values")
-        delattr(args, "embedding_variant_cross_values")
+        delattr(args, "embedding_variant_grid_values")
         try:
             args.cross_encoder_kwargs = _parse_json_object_arg(
-                args.cross_encoder_kwargs_json,
-                option_name="--cross-encoder-kwargs-json",
+                getattr(args, "reranker_init_kwargs_json", None),
+                option_name="--reranker-init-kwargs-json",
             )
             args.reranker_score_kwargs = _parse_json_object_arg(
-                args.reranker_score_kwargs_json,
-                option_name="--reranker-score-kwargs-json",
+                getattr(args, "reranker_inference_kwargs_json", None),
+                option_name="--reranker-inference-kwargs-json",
             )
         except ValueError as exc:
             parser.error(str(exc))
-        delattr(args, "cross_encoder_kwargs_json")
-        delattr(args, "reranker_score_kwargs_json")
+        if hasattr(args, "reranker_init_kwargs_json"):
+            delattr(args, "reranker_init_kwargs_json")
+        if hasattr(args, "reranker_inference_kwargs_json"):
+            delattr(args, "reranker_inference_kwargs_json")
         if args.model_type != "reranker" and (args.cross_encoder_kwargs or args.reranker_score_kwargs):
-            parser.error("--cross-encoder-kwargs-json and --reranker-score-kwargs-json require --model-type reranker.")
+            parser.error("--reranker-init-kwargs-json and --reranker-inference-kwargs-json require evaluate reranker.")
     if args.command == "evaluate":
         truncate_sparse_values = {
-            "--truncate-sparse-query-max-dims": args.truncate_sparse_query_max_dims,
-            "--truncate-sparse-docs-max-dims": args.truncate_sparse_docs_max_dims,
+            "--sparse-query-max-active-dims": getattr(args, "sparse_query_max_active_dims", None),
+            "--sparse-document-max-active-dims": getattr(args, "sparse_document_max_active_dims", None),
         }
         if any(value is not None for value in truncate_sparse_values.values()) and args.model_type != "sparse":
-            parser.error("Sparse truncation options require --model-type sparse.")
+            parser.error("Sparse truncation options require evaluate sparse.")
         for option_name, value in truncate_sparse_values.items():
             if value is not None and value <= 0:
                 parser.error(f"{option_name} must be positive.")
-    if args.command == "evaluate" and args.rerank_top_n <= 0:
-        parser.error("--rerank-top-n must be positive.")
+    if args.command == "evaluate" and getattr(args, "rerank_top_k", 1) <= 0:
+        parser.error("--rerank-top-k must be positive.")
     if args.command == "evaluate" and args.model_type == "late-interaction":
         if args.embedding_variants and not _late_interaction_embedding_variants_are_supported(args.embedding_variants):
-            parser.error("--model-type late-interaction supports only truncate embedding variants.")
+            parser.error("evaluate late-interaction supports only truncate embedding variants.")
         if args.truncate_dim is not None:
-            parser.error("--truncate-dim is not supported with --model-type late-interaction.")
+            parser.error("--truncate-dim is not supported with evaluate late-interaction.")
         if args.late_interaction_exact_doc_batch_size <= 0:
             parser.error("--late-interaction-exact-doc-batch-size must be positive.")
         if args.late_interaction_exact_query_batch_size <= 0:
@@ -268,13 +347,351 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         args.dataset = []
     if args.command == "evaluate" and args.model_type == "bm25" and args.model is None:
         args.model = f"bm25/{bm25_config_name(bm25_config_from_args(args))}"
+        args.model_id = args.model
+        args.model_source = {"type": "bm25", "name": args.model}
     if args.command == "evaluate" and args.model_type != "bm25" and args.model is None:
-        parser.error("--model is required unless --model-type bm25 is used.")
-    if args.command == "build-bm25" and args.dataset is None and not args.collection:
+        parser.error("--model is required unless evaluate bm25 is used.")
+    if args.command == "build-candidates":
+        _bridge_new_bm25_args(args)
+    if args.command == "build-candidates" and args.dataset is None and not args.collection:
         args.dataset = ["hakari-bench/NanoBEIR-en"]
-    elif args.command == "build-bm25" and args.dataset is None:
+    elif args.command == "build-candidates" and args.dataset is None:
         args.dataset = []
     return args
+
+
+def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
+    if not hasattr(args, "embedding_variant_values"):
+        args.embedding_variant_values = []
+    if not hasattr(args, "embedding_variant_grid_values"):
+        args.embedding_variant_grid_values = []
+    if not hasattr(args, "no_default_embedding_variants"):
+        args.no_default_embedding_variants = False
+    args.model = getattr(args, "model", None)
+    args.model_alias = getattr(args, "model_alias", None)
+    args.retrieval_score_device = getattr(args, "retrieval_score_device", "auto")
+    args.score_device = getattr(args, "retrieval_score_device", "auto")
+    args.corpus_prompt = getattr(args, "document_prompt", None)
+    args.corpus_prompt_name = getattr(args, "document_prompt_name", None)
+    args.query_task = getattr(args, "query_encode_task", None)
+    args.corpus_task = getattr(args, "document_encode_task", None)
+    args.candidate_subset_name = getattr(args, "candidate_ranking", "bm25")
+    args.rerank_top_n = getattr(args, "rerank_top_k", 100)
+    args.truncate_sparse_query_max_dims = getattr(args, "sparse_query_max_active_dims", None)
+    args.truncate_sparse_docs_max_dims = getattr(args, "sparse_document_max_active_dims", None)
+    args.output_dir = getattr(args, "results_dir", "output/results")
+    args.override = getattr(args, "overwrite", False)
+    args.aggregate_metric = getattr(args, "primary_metric", "ndcg@10")
+    _bridge_new_bm25_args(args)
+
+
+def _bridge_new_bm25_args(args: argparse.Namespace) -> None:
+    args.top_k = getattr(args, "bm25_top_k", 100)
+    args.bm25_tokenizer_name = getattr(args, "bm25_wordseg_language", None) or getattr(
+        args,
+        "bm25_tokenizer_model",
+        None,
+    )
+    args.bm25_stemmer_algorithm = getattr(args, "bm25_stemmer_language", "english")
+
+
+def _apply_model_identity(args: argparse.Namespace) -> None:
+    if args.model_type == "bm25":
+        return
+    model = getattr(args, "model", None)
+    alias = getattr(args, "model_alias", None)
+    if not model:
+        return
+    is_local = _is_local_model_path(model)
+    args.model_id = _model_id_for(model, alias=alias, is_local=is_local)
+    args.model_source = _model_source_for(model, is_local=is_local)
+
+
+def _is_local_model_path(value: str) -> bool:
+    return value.startswith(("/", "./", "../", "~")) or Path(value).exists()
+
+
+def _model_id_for(model: str, *, alias: str | None, is_local: bool) -> str:
+    if alias is not None:
+        normalized_alias = alias.strip().strip("/\\")
+        if not normalized_alias:
+            raise ValueError("--model-alias must not be empty.")
+        return normalized_alias if "/" in normalized_alias else f"local/{normalized_alias}"
+    if is_local:
+        path = Path(model).expanduser()
+        basename = path.name or path.parent.name or "model"
+        return f"local/{safe_path_part(basename)}"
+    return model
+
+
+def _model_source_for(model: str, *, is_local: bool) -> dict[str, str]:
+    if is_local:
+        path = Path(model).expanduser().resolve(strict=False)
+        return {"type": "local_path", "path": str(path)}
+    return {"type": "huggingface", "name": model}
+
+
+def _apply_evaluate_params_json(args: argparse.Namespace) -> None:
+    raw = getattr(args, "params_json", None)
+    if raw is None:
+        return
+    try:
+        payload = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"--params-json must be valid JSON: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise ValueError("--params-json must be a JSON object.")
+    _reject_unknown_keys(
+        payload,
+        allowed={"model", "target", "runtime", "output", "prompts", "reranker", "sparse", "embedding", "bm25", "late_interaction"},
+        path="params",
+    )
+    _apply_model_params(args, _params_section(payload, "model"))
+    _apply_target_params(args, _params_section(payload, "target"))
+    _apply_runtime_params(args, _params_section(payload, "runtime"))
+    _apply_output_params(args, _params_section(payload, "output"))
+    _apply_prompt_params(args, _params_section(payload, "prompts"))
+    _apply_reranker_params(args, _params_section(payload, "reranker"))
+    _apply_sparse_params(args, _params_section(payload, "sparse"))
+    _apply_embedding_params(args, _params_section(payload, "embedding"))
+    _apply_bm25_params(args, _params_section(payload, "bm25"))
+    _apply_late_interaction_params(args, _params_section(payload, "late_interaction"))
+
+
+def _params_section(payload: dict[str, Any], key: str) -> dict[str, Any]:
+    value = payload.get(key)
+    if value is None:
+        return {}
+    if not isinstance(value, dict):
+        raise ValueError(f"params.{key} must be a JSON object.")
+    return value
+
+
+def _reject_unknown_keys(value: dict[str, Any], *, allowed: set[str], path: str) -> None:
+    unknown = sorted(set(value) - allowed)
+    if unknown:
+        raise ValueError(f"{path} contains unknown key(s): {', '.join(unknown)}")
+
+
+def _apply_model_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(value, allowed={"source", "alias"}, path="params.model")
+    if "source" in value:
+        args.model = _string_param(value["source"], "params.model.source")
+    if "alias" in value:
+        args.model_alias = _string_param(value["alias"], "params.model.alias")
+
+
+def _apply_target_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(value, allowed={"datasets", "collections", "splits", "dataset_revision"}, path="params.target")
+    if "datasets" in value:
+        args.dataset = _string_list_param(value["datasets"], "params.target.datasets")
+    if "collections" in value:
+        args.collection = _string_list_param(value["collections"], "params.target.collections")
+    if "splits" in value:
+        args.split = _string_list_param(value["splits"], "params.target.splits")
+    if "dataset_revision" in value:
+        args.dataset_revision = _optional_string_param(value["dataset_revision"], "params.target.dataset_revision")
+
+
+def _apply_runtime_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(
+        value,
+        allowed={
+            "batch_size",
+            "dtype",
+            "attn_implementation",
+            "flash_attn2",
+            "device",
+            "retrieval_score_device",
+            "trust_remote_code",
+            "model_max_seq_length",
+            "truncate_dim",
+            "show_progress",
+        },
+        path="params.runtime",
+    )
+    for key in ("dtype", "attn_implementation", "device", "retrieval_score_device"):
+        if key in value:
+            setattr(args, key, _optional_string_param(value[key], f"params.runtime.{key}"))
+    for key in ("flash_attn2", "trust_remote_code", "show_progress"):
+        if key in value:
+            setattr(args, key, _bool_param(value[key], f"params.runtime.{key}"))
+    for key in ("batch_size", "model_max_seq_length", "truncate_dim"):
+        if key in value:
+            setattr(args, key, _optional_positive_int_param(value[key], f"params.runtime.{key}"))
+
+
+def _apply_output_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(value, allowed={"results_dir", "candidates_dir", "overwrite"}, path="params.output")
+    if "results_dir" in value:
+        args.results_dir = _string_param(value["results_dir"], "params.output.results_dir")
+    if "candidates_dir" in value:
+        args.candidates_dir = _string_param(value["candidates_dir"], "params.output.candidates_dir")
+    if "overwrite" in value:
+        args.overwrite = _bool_param(value["overwrite"], "params.output.overwrite")
+
+
+def _apply_prompt_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(
+        value,
+        allowed={
+            "query_prompt",
+            "document_prompt",
+            "query_prompt_name",
+            "document_prompt_name",
+            "query_encode_task",
+            "document_encode_task",
+        },
+        path="params.prompts",
+    )
+    for key in value:
+        setattr(args, key, _optional_string_param(value[key], f"params.prompts.{key}"))
+
+
+def _apply_reranker_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(value, allowed={"init_kwargs", "inference_kwargs", "candidate_ranking", "rerank_top_k"}, path="params.reranker")
+    if "init_kwargs" in value:
+        args.reranker_init_kwargs_json = json.dumps(_dict_param(value["init_kwargs"], "params.reranker.init_kwargs"))
+    if "inference_kwargs" in value:
+        args.reranker_inference_kwargs_json = json.dumps(_dict_param(value["inference_kwargs"], "params.reranker.inference_kwargs"))
+    if "candidate_ranking" in value:
+        args.candidate_ranking = _optional_string_param(value["candidate_ranking"], "params.reranker.candidate_ranking")
+    if "rerank_top_k" in value:
+        args.rerank_top_k = _optional_positive_int_param(value["rerank_top_k"], "params.reranker.rerank_top_k")
+
+
+def _apply_sparse_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(value, allowed={"query_max_active_dims", "document_max_active_dims"}, path="params.sparse")
+    if "query_max_active_dims" in value:
+        args.sparse_query_max_active_dims = _optional_positive_int_param(value["query_max_active_dims"], "params.sparse.query_max_active_dims")
+    if "document_max_active_dims" in value:
+        args.sparse_document_max_active_dims = _optional_positive_int_param(
+            value["document_max_active_dims"],
+            "params.sparse.document_max_active_dims",
+        )
+
+
+def _apply_embedding_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(value, allowed={"variants", "variant_grid", "default_variants"}, path="params.embedding")
+    if "variants" in value:
+        args.embedding_variant_values = _string_list_param(value["variants"], "params.embedding.variants")
+    if "variant_grid" in value:
+        args.embedding_variant_grid_values = _grid_param(value["variant_grid"], "params.embedding.variant_grid")
+    if "default_variants" in value:
+        args.no_default_embedding_variants = not _bool_param(value["default_variants"], "params.embedding.default_variants")
+
+
+def _apply_bm25_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(
+        value,
+        allowed={"top_k", "tokenizer", "tokenizer_model", "wordseg_language", "stemmer_language", "k1", "b"},
+        path="params.bm25",
+    )
+    if "top_k" in value:
+        args.bm25_top_k = _optional_positive_int_param(value["top_k"], "params.bm25.top_k")
+    for key, attr in {
+        "tokenizer": "bm25_tokenizer",
+        "tokenizer_model": "bm25_tokenizer_model",
+        "wordseg_language": "bm25_wordseg_language",
+        "stemmer_language": "bm25_stemmer_language",
+    }.items():
+        if key in value:
+            setattr(args, attr, _optional_string_param(value[key], f"params.bm25.{key}"))
+    for key, attr in {"k1": "bm25_k1", "b": "bm25_b"}.items():
+        if key in value:
+            setattr(args, attr, _float_param(value[key], f"params.bm25.{key}"))
+
+
+def _apply_late_interaction_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
+    _reject_unknown_keys(
+        value,
+        allowed={
+            "query_length",
+            "document_length",
+            "query_prefix",
+            "document_prefix",
+            "attend_to_expansion_tokens",
+            "exact_document_batch_size",
+            "exact_query_batch_size",
+        },
+        path="params.late_interaction",
+    )
+    if "query_length" in value:
+        args.late_interaction_query_length = _optional_positive_int_param(value["query_length"], "params.late_interaction.query_length")
+    if "document_length" in value:
+        args.late_interaction_document_length = _optional_positive_int_param(value["document_length"], "params.late_interaction.document_length")
+    if "query_prefix" in value:
+        args.late_interaction_query_prefix = _optional_string_param(value["query_prefix"], "params.late_interaction.query_prefix")
+    if "document_prefix" in value:
+        args.late_interaction_document_prefix = _optional_string_param(value["document_prefix"], "params.late_interaction.document_prefix")
+    if "attend_to_expansion_tokens" in value:
+        args.late_interaction_attend_to_expansion_tokens = _bool_param(
+            value["attend_to_expansion_tokens"],
+            "params.late_interaction.attend_to_expansion_tokens",
+        )
+    if "exact_document_batch_size" in value:
+        args.late_interaction_exact_doc_batch_size = _optional_positive_int_param(
+            value["exact_document_batch_size"],
+            "params.late_interaction.exact_document_batch_size",
+        )
+    if "exact_query_batch_size" in value:
+        args.late_interaction_exact_query_batch_size = _optional_positive_int_param(
+            value["exact_query_batch_size"],
+            "params.late_interaction.exact_query_batch_size",
+        )
+
+
+def _string_param(value: Any, path: str) -> str:
+    if not isinstance(value, str) or not value:
+        raise ValueError(f"{path} must be a non-empty string.")
+    return value
+
+
+def _optional_string_param(value: Any, path: str) -> str | None:
+    if value is None:
+        return None
+    return _string_param(value, path)
+
+
+def _string_list_param(value: Any, path: str) -> list[str]:
+    if not isinstance(value, list) or not all(isinstance(item, str) and item for item in value):
+        raise ValueError(f"{path} must be a list of non-empty strings.")
+    return value
+
+
+def _grid_param(value: Any, path: str) -> list[list[str]]:
+    if not isinstance(value, list):
+        raise ValueError(f"{path} must be a list of string lists.")
+    grid: list[list[str]] = []
+    for index, item in enumerate(value):
+        grid.append(_string_list_param(item, f"{path}[{index}]"))
+    return grid
+
+
+def _dict_param(value: Any, path: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise ValueError(f"{path} must be a JSON object.")
+    return value
+
+
+def _bool_param(value: Any, path: str) -> bool:
+    if not isinstance(value, bool):
+        raise ValueError(f"{path} must be a boolean.")
+    return value
+
+
+def _optional_positive_int_param(value: Any, path: str) -> int | None:
+    if value is None:
+        return None
+    if not isinstance(value, int) or value <= 0:
+        raise ValueError(f"{path} must be a positive integer.")
+    return value
+
+
+def _float_param(value: Any, path: str) -> float:
+    if not isinstance(value, int | float):
+        raise ValueError(f"{path} must be a number.")
+    return float(value)
 
 
 def _embedding_variants_use_quantization(variants: list[dict[str, Any]]) -> bool:
@@ -341,7 +758,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     pending_tasks = [
         task
         for task in tasks
-        if args.override or not result_path_for_task(output_dir=output_dir, model_name_or_path=args.model, task=task).exists()
+        if args.override or not result_path_for_task(output_dir=output_dir, model_id=args.model_id, task=task).exists()
     ]
     environment = collect_runtime_environment()
 
@@ -374,8 +791,9 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         model_metadata = collect_model_metadata(model, args)
     else:
         model_metadata = {
-            "model_type": args.model_type,
-            "name_or_path": args.model,
+            "method": args.model_type,
+            "id": args.model_id,
+            "source": args.model_source,
             "device": args.device,
             "dtype": args.dtype,
             "trust_remote_code": args.trust_remote_code,
@@ -386,7 +804,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
 
     results: list[TaskRunResult] = []
     for task in tasks:
-        if model is None and result_path_for_task(output_dir=output_dir, model_name_or_path=args.model, task=task).exists():
+        if model is None and result_path_for_task(output_dir=output_dir, model_id=args.model_id, task=task).exists():
             results.append(_load_cached_task(args=args, task=task))
             continue
         if model is None and args.model_type != "bm25":
@@ -415,7 +833,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         run_finished_at_utc=run_finished_at.isoformat(),
         run_wall_seconds=float(time.perf_counter() - run_start),
     )
-    all_path = write_all_payload(output_dir=output_dir, model_name_or_path=args.model, payload=all_payload)
+    all_path = write_all_payload(output_dir=output_dir, model_id=args.model_id, payload=all_payload)
     print(
         json.dumps(
             {
@@ -526,7 +944,7 @@ def _load_dataset_for_args(args: argparse.Namespace, task: EvalTask) -> LoadedIr
 
 
 def _load_cached_task(*, args: argparse.Namespace, task: EvalTask) -> TaskRunResult:
-    output_path = result_path_for_task(output_dir=Path(args.output_dir), model_name_or_path=args.model, task=task)
+    output_path = result_path_for_task(output_dir=Path(args.output_dir), model_id=args.model_id, task=task)
     return TaskRunResult(
         task=task,
         cache_hit=True,

@@ -179,7 +179,7 @@ def bm25_config_payload(
         **asdict(config),
     }
     if candidate_subset_name is not None:
-        payload["candidate_subset_name"] = candidate_subset_name
+        payload["candidate_ranking"] = candidate_subset_name
     return payload
 
 
@@ -192,8 +192,9 @@ def collect_bm25_metadata(
 ) -> dict[str, Any]:
     config = config or bm25_config_from_args(args)
     return {
-        "model_type": "bm25",
-        "name_or_path": args.model,
+        "method": "bm25",
+        "id": getattr(args, "model_id", args.model),
+        "source": getattr(args, "model_source", {"type": "bm25", "name": args.model}),
         "backend_library": "bm25s" if source == "computed_bm25s" else "dataset",
         "bm25": bm25_config_payload(config, source=source, candidate_subset_name=candidate_subset_name),
         "total_parameters": 0,

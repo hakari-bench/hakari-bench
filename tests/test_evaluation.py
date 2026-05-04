@@ -1570,11 +1570,11 @@ def test_evaluate_dense_task_skips_bm25_reranking_without_candidates() -> None:
 def test_result_path_layout() -> None:
     path = result_path_for_task(
         output_dir=Path("output/results"),
-        model_name_or_path="hotchpotch/bekko-model",
+        model_id="local/bekko-model",
         task=_toy_task(),
     )
 
-    assert path == Path("output/results/hotchpotch__bekko-model/toy__data/test.json")
+    assert path == Path("output/results/local__bekko-model/toy__data/test.json")
     assert safe_path_part("/tmp/local model") == "tmp__local_model"
 
 
@@ -1596,7 +1596,7 @@ def test_run_or_load_task_skips_existing_json(tmp_path: Path) -> None:
         aggregate_metric="ndcg@10",
         override=False,
     )
-    output_path = result_path_for_task(output_dir=tmp_path, model_name_or_path=args.model, task=task)
+    output_path = result_path_for_task(output_dir=tmp_path, model_id=args.model, task=task)
     output_path.parent.mkdir(parents=True)
     output_path.write_text(json.dumps({"metrics": {"cached": 1.0}}), encoding="utf-8")
 
@@ -1845,8 +1845,8 @@ def test_run_or_load_task_records_embedding_model_reranking_evaluations(tmp_path
     assert evaluation["rerank_aggregate_metric_value"] == pytest.approx(0.5)
     assert evaluation["reranking_evaluations"][0]["best_score_name"] == "dot_bm25_top1_rerank"
     assert result.payload["rerank_metrics"]["ToyData_test_dot_bm25_top1_rerank_ndcg@10"] == pytest.approx(0.5)
-    assert result.payload["config"]["candidate_subset_name"] == "bm25"
-    assert result.payload["config"]["rerank_top_n"] == 1
+    assert result.payload["config"]["candidate_ranking"] == "bm25"
+    assert result.payload["config"]["rerank_top_k"] == 1
 
     all_payload = build_all_payload(
         args=args,
@@ -1894,7 +1894,7 @@ def test_run_or_load_task_records_score_device(tmp_path: Path) -> None:
         dataset_loader=lambda _: _toy_dataset(),
     )
 
-    assert result.payload["config"]["score_device"] == "cpu"
+    assert result.payload["config"]["retrieval_score_device"] == "cpu"
     base_metadata = result.payload["evaluation"]["embedding_evaluations"][0]["embedding_metadata"]
     assert "device" not in base_metadata["query"]
 
@@ -1934,12 +1934,12 @@ def test_run_or_load_task_records_truncate_sparse_max_dims(tmp_path: Path) -> No
 
     assert model.query_calls[0]["max_active_dims"] is None
     assert model.document_calls[0]["max_active_dims"] is None
-    assert result.payload["config"]["truncate_sparse_query_max_dims"] == 32
-    assert result.payload["config"]["truncate_sparse_docs_max_dims"] == 128
+    assert result.payload["config"]["sparse_query_max_active_dims"] == 32
+    assert result.payload["config"]["sparse_document_max_active_dims"] == 128
     assert result.payload["config"]["sparse_truncation"] == {
         "algorithm": "top_abs_values_per_row",
-        "query_max_dims": 32,
-        "corpus_max_dims": 128,
+        "query_max_active_dims": 32,
+        "document_max_active_dims": 128,
         "source": "post_encode_pipeline",
     }
 
@@ -1949,16 +1949,16 @@ def test_run_or_load_task_records_truncate_sparse_max_dims(tmp_path: Path) -> No
         model_metadata={"name_or_path": "naver/splade-v3"},
         results=[result],
     )
-    assert all_payload["config"]["truncate_sparse_query_max_dims"] == 32
-    assert all_payload["config"]["truncate_sparse_docs_max_dims"] == 128
+    assert all_payload["config"]["sparse_query_max_active_dims"] == 32
+    assert all_payload["config"]["sparse_document_max_active_dims"] == 128
     assert all_payload["config"]["sparse_truncation"] == {
         "algorithm": "top_abs_values_per_row",
-        "query_max_dims": 32,
-        "corpus_max_dims": 128,
+        "query_max_active_dims": 32,
+        "document_max_active_dims": 128,
         "source": "post_encode_pipeline",
     }
-    assert all_payload["splits"][0]["config"]["truncate_sparse_query_max_dims"] == 32
-    assert all_payload["splits"][0]["config"]["truncate_sparse_docs_max_dims"] == 128
+    assert all_payload["splits"][0]["config"]["sparse_query_max_active_dims"] == 32
+    assert all_payload["splits"][0]["config"]["sparse_document_max_active_dims"] == 128
 
 
 def test_build_all_payload_includes_split_and_total_durations(tmp_path: Path) -> None:
@@ -2039,13 +2039,13 @@ def test_build_all_payload_aggregates_prompt_config_from_cached_splits(tmp_path:
         "target": {"dataset_revision": {"resolved": "toy/data@sha"}},
         "config": {
             "batch_size": 4,
-            "aggregate_metric": "ndcg@10",
+            "primary_metric": "ndcg@10",
             "query_prompt": "検索クエリ: ",
-            "corpus_prompt": "検索文書: ",
+            "document_prompt": "検索文書: ",
             "query_prompt_name": None,
-            "corpus_prompt_name": None,
-            "query_task": None,
-            "corpus_task": None,
+            "document_prompt_name": None,
+            "query_encode_task": None,
+            "document_encode_task": None,
         },
         "evaluation": {
             "aggregate_metric": "ndcg@10",
@@ -2069,7 +2069,7 @@ def test_build_all_payload_aggregates_prompt_config_from_cached_splits(tmp_path:
 
     assert payload["cli_args"]["query_prompt"] is None
     assert payload["config"]["query_prompt"] == "検索クエリ: "
-    assert payload["config"]["corpus_prompt"] == "検索文書: "
+    assert payload["config"]["document_prompt"] == "検索文書: "
     assert payload["config"]["batch_size"] == 4
     assert payload["config"]["prompt_summary"]["query_prompt"] == {
         "consistent": True,
@@ -2077,7 +2077,7 @@ def test_build_all_payload_aggregates_prompt_config_from_cached_splits(tmp_path:
         "values": [{"value": "検索クエリ: ", "count": 1}],
     }
     assert payload["splits"][0]["config"]["query_prompt"] == "検索クエリ: "
-    assert payload["splits"][0]["config"]["corpus_prompt"] == "検索文書: "
+    assert payload["splits"][0]["config"]["document_prompt"] == "検索文書: "
 
 
 def test_build_all_payload_uses_task_model_metadata_when_consistent(tmp_path: Path) -> None:
@@ -2202,8 +2202,8 @@ def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -
         dataset_loader=lambda _: _toy_dataset(),
     )
 
-    assert result.payload["config"]["candidate_subset_name"] == "bm25"
+    assert result.payload["config"]["candidate_ranking"] == "bm25"
     assert result.payload["config"]["bm25"]["source"] == "dataset_candidate_subset"
-    assert result.payload["config"]["bm25"]["candidate_subset_name"] == "bm25"
+    assert result.payload["config"]["bm25"]["candidate_ranking"] == "bm25"
     assert result.payload["model"]["bm25"]["source"] == "dataset_candidate_subset"
     assert result.payload["evaluation"]["aggregate_metric_value"] == pytest.approx(0.5)

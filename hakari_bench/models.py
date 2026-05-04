@@ -429,8 +429,9 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
         embedding_parameters=embedding_parameters,
     )
     payload: dict[str, Any] = {
-        "model_type": args.model_type,
-        "name_or_path": args.model,
+        "method": args.model_type,
+        "id": getattr(args, "model_id", args.model),
+        "source": getattr(args, "model_source", {"type": "huggingface", "name": args.model}),
         "device": args.device,
         "dtype": args.dtype,
         "attn_implementation": resolve_attn_implementation(

@@ -55,20 +55,85 @@ def _quantized_variant(
 
 
 def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
-    args = parse_args(["evaluate", "--model", "hotchpotch/model"])
+    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model"])
 
     assert args.command == "evaluate"
     assert args.model_type == "dense"
+    assert args.model_id == "hotchpotch/model"
+    assert args.model_source == {"type": "huggingface", "name": "hotchpotch/model"}
     assert args.dtype == "bf16"
-    assert args.score_device == "auto"
+    assert args.retrieval_score_device == "auto"
     assert args.dataset == ["hakari-bench/NanoBEIR-en"]
-    assert args.output_dir == "output/results"
+    assert args.results_dir == "output/results"
     assert args.embedding_variants == [
         _quantized_variant("int8", "int8"),
         _quantized_variant("binary", "binary"),
         _quantized_variant("int8_rescore", "int8", rescore=True),
         _quantized_variant("binary_rescore", "binary", rescore=True),
     ]
+
+
+def test_parse_args_normalizes_local_model_alias() -> None:
+    args = parse_args(["evaluate", "dense", "--model", "/local_model_A/", "--model-alias", "model_A"])
+
+    assert args.model == "/local_model_A/"
+    assert args.model_alias == "model_A"
+    assert args.model_id == "local/model_A"
+    assert args.model_source == {"type": "local_path", "path": "/local_model_A"}
+
+
+def test_parse_args_preserves_namespaced_local_model_alias() -> None:
+    args = parse_args(["evaluate", "dense", "--model", "/local_model_A/", "--model-alias", "local/model_A"])
+
+    assert args.model_id == "local/model_A"
+
+
+def test_evaluate_dense_help_excludes_bm25_options(capsys) -> None:
+    try:
+        build_parser().parse_args(["evaluate", "dense", "--help"])
+    except SystemExit as exc:
+        assert exc.code == 0
+    else:
+        raise AssertionError("Expected --help to exit.")
+    help_text = capsys.readouterr().out
+
+    assert "--bm25-top-k" not in help_text
+    assert "--bm25-tokenizer" not in help_text
+    assert "--reranker-init-kwargs-json" not in help_text
+
+
+def test_parse_args_accepts_structured_params_json() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "dense",
+            "--params-json",
+            (
+                '{"model":{"source":"/local_model_A/","alias":"model_A"},'
+                '"target":{"collections":["MNanoBEIR"]},'
+                '"runtime":{"batch_size":16,"dtype":"fp16"},'
+                '"output":{"results_dir":"output/custom","overwrite":true}}'
+            ),
+        ]
+    )
+
+    assert args.model == "/local_model_A/"
+    assert args.model_id == "local/model_A"
+    assert args.collection == ["MNanoBEIR"]
+    assert args.dataset == []
+    assert args.batch_size == 16
+    assert args.dtype == "fp16"
+    assert args.results_dir == "output/custom"
+    assert args.overwrite is True
+
+
+def test_parse_args_rejects_unknown_params_json_key() -> None:
+    try:
+        parse_args(["evaluate", "dense", "--params-json", '{"model":{"source":"hotchpotch/model"},"unknown":{}}'])
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected unknown params JSON keys to be rejected.")
 
 
 def test_parser_uses_hakari_bench_identity() -> None:
@@ -82,11 +147,11 @@ def test_parse_args_web_defaults_to_hakari_bench_paths() -> None:
     args = parse_args(["web"])
 
     assert args.duckdb_path is None
-    assert args.source_output_dir == "../hakari-bench/output"
+    assert args.source_results_dir == "../hakari-bench/output/results"
 
 
 def test_parse_args_defaults_to_quantized_variants_on_cpu() -> None:
-    args = parse_args(["evaluate", "--model", "hotchpotch/model", "--device", "cpu"])
+    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--device", "cpu"])
 
     assert args.embedding_variants == [
         _quantized_variant("int8", "int8"),
@@ -97,7 +162,7 @@ def test_parse_args_defaults_to_quantized_variants_on_cpu() -> None:
 
 
 def test_parse_args_defaults_to_quantized_variants_on_cuda() -> None:
-    args = parse_args(["evaluate", "--model", "hotchpotch/model", "--device", "cuda"])
+    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--device", "cuda"])
 
     assert args.embedding_variants == [
         _quantized_variant("int8", "int8"),
@@ -108,9 +173,11 @@ def test_parse_args_defaults_to_quantized_variants_on_cuda() -> None:
 
 
 def test_parse_args_score_device_cpu_forces_cpu_quantized_matrix_work() -> None:
-    args = parse_args(["evaluate", "--model", "hotchpotch/model", "--device", "cuda", "--score-device", "cpu"])
+    args = parse_args(
+        ["evaluate", "dense", "--model", "hotchpotch/model", "--device", "cuda", "--retrieval-score-device", "cpu"]
+    )
 
-    assert args.score_device == "cpu"
+    assert args.retrieval_score_device == "cpu"
     assert args.embedding_variants == [
         _quantized_variant("int8", "int8", device="cpu"),
         _quantized_variant("binary", "binary", device="cpu"),
@@ -120,9 +187,11 @@ def test_parse_args_score_device_cpu_forces_cpu_quantized_matrix_work() -> None:
 
 
 def test_parse_args_score_device_cuda_forces_cuda_quantized_matrix_work() -> None:
-    args = parse_args(["evaluate", "--model", "hotchpotch/model", "--device", "cpu", "--score-device", "cuda"])
+    args = parse_args(
+        ["evaluate", "dense", "--model", "hotchpotch/model", "--device", "cpu", "--retrieval-score-device", "cuda"]
+    )
 
-    assert args.score_device == "cuda"
+    assert args.retrieval_score_device == "cuda"
     assert args.embedding_variants == [
         _quantized_variant("int8", "int8", device="cuda"),
         _quantized_variant("binary", "binary", device="cuda"),
@@ -132,7 +201,7 @@ def test_parse_args_score_device_cuda_forces_cuda_quantized_matrix_work() -> Non
 
 
 def test_parse_args_can_disable_default_dense_quantized_variants() -> None:
-    args = parse_args(["evaluate", "--model", "hotchpotch/model", "--no-quantize"])
+    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--no-default-embedding-variants"])
 
     assert args.embedding_variants == []
 
@@ -141,10 +210,9 @@ def test_parse_args_does_not_add_default_quantized_variants_to_sparse_models() -
     args = parse_args(
         [
             "evaluate",
+            "sparse",
             "--model",
             "naver/splade-v3",
-            "--model-type",
-            "sparse",
         ]
     )
 
@@ -155,10 +223,9 @@ def test_parse_args_accepts_late_interaction_options() -> None:
     args = parse_args(
         [
             "evaluate",
+            "late-interaction",
             "--model",
             "lightonai/GTE-ModernColBERT-v1",
-            "--model-type",
-            "late-interaction",
             "--late-interaction-query-length",
             "64",
             "--late-interaction-document-length",
@@ -195,6 +262,7 @@ def test_parse_args_does_not_add_default_quantized_variants_when_variants_are_ex
     args = parse_args(
         [
             "evaluate",
+            "dense",
             "--model",
             "hotchpotch/model",
             "--embedding-variant",
@@ -211,7 +279,6 @@ def test_parse_args_allows_bm25_evaluation_without_model_name() -> None:
     args = parse_args(
         [
             "evaluate",
-            "--model-type",
             "bm25",
             "--bm25-tokenizer",
             "english_porter_stop",
@@ -219,11 +286,12 @@ def test_parse_args_allows_bm25_evaluation_without_model_name() -> None:
     )
 
     assert args.model == "bm25/bm25s-okapi-english_porter_stop"
+    assert args.model_id == "bm25/bm25s-okapi-english_porter_stop"
     assert args.bm25_tokenizer == "english_porter_stop"
 
 
 def test_parse_args_defaults_bm25_tokenizer_to_auto_when_omitted() -> None:
-    args = parse_args(["evaluate", "--model-type", "bm25"])
+    args = parse_args(["evaluate", "bm25"])
 
     assert args.model == "bm25/bm25s-okapi-auto"
     assert args.bm25_tokenizer is None
@@ -233,43 +301,44 @@ def test_parse_args_accepts_wordseg_bm25_tokenizer() -> None:
     args = parse_args(
         [
             "evaluate",
-            "--model-type",
             "bm25",
             "--bm25-tokenizer",
             "wordseg",
-            "--bm25-tokenizer-name",
+            "--bm25-wordseg-language",
             "ja",
         ]
     )
 
     assert args.model == "bm25/bm25s-okapi-wordseg-ja"
     assert args.bm25_tokenizer == "wordseg"
-    assert args.bm25_tokenizer_name == "ja"
+    assert args.bm25_wordseg_language == "ja"
 
 
 def test_parse_args_accepts_build_bm25_options() -> None:
     args = parse_args(
         [
-            "build-bm25",
+            "build-candidates",
+            "bm25",
             "--dataset",
             "NanoMLDR",
             "--split",
             "ja",
-            "--top-k",
+            "--bm25-top-k",
             "50",
             "--bm25-tokenizer",
             "stemmer",
-            "--bm25-stemmer-algorithm",
+            "--bm25-stemmer-language",
             "french",
         ]
     )
 
-    assert args.command == "build-bm25"
+    assert args.command == "build-candidates"
+    assert args.candidate_method == "bm25"
     assert args.dataset == ["NanoMLDR"]
     assert args.split == ["ja"]
-    assert args.top_k == 50
+    assert args.bm25_top_k == 50
     assert args.bm25_tokenizer == "stemmer"
-    assert args.bm25_stemmer_algorithm == "french"
+    assert args.bm25_stemmer_language == "french"
 
 
 def test_parse_args_accepts_web_viewer_options() -> None:
@@ -285,38 +354,25 @@ def test_parse_args_accepts_prompt_and_reranker_options() -> None:
     args = parse_args(
         [
             "evaluate",
+            "reranker",
             "--model",
             "hotchpotch/reranker",
-            "--model-type",
-            "reranker",
-            "--query-prompt-name",
-            "query",
-            "--query-task",
-            "retrieval",
-            "--corpus-task",
-            "retrieval",
-            "--corpus-prompt",
-            "passage: ",
-            "--cross-encoder-kwargs-json",
+            "--reranker-init-kwargs-json",
             '{"prompts":{"retrieval":"Retrieve relevant passages"},"default_prompt_name":"retrieval"}',
-            "--reranker-score-kwargs-json",
+            "--reranker-inference-kwargs-json",
             '{"prompt_name":"retrieval"}',
-            "--rerank-top-n",
+            "--rerank-top-k",
             "50",
         ]
     )
 
     assert args.model_type == "reranker"
-    assert args.query_prompt_name == "query"
-    assert args.query_task == "retrieval"
-    assert args.corpus_task == "retrieval"
-    assert args.corpus_prompt == "passage: "
     assert args.cross_encoder_kwargs == {
         "prompts": {"retrieval": "Retrieve relevant passages"},
         "default_prompt_name": "retrieval",
     }
     assert args.reranker_score_kwargs == {"prompt_name": "retrieval"}
-    assert args.rerank_top_n == 50
+    assert args.rerank_top_k == 50
 
 
 def test_parse_args_rejects_cross_encoder_kwargs_for_dense_model() -> None:
@@ -324,9 +380,10 @@ def test_parse_args_rejects_cross_encoder_kwargs_for_dense_model() -> None:
         parse_args(
             [
                 "evaluate",
+                "dense",
                 "--model",
                 "hotchpotch/model",
-                "--cross-encoder-kwargs-json",
+                "--reranker-init-kwargs-json",
                 '{"default_prompt_name":"query"}',
             ]
         )
@@ -341,11 +398,10 @@ def test_parse_args_rejects_non_positive_rerank_top_n() -> None:
         parse_args(
             [
                 "evaluate",
+                "reranker",
                 "--model",
                 "hotchpotch/reranker",
-                "--model-type",
-                "reranker",
-                "--rerank-top-n",
+                "--rerank-top-k",
                 "0",
             ]
         )
@@ -359,30 +415,30 @@ def test_parse_args_accepts_query_and_docs_truncate_sparse_max_dims() -> None:
     args = parse_args(
         [
             "evaluate",
+            "sparse",
             "--model",
             "naver/splade-v3",
-            "--model-type",
-            "sparse",
-            "--truncate-sparse-query-max-dims",
+            "--sparse-query-max-active-dims",
             "32",
-            "--truncate-sparse-docs-max-dims",
+            "--sparse-document-max-active-dims",
             "128",
         ]
     )
 
     assert args.model_type == "sparse"
-    assert args.truncate_sparse_query_max_dims == 32
-    assert args.truncate_sparse_docs_max_dims == 128
+    assert args.sparse_query_max_active_dims == 32
+    assert args.sparse_document_max_active_dims == 128
 
 
-def test_parse_args_rejects_truncate_sparse_query_max_dims_for_dense_model() -> None:
+def test_parse_args_rejects_sparse_query_max_active_dims_for_dense_model() -> None:
     try:
         parse_args(
             [
                 "evaluate",
+                "dense",
                 "--model",
                 "hotchpotch/model",
-                "--truncate-sparse-query-max-dims",
+                "--sparse-query-max-active-dims",
                 "128",
             ]
         )
@@ -397,10 +453,9 @@ def test_parse_args_rejects_legacy_sparse_max_active_dims_alias() -> None:
         parse_args(
             [
                 "evaluate",
+                "sparse",
                 "--model",
                 "naver/splade-v3",
-                "--model-type",
-                "sparse",
                 "--sparse-max-active-dims",
                 "128",
             ]
@@ -415,6 +470,7 @@ def test_parse_args_accepts_dataset_revision() -> None:
     args = parse_args(
         [
             "evaluate",
+            "dense",
             "--model",
             "hotchpotch/model",
             "--dataset",
@@ -431,6 +487,7 @@ def test_parse_args_accepts_embedding_variants() -> None:
     args = parse_args(
         [
             "evaluate",
+            "dense",
             "--model",
             "hotchpotch/model",
             "--embedding-variant",
@@ -448,6 +505,7 @@ def test_parse_args_accepts_compact_truncate_embedding_variants() -> None:
     args = parse_args(
         [
             "evaluate",
+            "dense",
             "--model",
             "hotchpotch/model",
             "--embedding-variant",
@@ -471,18 +529,17 @@ def test_parse_args_accepts_query_truncate_sparse_max_dims_embedding_variants() 
     args = parse_args(
         [
             "evaluate",
+            "sparse",
             "--model",
             "naver/splade-v3",
-            "--model-type",
-            "sparse",
             "--embedding-variant",
-            "truncate-sparse-query-max-dims:128,64",
+            "sparse-query-max-active-dims:128,64",
         ]
     )
 
     assert args.embedding_variants == [
-        _pipeline_variant("truncate_sparse_query_max_dims_128", _truncate_sparse_max_dims_step(128, target="query")),
-        _pipeline_variant("truncate_sparse_query_max_dims_64", _truncate_sparse_max_dims_step(64, target="query")),
+        _pipeline_variant("sparse_query_max_active_dims_128", _truncate_sparse_max_dims_step(128, target="query")),
+        _pipeline_variant("sparse_query_max_active_dims_64", _truncate_sparse_max_dims_step(64, target="query")),
     ]
 
 
@@ -491,10 +548,9 @@ def test_parse_args_rejects_legacy_sparse_max_active_dims_embedding_variant() ->
         parse_args(
             [
                 "evaluate",
+                "sparse",
                 "--model",
                 "naver/splade-v3",
-                "--model-type",
-                "sparse",
                 "--embedding-variant",
                 "sparse-max-active-dims:128",
             ]
@@ -509,59 +565,58 @@ def test_parse_args_accepts_query_and_docs_truncate_sparse_max_dims_cross_produc
     args = parse_args(
         [
             "evaluate",
+            "sparse",
             "--model",
             "naver/splade-v3",
-            "--model-type",
-            "sparse",
-            "--embedding-variant-cross",
-            "truncate-sparse-query-max-dims:8,16,32",
-            "truncate-sparse-docs-max-dims:64,128,256",
+            "--embedding-variant-grid",
+            "sparse-query-max-active-dims:8,16,32",
+            "sparse-document-max-active-dims:64,128,256",
         ]
     )
 
     assert args.embedding_variants == [
         _pipeline_variant(
-            "truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_64",
+            "sparse_query_max_active_dims_8_sparse_document_max_active_dims_64",
             _truncate_sparse_max_dims_step(8, target="query"),
             _truncate_sparse_max_dims_step(64, target="corpus"),
         ),
         _pipeline_variant(
-            "truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_128",
+            "sparse_query_max_active_dims_8_sparse_document_max_active_dims_128",
             _truncate_sparse_max_dims_step(8, target="query"),
             _truncate_sparse_max_dims_step(128, target="corpus"),
         ),
         _pipeline_variant(
-            "truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_256",
+            "sparse_query_max_active_dims_8_sparse_document_max_active_dims_256",
             _truncate_sparse_max_dims_step(8, target="query"),
             _truncate_sparse_max_dims_step(256, target="corpus"),
         ),
         _pipeline_variant(
-            "truncate_sparse_query_max_dims_16_truncate_sparse_docs_max_dims_64",
+            "sparse_query_max_active_dims_16_sparse_document_max_active_dims_64",
             _truncate_sparse_max_dims_step(16, target="query"),
             _truncate_sparse_max_dims_step(64, target="corpus"),
         ),
         _pipeline_variant(
-            "truncate_sparse_query_max_dims_16_truncate_sparse_docs_max_dims_128",
+            "sparse_query_max_active_dims_16_sparse_document_max_active_dims_128",
             _truncate_sparse_max_dims_step(16, target="query"),
             _truncate_sparse_max_dims_step(128, target="corpus"),
         ),
         _pipeline_variant(
-            "truncate_sparse_query_max_dims_16_truncate_sparse_docs_max_dims_256",
+            "sparse_query_max_active_dims_16_sparse_document_max_active_dims_256",
             _truncate_sparse_max_dims_step(16, target="query"),
             _truncate_sparse_max_dims_step(256, target="corpus"),
         ),
         _pipeline_variant(
-            "truncate_sparse_query_max_dims_32_truncate_sparse_docs_max_dims_64",
+            "sparse_query_max_active_dims_32_sparse_document_max_active_dims_64",
             _truncate_sparse_max_dims_step(32, target="query"),
             _truncate_sparse_max_dims_step(64, target="corpus"),
         ),
         _pipeline_variant(
-            "truncate_sparse_query_max_dims_32_truncate_sparse_docs_max_dims_128",
+            "sparse_query_max_active_dims_32_sparse_document_max_active_dims_128",
             _truncate_sparse_max_dims_step(32, target="query"),
             _truncate_sparse_max_dims_step(128, target="corpus"),
         ),
         _pipeline_variant(
-            "truncate_sparse_query_max_dims_32_truncate_sparse_docs_max_dims_256",
+            "sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",
             _truncate_sparse_max_dims_step(32, target="query"),
             _truncate_sparse_max_dims_step(256, target="corpus"),
         ),
@@ -586,10 +641,9 @@ def test_parse_args_rejects_quantized_embedding_variants_for_sparse_model() -> N
             parse_args(
                 [
                     "evaluate",
+                    "sparse",
                     "--model",
                     "naver/splade-v3",
-                    "--model-type",
-                    "sparse",
                     "--embedding-variant",
                     spec,
                 ]
@@ -605,12 +659,11 @@ def test_parse_args_rejects_quantized_cross_embedding_variants_for_sparse_model(
         parse_args(
             [
                 "evaluate",
+                "sparse",
                 "--model",
                 "naver/splade-v3",
-                "--model-type",
-                "sparse",
-                "--embedding-variant-cross",
-                "truncate-sparse-query-max-dims:128",
+                "--embedding-variant-grid",
+                "sparse-query-max-active-dims:128",
                 "int8",
             ]
         )
@@ -622,8 +675,8 @@ def test_parse_args_rejects_quantized_cross_embedding_variants_for_sparse_model(
 
 def test_parse_args_rejects_quantized_embedding_variants_for_all_non_dense_models() -> None:
     model_args_by_type = {
-        "late-interaction": ["--model", "hotchpotch/colbert-model"],
-        "reranker": ["--model", "hotchpotch/reranker"],
+        "late-interaction": ["late-interaction", "--model", "hotchpotch/colbert-model"],
+        "reranker": ["reranker", "--model", "hotchpotch/reranker"],
         "bm25": [],
     }
 
@@ -634,8 +687,7 @@ def test_parse_args_rejects_quantized_embedding_variants_for_all_non_dense_model
                     [
                         "evaluate",
                         *model_args,
-                        "--model-type",
-                        model_type,
+                        *(["bm25"] if model_type == "bm25" else []),
                         "--embedding-variant",
                         spec,
                     ]
@@ -653,11 +705,10 @@ def test_parse_args_rejects_quantized_cross_embedding_variants_for_non_dense_mod
         parse_args(
             [
                 "evaluate",
+                "late-interaction",
                 "--model",
                 "hotchpotch/colbert-model",
-                "--model-type",
-                "late-interaction",
-                "--embedding-variant-cross",
+                "--embedding-variant-grid",
                 "truncate:128",
                 "int8",
             ]
@@ -690,6 +741,7 @@ def test_parse_args_rejects_legacy_quantize_and_backend_prefixed_embedding_varia
             parse_args(
                 [
                     "evaluate",
+                    "dense",
                     "--model",
                     "hotchpotch/model",
                     "--embedding-variant",
@@ -706,6 +758,7 @@ def test_parse_args_accepts_quantized_embedding_variants() -> None:
     args = parse_args(
         [
             "evaluate",
+            "dense",
             "--model",
             "hotchpotch/model",
             "--embedding-variant",
@@ -727,6 +780,7 @@ def test_parse_args_accepts_suffix_rescore_quantized_embedding_variants() -> Non
     args = parse_args(
         [
             "evaluate",
+            "dense",
             "--model",
             "hotchpotch/model",
             "--embedding-variant",
@@ -746,6 +800,7 @@ def test_parse_args_accepts_normalize_embedding_variant() -> None:
     args = parse_args(
         [
             "evaluate",
+            "dense",
             "--model",
             "hotchpotch/model",
             "--embedding-variant",
@@ -762,9 +817,10 @@ def test_parse_args_accepts_embedding_variant_cross_product() -> None:
     args = parse_args(
         [
             "evaluate",
+            "dense",
             "--model",
             "hotchpotch/model",
-            "--embedding-variant-cross",
+            "--embedding-variant-grid",
             "truncate:256,128,64",
             "int8,binary",
         ]
@@ -787,9 +843,10 @@ def test_parse_args_accepts_normalize_quantized_cross_product() -> None:
     args = parse_args(
         [
             "evaluate",
+            "dense",
             "--model",
             "hotchpotch/model",
-            "--embedding-variant-cross",
+            "--embedding-variant-grid",
             "normalize",
             "int8,binary",
         ]
@@ -802,7 +859,7 @@ def test_parse_args_accepts_normalize_quantized_cross_product() -> None:
 
 
 def test_parse_args_does_not_mix_default_dataset_into_collection() -> None:
-    args = parse_args(["evaluate", "--model", "hotchpotch/model", "--collection", "MNanoBEIR"])
+    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--collection", "MNanoBEIR"])
 
     assert args.dataset == []
     assert args.collection == ["MNanoBEIR"]

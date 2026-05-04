@@ -167,7 +167,9 @@ def test_collect_model_metadata_counts_parameters() -> None:
 
     metadata = collect_model_metadata(model, args)
 
-    assert metadata["name_or_path"] == "toy"
+    assert metadata["method"] == "dense"
+    assert metadata["id"] == "toy"
+    assert metadata["source"] == {"type": "huggingface", "name": "toy"}
     assert metadata["total_parameters"] == 11
     assert metadata["trainable_parameters"] == 11
     assert metadata["embedding_parameters"] is None

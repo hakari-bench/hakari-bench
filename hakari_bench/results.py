@@ -36,28 +36,28 @@ TIMING_KEYS = [
 ]
 AGGREGATED_CONFIG_KEYS = [
     "batch_size",
-    "aggregate_metric",
-    "candidate_subset_name",
-    "rerank_top_n",
+    "primary_metric",
+    "candidate_ranking",
+    "rerank_top_k",
     "query_prompt",
-    "corpus_prompt",
+    "document_prompt",
     "query_prompt_name",
-    "corpus_prompt_name",
-    "query_task",
-    "corpus_task",
-    "truncate_sparse_query_max_dims",
-    "truncate_sparse_docs_max_dims",
+    "document_prompt_name",
+    "query_encode_task",
+    "document_encode_task",
+    "sparse_query_max_active_dims",
+    "sparse_document_max_active_dims",
     "sparse_truncation",
-    "score_device",
+    "retrieval_score_device",
     "late_interaction",
 ]
 PROMPT_CONFIG_KEYS = [
     "query_prompt",
-    "corpus_prompt",
+    "document_prompt",
     "query_prompt_name",
-    "corpus_prompt_name",
-    "query_task",
-    "corpus_task",
+    "document_prompt_name",
+    "query_encode_task",
+    "document_encode_task",
 ]
 
 
@@ -77,17 +77,17 @@ def safe_path_part(value: str) -> str:
     return normalized or "value"
 
 
-def result_path_for_task(*, output_dir: Path, model_name_or_path: str, task: EvalTask) -> Path:
+def result_path_for_task(*, output_dir: Path, model_id: str, task: EvalTask) -> Path:
     return (
         output_dir
-        / safe_path_part(model_name_or_path)
+        / safe_path_part(model_id)
         / safe_path_part(task.dataset_id)
         / f"{safe_path_part(task.task_name)}.json"
     )
 
 
-def model_output_dir(*, output_dir: Path, model_name_or_path: str) -> Path:
-    return output_dir / safe_path_part(model_name_or_path)
+def model_output_dir(*, output_dir: Path, model_id: str) -> Path:
+    return output_dir / safe_path_part(model_id)
 
 
 def run_or_load_task(
@@ -99,7 +99,11 @@ def run_or_load_task(
     model_metadata: dict[str, Any],
     dataset_loader: Callable[[EvalTask], LoadedIrDataset],
 ) -> TaskRunResult:
-    output_path = result_path_for_task(output_dir=Path(args.output_dir), model_name_or_path=args.model, task=task)
+    output_path = result_path_for_task(
+        output_dir=Path(args.output_dir),
+        model_id=getattr(args, "model_id", args.model),
+        task=task,
+    )
     if output_path.exists() and not args.override:
         return TaskRunResult(
             task=task,
@@ -219,31 +223,31 @@ def run_or_load_task(
         },
         "config": {
             "batch_size": args.batch_size,
-            "aggregate_metric": args.aggregate_metric,
+            "primary_metric": args.aggregate_metric,
             "show_progress": args.show_progress,
             "query_prompt": args.query_prompt,
-            "corpus_prompt": args.corpus_prompt,
+            "document_prompt": args.corpus_prompt,
             "query_prompt_name": args.query_prompt_name,
-            "corpus_prompt_name": args.corpus_prompt_name,
-            "query_task": getattr(args, "query_task", None),
-            "corpus_task": getattr(args, "corpus_task", None),
+            "document_prompt_name": args.corpus_prompt_name,
+            "query_encode_task": getattr(args, "query_task", None),
+            "document_encode_task": getattr(args, "corpus_task", None),
             "truncate_dim": args.truncate_dim,
-            "truncate_sparse_query_max_dims": getattr(args, "truncate_sparse_query_max_dims", None),
-            "truncate_sparse_docs_max_dims": getattr(args, "truncate_sparse_docs_max_dims", None),
+            "sparse_query_max_active_dims": getattr(args, "truncate_sparse_query_max_dims", None),
+            "sparse_document_max_active_dims": getattr(args, "truncate_sparse_docs_max_dims", None),
             "sparse_truncation": _sparse_truncation_payload(args),
-            "score_device": getattr(args, "score_device", "auto"),
+            "retrieval_score_device": getattr(args, "score_device", "auto"),
             "embedding_variants": getattr(args, "embedding_variants", []),
-            "cross_encoder_kwargs": getattr(args, "cross_encoder_kwargs", {})
+            "reranker_init_kwargs": getattr(args, "cross_encoder_kwargs", {})
             if args.model_type == "reranker"
             else {},
-            "reranker_score_kwargs": getattr(args, "reranker_score_kwargs", {})
+            "reranker_inference_kwargs": getattr(args, "reranker_score_kwargs", {})
             if args.model_type == "reranker"
             else {},
             "dataset_revision": getattr(args, "dataset_revision", None),
-            "candidate_subset_name": args.candidate_subset_name
+            "candidate_ranking": args.candidate_subset_name
             if args.model_type in {"dense", "sparse", "late-interaction", "bm25", "reranker"}
             else None,
-            "rerank_top_n": args.rerank_top_n
+            "rerank_top_k": args.rerank_top_n
             if args.model_type in {"dense", "sparse", "late-interaction", "reranker"}
             else None,
             "late_interaction": late_interaction_payload if args.model_type == "late-interaction" else None,
@@ -397,7 +401,7 @@ def build_all_payload(
         "environment": environment,
         "cli_args": vars(args),
         "config": _aggregate_split_configs(args=args, results=results),
-        "aggregate_metric": args.aggregate_metric,
+        "primary_metric": args.aggregate_metric,
         "totals": {
             "target_count": len({entry["dataset_id"] for entry in splits}),
             "split_count": len(splits),
@@ -422,8 +426,8 @@ def build_all_payload(
     }
 
 
-def write_all_payload(*, output_dir: Path, model_name_or_path: str, payload: dict[str, Any]) -> Path:
-    path = model_output_dir(output_dir=output_dir, model_name_or_path=model_name_or_path) / "all.json"
+def write_all_payload(*, output_dir: Path, model_id: str, payload: dict[str, Any]) -> Path:
+    path = model_output_dir(output_dir=output_dir, model_id=model_id) / "all.json"
     _write_json(path, payload)
     return path
 
@@ -448,8 +452,8 @@ def _sparse_truncation_payload(args: Any) -> dict[str, Any] | None:
         return None
     return {
         "algorithm": "top_abs_values_per_row",
-        "query_max_dims": query_limit,
-        "corpus_max_dims": corpus_limit,
+        "query_max_active_dims": query_limit,
+        "document_max_active_dims": corpus_limit,
         "source": "post_encode_pipeline",
     }
 
@@ -465,28 +469,28 @@ def _aggregate_split_configs(*, args: Any, results: list[TaskRunResult]) -> dict
     payload = {
         "source": "per_split_result_config",
         "batch_size": _representative_config_value(summaries["batch_size"], getattr(args, "batch_size", None)),
-        "aggregate_metric": _representative_config_value(
-            summaries["aggregate_metric"],
+        "primary_metric": _representative_config_value(
+            summaries["primary_metric"],
             getattr(args, "aggregate_metric", None),
         ),
-        "truncate_sparse_query_max_dims": _representative_config_value(
-            summaries["truncate_sparse_query_max_dims"],
+        "sparse_query_max_active_dims": _representative_config_value(
+            summaries["sparse_query_max_active_dims"],
             getattr(args, "truncate_sparse_query_max_dims", None),
         ),
-        "truncate_sparse_docs_max_dims": _representative_config_value(
-            summaries["truncate_sparse_docs_max_dims"],
+        "sparse_document_max_active_dims": _representative_config_value(
+            summaries["sparse_document_max_active_dims"],
             getattr(args, "truncate_sparse_docs_max_dims", None),
         ),
         "sparse_truncation": _representative_config_value(
             summaries["sparse_truncation"],
             _sparse_truncation_payload(args),
         ),
-        "candidate_subset_name": _representative_config_value(
-            summaries["candidate_subset_name"],
+        "candidate_ranking": _representative_config_value(
+            summaries["candidate_ranking"],
             getattr(args, "candidate_subset_name", None),
         ),
-        "rerank_top_n": _representative_config_value(
-            summaries["rerank_top_n"],
+        "rerank_top_k": _representative_config_value(
+            summaries["rerank_top_k"],
             getattr(args, "rerank_top_n", None),
         ),
         "late_interaction": summaries["late_interaction"],
@@ -565,7 +569,7 @@ def _summarize_reranking_evaluation(value: Any) -> dict[str, Any]:
         "source": value.get("source"),
         "status": value.get("status"),
         "reason": value.get("reason"),
-        "rerank_top_n": value.get("rerank_top_n"),
+        "rerank_top_k": value.get("rerank_top_n"),
         "aggregate_metric": value.get("aggregate_metric"),
         "aggregate_metric_value": value.get("aggregate_metric_value"),
         "best_score": value.get("best_score"),
