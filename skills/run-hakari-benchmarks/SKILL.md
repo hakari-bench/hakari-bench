@@ -1,9 +1,9 @@
 ---
-name: run-nano-ir-benchmarks
-description: Workflow for measuring models with the nano-ir-bench project. Use when Codex is asked to benchmark or evaluate embedding models on NanoIR/Nano* datasets, choose prompt/truncate-dim/attention options, schedule GPU benchmark jobs, compare BM25, or refresh DuckDB and HTML leaderboard reports.
+name: run-hakari-benchmarks
+description: Workflow for measuring models with the HAKARI-Bench project. Use when Codex is asked to benchmark or evaluate embedding models on NanoIR/Nano* datasets, choose prompt/truncate-dim/attention options, schedule GPU benchmark jobs, compare BM25, or refresh DuckDB and HTML leaderboard reports.
 ---
 
-# Run NanoIR Benchmarks
+# Run HAKARI-Bench Evaluations
 
 ## Core Workflow
 
@@ -73,7 +73,7 @@ For every specified model:
 Use the project CLI and existing project conventions:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model MODEL_NAME \
   --dataset DATASET_NAME \
   --dtype bf16
@@ -83,7 +83,7 @@ For Matryoshka-style dimensions, evaluate derived truncated embeddings from one
 inference pass:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model MODEL_NAME \
   --dataset DATASET_NAME \
   --embedding-variant truncate:512,256
@@ -95,7 +95,7 @@ for the base result without automatic `int8` and binary variants or
 their top-100 float-rescored variants:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model MODEL_NAME \
   --dataset DATASET_NAME
 ```
@@ -104,7 +104,7 @@ When dimensions are part of the run, include standalone dimensions, standalone
 quantized search, and their cross product:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model MODEL_NAME \
   --dataset DATASET_NAME \
   --embedding-variant truncate:256,128,64 \
@@ -122,7 +122,7 @@ For sparse/SPLADE-style models, use post-encode sparse truncation variants
 instead of dense `truncate:` variants. Query-only sparsity limits:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model MODEL_NAME \
   --model-type sparse \
   --dataset DATASET_NAME \
@@ -133,7 +133,7 @@ When query and document limits should differ, use query/docs-specific variants
 and their cross product:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model MODEL_NAME \
   --model-type sparse \
   --dataset DATASET_NAME \
@@ -152,7 +152,7 @@ unsupported in the CLI and use sparse truncation comparisons instead.
 For BM25:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model-type bm25 \
   --dataset DATASET_NAME
 ```

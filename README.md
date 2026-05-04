@@ -1,6 +1,6 @@
-# nano-ir-bench
+# HAKARI-Bench
 
-NanoIR Benchmark is a library, viewer, and leaderboard project for evaluating small information retrieval datasets.
+HAKARI-Bench is a library, viewer, and leaderboard project for evaluating small information retrieval datasets.
 
 Nano-style information retrieval benchmark runner for SentenceTransformers-compatible models.
 
@@ -11,7 +11,7 @@ Built-in dataset definitions include `NanoBEIR-en`, `NanoMIRACL`, `NanoMLDR`,
 ## Example
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model hotchpotch/bekko-embedding-pico-beta-unir-v7 \
   --dataset hakari-bench/NanoBEIR-en
 ```
@@ -32,11 +32,11 @@ specific branch, tag, or commit; the resolved commit SHA is still stored.
 ## Sparse encoders
 
 Sparse SentenceTransformers models can be evaluated with `--model-type sparse`.
-NanoIR Benchmark requests sparse tensor output from `SparseEncoder` models and
+HAKARI-Bench requests sparse tensor output from `SparseEncoder` models and
 keeps sparse embeddings in a sparse matrix format for scoring.
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model naver/splade-v3 \
   --model-type sparse \
   --dataset NanoBEIR-en
@@ -47,7 +47,7 @@ query and/or document sparse rows to their top weighted dimensions after
 encoding:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model naver/splade-v3 \
   --model-type sparse \
   --dataset NanoBEIR-en \
@@ -65,7 +65,7 @@ To compare multiple sparsity limits from one full sparse model encode, use
 post-encode embedding variants:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model naver/splade-v3 \
   --model-type sparse \
   --dataset NanoBEIR-en \
@@ -119,13 +119,13 @@ on the model output device, while `cpu` or `cuda` force quantized search matrix
 work to that device. Use `--no-quantize` to run only the base dense result.
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model example/embedding-model \
   --dataset NanoMTEB
 ```
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model example/embedding-model \
   --dataset NanoMTEB \
   --no-quantize
@@ -134,7 +134,7 @@ uv run nano-ir-bench evaluate \
 For explicit dense runs, use `int8,binary` and `rescore:int8,binary`:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model example/embedding-model \
   --dataset NanoMTEB \
   --embedding-variant int8,binary \
@@ -156,7 +156,7 @@ Matryoshka-style truncated embedding dimensions can be evaluated from the same
 base embedding run:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model example/matryoshka-embedding-model \
   --dataset NanoMTEB \
   --embedding-variant truncate:512,256
@@ -168,7 +168,7 @@ When evaluating dimensions, run the standalone truncation variants, standalone
 quantization variants, and their cross product:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model example/matryoshka-embedding-model \
   --dataset NanoMTEB \
   --embedding-variant truncate:256,128,64 \
@@ -219,7 +219,7 @@ CrossEncoder-style reranker models can be evaluated directly with
 models exposing `rank`, `predict`, or a callable pair-scoring API.
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model nreimers/mmarco-mMiniLMv2-L6-H384-v1 \
   --model-type reranker \
   --dataset NanoRTEB \
@@ -235,7 +235,7 @@ by `--candidate-subset-name` (default: `bm25`), that ranking is used as the BM25
 baseline. If the subset is unavailable, BM25 is computed locally.
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model-type bm25 \
   --dataset NanoMLDR \
   --split ja \
@@ -245,7 +245,7 @@ uv run nano-ir-bench evaluate \
 BM25 candidate files can also be generated for reranking workflows:
 
 ```bash
-uv run nano-ir-bench build-bm25 \
+uv run hakari-bench build-bm25 \
   --dataset NanoMLDR \
   --split ja \
   --bm25-tokenizer english_porter_stop \
@@ -272,7 +272,7 @@ uv sync --extra wordseg
 Supported `wordseg` language values are passed via `--bm25-tokenizer-name`:
 
 ```bash
-uv run nano-ir-bench build-bm25 \
+uv run hakari-bench build-bm25 \
   --dataset NanoMLDR \
   --split ja \
   --bm25-tokenizer wordseg \
@@ -299,11 +299,11 @@ uv sync --group all
 Start the HTMX/Tailwind leaderboard viewer:
 
 ```bash
-uv run nano-ir-bench web
+uv run hakari-bench web
 ```
 
 By default, it binds to `127.0.0.1:8000` and keeps
-`output/viewer/nano_ir_bench.duckdb` synchronized from the benchmark output
+`output/viewer/hakari_bench.duckdb` synchronized from the benchmark output
 DuckDB when a page is loaded. Use `--host 0.0.0.0 --port 28090` for remote
 access, or pass `--source-output-dir` / `--source-duckdb-path` to point at a
 different source.

@@ -7,8 +7,8 @@ from typing import Any, Iterable, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from nano_ir_benchmark.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
-from nano_ir_benchmark.viewer.data import TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
+from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
 
 SortDirection = Literal["asc", "desc"]
 

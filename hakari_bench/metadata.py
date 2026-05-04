@@ -4,7 +4,7 @@ from pathlib import Path
 from statistics import mean, median
 from typing import Any
 
-from nano_ir_benchmark.datasets import DatasetRegistry
+from hakari_bench.datasets import DatasetRegistry
 
 
 def text_stats(texts: list[str]) -> dict[str, int | float]:

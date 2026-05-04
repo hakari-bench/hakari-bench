@@ -676,6 +676,128 @@ wheels = [
 ]
 
 [[package]]
+name = "hakari-bench"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "bm25s" },
+    { name = "datasets" },
+    { name = "duckdb" },
+    { name = "fast-langdetect" },
+    { name = "flash-attn", marker = "python_full_version < '3.14'" },
+    { name = "huggingface-hub" },
+    { name = "nltk" },
+    { name = "numpy" },
+    { name = "peft" },
+    { name = "protobuf" },
+    { name = "pystemmer" },
+    { name = "pyyaml" },
+    { name = "scipy" },
+    { name = "sentence-transformers" },
+    { name = "sentencepiece" },
+    { name = "torch" },
+    { name = "transformers" },
+]
+
+[package.optional-dependencies]
+wordseg = [
+    { name = "fugashi" },
+    { name = "jieba" },
+    { name = "kiwipiepy" },
+    { name = "pythainlp" },
+    { name = "pyvi" },
+    { name = "unidic-lite" },
+]
+
+[package.dev-dependencies]
+all = [
+    { name = "duckdb" },
+    { name = "fastapi" },
+    { name = "pydantic" },
+    { name = "pytest" },
+    { name = "pyyaml" },
+    { name = "ruff" },
+    { name = "tox" },
+    { name = "tox-uv" },
+    { name = "ty" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+    { name = "tox" },
+    { name = "tox-uv" },
+    { name = "ty" },
+]
+pylate = [
+    { name = "pylate" },
+]
+viewer = [
+    { name = "duckdb" },
+    { name = "fastapi" },
+    { name = "pydantic" },
+    { name = "pyyaml" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "bm25s", specifier = ">=0.3.6" },
+    { name = "datasets", specifier = ">=4.8.4" },
+    { name = "duckdb", specifier = ">=1.5.2" },
+    { name = "fast-langdetect", specifier = ">=1.0.0" },
+    { name = "flash-attn", url = "https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3%2Bcu12torch2.9cxx11abiTRUE-cp312-cp312-linux_x86_64.whl" },
+    { name = "fugashi", marker = "extra == 'wordseg'", specifier = ">=1.5.2" },
+    { name = "huggingface-hub", specifier = ">=1.12.0" },
+    { name = "jieba", marker = "extra == 'wordseg'", specifier = ">=0.42.1" },
+    { name = "kiwipiepy", marker = "extra == 'wordseg'", specifier = ">=0.22.2" },
+    { name = "nltk", specifier = ">=3.9.4" },
+    { name = "numpy", specifier = ">=2.4.4" },
+    { name = "peft", specifier = ">=0.19.1" },
+    { name = "protobuf", specifier = ">=6.33.2" },
+    { name = "pystemmer", specifier = ">=3.0.0" },
+    { name = "pythainlp", marker = "extra == 'wordseg'", specifier = ">=5.2.0" },
+    { name = "pyvi", marker = "extra == 'wordseg'", specifier = ">=0.1.1" },
+    { name = "pyyaml", specifier = ">=6.0.3" },
+    { name = "scipy", specifier = ">=1.17.1" },
+    { name = "sentence-transformers", specifier = ">=5.4" },
+    { name = "sentencepiece", specifier = ">=0.2.1" },
+    { name = "torch", specifier = ">=2.9,<2.10" },
+    { name = "transformers", specifier = ">=5,<6" },
+    { name = "unidic-lite", marker = "extra == 'wordseg'", specifier = ">=1.0.8" },
+]
+provides-extras = ["wordseg"]
+
+[package.metadata.requires-dev]
+all = [
+    { name = "duckdb", specifier = ">=1.5.2" },
+    { name = "fastapi", specifier = ">=0.136.1" },
+    { name = "pydantic", specifier = ">=2.13.3" },
+    { name = "pytest", specifier = ">=9.0.3" },
+    { name = "pyyaml", specifier = ">=6.0.3" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "tox", specifier = ">=4.53.0" },
+    { name = "tox-uv", specifier = ">=1.35.1" },
+    { name = "ty", specifier = ">=0.0.32" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.46.0" },
+]
+dev = [
+    { name = "pytest", specifier = ">=9.0.3" },
+    { name = "ruff", specifier = ">=0.15.12" },
+    { name = "tox", specifier = ">=4.53.0" },
+    { name = "tox-uv", specifier = ">=1.35.1" },
+    { name = "ty", specifier = ">=0.0.32" },
+]
+pylate = [{ name = "pylate", git = "https://github.com/lightonai/pylate.git?rev=1f1f47cee5df35ebe6fd2286a0a205a1523e4119" }]
+viewer = [
+    { name = "duckdb", specifier = ">=1.5.2" },
+    { name = "fastapi", specifier = ">=0.136.1" },
+    { name = "pydantic", specifier = ">=2.13.3" },
+    { name = "pyyaml", specifier = ">=6.0.3" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.46.0" },
+]
+
+[[package]]
 name = "hf-xet"
 version = "1.4.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1086,128 +1208,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/7f/74/d2c27e03cb84251dfe7249b8e82923643c6d48fa4883b9476b025e7dc7eb/multiprocess-0.70.19-py313-none-any.whl", hash = "sha256:8d5eb4ec5017ba2fab4e34a747c6d2c2b6fecfe9e7236e77988db91580ada952", size = 156414, upload-time = "2026-01-19T06:47:35.915Z" },
     { url = "https://files.pythonhosted.org/packages/a0/61/af9115673a5870fd885247e2f1b68c4f1197737da315b520a91c757a861a/multiprocess-0.70.19-py314-none-any.whl", hash = "sha256:e8cc7fbdff15c0613f0a1f1f8744bef961b0a164c0ca29bdff53e9d2d93c5e5f", size = 160318, upload-time = "2026-01-19T06:47:37.497Z" },
     { url = "https://files.pythonhosted.org/packages/7e/82/69e539c4c2027f1e1697e09aaa2449243085a0edf81ae2c6341e84d769b6/multiprocess-0.70.19-py39-none-any.whl", hash = "sha256:0d4b4397ed669d371c81dcd1ef33fd384a44d6c3de1bd0ca7ac06d837720d3c5", size = 133477, upload-time = "2026-01-19T06:47:38.619Z" },
-]
-
-[[package]]
-name = "nano-ir-bench"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "bm25s" },
-    { name = "datasets" },
-    { name = "duckdb" },
-    { name = "fast-langdetect" },
-    { name = "flash-attn", marker = "python_full_version < '3.14'" },
-    { name = "huggingface-hub" },
-    { name = "nltk" },
-    { name = "numpy" },
-    { name = "peft" },
-    { name = "protobuf" },
-    { name = "pystemmer" },
-    { name = "pyyaml" },
-    { name = "scipy" },
-    { name = "sentence-transformers" },
-    { name = "sentencepiece" },
-    { name = "torch" },
-    { name = "transformers" },
-]
-
-[package.optional-dependencies]
-wordseg = [
-    { name = "fugashi" },
-    { name = "jieba" },
-    { name = "kiwipiepy" },
-    { name = "pythainlp" },
-    { name = "pyvi" },
-    { name = "unidic-lite" },
-]
-
-[package.dev-dependencies]
-all = [
-    { name = "duckdb" },
-    { name = "fastapi" },
-    { name = "pydantic" },
-    { name = "pytest" },
-    { name = "pyyaml" },
-    { name = "ruff" },
-    { name = "tox" },
-    { name = "tox-uv" },
-    { name = "ty" },
-    { name = "uvicorn", extra = ["standard"] },
-]
-dev = [
-    { name = "pytest" },
-    { name = "ruff" },
-    { name = "tox" },
-    { name = "tox-uv" },
-    { name = "ty" },
-]
-pylate = [
-    { name = "pylate" },
-]
-viewer = [
-    { name = "duckdb" },
-    { name = "fastapi" },
-    { name = "pydantic" },
-    { name = "pyyaml" },
-    { name = "uvicorn", extra = ["standard"] },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "bm25s", specifier = ">=0.3.6" },
-    { name = "datasets", specifier = ">=4.8.4" },
-    { name = "duckdb", specifier = ">=1.5.2" },
-    { name = "fast-langdetect", specifier = ">=1.0.0" },
-    { name = "flash-attn", url = "https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3%2Bcu12torch2.9cxx11abiTRUE-cp312-cp312-linux_x86_64.whl" },
-    { name = "fugashi", marker = "extra == 'wordseg'", specifier = ">=1.5.2" },
-    { name = "huggingface-hub", specifier = ">=1.12.0" },
-    { name = "jieba", marker = "extra == 'wordseg'", specifier = ">=0.42.1" },
-    { name = "kiwipiepy", marker = "extra == 'wordseg'", specifier = ">=0.22.2" },
-    { name = "nltk", specifier = ">=3.9.4" },
-    { name = "numpy", specifier = ">=2.4.4" },
-    { name = "peft", specifier = ">=0.19.1" },
-    { name = "protobuf", specifier = ">=6.33.2" },
-    { name = "pystemmer", specifier = ">=3.0.0" },
-    { name = "pythainlp", marker = "extra == 'wordseg'", specifier = ">=5.2.0" },
-    { name = "pyvi", marker = "extra == 'wordseg'", specifier = ">=0.1.1" },
-    { name = "pyyaml", specifier = ">=6.0.3" },
-    { name = "scipy", specifier = ">=1.17.1" },
-    { name = "sentence-transformers", specifier = ">=5.4" },
-    { name = "sentencepiece", specifier = ">=0.2.1" },
-    { name = "torch", specifier = ">=2.9,<2.10" },
-    { name = "transformers", specifier = ">=5,<6" },
-    { name = "unidic-lite", marker = "extra == 'wordseg'", specifier = ">=1.0.8" },
-]
-provides-extras = ["wordseg"]
-
-[package.metadata.requires-dev]
-all = [
-    { name = "duckdb", specifier = ">=1.5.2" },
-    { name = "fastapi", specifier = ">=0.136.1" },
-    { name = "pydantic", specifier = ">=2.13.3" },
-    { name = "pytest", specifier = ">=9.0.3" },
-    { name = "pyyaml", specifier = ">=6.0.3" },
-    { name = "ruff", specifier = ">=0.15.12" },
-    { name = "tox", specifier = ">=4.53.0" },
-    { name = "tox-uv", specifier = ">=1.35.1" },
-    { name = "ty", specifier = ">=0.0.32" },
-    { name = "uvicorn", extras = ["standard"], specifier = ">=0.46.0" },
-]
-dev = [
-    { name = "pytest", specifier = ">=9.0.3" },
-    { name = "ruff", specifier = ">=0.15.12" },
-    { name = "tox", specifier = ">=4.53.0" },
-    { name = "tox-uv", specifier = ">=1.35.1" },
-    { name = "ty", specifier = ">=0.0.32" },
-]
-pylate = [{ name = "pylate", git = "https://github.com/lightonai/pylate.git?rev=1f1f47cee5df35ebe6fd2286a0a205a1523e4119" }]
-viewer = [
-    { name = "duckdb", specifier = ">=1.5.2" },
-    { name = "fastapi", specifier = ">=0.136.1" },
-    { name = "pydantic", specifier = ">=2.13.3" },
-    { name = "pyyaml", specifier = ">=6.0.3" },
-    { name = "uvicorn", extras = ["standard"], specifier = ">=0.46.0" },
 ]
 
 [[package]]

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from nano_ir_benchmark.metadata import export_bibtex, export_citation_catalog, export_latex_citations, text_stats
+from hakari_bench.metadata import export_bibtex, export_citation_catalog, export_latex_citations, text_stats
 from scripts.update_dataset_metadata_stats import update_stats_in_file
 
 

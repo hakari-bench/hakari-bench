@@ -6,10 +6,10 @@ from pathlib import Path
 
 import duckdb
 
-from nano_ir_benchmark.viewer.app import _fmt_max_len, _metric_column_label, create_app
-from nano_ir_benchmark.viewer.config import load_viewer_config
-from nano_ir_benchmark.viewer.leaderboard import LeaderboardService, TaskScore, compute_leaderboard_rows
-from nano_ir_benchmark.viewer.store import DuckDbLocation, LocalDuckDbStore
+from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, create_app
+from hakari_bench.viewer.config import load_viewer_config
+from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, compute_leaderboard_rows
+from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore, resolve_duckdb_location
 
 
 def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> None:
@@ -632,6 +632,17 @@ def test_local_duckdb_store_copies_newer_source_on_page_load(tmp_path: Path) -> 
 
     assert store.ensure_current() is True
     assert local.read_bytes() == b"new"
+
+
+def test_resolve_duckdb_location_defaults_to_hakari_bench_name(tmp_path: Path) -> None:
+    location = resolve_duckdb_location(
+        data_dir=tmp_path,
+        duckdb_path=None,
+        source_output_dir=None,
+        source_duckdb_path=None,
+    )
+
+    assert location.local_path == tmp_path / "hakari_bench.duckdb"
 
 
 def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:

@@ -10,15 +10,15 @@ from typing import Any, Callable
 
 import numpy as np
 
-from nano_ir_benchmark.bm25 import (
+from hakari_bench.bm25 import (
     bm25_config_from_args,
     bm25_config_payload,
     collect_bm25_metadata,
     evaluate_bm25_task,
     resolve_bm25_config_for_queries,
 )
-from nano_ir_benchmark.datasets import EvalTask, resolve_dataset_revision
-from nano_ir_benchmark.evaluation import (
+from hakari_bench.datasets import EvalTask, resolve_dataset_revision
+from hakari_bench.evaluation import (
     LoadedIrDataset,
     evaluate_dense_task,
     evaluate_late_interaction_task,

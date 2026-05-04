@@ -6,7 +6,7 @@ from typing import Any, Iterable
 import duckdb
 from pydantic import BaseModel, ConfigDict
 
-from nano_ir_benchmark.viewer.task_names import (
+from hakari_bench.viewer.task_names import (
     canonical_split_name,
     canonical_task_key,
     canonical_task_name,

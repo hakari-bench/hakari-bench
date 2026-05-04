@@ -6,8 +6,8 @@ from typing import Any
 
 import yaml
 
-from nano_ir_benchmark.datasets import DatasetRegistry, resolve_dataset_splits
-from nano_ir_benchmark.metadata import text_stats
+from hakari_bench.datasets import DatasetRegistry, resolve_dataset_splits
+from hakari_bench.metadata import text_stats
 
 
 StatsByTask = dict[tuple[str, str], dict[str, dict[str, int | float]]]

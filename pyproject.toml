@@ -1,5 +1,5 @@
 [project]
-name = "nano-ir-bench"
+name = "hakari-bench"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -29,7 +29,7 @@ requires = ["setuptools>=81.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-nano-ir-bench = "nano_ir_benchmark.cli:main"
+hakari-bench = "hakari_bench.cli:main"
 
 [project.optional-dependencies]
 wordseg = [
@@ -45,7 +45,7 @@ wordseg = [
 pythonpath = ["."]
 
 [tool.setuptools.packages.find]
-include = ["nano_ir_benchmark*"]
+include = ["hakari_bench*"]
 exclude = ["config*", "tests*"]
 
 [tool.uv]

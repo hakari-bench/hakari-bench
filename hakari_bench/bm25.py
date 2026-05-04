@@ -14,8 +14,8 @@ from typing import Any, Literal, Sequence, cast
 
 import numpy as np
 
-from nano_ir_benchmark.datasets import EvalTask, resolve_dataset_revision
-from nano_ir_benchmark.metrics import compute_ir_metrics
+from hakari_bench.datasets import EvalTask, resolve_dataset_revision
+from hakari_bench.metrics import compute_ir_metrics
 
 BM25Tokenizer = Literal[
     "regex",
@@ -204,7 +204,7 @@ def collect_bm25_metadata(
 
 
 def evaluate_bm25_task(*, dataset: Any, config: BM25Config) -> Any:
-    from nano_ir_benchmark.evaluation import TaskEvaluation
+    from hakari_bench.evaluation import TaskEvaluation
 
     score_start = time.perf_counter()
     if dataset.candidates is None:
@@ -378,7 +378,7 @@ def candidate_rows_to_rankings(rows: Sequence[dict[str, Any]]) -> dict[str, list
 
 
 def bm25_candidate_path_for_task(*, output_dir: Path, task: EvalTask, config: BM25Config) -> Path:
-    from nano_ir_benchmark.results import safe_path_part
+    from hakari_bench.results import safe_path_part
 
     return output_dir / safe_path_part(bm25_config_name(config)) / safe_path_part(task.dataset_id) / f"{safe_path_part(task.task_name)}.json"
 

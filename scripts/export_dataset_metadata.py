@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from nano_ir_benchmark.metadata import export_bibtex, export_citation_catalog, export_latex_citations
+from hakari_bench.metadata import export_bibtex, export_citation_catalog, export_latex_citations
 
 
 def main() -> None:

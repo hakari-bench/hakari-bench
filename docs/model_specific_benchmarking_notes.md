@@ -19,7 +19,7 @@ Use the retrieval prompts documented by the model card:
 Example:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model cl-nagoya/ruri-v3-310m \
   --query-prompt '検索クエリ: ' \
   --corpus-prompt '検索文書: '
@@ -62,7 +62,7 @@ Use the standard E5 retrieval prefixes:
 Example:
 
 ```bash
-uv run nano-ir-bench evaluate \
+uv run hakari-bench evaluate \
   --model intfloat/multilingual-e5-base \
   --query-prompt 'query: ' \
   --corpus-prompt 'passage: '

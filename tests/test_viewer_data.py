@@ -4,7 +4,7 @@ from pathlib import Path
 
 import duckdb
 
-from nano_ir_benchmark.viewer.data import TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
 
 
 def test_task_results_repository_returns_pydantic_records_and_base_rows_by_default(tmp_path: Path) -> None:

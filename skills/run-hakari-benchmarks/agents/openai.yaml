@@ -1,0 +1,4 @@
+interface:
+  display_name: "Run HAKARI-Bench Evaluations"
+  short_description: "Plan and run HAKARI-Bench evaluations"
+  default_prompt: "Use $run-hakari-benchmarks to evaluate a model on selected NanoIR benchmark datasets."

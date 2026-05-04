@@ -7,28 +7,28 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from nano_ir_benchmark.bm25 import (
+from hakari_bench.bm25 import (
     BM25BuildResult,
     bm25_config_name,
     bm25_config_from_args,
     collect_bm25_metadata,
     run_or_load_bm25_task,
 )
-from nano_ir_benchmark.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
-from nano_ir_benchmark.embedding_variants import (
+from hakari_bench.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
+from hakari_bench.embedding_variants import (
     TORCH_RESCORE_SCORE_REPRESENTATION,
     TORCH_SCORE_REPRESENTATION,
     default_dense_quantized_embedding_variants,
     parse_embedding_variants,
 )
-from nano_ir_benchmark.evaluation import LoadedIrDataset, load_ir_dataset
-from nano_ir_benchmark.models import (
+from hakari_bench.evaluation import LoadedIrDataset, load_ir_dataset
+from hakari_bench.models import (
     ModelLoadConfig,
     collect_model_metadata,
     collect_runtime_environment,
     load_model,
 )
-from nano_ir_benchmark.results import (
+from hakari_bench.results import (
     TaskRunResult,
     build_all_payload,
     result_path_for_task,
@@ -39,7 +39,7 @@ from nano_ir_benchmark.results import (
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Nano IR benchmark runner")
+    parser = argparse.ArgumentParser(description="HAKARI-Bench runner")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     evaluate = subparsers.add_parser("evaluate", help="Evaluate a model on Nano-style IR datasets.")
@@ -167,15 +167,15 @@ def build_parser() -> argparse.ArgumentParser:
     build_bm25.add_argument("--show-progress", action="store_true")
     _add_bm25_args(build_bm25)
 
-    web = subparsers.add_parser("web", help="Run the Nano IR benchmark result viewer.")
+    web = subparsers.add_parser("web", help="Run the HAKARI-Bench result viewer.")
     web.add_argument("--host", default="127.0.0.1", help="Bind host. Use 0.0.0.0 to allow remote access.")
     web.add_argument("--port", type=int, default=8000)
     web.add_argument("--data-dir", default="output/viewer", help="Local viewer data/cache directory.")
-    web.add_argument("--duckdb-path", default=None, help="Local DuckDB path. Defaults to DATA_DIR/nano_ir_bench.duckdb.")
+    web.add_argument("--duckdb-path", default=None, help="Local DuckDB path. Defaults to DATA_DIR/hakari_bench.duckdb.")
     web.add_argument(
         "--source-output-dir",
-        default="../nano_ir_bench/output",
-        help="Source benchmark output directory containing results/nano_ir_bench.duckdb.",
+        default="../hakari-bench/output",
+        help="Source benchmark output directory containing results/hakari_bench.duckdb.",
     )
     web.add_argument("--source-duckdb-path", default=None, help="Explicit source DuckDB path to copy from.")
     web.add_argument("--viewer-config-dir", default="config/viewer", help="Viewer YAML config directory.")
@@ -490,8 +490,8 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def run_web(args: argparse.Namespace) -> None:
-    from nano_ir_benchmark.viewer.app import create_app
-    from nano_ir_benchmark.viewer.store import LocalDuckDbStore, resolve_duckdb_location
+    from hakari_bench.viewer.app import create_app
+    from hakari_bench.viewer.store import LocalDuckDbStore, resolve_duckdb_location
 
     import uvicorn
 
@@ -504,7 +504,7 @@ def run_web(args: argparse.Namespace) -> None:
     store = LocalDuckDbStore(location)
     store.ensure_current()
     app = create_app(store=store, config_dir=Path(args.viewer_config_dir))
-    print(f"Serving Nano IR benchmark viewer on http://{args.host}:{args.port}")
+    print(f"Serving HAKARI-Bench viewer on http://{args.host}:{args.port}")
     print(f"Local DuckDB: {location.local_path}")
     if location.source_path is not None:
         print(f"Source DuckDB: {location.source_path}")

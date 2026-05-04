@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import argparse
 
-from nano_ir_benchmark.cli import parse_args
-from nano_ir_benchmark.datasets import EvalTask, NanoDatasetSpec
+from hakari_bench.cli import build_parser, parse_args
+from hakari_bench.datasets import EvalTask, NanoDatasetSpec
 
 
 def _pipeline_variant(name: str, *steps: dict[str, object]) -> dict[str, object]:
@@ -69,6 +69,20 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
         _quantized_variant("int8_rescore", "int8", rescore=True),
         _quantized_variant("binary_rescore", "binary", rescore=True),
     ]
+
+
+def test_parser_uses_hakari_bench_identity() -> None:
+    parser = build_parser()
+
+    assert parser.description == "HAKARI-Bench runner"
+    assert "HAKARI-Bench" in parser.format_help()
+
+
+def test_parse_args_web_defaults_to_hakari_bench_paths() -> None:
+    args = parse_args(["web"])
+
+    assert args.duckdb_path is None
+    assert args.source_output_dir == "../hakari-bench/output"
 
 
 def test_parse_args_defaults_to_quantized_variants_on_cpu() -> None:
@@ -795,7 +809,7 @@ def test_parse_args_does_not_mix_default_dataset_into_collection() -> None:
 
 
 def test_load_dataset_for_args_uses_candidate_subset_for_candidate_aware_models(monkeypatch) -> None:
-    from nano_ir_benchmark.cli import _load_dataset_for_args
+    from hakari_bench.cli import _load_dataset_for_args
 
     calls: list[tuple[str, str | None]] = []
 
@@ -810,7 +824,7 @@ def test_load_dataset_for_args_uses_candidate_subset_for_candidate_aware_models(
         calls.append((current_model_type, candidate_subset_name))
         return object()
 
-    monkeypatch.setattr("nano_ir_benchmark.cli.load_ir_dataset", fake_load_ir_dataset)
+    monkeypatch.setattr("hakari_bench.cli.load_ir_dataset", fake_load_ir_dataset)
     task = EvalTask(
         dataset=NanoDatasetSpec(
             name="Toy",

@@ -5,7 +5,7 @@
 This repository implements a Nano-style information retrieval benchmark runner
 for SentenceTransformers-compatible models and BM25 baselines.
 
-Library code lives under `nano_ir_benchmark/`. Built-in dataset definitions live
+Library code lives under `hakari_bench/`. Built-in dataset definitions live
 under `config/datasets/`, and dataset collection definitions live under
 `config/dataset_collections/`.
 

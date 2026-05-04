@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from nano_ir_benchmark.datasets import (
+from hakari_bench.datasets import (
     DatasetRegistry,
     NanoDatasetSpec,
     REFERENCE_SOURCE_CONFIDENCE_LABELS,
@@ -318,7 +318,7 @@ def test_resolve_eval_tasks_expands_mnanobeir_collection() -> None:
 def test_resolve_eval_tasks_accepts_direct_dataset_id(monkeypatch: pytest.MonkeyPatch) -> None:
     registry = DatasetRegistry.load_builtin()
     monkeypatch.setattr(
-        "nano_ir_benchmark.datasets.get_dataset_split_names",
+        "hakari_bench.datasets.get_dataset_split_names",
         lambda dataset_id, subset: ["ja", "en"],
     )
 
@@ -360,7 +360,7 @@ def test_resolve_dataset_revision_uses_huggingface_hub_sha(monkeypatch: pytest.M
             return FakeDatasetInfo()
 
     resolve_dataset_revision.cache_clear()
-    monkeypatch.setattr("nano_ir_benchmark.datasets.HfApi", FakeHfApi)
+    monkeypatch.setattr("hakari_bench.datasets.HfApi", FakeHfApi)
 
     assert resolve_dataset_revision("owner/dataset", requested_revision="main") == {
         "requested": "main",
@@ -375,7 +375,7 @@ def test_resolve_dataset_revision_returns_unknown_when_hub_fails(monkeypatch: py
             raise RuntimeError(f"cannot resolve {repo_id}@{revision}")
 
     resolve_dataset_revision.cache_clear()
-    monkeypatch.setattr("nano_ir_benchmark.datasets.HfApi", FakeHfApi)
+    monkeypatch.setattr("hakari_bench.datasets.HfApi", FakeHfApi)
 
     revision = resolve_dataset_revision("local/dataset", requested_revision=None)
 

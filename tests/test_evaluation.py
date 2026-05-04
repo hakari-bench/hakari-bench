@@ -9,16 +9,16 @@ import pytest
 import torch
 from scipy import sparse
 
-import nano_ir_benchmark.evaluation as evaluation_module
-from nano_ir_benchmark.datasets import EvalTask, NanoDatasetSpec
-from nano_ir_benchmark.evaluation import (
+import hakari_bench.evaluation as evaluation_module
+from hakari_bench.datasets import EvalTask, NanoDatasetSpec
+from hakari_bench.evaluation import (
     LoadedIrDataset,
     QuantizedEmbeddingMatrix,
     evaluate_dense_task,
     evaluate_late_interaction_task,
     evaluate_reranker_task,
 )
-from nano_ir_benchmark.results import TaskRunResult, build_all_payload, result_path_for_task, run_or_load_task, safe_path_part
+from hakari_bench.results import TaskRunResult, build_all_payload, result_path_for_task, run_or_load_task, safe_path_part
 
 
 def _pipeline_variant(name: str, *steps: dict[str, object]) -> dict[str, object]:
@@ -1676,7 +1676,7 @@ def test_run_or_load_task_records_dataset_revision(tmp_path: Path, monkeypatch: 
         override=False,
     )
     monkeypatch.setattr(
-        "nano_ir_benchmark.results.resolve_dataset_revision",
+        "hakari_bench.results.resolve_dataset_revision",
         lambda dataset_id, requested_revision=None: {
             "requested": requested_revision,
             "resolved": f"{dataset_id}@sha",
@@ -2148,7 +2148,7 @@ def test_run_or_load_task_records_auto_bm25_config(tmp_path: Path, monkeypatch: 
         top_k=3,
     )
     monkeypatch.setattr(
-        "nano_ir_benchmark.bm25._detect_language",
+        "hakari_bench.bm25._detect_language",
         lambda _: {"lang": "en", "score": 0.99},
     )
 

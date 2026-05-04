@@ -10,7 +10,7 @@ from typing import Any
 
 import duckdb
 
-from nano_ir_benchmark.viewer.task_names import (
+from hakari_bench.viewer.task_names import (
     canonical_metric_name,
     canonical_split_name,
     canonical_task_key,
@@ -78,7 +78,7 @@ class TaskResult:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--results-dir", type=Path, default=Path("output/results"))
-    parser.add_argument("--duckdb-path", type=Path, default=Path("output/results/nano_ir_bench.duckdb"))
+    parser.add_argument("--duckdb-path", type=Path, default=Path("output/results/hakari_bench.duckdb"))
     parser.add_argument("--html-output", type=Path, required=True)
     args = parser.parse_args()
 
@@ -650,14 +650,14 @@ def render_html(*, data_json: str) -> str:
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nano IR Benchmark Borda Report</title>
+  <title>HAKARI-Bench Borda Report</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 </head>
 <body class="bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
   <main class="mx-auto max-w-[1600px] px-5 py-8">
     <header class="mb-7 border-b border-stone-200 pb-5 dark:border-stone-800">
-      <p class="text-sm font-medium text-sky-700 dark:text-sky-300">Nano IR benchmark report</p>
+      <p class="text-sm font-medium text-sky-700 dark:text-sky-300">HAKARI-Bench report</p>
       <h1 class="mt-2 text-2xl font-semibold tracking-normal text-stone-950 dark:text-stone-50">Nano benchmark sortable Borda score matrix</h1>
       <p class="mt-3 max-w-5xl text-sm leading-6 text-stone-700 dark:text-stone-300">Completed benchmark results are loaded into DuckDB and summarized by Overall and each Nano benchmark group. Tables are sorted by Borda Score by default. Click any column heading to sort.</p>
     </header>

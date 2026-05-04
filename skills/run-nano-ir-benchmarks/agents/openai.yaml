@@ -1,4 +1,0 @@
-interface:
-  display_name: "Run NanoIR Benchmarks"
-  short_description: "Plan and run NanoIR benchmark evaluations"
-  default_prompt: "Use $run-nano-ir-benchmarks to evaluate a model on selected NanoIR benchmark datasets."

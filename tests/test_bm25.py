@@ -6,7 +6,7 @@ from collections.abc import Iterable
 
 import pytest
 
-from nano_ir_benchmark.bm25 import (
+from hakari_bench.bm25 import (
     BM25Config,
     _build_wordseg_splitter,
     evaluate_bm25_task,
@@ -15,7 +15,7 @@ from nano_ir_benchmark.bm25 import (
     resolve_bm25_config_for_queries,
     tokenize_texts,
 )
-from nano_ir_benchmark.evaluation import LoadedIrDataset
+from hakari_bench.evaluation import LoadedIrDataset
 
 
 def test_rank_bm25_candidates_uses_bm25s_okapi() -> None:

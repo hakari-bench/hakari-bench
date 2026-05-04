@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-DEFAULT_DUCKDB_NAME = "nano_ir_bench.duckdb"
+DEFAULT_DUCKDB_NAME = "hakari_bench.duckdb"
 
 
 @dataclass(frozen=True)
@@ -61,9 +61,8 @@ def _source_from_output_dir(source_output_dir: Path | None) -> Path | None:
 
 def _discover_source_duckdb() -> Path | None:
     candidates = [
-        Path("../nano_ir_bench/output/results") / DEFAULT_DUCKDB_NAME,
-        Path("../nano-ir-bench/output/results") / DEFAULT_DUCKDB_NAME,
-        Path("../../nano-ir-bench/output/results") / DEFAULT_DUCKDB_NAME,
+        Path("../hakari-bench/output/results") / DEFAULT_DUCKDB_NAME,
+        Path("../../hakari-bench/output/results") / DEFAULT_DUCKDB_NAME,
         Path("output/results") / DEFAULT_DUCKDB_NAME,
     ]
     for candidate in candidates:

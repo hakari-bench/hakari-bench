@@ -1,6 +1,6 @@
 # DuckDB Schema and Leaderboard Query Guide
 
-This document describes how the Nano IR Benchmark viewer stores leaderboard
+This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
 The main source table for the HTMX leaderboard viewer is `task_results`.
@@ -17,7 +17,7 @@ Build the DuckDB database from benchmark JSON output:
 ```bash
 uv run python scripts/build_results_database_and_report.py \
   --results-dir output/results \
-  --duckdb-path output/results/nano_ir_bench.duckdb \
+  --duckdb-path output/results/hakari_bench.duckdb \
   --html-output output/results/report.html
 ```
 
@@ -36,10 +36,10 @@ The input files are:
 Start the web viewer with:
 
 ```bash
-uv run nano-ir-bench web
+uv run hakari-bench web
 ```
 
-By default, the viewer reads `output/viewer/nano_ir_bench.duckdb`. On each page
+By default, the viewer reads `output/viewer/hakari_bench.duckdb`. On each page
 load, it copies a newer source database from the benchmark output directory
 when one is available.
 
@@ -291,7 +291,7 @@ separately.
 
 ## Current Viewer Data Access Layer
 
-`nano_ir_benchmark/viewer/data.py` contains `TaskResultsRepository`, which
+`hakari_bench/viewer/data.py` contains `TaskResultsRepository`, which
 reads DuckDB rows into the Pydantic DTO `TaskResultRecord`. `LeaderboardService`
 converts that DTO into the leaderboard-domain `TaskScore`, then performs
 ranking, overall aggregation, score grouping, and sorting in Python.

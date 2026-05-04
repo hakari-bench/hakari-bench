@@ -9,15 +9,15 @@ from urllib.parse import urlencode
 
 from pydantic import BaseModel, ConfigDict
 
-from nano_ir_benchmark.viewer.config import ViewerConfig, load_viewer_config
-from nano_ir_benchmark.viewer.leaderboard import (
+from hakari_bench.viewer.config import ViewerConfig, load_viewer_config
+from hakari_bench.viewer.leaderboard import (
     LeaderboardResult,
     LeaderboardRow,
     LeaderboardService,
     SORT_COLUMNS,
     SortDirection,
 )
-from nano_ir_benchmark.viewer.store import LocalDuckDbStore
+from hakari_bench.viewer.store import LocalDuckDbStore
 
 
 class ViewerAppConfig(BaseModel):
@@ -44,7 +44,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
     from fastapi.responses import HTMLResponse
 
     viewer_config = load_viewer_config(config_dir)
-    app = FastAPI(title="Nano IR Benchmark Viewer")
+    app = FastAPI(title="HAKARI-Bench Viewer")
 
     @app.get("/", response_class=HTMLResponse)
     def index(
@@ -141,7 +141,7 @@ def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nano IR Benchmark Viewer</title>
+  <title>HAKARI-Bench Viewer</title>
   <link rel="canonical" href="/">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/htmx.org@2.0.8"></script>
@@ -149,7 +149,7 @@ def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1500px] px-4 py-6 sm:px-6">
     <header class="mb-5 border-b border-zinc-200 pb-4">
-      <p class="text-sm font-medium text-cyan-700">Nano IR benchmark viewer</p>
+      <p class="text-sm font-medium text-cyan-700">HAKARI-Bench viewer</p>
       <h1 class="mt-1 text-2xl font-semibold">Borda leaderboard</h1>
       <p class="mt-2 text-sm text-zinc-600">DuckDB: <span class="font-mono">{escape(str(duckdb_path))}</span></p>
     </header>

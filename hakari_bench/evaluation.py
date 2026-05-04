@@ -10,8 +10,8 @@ import torch
 from scipy import sparse
 from tqdm.auto import tqdm
 
-from nano_ir_benchmark.datasets import EvalTask
-from nano_ir_benchmark.metrics import compute_ir_metrics
+from hakari_bench.datasets import EvalTask
+from hakari_bench.metrics import compute_ir_metrics
 
 QuantizationPrecision = Literal["int8", "binary"]
 TORCH_SCORE_REPRESENTATION = "torch_exact"

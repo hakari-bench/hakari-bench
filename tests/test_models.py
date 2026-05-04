@@ -5,7 +5,7 @@ import argparse
 import pytest
 import torch
 
-from nano_ir_benchmark.models import (
+from hakari_bench.models import (
     ModelLoadConfig,
     collect_model_metadata,
     load_model,
@@ -36,7 +36,7 @@ def test_load_model_passes_dense_options(monkeypatch: pytest.MonkeyPatch) -> Non
             self.projection = torch.nn.Linear(2, 2)
             self.inner = FakeCustomModule()
 
-    monkeypatch.setattr("nano_ir_benchmark.models._import_sentence_transformer", lambda: FakeSentenceTransformer)
+    monkeypatch.setattr("hakari_bench.models._import_sentence_transformer", lambda: FakeSentenceTransformer)
 
     model = load_model(
         ModelLoadConfig(
@@ -77,7 +77,7 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
             calls.append({"model_name_or_path": model_name_or_path, **kwargs})
             self.projection = torch.nn.Linear(2, 2)
 
-    monkeypatch.setattr("nano_ir_benchmark.models._import_pylate_colbert", lambda: FakeColBERT)
+    monkeypatch.setattr("hakari_bench.models._import_pylate_colbert", lambda: FakeColBERT)
 
     model = load_model(
         ModelLoadConfig(
@@ -120,7 +120,7 @@ def test_load_model_reranker_passes_cross_encoder_kwargs(monkeypatch: pytest.Mon
             calls.append({"model_name_or_path": model_name_or_path, **kwargs})
             self.model = torch.nn.Linear(2, 1)
 
-    monkeypatch.setattr("nano_ir_benchmark.models._import_cross_encoder", lambda: FakeCrossEncoder)
+    monkeypatch.setattr("hakari_bench.models._import_cross_encoder", lambda: FakeCrossEncoder)
 
     model = load_model(
         ModelLoadConfig(
