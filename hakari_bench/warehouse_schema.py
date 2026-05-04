@@ -98,3 +98,68 @@ class MetricLongRow(WarehouseModel):
             self.metric_value,
             self.result_path,
         )
+
+
+class TaskDiagnosticRow(WarehouseModel):
+    model_dir: str
+    model_name: str
+    benchmark: str
+    dataset_id: str
+    task_name: str
+    task_key: str
+    result_path: str
+    base_score: float
+    rerank_score: float | None = None
+    rerank_lift: float | None = None
+    rerank_status: str | None = None
+    rerank_top_k: int | None = None
+    candidate_source: str | None = None
+    candidate_ranking: str | None = None
+    bm25_source: str | None = None
+    query_coverage: float | None = None
+    relevant_coverage: float | None = None
+    covered_query_count: int | None = None
+    query_with_relevance_count: int | None = None
+    covered_relevant_count: int | None = None
+    relevant_count: int | None = None
+    dataset_load_seconds: float | None = None
+    query_embedding_seconds: float | None = None
+    corpus_embedding_seconds: float | None = None
+    score_and_topk_seconds: float | None = None
+    metric_compute_seconds: float | None = None
+    pure_compute_seconds: float | None = None
+    wall_seconds: float | None = None
+    duration_seconds_including_dataset_load: float | None = None
+
+    def duckdb_values(self) -> tuple[object, ...]:
+        return (
+            self.model_dir,
+            self.model_name,
+            self.benchmark,
+            self.dataset_id,
+            self.task_name,
+            self.task_key,
+            self.result_path,
+            self.base_score,
+            self.rerank_score,
+            self.rerank_lift,
+            self.rerank_status,
+            self.rerank_top_k,
+            self.candidate_source,
+            self.candidate_ranking,
+            self.bm25_source,
+            self.query_coverage,
+            self.relevant_coverage,
+            self.covered_query_count,
+            self.query_with_relevance_count,
+            self.covered_relevant_count,
+            self.relevant_count,
+            self.dataset_load_seconds,
+            self.query_embedding_seconds,
+            self.corpus_embedding_seconds,
+            self.score_and_topk_seconds,
+            self.metric_compute_seconds,
+            self.pure_compute_seconds,
+            self.wall_seconds,
+            self.duration_seconds_including_dataset_load,
+        )

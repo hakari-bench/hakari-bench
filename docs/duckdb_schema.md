@@ -5,7 +5,8 @@ data in DuckDB and how a viewer should query that data.
 
 The main source table for the HTMX leaderboard viewer is `task_results`.
 `runs` contains run-level metadata, `metrics_long` contains detailed task
-metrics, and `model_scores` / `borda_task_scores` are precomputed tables used
+metrics, `task_diagnostics` contains analysis-oriented rerank, candidate, and
+latency fields, and `model_scores` / `borda_task_scores` are precomputed tables used
 by the static HTML report. The current HTMX viewer does not read
 `model_scores`; it computes the leaderboard from `task_results` on each
 request.
@@ -37,7 +38,7 @@ JSON file is required.
 
 When `--parquet-output-dir` is provided, the generator also writes Parquet
 snapshots for the canonical tables: `runs`, `task_results`, `metrics_long`,
-`model_scores`, and `borda_task_scores`. These files are intended for notebooks,
+`task_diagnostics`, `model_scores`, and `borda_task_scores`. These files are intended for notebooks,
 ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
 not need the mutable DuckDB database file.
 
@@ -170,6 +171,44 @@ does not use it for ranking.
 | `metric_name` | `VARCHAR` | Metric name, such as `NanoJaCWIR_ndcg@10`. |
 | `metric_value` | `DOUBLE` | Metric value. |
 | `result_path` | `VARCHAR` | Source task JSON path. |
+
+### `task_diagnostics`
+
+`task_diagnostics` is a notebook-friendly table for analyzing why a model did
+or did not improve under BM25 candidate reranking. It is not used for
+leaderboard ranking.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `model_dir` | `VARCHAR` | Model output directory. |
+| `model_name` | `VARCHAR` | Model name. |
+| `benchmark` | `VARCHAR` | Benchmark group. |
+| `dataset_id` | `VARCHAR` | Dataset id. |
+| `task_name` | `VARCHAR` | Task name. |
+| `task_key` | `VARCHAR` | Ranking task identity. |
+| `result_path` | `VARCHAR` | Source task JSON path. |
+| `base_score` | `DOUBLE` | Base retrieval aggregate score. |
+| `rerank_score` | `DOUBLE` | Candidate-reranked aggregate score, or `NULL` when unavailable. |
+| `rerank_lift` | `DOUBLE` | `rerank_score - base_score`, or `NULL`. |
+| `rerank_status` | `VARCHAR` | Rerank availability status from result JSON. |
+| `rerank_top_k` | `INTEGER` | Candidate depth used for reranking. |
+| `candidate_source` | `VARCHAR` | Candidate source label, usually `dataset_candidate_subset`. |
+| `candidate_ranking` | `VARCHAR` | Configured candidate ranking, usually `bm25`. |
+| `bm25_source` | `VARCHAR` | BM25 source metadata, such as `dataset_candidate_subset` or `computed_bm25s`. |
+| `query_coverage` | `DOUBLE` | Fraction of qrels-bearing queries with at least one relevant document in top-k candidates. |
+| `relevant_coverage` | `DOUBLE` | Fraction of relevant documents covered by top-k candidates. |
+| `covered_query_count` | `INTEGER` | Count of qrels-bearing queries covered by candidates. |
+| `query_with_relevance_count` | `INTEGER` | Count of queries with at least one relevant document. |
+| `covered_relevant_count` | `INTEGER` | Count of relevant documents found in top-k candidates. |
+| `relevant_count` | `INTEGER` | Total relevant document count in qrels. |
+| `dataset_load_seconds` | `DOUBLE` | Dataset load time. |
+| `query_embedding_seconds` | `DOUBLE` | Query encoding time. |
+| `corpus_embedding_seconds` | `DOUBLE` | Corpus encoding time. |
+| `score_and_topk_seconds` | `DOUBLE` | Retrieval score and top-k time. |
+| `metric_compute_seconds` | `DOUBLE` | Metric computation time. |
+| `pure_compute_seconds` | `DOUBLE` | Compute duration excluding dataset load. |
+| `wall_seconds` | `DOUBLE` | Task evaluation wall time. |
+| `duration_seconds_including_dataset_load` | `DOUBLE` | End-to-end task duration including dataset loading. |
 
 ### `model_scores`
 
@@ -386,6 +425,7 @@ directly in DuckDB. In a real viewer, build `selected_benchmarks` and
 DESCRIBE task_results;
 DESCRIBE runs;
 DESCRIBE metrics_long;
+DESCRIBE task_diagnostics;
 DESCRIBE model_scores;
 DESCRIBE borda_task_scores;
 ```
