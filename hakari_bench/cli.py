@@ -15,6 +15,7 @@ from hakari_bench.bm25 import (
     collect_bm25_metadata,
     run_or_load_bm25_task,
 )
+from hakari_bench.cli_schema import BuildCandidatesParamsJson, EvaluateParamsJson
 from hakari_bench.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
 from hakari_bench.embedding_variants import (
     TORCH_RESCORE_SCORE_REPRESENTATION,
@@ -85,7 +86,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_dataset_args(bm25, action="evaluate")
     _add_candidate_args(bm25)
     _add_output_args(bm25, results_default="output/results")
-    _add_bm25_args(bm25)
+    _add_bm25_args(bm25, include_source=True)
 
     build_candidates = subparsers.add_parser(
         "build-candidates",
@@ -253,7 +254,14 @@ def _add_output_args(parser: argparse.ArgumentParser, *, results_default: str) -
     parser.add_argument("--primary-metric", default="ndcg@10")
 
 
-def _add_bm25_args(parser: argparse.ArgumentParser) -> None:
+def _add_bm25_args(parser: argparse.ArgumentParser, *, include_source: bool = False) -> None:
+    if include_source:
+        parser.add_argument(
+            "--bm25-source",
+            choices=["dataset", "computed"],
+            default="dataset",
+            help="Use dataset candidate subset by default; use computed to recompute with bm25s.",
+        )
     parser.add_argument("--bm25-top-k", type=int, default=100, help="Number of BM25 candidates per query.")
     parser.add_argument(
         "--bm25-tokenizer",
@@ -351,8 +359,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         args.dataset = ["hakari-bench/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:
         args.dataset = []
+    if args.command == "evaluate" and args.model_type == "bm25":
+        _validate_bm25_source_args(args, parser)
     if args.command == "evaluate" and args.model_type == "bm25" and args.model is None:
-        args.model = f"bm25/{bm25_config_name(bm25_config_from_args(args))}"
+        args.model = _default_bm25_model_id(args)
         args.model_id = args.model
         args.model_source = {"type": "bm25", "name": args.model}
     if args.command == "evaluate" and args.model_type != "bm25" and args.model is None:
@@ -404,12 +414,31 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
 
 def _bridge_new_bm25_args(args: argparse.Namespace) -> None:
     args.top_k = getattr(args, "bm25_top_k", 100)
+    args.bm25_source = getattr(args, "bm25_source", "dataset")
     args.bm25_tokenizer_name = getattr(args, "bm25_wordseg_language", None) or getattr(
         args,
         "bm25_tokenizer_model",
         None,
     )
     args.bm25_stemmer_algorithm = getattr(args, "bm25_stemmer_language", "english")
+
+
+def _validate_bm25_source_args(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
+    if getattr(args, "bm25_source", "dataset") != "dataset":
+        return
+    if getattr(args, "bm25_tokenizer", None) is not None:
+        parser.error("--bm25-tokenizer requires --bm25-source computed.")
+    if getattr(args, "bm25_tokenizer_model", None) is not None:
+        parser.error("--bm25-tokenizer-model requires --bm25-source computed.")
+    if getattr(args, "bm25_wordseg_language", None) is not None:
+        parser.error("--bm25-wordseg-language requires --bm25-source computed.")
+
+
+def _default_bm25_model_id(args: argparse.Namespace) -> str:
+    if getattr(args, "bm25_source", "dataset") == "computed":
+        return f"bm25/{bm25_config_name(bm25_config_from_args(args))}"
+    candidate_name = safe_path_part(getattr(args, "candidate_subset_name", "bm25") or "bm25")
+    return f"bm25/dataset-{candidate_name}"
 
 
 def _apply_model_identity(args: argparse.Namespace) -> None:
@@ -452,12 +481,7 @@ def _apply_evaluate_params_json(args: argparse.Namespace) -> None:
     raw = getattr(args, "params_json", None)
     if raw is None:
         return
-    payload = _parse_params_json(raw)
-    _reject_unknown_keys(
-        payload,
-        allowed={"model", "target", "runtime", "output", "prompts", "reranker", "sparse", "embedding", "bm25", "late_interaction"},
-        path="params",
-    )
+    payload = _parse_evaluate_params_json(raw)
     _apply_model_params(args, _params_section(payload, "model"))
     _apply_target_params(args, _params_section(payload, "target"))
     _apply_runtime_params(args, _params_section(payload, "runtime"))
@@ -474,21 +498,24 @@ def _apply_build_candidates_params_json(args: argparse.Namespace) -> None:
     raw = getattr(args, "params_json", None)
     if raw is None:
         return
-    payload = _parse_params_json(raw)
-    _reject_unknown_keys(payload, allowed={"target", "output", "bm25"}, path="params")
+    payload = _parse_build_candidates_params_json(raw)
     _apply_target_params(args, _params_section(payload, "target"))
     _apply_build_candidates_output_params(args, _params_section(payload, "output"))
     _apply_bm25_params(args, _params_section(payload, "bm25"))
 
 
-def _parse_params_json(raw: str) -> dict[str, Any]:
+def _parse_evaluate_params_json(raw: str) -> dict[str, Any]:
     try:
-        payload = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"--params-json must be valid JSON: {exc}") from exc
-    if not isinstance(payload, dict):
-        raise ValueError("--params-json must be a JSON object.")
-    return payload
+        return EvaluateParamsJson.model_validate_json(raw).model_dump(exclude_none=True)
+    except ValueError as exc:
+        raise ValueError(f"--params-json is invalid: {exc}") from exc
+
+
+def _parse_build_candidates_params_json(raw: str) -> dict[str, Any]:
+    try:
+        return BuildCandidatesParamsJson.model_validate_json(raw).model_dump(exclude_none=True)
+    except ValueError as exc:
+        raise ValueError(f"--params-json is invalid: {exc}") from exc
 
 
 def _params_section(payload: dict[str, Any], key: str) -> dict[str, Any]:
@@ -625,9 +652,11 @@ def _apply_embedding_params(args: argparse.Namespace, value: dict[str, Any]) -> 
 def _apply_bm25_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
     _reject_unknown_keys(
         value,
-        allowed={"top_k", "tokenizer", "tokenizer_model", "wordseg_language", "stemmer_language", "k1", "b"},
+        allowed={"source", "top_k", "tokenizer", "tokenizer_model", "wordseg_language", "stemmer_language", "k1", "b"},
         path="params.bm25",
     )
+    if "source" in value:
+        args.bm25_source = _string_param(value["source"], "params.bm25.source")
     if "top_k" in value:
         args.bm25_top_k = _optional_positive_int_param(value["top_k"], "params.bm25.top_k")
     for key, attr in {

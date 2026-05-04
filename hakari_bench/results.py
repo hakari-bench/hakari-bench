@@ -5,6 +5,7 @@ import re
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from hashlib import sha256
 from pathlib import Path
 from typing import Any, Callable
 
@@ -121,15 +122,21 @@ def run_or_load_task(
     payload_model_metadata = model_metadata
     if args.model_type == "bm25":
         raw_bm25_config = bm25_config_from_args(args)
-        bm25_source = "dataset_candidate_subset" if dataset.candidates is not None else "computed_bm25s"
-        bm25_candidate_subset_name = (
-            args.candidate_subset_name if dataset.candidates is not None else None
-        )
-        bm25_config = (
-            raw_bm25_config
-            if dataset.candidates is not None
-            else resolve_bm25_config_for_queries(raw_bm25_config, dataset.queries)
-        )
+        requested_bm25_source = getattr(args, "bm25_source", "dataset")
+        if requested_bm25_source == "computed":
+            bm25_source = "computed_bm25s"
+            bm25_candidate_subset_name = None
+            bm25_config = resolve_bm25_config_for_queries(raw_bm25_config, dataset.queries)
+        else:
+            if dataset.candidates is None:
+                raise ValueError(
+                    "BM25 evaluation defaults to the dataset candidate subset, but the selected "
+                    f"candidate ranking {args.candidate_subset_name!r} is unavailable. "
+                    "Use --bm25-source computed to recompute BM25 locally with bm25s."
+                )
+            bm25_source = "dataset_candidate_subset"
+            bm25_candidate_subset_name = args.candidate_subset_name
+            bm25_config = raw_bm25_config
         bm25_payload = bm25_config_payload(
             bm25_config,
             source=bm25_source,
@@ -144,6 +151,7 @@ def run_or_load_task(
         evaluation = evaluate_bm25_task(
             dataset=dataset,
             config=bm25_config,
+            source=bm25_source,
         )
     elif args.model_type == "reranker":
         evaluation = evaluate_reranker_task(
@@ -271,8 +279,39 @@ def run_or_load_task(
         "metrics": evaluation.metrics,
         "rerank_metrics": evaluation.rerank_metrics,
     }
+    payload["experiment_manifest"] = build_experiment_manifest(payload)
     _write_json(output_path, payload)
     return TaskRunResult(task=task, cache_hit=False, output_path=output_path, payload=payload)
+
+
+def build_experiment_manifest(payload: dict[str, Any]) -> dict[str, Any]:
+    fingerprint_payload = {
+        "model": payload.get("model"),
+        "target": payload.get("target"),
+        "config": payload.get("config"),
+        "environment": payload.get("environment"),
+    }
+    fingerprint = sha256(_canonical_json_bytes(fingerprint_payload)).hexdigest()
+    model = payload.get("model")
+    target = payload.get("target")
+    config = payload.get("config")
+    return {
+        "schema_version": 1,
+        "fingerprint_sha256": fingerprint,
+        "model_id": model.get("id") if isinstance(model, dict) else None,
+        "method": model.get("method") if isinstance(model, dict) else None,
+        "dataset_id": target.get("dataset_id") if isinstance(target, dict) else None,
+        "dataset_revision": target.get("dataset_revision") if isinstance(target, dict) else None,
+        "split_name": target.get("split_name") if isinstance(target, dict) else None,
+        "task_name": target.get("task_name") if isinstance(target, dict) else None,
+        "primary_metric": config.get("primary_metric") if isinstance(config, dict) else None,
+        "candidate_ranking": config.get("candidate_ranking") if isinstance(config, dict) else None,
+        "rerank_top_k": config.get("rerank_top_k") if isinstance(config, dict) else None,
+    }
+
+
+def _canonical_json_bytes(value: Any) -> bytes:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
 
 
 def aggregate_metric_value_for(metrics: dict[str, float], suffix: str) -> float:
@@ -565,6 +604,7 @@ def _summarize_reranking_evaluation(value: Any) -> dict[str, Any]:
         "best_score": value.get("best_score"),
         "best_distance": value.get("best_distance"),
         "best_score_name": value.get("best_score_name"),
+        "candidate_coverage": value.get("candidate_coverage"),
         "distance_evaluations": _summarize_distance_evaluations(value.get("distance_evaluations")),
     }
 

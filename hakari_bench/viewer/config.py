@@ -1,18 +1,21 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
 
+ScoreGroupKey = Literal["task_key", "dataset_name", "dataset_id", "split_name", "benchmark", "task_name"]
+
+
 class ScoreGroupConfig(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid", strict=True)
 
     name: str
     label: str | None = None
-    group_by: str = "task_name"
+    group_by: ScoreGroupKey = "task_name"
 
     @property
     def display_label(self) -> str:
@@ -20,7 +23,7 @@ class ScoreGroupConfig(BaseModel):
 
 
 class BenchmarkConfig(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid", strict=True)
 
     name: str
     label: str | None = None
@@ -40,14 +43,14 @@ class BenchmarkConfig(BaseModel):
 
 
 class OverallBenchmarkConfig(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid", strict=True)
 
     name: str
-    group_by: str | None = None
+    group_by: ScoreGroupKey | None = None
 
 
 class OverallConfig(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid", strict=True)
 
     name: str = "Overall"
     label: str = "Overall"
@@ -66,7 +69,7 @@ class OverallConfig(BaseModel):
 
 
 class ViewerConfig(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid", strict=True)
 
     benchmarks: list[BenchmarkConfig]
     overalls: list[OverallConfig]

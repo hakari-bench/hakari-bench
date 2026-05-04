@@ -21,7 +21,7 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoBEIR-en").dataset_id == "hakari-bench/NanoBEIR-en"
     assert registry.get_dataset("NanoMIRACL").dataset_id == "hakari-bench/NanoMIRACL"
     assert registry.get_dataset("NanoMLDR").dataset_id == "hakari-bench/NanoMLDR"
-    assert registry.get_dataset("NanoJMTEB").dataset_id == "hakari-bench/NanoJMTEB"
+    assert registry.get_dataset("NanoMTEB-Japanese").dataset_id == "hakari-bench/NanoMTEB-Japanese"
     assert registry.get_dataset("NanoRTEB").dataset_id == "hakari-bench/NanoRTEB"
     assert registry.get_dataset("NanoMTEB").dataset_id == "hakari-bench/NanoMTEB"
     assert registry.get_dataset("NanoMMTEB").dataset_id == "hakari-bench/NanoMMTEB"
@@ -42,6 +42,14 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoMTEB-Dutch").dataset_id == "hakari-bench/NanoMTEB-Dutch"
     assert registry.get_dataset("NanoMTEB-Xlingual").dataset_id == "hakari-bench/NanoMTEB-Xlingual"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
+
+
+def test_builtin_config_lives_in_repo_config() -> None:
+    config_root = Path("config")
+
+    assert config_root.joinpath("datasets", "nanobeir_en.yaml").is_file()
+    assert config_root.joinpath("dataset_collections", "mnanobeir.yaml").is_file()
+    assert config_root.joinpath("viewer", "benchmarks.yaml").is_file()
 
 
 def test_resolve_eval_tasks_for_builtin_nanomteb_uses_declared_splits() -> None:
@@ -129,23 +137,23 @@ def test_resolve_eval_tasks_for_builtin_nanorteb_uses_declared_splits() -> None:
     ]
 
 
-def test_resolve_eval_tasks_for_builtin_nanojmteb_uses_declared_splits() -> None:
+def test_resolve_eval_tasks_for_builtin_nanomteb_japanese_uses_declared_splits() -> None:
     registry = DatasetRegistry.load_builtin()
 
-    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoJMTEB"], collection_values=[], split_values=[])
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMTEB-Japanese"], collection_values=[], split_values=[])
 
     assert [(task.dataset_name, task.split_name) for task in tasks] == [
-        ("NanoJMTEB", "NanoJaCWIR"),
-        ("NanoJMTEB", "NanoJaGovFaqs"),
-        ("NanoJMTEB", "NanoJaqket"),
-        ("NanoJMTEB", "NanoMIRACL"),
-        ("NanoJMTEB", "NanoMintaka"),
-        ("NanoJMTEB", "NanoMrTidy"),
-        ("NanoJMTEB", "NanoMultiLongDoc"),
-        ("NanoJMTEB", "NanoNLPJournalAbsArticle"),
-        ("NanoJMTEB", "NanoNLPJournalAbsIntro"),
-        ("NanoJMTEB", "NanoNLPJournalTitleAbs"),
-        ("NanoJMTEB", "NanoNLPJournalTitleIntro"),
+        ("NanoMTEB-Japanese", "NanoJaCWIR"),
+        ("NanoMTEB-Japanese", "NanoJaGovFaqs"),
+        ("NanoMTEB-Japanese", "NanoJaqket"),
+        ("NanoMTEB-Japanese", "NanoMIRACL"),
+        ("NanoMTEB-Japanese", "NanoMintaka"),
+        ("NanoMTEB-Japanese", "NanoMrTidy"),
+        ("NanoMTEB-Japanese", "NanoMultiLongDoc"),
+        ("NanoMTEB-Japanese", "NanoNLPJournalAbsArticle"),
+        ("NanoMTEB-Japanese", "NanoNLPJournalAbsIntro"),
+        ("NanoMTEB-Japanese", "NanoNLPJournalTitleAbs"),
+        ("NanoMTEB-Japanese", "NanoNLPJournalTitleIntro"),
     ]
 
 
@@ -417,6 +425,21 @@ datasets:
 
     assert registry.get_dataset("Toy").dataset_id == "local/toy"
     assert registry.get_collection("ToyCollection").datasets == ["Toy"]
+
+
+def test_registry_rejects_unknown_dataset_config_keys(tmp_path: Path) -> None:
+    (tmp_path / "datasets").mkdir()
+    (tmp_path / "datasets" / "toy.yaml").write_text(
+        """
+name: Toy
+dataset_id: local/toy
+unknown_key: value
+""".strip(),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="unknown_key"):
+        DatasetRegistry.load_from_root(tmp_path)
 
 
 def test_registry_preserves_dataset_and_task_metadata(tmp_path: Path) -> None:

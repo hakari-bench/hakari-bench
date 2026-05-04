@@ -57,5 +57,5 @@ overalls:
         group_by: benchmark
       - name: NanoMIRACL
         group_by: benchmark
-      - name: NanoJMTEB
+      - name: NanoMTEB-Japanese
         group_by: benchmark

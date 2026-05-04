@@ -4,9 +4,11 @@ HAKARI-Bench is a library, viewer, and leaderboard project for evaluating small 
 
 Nano-style information retrieval benchmark runner for SentenceTransformers-compatible models.
 
-Built-in dataset definitions include `NanoBEIR-en`, `NanoMIRACL`, `NanoMLDR`,
-`NanoJMTEB`, `NanoRTEB`, `NanoMTEB`, `NanoCMTEB`, `NanoMMTEB`, `NanoLongEmbed`, and
-`NanoCoIR`. Additional Nano benchmark configs include `NanoBIRCO`, `NanoDAPFAM`,
+Built-in dataset definitions include `NanoBEIR-en`, `MNanoBEIR`,
+`NanoMIRACL`, `NanoMLDR`, `NanoMTEB-Japanese`, `NanoRTEB`, `NanoMTEB`,
+`NanoCMTEB`, `NanoMMTEB`, `NanoLongEmbed`, `NanoCoIR`, `NanoIFIR`,
+`NanoLaw`, `NanoMedical`, `NanoRARb`, `NanoBRIGHT`, `NanoCodeRAG`,
+`NanoChemTEB`, `NanoR2MED`, `NanoBuiltBench`, `NanoBIRCO`, `NanoDAPFAM`,
 and language-specific `NanoMTEB-*` datasets.
 
 ## Example
@@ -29,6 +31,8 @@ output/results/{model_id}/{dataset_name}/{split_or_task}.json
 For Hugging Face datasets, each task JSON records the resolved dataset repo
 revision under `target.dataset_revision`. Use `--dataset-revision REV` to pin a
 specific branch, tag, or commit; the resolved commit SHA is still stored.
+Each task JSON also includes `experiment_manifest`, which records a SHA-256
+fingerprint derived from model, target, config, and environment metadata.
 
 Local model paths can be evaluated directly. Use `--model-alias` to choose the
 stable model id used in result paths and JSON. If the alias does not contain a
@@ -230,15 +234,16 @@ both entries in `distance_evaluations`, and copy the better aggregate result to
 Dense, sparse, and late-interaction evaluations also report BM25 top-100
 reranking by default when the dataset provides the `bm25` candidate subset. The
 model is still encoded and scored through the normal full-corpus path; the
-reranking metrics are computed by filtering the model's ranking to each query's
-BM25 candidates, so no second model inference is required.
+reranking metrics are computed by scoring only each query's BM25 candidates with
+the already-computed embeddings, so no second model inference is required.
 
 The full-corpus result remains the main aggregate. Reranking results are stored
 separately under `rerank_metrics`, `evaluation.rerank_aggregate_metric_value`,
-and `evaluation.reranking_evaluations`. The CLI prints a JSON summary with
-`primary_metric_mean` and task counts after the run. If BM25 candidates are
-unavailable, the full-corpus evaluation still succeeds and reranking is
-recorded as skipped.
+and `evaluation.reranking_evaluations`. Candidate coverage against qrels is
+stored in the reranking evaluation so BM25 candidate recall can be separated
+from reranker quality. The CLI prints a JSON summary with `primary_metric_mean`
+and task counts after the run. If BM25 candidates are unavailable, the
+full-corpus evaluation still succeeds and reranking is recorded as skipped.
 
 CrossEncoder-style reranker models can be evaluated directly with
 `evaluate reranker`. They score only the BM25 candidate subset and support
@@ -257,12 +262,26 @@ uv run hakari-bench evaluate reranker \
 
 BM25 can be evaluated directly. If the dataset provides a candidate subset named
 by `--candidate-ranking` (default: `bm25`), that ranking is used as the BM25
-baseline. If the subset is unavailable, BM25 is computed locally.
+baseline. This is the default because built-in HAKARI-Bench datasets are
+expected to ship BM25 candidate subsets. If the selected subset is unavailable,
+the run fails with an explicit error instead of silently changing the baseline.
 
 ```bash
 uv run hakari-bench evaluate bm25 \
   --dataset NanoMLDR \
   --split ja \
+  --bm25-top-k 100
+```
+
+Use `--bm25-source computed` only when generating BM25 subsets or intentionally
+recomputing BM25 with the local `bm25s` implementation:
+
+```bash
+uv run hakari-bench evaluate bm25 \
+  --dataset NanoMLDR \
+  --split ja \
+  --bm25-source computed \
+  --bm25-tokenizer english_porter_stop \
   --bm25-top-k 100
 ```
 
@@ -279,11 +298,12 @@ uv run hakari-bench build-candidates bm25 \
 `build-candidates bm25` also accepts `--params-json` with `target`, `output`,
 and `bm25` sections.
 
-BM25 scoring uses `bm25s` with the standard Okapi-style Robertson method.
-Available tokenizers are `regex`, `whitespace`, `transformer`, `stemmer`,
-`english_regex`, `english_porter`, `english_porter_stop`, and `wordseg`. The
-default is `auto`: 10 query texts are sampled deterministically and detected
-with `fast-langdetect`. If the detected language supports `wordseg`, BM25 uses
+Local BM25 scoring uses `bm25s` with the standard Okapi-style Robertson method.
+Available tokenizers for `--bm25-source computed` and `build-candidates bm25`
+are `regex`, `whitespace`, `transformer`, `stemmer`, `english_regex`,
+`english_porter`, `english_porter_stop`, and `wordseg`. The local default is
+`auto`: 10 query texts are sampled deterministically and detected with
+`fast-langdetect`. If the detected language supports `wordseg`, BM25 uses
 `wordseg`; otherwise it uses `regex`.
 
 The resolved BM25 algorithm and tokenizer are written to each result JSON under
@@ -334,6 +354,11 @@ By default, it binds to `127.0.0.1:8000` and keeps
 DuckDB when a page is loaded. Use `--host 0.0.0.0 --port 28090` for remote
 access, or pass `--source-results-dir` / `--source-duckdb-path` to point at a
 different source.
+
+The DuckDB warehouse includes `task_results`, `metrics_long`,
+`task_diagnostics`, and `dataset_metadata`. `task_diagnostics` is intended for
+SQL or notebook analysis of rerank lift, BM25 candidate coverage, and latency
+breakdowns; `dataset_metadata` supports language/category/citation analysis.
 
 ## Achievements
 

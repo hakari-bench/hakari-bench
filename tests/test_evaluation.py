@@ -711,6 +711,49 @@ def test_torch_dense_rank_by_similarity_does_not_convert_to_numpy(monkeypatch) -
     assert rankings["q2"] == ["d2", "d1", "d3"]
 
 
+def test_candidate_subset_rank_by_similarity_scores_only_candidate_documents() -> None:
+    rankings = evaluation_module._rank_candidate_subset_by_similarity(
+        query_ids=["q1", "q2"],
+        corpus_ids=["d1", "d2", "d3"],
+        query_embeddings=np.array([[1.0, 0.0], [0.0, 1.0]], dtype=np.float32),
+        corpus_embeddings=np.array(
+            [
+                [1.0, 0.0],
+                [0.0, 1.0],
+                [-1.0, 0.0],
+            ],
+            dtype=np.float32,
+        ),
+        candidates={"q1": ["d3", "d1"], "q2": ["d1", "d2"]},
+        score_name="dot",
+        rerank_top_n=2,
+    )
+
+    assert rankings == {"q1": ["d1", "d3"], "q2": ["d2", "d1"]}
+
+
+@pytest.mark.filterwarnings("ignore:Sparse CSR tensor support is in beta state.*:UserWarning")
+def test_candidate_subset_rank_by_similarity_supports_torch_sparse_csr() -> None:
+    rankings = evaluation_module._rank_candidate_subset_by_similarity(
+        query_ids=["q1", "q2"],
+        corpus_ids=["d1", "d2", "d3"],
+        query_embeddings=torch.tensor([[1.0, 0.0], [0.0, 1.0]]).to_sparse_csr(),
+        corpus_embeddings=torch.tensor(
+            [
+                [1.0, 0.0],
+                [0.0, 1.0],
+                [-1.0, 0.0],
+            ],
+            dtype=torch.float32,
+        ).to_sparse_csr(),
+        candidates={"q1": ["d3", "d1"], "q2": ["d1", "d2"]},
+        score_name="dot",
+        rerank_top_n=2,
+    )
+
+    assert rankings == {"q1": ["d1", "d3"], "q2": ["d2", "d1"]}
+
+
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not available")
 def test_cuda_dense_rank_by_similarity_keeps_scoring_on_cuda(monkeypatch) -> None:
     def fail_to_numpy(embeddings):
@@ -1536,6 +1579,16 @@ def test_evaluate_dense_task_records_bm25_top_n_reranking_metrics() -> None:
     assert result.reranking_evaluations[0]["rerank_top_n"] == 1
     assert result.reranking_evaluations[0]["aggregate_metric_value"] == pytest.approx(0.5)
     assert result.reranking_evaluations[0]["best_score_name"] == "dot_bm25_top1_rerank"
+    assert result.reranking_evaluations[0]["candidate_coverage"] == {
+        "top_k": 1,
+        "query_count": 2,
+        "query_with_relevance_count": 2,
+        "covered_query_count": 1,
+        "query_coverage": 0.5,
+        "relevant_count": 2,
+        "covered_relevant_count": 1,
+        "relevant_coverage": 0.5,
+    }
     assert result.rerank_metrics["ToyData_test_dot_bm25_top1_rerank_ndcg@10"] == pytest.approx(0.5)
 
 
@@ -1698,6 +1751,13 @@ def test_run_or_load_task_records_dataset_revision(tmp_path: Path, monkeypatch: 
         "resolved": "toy/data@sha",
         "source": "huggingface_hub",
     }
+    manifest = result.payload["experiment_manifest"]
+    assert manifest["schema_version"] == 1
+    assert manifest["model_id"] == "hotchpotch/model"
+    assert manifest["dataset_id"] == "toy/data"
+    assert manifest["dataset_revision"] == result.payload["target"]["dataset_revision"]
+    assert manifest["candidate_ranking"] == "bm25"
+    assert len(manifest["fingerprint_sha256"]) == 64
 
 
 def test_run_or_load_task_records_task_metadata(tmp_path: Path) -> None:
@@ -2084,7 +2144,7 @@ def test_build_run_summary_payload_uses_task_model_metadata_when_consistent(tmp_
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
-        model="bm25/bm25s-okapi-auto",
+        model="bm25/dataset-bm25",
         model_type="bm25",
         batch_size=2,
         show_progress=False,
@@ -2094,6 +2154,7 @@ def test_build_run_summary_payload_uses_task_model_metadata_when_consistent(tmp_
         corpus_prompt_name=None,
         truncate_dim=None,
         candidate_subset_name="bm25",
+        bm25_source="dataset",
         rerank_top_n=100,
         aggregate_metric="ndcg@10",
         override=False,
@@ -2137,6 +2198,7 @@ def test_run_or_load_task_records_auto_bm25_config(tmp_path: Path, monkeypatch: 
         corpus_prompt_name=None,
         truncate_dim=None,
         candidate_subset_name="bm25",
+        bm25_source="computed",
         rerank_top_n=100,
         aggregate_metric="ndcg@10",
         override=False,
@@ -2172,7 +2234,7 @@ def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
-        model="bm25/bm25s-okapi-auto",
+        model="bm25/dataset-bm25",
         model_type="bm25",
         batch_size=2,
         show_progress=False,
@@ -2182,6 +2244,7 @@ def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -
         corpus_prompt_name=None,
         truncate_dim=None,
         candidate_subset_name="bm25",
+        bm25_source="dataset",
         rerank_top_n=100,
         aggregate_metric="ndcg@10",
         override=False,
@@ -2207,3 +2270,40 @@ def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -
     assert result.payload["config"]["bm25"]["candidate_ranking"] == "bm25"
     assert result.payload["model"]["bm25"]["source"] == "dataset_candidate_subset"
     assert result.payload["evaluation"]["aggregate_metric_value"] == pytest.approx(0.5)
+
+
+def test_run_or_load_task_requires_dataset_bm25_source_candidates(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="bm25/dataset-bm25",
+        model_type="bm25",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        bm25_source="dataset",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+        bm25_tokenizer=None,
+        bm25_tokenizer_name=None,
+        bm25_stemmer_algorithm="english",
+        bm25_k1=1.5,
+        bm25_b=0.75,
+        top_k=1,
+    )
+
+    with pytest.raises(ValueError, match="--bm25-source computed"):
+        run_or_load_task(
+            task=task,
+            model=None,
+            args=args,
+            environment={"package_versions": {}},
+            model_metadata={"id": "bm25/dataset-bm25"},
+            dataset_loader=lambda _: _toy_dataset_without_candidates(),
+        )

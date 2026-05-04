@@ -270,6 +270,7 @@ def test_evaluate_bm25_task_returns_ir_metrics() -> None:
     result = evaluate_bm25_task(
         dataset=dataset,
         config=BM25Config(tokenizer="regex", top_k=3, show_progress=False),
+        source="computed_bm25s",
     )
 
     assert result.metrics["Toy_bm25_bm25s_okapi_ndcg@10"] == pytest.approx(1.0)
@@ -298,3 +299,19 @@ def test_evaluate_bm25_task_uses_dataset_candidate_subset_without_bm25s(monkeypa
 
     assert result.metrics["Toy_bm25_dataset_subset_ndcg@10"] == pytest.approx(1.0)
     assert result.timing["score_and_topk_seconds"] >= 0.0
+
+
+def test_evaluate_bm25_task_requires_dataset_candidates_by_default() -> None:
+    dataset = LoadedIrDataset(
+        queries={"q1": "cat fish"},
+        corpus={"d1": "cat likes fish"},
+        qrels={"q1": {"d1"}},
+        candidates=None,
+        evaluator_name="Toy",
+    )
+
+    with pytest.raises(ValueError, match="--bm25-source computed"):
+        evaluate_bm25_task(
+            dataset=dataset,
+            config=BM25Config(tokenizer="regex", top_k=1, show_progress=False),
+        )

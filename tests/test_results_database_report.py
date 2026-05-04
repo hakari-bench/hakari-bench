@@ -4,13 +4,16 @@ import json
 from pathlib import Path
 
 import duckdb
+import pytest
+from pydantic import ValidationError
 
 from scripts import build_results_database_and_report as report
+from hakari_bench.warehouse_schema import MetricLongRow, TaskResultRow
 
 
-def test_nanojmteb_is_a_ranked_benchmark() -> None:
-    assert "NanoJMTEB" in report.TARGET_BENCHMARKS
-    assert report.benchmark_name("hakari-bench/NanoJMTEB", "NanoJMTEB") == "NanoJMTEB"
+def test_nanomteb_japanese_is_a_ranked_benchmark() -> None:
+    assert "NanoMTEB-Japanese" in report.TARGET_BENCHMARKS
+    assert report.benchmark_name("hakari-bench/NanoMTEB-Japanese", "NanoMTEB-Japanese") == "NanoMTEB-Japanese"
 
 
 def test_nanorteb_is_a_ranked_benchmark() -> None:
@@ -35,7 +38,7 @@ def test_nanocmteb_is_a_ranked_benchmark() -> None:
 
 def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
-    task_path = model_dir / "hakari-bench__NanoJMTEB" / "NanoJaCWIR.json"
+    task_path = model_dir / "hakari-bench__NanoMTEB-Japanese" / "NanoJaCWIR.json"
     task_path.parent.mkdir(parents=True)
     task_path.write_text(
         json.dumps(
@@ -55,9 +58,10 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
                         "sentence-transformers": "5.4.1",
                     }
                 },
+                "experiment_manifest": {"fingerprint_sha256": "abc123"},
                 "target": {
-                    "dataset_name": "NanoJMTEB",
-                    "dataset_id": "hakari-bench/NanoJMTEB",
+                    "dataset_name": "NanoMTEB-Japanese",
+                    "dataset_id": "hakari-bench/NanoMTEB-Japanese",
                     "dataset_revision": {
                         "requested": None,
                         "resolved": "dataset-sha",
@@ -77,19 +81,137 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
-    rows, _, metric_rows = report.load_results(tmp_path)
+    rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows = report.load_results(tmp_path)
 
     assert len(rows) == 1
-    assert rows[0].benchmark == "NanoJMTEB"
+    assert rows[0].benchmark == "NanoMTEB-Japanese"
+    assert rows[0].dataset_id == "hakari-bench/NanoMTEB-Japanese"
+    assert rows[0].dataset_name == "NanoMTEB-Japanese"
     assert rows[0].score == 0.42
     assert rows[0].dataset_revision == "dataset-sha"
+    assert rows[0].experiment_fingerprint == "abc123"
     assert rows[0].active_parameters == 3
     assert rows[0].total_parameters == 5
     assert len(metric_rows) == 1
+    assert len(diagnostic_rows) == 1
+    assert diagnostic_rows[0].base_score == 0.42
+    assert len(dataset_metadata_rows) == 1
+    assert dataset_metadata_rows[0].language == "ja"
+    assert dataset_metadata_rows[0].category == "natural_language"
+    assert dataset_metadata_rows[0].citation_count is not None
+    assert dataset_metadata_rows[0].query_count == 200
+
+
+def test_task_result_row_schema_rejects_unknown_fields() -> None:
+    with pytest.raises(ValidationError, match="unexpected"):
+        TaskResultRow.model_validate(
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoMTEB-Japanese",
+                "dataset_id": "hakari-bench/NanoMTEB-Japanese",
+                "dataset_name": "NanoMTEB-Japanese",
+                "task_name": "NanoJaCWIR",
+                "task_key": "NanoMTEB-Japanese::hakari-bench/NanoMTEB-Japanese::NanoJaCWIR",
+                "score": 0.42,
+                "result_path": "result.json",
+                "unexpected": True,
+            }
+        )
+
+
+def test_metric_long_row_schema_exports_duckdb_values() -> None:
+    row = MetricLongRow(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="NanoMTEB-Japanese",
+        dataset_id="hakari-bench/NanoMTEB-Japanese",
+        task_name="NanoJaCWIR",
+        metric_name="NanoJaCWIR_ndcg@10",
+        metric_value=0.42,
+        result_path="result.json",
+    )
+
+    assert row.duckdb_values() == (
+        "model",
+        "example/model",
+        "NanoMTEB-Japanese",
+        "hakari-bench/NanoMTEB-Japanese",
+        "NanoJaCWIR",
+        "NanoJaCWIR_ndcg@10",
+        0.42,
+        "result.json",
+    )
+
+
+def test_load_results_extracts_task_diagnostics(tmp_path: Path) -> None:
+    task_dir = tmp_path / "model" / "hakari-bench__NanoMTEB-Japanese"
+    task_dir.mkdir(parents=True)
+    (task_dir / "NanoJaCWIR.json").write_text(
+        json.dumps(
+            {
+                "model": {"id": "example/model"},
+                "environment": {"package_versions": {}},
+                "target": {
+                    "dataset_name": "NanoMTEB-Japanese",
+                    "dataset_id": "hakari-bench/NanoMTEB-Japanese",
+                    "split_name": "NanoJaCWIR",
+                    "task_name": "NanoJaCWIR",
+                },
+                "config": {
+                    "candidate_ranking": "bm25",
+                    "rerank_top_k": 100,
+                    "bm25": {"source": "dataset_candidate_subset"},
+                },
+                "evaluation": {
+                    "aggregate_metric": "ndcg@10",
+                    "aggregate_metric_value": 0.42,
+                    "rerank_aggregate_metric_value": 0.50,
+                    "dataset_load_seconds": 0.25,
+                    "wall_seconds": 2.0,
+                    "duration_seconds_including_dataset_load": 2.25,
+                    "timing": {
+                        "query_embedding_seconds": 0.5,
+                        "corpus_embedding_seconds": 1.0,
+                        "score_and_topk_seconds": 0.3,
+                        "metric_compute_seconds": 0.2,
+                        "pure_compute_seconds": 2.0,
+                    },
+                    "reranking_evaluations": [
+                        {
+                            "source": "dataset_candidate_subset",
+                            "status": "available",
+                            "candidate_coverage": {
+                                "query_coverage": 0.75,
+                                "relevant_coverage": 0.60,
+                                "covered_query_count": 3,
+                                "query_with_relevance_count": 4,
+                                "covered_relevant_count": 6,
+                                "relevant_count": 10,
+                            },
+                        }
+                    ],
+                },
+                "metrics": {"NanoJaCWIR_ndcg@10": 0.42},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    _, _, _, diagnostic_rows, _ = report.load_results(tmp_path)
+
+    assert len(diagnostic_rows) == 1
+    row = diagnostic_rows[0]
+    assert row.rerank_lift == pytest.approx(0.08)
+    assert row.candidate_ranking == "bm25"
+    assert row.bm25_source == "dataset_candidate_subset"
+    assert row.query_coverage == 0.75
+    assert row.relevant_coverage == 0.60
+    assert row.score_and_topk_seconds == 0.3
 
 
 def test_load_results_builds_runs_from_task_json(tmp_path: Path) -> None:
-    task_dir = tmp_path / "local__model_A" / "hakari-bench__NanoJMTEB"
+    task_dir = tmp_path / "local__model_A" / "hakari-bench__NanoMTEB-Japanese"
     task_dir.mkdir(parents=True)
     (task_dir / "NanoJaCWIR.json").write_text(
         json.dumps(
@@ -111,8 +233,8 @@ def test_load_results_builds_runs_from_task_json(tmp_path: Path) -> None:
                     }
                 },
                 "target": {
-                    "dataset_name": "NanoJMTEB",
-                    "dataset_id": "hakari-bench/NanoJMTEB",
+                    "dataset_name": "NanoMTEB-Japanese",
+                    "dataset_id": "hakari-bench/NanoMTEB-Japanese",
                     "split_name": "NanoJaCWIR",
                     "task_name": "NanoJaCWIR",
                 },
@@ -128,7 +250,7 @@ def test_load_results_builds_runs_from_task_json(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
-    rows, runs, _ = report.load_results(tmp_path)
+    rows, runs, _, _, _ = report.load_results(tmp_path)
 
     assert len(rows) == 1
     assert runs == [
@@ -163,7 +285,7 @@ def test_render_html_includes_total_parameters_column() -> None:
 
 def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
-    task_path = model_dir / "hakari-bench__NanoJMTEB" / "NanoJaCWIR.json"
+    task_path = model_dir / "hakari-bench__NanoMTEB-Japanese" / "NanoJaCWIR.json"
     task_path.parent.mkdir(parents=True)
     task_path.write_text(
         json.dumps(
@@ -171,8 +293,8 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
                 "model": {"id": "example/model"},
                 "environment": {"package_versions": {}},
                 "target": {
-                    "dataset_name": "NanoJMTEB",
-                    "dataset_id": "hakari-bench/NanoJMTEB",
+                    "dataset_name": "NanoMTEB-Japanese",
+                    "dataset_id": "hakari-bench/NanoMTEB-Japanese",
                     "split_name": "NanoJaCWIR",
                     "task_name": "NanoJaCWIR",
                 },
@@ -205,7 +327,7 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
         ),
         encoding="utf-8",
     )
-    rows, _, _ = report.load_results(tmp_path)
+    rows, _, _, _, _ = report.load_results(tmp_path)
 
     assert [(row.embedding_variant_name, row.score, row.embedding_dim, row.quantization) for row in rows] == [
         (None, 0.42, 768, None),
@@ -213,35 +335,18 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
     ]
 
 
-def test_load_results_canonicalizes_legacy_nanojmteb_task_names(tmp_path: Path) -> None:
-    model_dir = tmp_path / "model"
-    task_dir = model_dir / "hakari-bench__NanoJMTEB"
-    task_dir.mkdir(parents=True)
-    _write_task_json(task_dir / "NanoJaMIRACL.json", task_name="NanoJaMIRACL", score=0.10)
-    _write_task_json(task_dir / "NanoMIRACL.json", task_name="NanoMIRACL", score=0.90)
-
-    rows, _, metric_rows = report.load_results(tmp_path)
-
-    assert [(row.task_name, row.task_key, row.score) for row in rows] == [
-        ("NanoMIRACL", "NanoJMTEB::hakari-bench/NanoJMTEB::NanoMIRACL", 0.90)
-    ]
-    assert [(row["task_name"], row["metric_name"], row["metric_value"]) for row in metric_rows] == [
-        ("NanoMIRACL", "NanoMIRACL_ndcg@10", 0.90)
-    ]
-
-
 def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
     row = report.TaskResult(
         model_dir="model",
         model_name="example/model",
-        benchmark="NanoJMTEB",
-        dataset_id="hakari-bench/NanoJMTEB",
+        benchmark="NanoMTEB-Japanese",
+        dataset_id="hakari-bench/NanoMTEB-Japanese",
         dataset_revision="dataset-sha",
         dataset_revision_requested="main",
-        dataset_name="NanoJMTEB",
+        dataset_name="NanoMTEB-Japanese",
         split_name="NanoJaCWIR",
         task_name="NanoJaCWIR",
-        task_key="NanoJMTEB::hakari-bench/NanoJMTEB::NanoJaCWIR",
+        task_key="NanoMTEB-Japanese::hakari-bench/NanoMTEB-Japanese::NanoJaCWIR",
         score=0.42,
         aggregate_metric="ndcg@10",
         result_path="result.json",
@@ -275,8 +380,8 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
             {
                 "model_dir": "model",
                 "model_name": "example/model",
-                "benchmark": "NanoJMTEB",
-                "dataset_id": "hakari-bench/NanoJMTEB",
+                "benchmark": "NanoMTEB-Japanese",
+                "dataset_id": "hakari-bench/NanoMTEB-Japanese",
                 "task_name": "NanoJaCWIR",
                 "metric_name": "NanoJaCWIR_ndcg@10",
                 "metric_value": 0.42,
@@ -314,25 +419,79 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
             "dataset-sha",
             "main",
         )
+        assert con.execute("SELECT base_score FROM task_diagnostics").fetchone() is None
     finally:
         con.close()
 
 
-def _write_task_json(path: Path, *, task_name: str, score: float) -> None:
-    path.write_text(
-        json.dumps(
-            {
-                "model": {"id": "example/model"},
-                "environment": {"package_versions": {}},
-                "target": {
-                    "dataset_name": "NanoJMTEB",
-                    "dataset_id": "hakari-bench/NanoJMTEB",
-                    "split_name": task_name,
-                    "task_name": task_name,
-                },
-                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": score},
-                "metrics": {f"{task_name}_ndcg@10": score},
-            }
-        ),
-        encoding="utf-8",
+def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path) -> None:
+    row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="NanoMTEB-Japanese",
+        dataset_id="hakari-bench/NanoMTEB-Japanese",
+        dataset_revision=None,
+        dataset_revision_requested=None,
+        dataset_name="NanoMTEB-Japanese",
+        split_name="NanoJaCWIR",
+        task_name="NanoJaCWIR",
+        task_key="NanoMTEB-Japanese::hakari-bench/NanoMTEB-Japanese::NanoJaCWIR",
+        score=0.42,
+        aggregate_metric="ndcg@10",
+        result_path="result.json",
+        active_parameters=None,
+        total_parameters=None,
+        max_seq_length=None,
+        dtype=None,
+        attn_implementation=None,
+        torch_version=None,
+        transformers_version=None,
+        sentence_transformers_version=None,
+        started_at_utc=None,
+        finished_at_utc=None,
+        evaluated_at_utc=None,
+        duration_seconds_including_dataset_load=None,
+        wall_seconds=None,
     )
+    standings, borda_rows = report.compute_standings([row])
+    db_path = tmp_path / "results.duckdb"
+    parquet_dir = tmp_path / "parquet"
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=[row],
+        metric_rows=[
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoMTEB-Japanese",
+                "dataset_id": "hakari-bench/NanoMTEB-Japanese",
+                "task_name": "NanoJaCWIR",
+                "metric_name": "NanoJaCWIR_ndcg@10",
+                "metric_value": 0.42,
+                "result_path": "result.json",
+            }
+        ],
+        standings=standings,
+        borda_rows=borda_rows,
+    )
+
+    report.export_duckdb_tables_to_parquet(db_path, parquet_dir)
+
+    assert sorted(path.name for path in parquet_dir.glob("*.parquet")) == [
+        "borda_task_scores.parquet",
+        "dataset_metadata.parquet",
+        "metrics_long.parquet",
+        "model_scores.parquet",
+        "runs.parquet",
+        "task_diagnostics.parquet",
+        "task_results.parquet",
+    ]
+    con = duckdb.connect()
+    try:
+        assert con.execute(f"SELECT model_name, score FROM read_parquet('{parquet_dir / 'task_results.parquet'}')").fetchone() == (
+            "example/model",
+            0.42,
+        )
+    finally:
+        con.close()

@@ -5,7 +5,9 @@ data in DuckDB and how a viewer should query that data.
 
 The main source table for the HTMX leaderboard viewer is `task_results`.
 `runs` contains run-level metadata, `metrics_long` contains detailed task
-metrics, and `model_scores` / `borda_task_scores` are precomputed tables used
+metrics, `task_diagnostics` contains analysis-oriented rerank, candidate, and
+latency fields, `dataset_metadata` exposes YAML task metadata for language,
+category, citation, and text-stat analysis, and `model_scores` / `borda_task_scores` are precomputed tables used
 by the static HTML report. The current HTMX viewer does not read
 `model_scores`; it computes the leaderboard from `task_results` on each
 request.
@@ -18,7 +20,8 @@ Build the DuckDB database from benchmark JSON output:
 uv run python scripts/build_results_database_and_report.py \
   --results-dir output/results \
   --duckdb-path output/results/hakari_bench.duckdb \
-  --html-output output/results/report.html
+  --html-output output/results/report.html \
+  --parquet-output-dir output/results/parquet
 ```
 
 The input files are:
@@ -33,6 +36,18 @@ The input files are:
 `evaluation.embedding_evaluations` are stored as additional variant rows.
 Run-level rows in `runs` are derived from these task JSON files; no aggregate
 JSON file is required.
+
+Each new task JSON includes `experiment_manifest`, a compact reproducibility
+record with a SHA-256 fingerprint over model metadata, target metadata, runtime
+config, and environment metadata. `task_results.experiment_fingerprint` copies
+that fingerprint into DuckDB for SQL-based run comparison. Older JSON files
+leave this column `NULL`.
+
+When `--parquet-output-dir` is provided, the generator also writes Parquet
+snapshots for the canonical tables: `runs`, `task_results`, `metrics_long`,
+`task_diagnostics`, `dataset_metadata`, `model_scores`, and `borda_task_scores`. These files are intended for notebooks,
+ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
+not need the mutable DuckDB database file.
 
 Start the web viewer with:
 
@@ -76,8 +91,8 @@ Main `benchmarks.yaml` fields:
 | `benchmark` | `task_results.benchmark` |
 | `task_name` | `task_results.task_name` |
 
-Unknown `group_by` values are treated like `task_name` by the current
-implementation.
+Unknown `group_by` values and unknown YAML keys are rejected at viewer config
+load time.
 
 ## Table Overview
 
@@ -91,7 +106,7 @@ one model, one benchmark task, and one embedding variant. Base results use
 | --- | --- | --- |
 | `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
 | `model_name` | `VARCHAR` | `model.id` from result JSON, or `model_dir` when absent. |
-| `benchmark` | `VARCHAR` | Viewer benchmark group, such as `MNanoBEIR` or `NanoJMTEB`. |
+| `benchmark` | `VARCHAR` | Viewer benchmark group, such as `MNanoBEIR` or `NanoMTEB-Japanese`. |
 | `dataset_id` | `VARCHAR` | `target.dataset_id`, usually a Hugging Face dataset repo. |
 | `dataset_revision` | `VARCHAR` | Resolved dataset revision, usually a commit SHA. |
 | `dataset_revision_requested` | `VARCHAR` | Requested revision from the run, or `NULL` when not specified. |
@@ -103,6 +118,7 @@ one model, one benchmark task, and one embedding variant. Base results use
 | `score_100` | `DOUBLE` | `score * 100.0`, used for display. |
 | `aggregate_metric` | `VARCHAR` | `evaluation.aggregate_metric`, such as `ndcg@10`. |
 | `result_path` | `VARCHAR` | Source task JSON path. |
+| `experiment_fingerprint` | `VARCHAR` | SHA-256 fingerprint from `experiment_manifest`, derived from model, target, config, and environment metadata. |
 | `active_parameters` | `BIGINT` | Active parameter count, or `NULL` if unavailable. |
 | `total_parameters` | `BIGINT` | Total parameter count, or `NULL` if unavailable. |
 | `max_seq_length` | `INTEGER` | Model maximum sequence length. |
@@ -163,6 +179,69 @@ does not use it for ranking.
 | `metric_name` | `VARCHAR` | Metric name, such as `NanoJaCWIR_ndcg@10`. |
 | `metric_value` | `DOUBLE` | Metric value. |
 | `result_path` | `VARCHAR` | Source task JSON path. |
+
+### `task_diagnostics`
+
+`task_diagnostics` is a notebook-friendly table for analyzing why a model did
+or did not improve under BM25 candidate reranking. It is not used for
+leaderboard ranking.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `model_dir` | `VARCHAR` | Model output directory. |
+| `model_name` | `VARCHAR` | Model name. |
+| `benchmark` | `VARCHAR` | Benchmark group. |
+| `dataset_id` | `VARCHAR` | Dataset id. |
+| `task_name` | `VARCHAR` | Task name. |
+| `task_key` | `VARCHAR` | Ranking task identity. |
+| `result_path` | `VARCHAR` | Source task JSON path. |
+| `base_score` | `DOUBLE` | Base retrieval aggregate score. |
+| `rerank_score` | `DOUBLE` | Candidate-reranked aggregate score, or `NULL` when unavailable. |
+| `rerank_lift` | `DOUBLE` | `rerank_score - base_score`, or `NULL`. |
+| `rerank_status` | `VARCHAR` | Rerank availability status from result JSON. |
+| `rerank_top_k` | `INTEGER` | Candidate depth used for reranking. |
+| `candidate_source` | `VARCHAR` | Candidate source label, usually `dataset_candidate_subset`. |
+| `candidate_ranking` | `VARCHAR` | Configured candidate ranking, usually `bm25`. |
+| `bm25_source` | `VARCHAR` | BM25 source metadata, such as `dataset_candidate_subset` or `computed_bm25s`. |
+| `query_coverage` | `DOUBLE` | Fraction of qrels-bearing queries with at least one relevant document in top-k candidates. |
+| `relevant_coverage` | `DOUBLE` | Fraction of relevant documents covered by top-k candidates. |
+| `covered_query_count` | `INTEGER` | Count of qrels-bearing queries covered by candidates. |
+| `query_with_relevance_count` | `INTEGER` | Count of queries with at least one relevant document. |
+| `covered_relevant_count` | `INTEGER` | Count of relevant documents found in top-k candidates. |
+| `relevant_count` | `INTEGER` | Total relevant document count in qrels. |
+| `dataset_load_seconds` | `DOUBLE` | Dataset load time. |
+| `query_embedding_seconds` | `DOUBLE` | Query encoding time. |
+| `corpus_embedding_seconds` | `DOUBLE` | Corpus encoding time. |
+| `score_and_topk_seconds` | `DOUBLE` | Retrieval score and top-k time. |
+| `metric_compute_seconds` | `DOUBLE` | Metric computation time. |
+| `pure_compute_seconds` | `DOUBLE` | Compute duration excluding dataset load. |
+| `wall_seconds` | `DOUBLE` | Task evaluation wall time. |
+| `duration_seconds_including_dataset_load` | `DOUBLE` | End-to-end task duration including dataset loading. |
+
+### `dataset_metadata`
+
+`dataset_metadata` is derived from built-in dataset YAML and keyed by
+`task_key`. Join it to `task_results` or `task_diagnostics` to score models by
+language, category, citation coverage, or text length profile.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `benchmark` | `VARCHAR` | Benchmark group. |
+| `dataset_id` | `VARCHAR` | Dataset id. |
+| `dataset_name` | `VARCHAR` | Dataset name. |
+| `split_name` | `VARCHAR` | Split name. |
+| `task_name` | `VARCHAR` | Task name. |
+| `task_key` | `VARCHAR` | Ranking task identity. |
+| `language` | `VARCHAR` | Metadata language code, or `multilingual`. |
+| `category` | `VARCHAR` | Metadata category, such as `natural_language` or `code`. |
+| `short_description` | `VARCHAR` | Short human-readable task description. |
+| `citation_count` | `INTEGER` | Number of citation keys recorded for the task. |
+| `reference_count` | `INTEGER` | Number of reference entries recorded for the task. |
+| `has_bibtex` | `BOOLEAN` | Whether the task metadata includes BibTeX. |
+| `query_count` | `INTEGER` | Query count from YAML text stats. |
+| `document_count` | `INTEGER` | Corpus document count from YAML text stats. |
+| `query_mean_chars` | `DOUBLE` | Mean query length in characters. |
+| `document_mean_chars` | `DOUBLE` | Mean document length in characters. |
 
 ### `model_scores`
 
@@ -310,8 +389,6 @@ choices:
 - Read only benchmarks requested by the selected view.
 - Read only base rows when variants are not requested.
 - Select missing variant columns as `NULL` for old DuckDB files.
-- Canonicalize legacy NanoJMTEB task names and prefer canonical-name rows when
-  old and new task names are both present.
 
 Conceptually, it runs this query:
 
@@ -340,33 +417,6 @@ WHERE benchmark IN ('MNanoBEIR', 'NanoRTEB')
 For older databases without `embedding_variant_name`, `embedding_dim`, or
 `quantization`, the viewer treats those fields as `NULL`.
 
-### NanoJMTEB Task Name Aliases
-
-Some NanoJMTEB split/task names changed from legacy `NanoJa...` names to
-canonical `Nano...` names. The viewer and the DuckDB/report generation script
-normalize these aliases so old result JSON and old DuckDB files remain usable.
-
-| legacy name | canonical name |
-| --- | --- |
-| `NanoJaMIRACL` | `NanoMIRACL` |
-| `NanoJaMintaka` | `NanoMintaka` |
-| `NanoJaMrTidy` | `NanoMrTidy` |
-| `NanoJaMultiLongDoc` | `NanoMultiLongDoc` |
-| `NanoJaNLPJournalAbsArticle` | `NanoNLPJournalAbsArticle` |
-| `NanoJaNLPJournalAbsIntro` | `NanoNLPJournalAbsIntro` |
-| `NanoJaNLPJournalTitleAbs` | `NanoNLPJournalTitleAbs` |
-| `NanoJaNLPJournalTitleIntro` | `NanoNLPJournalTitleIntro` |
-
-The canonical task key is:
-
-```text
-NanoJMTEB::hakari-bench/NanoJMTEB::{canonical task name}
-```
-
-If old-name and canonical-name rows both exist for the same model, task, and
-variant, the canonical-name row is preferred. This prevents the same task from
-entering the ranking twice and corrupting the Borda population.
-
 ## SQL Recipes
 
 The following SQL snippets show how to reproduce the viewer's leaderboard
@@ -379,6 +429,8 @@ directly in DuckDB. In a real viewer, build `selected_benchmarks` and
 DESCRIBE task_results;
 DESCRIBE runs;
 DESCRIBE metrics_long;
+DESCRIBE task_diagnostics;
+DESCRIBE dataset_metadata;
 DESCRIBE model_scores;
 DESCRIBE borda_task_scores;
 ```

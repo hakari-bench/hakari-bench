@@ -3,24 +3,26 @@ from __future__ import annotations
 import argparse
 import json
 from collections import defaultdict
-from dataclasses import dataclass
+from collections.abc import Sequence
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import duckdb
 
+from hakari_bench.datasets import DatasetRegistry
 from hakari_bench.viewer.task_names import (
     canonical_metric_name,
     canonical_split_name,
     canonical_task_key,
     canonical_task_name,
 )
+from hakari_bench.warehouse_schema import DatasetMetadataRow, MetricLongRow, TaskDiagnosticRow, TaskResultRow
 
 
-TARGET_BENCHMARKS = [
+TARGET_BENCHMARKS: list[str] = [
     "MNanoBEIR",
-    "NanoJMTEB",
+    "NanoMTEB-Japanese",
     "NanoRTEB",
     "NanoMTEB",
     "NanoCMTEB",
@@ -40,39 +42,18 @@ TARGET_BENCHMARKS = [
     "NanoBuiltBench",
 ]
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
+WAREHOUSE_TABLES = (
+    "runs",
+    "task_results",
+    "metrics_long",
+    "task_diagnostics",
+    "dataset_metadata",
+    "model_scores",
+    "borda_task_scores",
+)
 
 
-@dataclass(frozen=True)
-class TaskResult:
-    model_dir: str
-    model_name: str
-    benchmark: str
-    dataset_id: str
-    dataset_revision: str | None
-    dataset_revision_requested: str | None
-    dataset_name: str
-    split_name: str | None
-    task_name: str
-    task_key: str
-    score: float
-    aggregate_metric: str | None
-    result_path: str
-    active_parameters: int | None
-    total_parameters: int | None
-    max_seq_length: int | None
-    dtype: str | None
-    attn_implementation: str | None
-    torch_version: str | None
-    transformers_version: str | None
-    sentence_transformers_version: str | None
-    started_at_utc: str | None
-    finished_at_utc: str | None
-    evaluated_at_utc: str | None
-    duration_seconds_including_dataset_load: float | None
-    wall_seconds: float | None
-    embedding_variant_name: str | None = None
-    embedding_dim: int | None = None
-    quantization: str | None = None
+TaskResult = TaskResultRow
 
 
 def main() -> None:
@@ -80,19 +61,47 @@ def main() -> None:
     parser.add_argument("--results-dir", type=Path, default=Path("output/results"))
     parser.add_argument("--duckdb-path", type=Path, default=Path("output/results/hakari_bench.duckdb"))
     parser.add_argument("--html-output", type=Path, required=True)
+    parser.add_argument(
+        "--parquet-output-dir",
+        type=Path,
+        default=None,
+        help="Optional directory for Parquet snapshots of the canonical DuckDB tables.",
+    )
     args = parser.parse_args()
 
-    rows, runs, metric_rows = load_results(args.results_dir)
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows = load_results(args.results_dir)
     base_rows = [row for row in rows if row.embedding_variant_name is None]
     standings, borda_rows = compute_standings(base_rows)
-    write_duckdb(args.duckdb_path, runs=runs, rows=rows, metric_rows=metric_rows, standings=standings, borda_rows=borda_rows)
+    write_duckdb(
+        args.duckdb_path,
+        runs=runs,
+        rows=rows,
+        metric_rows=metric_rows,
+        diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
+        standings=standings,
+        borda_rows=borda_rows,
+    )
+    if args.parquet_output_dir is not None:
+        export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
     write_html(args.html_output, duckdb_path=args.duckdb_path, rows=base_rows, runs=runs, standings=standings)
 
 
-def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, Any]], list[dict[str, Any]]]:
+def load_results(
+    results_dir: Path,
+) -> tuple[
+    list[TaskResult],
+    list[dict[str, Any]],
+    list[MetricLongRow],
+    list[TaskDiagnosticRow],
+    list[DatasetMetadataRow],
+]:
     rows: list[TaskResult] = []
     run_accumulators: dict[str, dict[str, Any]] = {}
-    metric_rows: list[dict[str, Any]] = []
+    metric_rows: list[MetricLongRow] = []
+    diagnostic_rows: list[TaskDiagnosticRow] = []
+    dataset_metadata_rows: list[DatasetMetadataRow] = []
+    registry = DatasetRegistry.load_builtin()
 
     for result_path in sorted(results_dir.glob("*/*/*.json")):
         task_payload = json.loads(result_path.read_text(encoding="utf-8"))
@@ -105,12 +114,17 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
         evaluation = task_payload.get("evaluation", {})
         if not isinstance(evaluation, dict):
             continue
+        config = task_payload.get("config", {})
+        if not isinstance(config, dict):
+            config = {}
         score = evaluation.get("aggregate_metric_value")
         if not isinstance(score, int | float):
             continue
         model = task_payload.get("model", {})
         environment = task_payload.get("environment", {})
         package_versions = environment.get("package_versions", {}) if isinstance(environment, dict) else {}
+        experiment_manifest = task_payload.get("experiment_manifest", {})
+        experiment_manifest = experiment_manifest if isinstance(experiment_manifest, dict) else {}
         model_dir = result_path.relative_to(results_dir).parts[0]
         model_name = _model_name_from_payload(model, model_dir=model_dir)
         dataset_id = str(target.get("dataset_id") or "")
@@ -146,6 +160,7 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
             "task_name": task_name,
             "task_key": task_key,
             "result_path": str(result_path),
+            "experiment_fingerprint": _str_or_none(experiment_manifest.get("fingerprint_sha256")),
             "active_parameters": _int_or_none(model.get("active_parameters")) if isinstance(model, dict) else None,
             "total_parameters": _int_or_none(model.get("total_parameters")) if isinstance(model, dict) else None,
             "max_seq_length": _int_or_none(model.get("max_seq_length")) if isinstance(model, dict) else None,
@@ -175,6 +190,15 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
                 quantization=_quantization_precision(base_embedding),
             )
         )
+        diagnostic_rows.append(
+            _task_diagnostic_row(
+                common=common,
+                config=config,
+                evaluation=evaluation,
+                base_score=float(score),
+            )
+        )
+        dataset_metadata_rows.append(_dataset_metadata_row(common=common, registry=registry))
         for embedding_evaluation in embedding_evaluations:
             variant_name = embedding_evaluation.get("name")
             if not isinstance(variant_name, str) or variant_name == "base":
@@ -195,19 +219,25 @@ def load_results(results_dir: Path) -> tuple[list[TaskResult], list[dict[str, An
         for metric_name, metric_value in task_payload.get("metrics", {}).items():
             if isinstance(metric_value, int | float):
                 metric_rows.append(
-                    {
-                        "model_dir": model_dir,
-                        "model_name": model_name,
-                        "benchmark": benchmark,
-                        "dataset_id": dataset_id,
-                        "task_name": task_name,
-                        "metric_name": canonical_metric_name(benchmark, metric_name),
-                        "metric_value": float(metric_value),
-                        "result_path": str(result_path),
-                    }
+                    MetricLongRow(
+                        model_dir=model_dir,
+                        model_name=model_name,
+                        benchmark=benchmark,
+                        dataset_id=dataset_id,
+                        task_name=task_name,
+                        metric_name=canonical_metric_name(benchmark, metric_name),
+                        metric_value=float(metric_value),
+                        result_path=str(result_path),
+                    )
                 )
 
-    return _dedupe_task_results(rows), _runs_from_task_results(run_accumulators), _dedupe_metric_rows(metric_rows)
+    return (
+        _dedupe_task_results(rows),
+        _runs_from_task_results(run_accumulators),
+        _dedupe_metric_rows(metric_rows),
+        _dedupe_task_diagnostic_rows(diagnostic_rows),
+        _dedupe_dataset_metadata_rows(dataset_metadata_rows),
+    )
 
 
 def _model_name_from_payload(model: Any, *, model_dir: str) -> str:
@@ -343,16 +373,16 @@ def _result_path_stem_matches_task(row: TaskResult) -> bool:
     return Path(row.result_path).stem == row.task_name
 
 
-def _dedupe_metric_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    deduped: dict[tuple[Any, ...], dict[str, Any]] = {}
+def _dedupe_metric_rows(rows: list[MetricLongRow]) -> list[MetricLongRow]:
+    deduped: dict[tuple[Any, ...], MetricLongRow] = {}
     for row in rows:
         key = (
-            row.get("model_dir"),
-            row.get("model_name"),
-            row.get("benchmark"),
-            row.get("dataset_id"),
-            row.get("task_name"),
-            row.get("metric_name"),
+            row.model_dir,
+            row.model_name,
+            row.benchmark,
+            row.dataset_id,
+            row.task_name,
+            row.metric_name,
         )
         current = deduped.get(key)
         if current is None or _prefer_metric_row(row, current):
@@ -360,14 +390,140 @@ def _dedupe_metric_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return list(deduped.values())
 
 
-def _prefer_metric_row(candidate: dict[str, Any], current: dict[str, Any]) -> bool:
+def _prefer_metric_row(candidate: MetricLongRow, current: MetricLongRow) -> bool:
     return _metric_result_path_stem_matches_task(candidate) and not _metric_result_path_stem_matches_task(current)
 
 
-def _metric_result_path_stem_matches_task(row: dict[str, Any]) -> bool:
-    result_path = row.get("result_path")
-    task_name = row.get("task_name")
-    return isinstance(result_path, str) and isinstance(task_name, str) and Path(result_path).stem == task_name
+def _metric_result_path_stem_matches_task(row: MetricLongRow) -> bool:
+    return Path(row.result_path).stem == row.task_name
+
+
+def _dedupe_task_diagnostic_rows(rows: list[TaskDiagnosticRow]) -> list[TaskDiagnosticRow]:
+    deduped: dict[tuple[str, str, str, str, str, str], TaskDiagnosticRow] = {}
+    for row in rows:
+        key = (row.model_dir, row.model_name, row.benchmark, row.dataset_id, row.task_key, row.result_path)
+        current = deduped.get(key)
+        if current is None or _diagnostic_result_path_stem_matches_task(row):
+            deduped[key] = row
+    return list(deduped.values())
+
+
+def _diagnostic_result_path_stem_matches_task(row: TaskDiagnosticRow) -> bool:
+    return Path(row.result_path).stem == row.task_name
+
+
+def _dedupe_dataset_metadata_rows(rows: list[DatasetMetadataRow]) -> list[DatasetMetadataRow]:
+    deduped: dict[str, DatasetMetadataRow] = {}
+    for row in rows:
+        deduped[row.task_key] = row
+    return list(deduped.values())
+
+
+def _dataset_metadata_row(*, common: dict[str, Any], registry: DatasetRegistry) -> DatasetMetadataRow:
+    metadata = _metadata_for_common_task(common=common, registry=registry)
+    query_stats = metadata.get("query_text_stats")
+    query_stats = query_stats if isinstance(query_stats, dict) else {}
+    document_stats = metadata.get("document_text_stats")
+    document_stats = document_stats if isinstance(document_stats, dict) else {}
+    citation_keys = metadata.get("citation_keys")
+    references = metadata.get("references")
+    return DatasetMetadataRow(
+        benchmark=str(common["benchmark"]),
+        dataset_id=str(common["dataset_id"]),
+        dataset_name=str(common["dataset_name"]),
+        split_name=_str_or_none(common.get("split_name")),
+        task_name=str(common["task_name"]),
+        task_key=str(common["task_key"]),
+        language=_str_or_none(metadata.get("language")),
+        category=_str_or_none(metadata.get("category")),
+        short_description=_str_or_none(metadata.get("short_description")),
+        citation_count=len(citation_keys) if isinstance(citation_keys, list) else None,
+        reference_count=len(references) if isinstance(references, list) else None,
+        has_bibtex=bool(metadata.get("bibtex")) if "bibtex" in metadata else None,
+        query_count=_int_or_none(query_stats.get("count")),
+        document_count=_int_or_none(document_stats.get("count")),
+        query_mean_chars=_float_or_none(query_stats.get("mean_chars")),
+        document_mean_chars=_float_or_none(document_stats.get("mean_chars")),
+    )
+
+
+def _metadata_for_common_task(*, common: dict[str, Any], registry: DatasetRegistry) -> dict[str, Any]:
+    for dataset_key in (common.get("dataset_id"), common.get("dataset_name")):
+        if not isinstance(dataset_key, str) or not dataset_key:
+            continue
+        try:
+            dataset = registry.get_dataset(dataset_key)
+        except KeyError:
+            continue
+        return dataset.metadata_for_task(
+            split_name=str(common.get("split_name") or ""),
+            task_name=str(common.get("task_name") or ""),
+        )
+    return {}
+
+
+def _task_diagnostic_row(
+    *,
+    common: dict[str, Any],
+    config: dict[str, Any],
+    evaluation: dict[str, Any],
+    base_score: float,
+) -> TaskDiagnosticRow:
+    timing = evaluation.get("timing")
+    timing = timing if isinstance(timing, dict) else {}
+    reranking = _first_reranking_evaluation(evaluation.get("reranking_evaluations"))
+    coverage_value = reranking.get("candidate_coverage")
+    coverage: dict[str, Any] = coverage_value if isinstance(coverage_value, dict) else {}
+    rerank_score = _float_or_none(evaluation.get("rerank_aggregate_metric_value"))
+    if rerank_score is None:
+        rerank_score = _float_or_none(reranking.get("aggregate_metric_value"))
+    bm25_config = config.get("bm25")
+    bm25_config = bm25_config if isinstance(bm25_config, dict) else {}
+    rerank_top_k = _int_or_none(config.get("rerank_top_k"))
+    if rerank_top_k is None:
+        rerank_top_k = _int_or_none(reranking.get("rerank_top_k") or reranking.get("rerank_top_n"))
+    return TaskDiagnosticRow(
+        model_dir=str(common["model_dir"]),
+        model_name=str(common["model_name"]),
+        benchmark=str(common["benchmark"]),
+        dataset_id=str(common["dataset_id"]),
+        task_name=str(common["task_name"]),
+        task_key=str(common["task_key"]),
+        result_path=str(common["result_path"]),
+        base_score=base_score,
+        rerank_score=rerank_score,
+        rerank_lift=rerank_score - base_score if rerank_score is not None else None,
+        rerank_status=_str_or_none(reranking.get("status")),
+        rerank_top_k=rerank_top_k,
+        candidate_source=_str_or_none(reranking.get("source")),
+        candidate_ranking=_str_or_none(config.get("candidate_ranking")),
+        bm25_source=_str_or_none(bm25_config.get("source")),
+        query_coverage=_float_or_none(coverage.get("query_coverage")),
+        relevant_coverage=_float_or_none(coverage.get("relevant_coverage")),
+        covered_query_count=_int_or_none(coverage.get("covered_query_count")),
+        query_with_relevance_count=_int_or_none(coverage.get("query_with_relevance_count")),
+        covered_relevant_count=_int_or_none(coverage.get("covered_relevant_count")),
+        relevant_count=_int_or_none(coverage.get("relevant_count")),
+        dataset_load_seconds=_float_or_none(evaluation.get("dataset_load_seconds")),
+        query_embedding_seconds=_float_or_none(timing.get("query_embedding_seconds")),
+        corpus_embedding_seconds=_float_or_none(timing.get("corpus_embedding_seconds")),
+        score_and_topk_seconds=_float_or_none(timing.get("score_and_topk_seconds")),
+        metric_compute_seconds=_float_or_none(timing.get("metric_compute_seconds")),
+        pure_compute_seconds=_float_or_none(timing.get("pure_compute_seconds")),
+        wall_seconds=_float_or_none(evaluation.get("wall_seconds")),
+        duration_seconds_including_dataset_load=_float_or_none(
+            evaluation.get("duration_seconds_including_dataset_load")
+        ),
+    )
+
+
+def _first_reranking_evaluation(value: Any) -> dict[str, Any]:
+    if not isinstance(value, list):
+        return {}
+    for item in value:
+        if isinstance(item, dict):
+            return item
+    return {}
 
 
 def _embedding_evaluations(value: Any) -> list[dict[str, Any]]:
@@ -510,14 +666,28 @@ def write_duckdb(
     *,
     runs: list[dict[str, Any]],
     rows: list[TaskResult],
-    metric_rows: list[dict[str, Any]],
+    metric_rows: Sequence[MetricLongRow | dict[str, Any]],
+    diagnostic_rows: Sequence[TaskDiagnosticRow | dict[str, Any]] = (),
+    dataset_metadata_rows: Sequence[DatasetMetadataRow | dict[str, Any]] = (),
     standings: dict[str, list[dict[str, Any]]],
     borda_rows: list[dict[str, Any]],
 ) -> None:
     db_path.parent.mkdir(parents=True, exist_ok=True)
+    normalized_metric_rows = [
+        row if isinstance(row, MetricLongRow) else MetricLongRow.model_validate(row)
+        for row in metric_rows
+    ]
+    normalized_diagnostic_rows = [
+        row if isinstance(row, TaskDiagnosticRow) else TaskDiagnosticRow.model_validate(row)
+        for row in diagnostic_rows
+    ]
+    normalized_dataset_metadata_rows = [
+        row if isinstance(row, DatasetMetadataRow) else DatasetMetadataRow.model_validate(row)
+        for row in dataset_metadata_rows
+    ]
     con = duckdb.connect(str(db_path))
     try:
-        for table in ["runs", "task_results", "metrics_long", "model_scores", "borda_task_scores"]:
+        for table in WAREHOUSE_TABLES:
             con.execute(f"DROP TABLE IF EXISTS {table}")
         con.execute(
             """
@@ -564,6 +734,7 @@ def write_duckdb(
                 dataset_id VARCHAR, dataset_revision VARCHAR, dataset_revision_requested VARCHAR,
                 dataset_name VARCHAR, split_name VARCHAR, task_name VARCHAR, task_key VARCHAR,
                 score DOUBLE, score_100 DOUBLE, aggregate_metric VARCHAR, result_path VARCHAR,
+                experiment_fingerprint VARCHAR,
                 active_parameters BIGINT, total_parameters BIGINT, max_seq_length INTEGER, dtype VARCHAR,
                 embedding_variant_name VARCHAR, embedding_dim INTEGER, quantization VARCHAR,
                 attn_implementation VARCHAR, torch_version VARCHAR, transformers_version VARCHAR,
@@ -573,42 +744,8 @@ def write_duckdb(
             """
         )
         con.executemany(
-            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-                (
-                    row.model_dir,
-                    row.model_name,
-                    row.benchmark,
-                    row.dataset_id,
-                    row.dataset_revision,
-                    row.dataset_revision_requested,
-                    row.dataset_name,
-                    row.split_name,
-                    row.task_name,
-                    row.task_key,
-                    row.score,
-                    row.score * 100.0,
-                    row.aggregate_metric,
-                    row.result_path,
-                    row.active_parameters,
-                    row.total_parameters,
-                    row.max_seq_length,
-                    row.dtype,
-                    row.embedding_variant_name,
-                    row.embedding_dim,
-                    row.quantization,
-                    row.attn_implementation,
-                    row.torch_version,
-                    row.transformers_version,
-                    row.sentence_transformers_version,
-                    row.started_at_utc,
-                    row.finished_at_utc,
-                    row.evaluated_at_utc,
-                    row.duration_seconds_including_dataset_load,
-                    row.wall_seconds,
-                )
-                for row in rows
-            ],
+            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [row.duckdb_values() for row in rows],
         )
         con.execute(
             """
@@ -620,20 +757,47 @@ def write_duckdb(
         )
         con.executemany(
             "INSERT INTO metrics_long VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-                (
-                    row.get("model_dir"),
-                    row.get("model_name"),
-                    row.get("benchmark"),
-                    row.get("dataset_id"),
-                    row.get("task_name"),
-                    row.get("metric_name"),
-                    row.get("metric_value"),
-                    row.get("result_path"),
-                )
-                for row in metric_rows
-            ],
+            [row.duckdb_values() for row in normalized_metric_rows],
         )
+        con.execute(
+            """
+            CREATE TABLE task_diagnostics (
+                model_dir VARCHAR, model_name VARCHAR, benchmark VARCHAR, dataset_id VARCHAR,
+                task_name VARCHAR, task_key VARCHAR, result_path VARCHAR,
+                base_score DOUBLE, rerank_score DOUBLE, rerank_lift DOUBLE,
+                rerank_status VARCHAR, rerank_top_k INTEGER, candidate_source VARCHAR,
+                candidate_ranking VARCHAR, bm25_source VARCHAR,
+                query_coverage DOUBLE, relevant_coverage DOUBLE,
+                covered_query_count INTEGER, query_with_relevance_count INTEGER,
+                covered_relevant_count INTEGER, relevant_count INTEGER,
+                dataset_load_seconds DOUBLE, query_embedding_seconds DOUBLE,
+                corpus_embedding_seconds DOUBLE, score_and_topk_seconds DOUBLE,
+                metric_compute_seconds DOUBLE, pure_compute_seconds DOUBLE,
+                wall_seconds DOUBLE, duration_seconds_including_dataset_load DOUBLE
+            )
+            """
+        )
+        if normalized_diagnostic_rows:
+            con.executemany(
+                "INSERT INTO task_diagnostics VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [row.duckdb_values() for row in normalized_diagnostic_rows],
+            )
+        con.execute(
+            """
+            CREATE TABLE dataset_metadata (
+                benchmark VARCHAR, dataset_id VARCHAR, dataset_name VARCHAR, split_name VARCHAR,
+                task_name VARCHAR, task_key VARCHAR, language VARCHAR, category VARCHAR,
+                short_description VARCHAR, citation_count INTEGER, reference_count INTEGER,
+                has_bibtex BOOLEAN, query_count INTEGER, document_count INTEGER,
+                query_mean_chars DOUBLE, document_mean_chars DOUBLE
+            )
+            """
+        )
+        if normalized_dataset_metadata_rows:
+            con.executemany(
+                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [row.duckdb_values() for row in normalized_dataset_metadata_rows],
+            )
         score_rows = [row for view_rows in standings.values() for row in view_rows]
         con.execute(
             """
@@ -693,6 +857,19 @@ def write_duckdb(
                 for row in borda_rows
             ],
         )
+    finally:
+        con.close()
+
+
+def export_duckdb_tables_to_parquet(db_path: Path, output_dir: Path) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        for table in WAREHOUSE_TABLES:
+            output_path = output_dir / f"{table}.parquet"
+            if output_path.exists():
+                output_path.unlink()
+            con.execute(f"COPY (SELECT * FROM {table}) TO ? (FORMAT PARQUET)", [str(output_path)])
     finally:
         con.close()
 
@@ -966,6 +1143,10 @@ def _int_or_none(value: Any) -> int | None:
 
 def _float_or_none(value: Any) -> float | None:
     return float(value) if isinstance(value, int | float) else None
+
+
+def _str_or_none(value: Any) -> str | None:
+    return str(value) if value is not None else None
 
 
 def _dataset_revision_value(value: Any, *, key: str) -> str | None:
