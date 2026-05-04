@@ -12,8 +12,8 @@ from tqdm.auto import tqdm
 
 from hakari_bench.datasets import EvalTask
 from hakari_bench.embedding_matrix import QuantizedEmbeddingMatrix
-from hakari_bench.embedding_matrix import take_embedding_rows as _take_embedding_rows
 from hakari_bench.metrics import compute_ir_metrics
+from hakari_bench.scoring import rank_candidate_subset_by_similarity
 
 QuantizationPrecision = Literal["int8", "binary"]
 TORCH_SCORE_REPRESENTATION = "torch_exact"
@@ -1132,37 +1132,16 @@ def _rank_candidate_subset_by_similarity(
     score_name: str,
     rerank_top_n: int,
 ) -> dict[str, list[str]]:
-    if rerank_top_n <= 0:
-        raise ValueError("rerank_top_n must be positive.")
-    corpus_index_by_id = {corpus_id: index for index, corpus_id in enumerate(corpus_ids)}
-    rankings: dict[str, list[str]] = {}
-    for query_index, query_id in enumerate(query_ids):
-        candidate_indices: list[int] = []
-        candidate_ids: list[str] = []
-        seen: set[str] = set()
-        for candidate_id in candidates.get(query_id, []):
-            if candidate_id in seen:
-                continue
-            corpus_index = corpus_index_by_id.get(candidate_id)
-            if corpus_index is None:
-                continue
-            seen.add(candidate_id)
-            candidate_indices.append(corpus_index)
-            candidate_ids.append(candidate_id)
-            if len(candidate_ids) >= rerank_top_n:
-                break
-        if not candidate_ids:
-            rankings[query_id] = []
-            continue
-        ranked = _rank_by_similarity(
-            query_ids=[query_id],
-            corpus_ids=candidate_ids,
-            query_embeddings=_take_embedding_rows(query_embeddings, [query_index]),
-            corpus_embeddings=_take_embedding_rows(corpus_embeddings, candidate_indices),
-            score_name=score_name,
-        )
-        rankings[query_id] = ranked[query_id]
-    return rankings
+    return rank_candidate_subset_by_similarity(
+        query_ids=query_ids,
+        corpus_ids=corpus_ids,
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        candidates=candidates,
+        score_name=score_name,
+        rerank_top_n=rerank_top_n,
+        rank_by_similarity=_rank_by_similarity,
+    )
 
 
 def _candidate_reranking_evaluation(
