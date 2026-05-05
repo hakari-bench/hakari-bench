@@ -16,44 +16,58 @@ metadata:
     with technical concepts from classification systems used in architecture, engineering,
     construction, and operations.
   citation_keys:
-  - shahinmoghadam2024benchmarking
+  - shahinmoghadam2025benchmarking
   references:
   - title: Benchmarking pre-trained text embedding models in aligning built asset information
     authors:
     - Mehrzad Shahinmoghadam
     - Ali Motamedi
-    year: 2024
-    url: https://arxiv.org/abs/2411.12056
+    year: 2025
+    url: https://www.nature.com/articles/s41598-025-09052-5
     is_paper: true
     source_confidence: definitive_paper_link
-    doi: 10.48550/arXiv.2411.12056
-  bibtex: "@article{shahinmoghadam2024benchmarking,\n  author = {Shahinmoghadam, Mehrzad and\
-    \ Motamedi, Ali},\n  journal = {arXiv preprint arXiv:2411.12056},\n  title = {Benchmarking\
-    \ pre-trained text embedding models in aligning built asset information},\n  year = {2024},\n\
-    \  url = {https://arxiv.org/abs/2411.12056}\n}\n"
+    doi: 10.1038/s41598-025-09052-5
+  bibtex: |
+    @article{shahinmoghadam2025benchmarking,
+      author = {Shahinmoghadam, Mehrzad and Motamedi, Ali},
+      title = {Benchmarking pre-trained text embedding models in aligning built asset information},
+      journal = {Scientific Reports},
+      volume = {15},
+      pages = {23866},
+      year = {2025},
+      url = {https://www.nature.com/articles/s41598-025-09052-5},
+      doi = {10.1038/s41598-025-09052-5}
+    }
 task_metadata:
   NanoBuiltBench:
     language: en
     category: natural_language
     short_description: Built asset entity description retrieval.
-    description: Queries describing built asset entities are matched to relevant entity type
-      or class descriptions from classification systems such as IFC and Uniclass.
+    description: Queries describing built asset entities are matched to relevant entity type or
+      class descriptions from classification systems such as IFC and Uniclass.
     citation_keys:
-    - shahinmoghadam2024benchmarking
+    - shahinmoghadam2025benchmarking
     references:
     - title: Benchmarking pre-trained text embedding models in aligning built asset information
       authors:
       - Mehrzad Shahinmoghadam
       - Ali Motamedi
-      year: 2024
-      url: https://arxiv.org/abs/2411.12056
+      year: 2025
+      url: https://www.nature.com/articles/s41598-025-09052-5
       is_paper: true
       source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2411.12056
-    bibtex: "@article{shahinmoghadam2024benchmarking,\n  author = {Shahinmoghadam, Mehrzad\
-      \ and Motamedi, Ali},\n  journal = {arXiv preprint arXiv:2411.12056},\n  title = {Benchmarking\
-      \ pre-trained text embedding models in aligning built asset information},\n  year =\
-      \ {2024},\n  url = {https://arxiv.org/abs/2411.12056}\n}\n"
+      doi: 10.1038/s41598-025-09052-5
+    bibtex: |
+      @article{shahinmoghadam2025benchmarking,
+        author = {Shahinmoghadam, Mehrzad and Motamedi, Ali},
+        title = {Benchmarking pre-trained text embedding models in aligning built asset information},
+        journal = {Scientific Reports},
+        volume = {15},
+        pages = {23866},
+        year = {2025},
+        url = {https://www.nature.com/articles/s41598-025-09052-5},
+        doi = {10.1038/s41598-025-09052-5}
+      }
     query_text_stats:
       count: 200
       min_chars: 12
@@ -73,21 +87,28 @@ task_metadata:
     description: Built asset entity descriptions used as queries are reranked against candidate
       entity type or class descriptions from classification systems such as IFC and Uniclass.
     citation_keys:
-    - shahinmoghadam2024benchmarking
+    - shahinmoghadam2025benchmarking
     references:
     - title: Benchmarking pre-trained text embedding models in aligning built asset information
       authors:
       - Mehrzad Shahinmoghadam
       - Ali Motamedi
-      year: 2024
-      url: https://arxiv.org/abs/2411.12056
+      year: 2025
+      url: https://www.nature.com/articles/s41598-025-09052-5
       is_paper: true
       source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2411.12056
-    bibtex: "@article{shahinmoghadam2024benchmarking,\n  author = {Shahinmoghadam, Mehrzad\
-      \ and Motamedi, Ali},\n  journal = {arXiv preprint arXiv:2411.12056},\n  title = {Benchmarking\
-      \ pre-trained text embedding models in aligning built asset information},\n  year =\
-      \ {2024},\n  url = {https://arxiv.org/abs/2411.12056}\n}\n"
+      doi: 10.1038/s41598-025-09052-5
+    bibtex: |
+      @article{shahinmoghadam2025benchmarking,
+        author = {Shahinmoghadam, Mehrzad and Motamedi, Ali},
+        title = {Benchmarking pre-trained text embedding models in aligning built asset information},
+        journal = {Scientific Reports},
+        volume = {15},
+        pages = {23866},
+        year = {2025},
+        url = {https://www.nature.com/articles/s41598-025-09052-5},
+        doi = {10.1038/s41598-025-09052-5}
+      }
     query_text_stats:
       count: 82
       min_chars: 35

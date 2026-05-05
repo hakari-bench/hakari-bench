@@ -56,10 +56,10 @@ metadata:
     url: https://huggingface.co/datasets/Shitao/MLDR
     is_paper: false
     source_confidence: probably_correct
-  bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+  bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
     \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author =\
     \ {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and Liu,\
-    \ Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n  url\
+    \ Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n  url\
     \ = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n}\n@misc{shitao2024mldr,\n\
     \  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n  author = {Xiao,\
     \ Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian, Defu and Liu, Zheng},\n\
@@ -102,10 +102,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -160,10 +160,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -218,10 +218,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -276,10 +276,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -334,10 +334,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -392,10 +392,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -450,10 +450,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -508,10 +508,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -566,10 +566,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -624,10 +624,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -682,10 +682,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -740,10 +740,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\
@@ -798,10 +798,10 @@ task_metadata:
       url: https://huggingface.co/datasets/Shitao/MLDR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{chen2024bgem3,\n  title = {{BGE} {M3}-Embedding: Multi-Lingual, Multi-Functionality,\
+    bibtex: "@inproceedings{chen2024bgem3,\n  title = {{M3}-Embedding: Multi-Linguality, Multi-Functionality,\
       \ Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},\n  author\
       \ = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and\
-      \ Liu, Zheng},\n  year = {2024},\n  eprint = {2402.03216},\n  archivePrefix = {arXiv},\n\
+      \ Liu, Zheng},\n  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},\n  year = {2024},\n\
       \  url = {https://aclanthology.org/2024.findings-acl.137/},\n  doi = {10.18653/v1/2024.findings-acl.137}\n\
       }\n@misc{shitao2024mldr,\n  title = {{MLDR}: Multilingual Long-Document Retrieval dataset},\n\
       \  author = {Xiao, Shitao and Chen, Jianlyu and Zhang, Peitian and Luo, Kun and Lian,\

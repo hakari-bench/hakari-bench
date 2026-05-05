@@ -113,8 +113,8 @@ task_metadata:
       - Jon-Mikkel Ryen Korsvik
       year: 2023
       url: https://hdl.handle.net/11250/3079868
-      is_paper: false
-      source_confidence: probably_correct
+      is_paper: true
+      source_confidence: definitive_paper_link
     bibtex: |
       @mastersthesis{navjord2023beyond,
         title = {Beyond extractive: advancing abstractive automatic text summarization in Norwegian with transformers},

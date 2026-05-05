@@ -14,11 +14,11 @@ metadata:
   language: en
   category: code
   short_description: Nano subset of CodeRAG-Bench code retrieval tasks.
-  description: NanoCodeRAG evaluates retrieval for code retrieval-augmented generation. Its
-    compact task splits cover programming solutions, online tutorials, library documentation,
-    and Stack Overflow posts.
+  description: NanoCodeRAG evaluates retrieval for code retrieval-augmented generation. Its compact
+    task splits cover programming solutions, online tutorials, library documentation, and Stack
+    Overflow posts.
   citation_keys:
-  - wang2024coderagbench
+  - wang2025coderagbench
   references:
   - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
     authors:
@@ -34,20 +34,27 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2025.findings-naacl.176
-  bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
-    \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
-    \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
-    \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
-    \  year = {2024}\n}\n"
+  bibtex: |
+    @inproceedings{wang2025coderagbench,
+      title = {{CodeRAG}-Bench: Can Retrieval Augment Code Generation?},
+      author = {Wang, Zora Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and Neubig, Graham and Fried, Daniel},
+      booktitle = {Findings of the Association for Computational Linguistics: NAACL 2025},
+      pages = {3199--3214},
+      year = {2025},
+      address = {Albuquerque, New Mexico},
+      publisher = {Association for Computational Linguistics},
+      url = {https://aclanthology.org/2025.findings-naacl.176/},
+      doi = {10.18653/v1/2025.findings-naacl.176}
+    }
 task_metadata:
   NanoCodeRAGLibraryDocumentationSolutions:
     language: en
     category: code
     short_description: Python library documentation retrieval.
-    description: Code-related queries are matched to relevant Python library documentation
-      sections from CodeRAG-Bench.
+    description: Code-related queries are matched to relevant Python library documentation sections
+      from CodeRAG-Bench.
     citation_keys:
-    - wang2024coderagbench
+    - wang2025coderagbench
     references:
     - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
       authors:
@@ -63,11 +70,18 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.findings-naacl.176
-    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
-      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
-      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
-      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
-      \  year = {2024}\n}\n"
+    bibtex: |
+      @inproceedings{wang2025coderagbench,
+        title = {{CodeRAG}-Bench: Can Retrieval Augment Code Generation?},
+        author = {Wang, Zora Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and Neubig, Graham and Fried, Daniel},
+        booktitle = {Findings of the Association for Computational Linguistics: NAACL 2025},
+        pages = {3199--3214},
+        year = {2025},
+        address = {Albuquerque, New Mexico},
+        publisher = {Association for Computational Linguistics},
+        url = {https://aclanthology.org/2025.findings-naacl.176/},
+        doi = {10.18653/v1/2025.findings-naacl.176}
+      }
     query_text_stats:
       count: 200
       min_chars: 40
@@ -84,10 +98,10 @@ task_metadata:
     language: en
     category: code
     short_description: Online programming tutorial retrieval.
-    description: Code-related queries are matched to relevant online programming tutorial
-      documents from CodeRAG-Bench.
+    description: Code-related queries are matched to relevant online programming tutorial documents
+      from CodeRAG-Bench.
     citation_keys:
-    - wang2024coderagbench
+    - wang2025coderagbench
     references:
     - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
       authors:
@@ -103,11 +117,18 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.findings-naacl.176
-    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
-      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
-      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
-      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
-      \  year = {2024}\n}\n"
+    bibtex: |
+      @inproceedings{wang2025coderagbench,
+        title = {{CodeRAG}-Bench: Can Retrieval Augment Code Generation?},
+        author = {Wang, Zora Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and Neubig, Graham and Fried, Daniel},
+        booktitle = {Findings of the Association for Computational Linguistics: NAACL 2025},
+        pages = {3199--3214},
+        year = {2025},
+        address = {Albuquerque, New Mexico},
+        publisher = {Association for Computational Linguistics},
+        url = {https://aclanthology.org/2025.findings-naacl.176/},
+        doi = {10.18653/v1/2025.findings-naacl.176}
+      }
     query_text_stats:
       count: 200
       min_chars: 17
@@ -124,10 +145,10 @@ task_metadata:
     language: en
     category: code
     short_description: Programming solution retrieval.
-    description: Code-related queries are matched to relevant programming solution documents
-      from CodeRAG-Bench.
+    description: Code-related queries are matched to relevant programming solution documents from
+      CodeRAG-Bench.
     citation_keys:
-    - wang2024coderagbench
+    - wang2025coderagbench
     references:
     - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
       authors:
@@ -143,11 +164,18 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.findings-naacl.176
-    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
-      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
-      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
-      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
-      \  year = {2024}\n}\n"
+    bibtex: |
+      @inproceedings{wang2025coderagbench,
+        title = {{CodeRAG}-Bench: Can Retrieval Augment Code Generation?},
+        author = {Wang, Zora Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and Neubig, Graham and Fried, Daniel},
+        booktitle = {Findings of the Association for Computational Linguistics: NAACL 2025},
+        pages = {3199--3214},
+        year = {2025},
+        address = {Albuquerque, New Mexico},
+        publisher = {Association for Computational Linguistics},
+        url = {https://aclanthology.org/2025.findings-naacl.176/},
+        doi = {10.18653/v1/2025.findings-naacl.176}
+      }
     query_text_stats:
       count: 200
       min_chars: 11
@@ -164,9 +192,10 @@ task_metadata:
     language: en
     category: code
     short_description: Stack Overflow post retrieval.
-    description: Code-related queries are matched to relevant Stack Overflow posts from CodeRAG-Bench.
+    description: Code-related queries are matched to relevant Stack Overflow posts from
+      CodeRAG-Bench.
     citation_keys:
-    - wang2024coderagbench
+    - wang2025coderagbench
     references:
     - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
       authors:
@@ -182,11 +211,18 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.findings-naacl.176
-    bibtex: "@misc{wang2024coderagbench,\n  archiveprefix = {arXiv},\n  author = {Wang, Zora\
-      \ Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and\
-      \ Neubig, Graham and Fried, Daniel},\n  eprint = {2406.14497},\n  primaryclass = {cs.SE},\n\
-      \  title = {CodeRAG-Bench: Can Retrieval Augment Code Generation?},\n  url = {https://aclanthology.org/2025.findings-naacl.176/},\n  doi = {10.18653/v1/2025.findings-naacl.176},\n\
-      \  year = {2024}\n}\n"
+    bibtex: |
+      @inproceedings{wang2025coderagbench,
+        title = {{CodeRAG}-Bench: Can Retrieval Augment Code Generation?},
+        author = {Wang, Zora Zhiruo and Asai, Akari and Yu, Xinyan Velocity and Xu, Frank F. and Xie, Yiqing and Neubig, Graham and Fried, Daniel},
+        booktitle = {Findings of the Association for Computational Linguistics: NAACL 2025},
+        pages = {3199--3214},
+        year = {2025},
+        address = {Albuquerque, New Mexico},
+        publisher = {Association for Computational Linguistics},
+        url = {https://aclanthology.org/2025.findings-naacl.176/},
+        doi = {10.18653/v1/2025.findings-naacl.176}
+      }
     query_text_stats:
       count: 200
       min_chars: 25

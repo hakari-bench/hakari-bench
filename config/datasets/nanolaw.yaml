@@ -370,8 +370,7 @@ task_metadata:
       contracts QA task formulation.
     citation_keys:
     - guha2023legalbench
-    - hendrycks2021cuad
-    - koreeda2021contractnli
+    - kolt2022predicting
     references:
     - title: 'LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning
         in Large Language Models'
@@ -420,26 +419,14 @@ task_metadata:
       url: https://arxiv.org/abs/2308.11462
       is_paper: true
       source_confidence: definitive_paper_link
-    - title: 'CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review'
+    - title: Predicting Consumer Contracts
       authors:
-      - Dan Hendrycks
-      - Collin Burns
-      - Anya Chen
-      - Spencer Ball
-      year: 2021
-      url: https://arxiv.org/abs/2103.06268
+      - Noam Kolt
+      year: 2022
+      url: https://doi.org/10.15779/Z382B8VC90
       is_paper: true
       source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2103.06268
-    - title: 'ContractNLI: A Dataset for Document-level Natural Language Inference for Contracts'
-      authors:
-      - Yuta Koreeda
-      - Christopher D. Manning
-      year: 2021
-      url: https://arxiv.org/abs/2110.01799
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2110.01799
+      doi: 10.15779/Z382B8VC90
     bibtex: "@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel Guha\
       \ and Julian Nyarko and Daniel E. Ho and Christopher Ré and Adam Chilton and Aditya\
       \ Narayana and Alex Chohlas-Wood and Austin Peters and Brandon Waldon and Daniel N.\
@@ -451,7 +438,10 @@ task_metadata:
       \ and Sharad Goel and Shang Gao and Spencer Williams and Sunny Gandhi and Tom Zur and\
       \ Varun Iyer and Zehua Li},\n  eprint = {2308.11462},\n  primaryClass = {cs.CL},\n \
       \ title = {LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning\
-      \ in Large Language Models},\n  year = {2023},\n}\n"
+      \ in Large Language Models},\n  year = {2023},\n}\n\n\n@article{kolt2022predicting,\n\
+      \  author = {Kolt, Noam},\n  doi = {10.15779/Z382B8VC90},\n  journal = {Berkeley\
+      \ Technology Law Journal},\n  pages = {71--138},\n  title = {Predicting Consumer\
+      \ Contracts},\n  volume = {37},\n  year = {2022},\n}\n"
     query_text_stats:
       count: 200
       min_chars: 28

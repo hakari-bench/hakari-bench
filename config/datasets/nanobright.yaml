@@ -63,7 +63,7 @@ metadata:
     \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
     \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint arXiv:2407.12883},\n\
     \  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval},\n\
-    \  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+    \  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
 task_metadata:
   NanoBrightBiology:
     language: en
@@ -100,7 +100,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 89
@@ -148,7 +148,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 116
       min_chars: 83
@@ -196,7 +196,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 164
@@ -244,7 +244,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 166
@@ -292,7 +292,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 165
@@ -340,7 +340,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 117
       min_chars: 185
@@ -388,7 +388,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 108
       min_chars: 158
@@ -436,7 +436,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 112
       min_chars: 182
@@ -484,7 +484,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 142
       min_chars: 422
@@ -532,7 +532,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 111
       min_chars: 85
@@ -580,7 +580,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 76
       min_chars: 159
@@ -628,7 +628,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 194
       min_chars: 84
@@ -676,7 +676,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 89
@@ -724,7 +724,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 116
       min_chars: 83
@@ -772,7 +772,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 164
@@ -820,7 +820,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 166
@@ -868,7 +868,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 165
@@ -916,7 +916,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 117
       min_chars: 185
@@ -964,7 +964,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 108
       min_chars: 158
@@ -1012,7 +1012,7 @@ task_metadata:
       \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
       \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
       \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883}\n}\n"
+      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 112
       min_chars: 182

@@ -28,7 +28,7 @@ metadata:
     task families and VN-MTEB translated retrieval datasets.
   citation_keys:
   - muennighoff2023mteb
-  - pham2026vnmteb
+  - pham-etal-2026-vn
   references:
   - &mteb_ref
     title: 'MTEB: Massive Text Embedding Benchmark'
@@ -63,7 +63,7 @@ metadata:
       url = {https://arxiv.org/abs/2210.07316},
       doi = {10.48550/arXiv.2210.07316}
     }
-    @inproceedings{pham2026vnmteb,
+    @inproceedings{pham-etal-2026-vn,
       title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
       author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
       booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
@@ -79,7 +79,7 @@ task_metadata:
     description: A compact VN-MTEB translation of the CQADupStack Android duplicate-question
       retrieval task.
     citation_keys: &vnmteb_cqadup_keys
-    - pham2026vnmteb
+    - pham-etal-2026-vn
     - hoogeveen2015cqadupstack
     references: &vnmteb_cqadup_refs
     - *vnmteb_ref
@@ -95,7 +95,7 @@ task_metadata:
       source_confidence: definitive_paper_link
       doi: 10.1145/2838931.2838934
     bibtex: &vnmteb_cqadup_bib |
-      @inproceedings{pham2026vnmteb,
+      @inproceedings{pham-etal-2026-vn,
         title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
         author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
         booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
@@ -189,7 +189,7 @@ task_metadata:
     short_description: Vietnamese FEVER evidence retrieval.
     description: A compact VN-MTEB translation of FEVER claim-to-Wikipedia evidence retrieval.
     citation_keys: &vnmteb_fever_keys
-    - pham2026vnmteb
+    - pham-etal-2026-vn
     - thorne2018fever
     references: &vnmteb_fever_refs
     - *vnmteb_ref
@@ -206,7 +206,7 @@ task_metadata:
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/N18-1074
     bibtex: &vnmteb_fever_bib |
-      @inproceedings{pham2026vnmteb,
+      @inproceedings{pham-etal-2026-vn,
         title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
         author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
         booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
@@ -228,7 +228,7 @@ task_metadata:
     short_description: Vietnamese Natural Questions retrieval.
     description: A compact VN-MTEB translation of Natural Questions Wikipedia retrieval.
     citation_keys: &vnmteb_nq_keys
-    - pham2026vnmteb
+    - pham-etal-2026-vn
     - kwiatkowski2019nq
     references: &vnmteb_nq_refs
     - *vnmteb_ref
@@ -259,7 +259,7 @@ task_metadata:
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00276
     bibtex: &vnmteb_nq_bib |
-      @inproceedings{pham2026vnmteb,
+      @inproceedings{pham-etal-2026-vn,
         title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
         author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
         booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
@@ -300,24 +300,19 @@ task_metadata:
     short_description: Vietnamese duplicate question retrieval from Quora pairs.
     description: A compact VN-MTEB translation of Quora duplicate-question retrieval.
     citation_keys:
-    - pham2026vnmteb
+    - pham-etal-2026-vn
     - quora2017questionpairs
     references:
     - *vnmteb_ref
-    - title: Quora Question Pairs
+    - title: First Quora Dataset Release - Question Pairs
       authors:
-      - DataCanary
-      - hilfialkaff
-      - Lili Jiang
-      - Meg Risdal
-      - Nikhil Dandekar
-      - tomtung
+      - Quora
       year: 2017
-      url: https://kaggle.com/competitions/quora-question-pairs
+      url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
       is_paper: false
       source_confidence: probably_correct
     bibtex: |
-      @inproceedings{pham2026vnmteb,
+      @inproceedings{pham-etal-2026-vn,
         title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
         author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
         booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
@@ -326,8 +321,8 @@ task_metadata:
         doi = {10.18653/v1/2026.findings-eacl.86}
       }
       @misc{quora2017questionpairs,
-        title = {Quora Question Pairs},
-        author = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil and tomtung},
+        title = {First Quora Dataset Release - Question Pairs},
+        author = {{Quora}},
         year = {2017},
-        url = {https://kaggle.com/competitions/quora-question-pairs}
+        url = {https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs}
       }

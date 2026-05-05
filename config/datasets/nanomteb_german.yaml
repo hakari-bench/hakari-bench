@@ -103,10 +103,10 @@ task_metadata:
     references:
     - title: LHM-Dienstleistungen-QA - german public domain question-answering dataset
       authors:
-      - Leon Marius Schroder
+      - Leon Marius Schröder
       - Clemens Gutknecht
       - Oubada Alkiddeh
-      - Susanne Weiss
+      - Susanne Weiß
       - Leon Lukas
       year: 2022
       url: https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA
@@ -115,7 +115,7 @@ task_metadata:
     bibtex: |
       @software{schroeder2022lhmqa,
         title = {{LHM-Dienstleistungen-QA} - german public domain question-answering dataset},
-        author = {Schroder, Leon Marius and Gutknecht, Clemens and Alkiddeh, Oubada and Weiss, Susanne and Lukas, Leon},
+        author = {Schr{\"o}der, Leon Marius and Gutknecht, Clemens and Alkiddeh, Oubada and Wei{\ss}, Susanne and Lukas, Leon},
         publisher = {it@M},
         year = {2022},
         url = {https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA}

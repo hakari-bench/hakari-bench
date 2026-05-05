@@ -33,7 +33,7 @@ metadata:
     retrieval, instruction-following retrieval, reasoning-as-retrieval, long-context retrieval,
     and one code-oriented Stack Overflow QA task.
   citation_keys:
-  - mmteb
+  - enevoldsen2025mmteb
   references:
   - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
     authors:
@@ -43,13 +43,13 @@ metadata:
     - Marton Kardos
     - Ashwin Mathur
     year: 2025
-    url: https://arxiv.org/abs/2502.13595
+    url: https://proceedings.iclr.cc/paper_files/paper/2025/hash/fc0e3f908a2116ba529ad0a1530a3675-Abstract-Conference.html
     is_paper: true
     source_confidence: definitive_paper_link
-    doi: 10.48550/arXiv.2502.13595
-  bibtex: "@article{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual Text Embedding\
+  bibtex: "@inproceedings{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual Text Embedding\
     \ Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac and Kerboua, Imene and\
-    \ Kardos, Marton and Mathur, Ashwin},\n  year = {2025},\n  url = {https://arxiv.org/abs/2502.13595}\n\
+    \ Kardos, Marton and Mathur, Ashwin},\n  booktitle = {International Conference on Learning Representations},\n\
+    \  year = {2025},\n  url = {https://proceedings.iclr.cc/paper_files/paper/2025/hash/fc0e3f908a2116ba529ad0a1530a3675-Abstract-Conference.html}\n\
     }\n"
 task_metadata:
   NanoStackOverflowQA:
@@ -77,11 +77,12 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.acl-long.1072
-    bibtex: "@misc{li2024coir,\n  archiveprefix = {arXiv},\n  author = {Li, Xiangyang and\
-      \ Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Yin, Yichun and Zhang, Hao and Liu,\
-      \ Yong and Wang, Yasheng and Tang, Ruiming},\n  eprint = {2407.02883},\n  primaryclass\
-      \ = {cs.IR},\n  title = {CoIR: A Comprehensive Benchmark for Code Information Retrieval\
-      \ Models},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n  doi = {10.18653/v1/2025.acl-long.1072},\n  year = {2024}\n}\n"
+    bibtex: "@inproceedings{coir,\n  author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi\
+      \ Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},\n\
+      \  booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational\
+      \ Linguistics (Volume 1: Long Papers)},\n  pages = {22074--22091},\n  title = {{CoIR}:\
+      \ A Comprehensive Benchmark for Code Information Retrieval Models},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072},\n  year = {2025}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 61
@@ -110,15 +111,14 @@ task_metadata:
       - Lars Kai Hansen
       - Martin Carsten Nielsen
       year: 2025
-      url: https://arxiv.org/abs/2410.22839
+      url: https://aclanthology.org/2025.nodalida-1.78/
       is_paper: true
       source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2410.22839
-    bibtex: "@article{holm2025danoliteracy,\n  author = {Holm, Soren Vejlgaard and Hansen,\
-      \ Lars Kai and Nielsen, Martin Carsten},\n  journal = {Proceedings of the Joint 25th\
+    bibtex: "@inproceedings{twitterhjerne,\n  author = {Vejlgaard Holm, Soren and Hansen,\
+      \ Lars Kai and Nielsen, Martin Carsten},\n  booktitle = {Proceedings of the Joint 25th\
       \ Nordic Conference on Computational Linguistics and 11th Baltic Conference on Human\
-      \ Language Technologies},\n  title = {Danoliteracy of Generative Large Language Models},\n\
-      \  year = {2025},\n  url = {https://arxiv.org/abs/2410.22839},\n  doi = {10.48550/arXiv.2410.22839}\n\
+      \ Language Technologies},\n  pages = {785--800},\n  title = {Danoliteracy of Generative\
+      \ Large Language Models},\n  year = {2025},\n  url = {https://aclanthology.org/2025.nodalida-1.78/}\n\
       }\n"
     query_text_stats:
       count: 77
@@ -154,7 +154,7 @@ task_metadata:
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{bhattacharya2020aila,
+    bibtex: "@inproceedings{aila,
   title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
   author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
   booktitle = {CEUR Workshop Proceedings},
@@ -194,7 +194,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/P18-1023
-    bibtex: "@inproceedings{wachsmuth2018retrieval,\n  author = {Wachsmuth, Henning and Syed,\
+    bibtex: "@inproceedings{arguana,\n  author = {Wachsmuth, Henning and Syed,\
       \ Shahbaz and Stein, Benno},\n  booktitle = {ACL},\n  title = {Retrieval of the Best\
       \ Counterargument without Prior Topic Knowledge},\n  year = {2018},\n  url = {https://aclanthology.org/P18-1023/},\n\
       \  doi = {10.18653/v1/P18-1023}\n}\n"
@@ -233,7 +233,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2307.16883
-    bibtex: "@article{kamalloo2023hagrid,\n  author = {Kamalloo, Ehsan and Jafari, Aref and\
+    bibtex: "@article{hagrid,\n  author = {Kamalloo, Ehsan and Jafari, Aref and\
       \ Zhang, Xinyu and Thakur, Nandan and Lin, Jimmy},\n  journal = {arXiv:2307.16883},\n\
       \  title = {{HAGRID}: A Human-LLM Collaborative Dataset for Generative Information-Seeking\
       \ with Attribution},\n  year = {2023},\n  url = {https://arxiv.org/abs/2307.16883},\n\
@@ -271,10 +271,12 @@ task_metadata:
       url: https://arxiv.org/abs/2308.11462
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{guha2023legalbench,\n  archiveprefix = {arXiv},\n  author = {Guha, Neel\
+      doi: 10.48550/arXiv.2308.11462
+    bibtex: "@misc{legalbench,\n  archiveprefix = {arXiv},\n  author = {Guha, Neel\
       \ and Nyarko, Julian and Ho, Daniel E. and Re, Christopher},\n  eprint = {2308.11462},\n\
       \  primaryclass = {cs.CL},\n  title = {LegalBench: A Collaboratively Built Benchmark\
-      \ for Measuring Legal Reasoning in Large Language Models},\n  year = {2023}\n}\n"
+      \ for Measuring Legal Reasoning in Large Language Models},\n  url = {https://arxiv.org/abs/2308.11462},\n\
+      \  doi = {10.48550/arXiv.2308.11462},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 41
@@ -310,10 +312,13 @@ task_metadata:
       url: https://aclanthology.org/2024.emnlp-main.47/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
-      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
-      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
-      \ Long Context Retrieval},\n  year = {2024}\n}\n"
+      doi: 10.18653/v1/2024.emnlp-main.47
+    bibtex: "@inproceedings{longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  booktitle =\
+      \ {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},\n\
+      \  title = {LongEmbed: Extending Embedding Models for\
+      \ Long Context Retrieval},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n\
+      \  doi = {10.18653/v1/2024.emnlp-main.47},\n  year = {2024}\n}\n"
     query_text_stats:
       count: 100
       min_chars: 33
@@ -348,7 +353,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2020.acl-main.207
-    bibtex: "@inproceedings{cohan2020specter,\n  author = {Cohan, Arman and Feldman, Sergey\
+    bibtex: "@inproceedings{specter,\n  author = {Cohan, Arman and Feldman, Sergey\
       \ and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {ACL},\n  title\
       \ = {SPECTER: Document-level Representation Learning using Citation-informed Transformers},\n\
       \  year = {2020},\n  url = {https://aclanthology.org/2020.acl-main.207/},\n  doi =\
@@ -383,10 +388,10 @@ task_metadata:
       - Qiang Ning
       - Parisa Kordjamshidi
       year: 2021
-      url: https://arxiv.org/abs/2104.05832
+      url: https://aclanthology.org/2021.naacl-main.364/
       is_paper: true
       source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2104.05832
+      doi: 10.18653/v1/2021.naacl-main.364
     - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
       - Chenghao Xiao
@@ -396,11 +401,14 @@ task_metadata:
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@article{mirzaee2021spartqa,\n  author = {Mirzaee, Roshanak and Faghihi, Hossein\
-      \ Rajaby and Ning, Qiang and Kordjamshidi, Parisa},\n  journal = {arXiv preprint arXiv:2104.05832},\n\
+    bibtex: "@inproceedings{spartqa,\n  author = {Mirzaee, Roshanak and Faghihi, Hossein\
+      \ Rajaby and Ning, Qiang and Kordjamshidi, Parisa},\n  booktitle = {Proceedings of\
+      \ the 2021 Conference of the North American Chapter of the Association for Computational\
+      \ Linguistics: Human Language Technologies},\n\
       \  title = {SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning},\n\
-      \  year = {2021},\n  url = {https://arxiv.org/abs/2104.05832},\n  doi = {10.48550/arXiv.2104.05832}\n\
-      }\n@article{xiao2024rar,\n  author = {Xiao, Chenghao and Hudson, G.\
+      \  year = {2021},\n  url = {https://aclanthology.org/2021.naacl-main.364/},\n  doi\
+      \ = {10.18653/v1/2021.naacl-main.364}\n\
+      }\n@article{rarb,\n  author = {Xiao, Chenghao and Hudson, G.\
       \ Thomas and Moubayed, Noura Al},\n  journal = {arXiv preprint arXiv:2404.06347},\n\
       \  title = {RAR-b: Reasoning as Retrieval Benchmark},\n  year = {2024}\n}\n"
     query_text_stats:
@@ -432,10 +440,11 @@ task_metadata:
       - Qingyu Tan
       - Hwee Tou Ng
       - Lidong Bing
-      year: 2023
-      url: https://arxiv.org/abs/2306.08952
+      year: 2024
+      url: https://aclanthology.org/2023.acl-long.828/
       is_paper: true
       source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.828
     - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
       - Chenghao Xiao
@@ -445,10 +454,12 @@ task_metadata:
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@article{tan2023tempreason,\n  author = {Tan, Qingyu and Ng, Hwee Tou and Bing,\
-      \ Lidong},\n  journal = {arXiv preprint arXiv:2306.08952},\n  title = {Towards Benchmarking\
+    bibtex: "@inproceedings{tempreason,\n  author = {Tan, Qingyu and Ng, Hwee Tou and Bing,\
+      \ Lidong},\n  booktitle = {Proceedings of the 61st Annual Meeting of the Association\
+      \ for Computational Linguistics (Volume 1: Long Papers)},\n  title = {Towards Benchmarking\
       \ and Improving the Temporal Reasoning Capability of Large Language Models},\n  year\
-      \ = {2023}\n}\n@article{xiao2024rar,\n  author = {Xiao, Chenghao and Hudson, G. Thomas\
+      \ = {2023},\n  url = {https://aclanthology.org/2023.acl-long.828/},\n  doi = {10.18653/v1/2023.acl-long.828}\n\
+      }\n@article{rarb,\n  author = {Xiao, Chenghao and Hudson, G. Thomas\
       \ and Moubayed, Noura Al},\n  journal = {arXiv preprint arXiv:2404.06347},\n  title\
       \ = {RAR-b: Reasoning as Retrieval Benchmark},\n  year = {2024}\n}\n"
     query_text_stats:
@@ -480,10 +491,11 @@ task_metadata:
       - Ronan Le Bras
       - Chandra Bhagavatula
       - Yejin Choi
-      year: 2021
-      url: https://arxiv.org/abs/1907.10641
+      year: 2020
+      url: https://aaai.org/papers/08732-winogrande-an-adversarial-winograd-schema-challenge-at-scale/
       is_paper: true
       source_confidence: definitive_paper_link
+      doi: 10.1609/aaai.v34i05.6399
     - title: 'RAR-b: Reasoning as Retrieval Benchmark'
       authors:
       - Chenghao Xiao
@@ -493,11 +505,12 @@ task_metadata:
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@article{sakaguchi2021winogrande,\n  author = {Sakaguchi, Keisuke and Le Bras,\
-      \ Ronan and Bhagavatula, Chandra and Choi, Yejin},\n  journal = {Communications of the\
-      \ ACM},\n  number = {9},\n  pages = {99--106},\n  title = {WinoGrande: An Adversarial\
-      \ Winograd Schema Challenge at Scale},\n  volume = {64},\n  year = {2021},\n  url =\
-      \ {https://arxiv.org/abs/1907.10641}\n}\n@article{xiao2024rar,\n\
+    bibtex: "@inproceedings{winogrande,\n  author = {Sakaguchi, Keisuke and Le Bras,\
+      \ Ronan and Bhagavatula, Chandra and Choi, Yejin},\n  booktitle = {Proceedings of the\
+      \ AAAI Conference on Artificial Intelligence},\n  number = {05},\n  pages = {8732--8740},\n\
+      \  title = {WinoGrande: An Adversarial Winograd Schema Challenge at Scale},\n  volume\
+      \ = {34},\n  year = {2020},\n  url = {https://aaai.org/papers/08732-winogrande-an-adversarial-winograd-schema-challenge-at-scale/},\n\
+      \  doi = {10.1609/aaai.v34i05.6399}\n}\n@article{rarb,\n\
       \  author = {Xiao, Chenghao and Hudson, G. Thomas and Moubayed, Noura Al},\n  journal\
       \ = {arXiv preprint arXiv:2404.06347},\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  year = {2024}\n}\n"
@@ -537,14 +550,17 @@ task_metadata:
       - Luke Zettlemoyer
       - Madian Khabsa
       year: 2023
-      url: https://arxiv.org/abs/2308.16884
+      url: https://aclanthology.org/2024.acl-long.44/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@article{bandarkar2023belebele,\n  author = {Bandarkar, Lucas and Liang, Davis\
+      doi: 10.18653/v1/2024.acl-long.44
+    bibtex: "@inproceedings{belebele,\n  author = {Bandarkar, Lucas and Liang, Davis\
       \ and Muller, Benjamin and Artetxe, Mikel and Shukla, Satya Narayan and Husa, Donald\
       \ and Goyal, Naman and Krishnan, Abhinandan and Zettlemoyer, Luke and Khabsa, Madian},\n\
-      \  journal = {arXiv preprint arXiv:2308.16884},\n  title = {The Belebele Benchmark:\
-      \ A Parallel Reading Comprehension Dataset in 122 Language Variants},\n  year = {2023}\n\
+      \  booktitle = {Proceedings of the 62nd Annual Meeting of the Association for Computational\
+      \ Linguistics (Volume 1: Long Papers)},\n  title = {The Belebele Benchmark:\
+      \ A Parallel Reading Comprehension Dataset in 122 Language Variants},\n  url = {https://aclanthology.org/2024.acl-long.44/},\n\
+      \  doi = {10.18653/v1/2024.acl-long.44},\n  year = {2024}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -575,14 +591,17 @@ task_metadata:
       - Ruty Rinott
       - Sebastian Riedel
       - Holger Schwenk
-      year: 2019
-      url: https://arxiv.org/abs/1910.07475
+      year: 2020
+      url: https://aclanthology.org/2020.acl-main.653/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@article{lewis2019mlqa,\n  author = {Lewis, Patrick and Oguz, Barlas and Rinott,\
-      \ Ruty and Riedel, Sebastian and Schwenk, Holger},\n  journal = {arXiv preprint arXiv:1910.07475},\n\
-      \  title = {MLQA: Evaluating Cross-lingual Extractive Question Answering},\n  year =\
-      \ {2019}\n}\n"
+      doi: 10.18653/v1/2020.acl-main.653
+    bibtex: "@inproceedings{mlqa,\n  author = {Lewis, Patrick and Oguz, Barlas and Rinott,\
+      \ Ruty and Riedel, Sebastian and Schwenk, Holger},\n  booktitle = {Proceedings of the\
+      \ 58th Annual Meeting of the Association for Computational Linguistics},\n\
+      \  title = {MLQA: Evaluating Cross-lingual Extractive Question Answering},\n  url =\
+      \ {https://aclanthology.org/2020.acl-main.653/},\n  doi = {10.18653/v1/2020.acl-main.653},\n\
+      \  year = {2020}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 7
@@ -612,14 +631,16 @@ task_metadata:
       - Siva Reddy
       - Harm de Vries
       year: 2023
-      url: https://arxiv.org/abs/2304.01412
+      url: https://aclanthology.org/2023.eacl-main.206/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{lu2023statcan,\n  author = {Lu, Xing Han and Reddy, Siva and de\
+      doi: 10.18653/v1/2023.eacl-main.206
+    bibtex: "@inproceedings{statcan,\n  author = {Lu, Xing Han and Reddy, Siva and de\
       \ Vries, Harm},\n  booktitle = {Proceedings of the 17th Conference of the European Chapter\
       \ of the Association for Computational Linguistics},\n  pages = {2799--2829},\n  title\
       \ = {The StatCan Dialogue Dataset: Retrieving Data Tables through Conversations with\
-      \ Genuine Intents},\n  url = {https://arxiv.org/abs/2304.01412},\n  year = {2023}\n\
+      \ Genuine Intents},\n  url = {https://aclanthology.org/2023.eacl-main.206/},\n  doi = {10.18653/v1/2023.eacl-main.206},\n\
+      \  year = {2023}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -649,7 +670,7 @@ task_metadata:
       url: https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{ellamind2024wikipediaretrieval,\n  author = {{EllaMind contributors}},\n\
+    bibtex: "@misc{wiki_retrieval,\n  author = {{EllaMind contributors}},\n\
       \  title = {Wikipedia 2023-11 Retrieval Multilingual Queries},\n  url = {https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries},\n\
       \  year = {2024}\n}\n"
     query_text_stats:
@@ -686,14 +707,17 @@ task_metadata:
       - Luxi Xing
       - Ping Yang
       year: 2022
-      url: https://arxiv.org/abs/2203.03367
+      url: https://doi.org/10.1145/3477495.3531736
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{long2022multicpr,\n  archiveprefix = {arXiv},\n  author = {Long, Dingkun\
+      doi: 10.1145/3477495.3531736
+    bibtex: "@inproceedings{multicpr,\n  author = {Long, Dingkun\
       \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
-      \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  eprint = {2203.03367},\n\
-      \  primaryclass = {cs.IR},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for\
-      \ Passage Retrieval},\n  url = {https://arxiv.org/abs/2203.03367},\n  year = {2022}\n\
+      \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings\
+      \ of the 45th International ACM SIGIR Conference on Research and Development in Information\
+      \ Retrieval},\n  pages = {3046--3056},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for\
+      \ Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n  doi = {10.1145/3477495.3531736},\n\
+      \  year = {2022}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -727,15 +751,19 @@ task_metadata:
       - Benjamin Van Durme
       - Dawn Lawrie
       - Luca Soldaini
-      year: 2024
-      url: https://arxiv.org/abs/2403.15246
+      year: 2025
+      url: https://aclanthology.org/2025.naacl-long.597/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{weller2024followir,\n  archiveprefix = {arXiv},\n  author = {Weller, Orion\
+      doi: 10.18653/v1/2025.naacl-long.597
+    bibtex: "@inproceedings{followir,\n  author = {Weller, Orion\
       \ and Chang, Benjamin and MacAvaney, Sean and Lo, Kyle and Cohan, Arman and Van Durme,\
-      \ Benjamin and Lawrie, Dawn and Soldaini, Luca},\n  eprint = {2403.15246},\n  primaryclass\
-      \ = {cs.IR},\n  title = {FollowIR: Evaluating and Teaching Information Retrieval Models\
-      \ to Follow Instructions},\n  year = {2024}\n}\n"
+      \ Benjamin and Lawrie, Dawn and Soldaini, Luca},\n  booktitle = {Proceedings of the\
+      \ 2025 Conference of the Nations of the Americas Chapter of the Association for Computational\
+      \ Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  pages = {11926--11942},\n\
+      \  title = {FollowIR: Evaluating and Teaching Information Retrieval Models\
+      \ to Follow Instructions},\n  url = {https://aclanthology.org/2025.naacl-long.597/},\n\
+      \  doi = {10.18653/v1/2025.naacl-long.597},\n  year = {2025}\n}\n"
     query_text_stats:
       count: 6
       min_chars: 43
@@ -774,7 +802,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
+    bibtex: "@article{miracl,\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
       \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
       \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  doi = {10.1162/tacl_a_00595},\n\
       \  journal = {Transactions of the Association for Computational Linguistics},\n  pages\

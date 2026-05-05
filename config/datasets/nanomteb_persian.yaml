@@ -307,7 +307,7 @@ task_metadata:
     description: NanoPersianWebDocument evaluates Persian web information retrieval over real-world web documents and user-style queries, using a compact split of the PersianWebDocumentRetrieval task.
     citation_keys:
     - zinvandi2025famteb
-    - pourbahman2024persianwebdocument
+    - zinvandi2024persianwebdocument
     - mteb2025persianwebdocument
     references:
     - title: 'FaMTEB: Massive Text Embedding Benchmark in Persian Language'
@@ -326,11 +326,15 @@ task_metadata:
       doi: 10.18653/v1/2025.findings-emnlp.614
     - title: Persian Web Document Retrieval Corpus
       authors:
+      - Erfan Zinvandi
+      - Morteza Alikhani
       - Zahra Pourbahman
+      - Reza Kazemi
+      - Arash Amini
       year: 2024
       url: https://ieeexplore.ieee.org/document/10553090
       is_paper: true
-      source_confidence: probably_correct
+      source_confidence: definitive_paper_link
     - title: PersianWebDocumentRetrieval
       authors:
       - MTEB contributors
@@ -348,9 +352,10 @@ task_metadata:
         url = {https://aclanthology.org/2025.findings-emnlp.614/},
         doi = {10.18653/v1/2025.findings-emnlp.614}
       }
-      @misc{pourbahman2024persianwebdocument,
+      @inproceedings{zinvandi2024persianwebdocument,
         title = {Persian Web Document Retrieval Corpus},
-        author = {Pourbahman, Zahra},
+        author = {Zinvandi, Erfan and Alikhani, Morteza and Pourbahman, Zahra and Kazemi, Reza and Amini, Arash},
+        booktitle = {2024 12th Iran Workshop on Communication and Information Theory},
         year = {2024},
         url = {https://ieeexplore.ieee.org/document/10553090}
       }

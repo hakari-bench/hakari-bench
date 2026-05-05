@@ -34,8 +34,8 @@ metadata:
     title: 'BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language'
     authors:
     - Konrad Wojtasik
-    - Vadim Shishkin
     - Kacper Wołowiec
+    - Vadim Shishkin
     - Arkadiusz Janz
     - Maciej Piasecki
     year: 2024
@@ -45,7 +45,7 @@ metadata:
   bibtex: &beirpl_bibtex |
     @inproceedings{wojtasik2024beirpl,
       title = {{BEIR-PL}: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author = {Wojtasik, Konrad and Shishkin, Vadim and Wolowiec, Kacper and Janz, Arkadiusz and Piasecki, Maciej},
+      author = {Wojtasik, Konrad and Wo{\l}owiec, Kacper and Shishkin, Vadim and Janz, Arkadiusz and Piasecki, Maciej},
       booktitle = {Proceedings of LREC-COLING},
       year = {2024},
       url = {https://aclanthology.org/2024.lrec-main.194/}
@@ -75,7 +75,7 @@ task_metadata:
     bibtex: &cqadup_bibtex |
       @inproceedings{wojtasik2024beirpl,
         title = {{BEIR-PL}: Zero Shot Information Retrieval Benchmark for the Polish Language},
-        author = {Wojtasik, Konrad and Shishkin, Vadim and Wolowiec, Kacper and Janz, Arkadiusz and Piasecki, Maciej},
+        author = {Wojtasik, Konrad and Wo{\l}owiec, Kacper and Shishkin, Vadim and Janz, Arkadiusz and Piasecki, Maciej},
         booktitle = {Proceedings of LREC-COLING},
         year = {2024},
         url = {https://aclanthology.org/2024.lrec-main.194/}
@@ -188,7 +188,7 @@ task_metadata:
     bibtex: |
       @inproceedings{wojtasik2024beirpl,
         title = {{BEIR-PL}: Zero Shot Information Retrieval Benchmark for the Polish Language},
-        author = {Wojtasik, Konrad and Shishkin, Vadim and Wolowiec, Kacper and Janz, Arkadiusz and Piasecki, Maciej},
+        author = {Wojtasik, Konrad and Wo{\l}owiec, Kacper and Shishkin, Vadim and Janz, Arkadiusz and Piasecki, Maciej},
         booktitle = {Proceedings of LREC-COLING},
         year = {2024},
         url = {https://aclanthology.org/2024.lrec-main.194/}
@@ -240,7 +240,7 @@ task_metadata:
     bibtex: &nqpl_bibtex |
       @inproceedings{wojtasik2024beirpl,
         title = {{BEIR-PL}: Zero Shot Information Retrieval Benchmark for the Polish Language},
-        author = {Wojtasik, Konrad and Shishkin, Vadim and Wolowiec, Kacper and Janz, Arkadiusz and Piasecki, Maciej},
+        author = {Wojtasik, Konrad and Wo{\l}owiec, Kacper and Shishkin, Vadim and Janz, Arkadiusz and Piasecki, Maciej},
         booktitle = {Proceedings of LREC-COLING},
         year = {2024},
         url = {https://aclanthology.org/2024.lrec-main.194/}
@@ -287,7 +287,7 @@ task_metadata:
     bibtex: |
       @inproceedings{sawczyn2024pugg,
         title = {Developing {PUGG} for {P}olish: A Modern Approach to {KBQA}, {MRC}, and {IR} Dataset Construction},
-        author = {Sawczyn, Albert and Viarenich, Katsiaryna and Wojtasik, Konrad and Domogala, Aleksandra and Oleksy, Marcin and Piasecki, Maciej and Kajdanowicz, Tomasz},
+        author = {Sawczyn, Albert and Viarenich, Katsiaryna and Wojtasik, Konrad and Domoga{\l}a, Aleksandra and Oleksy, Marcin and Piasecki, Maciej and Kajdanowicz, Tomasz},
         booktitle = {Findings of ACL},
         year = {2024},
         url = {https://aclanthology.org/2024.findings-acl.652/},
@@ -314,7 +314,7 @@ task_metadata:
     bibtex: &quorapl_bibtex |
       @inproceedings{wojtasik2024beirpl,
         title = {{BEIR-PL}: Zero Shot Information Retrieval Benchmark for the Polish Language},
-        author = {Wojtasik, Konrad and Shishkin, Vadim and Wolowiec, Kacper and Janz, Arkadiusz and Piasecki, Maciej},
+        author = {Wojtasik, Konrad and Wo{\l}owiec, Kacper and Shishkin, Vadim and Janz, Arkadiusz and Piasecki, Maciej},
         booktitle = {Proceedings of LREC-COLING},
         year = {2024},
         url = {https://aclanthology.org/2024.lrec-main.194/}

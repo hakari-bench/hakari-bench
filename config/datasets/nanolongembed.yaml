@@ -36,9 +36,8 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2024.emnlp-main.47
-  bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang, Nan\
-    \ and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv preprint\
-    \ arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for Long Context\
+  bibtex: "@inproceedings{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang, Nan\
+    \ and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},\n  pages = {802--816},\n  title = {LongEmbed: Extending Embedding Models for Long Context\
     \ Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n}\n"
 task_metadata:
   NanoNarrativeQA:
@@ -79,9 +78,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00023
-    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
-      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
-      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+    bibtex: "@inproceedings{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},\n  pages = {802--816},\n  title = {LongEmbed: Extending Embedding Models for\
       \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
       }\n@article{kocisky2018narrativeqa,\n  author = {Kocisky, Tomas and Schwarz, Jonathan\
       \ and Blunsom, Phil and Dyer, Chris and Hermann, Karl Moritz and Melis, Gabor and Grefenstette,\
@@ -135,9 +133,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2022.acl-long.589
-    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
-      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
-      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+    bibtex: "@inproceedings{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},\n  pages = {802--816},\n  title = {LongEmbed: Extending Embedding Models for\
       \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
       }\n@inproceedings{chen2022summscreen,\n  author = {Chen, Mingda and Chu, Zewei and Wiseman,\
       \ Sam and Gimpel, Kevin},\n  booktitle = {Proceedings of the 60th Annual Meeting of\
@@ -199,9 +196,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2021.naacl-main.472
-    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
-      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
-      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+    bibtex: "@inproceedings{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},\n  pages = {802--816},\n  title = {LongEmbed: Extending Embedding Models for\
       \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
       }\n@inproceedings{zhong2021qmsum,\n  author = {Zhong, Ming and Yin, Da and Yu, Tao and\
       \ Zaidi, Ahmad and Mutuma, Mutethia and Jha, Rahul and Awadallah, Ahmed Hassan and Celikyilmaz,\
@@ -257,15 +253,15 @@ task_metadata:
       url: https://aclanthology.org/2020.coling-main.580
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
-      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
-      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+      doi: 10.18653/v1/2020.coling-main.580
+    bibtex: "@inproceedings{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},\n  pages = {802--816},\n  title = {LongEmbed: Extending Embedding Models for\
       \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
       }\n@inproceedings{ho2020constructing,\n  author = {Ho, Xanh and Nguyen, Anh-Khoa Duong\
       \ and Sugawara, Saku and Aizawa, Akiko},\n  booktitle = {Proceedings of the 28th International\
       \ Conference on Computational Linguistics},\n  title = {Constructing A Multi-hop QA\
       \ Dataset for Comprehensive Evaluation of Reasoning Steps},\n  year = {2020},\n  url\
-      \ = {https://aclanthology.org/2020.coling-main.580}\n}\n"
+      \ = {https://aclanthology.org/2020.coling-main.580},\n  doi = {10.18653/v1/2020.coling-main.580}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 36
@@ -301,9 +297,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2024.emnlp-main.47
-    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
-      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
-      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+    bibtex: "@inproceedings{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},\n  pages = {802--816},\n  title = {LongEmbed: Extending Embedding Models for\
       \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
       }\n"
     query_text_stats:
@@ -341,9 +336,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2024.emnlp-main.47
-    bibtex: "@article{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
-      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  journal = {arXiv\
-      \ preprint arXiv:2404.12096},\n  title = {LongEmbed: Extending Embedding Models for\
+    bibtex: "@inproceedings{zhu2024longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
+      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},\n  pages = {802--816},\n  title = {LongEmbed: Extending Embedding Models for\
       \ Long Context Retrieval},\n  year = {2024},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n  doi = {10.18653/v1/2024.emnlp-main.47}\n\
       }\n"
     query_text_stats:
