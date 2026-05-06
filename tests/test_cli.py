@@ -113,7 +113,8 @@ def test_parse_args_accepts_structured_params_json() -> None:
             (
                 '{"model":{"source":"/local_model_A/","alias":"model_A"},'
                 '"target":{"collections":["MNanoBEIR"]},'
-                '"runtime":{"batch_size":16,"dtype":"fp16"},'
+                '"runtime":{"batch_size":16,"dtype":"fp16",'
+                '"encode_devices":["cuda:0","cuda:1"],"encode_chunk_size":64},'
                 '"output":{"results_dir":"output/custom","overwrite":true}}'
             ),
         ]
@@ -125,8 +126,28 @@ def test_parse_args_accepts_structured_params_json() -> None:
     assert args.dataset == []
     assert args.batch_size == 16
     assert args.dtype == "fp16"
+    assert args.encode_devices == ["cuda:0", "cuda:1"]
+    assert args.encode_chunk_size == 64
     assert args.results_dir == "output/custom"
     assert args.overwrite is True
+
+
+def test_parse_args_accepts_dense_encode_devices() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "dense",
+            "--model",
+            "hotchpotch/model",
+            "--encode-devices",
+            "cuda:0,cuda:1",
+            "--encode-chunk-size",
+            "128",
+        ]
+    )
+
+    assert args.encode_devices == ["cuda:0", "cuda:1"]
+    assert args.encode_chunk_size == 128
 
 
 def test_parse_args_rejects_unknown_params_json_key() -> None:

@@ -120,6 +120,9 @@ def evaluate_dense_task(
     aggregate_metric: str = "ndcg@10",
     score_device: str = "auto",
     rerank_top_n: int = 100,
+    encode_devices: list[str] | None = None,
+    encode_chunk_size: int | None = None,
+    encode_pool: dict[str, Any] | None = None,
 ) -> TaskEvaluation:
     query_ids = list(dataset.queries)
     corpus_ids = list(dataset.corpus)
@@ -133,37 +136,48 @@ def evaluate_dense_task(
         or _embedding_variants_use_torch_quantized_scoring(embedding_variants or [])
     )
 
-    query_start = time.perf_counter()
-    query_embeddings = _encode(
-        model,
-        role="query",
-        sentences=query_texts,
-        batch_size=batch_size,
-        show_progress=show_progress,
-        prompt=query_prompt,
-        prompt_name=query_prompt_name,
-        task=query_task,
-        truncate_dim=truncate_dim,
-        prefer_tensor=prefer_tensor_embeddings,
-        score_device=score_device,
-    )
-    query_seconds = time.perf_counter() - query_start
+    owns_encode_pool = encode_pool is None
+    if encode_pool is None:
+        encode_pool = start_encode_pool(model, encode_devices)
+    try:
+        query_start = time.perf_counter()
+        query_embeddings = _encode(
+            model,
+            role="query",
+            sentences=query_texts,
+            batch_size=batch_size,
+            show_progress=show_progress,
+            prompt=query_prompt,
+            prompt_name=query_prompt_name,
+            task=query_task,
+            truncate_dim=truncate_dim,
+            prefer_tensor=prefer_tensor_embeddings,
+            score_device=score_device,
+            encode_pool=encode_pool,
+            encode_chunk_size=encode_chunk_size,
+        )
+        query_seconds = time.perf_counter() - query_start
 
-    corpus_start = time.perf_counter()
-    corpus_embeddings = _encode(
-        model,
-        role="document",
-        sentences=corpus_texts,
-        batch_size=batch_size,
-        show_progress=show_progress,
-        prompt=corpus_prompt,
-        prompt_name=corpus_prompt_name,
-        task=corpus_task,
-        truncate_dim=truncate_dim,
-        prefer_tensor=prefer_tensor_embeddings,
-        score_device=score_device,
-    )
-    corpus_seconds = time.perf_counter() - corpus_start
+        corpus_start = time.perf_counter()
+        corpus_embeddings = _encode(
+            model,
+            role="document",
+            sentences=corpus_texts,
+            batch_size=batch_size,
+            show_progress=show_progress,
+            prompt=corpus_prompt,
+            prompt_name=corpus_prompt_name,
+            task=corpus_task,
+            truncate_dim=truncate_dim,
+            prefer_tensor=prefer_tensor_embeddings,
+            score_device=score_device,
+            encode_pool=encode_pool,
+            encode_chunk_size=encode_chunk_size,
+        )
+        corpus_seconds = time.perf_counter() - corpus_start
+    finally:
+        if owns_encode_pool:
+            stop_encode_pool(model, encode_pool)
     query_embeddings = _move_embeddings_for_score_device(query_embeddings, score_device=score_device)
     corpus_embeddings = _move_embeddings_for_score_device(corpus_embeddings, score_device=score_device)
     base_postprocess_steps = _base_sparse_truncation_steps(
@@ -720,6 +734,8 @@ def _encode(
     truncate_dim: int | None,
     prefer_tensor: bool = False,
     score_device: str = "auto",
+    encode_pool: dict[str, Any] | None = None,
+    encode_chunk_size: int | None = None,
 ) -> Any:
     encode_fn = None if task is not None else getattr(model, "encode_query" if role == "query" else "encode_document", None)
     if encode_fn is None:
@@ -734,8 +750,24 @@ def _encode(
         kwargs["task"] = task
     if truncate_dim is not None:
         kwargs["truncate_dim"] = truncate_dim
+    if encode_pool is not None:
+        if not _accepts_encode_parameter(encode_fn, "pool"):
+            raise ValueError(
+                "Multi-process SentenceTransformers encode was requested, but the selected encode method "
+                f"does not accept a 'pool' parameter for {role} embeddings."
+            )
+        kwargs["pool"] = encode_pool
+        if encode_chunk_size is not None:
+            if not _accepts_encode_parameter(encode_fn, "chunk_size"):
+                raise ValueError(
+                    "Multi-process SentenceTransformers encode was requested with --encode-chunk-size, "
+                    f"but the selected encode method does not accept a 'chunk_size' parameter for {role} embeddings."
+                )
+            kwargs["chunk_size"] = encode_chunk_size
 
     if _accepts_encode_parameter(encode_fn, "convert_to_sparse_tensor"):
+        if encode_pool is not None:
+            raise ValueError("Multi-process encode is not supported for sparse tensor encoding.")
         sparse_kwargs: dict[str, Any] = {
             "convert_to_tensor": True,
             "convert_to_sparse_tensor": True,
@@ -756,6 +788,30 @@ def _encode(
         return encode_fn(sentences, convert_to_numpy=True, **kwargs)
     except TypeError:
         return encode_fn(sentences, **kwargs)
+
+
+def start_encode_pool(model: Any, encode_devices: list[str] | None) -> dict[str, Any] | None:
+    if not encode_devices:
+        return None
+    start_pool = getattr(model, "start_multi_process_pool", None)
+    if not callable(start_pool):
+        raise ValueError(
+            "Multi-process SentenceTransformers encode was requested, but the loaded model does not provide "
+            "start_multi_process_pool()."
+        )
+    return cast(dict[str, Any], start_pool(target_devices=encode_devices))
+
+
+def stop_encode_pool(model: Any, encode_pool: dict[str, Any] | None) -> None:
+    if encode_pool is None:
+        return
+    stop_pool = getattr(model, "stop_multi_process_pool", None)
+    if not callable(stop_pool):
+        raise ValueError(
+            "Multi-process SentenceTransformers encode was started, but the loaded model does not provide "
+            "stop_multi_process_pool()."
+        )
+    stop_pool(encode_pool)
 
 
 def _move_embeddings_for_score_device(embeddings: Any, *, score_device: str) -> Any:

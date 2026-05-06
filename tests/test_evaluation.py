@@ -120,6 +120,42 @@ class FakeDenseModel:
         return np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]])
 
 
+class FakeMultiProcessDenseModel(FakeDenseModel):
+    def __init__(self) -> None:
+        super().__init__()
+        self.started_devices: list[str] | None = None
+        self.stopped_pool: dict[str, object] | None = None
+
+    def start_multi_process_pool(self, target_devices: list[str] | None = None) -> dict[str, object]:
+        self.started_devices = target_devices
+        return {"target_devices": target_devices, "processes": []}
+
+    def stop_multi_process_pool(self, pool: dict[str, object]) -> None:
+        self.stopped_pool = pool
+
+    def encode_query(
+        self,
+        sentences: list[str],
+        *,
+        pool: dict[str, object] | None = None,
+        chunk_size: int | None = None,
+        **kwargs: object,
+    ) -> np.ndarray:
+        self.query_calls.append({"sentences": sentences, "pool": pool, "chunk_size": chunk_size, **kwargs})
+        return np.array([[1.0, 0.0], [0.0, 1.0]])
+
+    def encode_document(
+        self,
+        sentences: list[str],
+        *,
+        pool: dict[str, object] | None = None,
+        chunk_size: int | None = None,
+        **kwargs: object,
+    ) -> np.ndarray:
+        self.document_calls.append({"sentences": sentences, "pool": pool, "chunk_size": chunk_size, **kwargs})
+        return np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]])
+
+
 class FakeCudaDenseModel:
     similarity_fn_name = "dot"
     prompts = {"query": "query: ", "document": "document: "}
@@ -1957,6 +1993,99 @@ def test_run_or_load_task_records_score_device(tmp_path: Path) -> None:
     assert result.payload["config"]["retrieval_score_device"] == "cpu"
     base_metadata = result.payload["evaluation"]["embedding_evaluations"][0]["embedding_metadata"]
     assert "device" not in base_metadata["query"]
+
+
+def test_evaluate_dense_task_uses_sentence_transformer_multi_process_pool() -> None:
+    model = FakeMultiProcessDenseModel()
+
+    result = evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        embedding_variants=[],
+        score_device="cpu",
+        rerank_top_n=100,
+        encode_devices=["cuda:0", "cuda:1"],
+        encode_chunk_size=16,
+    )
+
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+    assert model.started_devices == ["cuda:0", "cuda:1"]
+    assert model.stopped_pool == {"target_devices": ["cuda:0", "cuda:1"], "processes": []}
+    assert model.query_calls[0]["pool"] is model.stopped_pool
+    assert model.document_calls[0]["pool"] is model.stopped_pool
+    assert model.query_calls[0]["chunk_size"] == 16
+    assert model.document_calls[0]["chunk_size"] == 16
+
+
+def test_evaluate_dense_task_reuses_supplied_sentence_transformer_multi_process_pool() -> None:
+    model = FakeMultiProcessDenseModel()
+    pool = {"target_devices": ["cuda:0", "cuda:1"], "processes": []}
+
+    result = evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        embedding_variants=[],
+        score_device="cpu",
+        rerank_top_n=100,
+        encode_pool=pool,
+        encode_chunk_size=16,
+    )
+
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+    assert model.started_devices is None
+    assert model.stopped_pool is None
+    assert model.query_calls[0]["pool"] is pool
+    assert model.document_calls[0]["pool"] is pool
+
+
+def test_run_or_load_task_records_encode_devices(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        truncate_sparse_query_max_dims=None,
+        truncate_sparse_docs_max_dims=None,
+        embedding_variants=[],
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        score_device="cpu",
+        encode_devices=["cuda:0", "cuda:1"],
+        encode_chunk_size=16,
+        override=False,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeMultiProcessDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"id": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    assert result.payload["config"]["encode_devices"] == ["cuda:0", "cuda:1"]
+    assert result.payload["config"]["encode_chunk_size"] == 16
 
 
 def test_run_or_load_task_records_truncate_sparse_max_dims(tmp_path: Path) -> None:

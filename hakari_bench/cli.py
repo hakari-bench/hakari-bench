@@ -23,7 +23,7 @@ from hakari_bench.embedding_variants import (
     default_dense_quantized_embedding_variants,
     parse_embedding_variants,
 )
-from hakari_bench.evaluation import LoadedIrDataset, load_ir_dataset
+from hakari_bench.evaluation import LoadedIrDataset, load_ir_dataset, start_encode_pool, stop_encode_pool
 from hakari_bench.models import (
     ModelLoadConfig,
     collect_model_metadata,
@@ -139,6 +139,21 @@ def _add_evaluate_runtime_args(parser: argparse.ArgumentParser) -> None:
             "Device policy for post-encode retrieval score/top-k matrix work. "
             "Use cpu or cuda to force supported matrix work onto that device."
         ),
+    )
+    parser.add_argument(
+        "--encode-devices",
+        action="append",
+        default=None,
+        help=(
+            "SentenceTransformers encode devices for multi-process inference. "
+            "Repeat or comma-separate, for example: cuda:0,cuda:1."
+        ),
+    )
+    parser.add_argument(
+        "--encode-chunk-size",
+        type=int,
+        default=None,
+        help="Optional SentenceTransformers multi-process encode chunk size.",
     )
     parser.add_argument("--trust-remote-code", action="store_true")
     parser.add_argument("--model-max-seq-length", type=int, default=None)
@@ -294,6 +309,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error(str(exc))
         _apply_model_identity(args)
         _bridge_new_evaluate_args(args)
+        try:
+            args.encode_devices = _comma_separated_values(getattr(args, "encode_devices", None), "--encode-devices")
+        except ValueError as exc:
+            parser.error(str(exc))
+        if args.encode_chunk_size is not None and args.encode_chunk_size <= 0:
+            parser.error("--encode-chunk-size must be positive.")
+        if args.encode_chunk_size is not None and not args.encode_devices:
+            parser.error("--encode-chunk-size requires --encode-devices.")
+        if args.model_type != "dense" and args.encode_devices:
+            parser.error("--encode-devices requires evaluate dense.")
         has_explicit_embedding_variants = bool(args.embedding_variant_values or args.embedding_variant_grid_values)
         try:
             args.embedding_variants = parse_embedding_variants(
@@ -390,6 +415,8 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
     args.dtype = getattr(args, "dtype", "bf16")
     args.trust_remote_code = getattr(args, "trust_remote_code", False)
     args.truncate_dim = getattr(args, "truncate_dim", None)
+    args.encode_devices = getattr(args, "encode_devices", None)
+    args.encode_chunk_size = getattr(args, "encode_chunk_size", None)
     args.retrieval_score_device = getattr(args, "retrieval_score_device", "auto")
     args.score_device = getattr(args, "retrieval_score_device", "auto")
     args.query_prompt = getattr(args, "query_prompt", None)
@@ -563,6 +590,8 @@ def _apply_runtime_params(args: argparse.Namespace, value: dict[str, Any]) -> No
             "flash_attn2",
             "device",
             "retrieval_score_device",
+            "encode_devices",
+            "encode_chunk_size",
             "trust_remote_code",
             "model_max_seq_length",
             "truncate_dim",
@@ -573,10 +602,12 @@ def _apply_runtime_params(args: argparse.Namespace, value: dict[str, Any]) -> No
     for key in ("dtype", "attn_implementation", "device", "retrieval_score_device"):
         if key in value:
             setattr(args, key, _optional_string_param(value[key], f"params.runtime.{key}"))
+    if "encode_devices" in value:
+        args.encode_devices = _string_list_param(value["encode_devices"], "params.runtime.encode_devices")
     for key in ("flash_attn2", "trust_remote_code", "show_progress"):
         if key in value:
             setattr(args, key, _bool_param(value[key], f"params.runtime.{key}"))
-    for key in ("batch_size", "model_max_seq_length", "truncate_dim"):
+    for key in ("batch_size", "encode_chunk_size", "model_max_seq_length", "truncate_dim"):
         if key in value:
             setattr(args, key, _optional_positive_int_param(value[key], f"params.runtime.{key}"))
 
@@ -729,6 +760,19 @@ def _string_list_param(value: Any, path: str) -> list[str]:
     return value
 
 
+def _comma_separated_values(value: list[str] | None, option_name: str) -> list[str] | None:
+    if value is None:
+        return None
+    values: list[str] = []
+    for item in value:
+        for part in item.split(","):
+            part = part.strip()
+            if not part:
+                raise ValueError(f"{option_name} must contain only non-empty values.")
+            values.append(part)
+    return values or None
+
+
 def _grid_param(value: Any, path: str) -> list[list[str]]:
     if not isinstance(value, list):
         raise ValueError(f"{path} must be a list of string lists.")
@@ -873,22 +917,31 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         }
 
     results: list[TaskRunResult] = []
-    for task in tasks:
-        if model is None and result_path_for_task(output_dir=output_dir, model_id=args.model_id, task=task).exists():
-            results.append(_load_cached_task(args=args, task=task))
-            continue
-        if model is None and args.model_type != "bm25":
-            raise RuntimeError("Internal error: model was not loaded for a pending task.")
-        results.append(
-            run_or_load_task(
-                task=task,
-                model=model,
-                args=args,
-                environment=environment,
-                model_metadata=model_metadata,
-                dataset_loader=lambda eval_task: _load_dataset_for_args(args, eval_task),
+    encode_pool = None
+    try:
+        if model is not None and args.model_type == "dense" and args.encode_devices and pending_tasks:
+            encode_pool = start_encode_pool(model, args.encode_devices)
+            args.encode_pool = encode_pool
+        for task in tasks:
+            if model is None and result_path_for_task(output_dir=output_dir, model_id=args.model_id, task=task).exists():
+                results.append(_load_cached_task(args=args, task=task))
+                continue
+            if model is None and args.model_type != "bm25":
+                raise RuntimeError("Internal error: model was not loaded for a pending task.")
+            results.append(
+                run_or_load_task(
+                    task=task,
+                    model=model,
+                    args=args,
+                    environment=environment,
+                    model_metadata=model_metadata,
+                    dataset_loader=lambda eval_task: _load_dataset_for_args(args, eval_task),
+                )
             )
-        )
+    finally:
+        if encode_pool is not None:
+            stop_encode_pool(model, encode_pool)
+            args.encode_pool = None
 
     if not pending_tasks and results and isinstance(results[0].payload.get("model"), dict):
         model_metadata = results[0].payload["model"]

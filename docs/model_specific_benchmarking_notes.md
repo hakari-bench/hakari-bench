@@ -74,3 +74,22 @@ Notes:
   may require task-specific query instructions from their own model cards.
 - Keep the prompts explicit in result metadata when re-running or comparing
   with older results.
+- For `intfloat/multilingual-e5-large`, prefer SDPA over Flash Attention 2 until
+  the FA2 path is revalidated. With `transformers==5.3.0`, `torch==2.9.0`, and
+  `flash-attn==2.8.3`, NanoMIRACL/en scored lower with FA2 than SDPA despite the
+  same prompts and model:
+
+| attention | base | int8 | binary | int8_rescore | binary_rescore |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| FA2 2.8.3 | 0.735197 | 0.742057 | 0.617535 | 0.735197 | 0.728762 |
+| SDPA | 0.747493 | 0.743811 | 0.670783 | 0.743362 | 0.744807 |
+
+Use:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model intfloat/multilingual-e5-large \
+  --attn-implementation sdpa \
+  --query-prompt 'query: ' \
+  --document-prompt 'passage: '
+```

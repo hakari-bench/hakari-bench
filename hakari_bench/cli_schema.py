@@ -39,10 +39,17 @@ class RuntimeParams(ParamsModel):
     flash_attn2: bool | None = None
     device: str | None = None
     retrieval_score_device: Literal["auto", "cpu", "cuda"] | None = None
+    encode_devices: list[str] | None = None
+    encode_chunk_size: int | None = Field(default=None, gt=0)
     trust_remote_code: bool | None = None
     model_max_seq_length: int | None = Field(default=None, gt=0)
     truncate_dim: int | None = Field(default=None, gt=0)
     show_progress: bool | None = None
+
+    @field_validator("encode_devices")
+    @classmethod
+    def validate_encode_devices(cls, value: list[str] | None) -> list[str] | None:
+        return None if value is None else _validate_non_empty_strings(value, "encode_devices")
 
 
 class OutputParams(ParamsModel):

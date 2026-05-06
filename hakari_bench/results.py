@@ -199,6 +199,9 @@ def run_or_load_task(
             aggregate_metric=args.aggregate_metric,
             score_device=getattr(args, "score_device", "auto"),
             rerank_top_n=args.rerank_top_n,
+            encode_devices=getattr(args, "encode_devices", None),
+            encode_chunk_size=getattr(args, "encode_chunk_size", None),
+            encode_pool=getattr(args, "encode_pool", None),
         )
     elapsed = time.perf_counter() - start
     finished_at = datetime.now(timezone.utc)
@@ -240,6 +243,8 @@ def run_or_load_task(
             "sparse_document_max_active_dims": getattr(args, "truncate_sparse_docs_max_dims", None),
             "sparse_truncation": _sparse_truncation_payload(args),
             "retrieval_score_device": getattr(args, "score_device", "auto"),
+            "encode_devices": getattr(args, "encode_devices", None),
+            "encode_chunk_size": getattr(args, "encode_chunk_size", None),
             "embedding_variants": getattr(args, "embedding_variants", []),
             "reranker_init_kwargs": getattr(args, "cross_encoder_kwargs", {})
             if args.model_type == "reranker"
