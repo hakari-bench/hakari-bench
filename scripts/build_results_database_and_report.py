@@ -11,6 +11,7 @@ from typing import Any
 import duckdb
 
 from hakari_bench.datasets import DatasetRegistry
+from hakari_bench.viewer.config import BenchmarkConfig, load_viewer_config
 from hakari_bench.viewer.task_names import (
     canonical_metric_name,
     canonical_split_name,
@@ -20,27 +21,18 @@ from hakari_bench.viewer.task_names import (
 from hakari_bench.warehouse_schema import DatasetMetadataRow, MetricLongRow, TaskDiagnosticRow, TaskResultRow
 
 
-TARGET_BENCHMARKS: list[str] = [
-    "MNanoBEIR",
-    "NanoMTEB-Japanese",
-    "NanoRTEB",
-    "NanoMTEB",
-    "NanoCMTEB",
-    "NanoMMTEB",
-    "NanoMIRACL",
-    "NanoMLDR",
-    "NanoLongEmbed",
-    "NanoCoIR",
-    "NanoIFIR",
-    "NanoLaw",
-    "NanoMedical",
-    "NanoRARb",
-    "NanoBRIGHT",
-    "NanoCodeRAG",
-    "NanoChemTEB",
-    "NanoR2MED",
-    "NanoBuiltBench",
-]
+DEFAULT_VIEWER_CONFIG_DIR = Path("config/viewer")
+
+
+def load_benchmark_configs(config_dir: Path = DEFAULT_VIEWER_CONFIG_DIR) -> list[BenchmarkConfig]:
+    return load_viewer_config(config_dir).benchmarks
+
+
+def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list[str]:
+    return [benchmark.name for benchmark in benchmark_configs]
+
+
+TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
 WAREHOUSE_TABLES = (
     "runs",
@@ -62,6 +54,12 @@ def main() -> None:
     parser.add_argument("--duckdb-path", type=Path, default=Path("output/results/hakari_bench.duckdb"))
     parser.add_argument("--html-output", type=Path, required=True)
     parser.add_argument(
+        "--viewer-config-dir",
+        type=Path,
+        default=DEFAULT_VIEWER_CONFIG_DIR,
+        help="Directory containing viewer benchmark and overall YAML configuration.",
+    )
+    parser.add_argument(
         "--parquet-output-dir",
         type=Path,
         default=None,
@@ -69,9 +67,14 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows = load_results(args.results_dir)
+    benchmark_configs = load_benchmark_configs(args.viewer_config_dir)
+    target_benchmarks = target_benchmark_names(benchmark_configs)
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows = load_results(
+        args.results_dir,
+        benchmark_configs=benchmark_configs,
+    )
     base_rows = [row for row in rows if row.embedding_variant_name is None]
-    standings, borda_rows = compute_standings(base_rows)
+    standings, borda_rows = compute_standings(base_rows, target_benchmarks=target_benchmarks)
     write_duckdb(
         args.duckdb_path,
         runs=runs,
@@ -84,11 +87,20 @@ def main() -> None:
     )
     if args.parquet_output_dir is not None:
         export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
-    write_html(args.html_output, duckdb_path=args.duckdb_path, rows=base_rows, runs=runs, standings=standings)
+    write_html(
+        args.html_output,
+        duckdb_path=args.duckdb_path,
+        rows=base_rows,
+        runs=runs,
+        standings=standings,
+        target_benchmarks=target_benchmarks,
+    )
 
 
 def load_results(
     results_dir: Path,
+    *,
+    benchmark_configs: Sequence[BenchmarkConfig] | None = None,
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -102,14 +114,20 @@ def load_results(
     diagnostic_rows: list[TaskDiagnosticRow] = []
     dataset_metadata_rows: list[DatasetMetadataRow] = []
     registry = DatasetRegistry.load_builtin()
+    benchmark_configs = list(benchmark_configs or load_benchmark_configs())
+    target_benchmarks = set(target_benchmark_names(benchmark_configs))
 
     for result_path in sorted(results_dir.glob("*/*/*.json")):
         task_payload = json.loads(result_path.read_text(encoding="utf-8"))
         target = task_payload.get("target", {})
         if not isinstance(target, dict):
             continue
-        benchmark = benchmark_name(target.get("dataset_id"), target.get("dataset_name"))
-        if benchmark not in TARGET_BENCHMARKS:
+        benchmark = benchmark_name(
+            target.get("dataset_id"),
+            target.get("dataset_name"),
+            benchmark_configs=benchmark_configs,
+        )
+        if benchmark not in target_benchmarks:
             continue
         evaluation = task_payload.get("evaluation", {})
         if not isinstance(evaluation, dict):
@@ -166,6 +184,13 @@ def load_results(
             "max_seq_length": _int_or_none(model.get("max_seq_length")) if isinstance(model, dict) else None,
             "dtype": model.get("dtype") if isinstance(model, dict) else None,
             "attn_implementation": model.get("attn_implementation") if isinstance(model, dict) else None,
+            "query_prompt": _str_or_none(config.get("query_prompt")),
+            "document_prompt": _str_or_none(config.get("document_prompt")),
+            "query_prompt_name": _str_or_none(config.get("query_prompt_name")),
+            "document_prompt_name": _str_or_none(config.get("document_prompt_name")),
+            "query_encode_task": _str_or_none(config.get("query_encode_task")),
+            "document_encode_task": _str_or_none(config.get("document_encode_task")),
+            "trust_remote_code": _bool_or_none(model.get("trust_remote_code")) if isinstance(model, dict) else None,
             "torch_version": package_versions.get("torch"),
             "transformers_version": package_versions.get("transformers"),
             "sentence_transformers_version": package_versions.get("sentence-transformers"),
@@ -336,13 +361,23 @@ def _max_string(current: Any, candidate: Any) -> str | None:
     return max(values) if values else None
 
 
-def benchmark_name(dataset_id: Any, dataset_name: Any) -> str:
+def benchmark_name(
+    dataset_id: Any,
+    dataset_name: Any,
+    *,
+    benchmark_configs: Sequence[BenchmarkConfig] | None = None,
+) -> str:
     value = f"{dataset_id or ''}/{dataset_name or ''}"
-    if "NanoBEIR" in value:
-        return "MNanoBEIR"
-    for name in TARGET_BENCHMARKS[1:]:
-        if name in value:
-            return name
+    benchmark_configs = benchmark_configs or load_benchmark_configs()
+    best_name: str | None = None
+    best_match_length = -1
+    for benchmark in benchmark_configs:
+        for pattern in benchmark.match_patterns:
+            if pattern in value and len(pattern) > best_match_length:
+                best_name = benchmark.name
+                best_match_length = len(pattern)
+    if best_name is not None:
+        return best_name
     return "Other"
 
 
@@ -570,10 +605,15 @@ def _quantization_precision(item: dict[str, Any] | None) -> str | None:
     return None
 
 
-def compute_standings(rows: list[TaskResult]) -> tuple[dict[str, list[dict[str, Any]]], list[dict[str, Any]]]:
+def compute_standings(
+    rows: list[TaskResult],
+    *,
+    target_benchmarks: Sequence[str] | None = None,
+) -> tuple[dict[str, list[dict[str, Any]]], list[dict[str, Any]]]:
     standings: dict[str, list[dict[str, Any]]] = {}
     all_borda_rows: list[dict[str, Any]] = []
-    for view in VIEWS:
+    views = ["Overall", *(target_benchmarks or TARGET_BENCHMARKS)]
+    for view in views:
         view_rows = rows if view == "Overall" else [row for row in rows if row.benchmark == view]
         expected_task_count = len({row.task_key for row in view_rows})
         counts_by_model: dict[str, int] = defaultdict(int)
@@ -737,14 +777,17 @@ def write_duckdb(
                 experiment_fingerprint VARCHAR,
                 active_parameters BIGINT, total_parameters BIGINT, max_seq_length INTEGER, dtype VARCHAR,
                 embedding_variant_name VARCHAR, embedding_dim INTEGER, quantization VARCHAR,
-                attn_implementation VARCHAR, torch_version VARCHAR, transformers_version VARCHAR,
+                attn_implementation VARCHAR,
+                query_prompt VARCHAR, document_prompt VARCHAR, query_prompt_name VARCHAR, document_prompt_name VARCHAR,
+                query_encode_task VARCHAR, document_encode_task VARCHAR, trust_remote_code BOOLEAN,
+                torch_version VARCHAR, transformers_version VARCHAR,
                 sentence_transformers_version VARCHAR, started_at_utc VARCHAR, finished_at_utc VARCHAR,
                 evaluated_at_utc VARCHAR, duration_seconds_including_dataset_load DOUBLE, wall_seconds DOUBLE
             )
             """
         )
         con.executemany(
-            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [row.duckdb_values() for row in rows],
         )
         con.execute(
@@ -874,9 +917,18 @@ def export_duckdb_tables_to_parquet(db_path: Path, output_dir: Path) -> None:
         con.close()
 
 
-def write_html(html_output: Path, *, duckdb_path: Path, rows: list[TaskResult], runs: list[dict[str, Any]], standings: dict[str, list[dict[str, Any]]]) -> None:
+def write_html(
+    html_output: Path,
+    *,
+    duckdb_path: Path,
+    rows: list[TaskResult],
+    runs: list[dict[str, Any]],
+    standings: dict[str, list[dict[str, Any]]],
+    target_benchmarks: Sequence[str] | None = None,
+) -> None:
     html_output.parent.mkdir(parents=True, exist_ok=True)
     generated_at = datetime.now(timezone.utc).isoformat()
+    target_benchmarks = target_benchmarks or TARGET_BENCHMARKS
     data = {
         "generatedAt": generated_at,
         "duckdbPath": str(duckdb_path),
@@ -887,7 +939,7 @@ def write_html(html_output: Path, *, duckdb_path: Path, rows: list[TaskResult], 
             "completeModels": len(standings.get("Overall", [])),
             "benchmarks": [
                 {"name": name, "tasks": len({row.task_key for row in rows if row.benchmark == name})}
-                for name in TARGET_BENCHMARKS
+                for name in target_benchmarks
             ],
             "skipped": [],
         },
@@ -1143,6 +1195,10 @@ def _int_or_none(value: Any) -> int | None:
 
 def _float_or_none(value: Any) -> float | None:
     return float(value) if isinstance(value, int | float) else None
+
+
+def _bool_or_none(value: Any) -> bool | None:
+    return value if isinstance(value, bool) else None
 
 
 def _str_or_none(value: Any) -> str | None:

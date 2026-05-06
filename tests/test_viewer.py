@@ -15,12 +15,29 @@ from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore, resolve_
 
 def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> None:
     config = load_viewer_config()
+    language_nanomteb_benchmarks = [
+        "NanoMTEB-Dutch",
+        "NanoMTEB-French",
+        "NanoMTEB-German",
+        "NanoMTEB-Japanese",
+        "NanoMTEB-Korean",
+        "NanoMTEB-Persian",
+        "NanoMTEB-Polish",
+        "NanoMTEB-Russian",
+        "NanoMTEB-Scandinavian",
+        "NanoMTEB-Spanish",
+        "NanoMTEB-Thai",
+        "NanoMTEB-Vietnamese",
+        "NanoMTEB-Xlingual",
+    ]
     expected_overall_benchmarks = [
         "NanoMMTEB",
         "NanoRTEB",
         "MNanoBEIR",
+        "NanoBIRCO",
         "NanoMLDR",
         "NanoLongEmbed",
+        "NanoDAPFAM",
         "NanoCoIR",
         "NanoIFIR",
         "NanoLaw",
@@ -41,8 +58,10 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "MNanoBEIR",
         "NanoRTEB",
         "NanoMMTEB",
+        "NanoBIRCO",
         "NanoMLDR",
         "NanoLongEmbed",
+        "NanoDAPFAM",
         "NanoCoIR",
         "NanoIFIR",
         "NanoLaw",
@@ -55,8 +74,8 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoBuiltBench",
         "NanoCMTEB",
         "NanoMTEB",
+        *language_nanomteb_benchmarks,
         "NanoMIRACL",
-        "NanoMTEB-Japanese",
     ]
     assert [component.group_by for component in grouped_overall.benchmark_components] == [
         "task_name",
@@ -64,6 +83,8 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "task_name",
         "benchmark",
         "benchmark",
+        "benchmark",
+        "benchmark",
         "task_name",
         "benchmark",
         "benchmark",
@@ -76,7 +97,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "benchmark",
         "benchmark",
         "benchmark",
-        "benchmark",
+        *["benchmark"] * len(language_nanomteb_benchmarks),
         "benchmark",
     ]
     assert config.view_names[: len(expected_overall_benchmarks) + 2] == [
@@ -85,8 +106,10 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         *expected_overall_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
-    assert "NanoMTEB-Japanese" in config.view_names
-    assert "NanoMTEB-Japanese" not in config.overall.benchmark_names
+    assert "NanoBIRCO" in config.view_names
+    assert "NanoDAPFAM" in config.view_names
+    assert all(benchmark in config.view_names for benchmark in language_nanomteb_benchmarks)
+    assert all(benchmark not in config.overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
     assert "NanoCMTEB" in config.view_names
     assert "NanoCMTEB" in config.overall.benchmark_names
     nano_law = config.benchmark_for_view("NanoLaw")
@@ -122,6 +145,33 @@ benchmarks:
 
     with pytest.raises(ValueError, match="language"):
         load_viewer_config(config_dir)
+
+
+def test_viewer_config_loads_benchmark_match_patterns(tmp_path: Path) -> None:
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: BenchA
+    matches:
+      - uploaded/bench-a
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+name: Overall
+label: Overall
+benchmarks:
+  - BenchA
+""".strip(),
+        encoding="utf-8",
+    )
+
+    config = load_viewer_config(config_dir)
+
+    assert config.benchmarks[0].match_patterns == ["uploaded/bench-a"]
 
 
 def test_viewer_config_rejects_unknown_yaml_keys(tmp_path: Path) -> None:
@@ -399,8 +449,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert ">Quantization</summary>" in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
-    assert response.text.count(">All</button>") == 2
-    assert response.text.count(">None</button>") == 2
+    assert response.text.count(">All</button>") == 5
+    assert response.text.count(">None</button>") == 5
     assert 'id="display-controls"' in response.text
     assert 'id="facet-filters"' in response.text
     assert 'from:input[type=' not in response.text
@@ -548,6 +598,112 @@ def test_model_filter_matches_any_whitespace_separated_token_case_insensitively(
     assert "Qwen/Qwen3-Embedding" in response.text
     assert "other/model" in response.text
     assert response.text.count('data-filter-hidden="true"') == 1
+
+
+def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "intfloat/multilingual-e5-small",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.90,
+                10,
+                12,
+                512,
+                "bf16",
+                "flash_attention_2",
+                "query: ",
+                "passage: ",
+                None,
+                None,
+                None,
+                None,
+                False,
+            ),
+            (
+                "google/embeddinggemma-300m",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.80,
+                20,
+                24,
+                2048,
+                "bf16",
+                "sdpa",
+                None,
+                None,
+                "query",
+                "document",
+                None,
+                None,
+                False,
+            ),
+            (
+                "jinaai/jina-embeddings-v5-text-small",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.70,
+                30,
+                36,
+                8192,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                "query",
+                "document",
+                "retrieval",
+                "retrieval",
+                True,
+            ),
+        ],
+        include_runtime_option_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get(
+        "/leaderboard?view=BenchA&filters=1&attn_filter=flash_attention_2&prompt_filter=explicit_prefixes"
+    )
+
+    assert response.status_code == 200
+    assert "Runtime" in response.text
+    assert ">Attention</summary>" in response.text
+    assert ">Dtype</summary>" in response.text
+    assert ">Prompt</summary>" in response.text
+    assert "FA2" in response.text
+    assert "SDPA" in response.text
+    assert "BF16" in response.text
+    assert "Explicit prefixes" in response.text
+    assert "Prompt names" in response.text
+    assert "Prompt names + encode tasks" in response.text
+    assert "remote code" in response.text
+    assert 'name="attn_filter" value="flash_attention_2" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="prompt_filter" value="explicit_prefixes" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'data-shown-count="1"' in response.text
+    assert response.text.count('data-filter-hidden="true"') == 2
+    assert "intfloat/multilingual-e5-small" in response.text
+    assert "google/embeddinggemma-300m" in response.text
 
 
 def test_individual_leaderboard_uses_simple_task_mean() -> None:
@@ -784,6 +940,7 @@ def _write_task_results(
     rows: list[tuple],
     *,
     include_embedding_variant_columns: bool = False,
+    include_runtime_option_columns: bool = False,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
@@ -794,6 +951,21 @@ def _write_task_results(
                 "quantization VARCHAR",
             ]
             if include_embedding_variant_columns
+            else []
+        )
+        runtime_columns = (
+            [
+                "dtype VARCHAR",
+                "attn_implementation VARCHAR",
+                "query_prompt VARCHAR",
+                "document_prompt VARCHAR",
+                "query_prompt_name VARCHAR",
+                "document_prompt_name VARCHAR",
+                "query_encode_task VARCHAR",
+                "document_encode_task VARCHAR",
+                "trust_remote_code BOOLEAN",
+            ]
+            if include_runtime_option_columns
             else []
         )
         columns = [
@@ -808,6 +980,7 @@ def _write_task_results(
             "active_parameters BIGINT",
             "total_parameters BIGINT",
             "max_seq_length INTEGER",
+            *runtime_columns,
             *variant_columns,
         ]
         con.execute(

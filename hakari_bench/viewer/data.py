@@ -28,9 +28,33 @@ class TaskResultRecord(BaseModel):
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
+    dtype: str | None = None
+    attn_implementation: str | None = None
+    query_prompt: str | None = None
+    document_prompt: str | None = None
+    query_prompt_name: str | None = None
+    document_prompt_name: str | None = None
+    query_encode_task: str | None = None
+    document_encode_task: str | None = None
+    trust_remote_code: bool | None = None
     embedding_variant_name: str | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
+
+    @property
+    def prompt_summary(self) -> str:
+        has_explicit_prompt = bool(self.query_prompt or self.document_prompt)
+        has_prompt_name = bool(self.query_prompt_name or self.document_prompt_name)
+        has_encode_task = bool(self.query_encode_task or self.document_encode_task)
+        if has_explicit_prompt:
+            return "explicit prefixes"
+        if has_prompt_name and has_encode_task:
+            return "prompt names + encode tasks"
+        if has_prompt_name:
+            return "prompt names"
+        if has_encode_task:
+            return "encode tasks"
+        return "model default"
 
 
 class TaskResultsRepository:
@@ -61,6 +85,15 @@ class TaskResultsRepository:
             variant_name_expr = _column_or_null(columns, "embedding_variant_name")
             embedding_dim_expr = _column_or_null(columns, "embedding_dim")
             quantization_expr = _column_or_null(columns, "quantization")
+            dtype_expr = _column_or_null(columns, "dtype")
+            attn_expr = _column_or_null(columns, "attn_implementation")
+            query_prompt_expr = _column_or_null(columns, "query_prompt")
+            document_prompt_expr = _column_or_null(columns, "document_prompt")
+            query_prompt_name_expr = _column_or_null(columns, "query_prompt_name")
+            document_prompt_name_expr = _column_or_null(columns, "document_prompt_name")
+            query_encode_task_expr = _column_or_null(columns, "query_encode_task")
+            document_encode_task_expr = _column_or_null(columns, "document_encode_task")
+            trust_remote_code_expr = _column_or_null(columns, "trust_remote_code")
             variant_filter = (
                 ""
                 if include_embedding_variants or "embedding_variant_name" not in columns
@@ -80,6 +113,15 @@ class TaskResultsRepository:
                     active_parameters,
                     total_parameters,
                     max_seq_length,
+                    {dtype_expr} AS dtype,
+                    {attn_expr} AS attn_implementation,
+                    {query_prompt_expr} AS query_prompt,
+                    {document_prompt_expr} AS document_prompt,
+                    {query_prompt_name_expr} AS query_prompt_name,
+                    {document_prompt_name_expr} AS document_prompt_name,
+                    {query_encode_task_expr} AS query_encode_task,
+                    {document_encode_task_expr} AS document_encode_task,
+                    {trust_remote_code_expr} AS trust_remote_code,
                     {variant_name_expr} AS embedding_variant_name,
                     {embedding_dim_expr} AS embedding_dim,
                     {quantization_expr} AS quantization

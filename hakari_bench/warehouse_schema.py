@@ -27,6 +27,13 @@ class TaskResultRow(WarehouseModel):
     max_seq_length: int | None = None
     dtype: str | None = None
     attn_implementation: str | None = None
+    query_prompt: str | None = None
+    document_prompt: str | None = None
+    query_prompt_name: str | None = None
+    document_prompt_name: str | None = None
+    query_encode_task: str | None = None
+    document_encode_task: str | None = None
+    trust_remote_code: bool | None = None
     torch_version: str | None = None
     transformers_version: str | None = None
     sentence_transformers_version: str | None = None
@@ -68,6 +75,13 @@ class TaskResultRow(WarehouseModel):
             self.embedding_dim,
             self.quantization,
             self.attn_implementation,
+            self.query_prompt,
+            self.document_prompt,
+            self.query_prompt_name,
+            self.document_prompt_name,
+            self.query_encode_task,
+            self.document_encode_task,
+            self.trust_remote_code,
             self.torch_version,
             self.transformers_version,
             self.sentence_transformers_version,

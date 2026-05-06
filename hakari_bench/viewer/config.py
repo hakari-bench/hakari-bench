@@ -27,6 +27,7 @@ class BenchmarkConfig(BaseModel):
 
     name: str
     label: str | None = None
+    matches: list[str] = Field(default_factory=list)
     include_in_overall: bool = True
     excluded_tasks: list[str] = Field(default_factory=list)
     score_groups: list[ScoreGroupConfig] = Field(default_factory=list)
@@ -34,6 +35,10 @@ class BenchmarkConfig(BaseModel):
     @property
     def display_label(self) -> str:
         return self.label or self.name
+
+    @property
+    def match_patterns(self) -> list[str]:
+        return self.matches or [self.name]
 
     @property
     def resolved_score_groups(self) -> list[ScoreGroupConfig]:

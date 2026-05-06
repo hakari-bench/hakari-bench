@@ -5,8 +5,10 @@ overalls:
       - NanoMMTEB
       - NanoRTEB
       - MNanoBEIR
+      - NanoBIRCO
       - NanoMLDR
       - NanoLongEmbed
+      - NanoDAPFAM
       - NanoCoIR
       - NanoIFIR
       - NanoLaw
@@ -27,9 +29,13 @@ overalls:
         group_by: task_name
       - name: NanoMMTEB
         group_by: task_name
+      - name: NanoBIRCO
+        group_by: benchmark
       - name: NanoMLDR
         group_by: benchmark
       - name: NanoLongEmbed
+        group_by: benchmark
+      - name: NanoDAPFAM
         group_by: benchmark
       - name: NanoCoIR
         group_by: task_name
@@ -55,7 +61,31 @@ overalls:
         group_by: benchmark
       - name: NanoMTEB
         group_by: benchmark
-      - name: NanoMIRACL
+      - name: NanoMTEB-Dutch
+        group_by: benchmark
+      - name: NanoMTEB-French
+        group_by: benchmark
+      - name: NanoMTEB-German
         group_by: benchmark
       - name: NanoMTEB-Japanese
+        group_by: benchmark
+      - name: NanoMTEB-Korean
+        group_by: benchmark
+      - name: NanoMTEB-Persian
+        group_by: benchmark
+      - name: NanoMTEB-Polish
+        group_by: benchmark
+      - name: NanoMTEB-Russian
+        group_by: benchmark
+      - name: NanoMTEB-Scandinavian
+        group_by: benchmark
+      - name: NanoMTEB-Spanish
+        group_by: benchmark
+      - name: NanoMTEB-Thai
+        group_by: benchmark
+      - name: NanoMTEB-Vietnamese
+        group_by: benchmark
+      - name: NanoMTEB-Xlingual
+        group_by: benchmark
+      - name: NanoMIRACL
         group_by: benchmark

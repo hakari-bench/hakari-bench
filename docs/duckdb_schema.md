@@ -30,10 +30,15 @@ The input files are:
   task-level benchmark results.
 
 `load_results()` determines `benchmark` from `target.dataset_id` and
-`target.dataset_name`, then writes only supported benchmark rows into
-`task_results`. The base embedding result is stored as a row where
+`target.dataset_name` using `config/viewer/benchmarks.yaml`, then writes only
+configured benchmark rows into `task_results`. The base embedding result is
+stored as a row where
 `embedding_variant_name IS NULL`. Derived embedding results from
 `evaluation.embedding_evaluations` are stored as additional variant rows.
+Language-specific `NanoMTEB-*` datasets are stored as distinct benchmark
+groups, separate from the generic English `NanoMTEB` group, so they can be
+opened as individual viewer tabs and included separately in grouped overall
+views.
 Run-level rows in `runs` are derived from these task JSON files; no aggregate
 JSON file is required.
 
@@ -65,8 +70,8 @@ explicit database path.
 
 Leaderboard views are defined in YAML, not in DuckDB.
 
-- `config/viewer/benchmarks.yaml`: benchmark views, display labels, excluded
-  tasks, and benchmark-local score groups.
+- `config/viewer/benchmarks.yaml`: benchmark views, dataset-name matching,
+  display labels, excluded tasks, and benchmark-local score groups.
 - `config/viewer/overall.yaml`: overall views and the benchmarks included in
   each overall view.
 
@@ -76,6 +81,7 @@ Main `benchmarks.yaml` fields:
 | --- | --- |
 | `name` | View name. Must match `task_results.benchmark`. |
 | `label` | UI label. Defaults to `name`. |
+| `matches` | Optional string patterns matched against `{dataset_id}/{dataset_name}` when building DuckDB. Defaults to `[name]`. If multiple benchmarks match, the longest pattern wins. |
 | `include_in_overall` | Descriptive metadata. Actual overall composition is defined by `overall.yaml`. |
 | `excluded_tasks` | Task names or task keys excluded from ranking. Matched against `task_name` and `task_key`. |
 | `score_groups` | Additional metric columns for a benchmark view. These do not change ranking. |
@@ -127,6 +133,13 @@ one model, one benchmark task, and one embedding variant. Base results use
 | `embedding_dim` | `INTEGER` | Embedding dimension for this row. May be present on base rows. |
 | `quantization` | `VARCHAR` | Quantization precision, such as `int8`, `uint8`, or `ubinary`. |
 | `attn_implementation` | `VARCHAR` | Attention implementation, such as `flash_attention_2`. |
+| `query_prompt` | `VARCHAR` | Explicit query prompt/prefix from `config.query_prompt`, such as `query: `. |
+| `document_prompt` | `VARCHAR` | Explicit document prompt/prefix from `config.document_prompt`, such as `passage: `. |
+| `query_prompt_name` | `VARCHAR` | Query prompt name from `config.query_prompt_name`, such as `query`. |
+| `document_prompt_name` | `VARCHAR` | Document prompt name from `config.document_prompt_name`, such as `document`. |
+| `query_encode_task` | `VARCHAR` | Query encode task hint from `config.query_encode_task`, when used by model-specific encoders. |
+| `document_encode_task` | `VARCHAR` | Document encode task hint from `config.document_encode_task`, when used by model-specific encoders. |
+| `trust_remote_code` | `BOOLEAN` | Whether model loading used Hugging Face `trust_remote_code`. |
 | `torch_version` | `VARCHAR` | Torch version used for evaluation. |
 | `transformers_version` | `VARCHAR` | Transformers version used for evaluation. |
 | `sentence_transformers_version` | `VARCHAR` | Sentence Transformers version used for evaluation. |
@@ -388,7 +401,9 @@ choices:
 - Exclude `score IS NULL` rows because they cannot participate in ranking.
 - Read only benchmarks requested by the selected view.
 - Read only base rows when variants are not requested.
-- Select missing variant columns as `NULL` for old DuckDB files.
+- Select missing variant/runtime columns as `NULL` for old DuckDB files.
+- Surface runtime metadata such as dtype, attention implementation, prompt
+  mode, and `trust_remote_code` as display columns and facet filters.
 
 Conceptually, it runs this query:
 
@@ -405,6 +420,15 @@ SELECT
   active_parameters,
   total_parameters,
   max_seq_length,
+  dtype,
+  attn_implementation,
+  query_prompt,
+  document_prompt,
+  query_prompt_name,
+  document_prompt_name,
+  query_encode_task,
+  document_encode_task,
+  trust_remote_code,
   embedding_variant_name,
   embedding_dim,
   quantization
@@ -414,8 +438,9 @@ WHERE benchmark IN ('MNanoBEIR', 'NanoRTEB')
   AND embedding_variant_name IS NULL;
 ```
 
-For older databases without `embedding_variant_name`, `embedding_dim`, or
-`quantization`, the viewer treats those fields as `NULL`.
+For older databases without `embedding_variant_name`, `embedding_dim`,
+`quantization`, prompt, attention, dtype, or remote-code columns, the viewer
+treats those fields as `NULL`.
 
 ## SQL Recipes
 
@@ -933,6 +958,14 @@ FROM task_results
 WHERE benchmark = 'MNanoBEIR'
   AND score IS NOT NULL
 ORDER BY quant_filter_value;
+
+SELECT DISTINCT
+  COALESCE(attn_implementation, '__unknown__') AS attention_filter_value,
+  COALESCE(dtype, '__unknown__') AS dtype_filter_value
+FROM task_results
+WHERE benchmark = 'MNanoBEIR'
+  AND score IS NOT NULL
+ORDER BY attention_filter_value, dtype_filter_value;
 ```
 
 The current viewer applies facet filters as display filters after the ranking

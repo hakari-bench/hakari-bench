@@ -26,6 +26,10 @@ class TaskScore:
     active_parameters: int | None
     total_parameters: int | None
     max_seq_length: int | None
+    dtype: str | None = None
+    attn_implementation: str | None = None
+    prompt_summary: str | None = None
+    trust_remote_code: bool | None = None
     embedding_variant_name: str | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
@@ -45,6 +49,10 @@ class LeaderboardRow(BaseModel):
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
+    dtype: str | None = None
+    attn_implementation: str | None = None
+    prompt_summary: str | None = None
+    trust_remote_code: bool | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
@@ -87,6 +95,10 @@ SORT_COLUMNS = {
     "active_parameters",
     "total_parameters",
     "max_seq_length",
+    "dtype",
+    "attn_implementation",
+    "prompt_summary",
+    "trust_remote_code",
     "embedding_dim",
     "quantization",
 }
@@ -189,6 +201,10 @@ class LeaderboardService:
                     active_parameters=record.active_parameters,
                     total_parameters=record.total_parameters,
                     max_seq_length=record.max_seq_length,
+                    dtype=record.dtype,
+                    attn_implementation=record.attn_implementation,
+                    prompt_summary=record.prompt_summary,
+                    trust_remote_code=record.trust_remote_code,
                     embedding_variant_name=record.embedding_variant_name,
                     embedding_dim=record.embedding_dim,
                     quantization=record.quantization,
@@ -245,6 +261,10 @@ def compute_leaderboard_rows(
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
+                dtype=first.dtype,
+                attn_implementation=first.attn_implementation,
+                prompt_summary=first.prompt_summary,
+                trust_remote_code=first.trust_remote_code,
                 embedding_dim=first.embedding_dim,
                 quantization=first.quantization,
                 metric_values=metric_values,
@@ -349,6 +369,10 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
+                dtype=first.dtype,
+                attn_implementation=first.attn_implementation,
+                prompt_summary=first.prompt_summary,
+                trust_remote_code=first.trust_remote_code,
                 embedding_variant_name=first.embedding_variant_name,
                 embedding_dim=first.embedding_dim,
                 quantization=first.quantization,
