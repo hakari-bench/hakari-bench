@@ -18,34 +18,220 @@ metadata:
   short_description: Scandinavian NanoMTEB retrieval benchmark.
   description: NanoMTEB-Scandinavian is a compact retrieval benchmark for Scandinavian-language MTEB-style
     task families.
+  citation_keys:
+  - enevoldsen2024scandinavian
+  references:
+  - &scandinavian_embedding_ref
+    title: 'The Scandinavian Embedding Benchmarks: Comprehensive Assessment of Multilingual and Monolingual Text Embedding'
+    authors:
+    - Kenneth Enevoldsen
+    - Márton Kardos
+    - Niklas Muennighoff
+    - Kristoffer Laigaard Nielbo
+    year: 2024
+    url: https://arxiv.org/abs/2406.02396
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2406.02396
+  bibtex: &scandinavian_embedding_bibtex |
+    @article{enevoldsen2024scandinavian,
+      title = {The Scandinavian Embedding Benchmarks: Comprehensive Assessment of Multilingual and Monolingual Text Embedding},
+      author = {Enevoldsen, Kenneth and Kardos, M{\'a}rton and Muennighoff, Niklas and Nielbo, Kristoffer Laigaard},
+      journal = {arXiv preprint arXiv:2406.02396},
+      year = {2024},
+      url = {https://arxiv.org/abs/2406.02396},
+      doi = {10.48550/arXiv.2406.02396}
+    }
 task_metadata:
   NanoDanFever:
-    language: multilingual
+    language: da
     category: natural_language
-    short_description: NanoDanFever retrieval task.
-    description: NanoDanFever is a compact retrieval task included in NanoMTEB-Scandinavian.
+    short_description: Danish claim-evidence retrieval.
+    description: A compact Danish retrieval task derived from DanFEVER, retrieving evidence for Danish factual claims.
+    citation_keys:
+    - norregaard-derczynski-2021-danfever
+    references:
+    - &danfever_ref
+      title: 'DanFEVER: claim verification dataset for Danish'
+      authors:
+      - Jeppe Nørregaard
+      - Leon Derczynski
+      year: 2021
+      url: https://aclanthology.org/2021.nodalida-main.47/
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: |
+      @inproceedings{norregaard-derczynski-2021-danfever,
+        title = {{D}an{FEVER}: claim verification dataset for {D}anish},
+        author = {N{\o}rregaard, Jeppe and Derczynski, Leon},
+        booktitle = {Proceedings of the 23rd Nordic Conference on Computational Linguistics (NoDaLiDa)},
+        pages = {422--428},
+        year = {2021},
+        url = {https://aclanthology.org/2021.nodalida-main.47/}
+      }
   NanoNorQuad:
-    language: multilingual
+    language: 'no'
     category: natural_language
-    short_description: NanoNorQuad retrieval task.
-    description: NanoNorQuad is a compact retrieval task included in NanoMTEB-Scandinavian.
+    short_description: Norwegian question-answer retrieval.
+    description: A compact retrieval task derived from NorQuAD, the Norwegian question answering dataset.
+    citation_keys:
+    - ivanova-etal-2023-norquad
+    references:
+    - &norquad_ref
+      title: 'NorQuAD: Norwegian Question Answering Dataset'
+      authors:
+      - Sardana Ivanova
+      - Fredrik Andreassen
+      - Matias Jentoft
+      - Sondre Wold
+      - Lilja Øvrelid
+      year: 2023
+      url: https://aclanthology.org/2023.nodalida-1.17/
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: |
+      @inproceedings{ivanova-etal-2023-norquad,
+        title = {{N}or{Q}u{AD}: {N}orwegian Question Answering Dataset},
+        author = {Ivanova, Sardana and Andreassen, Fredrik and Jentoft, Matias and Wold, Sondre and {\O}vrelid, Lilja},
+        booktitle = {Proceedings of the 24th Nordic Conference on Computational Linguistics (NoDaLiDa)},
+        pages = {159--168},
+        year = {2023},
+        url = {https://aclanthology.org/2023.nodalida-1.17/}
+      }
   NanoSNL:
-    language: multilingual
+    language: 'no'
     category: natural_language
-    short_description: NanoSNL retrieval task.
-    description: NanoSNL is a compact retrieval task included in NanoMTEB-Scandinavian.
+    short_description: Norwegian encyclopedia article retrieval.
+    description: A compact Store Norske Leksikon retrieval task using Norwegian lexicon headlines as queries.
+    citation_keys:
+    - navjord2023beyond
+    references:
+    - &snl_ref
+      title: 'Beyond extractive: advancing abstractive automatic text summarization in Norwegian with transformers'
+      authors:
+      - Jørgen Johnsen Navjord
+      - Jon-Mikkel Ryen Korsvik
+      year: 2023
+      url: https://hdl.handle.net/11250/3079868
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: |
+      @mastersthesis{navjord2023beyond,
+        title = {Beyond extractive: advancing abstractive automatic text summarization in Norwegian with transformers},
+        author = {Navjord, J{\o}rgen Johnsen and Korsvik, Jon-Mikkel Ryen},
+        school = {Norwegian University of Life Sciences, {\AA}s},
+        year = {2023},
+        url = {https://hdl.handle.net/11250/3079868}
+      }
   NanoSweFaq:
-    language: multilingual
+    language: sv
     category: natural_language
-    short_description: NanoSweFaq retrieval task.
-    description: NanoSweFaq is a compact retrieval task included in NanoMTEB-Scandinavian.
+    short_description: Swedish FAQ answer retrieval.
+    description: A compact Swedish FAQ retrieval task distributed through SuperLim 2.
+    citation_keys:
+    - berdicevskis-etal-2023-superlim
+    references:
+    - &superlim_ref
+      title: 'Superlim: A Swedish Language Understanding Evaluation Benchmark'
+      authors:
+      - Aleksandrs Berdicevskis
+      - Gerlof Bouma
+      - Robin Kurtz
+      - Felix Morger
+      - Joey Öhman
+      - Yvonne Adesam
+      - Lars Borin
+      - Dana Dannélls
+      - Markus Forsberg
+      - Tim Isbister
+      - Anna Lindahl
+      - Martin Malmsten
+      - Faton Rekathati
+      - Magnus Sahlgren
+      - Elena Volodina
+      - Love Börjeson
+      - Simon Hengchen
+      - Nina Tahmasebi
+      year: 2023
+      url: https://aclanthology.org/2023.emnlp-main.506/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.emnlp-main.506
+    bibtex: |
+      @inproceedings{berdicevskis-etal-2023-superlim,
+        title = {Superlim: A {S}wedish Language Understanding Evaluation Benchmark},
+        author = {Berdicevskis, Aleksandrs and Bouma, Gerlof and Kurtz, Robin and Morger, Felix and {\"O}hman, Joey and Adesam, Yvonne and Borin, Lars and Dann{\'e}lls, Dana and Forsberg, Markus and Isbister, Tim and Lindahl, Anna and Malmsten, Martin and Rekathati, Faton and Sahlgren, Magnus and Volodina, Elena and B{\"o}rjeson, Love and Hengchen, Simon and Tahmasebi, Nina},
+        booktitle = {Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing},
+        pages = {8137--8153},
+        year = {2023},
+        url = {https://aclanthology.org/2023.emnlp-main.506/},
+        doi = {10.18653/v1/2023.emnlp-main.506}
+      }
   NanoSwedn:
-    language: multilingual
+    language: sv
     category: natural_language
-    short_description: NanoSwedn retrieval task.
-    description: NanoSwedn is a compact retrieval task included in NanoMTEB-Scandinavian.
+    short_description: Swedish news summary retrieval.
+    description: A compact retrieval task derived from SWE-DN, a Swedish Dagens Nyheter news summarization corpus.
+    citation_keys:
+    - monsen2021method
+    - monsen2025swedn
+    references:
+    - &swedn_paper_ref
+      title: A method for building non-English corpora for abstractive text summarization
+      authors:
+      - Julius Monsen
+      - Arne Jönsson
+      year: 2021
+      url: https://www.ida.liu.se/~arnjo82/papers/clarin-21-julius.pdf
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - &swedn_data_ref
+      title: SweDN 1.0
+      authors:
+      - Julius Monsen
+      - Arne Jönsson
+      year: 2025
+      url: https://spraakbanken.gu.se/en/resources/swedn
+      is_paper: false
+      source_confidence: probably_correct
+      doi: 10.23695/36v9-9017
+    bibtex: |
+      @inproceedings{monsen2021method,
+        title = {A method for building non-English corpora for abstractive text summarization},
+        author = {Monsen, Julius and J{\"o}nsson, Arne},
+        booktitle = {Proceedings of the CLARIN Annual Conference},
+        year = {2021},
+        url = {https://www.ida.liu.se/~arnjo82/papers/clarin-21-julius.pdf}
+      }
+      @misc{monsen2025swedn,
+        title = {{SweDN} 1.0},
+        author = {Monsen, Julius and J{\"o}nsson, Arne},
+        year = {2025},
+        url = {https://spraakbanken.gu.se/en/resources/swedn},
+        doi = {10.23695/36v9-9017}
+      }
   NanoTV2Nord:
-    language: multilingual
+    language: da
     category: natural_language
-    short_description: NanoTV2Nord retrieval task.
-    description: NanoTV2Nord is a compact retrieval task included in NanoMTEB-Scandinavian.
+    short_description: Danish TV2 Nord news article retrieval.
+    description: A compact retrieval task derived from the Nordjylland news summarization dataset, matching Danish summaries to articles.
+    citation_keys:
+    - alexandrainst2025nordjylland
+    references:
+    - &tv2nord_ref
+      title: nordjylland-news-summarization
+      authors:
+      - Alexandra Institute
+      year: 2025
+      url: https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization
+      is_paper: false
+      source_confidence: probably_correct
+      doi: 10.57967/hf/5620
+    bibtex: |
+      @misc{alexandrainst2025nordjylland,
+        title = {nordjylland-news-summarization},
+        author = {{Alexandra Institute}},
+        year = {2025},
+        url = {https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization},
+        doi = {10.57967/hf/5620}
+      }

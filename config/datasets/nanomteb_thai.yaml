@@ -14,19 +14,111 @@ metadata:
   category: natural_language
   short_description: Thai NanoMTEB retrieval benchmark.
   description: NanoMTEB-Thai is a compact Thai retrieval benchmark aligned with MTEB-style task families.
+  citation_keys:
+  - muennighoff2023mteb
+  references:
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    authors:
+    - Niklas Muennighoff
+    - Nouamane Tazi
+    - Loic Magne
+    - Nils Reimers
+    year: 2023
+    url: https://arxiv.org/abs/2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2210.07316
+  bibtex: |
+    @inproceedings{muennighoff2023mteb,
+      title = {{MTEB}: Massive Text Embedding Benchmark},
+      author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},
+      year = {2023},
+      url = {https://arxiv.org/abs/2210.07316},
+      doi = {10.48550/arXiv.2210.07316}
+    }
 task_metadata:
   NanoMKQATh:
     language: th
     category: natural_language
-    short_description: NanoMKQATh retrieval task.
-    description: NanoMKQATh is a compact retrieval task included in NanoMTEB-Thai.
+    short_description: Thai MKQA open-domain question retrieval.
+    description: A compact Thai MKQA retrieval split derived from multilingual Natural Questions
+      questions and language-aligned answers.
+    citation_keys:
+    - longpre2021mkqa
+    references:
+    - title: 'MKQA: A Linguistically Diverse Benchmark for Multilingual Open Domain Question Answering'
+      authors:
+      - Shayne Longpre
+      - Yi Lu
+      - Joachim Daiber
+      year: 2021
+      url: https://aclanthology.org/2021.tacl-1.82/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00433
+    bibtex: |
+      @article{longpre2021mkqa,
+        title = {{MKQA}: A Linguistically Diverse Benchmark for Multilingual Open Domain Question Answering},
+        author = {Longpre, Shayne and Lu, Yi and Daiber, Joachim},
+        journal = {Transactions of the Association for Computational Linguistics},
+        year = {2021},
+        url = {https://aclanthology.org/2021.tacl-1.82/},
+        doi = {10.1162/tacl_a_00433}
+      }
   NanoWebFAQTh:
     language: th
     category: natural_language
-    short_description: NanoWebFAQTh retrieval task.
-    description: NanoWebFAQTh is a compact retrieval task included in NanoMTEB-Thai.
+    short_description: Thai WebFAQ dense retrieval.
+    description: A compact Thai WebFAQ retrieval split over natural FAQ-style question-answer
+      pairs collected from web pages.
+    citation_keys:
+    - dinzinger2025webfaq
+    references:
+    - title: 'WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval'
+      authors:
+      - Michael Dinzinger
+      - Laura Caspari
+      - Kanishka Ghosh Dastidar
+      - Jelena Mitrovic
+      - Michael Granitzer
+      year: 2025
+      url: https://arxiv.org/abs/2502.20936
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2502.20936
+    bibtex: |
+      @misc{dinzinger2025webfaq,
+        title = {{WebFAQ}: A Multilingual Collection of Natural Q\&A Datasets for Dense Retrieval},
+        author = {Dinzinger, Michael and Caspari, Laura and Ghosh Dastidar, Kanishka and Mitrovic, Jelena and Granitzer, Michael},
+        year = {2025},
+        url = {https://arxiv.org/abs/2502.20936},
+        doi = {10.48550/arXiv.2502.20936}
+      }
   NanoXQuADTh:
     language: th
     category: natural_language
-    short_description: NanoXQuADTh retrieval task.
-    description: NanoXQuADTh is a compact retrieval task included in NanoMTEB-Thai.
+    short_description: Thai XQuAD context retrieval.
+    description: A compact Thai XQuAD retrieval split that asks models to retrieve the translated
+      SQuAD context passage for each question.
+    citation_keys:
+    - artetxe2020xquad
+    references:
+    - title: On the Cross-lingual Transferability of Monolingual Representations
+      authors:
+      - Mikel Artetxe
+      - Sebastian Ruder
+      - Dani Yogatama
+      year: 2020
+      url: https://aclanthology.org/2020.acl-main.421/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2020.acl-main.421
+    bibtex: |
+      @inproceedings{artetxe2020xquad,
+        title = {On the Cross-lingual Transferability of Monolingual Representations},
+        author = {Artetxe, Mikel and Ruder, Sebastian and Yogatama, Dani},
+        booktitle = {Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics},
+        year = {2020},
+        url = {https://aclanthology.org/2020.acl-main.421/},
+        doi = {10.18653/v1/2020.acl-main.421}
+      }

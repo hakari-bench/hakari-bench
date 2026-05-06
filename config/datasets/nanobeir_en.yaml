@@ -25,10 +25,9 @@ metadata:
     - Abhishek Srivastava
     - Iryna Gurevych
     year: 2021
-    url: https://arxiv.org/abs/2104.08663
+    url: https://openreview.net/forum?id=wCu6T5xFjeJ
     is_paper: true
     source_confidence: definitive_paper_link
-    doi: 10.48550/arXiv.2104.08663
   - title: 'NanoBEIR: Smaller BEIR dataset subsets'
     authors:
     - Zeta Alpha
@@ -552,8 +551,27 @@ task_metadata:
       questions, and relevant documents provide arguments that address the topic. This split
       is the compact NanoTouche2020 subset used by NanoBEIR-en.
     citation_keys:
+    - bondarenko2020touche
     - potthast2022touche20
     references:
+    - title: 'Overview of Touché 2020: Argument Retrieval'
+      authors:
+      - Alexander Bondarenko
+      - Maik Fröbe
+      - Meriem Beloucif
+      - Lukas Gienapp
+      - Yamen Ajjour
+      - Alexander Panchenko
+      - Chris Biemann
+      - Benno Stein
+      - Henning Wachsmuth
+      - Martin Potthast
+      - Matthias Hagen
+      year: 2020
+      url: https://doi.org/10.1007/978-3-030-58219-7_26
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/978-3-030-58219-7_26
     - title: Touche20-Argument-Retrieval-for-Controversial-Questions
       authors:
       - Martin Potthast
@@ -569,7 +587,11 @@ task_metadata:
       is_paper: false
       source_confidence: probably_correct
       doi: 10.5281/zenodo.6862281
-    bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
+    bibtex: "@inproceedings{bondarenko2020touche,\n  title = {Overview of {Touché} 2020: Argument Retrieval},\n\
+      \  author = {Bondarenko, Alexander and Fröbe, Maik and Beloucif, Meriem and Gienapp, Lukas and Ajjour, Yamen and Panchenko, Alexander and Biemann, Chris and Stein, Benno and Wachsmuth, Henning and Potthast, Martin and Hagen, Matthias},\n\
+      \  booktitle = {Experimental IR Meets Multilinguality, Multimodality, and Interaction},\n\
+      \  year = {2020},\n  url = {https://doi.org/10.1007/978-3-030-58219-7_26},\n  doi = {10.1007/978-3-030-58219-7_26}\n\
+      }\n@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
       \  author = {Potthast, Martin and Gienapp, Lukas and Wachsmuth, Henning and Hagen, Matthias\n      \ and Fröbe, Maik and Bondarenko, Alexander and Ajjour, Yamen and Stein, Benno},\n\
       \  year = {2022},\n  url = {https://doi.org/10.5281/zenodo.6862281},\n  doi = {10.5281/zenodo.6862281}\n\
       }\n"

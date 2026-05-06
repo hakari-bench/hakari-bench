@@ -16,29 +16,146 @@ metadata:
   category: natural_language
   short_description: German NanoMTEB retrieval benchmark.
   description: NanoMTEB-German is a compact German retrieval benchmark aligned with MTEB-style task families.
+  citation_keys:
+  - muennighoff2023mteb
+  references:
+  - &mteb_reference
+    title: 'MTEB: Massive Text Embedding Benchmark'
+    authors:
+    - Niklas Muennighoff
+    - Nouamane Tazi
+    - Loic Magne
+    - Nils Reimers
+    year: 2023
+    url: https://arxiv.org/abs/2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2210.07316
+  bibtex: |
+    @inproceedings{muennighoff2023mteb,
+      title = {{MTEB}: Massive Text Embedding Benchmark},
+      author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},
+      year = {2023},
+      url = {https://arxiv.org/abs/2210.07316},
+      doi = {10.48550/arXiv.2210.07316}
+    }
 task_metadata:
   NanoGerDaLIR:
     language: de
     category: natural_language
-    short_description: NanoGerDaLIR retrieval task.
-    description: NanoGerDaLIR is a compact retrieval task included in NanoMTEB-German.
+    short_description: German legal information retrieval.
+    description: A compact GerDaLIR split for retrieving German legal case documents from legal queries.
+    citation_keys:
+    - wrzalik2021gerdalir
+    references:
+    - title: 'GerDaLIR: A German Dataset for Legal Information Retrieval'
+      authors:
+      - Marco Wrzalik
+      - Dirk Krechel
+      year: 2021
+      url: https://aclanthology.org/2021.nllp-1.13/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2021.nllp-1.13
+    bibtex: |
+      @inproceedings{wrzalik2021gerdalir,
+        title = {{GerDaLIR}: A German Dataset for Legal Information Retrieval},
+        author = {Wrzalik, Marco and Krechel, Dirk},
+        booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2021},
+        year = {2021},
+        url = {https://aclanthology.org/2021.nllp-1.13/},
+        doi = {10.18653/v1/2021.nllp-1.13}
+      }
   NanoGermanDPR:
     language: de
     category: natural_language
-    short_description: NanoGermanDPR retrieval task.
-    description: NanoGermanDPR is a compact retrieval task included in NanoMTEB-German.
+    short_description: German open-domain QA passage retrieval.
+    description: A compact GermanDPR retrieval task for German open-domain question answering over passages.
+    citation_keys:
+    - moeller2021germanquad
+    references:
+    - &germanquad_reference
+      title: 'GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval'
+      authors:
+      - Timo Moller
+      - Julian Risch
+      - Malte Pietsch
+      year: 2021
+      url: https://arxiv.org/abs/2104.12741
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2104.12741
+    bibtex: &germanquad_bibtex |
+      @misc{moeller2021germanquad,
+        title = {{GermanQuAD} and {GermanDPR}: Improving Non-English Question Answering and Passage Retrieval},
+        author = {Moller, Timo and Risch, Julian and Pietsch, Malte},
+        year = {2021},
+        url = {https://arxiv.org/abs/2104.12741},
+        doi = {10.48550/arXiv.2104.12741}
+      }
   NanoGermanGovService:
     language: de
     category: natural_language
-    short_description: NanoGermanGovService retrieval task.
-    description: NanoGermanGovService is a compact retrieval task included in NanoMTEB-German.
+    short_description: German Munich government-service QA retrieval.
+    description: A compact retrieval task over Munich city administration service texts and German public-domain QA pairs.
+    citation_keys:
+    - schroeder2022lhmqa
+    references:
+    - title: LHM-Dienstleistungen-QA - german public domain question-answering dataset
+      authors:
+      - Leon Marius Schröder
+      - Clemens Gutknecht
+      - Oubada Alkiddeh
+      - Susanne Weiß
+      - Leon Lukas
+      year: 2022
+      url: https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: |
+      @software{schroeder2022lhmqa,
+        title = {{LHM-Dienstleistungen-QA} - german public domain question-answering dataset},
+        author = {Schr{\"o}der, Leon Marius and Gutknecht, Clemens and Alkiddeh, Oubada and Wei{\ss}, Susanne and Lukas, Leon},
+        publisher = {it@M},
+        year = {2022},
+        url = {https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA}
+      }
   NanoGermanQuAD:
     language: de
     category: natural_language
-    short_description: NanoGermanQuAD retrieval task.
-    description: NanoGermanQuAD is a compact retrieval task included in NanoMTEB-German.
+    short_description: German extractive QA context retrieval.
+    description: A compact GermanQuAD retrieval task for retrieving German contexts that answer extractive QA questions.
+    citation_keys:
+    - moeller2021germanquad
+    references:
+    - *germanquad_reference
+    bibtex: *germanquad_bibtex
   NanoXMarket:
     language: de
     category: natural_language
-    short_description: NanoXMarket retrieval task.
-    description: NanoXMarket is a compact retrieval task included in NanoMTEB-German.
+    short_description: German cross-market product retrieval.
+    description: A compact German XMarket split for query-product relevance in cross-market product recommendation.
+    citation_keys:
+    - bonab2021crossmarket
+    references:
+    - title: Cross-Market Product Recommendation
+      authors:
+      - Hamed Bonab
+      - Mohammad Aliannejadi
+      - Ali Vardasbi
+      - Evangelos Kanoulas
+      - James Allan
+      year: 2021
+      url: https://doi.org/10.1145/3459637.3482493
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1145/3459637.3482493
+    bibtex: |
+      @inproceedings{bonab2021crossmarket,
+        title = {Cross-Market Product Recommendation},
+        author = {Bonab, Hamed and Aliannejadi, Mohammad and Vardasbi, Ali and Kanoulas, Evangelos and Allan, James},
+        booktitle = {Proceedings of the 30th ACM International Conference on Information and Knowledge Management},
+        year = {2021},
+        url = {https://doi.org/10.1145/3459637.3482493},
+        doi = {10.1145/3459637.3482493}
+      }

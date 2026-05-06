@@ -17,29 +17,191 @@ metadata:
   short_description: Nano subset of BIRCO retrieval tasks.
   description: NanoBIRCO is a compact benchmark for evaluating retrieval across heterogeneous BIRCO task
     families.
+  citation_keys:
+  - wang2024birco
+  references:
+  - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
+    authors:
+    - Xiaoyue Wang
+    - Jianyou Wang
+    - Weili Cao
+    - Kaicheng Wang
+    - Ramamohan Paturi
+    - Leon Bergen
+    year: 2024
+    url: https://arxiv.org/abs/2402.14151
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.48550/arXiv.2402.14151
+  bibtex: |
+    @misc{wang2024birco,
+      title = {{BIRCO}: A Benchmark of Information Retrieval Tasks with Complex Objectives},
+      author = {Wang, Xiaoyue and Wang, Jianyou and Cao, Weili and Wang, Kaicheng and Paturi, Ramamohan and Bergen, Leon},
+      year = {2024},
+      eprint = {2402.14151},
+      archivePrefix = {arXiv},
+      primaryClass = {cs.IR},
+      url = {https://arxiv.org/abs/2402.14151},
+      doi = {10.48550/arXiv.2402.14151}
+    }
 task_metadata:
   NanoBIRCOArguAna:
     language: en
     category: natural_language
-    short_description: NanoBIRCOArguAna retrieval task.
-    description: NanoBIRCOArguAna is a compact BIRCO retrieval task.
+    short_description: BIRCO argument retrieval over counterarguments.
+    description: A compact BIRCO ArguAna task where one-paragraph arguments are queries and passages are counterarguments that directly refute the query stance.
+    citation_keys:
+    - wang2024birco
+    references:
+    - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
+      authors:
+      - Xiaoyue Wang
+      - Jianyou Wang
+      - Weili Cao
+      - Kaicheng Wang
+      - Ramamohan Paturi
+      - Leon Bergen
+      year: 2024
+      url: https://arxiv.org/abs/2402.14151
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2402.14151
+    bibtex: |
+      @misc{wang2024birco,
+        title = {{BIRCO}: A Benchmark of Information Retrieval Tasks with Complex Objectives},
+        author = {Wang, Xiaoyue and Wang, Jianyou and Cao, Weili and Wang, Kaicheng and Paturi, Ramamohan and Bergen, Leon},
+        year = {2024},
+        eprint = {2402.14151},
+        archivePrefix = {arXiv},
+        primaryClass = {cs.IR},
+        url = {https://arxiv.org/abs/2402.14151},
+        doi = {10.48550/arXiv.2402.14151}
+      }
   NanoBIRCOClinicalTrial:
     language: en
     category: natural_language
-    short_description: NanoBIRCOClinicalTrial retrieval task.
-    description: NanoBIRCOClinicalTrial is a compact BIRCO retrieval task.
+    short_description: BIRCO patient-to-clinical-trial retrieval.
+    description: A compact BIRCO Clinical-Trial task where patient case reports are matched to clinical trial descriptions by eligibility relevance.
+    citation_keys:
+    - wang2024birco
+    references:
+    - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
+      authors:
+      - Xiaoyue Wang
+      - Jianyou Wang
+      - Weili Cao
+      - Kaicheng Wang
+      - Ramamohan Paturi
+      - Leon Bergen
+      year: 2024
+      url: https://arxiv.org/abs/2402.14151
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2402.14151
+    bibtex: |
+      @misc{wang2024birco,
+        title = {{BIRCO}: A Benchmark of Information Retrieval Tasks with Complex Objectives},
+        author = {Wang, Xiaoyue and Wang, Jianyou and Cao, Weili and Wang, Kaicheng and Paturi, Ramamohan and Bergen, Leon},
+        year = {2024},
+        eprint = {2402.14151},
+        archivePrefix = {arXiv},
+        primaryClass = {cs.IR},
+        url = {https://arxiv.org/abs/2402.14151},
+        doi = {10.48550/arXiv.2402.14151}
+      }
   NanoBIRCODorisMae:
     language: en
     category: natural_language
-    short_description: NanoBIRCODorisMae retrieval task.
-    description: NanoBIRCODorisMae is a compact BIRCO retrieval task.
+    short_description: BIRCO scientific-abstract retrieval.
+    description: A compact BIRCO DORIS-MAE task where complex research needs from computer scientists are used to retrieve suitable scientific abstracts.
+    citation_keys:
+    - wang2024birco
+    references:
+    - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
+      authors:
+      - Xiaoyue Wang
+      - Jianyou Wang
+      - Weili Cao
+      - Kaicheng Wang
+      - Ramamohan Paturi
+      - Leon Bergen
+      year: 2024
+      url: https://arxiv.org/abs/2402.14151
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2402.14151
+    bibtex: |
+      @misc{wang2024birco,
+        title = {{BIRCO}: A Benchmark of Information Retrieval Tasks with Complex Objectives},
+        author = {Wang, Xiaoyue and Wang, Jianyou and Cao, Weili and Wang, Kaicheng and Paturi, Ramamohan and Bergen, Leon},
+        year = {2024},
+        eprint = {2402.14151},
+        archivePrefix = {arXiv},
+        primaryClass = {cs.IR},
+        url = {https://arxiv.org/abs/2402.14151},
+        doi = {10.48550/arXiv.2402.14151}
+      }
   NanoBIRCORelic:
     language: en
     category: natural_language
-    short_description: NanoBIRCORelic retrieval task.
-    description: NanoBIRCORelic is a compact BIRCO retrieval task.
+    short_description: BIRCO literary-quotation retrieval.
+    description: A compact BIRCO RELIC task where literary analyses with masked quotations are matched to passages that best complete the analysis.
+    citation_keys:
+    - wang2024birco
+    references:
+    - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
+      authors:
+      - Xiaoyue Wang
+      - Jianyou Wang
+      - Weili Cao
+      - Kaicheng Wang
+      - Ramamohan Paturi
+      - Leon Bergen
+      year: 2024
+      url: https://arxiv.org/abs/2402.14151
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2402.14151
+    bibtex: |
+      @misc{wang2024birco,
+        title = {{BIRCO}: A Benchmark of Information Retrieval Tasks with Complex Objectives},
+        author = {Wang, Xiaoyue and Wang, Jianyou and Cao, Weili and Wang, Kaicheng and Paturi, Ramamohan and Bergen, Leon},
+        year = {2024},
+        eprint = {2402.14151},
+        archivePrefix = {arXiv},
+        primaryClass = {cs.IR},
+        url = {https://arxiv.org/abs/2402.14151},
+        doi = {10.48550/arXiv.2402.14151}
+      }
   NanoBIRCOWTB:
     language: en
     category: natural_language
-    short_description: NanoBIRCOWTB retrieval task.
-    description: NanoBIRCOWTB is a compact BIRCO retrieval task.
+    short_description: BIRCO ambiguous book-description retrieval.
+    description: A compact BIRCO WhatsThatBook task where ambiguous user memories of books are used to retrieve the matching book description.
+    citation_keys:
+    - wang2024birco
+    references:
+    - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
+      authors:
+      - Xiaoyue Wang
+      - Jianyou Wang
+      - Weili Cao
+      - Kaicheng Wang
+      - Ramamohan Paturi
+      - Leon Bergen
+      year: 2024
+      url: https://arxiv.org/abs/2402.14151
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2402.14151
+    bibtex: |
+      @misc{wang2024birco,
+        title = {{BIRCO}: A Benchmark of Information Retrieval Tasks with Complex Objectives},
+        author = {Wang, Xiaoyue and Wang, Jianyou and Cao, Weili and Wang, Kaicheng and Paturi, Ramamohan and Bergen, Leon},
+        year = {2024},
+        eprint = {2402.14151},
+        archivePrefix = {arXiv},
+        primaryClass = {cs.IR},
+        url = {https://arxiv.org/abs/2402.14151},
+        doi = {10.48550/arXiv.2402.14151}
+      }

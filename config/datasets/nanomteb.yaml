@@ -32,14 +32,14 @@ metadata:
     - Loic Magne
     - Nils Reimers
     year: 2023
-    url: https://arxiv.org/abs/2210.07316
+    url: https://aclanthology.org/2023.eacl-main.148/
     is_paper: true
     source_confidence: definitive_paper_link
-    doi: 10.48550/arXiv.2210.07316
+    doi: 10.18653/v1/2023.eacl-main.148
   bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
     \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
-    \ Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n  doi\
-    \ = {10.48550/arXiv.2210.07316}\n}\n"
+    \ Reimers, Nils},\n  year = {2023},\n  url = {https://aclanthology.org/2023.eacl-main.148/},\n  doi\
+    \ = {10.18653/v1/2023.eacl-main.148}\n}\n"
 task_metadata:
   NanoArguAna:
     language: en
@@ -170,10 +170,10 @@ task_metadata:
       - Loic Magne
       - Nils Reimers
       year: 2023
-      url: https://arxiv.org/abs/2210.07316
+      url: https://aclanthology.org/2023.eacl-main.148/
       is_paper: true
       source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2210.07316
+      doi: 10.18653/v1/2023.eacl-main.148
     - title: 'CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims'
       authors:
       - Thomas Diggelmann
@@ -188,8 +188,8 @@ task_metadata:
       doi: 10.48550/arXiv.2012.00614
     bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
       \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
-      \ Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n \
-      \ doi = {10.48550/arXiv.2210.07316}\n}\n@misc{diggelmann2021climatefever,\n  title =\
+      \ Reimers, Nils},\n  year = {2023},\n  url = {https://aclanthology.org/2023.eacl-main.148/},\n \
+      \ doi = {10.18653/v1/2023.eacl-main.148}\n}\n@misc{diggelmann2021climatefever,\n  title =\
       \ {{CLIMATE-FEVER}: A Dataset for Verification of Real-World Climate Claims},\n  author\
       \ = {Diggelmann, Thomas and Boyd-Graber, Jordan and Bulian, Jannis and Ciaramita, Massimiliano\
       \ and Leippold, Markus},\n  year = {2021},\n  url = {https://arxiv.org/abs/2012.00614},\n\
@@ -224,10 +224,10 @@ task_metadata:
       - Loic Magne
       - Nils Reimers
       year: 2023
-      url: https://arxiv.org/abs/2210.07316
+      url: https://aclanthology.org/2023.eacl-main.148/
       is_paper: true
       source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2210.07316
+      doi: 10.18653/v1/2023.eacl-main.148
     - title: 'FEVER: a Large-scale Dataset for Fact Extraction and Verification'
       authors:
       - James Thorne
@@ -241,8 +241,8 @@ task_metadata:
       doi: 10.18653/v1/N18-1074
     bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
       \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
-      \ Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n \
-      \ doi = {10.48550/arXiv.2210.07316}\n}\n@inproceedings{thorne2018fever,\n  title = {{FEVER}:\
+      \ Reimers, Nils},\n  year = {2023},\n  url = {https://aclanthology.org/2023.eacl-main.148/},\n \
+      \ doi = {10.18653/v1/2023.eacl-main.148}\n}\n@inproceedings{thorne2018fever,\n  title = {{FEVER}:\
       \ a Large-scale Dataset for Fact Extraction and Verification},\n  author = {Thorne,\
       \ James and Vlachos, Andreas and Christodoulopoulos, Christos and Mittal, Arpit},\n\
       \  booktitle = {Proceedings of NAACL-HLT},\n  year = {2018},\n  url = {https://aclanthology.org/N18-1074/},\n\
@@ -319,10 +319,10 @@ task_metadata:
       - Loic Magne
       - Nils Reimers
       year: 2023
-      url: https://arxiv.org/abs/2210.07316
+      url: https://aclanthology.org/2023.eacl-main.148/
       is_paper: true
       source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2210.07316
+      doi: 10.18653/v1/2023.eacl-main.148
     - title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering'
       authors:
       - Zhilin Yang
@@ -339,8 +339,8 @@ task_metadata:
       doi: 10.18653/v1/D18-1259
     bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
       \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and\
-      \ Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n \
-      \ doi = {10.48550/arXiv.2210.07316}\n}\n@inproceedings{yang2018hotpotqa,\n  title =\
+      \ Reimers, Nils},\n  year = {2023},\n  url = {https://aclanthology.org/2023.eacl-main.148/},\n \
+      \ doi = {10.18653/v1/2023.eacl-main.148}\n}\n@inproceedings{yang2018hotpotqa,\n  title =\
       \ {{HotpotQA}: A Dataset for Diverse, Explainable Multi-hop Question Answering},\n \
       \ author = {Yang, Zhilin and Qi, Peng and Zhang, Saizheng and Bengio, Yoshua and Cohen,\
       \ William W. and Salakhutdinov, Ruslan and Manning, Christopher D.},\n  booktitle =\
@@ -405,8 +405,27 @@ task_metadata:
       questions, and relevant documents provide arguments that address the topic. This split
       is the compact NanoTouche2020 subset used by NanoMTEB.
     citation_keys:
+    - bondarenko2020touche
     - potthast2022touche20
     references:
+    - title: 'Overview of Touché 2020: Argument Retrieval'
+      authors:
+      - Alexander Bondarenko
+      - Maik Fröbe
+      - Meriem Beloucif
+      - Lukas Gienapp
+      - Yamen Ajjour
+      - Alexander Panchenko
+      - Chris Biemann
+      - Benno Stein
+      - Henning Wachsmuth
+      - Martin Potthast
+      - Matthias Hagen
+      year: 2020
+      url: https://doi.org/10.1007/978-3-030-58219-7_26
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/978-3-030-58219-7_26
     - title: Touche20-Argument-Retrieval-for-Controversial-Questions
       authors:
       - Martin Potthast
@@ -422,7 +441,11 @@ task_metadata:
       is_paper: false
       source_confidence: probably_correct
       doi: 10.5281/zenodo.6862281
-    bibtex: "@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
+    bibtex: "@inproceedings{bondarenko2020touche,\n  title = {Overview of {Touché} 2020: Argument Retrieval},\n\
+      \  author = {Bondarenko, Alexander and Fröbe, Maik and Beloucif, Meriem and Gienapp, Lukas and Ajjour, Yamen and Panchenko, Alexander and Biemann, Chris and Stein, Benno and Wachsmuth, Henning and Potthast, Martin and Hagen, Matthias},\n\
+      \  booktitle = {Experimental IR Meets Multilinguality, Multimodality, and Interaction},\n\
+      \  year = {2020},\n  url = {https://doi.org/10.1007/978-3-030-58219-7_26},\n  doi = {10.1007/978-3-030-58219-7_26}\n\
+      }\n@dataset{potthast2022touche20,\n  title = {{Touche20}-Argument-Retrieval-for-Controversial-Questions},\n\
       \  author = {Potthast, Martin and Gienapp, Lukas and Wachsmuth, Henning and Hagen, Matthias\n      \ and Fröbe, Maik and Bondarenko, Alexander and Ajjour, Yamen and Stein, Benno},\n\
       \  year = {2022},\n  url = {https://doi.org/10.5281/zenodo.6862281},\n  doi = {10.5281/zenodo.6862281}\n\
       }\n"

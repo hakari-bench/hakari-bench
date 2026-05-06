@@ -27,84 +27,309 @@ metadata:
   category: natural_language
   short_description: Polish NanoMTEB retrieval benchmark.
   description: NanoMTEB-Polish is a compact Polish retrieval benchmark aligned with MTEB-style task families.
+  citation_keys:
+  - wojtasik2024beirpl
+  references:
+  - &beirpl_ref
+    title: 'BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language'
+    authors:
+    - Konrad Wojtasik
+    - Kacper Wołowiec
+    - Vadim Shishkin
+    - Arkadiusz Janz
+    - Maciej Piasecki
+    year: 2024
+    url: https://aclanthology.org/2024.lrec-main.194/
+    is_paper: true
+    source_confidence: definitive_paper_link
+  bibtex: &beirpl_bibtex |
+    @inproceedings{wojtasik2024beirpl,
+      title = {{BEIR-PL}: Zero Shot Information Retrieval Benchmark for the Polish Language},
+      author = {Wojtasik, Konrad and Wo{\l}owiec, Kacper and Shishkin, Vadim and Janz, Arkadiusz and Piasecki, Maciej},
+      booktitle = {Proceedings of LREC-COLING},
+      year = {2024},
+      url = {https://aclanthology.org/2024.lrec-main.194/}
+    }
 task_metadata:
   NanoCQADupstackAndroidPL:
     language: pl
     category: natural_language
-    short_description: NanoCQADupstackAndroidPL retrieval task.
-    description: NanoCQADupstackAndroidPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish Android duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of the CQADupStack Android Stack Exchange duplicate-question retrieval task.
+    citation_keys: &cqadup_keys
+    - wojtasik2024beirpl
+    - hoogeveen2015cqadupstack
+    references: &cqadup_refs
+    - *beirpl_ref
+    - &cqadup_ref
+      title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+      authors:
+      - Doris Hoogeveen
+      - Karin M. Verspoor
+      - Timothy Baldwin
+      year: 2015
+      url: https://doi.org/10.1145/2838931.2838934
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1145/2838931.2838934
+    bibtex: &cqadup_bibtex |
+      @inproceedings{wojtasik2024beirpl,
+        title = {{BEIR-PL}: Zero Shot Information Retrieval Benchmark for the Polish Language},
+        author = {Wojtasik, Konrad and Wo{\l}owiec, Kacper and Shishkin, Vadim and Janz, Arkadiusz and Piasecki, Maciej},
+        booktitle = {Proceedings of LREC-COLING},
+        year = {2024},
+        url = {https://aclanthology.org/2024.lrec-main.194/}
+      }
+      @inproceedings{hoogeveen2015cqadupstack,
+        title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},
+        author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},
+        booktitle = {Proceedings of ADCS},
+        year = {2015},
+        url = {https://doi.org/10.1145/2838931.2838934},
+        doi = {10.1145/2838931.2838934}
+      }
   NanoCQADupstackEnglishPL:
     language: pl
     category: natural_language
-    short_description: NanoCQADupstackEnglishPL retrieval task.
-    description: NanoCQADupstackEnglishPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish English-site duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of the CQADupStack English Stack Exchange duplicate-question retrieval task.
+    citation_keys: *cqadup_keys
+    references: *cqadup_refs
+    bibtex: *cqadup_bibtex
   NanoCQADupstackGisPL:
     language: pl
     category: natural_language
-    short_description: NanoCQADupstackGisPL retrieval task.
-    description: NanoCQADupstackGisPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish GIS duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of the CQADupStack GIS Stack Exchange duplicate-question retrieval task.
+    citation_keys: *cqadup_keys
+    references: *cqadup_refs
+    bibtex: *cqadup_bibtex
   NanoCQADupstackMathematicaPL:
     language: pl
     category: natural_language
-    short_description: NanoCQADupstackMathematicaPL retrieval task.
-    description: NanoCQADupstackMathematicaPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish Mathematica duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of the CQADupStack Mathematica Stack Exchange duplicate-question retrieval task.
+    citation_keys: *cqadup_keys
+    references: *cqadup_refs
+    bibtex: *cqadup_bibtex
   NanoCQADupstackPhysicsPL:
     language: pl
     category: natural_language
-    short_description: NanoCQADupstackPhysicsPL retrieval task.
-    description: NanoCQADupstackPhysicsPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish physics duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of the CQADupStack Physics Stack Exchange duplicate-question retrieval task.
+    citation_keys: *cqadup_keys
+    references: *cqadup_refs
+    bibtex: *cqadup_bibtex
   NanoCQADupstackProgrammersPL:
     language: pl
     category: natural_language
-    short_description: NanoCQADupstackProgrammersPL retrieval task.
-    description: NanoCQADupstackProgrammersPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish programmers duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of the CQADupStack Programmers Stack Exchange duplicate-question retrieval task.
+    citation_keys: *cqadup_keys
+    references: *cqadup_refs
+    bibtex: *cqadup_bibtex
   NanoCQADupstackStatsPL:
     language: pl
     category: natural_language
-    short_description: NanoCQADupstackStatsPL retrieval task.
-    description: NanoCQADupstackStatsPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish statistics duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of the CQADupStack Statistics Stack Exchange duplicate-question retrieval task.
+    citation_keys: *cqadup_keys
+    references: *cqadup_refs
+    bibtex: *cqadup_bibtex
   NanoCQADupstackTexPL:
     language: pl
     category: natural_language
-    short_description: NanoCQADupstackTexPL retrieval task.
-    description: NanoCQADupstackTexPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish TeX duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of the CQADupStack TeX Stack Exchange duplicate-question retrieval task.
+    citation_keys: *cqadup_keys
+    references: *cqadup_refs
+    bibtex: *cqadup_bibtex
   NanoCQADupstackWebmastersPL:
     language: pl
     category: natural_language
-    short_description: NanoCQADupstackWebmastersPL retrieval task.
-    description: NanoCQADupstackWebmastersPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish webmasters duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of the CQADupStack Webmasters Stack Exchange duplicate-question retrieval task.
+    citation_keys: *cqadup_keys
+    references: *cqadup_refs
+    bibtex: *cqadup_bibtex
   NanoCQADupstackWordpressPL:
     language: pl
     category: natural_language
-    short_description: NanoCQADupstackWordpressPL retrieval task.
-    description: NanoCQADupstackWordpressPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish WordPress duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of the CQADupStack WordPress Stack Exchange duplicate-question retrieval task.
+    citation_keys: *cqadup_keys
+    references: *cqadup_refs
+    bibtex: *cqadup_bibtex
   NanoFiQAPL:
     language: pl
     category: natural_language
-    short_description: NanoFiQAPL retrieval task.
-    description: NanoFiQAPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish financial QA retrieval.
+    description: A compact Polish BEIR-PL translation of the FiQA financial opinion question-answering retrieval task.
+    citation_keys:
+    - wojtasik2024beirpl
+    - maia2018fiqa
+    references:
+    - *beirpl_ref
+    - &fiqa_ref
+      title: 'WWW''18 Open Challenge: Financial Opinion Mining and Question Answering'
+      authors:
+      - Macedo Maia
+      - Siegfried Handschuh
+      - Andre Freitas
+      - Brian Davis
+      - Ross McDermott
+      - Manel Zarrouk
+      - Alexandra Balahur
+      year: 2018
+      url: https://doi.org/10.1145/3184558.3192301
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1145/3184558.3192301
+    bibtex: |
+      @inproceedings{wojtasik2024beirpl,
+        title = {{BEIR-PL}: Zero Shot Information Retrieval Benchmark for the Polish Language},
+        author = {Wojtasik, Konrad and Wo{\l}owiec, Kacper and Shishkin, Vadim and Janz, Arkadiusz and Piasecki, Maciej},
+        booktitle = {Proceedings of LREC-COLING},
+        year = {2024},
+        url = {https://aclanthology.org/2024.lrec-main.194/}
+      }
+      @inproceedings{maia2018fiqa,
+        title = {{WWW}'18 Open Challenge: Financial Opinion Mining and Question Answering},
+        author = {Maia, Macedo and Handschuh, Siegfried and Freitas, Andre and Davis, Brian and McDermott, Ross and Zarrouk, Manel and Balahur, Alexandra},
+        booktitle = {The 2018 Web Conference Companion},
+        year = {2018},
+        url = {https://doi.org/10.1145/3184558.3192301},
+        doi = {10.1145/3184558.3192301}
+      }
   NanoNQPL:
     language: pl
     category: natural_language
-    short_description: NanoNQPL retrieval task.
-    description: NanoNQPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish Natural Questions retrieval.
+    description: A compact Polish BEIR-PL translation of Natural Questions retrieval over Wikipedia evidence.
+    citation_keys: &nqpl_keys
+    - wojtasik2024beirpl
+    - kwiatkowski2019natural
+    references: &nqpl_refs
+    - *beirpl_ref
+    - &nq_ref
+      title: 'Natural Questions: A Benchmark for Question Answering Research'
+      authors:
+      - Tom Kwiatkowski
+      - Jennimaria Palomaki
+      - Olivia Redfield
+      - Michael Collins
+      - Ankur Parikh
+      - Chris Alberti
+      - Danielle Epstein
+      - Illia Polosukhin
+      - Jacob Devlin
+      - Kenton Lee
+      - Kristina Toutanova
+      - Llion Jones
+      - Matthew Kelcey
+      - Ming-Wei Chang
+      - Andrew M. Dai
+      - Jakob Uszkoreit
+      - Quoc Le
+      - Slav Petrov
+      year: 2019
+      url: https://aclanthology.org/Q19-1026/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00276
+    bibtex: &nqpl_bibtex |
+      @inproceedings{wojtasik2024beirpl,
+        title = {{BEIR-PL}: Zero Shot Information Retrieval Benchmark for the Polish Language},
+        author = {Wojtasik, Konrad and Wo{\l}owiec, Kacper and Shishkin, Vadim and Janz, Arkadiusz and Piasecki, Maciej},
+        booktitle = {Proceedings of LREC-COLING},
+        year = {2024},
+        url = {https://aclanthology.org/2024.lrec-main.194/}
+      }
+      @article{kwiatkowski2019natural,
+        title = {Natural Questions: A Benchmark for Question Answering Research},
+        author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and Toutanova, Kristina and Jones, Llion and Kelcey, Matthew and Chang, Ming-Wei and Dai, Andrew M. and Uszkoreit, Jakob and Le, Quoc and Petrov, Slav},
+        journal = {Transactions of the Association for Computational Linguistics},
+        year = {2019},
+        url = {https://aclanthology.org/Q19-1026/},
+        doi = {10.1162/tacl_a_00276}
+      }
   NanoNQPLHardNegatives:
     language: pl
     category: natural_language
-    short_description: NanoNQPLHardNegatives retrieval task.
-    description: NanoNQPLHardNegatives is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish Natural Questions hard-negative retrieval.
+    description: A compact Polish hard-negative variant of Natural Questions retrieval with pooled dense and BM25 candidates.
+    citation_keys: *nqpl_keys
+    references: *nqpl_refs
+    bibtex: *nqpl_bibtex
   NanoPUGG:
     language: pl
     category: natural_language
-    short_description: NanoPUGG retrieval task.
-    description: NanoPUGG is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish PUGG information retrieval.
+    description: A compact retrieval split from PUGG, a Polish QA-oriented dataset suite with KBQA, MRC, and IR tasks.
+    citation_keys:
+    - sawczyn2024pugg
+    references:
+    - &pugg_ref
+      title: 'Developing PUGG for Polish: A Modern Approach to KBQA, MRC, and IR Dataset Construction'
+      authors:
+      - Albert Sawczyn
+      - Katsiaryna Viarenich
+      - Konrad Wojtasik
+      - Aleksandra Domogała
+      - Marcin Oleksy
+      - Maciej Piasecki
+      - Tomasz Kajdanowicz
+      year: 2024
+      url: https://aclanthology.org/2024.findings-acl.652/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2024.findings-acl.652
+    bibtex: |
+      @inproceedings{sawczyn2024pugg,
+        title = {Developing {PUGG} for {P}olish: A Modern Approach to {KBQA}, {MRC}, and {IR} Dataset Construction},
+        author = {Sawczyn, Albert and Viarenich, Katsiaryna and Wojtasik, Konrad and Domoga{\l}a, Aleksandra and Oleksy, Marcin and Piasecki, Maciej and Kajdanowicz, Tomasz},
+        booktitle = {Findings of ACL},
+        year = {2024},
+        url = {https://aclanthology.org/2024.findings-acl.652/},
+        doi = {10.18653/v1/2024.findings-acl.652}
+      }
   NanoQuoraPL:
     language: pl
     category: natural_language
-    short_description: NanoQuoraPL retrieval task.
-    description: NanoQuoraPL is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish Quora duplicate-question retrieval.
+    description: A compact Polish BEIR-PL translation of Quora duplicate-question retrieval.
+    citation_keys: &quorapl_keys
+    - wojtasik2024beirpl
+    - quora2017questionpairs
+    references: &quorapl_refs
+    - *beirpl_ref
+    - &quora_ref
+      title: First Quora Dataset Release - Question Pairs
+      authors:
+      - Quora
+      year: 2017
+      url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: &quorapl_bibtex |
+      @inproceedings{wojtasik2024beirpl,
+        title = {{BEIR-PL}: Zero Shot Information Retrieval Benchmark for the Polish Language},
+        author = {Wojtasik, Konrad and Wo{\l}owiec, Kacper and Shishkin, Vadim and Janz, Arkadiusz and Piasecki, Maciej},
+        booktitle = {Proceedings of LREC-COLING},
+        year = {2024},
+        url = {https://aclanthology.org/2024.lrec-main.194/}
+      }
+      @misc{quora2017questionpairs,
+        title = {First Quora Dataset Release - Question Pairs},
+        author = {{Quora}},
+        year = {2017},
+        url = {https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs}
+      }
   NanoQuoraPLHardNegatives:
     language: pl
     category: natural_language
-    short_description: NanoQuoraPLHardNegatives retrieval task.
-    description: NanoQuoraPLHardNegatives is a compact retrieval task included in NanoMTEB-Polish.
+    short_description: Polish Quora hard-negative retrieval.
+    description: A compact Polish hard-negative variant of Quora duplicate-question retrieval with pooled dense and BM25 candidates.
+    citation_keys: *quorapl_keys
+    references: *quorapl_refs
+    bibtex: *quorapl_bibtex

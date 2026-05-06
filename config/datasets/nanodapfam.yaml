@@ -30,94 +30,172 @@ metadata:
   short_description: Nano subset of patent-family retrieval tasks.
   description: NanoDAPFAM evaluates patent-family retrieval with query and corpus variants based on titles,
     abstracts, claims, and full text.
+  citation_keys: &dapfam_citation_keys
+  - ayaou2026dapfam
+  references: &dapfam_references
+  - title: 'DAPFAM: A Domain-Aware Family-level Dataset to benchmark cross domain patent retrieval'
+    authors:
+    - Iliass Ayaou
+    - Denis Cavallucci
+    - Hicham Chibane
+    year: 2026
+    url: https://doi.org/10.1016/j.array.2026.100720
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.1016/j.array.2026.100720
+  bibtex: &dapfam_bibtex |
+    @article{ayaou2026dapfam,
+      title = {{DAPFAM}: A Domain-Aware Family-level Dataset to benchmark cross domain patent retrieval},
+      author = {Ayaou, Iliass and Cavallucci, Denis and Chibane, Hicham},
+      journal = {Array},
+      volume = {29},
+      pages = {100720},
+      year = {2026},
+      url = {https://doi.org/10.1016/j.array.2026.100720},
+      doi = {10.1016/j.array.2026.100720}
+    }
 task_metadata:
   NanoDAPFAMAllTitlAbsClmToFullText:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMAllTitlAbsClmToFullText retrieval task.
-    description: NanoDAPFAMAllTitlAbsClmToFullText is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM all-domain TAC queries to full-text targets.
+    description: A compact DAPFAM task retrieving citation-linked patent families across all domains from title, abstract, and claims queries to full-text targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMAllTitlAbsClmToTitlAbs:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMAllTitlAbsClmToTitlAbs retrieval task.
-    description: NanoDAPFAMAllTitlAbsClmToTitlAbs is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM all-domain TAC queries to title-abstract targets.
+    description: A compact DAPFAM task retrieving citation-linked patent families across all domains from title, abstract, and claims queries to title and abstract targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMAllTitlAbsClmToTitlAbsClm:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMAllTitlAbsClmToTitlAbsClm retrieval task.
-    description: NanoDAPFAMAllTitlAbsClmToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM all-domain TAC queries to TAC targets.
+    description: A compact DAPFAM task retrieving citation-linked patent families across all domains when both queries and targets use title, abstract, and claims.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMAllTitlAbsToFullText:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMAllTitlAbsToFullText retrieval task.
-    description: NanoDAPFAMAllTitlAbsToFullText is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM all-domain title-abstract queries to full text.
+    description: A compact DAPFAM task retrieving citation-linked patent families across all domains from title and abstract queries to full-text targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMAllTitlAbsToTitlAbs:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMAllTitlAbsToTitlAbs retrieval task.
-    description: NanoDAPFAMAllTitlAbsToTitlAbs is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM all-domain title-abstract retrieval.
+    description: A compact DAPFAM task retrieving citation-linked patent families across all domains when both queries and targets use titles and abstracts.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMAllTitlAbsToTitlAbsClm:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMAllTitlAbsToTitlAbsClm retrieval task.
-    description: NanoDAPFAMAllTitlAbsToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM all-domain title-abstract queries to TAC targets.
+    description: A compact DAPFAM task retrieving citation-linked patent families across all domains from title and abstract queries to title, abstract, and claims targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMInTitlAbsClmToFullText:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMInTitlAbsClmToFullText retrieval task.
-    description: NanoDAPFAMInTitlAbsClmToFullText is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM in-domain TAC queries to full-text targets.
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code from title, abstract, and claims queries to full-text targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMInTitlAbsClmToTitlAbs:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMInTitlAbsClmToTitlAbs retrieval task.
-    description: NanoDAPFAMInTitlAbsClmToTitlAbs is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM in-domain TAC queries to title-abstract targets.
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code from title, abstract, and claims queries to title and abstract targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMInTitlAbsClmToTitlAbsClm:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMInTitlAbsClmToTitlAbsClm retrieval task.
-    description: NanoDAPFAMInTitlAbsClmToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM in-domain TAC queries to TAC targets.
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code when both queries and targets use title, abstract, and claims.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMInTitlAbsToFullText:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMInTitlAbsToFullText retrieval task.
-    description: NanoDAPFAMInTitlAbsToFullText is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM in-domain title-abstract queries to full text.
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code from title and abstract queries to full-text targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMInTitlAbsToTitlAbs:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMInTitlAbsToTitlAbs retrieval task.
-    description: NanoDAPFAMInTitlAbsToTitlAbs is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM in-domain title-abstract retrieval.
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code when both queries and targets use titles and abstracts.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMInTitlAbsToTitlAbsClm:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMInTitlAbsToTitlAbsClm retrieval task.
-    description: NanoDAPFAMInTitlAbsToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM in-domain title-abstract queries to TAC targets.
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code from title and abstract queries to title, abstract, and claims targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMOutTitlAbsClmToFullText:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMOutTitlAbsClmToFullText retrieval task.
-    description: NanoDAPFAMOutTitlAbsClmToFullText is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM out-domain TAC queries to full-text targets.
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code from title, abstract, and claims queries to full-text targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMOutTitlAbsClmToTitlAbs:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMOutTitlAbsClmToTitlAbs retrieval task.
-    description: NanoDAPFAMOutTitlAbsClmToTitlAbs is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM out-domain TAC queries to title-abstract targets.
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code from title, abstract, and claims queries to title and abstract targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMOutTitlAbsClmToTitlAbsClm:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMOutTitlAbsClmToTitlAbsClm retrieval task.
-    description: NanoDAPFAMOutTitlAbsClmToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM out-domain TAC queries to TAC targets.
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code when both queries and targets use title, abstract, and claims.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMOutTitlAbsToFullText:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMOutTitlAbsToFullText retrieval task.
-    description: NanoDAPFAMOutTitlAbsToFullText is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM out-domain title-abstract queries to full text.
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code from title and abstract queries to full-text targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMOutTitlAbsToTitlAbs:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMOutTitlAbsToTitlAbs retrieval task.
-    description: NanoDAPFAMOutTitlAbsToTitlAbs is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM out-domain title-abstract retrieval.
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code when both queries and targets use titles and abstracts.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex
   NanoDAPFAMOutTitlAbsToTitlAbsClm:
     language: en
     category: natural_language
-    short_description: NanoDAPFAMOutTitlAbsToTitlAbsClm retrieval task.
-    description: NanoDAPFAMOutTitlAbsToTitlAbsClm is a compact DAPFAM patent-family retrieval task.
+    short_description: DAPFAM out-domain title-abstract queries to TAC targets.
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code from title and abstract queries to title, abstract, and claims targets.
+    citation_keys: *dapfam_citation_keys
+    references: *dapfam_references
+    bibtex: *dapfam_bibtex

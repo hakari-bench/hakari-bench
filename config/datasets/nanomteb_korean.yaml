@@ -14,25 +14,167 @@ metadata:
   language: ko
   category: natural_language
   short_description: Korean NanoMTEB retrieval benchmark.
-  description: NanoMTEB-Korean is a compact Korean retrieval benchmark aligned with MTEB-style task families.
+  description: NanoMTEB-Korean is a compact Korean retrieval benchmark aligned with MTEB-style Korean retrieval tasks, covering RAG, implicit-reasoning QA, legal article retrieval, and Korean SQuAD-style QA retrieval.
+  citation_keys:
+  - muennighoff2023mteb
+  references:
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    authors:
+    - Niklas Muennighoff
+    - Nouamane Tazi
+    - Loic Magne
+    - Nils Reimers
+    year: 2023
+    url: https://aclanthology.org/2023.eacl-main.148/
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.18653/v1/2023.eacl-main.148
+  bibtex: |
+    @inproceedings{muennighoff2023mteb,
+      title = {{MTEB}: Massive Text Embedding Benchmark},
+      author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},
+      booktitle = {Proceedings of the 17th Conference of the European Chapter of the Association for Computational Linguistics},
+      pages = {2014--2037},
+      year = {2023},
+      url = {https://aclanthology.org/2023.eacl-main.148/},
+      doi = {10.18653/v1/2023.eacl-main.148}
+    }
 task_metadata:
   NanoAutoRAG:
     language: ko
     category: natural_language
-    short_description: NanoAutoRAG retrieval task.
-    description: NanoAutoRAG is a compact retrieval task included in NanoMTEB-Korean.
+    short_description: Korean RAG retrieval over public-domain documents.
+    description: NanoAutoRAG evaluates retrieval for Korean RAG benchmark queries across finance, public-sector, healthcare, legal, and commerce documents. It is a compact Nano split of the AutoRAG retrieval benchmark source used in MTEB.
+    citation_keys:
+    - kim2024autorag
+    references:
+    - title: 'AutoRAG: Automated Framework for optimization of Retrieval Augmented Generation Pipeline'
+      authors:
+      - Dongkyu Kim
+      - Byoungwook Kim
+      - Donggeon Han
+      - Matouš Eibich
+      year: 2024
+      url: https://arxiv.org/abs/2410.20878
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.2410.20878
+    bibtex: |
+      @misc{kim2024autorag,
+        title = {{AutoRAG}: Automated Framework for optimization of Retrieval Augmented Generation Pipeline},
+        author = {Kim, Dongkyu and Kim, Byoungwook and Han, Donggeon and Eibich, Matouš},
+        year = {2024},
+        url = {https://arxiv.org/abs/2410.20878},
+        doi = {10.48550/arXiv.2410.20878}
+      }
   NanoKoStrategyQA:
     language: ko
     category: natural_language
-    short_description: NanoKoStrategyQA retrieval task.
-    description: NanoKoStrategyQA is a compact retrieval task included in NanoMTEB-Korean.
+    short_description: Korean StrategyQA evidence retrieval.
+    description: NanoKoStrategyQA evaluates Korean retrieval for implicit multi-hop StrategyQA questions converted to a BEIR/MTEB-style evidence retrieval format.
+    citation_keys:
+    - geva2021strategyqa
+    - lee2021kostrategyqa
+    references:
+    - title: Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies
+      authors:
+      - Mor Geva
+      - Daniel Khashabi
+      - Elad Segal
+      - Tushar Khot
+      - Dan Roth
+      - Jonathan Berant
+      year: 2021
+      url: https://aclanthology.org/2021.tacl-1.21/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00370
+    - title: Ko-StrategyQA
+      authors:
+      - Taemin Lee
+      year: 2021
+      url: https://huggingface.co/datasets/taeminlee/Ko-StrategyQA
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: |
+      @article{geva2021strategyqa,
+        title = {Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies},
+        author = {Geva, Mor and Khashabi, Daniel and Segal, Elad and Khot, Tushar and Roth, Dan and Berant, Jonathan},
+        journal = {Transactions of the Association for Computational Linguistics},
+        volume = {9},
+        pages = {346--361},
+        year = {2021},
+        url = {https://aclanthology.org/2021.tacl-1.21/},
+        doi = {10.1162/tacl_a_00370}
+      }
+      @misc{lee2021kostrategyqa,
+        title = {{Ko-StrategyQA}},
+        author = {Lee, Taemin},
+        year = {2021},
+        url = {https://huggingface.co/datasets/taeminlee/Ko-StrategyQA}
+      }
   NanoLawIRKo:
     language: ko
     category: natural_language
-    short_description: NanoLawIRKo retrieval task.
-    description: NanoLawIRKo is a compact retrieval task included in NanoMTEB-Korean.
+    short_description: Korean legal article retrieval.
+    description: NanoLawIRKo evaluates retrieval of relevant Korean legal articles from queries referencing law titles and provisions, using a compact split of the lawgov_ir-ko dataset.
+    citation_keys:
+    - lee2026lawgovirko
+    references:
+    - title: 'lawgov_ir-ko: A Benchmark Dataset for Korean Legal Information Retrieval and QA'
+      authors:
+      - kang-hyeun Lee
+      year: 2026
+      url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: |
+      @misc{lee2026lawgovirko,
+        title = {lawgov_ir-ko: A Benchmark Dataset for Korean Legal Information Retrieval and QA},
+        author = {Lee, kang-hyeun},
+        year = {2026},
+        url = {https://huggingface.co/datasets/on-and-on/lawgov_ir-ko}
+      }
   NanoSQuADKorV1:
     language: ko
     category: natural_language
-    short_description: NanoSQuADKorV1 retrieval task.
-    description: NanoSQuADKorV1 is a compact retrieval task included in NanoMTEB-Korean.
+    short_description: Korean SQuAD-style Wikipedia QA retrieval.
+    description: NanoSQuADKorV1 evaluates retrieval over a Korean translation of SQuAD v1.0 based on Korean Wikipedia articles, using a compact MTEB-style retrieval split.
+    citation_keys:
+    - rajpurkar2016squad
+    - jang2019squadkorv1
+    references:
+    - title: 'SQuAD: 100,000+ Questions for Machine Comprehension of Text'
+      authors:
+      - Pranav Rajpurkar
+      - Jian Zhang
+      - Konstantin Lopyrev
+      - Percy Liang
+      year: 2016
+      url: https://aclanthology.org/D16-1264/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/D16-1264
+    - title: squad_kor_v1
+      authors:
+      - yjoonjang
+      year: 2019
+      url: https://huggingface.co/datasets/yjoonjang/squad_kor_v1
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: |
+      @inproceedings{rajpurkar2016squad,
+        title = {{SQuAD}: 100,000+ Questions for Machine Comprehension of Text},
+        author = {Rajpurkar, Pranav and Zhang, Jian and Lopyrev, Konstantin and Liang, Percy},
+        booktitle = {Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing},
+        pages = {2383--2392},
+        year = {2016},
+        url = {https://aclanthology.org/D16-1264/},
+        doi = {10.18653/v1/D16-1264}
+      }
+      @misc{jang2019squadkorv1,
+        title = {squad\_kor\_v1},
+        author = {yjoonjang},
+        year = {2019},
+        url = {https://huggingface.co/datasets/yjoonjang/squad_kor_v1}
+      }

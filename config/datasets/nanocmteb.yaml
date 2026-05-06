@@ -23,9 +23,9 @@ metadata:
     COVID-19 news, medical consultation QA, e-commerce product retrieval, and video title
     retrieval.
   citation_keys:
-  - cpack
+  - xiao2024cpack
   references:
-  - title: 'C-Pack: Packaged Resources To Advance General Chinese Embedding'
+  - title: 'C-Pack: Packed Resources For General Chinese Embeddings'
     authors:
     - Shitao Xiao
     - Zheng Liu
@@ -34,13 +34,15 @@ metadata:
     - Defu Lian
     - Jian-Yun Nie
     year: 2024
-    url: https://arxiv.org/abs/2309.07597
+    url: https://doi.org/10.1145/3626772.3657878
     is_paper: true
     source_confidence: definitive_paper_link
-  bibtex: "@misc{xiao2024cpack,\n  archiveprefix = {arXiv},\n  author = {Xiao, Shitao and\
-    \ Liu, Zheng and Zhang, Peitian and Muennighoff, Niklas and Lian, Defu and Nie, Jian-Yun},\n\
-    \  eprint = {2309.07597},\n  primaryclass = {cs.CL},\n  title = {C-Pack: Packaged Resources\
-    \ To Advance General Chinese Embedding},\n  url = {https://arxiv.org/abs/2309.07597},\n\
+    doi: 10.1145/3626772.3657878
+  bibtex: "@inproceedings{xiao2024cpack,\n  author = {Xiao, Shitao and Liu, Zheng\
+    \ and Zhang, Peitian and Muennighoff, Niklas and Lian, Defu and Nie, Jian-Yun},\n\
+    \  booktitle = {Proceedings of the 47th International ACM SIGIR Conference on Research\
+    \ and Development in Information Retrieval},\n  doi = {10.1145/3626772.3657878},\n\
+    \  title = {C-Pack: Packed Resources For General Chinese Embeddings},\n  url = {https://doi.org/10.1145/3626772.3657878},\n\
     \  year = {2024}\n}\n"
 task_metadata:
   NanoT2Retrieval:
@@ -51,7 +53,7 @@ task_metadata:
       Chinese web passage retrieval benchmark with human relevance annotations across several
       domains.
     citation_keys:
-    - t2ranking
+    - xie2023t2ranking
     references:
     - title: 'T2Ranking: A Large-scale Chinese Benchmark for Passage Ranking'
       authors:
@@ -67,14 +69,17 @@ task_metadata:
       - Yiqun Liu
       - Jin Ma
       year: 2023
-      url: https://arxiv.org/abs/2304.03679
+      url: https://doi.org/10.1145/3539618.3591874
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{xie2023t2ranking,\n  archiveprefix = {arXiv},\n  author = {Xie, Xiaohui\
-      \ and Dong, Qian and Wang, Bingning and Lv, Feiyang and Yao, Ting and Gan, Weinan and\
-      \ Wu, Zhijing and Li, Xiangsheng and Li, Haitao and Liu, Yiqun and Ma, Jin},\n  eprint\
-      \ = {2304.03679},\n  primaryclass = {cs.IR},\n  title = {T2Ranking: A Large-scale Chinese\
-      \ Benchmark for Passage Ranking},\n  year = {2023}\n}\n"
+      doi: 10.1145/3539618.3591874
+    bibtex: "@inproceedings{xie2023t2ranking,\n  author = {Xie, Xiaohui and Dong,\
+      \ Qian and Wang, Bingning and Lv, Feiyang and Yao, Ting and Gan, Weinan and Wu,\
+      \ Zhijing and Li, Xiangsheng and Li, Haitao and Liu, Yiqun and Ma, Jin},\n  booktitle\
+      \ = {Proceedings of the 46th International ACM SIGIR Conference on Research and Development\
+      \ in Information Retrieval},\n  doi = {10.1145/3539618.3591874},\n  title = {T2Ranking:\
+      \ A Large-scale Chinese Benchmark for Passage Ranking},\n  url = {https://doi.org/10.1145/3539618.3591874},\n\
+      \  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 5
@@ -95,10 +100,10 @@ task_metadata:
       setting. Queries follow web-search question answering intent and documents are relevant
       passages translated or adapted from MS MARCO-style resources.
     citation_keys:
-    - cpack
+    - xiao2024cpack
     - bonifacio2021mmarco
     references:
-    - title: 'C-Pack: Packaged Resources To Advance General Chinese Embedding'
+    - title: 'C-Pack: Packed Resources For General Chinese Embeddings'
       authors:
       - Shitao Xiao
       - Zheng Liu
@@ -107,9 +112,10 @@ task_metadata:
       - Defu Lian
       - Jian-Yun Nie
       year: 2024
-      url: https://arxiv.org/abs/2309.07597
+      url: https://doi.org/10.1145/3626772.3657878
       is_paper: true
       source_confidence: definitive_paper_link
+      doi: 10.1145/3626772.3657878
     - title: 'mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset'
       authors:
       - Luiz Henrique Bonifacio
@@ -123,10 +129,11 @@ task_metadata:
       url: https://arxiv.org/abs/2108.13897
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{xiao2024cpack,\n  archiveprefix = {arXiv},\n  author = {Xiao, Shitao and\
-      \ Liu, Zheng and Zhang, Peitian and Muennighoff, Niklas and Lian, Defu and Nie, Jian-Yun},\n\
-      \  eprint = {2309.07597},\n  primaryclass = {cs.CL},\n  title = {C-Pack: Packaged Resources\
-      \ To Advance General Chinese Embedding},\n  url = {https://arxiv.org/abs/2309.07597},\n\
+    bibtex: "@inproceedings{xiao2024cpack,\n  author = {Xiao, Shitao and Liu, Zheng\
+      \ and Zhang, Peitian and Muennighoff, Niklas and Lian, Defu and Nie, Jian-Yun},\n\
+      \  booktitle = {Proceedings of the 47th International ACM SIGIR Conference on Research\
+      \ and Development in Information Retrieval},\n  doi = {10.1145/3626772.3657878},\n\
+      \  title = {C-Pack: Packed Resources For General Chinese Embeddings},\n  url = {https://doi.org/10.1145/3626772.3657878},\n\
       \  year = {2024}\n}\n\n@article{bonifacio2021mmarco,\n  author = {Luiz Henrique Bonifacio\
       \ and Vitor Jeronymo and Hugo Queiroz Abonizio and Israel Campiotti and Marzieh Fadaee\
       \ and Roberto Lotufo and Rodrigo Nogueira},\n  journal = {arXiv preprint arXiv:2108.13897},\n\
@@ -147,20 +154,20 @@ task_metadata:
   NanoDuRetrieval:
     language: zh
     category: natural_language
-    short_description: Chinese web passage retrieval from DuReader_retrieval.
-    description: NanoDuRetrieval evaluates Chinese passage retrieval from DuReader_retrieval,
+    short_description: Chinese web passage retrieval from DuReader-Retrieval.
+    description: NanoDuRetrieval evaluates Chinese passage retrieval from DuReader-Retrieval,
       where search-engine queries must retrieve web passages that answer the question.
     citation_keys:
-    - dureader
+    - qiu2022dureaderretrieval
     references:
-    - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from
+    - title: 'DuReader-Retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from
         Web Search Engine'
       authors:
       - Yifu Qiu
       - Hongyu Li
       - Yingqi Qu
       - Ying Chen
-      - Qiaoqiao She
+      - QiaoQiao She
       - Jing Liu
       - Hua Wu
       - Haifeng Wang
@@ -169,11 +176,12 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2022.emnlp-main.357
-    bibtex: "@misc{qiu2022dureaderretrieval,\n  archiveprefix = {arXiv},\n  author = {Qiu,\
-      \ Yifu and Li, Hongyu and Qu, Yingqi and Chen, Ying and She, Qiaoqiao and Liu, Jing\
-      \ and Wu, Hua and Wang, Haifeng},\n  eprint = {2203.10232},\n  primaryclass = {cs.CL},\n\
-      \  title = {DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval\
-      \ from Web Search Engine},\n  url = {https://aclanthology.org/2022.emnlp-main.357/},\n  doi = {10.18653/v1/2022.emnlp-main.357},\n  year = {2022}\n\
+    bibtex: "@inproceedings{qiu2022dureaderretrieval,\n  author = {Qiu,\
+      \ Yifu and Li, Hongyu and Qu, Yingqi and Chen, Ying and She, QiaoQiao and Liu, Jing\
+      \ and Wu, Hua and Wang, Haifeng},\n  booktitle = {Proceedings of the 2022 Conference\
+      \ on Empirical Methods in Natural Language Processing},\n  doi = {10.18653/v1/2022.emnlp-main.357},\n\
+      \  title = {DuReader-Retrieval: A Large-scale Chinese Benchmark for Passage Retrieval\
+      \ from Web Search Engine},\n  url = {https://aclanthology.org/2022.emnlp-main.357/},\n  year = {2022}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -195,7 +203,7 @@ task_metadata:
       from the Multi-CPR benchmark. Queries ask COVID-related questions and documents are
       candidate news passages.
     citation_keys:
-    - multicpr
+    - long2022multicpr
     references:
     - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
       authors:
@@ -210,14 +218,17 @@ task_metadata:
       - Luxi Xing
       - Ping Yang
       year: 2022
-      url: https://arxiv.org/abs/2203.03367
+      url: https://doi.org/10.1145/3477495.3531736
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{long2022multicpr,\n  archiveprefix = {arXiv},\n  author = {Long, Dingkun\
-      \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
-      \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  eprint = {2203.03367},\n\
-      \  primaryclass = {cs.IR},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for\
-      \ Passage Retrieval},\n  url = {https://arxiv.org/abs/2203.03367},\n  year = {2022}\n\
+      doi: 10.1145/3477495.3531736
+    bibtex: "@inproceedings{long2022multicpr,\n  author = {Long, Dingkun and Gao,\
+      \ Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and Xu,\
+      \ Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings\
+      \ of the 45th International ACM SIGIR Conference on Research and Development in Information\
+      \ Retrieval},\n  doi = {10.1145/3477495.3531736},\n  title = {Multi-CPR: A Multi\
+      \ Domain Chinese Dataset for Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n\
+      \  year = {2022}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -239,17 +250,17 @@ task_metadata:
       on CMedQAv2-style question-answer data, where a community medical question must retrieve
       relevant replies.
     citation_keys:
-    - dureader
+    - qiu2022dureaderretrieval
     - zhang2018cmedqav2
     references:
-    - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from
+    - title: 'DuReader-Retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from
         Web Search Engine'
       authors:
       - Yifu Qiu
       - Hongyu Li
       - Yingqi Qu
       - Ying Chen
-      - Qiaoqiao She
+      - QiaoQiao She
       - Jing Liu
       - Hua Wu
       - Haifeng Wang
@@ -271,11 +282,12 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1109/ACCESS.2018.2883637
-    bibtex: "@misc{qiu2022dureaderretrieval,\n  archiveprefix = {arXiv},\n  author = {Qiu,\
-      \ Yifu and Li, Hongyu and Qu, Yingqi and Chen, Ying and She, Qiaoqiao and Liu, Jing\
-      \ and Wu, Hua and Wang, Haifeng},\n  eprint = {2203.10232},\n  primaryclass = {cs.CL},\n\
-      \  title = {DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval\
-      \ from Web Search Engine},\n  url = {https://aclanthology.org/2022.emnlp-main.357/},\n  doi = {10.18653/v1/2022.emnlp-main.357},\n  year = {2022}\n\
+    bibtex: "@inproceedings{qiu2022dureaderretrieval,\n  author = {Qiu,\
+      \ Yifu and Li, Hongyu and Qu, Yingqi and Chen, Ying and She, QiaoQiao and Liu, Jing\
+      \ and Wu, Hua and Wang, Haifeng},\n  booktitle = {Proceedings of the 2022 Conference\
+      \ on Empirical Methods in Natural Language Processing},\n  doi = {10.18653/v1/2022.emnlp-main.357},\n\
+      \  title = {DuReader-Retrieval: A Large-scale Chinese Benchmark for Passage Retrieval\
+      \ from Web Search Engine},\n  url = {https://aclanthology.org/2022.emnlp-main.357/},\n  year = {2022}\n\
       }\n\n@article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and Hui Wang\
       \ and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n  journal\
       \ = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale Attentive Interaction\
@@ -301,7 +313,7 @@ task_metadata:
       in Multi-CPR. Queries are shopping search intents and documents are product description
       sentences.
     citation_keys:
-    - multicpr
+    - long2022multicpr
     references:
     - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
       authors:
@@ -316,14 +328,17 @@ task_metadata:
       - Luxi Xing
       - Ping Yang
       year: 2022
-      url: https://arxiv.org/abs/2203.03367
+      url: https://doi.org/10.1145/3477495.3531736
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{long2022multicpr,\n  archiveprefix = {arXiv},\n  author = {Long, Dingkun\
-      \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
-      \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  eprint = {2203.03367},\n\
-      \  primaryclass = {cs.IR},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for\
-      \ Passage Retrieval},\n  url = {https://arxiv.org/abs/2203.03367},\n  year = {2022}\n\
+      doi: 10.1145/3477495.3531736
+    bibtex: "@inproceedings{long2022multicpr,\n  author = {Long, Dingkun and Gao,\
+      \ Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and Xu,\
+      \ Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings\
+      \ of the 45th International ACM SIGIR Conference on Research and Development in Information\
+      \ Retrieval},\n  doi = {10.1145/3477495.3531736},\n  title = {Multi-CPR: A Multi\
+      \ Domain Chinese Dataset for Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n\
+      \  year = {2022}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -344,7 +359,7 @@ task_metadata:
     description: NanoMedicalRetrieval evaluates medical answer retrieval from Multi-CPR, matching
       Chinese medical questions to user replies or medical information that best answer them.
     citation_keys:
-    - multicpr
+    - long2022multicpr
     references:
     - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
       authors:
@@ -359,14 +374,17 @@ task_metadata:
       - Luxi Xing
       - Ping Yang
       year: 2022
-      url: https://arxiv.org/abs/2203.03367
+      url: https://doi.org/10.1145/3477495.3531736
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{long2022multicpr,\n  archiveprefix = {arXiv},\n  author = {Long, Dingkun\
-      \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
-      \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  eprint = {2203.03367},\n\
-      \  primaryclass = {cs.IR},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for\
-      \ Passage Retrieval},\n  url = {https://arxiv.org/abs/2203.03367},\n  year = {2022}\n\
+      doi: 10.1145/3477495.3531736
+    bibtex: "@inproceedings{long2022multicpr,\n  author = {Long, Dingkun and Gao,\
+      \ Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and Xu,\
+      \ Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings\
+      \ of the 45th International ACM SIGIR Conference on Research and Development in Information\
+      \ Retrieval},\n  doi = {10.1145/3477495.3531736},\n  title = {Multi-CPR: A Multi\
+      \ Domain Chinese Dataset for Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n\
+      \  year = {2022}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -387,7 +405,7 @@ task_metadata:
     description: NanoVideoRetrieval evaluates Chinese video title retrieval from Multi-CPR.
       Given a video search query, models rank relevant video-title documents.
     citation_keys:
-    - multicpr
+    - long2022multicpr
     references:
     - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
       authors:
@@ -402,14 +420,17 @@ task_metadata:
       - Luxi Xing
       - Ping Yang
       year: 2022
-      url: https://arxiv.org/abs/2203.03367
+      url: https://doi.org/10.1145/3477495.3531736
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{long2022multicpr,\n  archiveprefix = {arXiv},\n  author = {Long, Dingkun\
-      \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
-      \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  eprint = {2203.03367},\n\
-      \  primaryclass = {cs.IR},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for\
-      \ Passage Retrieval},\n  url = {https://arxiv.org/abs/2203.03367},\n  year = {2022}\n\
+      doi: 10.1145/3477495.3531736
+    bibtex: "@inproceedings{long2022multicpr,\n  author = {Long, Dingkun and Gao,\
+      \ Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and Xu,\
+      \ Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings\
+      \ of the 45th International ACM SIGIR Conference on Research and Development in Information\
+      \ Retrieval},\n  doi = {10.1145/3477495.3531736},\n  title = {Multi-CPR: A Multi\
+      \ Domain Chinese Dataset for Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n\
+      \  year = {2022}\n\
       }\n"
     query_text_stats:
       count: 200

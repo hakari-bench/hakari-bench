@@ -40,7 +40,7 @@ metadata:
     \ and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings of the\
     \ 2025 Conference of the Nations of the Americas Chapter of the Association for Computational\
     \ Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  pages = {10186--10204},\n\
-    \  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n}\n"
+    \  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n}\n"
 task_metadata:
   NanoIFIRAila:
     language: en
@@ -82,7 +82,7 @@ task_metadata:
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
       }\n\n@inproceedings{aila2019retrieval,
   title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
   author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
@@ -141,7 +141,7 @@ task_metadata:
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
       }\n\n@inproceedings{roberts2015treccds,\n  title = {Overview of the TREC 2015 Clinical\
       \ Decision Support Track},\n  author = {Kirk Roberts and Matthew S. Simpson and Ellen\
       \ M. Voorhees and William R. Hersh},\n  booktitle = {Proceedings of The Twenty-Fourth\
@@ -199,7 +199,7 @@ task_metadata:
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
       }\n\n@inproceedings{maia2018fiqa,\n  title = {WWW'18 Open Challenge: Financial Opinion\
       \ Mining and Question Answering},\n  author = {Macedo Maia and Siegfried Handschuh and\
       \ Andre Freitas and Brian Davis and Ross McDermott and Manel Zarrouk and Alexandra Balahur},\n\
@@ -255,7 +255,7 @@ task_metadata:
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
       }\n\n@inproceedings{mandal2017fireirled,\n  title = {Overview of the FIRE 2017 IRLeD\
       \ Track: Information Retrieval from Legal Documents},\n  author = {Arpan Mandal and\
       \ Kripabandhu Ghosh and Arnab Bhattacharya and Arindam Pal and Saptarshi Ghosh},\n\
@@ -310,7 +310,7 @@ task_metadata:
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
       }\n\n@inproceedings{boteva2016nfcorpus,\n  title = {NFCorpus: A Full-Text Learning to\
       \ Rank Dataset for Medical Information Retrieval},\n  author = {Vera Boteva and Demian\
       \ Gholipour and Artem Sokolov and Stefan Riezler},\n  booktitle = {Advances in Information\
@@ -367,7 +367,7 @@ task_metadata:
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
       }\n\n@inproceedings{roberts2017trecpm,\n  title = {Overview of the TREC 2017 Precision\
       \ Medicine Track},\n  author = {Kirk Roberts and Dina Demner-Fushman and Ellen M. Voorhees\
       \ and William R. Hersh and Steven Bedrick and Alexander J. Lazar and Shubham Pant},\n\
@@ -425,7 +425,7 @@ task_metadata:
       \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
       \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
       \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/}\n\
+      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
       }\n\n@inproceedings{wadden2020scifact,\n  title = {SciFact: A Dataset and Benchmark\
       \ for Scientific Claim Verification},\n  author = {David Wadden and Shanchuan Lin and\
       \ Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen and Arman Cohan and Hannaneh Hajishirzi},\n\
