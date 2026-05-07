@@ -21,7 +21,8 @@ metadata:
   category: code
   short_description: Nano subset of the CoIR code information retrieval benchmark.
   description: NanoCoIR contains compact splits derived from CoIR for evaluating code-oriented
-    retrieval across text-to-code, code-to-text, code-to-code, and hybrid code QA settings.
+    retrieval across text-to-code, code-to-text, code-to-code, and hybrid code QA
+    settings.
   citation_keys:
   - li2025coir
   references:
@@ -40,25 +41,21 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2025.acl-long.1072
-  bibtex: |
-    @inproceedings{li2025coir,
-      title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-      author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-      booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-      pages = {22074--22091},
-      year = {2025},
-      address = {Vienna, Austria},
-      publisher = {Association for Computational Linguistics},
-      url = {https://aclanthology.org/2025.acl-long.1072/},
-      doi = {10.18653/v1/2025.acl-long.1072}
-    }
+  bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+    \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+    \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+    \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual Meeting\
+    \ of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+    \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+    \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+    \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n"
 task_metadata:
   NanoApps:
     language: en
     category: code
     short_description: APPS coding challenge retrieval.
-    description: Uses programming problem statements as queries and candidate solution code as
-      documents, testing retrieval for competitive-programming style tasks.
+    description: Uses programming problem statements as queries and candidate solution
+      code as documents, testing retrieval for competitive-programming style tasks.
     citation_keys:
     - li2025coir
     - hendrycks2021apps
@@ -92,30 +89,24 @@ task_metadata:
       - Dawn Song
       - Jacob Steinhardt
       year: 2021
-      url:
-        https://datasets-benchmarks-proceedings.neurips.cc/paper_files/paper/2021/hash/c24cd76e1ce41366a4bbe8a49b02a028-Abstract-round2.html
+      url: https://datasets-benchmarks-proceedings.neurips.cc/paper_files/paper/2021/hash/c24cd76e1ce41366a4bbe8a49b02a028-Abstract-round2.html
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @inproceedings{li2025coir,
-        title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-        author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-        booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-        pages = {22074--22091},
-        year = {2025},
-        address = {Vienna, Austria},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2025.acl-long.1072/},
-        doi = {10.18653/v1/2025.acl-long.1072}
-      }
-
-      @inproceedings{hendrycks2021apps,
-        title = {Measuring Coding Challenge Competence With APPS},
-        author = {Hendrycks, Dan and Basart, Steven and Kadavath, Saurav and Mazeika, Mantas and Arora, Akul and Guo, Ethan and Burns, Collin and Puranik, Samir and He, Horace and Song, Dawn and Steinhardt, Jacob},
-        booktitle = {Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks},
-        year = {2021},
-        url = {https://datasets-benchmarks-proceedings.neurips.cc/paper_files/paper/2021/hash/c24cd76e1ce41366a4bbe8a49b02a028-Abstract-round2.html}
-      }
+    bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+      \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+      \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+      \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual\
+      \ Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+      \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@inproceedings{hendrycks2021apps,\n\
+      \  title = {Measuring Coding Challenge Competence With APPS},\n  author = {Hendrycks,\
+      \ Dan and Basart, Steven and Kadavath, Saurav and Mazeika, Mantas and Arora,\
+      \ Akul and Guo, Ethan and Burns, Collin and Puranik, Samir and He, Horace and\
+      \ Song, Dawn and Steinhardt, Jacob},\n  booktitle = {Proceedings of the Neural\
+      \ Information Processing Systems Track on Datasets and Benchmarks},\n  year\
+      \ = {2021},\n  url = {https://datasets-benchmarks-proceedings.neurips.cc/paper_files/paper/2021/hash/c24cd76e1ce41366a4bbe8a49b02a028-Abstract-round2.html}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 411
@@ -128,6 +119,26 @@ task_metadata:
       max_chars: 289048
       mean_chars: 573.1170893305917
       median_chars: 331.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 98.5
+          ru: 1.5
+      document:
+        sample_count: 8754
+        languages:
+          en: 88.2
+          ceb: 3.438
+          fa: 2.81
+          zh: 1.382
+          ru: 1.062
+          ja: 0.64
   NanoCodeFeedbackMT:
     language: en
     category: code
@@ -153,7 +164,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.acl-long.1072
-    - title: 'OpenCodeInterpreter: Integrating Code Generation with Execution and Refinement'
+    - title: 'OpenCodeInterpreter: Integrating Code Generation with Execution and
+        Refinement'
       authors:
       - Tianyu Zheng
       - Ge Zhang
@@ -168,28 +180,20 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2402.14658
-    bibtex: |
-      @inproceedings{li2025coir,
-        title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-        author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-        booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-        pages = {22074--22091},
-        year = {2025},
-        address = {Vienna, Austria},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2025.acl-long.1072/},
-        doi = {10.18653/v1/2025.acl-long.1072}
-      }
-
-      @misc{zheng2024opencodeinterpreter,
-        title = {OpenCodeInterpreter: Integrating Code Generation with Execution and Refinement},
-        author = {Zheng, Tianyu and Zhang, Ge and Shen, Tianhao and Liu, Xueling and Lin, Bill Yuchen and Fu, Jie and Chen, Wenhu and Yue, Xiang},
-        year = {2024},
-        eprint = {2402.14658},
-        archivePrefix = {arXiv},
-        url = {https://arxiv.org/abs/2402.14658},
-        doi = {10.48550/arXiv.2402.14658}
-      }
+    bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+      \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+      \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+      \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual\
+      \ Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+      \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@misc{zheng2024opencodeinterpreter,\n\
+      \  title = {OpenCodeInterpreter: Integrating Code Generation with Execution\
+      \ and Refinement},\n  author = {Zheng, Tianyu and Zhang, Ge and Shen, Tianhao\
+      \ and Liu, Xueling and Lin, Bill Yuchen and Fu, Jie and Chen, Wenhu and Yue,\
+      \ Xiang},\n  year = {2024},\n  eprint = {2402.14658},\n  archivePrefix = {arXiv},\n\
+      \  url = {https://arxiv.org/abs/2402.14658},\n  doi = {10.48550/arXiv.2402.14658}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 285
@@ -202,12 +206,26 @@ task_metadata:
       max_chars: 9402
       mean_chars: 1468.1565
       median_chars: 1373.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.34
   NanoCodeFeedbackST:
     language: en
     category: code
     short_description: Single-turn code feedback retrieval.
-    description: Retrieves code-assistant responses for single-turn programming instructions from
-      the CoIR CodeFeedback-ST task.
+    description: Retrieves code-assistant responses for single-turn programming instructions
+      from the CoIR CodeFeedback-ST task.
     citation_keys:
     - li2025coir
     references:
@@ -226,18 +244,14 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.acl-long.1072
-    bibtex: |
-      @inproceedings{li2025coir,
-        title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-        author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-        booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-        pages = {22074--22091},
-        year = {2025},
-        address = {Vienna, Austria},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2025.acl-long.1072/},
-        doi = {10.18653/v1/2025.acl-long.1072}
-      }
+    bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+      \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+      \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+      \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual\
+      \ Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+      \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 57
@@ -250,6 +264,20 @@ task_metadata:
       max_chars: 11353
       mean_chars: 1538.7276
       median_chars: 1407.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 98.08
   NanoCodeTransOceanContest:
     language: en
     category: code
@@ -287,30 +315,21 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2023.findings-emnlp.337
-    bibtex: |
-      @inproceedings{li2025coir,
-        title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-        author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-        booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-        pages = {22074--22091},
-        year = {2025},
-        address = {Vienna, Austria},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2025.acl-long.1072/},
-        doi = {10.18653/v1/2025.acl-long.1072}
-      }
-
-      @inproceedings{yan2023codetransocean,
-        title = {{CodeTransOcean}: A Comprehensive Multilingual Benchmark for Code Translation},
-        author = {Yan, Weixiang and Tian, Yuchen and Li, Yunzhe and Chen, Qian and Wang, Wen},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2023},
-        pages = {5067--5089},
-        year = {2023},
-        address = {Singapore},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2023.findings-emnlp.337/},
-        doi = {10.18653/v1/2023.findings-emnlp.337}
-      }
+    bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+      \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+      \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+      \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual\
+      \ Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+      \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@inproceedings{yan2023codetransocean,\n\
+      \  title = {{CodeTransOcean}: A Comprehensive Multilingual Benchmark for Code\
+      \ Translation},\n  author = {Yan, Weixiang and Tian, Yuchen and Li, Yunzhe and\
+      \ Chen, Qian and Wang, Wen},\n  booktitle = {Findings of the Association for\
+      \ Computational Linguistics: EMNLP 2023},\n  pages = {5067--5089},\n  year =\
+      \ {2023},\n  address = {Singapore},\n  publisher = {Association for Computational\
+      \ Linguistics},\n  url = {https://aclanthology.org/2023.findings-emnlp.337/},\n\
+      \  doi = {10.18653/v1/2023.findings-emnlp.337}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 7
@@ -323,12 +342,32 @@ task_metadata:
       max_chars: 10876
       mean_chars: 1528.720238095238
       median_chars: 1118.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 98.0
+          pt: 1.0
+          de: 0.5
+          es: 0.5
+      document:
+        sample_count: 1008
+        languages:
+          en: 88.095
+          es: 8.433
+          ja: 1.587
+          uk: 1.091
   NanoCodeTransOceanDL:
     language: en
     category: code
     short_description: Deep-learning framework code retrieval.
-    description: Uses CodeTransOcean-DL examples to retrieve equivalent Python deep-learning code
-      across machine-learning frameworks.
+    description: Uses CodeTransOcean-DL examples to retrieve equivalent Python deep-learning
+      code across machine-learning frameworks.
     citation_keys:
     - li2025coir
     - yan2023codetransocean
@@ -360,30 +399,21 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2023.findings-emnlp.337
-    bibtex: |
-      @inproceedings{li2025coir,
-        title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-        author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-        booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-        pages = {22074--22091},
-        year = {2025},
-        address = {Vienna, Austria},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2025.acl-long.1072/},
-        doi = {10.18653/v1/2025.acl-long.1072}
-      }
-
-      @inproceedings{yan2023codetransocean,
-        title = {{CodeTransOcean}: A Comprehensive Multilingual Benchmark for Code Translation},
-        author = {Yan, Weixiang and Tian, Yuchen and Li, Yunzhe and Chen, Qian and Wang, Wen},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2023},
-        pages = {5067--5089},
-        year = {2023},
-        address = {Singapore},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2023.findings-emnlp.337/},
-        doi = {10.18653/v1/2023.findings-emnlp.337}
-      }
+    bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+      \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+      \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+      \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual\
+      \ Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+      \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@inproceedings{yan2023codetransocean,\n\
+      \  title = {{CodeTransOcean}: A Comprehensive Multilingual Benchmark for Code\
+      \ Translation},\n  author = {Yan, Weixiang and Tian, Yuchen and Li, Yunzhe and\
+      \ Chen, Qian and Wang, Wen},\n  booktitle = {Findings of the Association for\
+      \ Computational Linguistics: EMNLP 2023},\n  pages = {5067--5089},\n  year =\
+      \ {2023},\n  address = {Singapore},\n  publisher = {Association for Computational\
+      \ Linguistics},\n  url = {https://aclanthology.org/2023.findings-emnlp.337/},\n\
+      \  doi = {10.18653/v1/2023.findings-emnlp.337}\n}\n"
     query_text_stats:
       count: 50
       min_chars: 376
@@ -396,12 +426,30 @@ task_metadata:
       max_chars: 8468
       mean_chars: 1644.9924812030076
       median_chars: 1314.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 94.0
+          es: 2.0
+          pl: 2.0
+          ru: 2.0
+      document:
+        sample_count: 266
+        languages:
+          en: 97.744
+          es: 1.88
   NanoCosQA:
     language: en
     category: code
     short_description: Web-query-to-code retrieval.
-    description: Uses CoSQA web queries to retrieve relevant Python code, testing short
-      natural-language code search with lexical and semantic gaps.
+    description: Uses CoSQA web queries to retrieve relevant Python code, testing
+      short natural-language code search with lexical and semantic gaps.
     citation_keys:
     - li2025coir
     - huang2021cosqa
@@ -436,30 +484,23 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2021.acl-long.442
-    bibtex: |
-      @inproceedings{li2025coir,
-        title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-        author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-        booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-        pages = {22074--22091},
-        year = {2025},
-        address = {Vienna, Austria},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2025.acl-long.1072/},
-        doi = {10.18653/v1/2025.acl-long.1072}
-      }
-
-      @inproceedings{huang2021cosqa,
-        title = {{CoSQA}: 20,000+ Web Queries for Code Search and Question Answering},
-        author = {Huang, Junjie and Tang, Duyu and Shou, Linjun and Gong, Ming and Xu, Ke and Jiang, Daxin and Zhou, Ming and Duan, Nan},
-        booktitle = {Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)},
-        pages = {5690--5700},
-        year = {2021},
-        address = {Online},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2021.acl-long.442/},
-        doi = {10.18653/v1/2021.acl-long.442}
-      }
+    bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+      \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+      \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+      \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual\
+      \ Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+      \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@inproceedings{huang2021cosqa,\n\
+      \  title = {{CoSQA}: 20,000+ Web Queries for Code Search and Question Answering},\n\
+      \  author = {Huang, Junjie and Tang, Duyu and Shou, Linjun and Gong, Ming and\
+      \ Xu, Ke and Jiang, Daxin and Zhou, Ming and Duan, Nan},\n  booktitle = {Proceedings\
+      \ of the 59th Annual Meeting of the Association for Computational Linguistics\
+      \ and the 11th International Joint Conference on Natural Language Processing\
+      \ (Volume 1: Long Papers)},\n  pages = {5690--5700},\n  year = {2021},\n  address\
+      \ = {Online},\n  publisher = {Association for Computational Linguistics},\n\
+      \  url = {https://aclanthology.org/2021.acl-long.442/},\n  doi = {10.18653/v1/2021.acl-long.442}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 18
@@ -472,12 +513,34 @@ task_metadata:
       max_chars: 6395
       mean_chars: 307.6144885910324
       median_chars: 258.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 95.0
+          cs: 1.5
+          es: 0.5
+          fr: 0.5
+          it: 0.5
+          kn: 0.5
+          nl: 0.5
+          ru: 0.5
+          sv: 0.5
+      document:
+        sample_count: 6267
+        languages:
+          en: 98.341
   NanoStackOverflowQA:
     language: en
     category: code
     short_description: StackOverflow code QA retrieval.
-    description: Retrieves relevant StackOverflow-style answers that may mix prose and code for real
-      programming questions.
+    description: Retrieves relevant StackOverflow-style answers that may mix prose
+      and code for real programming questions.
     citation_keys:
     - li2025coir
     references:
@@ -496,18 +559,14 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.acl-long.1072
-    bibtex: |
-      @inproceedings{li2025coir,
-        title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-        author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-        booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-        pages = {22074--22091},
-        year = {2025},
-        address = {Vienna, Austria},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2025.acl-long.1072/},
-        doi = {10.18653/v1/2025.acl-long.1072}
-      }
+    bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+      \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+      \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+      \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual\
+      \ Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+      \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 61
@@ -520,12 +579,26 @@ task_metadata:
       max_chars: 46027
       mean_chars: 1218.0589
       median_chars: 730.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.3
   NanoSyntheticText2SQL:
     language: en
     category: code
     short_description: Text-to-SQL retrieval.
-    description: Retrieves SQL statements for natural-language database questions using the Gretel
-      synthetic text-to-SQL dataset adapted in CoIR.
+    description: Retrieves SQL statements for natural-language database questions
+      using the Gretel synthetic text-to-SQL dataset adapted in CoIR.
     citation_keys:
     - li2025coir
     - gretel2024syntheticsql
@@ -545,8 +618,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.acl-long.1072
-    - title: 'Synthetic-Text-To-SQL: A synthetic dataset for training language models to generate SQL
-        queries from natural language prompts'
+    - title: 'Synthetic-Text-To-SQL: A synthetic dataset for training language models
+        to generate SQL queries from natural language prompts'
       authors:
       - Yev Meyer
       - Marjan Emadi
@@ -561,26 +634,20 @@ task_metadata:
       url: https://huggingface.co/datasets/gretelai/synthetic_text_to_sql
       is_paper: false
       source_confidence: probably_correct
-    bibtex: |
-      @inproceedings{li2025coir,
-        title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-        author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-        booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-        pages = {22074--22091},
-        year = {2025},
-        address = {Vienna, Austria},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2025.acl-long.1072/},
-        doi = {10.18653/v1/2025.acl-long.1072}
-      }
-
-      @software{gretel2024syntheticsql,
-        title = {{Synthetic-Text-To-SQL}: A synthetic dataset for training language models to generate SQL queries from natural language prompts},
-        author = {Meyer, Yev and Emadi, Marjan and Nathawani, Dhruv and Ramaswamy, Lipika and Boyd, Kendrick and Van Segbroeck, Maarten and Grossman, Matthew and Mlocek, Piotr and Newberry, Drew},
-        month = {April},
-        year = {2024},
-        url = {https://huggingface.co/datasets/gretelai/synthetic-text-to-sql}
-      }
+    bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+      \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+      \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+      \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual\
+      \ Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+      \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@software{gretel2024syntheticsql,\n\
+      \  title = {{Synthetic-Text-To-SQL}: A synthetic dataset for training language\
+      \ models to generate SQL queries from natural language prompts},\n  author =\
+      \ {Meyer, Yev and Emadi, Marjan and Nathawani, Dhruv and Ramaswamy, Lipika and\
+      \ Boyd, Kendrick and Van Segbroeck, Maarten and Grossman, Matthew and Mlocek,\
+      \ Piotr and Newberry, Drew},\n  month = {April},\n  year = {2024},\n  url =\
+      \ {https://huggingface.co/datasets/gretelai/synthetic-text-to-sql}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 49
@@ -593,12 +660,26 @@ task_metadata:
       max_chars: 730
       mean_chars: 130.6048
       median_chars: 111.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.06
   NanoCodeSearchNet:
     language: en
     category: code
     short_description: CodeSearchNet code-summary retrieval.
-    description: Uses CodeSearchNet pairs to retrieve the natural-language summary or documentation
-      associated with a code snippet.
+    description: Uses CodeSearchNet pairs to retrieve the natural-language summary
+      or documentation associated with a code snippet.
     citation_keys:
     - li2025coir
     - husain2019codesearchnet
@@ -630,27 +711,19 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.1909.09436
-    bibtex: |
-      @inproceedings{li2025coir,
-        title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-        author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-        booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-        pages = {22074--22091},
-        year = {2025},
-        address = {Vienna, Austria},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2025.acl-long.1072/},
-        doi = {10.18653/v1/2025.acl-long.1072}
-      }
-
-      @article{husain2019codesearchnet,
-        title = {{CodeSearchNet} Challenge: Evaluating the State of Semantic Code Search},
-        author = {Husain, Hamel and Wu, Ho-Hsiang and Gazit, Tiferet and Allamanis, Miltiadis and Brockschmidt, Marc},
-        journal = {arXiv preprint arXiv:1909.09436},
-        year = {2019},
-        url = {https://arxiv.org/abs/1909.09436},
-        doi = {10.48550/arXiv.1909.09436}
-      }
+    bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+      \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+      \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+      \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual\
+      \ Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+      \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n\n@article{husain2019codesearchnet,\n\
+      \  title = {{CodeSearchNet} Challenge: Evaluating the State of Semantic Code\
+      \ Search},\n  author = {Husain, Hamel and Wu, Ho-Hsiang and Gazit, Tiferet and\
+      \ Allamanis, Miltiadis and Brockschmidt, Marc},\n  journal = {arXiv preprint\
+      \ arXiv:1909.09436},\n  year = {2019},\n  url = {https://arxiv.org/abs/1909.09436},\n\
+      \  doi = {10.48550/arXiv.1909.09436}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 83
@@ -663,6 +736,33 @@ task_metadata:
       max_chars: 2610
       mean_chars: 86.072
       median_chars: 65.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 85.5
+          pt: 5.5
+          ru: 2.5
+          zh: 2.0
+          tr: 1.5
+          es: 1.0
+          ceb: 0.5
+          hu: 0.5
+          nl: 0.5
+          uk: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          en: 94.34
+          es: 1.5
+          ru: 1.0
+          uk: 0.58
+          zh: 0.51
   NanoCodeSearchNetCCR:
     language: en
     category: code
@@ -687,18 +787,14 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.acl-long.1072
-    bibtex: |
-      @inproceedings{li2025coir,
-        title = {{CoIR}: A Comprehensive Benchmark for Code Information Retrieval Models},
-        author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},
-        booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-        pages = {22074--22091},
-        year = {2025},
-        address = {Vienna, Austria},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/2025.acl-long.1072/},
-        doi = {10.18653/v1/2025.acl-long.1072}
-      }
+    bibtex: "@inproceedings{li2025coir,\n  title = {{CoIR}: A Comprehensive Benchmark\
+      \ for Code Information Retrieval Models},\n  author = {Li, Xiangyang and Dong,\
+      \ Kuicai and Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang,\
+      \ Yasheng and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual\
+      \ Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  year = {2025},\n  address = {Vienna, Austria},\n\
+      \  publisher = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+      \  doi = {10.18653/v1/2025.acl-long.1072}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 47
@@ -711,3 +807,36 @@ task_metadata:
       max_chars: 1849
       mean_chars: 158.4226
       median_chars: 99.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 86.0
+          pt: 5.5
+          ru: 2.5
+          zh: 2.0
+          tr: 1.5
+          es: 1.0
+          ceb: 0.5
+          hu: 0.5
+          uk: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          en: 78.37
+          es: 3.42
+          ru: 2.48
+          ja: 2.0
+          de: 1.74
+          zh: 1.71
+          uk: 1.35
+          it: 1.26
+          fa: 1.09
+          ar: 0.74
+          pt: 0.68
+          fr: 0.57

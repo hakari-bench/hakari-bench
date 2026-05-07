@@ -29,6 +29,20 @@ metadata:
   category: natural_language
   short_description: Compact MTEB English retrieval benchmark.
   description: NanoMTEB is a compact English retrieval benchmark aligned with the MTEB retrieval evaluation suite.
+  languages:
+  - en
+  language_detection:
+    detector: fast-langdetect
+    min_language_percent: 0.5
+    main_language_percent: 10.0
+    query:
+      sample_count: 200
+      languages:
+        en: 100.0
+    document:
+      sample_count: 10000
+      languages:
+        en: 99.8
   citation_keys:
   - muennighoff2023mteb
   references:
@@ -62,6 +76,20 @@ task_metadata:
     category: natural_language
     short_description: Argument retrieval over counterargument pairs.
     description: A compact ArguAna split where each query is an argument and relevant documents are strong counterarguments.
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 8626
+        languages:
+          en: 100.0
     citation_keys:
     - wachsmuth2018arguana
     references:
@@ -93,6 +121,8 @@ task_metadata:
 | Field | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `language` | string | yes | ISO 639-1 two-character code, or `multilingual`. |
+| `languages` | list of strings | recommended | Main detected languages for the task. Include languages that account for at least 10% of either query or document texts, ordered by detected usage. Use `unknown` when detection cannot establish a language. |
+| `language_detection` | mapping | recommended | `fast-langdetect` query/document language percentages. Include languages at or above 0.5% for each side. |
 | `category` | string | yes | `natural_language` or `code`. |
 | `short_description` | string | yes | 140 characters or fewer. |
 | `description` | string | yes | Human-readable benchmark/task overview. Prefer concise prose for YAML maintainability. |
@@ -123,6 +153,20 @@ task_metadata:
 | `max_chars` | integer or float | yes |
 | `mean_chars` | integer or float | yes |
 | `median_chars` | integer or float | yes |
+
+### Language Detection Object
+
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `detector` | string | yes | Currently `fast-langdetect`. |
+| `min_language_percent` | integer or float | yes | Minimum side percentage reported under `query.languages` and `document.languages`; normally `0.5`. |
+| `main_language_percent` | integer or float | yes | Threshold for inclusion in top-level `languages`; normally `10.0`. |
+| `query.sample_count` | integer | yes | Number of non-empty query texts passed to the detector. |
+| `query.languages` | mapping | yes | Detected query-language percentages, ordered descending. |
+| `document.sample_count` | integer | yes | Number of non-empty document texts passed to the detector. |
+| `document.languages` | mapping | yes | Detected document-language percentages, ordered descending. |
+
+For code retrieval tasks whose natural-language surface is primarily English, keep top-level `languages` as `["en"]` even when code snippets cause `fast-langdetect` to assign programming tokens to unrelated natural languages. Preserve those raw detector percentages in `language_detection` rather than hiding them.
 
 ## Source Confidence Labels
 
@@ -161,13 +205,14 @@ Before committing metadata changes:
 
 1. Confirm every split/task has `task_metadata`.
 2. Confirm every metadata block has `language`, `category`, `short_description`, and `description`.
-3. Confirm every reference has boolean `is_paper` and valid `source_confidence`.
-4. Confirm no AI audit assigns `human_verified`.
-5. Confirm duplicated citation keys and duplicated authors are removed.
-6. Confirm BibTeX keys match `citation_keys`.
-7. Confirm source URLs, DOI values, years, and author lists refer to the same work.
-8. Confirm text stats are numeric and use the required five fields.
-9. Run the repository checks required by `AGENTS.md`, normally `uv run tox` before committing.
+3. Confirm `languages` contains the main detected languages and `language_detection` records query/document percentages when language detection has been run.
+4. Confirm every reference has boolean `is_paper` and valid `source_confidence`.
+5. Confirm no AI audit assigns `human_verified`.
+6. Confirm duplicated citation keys and duplicated authors are removed.
+7. Confirm BibTeX keys match `citation_keys`.
+8. Confirm source URLs, DOI values, years, and author lists refer to the same work.
+9. Confirm text stats are numeric and use the required five fields.
+10. Run the repository checks required by `AGENTS.md`, normally `uv run tox` before committing.
 
 ## Long Audits
 

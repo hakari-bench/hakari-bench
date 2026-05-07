@@ -23,7 +23,9 @@ metadata:
   language: fa
   category: natural_language
   short_description: Persian NanoMTEB retrieval benchmark aligned with FaMTEB.
-  description: NanoMTEB-Persian is a compact Persian retrieval benchmark aligned with FaMTEB and MTEB-style retrieval tasks, covering translated BEIR-style datasets, Persian web retrieval, NeuCLIR, WebFAQ, and synthetic Persian QA/chatbot retrieval.
+  description: NanoMTEB-Persian is a compact Persian retrieval benchmark aligned with
+    FaMTEB and MTEB-style retrieval tasks, covering translated BEIR-style datasets,
+    Persian web retrieval, NeuCLIR, WebFAQ, and synthetic Persian QA/chatbot retrieval.
   citation_keys:
   - zinvandi2025famteb
   references:
@@ -41,22 +43,21 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2025.findings-emnlp.614
-  bibtex: |
-    @inproceedings{zinvandi2025famteb,
-      title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-      author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-      booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-      pages = {11441--11468},
-      year = {2025},
-      url = {https://aclanthology.org/2025.findings-emnlp.614/},
-      doi = {10.18653/v1/2025.findings-emnlp.614}
-    }
+  bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text Embedding\
+    \ Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and Alikhani, Morteza\
+    \ and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza\
+    \ and Amini, Arash},\n  booktitle = {Findings of the Association for Computational\
+    \ Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n  year = {2025},\n  url\
+    \ = {https://aclanthology.org/2025.findings-emnlp.614/},\n  doi = {10.18653/v1/2025.findings-emnlp.614}\n\
+    }\n"
 task_metadata:
   NanoFEVERFaHardNegatives:
     language: fa
     category: natural_language
     short_description: Persian FEVER evidence retrieval with hard negatives.
-    description: NanoFEVERFaHardNegatives evaluates Persian fact-verification evidence retrieval derived from FEVER and adapted in FaMTEB with hard-negative candidate pools.
+    description: NanoFEVERFaHardNegatives evaluates Persian fact-verification evidence
+      retrieval derived from FEVER and adapted in FaMTEB with hard-negative candidate
+      pools.
     citation_keys:
     - zinvandi2025famteb
     - thorne2018fever
@@ -86,29 +87,40 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/N18-1074
-    bibtex: |
-      @inproceedings{zinvandi2025famteb,
-        title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-        pages = {11441--11468},
-        year = {2025},
-        url = {https://aclanthology.org/2025.findings-emnlp.614/},
-        doi = {10.18653/v1/2025.findings-emnlp.614}
-      }
-      @inproceedings{thorne2018fever,
-        title = {{FEVER}: a Large-scale Dataset for Fact Extraction and Verification},
-        author = {Thorne, James and Vlachos, Andreas and Christodoulopoulos, Christos and Mittal, Arpit},
-        booktitle = {Proceedings of NAACL-HLT},
-        year = {2018},
-        url = {https://aclanthology.org/N18-1074/},
-        doi = {10.18653/v1/N18-1074}
-      }
+    bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text\
+      \ Embedding Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and\
+      \ Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr\
+      \ and Kazemi, Reza and Amini, Arash},\n  booktitle = {Findings of the Association\
+      \ for Computational Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n \
+      \ year = {2025},\n  url = {https://aclanthology.org/2025.findings-emnlp.614/},\n\
+      \  doi = {10.18653/v1/2025.findings-emnlp.614}\n}\n@inproceedings{thorne2018fever,\n\
+      \  title = {{FEVER}: a Large-scale Dataset for Fact Extraction and Verification},\n\
+      \  author = {Thorne, James and Vlachos, Andreas and Christodoulopoulos, Christos\
+      \ and Mittal, Arpit},\n  booktitle = {Proceedings of NAACL-HLT},\n  year = {2018},\n\
+      \  url = {https://aclanthology.org/N18-1074/},\n  doi = {10.18653/v1/N18-1074}\n\
+      }\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 97.51
+          en: 1.63
+          mzn: 0.8
   NanoNQFa:
     language: fa
     category: natural_language
     short_description: Persian Natural Questions retrieval.
-    description: NanoNQFa evaluates Persian question-to-document retrieval derived from Natural Questions and adapted as a Persian FaMTEB retrieval task.
+    description: NanoNQFa evaluates Persian question-to-document retrieval derived
+      from Natural Questions and adapted as a Persian FaMTEB retrieval task.
     citation_keys:
     - zinvandi2025famteb
     - kwiatkowski2019nq
@@ -152,31 +164,44 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00276
-    bibtex: |
-      @inproceedings{zinvandi2025famteb,
-        title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-        pages = {11441--11468},
-        year = {2025},
-        url = {https://aclanthology.org/2025.findings-emnlp.614/},
-        doi = {10.18653/v1/2025.findings-emnlp.614}
-      }
-      @article{kwiatkowski2019nq,
-        title = {Natural Questions: A Benchmark for Question Answering Research},
-        author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and Toutanova, Kristina and Jones, Llion and Kelcey, Matthew and Chang, Ming-Wei and Dai, Andrew M. and Uszkoreit, Jakob and Le, Quoc and Petrov, Slav},
-        journal = {Transactions of the Association for Computational Linguistics},
-        volume = {7},
-        pages = {452--466},
-        year = {2019},
-        url = {https://aclanthology.org/Q19-1026/},
-        doi = {10.1162/tacl_a_00276}
-      }
+    bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text\
+      \ Embedding Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and\
+      \ Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr\
+      \ and Kazemi, Reza and Amini, Arash},\n  booktitle = {Findings of the Association\
+      \ for Computational Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n \
+      \ year = {2025},\n  url = {https://aclanthology.org/2025.findings-emnlp.614/},\n\
+      \  doi = {10.18653/v1/2025.findings-emnlp.614}\n}\n@article{kwiatkowski2019nq,\n\
+      \  title = {Natural Questions: A Benchmark for Question Answering Research},\n\
+      \  author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia\
+      \ and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle\
+      \ and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and Toutanova, Kristina\
+      \ and Jones, Llion and Kelcey, Matthew and Chang, Ming-Wei and Dai, Andrew M.\
+      \ and Uszkoreit, Jakob and Le, Quoc and Petrov, Slav},\n  journal = {Transactions\
+      \ of the Association for Computational Linguistics},\n  volume = {7},\n  pages\
+      \ = {452--466},\n  year = {2019},\n  url = {https://aclanthology.org/Q19-1026/},\n\
+      \  doi = {10.1162/tacl_a_00276}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 99.0
+          en: 0.5
+          ur: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.81
   NanoNQFaHardNegatives:
     language: fa
     category: natural_language
     short_description: Persian Natural Questions retrieval with hard negatives.
-    description: NanoNQFaHardNegatives evaluates the Persian Natural Questions retrieval task with hard-negative candidate pools from the FaMTEB/MTEB variant.
+    description: NanoNQFaHardNegatives evaluates the Persian Natural Questions retrieval
+      task with hard-negative candidate pools from the FaMTEB/MTEB variant.
     citation_keys:
     - zinvandi2025famteb
     - kwiatkowski2019nq
@@ -220,31 +245,42 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00276
-    bibtex: |
-      @inproceedings{zinvandi2025famteb,
-        title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-        pages = {11441--11468},
-        year = {2025},
-        url = {https://aclanthology.org/2025.findings-emnlp.614/},
-        doi = {10.18653/v1/2025.findings-emnlp.614}
-      }
-      @article{kwiatkowski2019nq,
-        title = {Natural Questions: A Benchmark for Question Answering Research},
-        author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and Toutanova, Kristina and Jones, Llion and Kelcey, Matthew and Chang, Ming-Wei and Dai, Andrew M. and Uszkoreit, Jakob and Le, Quoc and Petrov, Slav},
-        journal = {Transactions of the Association for Computational Linguistics},
-        volume = {7},
-        pages = {452--466},
-        year = {2019},
-        url = {https://aclanthology.org/Q19-1026/},
-        doi = {10.1162/tacl_a_00276}
-      }
+    bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text\
+      \ Embedding Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and\
+      \ Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr\
+      \ and Kazemi, Reza and Amini, Arash},\n  booktitle = {Findings of the Association\
+      \ for Computational Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n \
+      \ year = {2025},\n  url = {https://aclanthology.org/2025.findings-emnlp.614/},\n\
+      \  doi = {10.18653/v1/2025.findings-emnlp.614}\n}\n@article{kwiatkowski2019nq,\n\
+      \  title = {Natural Questions: A Benchmark for Question Answering Research},\n\
+      \  author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia\
+      \ and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle\
+      \ and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and Toutanova, Kristina\
+      \ and Jones, Llion and Kelcey, Matthew and Chang, Ming-Wei and Dai, Andrew M.\
+      \ and Uszkoreit, Jakob and Le, Quoc and Petrov, Slav},\n  journal = {Transactions\
+      \ of the Association for Computational Linguistics},\n  volume = {7},\n  pages\
+      \ = {452--466},\n  year = {2019},\n  url = {https://aclanthology.org/Q19-1026/},\n\
+      \  doi = {10.1162/tacl_a_00276}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.95
   NanoNeuCLIR2023:
     language: fa
     category: natural_language
     short_description: Persian NeuCLIR 2023 news retrieval.
-    description: NanoNeuCLIR2023 evaluates the Persian portion of TREC 2023 NeuCLIR, a cross-language news retrieval task with English topics and Persian documents.
+    description: NanoNeuCLIR2023 evaluates the Persian portion of TREC 2023 NeuCLIR,
+      a cross-language news retrieval task with English topics and Persian documents.
     citation_keys:
     - lawrie2024neuclir2023
     references:
@@ -262,19 +298,32 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2404.08071
-    bibtex: |
-      @misc{lawrie2024neuclir2023,
-        title = {Overview of the {TREC} 2023 {NeuCLIR} Track},
-        author = {Lawrie, Dawn and MacAvaney, Sean and Mayfield, James and McNamee, Paul and Oard, Douglas W. and Soldaini, Luca and Yang, Eugene},
-        year = {2024},
-        url = {https://arxiv.org/abs/2404.08071},
-        doi = {10.48550/arXiv.2404.08071}
-      }
+    bibtex: "@misc{lawrie2024neuclir2023,\n  title = {Overview of the {TREC} 2023\
+      \ {NeuCLIR} Track},\n  author = {Lawrie, Dawn and MacAvaney, Sean and Mayfield,\
+      \ James and McNamee, Paul and Oard, Douglas W. and Soldaini, Luca and Yang,\
+      \ Eugene},\n  year = {2024},\n  url = {https://arxiv.org/abs/2404.08071},\n\
+      \  doi = {10.48550/arXiv.2404.08071}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 45
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.98
   NanoNeuCLIR2023HardNegatives:
     language: fa
     category: natural_language
     short_description: Persian NeuCLIR 2023 retrieval with hard negatives.
-    description: NanoNeuCLIR2023HardNegatives evaluates the Persian TREC 2023 NeuCLIR retrieval task using a hard-negative candidate pool derived from lexical and dense retrieval systems.
+    description: NanoNeuCLIR2023HardNegatives evaluates the Persian TREC 2023 NeuCLIR
+      retrieval task using a hard-negative candidate pool derived from lexical and
+      dense retrieval systems.
     citation_keys:
     - lawrie2024neuclir2023
     references:
@@ -292,19 +341,33 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2404.08071
-    bibtex: |
-      @misc{lawrie2024neuclir2023,
-        title = {Overview of the {TREC} 2023 {NeuCLIR} Track},
-        author = {Lawrie, Dawn and MacAvaney, Sean and Mayfield, James and McNamee, Paul and Oard, Douglas W. and Soldaini, Luca and Yang, Eugene},
-        year = {2024},
-        url = {https://arxiv.org/abs/2404.08071},
-        doi = {10.48550/arXiv.2404.08071}
-      }
+    bibtex: "@misc{lawrie2024neuclir2023,\n  title = {Overview of the {TREC} 2023\
+      \ {NeuCLIR} Track},\n  author = {Lawrie, Dawn and MacAvaney, Sean and Mayfield,\
+      \ James and McNamee, Paul and Oard, Douglas W. and Soldaini, Luca and Yang,\
+      \ Eugene},\n  year = {2024},\n  url = {https://arxiv.org/abs/2404.08071},\n\
+      \  doi = {10.48550/arXiv.2404.08071}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 74
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 94.32
+          en: 5.27
   NanoPersianWebDocument:
     language: fa
     category: natural_language
     short_description: Persian web document retrieval.
-    description: NanoPersianWebDocument evaluates Persian web information retrieval over real-world web documents and user-style queries, using a compact split of the PersianWebDocumentRetrieval task.
+    description: NanoPersianWebDocument evaluates Persian web information retrieval
+      over real-world web documents and user-style queries, using a compact split
+      of the PersianWebDocumentRetrieval task.
     citation_keys:
     - zinvandi2025famteb
     - zinvandi2024persianwebdocument
@@ -342,34 +405,47 @@ task_metadata:
       url: https://huggingface.co/datasets/mteb/PersianWebDocumentRetrieval
       is_paper: false
       source_confidence: probably_correct
-    bibtex: |
-      @inproceedings{zinvandi2025famteb,
-        title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-        pages = {11441--11468},
-        year = {2025},
-        url = {https://aclanthology.org/2025.findings-emnlp.614/},
-        doi = {10.18653/v1/2025.findings-emnlp.614}
-      }
-      @inproceedings{zinvandi2024persianwebdocument,
-        title = {Persian Web Document Retrieval Corpus},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Pourbahman, Zahra and Kazemi, Reza and Amini, Arash},
-        booktitle = {2024 12th Iran Workshop on Communication and Information Theory},
-        year = {2024},
-        url = {https://ieeexplore.ieee.org/document/10553090}
-      }
-      @misc{mteb2025persianwebdocument,
-        title = {{PersianWebDocumentRetrieval}},
-        author = {{MTEB contributors}},
-        year = {2025},
-        url = {https://huggingface.co/datasets/mteb/PersianWebDocumentRetrieval}
-      }
+    bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text\
+      \ Embedding Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and\
+      \ Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr\
+      \ and Kazemi, Reza and Amini, Arash},\n  booktitle = {Findings of the Association\
+      \ for Computational Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n \
+      \ year = {2025},\n  url = {https://aclanthology.org/2025.findings-emnlp.614/},\n\
+      \  doi = {10.18653/v1/2025.findings-emnlp.614}\n}\n@inproceedings{zinvandi2024persianwebdocument,\n\
+      \  title = {Persian Web Document Retrieval Corpus},\n  author = {Zinvandi, Erfan\
+      \ and Alikhani, Morteza and Pourbahman, Zahra and Kazemi, Reza and Amini, Arash},\n\
+      \  booktitle = {2024 12th Iran Workshop on Communication and Information Theory},\n\
+      \  year = {2024},\n  url = {https://ieeexplore.ieee.org/document/10553090}\n\
+      }\n@misc{mteb2025persianwebdocument,\n  title = {{PersianWebDocumentRetrieval}},\n\
+      \  author = {{MTEB contributors}},\n  year = {2025},\n  url = {https://huggingface.co/datasets/mteb/PersianWebDocumentRetrieval}\n\
+      }\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 95.5
+          ur: 1.5
+          mzn: 1.0
+          ar: 0.5
+          azb: 0.5
+          pnb: 0.5
+          ps: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.03
+          ar: 0.5
   NanoQuoraFa:
     language: fa
     category: natural_language
     short_description: Persian duplicate-question retrieval from Quora.
-    description: NanoQuoraFa evaluates Persian duplicate-question retrieval adapted from Quora Question Pairs and included in FaMTEB as a translated retrieval task.
+    description: NanoQuoraFa evaluates Persian duplicate-question retrieval adapted
+      from Quora Question Pairs and included in FaMTEB as a translated retrieval task.
     citation_keys:
     - zinvandi2025famteb
     - quora2017questionpairs
@@ -400,27 +476,36 @@ task_metadata:
       url: https://kaggle.com/competitions/quora-question-pairs
       is_paper: false
       source_confidence: probably_correct
-    bibtex: |
-      @inproceedings{zinvandi2025famteb,
-        title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-        pages = {11441--11468},
-        year = {2025},
-        url = {https://aclanthology.org/2025.findings-emnlp.614/},
-        doi = {10.18653/v1/2025.findings-emnlp.614}
-      }
-      @misc{quora2017questionpairs,
-        title = {Quora Question Pairs},
-        author = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil and tomtung},
-        year = {2017},
-        url = {https://kaggle.com/competitions/quora-question-pairs}
-      }
+    bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text\
+      \ Embedding Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and\
+      \ Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr\
+      \ and Kazemi, Reza and Amini, Arash},\n  booktitle = {Findings of the Association\
+      \ for Computational Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n \
+      \ year = {2025},\n  url = {https://aclanthology.org/2025.findings-emnlp.614/},\n\
+      \  doi = {10.18653/v1/2025.findings-emnlp.614}\n}\n@misc{quora2017questionpairs,\n\
+      \  title = {Quora Question Pairs},\n  author = {DataCanary and hilfialkaff and\
+      \ Jiang, Lili and Risdal, Meg and Dandekar, Nikhil and tomtung},\n  year = {2017},\n\
+      \  url = {https://kaggle.com/competitions/quora-question-pairs}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.87
   NanoQuoraFaV2:
     language: fa
     category: natural_language
     short_description: Persian duplicate-question retrieval from Quora v2.
-    description: NanoQuoraFaV2 evaluates the revised Persian Quora duplicate-question retrieval task included in FaMTEB v2.
+    description: NanoQuoraFaV2 evaluates the revised Persian Quora duplicate-question
+      retrieval task included in FaMTEB v2.
     citation_keys:
     - zinvandi2025famteb
     - quora2017questionpairs
@@ -451,27 +536,36 @@ task_metadata:
       url: https://kaggle.com/competitions/quora-question-pairs
       is_paper: false
       source_confidence: probably_correct
-    bibtex: |
-      @inproceedings{zinvandi2025famteb,
-        title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-        pages = {11441--11468},
-        year = {2025},
-        url = {https://aclanthology.org/2025.findings-emnlp.614/},
-        doi = {10.18653/v1/2025.findings-emnlp.614}
-      }
-      @misc{quora2017questionpairs,
-        title = {Quora Question Pairs},
-        author = {DataCanary and hilfialkaff and Jiang, Lili and Risdal, Meg and Dandekar, Nikhil and tomtung},
-        year = {2017},
-        url = {https://kaggle.com/competitions/quora-question-pairs}
-      }
+    bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text\
+      \ Embedding Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and\
+      \ Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr\
+      \ and Kazemi, Reza and Amini, Arash},\n  booktitle = {Findings of the Association\
+      \ for Computational Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n \
+      \ year = {2025},\n  url = {https://aclanthology.org/2025.findings-emnlp.614/},\n\
+      \  doi = {10.18653/v1/2025.findings-emnlp.614}\n}\n@misc{quora2017questionpairs,\n\
+      \  title = {Quora Question Pairs},\n  author = {DataCanary and hilfialkaff and\
+      \ Jiang, Lili and Risdal, Meg and Dandekar, Nikhil and tomtung},\n  year = {2017},\n\
+      \  url = {https://kaggle.com/competitions/quora-question-pairs}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.86
   NanoSynPerChatbotRAGFAQ:
     language: fa
     category: natural_language
     short_description: Synthetic Persian chatbot RAG FAQ retrieval.
-    description: NanoSynPerChatbotRAGFAQ evaluates synthetic Persian chatbot RAG FAQ retrieval introduced as part of FaMTEB chatbot/RAG retrieval datasets.
+    description: NanoSynPerChatbotRAGFAQ evaluates synthetic Persian chatbot RAG FAQ
+      retrieval introduced as part of FaMTEB chatbot/RAG retrieval datasets.
     citation_keys:
     - zinvandi2025famteb
     references:
@@ -489,21 +583,33 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.findings-emnlp.614
-    bibtex: |
-      @inproceedings{zinvandi2025famteb,
-        title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-        pages = {11441--11468},
-        year = {2025},
-        url = {https://aclanthology.org/2025.findings-emnlp.614/},
-        doi = {10.18653/v1/2025.findings-emnlp.614}
-      }
+    bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text\
+      \ Embedding Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and\
+      \ Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr\
+      \ and Kazemi, Reza and Amini, Arash},\n  booktitle = {Findings of the Association\
+      \ for Computational Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n \
+      \ year = {2025},\n  url = {https://aclanthology.org/2025.findings-emnlp.614/},\n\
+      \  doi = {10.18653/v1/2025.findings-emnlp.614}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 8696
+        languages:
+          fa: 100.0
   NanoSynPerChatbotRAGTopics:
     language: fa
     category: natural_language
     short_description: Synthetic Persian chatbot RAG topic retrieval.
-    description: NanoSynPerChatbotRAGTopics evaluates synthetic Persian chatbot RAG topic retrieval introduced as part of FaMTEB.
+    description: NanoSynPerChatbotRAGTopics evaluates synthetic Persian chatbot RAG
+      topic retrieval introduced as part of FaMTEB.
     citation_keys:
     - zinvandi2025famteb
     references:
@@ -521,21 +627,36 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.findings-emnlp.614
-    bibtex: |
-      @inproceedings{zinvandi2025famteb,
-        title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-        pages = {11441--11468},
-        year = {2025},
-        url = {https://aclanthology.org/2025.findings-emnlp.614/},
-        doi = {10.18653/v1/2025.findings-emnlp.614}
-      }
+    bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text\
+      \ Embedding Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and\
+      \ Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr\
+      \ and Kazemi, Reza and Amini, Arash},\n  booktitle = {Findings of the Association\
+      \ for Computational Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n \
+      \ year = {2025},\n  url = {https://aclanthology.org/2025.findings-emnlp.614/},\n\
+      \  doi = {10.18653/v1/2025.findings-emnlp.614}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 4146
+        languages:
+          fa: 92.258
+          ar: 3.642
+          ur: 2.074
+          azb: 0.555
   NanoSynPerChatbotTopics:
     language: fa
     category: natural_language
     short_description: Synthetic Persian chatbot topic retrieval.
-    description: NanoSynPerChatbotTopics evaluates synthetic Persian chatbot topic retrieval introduced as part of FaMTEB.
+    description: NanoSynPerChatbotTopics evaluates synthetic Persian chatbot topic
+      retrieval introduced as part of FaMTEB.
     citation_keys:
     - zinvandi2025famteb
     references:
@@ -553,21 +674,36 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.findings-emnlp.614
-    bibtex: |
-      @inproceedings{zinvandi2025famteb,
-        title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-        pages = {11441--11468},
-        year = {2025},
-        url = {https://aclanthology.org/2025.findings-emnlp.614/},
-        doi = {10.18653/v1/2025.findings-emnlp.614}
-      }
+    bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text\
+      \ Embedding Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and\
+      \ Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr\
+      \ and Kazemi, Reza and Amini, Arash},\n  booktitle = {Findings of the Association\
+      \ for Computational Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n \
+      \ year = {2025},\n  url = {https://aclanthology.org/2025.findings-emnlp.614/},\n\
+      \  doi = {10.18653/v1/2025.findings-emnlp.614}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 6212
+        languages:
+          fa: 92.209
+          ar: 3.67
+          ur: 1.787
+          azb: 0.515
   NanoSynPerQA:
     language: fa
     category: natural_language
     short_description: Synthetic Persian question-answer retrieval.
-    description: NanoSynPerQA evaluates synthetic Persian QA retrieval introduced as part of FaMTEB.
+    description: NanoSynPerQA evaluates synthetic Persian QA retrieval introduced
+      as part of FaMTEB.
     citation_keys:
     - zinvandi2025famteb
     references:
@@ -585,25 +721,38 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.findings-emnlp.614
-    bibtex: |
-      @inproceedings{zinvandi2025famteb,
-        title = {{FaMTEB}: Massive Text Embedding Benchmark in Persian Language},
-        author = {Zinvandi, Erfan and Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr and Kazemi, Reza and Amini, Arash},
-        booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-        pages = {11441--11468},
-        year = {2025},
-        url = {https://aclanthology.org/2025.findings-emnlp.614/},
-        doi = {10.18653/v1/2025.findings-emnlp.614}
-      }
+    bibtex: "@inproceedings{zinvandi2025famteb,\n  title = {{FaMTEB}: Massive Text\
+      \ Embedding Benchmark in Persian Language},\n  author = {Zinvandi, Erfan and\
+      \ Alikhani, Morteza and Sarmadi, Mehran and Pourbahman, Zahra and Arvin, Sepehr\
+      \ and Kazemi, Reza and Amini, Arash},\n  booktitle = {Findings of the Association\
+      \ for Computational Linguistics: EMNLP 2025},\n  pages = {11441--11468},\n \
+      \ year = {2025},\n  url = {https://aclanthology.org/2025.findings-emnlp.614/},\n\
+      \  doi = {10.18653/v1/2025.findings-emnlp.614}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.92
   NanoWebFAQFa:
     language: fa
     category: natural_language
     short_description: Persian WebFAQ question-answer retrieval.
-    description: NanoWebFAQFa evaluates Persian FAQ-style question-answer retrieval from WebFAQ, a multilingual web FAQ dataset used for dense retrieval evaluation.
+    description: NanoWebFAQFa evaluates Persian FAQ-style question-answer retrieval
+      from WebFAQ, a multilingual web FAQ dataset used for dense retrieval evaluation.
     citation_keys:
     - dinzinger2025webfaq
     references:
-    - title: 'WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval'
+    - title: 'WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense
+        Retrieval'
       authors:
       - Michael Dinzinger
       - Laura Caspari
@@ -615,11 +764,23 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2502.20936
-    bibtex: |
-      @misc{dinzinger2025webfaq,
-        title = {{WebFAQ}: A Multilingual Collection of Natural {Q\&A} Datasets for Dense Retrieval},
-        author = {Dinzinger, Michael and Caspari, Laura and Ghosh Dastidar, Kanishka and Mitrović, Jelena and Granitzer, Michael},
-        year = {2025},
-        url = {https://arxiv.org/abs/2502.20936},
-        doi = {10.48550/arXiv.2502.20936}
-      }
+    bibtex: "@misc{dinzinger2025webfaq,\n  title = {{WebFAQ}: A Multilingual Collection\
+      \ of Natural {Q\\&A} Datasets for Dense Retrieval},\n  author = {Dinzinger,\
+      \ Michael and Caspari, Laura and Ghosh Dastidar, Kanishka and Mitrović, Jelena\
+      \ and Granitzer, Michael},\n  year = {2025},\n  url = {https://arxiv.org/abs/2502.20936},\n\
+      \  doi = {10.48550/arXiv.2502.20936}\n}\n"
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 99.5
+          en: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.84

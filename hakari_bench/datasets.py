@@ -42,6 +42,7 @@ NANOBEIR_SPLIT_MAPPING: dict[str, str] = {
 VALID_METADATA_CATEGORIES = {"natural_language", "code"}
 REQUIRED_METADATA_FIELDS = {"language", "category", "short_description", "description"}
 TEXT_STATS_FIELDS = {"count", "min_chars", "max_chars", "mean_chars", "median_chars"}
+LANGUAGE_DETECTION_SIDES = ("query", "document")
 REFERENCE_SOURCE_CONFIDENCE_LABELS = {
     "source_uncertain": (
         "The source may be relevant, but the citation-to-task relationship is not established well enough "
@@ -278,10 +279,21 @@ def _validate_metadata_mapping(metadata: dict[str, Any], *, context: str) -> lis
 
     language = metadata.get("language")
     if isinstance(language, str):
-        if language != "multilingual" and len(language) != 2:
+        if language not in {"multilingual", "unknown"} and len(language) != 2:
             errors.append(f"{context} has invalid language '{language}'.")
     elif language is not None or "language" in metadata:
         errors.append(f"{context} has invalid language {language!r}.")
+
+    languages = metadata.get("languages")
+    if languages is not None:
+        if not isinstance(languages, list) or not languages:
+            errors.append(f"{context} has invalid languages; expected non-empty list.")
+        else:
+            for index, detected_language in enumerate(languages):
+                if not isinstance(detected_language, str):
+                    errors.append(f"{context} languages[{index}] must be string.")
+                elif not _is_valid_language_code(detected_language):
+                    errors.append(f"{context} has invalid languages[{index}] '{detected_language}'.")
 
     category = metadata.get("category")
     if isinstance(category, str):
@@ -339,7 +351,48 @@ def _validate_metadata_mapping(metadata: dict[str, Any], *, context: str) -> lis
         for key in TEXT_STATS_FIELDS & set(stats):
             if not isinstance(stats[key], int | float):
                 errors.append(f"{context} {stats_key}.{key} must be numeric.")
+
+    language_detection = metadata.get("language_detection")
+    if language_detection is not None:
+        errors.extend(_validate_language_detection(language_detection, context=context))
     return errors
+
+
+def _validate_language_detection(language_detection: Any, *, context: str) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(language_detection, dict):
+        return [f"{context} has invalid language_detection; expected mapping."]
+    detector = language_detection.get("detector")
+    if not isinstance(detector, str):
+        errors.append(f"{context} language_detection.detector must be string.")
+    for threshold_key in ("min_language_percent", "main_language_percent"):
+        value = language_detection.get(threshold_key)
+        if not isinstance(value, int | float):
+            errors.append(f"{context} language_detection.{threshold_key} must be numeric.")
+    for side in LANGUAGE_DETECTION_SIDES:
+        side_value = language_detection.get(side)
+        if not isinstance(side_value, dict):
+            errors.append(f"{context} language_detection.{side} must be mapping.")
+            continue
+        sample_count = side_value.get("sample_count")
+        if not isinstance(sample_count, int):
+            errors.append(f"{context} language_detection.{side}.sample_count must be integer.")
+        detected_languages = side_value.get("languages")
+        if not isinstance(detected_languages, dict) or not detected_languages:
+            errors.append(f"{context} language_detection.{side}.languages must be non-empty mapping.")
+            continue
+        for language, percent in detected_languages.items():
+            if not isinstance(language, str):
+                errors.append(f"{context} language_detection.{side}.languages key must be string.")
+            elif not _is_valid_language_code(language):
+                errors.append(f"{context} has invalid language_detection.{side}.languages key '{language}'.")
+            if not isinstance(percent, int | float):
+                errors.append(f"{context} language_detection.{side}.languages[{language!r}] must be numeric.")
+    return errors
+
+
+def _is_valid_language_code(language: str) -> bool:
+    return language == "unknown" or 2 <= len(language) <= 3
 
 
 def validate_builtin_metadata() -> list[str]:

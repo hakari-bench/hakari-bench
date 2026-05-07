@@ -19,9 +19,9 @@ metadata:
   category: natural_language
   short_description: Legal retrieval benchmark group.
   description: NanoLaw groups compact legal retrieval tasks covering precedent retrieval,
-    statute retrieval, contract-summary matching, German legal document search, Chinese legal
-    case retrieval, LegalBench-derived legal QA and policy retrieval, and German legal QA
-    document retrieval.
+    statute retrieval, contract-summary matching, German legal document search, Chinese
+    legal case retrieval, LegalBench-derived legal QA and policy retrieval, and German
+    legal QA document retrieval.
   citation_keys:
   - bhattacharya2020aila
   - manor2019plain
@@ -30,7 +30,8 @@ metadata:
   - guha2023legalbench
   - hoppe2021legalquad
   references:
-  - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance'
+  - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal
+      Assistance'
     authors:
     - Paheli Bhattacharya
     - Kripabandhu Ghosh
@@ -71,8 +72,8 @@ metadata:
     url: https://arxiv.org/abs/2310.17609
     is_paper: true
     source_confidence: definitive_paper_link
-  - title: 'LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in
-      Large Language Models'
+  - title: 'LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning
+      in Large Language Models'
     authors:
     - Neel Guha
     - Julian Nyarko
@@ -130,44 +131,42 @@ metadata:
     url: https://doi.org/10.1109/AIKE52691.2021.00011
     is_paper: true
     source_confidence: definitive_paper_link
-  bibtex: "@inproceedings{bhattacharya2020aila,
-  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
-  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
-  booktitle = {CEUR Workshop Proceedings},
-  volume = {2517},
-  year = {2019},
-  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
-}
-\n\n\
-    @inproceedings{manor2019plain,\n  author = {Laura Manor and Junyi Jessy Li},\n  booktitle\
-    \ = {Proceedings of the Natural Legal Language Processing Workshop 2019},\n  pages = {1--11},\n\
-    \  publisher = {Association for Computational Linguistics},\n  title = {Plain English\
-    \ Summarization of Contracts},\n  url = {https://aclanthology.org/W19-2201/},\n  year\
-    \ = {2019},\n}\n\n\n@inproceedings{wrzalik2021gerdalir,\n  author = {Marco Wrzalik and\
-    \ Dirk Krechel},\n  booktitle = {Proceedings of the Natural Legal Language Processing\
-    \ Workshop 2021},\n  pages = {123--128},\n  publisher = {Association for Computational\
-    \ Linguistics},\n  title = {GerDaLIR: A German Dataset for Legal Information Retrieval},\n\
-    \  url = {https://aclanthology.org/2021.nllp-1.13/},\n  year = {2021},\n}\n\n\n@misc{li2023lecardv2,\n\
-    \  archivePrefix = {arXiv},\n  author = {Haitao Li and Yunqiu Shao and Yueyue Wu and Qingyao\
-    \ Ai and Yixiao Ma and Yiqun Liu},\n  eprint = {2310.17609},\n  primaryClass = {cs.CL},\n\
-    \  title = {LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset},\n  year = {2023},\n\
-    }\n\n\n@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel Guha and\
-    \ Julian Nyarko and Daniel E. Ho and Christopher Ré and Adam Chilton and Aditya Narayana\
-    \ and Alex Chohlas-Wood and Austin Peters and Brandon Waldon and Daniel N. Rockmore and\
-    \ Diego Zambrano and Dmitry Talisman and Enam Hoque and Faiz Surani and Frank Fagan and\
-    \ Galit Sarfaty and Gregory M. Dickinson and Haggai Porat and Jason Hegland and Jessica\
-    \ Wu and Joe Nudell and Joel Niklaus and John Nay and Jonathan H. Choi and Kevin Tobia\
-    \ and Margaret Hagan and Megan Ma and Michael Livermore and Nikon Rasumov-Rahe and Nils\
-    \ Holzenberger and Noam Kolt and Peter Henderson and Sean Rehaag and Sharad Goel and Shang\
-    \ Gao and Spencer Williams and Sunny Gandhi and Tom Zur and Varun Iyer and Zehua Li},\n\
-    \  eprint = {2308.11462},\n  primaryClass = {cs.CL},\n  title = {LegalBench: A Collaboratively\
-    \ Built Benchmark for Measuring Legal Reasoning in Large Language Models},\n  year = {2023},\n\
-    }\n\n\n@inproceedings{hoppe2021legalquad,\n  author = {Christoph Hoppe and David Pelkmann\
-    \ and Nico Migenda and Daniel Hotte and Wolfram Schenck},\n  booktitle = {2021 IEEE Fourth\
-    \ International Conference on Artificial Intelligence and Knowledge Engineering},\n  doi\
-    \ = {10.1109/AIKE52691.2021.00011},\n  pages = {29--32},\n  title = {Towards Intelligent\
-    \ Legal Advisors for Document Retrieval and Question-Answering in German Legal Documents},\n\
-    \  year = {2021},\n}\n"
+  bibtex: "@inproceedings{bhattacharya2020aila, title = {Overview of the FIRE 2019\
+    \ AILA Track: Artificial Intelligence for Legal Assistance}, author = {Paheli\
+    \ Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth\
+    \ Mehta and Arnab Bhattacharya and Prasenjit Majumder}, booktitle = {CEUR Workshop\
+    \ Proceedings}, volume = {2517}, year = {2019}, url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}\
+    \ } \n\n@inproceedings{manor2019plain,\n  author = {Laura Manor and Junyi Jessy\
+    \ Li},\n  booktitle = {Proceedings of the Natural Legal Language Processing Workshop\
+    \ 2019},\n  pages = {1--11},\n  publisher = {Association for Computational Linguistics},\n\
+    \  title = {Plain English Summarization of Contracts},\n  url = {https://aclanthology.org/W19-2201/},\n\
+    \  year = {2019},\n}\n\n\n@inproceedings{wrzalik2021gerdalir,\n  author = {Marco\
+    \ Wrzalik and Dirk Krechel},\n  booktitle = {Proceedings of the Natural Legal\
+    \ Language Processing Workshop 2021},\n  pages = {123--128},\n  publisher = {Association\
+    \ for Computational Linguistics},\n  title = {GerDaLIR: A German Dataset for Legal\
+    \ Information Retrieval},\n  url = {https://aclanthology.org/2021.nllp-1.13/},\n\
+    \  year = {2021},\n}\n\n\n@misc{li2023lecardv2,\n  archivePrefix = {arXiv},\n\
+    \  author = {Haitao Li and Yunqiu Shao and Yueyue Wu and Qingyao Ai and Yixiao\
+    \ Ma and Yiqun Liu},\n  eprint = {2310.17609},\n  primaryClass = {cs.CL},\n  title\
+    \ = {LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset},\n  year =\
+    \ {2023},\n}\n\n\n@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author\
+    \ = {Neel Guha and Julian Nyarko and Daniel E. Ho and Christopher Ré and Adam\
+    \ Chilton and Aditya Narayana and Alex Chohlas-Wood and Austin Peters and Brandon\
+    \ Waldon and Daniel N. Rockmore and Diego Zambrano and Dmitry Talisman and Enam\
+    \ Hoque and Faiz Surani and Frank Fagan and Galit Sarfaty and Gregory M. Dickinson\
+    \ and Haggai Porat and Jason Hegland and Jessica Wu and Joe Nudell and Joel Niklaus\
+    \ and John Nay and Jonathan H. Choi and Kevin Tobia and Margaret Hagan and Megan\
+    \ Ma and Michael Livermore and Nikon Rasumov-Rahe and Nils Holzenberger and Noam\
+    \ Kolt and Peter Henderson and Sean Rehaag and Sharad Goel and Shang Gao and Spencer\
+    \ Williams and Sunny Gandhi and Tom Zur and Varun Iyer and Zehua Li},\n  eprint\
+    \ = {2308.11462},\n  primaryClass = {cs.CL},\n  title = {LegalBench: A Collaboratively\
+    \ Built Benchmark for Measuring Legal Reasoning in Large Language Models},\n \
+    \ year = {2023},\n}\n\n\n@inproceedings{hoppe2021legalquad,\n  author = {Christoph\
+    \ Hoppe and David Pelkmann and Nico Migenda and Daniel Hotte and Wolfram Schenck},\n\
+    \  booktitle = {2021 IEEE Fourth International Conference on Artificial Intelligence\
+    \ and Knowledge Engineering},\n  doi = {10.1109/AIKE52691.2021.00011},\n  pages\
+    \ = {29--32},\n  title = {Towards Intelligent Legal Advisors for Document Retrieval\
+    \ and Question-Answering in German Legal Documents},\n  year = {2021},\n}\n"
 task_metadata:
   NanoAILACasedocs:
     language: en
@@ -178,7 +177,8 @@ task_metadata:
     citation_keys:
     - bhattacharya2020aila
     references:
-    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance'
+    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal
+        Assistance'
       authors:
       - Paheli Bhattacharya
       - Kripabandhu Ghosh
@@ -191,15 +191,12 @@ task_metadata:
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{bhattacharya2020aila,
-  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
-  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
-  booktitle = {CEUR Workshop Proceedings},
-  volume = {2517},
-  year = {2019},
-  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
-}
-"
+    bibtex: '@inproceedings{bhattacharya2020aila, title = {Overview of the FIRE 2019
+      AILA Track: Artificial Intelligence for Legal Assistance}, author = {Paheli
+      Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth
+      Mehta and Arnab Bhattacharya and Prasenjit Majumder}, booktitle = {CEUR Workshop
+      Proceedings}, volume = {2517}, year = {2019}, url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
+      } '
     query_text_stats:
       count: 50
       min_chars: 1174
@@ -212,16 +209,31 @@ task_metadata:
       max_chars: 222889
       mean_chars: 26947.344086021505
       median_chars: 18958.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 100.0
+      document:
+        sample_count: 186
+        languages:
+          en: 100.0
   NanoAILAStatutes:
     language: en
     category: natural_language
     short_description: AILA statute retrieval for legal situations.
-    description: NanoAILAStatutes evaluates retrieval of relevant statutory provisions for
-      long legal situations from the AILA 2019 statute retrieval task.
+    description: NanoAILAStatutes evaluates retrieval of relevant statutory provisions
+      for long legal situations from the AILA 2019 statute retrieval task.
     citation_keys:
     - bhattacharya2020aila
     references:
-    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance'
+    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal
+        Assistance'
       authors:
       - Paheli Bhattacharya
       - Kripabandhu Ghosh
@@ -234,15 +246,12 @@ task_metadata:
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{bhattacharya2020aila,
-  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
-  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
-  booktitle = {CEUR Workshop Proceedings},
-  volume = {2517},
-  year = {2019},
-  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
-}
-"
+    bibtex: '@inproceedings{bhattacharya2020aila, title = {Overview of the FIRE 2019
+      AILA Track: Artificial Intelligence for Legal Assistance}, author = {Paheli
+      Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth
+      Mehta and Arnab Bhattacharya and Prasenjit Majumder}, booktitle = {CEUR Workshop
+      Proceedings}, volume = {2517}, year = {2019}, url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
+      } '
     query_text_stats:
       count: 50
       min_chars: 1174
@@ -255,12 +264,26 @@ task_metadata:
       max_chars: 26037
       mean_chars: 1972.6341463414635
       median_chars: 898.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 100.0
+      document:
+        sample_count: 82
+        languages:
+          en: 100.0
   NanoLegalSummarization:
     language: en
     category: natural_language
     short_description: Contract-to-summary legal retrieval.
-    description: NanoLegalSummarization evaluates matching between legal contract text and
-      plain-English summaries drawn from contract summarization resources.
+    description: NanoLegalSummarization evaluates matching between legal contract
+      text and plain-English summaries drawn from contract summarization resources.
     citation_keys:
     - manor2019plain
     references:
@@ -272,11 +295,11 @@ task_metadata:
       url: https://aclanthology.org/W19-2201/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{manor2019plain,\n  author = {Laura Manor and Junyi Jessy Li},\n\
-      \  booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2019},\n\
-      \  pages = {1--11},\n  publisher = {Association for Computational Linguistics},\n  title\
-      \ = {Plain English Summarization of Contracts},\n  url = {https://aclanthology.org/W19-2201/},\n\
-      \  year = {2019},\n}\n"
+    bibtex: "@inproceedings{manor2019plain,\n  author = {Laura Manor and Junyi Jessy\
+      \ Li},\n  booktitle = {Proceedings of the Natural Legal Language Processing\
+      \ Workshop 2019},\n  pages = {1--11},\n  publisher = {Association for Computational\
+      \ Linguistics},\n  title = {Plain English Summarization of Contracts},\n  url\
+      \ = {https://aclanthology.org/W19-2201/},\n  year = {2019},\n}\n"
     query_text_stats:
       count: 200
       min_chars: 17
@@ -289,13 +312,27 @@ task_metadata:
       max_chars: 6496
       mean_chars: 606.1643835616438
       median_chars: 340.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 438
+        languages:
+          en: 100.0
   NanoGerDaLIRSmall:
     language: de
     category: natural_language
     short_description: German legal document retrieval from GerDaLIRSmall.
-    description: NanoGerDaLIRSmall evaluates German legal information retrieval using the
-      smaller GerDaLIR corpus variant, where queries are matched to relevant legal documents
-      and passages.
+    description: NanoGerDaLIRSmall evaluates German legal information retrieval using
+      the smaller GerDaLIR corpus variant, where queries are matched to relevant legal
+      documents and passages.
     citation_keys:
     - wrzalik2021gerdalir
     references:
@@ -307,11 +344,12 @@ task_metadata:
       url: https://aclanthology.org/2021.nllp-1.13/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{wrzalik2021gerdalir,\n  author = {Marco Wrzalik and Dirk Krechel},\n\
-      \  booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2021},\n\
-      \  pages = {123--128},\n  publisher = {Association for Computational Linguistics},\n\
-      \  title = {GerDaLIR: A German Dataset for Legal Information Retrieval},\n  url = {https://aclanthology.org/2021.nllp-1.13/},\n\
-      \  year = {2021},\n}\n"
+    bibtex: "@inproceedings{wrzalik2021gerdalir,\n  author = {Marco Wrzalik and Dirk\
+      \ Krechel},\n  booktitle = {Proceedings of the Natural Legal Language Processing\
+      \ Workshop 2021},\n  pages = {123--128},\n  publisher = {Association for Computational\
+      \ Linguistics},\n  title = {GerDaLIR: A German Dataset for Legal Information\
+      \ Retrieval},\n  url = {https://aclanthology.org/2021.nllp-1.13/},\n  year =\
+      \ {2021},\n}\n"
     query_text_stats:
       count: 200
       min_chars: 155
@@ -324,12 +362,26 @@ task_metadata:
       max_chars: 427234
       mean_chars: 19706.823653325308
       median_chars: 14730.0
+    languages:
+    - de
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          de: 100.0
+      document:
+        sample_count: 9969
+        languages:
+          de: 99.99
   NanoLeCaRDv2:
     language: zh
     category: natural_language
     short_description: Chinese legal case retrieval from LeCaRDv2.
-    description: NanoLeCaRDv2 evaluates retrieval of Chinese legal case documents that best
-      match the facts and legal issues described in each query scenario.
+    description: NanoLeCaRDv2 evaluates retrieval of Chinese legal case documents
+      that best match the facts and legal issues described in each query scenario.
     citation_keys:
     - li2023lecardv2
     references:
@@ -345,10 +397,10 @@ task_metadata:
       url: https://arxiv.org/abs/2310.17609
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{li2023lecardv2,\n  archivePrefix = {arXiv},\n  author = {Haitao Li and\
-      \ Yunqiu Shao and Yueyue Wu and Qingyao Ai and Yixiao Ma and Yiqun Liu},\n  eprint =\
-      \ {2310.17609},\n  primaryClass = {cs.CL},\n  title = {LeCaRDv2: A Large-Scale Chinese\
-      \ Legal Case Retrieval Dataset},\n  year = {2023},\n}\n"
+    bibtex: "@misc{li2023lecardv2,\n  archivePrefix = {arXiv},\n  author = {Haitao\
+      \ Li and Yunqiu Shao and Yueyue Wu and Qingyao Ai and Yixiao Ma and Yiqun Liu},\n\
+      \  eprint = {2310.17609},\n  primaryClass = {cs.CL},\n  title = {LeCaRDv2: A\
+      \ Large-Scale Chinese Legal Case Retrieval Dataset},\n  year = {2023},\n}\n"
     query_text_stats:
       count: 159
       min_chars: 556
@@ -361,13 +413,28 @@ task_metadata:
       max_chars: 168521
       mean_chars: 7231.823978919631
       median_chars: 4825.0
+    languages:
+    - zh
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 159
+        languages:
+          zh: 99.371
+          ja: 0.629
+      document:
+        sample_count: 3795
+        languages:
+          zh: 99.552
   NanoLegalBenchConsumerContractsQA:
     language: en
     category: natural_language
     short_description: LegalBench consumer-contract QA retrieval.
-    description: NanoLegalBenchConsumerContractsQA evaluates retrieval for yes/no questions
-      about consumer contracts and online terms of service, using the LegalBench consumer
-      contracts QA task formulation.
+    description: NanoLegalBenchConsumerContractsQA evaluates retrieval for yes/no
+      questions about consumer contracts and online terms of service, using the LegalBench
+      consumer contracts QA task formulation.
     citation_keys:
     - guha2023legalbench
     - kolt2022predicting
@@ -427,21 +494,22 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.15779/Z382B8VC90
-    bibtex: "@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel Guha\
-      \ and Julian Nyarko and Daniel E. Ho and Christopher Ré and Adam Chilton and Aditya\
-      \ Narayana and Alex Chohlas-Wood and Austin Peters and Brandon Waldon and Daniel N.\
-      \ Rockmore and Diego Zambrano and Dmitry Talisman and Enam Hoque and Faiz Surani and\
-      \ Frank Fagan and Galit Sarfaty and Gregory M. Dickinson and Haggai Porat and Jason\
-      \ Hegland and Jessica Wu and Joe Nudell and Joel Niklaus and John Nay and Jonathan H.\
-      \ Choi and Kevin Tobia and Margaret Hagan and Megan Ma and Michael Livermore and Nikon\
-      \ Rasumov-Rahe and Nils Holzenberger and Noam Kolt and Peter Henderson and Sean Rehaag\
-      \ and Sharad Goel and Shang Gao and Spencer Williams and Sunny Gandhi and Tom Zur and\
-      \ Varun Iyer and Zehua Li},\n  eprint = {2308.11462},\n  primaryClass = {cs.CL},\n \
-      \ title = {LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning\
-      \ in Large Language Models},\n  year = {2023},\n}\n\n\n@article{kolt2022predicting,\n\
-      \  author = {Kolt, Noam},\n  doi = {10.15779/Z382B8VC90},\n  journal = {Berkeley\
-      \ Technology Law Journal},\n  pages = {71--138},\n  title = {Predicting Consumer\
-      \ Contracts},\n  volume = {37},\n  year = {2022},\n}\n"
+    bibtex: "@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel\
+      \ Guha and Julian Nyarko and Daniel E. Ho and Christopher Ré and Adam Chilton\
+      \ and Aditya Narayana and Alex Chohlas-Wood and Austin Peters and Brandon Waldon\
+      \ and Daniel N. Rockmore and Diego Zambrano and Dmitry Talisman and Enam Hoque\
+      \ and Faiz Surani and Frank Fagan and Galit Sarfaty and Gregory M. Dickinson\
+      \ and Haggai Porat and Jason Hegland and Jessica Wu and Joe Nudell and Joel\
+      \ Niklaus and John Nay and Jonathan H. Choi and Kevin Tobia and Margaret Hagan\
+      \ and Megan Ma and Michael Livermore and Nikon Rasumov-Rahe and Nils Holzenberger\
+      \ and Noam Kolt and Peter Henderson and Sean Rehaag and Sharad Goel and Shang\
+      \ Gao and Spencer Williams and Sunny Gandhi and Tom Zur and Varun Iyer and Zehua\
+      \ Li},\n  eprint = {2308.11462},\n  primaryClass = {cs.CL},\n  title = {LegalBench:\
+      \ A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language\
+      \ Models},\n  year = {2023},\n}\n\n\n@article{kolt2022predicting,\n  author\
+      \ = {Kolt, Noam},\n  doi = {10.15779/Z382B8VC90},\n  journal = {Berkeley Technology\
+      \ Law Journal},\n  pages = {71--138},\n  title = {Predicting Consumer Contracts},\n\
+      \  volume = {37},\n  year = {2022},\n}\n"
     query_text_stats:
       count: 200
       min_chars: 28
@@ -454,12 +522,27 @@ task_metadata:
       max_chars: 8094
       mean_chars: 2743.326797385621
       median_chars: 2402.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 153
+        languages:
+          en: 100.0
   NanoLegalBenchCorporateLobbying:
     language: en
     category: natural_language
     short_description: LegalBench corporate-lobbying bill retrieval.
-    description: NanoLegalBenchCorporateLobbying evaluates retrieval of bill titles and summaries
-      related to corporate lobbying from the LegalBench corporate lobbying task.
+    description: NanoLegalBenchCorporateLobbying evaluates retrieval of bill titles
+      and summaries related to corporate lobbying from the LegalBench corporate lobbying
+      task.
     citation_keys:
     - guha2023legalbench
     references:
@@ -510,18 +593,19 @@ task_metadata:
       url: https://arxiv.org/abs/2308.11462
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel Guha\
-      \ and Julian Nyarko and Daniel E. Ho and Christopher Ré and Adam Chilton and Aditya\
-      \ Narayana and Alex Chohlas-Wood and Austin Peters and Brandon Waldon and Daniel N.\
-      \ Rockmore and Diego Zambrano and Dmitry Talisman and Enam Hoque and Faiz Surani and\
-      \ Frank Fagan and Galit Sarfaty and Gregory M. Dickinson and Haggai Porat and Jason\
-      \ Hegland and Jessica Wu and Joe Nudell and Joel Niklaus and John Nay and Jonathan H.\
-      \ Choi and Kevin Tobia and Margaret Hagan and Megan Ma and Michael Livermore and Nikon\
-      \ Rasumov-Rahe and Nils Holzenberger and Noam Kolt and Peter Henderson and Sean Rehaag\
-      \ and Sharad Goel and Shang Gao and Spencer Williams and Sunny Gandhi and Tom Zur and\
-      \ Varun Iyer and Zehua Li},\n  eprint = {2308.11462},\n  primaryClass = {cs.CL},\n \
-      \ title = {LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning\
-      \ in Large Language Models},\n  year = {2023},\n}\n"
+    bibtex: "@misc{guha2023legalbench,\n  archivePrefix = {arXiv},\n  author = {Neel\
+      \ Guha and Julian Nyarko and Daniel E. Ho and Christopher Ré and Adam Chilton\
+      \ and Aditya Narayana and Alex Chohlas-Wood and Austin Peters and Brandon Waldon\
+      \ and Daniel N. Rockmore and Diego Zambrano and Dmitry Talisman and Enam Hoque\
+      \ and Faiz Surani and Frank Fagan and Galit Sarfaty and Gregory M. Dickinson\
+      \ and Haggai Porat and Jason Hegland and Jessica Wu and Joe Nudell and Joel\
+      \ Niklaus and John Nay and Jonathan H. Choi and Kevin Tobia and Margaret Hagan\
+      \ and Megan Ma and Michael Livermore and Nikon Rasumov-Rahe and Nils Holzenberger\
+      \ and Noam Kolt and Peter Henderson and Sean Rehaag and Sharad Goel and Shang\
+      \ Gao and Spencer Williams and Sunny Gandhi and Tom Zur and Varun Iyer and Zehua\
+      \ Li},\n  eprint = {2308.11462},\n  primaryClass = {cs.CL},\n  title = {LegalBench:\
+      \ A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language\
+      \ Models},\n  year = {2023},\n}\n"
     query_text_stats:
       count: 200
       min_chars: 41
@@ -534,12 +618,27 @@ task_metadata:
       max_chars: 11450
       mean_chars: 1157.2131661442006
       median_chars: 1033.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 319
+        languages:
+          en: 100.0
   NanoLegalQuAD:
     language: de
     category: natural_language
     short_description: German legal QA document retrieval.
-    description: NanoLegalQuAD evaluates retrieval of German legal documents for legal questions,
-      based on a German legal document retrieval and question-answering dataset.
+    description: NanoLegalQuAD evaluates retrieval of German legal documents for legal
+      questions, based on a German legal document retrieval and question-answering
+      dataset.
     citation_keys:
     - hoppe2021legalquad
     references:
@@ -555,12 +654,12 @@ task_metadata:
       url: https://doi.org/10.1109/AIKE52691.2021.00011
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{hoppe2021legalquad,\n  author = {Christoph Hoppe and David Pelkmann\
-      \ and Nico Migenda and Daniel Hotte and Wolfram Schenck},\n  booktitle = {2021 IEEE\
-      \ Fourth International Conference on Artificial Intelligence and Knowledge Engineering},\n\
-      \  doi = {10.1109/AIKE52691.2021.00011},\n  pages = {29--32},\n  title = {Towards Intelligent\
-      \ Legal Advisors for Document Retrieval and Question-Answering in German Legal Documents},\n\
-      \  year = {2021},\n}\n"
+    bibtex: "@inproceedings{hoppe2021legalquad,\n  author = {Christoph Hoppe and David\
+      \ Pelkmann and Nico Migenda and Daniel Hotte and Wolfram Schenck},\n  booktitle\
+      \ = {2021 IEEE Fourth International Conference on Artificial Intelligence and\
+      \ Knowledge Engineering},\n  doi = {10.1109/AIKE52691.2021.00011},\n  pages\
+      \ = {29--32},\n  title = {Towards Intelligent Legal Advisors for Document Retrieval\
+      \ and Question-Answering in German Legal Documents},\n  year = {2021},\n}\n"
     query_text_stats:
       count: 200
       min_chars: 22
@@ -573,3 +672,17 @@ task_metadata:
       max_chars: 94977
       mean_chars: 19481.02
       median_chars: 14530.0
+    languages:
+    - de
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          de: 100.0
+      document:
+        sample_count: 200
+        languages:
+          de: 100.0

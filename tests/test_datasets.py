@@ -25,7 +25,7 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoRTEB").dataset_id == "hakari-bench/NanoRTEB"
     assert registry.get_dataset("NanoMTEB").dataset_id == "hakari-bench/NanoMTEB"
     assert registry.get_dataset("NanoMMTEB").dataset_id == "hakari-bench/NanoMMTEB"
-    assert registry.get_dataset("NanoCMTEB").dataset_id == "hakari-bench/NanoCMTEB"
+    assert registry.get_dataset("NanoMTEB-Chinese").dataset_id == "hakari-bench/NanoMTEB-Chinese"
     assert registry.get_dataset("NanoLongEmbed").dataset_id == "hakari-bench/NanoLongEmbed"
     assert registry.get_dataset("NanoCoIR").dataset_id == "hakari-bench/NanoCoIR"
     assert registry.get_dataset("NanoIFIR").dataset_id == "hakari-bench/NanoIFIR"
@@ -97,20 +97,20 @@ def test_resolve_eval_tasks_for_builtin_nanommteb_uses_declared_splits() -> None
     ]
 
 
-def test_resolve_eval_tasks_for_builtin_nanocmteb_uses_declared_splits() -> None:
+def test_resolve_eval_tasks_for_builtin_nanomteb_chinese_uses_declared_splits() -> None:
     registry = DatasetRegistry.load_builtin()
 
-    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoCMTEB"], collection_values=[], split_values=[])
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMTEB-Chinese"], collection_values=[], split_values=[])
 
     assert [(task.dataset_name, task.split_name) for task in tasks] == [
-        ("NanoCMTEB", "NanoT2Retrieval"),
-        ("NanoCMTEB", "NanoMMarcoRetrieval"),
-        ("NanoCMTEB", "NanoDuRetrieval"),
-        ("NanoCMTEB", "NanoCovidRetrieval"),
-        ("NanoCMTEB", "NanoCmedqaRetrieval"),
-        ("NanoCMTEB", "NanoEcomRetrieval"),
-        ("NanoCMTEB", "NanoMedicalRetrieval"),
-        ("NanoCMTEB", "NanoVideoRetrieval"),
+        ("NanoMTEB-Chinese", "NanoT2Retrieval"),
+        ("NanoMTEB-Chinese", "NanoMMarcoRetrieval"),
+        ("NanoMTEB-Chinese", "NanoDuRetrieval"),
+        ("NanoMTEB-Chinese", "NanoCovidRetrieval"),
+        ("NanoMTEB-Chinese", "NanoCmedqaRetrieval"),
+        ("NanoMTEB-Chinese", "NanoEcomRetrieval"),
+        ("NanoMTEB-Chinese", "NanoMedicalRetrieval"),
+        ("NanoMTEB-Chinese", "NanoVideoRetrieval"),
     ]
 
 
@@ -553,6 +553,59 @@ def test_metadata_validation_rejects_unknown_category() -> None:
     errors = spec.validate_metadata()
 
     assert errors == ["Toy metadata has invalid category 'other'."]
+
+
+def test_metadata_validation_accepts_language_detection_fields() -> None:
+    spec = NanoDatasetSpec(
+        name="Toy",
+        dataset_id="local/toy",
+        metadata={
+            "language": "unknown",
+            "languages": ["en", "ja"],
+            "category": "natural_language",
+            "short_description": "Toy metadata.",
+            "description": "Toy metadata with detected language distributions.",
+            "language_detection": {
+                "detector": "fast-langdetect",
+                "min_language_percent": 0.5,
+                "main_language_percent": 10.0,
+                "query": {"sample_count": 10, "languages": {"ja": 80.0, "en": 20.0}},
+                "document": {"sample_count": 100, "languages": {"en": 81.0, "ja": 19.0}},
+            },
+        },
+    )
+
+    assert spec.validate_metadata() == []
+
+
+def test_metadata_validation_rejects_invalid_language_detection_fields() -> None:
+    spec = NanoDatasetSpec(
+        name="Toy",
+        dataset_id="local/toy",
+        metadata={
+            "language": "en",
+            "languages": ["english"],
+            "category": "natural_language",
+            "short_description": "Toy metadata.",
+            "description": "Toy metadata with invalid language detection.",
+            "language_detection": {
+                "detector": 1,
+                "min_language_percent": "0.5",
+                "main_language_percent": 10.0,
+                "query": {"sample_count": 10, "languages": {"engl": 100.0}},
+                "document": {"sample_count": "100", "languages": {"en": "100"}},
+            },
+        },
+    )
+
+    assert spec.validate_metadata() == [
+        "Toy metadata has invalid languages[0] 'english'.",
+        "Toy metadata language_detection.detector must be string.",
+        "Toy metadata language_detection.min_language_percent must be numeric.",
+        "Toy metadata has invalid language_detection.query.languages key 'engl'.",
+        "Toy metadata language_detection.document.sample_count must be integer.",
+        "Toy metadata language_detection.document.languages['en'] must be numeric.",
+    ]
 
 
 def test_metadata_validation_requires_reference_is_paper_boolean() -> None:

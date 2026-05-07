@@ -12,13 +12,14 @@ metadata:
   language: en
   category: natural_language
   short_description: Nano subset of BuiltBench built-asset information retrieval tasks.
-  description: NanoBuiltBench evaluates retrieval and reranking for aligning built asset information
-    with technical concepts from classification systems used in architecture, engineering,
-    construction, and operations.
+  description: NanoBuiltBench evaluates retrieval and reranking for aligning built
+    asset information with technical concepts from classification systems used in
+    architecture, engineering, construction, and operations.
   citation_keys:
   - shahinmoghadam2025benchmarking
   references:
-  - title: Benchmarking pre-trained text embedding models in aligning built asset information
+  - title: Benchmarking pre-trained text embedding models in aligning built asset
+      information
     authors:
     - Mehrzad Shahinmoghadam
     - Ali Motamedi
@@ -27,28 +28,23 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.1038/s41598-025-09052-5
-  bibtex: |
-    @article{shahinmoghadam2025benchmarking,
-      author = {Shahinmoghadam, Mehrzad and Motamedi, Ali},
-      title = {Benchmarking pre-trained text embedding models in aligning built asset information},
-      journal = {Scientific Reports},
-      volume = {15},
-      pages = {23866},
-      year = {2025},
-      url = {https://www.nature.com/articles/s41598-025-09052-5},
-      doi = {10.1038/s41598-025-09052-5}
-    }
+  bibtex: "@article{shahinmoghadam2025benchmarking,\n  author = {Shahinmoghadam, Mehrzad\
+    \ and Motamedi, Ali},\n  title = {Benchmarking pre-trained text embedding models\
+    \ in aligning built asset information},\n  journal = {Scientific Reports},\n \
+    \ volume = {15},\n  pages = {23866},\n  year = {2025},\n  url = {https://www.nature.com/articles/s41598-025-09052-5},\n\
+    \  doi = {10.1038/s41598-025-09052-5}\n}\n"
 task_metadata:
   NanoBuiltBench:
     language: en
     category: natural_language
     short_description: Built asset entity description retrieval.
-    description: Queries describing built asset entities are matched to relevant entity type or
-      class descriptions from classification systems such as IFC and Uniclass.
+    description: Queries describing built asset entities are matched to relevant entity
+      type or class descriptions from classification systems such as IFC and Uniclass.
     citation_keys:
     - shahinmoghadam2025benchmarking
     references:
-    - title: Benchmarking pre-trained text embedding models in aligning built asset information
+    - title: Benchmarking pre-trained text embedding models in aligning built asset
+        information
       authors:
       - Mehrzad Shahinmoghadam
       - Ali Motamedi
@@ -57,17 +53,11 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1038/s41598-025-09052-5
-    bibtex: |
-      @article{shahinmoghadam2025benchmarking,
-        author = {Shahinmoghadam, Mehrzad and Motamedi, Ali},
-        title = {Benchmarking pre-trained text embedding models in aligning built asset information},
-        journal = {Scientific Reports},
-        volume = {15},
-        pages = {23866},
-        year = {2025},
-        url = {https://www.nature.com/articles/s41598-025-09052-5},
-        doi = {10.1038/s41598-025-09052-5}
-      }
+    bibtex: "@article{shahinmoghadam2025benchmarking,\n  author = {Shahinmoghadam,\
+      \ Mehrzad and Motamedi, Ali},\n  title = {Benchmarking pre-trained text embedding\
+      \ models in aligning built asset information},\n  journal = {Scientific Reports},\n\
+      \  volume = {15},\n  pages = {23866},\n  year = {2025},\n  url = {https://www.nature.com/articles/s41598-025-09052-5},\n\
+      \  doi = {10.1038/s41598-025-09052-5}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 12
@@ -80,16 +70,33 @@ task_metadata:
       max_chars: 633
       mean_chars: 341.6859833393698
       median_chars: 335.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 99.5
+          fr: 0.5
+      document:
+        sample_count: 2761
+        languages:
+          en: 100.0
   NanoBuiltBenchReranking:
     language: en
     category: natural_language
     short_description: Built asset entity description reranking.
-    description: Built asset entity descriptions used as queries are reranked against candidate
-      entity type or class descriptions from classification systems such as IFC and Uniclass.
+    description: Built asset entity descriptions used as queries are reranked against
+      candidate entity type or class descriptions from classification systems such
+      as IFC and Uniclass.
     citation_keys:
     - shahinmoghadam2025benchmarking
     references:
-    - title: Benchmarking pre-trained text embedding models in aligning built asset information
+    - title: Benchmarking pre-trained text embedding models in aligning built asset
+        information
       authors:
       - Mehrzad Shahinmoghadam
       - Ali Motamedi
@@ -98,17 +105,11 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1038/s41598-025-09052-5
-    bibtex: |
-      @article{shahinmoghadam2025benchmarking,
-        author = {Shahinmoghadam, Mehrzad and Motamedi, Ali},
-        title = {Benchmarking pre-trained text embedding models in aligning built asset information},
-        journal = {Scientific Reports},
-        volume = {15},
-        pages = {23866},
-        year = {2025},
-        url = {https://www.nature.com/articles/s41598-025-09052-5},
-        doi = {10.1038/s41598-025-09052-5}
-      }
+    bibtex: "@article{shahinmoghadam2025benchmarking,\n  author = {Shahinmoghadam,\
+      \ Mehrzad and Motamedi, Ali},\n  title = {Benchmarking pre-trained text embedding\
+      \ models in aligning built asset information},\n  journal = {Scientific Reports},\n\
+      \  volume = {15},\n  pages = {23866},\n  year = {2025},\n  url = {https://www.nature.com/articles/s41598-025-09052-5},\n\
+      \  doi = {10.1038/s41598-025-09052-5}\n}\n"
     query_text_stats:
       count: 82
       min_chars: 35
@@ -121,3 +122,17 @@ task_metadata:
       max_chars: 508
       mean_chars: 309.03899240855765
       median_chars: 305.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 82
+        languages:
+          en: 100.0
+      document:
+        sample_count: 2898
+        languages:
+          en: 100.0

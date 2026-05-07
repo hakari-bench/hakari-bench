@@ -17,14 +17,14 @@ metadata:
   language: en
   category: natural_language
   short_description: Nano subset of the IFIR instruction-following retrieval benchmark.
-  description: NanoIFIR samples IFIR expert-domain instruction-following retrieval tasks,
-    testing whether retrievers respect nuanced legal, medical, finance, and scientific search
-    instructions.
+  description: NanoIFIR samples IFIR expert-domain instruction-following retrieval
+    tasks, testing whether retrievers respect nuanced legal, medical, finance, and
+    scientific search instructions.
   citation_keys:
   - song2025ifir
   references:
-  - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
-      Information Retrieval'
+  - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in
+      Expert-Domain Information Retrieval'
     authors:
     - Tingyu Song
     - Guo Gan
@@ -35,25 +35,27 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2025.naacl-long.511
-  bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for Evaluating\
-    \ Instruction-Following in Expert-Domain Information Retrieval},\n  author = {Tingyu Song\
-    \ and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings of the\
-    \ 2025 Conference of the Nations of the Americas Chapter of the Association for Computational\
-    \ Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  pages = {10186--10204},\n\
-    \  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n}\n"
+  bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark\
+    \ for Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n\
+    \  author = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle\
+    \ = {Proceedings of the 2025 Conference of the Nations of the Americas Chapter\
+    \ of the Association for Computational Linguistics: Human Language Technologies\
+    \ (Volume 1: Long Papers)},\n  pages = {10186--10204},\n  year = {2025},\n  url\
+    \ = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
+    }\n"
 task_metadata:
   NanoIFIRAila:
     language: en
     category: natural_language
     short_description: IFIR legal AILA retrieval.
-    description: Uses IFIR legal instructions over AILA-style legal documents to test retrieval
-      under lawyer or legal-assistant information needs.
+    description: Uses IFIR legal instructions over AILA-style legal documents to test
+      retrieval under lawyer or legal-assistant information needs.
     citation_keys:
     - song2025ifir
     - aila2019retrieval
     references:
-    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
-        Information Retrieval'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following
+        in Expert-Domain Information Retrieval'
       authors:
       - Tingyu Song
       - Guo Gan
@@ -64,7 +66,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.naacl-long.511
-    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance'
+    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal
+        Assistance'
       authors:
       - Paheli Bhattacharya
       - Kripabandhu Ghosh
@@ -77,21 +80,19 @@ task_metadata:
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
-      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
-      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
-      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
-      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
-      }\n\n@inproceedings{aila2019retrieval,
-  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
-  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
-  booktitle = {CEUR Workshop Proceedings},
-  volume = {2517},
-  year = {2019},
-  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
-}
-"
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark\
+      \ for Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n\
+      \  author = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n\
+      \  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas\
+      \ Chapter of the Association for Computational Linguistics: Human Language Technologies\
+      \ (Volume 1: Long Papers)},\n  pages = {10186--10204},\n  year = {2025},\n \
+      \ url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
+      }\n\n@inproceedings{aila2019retrieval, title = {Overview of the FIRE 2019 AILA\
+      \ Track: Artificial Intelligence for Legal Assistance}, author = {Paheli Bhattacharya\
+      \ and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta\
+      \ and Arnab Bhattacharya and Prasenjit Majumder}, booktitle = {CEUR Workshop\
+      \ Proceedings}, volume = {2517}, year = {2019}, url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}\
+      \ } "
     query_text_stats:
       count: 40
       min_chars: 1174
@@ -104,18 +105,32 @@ task_metadata:
       max_chars: 234968
       mean_chars: 19998.05765271105
       median_chars: 15303.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 40
+        languages:
+          en: 100.0
+      document:
+        sample_count: 2914
+        languages:
+          en: 99.966
   NanoIFIRCds:
     language: en
     category: natural_language
     short_description: IFIR clinical-decision retrieval.
-    description: Uses IFIR medical instructions to retrieve clinical decision-support documents
-      for treatment, diagnosis, or trial-oriented needs.
+    description: Uses IFIR medical instructions to retrieve clinical decision-support
+      documents for treatment, diagnosis, or trial-oriented needs.
     citation_keys:
     - song2025ifir
     - roberts2015treccds
     references:
-    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
-        Information Retrieval'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following
+        in Expert-Domain Information Retrieval'
       authors:
       - Tingyu Song
       - Guo Gan
@@ -136,17 +151,18 @@ task_metadata:
       url: https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
-      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
-      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
-      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
-      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
-      }\n\n@inproceedings{roberts2015treccds,\n  title = {Overview of the TREC 2015 Clinical\
-      \ Decision Support Track},\n  author = {Kirk Roberts and Matthew S. Simpson and Ellen\
-      \ M. Voorhees and William R. Hersh},\n  booktitle = {Proceedings of The Twenty-Fourth\
-      \ Text REtrieval Conference},\n  year = {2015},\n  url = {https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf}\n\
-      }\n"
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark\
+      \ for Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n\
+      \  author = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n\
+      \  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas\
+      \ Chapter of the Association for Computational Linguistics: Human Language Technologies\
+      \ (Volume 1: Long Papers)},\n  pages = {10186--10204},\n  year = {2025},\n \
+      \ url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
+      }\n\n@inproceedings{roberts2015treccds,\n  title = {Overview of the TREC 2015\
+      \ Clinical Decision Support Track},\n  author = {Kirk Roberts and Matthew S.\
+      \ Simpson and Ellen M. Voorhees and William R. Hersh},\n  booktitle = {Proceedings\
+      \ of The Twenty-Fourth Text REtrieval Conference},\n  year = {2015},\n  url\
+      \ = {https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf}\n}\n"
     query_text_stats:
       count: 42
       min_chars: 136
@@ -159,18 +175,32 @@ task_metadata:
       max_chars: 10071
       mean_chars: 1630.2225
       median_chars: 1604.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 42
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.99
   NanoIFIRFiQA:
     language: en
     category: natural_language
     short_description: IFIR financial advice retrieval.
-    description: Uses IFIR financial instructions over FiQA-style material to retrieve documents
-      matching nuanced personal finance questions.
+    description: Uses IFIR financial instructions over FiQA-style material to retrieve
+      documents matching nuanced personal finance questions.
     citation_keys:
     - song2025ifir
     - maia2018fiqa
     references:
-    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
-        Information Retrieval'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following
+        in Expert-Domain Information Retrieval'
       authors:
       - Tingyu Song
       - Guo Gan
@@ -194,16 +224,18 @@ task_metadata:
       url: https://doi.org/10.1145/3184558.3192301
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
-      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
-      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
-      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
-      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
-      }\n\n@inproceedings{maia2018fiqa,\n  title = {WWW'18 Open Challenge: Financial Opinion\
-      \ Mining and Question Answering},\n  author = {Macedo Maia and Siegfried Handschuh and\
-      \ Andre Freitas and Brian Davis and Ross McDermott and Manel Zarrouk and Alexandra Balahur},\n\
-      \  year = {2018},\n  url = {https://doi.org/10.1145/3184558.3192301}\n}\n"
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark\
+      \ for Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n\
+      \  author = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n\
+      \  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas\
+      \ Chapter of the Association for Computational Linguistics: Human Language Technologies\
+      \ (Volume 1: Long Papers)},\n  pages = {10186--10204},\n  year = {2025},\n \
+      \ url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
+      }\n\n@inproceedings{maia2018fiqa,\n  title = {WWW'18 Open Challenge: Financial\
+      \ Opinion Mining and Question Answering},\n  author = {Macedo Maia and Siegfried\
+      \ Handschuh and Andre Freitas and Brian Davis and Ross McDermott and Manel Zarrouk\
+      \ and Alexandra Balahur},\n  year = {2018},\n  url = {https://doi.org/10.1145/3184558.3192301}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 22
@@ -216,18 +248,32 @@ task_metadata:
       max_chars: 13080
       mean_chars: 791.8885
       median_chars: 541.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.57
   NanoIFIRFire:
     language: en
     category: natural_language
     short_description: IFIR legal FIRE retrieval.
-    description: Uses IFIR legal instructions to retrieve relevant legal documents in a FIRE-derived
-      expert-domain retrieval subset.
+    description: Uses IFIR legal instructions to retrieve relevant legal documents
+      in a FIRE-derived expert-domain retrieval subset.
     citation_keys:
     - song2025ifir
     - mandal2017fireirled
     references:
-    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
-        Information Retrieval'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following
+        in Expert-Domain Information Retrieval'
       authors:
       - Tingyu Song
       - Guo Gan
@@ -250,17 +296,19 @@ task_metadata:
       url: https://ceur-ws.org/Vol-2036/T3-1.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
-      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
-      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
-      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
-      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
-      }\n\n@inproceedings{mandal2017fireirled,\n  title = {Overview of the FIRE 2017 IRLeD\
-      \ Track: Information Retrieval from Legal Documents},\n  author = {Arpan Mandal and\
-      \ Kripabandhu Ghosh and Arnab Bhattacharya and Arindam Pal and Saptarshi Ghosh},\n\
-      \  booktitle = {CEUR Workshop Proceedings},\n  volume = {2036},\n  pages = {63--68},\n\
-      \  year = {2017},\n  url = {https://ceur-ws.org/Vol-2036/T3-1.pdf}\n}\n"
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark\
+      \ for Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n\
+      \  author = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n\
+      \  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas\
+      \ Chapter of the Association for Computational Linguistics: Human Language Technologies\
+      \ (Volume 1: Long Papers)},\n  pages = {10186--10204},\n  year = {2025},\n \
+      \ url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
+      }\n\n@inproceedings{mandal2017fireirled,\n  title = {Overview of the FIRE 2017\
+      \ IRLeD Track: Information Retrieval from Legal Documents},\n  author = {Arpan\
+      \ Mandal and Kripabandhu Ghosh and Arnab Bhattacharya and Arindam Pal and Saptarshi\
+      \ Ghosh},\n  booktitle = {CEUR Workshop Proceedings},\n  volume = {2036},\n\
+      \  pages = {63--68},\n  year = {2017},\n  url = {https://ceur-ws.org/Vol-2036/T3-1.pdf}\n\
+      }\n"
     query_text_stats:
       count: 167
       min_chars: 1783
@@ -273,18 +321,35 @@ task_metadata:
       max_chars: 75699
       mean_chars: 27167.665324899368
       median_chars: 24688.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 167
+        languages:
+          en: 100.0
+      document:
+        sample_count: 1739
+        languages:
+          en: 94.48
+          it: 2.588
+          sv: 0.805
+          de: 0.69
   NanoIFIRNFCorpus:
     language: en
     category: natural_language
     short_description: IFIR medical literature retrieval.
-    description: Uses IFIR instructions over NFCorpus-style medical and nutrition literature
-      for student or researcher information needs.
+    description: Uses IFIR instructions over NFCorpus-style medical and nutrition
+      literature for student or researcher information needs.
     citation_keys:
     - song2025ifir
     - boteva2016nfcorpus
     references:
-    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
-        Information Retrieval'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following
+        in Expert-Domain Information Retrieval'
       authors:
       - Tingyu Song
       - Guo Gan
@@ -295,7 +360,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.naacl-long.511
-    - title: 'NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval'
+    - title: 'NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information
+        Retrieval'
       authors:
       - Vera Boteva
       - Demian Gholipour Ghalandari
@@ -305,16 +371,18 @@ task_metadata:
       url: https://link.springer.com/chapter/10.1007/978-3-319-30671-1_58
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
-      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
-      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
-      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
-      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
-      }\n\n@inproceedings{boteva2016nfcorpus,\n  title = {NFCorpus: A Full-Text Learning to\
-      \ Rank Dataset for Medical Information Retrieval},\n  author = {Vera Boteva and Demian\
-      \ Gholipour and Artem Sokolov and Stefan Riezler},\n  booktitle = {Advances in Information\
-      \ Retrieval},\n  pages = {688--694},\n  year = {2016}\n}\n"
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark\
+      \ for Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n\
+      \  author = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n\
+      \  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas\
+      \ Chapter of the Association for Computational Linguistics: Human Language Technologies\
+      \ (Volume 1: Long Papers)},\n  pages = {10186--10204},\n  year = {2025},\n \
+      \ url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
+      }\n\n@inproceedings{boteva2016nfcorpus,\n  title = {NFCorpus: A Full-Text Learning\
+      \ to Rank Dataset for Medical Information Retrieval},\n  author = {Vera Boteva\
+      \ and Demian Gholipour and Artem Sokolov and Stefan Riezler},\n  booktitle =\
+      \ {Advances in Information Retrieval},\n  pages = {688--694},\n  year = {2016}\n\
+      }\n"
     query_text_stats:
       count: 86
       min_chars: 16
@@ -327,18 +395,33 @@ task_metadata:
       max_chars: 10090
       mean_chars: 1589.5165599777345
       median_chars: 1612.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 86
+        languages:
+          en: 98.837
+          de: 1.163
+      document:
+        sample_count: 3593
+        languages:
+          en: 99.972
   NanoIFIRPm:
     language: en
     category: natural_language
     short_description: IFIR precision-medicine retrieval.
-    description: Uses IFIR medical instructions to retrieve treatment, diagnosis, or clinical-trial
-      information for doctor-like queries.
+    description: Uses IFIR medical instructions to retrieve treatment, diagnosis,
+      or clinical-trial information for doctor-like queries.
     citation_keys:
     - song2025ifir
     - roberts2017trecpm
     references:
-    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
-        Information Retrieval'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following
+        in Expert-Domain Information Retrieval'
       authors:
       - Tingyu Song
       - Guo Gan
@@ -362,17 +445,19 @@ task_metadata:
       url: https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
-      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
-      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
-      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
-      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
-      }\n\n@inproceedings{roberts2017trecpm,\n  title = {Overview of the TREC 2017 Precision\
-      \ Medicine Track},\n  author = {Kirk Roberts and Dina Demner-Fushman and Ellen M. Voorhees\
-      \ and William R. Hersh and Steven Bedrick and Alexander J. Lazar and Shubham Pant},\n\
-      \  booktitle = {Proceedings of The Twenty-Sixth Text REtrieval Conference},\n  year\
-      \ = {2017},\n  url = {https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf}\n}\n"
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark\
+      \ for Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n\
+      \  author = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n\
+      \  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas\
+      \ Chapter of the Association for Computational Linguistics: Human Language Technologies\
+      \ (Volume 1: Long Papers)},\n  pages = {10186--10204},\n  year = {2025},\n \
+      \ url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
+      }\n\n@inproceedings{roberts2017trecpm,\n  title = {Overview of the TREC 2017\
+      \ Precision Medicine Track},\n  author = {Kirk Roberts and Dina Demner-Fushman\
+      \ and Ellen M. Voorhees and William R. Hersh and Steven Bedrick and Alexander\
+      \ J. Lazar and Shubham Pant},\n  booktitle = {Proceedings of The Twenty-Sixth\
+      \ Text REtrieval Conference},\n  year = {2017},\n  url = {https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf}\n\
+      }\n"
     query_text_stats:
       count: 59
       min_chars: 118
@@ -385,18 +470,32 @@ task_metadata:
       max_chars: 19737
       mean_chars: 2244.8705
       median_chars: 1651.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 59
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.91
   NanoIFIRScifact:
     language: en
     category: natural_language
     short_description: IFIR scientific literature retrieval.
-    description: Uses IFIR scientific instructions over SciFact-style literature to retrieve
-      papers relevant to research claims or questions.
+    description: Uses IFIR scientific instructions over SciFact-style literature to
+      retrieve papers relevant to research claims or questions.
     citation_keys:
     - song2025ifir
     - wadden2020scifact
     references:
-    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain
-        Information Retrieval'
+    - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following
+        in Expert-Domain Information Retrieval'
       authors:
       - Tingyu Song
       - Guo Gan
@@ -420,17 +519,18 @@ task_metadata:
       url: https://aclanthology.org/2020.emnlp-main.609/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark for\
-      \ Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n  author\
-      \ = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n  booktitle = {Proceedings\
-      \ of the 2025 Conference of the Nations of the Americas Chapter of the Association for\
-      \ Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n\
-      \  pages = {10186--10204},\n  year = {2025},\n  url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
+    bibtex: "@inproceedings{song2025ifir,\n  title = {IFIR: A Comprehensive Benchmark\
+      \ for Evaluating Instruction-Following in Expert-Domain Information Retrieval},\n\
+      \  author = {Tingyu Song and Guo Gan and Mingsheng Shang and Yilun Zhao},\n\
+      \  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas\
+      \ Chapter of the Association for Computational Linguistics: Human Language Technologies\
+      \ (Volume 1: Long Papers)},\n  pages = {10186--10204},\n  year = {2025},\n \
+      \ url = {https://aclanthology.org/2025.naacl-long.511/},\n  doi = {10.18653/v1/2025.naacl-long.511}\n\
       }\n\n@inproceedings{wadden2020scifact,\n  title = {SciFact: A Dataset and Benchmark\
-      \ for Scientific Claim Verification},\n  author = {David Wadden and Shanchuan Lin and\
-      \ Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen and Arman Cohan and Hannaneh Hajishirzi},\n\
-      \  booktitle = {Proceedings of EMNLP},\n  year = {2020},\n  url = {https://aclanthology.org/2020.emnlp-main.609/}\n\
-      }\n"
+      \ for Scientific Claim Verification},\n  author = {David Wadden and Shanchuan\
+      \ Lin and Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen and Arman Cohan\
+      \ and Hannaneh Hajishirzi},\n  booktitle = {Proceedings of EMNLP},\n  year =\
+      \ {2020},\n  url = {https://aclanthology.org/2020.emnlp-main.609/}\n}\n"
     query_text_stats:
       count: 43
       min_chars: 33
@@ -443,3 +543,17 @@ task_metadata:
       max_chars: 9124
       mean_chars: 1452.6093
       median_chars: 1454.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 43
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.96

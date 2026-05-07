@@ -29,13 +29,13 @@ metadata:
   language: nl
   category: natural_language
   short_description: Dutch NanoMTEB retrieval benchmark.
-  description: NanoMTEB-Dutch is a compact Dutch retrieval benchmark aligned with MTEB-style task families, including Dutch-native and translated retrieval tasks.
+  description: NanoMTEB-Dutch is a compact Dutch retrieval benchmark aligned with
+    MTEB-style task families, including Dutch-native and translated retrieval tasks.
   citation_keys:
   - muennighoff2023mteb
   - banar2025mtebnl
   references:
-  - &mteb_reference
-    title: 'MTEB: Massive Text Embedding Benchmark'
+  - title: 'MTEB: Massive Text Embedding Benchmark'
     authors:
     - Niklas Muennighoff
     - Nouamane Tazi
@@ -46,7 +46,7 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2210.07316
-  - &mtebnl_reference
+  - &id003
     title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
     authors:
     - Nikolay Banar
@@ -60,33 +60,26 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2509.12340
-  bibtex: |
-    @inproceedings{muennighoff2023mteb,
-      title = {{MTEB}: Massive Text Embedding Benchmark},
-      author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},
-      year = {2023},
-      url = {https://arxiv.org/abs/2210.07316},
-      doi = {10.48550/arXiv.2210.07316}
-    }
-
-    @misc{banar2025mtebnl,
-      title = {{MTEB-NL} and {E5-NL}: Embedding Benchmark and Models for Dutch},
-      author = {Banar, Nikolay and Lotfi, Ehsan and Van Nooten, Jens and Arhiliuc, Cristina and Kliocaite, Marija and Daelemans, Walter},
-      year = {2025},
-      url = {https://arxiv.org/abs/2509.12340},
-      doi = {10.48550/arXiv.2509.12340}
-    }
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
+    \ and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n\
+    \  doi = {10.48550/arXiv.2210.07316}\n}\n\n@misc{banar2025mtebnl,\n  title = {{MTEB-NL}\
+    \ and {E5-NL}: Embedding Benchmark and Models for Dutch},\n  author = {Banar,\
+    \ Nikolay and Lotfi, Ehsan and Van Nooten, Jens and Arhiliuc, Cristina and Kliocaite,\
+    \ Marija and Daelemans, Walter},\n  year = {2025},\n  url = {https://arxiv.org/abs/2509.12340},\n\
+    \  doi = {10.48550/arXiv.2509.12340}\n}\n"
 task_metadata:
   NanoCQADupstackAndroidNL:
     language: nl
     category: natural_language
     short_description: Dutch duplicate-question retrieval for Android Q&A.
-    description: A compact Dutch-translated CQADupStack Android split for duplicate question retrieval in community Q&A.
+    description: A compact Dutch-translated CQADupStack Android split for duplicate
+      question retrieval in community Q&A.
     citation_keys:
     - hoogeveen2015cqadupstack
     - lotfi2025beirnl
     references:
-    - &cqadupstack_reference
+    - &id001
       title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
       authors:
       - Doris Hoogeveen
@@ -97,7 +90,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1145/2838931.2838934
-    - &beirnl_reference
+    - &id002
       title: 'BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language'
       authors:
       - Ehsan Lotfi
@@ -107,136 +100,395 @@ task_metadata:
       url: https://aclanthology.org/2025.bucc-1.5/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: &cqadupstack_nl_bibtex |
-      @inproceedings{hoogeveen2015cqadupstack,
-        title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},
-        author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},
-        booktitle = {Proceedings of ADCS},
-        year = {2015},
-        url = {https://doi.org/10.1145/2838931.2838934},
-        doi = {10.1145/2838931.2838934}
-      }
-
-      @inproceedings{lotfi2025beirnl,
-        title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch Language},
-        author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},
-        booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable Corpora},
-        year = {2025},
-        url = {https://aclanthology.org/2025.bucc-1.5/}
-      }
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A\
+      \ Benchmark Data Set for Community Question-Answering Research},\n  author =\
+      \ {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle\
+      \ = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n\n@inproceedings{lotfi2025beirnl,\n \
+      \ title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch\
+      \ Language},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n\
+      \  booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable\
+      \ Corpora},\n  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 95.0
+          en: 3.0
+          de: 2.0
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.71
   NanoCQADupstackEnglishNL:
     language: nl
     category: natural_language
     short_description: Dutch duplicate-question retrieval for English Q&A.
-    description: A compact Dutch-translated CQADupStack English split for duplicate question retrieval in community Q&A.
+    description: A compact Dutch-translated CQADupStack English split for duplicate
+      question retrieval in community Q&A.
     citation_keys:
     - hoogeveen2015cqadupstack
     - lotfi2025beirnl
     references:
-    - *cqadupstack_reference
-    - *beirnl_reference
-    bibtex: *cqadupstack_nl_bibtex
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A\
+      \ Benchmark Data Set for Community Question-Answering Research},\n  author =\
+      \ {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle\
+      \ = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n\n@inproceedings{lotfi2025beirnl,\n \
+      \ title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch\
+      \ Language},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n\
+      \  booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable\
+      \ Corpora},\n  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 91.5
+          en: 7.5
+          af: 0.5
+          de: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 98.72
+          en: 1.04
   NanoCQADupstackGisNL:
     language: nl
     category: natural_language
     short_description: Dutch duplicate-question retrieval for GIS Q&A.
-    description: A compact Dutch-translated CQADupStack GIS split for duplicate question retrieval in community Q&A.
+    description: A compact Dutch-translated CQADupStack GIS split for duplicate question
+      retrieval in community Q&A.
     citation_keys:
     - hoogeveen2015cqadupstack
     - lotfi2025beirnl
     references:
-    - *cqadupstack_reference
-    - *beirnl_reference
-    bibtex: *cqadupstack_nl_bibtex
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A\
+      \ Benchmark Data Set for Community Question-Answering Research},\n  author =\
+      \ {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle\
+      \ = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n\n@inproceedings{lotfi2025beirnl,\n \
+      \ title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch\
+      \ Language},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n\
+      \  booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable\
+      \ Corpora},\n  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 95.5
+          en: 2.0
+          af: 1.0
+          de: 1.0
+          es: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.58
   NanoCQADupstackMathematicaNL:
     language: nl
     category: natural_language
     short_description: Dutch duplicate-question retrieval for Mathematica Q&A.
-    description: A compact Dutch-translated CQADupStack Mathematica split for duplicate question retrieval in community Q&A.
+    description: A compact Dutch-translated CQADupStack Mathematica split for duplicate
+      question retrieval in community Q&A.
     citation_keys:
     - hoogeveen2015cqadupstack
     - lotfi2025beirnl
     references:
-    - *cqadupstack_reference
-    - *beirnl_reference
-    bibtex: *cqadupstack_nl_bibtex
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A\
+      \ Benchmark Data Set for Community Question-Answering Research},\n  author =\
+      \ {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle\
+      \ = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n\n@inproceedings{lotfi2025beirnl,\n \
+      \ title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch\
+      \ Language},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n\
+      \  booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable\
+      \ Corpora},\n  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 95.0
+          en: 3.0
+          de: 0.5
+          es: 0.5
+          fr: 0.5
+          nds: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.58
   NanoCQADupstackPhysicsNL:
     language: nl
     category: natural_language
     short_description: Dutch duplicate-question retrieval for physics Q&A.
-    description: A compact Dutch-translated CQADupStack Physics split for duplicate question retrieval in community Q&A.
+    description: A compact Dutch-translated CQADupStack Physics split for duplicate
+      question retrieval in community Q&A.
     citation_keys:
     - hoogeveen2015cqadupstack
     - lotfi2025beirnl
     references:
-    - *cqadupstack_reference
-    - *beirnl_reference
-    bibtex: *cqadupstack_nl_bibtex
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A\
+      \ Benchmark Data Set for Community Question-Answering Research},\n  author =\
+      \ {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle\
+      \ = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n\n@inproceedings{lotfi2025beirnl,\n \
+      \ title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch\
+      \ Language},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n\
+      \  booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable\
+      \ Corpora},\n  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 98.5
+          de: 1.0
+          en: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.56
   NanoCQADupstackProgrammersNL:
     language: nl
     category: natural_language
     short_description: Dutch duplicate-question retrieval for programmers Q&A.
-    description: A compact Dutch-translated CQADupStack Programmers split for duplicate question retrieval in community Q&A.
+    description: A compact Dutch-translated CQADupStack Programmers split for duplicate
+      question retrieval in community Q&A.
     citation_keys:
     - hoogeveen2015cqadupstack
     - lotfi2025beirnl
     references:
-    - *cqadupstack_reference
-    - *beirnl_reference
-    bibtex: *cqadupstack_nl_bibtex
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A\
+      \ Benchmark Data Set for Community Question-Answering Research},\n  author =\
+      \ {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle\
+      \ = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n\n@inproceedings{lotfi2025beirnl,\n \
+      \ title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch\
+      \ Language},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n\
+      \  booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable\
+      \ Corpora},\n  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 97.0
+          en: 2.5
+          de: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.75
   NanoCQADupstackStatsNL:
     language: nl
     category: natural_language
     short_description: Dutch duplicate-question retrieval for statistics Q&A.
-    description: A compact Dutch-translated CQADupStack Stats split for duplicate question retrieval in community Q&A.
+    description: A compact Dutch-translated CQADupStack Stats split for duplicate
+      question retrieval in community Q&A.
     citation_keys:
     - hoogeveen2015cqadupstack
     - lotfi2025beirnl
     references:
-    - *cqadupstack_reference
-    - *beirnl_reference
-    bibtex: *cqadupstack_nl_bibtex
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A\
+      \ Benchmark Data Set for Community Question-Answering Research},\n  author =\
+      \ {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle\
+      \ = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n\n@inproceedings{lotfi2025beirnl,\n \
+      \ title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch\
+      \ Language},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n\
+      \  booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable\
+      \ Corpora},\n  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 94.5
+          en: 3.0
+          de: 1.5
+          es: 0.5
+          fr: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.52
   NanoCQADupstackTexNL:
     language: nl
     category: natural_language
     short_description: Dutch duplicate-question retrieval for TeX Q&A.
-    description: A compact Dutch-translated CQADupStack TeX split for duplicate question retrieval in community Q&A.
+    description: A compact Dutch-translated CQADupStack TeX split for duplicate question
+      retrieval in community Q&A.
     citation_keys:
     - hoogeveen2015cqadupstack
     - lotfi2025beirnl
     references:
-    - *cqadupstack_reference
-    - *beirnl_reference
-    bibtex: *cqadupstack_nl_bibtex
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A\
+      \ Benchmark Data Set for Community Question-Answering Research},\n  author =\
+      \ {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle\
+      \ = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n\n@inproceedings{lotfi2025beirnl,\n \
+      \ title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch\
+      \ Language},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n\
+      \  booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable\
+      \ Corpora},\n  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 95.5
+          en: 3.0
+          es: 0.5
+          fr: 0.5
+          la: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.71
   NanoCQADupstackWebmastersNL:
     language: nl
     category: natural_language
     short_description: Dutch duplicate-question retrieval for webmaster Q&A.
-    description: A compact Dutch-translated CQADupStack Webmasters split for duplicate question retrieval in community Q&A.
+    description: A compact Dutch-translated CQADupStack Webmasters split for duplicate
+      question retrieval in community Q&A.
     citation_keys:
     - hoogeveen2015cqadupstack
     - lotfi2025beirnl
     references:
-    - *cqadupstack_reference
-    - *beirnl_reference
-    bibtex: *cqadupstack_nl_bibtex
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A\
+      \ Benchmark Data Set for Community Question-Answering Research},\n  author =\
+      \ {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle\
+      \ = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n\n@inproceedings{lotfi2025beirnl,\n \
+      \ title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch\
+      \ Language},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n\
+      \  booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable\
+      \ Corpora},\n  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 94.5
+          en: 3.5
+          de: 0.5
+          fr: 0.5
+          id: 0.5
+          pl: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.64
   NanoCQADupstackWordpressNL:
     language: nl
     category: natural_language
     short_description: Dutch duplicate-question retrieval for WordPress Q&A.
-    description: A compact Dutch-translated CQADupStack WordPress split for duplicate question retrieval in community Q&A.
+    description: A compact Dutch-translated CQADupStack WordPress split for duplicate
+      question retrieval in community Q&A.
     citation_keys:
     - hoogeveen2015cqadupstack
     - lotfi2025beirnl
     references:
-    - *cqadupstack_reference
-    - *beirnl_reference
-    bibtex: *cqadupstack_nl_bibtex
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A\
+      \ Benchmark Data Set for Community Question-Answering Research},\n  author =\
+      \ {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle\
+      \ = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n\n@inproceedings{lotfi2025beirnl,\n \
+      \ title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch\
+      \ Language},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n\
+      \  booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable\
+      \ Corpora},\n  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 97.0
+          en: 2.0
+          it: 0.5
+          th: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.67
   NanoDutchNewsArticles:
     language: nl
     category: natural_language
     short_description: Dutch news article retrieval from NOS titles.
-    description: A compact retrieval task built from Dutch NOS news articles, retrieving article content from titles.
+    description: A compact retrieval task built from Dutch NOS news articles, retrieving
+      article content from titles.
     citation_keys:
     - scheijen2022dutchnewsarticles
     references:
@@ -247,24 +499,37 @@ task_metadata:
       url: https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles
       is_paper: false
       source_confidence: probably_correct
-    bibtex: |
-      @misc{scheijen2022dutchnewsarticles,
-        title = {Dutch News Articles},
-        author = {Scheijen, Max},
-        year = {2022},
-        url = {https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles}
-      }
+    bibtex: "@misc{scheijen2022dutchnewsarticles,\n  title = {Dutch News Articles},\n\
+      \  author = {Scheijen, Max},\n  year = {2022},\n  url = {https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 96.5
+          en: 2.5
+          da: 0.5
+          de: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.83
   NanoFEVERNL:
     language: nl
     category: natural_language
     short_description: Dutch-translated FEVER evidence retrieval.
-    description: A compact Dutch-translated FEVER split for retrieving Wikipedia evidence for fact-verification claims.
+    description: A compact Dutch-translated FEVER split for retrieving Wikipedia evidence
+      for fact-verification claims.
     citation_keys:
     - thorne2018fever
     - lotfi2025beirnl
     references:
-    - &fever_reference
-      title: 'FEVER: a Large-scale Dataset for Fact Extraction and VERification'
+    - title: 'FEVER: a Large-scale Dataset for Fact Extraction and VERification'
       authors:
       - James Thorne
       - Andreas Vlachos
@@ -275,29 +540,40 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/N18-1074
-    - *beirnl_reference
-    bibtex: |
-      @inproceedings{thorne2018fever,
-        title = {{FEVER}: a Large-scale Dataset for Fact Extraction and {VER}ification},
-        author = {Thorne, James and Vlachos, Andreas and Christodoulopoulos, Christos and Mittal, Arpit},
-        booktitle = {Proceedings of NAACL-HLT},
-        year = {2018},
-        url = {https://aclanthology.org/N18-1074/},
-        doi = {10.18653/v1/N18-1074}
-      }
-
-      @inproceedings{lotfi2025beirnl,
-        title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch Language},
-        author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},
-        booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable Corpora},
-        year = {2025},
-        url = {https://aclanthology.org/2025.bucc-1.5/}
-      }
+    - *id002
+    bibtex: "@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
+      \ for Fact Extraction and {VER}ification},\n  author = {Thorne, James and Vlachos,\
+      \ Andreas and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle\
+      \ = {Proceedings of NAACL-HLT},\n  year = {2018},\n  url = {https://aclanthology.org/N18-1074/},\n\
+      \  doi = {10.18653/v1/N18-1074}\n}\n\n@inproceedings{lotfi2025beirnl,\n  title\
+      \ = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch Language},\n\
+      \  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n  booktitle\
+      \ = {Proceedings of the 18th Workshop on Building and Using Comparable Corpora},\n\
+      \  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n}\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 98.0
+          en: 1.5
+          de: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 90.66
+          en: 7.53
+          fr: 0.59
   NanoLegalQANL:
     language: nl
     category: natural_language
     short_description: Dutch legal QA attribution retrieval.
-    description: A compact retrieval task for Dutch legal question answering with attributions to relevant law articles.
+    description: A compact retrieval task for Dutch legal question answering with
+      attributions to relevant law articles.
     citation_keys:
     - redelaar2024attributed
     references:
@@ -312,20 +588,34 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2024.nllp-1.12
-    bibtex: |
-      @inproceedings{redelaar2024attributed,
-        title = {Attributed Question Answering for Preconditions in the Dutch Law},
-        author = {Redelaar, Felicia and Van Drie, Romy and Verberne, Suzan and De Boer, Maaike},
-        booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2024},
-        year = {2024},
-        url = {https://aclanthology.org/2024.nllp-1.12/},
-        doi = {10.18653/v1/2024.nllp-1.12}
-      }
+    bibtex: "@inproceedings{redelaar2024attributed,\n  title = {Attributed Question\
+      \ Answering for Preconditions in the Dutch Law},\n  author = {Redelaar, Felicia\
+      \ and Van Drie, Romy and Verberne, Suzan and De Boer, Maaike},\n  booktitle\
+      \ = {Proceedings of the Natural Legal Language Processing Workshop 2024},\n\
+      \  year = {2024},\n  url = {https://aclanthology.org/2024.nllp-1.12/},\n  doi\
+      \ = {10.18653/v1/2024.nllp-1.12}\n}\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 102
+        languages:
+          nl: 99.02
+          de: 0.98
+      document:
+        sample_count: 10000
+        languages:
+          nl: 98.51
+          de: 1.45
   NanoNQNL:
     language: nl
     category: natural_language
     short_description: Dutch-translated Natural Questions retrieval.
-    description: A compact Dutch-translated Natural Questions split for retrieving Wikipedia passages that answer questions.
+    description: A compact Dutch-translated Natural Questions split for retrieving
+      Wikipedia passages that answer questions.
     citation_keys:
     - kwiatkowski2019natural
     - lotfi2025beirnl
@@ -355,41 +645,71 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00276
-    - *beirnl_reference
-    bibtex: |
-      @article{kwiatkowski2019natural,
-        title = {Natural Questions: a Benchmark for Question Answering Research},
-        author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and Toutanova, Kristina and Jones, Llion and Kelcey, Matthew and Chang, Ming-Wei and Dai, Andrew M. and Uszkoreit, Jakob and Le, Quoc and Petrov, Slav},
-        journal = {Transactions of the Association for Computational Linguistics},
-        year = {2019},
-        url = {https://aclanthology.org/Q19-1026/},
-        doi = {10.1162/tacl_a_00276}
-      }
-
-      @inproceedings{lotfi2025beirnl,
-        title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch Language},
-        author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},
-        booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable Corpora},
-        year = {2025},
-        url = {https://aclanthology.org/2025.bucc-1.5/}
-      }
+    - *id002
+    bibtex: "@article{kwiatkowski2019natural,\n  title = {Natural Questions: a Benchmark\
+      \ for Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki,\
+      \ Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and\
+      \ Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob\
+      \ and Lee, Kenton and Toutanova, Kristina and Jones, Llion and Kelcey, Matthew\
+      \ and Chang, Ming-Wei and Dai, Andrew M. and Uszkoreit, Jakob and Le, Quoc and\
+      \ Petrov, Slav},\n  journal = {Transactions of the Association for Computational\
+      \ Linguistics},\n  year = {2019},\n  url = {https://aclanthology.org/Q19-1026/},\n\
+      \  doi = {10.1162/tacl_a_00276}\n}\n\n@inproceedings{lotfi2025beirnl,\n  title\
+      \ = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch Language},\n\
+      \  author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},\n  booktitle\
+      \ = {Proceedings of the 18th Workshop on Building and Using Comparable Corpora},\n\
+      \  year = {2025},\n  url = {https://aclanthology.org/2025.bucc-1.5/}\n}\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 91.5
+          en: 5.5
+          de: 2.5
+          nds: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 96.56
+          en: 2.84
   NanoOpenTender:
     language: nl
     category: natural_language
     short_description: Dutch tender-call retrieval from titles.
-    description: A compact OpenTender retrieval task over Belgian and Dutch tender calls in Dutch.
+    description: A compact OpenTender retrieval task over Belgian and Dutch tender
+      calls in Dutch.
     citation_keys:
     - banar2025mtebnl
     references:
-    - *mtebnl_reference
-    bibtex: |
-      @misc{banar2025mtebnl,
-        title = {{MTEB-NL} and {E5-NL}: Embedding Benchmark and Models for Dutch},
-        author = {Banar, Nikolay and Lotfi, Ehsan and Van Nooten, Jens and Arhiliuc, Cristina and Kliocaite, Marija and Daelemans, Walter},
-        year = {2025},
-        url = {https://arxiv.org/abs/2509.12340},
-        doi = {10.48550/arXiv.2509.12340}
-      }
+    - *id003
+    bibtex: "@misc{banar2025mtebnl,\n  title = {{MTEB-NL} and {E5-NL}: Embedding Benchmark\
+      \ and Models for Dutch},\n  author = {Banar, Nikolay and Lotfi, Ehsan and Van\
+      \ Nooten, Jens and Arhiliuc, Cristina and Kliocaite, Marija and Daelemans, Walter},\n\
+      \  year = {2025},\n  url = {https://arxiv.org/abs/2509.12340},\n  doi = {10.48550/arXiv.2509.12340}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 90.0
+          en: 4.0
+          de: 3.5
+          fr: 2.0
+          sv: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 98.98
   NanoQuoraNL:
     language: nl
     category: natural_language
@@ -406,31 +726,42 @@ task_metadata:
       url: https://www.kaggle.com/datasets/quora/question-pairs-dataset
       is_paper: false
       source_confidence: probably_correct
-    - *beirnl_reference
-    bibtex: |
-      @misc{quora2017questionpairs,
-        title = {Quora Question Pairs},
-        author = {{Quora}},
-        year = {2017},
-        url = {https://www.kaggle.com/datasets/quora/question-pairs-dataset}
-      }
-
-      @inproceedings{lotfi2025beirnl,
-        title = {{BEIR-NL}: Zero-shot Information Retrieval Benchmark for the Dutch Language},
-        author = {Lotfi, Ehsan and Banar, Nikolay and Daelemans, Walter},
-        booktitle = {Proceedings of the 18th Workshop on Building and Using Comparable Corpora},
-        year = {2025},
-        url = {https://aclanthology.org/2025.bucc-1.5/}
-      }
+    - *id002
+    bibtex: "@misc{quora2017questionpairs,\n  title = {Quora Question Pairs},\n  author\
+      \ = {{Quora}},\n  year = {2017},\n  url = {https://www.kaggle.com/datasets/quora/question-pairs-dataset}\n\
+      }\n\n@inproceedings{lotfi2025beirnl,\n  title = {{BEIR-NL}: Zero-shot Information\
+      \ Retrieval Benchmark for the Dutch Language},\n  author = {Lotfi, Ehsan and\
+      \ Banar, Nikolay and Daelemans, Walter},\n  booktitle = {Proceedings of the\
+      \ 18th Workshop on Building and Using Comparable Corpora},\n  year = {2025},\n\
+      \  url = {https://aclanthology.org/2025.bucc-1.5/}\n}\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 97.5
+          en: 2.0
+          de: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 97.61
+          en: 1.74
   NanoVABB:
     language: nl
     category: natural_language
     short_description: Flemish academic bibliography abstract retrieval.
-    description: A compact retrieval task built from VABB-SHW edition 14, retrieving academic abstracts from titles.
+    description: A compact retrieval task built from VABB-SHW edition 14, retrieving
+      academic abstracts from titles.
     citation_keys:
     - aspeslagh2024vabb
     references:
-    - title: 'VABB-SHW: Dataset of Flemish Academic Bibliography for the Social Sciences and Humanities (edition 14)'
+    - title: 'VABB-SHW: Dataset of Flemish Academic Bibliography for the Social Sciences
+        and Humanities (edition 14)'
       authors:
       - Pieter Aspeslagh
       - Raf Guns
@@ -440,25 +771,43 @@ task_metadata:
       is_paper: false
       source_confidence: probably_correct
       doi: 10.5281/zenodo.14214806
-    bibtex: |
-      @dataset{aspeslagh2024vabb,
-        title = {{VABB-SHW}: Dataset of Flemish Academic Bibliography for the Social Sciences and Humanities (edition 14)},
-        author = {Aspeslagh, Pieter and Guns, Raf and Engels, Tim C. E.},
-        publisher = {Zenodo},
-        year = {2024},
-        url = {https://zenodo.org/records/14214806},
-        doi = {10.5281/zenodo.14214806}
-      }
+    bibtex: "@dataset{aspeslagh2024vabb,\n  title = {{VABB-SHW}: Dataset of Flemish\
+      \ Academic Bibliography for the Social Sciences and Humanities (edition 14)},\n\
+      \  author = {Aspeslagh, Pieter and Guns, Raf and Engels, Tim C. E.},\n  publisher\
+      \ = {Zenodo},\n  year = {2024},\n  url = {https://zenodo.org/records/14214806},\n\
+      \  doi = {10.5281/zenodo.14214806}\n}\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 92.0
+          en: 4.5
+          fr: 1.5
+          de: 0.5
+          es: 0.5
+          la: 0.5
+          'no': 0.5
+      document:
+        sample_count: 9123
+        languages:
+          nl: 98.761
+          en: 0.877
   NanoWebFAQNL:
     language: nl
     category: natural_language
     short_description: Dutch WebFAQ question-answer retrieval.
-    description: A compact Dutch split of WebFAQ for retrieving FAQ answers from natural questions.
+    description: A compact Dutch split of WebFAQ for retrieving FAQ answers from natural
+      questions.
     citation_keys:
     - dinzinger2025webfaq
     references:
-    - &webfaq_reference
-      title: 'WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval'
+    - title: 'WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense
+        Retrieval'
       authors:
       - Michael Dinzinger
       - Laura Caspari
@@ -470,19 +819,35 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2502.20936
-    bibtex: |
-      @misc{dinzinger2025webfaq,
-        title = {{WebFAQ}: A Multilingual Collection of Natural {Q&A} Datasets for Dense Retrieval},
-        author = {Dinzinger, Michael and Caspari, Laura and Ghosh Dastidar, Kanishka and Mitrovic, Jelena and Granitzer, Michael},
-        year = {2025},
-        url = {https://arxiv.org/abs/2502.20936},
-        doi = {10.48550/arXiv.2502.20936}
-      }
+    bibtex: "@misc{dinzinger2025webfaq,\n  title = {{WebFAQ}: A Multilingual Collection\
+      \ of Natural {Q&A} Datasets for Dense Retrieval},\n  author = {Dinzinger, Michael\
+      \ and Caspari, Laura and Ghosh Dastidar, Kanishka and Mitrovic, Jelena and Granitzer,\
+      \ Michael},\n  year = {2025},\n  url = {https://arxiv.org/abs/2502.20936},\n\
+      \  doi = {10.48550/arXiv.2502.20936}\n}\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 98.0
+          af: 0.5
+          da: 0.5
+          en: 0.5
+          eu: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.65
   NanobBSARDNL:
     language: nl
     category: natural_language
     short_description: Dutch statutory article retrieval from bBSARD.
-    description: A compact Dutch bBSARD split for retrieving Belgian statutory articles relevant to legal questions.
+    description: A compact Dutch bBSARD split for retrieving Belgian statutory articles
+      relevant to legal questions.
     citation_keys:
     - lotfi2025bbsard
     references:
@@ -496,11 +861,22 @@ task_metadata:
       url: https://aclanthology.org/2025.regnlp-1.3/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @inproceedings{lotfi2025bbsard,
-        title = {Bilingual {BSARD}: Extending Statutory Article Retrieval to Dutch},
-        author = {Lotfi, Ehsan and Banar, Nikolay and Yuzbashyan, Nerses and Daelemans, Walter},
-        booktitle = {Proceedings of the 1st Regulatory NLP Workshop},
-        year = {2025},
-        url = {https://aclanthology.org/2025.regnlp-1.3/}
-      }
+    bibtex: "@inproceedings{lotfi2025bbsard,\n  title = {Bilingual {BSARD}: Extending\
+      \ Statutory Article Retrieval to Dutch},\n  author = {Lotfi, Ehsan and Banar,\
+      \ Nikolay and Yuzbashyan, Nerses and Daelemans, Walter},\n  booktitle = {Proceedings\
+      \ of the 1st Regulatory NLP Workshop},\n  year = {2025},\n  url = {https://aclanthology.org/2025.regnlp-1.3/}\n\
+      }\n"
+    languages:
+    - nl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.52

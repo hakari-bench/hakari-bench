@@ -19,7 +19,7 @@ overalls:
       - NanoChemTEB
       - NanoR2MED
       - NanoBuiltBench
-      - NanoCMTEB
+      - NanoMTEB-Chinese
   - name: OverallGrouped
     label: Overall Grouped
     benchmarks:
@@ -57,7 +57,7 @@ overalls:
         group_by: benchmark
       - name: NanoBuiltBench
         group_by: benchmark
-      - name: NanoCMTEB
+      - name: NanoMTEB-Chinese
         group_by: benchmark
       - name: NanoMTEB
         group_by: benchmark

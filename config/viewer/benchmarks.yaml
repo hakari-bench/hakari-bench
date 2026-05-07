@@ -89,8 +89,8 @@ benchmarks:
   - name: NanoBuiltBench
     label: NanoBuiltBench
     include_in_overall: true
-  - name: NanoCMTEB
-    label: NanoCMTEB
+  - name: NanoMTEB-Chinese
+    label: NanoMTEB-Chinese
     include_in_overall: true
   - name: NanoMTEB
     label: NanoMTEB

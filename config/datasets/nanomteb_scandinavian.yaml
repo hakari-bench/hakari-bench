@@ -16,13 +16,13 @@ metadata:
   language: multilingual
   category: natural_language
   short_description: Scandinavian NanoMTEB retrieval benchmark.
-  description: NanoMTEB-Scandinavian is a compact retrieval benchmark for Scandinavian-language MTEB-style
-    task families.
+  description: NanoMTEB-Scandinavian is a compact retrieval benchmark for Scandinavian-language
+    MTEB-style task families.
   citation_keys:
   - enevoldsen2024scandinavian
   references:
-  - &scandinavian_embedding_ref
-    title: 'The Scandinavian Embedding Benchmarks: Comprehensive Assessment of Multilingual and Monolingual Text Embedding'
+  - title: 'The Scandinavian Embedding Benchmarks: Comprehensive Assessment of Multilingual
+      and Monolingual Text Embedding'
     authors:
     - Kenneth Enevoldsen
     - Márton Kardos
@@ -33,26 +33,23 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2406.02396
-  bibtex: &scandinavian_embedding_bibtex |
-    @article{enevoldsen2024scandinavian,
-      title = {The Scandinavian Embedding Benchmarks: Comprehensive Assessment of Multilingual and Monolingual Text Embedding},
-      author = {Enevoldsen, Kenneth and Kardos, M{\'a}rton and Muennighoff, Niklas and Nielbo, Kristoffer Laigaard},
-      journal = {arXiv preprint arXiv:2406.02396},
-      year = {2024},
-      url = {https://arxiv.org/abs/2406.02396},
-      doi = {10.48550/arXiv.2406.02396}
-    }
+  bibtex: "@article{enevoldsen2024scandinavian,\n  title = {The Scandinavian Embedding\
+    \ Benchmarks: Comprehensive Assessment of Multilingual and Monolingual Text Embedding},\n\
+    \  author = {Enevoldsen, Kenneth and Kardos, M{\\'a}rton and Muennighoff, Niklas\
+    \ and Nielbo, Kristoffer Laigaard},\n  journal = {arXiv preprint arXiv:2406.02396},\n\
+    \  year = {2024},\n  url = {https://arxiv.org/abs/2406.02396},\n  doi = {10.48550/arXiv.2406.02396}\n\
+    }\n"
 task_metadata:
   NanoDanFever:
     language: da
     category: natural_language
     short_description: Danish claim-evidence retrieval.
-    description: A compact Danish retrieval task derived from DanFEVER, retrieving evidence for Danish factual claims.
+    description: A compact Danish retrieval task derived from DanFEVER, retrieving
+      evidence for Danish factual claims.
     citation_keys:
     - norregaard-derczynski-2021-danfever
     references:
-    - &danfever_ref
-      title: 'DanFEVER: claim verification dataset for Danish'
+    - title: 'DanFEVER: claim verification dataset for Danish'
       authors:
       - Jeppe Nørregaard
       - Leon Derczynski
@@ -60,25 +57,46 @@ task_metadata:
       url: https://aclanthology.org/2021.nodalida-main.47/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @inproceedings{norregaard-derczynski-2021-danfever,
-        title = {{D}an{FEVER}: claim verification dataset for {D}anish},
-        author = {N{\o}rregaard, Jeppe and Derczynski, Leon},
-        booktitle = {Proceedings of the 23rd Nordic Conference on Computational Linguistics (NoDaLiDa)},
-        pages = {422--428},
-        year = {2021},
-        url = {https://aclanthology.org/2021.nodalida-main.47/}
-      }
+    bibtex: "@inproceedings{norregaard-derczynski-2021-danfever,\n  title = {{D}an{FEVER}:\
+      \ claim verification dataset for {D}anish},\n  author = {N{\\o}rregaard, Jeppe\
+      \ and Derczynski, Leon},\n  booktitle = {Proceedings of the 23rd Nordic Conference\
+      \ on Computational Linguistics (NoDaLiDa)},\n  pages = {422--428},\n  year =\
+      \ {2021},\n  url = {https://aclanthology.org/2021.nodalida-main.47/}\n}\n"
+    languages:
+    - da
+    - 'no'
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          da: 85.0
+          'no': 9.0
+          sv: 2.0
+          en: 1.5
+          es: 1.5
+          fr: 0.5
+          nn: 0.5
+      document:
+        sample_count: 2522
+        languages:
+          da: 81.959
+          'no': 13.283
+          en: 1.348
+          sv: 1.11
+          nn: 0.793
   NanoNorQuad:
     language: 'no'
     category: natural_language
     short_description: Norwegian question-answer retrieval.
-    description: A compact retrieval task derived from NorQuAD, the Norwegian question answering dataset.
+    description: A compact retrieval task derived from NorQuAD, the Norwegian question
+      answering dataset.
     citation_keys:
     - ivanova-etal-2023-norquad
     references:
-    - &norquad_ref
-      title: 'NorQuAD: Norwegian Question Answering Dataset'
+    - title: 'NorQuAD: Norwegian Question Answering Dataset'
       authors:
       - Sardana Ivanova
       - Fredrik Andreassen
@@ -89,25 +107,54 @@ task_metadata:
       url: https://aclanthology.org/2023.nodalida-1.17/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @inproceedings{ivanova-etal-2023-norquad,
-        title = {{N}or{Q}u{AD}: {N}orwegian Question Answering Dataset},
-        author = {Ivanova, Sardana and Andreassen, Fredrik and Jentoft, Matias and Wold, Sondre and {\O}vrelid, Lilja},
-        booktitle = {Proceedings of the 24th Nordic Conference on Computational Linguistics (NoDaLiDa)},
-        pages = {159--168},
-        year = {2023},
-        url = {https://aclanthology.org/2023.nodalida-1.17/}
-      }
+    bibtex: "@inproceedings{ivanova-etal-2023-norquad,\n  title = {{N}or{Q}u{AD}:\
+      \ {N}orwegian Question Answering Dataset},\n  author = {Ivanova, Sardana and\
+      \ Andreassen, Fredrik and Jentoft, Matias and Wold, Sondre and {\\O}vrelid,\
+      \ Lilja},\n  booktitle = {Proceedings of the 24th Nordic Conference on Computational\
+      \ Linguistics (NoDaLiDa)},\n  pages = {159--168},\n  year = {2023},\n  url =\
+      \ {https://aclanthology.org/2023.nodalida-1.17/}\n}\n"
+    languages:
+    - 'no'
+    - da
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          'no': 66.0
+          da: 30.5
+          sv: 2.5
+          en: 0.5
+          vi: 0.5
+      document:
+        sample_count: 1048
+        languages:
+          'no': 56.011
+          en: 11.164
+          sv: 8.874
+          da: 6.775
+          de: 4.103
+          fr: 2.385
+          nn: 2.099
+          es: 1.145
+          ca: 0.954
+          it: 0.859
+          nl: 0.859
+          ru: 0.859
   NanoSNL:
     language: 'no'
     category: natural_language
     short_description: Norwegian encyclopedia article retrieval.
-    description: A compact Store Norske Leksikon retrieval task using Norwegian lexicon headlines as queries.
+    description: A compact Store Norske Leksikon retrieval task using Norwegian lexicon
+      headlines as queries.
     citation_keys:
     - navjord2023beyond
     references:
-    - &snl_ref
-      title: 'Beyond extractive: advancing abstractive automatic text summarization in Norwegian with transformers'
+    - title: 'Beyond extractive: advancing abstractive automatic text summarization
+        in Norwegian with transformers'
       authors:
       - Jørgen Johnsen Navjord
       - Jon-Mikkel Ryen Korsvik
@@ -115,24 +162,65 @@ task_metadata:
       url: https://hdl.handle.net/11250/3079868
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @mastersthesis{navjord2023beyond,
-        title = {Beyond extractive: advancing abstractive automatic text summarization in Norwegian with transformers},
-        author = {Navjord, J{\o}rgen Johnsen and Korsvik, Jon-Mikkel Ryen},
-        school = {Norwegian University of Life Sciences, {\AA}s},
-        year = {2023},
-        url = {https://hdl.handle.net/11250/3079868}
-      }
+    bibtex: "@mastersthesis{navjord2023beyond,\n  title = {Beyond extractive: advancing\
+      \ abstractive automatic text summarization in Norwegian with transformers},\n\
+      \  author = {Navjord, J{\\o}rgen Johnsen and Korsvik, Jon-Mikkel Ryen},\n  school\
+      \ = {Norwegian University of Life Sciences, {\\AA}s},\n  year = {2023},\n  url\
+      \ = {https://hdl.handle.net/11250/3079868}\n}\n"
+    languages:
+    - 'no'
+    - en
+    - de
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 28.5
+          'no': 23.0
+          de: 12.0
+          sv: 8.0
+          fr: 6.0
+          da: 2.5
+          es: 2.0
+          id: 2.0
+          it: 2.0
+          nl: 2.0
+          af: 1.5
+          nn: 1.5
+          tr: 1.5
+          pl: 1.0
+          sl: 1.0
+          bs: 0.5
+          ca: 0.5
+          ceb: 0.5
+          cs: 0.5
+          cy: 0.5
+          eo: 0.5
+          fi: 0.5
+          hu: 0.5
+          pt: 0.5
+          sq: 0.5
+          uk: 0.5
+      document:
+        sample_count: 1300
+        languages:
+          'no': 88.385
+          da: 5.231
+          nn: 3.0
+          sv: 2.846
   NanoSweFaq:
     language: sv
     category: natural_language
     short_description: Swedish FAQ answer retrieval.
-    description: A compact Swedish FAQ retrieval task distributed through SuperLim 2.
+    description: A compact Swedish FAQ retrieval task distributed through SuperLim
+      2.
     citation_keys:
     - berdicevskis-etal-2023-superlim
     references:
-    - &superlim_ref
-      title: 'Superlim: A Swedish Language Understanding Evaluation Benchmark'
+    - title: 'Superlim: A Swedish Language Understanding Evaluation Benchmark'
       authors:
       - Aleksandrs Berdicevskis
       - Gerlof Bouma
@@ -157,27 +245,42 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2023.emnlp-main.506
-    bibtex: |
-      @inproceedings{berdicevskis-etal-2023-superlim,
-        title = {Superlim: A {S}wedish Language Understanding Evaluation Benchmark},
-        author = {Berdicevskis, Aleksandrs and Bouma, Gerlof and Kurtz, Robin and Morger, Felix and {\"O}hman, Joey and Adesam, Yvonne and Borin, Lars and Dann{\'e}lls, Dana and Forsberg, Markus and Isbister, Tim and Lindahl, Anna and Malmsten, Martin and Rekathati, Faton and Sahlgren, Magnus and Volodina, Elena and B{\"o}rjeson, Love and Hengchen, Simon and Tahmasebi, Nina},
-        booktitle = {Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing},
-        pages = {8137--8153},
-        year = {2023},
-        url = {https://aclanthology.org/2023.emnlp-main.506/},
-        doi = {10.18653/v1/2023.emnlp-main.506}
-      }
+    bibtex: "@inproceedings{berdicevskis-etal-2023-superlim,\n  title = {Superlim:\
+      \ A {S}wedish Language Understanding Evaluation Benchmark},\n  author = {Berdicevskis,\
+      \ Aleksandrs and Bouma, Gerlof and Kurtz, Robin and Morger, Felix and {\\\"\
+      O}hman, Joey and Adesam, Yvonne and Borin, Lars and Dann{\\'e}lls, Dana and\
+      \ Forsberg, Markus and Isbister, Tim and Lindahl, Anna and Malmsten, Martin\
+      \ and Rekathati, Faton and Sahlgren, Magnus and Volodina, Elena and B{\\\"o}rjeson,\
+      \ Love and Hengchen, Simon and Tahmasebi, Nina},\n  booktitle = {Proceedings\
+      \ of the 2023 Conference on Empirical Methods in Natural Language Processing},\n\
+      \  pages = {8137--8153},\n  year = {2023},\n  url = {https://aclanthology.org/2023.emnlp-main.506/},\n\
+      \  doi = {10.18653/v1/2023.emnlp-main.506}\n}\n"
+    languages:
+    - sv
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          sv: 99.5
+          'no': 0.5
+      document:
+        sample_count: 511
+        languages:
+          sv: 99.609
   NanoSwedn:
     language: sv
     category: natural_language
     short_description: Swedish news summary retrieval.
-    description: A compact retrieval task derived from SWE-DN, a Swedish Dagens Nyheter news summarization corpus.
+    description: A compact retrieval task derived from SWE-DN, a Swedish Dagens Nyheter
+      news summarization corpus.
     citation_keys:
     - monsen2021method
     - monsen2025swedn
     references:
-    - &swedn_paper_ref
-      title: A method for building non-English corpora for abstractive text summarization
+    - title: A method for building non-English corpora for abstractive text summarization
       authors:
       - Julius Monsen
       - Arne Jönsson
@@ -185,8 +288,7 @@ task_metadata:
       url: https://www.ida.liu.se/~arnjo82/papers/clarin-21-julius.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    - &swedn_data_ref
-      title: SweDN 1.0
+    - title: SweDN 1.0
       authors:
       - Julius Monsen
       - Arne Jönsson
@@ -195,31 +297,45 @@ task_metadata:
       is_paper: false
       source_confidence: probably_correct
       doi: 10.23695/36v9-9017
-    bibtex: |
-      @inproceedings{monsen2021method,
-        title = {A method for building non-English corpora for abstractive text summarization},
-        author = {Monsen, Julius and J{\"o}nsson, Arne},
-        booktitle = {Proceedings of the CLARIN Annual Conference},
-        year = {2021},
-        url = {https://www.ida.liu.se/~arnjo82/papers/clarin-21-julius.pdf}
-      }
-      @misc{monsen2025swedn,
-        title = {{SweDN} 1.0},
-        author = {Monsen, Julius and J{\"o}nsson, Arne},
-        year = {2025},
-        url = {https://spraakbanken.gu.se/en/resources/swedn},
-        doi = {10.23695/36v9-9017}
-      }
+    bibtex: "@inproceedings{monsen2021method,\n  title = {A method for building non-English\
+      \ corpora for abstractive text summarization},\n  author = {Monsen, Julius and\
+      \ J{\\\"o}nsson, Arne},\n  booktitle = {Proceedings of the CLARIN Annual Conference},\n\
+      \  year = {2021},\n  url = {https://www.ida.liu.se/~arnjo82/papers/clarin-21-julius.pdf}\n\
+      }\n@misc{monsen2025swedn,\n  title = {{SweDN} 1.0},\n  author = {Monsen, Julius\
+      \ and J{\\\"o}nsson, Arne},\n  year = {2025},\n  url = {https://spraakbanken.gu.se/en/resources/swedn},\n\
+      \  doi = {10.23695/36v9-9017}\n}\n"
+    languages:
+    - sv
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          sv: 95.0
+          da: 1.0
+          en: 1.0
+          de: 0.5
+          es: 0.5
+          fi: 0.5
+          fr: 0.5
+          'no': 0.5
+          pl: 0.5
+      document:
+        sample_count: 2046
+        languages:
+          sv: 99.707
   NanoTV2Nord:
     language: da
     category: natural_language
     short_description: Danish TV2 Nord news article retrieval.
-    description: A compact retrieval task derived from the Nordjylland news summarization dataset, matching Danish summaries to articles.
+    description: A compact retrieval task derived from the Nordjylland news summarization
+      dataset, matching Danish summaries to articles.
     citation_keys:
     - alexandrainst2025nordjylland
     references:
-    - &tv2nord_ref
-      title: nordjylland-news-summarization
+    - title: nordjylland-news-summarization
       authors:
       - Alexandra Institute
       year: 2025
@@ -227,11 +343,23 @@ task_metadata:
       is_paper: false
       source_confidence: probably_correct
       doi: 10.57967/hf/5620
-    bibtex: |
-      @misc{alexandrainst2025nordjylland,
-        title = {nordjylland-news-summarization},
-        author = {{Alexandra Institute}},
-        year = {2025},
-        url = {https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization},
-        doi = {10.57967/hf/5620}
-      }
+    bibtex: "@misc{alexandrainst2025nordjylland,\n  title = {nordjylland-news-summarization},\n\
+      \  author = {{Alexandra Institute}},\n  year = {2025},\n  url = {https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization},\n\
+      \  doi = {10.57967/hf/5620}\n}\n"
+    languages:
+    - da
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          da: 94.5
+          'no': 5.0
+          sv: 0.5
+      document:
+        sample_count: 2048
+        languages:
+          da: 94.287
+          'no': 5.078
