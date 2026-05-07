@@ -59,14 +59,16 @@ uv run hakari-bench evaluate dense \
 ```
 
 Dense models automatically run normalized `int8` and binary quantized search
-variants plus top-100 float-rescored variants only when no explicit embedding
-variants are supplied and `--no-default-embedding-variants` is not set.
+variants plus top-100 float-rescored variants whenever
+`--no-default-embedding-variants` is not set. Explicit dense variants no longer
+disable these defaults.
 
 This is the most important coverage rule:
 
-> If any `--embedding-variant` or `--embedding-variant-grid` is supplied, the
-> automatic dense quantized/rescore variants are disabled. Add every intended
-> standalone and cross variant explicitly.
+> For dense models, specify truncation dimensions with
+> `--embedding-variant truncate:DIMS` when dimensional comparisons are needed.
+> The CLI will automatically add standalone truncation, full-dim quantized and
+> rescored variants, and truncation x quantized/rescore variants for those dims.
 
 Use `--no-default-embedding-variants` only when the run intentionally needs base
 results without automatic dense quantized/rescore variants.
@@ -87,7 +89,7 @@ uv run hakari-bench evaluate dense \
   --dtype bf16
 ```
 
-For Matryoshka or other dimension comparisons, include all three related groups:
+For Matryoshka or other dimension comparisons, provide the truncation dimensions:
 
 - standalone truncation variants,
 - standalone quantized search and rescore variants at the original dimension,
@@ -100,27 +102,24 @@ uv run hakari-bench evaluate dense \
   --model MODEL_NAME \
   --dataset DATASET_NAME \
   --dtype bf16 \
-  --embedding-variant truncate:256,128,64 \
-  --embedding-variant int8,binary \
-  --embedding-variant rescore:int8,binary \
-  --embedding-variant-grid truncate:256,128,64 int8,binary \
-  --embedding-variant-grid truncate:256,128,64 rescore:int8,binary
+  --embedding-variant truncate:256,128,64
 ```
 
-This is the complete comparison set because standalone dimensions isolate the
-dimension trade-off, standalone quantized/rescore variants isolate the
-quantization trade-off at the original dimension, and the grids measure combined
-trade-offs such as `128dim x int8` and `64dim x binary`, with and without
-top-100 float rescore.
+This command produces the complete comparison set because standalone dimensions
+isolate the dimension trade-off, standalone quantized/rescore variants isolate
+the quantization trade-off at the original dimension, and the automatically
+expanded grids measure combined trade-offs such as `128dim x int8` and
+`64dim x binary`, with and without top-100 float rescore.
 
 If a user asks only for truncation and explicitly does not want quantization,
-run only the truncation variants and state that quantized/rescore variants are
+disable dense defaults and state that quantized/rescore variants are
 intentionally omitted:
 
 ```bash
 uv run hakari-bench evaluate dense \
   --model MODEL_NAME \
   --dataset DATASET_NAME \
+  --no-default-embedding-variants \
   --embedding-variant truncate:512,256
 ```
 
@@ -248,9 +247,9 @@ Before reporting a leaderboard or diagnosing model differences, audit coverage:
    with fewer rows needs investigation before it is used in a ranking.
 4. Inspect missing `(benchmark, task_key)` pairs for incomplete variants.
 5. Confirm output JSON `config.embedding_variants` contains the intended
-   variants. If quantized variants are missing after a truncation run, the run
-   probably supplied explicit truncation variants without also adding explicit
-   `int8,binary` and `rescore:int8,binary` variants.
+   variants. A dense truncation run should include standalone truncation,
+   full-dim quantized/rescore, and truncation x quantized/rescore variants
+   unless `--no-default-embedding-variants` was used.
 6. Rebuild DuckDB/HTML viewer artifacts after adding or correcting benchmark
    results.
 

@@ -20,7 +20,7 @@ from hakari_bench.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
 from hakari_bench.embedding_variants import (
     TORCH_RESCORE_SCORE_REPRESENTATION,
     TORCH_SCORE_REPRESENTATION,
-    default_dense_quantized_embedding_variants,
+    dense_embedding_variants,
     parse_embedding_variants,
 )
 from hakari_bench.evaluation import LoadedIrDataset, load_ir_dataset, start_encode_pool, stop_encode_pool
@@ -185,7 +185,9 @@ def _add_embedding_variant_args(parser: argparse.ArgumentParser) -> None:
             "Derived embedding evaluation spec. Repeat or comma-separate. "
             "Current syntax: truncate:DIM, sparse-query-max-active-dims:DIM, "
             "sparse-document-max-active-dims:DIM, normalize, int8, binary, "
-            "rescore:int8, rescore:binary, int8-rescore, or binary-rescore."
+            "rescore:int8, rescore:binary, int8-rescore, or binary-rescore. "
+            "Dense runs automatically include full-dim quantized/rescore variants; "
+            "explicit truncate:DIM also expands to truncate x quantized/rescore variants."
         ),
     )
     parser.add_argument(
@@ -203,7 +205,10 @@ def _add_embedding_variant_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--no-default-embedding-variants",
         action="store_true",
-        help="Disable automatic dense int8/binary quantized and top-100 rescore variants.",
+        help=(
+            "Disable automatic dense int8/binary quantized and top-100 rescore variants, "
+            "including truncate x quantized/rescore expansion."
+        ),
     )
 
 
@@ -319,16 +324,20 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error("--encode-chunk-size requires --encode-devices.")
         if args.model_type != "dense" and args.encode_devices:
             parser.error("--encode-devices requires evaluate dense.")
-        has_explicit_embedding_variants = bool(args.embedding_variant_values or args.embedding_variant_grid_values)
         try:
-            args.embedding_variants = parse_embedding_variants(
-                args.embedding_variant_values,
-                args.embedding_variant_grid_values,
-            )
+            if args.model_type == "dense":
+                args.embedding_variants = dense_embedding_variants(
+                    args.embedding_variant_values,
+                    args.embedding_variant_grid_values,
+                    include_defaults=not args.no_default_embedding_variants,
+                )
+            else:
+                args.embedding_variants = parse_embedding_variants(
+                    args.embedding_variant_values,
+                    args.embedding_variant_grid_values,
+                )
         except ValueError as exc:
             parser.error(str(exc))
-        if args.model_type == "dense" and not args.no_default_embedding_variants and not has_explicit_embedding_variants:
-            args.embedding_variants = default_dense_quantized_embedding_variants()
         _apply_score_device_to_quantized_variants(args.embedding_variants, score_device=args.retrieval_score_device)
         if args.model_type != "dense" and _embedding_variants_use_quantization(args.embedding_variants):
             parser.error(
