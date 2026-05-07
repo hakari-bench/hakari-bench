@@ -175,6 +175,69 @@ benchmarks:
     assert config.benchmarks[0].match_patterns == ["uploaded/bench-a"]
 
 
+def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/")
+
+    assert response.status_code == 200
+    assert "Benchmark coverage" in response.text
+    assert "Models" in response.text
+    assert "Analysis views" in response.text
+    assert "Variant impact" in response.text
+    assert "Reranking diagnostics" in response.text
+    assert "Dataset diagnostics" in response.text
+    assert 'data-testid="summary-card-models"' in response.text
+
+
+def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "NanoMTEB-Japanese", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "NanoMTEB-Japanese", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        "benchmarks:\n  - name: NanoMTEB-Japanese\n  - name: NanoMedical\n",
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMTEB-Japanese\n",
+        encoding="utf-8",
+    )
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=NanoMTEB-Japanese")
+
+    assert response.status_code == 200
+    assert "Benchmark groups" in response.text
+    assert "Language-specific" in response.text
+    assert "Domain-specific" in response.text
+    assert "sticky left-0" in response.text
+    assert "z-20" in response.text
+
+
 def test_viewer_config_rejects_unknown_yaml_keys(tmp_path: Path) -> None:
     config_dir = tmp_path / "config"
     config_dir.mkdir()

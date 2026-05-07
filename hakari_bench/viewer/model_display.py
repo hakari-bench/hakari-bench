@@ -121,7 +121,7 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> st
             f"""<span class="inline-flex items-center border border-violet-200 bg-violet-50 px-1.5 py-0.5 text-xs font-medium text-violet-800">{escape(model_view.variant_label)}</span>"""
         )
     badge_html = f"""<span class="ml-2 inline-flex flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
-    return f"""<td class="whitespace-nowrap px-3 py-2 font-medium">
+    return f"""<td class="sticky left-32 z-10 whitespace-nowrap bg-inherit px-3 py-2 font-medium">
       <button type="button" class="model-detail-trigger text-left font-medium text-cyan-800 underline-offset-2 hover:underline"
               data-model-metadata="{escape(metadata_json)}">{escape(model_view.display_name)}</button>{badge_html}
     </td>"""

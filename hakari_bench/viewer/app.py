@@ -7,6 +7,7 @@ from urllib.parse import urlencode
 
 from pydantic import BaseModel, ConfigDict
 
+from hakari_bench.viewer.analytics import ViewerAnalyticsRepository, ViewerSummary
 from hakari_bench.viewer.config import ViewerConfig, load_viewer_config
 from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
@@ -93,7 +94,13 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             lang_filter=lang_filter,
             model_filter=model_filter,
         )
-        return render_page(viewer_config=viewer_config, duckdb_path=store.path, initial_query=initial_query)
+        summary = ViewerAnalyticsRepository(store.path).fetch_summary()
+        return render_page(
+            viewer_config=viewer_config,
+            duckdb_path=store.path,
+            summary=summary,
+            initial_query=initial_query,
+        )
 
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
@@ -157,11 +164,45 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
         return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}"})
 
+    @app.get("/analysis", response_class=HTMLResponse)
+    def analysis(
+        panel: str = Query(default="variants", pattern="^(variants|reranking|datasets)$"),
+        view: str = Query(default=viewer_config.overall.name),
+    ) -> HTMLResponse:
+        store.ensure_current()
+        if view not in viewer_config.view_names:
+            view = viewer_config.overall.name
+        benchmarks = viewer_config.benchmarks_for_view(view)
+        repository = ViewerAnalyticsRepository(store.path)
+        if panel == "reranking":
+            content = render_reranking_panel(
+                view_label=viewer_config.label_for_view(view),
+                rows=repository.fetch_rerank_diagnostics(benchmarks=benchmarks),
+            )
+        elif panel == "datasets":
+            content = render_dataset_diagnostics_panel(
+                view_label=viewer_config.label_for_view(view),
+                rows=repository.fetch_dataset_diagnostics(benchmarks=benchmarks),
+            )
+        else:
+            content = render_variant_panel(
+                view_label=viewer_config.label_for_view(view),
+                rows=repository.fetch_variant_analysis(benchmarks=benchmarks),
+            )
+        return HTMLResponse(content=content)
+
     return app
 
 
-def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query: QueryState | None = None) -> str:
+def render_page(
+    *,
+    viewer_config: ViewerConfig,
+    duckdb_path: Path,
+    summary: ViewerSummary | None = None,
+    initial_query: QueryState | None = None,
+) -> str:
     query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
+    view = query_string((initial_query or {"view": viewer_config.overall.name})["view"])
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -173,12 +214,15 @@ def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query
   <script src="https://unpkg.com/htmx.org@2.0.8"></script>
 </head>
 <body class="bg-zinc-50 text-zinc-950">
-  <main class="mx-auto max-w-[1500px] px-4 py-6 sm:px-6">
+  <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
     <header class="mb-5 border-b border-zinc-200 pb-4">
       <p class="text-sm font-medium text-cyan-700">HAKARI-Bench viewer</p>
-      <h1 class="mt-1 text-2xl font-semibold">Borda leaderboard</h1>
-      <p class="mt-2 text-sm text-zinc-600">DuckDB: <span class="font-mono">{escape(str(duckdb_path))}</span></p>
+      <h1 class="mt-1 text-2xl font-semibold">Retrieval benchmark explorer</h1>
+      <p class="mt-2 max-w-4xl text-sm text-zinc-600">Compare multilingual retrieval models, inspect compression variants, and audit reranking and Nano subset diagnostics from the DuckDB result warehouse.</p>
+      <p class="mt-2 text-xs text-zinc-500">DuckDB: <span class="font-mono">{escape(str(duckdb_path))}</span></p>
     </header>
+    {render_summary_cards(summary or ViewerSummary())}
+    {render_analysis_shell(view=view)}
     <section
       id="leaderboard-panel"
       hx-get="{_leaderboard_url(query)}"
@@ -190,6 +234,70 @@ def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query
   </main>
 </body>
 </html>"""
+
+
+def render_summary_cards(summary: ViewerSummary) -> str:
+    cards = [
+        ("Models", f"{summary.model_count:,}", "summary-card-models"),
+        ("Benchmarks", f"{summary.benchmark_count:,}", "summary-card-benchmarks"),
+        ("Tasks", f"{summary.task_count:,}", "summary-card-tasks"),
+        ("Languages", f"{summary.language_count:,}", "summary-card-languages"),
+        ("Base rows", f"{summary.base_result_count:,}", "summary-card-base"),
+        ("Variant rows", f"{summary.variant_result_count:,}", "summary-card-variants"),
+    ]
+    card_html = "".join(
+        f"""
+        <div data-testid="{escape(testid)}" class="border border-zinc-200 bg-white px-3 py-2">
+          <p class="text-xs font-medium uppercase text-zinc-500">{escape(label)}</p>
+          <p class="mt-1 text-xl font-semibold tabular-nums text-zinc-950">{escape(value)}</p>
+        </div>
+        """
+        for label, value, testid in cards
+    )
+    timestamp = (
+        f"""<p class="mt-2 text-xs text-zinc-500">Latest result: <span class="font-mono">{escape(summary.latest_finished_at_utc)}</span></p>"""
+        if summary.latest_finished_at_utc
+        else ""
+    )
+    return f"""
+    <section class="mb-5" aria-label="Benchmark coverage">
+      <div class="mb-2 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h2 class="text-base font-semibold">Benchmark coverage</h2>
+          <p class="text-sm text-zinc-600">Result warehouse size and coverage visible in this viewer.</p>
+        </div>
+        {timestamp}
+      </div>
+      <div class="grid gap-2 sm:grid-cols-3 lg:grid-cols-6">{card_html}</div>
+    </section>
+    """
+
+
+def render_analysis_shell(*, view: str) -> str:
+    variant_query = urlencode({"panel": "variants", "view": view})
+    rerank_query = urlencode({"panel": "reranking", "view": view})
+    dataset_query = urlencode({"panel": "datasets", "view": view})
+    return f"""
+    <section class="mb-5 border border-zinc-200 bg-white" aria-label="Analysis views">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 px-3 py-2">
+        <div>
+          <h2 class="text-base font-semibold">Analysis views</h2>
+          <p class="text-sm text-zinc-600">Use these panels for paper-facing variant, reranking, and Nano subset audits.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" class="border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+                  hx-get="/analysis?{escape(variant_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">Variant impact</button>
+          <button type="button" class="border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+                  hx-get="/analysis?{escape(rerank_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">Reranking diagnostics</button>
+          <button type="button" class="border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+                  hx-get="/analysis?{escape(dataset_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">Dataset diagnostics</button>
+        </div>
+      </div>
+      <div id="analysis-panel" hx-get="/analysis?{escape(variant_query, quote=True)}" hx-trigger="load" hx-swap="innerHTML">
+        <div class="px-3 py-3 text-sm text-zinc-600">Loading analysis...</div>
+      </div>
+    </section>
+    """
 
 
 def render_leaderboard(
@@ -227,7 +335,12 @@ def render_leaderboard(
 
 def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
     filter_state = filter_state or FilterState()
-    buttons: list[str] = []
+    grouped_buttons: dict[str, list[str]] = {
+        "Overall": [],
+        "Core benchmarks": [],
+        "Language-specific": [],
+        "Domain-specific": [],
+    }
     for view_name in result.available_views:
         active = view_name == result.view_name
         view_label = result.available_view_labels.get(view_name, view_name)
@@ -241,14 +354,44 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         query_payload["view"] = view_name
         query = urlencode(query_payload, doseq=True)
-        buttons.append(
+        grouped_buttons[_view_group(view_name)].append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                   hx-target="#leaderboard-panel" hx-swap="innerHTML">
                   {escape(view_label)}
                 </button>"""
         )
-    return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Benchmark views">{''.join(buttons)}</nav>"""
+    groups = []
+    for label, buttons in grouped_buttons.items():
+        if not buttons:
+            continue
+        groups.append(
+            f"""
+            <div class="min-w-0">
+              <p class="mb-1 text-xs font-semibold uppercase text-zinc-500">{escape(label)}</p>
+              <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
+            </div>
+            """
+        )
+    return f"""
+    <nav class="mb-4 border border-zinc-200 bg-white p-3" aria-label="Benchmark views">
+      <div class="mb-2 flex items-center justify-between gap-2">
+        <h2 class="text-sm font-semibold">Benchmark groups</h2>
+        <p class="text-xs text-zinc-500">Views are grouped to keep multilingual and domain-specific suites scannable.</p>
+      </div>
+      <div class="grid gap-3 lg:grid-cols-2 xl:grid-cols-4">{''.join(groups)}</div>
+    </nav>
+    """
+
+
+def _view_group(view_name: str) -> str:
+    if view_name.startswith("Overall"):
+        return "Overall"
+    if view_name.startswith("NanoMTEB-") or view_name == "NanoMIRACL":
+        return "Language-specific"
+    if view_name in {"MNanoBEIR", "NanoMMTEB", "NanoRTEB", "NanoMTEB", "NanoMLDR", "NanoLongEmbed"}:
+        return "Core benchmarks"
+    return "Domain-specific"
 
 
 def render_language_pages(
@@ -709,9 +852,10 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
         th_spacing = "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 normal-case" if is_metric else "px-3 uppercase"
+        sticky = _sticky_head_class(key)
         label_class = "min-w-0 leading-tight [overflow-wrap:anywhere]" if is_metric else ""
         heads.append(
-            f"""<th scope="col" class="bg-zinc-100 py-2 text-xs font-semibold text-zinc-600 {text_align} {th_spacing}">
+            f"""<th scope="col" class="bg-zinc-100 py-2 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
                  <button type="button" class="inline-flex w-full {justify} hover:text-cyan-700"
                          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                          hx-target="#leaderboard-panel" hx-swap="innerHTML">
@@ -720,6 +864,16 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
                </th>"""
         )
     return f"<thead><tr>{''.join(heads)}</tr></thead>"
+
+
+def _sticky_head_class(key: str) -> str:
+    if key == "borda_rank":
+        return "sticky left-0 z-20 min-w-16"
+    if key == "mean_rank":
+        return "sticky left-16 z-20 min-w-16"
+    if key == "model_name":
+        return "sticky left-32 z-20 min-w-72"
+    return ""
 
 
 def render_table_body(*, result: LeaderboardResult, filter_context: FilterContext | None = None) -> str:
@@ -740,8 +894,8 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         )
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
+              <td class="sticky left-0 z-10 bg-inherit px-3 py-2 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
+              <td class="sticky left-16 z-10 bg-inherit px-3 py-2 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
               {render_model_name_cell(row, model_views[row.model_name])}
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
@@ -756,6 +910,172 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
+
+
+def render_variant_panel(*, view_label: str, rows) -> str:
+    if not rows:
+        return _empty_analysis_panel(
+            title="Variant impact",
+            body="No embedding variant rows are available for this view.",
+        )
+    body = "".join(
+        f"""
+        <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
+          <td class="px-3 py-2 font-medium">{escape(row.model_name)}</td>
+          <td class="px-3 py-2">{escape(row.variant_name)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
+          <td class="px-3 py-2">{escape(row.quantization or "original")}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score_100)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent_delta(row.base_delta_percent)}</td>
+        </tr>
+        """
+        for row in rows[:80]
+    )
+    return f"""
+    <div class="px-3 py-3">
+      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h3 class="text-base font-semibold">Variant impact</h3>
+          <p class="text-sm text-zinc-600">{escape(view_label)}: base-relative score changes for truncation, quantization, and cross variants.</p>
+        </div>
+        <p class="text-xs text-zinc-500">{len(rows):,} variant groups</p>
+      </div>
+      <div class="overflow-x-auto border border-zinc-200">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
+              <th class="px-3 py-2 text-left">Model</th>
+              <th class="px-3 py-2 text-left">Variant</th>
+              <th class="px-3 py-2 text-right">Dims</th>
+              <th class="px-3 py-2 text-left">Quantization</th>
+              <th class="px-3 py-2 text-right">Tasks</th>
+              <th class="px-3 py-2 text-right">Mean score</th>
+              <th class="px-3 py-2 text-right">Delta vs base</th>
+            </tr>
+          </thead>
+          <tbody>{body}</tbody>
+        </table>
+      </div>
+    </div>
+    """
+
+
+def render_reranking_panel(*, view_label: str, rows) -> str:
+    if not rows:
+        return _empty_analysis_panel(
+            title="Reranking diagnostics",
+            body="No reranking diagnostic rows are available for this view.",
+        )
+    body = "".join(
+        f"""
+        <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
+          <td class="px-3 py-2 font-medium">{escape(row.benchmark)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.query_coverage_percent)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.relevant_coverage_percent)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_signed_points(row.mean_lift_points)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_max_len(row.rerank_top_k)}</td>
+          <td class="px-3 py-2">{escape(row.candidate_source or "")}</td>
+          <td class="px-3 py-2">{escape(row.candidate_ranking or "")}</td>
+          <td class="px-3 py-2">{escape(row.bm25_source or "")}</td>
+        </tr>
+        """
+        for row in rows
+    )
+    return f"""
+    <div class="px-3 py-3">
+      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h3 class="text-base font-semibold">Reranking diagnostics</h3>
+          <p class="text-sm text-zinc-600">{escape(view_label)}: candidate coverage and second-stage rerank lift.</p>
+        </div>
+        <p class="text-xs text-zinc-500">{len(rows):,} benchmark rows</p>
+      </div>
+      <div class="overflow-x-auto border border-zinc-200">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
+              <th class="px-3 py-2 text-left">Benchmark</th>
+              <th class="px-3 py-2 text-right">Tasks</th>
+              <th class="px-3 py-2 text-right">Query coverage</th>
+              <th class="px-3 py-2 text-right">Relevant coverage</th>
+              <th class="px-3 py-2 text-right">Lift</th>
+              <th class="px-3 py-2 text-right">Top K</th>
+              <th class="px-3 py-2 text-left">Candidate source</th>
+              <th class="px-3 py-2 text-left">Ranking</th>
+              <th class="px-3 py-2 text-left">BM25 source</th>
+            </tr>
+          </thead>
+          <tbody>{body}</tbody>
+        </table>
+      </div>
+    </div>
+    """
+
+
+def render_dataset_diagnostics_panel(*, view_label: str, rows) -> str:
+    if not rows:
+        return _empty_analysis_panel(
+            title="Dataset diagnostics",
+            body="No dataset metadata rows are available for this view.",
+        )
+    body = "".join(
+        f"""
+        <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
+          <td class="px-3 py-2 font-medium">{escape(row.benchmark)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.language_count:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.category_count:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.base_rows:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.saturation_percent)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_query_count)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_document_count)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_query_chars)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_document_chars)}</td>
+        </tr>
+        """
+        for row in rows
+    )
+    return f"""
+    <div class="px-3 py-3">
+      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h3 class="text-base font-semibold">Dataset diagnostics</h3>
+          <p class="text-sm text-zinc-600">{escape(view_label)}: metadata coverage, sample sizes, text lengths, and score saturation.</p>
+        </div>
+        <p class="text-xs text-zinc-500">{len(rows):,} benchmark rows</p>
+      </div>
+      <div class="overflow-x-auto border border-zinc-200">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
+              <th class="px-3 py-2 text-left">Benchmark</th>
+              <th class="px-3 py-2 text-right">Tasks</th>
+              <th class="px-3 py-2 text-right">Languages</th>
+              <th class="px-3 py-2 text-right">Categories</th>
+              <th class="px-3 py-2 text-right">Base rows</th>
+              <th class="px-3 py-2 text-right">Saturation</th>
+              <th class="px-3 py-2 text-right">Queries</th>
+              <th class="px-3 py-2 text-right">Docs</th>
+              <th class="px-3 py-2 text-right">Query chars</th>
+              <th class="px-3 py-2 text-right">Doc chars</th>
+            </tr>
+          </thead>
+          <tbody>{body}</tbody>
+        </table>
+      </div>
+    </div>
+    """
+
+
+def _empty_analysis_panel(*, title: str, body: str) -> str:
+    return f"""
+    <div class="px-3 py-4">
+      <h3 class="text-base font-semibold">{escape(title)}</h3>
+      <p class="mt-1 text-sm text-zinc-600">{escape(body)}</p>
+    </div>
+    """
 
 
 def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
@@ -857,6 +1177,18 @@ def _fmt_embedding_dim(value: int | None) -> str:
 
 def _fmt_percent_delta(value: float | None) -> str:
     return "" if value is None else f"{value:+.1f}%"
+
+
+def _fmt_percent(value: float | None) -> str:
+    return "" if value is None else f"{value:.1f}%"
+
+
+def _fmt_signed_points(value: float | None) -> str:
+    return "" if value is None else f"{value:+.2f}"
+
+
+def _fmt_number(value: float | None) -> str:
+    return "" if value is None else f"{value:,.1f}"
 
 
 def _metric_column_label(column: str) -> str:
