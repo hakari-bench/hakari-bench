@@ -137,6 +137,7 @@ class ViewerAnalyticsRepository:
         *,
         benchmarks: list[str],
         include_rescore: bool = False,
+        include_truncate: bool = False,
     ) -> list[VariantAnalysisRow]:
         if not self.duckdb_path.exists() or not benchmarks:
             return []
@@ -152,6 +153,7 @@ class ViewerAnalyticsRepository:
             quantization_expr = "tr.quantization" if "quantization" in columns else "NULL"
             where, params = _benchmark_where_clause("tr.benchmark", benchmarks)
             rescore_filter = "" if include_rescore else "AND lower(tr.embedding_variant_name) NOT LIKE '%rescore%'"
+            truncate_filter = "" if include_truncate else "AND lower(tr.embedding_variant_name) NOT LIKE '%truncate%'"
             query = f"""
                 WITH base AS (
                     SELECT model_name, benchmark, task_key, score AS base_score
@@ -173,6 +175,7 @@ class ViewerAnalyticsRepository:
                  AND base.task_key = tr.task_key
                 WHERE tr.embedding_variant_name IS NOT NULL
                   {rescore_filter}
+                  {truncate_filter}
                   AND {where}
                 GROUP BY 1, 2, 3, 4
                 ORDER BY tr.model_name, tr.embedding_variant_name, embedding_dim, quantization

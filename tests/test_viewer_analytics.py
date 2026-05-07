@@ -31,14 +31,20 @@ def test_variant_analysis_aggregates_base_relative_delta_by_variant(tmp_path: Pa
 
     assert [(row.model_name, row.variant_name, row.embedding_dim, row.quantization) for row in rows] == [
         ("model/a", "binary", 768, "binary"),
-        ("model/a", "truncate_dim_384", 384, None),
     ]
     by_variant = {row.variant_name: row for row in rows}
     assert by_variant["binary"].task_count == 2
     assert by_variant["binary"].mean_score_100 == pytest.approx(75.0)
     assert by_variant["binary"].base_delta_percent == pytest.approx(-16.6666666667)
-    assert by_variant["truncate_dim_384"].base_delta_percent == pytest.approx(-5.5555555556)
+    assert "truncate_dim_384" not in by_variant
     assert "binary_rescore" not in by_variant
+
+    rows_with_truncate = ViewerAnalyticsRepository(db_path).fetch_variant_analysis(
+        benchmarks=["BenchA"],
+        include_truncate=True,
+    )
+    truncate_by_variant = {row.variant_name: row for row in rows_with_truncate}
+    assert truncate_by_variant["truncate_dim_384"].base_delta_percent == pytest.approx(-5.5555555556)
 
     rows_with_rescore = ViewerAnalyticsRepository(db_path).fetch_variant_analysis(
         benchmarks=["BenchA"],

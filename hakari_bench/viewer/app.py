@@ -179,6 +179,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         panel: str = Query(default="variants", pattern="^(variants|reranking|datasets)$"),
         view: str = Query(default=viewer_config.overall.name),
         include_rescore: bool = Query(default=False),
+        include_truncate: bool = Query(default=False),
     ) -> HTMLResponse:
         store.ensure_current()
         if view not in viewer_config.view_names:
@@ -202,8 +203,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 rows=repository.fetch_variant_analysis(
                     benchmarks=benchmarks,
                     include_rescore=include_rescore,
+                    include_truncate=include_truncate,
                 ),
                 include_rescore=include_rescore,
+                include_truncate=include_truncate,
             )
         return HTMLResponse(content=content)
 
@@ -966,56 +969,52 @@ def render_variant_panel(
     view_label: str,
     rows,
     include_rescore: bool = False,
+    include_truncate: bool = False,
     view_name: str | None = None,
 ) -> str:
-    if not rows:
-        return _empty_analysis_panel(
-            title="Variant impact",
-            body="No embedding variant rows are available for this view.",
-        )
-    body = "".join(
-        f"""
-        <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
-          <td class="px-3 py-2 font-medium">{escape(row.model_name)}</td>
-          <td class="px-3 py-2">{escape(row.variant_name)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
-          <td class="px-3 py-2">{escape(row.quantization or "original")}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score_100)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent_delta(row.base_delta_percent)}</td>
-        </tr>
-        """
-        for row in rows
+    rescore_toggle = _variant_analysis_toggle(
+        view_name=view_name,
+        label_enabled="Hide rescore",
+        label_disabled="Include rescore",
+        flag_name="include_rescore",
+        flag_value=include_rescore,
+        other_flags={"include_truncate": include_truncate},
     )
-    rescore_toggle = ""
-    if view_name is not None:
-        toggle_query = urlencode(
-            {
-                "panel": "variants",
-                "view": view_name,
-                "include_rescore": "0" if include_rescore else "1",
-            }
+    truncate_toggle = _variant_analysis_toggle(
+        view_name=view_name,
+        label_enabled="Hide truncate_dim",
+        label_disabled="Include truncate_dim",
+        flag_name="include_truncate",
+        flag_value=include_truncate,
+        other_flags={"include_rescore": include_rescore},
+    )
+    if not rows:
+        body = """<tr><td class="px-3 py-5 text-center text-zinc-500" colspan="7">No embedding variant rows are available for this view.</td></tr>"""
+    else:
+        body = "".join(
+            f"""
+            <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
+              <td class="px-3 py-2 font-medium">{escape(row.model_name)}</td>
+              <td class="px-3 py-2">{escape(row.variant_name)}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
+              <td class="px-3 py-2">{escape(row.quantization or "original")}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score_100)}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent_delta(row.base_delta_percent)}</td>
+            </tr>
+            """
+            for row in rows
         )
-        toggle_label = "Hide rescore" if include_rescore else "Include rescore"
-        toggle_classes = (
-            "border-cyan-700 bg-cyan-50 text-cyan-900"
-            if include_rescore
-            else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-600 hover:text-cyan-700"
-        )
-        rescore_toggle = f"""
-        <button type="button" class="border px-3 py-1.5 text-sm {toggle_classes}"
-                hx-get="/analysis?{escape(toggle_query, quote=True)}"
-                hx-target="#analysis-panel" hx-swap="innerHTML">{escape(toggle_label)}</button>
-        """
     return f"""
     <div class="px-3 py-3">
       <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
         <div>
           <h3 class="text-base font-semibold">Variant impact</h3>
-          <p class="text-sm text-zinc-600">{escape(view_label)}: base-relative score changes for truncation, quantization, and cross variants. Rescore variants are hidden by default.</p>
+          <p class="text-sm text-zinc-600">{escape(view_label)}: base-relative score changes for embedding variants. Rescore and truncate_dim variants are hidden by default.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
           {rescore_toggle}
+          {truncate_toggle}
           <p class="text-xs text-zinc-500">{len(rows):,} variant groups</p>
         </div>
       </div>
@@ -1036,6 +1035,37 @@ def render_variant_panel(
         </table>
       </div>
     </div>
+    """
+
+
+def _variant_analysis_toggle(
+    *,
+    view_name: str | None,
+    label_enabled: str,
+    label_disabled: str,
+    flag_name: str,
+    flag_value: bool,
+    other_flags: dict[str, bool],
+) -> str:
+    if view_name is None:
+        return ""
+    query_payload = {
+        "panel": "variants",
+        "view": view_name,
+        flag_name: "0" if flag_value else "1",
+    }
+    query_payload.update({name: "1" for name, value in other_flags.items() if value})
+    toggle_query = urlencode(query_payload)
+    toggle_label = label_enabled if flag_value else label_disabled
+    toggle_classes = (
+        "border-cyan-700 bg-cyan-50 text-cyan-900"
+        if flag_value
+        else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-600 hover:text-cyan-700"
+    )
+    return f"""
+    <button type="button" class="border px-3 py-1.5 text-sm {toggle_classes}"
+            hx-get="/analysis?{escape(toggle_query, quote=True)}"
+            hx-target="#analysis-panel" hx-swap="innerHTML">{escape(toggle_label)}</button>
     """
 
 

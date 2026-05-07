@@ -26,13 +26,26 @@ def test_analysis_panels_render_variant_rerank_and_dataset_tables(tmp_path: Path
     assert variants.status_code == 200
     assert "Variant impact" in variants.text
     assert "binary" in variants.text
+    assert "truncate_dim_384" not in variants.text
     assert "binary_rescore" not in variants.text
     assert "Include rescore" in variants.text
+    assert "Include truncate_dim" in variants.text
     assert "-11.1%" in variants.text
+
+    variants_with_truncate = client.get("/analysis?panel=variants&view=BenchA&include_truncate=1")
+    assert variants_with_truncate.status_code == 200
+    assert "truncate_dim_384" in variants_with_truncate.text
+    assert "binary_rescore" not in variants_with_truncate.text
 
     variants_with_rescore = client.get("/analysis?panel=variants&view=BenchA&include_rescore=1")
     assert variants_with_rescore.status_code == 200
     assert "binary_rescore" in variants_with_rescore.text
+    assert "truncate_dim_384" not in variants_with_rescore.text
+
+    variants_with_both = client.get("/analysis?panel=variants&view=BenchA&include_rescore=1&include_truncate=1")
+    assert variants_with_both.status_code == 200
+    assert "binary_rescore" in variants_with_both.text
+    assert "truncate_dim_384" in variants_with_both.text
 
     rerank = client.get("/analysis?panel=reranking&view=BenchA")
     assert rerank.status_code == 200
@@ -61,7 +74,7 @@ def test_variant_panel_does_not_truncate_rows_at_80() -> None:
         for index in range(85)
     ]
 
-    html = render_variant_panel(view_label="BenchA", rows=rows, include_rescore=False)
+    html = render_variant_panel(view_label="BenchA", rows=rows, include_rescore=False, include_truncate=False)
 
     assert "variant_084" in html
 
@@ -99,6 +112,7 @@ def _write_panel_db(db_path: Path) -> None:
                 ("model/b", "BenchA", "bench/a", "BenchA", "", "t2", "t2", 0.60, None, 512, None, "2026-01-01", 1, 2, 512),
                 ("model/a", "BenchA", "bench/a", "BenchA", "", "t1", "t1", 0.80, "binary", 768, "binary", "2026-01-01", 1, 2, 512),
                 ("model/a", "BenchA", "bench/a", "BenchA", "", "t2", "t2", 0.80, "binary", 768, "binary", "2026-01-01", 1, 2, 512),
+                ("model/a", "BenchA", "bench/a", "BenchA", "", "t1", "t1", 0.85, "truncate_dim_384", 384, None, "2026-01-01", 1, 2, 512),
                 ("model/a", "BenchA", "bench/a", "BenchA", "", "t1", "t1", 0.82, "binary_rescore", 768, "binary", "2026-01-01", 1, 2, 512),
             ],
         )
