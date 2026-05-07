@@ -24,14 +24,13 @@ metadata:
   language: vi
   category: natural_language
   short_description: Vietnamese NanoMTEB retrieval benchmark.
-  description: NanoMTEB-Vietnamese is a compact Vietnamese retrieval benchmark aligned with MTEB-style
-    task families and VN-MTEB translated retrieval datasets.
+  description: NanoMTEB-Vietnamese is a compact Vietnamese retrieval benchmark aligned
+    with MTEB-style task families and VN-MTEB translated retrieval datasets.
   citation_keys:
   - muennighoff2023mteb
   - pham-etal-2026-vn
   references:
-  - &mteb_ref
-    title: 'MTEB: Massive Text Embedding Benchmark'
+  - title: 'MTEB: Massive Text Embedding Benchmark'
     authors:
     - Niklas Muennighoff
     - Nouamane Tazi
@@ -42,7 +41,7 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2210.07316
-  - &vnmteb_ref
+  - &id001
     title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
     authors:
     - Loc Pham
@@ -55,22 +54,15 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2026.findings-eacl.86
-  bibtex: |
-    @inproceedings{muennighoff2023mteb,
-      title = {{MTEB}: Massive Text Embedding Benchmark},
-      author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},
-      year = {2023},
-      url = {https://arxiv.org/abs/2210.07316},
-      doi = {10.48550/arXiv.2210.07316}
-    }
-    @inproceedings{pham-etal-2026-vn,
-      title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
-      author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
-      booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
-      year = {2026},
-      url = {https://aclanthology.org/2026.findings-eacl.86/},
-      doi = {10.18653/v1/2026.findings-eacl.86}
-    }
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
+    \ and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n\
+    \  doi = {10.48550/arXiv.2210.07316}\n}\n@inproceedings{pham-etal-2026-vn,\n \
+    \ title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author\
+    \ = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n\
+    \  booktitle = {Findings of the Association for Computational Linguistics: EACL\
+    \ 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n\
+    \  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n"
 task_metadata:
   NanoCQADupstackAndroidVN:
     language: vi
@@ -78,13 +70,12 @@ task_metadata:
     short_description: Vietnamese duplicate question retrieval for Android Q&A.
     description: A compact VN-MTEB translation of the CQADupStack Android duplicate-question
       retrieval task.
-    citation_keys: &vnmteb_cqadup_keys
+    citation_keys: &id002
     - pham-etal-2026-vn
     - hoogeveen2015cqadupstack
-    references: &vnmteb_cqadup_refs
-    - *vnmteb_ref
-    - &cqadupstack_ref
-      title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+    references: &id003
+    - *id001
+    - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
       authors:
       - Doris Hoogeveen
       - Karin M. Verspoor
@@ -94,107 +85,313 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1145/2838931.2838934
-    bibtex: &vnmteb_cqadup_bib |
-      @inproceedings{pham-etal-2026-vn,
-        title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
-        author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
-        booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
-        year = {2026},
-        url = {https://aclanthology.org/2026.findings-eacl.86/},
-        doi = {10.18653/v1/2026.findings-eacl.86}
-      }
-      @inproceedings{hoogeveen2015cqadupstack,
-        title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},
-        author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},
-        booktitle = {Proceedings of ADCS},
-        year = {2015},
-        url = {https://doi.org/10.1145/2838931.2838934},
-        doi = {10.1145/2838931.2838934}
-      }
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen,\
+      \ Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings\
+      \ of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 98.5
+          en: 1.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.86
   NanoCQADupstackGisVN:
     language: vi
     category: natural_language
     short_description: Vietnamese duplicate question retrieval for GIS Q&A.
     description: A compact VN-MTEB translation of the CQADupStack GIS duplicate-question
       retrieval task.
-    citation_keys: *vnmteb_cqadup_keys
-    references: *vnmteb_cqadup_refs
-    bibtex: *vnmteb_cqadup_bib
+    citation_keys: *id002
+    references: *id003
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen,\
+      \ Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings\
+      \ of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 98.0
+          en: 1.5
+          ja: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.81
   NanoCQADupstackMathematicaVN:
     language: vi
     category: natural_language
     short_description: Vietnamese duplicate question retrieval for Mathematica Q&A.
     description: A compact VN-MTEB translation of the CQADupStack Mathematica duplicate-question
       retrieval task.
-    citation_keys: *vnmteb_cqadup_keys
-    references: *vnmteb_cqadup_refs
-    bibtex: *vnmteb_cqadup_bib
+    citation_keys: *id002
+    references: *id003
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen,\
+      \ Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings\
+      \ of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.94
   NanoCQADupstackPhysicsVN:
     language: vi
     category: natural_language
     short_description: Vietnamese duplicate question retrieval for physics Q&A.
     description: A compact VN-MTEB translation of the CQADupStack physics duplicate-question
       retrieval task.
-    citation_keys: *vnmteb_cqadup_keys
-    references: *vnmteb_cqadup_refs
-    bibtex: *vnmteb_cqadup_bib
+    citation_keys: *id002
+    references: *id003
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen,\
+      \ Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings\
+      \ of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 99.5
+          en: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.92
   NanoCQADupstackProgrammersVN:
     language: vi
     category: natural_language
     short_description: Vietnamese duplicate question retrieval for programmers Q&A.
     description: A compact VN-MTEB translation of the CQADupStack programmers duplicate-question
       retrieval task.
-    citation_keys: *vnmteb_cqadup_keys
-    references: *vnmteb_cqadup_refs
-    bibtex: *vnmteb_cqadup_bib
+    citation_keys: *id002
+    references: *id003
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen,\
+      \ Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings\
+      \ of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 99.0
+          en: 1.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.92
   NanoCQADupstackStatsVN:
     language: vi
     category: natural_language
     short_description: Vietnamese duplicate question retrieval for statistics Q&A.
     description: A compact VN-MTEB translation of the CQADupStack statistics duplicate-question
       retrieval task.
-    citation_keys: *vnmteb_cqadup_keys
-    references: *vnmteb_cqadup_refs
-    bibtex: *vnmteb_cqadup_bib
+    citation_keys: *id002
+    references: *id003
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen,\
+      \ Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings\
+      \ of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 98.0
+          en: 1.5
+          el: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.93
   NanoCQADupstackTexVN:
     language: vi
     category: natural_language
     short_description: Vietnamese duplicate question retrieval for TeX Q&A.
     description: A compact VN-MTEB translation of the CQADupStack TeX duplicate-question
       retrieval task.
-    citation_keys: *vnmteb_cqadup_keys
-    references: *vnmteb_cqadup_refs
-    bibtex: *vnmteb_cqadup_bib
+    citation_keys: *id002
+    references: *id003
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen,\
+      \ Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings\
+      \ of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 97.5
+          en: 1.5
+          es: 0.5
+          hu: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.93
   NanoCQADupstackWebmastersVN:
     language: vi
     category: natural_language
     short_description: Vietnamese duplicate question retrieval for webmasters Q&A.
     description: A compact VN-MTEB translation of the CQADupStack webmasters duplicate-question
       retrieval task.
-    citation_keys: *vnmteb_cqadup_keys
-    references: *vnmteb_cqadup_refs
-    bibtex: *vnmteb_cqadup_bib
+    citation_keys: *id002
+    references: *id003
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen,\
+      \ Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings\
+      \ of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 97.5
+          en: 1.5
+          de: 0.5
+          es: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.91
   NanoCQADupstackWordpressVN:
     language: vi
     category: natural_language
     short_description: Vietnamese duplicate question retrieval for WordPress Q&A.
     description: A compact VN-MTEB translation of the CQADupStack WordPress duplicate-question
       retrieval task.
-    citation_keys: *vnmteb_cqadup_keys
-    references: *vnmteb_cqadup_refs
-    bibtex: *vnmteb_cqadup_bib
+    citation_keys: *id002
+    references: *id003
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark\
+      \ Data Set for Community Question-Answering Research},\n  author = {Hoogeveen,\
+      \ Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings\
+      \ of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n\
+      \  doi = {10.1145/2838931.2838934}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 96.5
+          en: 3.0
+          sv: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.91
   NanoFEVERVN:
     language: vi
     category: natural_language
     short_description: Vietnamese FEVER evidence retrieval.
-    description: A compact VN-MTEB translation of FEVER claim-to-Wikipedia evidence retrieval.
-    citation_keys: &vnmteb_fever_keys
+    description: A compact VN-MTEB translation of FEVER claim-to-Wikipedia evidence
+      retrieval.
+    citation_keys: &id004
     - pham-etal-2026-vn
     - thorne2018fever
-    references: &vnmteb_fever_refs
-    - *vnmteb_ref
-    - &fever_ref
-      title: 'FEVER: a Large-scale Dataset for Fact Extraction and Verification'
+    references: &id005
+    - *id001
+    - title: 'FEVER: a Large-scale Dataset for Fact Extraction and Verification'
       authors:
       - James Thorne
       - Andreas Vlachos
@@ -205,35 +402,42 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/N18-1074
-    bibtex: &vnmteb_fever_bib |
-      @inproceedings{pham-etal-2026-vn,
-        title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
-        author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
-        booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
-        year = {2026},
-        url = {https://aclanthology.org/2026.findings-eacl.86/},
-        doi = {10.18653/v1/2026.findings-eacl.86}
-      }
-      @inproceedings{thorne2018fever,
-        title = {{FEVER}: a Large-scale Dataset for Fact Extraction and Verification},
-        author = {Thorne, James and Vlachos, Andreas and Christodoulopoulos, Christos and Mittal, Arpit},
-        booktitle = {Proceedings of NAACL-HLT},
-        year = {2018},
-        url = {https://aclanthology.org/N18-1074/},
-        doi = {10.18653/v1/N18-1074}
-      }
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
+      \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos,\
+      \ Andreas and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle\
+      \ = {Proceedings of NAACL-HLT},\n  year = {2018},\n  url = {https://aclanthology.org/N18-1074/},\n\
+      \  doi = {10.18653/v1/N18-1074}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.03
+          en: 0.83
   NanoNQVN:
     language: vi
     category: natural_language
     short_description: Vietnamese Natural Questions retrieval.
     description: A compact VN-MTEB translation of Natural Questions Wikipedia retrieval.
-    citation_keys: &vnmteb_nq_keys
+    citation_keys: &id006
     - pham-etal-2026-vn
     - kwiatkowski2019nq
-    references: &vnmteb_nq_refs
-    - *vnmteb_ref
-    - &nq_ref
-      title: 'Natural Questions: A Benchmark for Question Answering Research'
+    references: &id007
+    - *id001
+    - title: 'Natural Questions: A Benchmark for Question Answering Research'
       authors:
       - Tom Kwiatkowski
       - Jennimaria Palomaki
@@ -258,42 +462,104 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00276
-    bibtex: &vnmteb_nq_bib |
-      @inproceedings{pham-etal-2026-vn,
-        title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
-        author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
-        booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
-        year = {2026},
-        url = {https://aclanthology.org/2026.findings-eacl.86/},
-        doi = {10.18653/v1/2026.findings-eacl.86}
-      }
-      @article{kwiatkowski2019nq,
-        title = {Natural Questions: A Benchmark for Question Answering Research},
-        author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and others},
-        journal = {Transactions of the Association for Computational Linguistics},
-        volume = {7},
-        pages = {452--466},
-        year = {2019},
-        url = {https://aclanthology.org/Q19-1026/},
-        doi = {10.1162/tacl_a_00276}
-      }
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
+      \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki,\
+      \ Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and\
+      \ Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob\
+      \ and Lee, Kenton and others},\n  journal = {Transactions of the Association\
+      \ for Computational Linguistics},\n  volume = {7},\n  pages = {452--466},\n\
+      \  year = {2019},\n  url = {https://aclanthology.org/Q19-1026/},\n  doi = {10.1162/tacl_a_00276}\n\
+      }\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 97.5
+          en: 2.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.33
+          en: 0.65
   NanoNanoFEVERVN:
     language: vi
     category: natural_language
     short_description: Vietnamese nano FEVER evidence retrieval.
-    description: A smaller compact VN-MTEB translation of FEVER claim-to-Wikipedia evidence
-      retrieval.
-    citation_keys: *vnmteb_fever_keys
-    references: *vnmteb_fever_refs
-    bibtex: *vnmteb_fever_bib
+    description: A smaller compact VN-MTEB translation of FEVER claim-to-Wikipedia
+      evidence retrieval.
+    citation_keys: *id004
+    references: *id005
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset\
+      \ for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos,\
+      \ Andreas and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle\
+      \ = {Proceedings of NAACL-HLT},\n  year = {2018},\n  url = {https://aclanthology.org/N18-1074/},\n\
+      \  doi = {10.18653/v1/N18-1074}\n}\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 97.57
+          en: 1.59
   NanoNanoNQVN:
     language: vi
     category: natural_language
     short_description: Vietnamese nano Natural Questions retrieval.
-    description: A smaller compact VN-MTEB translation of Natural Questions Wikipedia retrieval.
-    citation_keys: *vnmteb_nq_keys
-    references: *vnmteb_nq_refs
-    bibtex: *vnmteb_nq_bib
+    description: A smaller compact VN-MTEB translation of Natural Questions Wikipedia
+      retrieval.
+    citation_keys: *id006
+    references: *id007
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for\
+      \ Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki,\
+      \ Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and\
+      \ Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob\
+      \ and Lee, Kenton and others},\n  journal = {Transactions of the Association\
+      \ for Computational Linguistics},\n  volume = {7},\n  pages = {452--466},\n\
+      \  year = {2019},\n  url = {https://aclanthology.org/Q19-1026/},\n  doi = {10.1162/tacl_a_00276}\n\
+      }\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 97.5
+          en: 2.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.4
   NanoQuoraVN:
     language: vi
     category: natural_language
@@ -303,7 +569,7 @@ task_metadata:
     - pham-etal-2026-vn
     - quora2017questionpairs
     references:
-    - *vnmteb_ref
+    - *id001
     - title: First Quora Dataset Release - Question Pairs
       authors:
       - Quora
@@ -311,18 +577,25 @@ task_metadata:
       url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
       is_paper: false
       source_confidence: probably_correct
-    bibtex: |
-      @inproceedings{pham-etal-2026-vn,
-        title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},
-        author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},
-        booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},
-        year = {2026},
-        url = {https://aclanthology.org/2026.findings-eacl.86/},
-        doi = {10.18653/v1/2026.findings-eacl.86}
-      }
-      @misc{quora2017questionpairs,
-        title = {First Quora Dataset Release - Question Pairs},
-        author = {{Quora}},
-        year = {2017},
-        url = {https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs}
-      }
+    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese\
+      \ Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and\
+      \ Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the\
+      \ Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n\
+      \  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n\
+      }\n@misc{quora2017questionpairs,\n  title = {First Quora Dataset Release - Question\
+      \ Pairs},\n  author = {{Quora}},\n  year = {2017},\n  url = {https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs}\n\
+      }\n"
+    languages:
+    - vi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.98

@@ -31,13 +31,14 @@ metadata:
   category: natural_language
   short_description: Nano subset of the BRIGHT reasoning-intensive retrieval benchmark.
   description: NanoBRIGHT is a compact subset of BRIGHT for evaluating reasoning-intensive
-    retrieval. It covers StackExchange, programming, mathematical reasoning, theorem, and
-    long-document variants where queries must retrieve cited or semantically corresponding
+    retrieval. It covers StackExchange, programming, mathematical reasoning, theorem,
+    and long-document variants where queries must retrieve cited or semantically corresponding
     documents.
   citation_keys:
   - su2024bright
   references:
-  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+      Retrieval'
     authors:
     - Hongjin Su
     - Howard Yen
@@ -59,22 +60,25 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2407.12883
-  bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-    \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-    \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint arXiv:2407.12883},\n\
-    \  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval},\n\
-    \  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+  bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+    \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu\
+    \ and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon,\
+    \ Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv\
+    \ preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+    \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+    \  doi = {10.48550/arXiv.2407.12883}\n}\n"
 task_metadata:
   NanoBrightBiology:
     language: en
     category: natural_language
     short_description: Biology StackExchange citation retrieval.
-    description: Queries are Biology StackExchange posts; systems retrieve web documents cited
-      by relevant answers.
+    description: Queries are Biology StackExchange posts; systems retrieve web documents
+      cited by relevant answers.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -96,11 +100,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 89
@@ -113,16 +119,36 @@ task_metadata:
       max_chars: 31130
       mean_chars: 473.9342
       median_chars: 397.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 103
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 91.62
+          de: 1.64
+          ru: 1.11
+          es: 0.98
+          it: 0.85
+          fr: 0.61
   NanoBrightEarthScience:
     language: en
     category: natural_language
     short_description: Earth Science StackExchange citation retrieval.
-    description: Queries are Earth Science StackExchange posts; systems retrieve web documents
-      cited by relevant answers.
+    description: Queries are Earth Science StackExchange posts; systems retrieve web
+      documents cited by relevant answers.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -144,11 +170,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 116
       min_chars: 83
@@ -161,6 +189,28 @@ task_metadata:
       max_chars: 233622
       mean_chars: 716.2489
       median_chars: 222.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 116
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 84.22
+          zh: 3.4
+          ja: 2.99
+          eu: 2.36
+          fr: 1.17
+          ru: 0.95
+          de: 0.82
+          es: 0.58
+          it: 0.57
   NanoBrightEconomics:
     language: en
     category: natural_language
@@ -170,7 +220,8 @@ task_metadata:
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -192,11 +243,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 164
@@ -209,16 +262,34 @@ task_metadata:
       max_chars: 39672
       mean_chars: 532.5738
       median_chars: 167.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 103
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 94.99
+          de: 1.48
+          it: 0.6
+          fr: 0.55
   NanoBrightPsychology:
     language: en
     category: natural_language
     short_description: Psychology StackExchange citation retrieval.
-    description: Queries are Psychology StackExchange posts; systems retrieve web documents
-      cited by relevant answers.
+    description: Queries are Psychology StackExchange posts; systems retrieve web
+      documents cited by relevant answers.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -240,11 +311,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 166
@@ -257,6 +330,21 @@ task_metadata:
       max_chars: 53215
       mean_chars: 504.4673
       median_chars: 162.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 101
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 95.76
+          de: 1.34
   NanoBrightRobotics:
     language: en
     category: natural_language
@@ -266,7 +354,8 @@ task_metadata:
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -288,11 +377,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 165
@@ -305,16 +396,38 @@ task_metadata:
       max_chars: 12758
       mean_chars: 382.3519
       median_chars: 103.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 101
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 90.29
+          de: 2.01
+          es: 1.15
+          zh: 0.83
+          el: 0.76
+          fr: 0.66
+          it: 0.62
+          pt: 0.51
   NanoBrightStackoverflow:
     language: en
     category: code
     short_description: Stack Overflow citation retrieval.
-    description: Queries are Stack Overflow posts; systems retrieve web documents cited by
-      relevant answers.
+    description: Queries are Stack Overflow posts; systems retrieve web documents
+      cited by relevant answers.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -336,11 +449,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 117
       min_chars: 185
@@ -353,16 +468,34 @@ task_metadata:
       max_chars: 4000
       mean_chars: 1120.6261
       median_chars: 209.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 117
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 94.86
+          de: 0.78
+          es: 0.73
+          fr: 0.69
   NanoBrightSustainableLiving:
     language: en
     category: natural_language
     short_description: Sustainable Living StackExchange citation retrieval.
-    description: Queries are Sustainable Living StackExchange posts; systems retrieve web
-      documents cited by relevant answers.
+    description: Queries are Sustainable Living StackExchange posts; systems retrieve
+      web documents cited by relevant answers.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -384,11 +517,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 108
       min_chars: 158
@@ -401,16 +536,32 @@ task_metadata:
       max_chars: 63827
       mean_chars: 733.6211
       median_chars: 550.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 108
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 96.22
+          de: 1.19
   NanoBrightPony:
     language: en
     category: code
     short_description: Pony programming language documentation retrieval.
-    description: Queries about the Pony programming language are matched to relevant syntax
-      documentation passages.
+    description: Queries about the Pony programming language are matched to relevant
+      syntax documentation passages.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -432,11 +583,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 112
       min_chars: 182
@@ -449,16 +602,37 @@ task_metadata:
       max_chars: 2583
       mean_chars: 306.50072780203783
       median_chars: 218.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 112
+        languages:
+          en: 100.0
+      document:
+        sample_count: 6183
+        languages:
+          en: 86.754
+          zh: 3.817
+          fr: 2.879
+          de: 1.682
+          es: 0.857
+          ru: 0.728
+          oc: 0.712
   NanoBrightLeetcode:
     language: en
     category: code
     short_description: Algorithmic programming problem retrieval.
-    description: Queries are coding problems; systems retrieve similar algorithmic problems
-      that share solution techniques.
+    description: Queries are coding problems; systems retrieve similar algorithmic
+      problems that share solution techniques.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -480,11 +654,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 142
       min_chars: 422
@@ -497,16 +673,32 @@ task_metadata:
       max_chars: 43594
       mean_chars: 1079.6235
       median_chars: 680.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 142
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 97.76
+          zh: 0.56
   NanoBrightAops:
     language: en
     category: natural_language
     short_description: Math Olympiad problem retrieval.
-    description: Queries are mathematical problems from Art of Problem Solving; systems retrieve
-      similar problems.
+    description: Queries are mathematical problems from Art of Problem Solving; systems
+      retrieve similar problems.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -528,11 +720,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 111
       min_chars: 85
@@ -545,16 +739,32 @@ task_metadata:
       max_chars: 3087
       mean_chars: 549.0736
       median_chars: 514.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 111
+        languages:
+          en: 99.099
+          ja: 0.901
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.95
   NanoBrightTheoremQATheorems:
     language: en
     category: natural_language
     short_description: Theorem definition and proof retrieval.
-    description: Queries are mathematical problems; systems retrieve relevant theorem definitions
-      and proofs from ProofWiki.
+    description: Queries are mathematical problems; systems retrieve relevant theorem
+      definitions and proofs from ProofWiki.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -576,11 +786,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 76
       min_chars: 159
@@ -593,16 +805,31 @@ task_metadata:
       max_chars: 13196
       mean_chars: 401.121
       median_chars: 338.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 76
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.74
   NanoBrightTheoremQAQuestions:
     language: en
     category: natural_language
     short_description: TheoremQA scenario question retrieval.
-    description: Queries are theorem questions rephrased as real-world scenarios; systems
-      retrieve relevant ProofWiki theorem definitions.
+    description: Queries are theorem questions rephrased as real-world scenarios;
+      systems retrieve relevant ProofWiki theorem definitions.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -624,11 +851,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 194
       min_chars: 84
@@ -641,6 +870,20 @@ task_metadata:
       max_chars: 2392
       mean_chars: 543.4251
       median_chars: 512.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 194
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.96
   NanoBrightBiologyLong:
     language: en
     category: natural_language
@@ -650,7 +893,8 @@ task_metadata:
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -672,11 +916,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 89
@@ -689,16 +935,31 @@ task_metadata:
       max_chars: 1324201
       mean_chars: 36923.73092369478
       median_chars: 19261.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 103
+        languages:
+          en: 100.0
+      document:
+        sample_count: 498
+        languages:
+          en: 98.795
   NanoBrightEarthScienceLong:
     language: en
     category: natural_language
     short_description: Long-document Earth Science citation retrieval.
-    description: Long-document variant of the Earth Science StackExchange BRIGHT task, retrieving
-      cited web documents with long source documents.
+    description: Long-document variant of the Earth Science StackExchange BRIGHT task,
+      retrieving cited web documents with long source documents.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -720,11 +981,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 116
       min_chars: 83
@@ -737,16 +1000,32 @@ task_metadata:
       max_chars: 2627262
       mean_chars: 70649.63202725723
       median_chars: 19448.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 116
+        languages:
+          en: 100.0
+      document:
+        sample_count: 587
+        languages:
+          en: 97.104
+          de: 0.681
   NanoBrightEconomicsLong:
     language: en
     category: natural_language
     short_description: Long-document Economics citation retrieval.
-    description: Long-document variant of the Economics StackExchange BRIGHT task, retrieving
-      cited web documents with long source documents.
+    description: Long-document variant of the Economics StackExchange BRIGHT task,
+      retrieving cited web documents with long source documents.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -768,11 +1047,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 103
       min_chars: 164
@@ -785,16 +1066,31 @@ task_metadata:
       max_chars: 429507
       mean_chars: 38615.970873786406
       median_chars: 23858.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 103
+        languages:
+          en: 100.0
+      document:
+        sample_count: 515
+        languages:
+          en: 99.223
   NanoBrightPsychologyLong:
     language: en
     category: natural_language
     short_description: Long-document Psychology citation retrieval.
-    description: Long-document variant of the Psychology StackExchange BRIGHT task, retrieving
-      cited web documents with long source documents.
+    description: Long-document variant of the Psychology StackExchange BRIGHT task,
+      retrieving cited web documents with long source documents.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -816,11 +1112,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 166
@@ -833,16 +1131,31 @@ task_metadata:
       max_chars: 669575
       mean_chars: 40097.47347740668
       median_chars: 20506.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 101
+        languages:
+          en: 100.0
+      document:
+        sample_count: 509
+        languages:
+          en: 99.607
   NanoBrightRoboticsLong:
     language: en
     category: natural_language
     short_description: Long-document Robotics citation retrieval.
-    description: Long-document variant of the Robotics StackExchange BRIGHT task, retrieving
-      cited web documents with long source documents.
+    description: Long-document variant of the Robotics StackExchange BRIGHT task,
+      retrieving cited web documents with long source documents.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -864,11 +1177,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 101
       min_chars: 165
@@ -881,16 +1196,33 @@ task_metadata:
       max_chars: 3589928
       mean_chars: 35895.2
       median_chars: 16155.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 101
+        languages:
+          en: 100.0
+      document:
+        sample_count: 505
+        languages:
+          en: 97.624
+          el: 0.99
+          es: 0.594
   NanoBrightStackoverflowLong:
     language: en
     category: code
     short_description: Long-document Stack Overflow citation retrieval.
-    description: Long-document variant of the Stack Overflow BRIGHT task, retrieving cited
-      web documents with long source documents.
+    description: Long-document variant of the Stack Overflow BRIGHT task, retrieving
+      cited web documents with long source documents.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -912,11 +1244,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 117
       min_chars: 185
@@ -929,16 +1263,34 @@ task_metadata:
       max_chars: 9182738
       mean_chars: 77578.43770314193
       median_chars: 4687.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 117
+        languages:
+          en: 100.0
+      document:
+        sample_count: 1846
+        languages:
+          en: 89.437
+          de: 4.713
+          cs: 4.55
+          es: 0.921
   NanoBrightSustainableLivingLong:
     language: en
     category: natural_language
     short_description: Long-document Sustainable Living citation retrieval.
-    description: Long-document variant of the Sustainable Living StackExchange BRIGHT task,
-      retrieving cited web documents with long source documents.
+    description: Long-document variant of the Sustainable Living StackExchange BRIGHT
+      task, retrieving cited web documents with long source documents.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -960,11 +1312,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 108
       min_chars: 158
@@ -977,16 +1331,31 @@ task_metadata:
       max_chars: 5732344
       mean_chars: 38204.29945553539
       median_chars: 16808.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 108
+        languages:
+          en: 100.0
+      document:
+        sample_count: 551
+        languages:
+          en: 98.185
   NanoBrightPonyLong:
     language: en
     category: code
     short_description: Long-document Pony documentation retrieval.
-    description: Long-document variant of the Pony programming language task, retrieving relevant
-      syntax documentation passages.
+    description: Long-document variant of the Pony programming language task, retrieving
+      relevant syntax documentation passages.
     citation_keys:
     - su2024bright
     references:
-    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval'
+    - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+        Retrieval'
       authors:
       - Hongjin Su
       - Howard Yen
@@ -1008,11 +1377,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2407.12883
-    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia, Mengzhou\
-      \ and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu, Haisu and Shi, Quan\
-      \ and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal = {arXiv preprint\
-      \ arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive\
-      \ Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n  doi = {10.48550/arXiv.2407.12883}\n}\n"
+    bibtex: "@article{su2024bright,\n  author = {Su, Hongjin and Yen, Howard and Xia,\
+      \ Mengzhou and Shi, Weijia and Muennighoff, Niklas and Wang, Han-yu and Liu,\
+      \ Haisu and Shi, Quan and Siegel, Zachary S. and Tang, Michael and Sun, Ruoxi\
+      \ and Yoon, Jinsung and Arik, Sercan O. and Chen, Danqi and Yu, Tao},\n  journal\
+      \ = {arXiv preprint arXiv:2407.12883},\n  title = {BRIGHT: A Realistic and Challenging\
+      \ Benchmark for Reasoning-Intensive Retrieval},\n  year = {2024},\n  url = {https://arxiv.org/abs/2407.12883},\n\
+      \  doi = {10.48550/arXiv.2407.12883}\n}\n"
     query_text_stats:
       count: 112
       min_chars: 182
@@ -1025,3 +1396,20 @@ task_metadata:
       max_chars: 108885
       mean_chars: 3553.1282495667247
       median_chars: 1091.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 112
+        languages:
+          en: 100.0
+      document:
+        sample_count: 577
+        languages:
+          en: 90.468
+          fr: 7.452
+          sv: 1.213
+          'no': 0.693

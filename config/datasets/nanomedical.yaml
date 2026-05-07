@@ -20,10 +20,10 @@ metadata:
   language: multilingual
   category: natural_language
   short_description: Medical and public-health retrieval benchmark group.
-  description: NanoMedical groups compact medical, biomedical, public-health, and clinical
-    retrieval tasks. It covers clinical query-passage retrieval, biomedical literature search,
-    scientific claim evidence retrieval, public-health FAQ answer retrieval, and Chinese medical
-    answer selection.
+  description: NanoMedical groups compact medical, biomedical, public-health, and
+    clinical retrieval tasks. It covers clinical query-passage retrieval, biomedical
+    literature search, scientific claim evidence retrieval, public-health FAQ answer
+    retrieval, and Chinese medical answer selection.
   citation_keys:
   - sheikh2025cure
   - boteva2016nfcorpus
@@ -111,8 +111,8 @@ metadata:
     url: https://huggingface.co/datasets/xhluca/publichealth-qa
     is_paper: false
     source_confidence: probably_correct
-  - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from
-      Web Search Engine'
+  - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval
+      from Web Search Engine'
     authors:
     - Yifu Qiu
     - Hongyu Li
@@ -127,8 +127,8 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2022.emnlp-main.357
-  - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer
-      Selection
+  - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question
+      Answer Selection
     authors:
     - Sheng Zhang
     - Xin Zhang
@@ -139,35 +139,46 @@ metadata:
     url: https://doi.org/10.1109/ACCESS.2018.2883637
     is_paper: true
     source_confidence: definitive_paper_link
-  bibtex: "@inproceedings{sheikh2025cure,\n  author = {Nadia Athar Sheikh and Daniel Buades Marcos\
-    \ and Anne-Laure Jousse and Akintunde Oladipo and Olivier Rousseau and Jimmy Lin},\n\
-    \  booktitle = {Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery and\
-    \ Data Mining V.2},\n  doi = {10.1145/3711896.3737435},\n  pages = {1417--1428},\n  title\
-    \ = {CURE: A Dataset for Clinical Understanding & Retrieval Evaluation},\n  year = {2025},\n\
-    }\n\n\n@inproceedings{boteva2016nfcorpus,\n  author = {Vera Boteva and Demian Gholipour\
-    \ and Artem Sokolov and Stefan Riezler},\n  booktitle = {Proceedings of the 38th European\
-    \ Conference on Information Retrieval},\n  title = {A Full-Text Learning to Rank Dataset\
-    \ for Medical Information Retrieval},\n  url = {http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
-    \  year = {2016},\n}\n\n\n@misc{roberts2021searching,\n  archivePrefix = {arXiv},\n  author\
-    \ = {Kirk Roberts and Tasmeer Alam and Steven Bedrick and Dina Demner-Fushman and Kyle\
-    \ Lo and Ian Soboroff and Ellen Voorhees and Lucy Lu Wang and William R. Hersh},\n  eprint\
-    \ = {2104.09632},\n  primaryClass = {cs.IR},\n  title = {Searching for Scientific Evidence\
-    \ in a Pandemic: An Overview of TREC-COVID},\n  year = {2021},\n}\n\n\n@misc{wojtasik2024beirpl,\n  archivePrefix = {arXiv},\n  author = {Konrad Wojtasik and Kacper Wołowiec and Vadim Shishkin and Arkadiusz Janz and Maciej Piasecki},\n  eprint = {2305.19840},\n  primaryClass = {cs.IR},\n  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},\n  year = {2024},\n}\n\n\n@inproceedings{wadden2020fact,\n\
-    \  author = {David Wadden and Shanchuan Lin and Kyle Lo and Lucy Lu Wang and Madeleine\
-    \ van Zuylen and Arman Cohan and Hannaneh Hajishirzi},\n  booktitle = {Proceedings of\
-    \ the 2020 Conference on Empirical Methods in Natural Language Processing},\n  title =\
-    \ {Fact or Fiction: Verifying Scientific Claims},\n  url = {https://aclanthology.org/2020.emnlp-main.609/},\n\
-    \  year = {2020},\n}\n\n\n@article{benabacha2019question,\n  author = {Asma Ben Abacha\
-    \ and Dina Demner-Fushman},\n  doi = {10.1186/s12859-019-3119-4},\n  journal = {BMC Bioinformatics},\n\
-    \  number = {1},\n  pages = {511},\n  title = {A Question-Entailment Approach to Question\
-    \ Answering},\n  volume = {20},\n  year = {2019},\n}\n\n\n@misc{lu2024publichealthqa,\n\
-    \  author = {Xing Han Lu},\n  doi = {10.57967/hf/2247},\n  publisher = {Hugging Face},\n\
-    \  title = {publichealth-qa},\n  url = {https://huggingface.co/datasets/xhluca/publichealth-qa},\n\
-    \  year = {2024},\n}\n\n\n@misc{qiu2022dureaderretrieval,\n  archivePrefix = {arXiv},\n  author = {Yifu Qiu and Hongyu Li and Yingqi Qu and Ying Chen and Qiaoqiao She and Jing Liu and Hua Wu and Haifeng Wang},\n  eprint = {2203.10232},\n  primaryClass = {cs.CL},\n  title = {DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from Web Search Engine},\n  year = {2022},\n}\n\n\n@article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin\
-    \ Zhang and Hui Wang and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n\
-    \  journal = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale Attentive\
-    \ Interaction Networks for Chinese Medical Question Answer Selection},\n  volume = {6},\n\
-    \  year = {2018},\n}\n"
+  bibtex: "@inproceedings{sheikh2025cure,\n  author = {Nadia Athar Sheikh and Daniel\
+    \ Buades Marcos and Anne-Laure Jousse and Akintunde Oladipo and Olivier Rousseau\
+    \ and Jimmy Lin},\n  booktitle = {Proceedings of the 31st ACM SIGKDD Conference\
+    \ on Knowledge Discovery and Data Mining V.2},\n  doi = {10.1145/3711896.3737435},\n\
+    \  pages = {1417--1428},\n  title = {CURE: A Dataset for Clinical Understanding\
+    \ & Retrieval Evaluation},\n  year = {2025},\n}\n\n\n@inproceedings{boteva2016nfcorpus,\n\
+    \  author = {Vera Boteva and Demian Gholipour and Artem Sokolov and Stefan Riezler},\n\
+    \  booktitle = {Proceedings of the 38th European Conference on Information Retrieval},\n\
+    \  title = {A Full-Text Learning to Rank Dataset for Medical Information Retrieval},\n\
+    \  url = {http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
+    \  year = {2016},\n}\n\n\n@misc{roberts2021searching,\n  archivePrefix = {arXiv},\n\
+    \  author = {Kirk Roberts and Tasmeer Alam and Steven Bedrick and Dina Demner-Fushman\
+    \ and Kyle Lo and Ian Soboroff and Ellen Voorhees and Lucy Lu Wang and William\
+    \ R. Hersh},\n  eprint = {2104.09632},\n  primaryClass = {cs.IR},\n  title = {Searching\
+    \ for Scientific Evidence in a Pandemic: An Overview of TREC-COVID},\n  year =\
+    \ {2021},\n}\n\n\n@misc{wojtasik2024beirpl,\n  archivePrefix = {arXiv},\n  author\
+    \ = {Konrad Wojtasik and Kacper Wołowiec and Vadim Shishkin and Arkadiusz Janz\
+    \ and Maciej Piasecki},\n  eprint = {2305.19840},\n  primaryClass = {cs.IR},\n\
+    \  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish\
+    \ Language},\n  year = {2024},\n}\n\n\n@inproceedings{wadden2020fact,\n  author\
+    \ = {David Wadden and Shanchuan Lin and Kyle Lo and Lucy Lu Wang and Madeleine\
+    \ van Zuylen and Arman Cohan and Hannaneh Hajishirzi},\n  booktitle = {Proceedings\
+    \ of the 2020 Conference on Empirical Methods in Natural Language Processing},\n\
+    \  title = {Fact or Fiction: Verifying Scientific Claims},\n  url = {https://aclanthology.org/2020.emnlp-main.609/},\n\
+    \  year = {2020},\n}\n\n\n@article{benabacha2019question,\n  author = {Asma Ben\
+    \ Abacha and Dina Demner-Fushman},\n  doi = {10.1186/s12859-019-3119-4},\n  journal\
+    \ = {BMC Bioinformatics},\n  number = {1},\n  pages = {511},\n  title = {A Question-Entailment\
+    \ Approach to Question Answering},\n  volume = {20},\n  year = {2019},\n}\n\n\n\
+    @misc{lu2024publichealthqa,\n  author = {Xing Han Lu},\n  doi = {10.57967/hf/2247},\n\
+    \  publisher = {Hugging Face},\n  title = {publichealth-qa},\n  url = {https://huggingface.co/datasets/xhluca/publichealth-qa},\n\
+    \  year = {2024},\n}\n\n\n@misc{qiu2022dureaderretrieval,\n  archivePrefix = {arXiv},\n\
+    \  author = {Yifu Qiu and Hongyu Li and Yingqi Qu and Ying Chen and Qiaoqiao She\
+    \ and Jing Liu and Hua Wu and Haifeng Wang},\n  eprint = {2203.10232},\n  primaryClass\
+    \ = {cs.CL},\n  title = {DuReader_retrieval: A Large-scale Chinese Benchmark for\
+    \ Passage Retrieval from Web Search Engine},\n  year = {2022},\n}\n\n\n@article{zhang2018cmedqav2,\n\
+    \  author = {Sheng Zhang and Xin Zhang and Hui Wang and Liang Guo and Shanshan\
+    \ Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n  journal = {IEEE Access},\n\
+    \  pages = {74061--74071},\n  title = {Multi-Scale Attentive Interaction Networks\
+    \ for Chinese Medical Question Answer Selection},\n  volume = {6},\n  year = {2018},\n\
+    }\n"
 task_metadata:
   NanoCUREv1:
     language: multilingual
@@ -191,12 +202,12 @@ task_metadata:
       url: https://doi.org/10.1145/3711896.3737435
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{sheikh2025cure,\n  author = {Nadia Athar Sheikh and Daniel Buades Marcos\
-      \ and Anne-Laure Jousse and Akintunde Oladipo and Olivier Rousseau and Jimmy Lin},\n\
-      \  booktitle = {Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery\
-      \ and Data Mining V.2},\n  doi = {10.1145/3711896.3737435},\n  pages = {1417--1428},\n\
-      \  title = {CURE: A Dataset for Clinical Understanding & Retrieval Evaluation},\n\
-      \  year = {2025},\n}\n"
+    bibtex: "@inproceedings{sheikh2025cure,\n  author = {Nadia Athar Sheikh and Daniel\
+      \ Buades Marcos and Anne-Laure Jousse and Akintunde Oladipo and Olivier Rousseau\
+      \ and Jimmy Lin},\n  booktitle = {Proceedings of the 31st ACM SIGKDD Conference\
+      \ on Knowledge Discovery and Data Mining V.2},\n  doi = {10.1145/3711896.3737435},\n\
+      \  pages = {1417--1428},\n  title = {CURE: A Dataset for Clinical Understanding\
+      \ & Retrieval Evaluation},\n  year = {2025},\n}\n"
     query_text_stats:
       count: 200
       min_chars: 21
@@ -209,6 +220,20 @@ task_metadata:
       max_chars: 4179
       mean_chars: 604.2063
       median_chars: 511.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.93
   NanoNFCorpus:
     language: en
     category: natural_language
@@ -228,10 +253,10 @@ task_metadata:
       url: http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{boteva2016nfcorpus,\n  author = {Vera Boteva and Demian Gholipour\
-      \ and Artem Sokolov and Stefan Riezler},\n  booktitle = {Proceedings of the 38th European\
-      \ Conference on Information Retrieval},\n  title = {A Full-Text Learning to Rank Dataset\
-      \ for Medical Information Retrieval},\n  url = {http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
+    bibtex: "@inproceedings{boteva2016nfcorpus,\n  author = {Vera Boteva and Demian\
+      \ Gholipour and Artem Sokolov and Stefan Riezler},\n  booktitle = {Proceedings\
+      \ of the 38th European Conference on Information Retrieval},\n  title = {A Full-Text\
+      \ Learning to Rank Dataset for Medical Information Retrieval},\n  url = {http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf},\n\
       \  year = {2016},\n}\n"
     query_text_stats:
       count: 200
@@ -245,12 +270,42 @@ task_metadata:
       max_chars: 10090
       mean_chars: 1589.5165599777345
       median_chars: 1612.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 81.5
+          it: 3.0
+          de: 2.5
+          es: 2.5
+          fr: 2.5
+          ceb: 1.5
+          nl: 1.0
+          sl: 1.0
+          ca: 0.5
+          cs: 0.5
+          da: 0.5
+          hu: 0.5
+          kw: 0.5
+          pt: 0.5
+          so: 0.5
+          sr: 0.5
+          zh: 0.5
+      document:
+        sample_count: 3593
+        languages:
+          en: 99.972
   NanoTRECCOVID:
     language: en
     category: natural_language
     short_description: COVID-19 scientific literature retrieval.
-    description: NanoTRECCOVID evaluates ad-hoc retrieval for COVID-19 information needs over
-      scientific articles from the TREC-COVID test collection.
+    description: NanoTRECCOVID evaluates ad-hoc retrieval for COVID-19 information
+      needs over scientific articles from the TREC-COVID test collection.
     citation_keys:
     - roberts2021searching
     references:
@@ -269,11 +324,12 @@ task_metadata:
       url: https://arxiv.org/abs/2104.09632
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{roberts2021searching,\n  archivePrefix = {arXiv},\n  author = {Kirk Roberts\
-      \ and Tasmeer Alam and Steven Bedrick and Dina Demner-Fushman and Kyle Lo and Ian Soboroff\
-      \ and Ellen Voorhees and Lucy Lu Wang and William R. Hersh},\n  eprint = {2104.09632},\n\
-      \  primaryClass = {cs.IR},\n  title = {Searching for Scientific Evidence in a Pandemic:\
-      \ An Overview of TREC-COVID},\n  year = {2021},\n}\n"
+    bibtex: "@misc{roberts2021searching,\n  archivePrefix = {arXiv},\n  author = {Kirk\
+      \ Roberts and Tasmeer Alam and Steven Bedrick and Dina Demner-Fushman and Kyle\
+      \ Lo and Ian Soboroff and Ellen Voorhees and Lucy Lu Wang and William R. Hersh},\n\
+      \  eprint = {2104.09632},\n  primaryClass = {cs.IR},\n  title = {Searching for\
+      \ Scientific Evidence in a Pandemic: An Overview of TREC-COVID},\n  year = {2021},\n\
+      }\n"
     query_text_stats:
       count: 50
       min_chars: 30
@@ -286,6 +342,23 @@ task_metadata:
       max_chars: 81127
       mean_chars: 1208.7826
       median_chars: 1318.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 95.32
+          de: 2.94
+          fr: 0.87
+          es: 0.58
   NanoTRECCOVIDPL:
     language: pl
     category: natural_language
@@ -322,15 +395,16 @@ task_metadata:
       url: https://arxiv.org/abs/2104.09632
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{wojtasik2024beirpl,\n  archivePrefix = {arXiv},\n  author = {Konrad Wojtasik\
-      \ and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},\n\
-      \  eprint = {2305.19840},\n  primaryClass = {cs.IR},\n  title = {BEIR-PL: Zero Shot\
-      \ Information Retrieval Benchmark for the Polish Language},\n  year = {2024},\n}\n\n\
-      \n@misc{roberts2021searching,\n  archivePrefix = {arXiv},\n  author = {Kirk Roberts\
-      \ and Tasmeer Alam and Steven Bedrick and Dina Demner-Fushman and Kyle Lo and Ian Soboroff\
-      \ and Ellen Voorhees and Lucy Lu Wang and William R. Hersh},\n  eprint = {2104.09632},\n\
-      \  primaryClass = {cs.IR},\n  title = {Searching for Scientific Evidence in a Pandemic:\
-      \ An Overview of TREC-COVID},\n  year = {2021},\n}\n"
+    bibtex: "@misc{wojtasik2024beirpl,\n  archivePrefix = {arXiv},\n  author = {Konrad\
+      \ Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej\
+      \ Piasecki},\n  eprint = {2305.19840},\n  primaryClass = {cs.IR},\n  title =\
+      \ {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},\n\
+      \  year = {2024},\n}\n\n\n@misc{roberts2021searching,\n  archivePrefix = {arXiv},\n\
+      \  author = {Kirk Roberts and Tasmeer Alam and Steven Bedrick and Dina Demner-Fushman\
+      \ and Kyle Lo and Ian Soboroff and Ellen Voorhees and Lucy Lu Wang and William\
+      \ R. Hersh},\n  eprint = {2104.09632},\n  primaryClass = {cs.IR},\n  title =\
+      \ {Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID},\n\
+      \  year = {2021},\n}\n"
     query_text_stats:
       count: 50
       min_chars: 30
@@ -343,6 +417,23 @@ task_metadata:
       max_chars: 81127
       mean_chars: 1251.911
       median_chars: 1360.0
+    languages:
+    - pl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          pl: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          pl: 95.51
+          de: 2.52
+          fr: 0.65
+          es: 0.55
   NanoSciFact:
     language: en
     category: natural_language
@@ -365,10 +456,11 @@ task_metadata:
       url: https://aclanthology.org/2020.emnlp-main.609/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{wadden2020fact,\n  author = {David Wadden and Shanchuan Lin and\
-      \ Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen and Arman Cohan and Hannaneh Hajishirzi},\n\
-      \  booktitle = {Proceedings of the 2020 Conference on Empirical Methods in Natural Language\
-      \ Processing},\n  title = {Fact or Fiction: Verifying Scientific Claims},\n  url = {https://aclanthology.org/2020.emnlp-main.609/},\n\
+    bibtex: "@inproceedings{wadden2020fact,\n  author = {David Wadden and Shanchuan\
+      \ Lin and Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen and Arman Cohan\
+      \ and Hannaneh Hajishirzi},\n  booktitle = {Proceedings of the 2020 Conference\
+      \ on Empirical Methods in Natural Language Processing},\n  title = {Fact or\
+      \ Fiction: Verifying Scientific Claims},\n  url = {https://aclanthology.org/2020.emnlp-main.609/},\n\
       \  year = {2020},\n}\n"
     query_text_stats:
       count: 200
@@ -382,12 +474,26 @@ task_metadata:
       max_chars: 10127
       mean_chars: 1499.4072930735097
       median_chars: 1426.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 5183
+        languages:
+          en: 99.981
   NanoSciFactPL:
     language: pl
     category: natural_language
     short_description: Polish scientific claim evidence retrieval.
-    description: NanoSciFactPL is the Polish BEIR-PL adaptation of SciFact, evaluating retrieval
-      of scientific evidence abstracts for Polish claims.
+    description: NanoSciFactPL is the Polish BEIR-PL adaptation of SciFact, evaluating
+      retrieval of scientific evidence abstracts for Polish claims.
     citation_keys:
     - wojtasik2024beirpl
     - wadden2020fact
@@ -416,14 +522,15 @@ task_metadata:
       url: https://aclanthology.org/2020.emnlp-main.609/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{wojtasik2024beirpl,\n  archivePrefix = {arXiv},\n  author = {Konrad Wojtasik\
-      \ and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},\n\
-      \  eprint = {2305.19840},\n  primaryClass = {cs.IR},\n  title = {BEIR-PL: Zero Shot\
-      \ Information Retrieval Benchmark for the Polish Language},\n  year = {2024},\n}\n\n\
-      \n@inproceedings{wadden2020fact,\n  author = {David Wadden and Shanchuan Lin and Kyle\
-      \ Lo and Lucy Lu Wang and Madeleine van Zuylen and Arman Cohan and Hannaneh Hajishirzi},\n\
-      \  booktitle = {Proceedings of the 2020 Conference on Empirical Methods in Natural Language\
-      \ Processing},\n  title = {Fact or Fiction: Verifying Scientific Claims},\n  url = {https://aclanthology.org/2020.emnlp-main.609/},\n\
+    bibtex: "@misc{wojtasik2024beirpl,\n  archivePrefix = {arXiv},\n  author = {Konrad\
+      \ Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej\
+      \ Piasecki},\n  eprint = {2305.19840},\n  primaryClass = {cs.IR},\n  title =\
+      \ {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},\n\
+      \  year = {2024},\n}\n\n\n@inproceedings{wadden2020fact,\n  author = {David\
+      \ Wadden and Shanchuan Lin and Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen\
+      \ and Arman Cohan and Hannaneh Hajishirzi},\n  booktitle = {Proceedings of the\
+      \ 2020 Conference on Empirical Methods in Natural Language Processing},\n  title\
+      \ = {Fact or Fiction: Verifying Scientific Claims},\n  url = {https://aclanthology.org/2020.emnlp-main.609/},\n\
       \  year = {2020},\n}\n"
     query_text_stats:
       count: 200
@@ -437,12 +544,27 @@ task_metadata:
       max_chars: 10870
       mean_chars: 1554.5178468068686
       median_chars: 1467.0
+    languages:
+    - pl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 100.0
+      document:
+        sample_count: 5183
+        languages:
+          pl: 99.846
   NanoMedicalQA:
     language: en
     category: natural_language
     short_description: Medical question-answer retrieval.
-    description: NanoMedicalQA evaluates retrieval for medical question answering using question-answer
-      pairs associated with a question-entailment approach to medical QA.
+    description: NanoMedicalQA evaluates retrieval for medical question answering
+      using question-answer pairs associated with a question-entailment approach to
+      medical QA.
     citation_keys:
     - benabacha2019question
     references:
@@ -454,10 +576,10 @@ task_metadata:
       url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@article{benabacha2019question,\n  author = {Asma Ben Abacha and Dina Demner-Fushman},\n\
-      \  doi = {10.1186/s12859-019-3119-4},\n  journal = {BMC Bioinformatics},\n  number =\
-      \ {1},\n  pages = {511},\n  title = {A Question-Entailment Approach to Question Answering},\n\
-      \  volume = {20},\n  year = {2019},\n}\n"
+    bibtex: "@article{benabacha2019question,\n  author = {Asma Ben Abacha and Dina\
+      \ Demner-Fushman},\n  doi = {10.1186/s12859-019-3119-4},\n  journal = {BMC Bioinformatics},\n\
+      \  number = {1},\n  pages = {511},\n  title = {A Question-Entailment Approach\
+      \ to Question Answering},\n  volume = {20},\n  year = {2019},\n}\n"
     query_text_stats:
       count: 200
       min_chars: 16
@@ -470,12 +592,27 @@ task_metadata:
       max_chars: 14441
       mean_chars: 1102.433981066268
       median_chars: 683.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 2007
+        languages:
+          en: 100.0
   NanoPublicHealthQA:
     language: multilingual
     category: natural_language
     short_description: Public-health FAQ answer retrieval.
-    description: NanoPublicHealthQA evaluates retrieval of public-health FAQ answers for questions
-      sourced from CDC and WHO material in a multilingual public-health QA dataset.
+    description: NanoPublicHealthQA evaluates retrieval of public-health FAQ answers
+      for questions sourced from CDC and WHO material in a multilingual public-health
+      QA dataset.
     citation_keys:
     - lu2024publichealthqa
     references:
@@ -501,18 +638,32 @@ task_metadata:
       max_chars: 3749
       mean_chars: 828.1511627906976
       median_chars: 625.0
+    languages:
+    - ar
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 86
+        languages:
+          ar: 100.0
+      document:
+        sample_count: 86
+        languages:
+          ar: 100.0
   NanoCmedqa:
     language: zh
     category: natural_language
     short_description: Chinese medical consultation answer retrieval.
-    description: NanoCmedqa evaluates retrieval over Chinese online medical consultation text,
-      matching community medical questions to useful answer replies.
+    description: NanoCmedqa evaluates retrieval over Chinese online medical consultation
+      text, matching community medical questions to useful answer replies.
     citation_keys:
     - qiu2022dureaderretrieval
     - zhang2018cmedqav2
     references:
-    - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from
-        Web Search Engine'
+    - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval
+        from Web Search Engine'
       authors:
       - Yifu Qiu
       - Hongyu Li
@@ -527,8 +678,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2022.emnlp-main.357
-    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer
-        Selection
+    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question
+        Answer Selection
       authors:
       - Sheng Zhang
       - Xin Zhang
@@ -539,15 +690,16 @@ task_metadata:
       url: https://doi.org/10.1109/ACCESS.2018.2883637
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@misc{qiu2022dureaderretrieval,\n  archivePrefix = {arXiv},\n  author = {Yifu\
-      \ Qiu and Hongyu Li and Yingqi Qu and Ying Chen and Qiaoqiao She and Jing Liu and Hua\
-      \ Wu and Haifeng Wang},\n  eprint = {2203.10232},\n  primaryClass = {cs.CL},\n  title\
-      \ = {DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from\
-      \ Web Search Engine},\n  year = {2022},\n}\n\n\n@article{zhang2018cmedqav2,\n  author\
-      \ = {Sheng Zhang and Xin Zhang and Hui Wang and Liang Guo and Shanshan Liu},\n  doi\
-      \ = {10.1109/ACCESS.2018.2883637},\n  journal = {IEEE Access},\n  pages = {74061--74071},\n\
-      \  title = {Multi-Scale Attentive Interaction Networks for Chinese Medical Question\
-      \ Answer Selection},\n  volume = {6},\n  year = {2018},\n}\n"
+    bibtex: "@misc{qiu2022dureaderretrieval,\n  archivePrefix = {arXiv},\n  author\
+      \ = {Yifu Qiu and Hongyu Li and Yingqi Qu and Ying Chen and Qiaoqiao She and\
+      \ Jing Liu and Hua Wu and Haifeng Wang},\n  eprint = {2203.10232},\n  primaryClass\
+      \ = {cs.CL},\n  title = {DuReader_retrieval: A Large-scale Chinese Benchmark\
+      \ for Passage Retrieval from Web Search Engine},\n  year = {2022},\n}\n\n\n\
+      @article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and Hui Wang\
+      \ and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n\
+      \  journal = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale\
+      \ Attentive Interaction Networks for Chinese Medical Question Answer Selection},\n\
+      \  volume = {6},\n  year = {2018},\n}\n"
     query_text_stats:
       count: 200
       min_chars: 11
@@ -560,17 +712,32 @@ task_metadata:
       max_chars: 4341
       mean_chars: 157.5694
       median_chars: 112.0
+    languages:
+    - zh
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          zh: 99.0
+          ja: 1.0
+      document:
+        sample_count: 10000
+        languages:
+          zh: 99.5
   NanoCMedQAv2reranking:
     language: zh
     category: natural_language
     short_description: Chinese CMedQAv2 medical answer reranking.
-    description: NanoCMedQAv2reranking evaluates answer selection for Chinese community medical
-      questions using the CMedQAv2 reranking formulation.
+    description: NanoCMedQAv2reranking evaluates answer selection for Chinese community
+      medical questions using the CMedQAv2 reranking formulation.
     citation_keys:
     - zhang2018cmedqav2
     references:
-    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer
-        Selection
+    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question
+        Answer Selection
       authors:
       - Sheng Zhang
       - Xin Zhang
@@ -581,11 +748,11 @@ task_metadata:
       url: https://doi.org/10.1109/ACCESS.2018.2883637
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and Hui Wang\
-      \ and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n  journal\
-      \ = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale Attentive Interaction\
-      \ Networks for Chinese Medical Question Answer Selection},\n  volume = {6},\n  year\
-      \ = {2018},\n}\n"
+    bibtex: "@article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and\
+      \ Hui Wang and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n\
+      \  journal = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale\
+      \ Attentive Interaction Networks for Chinese Medical Question Answer Selection},\n\
+      \  volume = {6},\n  year = {2018},\n}\n"
     query_text_stats:
       count: 200
       min_chars: 11
@@ -598,3 +765,19 @@ task_metadata:
       max_chars: 260
       mean_chars: 100.8981
       median_chars: 91.0
+    languages:
+    - zh
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          zh: 98.0
+          ja: 1.5
+          sr: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          zh: 99.92

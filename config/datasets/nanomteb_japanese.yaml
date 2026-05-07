@@ -20,12 +20,17 @@ splits:
 metadata:
   language: ja
   category: natural_language
-  short_description: Japanese NanoMTEB retrieval benchmark based on JMTEB and JMTEB-lite tasks.
-  description: NanoMTEB-Japanese is a compact Japanese retrieval benchmark assembled from JMTEB and JMTEB-lite retrieval tasks. It covers Japanese web search, administrative FAQ matching, quiz and entity QA, multilingual Japanese QA retrieval, long-document retrieval, and academic-paper field matching.
+  short_description: Japanese NanoMTEB retrieval benchmark based on JMTEB and JMTEB-lite
+    tasks.
+  description: NanoMTEB-Japanese is a compact Japanese retrieval benchmark assembled
+    from JMTEB and JMTEB-lite retrieval tasks. It covers Japanese web search, administrative
+    FAQ matching, quiz and entity QA, multilingual Japanese QA retrieval, long-document
+    retrieval, and academic-paper field matching.
   citation_keys:
   - li2025jmteb
   references:
-  - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version'
+  - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its
+      Lightweight Version'
     authors:
     - Shengzhe Li
     - Masaya Ohagi
@@ -37,24 +42,25 @@ metadata:
     url: https://ipsj.ixsq.nii.ac.jp/records/2004356
     is_paper: true
     source_confidence: definitive_paper_link
-  bibtex: |
-    @article{li2025jmteb,
-      title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},
-      author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},
-      year = {2025},
-      url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}
-    }
+  bibtex: "@article{li2025jmteb,\n  title = {JMTEB and JMTEB-lite: Japanese Massive\
+    \ Text Embedding Benchmark and Its Lightweight Version},\n  author = {Li, Shengzhe\
+    \ and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide\
+    \ and Kawahara, Daisuke},\n  year = {2025},\n  url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}\n\
+    }\n"
 task_metadata:
   NanoJaCWIR:
     language: ja
     category: natural_language
     short_description: Japanese casual web retrieval from JaCWIR.
-    description: NanoJaCWIR evaluates Japanese web retrieval using JaCWIR-style queries generated for Hatena Bookmark web-page metadata. The Nano split keeps the same query-to-document matching objective while using a compact corpus for fast benchmarking.
+    description: NanoJaCWIR evaluates Japanese web retrieval using JaCWIR-style queries
+      generated for Hatena Bookmark web-page metadata. The Nano split keeps the same
+      query-to-document matching objective while using a compact corpus for fast benchmarking.
     citation_keys:
     - jmteb_lite
     - tateno2024jacwir
     references:
-    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version'
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
       authors:
       - Shengzhe Li
       - Masaya Ohagi
@@ -73,18 +79,13 @@ task_metadata:
       url: https://huggingface.co/datasets/hotchpotch/JaCWIR
       is_paper: false
       source_confidence: probably_correct
-    bibtex: |
-      @misc{jmteb_lite,
-        author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},
-        howpublished = {\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},
-        title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version}, year = {2025}
-      }
-      @misc{tateno2024jacwir,
-        author = {Tateno, Yuichi},
-        title = {JaCWIR: Japanese Casual Web IR},
-        url = {https://huggingface.co/datasets/hotchpotch/JaCWIR},
-        year = {2024}
-      }
+    bibtex: "@misc{jmteb_lite,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri,\
+      \ Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n\
+      \  howpublished = {\\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},\n  title\
+      \ = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its\
+      \ Lightweight Version}, year = {2025}\n}\n@misc{tateno2024jacwir,\n  author\
+      \ = {Tateno, Yuichi},\n  title = {JaCWIR: Japanese Casual Web IR},\n  url =\
+      \ {https://huggingface.co/datasets/hotchpotch/JaCWIR},\n  year = {2024}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 14
@@ -97,15 +98,32 @@ task_metadata:
       max_chars: 252
       mean_chars: 187.0093
       median_chars: 185.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.82
   NanoJaGovFaqs:
     language: ja
     category: natural_language
     short_description: Japanese government FAQ answer retrieval.
-    description: NanoJaGovFaqs evaluates retrieval of answers for questions from Japanese government and bureau FAQ pages. Queries are FAQ questions and corpus documents are shuffled FAQ answers.
+    description: NanoJaGovFaqs evaluates retrieval of answers for questions from Japanese
+      government and bureau FAQ pages. Queries are FAQ questions and corpus documents
+      are shuffled FAQ answers.
     citation_keys:
     - li2025jmteb
     references:
-    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version'
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
       authors:
       - Shengzhe Li
       - Masaya Ohagi
@@ -117,13 +135,11 @@ task_metadata:
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @article{li2025jmteb,
-        author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},
-        title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},
-        year = {2025},
-        url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}
-      }
+    bibtex: "@article{li2025jmteb,\n  author = {Li, Shengzhe and Ohagi, Masaya and\
+      \ Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n\
+      \  title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark\
+      \ and Its Lightweight Version},\n  year = {2025},\n  url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 11
@@ -136,16 +152,33 @@ task_metadata:
       max_chars: 2934
       mean_chars: 193.7102
       median_chars: 137.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.89
   NanoJaqket:
     language: ja
     category: natural_language
     short_description: Japanese quiz-question retrieval based on JAQKET.
-    description: NanoJaqket evaluates retrieval for Japanese quiz-style questions from JAQKET. The task asks models to rank the relevant entity or evidence document for each quiz question in a compact Nano corpus.
+    description: NanoJaqket evaluates retrieval for Japanese quiz-style questions
+      from JAQKET. The task asks models to rank the relevant entity or evidence document
+      for each quiz question in a compact Nano corpus.
     citation_keys:
     - jmteb_lite
     - suzuki2020jaqket
     references:
-    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version'
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
       authors:
       - Shengzhe Li
       - Masaya Ohagi
@@ -168,19 +201,16 @@ task_metadata:
       url: https://www.anlp.jp/proceedings/annual_meeting/2020/pdf_dir/P2-24.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @misc{jmteb_lite,
-        author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},
-        howpublished = {\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},
-        title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version}, year = {2025}
-      }
-      @inproceedings{suzuki2020jaqket,
-        author = {Suzuki, Masatoshi and Suzuki, Jun and Matsuda, Koji and Nishida, Kyosuke and Inoue, Naoya},
-        booktitle = {Proceedings of the 26th Annual Meeting of the Association for Natural Language Processing},
-        title = {JAQKET: Construction of a Japanese QA Dataset Based on Quiz Questions},
-        url = {https://www.anlp.jp/proceedings/annual_meeting/2020/pdf_dir/P2-24.pdf},
-        year = {2020}
-      }
+    bibtex: "@misc{jmteb_lite,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri,\
+      \ Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n\
+      \  howpublished = {\\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},\n  title\
+      \ = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its\
+      \ Lightweight Version}, year = {2025}\n}\n@inproceedings{suzuki2020jaqket,\n\
+      \  author = {Suzuki, Masatoshi and Suzuki, Jun and Matsuda, Koji and Nishida,\
+      \ Kyosuke and Inoue, Naoya},\n  booktitle = {Proceedings of the 26th Annual\
+      \ Meeting of the Association for Natural Language Processing},\n  title = {JAQKET:\
+      \ Construction of a Japanese QA Dataset Based on Quiz Questions},\n  url = {https://www.anlp.jp/proceedings/annual_meeting/2020/pdf_dir/P2-24.pdf},\n\
+      \  year = {2020}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 27
@@ -193,11 +223,27 @@ task_metadata:
       max_chars: 139335
       mean_chars: 4381.4384
       median_chars: 1751.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.78
   NanoMIRACL:
     language: ja
     category: natural_language
     short_description: Japanese MIRACL retrieval with a compact hard-negative corpus.
-    description: NanoMIRACL evaluates the Japanese portion of MIRACL as a Wikipedia passage retrieval task. It uses the JMTEB-lite style compact corpus with hard negatives while preserving the multilingual QA retrieval objective.
+    description: NanoMIRACL evaluates the Japanese portion of MIRACL as a Wikipedia
+      passage retrieval task. It uses the JMTEB-lite style compact corpus with hard
+      negatives while preserving the multilingual QA retrieval objective.
     citation_keys:
     - zhang2023miracl
     - jmteb_lite
@@ -218,7 +264,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version'
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
       authors:
       - Shengzhe Li
       - Masaya Ohagi
@@ -230,22 +277,18 @@ task_metadata:
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @article{zhang2023miracl,
-        author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},
-        doi = {10.1162/tacl_a_00595},
-        journal = {Transactions of the Association for Computational Linguistics},
-        pages = {1114--1131},
-        title = {{MIRACL}: A Multilingual Retrieval Dataset Covering 18 Diverse Languages},
-        url = {https://aclanthology.org/2023.tacl-1.63/},
-        volume = {11},
-        year = {2023}
-      }
-      @misc{jmteb_lite,
-        author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},
-        howpublished = {\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},
-        title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version}, year = {2025}
-      }
+    bibtex: "@article{zhang2023miracl,\n  author = {Zhang, Xinyu and Thakur, Nandan\
+      \ and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li,\
+      \ Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  doi =\
+      \ {10.1162/tacl_a_00595},\n  journal = {Transactions of the Association for\
+      \ Computational Linguistics},\n  pages = {1114--1131},\n  title = {{MIRACL}:\
+      \ A Multilingual Retrieval Dataset Covering 18 Diverse Languages},\n  url =\
+      \ {https://aclanthology.org/2023.tacl-1.63/},\n  volume = {11},\n  year = {2023}\n\
+      }\n@misc{jmteb_lite,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan\
+      \ and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n  howpublished\
+      \ = {\\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},\n  title = {JMTEB\
+      \ and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight\
+      \ Version}, year = {2025}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 8
@@ -258,15 +301,33 @@ task_metadata:
       max_chars: 2016
       mean_chars: 161.8757
       median_chars: 131.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.91
   NanoMintaka:
     language: ja
     category: natural_language
     short_description: Japanese complex question retrieval from Mintaka.
-    description: NanoMintaka evaluates retrieval for Japanese Mintaka questions, focusing on entity-heavy complex QA such as superlative, intersection, and multi-hop questions. The task ranks answer or entity documents for each natural-language question.
+    description: NanoMintaka evaluates retrieval for Japanese Mintaka questions, focusing
+      on entity-heavy complex QA such as superlative, intersection, and multi-hop
+      questions. The task ranks answer or entity documents for each natural-language
+      question.
     citation_keys:
     - sen2022mintaka
     references:
-    - title: 'Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering'
+    - title: 'Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End
+        Question Answering'
       authors:
       - Priyanka Sen
       - Alham Fikri Aji
@@ -275,15 +336,12 @@ task_metadata:
       url: https://aclanthology.org/2022.coling-1.138
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @inproceedings{sen2022mintaka,
-        author = {Sen, Priyanka and Aji, Alham Fikri and Saffari, Amir},
-        booktitle = {Proceedings of the 29th International Conference on Computational Linguistics},
-        pages = {1604--1619},
-        title = {Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering},
-        url = {https://aclanthology.org/2022.coling-1.138},
-        year = {2022}
-      }
+    bibtex: "@inproceedings{sen2022mintaka,\n  author = {Sen, Priyanka and Aji, Alham\
+      \ Fikri and Saffari, Amir},\n  booktitle = {Proceedings of the 29th International\
+      \ Conference on Computational Linguistics},\n  pages = {1604--1619},\n  title\
+      \ = {Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question\
+      \ Answering},\n  url = {https://aclanthology.org/2022.coling-1.138},\n  year\
+      \ = {2022}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 17
@@ -296,16 +354,35 @@ task_metadata:
       max_chars: 71
       mean_chars: 9.167713567839195
       median_chars: 9.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 1592
+        languages:
+          ja: 91.897
+          en: 4.774
+          zh: 1.319
   NanoMrTidy:
     language: ja
     category: natural_language
     short_description: Japanese Mr. TyDi dense-retrieval task.
-    description: NanoMrTidy evaluates the Japanese split of Mr. TyDi, a multilingual retrieval benchmark derived from TyDi QA. Queries are Japanese questions and documents are candidate passages from the compact JMTEB-lite corpus.
+    description: NanoMrTidy evaluates the Japanese split of Mr. TyDi, a multilingual
+      retrieval benchmark derived from TyDi QA. Queries are Japanese questions and
+      documents are candidate passages from the compact JMTEB-lite corpus.
     citation_keys:
     - jmteb_lite
     - zhang2021mrtydi
     references:
-    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version'
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
       authors:
       - Shengzhe Li
       - Masaya Ohagi
@@ -327,18 +404,14 @@ task_metadata:
       url: https://arxiv.org/abs/2108.08787
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @misc{jmteb_lite,
-        author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},
-        howpublished = {\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},
-        title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version}, year = {2025}
-      }
-      @article{zhang2021mrtydi,
-        author = {Zhang, Xinyu and Ma, Xueguang and Shi, Peng and Lin, Jimmy},
-        journal = {arXiv:2108.08787},
-        title = {{Mr. TyDi}: A Multi-lingual Benchmark for Dense Retrieval},
-        year = {2021}
-      }
+    bibtex: "@misc{jmteb_lite,\n  author = {Li, Shengzhe and Ohagi, Masaya and Ri,\
+      \ Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n\
+      \  howpublished = {\\url{https://ipsj.ixsq.nii.ac.jp/records/2004356}},\n  title\
+      \ = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its\
+      \ Lightweight Version}, year = {2025}\n}\n@article{zhang2021mrtydi,\n  author\
+      \ = {Zhang, Xinyu and Ma, Xueguang and Shi, Peng and Lin, Jimmy},\n  journal\
+      \ = {arXiv:2108.08787},\n  title = {{Mr. TyDi}: A Multi-lingual Benchmark for\
+      \ Dense Retrieval},\n  year = {2021}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 7
@@ -351,15 +424,33 @@ task_metadata:
       max_chars: 5272
       mean_chars: 183.4976
       median_chars: 142.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 99.5
+          ko: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.86
   NanoMultiLongDoc:
     language: ja
     category: natural_language
     short_description: Japanese long-document retrieval from MLDR.
-    description: NanoMultiLongDoc evaluates Japanese long-document retrieval from MLDR. Questions are generated from paragraphs sampled from long articles, and models must retrieve the source article-level document.
+    description: NanoMultiLongDoc evaluates Japanese long-document retrieval from
+      MLDR. Questions are generated from paragraphs sampled from long articles, and
+      models must retrieve the source article-level document.
     citation_keys:
     - chen2024bgem3
     references:
-    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation'
+    - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity
+        Text Embeddings Through Self-Knowledge Distillation'
       authors:
       - Jianlyu Chen
       - Shitao Xiao
@@ -372,15 +463,11 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2024.findings-acl.137
-    bibtex: |
-      @misc{chen2024bgem3,
-        archiveprefix = {arXiv},
-        author = {Chen, Jianlyu and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and Liu, Zheng},
-        eprint = {2402.03216},
-        primaryclass = {cs.CL},
-        title = {M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},
-        year = {2024}
-      }
+    bibtex: "@misc{chen2024bgem3,\n  archiveprefix = {arXiv},\n  author = {Chen, Jianlyu\
+      \ and Xiao, Shitao and Zhang, Peitian and Luo, Kun and Lian, Defu and Liu, Zheng},\n\
+      \  eprint = {2402.03216},\n  primaryclass = {cs.CL},\n  title = {M3-Embedding:\
+      \ Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through\
+      \ Self-Knowledge Distillation},\n  year = {2024}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 6
@@ -393,15 +480,32 @@ task_metadata:
       max_chars: 234887
       mean_chars: 14479.4331
       median_chars: 13069.5
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.97
   NanoNLPJournalAbsArticle:
     language: ja
     category: natural_language
     short_description: Japanese NLP Journal abstract-to-article retrieval.
-    description: NanoNLPJournalAbsArticle evaluates academic-paper matching from the Japanese NLP Journal LaTeX Corpus. Given an abstract, the model must retrieve the corresponding full article.
+    description: NanoNLPJournalAbsArticle evaluates academic-paper matching from the
+      Japanese NLP Journal LaTeX Corpus. Given an abstract, the model must retrieve
+      the corresponding full article.
     citation_keys:
     - li2025jmteb
     references:
-    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version'
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
       authors:
       - Shengzhe Li
       - Masaya Ohagi
@@ -413,13 +517,11 @@ task_metadata:
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @article{li2025jmteb,
-        author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},
-        title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},
-        year = {2025},
-        url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}
-      }
+    bibtex: "@article{li2025jmteb,\n  author = {Li, Shengzhe and Ohagi, Masaya and\
+      \ Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n\
+      \  title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark\
+      \ and Its Lightweight Version},\n  year = {2025},\n  url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 120
@@ -432,15 +534,33 @@ task_metadata:
       max_chars: 92725
       mean_chars: 28330.390894819466
       median_chars: 26570.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 637
+        languages:
+          ja: 97.488
+          en: 1.57
   NanoNLPJournalAbsIntro:
     language: ja
     category: natural_language
     short_description: Japanese NLP Journal abstract-to-introduction retrieval.
-    description: NanoNLPJournalAbsIntro evaluates academic-paper section matching from the Japanese NLP Journal LaTeX Corpus. Given an abstract, the model must retrieve the corresponding introduction.
+    description: NanoNLPJournalAbsIntro evaluates academic-paper section matching
+      from the Japanese NLP Journal LaTeX Corpus. Given an abstract, the model must
+      retrieve the corresponding introduction.
     citation_keys:
     - li2025jmteb
     references:
-    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version'
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
       authors:
       - Shengzhe Li
       - Masaya Ohagi
@@ -452,13 +572,11 @@ task_metadata:
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @article{li2025jmteb,
-        author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},
-        title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},
-        year = {2025},
-        url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}
-      }
+    bibtex: "@article{li2025jmteb,\n  author = {Li, Shengzhe and Ohagi, Masaya and\
+      \ Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n\
+      \  title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark\
+      \ and Its Lightweight Version},\n  year = {2025},\n  url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 120
@@ -471,15 +589,33 @@ task_metadata:
       max_chars: 9565
       mean_chars: 2148.0376766091053
       median_chars: 1990.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 637
+        languages:
+          ja: 98.116
+          en: 0.942
   NanoNLPJournalTitleAbs:
     language: ja
     category: natural_language
     short_description: Japanese NLP Journal title-to-abstract retrieval.
-    description: NanoNLPJournalTitleAbs evaluates academic-paper metadata matching from the Japanese NLP Journal LaTeX Corpus. Given a paper title, the model must retrieve the corresponding abstract.
+    description: NanoNLPJournalTitleAbs evaluates academic-paper metadata matching
+      from the Japanese NLP Journal LaTeX Corpus. Given a paper title, the model must
+      retrieve the corresponding abstract.
     citation_keys:
     - li2025jmteb
     references:
-    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version'
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
       authors:
       - Shengzhe Li
       - Masaya Ohagi
@@ -491,13 +627,11 @@ task_metadata:
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @article{li2025jmteb,
-        author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},
-        title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},
-        year = {2025},
-        url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}
-      }
+    bibtex: "@article{li2025jmteb,\n  author = {Li, Shengzhe and Ohagi, Masaya and\
+      \ Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n\
+      \  title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark\
+      \ and Its Lightweight Version},\n  year = {2025},\n  url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 5
@@ -510,15 +644,33 @@ task_metadata:
       max_chars: 1290
       mean_chars: 461.51962323390893
       median_chars: 436.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 99.5
+          en: 0.5
+      document:
+        sample_count: 637
+        languages:
+          ja: 100.0
   NanoNLPJournalTitleIntro:
     language: ja
     category: natural_language
     short_description: Japanese NLP Journal title-to-introduction retrieval.
-    description: NanoNLPJournalTitleIntro evaluates academic-paper section matching from the Japanese NLP Journal LaTeX Corpus. Given a paper title, the model must retrieve the corresponding introduction.
+    description: NanoNLPJournalTitleIntro evaluates academic-paper section matching
+      from the Japanese NLP Journal LaTeX Corpus. Given a paper title, the model must
+      retrieve the corresponding introduction.
     citation_keys:
     - li2025jmteb
     references:
-    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version'
+    - title: 'JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and
+        Its Lightweight Version'
       authors:
       - Shengzhe Li
       - Masaya Ohagi
@@ -530,13 +682,11 @@ task_metadata:
       url: https://ipsj.ixsq.nii.ac.jp/records/2004356
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @article{li2025jmteb,
-        author = {Li, Shengzhe and Ohagi, Masaya and Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},
-        title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark and Its Lightweight Version},
-        year = {2025},
-        url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}
-      }
+    bibtex: "@article{li2025jmteb,\n  author = {Li, Shengzhe and Ohagi, Masaya and\
+      \ Ri, Ryokan and Fukuchi, Akihiko and Shibata, Tomohide and Kawahara, Daisuke},\n\
+      \  title = {JMTEB and JMTEB-lite: Japanese Massive Text Embedding Benchmark\
+      \ and Its Lightweight Version},\n  year = {2025},\n  url = {https://ipsj.ixsq.nii.ac.jp/records/2004356}\n\
+      }\n"
     query_text_stats:
       count: 200
       min_chars: 5
@@ -549,3 +699,19 @@ task_metadata:
       max_chars: 9565
       mean_chars: 2148.0376766091053
       median_chars: 1990.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 99.5
+          en: 0.5
+      document:
+        sample_count: 637
+        languages:
+          ja: 98.116
+          en: 0.942

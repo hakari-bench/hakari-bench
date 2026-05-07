@@ -142,5 +142,5 @@ output/results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
   `config/dataset_collections/mnanobeir.yaml`.
 - Built-in dataset names should stay consistent across docs, configs, and tests:
   `NanoBEIR-en`, `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoMTEB-Japanese`,
-  `NanoRTEB`, `NanoMTEB`, `NanoCMTEB`, `NanoMMTEB`, `NanoLongEmbed`, and
+  `NanoRTEB`, `NanoMTEB`, `NanoMTEB-Chinese`, `NanoMMTEB`, `NanoLongEmbed`, and
   `NanoCoIR`.

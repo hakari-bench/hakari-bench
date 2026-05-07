@@ -15,13 +15,14 @@ metadata:
   language: ru
   category: natural_language
   short_description: Russian NanoMTEB retrieval benchmark.
-  description: NanoMTEB-Russian is a compact Russian retrieval benchmark aligned with MTEB-style task
-    families.
+  description: NanoMTEB-Russian is a compact Russian retrieval benchmark aligned with
+    MTEB-style task families.
   citation_keys:
   - snegirev-etal-2025-russian
   references:
-  - &rumteb_ref
-    title: 'The Russian-focused embedders'' exploration: ruMTEB benchmark and Russian embedding model design'
+  - &id001
+    title: 'The Russian-focused embedders'' exploration: ruMTEB benchmark and Russian
+      embedding model design'
     authors:
     - Artem Snegirev
     - Maria Tikhonova
@@ -33,26 +34,25 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2025.naacl-long.12
-  bibtex: &rumteb_bibtex |
-    @inproceedings{snegirev-etal-2025-russian,
-      title = "The {R}ussian-focused embedders' exploration: ru{MTEB} benchmark and {R}ussian embedding model design",
-      author = {Snegirev, Artem and Tikhonova, Maria and Anna, Maksimova and Fenogenova, Alena and Abramov, Aleksandr},
-      booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},
-      year = {2025},
-      pages = {236--254},
-      url = {https://aclanthology.org/2025.naacl-long.12/},
-      doi = {10.18653/v1/2025.naacl-long.12}
-    }
+  bibtex: "@inproceedings{snegirev-etal-2025-russian,\n  title = \"The {R}ussian-focused\
+    \ embedders' exploration: ru{MTEB} benchmark and {R}ussian embedding model design\"\
+    ,\n  author = {Snegirev, Artem and Tikhonova, Maria and Anna, Maksimova and Fenogenova,\
+    \ Alena and Abramov, Aleksandr},\n  booktitle = {Proceedings of the 2025 Conference\
+    \ of the Nations of the Americas Chapter of the Association for Computational\
+    \ Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  year =\
+    \ {2025},\n  pages = {236--254},\n  url = {https://aclanthology.org/2025.naacl-long.12/},\n\
+    \  doi = {10.18653/v1/2025.naacl-long.12}\n}\n"
 task_metadata:
   NanoRiaNews:
     language: ru
     category: natural_language
     short_description: Russian RIA news headline retrieval.
-    description: A compact retrieval task derived from the RIA news headline-generation corpus, retrieving news articles from headlines.
-    citation_keys: &ria_keys
+    description: A compact retrieval task derived from the RIA news headline-generation
+      corpus, retrieving news articles from headlines.
+    citation_keys:
     - gavrilov2019self
-    references: &ria_refs
-    - &ria_ref
+    references:
+    - &id002
       title: Self-Attentive Model for Headline Generation
       authors:
       - Daniil Gavrilov
@@ -63,54 +63,77 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.1901.07786
-    bibtex: &ria_bibtex |
-      @inproceedings{gavrilov2019self,
-        title = {Self-Attentive Model for Headline Generation},
-        author = {Gavrilov, Daniil and Kalaidin, Pavel and Malykh, Valentin},
-        booktitle = {Proceedings of the 41st European Conference on Information Retrieval},
-        year = {2019},
-        url = {https://arxiv.org/abs/1901.07786},
-        doi = {10.48550/arXiv.1901.07786}
-      }
+    bibtex: "@inproceedings{gavrilov2019self,\n  title = {Self-Attentive Model for\
+      \ Headline Generation},\n  author = {Gavrilov, Daniil and Kalaidin, Pavel and\
+      \ Malykh, Valentin},\n  booktitle = {Proceedings of the 41st European Conference\
+      \ on Information Retrieval},\n  year = {2019},\n  url = {https://arxiv.org/abs/1901.07786},\n\
+      \  doi = {10.48550/arXiv.1901.07786}\n}\n"
+    languages:
+    - ru
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ru: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ru: 99.98
   NanoRiaNewsHardNegativesV2:
     language: ru
     category: natural_language
     short_description: Russian RIA news hard-negative retrieval.
-    description: A compact hard-negative RIA news headline retrieval variant used in ruMTEB v1.1.
+    description: A compact hard-negative RIA news headline retrieval variant used
+      in ruMTEB v1.1.
     citation_keys:
     - snegirev-etal-2025-russian
     - gavrilov2019self
     references:
-    - *rumteb_ref
-    - *ria_ref
-    bibtex: |
-      @inproceedings{snegirev-etal-2025-russian,
-        title = "The {R}ussian-focused embedders' exploration: ru{MTEB} benchmark and {R}ussian embedding model design",
-        author = {Snegirev, Artem and Tikhonova, Maria and Anna, Maksimova and Fenogenova, Alena and Abramov, Aleksandr},
-        booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},
-        year = {2025},
-        pages = {236--254},
-        url = {https://aclanthology.org/2025.naacl-long.12/},
-        doi = {10.18653/v1/2025.naacl-long.12}
-      }
-      @inproceedings{gavrilov2019self,
-        title = {Self-Attentive Model for Headline Generation},
-        author = {Gavrilov, Daniil and Kalaidin, Pavel and Malykh, Valentin},
-        booktitle = {Proceedings of the 41st European Conference on Information Retrieval},
-        year = {2019},
-        url = {https://arxiv.org/abs/1901.07786},
-        doi = {10.48550/arXiv.1901.07786}
-      }
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{snegirev-etal-2025-russian,\n  title = \"The {R}ussian-focused\
+      \ embedders' exploration: ru{MTEB} benchmark and {R}ussian embedding model design\"\
+      ,\n  author = {Snegirev, Artem and Tikhonova, Maria and Anna, Maksimova and\
+      \ Fenogenova, Alena and Abramov, Aleksandr},\n  booktitle = {Proceedings of\
+      \ the 2025 Conference of the Nations of the Americas Chapter of the Association\
+      \ for Computational Linguistics: Human Language Technologies (Volume 1: Long\
+      \ Papers)},\n  year = {2025},\n  pages = {236--254},\n  url = {https://aclanthology.org/2025.naacl-long.12/},\n\
+      \  doi = {10.18653/v1/2025.naacl-long.12}\n}\n@inproceedings{gavrilov2019self,\n\
+      \  title = {Self-Attentive Model for Headline Generation},\n  author = {Gavrilov,\
+      \ Daniil and Kalaidin, Pavel and Malykh, Valentin},\n  booktitle = {Proceedings\
+      \ of the 41st European Conference on Information Retrieval},\n  year = {2019},\n\
+      \  url = {https://arxiv.org/abs/1901.07786},\n  doi = {10.48550/arXiv.1901.07786}\n\
+      }\n"
+    languages:
+    - ru
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ru: 99.0
+          en: 0.5
+          fi: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          ru: 98.33
+          pl: 1.35
   NanoRuBQ:
     language: ru
     category: natural_language
     short_description: Russian RuBQ question-answer retrieval.
-    description: A compact retrieval task based on RuBQ 2.0, a Russian KBQA and MRC dataset with answer-bearing Wikipedia paragraphs.
+    description: A compact retrieval task based on RuBQ 2.0, a Russian KBQA and MRC
+      dataset with answer-bearing Wikipedia paragraphs.
     citation_keys:
     - RuBQ2021
     references:
-    - &rubq_ref
-      title: 'RuBQ 2.0: An Innovated Russian Question Answering Dataset'
+    - title: 'RuBQ 2.0: An Innovated Russian Question Answering Dataset'
       authors:
       - Ivan Rybin
       - Vladislav Korablinov
@@ -120,25 +143,36 @@ task_metadata:
       url: https://openreview.net/pdf?id=P5UQFFoQ4PJ
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: |
-      @inproceedings{RuBQ2021,
-        title = {{RuBQ} 2.0: An Innovated Russian Question Answering Dataset},
-        author = {Rybin, Ivan and Korablinov, Vladislav and Efimov, Pavel and Braslavski, Pavel},
-        booktitle = {The Semantic Web},
-        pages = {532--547},
-        year = {2021},
-        url = {https://openreview.net/pdf?id=P5UQFFoQ4PJ}
-      }
+    bibtex: "@inproceedings{RuBQ2021,\n  title = {{RuBQ} 2.0: An Innovated Russian\
+      \ Question Answering Dataset},\n  author = {Rybin, Ivan and Korablinov, Vladislav\
+      \ and Efimov, Pavel and Braslavski, Pavel},\n  booktitle = {The Semantic Web},\n\
+      \  pages = {532--547},\n  year = {2021},\n  url = {https://openreview.net/pdf?id=P5UQFFoQ4PJ}\n\
+      }\n"
+    languages:
+    - ru
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ru: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ru: 99.6
   NanoRuSciBenchCite:
     language: ru
     category: natural_language
     short_description: Russian scientific citation retrieval.
-    description: A compact RuSciBench citation-link retrieval task for Russian scientific document representations.
-    citation_keys: &ruscibench_keys
+    description: A compact RuSciBench citation-link retrieval task for Russian scientific
+      document representations.
+    citation_keys: &id003
     - vatolin2024ruscibench
-    references: &ruscibench_refs
-    - &ruscibench_ref
-      title: 'RuSciBench: Open Benchmark for Russian and English Scientific Document Representations'
+    references: &id004
+    - title: 'RuSciBench: Open Benchmark for Russian and English Scientific Document
+        Representations'
       authors:
       - A. Vatolin
       - N. Gerasimenko
@@ -149,23 +183,51 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1134/S1064562424602191
-    bibtex: &ruscibench_bibtex |
-      @article{vatolin2024ruscibench,
-        title = {{RuSciBench}: Open Benchmark for Russian and English Scientific Document Representations},
-        author = {Vatolin, A. and Gerasimenko, N. and Ianina, A. and Vorontsov, K.},
-        journal = {Doklady Mathematics},
-        volume = {110},
-        number = {1},
-        pages = {S251--S260},
-        year = {2024},
-        url = {https://doi.org/10.1134/S1064562424602191},
-        doi = {10.1134/S1064562424602191}
-      }
+    bibtex: "@article{vatolin2024ruscibench,\n  title = {{RuSciBench}: Open Benchmark\
+      \ for Russian and English Scientific Document Representations},\n  author =\
+      \ {Vatolin, A. and Gerasimenko, N. and Ianina, A. and Vorontsov, K.},\n  journal\
+      \ = {Doklady Mathematics},\n  volume = {110},\n  number = {1},\n  pages = {S251--S260},\n\
+      \  year = {2024},\n  url = {https://doi.org/10.1134/S1064562424602191},\n  doi\
+      \ = {10.1134/S1064562424602191}\n}\n"
+    languages:
+    - ru
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ru: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ru: 99.8
   NanoRuSciBenchCocite:
     language: ru
     category: natural_language
     short_description: Russian scientific co-citation retrieval.
-    description: A compact RuSciBench co-citation retrieval task for Russian scientific document representations.
-    citation_keys: *ruscibench_keys
-    references: *ruscibench_refs
-    bibtex: *ruscibench_bibtex
+    description: A compact RuSciBench co-citation retrieval task for Russian scientific
+      document representations.
+    citation_keys: *id003
+    references: *id004
+    bibtex: "@article{vatolin2024ruscibench,\n  title = {{RuSciBench}: Open Benchmark\
+      \ for Russian and English Scientific Document Representations},\n  author =\
+      \ {Vatolin, A. and Gerasimenko, N. and Ianina, A. and Vorontsov, K.},\n  journal\
+      \ = {Doklady Mathematics},\n  volume = {110},\n  number = {1},\n  pages = {S251--S260},\n\
+      \  year = {2024},\n  url = {https://doi.org/10.1134/S1064562424602191},\n  doi\
+      \ = {10.1134/S1064562424602191}\n}\n"
+    languages:
+    - ru
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ru: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ru: 99.78

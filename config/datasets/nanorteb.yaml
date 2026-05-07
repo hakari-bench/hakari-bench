@@ -24,8 +24,9 @@ metadata:
   language: en
   category: natural_language
   short_description: Nano subset of the RTEB English retrieval benchmark.
-  description: NanoRTEB samples open English RTEB tasks for compact evaluation across legal,
-    finance, code, and healthcare retrieval settings that target practical domain search.
+  description: NanoRTEB samples open English RTEB tasks for compact evaluation across
+    legal, finance, code, and healthcare retrieval settings that target practical
+    domain search.
   citation_keys:
   - rteb2025
   references:
@@ -41,16 +42,17 @@ metadata:
     url: https://huggingface.co/blog/rteb
     is_paper: false
     source_confidence: probably_correct
-  bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval Evaluation},\n\
-    \  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin and Isaac Chung and\n    \ Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-    }\n"
+  bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
+    \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
+    \ and Isaac Chung and\n     Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n \
+    \ url = {https://huggingface.co/blog/rteb}\n}\n"
 task_metadata:
   NanoAILACasedocs:
     language: en
     category: natural_language
     short_description: AILA case-law retrieval.
-    description: Retrieves relevant Indian legal precedent documents for long legal situation
-      descriptions from the AILA precedent retrieval task.
+    description: Retrieves relevant Indian legal precedent documents for long legal
+      situation descriptions from the AILA precedent retrieval task.
     citation_keys:
     - rteb2025
     - aila2019retrieval
@@ -81,42 +83,30 @@ task_metadata:
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-
     - title: AILA 2019 Precedent & Statute Retrieval Task
-
       authors:
-
       - Paheli Bhattacharya
-
       - Kripabandhu Ghosh
-
       - Saptarshi Ghosh
-
       - Arindam Pal
-
       - Parth Mehta
-
       - Arnab Bhattacharya
-
       - Prasenjit Majumder
-
       year: 2020
-
       url: https://doi.org/10.5281/zenodo.4063986
-
       is_paper: false
-
       source_confidence: probably_correct
-
       doi: 10.5281/zenodo.4063986
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@inproceedings{aila2019retrieval,\n  title = {Overview of the FIRE 2019 AILA Track:\
-      \ Artificial Intelligence for Legal Assistance},\n  author = {Paheli Bhattacharya and\
-      \ Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya\
-      \ and Prasenjit Majumder},\n  booktitle = {CEUR Workshop Proceedings},\n  volume =\
-      \ {2517},\n  year = {2019},\n  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}\n}\n"
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@inproceedings{aila2019retrieval,\n\
+      \  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for\
+      \ Legal Assistance},\n  author = {Paheli Bhattacharya and Kripabandhu Ghosh\
+      \ and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya\
+      \ and Prasenjit Majumder},\n  booktitle = {CEUR Workshop Proceedings},\n  volume\
+      \ = {2517},\n  year = {2019},\n  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}\n\
+      }\n"
     query_text_stats:
       count: 50
       min_chars: 1174
@@ -129,12 +119,26 @@ task_metadata:
       max_chars: 222889
       mean_chars: 26947.344086021505
       median_chars: 18958.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 100.0
+      document:
+        sample_count: 186
+        languages:
+          en: 100.0
   NanoAILAStatutes:
     language: en
     category: natural_language
     short_description: AILA statute retrieval.
-    description: Retrieves relevant statutory provisions for long legal situation descriptions
-      from the AILA statute retrieval task.
+    description: Retrieves relevant statutory provisions for long legal situation
+      descriptions from the AILA statute retrieval task.
     citation_keys:
     - rteb2025
     - aila2019retrieval
@@ -165,42 +169,30 @@ task_metadata:
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-
     - title: AILA 2019 Precedent & Statute Retrieval Task
-
       authors:
-
       - Paheli Bhattacharya
-
       - Kripabandhu Ghosh
-
       - Saptarshi Ghosh
-
       - Arindam Pal
-
       - Parth Mehta
-
       - Arnab Bhattacharya
-
       - Prasenjit Majumder
-
       year: 2020
-
       url: https://doi.org/10.5281/zenodo.4063986
-
       is_paper: false
-
       source_confidence: probably_correct
-
       doi: 10.5281/zenodo.4063986
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@inproceedings{aila2019retrieval,\n  title = {Overview of the FIRE 2019 AILA Track:\
-      \ Artificial Intelligence for Legal Assistance},\n  author = {Paheli Bhattacharya and\
-      \ Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya\
-      \ and Prasenjit Majumder},\n  booktitle = {CEUR Workshop Proceedings},\n  volume =\
-      \ {2517},\n  year = {2019},\n  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}\n}\n"
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@inproceedings{aila2019retrieval,\n\
+      \  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for\
+      \ Legal Assistance},\n  author = {Paheli Bhattacharya and Kripabandhu Ghosh\
+      \ and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya\
+      \ and Prasenjit Majumder},\n  booktitle = {CEUR Workshop Proceedings},\n  volume\
+      \ = {2517},\n  year = {2019},\n  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}\n\
+      }\n"
     query_text_stats:
       count: 50
       min_chars: 1174
@@ -213,12 +205,26 @@ task_metadata:
       max_chars: 26037
       mean_chars: 1972.6341463414635
       median_chars: 898.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 100.0
+      document:
+        sample_count: 82
+        languages:
+          en: 100.0
   NanoLegalSummarization:
     language: en
     category: natural_language
     short_description: Contract-summary retrieval.
-    description: Retrieves plain-English contract summaries or source contract passages from
-      the legal summarization dataset.
+    description: Retrieves plain-English contract summaries or source contract passages
+      from the legal summarization dataset.
     citation_keys:
     - rteb2025
     - manor2019plain
@@ -245,11 +251,12 @@ task_metadata:
       source_confidence: definitive_paper_link
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@inproceedings{manor2019plain,\n  title = {Plain English Summarization of Contracts},\n\
-      \  author = {Laura Manor and Junyi Jessy Li},\n  booktitle = {Proceedings of the Natural\
-      \ Legal Language Processing Workshop 2019},\n  pages = {1--11},\n  year = {2019},\n\
-      \  url = {https://aclanthology.org/W19-2201/}\n}\n"
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@inproceedings{manor2019plain,\n\
+      \  title = {Plain English Summarization of Contracts},\n  author = {Laura Manor\
+      \ and Junyi Jessy Li},\n  booktitle = {Proceedings of the Natural Legal Language\
+      \ Processing Workshop 2019},\n  pages = {1--11},\n  year = {2019},\n  url =\
+      \ {https://aclanthology.org/W19-2201/}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 17
@@ -262,12 +269,26 @@ task_metadata:
       max_chars: 6496
       mean_chars: 606.1643835616438
       median_chars: 340.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 438
+        languages:
+          en: 100.0
   NanoFinanceBench:
     language: en
     category: natural_language
     short_description: FinanceBench document retrieval.
-    description: Retrieves financial document excerpts and filing evidence needed to answer
-      expert-written FinanceBench questions.
+    description: Retrieves financial document excerpts and filing evidence needed
+      to answer expert-written FinanceBench questions.
     citation_keys:
     - rteb2025
     - islam2023financebench
@@ -300,11 +321,12 @@ task_metadata:
       source_confidence: definitive_paper_link
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@article{islam2023financebench,\n  title = {FinanceBench: A New Benchmark for Financial\
-      \ Question Answering},\n  author = {Pranab Islam and Anand Kannappan and Douwe Kiela\
-      \ and Rob Fergus and Myle Ott and Sam Wang and Aparna Garimella and Nino Garcia},\n\
-      \  journal = {arXiv preprint arXiv:2311.11944},\n  year = {2023}\n}\n"
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@article{islam2023financebench,\n\
+      \  title = {FinanceBench: A New Benchmark for Financial Question Answering},\n\
+      \  author = {Pranab Islam and Anand Kannappan and Douwe Kiela and Rob Fergus\
+      \ and Myle Ott and Sam Wang and Aparna Garimella and Nino Garcia},\n  journal\
+      \ = {arXiv preprint arXiv:2311.11944},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 150
       min_chars: 44
@@ -317,12 +339,26 @@ task_metadata:
       max_chars: 12172
       mean_chars: 1676.9586206896552
       median_chars: 1323.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 150
+        languages:
+          en: 100.0
+      document:
+        sample_count: 145
+        languages:
+          en: 100.0
   NanoHC3Finance:
     language: en
     category: natural_language
     short_description: HC3 finance response retrieval.
-    description: Retrieves relevant financial explanations or answers for finance prompts
-      adapted from the HC3 human-versus-ChatGPT corpus.
+    description: Retrieves relevant financial explanations or answers for finance
+      prompts adapted from the HC3 human-versus-ChatGPT corpus.
     citation_keys:
     - rteb2025
     - guo2023hc3
@@ -339,7 +375,8 @@ task_metadata:
       url: https://huggingface.co/blog/rteb
       is_paper: false
       source_confidence: probably_correct
-    - title: How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and Detection
+    - title: How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation,
+        and Detection
       authors:
       - Biyang Guo
       - Xin Zhang
@@ -355,11 +392,12 @@ task_metadata:
       source_confidence: definitive_paper_link
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@article{guo2023hc3,\n  title = {How Close is ChatGPT to Human Experts? Comparison\
-      \ Corpus, Evaluation, and Detection},\n  author = {Biyang Guo and Xin Zhang and Zhiyuan\
-      \ Wang and Minqi Jiang and Jinran Nie and Yuxuan Ding and Jianwei Yue and Yupeng Wu},\n\
-      \  journal = {arXiv preprint arXiv:2301.07597},\n  year = {2023}\n}\n"
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@article{guo2023hc3,\n  title =\
+      \ {How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and\
+      \ Detection},\n  author = {Biyang Guo and Xin Zhang and Zhiyuan Wang and Minqi\
+      \ Jiang and Jinran Nie and Yuxuan Ding and Jianwei Yue and Yupeng Wu},\n  journal\
+      \ = {arXiv preprint arXiv:2301.07597},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 16
@@ -372,12 +410,27 @@ task_metadata:
       max_chars: 7489
       mean_chars: 991.2987951807229
       median_chars: 693.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 99.5
+          it: 0.5
+      document:
+        sample_count: 415
+        languages:
+          en: 100.0
   NanoFinQA:
     language: en
     category: natural_language
     short_description: FinQA numerical evidence retrieval.
-    description: Retrieves financial tables and text passages needed for numerical reasoning
-      questions from FinQA.
+    description: Retrieves financial tables and text passages needed for numerical
+      reasoning questions from FinQA.
     citation_keys:
     - rteb2025
     - chen2021finqa
@@ -413,13 +466,14 @@ task_metadata:
       source_confidence: definitive_paper_link
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@inproceedings{chen2021finqa,\n  title = {FinQA: A Dataset of Numerical Reasoning\
-      \ over Financial Data},\n  author = {Zhiyu Chen and Wenhu Chen and Charese Smiley and\
-      \ Sameena Shah and Iana Borova and Dylan Langdon and Reema Moussa and Matt Beane and\
-      \ Ting-Hao Huang and Bryan Routledge and William Yang Wang},\n  booktitle = {Proceedings\
-      \ of the 2021 Conference on Empirical Methods in Natural Language Processing},\n  year\
-      \ = {2021}\n}\n"
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@inproceedings{chen2021finqa,\n\
+      \  title = {FinQA: A Dataset of Numerical Reasoning over Financial Data},\n\
+      \  author = {Zhiyu Chen and Wenhu Chen and Charese Smiley and Sameena Shah and\
+      \ Iana Borova and Dylan Langdon and Reema Moussa and Matt Beane and Ting-Hao\
+      \ Huang and Bryan Routledge and William Yang Wang},\n  booktitle = {Proceedings\
+      \ of the 2021 Conference on Empirical Methods in Natural Language Processing},\n\
+      \  year = {2021}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 32
@@ -432,6 +486,20 @@ task_metadata:
       max_chars: 8989
       mean_chars: 3918.536842105263
       median_chars: 3887.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 380
+        languages:
+          en: 99.474
   NanoApps:
     language: en
     category: code
@@ -473,12 +541,12 @@ task_metadata:
       source_confidence: definitive_paper_link
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@article{hendrycks2021apps,\n  title = {Measuring Coding Challenge Competence With\
-      \ APPS},\n  author = {Dan Hendrycks and Steven Basart and Saurav Kadavath and Mantas\
-      \ Mazeika and Akul Arora and Ethan Guo and Collin Burns and Samir Puranik and Horace\
-      \ He and Dawn Song and Jacob Steinhardt},\n  journal = {NeurIPS},\n  year = {2021}\n\
-      }\n"
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@article{hendrycks2021apps,\n \
+      \ title = {Measuring Coding Challenge Competence With APPS},\n  author = {Dan\
+      \ Hendrycks and Steven Basart and Saurav Kadavath and Mantas Mazeika and Akul\
+      \ Arora and Ethan Guo and Collin Burns and Samir Puranik and Horace He and Dawn\
+      \ Song and Jacob Steinhardt},\n  journal = {NeurIPS},\n  year = {2021}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 411
@@ -491,12 +559,32 @@ task_metadata:
       max_chars: 289048
       mean_chars: 573.1170893305917
       median_chars: 331.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 98.5
+          ru: 1.5
+      document:
+        sample_count: 8754
+        languages:
+          en: 88.2
+          ceb: 3.438
+          fa: 2.81
+          zh: 1.382
+          ru: 1.062
+          ja: 0.64
   NanoDS1000:
     language: en
     category: code
     short_description: DS-1000 code retrieval.
-    description: Retrieves Python data-science code snippets that solve natural-language tasks
-      involving libraries such as pandas, NumPy, and matplotlib.
+    description: Retrieves Python data-science code snippets that solve natural-language
+      tasks involving libraries such as pandas, NumPy, and matplotlib.
     citation_keys:
     - rteb2025
     - lai2022ds1000
@@ -531,11 +619,12 @@ task_metadata:
       source_confidence: definitive_paper_link
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@article{lai2022ds1000,\n  title = {DS-1000: A Natural and Reliable Benchmark for\
-      \ Data Science Code Generation},\n  author = {Yuhang Lai and Chengxi Li and Yiming Wang\
-      \ and Tianyi Zhang and Ruiqi Zhong and Luke Zettlemoyer and Wen-tau Yih and Daniel Fried\
-      \ and Sida Wang and Tao Yu},\n  journal = {arXiv preprint arXiv:2211.11501},\n  year\
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@article{lai2022ds1000,\n  title\
+      \ = {DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation},\n\
+      \  author = {Yuhang Lai and Chengxi Li and Yiming Wang and Tianyi Zhang and\
+      \ Ruiqi Zhong and Luke Zettlemoyer and Wen-tau Yih and Daniel Fried and Sida\
+      \ Wang and Tao Yu},\n  journal = {arXiv preprint arXiv:2211.11501},\n  year\
       \ = {2022}\n}\n"
     query_text_stats:
       count: 200
@@ -549,6 +638,21 @@ task_metadata:
       max_chars: 2398
       mean_chars: 687.8475426278836
       median_chars: 547.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 997
+        languages:
+          de: 84.353
+          es: 15.446
   NanoHumanEval:
     language: en
     category: code
@@ -586,11 +690,12 @@ task_metadata:
       source_confidence: definitive_paper_link
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@article{chen2021humaneval,\n  title = {Evaluating Large Language Models Trained\
-      \ on Code},\n  author = {Mark Chen and Jerry Tworek and Heewoo Jun and Qiming Yuan and\
-      \ Henrique Ponde de Oliveira Pinto and Jared Kaplan and Harri Edwards and Yuri Burda},\n\
-      \  journal = {arXiv preprint arXiv:2107.03374},\n  year = {2021}\n}\n"
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@article{chen2021humaneval,\n \
+      \ title = {Evaluating Large Language Models Trained on Code},\n  author = {Mark\
+      \ Chen and Jerry Tworek and Heewoo Jun and Qiming Yuan and Henrique Ponde de\
+      \ Oliveira Pinto and Jared Kaplan and Harri Edwards and Yuri Burda},\n  journal\
+      \ = {arXiv preprint arXiv:2107.03374},\n  year = {2021}\n}\n"
     query_text_stats:
       count: 158
       min_chars: 23
@@ -603,12 +708,46 @@ task_metadata:
       max_chars: 854
       mean_chars: 176.99367088607596
       median_chars: 145.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 158
+        languages:
+          en: 100.0
+      document:
+        sample_count: 158
+        languages:
+          en: 75.316
+          zh: 3.165
+          fr: 2.532
+          tr: 2.532
+          pt: 1.899
+          sr: 1.899
+          es: 1.266
+          it: 1.266
+          ko: 1.266
+          ru: 1.266
+          vi: 1.266
+          eo: 0.633
+          fa: 0.633
+          fi: 0.633
+          ja: 0.633
+          jv: 0.633
+          kv: 0.633
+          nl: 0.633
+          'no': 0.633
+          pa: 0.633
+          te: 0.633
   NanoMBPP:
     language: en
     category: code
     short_description: MBPP code retrieval.
-    description: Retrieves Python implementations for Mostly Basic Python Programming task
-      descriptions.
+    description: Retrieves Python implementations for Mostly Basic Python Programming
+      task descriptions.
     citation_keys:
     - rteb2025
     - austin2021mbpp
@@ -643,10 +782,11 @@ task_metadata:
       source_confidence: definitive_paper_link
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@article{austin2021mbpp,\n  title = {Program Synthesis with Large Language Models},\n\
-      \  author = {Jacob Austin and Augustus Odena and Maxwell Nye and Maarten Bosma and Henryk\
-      \ Michalewski and David Dohan and Ellen Jiang and Carrie Cai and Michael Terry and Quoc\
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@article{austin2021mbpp,\n  title\
+      \ = {Program Synthesis with Large Language Models},\n  author = {Jacob Austin\
+      \ and Augustus Odena and Maxwell Nye and Maarten Bosma and Henryk Michalewski\
+      \ and David Dohan and Ellen Jiang and Carrie Cai and Michael Terry and Quoc\
       \ Le},\n  journal = {arXiv preprint arXiv:2108.07732},\n  year = {2021}\n}\n"
     query_text_stats:
       count: 200
@@ -660,12 +800,34 @@ task_metadata:
       max_chars: 1331
       mean_chars: 180.80349794238683
       median_chars: 144.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 972
+        languages:
+          en: 88.477
+          de: 1.749
+          es: 1.337
+          zh: 1.235
+          fa: 1.029
+          pt: 0.926
+          fr: 0.823
+          it: 0.823
+          ar: 0.617
   NanoWikiSQL:
     language: en
     category: code
     short_description: WikiSQL query retrieval.
-    description: Retrieves SQL SELECT statements corresponding to natural-language questions
-      over tables.
+    description: Retrieves SQL SELECT statements corresponding to natural-language
+      questions over tables.
     citation_keys:
     - rteb2025
     - zhong2017seq2sql
@@ -694,11 +856,11 @@ task_metadata:
       source_confidence: definitive_paper_link
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@article{zhong2017seq2sql,\n  title = {Seq2SQL: Generating Structured Queries from\
-      \ Natural Language using Reinforcement Learning},\n  author = {Victor Zhong and Caiming\
-      \ Xiong and Richard Socher},\n  journal = {arXiv preprint arXiv:1709.00103},\n  year\
-      \ = {2017}\n}\n"
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@article{zhong2017seq2sql,\n  title\
+      \ = {Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement\
+      \ Learning},\n  author = {Victor Zhong and Caiming Xiong and Richard Socher},\n\
+      \  journal = {arXiv preprint arXiv:1709.00103},\n  year = {2017}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 620
@@ -711,12 +873,26 @@ task_metadata:
       max_chars: 211
       mean_chars: 62.34272997032641
       median_chars: 59.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 2022
+        languages:
+          en: 98.961
   NanoFreshStack:
     language: en
     category: natural_language
     short_description: FreshStack technical retrieval.
-    description: Retrieves relevant technical documentation or code-oriented documents for
-      recent community programming questions.
+    description: Retrieves relevant technical documentation or code-oriented documents
+      for recent community programming questions.
     citation_keys:
     - rteb2025
     - thakur2025freshstack
@@ -733,8 +909,8 @@ task_metadata:
       url: https://huggingface.co/blog/rteb
       is_paper: false
       source_confidence: probably_correct
-    - title: 'FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical
-        Documents'
+    - title: 'FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on
+        Technical Documents'
       authors:
       - Nandan Thakur
       - Jimmy Lin
@@ -748,11 +924,12 @@ task_metadata:
       source_confidence: definitive_paper_link
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@misc{thakur2025freshstack,\n  title = {FreshStack: Building Realistic Benchmarks\
-      \ for Evaluating Retrieval on Technical Documents},\n  author = {Nandan Thakur and Jimmy\
-      \ Lin and Sam Havens and Michael Carbin and Omar Khattab and Andrew Drozdov},\n  year\
-      \ = {2025},\n  eprint = {2504.13128},\n  archivePrefix = {arXiv},\n  url = {https://arxiv.org/abs/2504.13128}\n\
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@misc{thakur2025freshstack,\n \
+      \ title = {FreshStack: Building Realistic Benchmarks for Evaluating Retrieval\
+      \ on Technical Documents},\n  author = {Nandan Thakur and Jimmy Lin and Sam\
+      \ Havens and Michael Carbin and Omar Khattab and Andrew Drozdov},\n  year =\
+      \ {2025},\n  eprint = {2504.13128},\n  archivePrefix = {arXiv},\n  url = {https://arxiv.org/abs/2504.13128}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -766,12 +943,31 @@ task_metadata:
       max_chars: 17168
       mean_chars: 4983.0310344827585
       median_chars: 5505.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 3770
+        languages:
+          en: 90.981
+          ko: 4.191
+          el: 0.637
+          es: 0.61
+          zh: 0.584
+          ru: 0.504
   NanoChatDoctor:
     language: en
     category: natural_language
     short_description: ChatDoctor medical QA retrieval.
-    description: Retrieves healthcare responses for patient medical questions from the ChatDoctor
-      HealthCareMagic dataset.
+    description: Retrieves healthcare responses for patient medical questions from
+      the ChatDoctor HealthCareMagic dataset.
     citation_keys:
     - rteb2025
     - li2023chatdoctor
@@ -789,8 +985,8 @@ task_metadata:
       url: https://huggingface.co/blog/rteb
       is_paper: false
       source_confidence: probably_correct
-    - title: 'ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI
-        (LLaMA) Using Medical Domain Knowledge'
+    - title: 'ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model
+        Meta-AI (LLaMA) Using Medical Domain Knowledge'
       authors:
       - Yunxiang Li
       - Zihan Li
@@ -811,14 +1007,15 @@ task_metadata:
       source_confidence: probably_correct
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@misc{li2023chatdoctor,\n  title = {ChatDoctor: A Medical Chat Model Fine-Tuned\
-      \ on a Large Language Model Meta-AI (LLaMA) Using Medical Domain Knowledge},\n  author\
-      \ = {Yunxiang Li and Zihan Li and Kai Zhang and Ruilong Dan and Steve Jiang and You\
-      \ Zhang},\n  year = {2023},\n  eprint = {2303.14070},\n  archivePrefix = {arXiv},\n\
-      \  url = {https://arxiv.org/abs/2303.14070}\n}\n\n@misc{lavita2023chatdoctorhealthcaremagic,\n\
-      \  title = {ChatDoctor HealthCareMagic Medical Question-Answer Dataset},\n  author\
-      \ = {{Lavita AI}},\n  year = {2023},\n  url = {https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k}\n\
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@misc{li2023chatdoctor,\n  title\
+      \ = {ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI\
+      \ (LLaMA) Using Medical Domain Knowledge},\n  author = {Yunxiang Li and Zihan\
+      \ Li and Kai Zhang and Ruilong Dan and Steve Jiang and You Zhang},\n  year =\
+      \ {2023},\n  eprint = {2303.14070},\n  archivePrefix = {arXiv},\n  url = {https://arxiv.org/abs/2303.14070}\n\
+      }\n\n@misc{lavita2023chatdoctorhealthcaremagic,\n  title = {ChatDoctor HealthCareMagic\
+      \ Medical Question-Answer Dataset},\n  author = {{Lavita AI}},\n  year = {2023},\n\
+      \  url = {https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k}\n\
       }\n"
     query_text_stats:
       count: 200
@@ -832,12 +1029,27 @@ task_metadata:
       max_chars: 2527
       mean_chars: 605.1229936880072
       median_chars: 558.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 99.5
+          ru: 0.5
+      document:
+        sample_count: 5545
+        languages:
+          en: 100.0
   NanoCUREv1:
     language: en
     category: natural_language
     short_description: CUREv1 clinical passage retrieval.
-    description: Retrieves medical passages for clinician-oriented questions from CUREv1,
-      using the English subset in NanoRTEB.
+    description: Retrieves medical passages for clinician-oriented questions from
+      CUREv1, using the English subset in NanoRTEB.
     citation_keys:
     - rteb2025
     - sheikh2025cure
@@ -877,15 +1089,16 @@ task_metadata:
       source_confidence: probably_correct
     bibtex: "@article{rteb2025,\n  title = {Introducing RTEB: A New Standard for Retrieval\
       \ Evaluation},\n  author = {Frank Liu and Kenneth C. Enevoldsen and Roman Solomatin\
-      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url = {https://huggingface.co/blog/rteb}\n\
-      }\n\n@inproceedings{sheikh2025cure,\n  author = {Nadia Athar Sheikh and Daniel Buades\
-      \ Marcos and Anne-Laure Jousse and Akintunde Oladipo and Olivier Rousseau and Jimmy\
-      \ Lin},\n  booktitle = {Proceedings of the 31st ACM SIGKDD Conference on Knowledge\
-      \ Discovery and Data Mining V.2},\n  doi = {10.1145/3711896.3737435},\n  pages = {1417--1428},\n\
+      \ and Isaac Chung and Tom Aarsen and Zoltán Fődi},\n  year = {2025},\n  url\
+      \ = {https://huggingface.co/blog/rteb}\n}\n\n@inproceedings{sheikh2025cure,\n\
+      \  author = {Nadia Athar Sheikh and Daniel Buades Marcos and Anne-Laure Jousse\
+      \ and Akintunde Oladipo and Olivier Rousseau and Jimmy Lin},\n  booktitle =\
+      \ {Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery and\
+      \ Data Mining V.2},\n  doi = {10.1145/3711896.3737435},\n  pages = {1417--1428},\n\
       \  title = {CURE: A Dataset for Clinical Understanding & Retrieval Evaluation},\n\
       \  year = {2025}\n}\n\n@misc{clinia2025curev1,\n  title = {CUREv1 Clinical Understanding\
-      \ and Retrieval Evaluation Dataset},\n  author = {{Clinia}},\n  year = {2025},\n  url\
-      \ = {https://huggingface.co/datasets/clinia/CUREv1}\n}\n"
+      \ and Retrieval Evaluation Dataset},\n  author = {{Clinia}},\n  year = {2025},\n\
+      \  url = {https://huggingface.co/datasets/clinia/CUREv1}\n}\n"
     query_text_stats:
       count: 182
       min_chars: 21
@@ -898,3 +1111,17 @@ task_metadata:
       max_chars: 4179
       mean_chars: 603.9569
       median_chars: 511.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 182
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.93

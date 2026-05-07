@@ -9,8 +9,9 @@ metadata:
   language: multilingual
   category: natural_language
   short_description: Compact multilingual MIRACL retrieval benchmark.
-  description: NanoMIRACL is a compact multilingual benchmark derived from MIRACL. Each language
-    split evaluates monolingual retrieval of Wikipedia passages for natural-language questions.
+  description: NanoMIRACL is a compact multilingual benchmark derived from MIRACL.
+    Each language split evaluates monolingual retrieval of Wikipedia passages for
+    natural-language questions.
   citation_keys:
   - zhang2023miracl
   references:
@@ -30,425 +31,20 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.1162/tacl_a_00595
-  bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-    \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-    \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu, Qun\
-    \ and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-    \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year =\
-    \ {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-    }\n"
+  bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+    \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+    \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+    \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+    \  journal = {Transactions of the Association for Computational Linguistics},\n\
+    \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+    \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
 task_metadata:
   ar:
     language: ar
     category: natural_language
     short_description: Arabic MIRACL passage retrieval task.
-    description: The Arabic split of NanoMIRACL evaluates retrieval of Arabic Wikipedia passages
-      for Arabic questions. It keeps MIRACL's monolingual question-to-passage retrieval setting
-      in a compact Nano benchmark split.
-    citation_keys:
-    - zhang2023miracl
-    references:
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      authors:
-      - Xinyu Zhang
-      - Nandan Thakur
-      - Odunayo Ogundepo
-      - Ehsan Kamalloo
-      - David Alfonso-Hermelo
-      - Xiaoguang Li
-      - Qun Liu
-      - Mehdi Rezagholizadeh
-      - Jimmy Lin
-      year: 2023
-      url: https://aclanthology.org/2023.tacl-1.63/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 12
-      max_chars: 101
-      mean_chars: 30.14
-      median_chars: 27.0
-    document_text_stats:
-      count: 1854
-      min_chars: 61
-      max_chars: 13050
-      mean_chars: 680.4735706580367
-      median_chars: 591.5
-  bn:
-    language: bn
-    category: natural_language
-    short_description: Bengali MIRACL passage retrieval task.
-    description: The Bengali split of NanoMIRACL evaluates retrieval of Bengali Wikipedia
-      passages for Bengali questions. It keeps MIRACL's monolingual question-to-passage retrieval
-      setting in a compact Nano benchmark split.
-    citation_keys:
-    - zhang2023miracl
-    references:
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      authors:
-      - Xinyu Zhang
-      - Nandan Thakur
-      - Odunayo Ogundepo
-      - Ehsan Kamalloo
-      - David Alfonso-Hermelo
-      - Xiaoguang Li
-      - Qun Liu
-      - Mehdi Rezagholizadeh
-      - Jimmy Lin
-      year: 2023
-      url: https://aclanthology.org/2023.tacl-1.63/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 18
-      max_chars: 112
-      mean_chars: 47.225
-      median_chars: 43.5
-    document_text_stats:
-      count: 1731
-      min_chars: 66
-      max_chars: 6072
-      mean_chars: 717.8792605430388
-      median_chars: 640.0
-  de:
-    language: de
-    category: natural_language
-    short_description: German MIRACL passage retrieval task.
-    description: The German split of NanoMIRACL evaluates retrieval of German Wikipedia passages
-      for German questions. It keeps MIRACL's monolingual question-to-passage retrieval setting
-      in a compact Nano benchmark split.
-    citation_keys:
-    - zhang2023miracl
-    references:
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      authors:
-      - Xinyu Zhang
-      - Nandan Thakur
-      - Odunayo Ogundepo
-      - Ehsan Kamalloo
-      - David Alfonso-Hermelo
-      - Xiaoguang Li
-      - Qun Liu
-      - Mehdi Rezagholizadeh
-      - Jimmy Lin
-      year: 2023
-      url: https://aclanthology.org/2023.tacl-1.63/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 15
-      max_chars: 87
-      mean_chars: 45.57
-      median_chars: 43.0
-    document_text_stats:
-      count: 1748
-      min_chars: 26
-      max_chars: 3520
-      mean_chars: 629.7454233409611
-      median_chars: 553.0
-  en:
-    language: en
-    category: natural_language
-    short_description: English MIRACL passage retrieval task.
-    description: The English split of NanoMIRACL evaluates retrieval of English Wikipedia
-      passages for English questions. It keeps MIRACL's monolingual question-to-passage retrieval
-      setting in a compact Nano benchmark split.
-    citation_keys:
-    - zhang2023miracl
-    references:
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      authors:
-      - Xinyu Zhang
-      - Nandan Thakur
-      - Odunayo Ogundepo
-      - Ehsan Kamalloo
-      - David Alfonso-Hermelo
-      - Xiaoguang Li
-      - Qun Liu
-      - Mehdi Rezagholizadeh
-      - Jimmy Lin
-      year: 2023
-      url: https://aclanthology.org/2023.tacl-1.63/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 19
-      max_chars: 122
-      mean_chars: 40.1
-      median_chars: 38.0
-    document_text_stats:
-      count: 1657
-      min_chars: 37
-      max_chars: 3547
-      mean_chars: 760.2287266143633
-      median_chars: 708.0
-  es:
-    language: es
-    category: natural_language
-    short_description: Spanish MIRACL passage retrieval task.
-    description: The Spanish split of NanoMIRACL evaluates retrieval of Spanish Wikipedia
-      passages for Spanish questions. It keeps MIRACL's monolingual question-to-passage retrieval
-      setting in a compact Nano benchmark split.
-    citation_keys:
-    - zhang2023miracl
-    references:
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      authors:
-      - Xinyu Zhang
-      - Nandan Thakur
-      - Odunayo Ogundepo
-      - Ehsan Kamalloo
-      - David Alfonso-Hermelo
-      - Xiaoguang Li
-      - Qun Liu
-      - Mehdi Rezagholizadeh
-      - Jimmy Lin
-      year: 2023
-      url: https://aclanthology.org/2023.tacl-1.63/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 20
-      max_chars: 83
-      mean_chars: 48.21
-      median_chars: 47.0
-    document_text_stats:
-      count: 1312
-      min_chars: 36
-      max_chars: 6275
-      mean_chars: 612.4733231707318
-      median_chars: 544.5
-  fa:
-    language: fa
-    category: natural_language
-    short_description: Persian MIRACL passage retrieval task.
-    description: The Persian split of NanoMIRACL evaluates retrieval of Persian Wikipedia
-      passages for Persian questions. It keeps MIRACL's monolingual question-to-passage retrieval
-      setting in a compact Nano benchmark split.
-    citation_keys:
-    - zhang2023miracl
-    references:
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      authors:
-      - Xinyu Zhang
-      - Nandan Thakur
-      - Odunayo Ogundepo
-      - Ehsan Kamalloo
-      - David Alfonso-Hermelo
-      - Xiaoguang Li
-      - Qun Liu
-      - Mehdi Rezagholizadeh
-      - Jimmy Lin
-      year: 2023
-      url: https://aclanthology.org/2023.tacl-1.63/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 18
-      max_chars: 81
-      mean_chars: 39.99
-      median_chars: 38.0
-    document_text_stats:
-      count: 1858
-      min_chars: 28
-      max_chars: 4611
-      mean_chars: 489.7147470398278
-      median_chars: 424.0
-  fi:
-    language: fi
-    category: natural_language
-    short_description: Finnish MIRACL passage retrieval task.
-    description: The Finnish split of NanoMIRACL evaluates retrieval of Finnish Wikipedia
-      passages for Finnish questions. It keeps MIRACL's monolingual question-to-passage retrieval
-      setting in a compact Nano benchmark split.
-    citation_keys:
-    - zhang2023miracl
-    references:
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      authors:
-      - Xinyu Zhang
-      - Nandan Thakur
-      - Odunayo Ogundepo
-      - Ehsan Kamalloo
-      - David Alfonso-Hermelo
-      - Xiaoguang Li
-      - Qun Liu
-      - Mehdi Rezagholizadeh
-      - Jimmy Lin
-      year: 2023
-      url: https://aclanthology.org/2023.tacl-1.63/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 15
-      max_chars: 112
-      mean_chars: 37.335
-      median_chars: 33.0
-    document_text_stats:
-      count: 1828
-      min_chars: 50
-      max_chars: 2731
-      mean_chars: 653.4184901531729
-      median_chars: 599.0
-  fr:
-    language: fr
-    category: natural_language
-    short_description: French MIRACL passage retrieval task.
-    description: The French split of NanoMIRACL evaluates retrieval of French Wikipedia passages
-      for French questions. It keeps MIRACL's monolingual question-to-passage retrieval setting
-      in a compact Nano benchmark split.
-    citation_keys:
-    - zhang2023miracl
-    references:
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      authors:
-      - Xinyu Zhang
-      - Nandan Thakur
-      - Odunayo Ogundepo
-      - Ehsan Kamalloo
-      - David Alfonso-Hermelo
-      - Xiaoguang Li
-      - Qun Liu
-      - Mehdi Rezagholizadeh
-      - Jimmy Lin
-      year: 2023
-      url: https://aclanthology.org/2023.tacl-1.63/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 16
-      max_chars: 77
-      mean_chars: 43.255
-      median_chars: 43.0
-    document_text_stats:
-      count: 1777
-      min_chars: 29
-      max_chars: 2415
-      mean_chars: 556.7343837929094
-      median_chars: 488.0
-  hi:
-    language: hi
-    category: natural_language
-    short_description: Hindi MIRACL passage retrieval task.
-    description: The Hindi split of NanoMIRACL evaluates retrieval of Hindi Wikipedia passages
-      for Hindi questions. It keeps MIRACL's monolingual question-to-passage retrieval setting
-      in a compact Nano benchmark split.
-    citation_keys:
-    - zhang2023miracl
-    references:
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      authors:
-      - Xinyu Zhang
-      - Nandan Thakur
-      - Odunayo Ogundepo
-      - Ehsan Kamalloo
-      - David Alfonso-Hermelo
-      - Xiaoguang Li
-      - Qun Liu
-      - Mehdi Rezagholizadeh
-      - Jimmy Lin
-      year: 2023
-      url: https://aclanthology.org/2023.tacl-1.63/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 24
-      max_chars: 120
-      mean_chars: 54.75
-      median_chars: 52.0
-    document_text_stats:
-      count: 1748
-      min_chars: 19
-      max_chars: 5135
-      mean_chars: 580.3649885583524
-      median_chars: 494.5
-  id:
-    language: id
-    category: natural_language
-    short_description: Indonesian MIRACL passage retrieval task.
-    description: The Indonesian split of NanoMIRACL evaluates retrieval of Indonesian Wikipedia
-      passages for Indonesian questions. It keeps MIRACL's monolingual question-to-passage
+    description: The Arabic split of NanoMIRACL evaluates retrieval of Arabic Wikipedia
+      passages for Arabic questions. It keeps MIRACL's monolingual question-to-passage
       retrieval setting in a compact Nano benchmark split.
     citation_keys:
     - zhang2023miracl
@@ -469,13 +65,552 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 12
+      max_chars: 101
+      mean_chars: 30.14
+      median_chars: 27.0
+    document_text_stats:
+      count: 1854
+      min_chars: 61
+      max_chars: 13050
+      mean_chars: 680.4735706580367
+      median_chars: 591.5
+    languages:
+    - ar
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ar: 100.0
+      document:
+        sample_count: 1854
+        languages:
+          ar: 99.946
+  bn:
+    language: bn
+    category: natural_language
+    short_description: Bengali MIRACL passage retrieval task.
+    description: The Bengali split of NanoMIRACL evaluates retrieval of Bengali Wikipedia
+      passages for Bengali questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
+    citation_keys:
+    - zhang2023miracl
+    references:
+    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+      authors:
+      - Xinyu Zhang
+      - Nandan Thakur
+      - Odunayo Ogundepo
+      - Ehsan Kamalloo
+      - David Alfonso-Hermelo
+      - Xiaoguang Li
+      - Qun Liu
+      - Mehdi Rezagholizadeh
+      - Jimmy Lin
+      year: 2023
+      url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00595
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 112
+      mean_chars: 47.225
+      median_chars: 43.5
+    document_text_stats:
+      count: 1731
+      min_chars: 66
+      max_chars: 6072
+      mean_chars: 717.8792605430388
+      median_chars: 640.0
+    languages:
+    - bn
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          bn: 100.0
+      document:
+        sample_count: 1731
+        languages:
+          bn: 99.942
+  de:
+    language: de
+    category: natural_language
+    short_description: German MIRACL passage retrieval task.
+    description: The German split of NanoMIRACL evaluates retrieval of German Wikipedia
+      passages for German questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
+    citation_keys:
+    - zhang2023miracl
+    references:
+    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+      authors:
+      - Xinyu Zhang
+      - Nandan Thakur
+      - Odunayo Ogundepo
+      - Ehsan Kamalloo
+      - David Alfonso-Hermelo
+      - Xiaoguang Li
+      - Qun Liu
+      - Mehdi Rezagholizadeh
+      - Jimmy Lin
+      year: 2023
+      url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00595
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 87
+      mean_chars: 45.57
+      median_chars: 43.0
+    document_text_stats:
+      count: 1748
+      min_chars: 26
+      max_chars: 3520
+      mean_chars: 629.7454233409611
+      median_chars: 553.0
+    languages:
+    - de
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          de: 99.5
+          en: 0.5
+      document:
+        sample_count: 1748
+        languages:
+          de: 98.684
+          en: 1.259
+  en:
+    language: en
+    category: natural_language
+    short_description: English MIRACL passage retrieval task.
+    description: The English split of NanoMIRACL evaluates retrieval of English Wikipedia
+      passages for English questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
+    citation_keys:
+    - zhang2023miracl
+    references:
+    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+      authors:
+      - Xinyu Zhang
+      - Nandan Thakur
+      - Odunayo Ogundepo
+      - Ehsan Kamalloo
+      - David Alfonso-Hermelo
+      - Xiaoguang Li
+      - Qun Liu
+      - Mehdi Rezagholizadeh
+      - Jimmy Lin
+      year: 2023
+      url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00595
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 19
+      max_chars: 122
+      mean_chars: 40.1
+      median_chars: 38.0
+    document_text_stats:
+      count: 1657
+      min_chars: 37
+      max_chars: 3547
+      mean_chars: 760.2287266143633
+      median_chars: 708.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 1657
+        languages:
+          en: 99.759
+  es:
+    language: es
+    category: natural_language
+    short_description: Spanish MIRACL passage retrieval task.
+    description: The Spanish split of NanoMIRACL evaluates retrieval of Spanish Wikipedia
+      passages for Spanish questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
+    citation_keys:
+    - zhang2023miracl
+    references:
+    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+      authors:
+      - Xinyu Zhang
+      - Nandan Thakur
+      - Odunayo Ogundepo
+      - Ehsan Kamalloo
+      - David Alfonso-Hermelo
+      - Xiaoguang Li
+      - Qun Liu
+      - Mehdi Rezagholizadeh
+      - Jimmy Lin
+      year: 2023
+      url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00595
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 20
+      max_chars: 83
+      mean_chars: 48.21
+      median_chars: 47.0
+    document_text_stats:
+      count: 1312
+      min_chars: 36
+      max_chars: 6275
+      mean_chars: 612.4733231707318
+      median_chars: 544.5
+    languages:
+    - es
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          es: 99.5
+          sk: 0.5
+      document:
+        sample_count: 1312
+        languages:
+          es: 98.323
+          en: 0.762
+  fa:
+    language: fa
+    category: natural_language
+    short_description: Persian MIRACL passage retrieval task.
+    description: The Persian split of NanoMIRACL evaluates retrieval of Persian Wikipedia
+      passages for Persian questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
+    citation_keys:
+    - zhang2023miracl
+    references:
+    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+      authors:
+      - Xinyu Zhang
+      - Nandan Thakur
+      - Odunayo Ogundepo
+      - Ehsan Kamalloo
+      - David Alfonso-Hermelo
+      - Xiaoguang Li
+      - Qun Liu
+      - Mehdi Rezagholizadeh
+      - Jimmy Lin
+      year: 2023
+      url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00595
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 81
+      mean_chars: 39.99
+      median_chars: 38.0
+    document_text_stats:
+      count: 1858
+      min_chars: 28
+      max_chars: 4611
+      mean_chars: 489.7147470398278
+      median_chars: 424.0
+    languages:
+    - fa
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 1858
+        languages:
+          fa: 99.946
+  fi:
+    language: fi
+    category: natural_language
+    short_description: Finnish MIRACL passage retrieval task.
+    description: The Finnish split of NanoMIRACL evaluates retrieval of Finnish Wikipedia
+      passages for Finnish questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
+    citation_keys:
+    - zhang2023miracl
+    references:
+    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+      authors:
+      - Xinyu Zhang
+      - Nandan Thakur
+      - Odunayo Ogundepo
+      - Ehsan Kamalloo
+      - David Alfonso-Hermelo
+      - Xiaoguang Li
+      - Qun Liu
+      - Mehdi Rezagholizadeh
+      - Jimmy Lin
+      year: 2023
+      url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00595
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 112
+      mean_chars: 37.335
+      median_chars: 33.0
+    document_text_stats:
+      count: 1828
+      min_chars: 50
+      max_chars: 2731
+      mean_chars: 653.4184901531729
+      median_chars: 599.0
+    languages:
+    - fi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fi: 99.0
+          en: 0.5
+          sl: 0.5
+      document:
+        sample_count: 1828
+        languages:
+          fi: 98.742
+          en: 0.602
+  fr:
+    language: fr
+    category: natural_language
+    short_description: French MIRACL passage retrieval task.
+    description: The French split of NanoMIRACL evaluates retrieval of French Wikipedia
+      passages for French questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
+    citation_keys:
+    - zhang2023miracl
+    references:
+    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+      authors:
+      - Xinyu Zhang
+      - Nandan Thakur
+      - Odunayo Ogundepo
+      - Ehsan Kamalloo
+      - David Alfonso-Hermelo
+      - Xiaoguang Li
+      - Qun Liu
+      - Mehdi Rezagholizadeh
+      - Jimmy Lin
+      year: 2023
+      url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00595
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 77
+      mean_chars: 43.255
+      median_chars: 43.0
+    document_text_stats:
+      count: 1777
+      min_chars: 29
+      max_chars: 2415
+      mean_chars: 556.7343837929094
+      median_chars: 488.0
+    languages:
+    - fr
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fr: 99.5
+          de: 0.5
+      document:
+        sample_count: 1777
+        languages:
+          fr: 99.887
+  hi:
+    language: hi
+    category: natural_language
+    short_description: Hindi MIRACL passage retrieval task.
+    description: The Hindi split of NanoMIRACL evaluates retrieval of Hindi Wikipedia
+      passages for Hindi questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
+    citation_keys:
+    - zhang2023miracl
+    references:
+    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+      authors:
+      - Xinyu Zhang
+      - Nandan Thakur
+      - Odunayo Ogundepo
+      - Ehsan Kamalloo
+      - David Alfonso-Hermelo
+      - Xiaoguang Li
+      - Qun Liu
+      - Mehdi Rezagholizadeh
+      - Jimmy Lin
+      year: 2023
+      url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00595
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 24
+      max_chars: 120
+      mean_chars: 54.75
+      median_chars: 52.0
+    document_text_stats:
+      count: 1748
+      min_chars: 19
+      max_chars: 5135
+      mean_chars: 580.3649885583524
+      median_chars: 494.5
+    languages:
+    - hi
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          hi: 100.0
+      document:
+        sample_count: 1748
+        languages:
+          hi: 99.714
+  id:
+    language: id
+    category: natural_language
+    short_description: Indonesian MIRACL passage retrieval task.
+    description: The Indonesian split of NanoMIRACL evaluates retrieval of Indonesian
+      Wikipedia passages for Indonesian questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
+    citation_keys:
+    - zhang2023miracl
+    references:
+    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+      authors:
+      - Xinyu Zhang
+      - Nandan Thakur
+      - Odunayo Ogundepo
+      - Ehsan Kamalloo
+      - David Alfonso-Hermelo
+      - Xiaoguang Li
+      - Qun Liu
+      - Mehdi Rezagholizadeh
+      - Jimmy Lin
+      year: 2023
+      url: https://aclanthology.org/2023.tacl-1.63/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1162/tacl_a_00595
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 16
@@ -488,13 +623,37 @@ task_metadata:
       max_chars: 2789
       mean_chars: 676.1638157894737
       median_chars: 638.0
+    languages:
+    - id
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          id: 89.0
+          ms: 6.0
+          en: 2.0
+          de: 0.5
+          es: 0.5
+          et: 0.5
+          hr: 0.5
+          min: 0.5
+          nl: 0.5
+      document:
+        sample_count: 1520
+        languages:
+          id: 89.868
+          ms: 7.368
+          en: 1.842
   ja:
     language: ja
     category: natural_language
     short_description: Japanese MIRACL passage retrieval task.
-    description: The Japanese split of NanoMIRACL evaluates retrieval of Japanese Wikipedia
-      passages for Japanese questions. It keeps MIRACL's monolingual question-to-passage retrieval
-      setting in a compact Nano benchmark split.
+    description: The Japanese split of NanoMIRACL evaluates retrieval of Japanese
+      Wikipedia passages for Japanese questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
     citation_keys:
     - zhang2023miracl
     references:
@@ -514,13 +673,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 8
@@ -533,13 +692,27 @@ task_metadata:
       max_chars: 3278
       mean_chars: 297.9127843986999
       median_chars: 271.0
+    languages:
+    - ja
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 1846
+        languages:
+          ja: 100.0
   ko:
     language: ko
     category: natural_language
     short_description: Korean MIRACL passage retrieval task.
-    description: The Korean split of NanoMIRACL evaluates retrieval of Korean Wikipedia passages
-      for Korean questions. It keeps MIRACL's monolingual question-to-passage retrieval setting
-      in a compact Nano benchmark split.
+    description: The Korean split of NanoMIRACL evaluates retrieval of Korean Wikipedia
+      passages for Korean questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
     citation_keys:
     - zhang2023miracl
     references:
@@ -559,13 +732,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 5
@@ -578,13 +751,28 @@ task_metadata:
       max_chars: 4613
       mean_chars: 287.30095080611824
       median_chars: 251.0
+    languages:
+    - ko
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ko: 99.5
+          en: 0.5
+      document:
+        sample_count: 2419
+        languages:
+          ko: 99.917
   ru:
     language: ru
     category: natural_language
     short_description: Russian MIRACL passage retrieval task.
     description: The Russian split of NanoMIRACL evaluates retrieval of Russian Wikipedia
-      passages for Russian questions. It keeps MIRACL's monolingual question-to-passage retrieval
-      setting in a compact Nano benchmark split.
+      passages for Russian questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
     citation_keys:
     - zhang2023miracl
     references:
@@ -604,13 +792,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 17
@@ -623,13 +811,27 @@ task_metadata:
       max_chars: 5234
       mean_chars: 783.4273306311522
       median_chars: 707.0
+    languages:
+    - ru
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ru: 100.0
+      document:
+        sample_count: 1727
+        languages:
+          ru: 99.942
   sw:
     language: sw
     category: natural_language
     short_description: Swahili MIRACL passage retrieval task.
     description: The Swahili split of NanoMIRACL evaluates retrieval of Swahili Wikipedia
-      passages for Swahili questions. It keeps MIRACL's monolingual question-to-passage retrieval
-      setting in a compact Nano benchmark split.
+      passages for Swahili questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
     citation_keys:
     - zhang2023miracl
     references:
@@ -649,13 +851,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 14
@@ -668,13 +870,49 @@ task_metadata:
       max_chars: 4292
       mean_chars: 532.750625
       median_chars: 440.0
+    languages:
+    - sw
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          sw: 78.0
+          eo: 8.0
+          en: 2.0
+          war: 2.0
+          eu: 1.5
+          nl: 1.5
+          pl: 1.5
+          de: 1.0
+          tl: 1.0
+          es: 0.5
+          fi: 0.5
+          hr: 0.5
+          id: 0.5
+          kw: 0.5
+          sl: 0.5
+          tr: 0.5
+      document:
+        sample_count: 1600
+        languages:
+          sw: 79.438
+          en: 10.125
+          id: 3.0
+          de: 1.812
+          eo: 0.938
+          pl: 0.812
+          nl: 0.688
   te:
     language: te
     category: natural_language
     short_description: Telugu MIRACL passage retrieval task.
-    description: The Telugu split of NanoMIRACL evaluates retrieval of Telugu Wikipedia passages
-      for Telugu questions. It keeps MIRACL's monolingual question-to-passage retrieval setting
-      in a compact Nano benchmark split.
+    description: The Telugu split of NanoMIRACL evaluates retrieval of Telugu Wikipedia
+      passages for Telugu questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
     citation_keys:
     - zhang2023miracl
     references:
@@ -694,13 +932,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
     query_text_stats:
       count: 84
       min_chars: 24
@@ -713,13 +951,27 @@ task_metadata:
       max_chars: 6166
       mean_chars: 787.5437665782493
       median_chars: 562.5
+    languages:
+    - te
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 84
+        languages:
+          te: 100.0
+      document:
+        sample_count: 754
+        languages:
+          te: 100.0
   th:
     language: th
     category: natural_language
     short_description: Thai MIRACL passage retrieval task.
-    description: The Thai split of NanoMIRACL evaluates retrieval of Thai Wikipedia passages
-      for Thai questions. It keeps MIRACL's monolingual question-to-passage retrieval setting
-      in a compact Nano benchmark split.
+    description: The Thai split of NanoMIRACL evaluates retrieval of Thai Wikipedia
+      passages for Thai questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
     citation_keys:
     - zhang2023miracl
     references:
@@ -739,13 +991,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 16
@@ -758,13 +1010,27 @@ task_metadata:
       max_chars: 4857
       mean_chars: 595.210332103321
       median_chars: 511.0
+    languages:
+    - th
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          th: 100.0
+      document:
+        sample_count: 1897
+        languages:
+          th: 100.0
   yo:
     language: yo
     category: natural_language
     short_description: Yoruba MIRACL passage retrieval task.
-    description: The Yoruba split of NanoMIRACL evaluates retrieval of Yoruba Wikipedia passages
-      for Yoruba questions. It keeps MIRACL's monolingual question-to-passage retrieval setting
-      in a compact Nano benchmark split.
+    description: The Yoruba split of NanoMIRACL evaluates retrieval of Yoruba Wikipedia
+      passages for Yoruba questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
     citation_keys:
     - zhang2023miracl
     references:
@@ -784,13 +1050,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
     query_text_stats:
       count: 119
       min_chars: 25
@@ -803,13 +1069,83 @@ task_metadata:
       max_chars: 3220
       mean_chars: 397.16178067318134
       median_chars: 350.0
+    languages:
+    - yo
+    - en
+    - sw
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 119
+        languages:
+          en: 15.126
+          sw: 10.084
+          it: 8.403
+          yo: 8.403
+          es: 6.723
+          la: 5.882
+          tl: 5.882
+          kw: 4.202
+          ro: 3.361
+          fi: 2.521
+          ga: 2.521
+          hr: 2.521
+          gv: 1.681
+          ilo: 1.681
+          lmo: 1.681
+          lt: 1.681
+          nap: 1.681
+          sl: 1.681
+          tr: 1.681
+          vep: 1.681
+          vi: 1.681
+          cbk: 0.84
+          cs: 0.84
+          eo: 0.84
+          et: 0.84
+          id: 0.84
+          lv: 0.84
+          pfl: 0.84
+          pl: 0.84
+          qu: 0.84
+          war: 0.84
+          xal: 0.84
+      document:
+        sample_count: 921
+        languages:
+          yo: 28.122
+          en: 22.15
+          ga: 8.903
+          es: 4.886
+          tl: 4.777
+          vep: 2.714
+          hr: 2.606
+          sl: 2.28
+          ca: 2.172
+          de: 1.846
+          mg: 1.629
+          sw: 1.194
+          pl: 1.086
+          it: 0.977
+          cs: 0.869
+          tr: 0.869
+          fr: 0.76
+          nl: 0.76
+          ur: 0.76
+          war: 0.76
+          rm: 0.651
+          bs: 0.543
+          id: 0.543
+          sk: 0.543
   zh:
     language: zh
     category: natural_language
     short_description: Chinese MIRACL passage retrieval task.
     description: The Chinese split of NanoMIRACL evaluates retrieval of Chinese Wikipedia
-      passages for Chinese questions. It keeps MIRACL's monolingual question-to-passage retrieval
-      setting in a compact Nano benchmark split.
+      passages for Chinese questions. It keeps MIRACL's monolingual question-to-passage
+      retrieval setting in a compact Nano benchmark split.
     citation_keys:
     - zhang2023miracl
     references:
@@ -829,13 +1165,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
-    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
-      \ Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  journal = {Transactions of the Association\
-      \ for Computational Linguistics},\n  volume = {11},\n  pages = {1114--1131},\n  year\
-      \ = {2023},\n  doi = {10.1162/tacl_a_00595},\n  url = {https://doi.org/10.1162/tacl_a_00595}\n\
-      }\n"
+    bibtex: "@article{zhang2023miracl,\n  title = {{MIRACL}: A Multilingual Retrieval\
+      \ Dataset Covering 18 Diverse Languages},\n  author = {Zhang, Xinyu and Thakur,\
+      \ Nandan and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David\
+      \ and Li, Xiaoguang and Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  volume = {11},\n  pages = {1114--1131},\n  year = {2023},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  url = {https://doi.org/10.1162/tacl_a_00595}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 7
@@ -848,3 +1184,19 @@ task_metadata:
       max_chars: 1420
       mean_chars: 179.69176470588235
       median_chars: 157.0
+    languages:
+    - zh
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          zh: 99.0
+          ja: 0.5
+          wuu: 0.5
+      document:
+        sample_count: 1700
+        languages:
+          zh: 99.882

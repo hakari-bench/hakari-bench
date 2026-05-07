@@ -13,15 +13,15 @@ metadata:
   language: en
   category: natural_language
   short_description: Nano subset of ChemTEB chemical-domain retrieval tasks.
-  description: NanoChemTEB is a compact retrieval subset of ChemTEB for chemical-domain text
-    embeddings. It includes chemistry-focused question answering retrieval tasks and a ChemRxiv
-    literature retrieval task.
+  description: NanoChemTEB is a compact retrieval subset of ChemTEB for chemical-domain
+    text embeddings. It includes chemistry-focused question answering retrieval tasks
+    and a ChemRxiv literature retrieval task.
   citation_keys:
   - kasmaee2024chemteb
   - kasmaee2025chembed
   references:
-  - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance &
-      Efficiency on a Specific Domain'
+  - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models
+      Performance & Efficiency on a Specific Domain'
     authors:
     - Ali Shiraee Kasmaee
     - Mohammad Khodadad
@@ -34,7 +34,8 @@ metadata:
     url: https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html
     is_paper: true
     source_confidence: definitive_paper_link
-  - title: 'ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings'
+  - title: 'ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific
+      Text Embeddings'
     authors:
     - Ali Shiraee Kasmaee
     - Mohammad Khodadad
@@ -48,39 +49,33 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2508.01643
-  bibtex: |
-    @inproceedings{kasmaee2024chemteb,
-      title = {{ChemTEB}: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance \& Efficiency on a Specific Domain},
-      author = {Shiraee Kasmaee, Ali and Khodadad, Mohammad and Arshi Saloot, Mohammad and Sherck, Nick and Dokas, Stephen and Mahyar, Hamidreza and Samiee, Soheila},
-      booktitle = {Proceedings of The 4th NeurIPS Efficient Natural Language and Speech Processing Workshop},
-      pages = {512--531},
-      year = {2024},
-      volume = {262},
-      series = {Proceedings of Machine Learning Research},
-      publisher = {PMLR},
-      url = {https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html}
-    }
-    @article{kasmaee2025chembed,
-      title = {ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings},
-      author = {Kasmaee, Ali Shiraee and Khodadad, Mohammad and Astaraki, Mehdi and Saloot, Mohammad Arshi and Sherck, Nicholas and Mahyar, Hamidreza and Samiee, Soheila},
-      journal = {arXiv preprint arXiv:2508.01643},
-      year = {2025},
-      url = {https://arxiv.org/abs/2508.01643},
-      doi = {10.48550/arXiv.2508.01643}
-    }
+  bibtex: "@inproceedings{kasmaee2024chemteb,\n  title = {{ChemTEB}: Chemical Text\
+    \ Embedding Benchmark, an Overview of Embedding Models Performance \\& Efficiency\
+    \ on a Specific Domain},\n  author = {Shiraee Kasmaee, Ali and Khodadad, Mohammad\
+    \ and Arshi Saloot, Mohammad and Sherck, Nick and Dokas, Stephen and Mahyar, Hamidreza\
+    \ and Samiee, Soheila},\n  booktitle = {Proceedings of The 4th NeurIPS Efficient\
+    \ Natural Language and Speech Processing Workshop},\n  pages = {512--531},\n \
+    \ year = {2024},\n  volume = {262},\n  series = {Proceedings of Machine Learning\
+    \ Research},\n  publisher = {PMLR},\n  url = {https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html}\n\
+    }\n@article{kasmaee2025chembed,\n  title = {ChEmbed: Enhancing Chemical Literature\
+    \ Search Through Domain-Specific Text Embeddings},\n  author = {Kasmaee, Ali Shiraee\
+    \ and Khodadad, Mohammad and Astaraki, Mehdi and Saloot, Mohammad Arshi and Sherck,\
+    \ Nicholas and Mahyar, Hamidreza and Samiee, Soheila},\n  journal = {arXiv preprint\
+    \ arXiv:2508.01643},\n  year = {2025},\n  url = {https://arxiv.org/abs/2508.01643},\n\
+    \  doi = {10.48550/arXiv.2508.01643}\n}\n"
 task_metadata:
   NanoChemNQ:
     language: en
     category: natural_language
     short_description: Chemical-domain Natural Questions retrieval.
-    description: Chemistry-focused question answering retrieval task in ChemTEB, with queries
-      matched to relevant passages.
+    description: Chemistry-focused question answering retrieval task in ChemTEB, with
+      queries matched to relevant passages.
     citation_keys:
     - kasmaee2024chemteb
     - kwiatkowski2019natural
     references:
-    - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance
-        & Efficiency on a Specific Domain'
+    - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding
+        Models Performance & Efficiency on a Specific Domain'
       authors:
       - Ali Shiraee Kasmaee
       - Mohammad Khodadad
@@ -118,28 +113,24 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00276
-    bibtex: |
-      @inproceedings{kasmaee2024chemteb,
-        title = {{ChemTEB}: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance \& Efficiency on a Specific Domain},
-        author = {Shiraee Kasmaee, Ali and Khodadad, Mohammad and Arshi Saloot, Mohammad and Sherck, Nick and Dokas, Stephen and Mahyar, Hamidreza and Samiee, Soheila},
-        booktitle = {Proceedings of The 4th NeurIPS Efficient Natural Language and Speech Processing Workshop},
-        pages = {512--531},
-        year = {2024},
-        volume = {262},
-        series = {Proceedings of Machine Learning Research},
-        publisher = {PMLR},
-        url = {https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html}
-      }
-      @article{kwiatkowski2019natural,
-        title = {Natural Questions: A Benchmark for Question Answering Research},
-        author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and Toutanova, Kristina and Jones, Llion and Kelcey, Matthew and Chang, Ming-Wei and Dai, Andrew M. and Uszkoreit, Jakob and Le, Quoc and Petrov, Slav},
-        journal = {Transactions of the Association for Computational Linguistics},
-        volume = {7},
-        pages = {452--466},
-        year = {2019},
-        url = {https://aclanthology.org/Q19-1026/},
-        doi = {10.1162/tacl_a_00276}
-      }
+    bibtex: "@inproceedings{kasmaee2024chemteb,\n  title = {{ChemTEB}: Chemical Text\
+      \ Embedding Benchmark, an Overview of Embedding Models Performance \\& Efficiency\
+      \ on a Specific Domain},\n  author = {Shiraee Kasmaee, Ali and Khodadad, Mohammad\
+      \ and Arshi Saloot, Mohammad and Sherck, Nick and Dokas, Stephen and Mahyar,\
+      \ Hamidreza and Samiee, Soheila},\n  booktitle = {Proceedings of The 4th NeurIPS\
+      \ Efficient Natural Language and Speech Processing Workshop},\n  pages = {512--531},\n\
+      \  year = {2024},\n  volume = {262},\n  series = {Proceedings of Machine Learning\
+      \ Research},\n  publisher = {PMLR},\n  url = {https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html}\n\
+      }\n@article{kwiatkowski2019natural,\n  title = {Natural Questions: A Benchmark\
+      \ for Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki,\
+      \ Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and\
+      \ Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob\
+      \ and Lee, Kenton and Toutanova, Kristina and Jones, Llion and Kelcey, Matthew\
+      \ and Chang, Ming-Wei and Dai, Andrew M. and Uszkoreit, Jakob and Le, Quoc and\
+      \ Petrov, Slav},\n  journal = {Transactions of the Association for Computational\
+      \ Linguistics},\n  volume = {7},\n  pages = {452--466},\n  year = {2019},\n\
+      \  url = {https://aclanthology.org/Q19-1026/},\n  doi = {10.1162/tacl_a_00276}\n\
+      }\n"
     query_text_stats:
       count: 27
       min_chars: 33
@@ -152,18 +143,32 @@ task_metadata:
       max_chars: 2801
       mean_chars: 481.2438
       median_chars: 411.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 27
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.72
   NanoChemHotpotQA:
     language: en
     category: natural_language
     short_description: Chemical-domain multi-hop QA retrieval.
-    description: Chemistry-focused multi-hop question answering retrieval task in ChemTEB, with
-      queries matched to relevant evidence passages.
+    description: Chemistry-focused multi-hop question answering retrieval task in
+      ChemTEB, with queries matched to relevant evidence passages.
     citation_keys:
     - kasmaee2024chemteb
     - yang2018hotpotqa
     references:
-    - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance
-        & Efficiency on a Specific Domain'
+    - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding
+        Models Performance & Efficiency on a Specific Domain'
       authors:
       - Ali Shiraee Kasmaee
       - Mohammad Khodadad
@@ -190,29 +195,22 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/D18-1259
-    bibtex: |
-      @inproceedings{kasmaee2024chemteb,
-        title = {{ChemTEB}: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance \& Efficiency on a Specific Domain},
-        author = {Shiraee Kasmaee, Ali and Khodadad, Mohammad and Arshi Saloot, Mohammad and Sherck, Nick and Dokas, Stephen and Mahyar, Hamidreza and Samiee, Soheila},
-        booktitle = {Proceedings of The 4th NeurIPS Efficient Natural Language and Speech Processing Workshop},
-        pages = {512--531},
-        year = {2024},
-        volume = {262},
-        series = {Proceedings of Machine Learning Research},
-        publisher = {PMLR},
-        url = {https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html}
-      }
-      @inproceedings{yang2018hotpotqa,
-        title = {{HotpotQA}: A Dataset for Diverse, Explainable Multi-hop Question Answering},
-        author = {Yang, Zhilin and Qi, Peng and Zhang, Saizheng and Bengio, Yoshua and Cohen, William and Salakhutdinov, Ruslan and Manning, Christopher D.},
-        booktitle = {Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing},
-        pages = {2369--2380},
-        year = {2018},
-        address = {Brussels, Belgium},
-        publisher = {Association for Computational Linguistics},
-        url = {https://aclanthology.org/D18-1259/},
-        doi = {10.18653/v1/D18-1259}
-      }
+    bibtex: "@inproceedings{kasmaee2024chemteb,\n  title = {{ChemTEB}: Chemical Text\
+      \ Embedding Benchmark, an Overview of Embedding Models Performance \\& Efficiency\
+      \ on a Specific Domain},\n  author = {Shiraee Kasmaee, Ali and Khodadad, Mohammad\
+      \ and Arshi Saloot, Mohammad and Sherck, Nick and Dokas, Stephen and Mahyar,\
+      \ Hamidreza and Samiee, Soheila},\n  booktitle = {Proceedings of The 4th NeurIPS\
+      \ Efficient Natural Language and Speech Processing Workshop},\n  pages = {512--531},\n\
+      \  year = {2024},\n  volume = {262},\n  series = {Proceedings of Machine Learning\
+      \ Research},\n  publisher = {PMLR},\n  url = {https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html}\n\
+      }\n@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
+      \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi,\
+      \ Peng and Zhang, Saizheng and Bengio, Yoshua and Cohen, William and Salakhutdinov,\
+      \ Ruslan and Manning, Christopher D.},\n  booktitle = {Proceedings of the 2018\
+      \ Conference on Empirical Methods in Natural Language Processing},\n  pages\
+      \ = {2369--2380},\n  year = {2018},\n  address = {Brussels, Belgium},\n  publisher\
+      \ = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/D18-1259/},\n\
+      \  doi = {10.18653/v1/D18-1259}\n}\n"
     query_text_stats:
       count: 18
       min_chars: 46
@@ -225,16 +223,31 @@ task_metadata:
       max_chars: 2661
       mean_chars: 402.3997
       median_chars: 349.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 18
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 98.98
   NanoChemRxiv:
     language: en
     category: natural_language
     short_description: ChemRxiv literature retrieval.
-    description: Retrieval over ChemRxiv papers where LLM-synthesized queries are matched to
-      specific paper paragraphs.
+    description: Retrieval over ChemRxiv papers where LLM-synthesized queries are
+      matched to specific paper paragraphs.
     citation_keys:
     - kasmaee2025chembed
     references:
-    - title: 'ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings'
+    - title: 'ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific
+        Text Embeddings'
       authors:
       - Ali Shiraee Kasmaee
       - Mohammad Khodadad
@@ -248,15 +261,12 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2508.01643
-    bibtex: |
-      @article{kasmaee2025chembed,
-        title = {ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings},
-        author = {Kasmaee, Ali Shiraee and Khodadad, Mohammad and Astaraki, Mehdi and Saloot, Mohammad Arshi and Sherck, Nicholas and Mahyar, Hamidreza and Samiee, Soheila},
-        journal = {arXiv preprint arXiv:2508.01643},
-        year = {2025},
-        url = {https://arxiv.org/abs/2508.01643},
-        doi = {10.48550/arXiv.2508.01643}
-      }
+    bibtex: "@article{kasmaee2025chembed,\n  title = {ChEmbed: Enhancing Chemical\
+      \ Literature Search Through Domain-Specific Text Embeddings},\n  author = {Kasmaee,\
+      \ Ali Shiraee and Khodadad, Mohammad and Astaraki, Mehdi and Saloot, Mohammad\
+      \ Arshi and Sherck, Nicholas and Mahyar, Hamidreza and Samiee, Soheila},\n \
+      \ journal = {arXiv preprint arXiv:2508.01643},\n  year = {2025},\n  url = {https://arxiv.org/abs/2508.01643},\n\
+      \  doi = {10.48550/arXiv.2508.01643}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 68
@@ -269,3 +279,17 @@ task_metadata:
       max_chars: 13746
       mean_chars: 1079.0728
       median_chars: 852.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.95

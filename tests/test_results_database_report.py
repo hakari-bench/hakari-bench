@@ -32,9 +32,9 @@ def test_nanocoir_is_a_ranked_benchmark() -> None:
     assert report.benchmark_name("hakari-bench/NanoCoIR", "NanoCoIR") == "NanoCoIR"
 
 
-def test_nanocmteb_is_a_ranked_benchmark() -> None:
-    assert "NanoCMTEB" in report.TARGET_BENCHMARKS
-    assert report.benchmark_name("hakari-bench/NanoCMTEB", "NanoCMTEB") == "NanoCMTEB"
+def test_nanomteb_chinese_is_a_ranked_benchmark() -> None:
+    assert "NanoMTEB-Chinese" in report.TARGET_BENCHMARKS
+    assert report.benchmark_name("hakari-bench/NanoMTEB-Chinese", "NanoMTEB-Chinese") == "NanoMTEB-Chinese"
 
 
 def test_new_nano_benchmarks_are_ranked_benchmarks() -> None:

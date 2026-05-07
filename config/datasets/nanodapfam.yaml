@@ -28,12 +28,13 @@ metadata:
   language: en
   category: natural_language
   short_description: Nano subset of patent-family retrieval tasks.
-  description: NanoDAPFAM evaluates patent-family retrieval with query and corpus variants based on titles,
-    abstracts, claims, and full text.
-  citation_keys: &dapfam_citation_keys
+  description: NanoDAPFAM evaluates patent-family retrieval with query and corpus
+    variants based on titles, abstracts, claims, and full text.
+  citation_keys: &id001
   - ayaou2026dapfam
-  references: &dapfam_references
-  - title: 'DAPFAM: A Domain-Aware Family-level Dataset to benchmark cross domain patent retrieval'
+  references: &id002
+  - title: 'DAPFAM: A Domain-Aware Family-level Dataset to benchmark cross domain
+      patent retrieval'
     authors:
     - Iliass Ayaou
     - Denis Cavallucci
@@ -43,159 +44,507 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.1016/j.array.2026.100720
-  bibtex: &dapfam_bibtex |
-    @article{ayaou2026dapfam,
-      title = {{DAPFAM}: A Domain-Aware Family-level Dataset to benchmark cross domain patent retrieval},
-      author = {Ayaou, Iliass and Cavallucci, Denis and Chibane, Hicham},
-      journal = {Array},
-      volume = {29},
-      pages = {100720},
-      year = {2026},
-      url = {https://doi.org/10.1016/j.array.2026.100720},
-      doi = {10.1016/j.array.2026.100720}
-    }
+  bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+    \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+    \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+    \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+    \  doi = {10.1016/j.array.2026.100720}\n}\n"
 task_metadata:
   NanoDAPFAMAllTitlAbsClmToFullText:
     language: en
     category: natural_language
     short_description: DAPFAM all-domain TAC queries to full-text targets.
-    description: A compact DAPFAM task retrieving citation-linked patent families across all domains from title, abstract, and claims queries to full-text targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM task retrieving citation-linked patent families
+      across all domains from title, abstract, and claims queries to full-text targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMAllTitlAbsClmToTitlAbs:
     language: en
     category: natural_language
     short_description: DAPFAM all-domain TAC queries to title-abstract targets.
-    description: A compact DAPFAM task retrieving citation-linked patent families across all domains from title, abstract, and claims queries to title and abstract targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM task retrieving citation-linked patent families
+      across all domains from title, abstract, and claims queries to title and abstract
+      targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMAllTitlAbsClmToTitlAbsClm:
     language: en
     category: natural_language
     short_description: DAPFAM all-domain TAC queries to TAC targets.
-    description: A compact DAPFAM task retrieving citation-linked patent families across all domains when both queries and targets use title, abstract, and claims.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM task retrieving citation-linked patent families
+      across all domains when both queries and targets use title, abstract, and claims.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMAllTitlAbsToFullText:
     language: en
     category: natural_language
     short_description: DAPFAM all-domain title-abstract queries to full text.
-    description: A compact DAPFAM task retrieving citation-linked patent families across all domains from title and abstract queries to full-text targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM task retrieving citation-linked patent families
+      across all domains from title and abstract queries to full-text targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMAllTitlAbsToTitlAbs:
     language: en
     category: natural_language
     short_description: DAPFAM all-domain title-abstract retrieval.
-    description: A compact DAPFAM task retrieving citation-linked patent families across all domains when both queries and targets use titles and abstracts.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM task retrieving citation-linked patent families
+      across all domains when both queries and targets use titles and abstracts.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMAllTitlAbsToTitlAbsClm:
     language: en
     category: natural_language
     short_description: DAPFAM all-domain title-abstract queries to TAC targets.
-    description: A compact DAPFAM task retrieving citation-linked patent families across all domains from title and abstract queries to title, abstract, and claims targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM task retrieving citation-linked patent families
+      across all domains from title and abstract queries to title, abstract, and claims
+      targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMInTitlAbsClmToFullText:
     language: en
     category: natural_language
     short_description: DAPFAM in-domain TAC queries to full-text targets.
-    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code from title, abstract, and claims queries to full-text targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent
+      families sharing an IPC3 code from title, abstract, and claims queries to full-text
+      targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMInTitlAbsClmToTitlAbs:
     language: en
     category: natural_language
     short_description: DAPFAM in-domain TAC queries to title-abstract targets.
-    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code from title, abstract, and claims queries to title and abstract targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent
+      families sharing an IPC3 code from title, abstract, and claims queries to title
+      and abstract targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMInTitlAbsClmToTitlAbsClm:
     language: en
     category: natural_language
     short_description: DAPFAM in-domain TAC queries to TAC targets.
-    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code when both queries and targets use title, abstract, and claims.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent
+      families sharing an IPC3 code when both queries and targets use title, abstract,
+      and claims.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMInTitlAbsToFullText:
     language: en
     category: natural_language
     short_description: DAPFAM in-domain title-abstract queries to full text.
-    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code from title and abstract queries to full-text targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent
+      families sharing an IPC3 code from title and abstract queries to full-text targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMInTitlAbsToTitlAbs:
     language: en
     category: natural_language
     short_description: DAPFAM in-domain title-abstract retrieval.
-    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code when both queries and targets use titles and abstracts.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent
+      families sharing an IPC3 code when both queries and targets use titles and abstracts.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMInTitlAbsToTitlAbsClm:
     language: en
     category: natural_language
     short_description: DAPFAM in-domain title-abstract queries to TAC targets.
-    description: A compact DAPFAM in-domain task retrieving citation-linked patent families sharing an IPC3 code from title and abstract queries to title, abstract, and claims targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM in-domain task retrieving citation-linked patent
+      families sharing an IPC3 code from title and abstract queries to title, abstract,
+      and claims targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMOutTitlAbsClmToFullText:
     language: en
     category: natural_language
     short_description: DAPFAM out-domain TAC queries to full-text targets.
-    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code from title, abstract, and claims queries to full-text targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent
+      families with no shared IPC3 code from title, abstract, and claims queries to
+      full-text targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMOutTitlAbsClmToTitlAbs:
     language: en
     category: natural_language
     short_description: DAPFAM out-domain TAC queries to title-abstract targets.
-    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code from title, abstract, and claims queries to title and abstract targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent
+      families with no shared IPC3 code from title, abstract, and claims queries to
+      title and abstract targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMOutTitlAbsClmToTitlAbsClm:
     language: en
     category: natural_language
     short_description: DAPFAM out-domain TAC queries to TAC targets.
-    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code when both queries and targets use title, abstract, and claims.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent
+      families with no shared IPC3 code when both queries and targets use title, abstract,
+      and claims.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMOutTitlAbsToFullText:
     language: en
     category: natural_language
     short_description: DAPFAM out-domain title-abstract queries to full text.
-    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code from title and abstract queries to full-text targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent
+      families with no shared IPC3 code from title and abstract queries to full-text
+      targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMOutTitlAbsToTitlAbs:
     language: en
     category: natural_language
     short_description: DAPFAM out-domain title-abstract retrieval.
-    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code when both queries and targets use titles and abstracts.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent
+      families with no shared IPC3 code when both queries and targets use titles and
+      abstracts.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97
   NanoDAPFAMOutTitlAbsToTitlAbsClm:
     language: en
     category: natural_language
     short_description: DAPFAM out-domain title-abstract queries to TAC targets.
-    description: A compact DAPFAM out-domain task retrieving citation-linked patent families with no shared IPC3 code from title and abstract queries to title, abstract, and claims targets.
-    citation_keys: *dapfam_citation_keys
-    references: *dapfam_references
-    bibtex: *dapfam_bibtex
+    description: A compact DAPFAM out-domain task retrieving citation-linked patent
+      families with no shared IPC3 code from title and abstract queries to title,
+      abstract, and claims targets.
+    citation_keys: *id001
+    references: *id002
+    bibtex: "@article{ayaou2026dapfam,\n  title = {{DAPFAM}: A Domain-Aware Family-level\
+      \ Dataset to benchmark cross domain patent retrieval},\n  author = {Ayaou, Iliass\
+      \ and Cavallucci, Denis and Chibane, Hicham},\n  journal = {Array},\n  volume\
+      \ = {29},\n  pages = {100720},\n  year = {2026},\n  url = {https://doi.org/10.1016/j.array.2026.100720},\n\
+      \  doi = {10.1016/j.array.2026.100720}\n}\n"
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.97

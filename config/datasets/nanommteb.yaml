@@ -29,9 +29,9 @@ metadata:
   category: natural_language
   short_description: Multilingual Nano retrieval benchmark based on MMTEB tasks.
   description: NanoMMTEB is a compact retrieval benchmark drawn from MMTEB task families.
-    It mixes multilingual QA retrieval, English and Danish retrieval tasks, legal and scientific
-    retrieval, instruction-following retrieval, reasoning-as-retrieval, long-context retrieval,
-    and one code-oriented Stack Overflow QA task.
+    It mixes multilingual QA retrieval, English and Danish retrieval tasks, legal
+    and scientific retrieval, instruction-following retrieval, reasoning-as-retrieval,
+    long-context retrieval, and one code-oriented Stack Overflow QA task.
   citation_keys:
   - enevoldsen2025mmteb
   references:
@@ -46,19 +46,20 @@ metadata:
     url: https://proceedings.iclr.cc/paper_files/paper/2025/hash/fc0e3f908a2116ba529ad0a1530a3675-Abstract-Conference.html
     is_paper: true
     source_confidence: definitive_paper_link
-  bibtex: "@inproceedings{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual Text Embedding\
-    \ Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac and Kerboua, Imene and\
-    \ Kardos, Marton and Mathur, Ashwin},\n  booktitle = {International Conference on Learning Representations},\n\
-    \  year = {2025},\n  url = {https://proceedings.iclr.cc/paper_files/paper/2025/hash/fc0e3f908a2116ba529ad0a1530a3675-Abstract-Conference.html}\n\
+  bibtex: "@inproceedings{enevoldsen2025mmteb,\n  title = {MMTEB: Massive Multilingual\
+    \ Text Embedding Benchmark},\n  author = {Enevoldsen, Kenneth and Chung, Isaac\
+    \ and Kerboua, Imene and Kardos, Marton and Mathur, Ashwin},\n  booktitle = {International\
+    \ Conference on Learning Representations},\n  year = {2025},\n  url = {https://proceedings.iclr.cc/paper_files/paper/2025/hash/fc0e3f908a2116ba529ad0a1530a3675-Abstract-Conference.html}\n\
     }\n"
 task_metadata:
   NanoStackOverflowQA:
     language: en
     category: code
-    short_description: Stack Overflow question-answer retrieval with code-bearing responses.
-    description: NanoStackOverflowQA evaluates code information retrieval from Stack Overflow
-      QA pairs. Queries are natural-language programming questions and documents are answers
-      that may mix prose with code snippets.
+    short_description: Stack Overflow question-answer retrieval with code-bearing
+      responses.
+    description: NanoStackOverflowQA evaluates code information retrieval from Stack
+      Overflow QA pairs. Queries are natural-language programming questions and documents
+      are answers that may mix prose with code snippets.
     citation_keys:
     - coir
     references:
@@ -77,11 +78,12 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.acl-long.1072
-    bibtex: "@inproceedings{coir,\n  author = {Li, Xiangyang and Dong, Kuicai and Lee, Yi\
-      \ Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng and Tang, Ruiming},\n\
-      \  booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational\
-      \ Linguistics (Volume 1: Long Papers)},\n  pages = {22074--22091},\n  title = {{CoIR}:\
-      \ A Comprehensive Benchmark for Code Information Retrieval Models},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
+    bibtex: "@inproceedings{coir,\n  author = {Li, Xiangyang and Dong, Kuicai and\
+      \ Lee, Yi Quan and Xia, Wei and Zhang, Hao and Dai, Xinyi and Wang, Yasheng\
+      \ and Tang, Ruiming},\n  booktitle = {Proceedings of the 63rd Annual Meeting\
+      \ of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  pages = {22074--22091},\n  title = {{CoIR}: A Comprehensive Benchmark for\
+      \ Code Information Retrieval Models},\n  url = {https://aclanthology.org/2025.acl-long.1072/},\n\
       \  doi = {10.18653/v1/2025.acl-long.1072},\n  year = {2025}\n}\n"
     query_text_stats:
       count: 200
@@ -95,13 +97,27 @@ task_metadata:
       max_chars: 46027
       mean_chars: 1218.0589
       median_chars: 730.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.3
   NanoTwitterHjerne:
     language: da
     category: natural_language
     short_description: Danish Twitter question-answer retrieval.
-    description: 'NanoTwitterHjerne evaluates retrieval of answers to Danish questions posted
-      with the #Twitterhjerne hashtag. The compact task ranks candidate answer tweets for
-      each Danish question.'
+    description: 'NanoTwitterHjerne evaluates retrieval of answers to Danish questions
+      posted with the #Twitterhjerne hashtag. The compact task ranks candidate answer
+      tweets for each Danish question.'
     citation_keys:
     - twitterhjerne
     references:
@@ -114,12 +130,12 @@ task_metadata:
       url: https://aclanthology.org/2025.nodalida-1.78/
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{twitterhjerne,\n  author = {Vejlgaard Holm, Soren and Hansen,\
-      \ Lars Kai and Nielsen, Martin Carsten},\n  booktitle = {Proceedings of the Joint 25th\
-      \ Nordic Conference on Computational Linguistics and 11th Baltic Conference on Human\
-      \ Language Technologies},\n  pages = {785--800},\n  title = {Danoliteracy of Generative\
-      \ Large Language Models},\n  year = {2025},\n  url = {https://aclanthology.org/2025.nodalida-1.78/}\n\
-      }\n"
+    bibtex: "@inproceedings{twitterhjerne,\n  author = {Vejlgaard Holm, Soren and\
+      \ Hansen, Lars Kai and Nielsen, Martin Carsten},\n  booktitle = {Proceedings\
+      \ of the Joint 25th Nordic Conference on Computational Linguistics and 11th\
+      \ Baltic Conference on Human Language Technologies},\n  pages = {785--800},\n\
+      \  title = {Danoliteracy of Generative Large Language Models},\n  year = {2025},\n\
+      \  url = {https://aclanthology.org/2025.nodalida-1.78/}\n}\n"
     query_text_stats:
       count: 77
       min_chars: 48
@@ -132,16 +148,36 @@ task_metadata:
       max_chars: 595
       mean_chars: 128.7709923664122
       median_chars: 119.0
+    languages:
+    - da
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 77
+        languages:
+          da: 97.403
+          'no': 2.597
+      document:
+        sample_count: 262
+        languages:
+          da: 88.931
+          'no': 5.725
+          en: 3.817
+          de: 0.763
   NanoAILAStatutes:
     language: en
     category: natural_language
     short_description: Legal statute retrieval from AILA.
-    description: NanoAILAStatutes evaluates legal retrieval where long fact-pattern queries
-      must retrieve the relevant statutory provisions from the AILA statute retrieval task.
+    description: NanoAILAStatutes evaluates legal retrieval where long fact-pattern
+      queries must retrieve the relevant statutory provisions from the AILA statute
+      retrieval task.
     citation_keys:
     - aila
     references:
-    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance'
+    - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal
+        Assistance'
       authors:
       - Paheli Bhattacharya
       - Kripabandhu Ghosh
@@ -154,15 +190,11 @@ task_metadata:
       url: https://ceur-ws.org/Vol-2517/T1-1.pdf
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{aila,
-  title = {Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance},
-  author = {Paheli Bhattacharya and Kripabandhu Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya and Prasenjit Majumder},
-  booktitle = {CEUR Workshop Proceedings},
-  volume = {2517},
-  year = {2019},
-  url = {https://ceur-ws.org/Vol-2517/T1-1.pdf}
-}
-"
+    bibtex: '@inproceedings{aila, title = {Overview of the FIRE 2019 AILA Track: Artificial
+      Intelligence for Legal Assistance}, author = {Paheli Bhattacharya and Kripabandhu
+      Ghosh and Saptarshi Ghosh and Arindam Pal and Parth Mehta and Arnab Bhattacharya
+      and Prasenjit Majumder}, booktitle = {CEUR Workshop Proceedings}, volume = {2517},
+      year = {2019}, url = {https://ceur-ws.org/Vol-2517/T1-1.pdf} } '
     query_text_stats:
       count: 50
       min_chars: 1174
@@ -175,12 +207,27 @@ task_metadata:
       max_chars: 26037
       mean_chars: 1972.6341463414635
       median_chars: 898.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 100.0
+      document:
+        sample_count: 82
+        languages:
+          en: 100.0
   NanoArguAna:
     language: en
     category: natural_language
     short_description: Counterargument retrieval from ArguAna.
-    description: NanoArguAna evaluates argument retrieval by asking models to retrieve the
-      best counterargument for a given claim without relying on explicit topic labels.
+    description: NanoArguAna evaluates argument retrieval by asking models to retrieve
+      the best counterargument for a given claim without relying on explicit topic
+      labels.
     citation_keys:
     - arguana
     references:
@@ -194,10 +241,10 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/P18-1023
-    bibtex: "@inproceedings{arguana,\n  author = {Wachsmuth, Henning and Syed,\
-      \ Shahbaz and Stein, Benno},\n  booktitle = {ACL},\n  title = {Retrieval of the Best\
-      \ Counterargument without Prior Topic Knowledge},\n  year = {2018},\n  url = {https://aclanthology.org/P18-1023/},\n\
-      \  doi = {10.18653/v1/P18-1023}\n}\n"
+    bibtex: "@inproceedings{arguana,\n  author = {Wachsmuth, Henning and Syed, Shahbaz\
+      \ and Stein, Benno},\n  booktitle = {ACL},\n  title = {Retrieval of the Best\
+      \ Counterargument without Prior Topic Knowledge},\n  year = {2018},\n  url =\
+      \ {https://aclanthology.org/P18-1023/},\n  doi = {10.18653/v1/P18-1023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 358
@@ -210,13 +257,27 @@ task_metadata:
       max_chars: 6673
       mean_chars: 1029.2971249710179
       median_chars: 927.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 8626
+        languages:
+          en: 100.0
   NanoHagrid:
     language: en
     category: natural_language
     short_description: Attribution passage retrieval from HAGRID.
-    description: NanoHagrid evaluates information-seeking retrieval from HAGRID, where user
-      queries are matched to manually labeled passages suitable for attributable generated
-      answers.
+    description: NanoHagrid evaluates information-seeking retrieval from HAGRID, where
+      user queries are matched to manually labeled passages suitable for attributable
+      generated answers.
     citation_keys:
     - hagrid
     references:
@@ -233,8 +294,8 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2307.16883
-    bibtex: "@article{hagrid,\n  author = {Kamalloo, Ehsan and Jafari, Aref and\
-      \ Zhang, Xinyu and Thakur, Nandan and Lin, Jimmy},\n  journal = {arXiv:2307.16883},\n\
+    bibtex: "@article{hagrid,\n  author = {Kamalloo, Ehsan and Jafari, Aref and Zhang,\
+      \ Xinyu and Thakur, Nandan and Lin, Jimmy},\n  journal = {arXiv:2307.16883},\n\
       \  title = {{HAGRID}: A Human-LLM Collaborative Dataset for Generative Information-Seeking\
       \ with Attribution},\n  year = {2023},\n  url = {https://arxiv.org/abs/2307.16883},\n\
       \  doi = {10.48550/arXiv.2307.16883}\n}\n"
@@ -250,13 +311,27 @@ task_metadata:
       max_chars: 1205
       mean_chars: 229.56795131845843
       median_chars: 133.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 493
+        languages:
+          en: 100.0
   NanoLegalBenchCorporateLobbying:
     language: en
     category: natural_language
     short_description: LegalBench corporate lobbying bill retrieval.
-    description: NanoLegalBenchCorporateLobbying evaluates retrieval over LegalBench corporate
-      lobbying data, matching bill titles or summaries to related legislative text for legal
-      reasoning evaluation.
+    description: NanoLegalBenchCorporateLobbying evaluates retrieval over LegalBench
+      corporate lobbying data, matching bill titles or summaries to related legislative
+      text for legal reasoning evaluation.
     citation_keys:
     - legalbench
     references:
@@ -289,13 +364,27 @@ task_metadata:
       max_chars: 11450
       mean_chars: 1157.2131661442006
       median_chars: 1033.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 319
+        languages:
+          en: 100.0
   NanoLEMBPasskey:
     language: en
     category: natural_language
     short_description: Long-context passkey retrieval from LongEmbed.
-    description: NanoLEMBPasskey evaluates long-context retrieval from the LongEmbed passkey
-      subset. Queries ask for embedded passkeys and documents can be very long, stressing
-      long-context embedding behavior.
+    description: NanoLEMBPasskey evaluates long-context retrieval from the LongEmbed
+      passkey subset. Queries ask for embedded passkeys and documents can be very
+      long, stressing long-context embedding behavior.
     citation_keys:
     - longembed
     references:
@@ -313,10 +402,10 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2024.emnlp-main.47
-    bibtex: "@inproceedings{longembed,\n  author = {Zhu, Dawei and Wang, Liang and Yang,\
-      \ Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n  booktitle =\
-      \ {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},\n\
-      \  title = {LongEmbed: Extending Embedding Models for\
+    bibtex: "@inproceedings{longembed,\n  author = {Zhu, Dawei and Wang, Liang and\
+      \ Yang, Nan and Song, Yifan and Wu, Wenhao and Wei, Furu and Li, Sujian},\n\
+      \  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural\
+      \ Language Processing},\n  title = {LongEmbed: Extending Embedding Models for\
       \ Long Context Retrieval},\n  url = {https://aclanthology.org/2024.emnlp-main.47/},\n\
       \  doi = {10.18653/v1/2024.emnlp-main.47},\n  year = {2024}\n}\n"
     query_text_stats:
@@ -331,17 +420,32 @@ task_metadata:
       max_chars: 116395
       mean_chars: 28956.68
       median_chars: 10883.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 100
+        languages:
+          en: 100.0
+      document:
+        sample_count: 800
+        languages:
+          en: 100.0
   NanoSCIDOCS:
     language: en
     category: natural_language
     short_description: Scientific citation-style retrieval from SciDocs.
-    description: NanoSCIDOCS evaluates scientific document retrieval from SciDocs. Given a
-      scientific paper title, models rank paper abstracts that are cited or otherwise relevant
-      in the document-level benchmark.
+    description: NanoSCIDOCS evaluates scientific document retrieval from SciDocs.
+      Given a scientific paper title, models rank paper abstracts that are cited or
+      otherwise relevant in the document-level benchmark.
     citation_keys:
     - specter
     references:
-    - title: 'SPECTER: Document-level Representation Learning using Citation-informed Transformers'
+    - title: 'SPECTER: Document-level Representation Learning using Citation-informed
+        Transformers'
       authors:
       - Arman Cohan
       - Sergey Feldman
@@ -354,10 +458,10 @@ task_metadata:
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2020.acl-main.207
     bibtex: "@inproceedings{specter,\n  author = {Cohan, Arman and Feldman, Sergey\
-      \ and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {ACL},\n  title\
-      \ = {SPECTER: Document-level Representation Learning using Citation-informed Transformers},\n\
-      \  year = {2020},\n  url = {https://aclanthology.org/2020.acl-main.207/},\n  doi =\
-      \ {10.18653/v1/2020.acl-main.207}\n}\n"
+      \ and Beltagy, Iz and Downey, Doug and Weld, Daniel S.},\n  booktitle = {ACL},\n\
+      \  title = {SPECTER: Document-level Representation Learning using Citation-informed\
+      \ Transformers},\n  year = {2020},\n  url = {https://aclanthology.org/2020.acl-main.207/},\n\
+      \  doi = {10.18653/v1/2020.acl-main.207}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 30
@@ -370,13 +474,28 @@ task_metadata:
       max_chars: 10169
       mean_chars: 1201.6931
       median_chars: 1101.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 99.5
+          fr: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.94
   NanoSpartQA:
     language: en
     category: natural_language
     short_description: Spatial reasoning as answer retrieval.
-    description: NanoSpartQA converts SpartQA spatial reasoning questions into retrieval queries.
-      Models must retrieve the correct short answer text, so success depends on reasoning
-      over the query rather than topical passage matching alone.
+    description: NanoSpartQA converts SpartQA spatial reasoning questions into retrieval
+      queries. Models must retrieve the correct short answer text, so success depends
+      on reasoning over the query rather than topical passage matching alone.
     citation_keys:
     - spartqa
     - rarb
@@ -402,15 +521,14 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
     bibtex: "@inproceedings{spartqa,\n  author = {Mirzaee, Roshanak and Faghihi, Hossein\
-      \ Rajaby and Ning, Qiang and Kordjamshidi, Parisa},\n  booktitle = {Proceedings of\
-      \ the 2021 Conference of the North American Chapter of the Association for Computational\
-      \ Linguistics: Human Language Technologies},\n\
-      \  title = {SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning},\n\
-      \  year = {2021},\n  url = {https://aclanthology.org/2021.naacl-main.364/},\n  doi\
-      \ = {10.18653/v1/2021.naacl-main.364}\n\
-      }\n@article{rarb,\n  author = {Xiao, Chenghao and Hudson, G.\
-      \ Thomas and Moubayed, Noura Al},\n  journal = {arXiv preprint arXiv:2404.06347},\n\
-      \  title = {RAR-b: Reasoning as Retrieval Benchmark},\n  year = {2024}\n}\n"
+      \ Rajaby and Ning, Qiang and Kordjamshidi, Parisa},\n  booktitle = {Proceedings\
+      \ of the 2021 Conference of the North American Chapter of the Association for\
+      \ Computational Linguistics: Human Language Technologies},\n  title = {SpartQA:\
+      \ A Textual Question Answering Benchmark for Spatial Reasoning},\n  year = {2021},\n\
+      \  url = {https://aclanthology.org/2021.naacl-main.364/},\n  doi = {10.18653/v1/2021.naacl-main.364}\n\
+      }\n@article{rarb,\n  author = {Xiao, Chenghao and Hudson, G. Thomas and Moubayed,\
+      \ Noura Al},\n  journal = {arXiv preprint arXiv:2404.06347},\n  title = {RAR-b:\
+      \ Reasoning as Retrieval Benchmark},\n  year = {2024}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 429
@@ -423,19 +541,33 @@ task_metadata:
       max_chars: 90
       mean_chars: 49.79711055276382
       median_chars: 55.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 1592
+        languages:
+          en: 99.623
   NanoTempReasonL1:
     language: en
     category: natural_language
     short_description: Temporal reasoning as answer retrieval.
-    description: NanoTempReasonL1 evaluates temporal reasoning as retrieval using TempReason
-      level-1 questions. The model must retrieve the correct answer text for time-related
-      reasoning queries.
+    description: NanoTempReasonL1 evaluates temporal reasoning as retrieval using
+      TempReason level-1 questions. The model must retrieve the correct answer text
+      for time-related reasoning queries.
     citation_keys:
     - tempreason
     - rarb
     references:
-    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of Large
-        Language Models
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
+        of Large Language Models
       authors:
       - Qingyu Tan
       - Hwee Tou Ng
@@ -454,14 +586,15 @@ task_metadata:
       url: https://arxiv.org/abs/2404.06347
       is_paper: true
       source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{tempreason,\n  author = {Tan, Qingyu and Ng, Hwee Tou and Bing,\
-      \ Lidong},\n  booktitle = {Proceedings of the 61st Annual Meeting of the Association\
-      \ for Computational Linguistics (Volume 1: Long Papers)},\n  title = {Towards Benchmarking\
-      \ and Improving the Temporal Reasoning Capability of Large Language Models},\n  year\
-      \ = {2023},\n  url = {https://aclanthology.org/2023.acl-long.828/},\n  doi = {10.18653/v1/2023.acl-long.828}\n\
-      }\n@article{rarb,\n  author = {Xiao, Chenghao and Hudson, G. Thomas\
-      \ and Moubayed, Noura Al},\n  journal = {arXiv preprint arXiv:2404.06347},\n  title\
-      \ = {RAR-b: Reasoning as Retrieval Benchmark},\n  year = {2024}\n}\n"
+    bibtex: "@inproceedings{tempreason,\n  author = {Tan, Qingyu and Ng, Hwee Tou\
+      \ and Bing, Lidong},\n  booktitle = {Proceedings of the 61st Annual Meeting\
+      \ of the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
+      \ of Large Language Models},\n  year = {2023},\n  url = {https://aclanthology.org/2023.acl-long.828/},\n\
+      \  doi = {10.18653/v1/2023.acl-long.828}\n}\n@article{rarb,\n  author = {Xiao,\
+      \ Chenghao and Hudson, G. Thomas and Moubayed, Noura Al},\n  journal = {arXiv\
+      \ preprint arXiv:2404.06347},\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 39
@@ -474,13 +607,31 @@ task_metadata:
       max_chars: 9
       mean_chars: 8.9975
       median_chars: 9.0
+    languages:
+    - en
+    - de
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 60.59
+          de: 37.16
+          sl: 0.68
+          fr: 0.65
   NanoWinoGrande:
     language: en
     category: natural_language
     short_description: Commonsense pronoun reasoning as retrieval.
-    description: NanoWinoGrande converts WinoGrande-style commonsense pronoun resolution into
-      retrieval. Given an underspecified sentence, the model must rank the correct answer
-      string above distractors.
+    description: NanoWinoGrande converts WinoGrande-style commonsense pronoun resolution
+      into retrieval. Given an underspecified sentence, the model must rank the correct
+      answer string above distractors.
     citation_keys:
     - winogrande
     - rarb
@@ -506,13 +657,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
     bibtex: "@inproceedings{winogrande,\n  author = {Sakaguchi, Keisuke and Le Bras,\
-      \ Ronan and Bhagavatula, Chandra and Choi, Yejin},\n  booktitle = {Proceedings of the\
-      \ AAAI Conference on Artificial Intelligence},\n  number = {05},\n  pages = {8732--8740},\n\
-      \  title = {WinoGrande: An Adversarial Winograd Schema Challenge at Scale},\n  volume\
-      \ = {34},\n  year = {2020},\n  url = {https://aaai.org/papers/08732-winogrande-an-adversarial-winograd-schema-challenge-at-scale/},\n\
-      \  doi = {10.1609/aaai.v34i05.6399}\n}\n@article{rarb,\n\
-      \  author = {Xiao, Chenghao and Hudson, G. Thomas and Moubayed, Noura Al},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \ Ronan and Bhagavatula, Chandra and Choi, Yejin},\n  booktitle = {Proceedings\
+      \ of the AAAI Conference on Artificial Intelligence},\n  number = {05},\n  pages\
+      \ = {8732--8740},\n  title = {WinoGrande: An Adversarial Winograd Schema Challenge\
+      \ at Scale},\n  volume = {34},\n  year = {2020},\n  url = {https://aaai.org/papers/08732-winogrande-an-adversarial-winograd-schema-challenge-at-scale/},\n\
+      \  doi = {10.1609/aaai.v34i05.6399}\n}\n@article{rarb,\n  author = {Xiao, Chenghao\
+      \ and Hudson, G. Thomas and Moubayed, Noura Al},\n  journal = {arXiv preprint\
+      \ arXiv:2404.06347},\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
       \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
@@ -526,18 +677,41 @@ task_metadata:
       max_chars: 31
       mean_chars: 7.68243375858685
       median_chars: 7.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 5095
+        languages:
+          en: 82.728
+          fr: 2.689
+          de: 1.786
+          es: 1.747
+          it: 1.708
+          nl: 1.178
+          pt: 0.707
+          sv: 0.687
+          ca: 0.628
+          pl: 0.53
   NanoBelebele:
     language: multilingual
     category: natural_language
     short_description: Multilingual reading-comprehension retrieval from Belebele.
     description: NanoBelebele evaluates retrieval over Belebele, a parallel reading-comprehension
-      benchmark spanning many language variants. Questions and contexts are repurposed as
-      multilingual text retrieval pairs.
+      benchmark spanning many language variants. Questions and contexts are repurposed
+      as multilingual text retrieval pairs.
     citation_keys:
     - belebele
     references:
-    - title: 'The Belebele Benchmark: A Parallel Reading Comprehension Dataset in 122 Language
-        Variants'
+    - title: 'The Belebele Benchmark: A Parallel Reading Comprehension Dataset in
+        122 Language Variants'
       authors:
       - Lucas Bandarkar
       - Davis Liang
@@ -555,13 +729,13 @@ task_metadata:
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2024.acl-long.44
     bibtex: "@inproceedings{belebele,\n  author = {Bandarkar, Lucas and Liang, Davis\
-      \ and Muller, Benjamin and Artetxe, Mikel and Shukla, Satya Narayan and Husa, Donald\
-      \ and Goyal, Naman and Krishnan, Abhinandan and Zettlemoyer, Luke and Khabsa, Madian},\n\
-      \  booktitle = {Proceedings of the 62nd Annual Meeting of the Association for Computational\
-      \ Linguistics (Volume 1: Long Papers)},\n  title = {The Belebele Benchmark:\
-      \ A Parallel Reading Comprehension Dataset in 122 Language Variants},\n  url = {https://aclanthology.org/2024.acl-long.44/},\n\
-      \  doi = {10.18653/v1/2024.acl-long.44},\n  year = {2024}\n\
-      }\n"
+      \ and Muller, Benjamin and Artetxe, Mikel and Shukla, Satya Narayan and Husa,\
+      \ Donald and Goyal, Naman and Krishnan, Abhinandan and Zettlemoyer, Luke and\
+      \ Khabsa, Madian},\n  booktitle = {Proceedings of the 62nd Annual Meeting of\
+      \ the Association for Computational Linguistics (Volume 1: Long Papers)},\n\
+      \  title = {The Belebele Benchmark: A Parallel Reading Comprehension Dataset\
+      \ in 122 Language Variants},\n  url = {https://aclanthology.org/2024.acl-long.44/},\n\
+      \  doi = {10.18653/v1/2024.acl-long.44},\n  year = {2024}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 28
@@ -574,13 +748,99 @@ task_metadata:
       max_chars: 1708
       mean_chars: 471.7556
       median_chars: 450.0
+    languages:
+    - en
+    - ar
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 37.5
+          ar: 6.0
+          tl: 2.5
+          de: 2.0
+          fi: 2.0
+          bn: 1.5
+          hr: 1.5
+          hu: 1.5
+          it: 1.5
+          jv: 1.5
+          af: 1.0
+          am: 1.0
+          az: 1.0
+          bg: 1.0
+          bo: 1.0
+          ca: 1.0
+          ceb: 1.0
+          ckb: 1.0
+          cs: 1.0
+          da: 1.0
+          el: 1.0
+          et: 1.0
+          eu: 1.0
+          fr: 1.0
+          gu: 1.0
+          he: 1.0
+          hi: 1.0
+          hy: 1.0
+          id: 1.0
+          ilo: 1.0
+          is: 1.0
+          ja: 1.0
+          ka: 1.0
+          kk: 1.0
+          km: 1.0
+          kn: 1.0
+          ko: 1.0
+          ky: 1.0
+          lo: 1.0
+          lt: 1.0
+          lv: 1.0
+          mk: 1.0
+          ml: 1.0
+          mn: 1.0
+          mr: 1.0
+          sq: 1.0
+          sw: 1.0
+          as: 0.5
+          eo: 0.5
+          es: 0.5
+          ht: 0.5
+          mt: 0.5
+          pl: 0.5
+          pms: 0.5
+          so: 0.5
+          tr: 0.5
+          uz: 0.5
+          war: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          ar: 27.8
+          en: 14.16
+          bn: 4.91
+          sq: 4.9
+          am: 4.88
+          bo: 4.88
+          bg: 4.86
+          ca: 4.86
+          as: 4.85
+          az: 4.81
+          ceb: 4.42
+          af: 3.06
+          cs: 2.94
+          nl: 1.76
+          tl: 0.94
   NanoMLQA:
     language: multilingual
     category: natural_language
     short_description: Cross-lingual extractive QA retrieval from MLQA.
-    description: NanoMLQA evaluates multilingual and cross-lingual QA retrieval from MLQA.
-      Queries are questions and documents are contexts across seven languages in SQuAD-style
-      data.
+    description: NanoMLQA evaluates multilingual and cross-lingual QA retrieval from
+      MLQA. Queries are questions and documents are contexts across seven languages
+      in SQuAD-style data.
     citation_keys:
     - mlqa
     references:
@@ -596,11 +856,11 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2020.acl-main.653
-    bibtex: "@inproceedings{mlqa,\n  author = {Lewis, Patrick and Oguz, Barlas and Rinott,\
-      \ Ruty and Riedel, Sebastian and Schwenk, Holger},\n  booktitle = {Proceedings of the\
-      \ 58th Annual Meeting of the Association for Computational Linguistics},\n\
-      \  title = {MLQA: Evaluating Cross-lingual Extractive Question Answering},\n  url =\
-      \ {https://aclanthology.org/2020.acl-main.653/},\n  doi = {10.18653/v1/2020.acl-main.653},\n\
+    bibtex: "@inproceedings{mlqa,\n  author = {Lewis, Patrick and Oguz, Barlas and\
+      \ Rinott, Ruty and Riedel, Sebastian and Schwenk, Holger},\n  booktitle = {Proceedings\
+      \ of the 58th Annual Meeting of the Association for Computational Linguistics},\n\
+      \  title = {MLQA: Evaluating Cross-lingual Extractive Question Answering},\n\
+      \  url = {https://aclanthology.org/2020.acl-main.653/},\n  doi = {10.18653/v1/2020.acl-main.653},\n\
       \  year = {2020}\n}\n"
     query_text_stats:
       count: 200
@@ -614,18 +874,46 @@ task_metadata:
       max_chars: 6976
       mean_chars: 752.8756
       median_chars: 547.0
+    languages:
+    - ar
+    - de
+    - en
+    - es
+    - hi
+    - vi
+    - zh
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ar: 14.5
+          de: 14.5
+          en: 14.5
+          es: 14.5
+          hi: 14.0
+          vi: 14.0
+          zh: 14.0
+      document:
+        sample_count: 10000
+        languages:
+          ar: 46.42
+          de: 39.8
+          en: 12.66
   NanoStatcanDialogueDataset:
     language: multilingual
     category: natural_language
     short_description: Conversational retrieval of Statistics Canada tables.
-    description: NanoStatcanDialogueDataset evaluates retrieval of Statistics Canada data
-      tables from multi-turn English and French conversations with genuine information-seeking
+    description: NanoStatcanDialogueDataset evaluates retrieval of Statistics Canada
+      data tables from multi-turn English and French conversations with genuine information-seeking
       intents.
     citation_keys:
     - statcan
     references:
-    - title: 'The StatCan Dialogue Dataset: Retrieving Data Tables through Conversations with
-        Genuine Intents'
+    - title: 'The StatCan Dialogue Dataset: Retrieving Data Tables through Conversations
+        with Genuine Intents'
       authors:
       - Xing Han Lu
       - Siva Reddy
@@ -635,13 +923,12 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2023.eacl-main.206
-    bibtex: "@inproceedings{statcan,\n  author = {Lu, Xing Han and Reddy, Siva and de\
-      \ Vries, Harm},\n  booktitle = {Proceedings of the 17th Conference of the European Chapter\
-      \ of the Association for Computational Linguistics},\n  pages = {2799--2829},\n  title\
-      \ = {The StatCan Dialogue Dataset: Retrieving Data Tables through Conversations with\
-      \ Genuine Intents},\n  url = {https://aclanthology.org/2023.eacl-main.206/},\n  doi = {10.18653/v1/2023.eacl-main.206},\n\
-      \  year = {2023}\n\
-      }\n"
+    bibtex: "@inproceedings{statcan,\n  author = {Lu, Xing Han and Reddy, Siva and\
+      \ de Vries, Harm},\n  booktitle = {Proceedings of the 17th Conference of the\
+      \ European Chapter of the Association for Computational Linguistics},\n  pages\
+      \ = {2799--2829},\n  title = {The StatCan Dialogue Dataset: Retrieving Data\
+      \ Tables through Conversations with Genuine Intents},\n  url = {https://aclanthology.org/2023.eacl-main.206/},\n\
+      \  doi = {10.18653/v1/2023.eacl-main.206},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 133
@@ -654,12 +941,34 @@ task_metadata:
       max_chars: 398046
       mean_chars: 7234.3434
       median_chars: 2209.5
+    languages:
+    - en
+    - fr
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fr: 47.5
+          en: 38.5
+          tr: 9.5
+          hi: 2.0
+          it: 2.0
+          kk: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          en: 59.07
+          fr: 40.93
   NanoWikipediaRetrievalMultilingual:
     language: multilingual
     category: natural_language
     short_description: Synthetic-query multilingual Wikipedia retrieval.
-    description: NanoWikipediaRetrievalMultilingual evaluates multilingual Wikipedia article
-      retrieval using synthetic queries derived from Cohere Wikipedia 2023-11 content.
+    description: NanoWikipediaRetrievalMultilingual evaluates multilingual Wikipedia
+      article retrieval using synthetic queries derived from Cohere Wikipedia 2023-11
+      content.
     citation_keys:
     - wiki_retrieval
     references:
@@ -670,8 +979,8 @@ task_metadata:
       url: https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{wiki_retrieval,\n  author = {{EllaMind contributors}},\n\
-      \  title = {Wikipedia 2023-11 Retrieval Multilingual Queries},\n  url = {https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries},\n\
+    bibtex: "@misc{wiki_retrieval,\n  author = {{EllaMind contributors}},\n  title\
+      \ = {Wikipedia 2023-11 Retrieval Multilingual Queries},\n  url = {https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries},\n\
       \  year = {2024}\n}\n"
     query_text_stats:
       count: 200
@@ -685,12 +994,43 @@ task_metadata:
       max_chars: 4869
       mean_chars: 383.4116
       median_chars: 301.0
+    languages:
+    - bg
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 7.5
+          da: 7.0
+          bg: 6.5
+          bn: 6.5
+          cs: 6.5
+          de: 6.5
+          fa: 6.5
+          fi: 6.5
+          it: 6.5
+          sv: 6.5
+          hi: 6.0
+          nl: 6.0
+          pt: 6.0
+          ro: 5.5
+          sr: 5.5
+          'no': 4.5
+      document:
+        sample_count: 10000
+        languages:
+          bg: 96.43
+          ru: 0.75
+          en: 0.74
   NanoCovid:
     language: zh
     category: natural_language
     short_description: Chinese COVID-19 news retrieval.
-    description: NanoCovid evaluates Chinese COVID-19 news retrieval from the Multi-CPR benchmark,
-      matching COVID-related questions to relevant news article passages.
+    description: NanoCovid evaluates Chinese COVID-19 news retrieval from the Multi-CPR
+      benchmark, matching COVID-related questions to relevant news article passages.
     citation_keys:
     - multicpr
     references:
@@ -711,14 +1051,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1145/3477495.3531736
-    bibtex: "@inproceedings{multicpr,\n  author = {Long, Dingkun\
-      \ and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and\
-      \ Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings\
-      \ of the 45th International ACM SIGIR Conference on Research and Development in Information\
-      \ Retrieval},\n  pages = {3046--3056},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for\
-      \ Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n  doi = {10.1145/3477495.3531736},\n\
-      \  year = {2022}\n\
-      }\n"
+    bibtex: "@inproceedings{multicpr,\n  author = {Long, Dingkun and Gao, Qiong and\
+      \ Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and Xu, Jian and\
+      \ Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings\
+      \ of the 45th International ACM SIGIR Conference on Research and Development\
+      \ in Information Retrieval},\n  pages = {3046--3056},\n  title = {Multi-CPR:\
+      \ A Multi Domain Chinese Dataset for Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n\
+      \  doi = {10.1145/3477495.3531736},\n  year = {2022}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 10
@@ -731,17 +1070,34 @@ task_metadata:
       max_chars: 15408
       mean_chars: 409.3471
       median_chars: 275.0
+    languages:
+    - zh
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          zh: 99.5
+          ja: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          zh: 98.54
+          en: 0.78
   NanoNews21Instruction:
     language: en
     category: natural_language
     short_description: Instruction-following retrieval on News21 narratives.
     description: NanoNews21Instruction evaluates whether retrieval models follow instructions
-      in the FollowIR News21 setting, where narrative-style retrieval instructions alter which
-      documents should be preferred.
+      in the FollowIR News21 setting, where narrative-style retrieval instructions
+      alter which documents should be preferred.
     citation_keys:
     - followir
     references:
-    - title: 'FollowIR: Evaluating and Teaching Information Retrieval Models to Follow Instructions'
+    - title: 'FollowIR: Evaluating and Teaching Information Retrieval Models to Follow
+        Instructions'
       authors:
       - Orion Weller
       - Benjamin Chang
@@ -756,13 +1112,13 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2025.naacl-long.597
-    bibtex: "@inproceedings{followir,\n  author = {Weller, Orion\
-      \ and Chang, Benjamin and MacAvaney, Sean and Lo, Kyle and Cohan, Arman and Van Durme,\
-      \ Benjamin and Lawrie, Dawn and Soldaini, Luca},\n  booktitle = {Proceedings of the\
-      \ 2025 Conference of the Nations of the Americas Chapter of the Association for Computational\
-      \ Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  pages = {11926--11942},\n\
-      \  title = {FollowIR: Evaluating and Teaching Information Retrieval Models\
-      \ to Follow Instructions},\n  url = {https://aclanthology.org/2025.naacl-long.597/},\n\
+    bibtex: "@inproceedings{followir,\n  author = {Weller, Orion and Chang, Benjamin\
+      \ and MacAvaney, Sean and Lo, Kyle and Cohan, Arman and Van Durme, Benjamin\
+      \ and Lawrie, Dawn and Soldaini, Luca},\n  booktitle = {Proceedings of the 2025\
+      \ Conference of the Nations of the Americas Chapter of the Association for Computational\
+      \ Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  pages\
+      \ = {11926--11942},\n  title = {FollowIR: Evaluating and Teaching Information\
+      \ Retrieval Models to Follow Instructions},\n  url = {https://aclanthology.org/2025.naacl-long.597/},\n\
       \  doi = {10.18653/v1/2025.naacl-long.597},\n  year = {2025}\n}\n"
     query_text_stats:
       count: 6
@@ -776,13 +1132,27 @@ task_metadata:
       max_chars: 3293
       mean_chars: 2293.1444
       median_chars: 2471.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 6
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.74
   NanoMIRACLRetrievalHardNegatives:
     language: multilingual
     category: natural_language
     short_description: MIRACL multilingual retrieval with pooled hard negatives.
     description: NanoMIRACLRetrievalHardNegatives evaluates multilingual MIRACL retrieval
-      with a hard-negative corpus built by pooling top documents from BM25 and strong multilingual
-      dense retrievers.
+      with a hard-negative corpus built by pooling top documents from BM25 and strong
+      multilingual dense retrievers.
     citation_keys:
     - miracl
     references:
@@ -803,11 +1173,11 @@ task_metadata:
       source_confidence: definitive_paper_link
       doi: 10.1162/tacl_a_00595
     bibtex: "@article{miracl,\n  author = {Zhang, Xinyu and Thakur, Nandan and Ogundepo,\
-      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu,\
-      \ Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  doi = {10.1162/tacl_a_00595},\n\
-      \  journal = {Transactions of the Association for Computational Linguistics},\n  pages\
-      \ = {1114--1131},\n  title = {{MIRACL}: A Multilingual Retrieval Dataset Covering 18\
-      \ Diverse Languages},\n  volume = {11},\n  year = {2023}\n}\n"
+      \ Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and\
+      \ Liu, Qun and Rezagholizadeh, Mehdi and Lin, Jimmy},\n  doi = {10.1162/tacl_a_00595},\n\
+      \  journal = {Transactions of the Association for Computational Linguistics},\n\
+      \  pages = {1114--1131},\n  title = {{MIRACL}: A Multilingual Retrieval Dataset\
+      \ Covering 18 Diverse Languages},\n  volume = {11},\n  year = {2023}\n}\n"
     query_text_stats:
       count: 200
       min_chars: 8
@@ -820,3 +1190,55 @@ task_metadata:
       max_chars: 48551
       mean_chars: 497.3043
       median_chars: 403.0
+    languages:
+    - ar
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 6.5
+          es: 6.5
+          ar: 6.0
+          bn: 6.0
+          de: 5.5
+          fa: 5.5
+          fi: 5.5
+          fr: 5.5
+          hi: 5.5
+          ja: 5.5
+          ko: 5.5
+          ru: 5.5
+          sw: 5.5
+          te: 5.5
+          th: 5.5
+          zh: 5.5
+          id: 5.0
+          ro: 1.0
+          cbk: 0.5
+          eo: 0.5
+          it: 0.5
+          lv: 0.5
+          tr: 0.5
+          yo: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          ar: 83.44
+          en: 1.54
+          ko: 1.39
+          bn: 1.24
+          es: 1.07
+          fr: 1.03
+          hi: 1.01
+          fi: 0.99
+          th: 0.99
+          zh: 0.99
+          sw: 0.95
+          ja: 0.93
+          fa: 0.92
+          id: 0.83
+          ru: 0.81
+          de: 0.8
