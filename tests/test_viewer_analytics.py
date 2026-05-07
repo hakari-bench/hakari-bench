@@ -19,7 +19,7 @@ def test_viewer_summary_counts_base_variant_tasks_and_latest_timestamp(tmp_path:
     assert summary.task_count == 3
     assert summary.language_count == 2
     assert summary.base_result_count == 6
-    assert summary.variant_result_count == 3
+    assert summary.variant_result_count == 4
     assert summary.latest_finished_at_utc == "2026-01-02T00:00:00Z"
 
 
@@ -38,6 +38,14 @@ def test_variant_analysis_aggregates_base_relative_delta_by_variant(tmp_path: Pa
     assert by_variant["binary"].mean_score_100 == pytest.approx(75.0)
     assert by_variant["binary"].base_delta_percent == pytest.approx(-16.6666666667)
     assert by_variant["truncate_dim_384"].base_delta_percent == pytest.approx(-5.5555555556)
+    assert "binary_rescore" not in by_variant
+
+    rows_with_rescore = ViewerAnalyticsRepository(db_path).fetch_variant_analysis(
+        benchmarks=["BenchA"],
+        include_rescore=True,
+    )
+
+    assert "binary_rescore" in {row.variant_name for row in rows_with_rescore}
 
 
 def test_rerank_diagnostics_aggregate_candidate_coverage_and_lift(tmp_path: Path) -> None:
@@ -103,6 +111,7 @@ def _write_analytics_db(db_path: Path) -> None:
                 ("model/b", "BenchA", "bench/a", "BenchA", "", "t2", "BenchA::t2", 0.60, None, 512, None, "2026-01-02T00:00:00Z"),
                 ("model/a", "BenchA", "bench/a", "BenchA", "", "t1", "BenchA::t1", 0.80, "binary", 768, "binary", "2026-01-01T00:00:00Z"),
                 ("model/a", "BenchA", "bench/a", "BenchA", "", "t2", "BenchA::t2", 0.70, "binary", 768, "binary", "2026-01-01T00:00:00Z"),
+                ("model/a", "BenchA", "bench/a", "BenchA", "", "t1", "BenchA::t1", 0.82, "binary_rescore", 768, "binary", "2026-01-01T00:00:00Z"),
                 ("model/a", "BenchA", "bench/a", "BenchA", "", "t1", "BenchA::t1", 0.85, "truncate_dim_384", 384, None, "2026-01-01T00:00:00Z"),
                 ("model/a", "BenchB", "bench/b", "BenchB", "", "t3", "BenchB::t3", 0.50, None, 768, None, "2026-01-01T00:00:00Z"),
                 ("model/b", "BenchB", "bench/b", "BenchB", "", "t3", "BenchB::t3", 0.60, None, 512, None, "2026-01-02T00:00:00Z"),

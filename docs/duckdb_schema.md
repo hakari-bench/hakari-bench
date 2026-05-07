@@ -109,7 +109,7 @@ The web viewer exposes four user-facing query surfaces over the DuckDB file:
 | --- | --- | --- |
 | Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
 | Leaderboard | `task_results`, optionally joined to `dataset_metadata` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. Base rows are used unless the user explicitly enables variant categories. |
-| Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for truncation, quantization, and rescore comparisons. |
+| Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for truncation and quantization comparisons; rescore variants are hidden unless explicitly enabled in the panel. |
 | Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
 | Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
 

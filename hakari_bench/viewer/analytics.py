@@ -132,7 +132,12 @@ class ViewerAnalyticsRepository:
         finally:
             con.close()
 
-    def fetch_variant_analysis(self, *, benchmarks: list[str]) -> list[VariantAnalysisRow]:
+    def fetch_variant_analysis(
+        self,
+        *,
+        benchmarks: list[str],
+        include_rescore: bool = False,
+    ) -> list[VariantAnalysisRow]:
         if not self.duckdb_path.exists() or not benchmarks:
             return []
         con = duckdb.connect(str(self.duckdb_path), read_only=True)
@@ -146,6 +151,7 @@ class ViewerAnalyticsRepository:
             embedding_dim_expr = "tr.embedding_dim" if "embedding_dim" in columns else "NULL"
             quantization_expr = "tr.quantization" if "quantization" in columns else "NULL"
             where, params = _benchmark_where_clause("tr.benchmark", benchmarks)
+            rescore_filter = "" if include_rescore else "AND lower(tr.embedding_variant_name) NOT LIKE '%rescore%'"
             query = f"""
                 WITH base AS (
                     SELECT model_name, benchmark, task_key, score AS base_score
@@ -166,6 +172,7 @@ class ViewerAnalyticsRepository:
                  AND base.benchmark = tr.benchmark
                  AND base.task_key = tr.task_key
                 WHERE tr.embedding_variant_name IS NOT NULL
+                  {rescore_filter}
                   AND {where}
                 GROUP BY 1, 2, 3, 4
                 ORDER BY tr.model_name, tr.embedding_variant_name, embedding_dim, quantization

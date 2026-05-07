@@ -178,6 +178,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
     def analysis(
         panel: str = Query(default="variants", pattern="^(variants|reranking|datasets)$"),
         view: str = Query(default=viewer_config.overall.name),
+        include_rescore: bool = Query(default=False),
     ) -> HTMLResponse:
         store.ensure_current()
         if view not in viewer_config.view_names:
@@ -196,8 +197,13 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             )
         else:
             content = render_variant_panel(
+                view_name=view,
                 view_label=viewer_config.label_for_view(view),
-                rows=repository.fetch_variant_analysis(benchmarks=benchmarks),
+                rows=repository.fetch_variant_analysis(
+                    benchmarks=benchmarks,
+                    include_rescore=include_rescore,
+                ),
+                include_rescore=include_rescore,
             )
         return HTMLResponse(content=content)
 
@@ -955,7 +961,13 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
     return f"<tbody>{''.join(body_rows)}</tbody>"
 
 
-def render_variant_panel(*, view_label: str, rows) -> str:
+def render_variant_panel(
+    *,
+    view_label: str,
+    rows,
+    include_rescore: bool = False,
+    view_name: str | None = None,
+) -> str:
     if not rows:
         return _empty_analysis_panel(
             title="Variant impact",
@@ -973,16 +985,39 @@ def render_variant_panel(*, view_label: str, rows) -> str:
           <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent_delta(row.base_delta_percent)}</td>
         </tr>
         """
-        for row in rows[:80]
+        for row in rows
     )
+    rescore_toggle = ""
+    if view_name is not None:
+        toggle_query = urlencode(
+            {
+                "panel": "variants",
+                "view": view_name,
+                "include_rescore": "0" if include_rescore else "1",
+            }
+        )
+        toggle_label = "Hide rescore" if include_rescore else "Include rescore"
+        toggle_classes = (
+            "border-cyan-700 bg-cyan-50 text-cyan-900"
+            if include_rescore
+            else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-600 hover:text-cyan-700"
+        )
+        rescore_toggle = f"""
+        <button type="button" class="border px-3 py-1.5 text-sm {toggle_classes}"
+                hx-get="/analysis?{escape(toggle_query, quote=True)}"
+                hx-target="#analysis-panel" hx-swap="innerHTML">{escape(toggle_label)}</button>
+        """
     return f"""
     <div class="px-3 py-3">
       <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
         <div>
           <h3 class="text-base font-semibold">Variant impact</h3>
-          <p class="text-sm text-zinc-600">{escape(view_label)}: base-relative score changes for truncation, quantization, and cross variants.</p>
+          <p class="text-sm text-zinc-600">{escape(view_label)}: base-relative score changes for truncation, quantization, and cross variants. Rescore variants are hidden by default.</p>
         </div>
-        <p class="text-xs text-zinc-500">{len(rows):,} variant groups</p>
+        <div class="flex flex-wrap items-center gap-2">
+          {rescore_toggle}
+          <p class="text-xs text-zinc-500">{len(rows):,} variant groups</p>
+        </div>
       </div>
       <div class="max-h-80 overflow-auto border border-zinc-200">
         <table class="min-w-full text-sm">

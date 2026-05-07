@@ -5,7 +5,9 @@ from pathlib import Path
 import duckdb
 from fastapi.testclient import TestClient
 
+from hakari_bench.viewer.analytics import VariantAnalysisRow
 from hakari_bench.viewer.app import create_app
+from hakari_bench.viewer.app import render_variant_panel
 from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore
 
 
@@ -24,7 +26,13 @@ def test_analysis_panels_render_variant_rerank_and_dataset_tables(tmp_path: Path
     assert variants.status_code == 200
     assert "Variant impact" in variants.text
     assert "binary" in variants.text
+    assert "binary_rescore" not in variants.text
+    assert "Include rescore" in variants.text
     assert "-11.1%" in variants.text
+
+    variants_with_rescore = client.get("/analysis?panel=variants&view=BenchA&include_rescore=1")
+    assert variants_with_rescore.status_code == 200
+    assert "binary_rescore" in variants_with_rescore.text
 
     rerank = client.get("/analysis?panel=reranking&view=BenchA")
     assert rerank.status_code == 200
@@ -37,6 +45,25 @@ def test_analysis_panels_render_variant_rerank_and_dataset_tables(tmp_path: Path
     assert "Dataset diagnostics" in datasets.text
     assert "Saturation" in datasets.text
     assert "25.0%" in datasets.text
+
+
+def test_variant_panel_does_not_truncate_rows_at_80() -> None:
+    rows = [
+        VariantAnalysisRow(
+            model_name=f"model/{index:03d}",
+            variant_name=f"variant_{index:03d}",
+            embedding_dim=768,
+            quantization=None,
+            task_count=1,
+            mean_score_100=50.0,
+            base_delta_percent=None,
+        )
+        for index in range(85)
+    ]
+
+    html = render_variant_panel(view_label="BenchA", rows=rows, include_rescore=False)
+
+    assert "variant_084" in html
 
 
 def _write_panel_db(db_path: Path) -> None:
@@ -72,6 +99,7 @@ def _write_panel_db(db_path: Path) -> None:
                 ("model/b", "BenchA", "bench/a", "BenchA", "", "t2", "t2", 0.60, None, 512, None, "2026-01-01", 1, 2, 512),
                 ("model/a", "BenchA", "bench/a", "BenchA", "", "t1", "t1", 0.80, "binary", 768, "binary", "2026-01-01", 1, 2, 512),
                 ("model/a", "BenchA", "bench/a", "BenchA", "", "t2", "t2", 0.80, "binary", 768, "binary", "2026-01-01", 1, 2, 512),
+                ("model/a", "BenchA", "bench/a", "BenchA", "", "t1", "t1", 0.82, "binary_rescore", 768, "binary", "2026-01-01", 1, 2, 512),
             ],
         )
         con.execute(
