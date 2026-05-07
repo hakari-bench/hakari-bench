@@ -1,6 +1,10 @@
 # Dataset Citation Metadata
 
-This document defines how to write and audit paper/source citation metadata for NanoIR dataset definition files. For the reusable workflow, see [`skills/research-dataset-citations/SKILL.md`](../skills/research-dataset-citations/SKILL.md).
+This document is the canonical repository guidance for writing and auditing
+paper/source citation metadata for NanoIR dataset definition files. Do not rely
+on skill-local citation instructions as the source of truth. Skill files may
+point here, but citation policy and metadata workflow should be maintained in
+this document.
 
 ## Purpose
 
@@ -164,3 +168,12 @@ Before committing metadata changes:
 7. Confirm source URLs, DOI values, years, and author lists refer to the same work.
 8. Confirm text stats are numeric and use the required five fields.
 9. Run the repository checks required by `AGENTS.md`, normally `uv run tox` before committing.
+
+## Long Audits
+
+For large dataset metadata sweeps, keep an ignored progress checklist under
+`tmp/`. Split work by dataset family when parallel review is useful, but require
+each reviewer to list source URLs checked, unresolved uncertainties, and exact
+YAML changes needed. After merging findings, perform one parent pass over all
+files to catch cross-file inconsistencies, duplicated citation keys, duplicated
+authors, stale source URLs, and copy-paste mistakes.

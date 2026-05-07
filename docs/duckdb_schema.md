@@ -355,6 +355,12 @@ For overall views:
 `group_by` settings from `overall.yaml` to average tasks into benchmark-local
 units before computing Borda and means.
 
+Grouped overall views also expose the aggregated benchmark-local units as
+metric columns. These columns use the aggregated `task_key` values, such as
+`NanoMTEB-German::Banking77Classification`, and can be sorted with the
+`metric:<task_key>` sort key. Non-grouped overall views keep metric columns
+disabled to avoid expanding the table to every raw task.
+
 ### Embedding Variants
 
 By default, the viewer displays base results only:
@@ -368,20 +374,32 @@ variant categories are added.
 
 | UI flag | variant rule |
 | --- | --- |
-| Quantization | `quantization IS NOT NULL` or `embedding_variant_name` contains `quantize`. |
+| Quantization | Non-rescore rows where `quantization IS NOT NULL` or `embedding_variant_name` contains `quantize`. |
 | Truncate dims | `embedding_variant_name` contains `truncate`. |
+| Rescore | `embedding_variant_name` contains `rescore`. Rescore rows are not included by the Quantization flag by default. |
 | Other variants | Variant rows that are neither quantization nor truncation variants. |
 
-When variants are displayed, the current viewer appends `embedding_dim` and
-`quantization` to `model_name` and uses that display name as the ranking key.
-If multiple `embedding_variant_name` values would produce the same display
-name, the viewer also appends the variant name. This prevents multiple rows
-from the same task from collapsing into a single model key and corrupting Borda
-rank populations.
+Rows that are both quantized and truncated are displayed only when both the
+Quantization and Truncate dims flags are enabled. Facet filter query parameters
+such as `dim_filter` and `quant_filter` do not infer or re-enable display
+flags; the display flags come only from the explicit display controls.
 
-For a new viewer, a stronger design is to use an internal key made from
-`model_name` and `embedding_variant_name`, then build the display label
-separately.
+When variants are displayed, the leaderboard keeps a unique internal row label
+by appending `embedding_dim`, `quantization`, and sometimes
+`embedding_variant_name` to `model_name`. The rendered model-name cell strips
+that suffix back off, shortens Hugging Face-style IDs to the repository name
+when that short name is unambiguous, and shows dimensions, quantization, and
+variant labels such as `binary_rescore` as badges instead of duplicating them in
+the visible model text. Runtime fields such as dtype, attention implementation,
+prompt mode, and `trust_remote_code` are carried in a `data-model-metadata`
+JSON attribute on the model-name button and displayed in the model details
+modal.
+
+When quantization or truncation variants are displayed, the viewer appends a
+`Δ vs Base` column. It compares each variant row's displayed mean score against
+the base row for the same source model and renders the relative percentage
+change, such as `-24.5%` or `+1.2%`. Base rows and rows without a matching base
+row leave this column blank.
 
 ## Current Viewer Data Access Layer
 
@@ -403,7 +421,8 @@ choices:
 - Read only base rows when variants are not requested.
 - Select missing variant/runtime columns as `NULL` for old DuckDB files.
 - Surface runtime metadata such as dtype, attention implementation, prompt
-  mode, and `trust_remote_code` as display columns and facet filters.
+  mode, and `trust_remote_code` in model details metadata; dtype, attention,
+  and prompt remain available as facet filters.
 
 Conceptually, it runs this query:
 
@@ -471,6 +490,7 @@ params AS (
   SELECT
     false AS include_quantization_variants,
     false AS include_truncate_variants,
+    false AS include_rescore_variants,
     false AS include_other_variants
 ),
 selected_benchmarks(benchmark) AS (
@@ -485,6 +505,7 @@ source_rows AS (
       WHEN (
         p.include_quantization_variants
         OR p.include_truncate_variants
+        OR p.include_rescore_variants
         OR p.include_other_variants
       ) THEN tr.model_name || COALESCE('::' || tr.embedding_variant_name, '::base')
       ELSE tr.model_name
@@ -493,6 +514,7 @@ source_rows AS (
       WHEN NOT (
         p.include_quantization_variants
         OR p.include_truncate_variants
+        OR p.include_rescore_variants
         OR p.include_other_variants
       ) THEN tr.model_name
       WHEN tr.embedding_dim IS NOT NULL AND tr.quantization IS NOT NULL
@@ -530,6 +552,7 @@ source_rows AS (
       tr.embedding_variant_name IS NULL
       OR (
         p.include_quantization_variants
+        AND lower(COALESCE(tr.embedding_variant_name, '')) NOT LIKE '%rescore%'
         AND (
           tr.quantization IS NOT NULL
           OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%quantize%'
@@ -540,8 +563,13 @@ source_rows AS (
         AND lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%truncate%'
       )
       OR (
+        p.include_rescore_variants
+        AND lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%rescore%'
+      )
+      OR (
         p.include_other_variants
         AND tr.embedding_variant_name IS NOT NULL
+        AND lower(COALESCE(tr.embedding_variant_name, '')) NOT LIKE '%rescore%'
         AND NOT (
           tr.quantization IS NOT NULL
           OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%quantize%'
@@ -688,8 +716,8 @@ for overall views ranks `mean_score`, which is `macro_mean`.
 ### 4. OverallGrouped Leaderboard
 
 `OverallGrouped` first averages raw tasks into benchmark-local groups, then
-computes Borda and means. Generate `overall_components` from
-`config/viewer/overall.yaml`.
+computes Borda, means, and per-group metric columns. Generate
+`overall_components` from `config/viewer/overall.yaml`.
 
 ```sql
 WITH
@@ -697,6 +725,7 @@ params AS (
   SELECT
     false AS include_quantization_variants,
     false AS include_truncate_variants,
+    false AS include_rescore_variants,
     false AS include_other_variants
 ),
 overall_components(benchmark, group_by) AS (
@@ -714,6 +743,7 @@ raw_rows AS (
       WHEN (
         p.include_quantization_variants
         OR p.include_truncate_variants
+        OR p.include_rescore_variants
         OR p.include_other_variants
       ) THEN tr.model_name || COALESCE('::' || tr.embedding_variant_name, '::base')
       ELSE tr.model_name
@@ -736,6 +766,7 @@ raw_rows AS (
     (
       p.include_quantization_variants
       OR p.include_truncate_variants
+      OR p.include_rescore_variants
       OR p.include_other_variants
     ) AS include_any_variants
   FROM task_results AS tr
@@ -751,6 +782,7 @@ raw_rows AS (
       tr.embedding_variant_name IS NULL
       OR (
         p.include_quantization_variants
+        AND lower(COALESCE(tr.embedding_variant_name, '')) NOT LIKE '%rescore%'
         AND (
           tr.quantization IS NOT NULL
           OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%quantize%'
@@ -761,8 +793,13 @@ raw_rows AS (
         AND lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%truncate%'
       )
       OR (
+        p.include_rescore_variants
+        AND lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%rescore%'
+      )
+      OR (
         p.include_other_variants
         AND tr.embedding_variant_name IS NOT NULL
+        AND lower(COALESCE(tr.embedding_variant_name, '')) NOT LIKE '%rescore%'
         AND NOT (
           tr.quantization IS NOT NULL
           OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%quantize%'
