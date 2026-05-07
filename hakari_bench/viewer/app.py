@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from html import escape
+import json
 from pathlib import Path
 import re
 from typing import cast
@@ -17,7 +18,12 @@ from hakari_bench.viewer.leaderboard import (
     SORT_COLUMNS,
     SortDirection,
 )
+from hakari_bench.viewer.model_display import ModelCellView, model_cell_views
 from hakari_bench.viewer.store import LocalDuckDbStore
+from hakari_bench.viewer.variant_display import (
+    variant_display_flags_from_query,
+    variant_display_flags_from_values,
+)
 
 
 class ViewerAppConfig(BaseModel):
@@ -29,6 +35,7 @@ class ViewerAppConfig(BaseModel):
 
 QueryValue = str | list[str]
 QueryState = dict[str, QueryValue]
+FILTER_NONE_VALUE = "__none_selected__"
 
 
 @dataclass(frozen=True)
@@ -37,6 +44,9 @@ class FilterState:
     filters_active: bool = False
     dim_filters: tuple[str, ...] = ()
     quant_filters: tuple[str, ...] = ()
+    dtype_filters: tuple[str, ...] = ()
+    attn_filters: tuple[str, ...] = ()
+    prompt_filters: tuple[str, ...] = ()
 
 
 def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewer")):
@@ -55,10 +65,14 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         variants: bool = Query(default=False),
         quantization: bool = Query(default=False),
         truncate: bool = Query(default=False),
+        rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        dtype_filter: list[str] | None = Query(default=None),
+        attn_filter: list[str] | None = Query(default=None),
+        prompt_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
     ) -> str:
         store.ensure_current()
@@ -71,10 +85,14 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             variants=variants,
             quantization=quantization,
             truncate=truncate,
+            rescore=rescore,
             other_variant=other_variant,
             filters=filters,
             dim_filter=dim_filter,
             quant_filter=quant_filter,
+            dtype_filter=dtype_filter,
+            attn_filter=attn_filter,
+            prompt_filter=prompt_filter,
             model_filter=model_filter,
         )
         return render_page(viewer_config=viewer_config, duckdb_path=store.path, initial_query=initial_query)
@@ -88,10 +106,14 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         variants: bool = Query(default=False),
         quantization: bool = Query(default=False),
         truncate: bool = Query(default=False),
+        rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        dtype_filter: list[str] | None = Query(default=None),
+        attn_filter: list[str] | None = Query(default=None),
+        prompt_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
     ) -> HTMLResponse:
         store.ensure_current()
@@ -104,19 +126,21 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             variants=variants,
             quantization=quantization,
             truncate=truncate,
+            rescore=rescore,
             other_variant=other_variant,
             filters=filters,
             dim_filter=dim_filter,
             quant_filter=quant_filter,
+            dtype_filter=dtype_filter,
+            attn_filter=attn_filter,
+            prompt_filter=prompt_filter,
             model_filter=model_filter,
         )
         view = _query_string(state_query["view"])
         sort = _query_string(state_query["sort"])
         direction = _query_string(state_query["direction"])
         group = _optional_query_string(state_query.get("group"))
-        include_quantization_variants = state_query.get("quantization") == "1"
-        include_truncate_variants = state_query.get("truncate") == "1"
-        include_other_variants = state_query.get("other_variant") == "1"
+        display_flags = variant_display_flags_from_query(state_query)
         filter_state = _filter_state_from_query(state_query)
         service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
         result = service.get_leaderboard(
@@ -124,9 +148,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             sort=sort,
             direction=cast(SortDirection, direction),
             score_group_name=group,
-            include_quantization_variants=include_quantization_variants,
-            include_truncate_variants=include_truncate_variants,
-            include_other_variants=include_other_variants,
+            include_quantization_variants=display_flags.quantization,
+            include_truncate_variants=display_flags.truncate,
+            include_rescore_variants=display_flags.rescore,
+            include_other_variants=display_flags.other,
         )
         content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
         return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}"})
@@ -182,7 +207,7 @@ def render_leaderboard(
   <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
     <div>
       <h2 class="text-lg font-semibold">{escape(result.view_label)}</h2>
-      <p class="mt-1 text-sm text-zinc-600">{len(result.rows)} complete models / {result.expected_tasks} tasks</p>
+      <p class="mt-1 text-sm text-zinc-600" data-shown-count="{_visible_row_count(result.rows, filter_state)}">{_visible_row_count(result.rows, filter_state)} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks</p>
     </div>
   </div>
   <div class="overflow-x-auto border border-zinc-200 bg-white">
@@ -191,6 +216,7 @@ def render_leaderboard(
       {render_table_body(result=result, filter_state=filter_state)}
     </table>
   </div>
+  {render_model_detail_modal()}
 </div>
 """
 
@@ -225,6 +251,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
     filter_state = filter_state or FilterState()
     quantization_checked = " checked" if result.include_quantization_variants else ""
     truncate_checked = " checked" if result.include_truncate_variants else ""
+    rescore_checked = " checked" if result.include_rescore_variants else ""
     other_variant_checked = " checked" if result.include_other_variants else ""
     state_fields = [
         ("view", result.view_name),
@@ -239,11 +266,16 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         filter_hidden_fields.append(("quantization", "1"))
     if result.include_truncate_variants:
         filter_hidden_fields.append(("truncate", "1"))
+    if result.include_rescore_variants:
+        filter_hidden_fields.append(("rescore", "1"))
     if result.include_other_variants:
         filter_hidden_fields.append(("other_variant", "1"))
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
     dim_options = _dim_filter_options(result.rows)
     quant_options = _quant_filter_options(result.rows)
+    dtype_options = _dtype_filter_options(result.rows)
+    attn_options = _attn_filter_options(result.rows)
+    prompt_options = _prompt_filter_options(result.rows)
     selected_dims = _selected_filter_values(
         options=dim_options,
         selected=filter_state.dim_filters,
@@ -252,6 +284,21 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
     selected_quants = _selected_filter_values(
         options=quant_options,
         selected=filter_state.quant_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_dtypes = _selected_filter_values(
+        options=dtype_options,
+        selected=filter_state.dtype_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_attn = _selected_filter_values(
+        options=attn_options,
+        selected=filter_state.attn_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_prompts = _selected_filter_values(
+        options=prompt_options,
+        selected=filter_state.prompt_filters,
         filters_active=filter_state.filters_active,
     )
     dim_all_query = _state_payload(
@@ -263,6 +310,9 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             filters_active=True,
             dim_filters=tuple(value for value, _ in dim_options),
             quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
+            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
+            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
     dim_none_query = _state_payload(
@@ -272,8 +322,11 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
             filters_active=True,
-            dim_filters=(),
+            dim_filters=(FILTER_NONE_VALUE,),
             quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
+            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
+            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
     quant_all_query = _state_payload(
@@ -285,6 +338,9 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             filters_active=True,
             dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
             quant_filters=tuple(value for value, _ in quant_options),
+            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
+            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
+            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
     quant_none_query = _state_payload(
@@ -295,7 +351,94 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             model_filter=filter_state.model_filter,
             filters_active=True,
             dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
-            quant_filters=(),
+            quant_filters=(FILTER_NONE_VALUE,),
+            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
+            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
+            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+        ),
+    )
+    dtype_all_query = _state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=True,
+            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
+            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+            dtype_filters=tuple(value for value, _ in dtype_options),
+            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
+            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+        ),
+    )
+    dtype_none_query = _state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=True,
+            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
+            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+            dtype_filters=(FILTER_NONE_VALUE,),
+            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
+            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+        ),
+    )
+    attn_all_query = _state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=True,
+            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
+            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
+            attn_filters=tuple(value for value, _ in attn_options),
+            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+        ),
+    )
+    attn_none_query = _state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=True,
+            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
+            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
+            attn_filters=(FILTER_NONE_VALUE,),
+            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+        ),
+    )
+    prompt_all_query = _state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=True,
+            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
+            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
+            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
+            prompt_filters=tuple(value for value, _ in prompt_options),
+        ),
+    )
+    prompt_none_query = _state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=True,
+            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
+            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
+            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
+            prompt_filters=(FILTER_NONE_VALUE,),
         ),
     )
     return f"""
@@ -303,7 +446,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
       <form id="display-controls" class="flex flex-wrap items-center gap-x-5 gap-y-2"
             hx-get="/leaderboard" hx-push-url="true"
             hx-target="#leaderboard-panel" hx-swap="innerHTML"
-            hx-trigger="change">
+            hx-trigger="change, submit">
         {display_hidden_html}
         <span class="font-medium text-zinc-800">Display:</span>
         <label class="inline-flex items-center gap-2">
@@ -315,15 +458,17 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
           <span>Truncate dims</span>
         </label>
         <label class="inline-flex items-center gap-2">
+          <input type="checkbox" name="rescore" value="1" class="h-4 w-4 accent-cyan-700"{rescore_checked}>
+          <span>Rescore</span>
+        </label>
+        <label class="inline-flex items-center gap-2">
           <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
           <span>Other variants</span>
         </label>
         <label class="flex min-w-64 items-center gap-2">
           <span class="font-medium text-zinc-800">Model name</span>
-          <input type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
+          <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
                  class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
-                 hx-get="/leaderboard" hx-include="#display-controls" hx-push-url="true"
-                 hx-target="#leaderboard-panel" hx-swap="innerHTML" hx-trigger="input changed delay:700ms"
                  autocomplete="off">
         </label>
       </form>
@@ -336,6 +481,12 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
           {filter_hidden_html}
           {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
           {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
+          <div class="flex flex-wrap items-start gap-3 border-l border-zinc-200 pl-3">
+            <p class="pt-1 font-medium text-zinc-800">Runtime</p>
+            {_render_filter_details(name="dtype_filter", summary="Dtype", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
+            {_render_filter_details(name="attn_filter", summary="Attention", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
+            {_render_filter_details(name="prompt_filter", summary="Prompt", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
+          </div>
         </form>
       </div>
     </div>
@@ -399,6 +550,8 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
             ("quantization", "Quantization", "asc", "left", False),
         ]
     )
+    if _show_base_delta_column(result):
+        columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False))
     heads = []
     for key, label, default_direction, align, is_metric in columns:
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
@@ -426,9 +579,13 @@ def render_table_body(*, result: LeaderboardResult, filter_state: FilterState | 
     if not result.rows:
         return """<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="12">No complete results found.</td></tr></tbody>"""
     body_rows = []
+    model_views = model_cell_views(result.rows)
     model_filter_terms = _active_model_filter_terms(filter_state.model_filter)
     dim_options = _dim_filter_options(result.rows)
     quant_options = _quant_filter_options(result.rows)
+    dtype_options = _dtype_filter_options(result.rows)
+    attn_options = _attn_filter_options(result.rows)
+    prompt_options = _prompt_filter_options(result.rows)
     selected_dims = _selected_filter_values(
         options=dim_options,
         selected=filter_state.dim_filters,
@@ -439,11 +596,29 @@ def render_table_body(*, result: LeaderboardResult, filter_state: FilterState | 
         selected=filter_state.quant_filters,
         filters_active=filter_state.filters_active,
     )
+    selected_dtypes = _selected_filter_values(
+        options=dtype_options,
+        selected=filter_state.dtype_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_attn = _selected_filter_values(
+        options=attn_options,
+        selected=filter_state.attn_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_prompts = _selected_filter_values(
+        options=prompt_options,
+        selected=filter_state.prompt_filters,
+        filters_active=filter_state.filters_active,
+    )
     for row in result.rows:
         hidden = (
             bool(model_filter_terms and not _model_name_matches_filter_terms(row.model_name, model_filter_terms))
             or _dim_bucket(row.embedding_dim) not in selected_dims
             or _quant_bucket(row.quantization) not in selected_quants
+            or _dtype_bucket(row.dtype) not in selected_dtypes
+            or _attn_bucket(row.attn_implementation) not in selected_attn
+            or _prompt_bucket(row.prompt_summary) not in selected_prompts
         )
         row_class = "border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
@@ -457,7 +632,7 @@ def render_table_body(*, result: LeaderboardResult, filter_state: FilterState | 
             f"""<tr class="{row_class}"{hidden_attrs}>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
-              {_render_model_name_cell(row)}
+              {_render_model_name_cell(row, model_views[row.model_name])}
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
               {_render_metric_cells(result=result, row=row)}
@@ -467,6 +642,7 @@ def render_table_body(*, result: LeaderboardResult, filter_state: FilterState | 
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
               <td class="px-3 py-2 text-left">{escape(row.quantization or "")}</td>
+              {_render_base_delta_cell(result=result, row=row)}
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
@@ -480,13 +656,18 @@ def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> s
     )
 
 
-def _render_model_name_cell(row: LeaderboardRow) -> str:
-    details = _model_variant_details(row)
-    model_name = row.model_name
-    if details:
-        suffix = f" ({', '.join(details)})"
-        if model_name.endswith(suffix):
-            model_name = model_name[: -len(suffix)]
+def _render_base_delta_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if not _show_base_delta_column(result):
+        return ""
+    return f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_percent_delta(row.base_score_delta_percent)}</td>"""
+
+
+def _show_base_delta_column(result: LeaderboardResult) -> bool:
+    return result.include_quantization_variants or result.include_truncate_variants
+
+
+def _render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> str:
+    metadata_json = json.dumps(model_view.metadata, ensure_ascii=False, separators=(",", ":"))
     badges = []
     if row.embedding_dim is not None:
         badges.append(
@@ -496,17 +677,99 @@ def _render_model_name_cell(row: LeaderboardRow) -> str:
         badges.append(
             f"""<span class="inline-flex items-center border border-amber-200 bg-amber-50 px-1.5 py-0.5 text-xs font-medium text-amber-800">{escape(row.quantization)}</span>"""
         )
+    if model_view.variant_label:
+        badges.append(
+            f"""<span class="inline-flex items-center border border-violet-200 bg-violet-50 px-1.5 py-0.5 text-xs font-medium text-violet-800">{escape(model_view.variant_label)}</span>"""
+        )
     badge_html = f"""<span class="ml-2 inline-flex flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
-    return f"""<td class="whitespace-nowrap px-3 py-2 font-medium">{escape(model_name)}{badge_html}</td>"""
+    return f"""<td class="whitespace-nowrap px-3 py-2 font-medium">
+      <button type="button" class="model-detail-trigger text-left font-medium text-cyan-800 underline-offset-2 hover:underline"
+              data-model-metadata="{escape(metadata_json)}">{escape(model_view.display_name)}</button>{badge_html}
+    </td>"""
 
 
-def _model_variant_details(row: LeaderboardRow) -> list[str]:
-    details = []
-    if row.embedding_dim is not None:
-        details.append(f"{row.embedding_dim} dims")
-    if row.quantization:
-        details.append(row.quantization)
-    return details
+def render_model_detail_modal() -> str:
+    return """
+<dialog id="model-detail-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
+  <form method="dialog">
+    <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
+      <h3 class="text-base font-semibold">Model Details</h3>
+      <button type="submit" class="border border-zinc-300 px-2 py-1 text-sm text-zinc-700 hover:border-cyan-600 hover:text-cyan-700">Close</button>
+    </div>
+  </form>
+  <div class="px-4 py-3">
+    <p id="model-detail-title" class="break-all font-mono text-sm font-semibold text-zinc-900"></p>
+    <dl id="model-detail-fields" class="mt-3 grid grid-cols-[10rem_1fr] gap-x-3 gap-y-2 text-sm"></dl>
+  </div>
+</dialog>
+<script>
+(() => {
+  if (window.__hakariModelDetailsBound) return;
+  window.__hakariModelDetailsBound = true;
+  const fields = [
+    ["Ranking label", "ranking_model_name"],
+    ["Variant", "embedding_variant_name"],
+    ["Dimensions", "embedding_dim"],
+    ["Quantization", "quantization"],
+    ["Active params", "active_parameters"],
+    ["Total params", "total_parameters"],
+    ["Max len", "max_seq_length"],
+    ["DType", "dtype"],
+    ["Attention", "attention"],
+    ["Prompt", "prompt"],
+    ["HF trust", "trust_remote_code"],
+  ];
+  const fmt = (value) => {
+    if (value === null || value === undefined || value === "") return "";
+    if (typeof value === "boolean") return value ? "true" : "false";
+    if (typeof value === "number") return value.toLocaleString();
+    return String(value);
+  };
+  document.addEventListener("click", (event) => {
+    const trigger = event.target.closest(".model-detail-trigger");
+    if (!trigger) return;
+    const modal = document.getElementById("model-detail-modal");
+    const title = document.getElementById("model-detail-title");
+    const list = document.getElementById("model-detail-fields");
+    if (!modal || !title || !list) return;
+    const metadata = JSON.parse(trigger.dataset.modelMetadata || "{}");
+    title.textContent = metadata.model_name || trigger.textContent || "";
+    list.replaceChildren();
+    for (const [label, key] of fields) {
+      const value = fmt(metadata[key]);
+      if (!value) continue;
+      const dt = document.createElement("dt");
+      dt.className = "font-medium text-zinc-600";
+      dt.textContent = label;
+      const dd = document.createElement("dd");
+      dd.className = "break-all font-mono text-zinc-900";
+      dd.textContent = value;
+      list.append(dt, dd);
+    }
+    if (typeof modal.showModal === "function") modal.showModal();
+  });
+  const modal = document.getElementById("model-detail-modal");
+  if (modal) {
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) modal.close();
+    });
+  }
+  document.addEventListener("submit", (event) => {
+    if (event.target?.id !== "display-controls") return;
+    window.__hakariRestoreModelFilterFocus = document.activeElement?.id === "model-filter-input";
+  });
+  document.addEventListener("htmx:afterSwap", (event) => {
+    if (event.target?.id !== "leaderboard-panel" || !window.__hakariRestoreModelFilterFocus) return;
+    window.__hakariRestoreModelFilterFocus = false;
+    const input = document.getElementById("model-filter-input");
+    if (!input) return;
+    input.focus();
+    const end = input.value.length;
+    if (typeof input.setSelectionRange === "function") input.setSelectionRange(end, end);
+  });
+})();
+</script>
+"""
 
 
 def _active_model_filter_terms(model_filter: str) -> tuple[str, ...]:
@@ -576,6 +839,30 @@ def _quant_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
     )
 
 
+def _dtype_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
+    buckets = {_dtype_bucket(row.dtype) for row in rows}
+    return sorted(
+        ((bucket, _dtype_bucket_label(bucket)) for bucket in buckets),
+        key=lambda item: _dtype_bucket_sort_key(item[0]),
+    )
+
+
+def _attn_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
+    buckets = {_attn_bucket(row.attn_implementation) for row in rows}
+    return sorted(
+        ((bucket, _attn_bucket_label(bucket)) for bucket in buckets),
+        key=lambda item: _attn_bucket_sort_key(item[0]),
+    )
+
+
+def _prompt_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
+    buckets = {_prompt_bucket(row.prompt_summary) for row in rows}
+    return sorted(
+        ((bucket, _prompt_bucket_label(bucket)) for bucket in buckets),
+        key=lambda item: _prompt_bucket_sort_key(item[0]),
+    )
+
+
 def _selected_filter_values(
     *,
     options: list[tuple[str, str]],
@@ -584,6 +871,8 @@ def _selected_filter_values(
 ) -> set[str]:
     available = {value for value, _ in options}
     if not filters_active:
+        return available
+    if not selected:
         return available
     return {value for value in selected if value in available}
 
@@ -628,6 +917,123 @@ def _quant_bucket_sort_key(bucket: str) -> tuple[int, str]:
     return (0, "") if bucket == "__none__" else (1, bucket)
 
 
+def _dtype_bucket(value: str | None) -> str:
+    return value or "__unknown__"
+
+
+def _dtype_bucket_label(bucket: str) -> str:
+    return "Unknown" if bucket == "__unknown__" else bucket.upper()
+
+
+def _dtype_bucket_sort_key(bucket: str) -> tuple[int, str]:
+    return (1, "") if bucket == "__unknown__" else (0, bucket)
+
+
+def _dtype_label(value: str | None) -> str:
+    return "" if value is None else value.upper()
+
+
+def _attn_bucket(value: str | None) -> str:
+    return value or "__unknown__"
+
+
+def _attn_bucket_label(bucket: str) -> str:
+    return "Unknown" if bucket == "__unknown__" else _attn_label(bucket)
+
+
+def _attn_bucket_sort_key(bucket: str) -> tuple[int, str]:
+    order = {"flash_attention_2": "0", "sdpa": "1", "__unknown__": "9"}
+    return (1 if bucket == "__unknown__" else 0, order.get(bucket, bucket))
+
+
+def _attn_label(value: str | None) -> str:
+    if value is None:
+        return ""
+    labels = {
+        "flash_attention_2": "FA2",
+        "sdpa": "SDPA",
+    }
+    return labels.get(value, value)
+
+
+def _prompt_bucket(value: str | None) -> str:
+    if value is None:
+        return "model_default"
+    return value.replace(" + ", "_").replace(" ", "_")
+
+
+def _prompt_bucket_label(bucket: str) -> str:
+    labels = {
+        "explicit_prefixes": "Explicit prefixes",
+        "prompt_names": "Prompt names",
+        "prompt_names_encode_tasks": "Prompt names + encode tasks",
+        "encode_tasks": "Encode tasks",
+        "model_default": "Model default",
+    }
+    return labels.get(bucket, bucket.replace("_", " ").title())
+
+
+def _prompt_bucket_sort_key(bucket: str) -> tuple[int, str]:
+    order = {
+        "explicit_prefixes": "0",
+        "prompt_names": "1",
+        "prompt_names_encode_tasks": "2",
+        "encode_tasks": "3",
+        "model_default": "4",
+    }
+    return (0, order.get(bucket, bucket))
+
+
+def _prompt_label(value: str | None) -> str:
+    return _prompt_bucket_label(_prompt_bucket(value))
+
+
+def _visible_row_count(rows: list[LeaderboardRow], filter_state: FilterState) -> int:
+    model_filter_terms = _active_model_filter_terms(filter_state.model_filter)
+    dim_options = _dim_filter_options(rows)
+    quant_options = _quant_filter_options(rows)
+    dtype_options = _dtype_filter_options(rows)
+    attn_options = _attn_filter_options(rows)
+    prompt_options = _prompt_filter_options(rows)
+    selected_dims = _selected_filter_values(
+        options=dim_options,
+        selected=filter_state.dim_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_quants = _selected_filter_values(
+        options=quant_options,
+        selected=filter_state.quant_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_dtypes = _selected_filter_values(
+        options=dtype_options,
+        selected=filter_state.dtype_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_attn = _selected_filter_values(
+        options=attn_options,
+        selected=filter_state.attn_filters,
+        filters_active=filter_state.filters_active,
+    )
+    selected_prompts = _selected_filter_values(
+        options=prompt_options,
+        selected=filter_state.prompt_filters,
+        filters_active=filter_state.filters_active,
+    )
+    return sum(
+        1
+        for row in rows
+        if not (
+            bool(model_filter_terms and not _model_name_matches_filter_terms(row.model_name, model_filter_terms))
+            or _dim_bucket(row.embedding_dim) not in selected_dims
+            or _quant_bucket(row.quantization) not in selected_quants
+            or _dtype_bucket(row.dtype) not in selected_dtypes
+            or _attn_bucket(row.attn_implementation) not in selected_attn
+            or _prompt_bucket(row.prompt_summary) not in selected_prompts
+        )
+    )
+
+
 def _hidden_inputs(fields: list[tuple[str, str]]) -> str:
     return "".join(f"""<input type="hidden" name="{escape(name)}" value="{escape(value)}">""" for name, value in fields)
 
@@ -638,6 +1044,9 @@ def _active_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, s
     fields = [("filters", "1")]
     fields.extend(("dim_filter", value) for value in filter_state.dim_filters)
     fields.extend(("quant_filter", value) for value in filter_state.quant_filters)
+    fields.extend(("dtype_filter", value) for value in filter_state.dtype_filters)
+    fields.extend(("attn_filter", value) for value in filter_state.attn_filters)
+    fields.extend(("prompt_filter", value) for value in filter_state.prompt_filters)
     return fields
 
 
@@ -673,6 +1082,10 @@ def _fmt_embedding_dim(value: int | None) -> str:
     return "" if value is None else f"{value:,}"
 
 
+def _fmt_percent_delta(value: float | None) -> str:
+    return "" if value is None else f"{value:+.1f}%"
+
+
 def _metric_column_label(column: str) -> str:
     return column.removeprefix("Nano")
 
@@ -692,6 +1105,8 @@ def _state_payload(
         query_payload["quantization"] = "1"
     if result.include_truncate_variants:
         query_payload["truncate"] = "1"
+    if result.include_rescore_variants:
+        query_payload["rescore"] = "1"
     if result.include_other_variants:
         query_payload["other_variant"] = "1"
     if filter_state.model_filter:
@@ -700,6 +1115,9 @@ def _state_payload(
         query_payload["filters"] = "1"
         query_payload["dim_filter"] = list(filter_state.dim_filters)
         query_payload["quant_filter"] = list(filter_state.quant_filters)
+        query_payload["dtype_filter"] = list(filter_state.dtype_filters)
+        query_payload["attn_filter"] = list(filter_state.attn_filters)
+        query_payload["prompt_filter"] = list(filter_state.prompt_filters)
     return query_payload
 
 
@@ -713,10 +1131,14 @@ def _state_query(
     variants: bool,
     quantization: bool,
     truncate: bool,
+    rescore: bool,
     other_variant: bool,
     filters: bool,
     dim_filter: list[str] | None,
     quant_filter: list[str] | None,
+    dtype_filter: list[str] | None,
+    attn_filter: list[str] | None,
+    prompt_filter: list[str] | None,
     model_filter: str,
 ) -> QueryState:
     if view not in viewer_config.view_names:
@@ -725,30 +1147,36 @@ def _state_query(
         sort = "borda_rank"
     if direction not in {"asc", "desc"}:
         direction = "asc"
-    if variants:
-        quantization = True
-        truncate = True
-        other_variant = True
+    display_flags = variant_display_flags_from_values(
+        variants=variants,
+        quantization=quantization,
+        truncate=truncate,
+        rescore=rescore,
+        other=other_variant,
+    )
     dim_filters = _normalized_query_values(dim_filter)
     quant_filters = _normalized_query_values(quant_filter)
-    if filters and dim_filters:
-        truncate = True
-    if filters and any(value != "__none__" for value in quant_filters):
-        quantization = True
-
+    dtype_filters = _normalized_query_values(dtype_filter)
+    attn_filters = _normalized_query_values(attn_filter)
+    prompt_filters = _normalized_query_values(prompt_filter)
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
     if group:
         query["group"] = group
-    if quantization:
+    if display_flags.quantization:
         query["quantization"] = "1"
-    if truncate:
+    if display_flags.truncate:
         query["truncate"] = "1"
-    if other_variant:
+    if display_flags.rescore:
+        query["rescore"] = "1"
+    if display_flags.other:
         query["other_variant"] = "1"
     if filters:
         query["filters"] = "1"
         query["dim_filter"] = dim_filters
         query["quant_filter"] = quant_filters
+        query["dtype_filter"] = dtype_filters
+        query["attn_filter"] = attn_filters
+        query["prompt_filter"] = prompt_filters
     model_filter = model_filter.strip()
     if model_filter:
         query["model_filter"] = model_filter
@@ -761,6 +1189,9 @@ def _filter_state_from_query(query: QueryState) -> FilterState:
         filters_active=query.get("filters") == "1",
         dim_filters=tuple(_query_values(query.get("dim_filter"))),
         quant_filters=tuple(_query_values(query.get("quant_filter"))),
+        dtype_filters=tuple(_query_values(query.get("dtype_filter"))),
+        attn_filters=tuple(_query_values(query.get("attn_filter"))),
+        prompt_filters=tuple(_query_values(query.get("prompt_filter"))),
     )
 
 

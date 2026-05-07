@@ -7,6 +7,8 @@ benchmarks:
     include_in_overall: true
   - name: MNanoBEIR
     label: MNanoBEIR
+    matches:
+      - NanoBEIR
     include_in_overall: true
     score_groups:
       - name: task_mean
@@ -15,11 +17,17 @@ benchmarks:
       - name: lang_mean
         label: Lang Mean
         group_by: dataset_name
+  - name: NanoBIRCO
+    label: NanoBIRCO
+    include_in_overall: true
   - name: NanoMLDR
     label: NanoMLDR
     include_in_overall: true
   - name: NanoLongEmbed
     label: NanoLongEmbed
+    include_in_overall: true
+  - name: NanoDAPFAM
+    label: NanoDAPFAM
     include_in_overall: true
   - name: NanoCoIR
     label: NanoCoIR
@@ -87,9 +95,45 @@ benchmarks:
   - name: NanoMTEB
     label: NanoMTEB
     include_in_overall: false
-  - name: NanoMIRACL
-    label: NanoMIRACL
+  - name: NanoMTEB-Dutch
+    label: NanoMTEB-Dutch
+    include_in_overall: false
+  - name: NanoMTEB-French
+    label: NanoMTEB-French
+    include_in_overall: false
+  - name: NanoMTEB-German
+    label: NanoMTEB-German
     include_in_overall: false
   - name: NanoMTEB-Japanese
     label: NanoMTEB-Japanese
+    include_in_overall: false
+  - name: NanoMTEB-Korean
+    label: NanoMTEB-Korean
+    include_in_overall: false
+  - name: NanoMTEB-Persian
+    label: NanoMTEB-Persian
+    include_in_overall: false
+  - name: NanoMTEB-Polish
+    label: NanoMTEB-Polish
+    include_in_overall: false
+  - name: NanoMTEB-Russian
+    label: NanoMTEB-Russian
+    include_in_overall: false
+  - name: NanoMTEB-Scandinavian
+    label: NanoMTEB-Scandinavian
+    include_in_overall: false
+  - name: NanoMTEB-Spanish
+    label: NanoMTEB-Spanish
+    include_in_overall: false
+  - name: NanoMTEB-Thai
+    label: NanoMTEB-Thai
+    include_in_overall: false
+  - name: NanoMTEB-Vietnamese
+    label: NanoMTEB-Vietnamese
+    include_in_overall: false
+  - name: NanoMTEB-Xlingual
+    label: NanoMTEB-Xlingual
+    include_in_overall: false
+  - name: NanoMIRACL
+    label: NanoMIRACL
     include_in_overall: false

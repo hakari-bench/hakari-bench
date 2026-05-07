@@ -7,8 +7,9 @@ import duckdb
 import pytest
 from pydantic import ValidationError
 
-from scripts import build_results_database_and_report as report
+from hakari_bench.viewer.config import BenchmarkConfig
 from hakari_bench.warehouse_schema import MetricLongRow, TaskResultRow
+from scripts import build_results_database_and_report as report
 
 
 def test_nanomteb_japanese_is_a_ranked_benchmark() -> None:
@@ -36,6 +37,97 @@ def test_nanocmteb_is_a_ranked_benchmark() -> None:
     assert report.benchmark_name("hakari-bench/NanoCMTEB", "NanoCMTEB") == "NanoCMTEB"
 
 
+def test_new_nano_benchmarks_are_ranked_benchmarks() -> None:
+    assert "NanoBIRCO" in report.TARGET_BENCHMARKS
+    assert "NanoDAPFAM" in report.TARGET_BENCHMARKS
+    assert report.benchmark_name("hakari-bench/NanoBIRCO", "NanoBIRCO") == "NanoBIRCO"
+    assert report.benchmark_name("hakari-bench/NanoDAPFAM", "NanoDAPFAM") == "NanoDAPFAM"
+
+
+def test_language_specific_nanomteb_benchmarks_are_ranked_separately() -> None:
+    language_benchmarks = [
+        "NanoMTEB-Dutch",
+        "NanoMTEB-French",
+        "NanoMTEB-German",
+        "NanoMTEB-Japanese",
+        "NanoMTEB-Korean",
+        "NanoMTEB-Persian",
+        "NanoMTEB-Polish",
+        "NanoMTEB-Russian",
+        "NanoMTEB-Scandinavian",
+        "NanoMTEB-Spanish",
+        "NanoMTEB-Thai",
+        "NanoMTEB-Vietnamese",
+        "NanoMTEB-Xlingual",
+    ]
+
+    for benchmark in language_benchmarks:
+        assert benchmark in report.TARGET_BENCHMARKS
+        assert report.benchmark_name(f"hakari-bench/{benchmark}", benchmark) == benchmark
+
+
+def test_benchmark_name_uses_yaml_match_patterns_and_prefers_longest_match() -> None:
+    benchmark_configs = [
+        BenchmarkConfig(name="NanoMTEB", matches=["NanoMTEB"]),
+        BenchmarkConfig(name="NanoMTEB-Dutch", matches=["NanoMTEB-Dutch"]),
+        BenchmarkConfig(name="CustomBench", matches=["uploaded/custom-dataset"]),
+        BenchmarkConfig(name="MNanoBEIR", matches=["NanoBEIR"]),
+    ]
+
+    assert (
+        report.benchmark_name(
+            "hakari-bench/NanoMTEB-Dutch",
+            "NanoMTEB-Dutch",
+            benchmark_configs=benchmark_configs,
+        )
+        == "NanoMTEB-Dutch"
+    )
+    assert (
+        report.benchmark_name(
+            "uploaded/custom-dataset",
+            "arbitrary-name",
+            benchmark_configs=benchmark_configs,
+        )
+        == "CustomBench"
+    )
+    assert (
+        report.benchmark_name(
+            "hakari-bench/NanoBEIR-en",
+            "NanoBEIR-en",
+            benchmark_configs=benchmark_configs,
+        )
+        == "MNanoBEIR"
+    )
+
+
+def test_load_results_uses_yaml_benchmark_matches(tmp_path: Path) -> None:
+    model_dir = tmp_path / "model"
+    task_path = model_dir / "uploaded__custom-dataset" / "task.json"
+    task_path.parent.mkdir(parents=True)
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {"id": "example/model"},
+                "target": {
+                    "dataset_id": "uploaded/custom-dataset",
+                    "dataset_name": "custom-name",
+                    "task_name": "task",
+                },
+                "evaluation": {"aggregate_metric_value": 0.5},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    rows, _, _, _, _ = report.load_results(
+        tmp_path,
+        benchmark_configs=[BenchmarkConfig(name="CustomBench", matches=["uploaded/custom-dataset"])],
+    )
+
+    assert len(rows) == 1
+    assert rows[0].benchmark == "CustomBench"
+
+
 def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
     task_path = model_dir / "hakari-bench__NanoMTEB-Japanese" / "NanoJaCWIR.json"
@@ -50,6 +142,15 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
                     "max_seq_length": 8192,
                     "dtype": "bf16",
                     "attn_implementation": "flash_attention_2",
+                    "trust_remote_code": True,
+                },
+                "config": {
+                    "query_prompt": "query: ",
+                    "document_prompt": "passage: ",
+                    "query_prompt_name": None,
+                    "document_prompt_name": None,
+                    "query_encode_task": None,
+                    "document_encode_task": None,
                 },
                 "environment": {
                     "package_versions": {
@@ -92,6 +193,9 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert rows[0].experiment_fingerprint == "abc123"
     assert rows[0].active_parameters == 3
     assert rows[0].total_parameters == 5
+    assert rows[0].query_prompt == "query: "
+    assert rows[0].document_prompt == "passage: "
+    assert rows[0].trust_remote_code is True
     assert len(metric_rows) == 1
     assert len(diagnostic_rows) == 1
     assert diagnostic_rows[0].base_score == 0.42
@@ -355,6 +459,13 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
         max_seq_length=8192,
         dtype="bf16",
         attn_implementation="flash_attention_2",
+        query_prompt="query: ",
+        document_prompt="passage: ",
+        query_prompt_name=None,
+        document_prompt_name=None,
+        query_encode_task=None,
+        document_encode_task=None,
+        trust_remote_code=True,
         torch_version="2.9.1",
         transformers_version="4.57.6",
         sentence_transformers_version="5.4.1",
@@ -419,6 +530,13 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
             "dataset-sha",
             "main",
         )
+        assert con.execute(
+            """
+            SELECT query_prompt, document_prompt, query_prompt_name, document_prompt_name,
+                   query_encode_task, document_encode_task, trust_remote_code
+            FROM task_results
+            """
+        ).fetchone() == ("query: ", "passage: ", None, None, None, None, True)
         assert con.execute("SELECT base_score FROM task_diagnostics").fetchone() is None
     finally:
         con.close()
@@ -444,6 +562,13 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
         max_seq_length=None,
         dtype=None,
         attn_implementation=None,
+        query_prompt=None,
+        document_prompt=None,
+        query_prompt_name=None,
+        document_prompt_name=None,
+        query_encode_task=None,
+        document_encode_task=None,
+        trust_remote_code=None,
         torch_version=None,
         transformers_version=None,
         sentence_transformers_version=None,

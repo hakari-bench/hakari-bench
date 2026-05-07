@@ -10,17 +10,35 @@ import pytest
 from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, create_app
 from hakari_bench.viewer.config import load_viewer_config
 from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, compute_leaderboard_rows
+from hakari_bench.viewer.model_display import model_cell_views
 from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore, resolve_duckdb_location
 
 
 def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> None:
     config = load_viewer_config()
+    language_nanomteb_benchmarks = [
+        "NanoMTEB-Dutch",
+        "NanoMTEB-French",
+        "NanoMTEB-German",
+        "NanoMTEB-Japanese",
+        "NanoMTEB-Korean",
+        "NanoMTEB-Persian",
+        "NanoMTEB-Polish",
+        "NanoMTEB-Russian",
+        "NanoMTEB-Scandinavian",
+        "NanoMTEB-Spanish",
+        "NanoMTEB-Thai",
+        "NanoMTEB-Vietnamese",
+        "NanoMTEB-Xlingual",
+    ]
     expected_overall_benchmarks = [
         "NanoMMTEB",
         "NanoRTEB",
         "MNanoBEIR",
+        "NanoBIRCO",
         "NanoMLDR",
         "NanoLongEmbed",
+        "NanoDAPFAM",
         "NanoCoIR",
         "NanoIFIR",
         "NanoLaw",
@@ -41,8 +59,10 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "MNanoBEIR",
         "NanoRTEB",
         "NanoMMTEB",
+        "NanoBIRCO",
         "NanoMLDR",
         "NanoLongEmbed",
+        "NanoDAPFAM",
         "NanoCoIR",
         "NanoIFIR",
         "NanoLaw",
@@ -55,8 +75,8 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoBuiltBench",
         "NanoCMTEB",
         "NanoMTEB",
+        *language_nanomteb_benchmarks,
         "NanoMIRACL",
-        "NanoMTEB-Japanese",
     ]
     assert [component.group_by for component in grouped_overall.benchmark_components] == [
         "task_name",
@@ -64,6 +84,8 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "task_name",
         "benchmark",
         "benchmark",
+        "benchmark",
+        "benchmark",
         "task_name",
         "benchmark",
         "benchmark",
@@ -76,7 +98,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "benchmark",
         "benchmark",
         "benchmark",
-        "benchmark",
+        *["benchmark"] * len(language_nanomteb_benchmarks),
         "benchmark",
     ]
     assert config.view_names[: len(expected_overall_benchmarks) + 2] == [
@@ -85,8 +107,10 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         *expected_overall_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
-    assert "NanoMTEB-Japanese" in config.view_names
-    assert "NanoMTEB-Japanese" not in config.overall.benchmark_names
+    assert "NanoBIRCO" in config.view_names
+    assert "NanoDAPFAM" in config.view_names
+    assert all(benchmark in config.view_names for benchmark in language_nanomteb_benchmarks)
+    assert all(benchmark not in config.overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
     assert "NanoCMTEB" in config.view_names
     assert "NanoCMTEB" in config.overall.benchmark_names
     nano_law = config.benchmark_for_view("NanoLaw")
@@ -122,6 +146,33 @@ benchmarks:
 
     with pytest.raises(ValueError, match="language"):
         load_viewer_config(config_dir)
+
+
+def test_viewer_config_loads_benchmark_match_patterns(tmp_path: Path) -> None:
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: BenchA
+    matches:
+      - uploaded/bench-a
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+name: Overall
+label: Overall
+benchmarks:
+  - BenchA
+""".strip(),
+        encoding="utf-8",
+    )
+
+    config = load_viewer_config(config_dir)
+
+    assert config.benchmarks[0].match_patterns == ["uploaded/bench-a"]
 
 
 def test_viewer_config_rejects_unknown_yaml_keys(tmp_path: Path) -> None:
@@ -336,6 +387,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.83, 10, 12, 8192, "truncate_dim_384", 384, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.85, 10, 12, 8192, "truncate_dim_512", 512, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.82, 10, 12, 8192, "truncate_dim_256_quantize_int8_docs", 256, "int8"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.81, 10, 12, 8192, "binary_rescore", 768, "binary"),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.75, 10, 12, 8192, "custom_variant", 2048, None),
             ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 20, 24, 4096, None, 512, None),
         ],
@@ -355,22 +407,24 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         include_quantization_variants=True,
         include_truncate_variants=True,
     )
+    rescore_result = service.get_leaderboard("BenchA", include_rescore_variants=True)
     other_variant_result = service.get_leaderboard("BenchA", include_other_variants=True)
 
     assert [row.model_name for row in base_result.rows] == ["model/a", "model/b"]
     assert [row.model_name for row in quantization_result.rows] == [
         "model/a (768 dims)",
-        "model/a (256 dims, int8)",
         "model/a (768 dims, uint8)",
         "model/b (512 dims)",
     ]
+    assert all("rescore" not in row.model_name for row in quantization_result.rows)
+    assert all("256 dims" not in row.model_name for row in quantization_result.rows)
     assert [row.model_name for row in truncate_result.rows] == [
         "model/a (768 dims)",
         "model/a (512 dims)",
         "model/a (384 dims)",
-        "model/a (256 dims, int8)",
         "model/b (512 dims)",
     ]
+    assert all("int8" not in row.model_name for row in truncate_result.rows)
     assert [row.model_name for row in all_variant_result.rows] == [
         "model/a (768 dims)",
         "model/a (512 dims)",
@@ -381,6 +435,17 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     ]
     assert all_variant_result.rows[3].embedding_dim == 256
     assert all_variant_result.rows[3].quantization == "int8"
+    delta_by_model = {row.model_name: row.base_score_delta_percent for row in quantization_result.rows}
+    assert delta_by_model == {
+        "model/a (768 dims)": None,
+        "model/a (768 dims, uint8)": pytest.approx(-11.1111111111),
+        "model/b (512 dims)": None,
+    }
+    assert [row.model_name for row in rescore_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (768 dims, binary)",
+        "model/b (512 dims)",
+    ]
     assert [row.model_name for row in other_variant_result.rows] == [
         "model/a (768 dims)",
         "model/a (2048 dims)",
@@ -399,26 +464,34 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert ">Quantization</summary>" in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
-    assert response.text.count(">All</button>") == 2
-    assert response.text.count(">None</button>") == 2
+    assert response.text.count(">All</button>") == 5
+    assert response.text.count(">None</button>") == 5
     assert 'id="display-controls"' in response.text
     assert 'id="facet-filters"' in response.text
     assert 'from:input[type=' not in response.text
-    assert 'hx-trigger="change"' in response.text
-    assert 'hx-include="#display-controls"' in response.text
+    assert 'hx-trigger="change, submit"' in response.text
+    assert 'hx-include="#display-controls"' not in response.text
     assert "Truncate dims" in response.text
+    assert "Rescore" in response.text
+    assert 'id="model-filter-input"' in response.text
     assert 'name="model_filter"' in response.text
     assert 'value="model/b"' in response.text
-    assert "model/a (768 dims, uint8)" not in response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
     assert "model/a" in response.text
     assert "bg-cyan-50" in response.text
     assert "768 dims" in response.text
     assert "bg-amber-50" in response.text
     assert "uint8" in response.text
+    assert "binary_rescore" not in response.text
+    assert "Δ vs Base" in response.text
+    assert "-11.1%" in response.text
+    assert "-8.9%" not in response.text
     assert 'data-filter-hidden="true"' in response.text
     assert "Dims" in response.text
     assert "Quantization" in response.text
-    assert "delay:700ms" in response.text
+    assert "delay:700ms" not in response.text
+    assert "htmx:afterSwap" in response.text
+    assert "window.__hakariRestoreModelFilterFocus" in response.text
     assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
 
@@ -445,22 +518,106 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "quant_filter=uint8" in facet_response.text
     assert 'data-filter-hidden="true"' in facet_response.text
 
-    inferred_truncate_response = TestClient(app).get(
+    explicit_truncate_off_response = TestClient(app).get(
         "/leaderboard?view=BenchA&filters=1&dim_filter=384&quant_filter=__none__"
     )
 
-    assert inferred_truncate_response.status_code == 200
-    assert 'name="truncate" value="1" class="h-4 w-4 accent-cyan-700" checked' in inferred_truncate_response.text
-    assert "384 dims" in inferred_truncate_response.text
-    assert "model/a" in inferred_truncate_response.text
+    assert explicit_truncate_off_response.status_code == 200
+    assert 'name="truncate" value="1" class="h-4 w-4 accent-cyan-700" checked' not in explicit_truncate_off_response.text
+    assert "384 dims" not in explicit_truncate_off_response.text
 
-    inferred_quant_response = TestClient(app).get(
+    explicit_quantization_off_response = TestClient(app).get(
         "/leaderboard?view=BenchA&filters=1&dim_filter=768&quant_filter=uint8"
     )
 
-    assert inferred_quant_response.status_code == 200
-    assert 'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked' in inferred_quant_response.text
-    assert "uint8" in inferred_quant_response.text
+    assert explicit_quantization_off_response.status_code == 200
+    assert (
+        'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked'
+        not in explicit_quantization_off_response.text
+    )
+    assert ">uint8</td>" not in explicit_quantization_off_response.text
+
+    rescore_response = TestClient(app).get("/leaderboard?view=BenchA&rescore=1")
+
+    assert rescore_response.status_code == 200
+    assert 'name="rescore" value="1" class="h-4 w-4 accent-cyan-700" checked' in rescore_response.text
+    assert "binary_rescore" in rescore_response.text
+    assert "Δ vs Base" not in rescore_response.text
+
+
+def test_base_score_delta_percent_can_be_positive() -> None:
+    rows = compute_leaderboard_rows(
+        [
+            TaskScore(
+                "model/a (768 dims)",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.50,
+                None,
+                None,
+                None,
+                source_model_name="model/a",
+            ),
+            TaskScore(
+                "model/a (768 dims, uint8)",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.55,
+                None,
+                None,
+                None,
+                embedding_variant_name="quantize_uint8_docs",
+                embedding_dim=768,
+                quantization="uint8",
+                source_model_name="model/a",
+            ),
+            TaskScore(
+                "model/a (768 dims)",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a2",
+                "a2",
+                "a2",
+                0.50,
+                None,
+                None,
+                None,
+                source_model_name="model/a",
+            ),
+            TaskScore(
+                "model/a (768 dims, uint8)",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a2",
+                "a2",
+                "a2",
+                0.55,
+                None,
+                None,
+                None,
+                embedding_variant_name="quantize_uint8_docs",
+                embedding_dim=768,
+                quantization="uint8",
+                source_model_name="model/a",
+            ),
+        ],
+        is_overall=False,
+    )
+
+    by_model = {row.model_name: row for row in rows}
+
+    assert by_model["model/a (768 dims)"].base_score_delta_percent is None
+    assert by_model["model/a (768 dims, uint8)"].base_score_delta_percent == pytest.approx(10.0)
 
 
 def test_variant_display_names_stay_unique_when_dimension_and_quantization_collide(tmp_path: Path) -> None:
@@ -511,15 +668,205 @@ def test_variant_display_names_stay_unique_when_dimension_and_quantization_colli
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    result = service.get_leaderboard("BenchA", include_quantization_variants=True)
+    quantization_result = service.get_leaderboard("BenchA", include_quantization_variants=True)
+    cross_variant_result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+    )
 
-    assert [row.model_name for row in result.rows] == [
+    assert [row.model_name for row in quantization_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (768 dims, int8)",
+        "model/b (512 dims)",
+    ]
+    assert [row.model_name for row in cross_variant_result.rows] == [
         "model/a (768 dims)",
         "model/a (768 dims, int8, quantize_int8_docs)",
         "model/a (768 dims, int8, truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_64_quantize_int8_docs)",
         "model/b (512 dims)",
     ]
-    assert all(row.borda_score >= 0.0 for row in result.rows)
+    assert all(row.borda_score >= 0.0 for row in cross_variant_result.rows)
+
+
+def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "jinaai/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.90,
+                10,
+                12,
+                8192,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                True,
+                None,
+                768,
+                None,
+            ),
+            (
+                "jinaai/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.80,
+                10,
+                12,
+                8192,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                True,
+                "binary",
+                768,
+                "binary",
+            ),
+            (
+                "Qwen/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.70,
+                20,
+                24,
+                4096,
+                "fp32",
+                "sdpa",
+                None,
+                None,
+                "query",
+                "document",
+                None,
+                None,
+                False,
+                None,
+                768,
+                None,
+            ),
+        ],
+        include_embedding_variant_columns=True,
+        include_runtime_option_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1")
+
+    assert response.status_code == 200
+    assert "jinaai/jina-embeddings-v5-text-nano (768 dims, binary, binary)" not in response.text
+    assert "jinaai/jina-embeddings-v5-text-nano" in response.text
+    assert "Qwen/jina-embeddings-v5-text-nano" in response.text
+    assert "768 dims" in response.text
+    assert "binary" in response.text
+    assert ">remote code<" not in response.text
+    assert 'data-model-metadata="' in response.text
+    assert "&quot;dtype&quot;:&quot;bf16&quot;" in response.text
+    assert "&quot;attention&quot;:&quot;flash_attention_2&quot;" in response.text
+    assert "&quot;trust_remote_code&quot;:true" in response.text
+    assert "Model Details" in response.text
+    assert "JSON.parse" in response.text
+    assert 'modal.addEventListener("click"' in response.text
+    assert "if (event.target === modal) modal.close();" in response.text
+
+
+def test_model_cell_views_shorten_names_unless_short_name_collides() -> None:
+    unique = compute_leaderboard_rows(
+        [
+            TaskScore(
+                "jinaai/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.90,
+                10,
+                12,
+                8192,
+                dtype="bf16",
+                attn_implementation="flash_attention_2",
+                prompt_summary="model default",
+                trust_remote_code=True,
+                embedding_dim=768,
+            )
+        ],
+        is_overall=False,
+    )
+    unique_views = model_cell_views(unique)
+
+    assert unique_views[unique[0].model_name].display_name == "jina-embeddings-v5-text-nano"
+    assert unique_views[unique[0].model_name].metadata["model_name"] == "jinaai/jina-embeddings-v5-text-nano"
+    assert unique_views[unique[0].model_name].metadata["dtype"] == "bf16"
+    assert unique_views[unique[0].model_name].metadata["attention"] == "flash_attention_2"
+    assert unique_views[unique[0].model_name].metadata["trust_remote_code"] is True
+
+    colliding = compute_leaderboard_rows(
+        [
+            TaskScore(
+                "jinaai/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.90,
+                None,
+                None,
+                None,
+            ),
+            TaskScore(
+                "other/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.80,
+                None,
+                None,
+                None,
+            ),
+        ],
+        is_overall=False,
+    )
+    colliding_views = model_cell_views(colliding)
+
+    assert colliding_views[colliding[0].model_name].display_name == "jinaai/jina-embeddings-v5-text-nano"
+    assert colliding_views[colliding[1].model_name].display_name == "other/jina-embeddings-v5-text-nano"
 
 
 def test_model_filter_matches_any_whitespace_separated_token_case_insensitively(tmp_path: Path) -> None:
@@ -548,6 +895,115 @@ def test_model_filter_matches_any_whitespace_separated_token_case_insensitively(
     assert "Qwen/Qwen3-Embedding" in response.text
     assert "other/model" in response.text
     assert response.text.count('data-filter-hidden="true"') == 1
+
+
+def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "intfloat/multilingual-e5-small",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.90,
+                10,
+                12,
+                512,
+                "bf16",
+                "flash_attention_2",
+                "query: ",
+                "passage: ",
+                None,
+                None,
+                None,
+                None,
+                False,
+            ),
+            (
+                "google/embeddinggemma-300m",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.80,
+                20,
+                24,
+                2048,
+                "bf16",
+                "sdpa",
+                None,
+                None,
+                "query",
+                "document",
+                None,
+                None,
+                False,
+            ),
+            (
+                "jinaai/jina-embeddings-v5-text-small",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.70,
+                30,
+                36,
+                8192,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                "query",
+                "document",
+                "retrieval",
+                "retrieval",
+                True,
+            ),
+        ],
+        include_runtime_option_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get(
+        "/leaderboard?view=BenchA&filters=1&attn_filter=flash_attention_2&prompt_filter=explicit_prefixes"
+    )
+
+    assert response.status_code == 200
+    assert "Runtime" in response.text
+    assert ">Attention</summary>" in response.text
+    assert ">Dtype</summary>" in response.text
+    assert ">Prompt</summary>" in response.text
+    assert ">Attention</span>" not in response.text
+    assert ">Dtype</span>" not in response.text
+    assert ">Prompt</span>" not in response.text
+    assert ">FA2</td>" not in response.text
+    assert ">SDPA</td>" not in response.text
+    assert ">BF16</td>" not in response.text
+    assert "Explicit prefixes" in response.text
+    assert "Prompt names" in response.text
+    assert "Prompt names + encode tasks" in response.text
+    assert ">remote code<" not in response.text
+    assert 'name="attn_filter" value="flash_attention_2" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="prompt_filter" value="explicit_prefixes" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'data-shown-count="1"' in response.text
+    assert response.text.count('data-filter-hidden="true"') == 2
+    assert "intfloat/multilingual-e5-small" in response.text
+    assert "google/embeddinggemma-300m" in response.text
 
 
 def test_individual_leaderboard_uses_simple_task_mean() -> None:
@@ -784,6 +1240,7 @@ def _write_task_results(
     rows: list[tuple],
     *,
     include_embedding_variant_columns: bool = False,
+    include_runtime_option_columns: bool = False,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
@@ -794,6 +1251,21 @@ def _write_task_results(
                 "quantization VARCHAR",
             ]
             if include_embedding_variant_columns
+            else []
+        )
+        runtime_columns = (
+            [
+                "dtype VARCHAR",
+                "attn_implementation VARCHAR",
+                "query_prompt VARCHAR",
+                "document_prompt VARCHAR",
+                "query_prompt_name VARCHAR",
+                "document_prompt_name VARCHAR",
+                "query_encode_task VARCHAR",
+                "document_encode_task VARCHAR",
+                "trust_remote_code BOOLEAN",
+            ]
+            if include_runtime_option_columns
             else []
         )
         columns = [
@@ -808,6 +1280,7 @@ def _write_task_results(
             "active_parameters BIGINT",
             "total_parameters BIGINT",
             "max_seq_length INTEGER",
+            *runtime_columns,
             *variant_columns,
         ]
         con.execute(

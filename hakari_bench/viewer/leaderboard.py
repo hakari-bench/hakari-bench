@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
 
 SortDirection = Literal["asc", "desc"]
 
@@ -26,9 +27,14 @@ class TaskScore:
     active_parameters: int | None
     total_parameters: int | None
     max_seq_length: int | None
+    dtype: str | None = None
+    attn_implementation: str | None = None
+    prompt_summary: str | None = None
+    trust_remote_code: bool | None = None
     embedding_variant_name: str | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
+    source_model_name: str | None = None
 
 
 class LeaderboardRow(BaseModel):
@@ -45,8 +51,15 @@ class LeaderboardRow(BaseModel):
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
+    dtype: str | None = None
+    attn_implementation: str | None = None
+    prompt_summary: str | None = None
+    trust_remote_code: bool | None = None
+    embedding_variant_name: str | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
+    source_model_name: str | None = None
+    base_score_delta_percent: float | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
 
 
@@ -69,6 +82,7 @@ class LeaderboardResult(BaseModel):
     available_view_labels: dict[str, str]
     include_quantization_variants: bool = False
     include_truncate_variants: bool = False
+    include_rescore_variants: bool = False
     include_other_variants: bool = False
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
@@ -89,6 +103,7 @@ SORT_COLUMNS = {
     "max_seq_length",
     "embedding_dim",
     "quantization",
+    "base_score_delta_percent",
 }
 
 
@@ -106,6 +121,7 @@ class LeaderboardService:
         score_group_name: str | None = None,
         include_quantization_variants: bool = False,
         include_truncate_variants: bool = False,
+        include_rescore_variants: bool = False,
         include_other_variants: bool = False,
     ) -> LeaderboardResult:
         overall = self.config.overall_for_view(view_name)
@@ -117,6 +133,7 @@ class LeaderboardService:
             benchmarks,
             include_quantization_variants=include_quantization_variants,
             include_truncate_variants=include_truncate_variants,
+            include_rescore_variants=include_rescore_variants,
             include_other_variants=include_other_variants,
         )
         rows = _exclude_configured_tasks(rows, self.config)
@@ -139,6 +156,7 @@ class LeaderboardService:
             available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
             include_quantization_variants=include_quantization_variants,
             include_truncate_variants=include_truncate_variants,
+            include_rescore_variants=include_rescore_variants,
             include_other_variants=include_other_variants,
             score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
             selected_score_group=(
@@ -155,10 +173,16 @@ class LeaderboardService:
         *,
         include_quantization_variants: bool,
         include_truncate_variants: bool,
+        include_rescore_variants: bool,
         include_other_variants: bool,
     ) -> list[TaskScore]:
         task_scores: list[TaskScore] = []
-        include_any_variants = include_quantization_variants or include_truncate_variants or include_other_variants
+        include_any_variants = (
+            include_quantization_variants
+            or include_truncate_variants
+            or include_rescore_variants
+            or include_other_variants
+        )
         records = self.task_results_repository.fetch_task_results(
             benchmarks=benchmarks,
             include_embedding_variants=include_any_variants,
@@ -166,12 +190,15 @@ class LeaderboardService:
         filtered_records = [
             record
             for record in records
-            if _include_variant_row(
+            if include_variant_row(
                 embedding_variant_name=record.embedding_variant_name,
                 quantization=record.quantization,
-                include_quantization_variants=include_quantization_variants,
-                include_truncate_variants=include_truncate_variants,
-                include_other_variants=include_other_variants,
+                flags=VariantDisplayFlags(
+                    quantization=include_quantization_variants,
+                    truncate=include_truncate_variants,
+                    rescore=include_rescore_variants,
+                    other=include_other_variants,
+                ),
             )
         ]
         model_names = _record_display_model_names(filtered_records, include_variant_details=include_any_variants)
@@ -189,9 +216,14 @@ class LeaderboardService:
                     active_parameters=record.active_parameters,
                     total_parameters=record.total_parameters,
                     max_seq_length=record.max_seq_length,
+                    dtype=record.dtype,
+                    attn_implementation=record.attn_implementation,
+                    prompt_summary=record.prompt_summary,
+                    trust_remote_code=record.trust_remote_code,
                     embedding_variant_name=record.embedding_variant_name,
                     embedding_dim=record.embedding_dim,
                     quantization=record.quantization,
+                    source_model_name=record.model_name,
                 )
             )
         return task_scores
@@ -245,18 +277,25 @@ def compute_leaderboard_rows(
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
+                dtype=first.dtype,
+                attn_implementation=first.attn_implementation,
+                prompt_summary=first.prompt_summary,
+                trust_remote_code=first.trust_remote_code,
+                embedding_variant_name=first.embedding_variant_name,
                 embedding_dim=first.embedding_dim,
                 quantization=first.quantization,
+                source_model_name=first.source_model_name,
                 metric_values=metric_values,
             )
         )
 
     borda_rank_by_model = _rank_desc((row.model_name, row.borda_score) for row in leaderboard_rows)
     mean_rank_by_model = _rank_desc((row.model_name, row.mean_score) for row in leaderboard_rows)
-    return [
+    ranked_rows = [
         row.model_copy(update={"borda_rank": borda_rank_by_model[row.model_name], "mean_rank": mean_rank_by_model[row.model_name]})
         for row in leaderboard_rows
     ]
+    return _with_base_score_delta_percent(ranked_rows)
 
 
 def sort_rows(rows: list[LeaderboardRow], *, sort: str, direction: SortDirection) -> list[LeaderboardRow]:
@@ -349,12 +388,52 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
+                dtype=first.dtype,
+                attn_implementation=first.attn_implementation,
+                prompt_summary=first.prompt_summary,
+                trust_remote_code=first.trust_remote_code,
                 embedding_variant_name=first.embedding_variant_name,
                 embedding_dim=first.embedding_dim,
                 quantization=first.quantization,
+                source_model_name=first.source_model_name,
             )
         )
     return aggregated
+
+
+def _with_base_score_delta_percent(rows: list[LeaderboardRow]) -> list[LeaderboardRow]:
+    base_score_by_source_model = {
+        row.source_model_name: row.mean_score
+        for row in rows
+        if row.source_model_name is not None and row.embedding_variant_name is None and row.mean_score != 0.0
+    }
+    return [
+        row.model_copy(
+            update={
+                "base_score_delta_percent": _base_score_delta_percent(
+                    score=row.mean_score,
+                    base_score=(
+                        base_score_by_source_model.get(row.source_model_name)
+                        if row.source_model_name is not None
+                        else None
+                    ),
+                    embedding_variant_name=row.embedding_variant_name,
+                )
+            }
+        )
+        for row in rows
+    ]
+
+
+def _base_score_delta_percent(
+    *,
+    score: float,
+    base_score: float | None,
+    embedding_variant_name: str | None,
+) -> float | None:
+    if embedding_variant_name is None or base_score is None:
+        return None
+    return 100.0 * (score - base_score) / base_score
 
 
 def _exclude_configured_tasks(rows: list[TaskScore], config: ViewerConfig) -> list[TaskScore]:
@@ -426,27 +505,6 @@ def _display_model_name(
     if not details:
         return model_name
     return f"{model_name} ({', '.join(details)})"
-
-
-def _include_variant_row(
-    *,
-    embedding_variant_name: str | None,
-    quantization: str | None,
-    include_quantization_variants: bool,
-    include_truncate_variants: bool,
-    include_other_variants: bool,
-) -> bool:
-    if embedding_variant_name is None:
-        return True
-    normalized_name = embedding_variant_name.lower()
-    is_quantization = quantization is not None or "quantize" in normalized_name
-    is_truncate = "truncate" in normalized_name
-    is_other = not is_quantization and not is_truncate
-    return (
-        (include_quantization_variants and is_quantization)
-        or (include_truncate_variants and is_truncate)
-        or (include_other_variants and is_other)
-    )
 
 
 def _select_score_group(

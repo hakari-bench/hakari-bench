@@ -117,11 +117,84 @@ def test_task_results_repository_can_fetch_embedding_variant_rows_when_requested
     ]
 
 
+def test_task_results_repository_reads_runtime_option_columns_when_present(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "model/e5",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.90,
+                10,
+                12,
+                8192,
+                "bf16",
+                "flash_attention_2",
+                "query: ",
+                "passage: ",
+                None,
+                None,
+                None,
+                None,
+                False,
+            ),
+            (
+                "model/gemma",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.80,
+                20,
+                24,
+                2048,
+                "bf16",
+                "sdpa",
+                None,
+                None,
+                "query",
+                "document",
+                None,
+                None,
+                True,
+            ),
+        ],
+        include_embedding_variant_columns=False,
+        include_runtime_option_columns=True,
+    )
+
+    records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+    )
+
+    assert records[0].dtype == "bf16"
+    assert records[0].attn_implementation == "flash_attention_2"
+    assert records[0].query_prompt == "query: "
+    assert records[0].document_prompt == "passage: "
+    assert records[0].prompt_summary == "explicit prefixes"
+    assert records[0].trust_remote_code is False
+    assert records[1].attn_implementation == "sdpa"
+    assert records[1].query_prompt_name == "query"
+    assert records[1].document_prompt_name == "document"
+    assert records[1].prompt_summary == "prompt names"
+    assert records[1].trust_remote_code is True
+
+
 def _write_task_results(
     db_path: Path,
     rows: list[tuple],
     *,
     include_embedding_variant_columns: bool,
+    include_runtime_option_columns: bool = False,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
@@ -132,6 +205,21 @@ def _write_task_results(
                 "quantization VARCHAR",
             ]
             if include_embedding_variant_columns
+            else []
+        )
+        runtime_columns = (
+            [
+                "dtype VARCHAR",
+                "attn_implementation VARCHAR",
+                "query_prompt VARCHAR",
+                "document_prompt VARCHAR",
+                "query_prompt_name VARCHAR",
+                "document_prompt_name VARCHAR",
+                "query_encode_task VARCHAR",
+                "document_encode_task VARCHAR",
+                "trust_remote_code BOOLEAN",
+            ]
+            if include_runtime_option_columns
             else []
         )
         columns = [
@@ -146,6 +234,7 @@ def _write_task_results(
             "active_parameters BIGINT",
             "total_parameters BIGINT",
             "max_seq_length INTEGER",
+            *runtime_columns,
             *variant_columns,
         ]
         con.execute(f"CREATE TABLE task_results ({', '.join(columns)})")
