@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from html import escape
 import json
 from pathlib import Path
@@ -15,14 +14,22 @@ from hakari_bench.viewer.leaderboard import (
     LeaderboardResult,
     LeaderboardRow,
     LeaderboardService,
-    SORT_COLUMNS,
     SortDirection,
 )
 from hakari_bench.viewer.model_display import ModelCellView, model_cell_views
+from hakari_bench.viewer.state import (
+    FilterState,
+    QueryState,
+    active_filter_hidden_fields,
+    filter_state_from_query,
+    normalize_query_state,
+    optional_query_string,
+    query_string,
+    state_payload,
+)
 from hakari_bench.viewer.store import LocalDuckDbStore
 from hakari_bench.viewer.variant_display import (
     variant_display_flags_from_query,
-    variant_display_flags_from_values,
 )
 
 
@@ -33,20 +40,7 @@ class ViewerAppConfig(BaseModel):
     config_dir: Path = Path("config/viewer")
 
 
-QueryValue = str | list[str]
-QueryState = dict[str, QueryValue]
 FILTER_NONE_VALUE = "__none_selected__"
-
-
-@dataclass(frozen=True)
-class FilterState:
-    model_filter: str = ""
-    filters_active: bool = False
-    dim_filters: tuple[str, ...] = ()
-    quant_filters: tuple[str, ...] = ()
-    dtype_filters: tuple[str, ...] = ()
-    attn_filters: tuple[str, ...] = ()
-    prompt_filters: tuple[str, ...] = ()
 
 
 def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewer")):
@@ -76,7 +70,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         model_filter: str = Query(default=""),
     ) -> str:
         store.ensure_current()
-        initial_query = _state_query(
+        initial_query = normalize_query_state(
             viewer_config=viewer_config,
             view=view,
             sort=sort,
@@ -117,7 +111,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         model_filter: str = Query(default=""),
     ) -> HTMLResponse:
         store.ensure_current()
-        state_query = _state_query(
+        state_query = normalize_query_state(
             viewer_config=viewer_config,
             view=view,
             sort=sort,
@@ -136,12 +130,12 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             prompt_filter=prompt_filter,
             model_filter=model_filter,
         )
-        view = _query_string(state_query["view"])
-        sort = _query_string(state_query["sort"])
-        direction = _query_string(state_query["direction"])
-        group = _optional_query_string(state_query.get("group"))
+        view = query_string(state_query["view"])
+        sort = query_string(state_query["sort"])
+        direction = query_string(state_query["direction"])
+        group = optional_query_string(state_query.get("group"))
         display_flags = variant_display_flags_from_query(state_query)
-        filter_state = _filter_state_from_query(state_query)
+        filter_state = filter_state_from_query(state_query)
         service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
         result = service.get_leaderboard(
             view,
@@ -234,7 +228,7 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_
         )
         tab_sort = "borda_rank" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = _state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         query_payload["view"] = view_name
         query = urlencode(query_payload, doseq=True)
         buttons.append(
@@ -260,7 +254,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
     ]
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
-    display_hidden_html = _hidden_inputs(state_fields + _active_filter_hidden_fields(filter_state))
+    display_hidden_html = _hidden_inputs(state_fields + active_filter_hidden_fields(filter_state))
     filter_hidden_fields = [*state_fields, ("filters", "1"), ("model_filter", filter_state.model_filter)]
     if result.include_quantization_variants:
         filter_hidden_fields.append(("quantization", "1"))
@@ -301,7 +295,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         selected=filter_state.prompt_filters,
         filters_active=filter_state.filters_active,
     )
-    dim_all_query = _state_payload(
+    dim_all_query = state_payload(
         result=result,
         sort=sort,
         direction=direction,
@@ -315,7 +309,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
-    dim_none_query = _state_payload(
+    dim_none_query = state_payload(
         result=result,
         sort=sort,
         direction=direction,
@@ -329,7 +323,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
-    quant_all_query = _state_payload(
+    quant_all_query = state_payload(
         result=result,
         sort=sort,
         direction=direction,
@@ -343,7 +337,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
-    quant_none_query = _state_payload(
+    quant_none_query = state_payload(
         result=result,
         sort=sort,
         direction=direction,
@@ -357,7 +351,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
-    dtype_all_query = _state_payload(
+    dtype_all_query = state_payload(
         result=result,
         sort=sort,
         direction=direction,
@@ -371,7 +365,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
-    dtype_none_query = _state_payload(
+    dtype_none_query = state_payload(
         result=result,
         sort=sort,
         direction=direction,
@@ -385,7 +379,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
-    attn_all_query = _state_payload(
+    attn_all_query = state_payload(
         result=result,
         sort=sort,
         direction=direction,
@@ -399,7 +393,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
-    attn_none_query = _state_payload(
+    attn_none_query = state_payload(
         result=result,
         sort=sort,
         direction=direction,
@@ -413,7 +407,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
         ),
     )
-    prompt_all_query = _state_payload(
+    prompt_all_query = state_payload(
         result=result,
         sort=sort,
         direction=direction,
@@ -427,7 +421,7 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             prompt_filters=tuple(value for value, _ in prompt_options),
         ),
     )
-    prompt_none_query = _state_payload(
+    prompt_none_query = state_payload(
         result=result,
         sort=sort,
         direction=direction,
@@ -505,7 +499,7 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
             if active
             else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
         )
-        query_payload = _state_payload(result=result, sort="borda_rank", direction="asc", filter_state=filter_state)
+        query_payload = state_payload(result=result, sort="borda_rank", direction="asc", filter_state=filter_state)
         query_payload["group"] = score_group.name
         query = urlencode(query_payload, doseq=True)
         page_url = _page_url(query_payload)
@@ -556,7 +550,7 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
     for key, label, default_direction, align, is_metric in columns:
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
         indicator = " ▲" if sort == key and direction == "asc" else " ▼" if sort == key else ""
-        query_payload = _state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
+        query_payload = state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
         query = urlencode(query_payload, doseq=True)
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
@@ -1038,18 +1032,6 @@ def _hidden_inputs(fields: list[tuple[str, str]]) -> str:
     return "".join(f"""<input type="hidden" name="{escape(name)}" value="{escape(value)}">""" for name, value in fields)
 
 
-def _active_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
-    if not filter_state.filters_active:
-        return []
-    fields = [("filters", "1")]
-    fields.extend(("dim_filter", value) for value in filter_state.dim_filters)
-    fields.extend(("quant_filter", value) for value in filter_state.quant_filters)
-    fields.extend(("dtype_filter", value) for value in filter_state.dtype_filters)
-    fields.extend(("attn_filter", value) for value in filter_state.attn_filters)
-    fields.extend(("prompt_filter", value) for value in filter_state.prompt_filters)
-    return fields
-
-
 def _next_direction(*, key: str, sort: str, direction: str, default_direction: str) -> str:
     if key != sort:
         return default_direction
@@ -1088,135 +1070,6 @@ def _fmt_percent_delta(value: float | None) -> str:
 
 def _metric_column_label(column: str) -> str:
     return column.removeprefix("Nano")
-
-
-def _state_payload(
-    *,
-    result: LeaderboardResult,
-    sort: str,
-    direction: str,
-    filter_state: FilterState | None = None,
-) -> QueryState:
-    filter_state = filter_state or FilterState()
-    query_payload: QueryState = {"view": result.view_name, "sort": sort, "direction": direction}
-    if result.selected_score_group is not None:
-        query_payload["group"] = result.selected_score_group.name
-    if result.include_quantization_variants:
-        query_payload["quantization"] = "1"
-    if result.include_truncate_variants:
-        query_payload["truncate"] = "1"
-    if result.include_rescore_variants:
-        query_payload["rescore"] = "1"
-    if result.include_other_variants:
-        query_payload["other_variant"] = "1"
-    if filter_state.model_filter:
-        query_payload["model_filter"] = filter_state.model_filter
-    if filter_state.filters_active:
-        query_payload["filters"] = "1"
-        query_payload["dim_filter"] = list(filter_state.dim_filters)
-        query_payload["quant_filter"] = list(filter_state.quant_filters)
-        query_payload["dtype_filter"] = list(filter_state.dtype_filters)
-        query_payload["attn_filter"] = list(filter_state.attn_filters)
-        query_payload["prompt_filter"] = list(filter_state.prompt_filters)
-    return query_payload
-
-
-def _state_query(
-    *,
-    viewer_config: ViewerConfig,
-    view: str,
-    sort: str,
-    direction: str,
-    group: str | None,
-    variants: bool,
-    quantization: bool,
-    truncate: bool,
-    rescore: bool,
-    other_variant: bool,
-    filters: bool,
-    dim_filter: list[str] | None,
-    quant_filter: list[str] | None,
-    dtype_filter: list[str] | None,
-    attn_filter: list[str] | None,
-    prompt_filter: list[str] | None,
-    model_filter: str,
-) -> QueryState:
-    if view not in viewer_config.view_names:
-        view = viewer_config.overall.name
-    if sort not in SORT_COLUMNS and not sort.startswith("metric:"):
-        sort = "borda_rank"
-    if direction not in {"asc", "desc"}:
-        direction = "asc"
-    display_flags = variant_display_flags_from_values(
-        variants=variants,
-        quantization=quantization,
-        truncate=truncate,
-        rescore=rescore,
-        other=other_variant,
-    )
-    dim_filters = _normalized_query_values(dim_filter)
-    quant_filters = _normalized_query_values(quant_filter)
-    dtype_filters = _normalized_query_values(dtype_filter)
-    attn_filters = _normalized_query_values(attn_filter)
-    prompt_filters = _normalized_query_values(prompt_filter)
-    query: QueryState = {"view": view, "sort": sort, "direction": direction}
-    if group:
-        query["group"] = group
-    if display_flags.quantization:
-        query["quantization"] = "1"
-    if display_flags.truncate:
-        query["truncate"] = "1"
-    if display_flags.rescore:
-        query["rescore"] = "1"
-    if display_flags.other:
-        query["other_variant"] = "1"
-    if filters:
-        query["filters"] = "1"
-        query["dim_filter"] = dim_filters
-        query["quant_filter"] = quant_filters
-        query["dtype_filter"] = dtype_filters
-        query["attn_filter"] = attn_filters
-        query["prompt_filter"] = prompt_filters
-    model_filter = model_filter.strip()
-    if model_filter:
-        query["model_filter"] = model_filter
-    return query
-
-
-def _filter_state_from_query(query: QueryState) -> FilterState:
-    return FilterState(
-        model_filter=str(query.get("model_filter", "")),
-        filters_active=query.get("filters") == "1",
-        dim_filters=tuple(_query_values(query.get("dim_filter"))),
-        quant_filters=tuple(_query_values(query.get("quant_filter"))),
-        dtype_filters=tuple(_query_values(query.get("dtype_filter"))),
-        attn_filters=tuple(_query_values(query.get("attn_filter"))),
-        prompt_filters=tuple(_query_values(query.get("prompt_filter"))),
-    )
-
-
-def _normalized_query_values(values: list[str] | None) -> list[str]:
-    if values is None:
-        return []
-    return [value for value in values if value]
-
-
-def _query_values(value: QueryValue | None) -> list[str]:
-    if value is None:
-        return []
-    if isinstance(value, list):
-        return value
-    return [value]
-
-
-def _query_string(value: QueryValue) -> str:
-    return value[0] if isinstance(value, list) and value else str(value)
-
-
-def _optional_query_string(value: QueryValue | None) -> str | None:
-    if value is None:
-        return None
-    return _query_string(value)
 
 
 def _page_url(query: QueryState) -> str:
