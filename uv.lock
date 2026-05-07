@@ -521,8 +521,8 @@ name = "flash-attn"
 version = "2.8.3"
 source = { url = "https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3%2Bcu12torch2.9cxx11abiTRUE-cp312-cp312-linux_x86_64.whl" }
 dependencies = [
-    { name = "einops", marker = "python_full_version < '3.14'" },
-    { name = "torch", marker = "python_full_version < '3.14'" },
+    { name = "einops", marker = "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'" },
+    { name = "torch", marker = "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'" },
 ]
 wheels = [
     { url = "https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3%2Bcu12torch2.9cxx11abiTRUE-cp312-cp312-linux_x86_64.whl", hash = "sha256:4e2f9e39313266b1544b68138b15b91ee6221eccf14f7902b7c6620351340810" },
@@ -684,7 +684,6 @@ dependencies = [
     { name = "datasets" },
     { name = "duckdb" },
     { name = "fast-langdetect" },
-    { name = "flash-attn", marker = "python_full_version < '3.14'" },
     { name = "huggingface-hub" },
     { name = "nltk" },
     { name = "numpy" },
@@ -730,6 +729,9 @@ dev = [
     { name = "tox-uv" },
     { name = "ty" },
 ]
+flash-attn = [
+    { name = "flash-attn", marker = "python_full_version < '3.13' and platform_machine == 'x86_64' and sys_platform == 'linux'" },
+]
 pylate = [
     { name = "pylate" },
 ]
@@ -747,7 +749,6 @@ requires-dist = [
     { name = "datasets", specifier = ">=4.8.4" },
     { name = "duckdb", specifier = ">=1.5.2" },
     { name = "fast-langdetect", specifier = ">=1.0.0" },
-    { name = "flash-attn", url = "https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3%2Bcu12torch2.9cxx11abiTRUE-cp312-cp312-linux_x86_64.whl" },
     { name = "fugashi", marker = "extra == 'wordseg'", specifier = ">=1.5.2" },
     { name = "huggingface-hub", specifier = ">=1.12.0" },
     { name = "jieba", marker = "extra == 'wordseg'", specifier = ">=0.42.1" },
@@ -790,6 +791,7 @@ dev = [
     { name = "tox-uv", specifier = ">=1.35.1" },
     { name = "ty", specifier = ">=0.0.32" },
 ]
+flash-attn = [{ name = "flash-attn", marker = "python_full_version == '3.12.*' and platform_machine == 'x86_64' and sys_platform == 'linux'", url = "https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3%2Bcu12torch2.9cxx11abiTRUE-cp312-cp312-linux_x86_64.whl" }]
 pylate = [{ name = "pylate", git = "https://github.com/lightonai/pylate.git?rev=1f1f47cee5df35ebe6fd2286a0a205a1523e4119" }]
 viewer = [
     { name = "duckdb", specifier = ">=1.5.2" },
