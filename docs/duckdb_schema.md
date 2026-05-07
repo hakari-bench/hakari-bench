@@ -245,7 +245,8 @@ language, category, citation coverage, or text length profile.
 | `split_name` | `VARCHAR` | Split name. |
 | `task_name` | `VARCHAR` | Task name. |
 | `task_key` | `VARCHAR` | Ranking task identity. |
-| `language` | `VARCHAR` | Metadata language code, or `multilingual`. |
+| `language` | `VARCHAR` | Primary metadata language code, or `multilingual`. |
+| `languages` | `VARCHAR[]` | Main detected language codes for the task, copied from YAML `metadata.languages`. Falls back conceptually to `[language]` for older metadata. |
 | `category` | `VARCHAR` | Metadata category, such as `natural_language` or `code`. |
 | `short_description` | `VARCHAR` | Short human-readable task description. |
 | `citation_count` | `INTEGER` | Number of citation keys recorded for the task. |
@@ -423,6 +424,12 @@ choices:
 - Surface runtime metadata such as dtype, attention implementation, prompt
   mode, and `trust_remote_code` in model details metadata; dtype, attention,
   and prompt remain available as facet filters.
+- Join `dataset_metadata` when present to attach `language` and `languages`
+  to task rows. The HTMX viewer uses `lang_filter` query parameters as
+  task-level ranking filters: Borda, mean scores, expected task counts, and
+  completeness are recomputed only over tasks whose `languages` contains at
+  least one selected language. If no `lang_filter` is set, all tasks in the
+  selected view are ranked.
 
 Conceptually, it runs this query:
 
@@ -533,6 +540,8 @@ source_rows AS (
     tr.task_key,
     tr.score,
     tr.score * 100.0 AS score_100,
+    dm.language,
+    dm.languages,
     tr.active_parameters,
     tr.total_parameters,
     tr.max_seq_length,
@@ -540,6 +549,7 @@ source_rows AS (
     tr.embedding_dim,
     tr.quantization
   FROM task_results AS tr
+  LEFT JOIN dataset_metadata AS dm ON dm.task_key = tr.task_key
   JOIN selected_benchmarks AS sb USING (benchmark)
   CROSS JOIN params AS p
   WHERE tr.score IS NOT NULL

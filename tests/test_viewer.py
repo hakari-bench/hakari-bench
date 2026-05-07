@@ -246,6 +246,67 @@ benchmarks:
     assert result.rows[0].micro_mean == 80.0
 
 
+def test_leaderboard_language_filter_recomputes_ranking_for_matching_tasks(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "en", "task-en", "task-en", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "ja", "task-ja", "task-ja", 0.40, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "en", "task-en", "task-en", 0.80, 20, 24, 4096),
+            ("model/b", "BenchA", "bench/a", "BenchA", "ja", "task-ja", "task-ja", 0.95, 20, 24, 4096),
+        ],
+        dataset_metadata_rows=[
+            ("BenchA", "bench/a", "BenchA", "en", "task-en", "task-en", "en", ["en"]),
+            ("BenchA", "bench/a", "BenchA", "ja", "task-ja", "task-ja", "ja", ["ja"]),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA", language_filters=("ja",))
+
+    assert result.expected_tasks == 1
+    assert result.selected_languages == ("ja",)
+    assert [(option.code, option.task_count) for option in result.available_languages] == [("en", 1), ("ja", 1)]
+    assert [row.model_name for row in result.rows] == ["model/b", "model/a"]
+    assert [row.task_count for row in result.rows] == [1, 1]
+
+
+def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    rows = []
+    metadata_rows = []
+    for index, lang in enumerate(["en", "ja", "de", "fr", "es", "ko", "th", "vi", "pl", "ru", "zh", "ar", "fa"]):
+        task_key = f"task-{lang}"
+        rows.append(("model/a", "BenchA", "bench/a", "BenchA", lang, task_key, task_key, 0.50 + index / 100, 10, 12, 8192))
+        rows.append(("model/b", "BenchA", "bench/a", "BenchA", lang, task_key, task_key, 0.40 + index / 100, 20, 24, 4096))
+        metadata_rows.append(("BenchA", "bench/a", "BenchA", lang, task_key, task_key, lang, [lang]))
+    _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&lang_filter=ja")
+
+    assert response.status_code == 200
+    assert "Language pages" in response.text
+    assert "Languages (13)" in response.text
+    assert "max-h-72" in response.text
+    assert 'name="lang_filter" value="ja" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task&amp;lang_filter=en"' in response.text
+    assert 'data-language-page="ja"' in response.text
+    assert 'data-shown-count="2"' in response.text
+    assert "2 shown / 2 complete models / 1 tasks" in response.text
+
+
 def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
@@ -1256,6 +1317,7 @@ def _write_task_results(
     *,
     include_embedding_variant_columns: bool = False,
     include_runtime_option_columns: bool = False,
+    dataset_metadata_rows: list[tuple] | None = None,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
@@ -1307,5 +1369,24 @@ def _write_task_results(
         )
         placeholders = ", ".join("?" for _ in rows[0])
         con.executemany(f"INSERT INTO task_results VALUES ({placeholders})", rows)
+        if dataset_metadata_rows is not None:
+            con.execute(
+                """
+                CREATE TABLE dataset_metadata (
+                    benchmark VARCHAR,
+                    dataset_id VARCHAR,
+                    dataset_name VARCHAR,
+                    split_name VARCHAR,
+                    task_name VARCHAR,
+                    task_key VARCHAR,
+                    language VARCHAR,
+                    languages VARCHAR[]
+                )
+                """
+            )
+            con.executemany(
+                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                dataset_metadata_rows,
+            )
     finally:
         con.close()

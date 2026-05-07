@@ -201,6 +201,7 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert diagnostic_rows[0].base_score == 0.42
     assert len(dataset_metadata_rows) == 1
     assert dataset_metadata_rows[0].language == "ja"
+    assert dataset_metadata_rows[0].languages == ["ja"]
     assert dataset_metadata_rows[0].category == "natural_language"
     assert dataset_metadata_rows[0].citation_count is not None
     assert dataset_metadata_rows[0].query_count == 200

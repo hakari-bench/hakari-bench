@@ -189,12 +189,39 @@ def test_task_results_repository_reads_runtime_option_columns_when_present(tmp_p
     assert records[1].trust_remote_code is True
 
 
+def test_task_results_repository_reads_dataset_languages_when_present(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "task-ja", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a2", "task-multi", 0.80, 10, 12, 8192),
+        ],
+        include_embedding_variant_columns=False,
+        dataset_metadata_rows=[
+            ("BenchA", "bench/a", "BenchA", None, "a1", "task-ja", "ja", ["ja"]),
+            ("BenchA", "bench/a", "BenchA", None, "a2", "task-multi", "multilingual", ["en", "ja"]),
+        ],
+    )
+
+    records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+    )
+
+    assert [(record.task_key, record.language, record.languages) for record in records] == [
+        ("task-ja", "ja", ["ja"]),
+        ("task-multi", "multilingual", ["en", "ja"]),
+    ]
+
+
 def _write_task_results(
     db_path: Path,
     rows: list[tuple],
     *,
     include_embedding_variant_columns: bool,
     include_runtime_option_columns: bool = False,
+    dataset_metadata_rows: list[tuple] | None = None,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
@@ -240,5 +267,24 @@ def _write_task_results(
         con.execute(f"CREATE TABLE task_results ({', '.join(columns)})")
         placeholders = ", ".join("?" for _ in rows[0])
         con.executemany(f"INSERT INTO task_results VALUES ({placeholders})", rows)
+        if dataset_metadata_rows is not None:
+            con.execute(
+                """
+                CREATE TABLE dataset_metadata (
+                    benchmark VARCHAR,
+                    dataset_id VARCHAR,
+                    dataset_name VARCHAR,
+                    split_name VARCHAR,
+                    task_name VARCHAR,
+                    task_key VARCHAR,
+                    language VARCHAR,
+                    languages VARCHAR[]
+                )
+                """
+            )
+            con.executemany(
+                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                dataset_metadata_rows,
+            )
     finally:
         con.close()

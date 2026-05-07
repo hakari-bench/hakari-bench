@@ -15,6 +15,7 @@ from hakari_bench.viewer.filters import (
     visible_row_count,
 )
 from hakari_bench.viewer.leaderboard import (
+    LanguageOption,
     LeaderboardResult,
     LeaderboardRow,
     LeaderboardService,
@@ -68,6 +69,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
         prompt_filter: list[str] | None = Query(default=None),
+        lang_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
     ) -> str:
         store.ensure_current()
@@ -88,6 +90,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             dtype_filter=dtype_filter,
             attn_filter=attn_filter,
             prompt_filter=prompt_filter,
+            lang_filter=lang_filter,
             model_filter=model_filter,
         )
         return render_page(viewer_config=viewer_config, duckdb_path=store.path, initial_query=initial_query)
@@ -109,6 +112,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
         prompt_filter: list[str] | None = Query(default=None),
+        lang_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
     ) -> HTMLResponse:
         store.ensure_current()
@@ -129,6 +133,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             dtype_filter=dtype_filter,
             attn_filter=attn_filter,
             prompt_filter=prompt_filter,
+            lang_filter=lang_filter,
             model_filter=model_filter,
         )
         view = query_string(state_query["view"])
@@ -147,6 +152,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             include_truncate_variants=display_flags.truncate,
             include_rescore_variants=display_flags.rescore,
             include_other_variants=display_flags.other,
+            language_filters=filter_state.language_filters,
         )
         content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
         return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}"})
@@ -199,6 +205,7 @@ def render_leaderboard(
     return f"""
 <div>
   {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+  {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
   {render_score_groups(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
@@ -244,6 +251,109 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Benchmark views">{''.join(buttons)}</nav>"""
 
 
+def render_language_pages(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState | None = None,
+) -> str:
+    filter_state = filter_state or FilterState()
+    if not result.available_languages:
+        return ""
+
+    buttons = [
+        _language_page_button(
+            option=None,
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+        )
+    ]
+    visible_options = result.available_languages[:12]
+    more_options = result.available_languages[12:]
+    buttons.extend(
+        _language_page_button(
+            option=option,
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+        )
+        for option in visible_options
+    )
+    more = ""
+    if more_options:
+        more_buttons = "".join(
+            _language_page_button(
+                option=option,
+                result=result,
+                sort=sort,
+                direction=direction,
+                filter_state=filter_state,
+            )
+            for option in more_options
+        )
+        more = f"""
+          <details class="relative">
+            <summary class="cursor-pointer border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">More</summary>
+            <div class="absolute z-10 mt-1 grid max-h-72 min-w-[28rem] grid-cols-3 gap-1 overflow-auto border border-zinc-300 bg-white p-2 shadow-sm sm:grid-cols-5">
+              {more_buttons}
+            </div>
+          </details>
+        """
+    return f"""
+      <nav class="mb-4 flex flex-wrap items-start gap-2" aria-label="Language pages">
+        <span class="pt-1.5 text-sm font-medium text-zinc-800">Language pages</span>
+        {''.join(buttons)}
+        {more}
+      </nav>
+    """
+
+
+def _language_page_button(
+    *,
+    option: LanguageOption | None,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+) -> str:
+    language_filters = () if option is None else (option.code,)
+    active = result.selected_languages == language_filters
+    label = "All" if option is None else f"{option.label} {option.task_count}"
+    classes = (
+        "border-cyan-700 bg-cyan-50 text-cyan-900"
+        if active
+        else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
+    )
+    query_payload = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=_filter_state_with_languages(filter_state, language_filters),
+    )
+    query = urlencode(query_payload, doseq=True)
+    data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
+    return f"""<button type="button"{data_attr} class="border px-3 py-1.5 text-sm {classes}"
+              hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+              hx-target="#leaderboard-panel" hx-swap="innerHTML">{escape(label)}</button>"""
+
+
+def _filter_state_with_languages(filter_state: FilterState, language_filters: tuple[str, ...]) -> FilterState:
+    return FilterState(
+        model_filter=filter_state.model_filter,
+        language_filters=language_filters,
+        filters_active=filter_state.filters_active,
+        dim_filters=filter_state.dim_filters,
+        quant_filters=filter_state.quant_filters,
+        dtype_filters=filter_state.dtype_filters,
+        attn_filters=filter_state.attn_filters,
+        prompt_filters=filter_state.prompt_filters,
+    )
+
+
 def render_controls(
     *,
     result: LeaderboardResult,
@@ -281,6 +391,7 @@ def render_controls(
     dtype_options = filter_context.dtype_options
     attn_options = filter_context.attn_options
     prompt_options = filter_context.prompt_options
+    language_options = [(option.code, f"{option.label} ({option.task_count})") for option in result.available_languages]
     selected_dims = filter_context.selected_dims
     selected_quants = filter_context.selected_quants
     selected_dtypes = filter_context.selected_dtypes
@@ -292,6 +403,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(value for value, _ in dim_options),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -306,6 +418,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=(FILTER_NONE_VALUE,),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -320,6 +433,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(value for value, _ in quant_options),
@@ -334,6 +448,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=(FILTER_NONE_VALUE,),
@@ -348,6 +463,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -362,6 +478,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -376,6 +493,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -390,6 +508,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -404,6 +523,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -418,6 +538,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -425,6 +546,47 @@ def render_controls(
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=(FILTER_NONE_VALUE,),
         ),
+    )
+    language_all_query = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=filter_state.filters_active,
+            dim_filters=filter_state.dim_filters,
+            quant_filters=filter_state.quant_filters,
+            dtype_filters=filter_state.dtype_filters,
+            attn_filters=filter_state.attn_filters,
+            prompt_filters=filter_state.prompt_filters,
+        ),
+    )
+    language_none_query = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            filters_active=filter_state.filters_active,
+            dim_filters=filter_state.dim_filters,
+            quant_filters=filter_state.quant_filters,
+            dtype_filters=filter_state.dtype_filters,
+            attn_filters=filter_state.attn_filters,
+            prompt_filters=filter_state.prompt_filters,
+        ),
+    )
+    language_filter_html = (
+        _render_filter_details(
+            name="lang_filter",
+            summary=f"Languages ({len(result.available_languages)})",
+            options=language_options,
+            selected_values=set(result.selected_languages),
+            all_query=language_all_query,
+            none_query=language_none_query,
+            grid_class="grid max-h-72 min-w-[28rem] grid-cols-3 gap-x-2 gap-y-1 overflow-auto sm:grid-cols-5",
+        )
+        if language_options
+        else ""
     )
     return f"""
     <div class="mb-4 text-sm text-zinc-700">
@@ -464,6 +626,7 @@ def render_controls(
               hx-target="#leaderboard-panel" hx-swap="innerHTML"
               hx-trigger="change">
           {filter_hidden_html}
+          {language_filter_html}
           {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
           {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
           <div class="flex flex-wrap items-start gap-3 border-l border-zinc-200 pl-3">
@@ -621,6 +784,7 @@ def _render_filter_details(
     selected_values: set[str],
     all_query: QueryState,
     none_query: QueryState,
+    grid_class: str = "grid max-h-60 min-w-64 grid-cols-2 gap-x-2 gap-y-1 overflow-auto sm:grid-cols-3",
 ) -> str:
     checkboxes = []
     for value, label in options:
@@ -647,7 +811,7 @@ def _render_filter_details(
                     hx-get="{none_url}" hx-push-url="{none_page_url}"
                     hx-target="#leaderboard-panel" hx-swap="innerHTML">None</button>
           </div>
-          <div class="grid max-h-60 min-w-64 grid-cols-2 gap-x-2 gap-y-1 overflow-auto sm:grid-cols-3">
+          <div class="{escape(grid_class)}">
             {''.join(checkboxes)}
           </div>
         </div>
