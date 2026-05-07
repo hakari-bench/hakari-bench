@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from html import escape
-import json
 from pathlib import Path
 from typing import cast
 from urllib.parse import urlencode
@@ -21,7 +20,7 @@ from hakari_bench.viewer.leaderboard import (
     LeaderboardService,
     SortDirection,
 )
-from hakari_bench.viewer.model_display import ModelCellView, model_cell_views
+from hakari_bench.viewer.model_display import model_cell_views, render_model_detail_modal, render_model_name_cell
 from hakari_bench.viewer.state import (
     FilterState,
     QueryState,
@@ -580,7 +579,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
             f"""<tr class="{row_class}"{hidden_attrs}>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
-              {_render_model_name_cell(row, model_views[row.model_name])}
+              {render_model_name_cell(row, model_views[row.model_name])}
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
               {_render_metric_cells(result=result, row=row)}
@@ -612,112 +611,6 @@ def _render_base_delta_cell(*, result: LeaderboardResult, row: LeaderboardRow) -
 
 def _show_base_delta_column(result: LeaderboardResult) -> bool:
     return result.include_quantization_variants or result.include_truncate_variants
-
-
-def _render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> str:
-    metadata_json = json.dumps(model_view.metadata, ensure_ascii=False, separators=(",", ":"))
-    badges = []
-    if row.embedding_dim is not None:
-        badges.append(
-            f"""<span class="inline-flex items-center border border-cyan-200 bg-cyan-50 px-1.5 py-0.5 text-xs font-medium text-cyan-800">{escape(f"{row.embedding_dim:,} dims")}</span>"""
-        )
-    if row.quantization:
-        badges.append(
-            f"""<span class="inline-flex items-center border border-amber-200 bg-amber-50 px-1.5 py-0.5 text-xs font-medium text-amber-800">{escape(row.quantization)}</span>"""
-        )
-    if model_view.variant_label:
-        badges.append(
-            f"""<span class="inline-flex items-center border border-violet-200 bg-violet-50 px-1.5 py-0.5 text-xs font-medium text-violet-800">{escape(model_view.variant_label)}</span>"""
-        )
-    badge_html = f"""<span class="ml-2 inline-flex flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
-    return f"""<td class="whitespace-nowrap px-3 py-2 font-medium">
-      <button type="button" class="model-detail-trigger text-left font-medium text-cyan-800 underline-offset-2 hover:underline"
-              data-model-metadata="{escape(metadata_json)}">{escape(model_view.display_name)}</button>{badge_html}
-    </td>"""
-
-
-def render_model_detail_modal() -> str:
-    return """
-<dialog id="model-detail-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
-  <form method="dialog">
-    <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
-      <h3 class="text-base font-semibold">Model Details</h3>
-      <button type="submit" class="border border-zinc-300 px-2 py-1 text-sm text-zinc-700 hover:border-cyan-600 hover:text-cyan-700">Close</button>
-    </div>
-  </form>
-  <div class="px-4 py-3">
-    <p id="model-detail-title" class="break-all font-mono text-sm font-semibold text-zinc-900"></p>
-    <dl id="model-detail-fields" class="mt-3 grid grid-cols-[10rem_1fr] gap-x-3 gap-y-2 text-sm"></dl>
-  </div>
-</dialog>
-<script>
-(() => {
-  if (window.__hakariModelDetailsBound) return;
-  window.__hakariModelDetailsBound = true;
-  const fields = [
-    ["Ranking label", "ranking_model_name"],
-    ["Variant", "embedding_variant_name"],
-    ["Dimensions", "embedding_dim"],
-    ["Quantization", "quantization"],
-    ["Active params", "active_parameters"],
-    ["Total params", "total_parameters"],
-    ["Max len", "max_seq_length"],
-    ["DType", "dtype"],
-    ["Attention", "attention"],
-    ["Prompt", "prompt"],
-    ["HF trust", "trust_remote_code"],
-  ];
-  const fmt = (value) => {
-    if (value === null || value === undefined || value === "") return "";
-    if (typeof value === "boolean") return value ? "true" : "false";
-    if (typeof value === "number") return value.toLocaleString();
-    return String(value);
-  };
-  document.addEventListener("click", (event) => {
-    const trigger = event.target.closest(".model-detail-trigger");
-    if (!trigger) return;
-    const modal = document.getElementById("model-detail-modal");
-    const title = document.getElementById("model-detail-title");
-    const list = document.getElementById("model-detail-fields");
-    if (!modal || !title || !list) return;
-    const metadata = JSON.parse(trigger.dataset.modelMetadata || "{}");
-    title.textContent = metadata.model_name || trigger.textContent || "";
-    list.replaceChildren();
-    for (const [label, key] of fields) {
-      const value = fmt(metadata[key]);
-      if (!value) continue;
-      const dt = document.createElement("dt");
-      dt.className = "font-medium text-zinc-600";
-      dt.textContent = label;
-      const dd = document.createElement("dd");
-      dd.className = "break-all font-mono text-zinc-900";
-      dd.textContent = value;
-      list.append(dt, dd);
-    }
-    if (typeof modal.showModal === "function") modal.showModal();
-  });
-  const modal = document.getElementById("model-detail-modal");
-  if (modal) {
-    modal.addEventListener("click", (event) => {
-      if (event.target === modal) modal.close();
-    });
-  }
-  document.addEventListener("submit", (event) => {
-    if (event.target?.id !== "display-controls") return;
-    window.__hakariRestoreModelFilterFocus = document.activeElement?.id === "model-filter-input";
-  });
-  document.addEventListener("htmx:afterSwap", (event) => {
-    if (event.target?.id !== "leaderboard-panel" || !window.__hakariRestoreModelFilterFocus) return;
-    window.__hakariRestoreModelFilterFocus = false;
-    const input = document.getElementById("model-filter-input");
-    if (!input) return;
-    input.focus();
-    const end = input.value.length;
-    if (typeof input.setSelectionRange === "function") input.setSelectionRange(end, end);
-  });
-})();
-</script>
-"""
 
 
 def _render_filter_details(
