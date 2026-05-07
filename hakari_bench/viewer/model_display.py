@@ -145,11 +145,12 @@ def render_model_detail_modal() -> str:
 (() => {
   if (window.__hakariModelDetailsBound) return;
   window.__hakariModelDetailsBound = true;
-  const fields = [
+    const fields = [
     ["Ranking label", "ranking_model_name"],
     ["Variant", "embedding_variant_name"],
     ["Dimensions", "embedding_dim"],
     ["Quantization", "quantization"],
+    ["Base delta", "base_score_delta_percent"],
     ["Active params", "active_parameters"],
     ["Total params", "total_parameters"],
     ["Max len", "max_seq_length"],

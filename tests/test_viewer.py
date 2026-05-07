@@ -198,10 +198,15 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert response.status_code == 200
     assert "Benchmark coverage" in response.text
     assert "Models" in response.text
-    assert "Analysis views" in response.text
-    assert "Variant impact" in response.text
-    assert "Reranking diagnostics" in response.text
-    assert "Dataset diagnostics" in response.text
+    assert 'hx-get="/leaderboard?view=Overall' in response.text
+
+    leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
+    assert leaderboard_response.status_code == 200
+    assert "Analysis views" in leaderboard_response.text
+    assert "Variant impact" in leaderboard_response.text
+    assert "Reranking diagnostics" in leaderboard_response.text
+    assert "Dataset diagnostics" in leaderboard_response.text
+    assert 'hx-get="/analysis?panel=variants&amp;view=BenchA"' in leaderboard_response.text
     assert 'data-testid="summary-card-models"' in response.text
 
 

@@ -202,7 +202,6 @@ def render_page(
     initial_query: QueryState | None = None,
 ) -> str:
     query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
-    view = query_string((initial_query or {"view": viewer_config.overall.name})["view"])
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -222,7 +221,6 @@ def render_page(
       <p class="mt-2 text-xs text-zinc-500">DuckDB: <span class="font-mono">{escape(str(duckdb_path))}</span></p>
     </header>
     {render_summary_cards(summary or ViewerSummary())}
-    {render_analysis_shell(view=view)}
     <section
       id="leaderboard-panel"
       hx-get="{_leaderboard_url(query)}"
@@ -293,8 +291,8 @@ def render_analysis_shell(*, view: str) -> str:
                   hx-get="/analysis?{escape(dataset_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">Dataset diagnostics</button>
         </div>
       </div>
-      <div id="analysis-panel" hx-get="/analysis?{escape(variant_query, quote=True)}" hx-trigger="load" hx-swap="innerHTML">
-        <div class="px-3 py-3 text-sm text-zinc-600">Loading analysis...</div>
+      <div id="analysis-panel">
+        <div class="border-t border-zinc-200 px-3 py-3 text-sm text-zinc-600">Select an analysis view to load paper-facing diagnostics for the current benchmark view.</div>
       </div>
     </section>
     """
@@ -312,6 +310,7 @@ def render_leaderboard(
     shown_count = visible_row_count(result.rows, filter_context)
     return f"""
 <div>
+  {render_analysis_shell(view=result.view_name)}
   {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
@@ -941,7 +940,7 @@ def render_variant_panel(*, view_label: str, rows) -> str:
         </div>
         <p class="text-xs text-zinc-500">{len(rows):,} variant groups</p>
       </div>
-      <div class="overflow-x-auto border border-zinc-200">
+      <div class="max-h-80 overflow-auto border border-zinc-200">
         <table class="min-w-full text-sm">
           <thead>
             <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
@@ -992,7 +991,7 @@ def render_reranking_panel(*, view_label: str, rows) -> str:
         </div>
         <p class="text-xs text-zinc-500">{len(rows):,} benchmark rows</p>
       </div>
-      <div class="overflow-x-auto border border-zinc-200">
+      <div class="max-h-80 overflow-auto border border-zinc-200">
         <table class="min-w-full text-sm">
           <thead>
             <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
@@ -1046,7 +1045,7 @@ def render_dataset_diagnostics_panel(*, view_label: str, rows) -> str:
         </div>
         <p class="text-xs text-zinc-500">{len(rows):,} benchmark rows</p>
       </div>
-      <div class="overflow-x-auto border border-zinc-200">
+      <div class="max-h-80 overflow-auto border border-zinc-200">
         <table class="min-w-full text-sm">
           <thead>
             <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">

@@ -42,3 +42,4 @@ def test_render_model_detail_modal_supports_backdrop_close_and_focus_restore() -
     assert "modal.close()" in html
     assert "window.__hakariRestoreModelFilterFocus" in html
     assert '["HF trust", "trust_remote_code"]' in html
+    assert '["Base delta", "base_score_delta_percent"]' in html

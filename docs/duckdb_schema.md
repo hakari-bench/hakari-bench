@@ -7,10 +7,11 @@ The main source table for the HTMX leaderboard viewer is `task_results`.
 `runs` contains run-level metadata, `metrics_long` contains detailed task
 metrics, `task_diagnostics` contains analysis-oriented rerank, candidate, and
 latency fields, `dataset_metadata` exposes YAML task metadata for language,
-category, citation, and text-stat analysis, and `model_scores` / `borda_task_scores` are precomputed tables used
-by the static HTML report. The current HTMX viewer does not read
-`model_scores`; it computes the leaderboard from `task_results` on each
-request.
+category, citation, and text-stat analysis, and `model_scores` /
+`borda_task_scores` are precomputed tables used by the static HTML report. The
+current HTMX viewer computes the leaderboard from `task_results` on each
+request and reads `task_diagnostics` / `dataset_metadata` for paper-facing
+analysis panels. It does not read `model_scores`.
 
 ## Generation
 
@@ -99,6 +100,22 @@ Main `benchmarks.yaml` fields:
 
 Unknown `group_by` values and unknown YAML keys are rejected at viewer config
 load time.
+
+## HTMX Viewer Query Surfaces
+
+The web viewer exposes four user-facing query surfaces over the DuckDB file:
+
+| UI surface | source tables | semantics |
+| --- | --- | --- |
+| Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
+| Leaderboard | `task_results`, optionally joined to `dataset_metadata` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. Base rows are used unless the user explicitly enables variant categories. |
+| Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for truncation, quantization, and rescore comparisons. |
+| Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
+| Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
+
+Analysis panels are scoped by the same YAML view selection as the leaderboard.
+`Overall` views expand to their configured benchmark components before querying.
+The diagnostics panels are descriptive and do not alter leaderboard ranking.
 
 ## Table Overview
 
