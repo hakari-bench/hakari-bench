@@ -3,13 +3,18 @@ from __future__ import annotations
 from html import escape
 import json
 from pathlib import Path
-import re
 from typing import cast
 from urllib.parse import urlencode
 
 from pydantic import BaseModel, ConfigDict
 
 from hakari_bench.viewer.config import ViewerConfig, load_viewer_config
+from hakari_bench.viewer.filters import (
+    FILTER_NONE_VALUE,
+    FilterContext,
+    row_filter_context,
+    visible_row_count,
+)
 from hakari_bench.viewer.leaderboard import (
     LeaderboardResult,
     LeaderboardRow,
@@ -38,9 +43,6 @@ class ViewerAppConfig(BaseModel):
 
     duckdb_path: Path
     config_dir: Path = Path("config/viewer")
-
-
-FILTER_NONE_VALUE = "__none_selected__"
 
 
 def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewer")):
@@ -193,21 +195,23 @@ def render_leaderboard(
     filter_state: FilterState | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
+    filter_context = row_filter_context(result.rows, filter_state)
+    shown_count = visible_row_count(result.rows, filter_context)
     return f"""
 <div>
   {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state)}
-  {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+  {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
   {render_score_groups(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
     <div>
       <h2 class="text-lg font-semibold">{escape(result.view_label)}</h2>
-      <p class="mt-1 text-sm text-zinc-600" data-shown-count="{_visible_row_count(result.rows, filter_state)}">{_visible_row_count(result.rows, filter_state)} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks</p>
+      <p class="mt-1 text-sm text-zinc-600" data-shown-count="{shown_count}">{shown_count} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks</p>
     </div>
   </div>
   <div class="overflow-x-auto border border-zinc-200 bg-white">
     <table class="min-w-full border-collapse text-sm">
       {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state)}
-      {render_table_body(result=result, filter_state=filter_state)}
+      {render_table_body(result=result, filter_context=filter_context)}
     </table>
   </div>
   {render_model_detail_modal()}
@@ -241,8 +245,16 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Benchmark views">{''.join(buttons)}</nav>"""
 
 
-def render_controls(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
+def render_controls(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState | None = None,
+    filter_context: FilterContext | None = None,
+) -> str:
     filter_state = filter_state or FilterState()
+    filter_context = filter_context or row_filter_context(result.rows, filter_state)
     quantization_checked = " checked" if result.include_quantization_variants else ""
     truncate_checked = " checked" if result.include_truncate_variants else ""
     rescore_checked = " checked" if result.include_rescore_variants else ""
@@ -265,36 +277,16 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
     if result.include_other_variants:
         filter_hidden_fields.append(("other_variant", "1"))
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
-    dim_options = _dim_filter_options(result.rows)
-    quant_options = _quant_filter_options(result.rows)
-    dtype_options = _dtype_filter_options(result.rows)
-    attn_options = _attn_filter_options(result.rows)
-    prompt_options = _prompt_filter_options(result.rows)
-    selected_dims = _selected_filter_values(
-        options=dim_options,
-        selected=filter_state.dim_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_quants = _selected_filter_values(
-        options=quant_options,
-        selected=filter_state.quant_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_dtypes = _selected_filter_values(
-        options=dtype_options,
-        selected=filter_state.dtype_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_attn = _selected_filter_values(
-        options=attn_options,
-        selected=filter_state.attn_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_prompts = _selected_filter_values(
-        options=prompt_options,
-        selected=filter_state.prompt_filters,
-        filters_active=filter_state.filters_active,
-    )
+    dim_options = filter_context.dim_options
+    quant_options = filter_context.quant_options
+    dtype_options = filter_context.dtype_options
+    attn_options = filter_context.attn_options
+    prompt_options = filter_context.prompt_options
+    selected_dims = filter_context.selected_dims
+    selected_quants = filter_context.selected_quants
+    selected_dtypes = filter_context.selected_dtypes
+    selected_attn = filter_context.selected_attn
+    selected_prompts = filter_context.selected_prompts
     dim_all_query = state_payload(
         result=result,
         sort=sort,
@@ -303,10 +295,10 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             model_filter=filter_state.model_filter,
             filters_active=True,
             dim_filters=tuple(value for value, _ in dim_options),
-            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
-            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
-            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
-            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+            quant_filters=tuple(filter_context.ordered_selected_quants()),
+            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
+            attn_filters=tuple(filter_context.ordered_selected_attn()),
+            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
         ),
     )
     dim_none_query = state_payload(
@@ -317,10 +309,10 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
             model_filter=filter_state.model_filter,
             filters_active=True,
             dim_filters=(FILTER_NONE_VALUE,),
-            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
-            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
-            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
-            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+            quant_filters=tuple(filter_context.ordered_selected_quants()),
+            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
+            attn_filters=tuple(filter_context.ordered_selected_attn()),
+            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
         ),
     )
     quant_all_query = state_payload(
@@ -330,11 +322,11 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
             filters_active=True,
-            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
+            dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(value for value, _ in quant_options),
-            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
-            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
-            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
+            attn_filters=tuple(filter_context.ordered_selected_attn()),
+            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
         ),
     )
     quant_none_query = state_payload(
@@ -344,11 +336,11 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
             filters_active=True,
-            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
+            dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=(FILTER_NONE_VALUE,),
-            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
-            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
-            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
+            attn_filters=tuple(filter_context.ordered_selected_attn()),
+            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
         ),
     )
     dtype_all_query = state_payload(
@@ -358,11 +350,11 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
             filters_active=True,
-            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
-            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            quant_filters=tuple(filter_context.ordered_selected_quants()),
             dtype_filters=tuple(value for value, _ in dtype_options),
-            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
-            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+            attn_filters=tuple(filter_context.ordered_selected_attn()),
+            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
         ),
     )
     dtype_none_query = state_payload(
@@ -372,11 +364,11 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
             filters_active=True,
-            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
-            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
+            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            quant_filters=tuple(filter_context.ordered_selected_quants()),
             dtype_filters=(FILTER_NONE_VALUE,),
-            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
-            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+            attn_filters=tuple(filter_context.ordered_selected_attn()),
+            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
         ),
     )
     attn_all_query = state_payload(
@@ -386,11 +378,11 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
             filters_active=True,
-            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
-            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
-            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
+            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            quant_filters=tuple(filter_context.ordered_selected_quants()),
+            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(value for value, _ in attn_options),
-            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
         ),
     )
     attn_none_query = state_payload(
@@ -400,11 +392,11 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
             filters_active=True,
-            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
-            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
-            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
+            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            quant_filters=tuple(filter_context.ordered_selected_quants()),
+            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=(FILTER_NONE_VALUE,),
-            prompt_filters=tuple(_ordered_selected_values(prompt_options, selected_prompts)),
+            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
         ),
     )
     prompt_all_query = state_payload(
@@ -414,10 +406,10 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
             filters_active=True,
-            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
-            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
-            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
-            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
+            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            quant_filters=tuple(filter_context.ordered_selected_quants()),
+            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
+            attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(value for value, _ in prompt_options),
         ),
     )
@@ -428,10 +420,10 @@ def render_controls(*, result: LeaderboardResult, sort: str, direction: str, fil
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
             filters_active=True,
-            dim_filters=tuple(_ordered_selected_values(dim_options, selected_dims)),
-            quant_filters=tuple(_ordered_selected_values(quant_options, selected_quants)),
-            dtype_filters=tuple(_ordered_selected_values(dtype_options, selected_dtypes)),
-            attn_filters=tuple(_ordered_selected_values(attn_options, selected_attn)),
+            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            quant_filters=tuple(filter_context.ordered_selected_quants()),
+            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
+            attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=(FILTER_NONE_VALUE,),
         ),
     )
@@ -568,52 +560,14 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
     return f"<thead><tr>{''.join(heads)}</tr></thead>"
 
 
-def render_table_body(*, result: LeaderboardResult, filter_state: FilterState | None = None) -> str:
-    filter_state = filter_state or FilterState()
+def render_table_body(*, result: LeaderboardResult, filter_context: FilterContext | None = None) -> str:
     if not result.rows:
         return """<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="12">No complete results found.</td></tr></tbody>"""
+    filter_context = filter_context or row_filter_context(result.rows, FilterState())
     body_rows = []
     model_views = model_cell_views(result.rows)
-    model_filter_terms = _active_model_filter_terms(filter_state.model_filter)
-    dim_options = _dim_filter_options(result.rows)
-    quant_options = _quant_filter_options(result.rows)
-    dtype_options = _dtype_filter_options(result.rows)
-    attn_options = _attn_filter_options(result.rows)
-    prompt_options = _prompt_filter_options(result.rows)
-    selected_dims = _selected_filter_values(
-        options=dim_options,
-        selected=filter_state.dim_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_quants = _selected_filter_values(
-        options=quant_options,
-        selected=filter_state.quant_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_dtypes = _selected_filter_values(
-        options=dtype_options,
-        selected=filter_state.dtype_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_attn = _selected_filter_values(
-        options=attn_options,
-        selected=filter_state.attn_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_prompts = _selected_filter_values(
-        options=prompt_options,
-        selected=filter_state.prompt_filters,
-        filters_active=filter_state.filters_active,
-    )
     for row in result.rows:
-        hidden = (
-            bool(model_filter_terms and not _model_name_matches_filter_terms(row.model_name, model_filter_terms))
-            or _dim_bucket(row.embedding_dim) not in selected_dims
-            or _quant_bucket(row.quantization) not in selected_quants
-            or _dtype_bucket(row.dtype) not in selected_dtypes
-            or _attn_bucket(row.attn_implementation) not in selected_attn
-            or _prompt_bucket(row.prompt_summary) not in selected_prompts
-        )
+        hidden = not filter_context.is_visible(row)
         row_class = "border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
         mean_cells = (
@@ -766,15 +720,6 @@ def render_model_detail_modal() -> str:
 """
 
 
-def _active_model_filter_terms(model_filter: str) -> tuple[str, ...]:
-    return tuple(token.casefold() for token in re.split(r"\s+", model_filter.strip()) if len(token) >= 3)
-
-
-def _model_name_matches_filter_terms(model_name: str, terms: tuple[str, ...]) -> bool:
-    normalized = model_name.casefold()
-    return any(term in normalized for term in terms)
-
-
 def _render_filter_details(
     *,
     name: str,
@@ -815,217 +760,6 @@ def _render_filter_details(
         </div>
       </details>
     """
-
-
-def _dim_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
-    buckets = {_dim_bucket(row.embedding_dim) for row in rows}
-    return sorted(
-        ((bucket, _dim_bucket_label(bucket)) for bucket in buckets),
-        key=lambda item: _dim_bucket_sort_key(item[0]),
-    )
-
-
-def _quant_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
-    buckets = {_quant_bucket(row.quantization) for row in rows}
-    return sorted(
-        ((bucket, _quant_bucket_label(bucket)) for bucket in buckets),
-        key=lambda item: _quant_bucket_sort_key(item[0]),
-    )
-
-
-def _dtype_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
-    buckets = {_dtype_bucket(row.dtype) for row in rows}
-    return sorted(
-        ((bucket, _dtype_bucket_label(bucket)) for bucket in buckets),
-        key=lambda item: _dtype_bucket_sort_key(item[0]),
-    )
-
-
-def _attn_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
-    buckets = {_attn_bucket(row.attn_implementation) for row in rows}
-    return sorted(
-        ((bucket, _attn_bucket_label(bucket)) for bucket in buckets),
-        key=lambda item: _attn_bucket_sort_key(item[0]),
-    )
-
-
-def _prompt_filter_options(rows: list[LeaderboardRow]) -> list[tuple[str, str]]:
-    buckets = {_prompt_bucket(row.prompt_summary) for row in rows}
-    return sorted(
-        ((bucket, _prompt_bucket_label(bucket)) for bucket in buckets),
-        key=lambda item: _prompt_bucket_sort_key(item[0]),
-    )
-
-
-def _selected_filter_values(
-    *,
-    options: list[tuple[str, str]],
-    selected: tuple[str, ...],
-    filters_active: bool,
-) -> set[str]:
-    available = {value for value, _ in options}
-    if not filters_active:
-        return available
-    if not selected:
-        return available
-    return {value for value in selected if value in available}
-
-
-def _ordered_selected_values(options: list[tuple[str, str]], selected_values: set[str]) -> list[str]:
-    return [value for value, _ in options if value in selected_values]
-
-
-def _dim_bucket(value: int | None) -> str:
-    if value is None:
-        return "__unknown__"
-    if value >= 1025:
-        return "1025+"
-    return str(value)
-
-
-def _dim_bucket_label(bucket: str) -> str:
-    if bucket == "__unknown__":
-        return "Unknown"
-    if bucket == "1025+":
-        return "1025~ dims"
-    return f"{int(bucket):,} dims"
-
-
-def _dim_bucket_sort_key(bucket: str) -> tuple[int, int]:
-    if bucket == "__unknown__":
-        return (1, 0)
-    if bucket == "1025+":
-        return (0, 1025)
-    return (0, int(bucket))
-
-
-def _quant_bucket(value: str | None) -> str:
-    return value or "__none__"
-
-
-def _quant_bucket_label(bucket: str) -> str:
-    return "Original" if bucket == "__none__" else bucket
-
-
-def _quant_bucket_sort_key(bucket: str) -> tuple[int, str]:
-    return (0, "") if bucket == "__none__" else (1, bucket)
-
-
-def _dtype_bucket(value: str | None) -> str:
-    return value or "__unknown__"
-
-
-def _dtype_bucket_label(bucket: str) -> str:
-    return "Unknown" if bucket == "__unknown__" else bucket.upper()
-
-
-def _dtype_bucket_sort_key(bucket: str) -> tuple[int, str]:
-    return (1, "") if bucket == "__unknown__" else (0, bucket)
-
-
-def _dtype_label(value: str | None) -> str:
-    return "" if value is None else value.upper()
-
-
-def _attn_bucket(value: str | None) -> str:
-    return value or "__unknown__"
-
-
-def _attn_bucket_label(bucket: str) -> str:
-    return "Unknown" if bucket == "__unknown__" else _attn_label(bucket)
-
-
-def _attn_bucket_sort_key(bucket: str) -> tuple[int, str]:
-    order = {"flash_attention_2": "0", "sdpa": "1", "__unknown__": "9"}
-    return (1 if bucket == "__unknown__" else 0, order.get(bucket, bucket))
-
-
-def _attn_label(value: str | None) -> str:
-    if value is None:
-        return ""
-    labels = {
-        "flash_attention_2": "FA2",
-        "sdpa": "SDPA",
-    }
-    return labels.get(value, value)
-
-
-def _prompt_bucket(value: str | None) -> str:
-    if value is None:
-        return "model_default"
-    return value.replace(" + ", "_").replace(" ", "_")
-
-
-def _prompt_bucket_label(bucket: str) -> str:
-    labels = {
-        "explicit_prefixes": "Explicit prefixes",
-        "prompt_names": "Prompt names",
-        "prompt_names_encode_tasks": "Prompt names + encode tasks",
-        "encode_tasks": "Encode tasks",
-        "model_default": "Model default",
-    }
-    return labels.get(bucket, bucket.replace("_", " ").title())
-
-
-def _prompt_bucket_sort_key(bucket: str) -> tuple[int, str]:
-    order = {
-        "explicit_prefixes": "0",
-        "prompt_names": "1",
-        "prompt_names_encode_tasks": "2",
-        "encode_tasks": "3",
-        "model_default": "4",
-    }
-    return (0, order.get(bucket, bucket))
-
-
-def _prompt_label(value: str | None) -> str:
-    return _prompt_bucket_label(_prompt_bucket(value))
-
-
-def _visible_row_count(rows: list[LeaderboardRow], filter_state: FilterState) -> int:
-    model_filter_terms = _active_model_filter_terms(filter_state.model_filter)
-    dim_options = _dim_filter_options(rows)
-    quant_options = _quant_filter_options(rows)
-    dtype_options = _dtype_filter_options(rows)
-    attn_options = _attn_filter_options(rows)
-    prompt_options = _prompt_filter_options(rows)
-    selected_dims = _selected_filter_values(
-        options=dim_options,
-        selected=filter_state.dim_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_quants = _selected_filter_values(
-        options=quant_options,
-        selected=filter_state.quant_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_dtypes = _selected_filter_values(
-        options=dtype_options,
-        selected=filter_state.dtype_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_attn = _selected_filter_values(
-        options=attn_options,
-        selected=filter_state.attn_filters,
-        filters_active=filter_state.filters_active,
-    )
-    selected_prompts = _selected_filter_values(
-        options=prompt_options,
-        selected=filter_state.prompt_filters,
-        filters_active=filter_state.filters_active,
-    )
-    return sum(
-        1
-        for row in rows
-        if not (
-            bool(model_filter_terms and not _model_name_matches_filter_terms(row.model_name, model_filter_terms))
-            or _dim_bucket(row.embedding_dim) not in selected_dims
-            or _quant_bucket(row.quantization) not in selected_quants
-            or _dtype_bucket(row.dtype) not in selected_dtypes
-            or _attn_bucket(row.attn_implementation) not in selected_attn
-            or _prompt_bucket(row.prompt_summary) not in selected_prompts
-        )
-    )
 
 
 def _hidden_inputs(fields: list[tuple[str, str]]) -> str:
