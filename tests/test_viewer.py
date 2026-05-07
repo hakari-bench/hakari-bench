@@ -1315,6 +1315,8 @@ def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
     assert _metric_column_label("NanoBEIR-ja") == "BEIR-ja"
     assert _metric_column_label("NanoWikipediaRetrievalMultilingual") == "WikipediaRetrievalMultilingual"
     assert _metric_column_label("arguana") == "arguana"
+    assert _metric_column_label("NanoBIRCO::NanoBIRCO") == "NanoBIRCO::NanoBIRCO"
+    assert _metric_column_label("NanoMMTEB::NanoArguAna") == "NanoMMTEB::NanoArguAna"
 
 
 def test_max_len_is_formatted_with_grouping_separator() -> None:

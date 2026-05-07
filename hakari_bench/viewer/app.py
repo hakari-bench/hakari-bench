@@ -1235,6 +1235,8 @@ def _fmt_number(value: float | None) -> str:
 
 
 def _metric_column_label(column: str) -> str:
+    if "::" in column:
+        return column
     return column.removeprefix("Nano")
 
 
