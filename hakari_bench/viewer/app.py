@@ -521,10 +521,10 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
         )
     else:
         columns.append(("mean_score", "Mean Score", "desc", "right", False))
-        columns.extend(
-            (f"metric:{column}", _metric_column_label(column), "desc", "right", True)
-            for column in result.metric_columns
-        )
+    columns.extend(
+        (f"metric:{column}", _metric_column_label(column), "desc", "right", True)
+        for column in result.metric_columns
+    )
     columns.extend(
         [
             ("task_count", "Tasks", "desc", "right", False),

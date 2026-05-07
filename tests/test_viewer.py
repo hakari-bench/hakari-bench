@@ -297,6 +297,7 @@ overalls:
     )
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    assert service.get_leaderboard("Overall").metric_columns == []
     result = service.get_leaderboard("OverallGrouped")
 
     assert result.expected_tasks == 3
@@ -307,6 +308,16 @@ overalls:
     assert by_model["model/b"].borda_score == 100 / 3
     assert by_model["model/a"].micro_mean == (70 + 50 + 80) / 3
     assert by_model["model/a"].macro_mean == 70.0
+    assert result.metric_columns == [
+        "BenchMean::BenchMean",
+        "BenchTask::task1",
+        "BenchTask::task2",
+    ]
+    assert by_model["model/a"].metric_values == {
+        "BenchMean::BenchMean": 80.0,
+        "BenchTask::task1": 70.0,
+        "BenchTask::task2": 50.0,
+    }
 
     from fastapi.testclient import TestClient
 
@@ -315,6 +326,10 @@ overalls:
 
     assert response.status_code == 200
     assert "Overall Grouped" in response.text
+    assert "BenchMean::BenchMean" in response.text
+    assert "BenchTask::task1" in response.text
+    assert "BenchTask::task2" in response.text
+    assert "metric%3ABenchTask%3A%3Atask1" in response.text
 
 
 def test_configured_excluded_tasks_are_not_used_in_leaderboards(tmp_path: Path) -> None:

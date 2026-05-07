@@ -137,13 +137,15 @@ class LeaderboardService:
             include_other_variants=include_other_variants,
         )
         rows = _exclude_configured_tasks(rows, self.config)
+        metric_score_group = selected_score_group
         if overall is not None:
             rows = _aggregate_overall_scores(rows, overall)
-        metric_columns = _metric_columns(rows, selected_score_group) if selected_score_group is not None else []
+            metric_score_group = _overall_metric_score_group(overall)
+        metric_columns = _metric_columns(rows, metric_score_group) if metric_score_group is not None else []
         leaderboard_rows = compute_leaderboard_rows(
             rows,
             is_overall=is_overall,
-            score_group=selected_score_group,
+            score_group=metric_score_group,
             metric_columns=metric_columns,
         )
         return LeaderboardResult(
@@ -455,6 +457,12 @@ def _exclude_configured_tasks(rows: list[TaskScore], config: ViewerConfig) -> li
 def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGroupConfig]:
     benchmark = config.benchmark_for_view(view_name)
     return benchmark.resolved_score_groups if benchmark is not None else []
+
+
+def _overall_metric_score_group(overall: OverallConfig) -> ScoreGroupConfig | None:
+    if not any(component.group_by is not None for component in overall.benchmark_components):
+        return None
+    return ScoreGroupConfig(name="grouped_tasks", label="Grouped Tasks", group_by="task_key")
 
 
 def _record_display_model_names(records: list[TaskResultRecord], *, include_variant_details: bool) -> list[str]:

@@ -355,6 +355,12 @@ For overall views:
 `group_by` settings from `overall.yaml` to average tasks into benchmark-local
 units before computing Borda and means.
 
+Grouped overall views also expose the aggregated benchmark-local units as
+metric columns. These columns use the aggregated `task_key` values, such as
+`NanoMTEB-German::Banking77Classification`, and can be sorted with the
+`metric:<task_key>` sort key. Non-grouped overall views keep metric columns
+disabled to avoid expanding the table to every raw task.
+
 ### Embedding Variants
 
 By default, the viewer displays base results only:
@@ -710,8 +716,8 @@ for overall views ranks `mean_score`, which is `macro_mean`.
 ### 4. OverallGrouped Leaderboard
 
 `OverallGrouped` first averages raw tasks into benchmark-local groups, then
-computes Borda and means. Generate `overall_components` from
-`config/viewer/overall.yaml`.
+computes Borda, means, and per-group metric columns. Generate
+`overall_components` from `config/viewer/overall.yaml`.
 
 ```sql
 WITH
