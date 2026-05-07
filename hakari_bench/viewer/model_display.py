@@ -196,12 +196,19 @@ def render_model_detail_modal() -> str:
   }
   document.addEventListener("submit", (event) => {
     if (event.target?.id !== "display-controls") return;
-    window.__hakariRestoreModelFilterFocus = document.activeElement?.id === "model-filter-input";
+    const activeId = document.activeElement?.id;
+    window.__hakariRestoreModelFilterFocus = activeId === "model-filter-input";
+    window.__hakariRestoreTaskFilterFocus = activeId === "task-filter-input";
   });
   document.addEventListener("htmx:afterSwap", (event) => {
-    if (event.target?.id !== "leaderboard-panel" || !window.__hakariRestoreModelFilterFocus) return;
+    if (
+      event.target?.id !== "leaderboard-panel" ||
+      (!window.__hakariRestoreModelFilterFocus && !window.__hakariRestoreTaskFilterFocus)
+    ) return;
+    const inputId = window.__hakariRestoreTaskFilterFocus ? "task-filter-input" : "model-filter-input";
     window.__hakariRestoreModelFilterFocus = false;
-    const input = document.getElementById("model-filter-input");
+    window.__hakariRestoreTaskFilterFocus = false;
+    const input = document.getElementById(inputId);
     if (!input) return;
     input.focus();
     const end = input.value.length;

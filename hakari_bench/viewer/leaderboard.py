@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
 from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
 
 SortDirection = Literal["asc", "desc"]
@@ -94,6 +95,8 @@ class LeaderboardResult(BaseModel):
     include_truncate_variants: bool = False
     include_rescore_variants: bool = False
     include_other_variants: bool = False
+    show_task_scores: bool = False
+    task_filter: str = ""
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
     metric_columns: list[str]
@@ -136,6 +139,8 @@ class LeaderboardService:
         include_rescore_variants: bool = False,
         include_other_variants: bool = False,
         language_filters: tuple[str, ...] = (),
+        show_task_scores: bool = False,
+        task_filter: str = "",
     ) -> LeaderboardResult:
         overall = self.config.overall_for_view(view_name)
         benchmarks = self.config.benchmarks_for_view(view_name)
@@ -158,7 +163,10 @@ class LeaderboardService:
         if overall is not None:
             rows = _aggregate_overall_scores(rows, overall)
             metric_score_group = _overall_metric_score_group(overall)
-        metric_columns = _metric_columns(rows, metric_score_group) if metric_score_group is not None else []
+        if show_task_scores and metric_score_group is None:
+            metric_score_group = ScoreGroupConfig(name="task_scores", label="Task Scores", group_by="task_key")
+        metric_columns = _metric_columns(rows, metric_score_group) if show_task_scores and metric_score_group is not None else []
+        metric_columns = _filter_metric_columns(rows, metric_score_group, metric_columns, task_filter)
         leaderboard_rows = compute_leaderboard_rows(
             rows,
             is_overall=is_overall,
@@ -177,6 +185,8 @@ class LeaderboardService:
             include_truncate_variants=include_truncate_variants,
             include_rescore_variants=include_rescore_variants,
             include_other_variants=include_other_variants,
+            show_task_scores=show_task_scores,
+            task_filter=task_filter.strip(),
             score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
             selected_score_group=(
                 ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
@@ -586,6 +596,35 @@ def _metric_columns(rows: list[TaskScore], score_group: ScoreGroupConfig | None)
     if score_group is None:
         return []
     return sorted({_score_group_key(row, score_group.group_by) for row in rows})
+
+
+def _filter_metric_columns(
+    rows: list[TaskScore],
+    score_group: ScoreGroupConfig | None,
+    columns: list[str],
+    task_filter: str,
+) -> list[str]:
+    terms = active_filter_terms(task_filter)
+    if not terms or score_group is None:
+        return columns
+    labels_by_column: dict[str, set[str]] = defaultdict(set)
+    for row in rows:
+        column = _score_group_key(row, score_group.group_by)
+        labels_by_column[column].update(
+            {
+                column,
+                row.task_name,
+                row.task_key,
+                row.dataset_name,
+                row.dataset_id,
+                row.benchmark,
+            }
+        )
+    return [
+        column
+        for column in columns
+        if any(text_matches_filter_terms(label, terms) for label in labels_by_column.get(column, {column}))
+    ]
 
 
 def _metric_values(

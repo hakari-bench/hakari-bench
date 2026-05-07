@@ -64,6 +64,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         truncate: bool = Query(default=False),
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
+        task_scores: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -72,6 +73,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         prompt_filter: list[str] | None = Query(default=None),
         lang_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
+        task_filter: str = Query(default=""),
     ) -> str:
         store.ensure_current()
         initial_query = normalize_query_state(
@@ -85,6 +87,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             truncate=truncate,
             rescore=rescore,
             other_variant=other_variant,
+            task_scores=task_scores,
             filters=filters,
             dim_filter=dim_filter,
             quant_filter=quant_filter,
@@ -93,6 +96,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             prompt_filter=prompt_filter,
             lang_filter=lang_filter,
             model_filter=model_filter,
+            task_filter=task_filter,
         )
         summary = ViewerAnalyticsRepository(store.path).fetch_summary()
         return render_page(
@@ -113,6 +117,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         truncate: bool = Query(default=False),
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
+        task_scores: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -121,6 +126,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         prompt_filter: list[str] | None = Query(default=None),
         lang_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
+        task_filter: str = Query(default=""),
     ) -> HTMLResponse:
         store.ensure_current()
         state_query = normalize_query_state(
@@ -134,6 +140,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             truncate=truncate,
             rescore=rescore,
             other_variant=other_variant,
+            task_scores=task_scores,
             filters=filters,
             dim_filter=dim_filter,
             quant_filter=quant_filter,
@@ -142,6 +149,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             prompt_filter=prompt_filter,
             lang_filter=lang_filter,
             model_filter=model_filter,
+            task_filter=task_filter,
         )
         view = query_string(state_query["view"])
         sort = query_string(state_query["sort"])
@@ -160,6 +168,8 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             include_rescore_variants=display_flags.rescore,
             include_other_variants=display_flags.other,
             language_filters=filter_state.language_filters,
+            show_task_scores=state_query.get("task_scores") == "1",
+            task_filter=filter_state.task_filter,
         )
         content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
         return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}"})
@@ -486,6 +496,7 @@ def _language_page_button(
 def _filter_state_with_languages(filter_state: FilterState, language_filters: tuple[str, ...]) -> FilterState:
     return FilterState(
         model_filter=filter_state.model_filter,
+        task_filter=filter_state.task_filter,
         language_filters=language_filters,
         filters_active=filter_state.filters_active,
         dim_filters=filter_state.dim_filters,
@@ -510,6 +521,7 @@ def render_controls(
     truncate_checked = " checked" if result.include_truncate_variants else ""
     rescore_checked = " checked" if result.include_rescore_variants else ""
     other_variant_checked = " checked" if result.include_other_variants else ""
+    task_scores_checked = " checked" if result.show_task_scores else ""
     state_fields = [
         ("view", result.view_name),
         ("sort", sort),
@@ -518,7 +530,12 @@ def render_controls(
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
     display_hidden_html = _hidden_inputs(state_fields + active_filter_hidden_fields(filter_state))
-    filter_hidden_fields = [*state_fields, ("filters", "1"), ("model_filter", filter_state.model_filter)]
+    filter_hidden_fields = [
+        *state_fields,
+        ("filters", "1"),
+        ("model_filter", filter_state.model_filter),
+        ("task_filter", filter_state.task_filter),
+    ]
     if result.include_quantization_variants:
         filter_hidden_fields.append(("quantization", "1"))
     if result.include_truncate_variants:
@@ -527,6 +544,8 @@ def render_controls(
         filter_hidden_fields.append(("rescore", "1"))
     if result.include_other_variants:
         filter_hidden_fields.append(("other_variant", "1"))
+    if result.show_task_scores:
+        filter_hidden_fields.append(("task_scores", "1"))
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
     dim_options = filter_context.dim_options
     quant_options = filter_context.quant_options
@@ -545,6 +564,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(value for value, _ in dim_options),
@@ -560,6 +580,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=(FILTER_NONE_VALUE,),
@@ -575,6 +596,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
@@ -590,6 +612,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
@@ -605,6 +628,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
@@ -620,6 +644,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
@@ -635,6 +660,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
@@ -650,6 +676,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
@@ -665,6 +692,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
@@ -680,6 +708,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
@@ -695,6 +724,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             filters_active=filter_state.filters_active,
             dim_filters=filter_state.dim_filters,
             quant_filters=filter_state.quant_filters,
@@ -709,6 +739,7 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
             filters_active=filter_state.filters_active,
             dim_filters=filter_state.dim_filters,
             quant_filters=filter_state.quant_filters,
@@ -754,12 +785,25 @@ def render_controls(
           <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
           <span>Other variants</span>
         </label>
+        <label class="inline-flex items-center gap-2">
+          <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
+          <span>Task score columns</span>
+        </label>
         <label class="flex min-w-64 items-center gap-2">
-          <span class="font-medium text-zinc-800">Model name</span>
+          <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model name</span>
           <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
                  class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
                  autocomplete="off">
         </label>
+        <label class="flex min-w-64 items-center gap-2">
+          <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Task name</span>
+          <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
+                 class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
+                 autocomplete="off">
+        </label>
+        <button type="submit" class="border border-zinc-300 bg-zinc-50 px-3 py-1 text-sm font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
+          Apply
+        </button>
       </form>
       <div class="mt-3 flex flex-wrap items-start gap-3">
         <p class="pt-1 font-medium text-zinc-800">Filters:</p>

@@ -427,7 +427,7 @@ overalls:
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
     assert service.get_leaderboard("Overall").metric_columns == []
-    result = service.get_leaderboard("OverallGrouped")
+    result = service.get_leaderboard("OverallGrouped", show_task_scores=True)
 
     assert result.expected_tasks == 3
     assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
@@ -451,7 +451,7 @@ overalls:
     from fastapi.testclient import TestClient
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=OverallGrouped")
+    response = TestClient(app).get("/leaderboard?view=OverallGrouped&task_scores=1")
 
     assert response.status_code == 200
     assert "Overall Grouped" in response.text
@@ -506,7 +506,7 @@ overalls:
     )
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    bench_result = service.get_leaderboard("BenchA")
+    bench_result = service.get_leaderboard("BenchA", show_task_scores=True)
     overall_result = service.get_leaderboard("Overall")
     grouped_result = service.get_leaderboard("OverallGrouped")
 
@@ -619,6 +619,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Rescore" in response.text
     assert 'id="model-filter-input"' in response.text
     assert 'name="model_filter"' in response.text
+    assert "Apply" in response.text
     assert 'value="model/b"' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
     assert "model/a" in response.text
@@ -1233,9 +1234,16 @@ benchmarks:
     )
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    task_result = service.get_leaderboard("MNanoBEIR", score_group_name="task_mean")
-    lang_result = service.get_leaderboard("MNanoBEIR", score_group_name="lang_mean", sort="metric:NanoBEIR-ja")
+    hidden_result = service.get_leaderboard("MNanoBEIR", score_group_name="task_mean")
+    task_result = service.get_leaderboard("MNanoBEIR", score_group_name="task_mean", show_task_scores=True)
+    lang_result = service.get_leaderboard(
+        "MNanoBEIR",
+        score_group_name="lang_mean",
+        sort="metric:NanoBEIR-ja",
+        show_task_scores=True,
+    )
 
+    assert hidden_result.metric_columns == []
     assert task_result.metric_columns == ["arguana", "fever"]
     assert task_result.rows[0].metric_values["arguana"] == 75.0
     assert lang_result.metric_columns == ["NanoBEIR-en", "NanoBEIR-ja"]
@@ -1245,17 +1253,61 @@ benchmarks:
     from fastapi.testclient import TestClient
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=MNanoBEIR&group=lang_mean&sort=metric:NanoBEIR-ja")
+    response = TestClient(app).get(
+        "/leaderboard?view=MNanoBEIR&group=lang_mean&task_scores=1&sort=metric:NanoBEIR-ja"
+    )
 
     assert response.status_code == 200
     assert "Task Mean" in response.text
     assert "Lang Mean" in response.text
+    assert "Task score columns" in response.text
+    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "Mean Score" in response.text
     assert ">BEIR-ja</span>" in response.text
     assert "[overflow-wrap:anywhere]" in response.text
     assert "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem]" in response.text
     assert "metric%3ANanoBEIR-ja" in response.text
     assert 'hx-push-url="/?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja' in response.text
+
+
+def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "NanoArguAna", "arguana", "bench::arguana", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "NanoFEVER", "fever", "bench::fever", 0.80, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "NanoArguAna", "arguana", "bench::arguana", 0.70, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "NanoFEVER", "fever", "bench::fever", 0.60, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    hidden_result = service.get_leaderboard("BenchA")
+    full_result = service.get_leaderboard("BenchA", show_task_scores=True)
+    filtered_result = service.get_leaderboard("BenchA", show_task_scores=True, task_filter="arguana qwen")
+
+    assert hidden_result.metric_columns == []
+    assert full_result.metric_columns == ["arguana", "fever"]
+    assert filtered_result.metric_columns == ["arguana"]
+    assert filtered_result.rows[0].metric_values["arguana"] == 90.0
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&task_scores=1&task_filter=ARGUANA%20qw")
+
+    assert response.status_code == 200
+    assert 'id="task-filter-input"' in response.text
+    assert 'name="task_filter"' in response.text
+    assert 'value="ARGUANA qw"' in response.text
+    assert ">arguana</span>" in response.text
+    assert ">fever</span>" not in response.text
+    assert "metric%3Aarguana" in response.text
 
 
 def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:

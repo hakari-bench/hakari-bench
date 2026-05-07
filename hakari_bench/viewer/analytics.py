@@ -73,11 +73,7 @@ class ViewerAnalyticsRepository:
                 task_columns,
                 ["finished_at_utc", "evaluated_at_utc", "started_at_utc"],
             )
-            latest = (
-                con.execute(f"SELECT max({finished_expr}) FROM task_results").fetchone()[0]
-                if finished_expr != "NULL"
-                else None
-            )
+            latest = _first_value(con.execute(f"SELECT max({finished_expr}) FROM task_results").fetchone()) if finished_expr != "NULL" else None
             base_count_expr = (
                 "count(*) FILTER (WHERE embedding_variant_name IS NULL)"
                 if "embedding_variant_name" in task_columns
@@ -98,25 +94,31 @@ class ViewerAnalyticsRepository:
                     {variant_count_expr}
                 FROM task_results
                 """
-            ).fetchone()
+            ).fetchone() or (0, 0, 0, 0, 0)
             language_count = 0
             if _table_exists(con, "dataset_metadata"):
                 metadata_columns = _table_columns(con, "dataset_metadata")
                 if "languages" in metadata_columns:
                     language_count = int(
-                        con.execute(
-                            """
-                            SELECT count(DISTINCT item.language)
-                            FROM dataset_metadata, unnest(languages) AS item(language)
-                            WHERE item.language IS NOT NULL AND item.language != ''
-                            """
-                        ).fetchone()[0]
+                        _first_value(
+                            con.execute(
+                                """
+                                SELECT count(DISTINCT item.language)
+                                FROM dataset_metadata, unnest(languages) AS item(language)
+                                WHERE item.language IS NOT NULL AND item.language != ''
+                                """
+                            ).fetchone()
+                        )
+                        or 0
                     )
                 elif "language" in metadata_columns:
                     language_count = int(
-                        con.execute(
-                            "SELECT count(DISTINCT language) FROM dataset_metadata WHERE language IS NOT NULL AND language != ''"
-                        ).fetchone()[0]
+                        _first_value(
+                            con.execute(
+                                "SELECT count(DISTINCT language) FROM dataset_metadata WHERE language IS NOT NULL AND language != ''"
+                            ).fetchone()
+                        )
+                        or 0
                     )
             return ViewerSummary(
                 model_count=int(task_counts[0] or 0),
@@ -311,6 +313,10 @@ def _table_exists(con: duckdb.DuckDBPyConnection, table: str) -> bool:
         [table],
     ).fetchone()
     return bool(row[0]) if row is not None else False
+
+
+def _first_value(row: tuple[Any, ...] | None) -> Any:
+    return row[0] if row is not None else None
 
 
 def _benchmark_where_clause(column: str, benchmarks: list[str]) -> tuple[str, list[str]]:

@@ -14,6 +14,7 @@ QueryState = dict[str, QueryValue]
 @dataclass(frozen=True)
 class FilterState:
     model_filter: str = ""
+    task_filter: str = ""
     language_filters: tuple[str, ...] = ()
     filters_active: bool = False
     dim_filters: tuple[str, ...] = ()
@@ -43,6 +44,8 @@ def normalize_query_state(
     prompt_filter: list[str] | None,
     lang_filter: list[str] | None = None,
     model_filter: str,
+    task_scores: bool = False,
+    task_filter: str = "",
 ) -> QueryState:
     if view not in viewer_config.view_names:
         view = viewer_config.overall.name
@@ -57,9 +60,12 @@ def normalize_query_state(
         rescore=rescore,
         other=other_variant,
     )
+    task_filter = task_filter.strip()
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
     if group:
         query["group"] = group
+    if task_scores or task_filter:
+        query["task_scores"] = "1"
     if display_flags.quantization:
         query["quantization"] = "1"
     if display_flags.truncate:
@@ -81,12 +87,15 @@ def normalize_query_state(
     model_filter = model_filter.strip()
     if model_filter:
         query["model_filter"] = model_filter
+    if task_filter:
+        query["task_filter"] = task_filter
     return query
 
 
 def filter_state_from_query(query: QueryState) -> FilterState:
     return FilterState(
         model_filter=str(query.get("model_filter", "")),
+        task_filter=str(query.get("task_filter", "")),
         language_filters=tuple(query_values(query.get("lang_filter"))),
         filters_active=query.get("filters") == "1",
         dim_filters=tuple(query_values(query.get("dim_filter"))),
@@ -108,6 +117,8 @@ def state_payload(
     query_payload: QueryState = {"view": result.view_name, "sort": sort, "direction": direction}
     if result.selected_score_group is not None:
         query_payload["group"] = result.selected_score_group.name
+    if result.show_task_scores:
+        query_payload["task_scores"] = "1"
     if result.include_quantization_variants:
         query_payload["quantization"] = "1"
     if result.include_truncate_variants:
@@ -118,6 +129,8 @@ def state_payload(
         query_payload["other_variant"] = "1"
     if filter_state.model_filter:
         query_payload["model_filter"] = filter_state.model_filter
+    if filter_state.task_filter:
+        query_payload["task_filter"] = filter_state.task_filter
     if filter_state.language_filters:
         query_payload["lang_filter"] = list(filter_state.language_filters)
     if filter_state.filters_active:

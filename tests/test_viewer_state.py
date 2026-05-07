@@ -54,12 +54,15 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         attn_filter=[],
         prompt_filter=None,
         model_filter="  jina  ",
+        task_scores=True,
+        task_filter="  arguana  fever  ",
     )
 
     assert query == {
         "view": "BenchA",
         "sort": "metric:task1",
         "direction": "desc",
+        "task_scores": "1",
         "quantization": "1",
         "filters": "1",
         "dim_filter": ["384"],
@@ -68,6 +71,7 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         "attn_filter": [],
         "prompt_filter": [],
         "model_filter": "jina",
+        "task_filter": "arguana  fever",
     }
 
 
@@ -98,11 +102,38 @@ def test_legacy_variants_query_enables_all_variant_flags() -> None:
     assert query["other_variant"] == "1"
 
 
+def test_task_filter_enables_task_score_columns() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="BenchA",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        task_filter="fever",
+    )
+
+    assert query["task_scores"] == "1"
+    assert query["task_filter"] == "fever"
+
+
 def test_filter_state_from_query_accepts_scalar_or_list_query_values() -> None:
     state = filter_state_from_query(
         {
             "filters": "1",
             "model_filter": "bekko",
+            "task_filter": "arguana",
             "dim_filter": "768",
             "quant_filter": ["int8", "binary"],
             "dtype_filter": [],
@@ -111,6 +142,7 @@ def test_filter_state_from_query_accepts_scalar_or_list_query_values() -> None:
 
     assert state == FilterState(
         model_filter="bekko",
+        task_filter="arguana",
         filters_active=True,
         dim_filters=("768",),
         quant_filters=("int8", "binary"),
@@ -138,6 +170,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         direction="desc",
         filter_state=FilterState(
             model_filter="jina",
+            task_filter="fever",
             filters_active=True,
             dim_filters=("768",),
             quant_filters=("binary",),
@@ -151,6 +184,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         "quantization": "1",
         "rescore": "1",
         "model_filter": "jina",
+        "task_filter": "fever",
         "filters": "1",
         "dim_filter": ["768"],
         "quant_filter": ["binary"],
