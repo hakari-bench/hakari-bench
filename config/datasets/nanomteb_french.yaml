@@ -8,15 +8,13 @@ candidate_config: bm25
 splits:
 - NanoAlloprof
 - NanoBSARDV2
-- NanoFQuAD
 - NanoSyntec
 - NanoXPQAFr
 metadata:
   language: fr
   category: natural_language
   short_description: French NanoMTEB retrieval benchmark.
-  description: NanoMTEB-French is a compact French retrieval benchmark aligned with
-    MTEB-style task families and MTEB-French retrieval resources.
+  description: NanoMTEB-French is a compact French retrieval benchmark containing the MTEB(fra, v1) retrieval-family splits. Non-benchmark French retrieval tasks are placed in NanoMTEB-Misc.
   citation_keys:
   - muennighoff2023mteb
   - ciancone2024mtebfrench
@@ -44,26 +42,17 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2405.20468
-  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
-    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
-    \ and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n\
-    \  doi = {10.48550/arXiv.2210.07316}\n}\n\n@misc{ciancone2024mtebfrench,\n  title\
-    \ = {{MTEB-French}: Resources for French Sentence Embedding Evaluation and Analysis},\n\
-    \  author = {Ciancone, Mathieu and Kerboua, Imene and Schaeffer, Marion and Siblini,\
-    \ Wissam},\n  year = {2024},\n  url = {https://arxiv.org/abs/2405.20468},\n  doi\
-    \ = {10.48550/arXiv.2405.20468}\n}\n"
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n  doi = {10.48550/arXiv.2210.07316}\n}\n\n@misc{ciancone2024mtebfrench,\n  title = {{MTEB-French}: Resources for French Sentence Embedding Evaluation and Analysis},\n  author = {Ciancone, Mathieu and Kerboua, Imene and Schaeffer, Marion and Siblini, Wissam},\n  year = {2024},\n  url = {https://arxiv.org/abs/2405.20468},\n  doi = {10.48550/arXiv.2405.20468}\n}\n"
 task_metadata:
   NanoAlloprof:
     language: fr
     category: natural_language
     short_description: French educational question-answer retrieval.
-    description: A compact Alloprof retrieval task over French educational questions
-      and reference answers from Quebec.
+    description: A compact Alloprof retrieval task over French educational questions and reference answers from Quebec.
     citation_keys:
     - lefebvre2023alloprof
     references:
-    - title: 'Alloprof: a new French question-answer education dataset and its use
-        in an information retrieval case study'
+    - title: 'Alloprof: a new French question-answer education dataset and its use in an information retrieval case study'
       authors:
       - Antoine Lefebvre-Brossard
       - Stephane Gazaille
@@ -73,11 +62,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2302.07738
-    bibtex: "@misc{lefebvre2023alloprof,\n  title = {Alloprof: a new French question-answer\
-      \ education dataset and its use in an information retrieval case study},\n \
-      \ author = {Lefebvre-Brossard, Antoine and Gazaille, Stephane and Desmarais,\
-      \ Michel C.},\n  year = {2023},\n  url = {https://arxiv.org/abs/2302.07738},\n\
-      \  doi = {10.48550/arXiv.2302.07738}\n}\n"
+    bibtex: "@misc{lefebvre2023alloprof,\n  title = {Alloprof: a new French question-answer education dataset and its use in an information retrieval case study},\n  author = {Lefebvre-Brossard, Antoine and Gazaille, Stephane and Desmarais, Michel C.},\n  year = {2023},\n  url = {https://arxiv.org/abs/2302.07738},\n  doi = {10.48550/arXiv.2302.07738}\n}\n"
     languages:
     - fr
     language_detection:
@@ -99,8 +84,7 @@ task_metadata:
     language: fr
     category: natural_language
     short_description: French statutory article retrieval.
-    description: A compact BSARD v2 retrieval task for matching French legal questions
-      to Belgian statutory articles.
+    description: A compact BSARD v2 retrieval task for matching French legal questions to Belgian statutory articles.
     citation_keys:
     - louis2022statutory
     references:
@@ -113,11 +97,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2022.acl-long.468
-    bibtex: "@inproceedings{louis2022statutory,\n  title = {A Statutory Article Retrieval\
-      \ Dataset in French},\n  author = {Louis, Antoine and Spanakis, Gerasimos},\n\
-      \  booktitle = {Proceedings of the 60th Annual Meeting of the Association for\
-      \ Computational Linguistics},\n  year = {2022},\n  url = {https://aclanthology.org/2022.acl-long.468/},\n\
-      \  doi = {10.18653/v1/2022.acl-long.468}\n}\n"
+    bibtex: "@inproceedings{louis2022statutory,\n  title = {A Statutory Article Retrieval Dataset in French},\n  author = {Louis, Antoine and Spanakis, Gerasimos},\n  booktitle = {Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics},\n  year = {2022},\n  url = {https://aclanthology.org/2022.acl-long.468/},\n  doi = {10.18653/v1/2022.acl-long.468}\n}\n"
     languages:
     - fr
     language_detection:
@@ -132,63 +112,16 @@ task_metadata:
         sample_count: 10000
         languages:
           fr: 99.95
-  NanoFQuAD:
-    language: fr
-    category: natural_language
-    short_description: French Wikipedia QA context retrieval.
-    description: A compact FQuAD retrieval task for retrieving French Wikipedia contexts
-      that answer questions.
-    citation_keys:
-    - dhoffschmidt2020fquad
-    references:
-    - title: 'FQuAD: French Question Answering Dataset'
-      authors:
-      - Martin d'Hoffschmidt
-      - Wacim Belblidia
-      - Quentin Heinrich
-      - Tom Brendle
-      - Maxime Vidal
-      year: 2020
-      url: https://aclanthology.org/2020.findings-emnlp.107/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2020.findings-emnlp.107
-    bibtex: "@inproceedings{dhoffschmidt2020fquad,\n  title = {{FQuAD}: French Question\
-      \ Answering Dataset},\n  author = {d'Hoffschmidt, Martin and Belblidia, Wacim\
-      \ and Heinrich, Quentin and Brendle, Tom and Vidal, Maxime},\n  booktitle =\
-      \ {Findings of the Association for Computational Linguistics: EMNLP 2020},\n\
-      \  year = {2020},\n  url = {https://aclanthology.org/2020.findings-emnlp.107/},\n\
-      \  doi = {10.18653/v1/2020.findings-emnlp.107}\n}\n"
-    languages:
-    - fr
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          fr: 99.5
-          pt: 0.5
-      document:
-        sample_count: 269
-        languages:
-          fr: 99.257
   NanoSyntec:
     language: fr
     category: natural_language
     short_description: French Syntec collective-agreement retrieval.
-    description: A compact legal retrieval task built from the Syntec collective bargaining
-      agreement and introduced with MTEB-French.
+    description: A compact legal retrieval task built from the Syntec collective bargaining agreement and introduced with MTEB-French.
     citation_keys:
     - ciancone2024mtebfrench
     references:
     - *id001
-    bibtex: "@misc{ciancone2024mtebfrench,\n  title = {{MTEB-French}: Resources for\
-      \ French Sentence Embedding Evaluation and Analysis},\n  author = {Ciancone,\
-      \ Mathieu and Kerboua, Imene and Schaeffer, Marion and Siblini, Wissam},\n \
-      \ year = {2024},\n  url = {https://arxiv.org/abs/2405.20468},\n  doi = {10.48550/arXiv.2405.20468}\n\
-      }\n"
+    bibtex: "@misc{ciancone2024mtebfrench,\n  title = {{MTEB-French}: Resources for French Sentence Embedding Evaluation and Analysis},\n  author = {Ciancone, Mathieu and Kerboua, Imene and Schaeffer, Marion and Siblini, Wissam},\n  year = {2024},\n  url = {https://arxiv.org/abs/2405.20468},\n  doi = {10.48550/arXiv.2405.20468}\n}\n"
     languages:
     - fr
     language_detection:
@@ -207,8 +140,7 @@ task_metadata:
     language: fr
     category: natural_language
     short_description: French product question-answer retrieval.
-    description: A compact French xPQA split for cross-lingual product question answering
-      and candidate retrieval.
+    description: A compact French xPQA split for cross-lingual product question answering and candidate retrieval.
     citation_keys:
     - shen2023xpqa
     references:
@@ -223,12 +155,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2023.acl-industry.12
-    bibtex: "@inproceedings{shen2023xpqa,\n  title = {{xPQA}: Cross-Lingual Product\
-      \ Question Answering in 12 Languages},\n  author = {Shen, Xiaoyu and Asai, Akari\
-      \ and Byrne, Bill and De Gispert, Adria},\n  booktitle = {Proceedings of the\
-      \ 61st Annual Meeting of the Association for Computational Linguistics (Volume\
-      \ 5: Industry Track)},\n  year = {2023},\n  url = {https://aclanthology.org/2023.acl-industry.12/},\n\
-      \  doi = {10.18653/v1/2023.acl-industry.12}\n}\n"
+    bibtex: "@inproceedings{shen2023xpqa,\n  title = {{xPQA}: Cross-Lingual Product Question Answering in 12 Languages},\n  author = {Shen, Xiaoyu and Asai, Akari and Byrne, Bill and De Gispert, Adria},\n  booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 5: Industry Track)},\n  year = {2023},\n  url = {https://aclanthology.org/2023.acl-industry.12/},\n  doi = {10.18653/v1/2023.acl-industry.12}\n}\n"
     languages:
     - fr
     language_detection:

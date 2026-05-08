@@ -21,11 +21,11 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoBEIR-en").dataset_id == "hakari-bench/NanoBEIR-en"
     assert registry.get_dataset("NanoMIRACL").dataset_id == "hakari-bench/NanoMIRACL"
     assert registry.get_dataset("NanoMLDR").dataset_id == "hakari-bench/NanoMLDR"
-    assert registry.get_dataset("NanoMTEB-Japanese").dataset_id == "hakari-bench/NanoMTEB-Japanese"
+    assert registry.get_dataset("NanoJMTEB").dataset_id == "hakari-bench/NanoJMTEB"
     assert registry.get_dataset("NanoRTEB").dataset_id == "hakari-bench/NanoRTEB"
     assert registry.get_dataset("NanoMTEB").dataset_id == "hakari-bench/NanoMTEB"
     assert registry.get_dataset("NanoMMTEB").dataset_id == "hakari-bench/NanoMMTEB"
-    assert registry.get_dataset("NanoMTEB-Chinese").dataset_id == "hakari-bench/NanoMTEB-Chinese"
+    assert registry.get_dataset("NanoCMTEB").dataset_id == "hakari-bench/NanoCMTEB"
     assert registry.get_dataset("NanoLongEmbed").dataset_id == "hakari-bench/NanoLongEmbed"
     assert registry.get_dataset("NanoCoIR").dataset_id == "hakari-bench/NanoCoIR"
     assert registry.get_dataset("NanoIFIR").dataset_id == "hakari-bench/NanoIFIR"
@@ -40,8 +40,12 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoBIRCO").dataset_id == "hakari-bench/NanoBIRCO"
     assert registry.get_dataset("NanoDAPFAM").dataset_id == "hakari-bench/NanoDAPFAM"
     assert registry.get_dataset("NanoMTEB-Dutch").dataset_id == "hakari-bench/NanoMTEB-Dutch"
-    assert registry.get_dataset("NanoMTEB-Xlingual").dataset_id == "hakari-bench/NanoMTEB-Xlingual"
+    assert registry.get_dataset("NanoMTEB-Misc").dataset_id == "hakari-bench/NanoMTEB-Misc"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
+    with pytest.raises(KeyError):
+        registry.get_collection("NanoMTEB_Family")
+    with pytest.raises(KeyError):
+        registry.get_dataset("NanoMTEB-Polish")
 
 
 def test_builtin_config_lives_in_repo_config() -> None:
@@ -49,6 +53,7 @@ def test_builtin_config_lives_in_repo_config() -> None:
 
     assert config_root.joinpath("datasets", "nanobeir_en.yaml").is_file()
     assert config_root.joinpath("dataset_collections", "mnanobeir.yaml").is_file()
+    assert not config_root.joinpath("dataset_collections", "nanomteb_family.yaml").exists()
     assert config_root.joinpath("viewer", "benchmarks.yaml").is_file()
 
 
@@ -100,17 +105,17 @@ def test_resolve_eval_tasks_for_builtin_nanommteb_uses_declared_splits() -> None
 def test_resolve_eval_tasks_for_builtin_nanomteb_chinese_uses_declared_splits() -> None:
     registry = DatasetRegistry.load_builtin()
 
-    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMTEB-Chinese"], collection_values=[], split_values=[])
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoCMTEB"], collection_values=[], split_values=[])
 
     assert [(task.dataset_name, task.split_name) for task in tasks] == [
-        ("NanoMTEB-Chinese", "NanoT2Retrieval"),
-        ("NanoMTEB-Chinese", "NanoMMarcoRetrieval"),
-        ("NanoMTEB-Chinese", "NanoDuRetrieval"),
-        ("NanoMTEB-Chinese", "NanoCovidRetrieval"),
-        ("NanoMTEB-Chinese", "NanoCmedqaRetrieval"),
-        ("NanoMTEB-Chinese", "NanoEcomRetrieval"),
-        ("NanoMTEB-Chinese", "NanoMedicalRetrieval"),
-        ("NanoMTEB-Chinese", "NanoVideoRetrieval"),
+        ("NanoCMTEB", "NanoT2Retrieval"),
+        ("NanoCMTEB", "NanoMMarcoRetrieval"),
+        ("NanoCMTEB", "NanoDuRetrieval"),
+        ("NanoCMTEB", "NanoCovidRetrieval"),
+        ("NanoCMTEB", "NanoCmedqaRetrieval"),
+        ("NanoCMTEB", "NanoEcomRetrieval"),
+        ("NanoCMTEB", "NanoMedicalRetrieval"),
+        ("NanoCMTEB", "NanoVideoRetrieval"),
     ]
 
 
@@ -140,20 +145,20 @@ def test_resolve_eval_tasks_for_builtin_nanorteb_uses_declared_splits() -> None:
 def test_resolve_eval_tasks_for_builtin_nanomteb_japanese_uses_declared_splits() -> None:
     registry = DatasetRegistry.load_builtin()
 
-    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMTEB-Japanese"], collection_values=[], split_values=[])
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoJMTEB"], collection_values=[], split_values=[])
 
     assert [(task.dataset_name, task.split_name) for task in tasks] == [
-        ("NanoMTEB-Japanese", "NanoJaCWIR"),
-        ("NanoMTEB-Japanese", "NanoJaGovFaqs"),
-        ("NanoMTEB-Japanese", "NanoJaqket"),
-        ("NanoMTEB-Japanese", "NanoMIRACL"),
-        ("NanoMTEB-Japanese", "NanoMintaka"),
-        ("NanoMTEB-Japanese", "NanoMrTidy"),
-        ("NanoMTEB-Japanese", "NanoMultiLongDoc"),
-        ("NanoMTEB-Japanese", "NanoNLPJournalAbsArticle"),
-        ("NanoMTEB-Japanese", "NanoNLPJournalAbsIntro"),
-        ("NanoMTEB-Japanese", "NanoNLPJournalTitleAbs"),
-        ("NanoMTEB-Japanese", "NanoNLPJournalTitleIntro"),
+        ("NanoJMTEB", "NanoJaCWIR"),
+        ("NanoJMTEB", "NanoJaGovFaqs"),
+        ("NanoJMTEB", "NanoJaqket"),
+        ("NanoJMTEB", "NanoMIRACL"),
+        ("NanoJMTEB", "NanoMintaka"),
+        ("NanoJMTEB", "NanoMrTidy"),
+        ("NanoJMTEB", "NanoMultiLongDoc"),
+        ("NanoJMTEB", "NanoNLPJournalAbsArticle"),
+        ("NanoJMTEB", "NanoNLPJournalAbsIntro"),
+        ("NanoJMTEB", "NanoNLPJournalTitleAbs"),
+        ("NanoJMTEB", "NanoNLPJournalTitleIntro"),
     ]
 
 

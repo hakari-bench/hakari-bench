@@ -89,8 +89,8 @@ benchmarks:
   - name: NanoBuiltBench
     label: NanoBuiltBench
     include_in_overall: true
-  - name: NanoMTEB-Chinese
-    label: NanoMTEB-Chinese
+  - name: NanoCMTEB
+    label: NanoCMTEB
     include_in_overall: true
   - name: NanoMTEB
     label: NanoMTEB
@@ -104,20 +104,17 @@ benchmarks:
   - name: NanoMTEB-German
     label: NanoMTEB-German
     include_in_overall: false
-  - name: NanoMTEB-Japanese
-    label: NanoMTEB-Japanese
+  - name: NanoJMTEB
+    label: NanoJMTEB
     include_in_overall: false
   - name: NanoMTEB-Korean
     label: NanoMTEB-Korean
     include_in_overall: false
-  - name: NanoMTEB-Persian
-    label: NanoMTEB-Persian
+  - name: NanoFaMTEB
+    label: NanoFaMTEB
     include_in_overall: false
-  - name: NanoMTEB-Polish
-    label: NanoMTEB-Polish
-    include_in_overall: false
-  - name: NanoMTEB-Russian
-    label: NanoMTEB-Russian
+  - name: NanoRuMTEB
+    label: NanoRuMTEB
     include_in_overall: false
   - name: NanoMTEB-Scandinavian
     label: NanoMTEB-Scandinavian
@@ -128,11 +125,11 @@ benchmarks:
   - name: NanoMTEB-Thai
     label: NanoMTEB-Thai
     include_in_overall: false
-  - name: NanoMTEB-Vietnamese
-    label: NanoMTEB-Vietnamese
+  - name: NanoVNMTEB
+    label: NanoVNMTEB
     include_in_overall: false
-  - name: NanoMTEB-Xlingual
-    label: NanoMTEB-Xlingual
+  - name: NanoMTEB-Misc
+    label: NanoMTEB-Misc
     include_in_overall: false
   - name: NanoMIRACL
     label: NanoMIRACL

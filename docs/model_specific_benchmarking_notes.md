@@ -29,7 +29,7 @@ Runtime notes:
 
 - Prefer Transformers 4.x with Flash Attention 2 for ruri-v3 unless a newer
   runtime has been revalidated for the exact model and task set.
-- In this project, `cl-nagoya/ruri-v3-310m` on NanoMTEB-Japanese/NanoJaqket produced
+- In this project, `cl-nagoya/ruri-v3-310m` on NanoJMTEB/NanoJaqket produced
   abnormally low scores with `transformers==5.7.0` despite correct prompts.
   Re-running with `transformers==4.57.6` and Flash Attention 2 restored the
   expected current-dataset score.
@@ -38,8 +38,8 @@ Runtime notes:
 
 Historical comparison note:
 
-- Older NanoMTEB-Japanese/NanoJaqket results around `nDCG@10 = 0.9426` were measured on
-  the earlier q50 NanoJaqket data. Current NanoMTEB-Japanese uses q200 data, where
+- Older NanoJMTEB/NanoJaqket results around `nDCG@10 = 0.9426` were measured on
+  the earlier q50 NanoJaqket data. Current NanoJMTEB uses q200 data, where
   `cl-nagoya/ruri-v3-310m` reproduced around `nDCG@10 = 0.8975` with
   Transformers 4.x + Flash Attention 2. Do not compare q50 and q200 scores as
   the same benchmark state.

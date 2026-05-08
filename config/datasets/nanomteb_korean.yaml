@@ -6,17 +6,12 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoAutoRAG
 - NanoKoStrategyQA
-- NanoLawIRKo
-- NanoSQuADKorV1
 metadata:
   language: ko
   category: natural_language
   short_description: Korean NanoMTEB retrieval benchmark.
-  description: NanoMTEB-Korean is a compact Korean retrieval benchmark aligned with
-    MTEB-style Korean retrieval tasks, covering RAG, implicit-reasoning QA, legal
-    article retrieval, and Korean SQuAD-style QA retrieval.
+  description: NanoMTEB-Korean is a compact Korean retrieval benchmark containing the MTEB(kor, v1) retrieval-family splits available in the Nano collection. Other Korean retrieval tasks are placed in NanoMTEB-Misc.
   citation_keys:
   - muennighoff2023mteb
   references:
@@ -31,67 +26,18 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2023.eacl-main.148
-  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
-    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
-    \ and Reimers, Nils},\n  booktitle = {Proceedings of the 17th Conference of the\
-    \ European Chapter of the Association for Computational Linguistics},\n  pages\
-    \ = {2014--2037},\n  year = {2023},\n  url = {https://aclanthology.org/2023.eacl-main.148/},\n\
-    \  doi = {10.18653/v1/2023.eacl-main.148}\n}\n"
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},\n  booktitle = {Proceedings of the 17th Conference of the European Chapter of the Association for Computational Linguistics},\n  pages = {2014--2037},\n  year = {2023},\n  url = {https://aclanthology.org/2023.eacl-main.148/},\n  doi = {10.18653/v1/2023.eacl-main.148}\n}\n"
 task_metadata:
-  NanoAutoRAG:
-    language: ko
-    category: natural_language
-    short_description: Korean RAG retrieval over public-domain documents.
-    description: NanoAutoRAG evaluates retrieval for Korean RAG benchmark queries
-      across finance, public-sector, healthcare, legal, and commerce documents. It
-      is a compact Nano split of the AutoRAG retrieval benchmark source used in MTEB.
-    citation_keys:
-    - kim2024autorag
-    references:
-    - title: 'AutoRAG: Automated Framework for optimization of Retrieval Augmented
-        Generation Pipeline'
-      authors:
-      - Dongkyu Kim
-      - Byoungwook Kim
-      - Donggeon Han
-      - Matouš Eibich
-      year: 2024
-      url: https://arxiv.org/abs/2410.20878
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2410.20878
-    bibtex: "@misc{kim2024autorag,\n  title = {{AutoRAG}: Automated Framework for\
-      \ optimization of Retrieval Augmented Generation Pipeline},\n  author = {Kim,\
-      \ Dongkyu and Kim, Byoungwook and Han, Donggeon and Eibich, Matouš},\n  year\
-      \ = {2024},\n  url = {https://arxiv.org/abs/2410.20878},\n  doi = {10.48550/arXiv.2410.20878}\n\
-      }\n"
-    languages:
-    - ko
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 114
-        languages:
-          ko: 100.0
-      document:
-        sample_count: 720
-        languages:
-          ko: 97.917
-          en: 1.944
   NanoKoStrategyQA:
     language: ko
     category: natural_language
     short_description: Korean StrategyQA evidence retrieval.
-    description: NanoKoStrategyQA evaluates Korean retrieval for implicit multi-hop
-      StrategyQA questions converted to a BEIR/MTEB-style evidence retrieval format.
+    description: NanoKoStrategyQA evaluates Korean retrieval for implicit multi-hop StrategyQA questions converted to a BEIR/MTEB-style evidence retrieval format.
     citation_keys:
     - geva2021strategyqa
     - lee2021kostrategyqa
     references:
-    - title: Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit
-        Reasoning Strategies
+    - title: Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies
       authors:
       - Mor Geva
       - Daniel Khashabi
@@ -111,15 +57,7 @@ task_metadata:
       url: https://huggingface.co/datasets/taeminlee/Ko-StrategyQA
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@article{geva2021strategyqa,\n  title = {Did Aristotle Use a Laptop?\
-      \ A Question Answering Benchmark with Implicit Reasoning Strategies},\n  author\
-      \ = {Geva, Mor and Khashabi, Daniel and Segal, Elad and Khot, Tushar and Roth,\
-      \ Dan and Berant, Jonathan},\n  journal = {Transactions of the Association for\
-      \ Computational Linguistics},\n  volume = {9},\n  pages = {346--361},\n  year\
-      \ = {2021},\n  url = {https://aclanthology.org/2021.tacl-1.21/},\n  doi = {10.1162/tacl_a_00370}\n\
-      }\n@misc{lee2021kostrategyqa,\n  title = {{Ko-StrategyQA}},\n  author = {Lee,\
-      \ Taemin},\n  year = {2021},\n  url = {https://huggingface.co/datasets/taeminlee/Ko-StrategyQA}\n\
-      }\n"
+    bibtex: "@article{geva2021strategyqa,\n  title = {Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies},\n  author = {Geva, Mor and Khashabi, Daniel and Segal, Elad and Khot, Tushar and Roth, Dan and Berant, Jonathan},\n  journal = {Transactions of the Association for Computational Linguistics},\n  volume = {9},\n  pages = {346--361},\n  year = {2021},\n  url = {https://aclanthology.org/2021.tacl-1.21/},\n  doi = {10.1162/tacl_a_00370}\n}\n@misc{lee2021kostrategyqa,\n  title = {{Ko-StrategyQA}},\n  author = {Lee, Taemin},\n  year = {2021},\n  url = {https://huggingface.co/datasets/taeminlee/Ko-StrategyQA}\n}\n"
     languages:
     - ko
     language_detection:
@@ -134,90 +72,3 @@ task_metadata:
         sample_count: 9251
         languages:
           ko: 99.697
-  NanoLawIRKo:
-    language: ko
-    category: natural_language
-    short_description: Korean legal article retrieval.
-    description: NanoLawIRKo evaluates retrieval of relevant Korean legal articles
-      from queries referencing law titles and provisions, using a compact split of
-      the lawgov_ir-ko dataset.
-    citation_keys:
-    - lee2026lawgovirko
-    references:
-    - title: 'lawgov_ir-ko: A Benchmark Dataset for Korean Legal Information Retrieval
-        and QA'
-      authors:
-      - kang-hyeun Lee
-      year: 2026
-      url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
-      is_paper: false
-      source_confidence: probably_correct
-    bibtex: "@misc{lee2026lawgovirko,\n  title = {lawgov_ir-ko: A Benchmark Dataset\
-      \ for Korean Legal Information Retrieval and QA},\n  author = {Lee, kang-hyeun},\n\
-      \  year = {2026},\n  url = {https://huggingface.co/datasets/on-and-on/lawgov_ir-ko}\n\
-      }\n"
-    languages:
-    - ko
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          ko: 100.0
-      document:
-        sample_count: 3562
-        languages:
-          ko: 100.0
-  NanoSQuADKorV1:
-    language: ko
-    category: natural_language
-    short_description: Korean SQuAD-style Wikipedia QA retrieval.
-    description: NanoSQuADKorV1 evaluates retrieval over a Korean translation of SQuAD
-      v1.0 based on Korean Wikipedia articles, using a compact MTEB-style retrieval
-      split.
-    citation_keys:
-    - rajpurkar2016squad
-    - jang2019squadkorv1
-    references:
-    - title: 'SQuAD: 100,000+ Questions for Machine Comprehension of Text'
-      authors:
-      - Pranav Rajpurkar
-      - Jian Zhang
-      - Konstantin Lopyrev
-      - Percy Liang
-      year: 2016
-      url: https://aclanthology.org/D16-1264/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/D16-1264
-    - title: squad_kor_v1
-      authors:
-      - yjoonjang
-      year: 2019
-      url: https://huggingface.co/datasets/yjoonjang/squad_kor_v1
-      is_paper: false
-      source_confidence: probably_correct
-    bibtex: "@inproceedings{rajpurkar2016squad,\n  title = {{SQuAD}: 100,000+ Questions\
-      \ for Machine Comprehension of Text},\n  author = {Rajpurkar, Pranav and Zhang,\
-      \ Jian and Lopyrev, Konstantin and Liang, Percy},\n  booktitle = {Proceedings\
-      \ of the 2016 Conference on Empirical Methods in Natural Language Processing},\n\
-      \  pages = {2383--2392},\n  year = {2016},\n  url = {https://aclanthology.org/D16-1264/},\n\
-      \  doi = {10.18653/v1/D16-1264}\n}\n@misc{jang2019squadkorv1,\n  title = {squad\\\
-      _kor\\_v1},\n  author = {yjoonjang},\n  year = {2019},\n  url = {https://huggingface.co/datasets/yjoonjang/squad_kor_v1}\n\
-      }\n"
-    languages:
-    - ko
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          ko: 100.0
-      document:
-        sample_count: 960
-        languages:
-          ko: 100.0

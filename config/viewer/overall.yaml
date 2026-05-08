@@ -19,7 +19,7 @@ overalls:
       - NanoChemTEB
       - NanoR2MED
       - NanoBuiltBench
-      - NanoMTEB-Chinese
+      - NanoCMTEB
   - name: OverallGrouped
     label: Overall Grouped
     benchmarks:
@@ -57,7 +57,7 @@ overalls:
         group_by: benchmark
       - name: NanoBuiltBench
         group_by: benchmark
-      - name: NanoMTEB-Chinese
+      - name: NanoCMTEB
         group_by: benchmark
       - name: NanoMTEB
         group_by: benchmark
@@ -67,15 +67,13 @@ overalls:
         group_by: benchmark
       - name: NanoMTEB-German
         group_by: benchmark
-      - name: NanoMTEB-Japanese
+      - name: NanoJMTEB
         group_by: benchmark
       - name: NanoMTEB-Korean
         group_by: benchmark
-      - name: NanoMTEB-Persian
+      - name: NanoFaMTEB
         group_by: benchmark
-      - name: NanoMTEB-Polish
-        group_by: benchmark
-      - name: NanoMTEB-Russian
+      - name: NanoRuMTEB
         group_by: benchmark
       - name: NanoMTEB-Scandinavian
         group_by: benchmark
@@ -83,9 +81,9 @@ overalls:
         group_by: benchmark
       - name: NanoMTEB-Thai
         group_by: benchmark
-      - name: NanoMTEB-Vietnamese
+      - name: NanoVNMTEB
         group_by: benchmark
-      - name: NanoMTEB-Xlingual
+      - name: NanoMTEB-Misc
         group_by: benchmark
       - name: NanoMIRACL
         group_by: benchmark

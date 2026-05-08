@@ -26,7 +26,7 @@ uv run python scripts/build_results_database_and_report.py \
 
 The input files are:
 
-- `output/results/{model_dir}/{dataset_name}/{split_or_task}.json`:
+- `output/results/{model_dir}/{huggingface_dataset_name}/{split_or_task}.json`:
   task-level benchmark results.
 
 `load_results()` determines `benchmark` from `target.dataset_id` and
@@ -35,10 +35,13 @@ configured benchmark rows into `task_results`. The base embedding result is
 stored as a row where
 `embedding_variant_name IS NULL`. Derived embedding results from
 `evaluation.embedding_evaluations` are stored as additional variant rows.
-Language-specific `NanoMTEB-*` datasets are stored as distinct benchmark
-groups, separate from the generic English `NanoMTEB` group, so they can be
-opened as individual viewer tabs and included separately in grouped overall
-views.
+NanoMTEB family datasets are stored as distinct benchmark groups, separate from
+the generic English `NanoMTEB` group, so official-family datasets such as
+`NanoCMTEB`, `NanoJMTEB`, `NanoFaMTEB`, `NanoRuMTEB`, `NanoVNMTEB`, and
+remaining `NanoMTEB-{language}` groups can be opened as individual viewer tabs
+and included separately in grouped overall views. Mixed or separate-source
+retrieval tasks are grouped as `NanoMTEB-Misc`; old `NanoMTEB-{language}` names
+that were only broad language buckets are not accepted as compatibility aliases.
 Run-level rows in `runs` are derived from these task JSON files; no aggregate
 JSON file is required.
 
@@ -112,7 +115,7 @@ one model, one benchmark task, and one embedding variant. Base results use
 | --- | --- | --- |
 | `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
 | `model_name` | `VARCHAR` | `model.id` from result JSON, or `model_dir` when absent. |
-| `benchmark` | `VARCHAR` | Viewer benchmark group, such as `MNanoBEIR` or `NanoMTEB-Japanese`. |
+| `benchmark` | `VARCHAR` | Viewer benchmark group, such as `MNanoBEIR` or `NanoJMTEB`. |
 | `dataset_id` | `VARCHAR` | `target.dataset_id`, usually a Hugging Face dataset repo. |
 | `dataset_revision` | `VARCHAR` | Resolved dataset revision, usually a commit SHA. |
 | `dataset_revision_requested` | `VARCHAR` | Requested revision from the run, or `NULL` when not specified. |

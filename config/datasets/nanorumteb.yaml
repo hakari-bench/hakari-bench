@@ -1,0 +1,130 @@
+name: NanoRuMTEB
+dataset_id: hakari-bench/NanoRuMTEB
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- NanoRiaNews
+- NanoRiaNewsHardNegativesV2
+- NanoRuBQ
+metadata:
+  language: ru
+  category: natural_language
+  short_description: Russian Nano retrieval benchmark based on ruMTEB retrieval tasks.
+  description: NanoRuMTEB is a compact Russian retrieval benchmark assembled from ruMTEB retrieval tasks. RuSciBench retrieval tasks are placed in NanoMTEB-Misc.
+  citation_keys:
+  - snegirev-etal-2025-russian
+  references:
+  - &id001
+    title: 'The Russian-focused embedders'' exploration: ruMTEB benchmark and Russian embedding model design'
+    authors:
+    - Artem Snegirev
+    - Maria Tikhonova
+    - Maksimova Anna
+    - Alena Fenogenova
+    - Aleksandr Abramov
+    year: 2025
+    url: https://aclanthology.org/2025.naacl-long.12/
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.18653/v1/2025.naacl-long.12
+  bibtex: "@inproceedings{snegirev-etal-2025-russian,\n  title = \"The {R}ussian-focused embedders' exploration: ru{MTEB} benchmark and {R}ussian embedding model design\",\n  author = {Snegirev, Artem and Tikhonova, Maria and Anna, Maksimova and Fenogenova, Alena and Abramov, Aleksandr},\n  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  year = {2025},\n  pages = {236--254},\n  url = {https://aclanthology.org/2025.naacl-long.12/},\n  doi = {10.18653/v1/2025.naacl-long.12}\n}\n"
+task_metadata:
+  NanoRiaNews:
+    language: ru
+    category: natural_language
+    short_description: Russian RIA news headline retrieval.
+    description: A compact retrieval task derived from the RIA news headline-generation corpus, retrieving news articles from headlines.
+    citation_keys:
+    - gavrilov2019self
+    references:
+    - &id002
+      title: Self-Attentive Model for Headline Generation
+      authors:
+      - Daniil Gavrilov
+      - Pavel Kalaidin
+      - Valentin Malykh
+      year: 2019
+      url: https://arxiv.org/abs/1901.07786
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.48550/arXiv.1901.07786
+    bibtex: "@inproceedings{gavrilov2019self,\n  title = {Self-Attentive Model for Headline Generation},\n  author = {Gavrilov, Daniil and Kalaidin, Pavel and Malykh, Valentin},\n  booktitle = {Proceedings of the 41st European Conference on Information Retrieval},\n  year = {2019},\n  url = {https://arxiv.org/abs/1901.07786},\n  doi = {10.48550/arXiv.1901.07786}\n}\n"
+    languages:
+    - ru
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ru: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ru: 99.98
+  NanoRiaNewsHardNegativesV2:
+    language: ru
+    category: natural_language
+    short_description: Russian RIA news hard-negative retrieval.
+    description: A compact hard-negative RIA news headline retrieval variant used in ruMTEB v1.1.
+    citation_keys:
+    - snegirev-etal-2025-russian
+    - gavrilov2019self
+    references:
+    - *id001
+    - *id002
+    bibtex: "@inproceedings{snegirev-etal-2025-russian,\n  title = \"The {R}ussian-focused embedders' exploration: ru{MTEB} benchmark and {R}ussian embedding model design\",\n  author = {Snegirev, Artem and Tikhonova, Maria and Anna, Maksimova and Fenogenova, Alena and Abramov, Aleksandr},\n  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  year = {2025},\n  pages = {236--254},\n  url = {https://aclanthology.org/2025.naacl-long.12/},\n  doi = {10.18653/v1/2025.naacl-long.12}\n}\n@inproceedings{gavrilov2019self,\n  title = {Self-Attentive Model for Headline Generation},\n  author = {Gavrilov, Daniil and Kalaidin, Pavel and Malykh, Valentin},\n  booktitle = {Proceedings of the 41st European Conference on Information Retrieval},\n  year = {2019},\n  url = {https://arxiv.org/abs/1901.07786},\n  doi = {10.48550/arXiv.1901.07786}\n}\n"
+    languages:
+    - ru
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ru: 99.0
+          en: 0.5
+          fi: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          ru: 98.33
+          pl: 1.35
+  NanoRuBQ:
+    language: ru
+    category: natural_language
+    short_description: Russian RuBQ question-answer retrieval.
+    description: A compact retrieval task based on RuBQ 2.0, a Russian KBQA and MRC dataset with answer-bearing Wikipedia paragraphs.
+    citation_keys:
+    - RuBQ2021
+    references:
+    - title: 'RuBQ 2.0: An Innovated Russian Question Answering Dataset'
+      authors:
+      - Ivan Rybin
+      - Vladislav Korablinov
+      - Pavel Efimov
+      - Pavel Braslavski
+      year: 2021
+      url: https://openreview.net/pdf?id=P5UQFFoQ4PJ
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@inproceedings{RuBQ2021,\n  title = {{RuBQ} 2.0: An Innovated Russian Question Answering Dataset},\n  author = {Rybin, Ivan and Korablinov, Vladislav and Efimov, Pavel and Braslavski, Pavel},\n  booktitle = {The Semantic Web},\n  pages = {532--547},\n  year = {2021},\n  url = {https://openreview.net/pdf?id=P5UQFFoQ4PJ}\n}\n"
+    languages:
+    - ru
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ru: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ru: 99.6

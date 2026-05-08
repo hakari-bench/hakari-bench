@@ -8,15 +8,13 @@ candidate_config: bm25
 splits:
 - NanoGerDaLIR
 - NanoGermanDPR
-- NanoGermanGovService
 - NanoGermanQuAD
 - NanoXMarket
 metadata:
   language: de
   category: natural_language
   short_description: German NanoMTEB retrieval benchmark.
-  description: NanoMTEB-German is a compact German retrieval benchmark aligned with
-    MTEB-style task families.
+  description: NanoMTEB-German is a compact German retrieval benchmark containing the MTEB(deu, v1) retrieval-family splits. Non-benchmark German retrieval tasks are placed in NanoMTEB-Misc.
   citation_keys:
   - muennighoff2023mteb
   references:
@@ -31,17 +29,13 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2210.07316
-  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
-    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
-    \ and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n\
-    \  doi = {10.48550/arXiv.2210.07316}\n}\n"
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n  doi = {10.48550/arXiv.2210.07316}\n}\n"
 task_metadata:
   NanoGerDaLIR:
     language: de
     category: natural_language
     short_description: German legal information retrieval.
-    description: A compact GerDaLIR split for retrieving German legal case documents
-      from legal queries.
+    description: A compact GerDaLIR split for retrieving German legal case documents from legal queries.
     citation_keys:
     - wrzalik2021gerdalir
     references:
@@ -54,11 +48,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.18653/v1/2021.nllp-1.13
-    bibtex: "@inproceedings{wrzalik2021gerdalir,\n  title = {{GerDaLIR}: A German\
-      \ Dataset for Legal Information Retrieval},\n  author = {Wrzalik, Marco and\
-      \ Krechel, Dirk},\n  booktitle = {Proceedings of the Natural Legal Language\
-      \ Processing Workshop 2021},\n  year = {2021},\n  url = {https://aclanthology.org/2021.nllp-1.13/},\n\
-      \  doi = {10.18653/v1/2021.nllp-1.13}\n}\n"
+    bibtex: "@inproceedings{wrzalik2021gerdalir,\n  title = {{GerDaLIR}: A German Dataset for Legal Information Retrieval},\n  author = {Wrzalik, Marco and Krechel, Dirk},\n  booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2021},\n  year = {2021},\n  url = {https://aclanthology.org/2021.nllp-1.13/},\n  doi = {10.18653/v1/2021.nllp-1.13}\n}\n"
     languages:
     - de
     language_detection:
@@ -77,14 +67,12 @@ task_metadata:
     language: de
     category: natural_language
     short_description: German open-domain QA passage retrieval.
-    description: A compact GermanDPR retrieval task for German open-domain question
-      answering over passages.
+    description: A compact GermanDPR retrieval task for German open-domain question answering over passages.
     citation_keys:
     - moeller2021germanquad
     references:
     - &id001
-      title: 'GermanQuAD and GermanDPR: Improving Non-English Question Answering and
-        Passage Retrieval'
+      title: 'GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval'
       authors:
       - Timo Moller
       - Julian Risch
@@ -94,11 +82,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.48550/arXiv.2104.12741
-    bibtex: "@misc{moeller2021germanquad,\n  title = {{GermanQuAD} and {GermanDPR}:\
-      \ Improving Non-English Question Answering and Passage Retrieval},\n  author\
-      \ = {Moller, Timo and Risch, Julian and Pietsch, Malte},\n  year = {2021},\n\
-      \  url = {https://arxiv.org/abs/2104.12741},\n  doi = {10.48550/arXiv.2104.12741}\n\
-      }\n"
+    bibtex: "@misc{moeller2021germanquad,\n  title = {{GermanQuAD} and {GermanDPR}: Improving Non-English Question Answering and Passage Retrieval},\n  author = {Moller, Timo and Risch, Julian and Pietsch, Malte},\n  year = {2021},\n  url = {https://arxiv.org/abs/2104.12741},\n  doi = {10.48550/arXiv.2104.12741}\n}\n"
     languages:
     - de
     language_detection:
@@ -115,60 +99,16 @@ task_metadata:
         languages:
           de: 97.497
           en: 2.017
-  NanoGermanGovService:
-    language: de
-    category: natural_language
-    short_description: German Munich government-service QA retrieval.
-    description: A compact retrieval task over Munich city administration service
-      texts and German public-domain QA pairs.
-    citation_keys:
-    - schroeder2022lhmqa
-    references:
-    - title: LHM-Dienstleistungen-QA - german public domain question-answering dataset
-      authors:
-      - Leon Marius Schröder
-      - Clemens Gutknecht
-      - Oubada Alkiddeh
-      - Susanne Weiß
-      - Leon Lukas
-      year: 2022
-      url: https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA
-      is_paper: false
-      source_confidence: probably_correct
-    bibtex: "@software{schroeder2022lhmqa,\n  title = {{LHM-Dienstleistungen-QA} -\
-      \ german public domain question-answering dataset},\n  author = {Schr{\\\"o}der,\
-      \ Leon Marius and Gutknecht, Clemens and Alkiddeh, Oubada and Wei{\\ss}, Susanne\
-      \ and Lukas, Leon},\n  publisher = {it@M},\n  year = {2022},\n  url = {https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA}\n\
-      }\n"
-    languages:
-    - de
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          de: 100.0
-      document:
-        sample_count: 105
-        languages:
-          de: 100.0
   NanoGermanQuAD:
     language: de
     category: natural_language
     short_description: German extractive QA context retrieval.
-    description: A compact GermanQuAD retrieval task for retrieving German contexts
-      that answer extractive QA questions.
+    description: A compact GermanQuAD retrieval task for retrieving German contexts that answer extractive QA questions.
     citation_keys:
     - moeller2021germanquad
     references:
     - *id001
-    bibtex: "@misc{moeller2021germanquad,\n  title = {{GermanQuAD} and {GermanDPR}:\
-      \ Improving Non-English Question Answering and Passage Retrieval},\n  author\
-      \ = {Moller, Timo and Risch, Julian and Pietsch, Malte},\n  year = {2021},\n\
-      \  url = {https://arxiv.org/abs/2104.12741},\n  doi = {10.48550/arXiv.2104.12741}\n\
-      }\n"
+    bibtex: "@misc{moeller2021germanquad,\n  title = {{GermanQuAD} and {GermanDPR}: Improving Non-English Question Answering and Passage Retrieval},\n  author = {Moller, Timo and Risch, Julian and Pietsch, Malte},\n  year = {2021},\n  url = {https://arxiv.org/abs/2104.12741},\n  doi = {10.48550/arXiv.2104.12741}\n}\n"
     languages:
     - de
     language_detection:
@@ -188,8 +128,7 @@ task_metadata:
     language: de
     category: natural_language
     short_description: German cross-market product retrieval.
-    description: A compact German XMarket split for query-product relevance in cross-market
-      product recommendation.
+    description: A compact German XMarket split for query-product relevance in cross-market product recommendation.
     citation_keys:
     - bonab2021crossmarket
     references:
@@ -205,12 +144,7 @@ task_metadata:
       is_paper: true
       source_confidence: definitive_paper_link
       doi: 10.1145/3459637.3482493
-    bibtex: "@inproceedings{bonab2021crossmarket,\n  title = {Cross-Market Product\
-      \ Recommendation},\n  author = {Bonab, Hamed and Aliannejadi, Mohammad and Vardasbi,\
-      \ Ali and Kanoulas, Evangelos and Allan, James},\n  booktitle = {Proceedings\
-      \ of the 30th ACM International Conference on Information and Knowledge Management},\n\
-      \  year = {2021},\n  url = {https://doi.org/10.1145/3459637.3482493},\n  doi\
-      \ = {10.1145/3459637.3482493}\n}\n"
+    bibtex: "@inproceedings{bonab2021crossmarket,\n  title = {Cross-Market Product Recommendation},\n  author = {Bonab, Hamed and Aliannejadi, Mohammad and Vardasbi, Ali and Kanoulas, Evangelos and Allan, James},\n  booktitle = {Proceedings of the 30th ACM International Conference on Information and Knowledge Management},\n  year = {2021},\n  url = {https://doi.org/10.1145/3459637.3482493},\n  doi = {10.1145/3459637.3482493}\n}\n"
     languages:
     - de
     - en

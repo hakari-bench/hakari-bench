@@ -5,11 +5,18 @@ HAKARI-Bench is a library, viewer, and leaderboard project for evaluating small 
 Nano-style information retrieval benchmark runner for SentenceTransformers-compatible models.
 
 Built-in dataset definitions include `NanoBEIR-en`, `MNanoBEIR`,
-`NanoMIRACL`, `NanoMLDR`, `NanoMTEB-Japanese`, `NanoRTEB`, `NanoMTEB`,
-`NanoMTEB-Chinese`, `NanoMMTEB`, `NanoLongEmbed`, `NanoCoIR`, `NanoIFIR`,
-`NanoLaw`, `NanoMedical`, `NanoRARb`, `NanoBRIGHT`, `NanoCodeRAG`,
-`NanoChemTEB`, `NanoR2MED`, `NanoBuiltBench`, `NanoBIRCO`, `NanoDAPFAM`,
-and language-specific `NanoMTEB-*` datasets.
+`NanoMIRACL`, `NanoMLDR`, `NanoRTEB`, `NanoMTEB`, `NanoCMTEB`,
+`NanoJMTEB`, `NanoFaMTEB`, `NanoRuMTEB`, `NanoVNMTEB`, `NanoMTEB-Misc`,
+`NanoMMTEB`, `NanoLongEmbed`, `NanoCoIR`, `NanoIFIR`, `NanoLaw`,
+`NanoMedical`, `NanoRARb`, `NanoBRIGHT`, `NanoCodeRAG`, `NanoChemTEB`,
+`NanoR2MED`, `NanoBuiltBench`, `NanoBIRCO`, and `NanoDAPFAM`.
+
+The NanoMTEB family follows MTEB benchmark provenance rather than legacy
+language buckets. Named benchmark families such as C-MTEB, JMTEB, FaMTEB,
+ruMTEB, and VN-MTEB use dedicated Nano dataset names. Retrieval tasks that do
+not belong to a specific official MTEB family are grouped under
+`NanoMTEB-Misc`. Historical broad `NanoMTEB-{language}` aliases are not
+supported; use the canonical dataset names directly.
 
 ## Example
 
@@ -19,14 +26,36 @@ uv run hakari-bench evaluate dense \
   --dataset hakari-bench/NanoBEIR-en
 ```
 
+Evaluate an individual provenance-aligned NanoMTEB family dataset with:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model hotchpotch/bekko-embedding-pico-beta-unir-v7 \
+  --dataset hakari-bench/NanoFaMTEB
+```
+
 The default model dtype is `bf16`; pass `--dtype fp32` or `--dtype fp16` only
 when a run needs an explicit override.
 
 Results are written under:
 
 ```text
-output/results/{model_id}/{dataset_name}/{split_or_task}.json
+output/results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
 ```
+
+For example, `hakari-bench/NanoJMTEB` is stored under
+`output/results/{model_id}/hakari-bench__NanoJMTEB/`.
+
+Uploadable NanoMTEB family dataset repositories can be staged under:
+
+```text
+output/NanoMTEB_Family/{canonical_dataset}/
+```
+
+Each child directory is a Hugging Face dataset repo layout with `corpus`,
+`queries`, `qrels`, and `bm25` configs. These directories are intended for
+uploading canonical datasets such as `hakari-bench/NanoFaMTEB`; they are not a
+HAKARI-Bench dataset collection.
 
 For Hugging Face datasets, each task JSON records the resolved dataset repo
 revision under `target.dataset_revision`. Use `--dataset-revision REV` to pin a

@@ -610,7 +610,7 @@ def test_parse_args_accepts_dataset_revision() -> None:
             "--model",
             "hotchpotch/model",
             "--dataset",
-            "NanoMTEB-Japanese",
+            "NanoJMTEB",
             "--dataset-revision",
             "abc123",
         ]
