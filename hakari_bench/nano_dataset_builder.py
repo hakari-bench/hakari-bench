@@ -95,13 +95,20 @@ def _score(row: Mapping[str, Any]) -> float:
     return 1.0
 
 
+def _normalize_corpus_row(row: Mapping[str, Any]) -> dict[str, str] | None:
+    corpus_id = str(_first_present(row, _CORPUS_ID_COLUMNS, row_name="corpus"))
+    text = _corpus_text(row)
+    if corpus_id and text:
+        return {"_id": corpus_id, "text": text}
+    return None
+
+
 def normalize_corpus_rows(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, str]]:
     normalized: list[dict[str, str]] = []
     for row in rows:
-        corpus_id = str(_first_present(row, _CORPUS_ID_COLUMNS, row_name="corpus"))
-        text = _corpus_text(row)
-        if corpus_id and text:
-            normalized.append({"_id": corpus_id, "text": text})
+        normalized_row = _normalize_corpus_row(row)
+        if normalized_row is not None:
+            normalized.append(normalized_row)
     return normalized
 
 
@@ -109,7 +116,12 @@ def normalize_query_rows(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, st
     normalized: list[dict[str, str]] = []
     for row in rows:
         query_id = str(_first_present(row, _QUERY_ID_COLUMNS, row_name="query"))
-        text = _query_text(row)
+        try:
+            text = _query_text(row)
+        except ValueError:
+            if any(column in row for column in _QUERY_TEXT_COLUMNS):
+                continue
+            raise
         if query_id and text:
             normalized.append({"_id": query_id, "text": text})
     return normalized
@@ -142,23 +154,25 @@ def _select_queries(
     *,
     queries: list[dict[str, str]],
     positive_qrels: list[dict[str, str]],
-    corpus_by_id: Mapping[str, dict[str, str]],
     query_limit: int,
 ) -> tuple[list[dict[str, str]], list[dict[str, str]], dict[str, int]]:
     positive_by_query: dict[str, list[dict[str, str]]] = defaultdict(list)
     for row in positive_qrels:
-        if row["corpus-id"] in corpus_by_id:
-            positive_by_query[row["query-id"]].append(row)
+        positive_by_query[row["query-id"]].append(row)
 
     selected_queries: list[dict[str, str]] = []
     selected_qids: set[str] = set()
     seen_query_texts: set[str] = set()
     skipped_without_qrels = 0
+    skipped_duplicate_query_ids = 0
     skipped_duplicate_text = 0
     for row in queries:
         query_id = row["_id"]
         if query_id not in positive_by_query:
             skipped_without_qrels += 1
+            continue
+        if query_id in selected_qids:
+            skipped_duplicate_query_ids += 1
             continue
         if row["text"] in seen_query_texts:
             skipped_duplicate_text += 1
@@ -172,6 +186,7 @@ def _select_queries(
     selected_qrels = [row for row in positive_qrels if row["query-id"] in selected_qids]
     return selected_queries, selected_qrels, {
         "skipped_queries_without_positive_qrels": skipped_without_qrels,
+        "skipped_duplicate_query_ids": skipped_duplicate_query_ids,
         "skipped_duplicate_query_texts": skipped_duplicate_text,
     }
 
@@ -204,28 +219,47 @@ def _round_robin_hard_negative_ids(rows: list[dict[str, str]], *, selected_qids:
 
 def _select_corpus(
     *,
-    corpus: list[dict[str, str]],
+    corpus_rows: Iterable[Mapping[str, Any]],
     selected_qrels: list[dict[str, str]],
     non_positive_qrels: list[dict[str, str]],
     doc_limit: int,
 ) -> tuple[list[dict[str, str]], dict[str, int | str]]:
-    corpus_by_id = _rows_by_id(corpus)
     selected_qids = {row["query-id"] for row in selected_qrels}
     positive_doc_ids = [row["corpus-id"] for row in selected_qrels]
     hard_negative_doc_ids = _round_robin_hard_negative_ids(non_positive_qrels, selected_qids=selected_qids)
+    wanted_doc_ids = set(positive_doc_ids) | set(hard_negative_doc_ids)
+    wanted_docs: dict[str, dict[str, str]] = {}
+    fill_candidates: list[dict[str, str]] = []
+    fill_candidate_limit = max(doc_limit * 3, doc_limit + len(wanted_doc_ids))
+
+    for row in corpus_rows:
+        normalized = _normalize_corpus_row(row)
+        if normalized is None:
+            continue
+        doc_id = normalized["_id"]
+        if doc_id in wanted_doc_ids and doc_id not in wanted_docs:
+            wanted_docs[doc_id] = normalized
+        if len(fill_candidates) < fill_candidate_limit:
+            fill_candidates.append(normalized)
 
     selected: list[dict[str, str]] = []
     selected_ids: set[str] = set()
     seen_texts: set[str] = set()
     duplicate_doc_texts_removed = 0
     kept_hard_negatives = 0
+    missing_positive_docs = 0
+    missing_hard_negative_docs = 0
 
     def add_doc(doc_id: str, *, hard_negative: bool = False) -> None:
-        nonlocal duplicate_doc_texts_removed, kept_hard_negatives
+        nonlocal duplicate_doc_texts_removed, kept_hard_negatives, missing_positive_docs, missing_hard_negative_docs
         if len(selected) >= doc_limit or doc_id in selected_ids:
             return
-        row = corpus_by_id.get(doc_id)
+        row = wanted_docs.get(doc_id)
         if row is None:
+            if hard_negative:
+                missing_hard_negative_docs += 1
+            else:
+                missing_positive_docs += 1
             return
         text = row["text"]
         if text in seen_texts:
@@ -241,13 +275,26 @@ def _select_corpus(
         add_doc(doc_id)
     for doc_id in hard_negative_doc_ids:
         add_doc(doc_id, hard_negative=True)
-    for row in corpus:
-        add_doc(row["_id"])
+    for row in fill_candidates:
+        if len(selected) >= doc_limit:
+            break
+        doc_id = row["_id"]
+        if doc_id in selected_ids:
+            continue
+        text = row["text"]
+        if text in seen_texts:
+            duplicate_doc_texts_removed += 1
+            continue
+        selected.append(row)
+        selected_ids.add(doc_id)
+        seen_texts.add(text)
 
     return selected, {
         "positive_doc_count": len(set(positive_doc_ids)),
         "source_hard_negative_doc_candidates": len(set(hard_negative_doc_ids)),
         "kept_hard_negative_docs": kept_hard_negatives,
+        "missing_positive_docs": missing_positive_docs,
+        "missing_hard_negative_docs": missing_hard_negative_docs,
         "duplicate_doc_texts_removed": duplicate_doc_texts_removed,
         "hard_negative_sampling_policy": "query_round_robin",
     }
@@ -297,6 +344,28 @@ def force_qrels_positives_into_rankings(
     }
 
 
+def _cap_qrels_per_query(
+    qrels: list[dict[str, str]],
+    *,
+    limit: int,
+) -> tuple[list[dict[str, str]], dict[str, int | str]]:
+    counts: dict[str, int] = defaultdict(int)
+    capped: list[dict[str, str]] = []
+    removed = 0
+    for row in qrels:
+        query_id = row["query-id"]
+        if counts[query_id] >= limit:
+            removed += 1
+            continue
+        counts[query_id] += 1
+        capped.append(row)
+    return capped, {
+        "qrels_per_query_cap": limit,
+        "removed_qrels_over_cap": removed,
+        "qrels_cap_policy": "positive qrels are capped per query to the BM25 candidate top_k",
+    }
+
+
 def build_nano_dataset_from_rows(
     *,
     output_dir: Path,
@@ -317,17 +386,15 @@ def build_nano_dataset_from_rows(
     if doc_limit <= 0:
         raise ValueError("doc_limit must be positive.")
 
-    corpus = normalize_corpus_rows(corpus_rows)
     queries = normalize_query_rows(query_rows)
     positive_qrels, non_positive_qrels = normalize_qrels_rows(qrels_rows)
     selected_queries, selected_qrels, query_metadata = _select_queries(
         queries=queries,
         positive_qrels=positive_qrels,
-        corpus_by_id=_rows_by_id(corpus),
         query_limit=query_limit,
     )
     selected_corpus, corpus_metadata = _select_corpus(
-        corpus=corpus,
+        corpus_rows=corpus_rows,
         selected_qrels=selected_qrels,
         non_positive_qrels=non_positive_qrels,
         doc_limit=doc_limit,
@@ -337,13 +404,19 @@ def build_nano_dataset_from_rows(
     selected_qrels = [
         row for row in selected_qrels if row["query-id"] in selected_query_ids and row["corpus-id"] in selected_doc_ids
     ]
+    selected_query_ids_with_qrels = {row["query-id"] for row in selected_qrels}
+    removed_queries_after_corpus_filter = len(selected_queries) - len(selected_query_ids_with_qrels)
+    if removed_queries_after_corpus_filter:
+        selected_queries = [row for row in selected_queries if row["_id"] in selected_query_ids_with_qrels]
+        query_metadata["removed_queries_after_corpus_filter"] = removed_queries_after_corpus_filter
     if not selected_queries or not selected_corpus or not selected_qrels:
         raise ValueError("selected Nano split must contain queries, corpus, and positive qrels.")
 
     query_map = {row["_id"]: row["text"] for row in selected_queries}
     corpus_map = {row["_id"]: row["text"] for row in selected_corpus}
-    qrels_map = _qrels_mapping(selected_qrels)
     resolved_bm25 = bm25_config or BM25Config(tokenizer="regex", top_k=DEFAULT_BM25_TOP_K)
+    selected_qrels, qrels_cap_metadata = _cap_qrels_per_query(selected_qrels, limit=resolved_bm25.top_k)
+    qrels_map = _qrels_mapping(selected_qrels)
     raw_rankings = rank_bm25_candidates(corpus=corpus_map, queries=query_map, config=resolved_bm25)
     rankings, forcing_metadata = force_qrels_positives_into_rankings(
         rankings=raw_rankings,
@@ -373,12 +446,23 @@ def build_nano_dataset_from_rows(
         "qrels_score_policy": "score > 0 kept as qrels; score <= 0 excluded and used as hard-negative corpus candidates",
         "query_selection": query_metadata,
         "corpus_selection": corpus_metadata,
+        "qrels_selection": qrels_cap_metadata,
         "bm25": {
             "config": bm25_config_payload(resolved_bm25),
             "ndcg_at_10": bm25_ndcg_at_10,
             **forcing_metadata,
         },
     }
+    if metadata is not None:
+        for key in (
+            "source_task",
+            "source_dataset_id",
+            "source_dataset_revision",
+            "source_dataset_subset",
+            "source_eval_split",
+        ):
+            if key in metadata:
+                split_metadata[key] = metadata[key]
     _write_json(output_dir / "metadata" / f"{split_name}.json", split_metadata)
     _upsert_manifest(output_dir=output_dir, dataset_name=dataset_name, dataset_id=dataset_id, split_metadata=split_metadata)
     _write_readme(output_dir=output_dir, dataset_name=dataset_name, dataset_id=dataset_id, metadata=metadata)
@@ -666,7 +750,8 @@ def _split_mapping_rows(
         corpus = len(_read_optional_parquet(output_dir / "corpus" / f"{split}.parquet"))
         qrels = len(_read_optional_parquet(output_dir / "qrels" / f"{split}.parquet"))
         source_task = _split_metadata_text(output_dir, split, "source_task", split)
-        rows.append(f"| {split} | {source_task} | `{source_dataset}` | {queries} | {corpus} | {qrels} |")
+        split_source_dataset = _split_metadata_text(output_dir, split, "source_dataset_id", source_dataset)
+        rows.append(f"| {split} | {source_task} | `{split_source_dataset}` | {queries} | {corpus} | {qrels} |")
     return "\n".join(rows)
 
 
