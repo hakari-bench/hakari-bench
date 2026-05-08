@@ -53,6 +53,78 @@ def default_dense_quantized_embedding_variants() -> list[dict[str, Any]]:
     return parse_embedding_variants(["int8,binary", "rescore:int8,binary"])
 
 
+def dense_embedding_variants(
+    values: list[str] | None,
+    cross_values: list[list[str]] | None = None,
+    *,
+    include_defaults: bool = True,
+) -> list[dict[str, Any]]:
+    variants = parse_embedding_variants(values, cross_values)
+    if not include_defaults:
+        return variants
+
+    truncate_dims = _truncate_dims_from_variants(variants)
+    default_variants = default_dense_quantized_embedding_variants()
+    auto_variants = [
+        *default_variants,
+        *_default_truncate_embedding_variants(truncate_dims),
+        *_default_truncate_quantized_embedding_variants(truncate_dims),
+    ]
+    return _dedupe_variants([*variants, *auto_variants])
+
+
+def _default_truncate_embedding_variants(dims: list[int]) -> list[dict[str, Any]]:
+    if not dims:
+        return []
+    return parse_embedding_variants(["truncate:" + ",".join(str(dim) for dim in dims)])
+
+
+def _default_truncate_quantized_embedding_variants(dims: list[int]) -> list[dict[str, Any]]:
+    variants: list[dict[str, Any]] = []
+    for dim in dims:
+        truncate_spec = f"truncate:{dim}"
+        variants.extend(
+            parse_embedding_variants(
+                None,
+                [
+                    [truncate_spec, "int8,binary"],
+                    [truncate_spec, "rescore:int8,binary"],
+                ],
+            )
+        )
+    return variants
+
+
+def _truncate_dims_from_variants(variants: list[dict[str, Any]]) -> list[int]:
+    dims: list[int] = []
+    seen: set[int] = set()
+    for variant in variants:
+        for step in _pipeline_steps(variant):
+            if step.get("type") != "truncate":
+                continue
+            parameters = step.get("parameters")
+            if not isinstance(parameters, dict):
+                continue
+            dim = parameters.get("dim")
+            if not isinstance(dim, int) or dim in seen:
+                continue
+            seen.add(dim)
+            dims.append(dim)
+    return dims
+
+
+def _dedupe_variants(variants: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    deduped: list[dict[str, Any]] = []
+    seen_names: set[str] = set()
+    for variant in variants:
+        name = str(variant["name"])
+        if name in seen_names:
+            continue
+        seen_names.add(name)
+        deduped.append(variant)
+    return deduped
+
+
 def _split_tokens(value: str) -> list[str]:
     return [token.strip() for token in value.split(",") if token.strip()]
 

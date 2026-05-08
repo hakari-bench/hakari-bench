@@ -173,8 +173,9 @@ first L2-normalizes SentenceTransformers embeddings and converts them to stored
 codes, then uses exact PyTorch matrix scoring for the quantized top-k. The
 post-encode score device follows `--retrieval-score-device`: `auto` keeps tensor scoring
 on the model output device, while `cpu` or `cuda` force quantized search matrix
-work to that device. Use `--no-default-embedding-variants` to run only the base
-dense result.
+work to that device. Explicit dense variants do not disable these defaults. Use
+`--no-default-embedding-variants` to run only the base dense result or only the
+explicit variants you specify.
 
 ```bash
 uv run hakari-bench evaluate dense \
@@ -189,7 +190,8 @@ uv run hakari-bench evaluate dense \
   --no-default-embedding-variants
 ```
 
-For explicit dense runs, use `int8,binary` and `rescore:int8,binary`:
+For explicit dense quantization-only runs, the following command is accepted but
+is equivalent to the default dense variant plan:
 
 ```bash
 uv run hakari-bench evaluate dense \
@@ -211,7 +213,9 @@ PyTorch CUDA matmul does not expose integer accumulation for these tensors.
 ### Truncated Dimensions
 
 Matryoshka-style truncated embedding dimensions can be evaluated from the same
-base embedding run:
+base embedding run. Dense truncation runs automatically add full-dimension
+quantized/rescore variants and truncation x quantized/rescore variants for the
+specified dimensions:
 
 ```bash
 uv run hakari-bench evaluate dense \
@@ -222,18 +226,15 @@ uv run hakari-bench evaluate dense \
 
 ### Truncated Dimensions With Quantization
 
-When evaluating dimensions, run the standalone truncation variants, standalone
+When evaluating dimensions, specifying the truncation dimensions is enough. The
+CLI automatically runs the standalone truncation variants, standalone
 quantization variants, and their cross product:
 
 ```bash
 uv run hakari-bench evaluate dense \
   --model example/matryoshka-embedding-model \
   --dataset NanoMTEB \
-  --embedding-variant truncate:256,128,64 \
-  --embedding-variant int8,binary \
-  --embedding-variant rescore:int8,binary \
-  --embedding-variant-grid truncate:256,128,64 int8,binary \
-  --embedding-variant-grid truncate:256,128,64 rescore:int8,binary
+  --embedding-variant truncate:256,128,64
 ```
 
 All three groups answer different questions: standalone truncation measures the
@@ -242,6 +243,9 @@ trade-off at the original dimension, and the cross product measures the combined
 dimension-and-quantization trade-off such as `128dim x int8` or
 `64dim x binary`. The rescore variants record the same candidate set
 after reranking the top 100 quantized hits with source float embeddings.
+
+Use `--no-default-embedding-variants` with `truncate:` only when intentionally
+omitting dense quantized/rescore comparisons.
 
 Each task JSON keeps the base result in `metrics` and records the base and
 derived results under `evaluation.embedding_evaluations`. Every entry includes

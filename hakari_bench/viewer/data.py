@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 import duckdb
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.task_names import (
     canonical_split_name,
@@ -25,6 +25,8 @@ class TaskResultRecord(BaseModel):
     task_name: str
     task_key: str
     score: float
+    language: str | None = None
+    languages: list[str] = Field(default_factory=list)
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
@@ -82,6 +84,10 @@ class TaskResultsRepository:
         con = duckdb.connect(str(self.duckdb_path), read_only=True)
         try:
             columns = _table_columns(con, "task_results")
+            metadata_columns = _table_columns(con, "dataset_metadata") if _table_exists(con, "dataset_metadata") else set()
+            metadata_join = "LEFT JOIN dataset_metadata AS dm ON dm.task_key = tr.task_key" if metadata_columns else ""
+            language_expr = "dm.language" if "language" in metadata_columns else "NULL"
+            languages_expr = "dm.languages" if "languages" in metadata_columns else "NULL"
             variant_name_expr = _column_or_null(columns, "embedding_variant_name")
             embedding_dim_expr = _column_or_null(columns, "embedding_dim")
             quantization_expr = _column_or_null(columns, "quantization")
@@ -97,22 +103,29 @@ class TaskResultsRepository:
             variant_filter = (
                 ""
                 if include_embedding_variants or "embedding_variant_name" not in columns
-                else "AND embedding_variant_name IS NULL"
+                else "AND tr.embedding_variant_name IS NULL"
+            )
+            variant_order = (
+                ", tr.embedding_variant_name IS NOT NULL, tr.embedding_variant_name"
+                if "embedding_variant_name" in columns
+                else ""
             )
             placeholders = ", ".join("?" for _ in benchmarks)
             query = f"""
                 SELECT
-                    model_name,
-                    benchmark,
-                    dataset_id,
-                    dataset_name,
-                    COALESCE(split_name, '') AS split_name,
-                    task_name,
-                    task_key,
-                    score,
-                    active_parameters,
-                    total_parameters,
-                    max_seq_length,
+                    tr.model_name,
+                    tr.benchmark,
+                    tr.dataset_id,
+                    tr.dataset_name,
+                    COALESCE(tr.split_name, '') AS split_name,
+                    tr.task_name,
+                    tr.task_key,
+                    tr.score,
+                    {language_expr} AS language,
+                    {languages_expr} AS languages,
+                    tr.active_parameters,
+                    tr.total_parameters,
+                    tr.max_seq_length,
                     {dtype_expr} AS dtype,
                     {attn_expr} AS attn_implementation,
                     {query_prompt_expr} AS query_prompt,
@@ -125,11 +138,12 @@ class TaskResultsRepository:
                     {variant_name_expr} AS embedding_variant_name,
                     {embedding_dim_expr} AS embedding_dim,
                     {quantization_expr} AS quantization
-                FROM task_results
-                WHERE benchmark IN ({placeholders})
-                  AND score IS NOT NULL
+                FROM task_results AS tr
+                {metadata_join}
+                WHERE tr.benchmark IN ({placeholders})
+                  AND tr.score IS NOT NULL
                   {variant_filter}
-                ORDER BY benchmark, dataset_id, task_name, model_name, embedding_variant_name IS NOT NULL, embedding_variant_name
+                ORDER BY tr.benchmark, tr.dataset_id, tr.task_name, tr.model_name{variant_order}
             """
             cursor = con.execute(query, benchmarks)
             field_names = [str(description[0]) for description in cursor.description]
@@ -145,6 +159,7 @@ def _task_result_record(field_names: list[str], row: tuple[Any, ...]) -> TaskRes
     task_name = canonical_task_name(benchmark, raw_task_name)
     payload["split_name"] = canonical_split_name(benchmark, payload.get("split_name"))
     payload["task_name"] = task_name
+    payload["languages"] = _normalized_languages(payload.get("languages"), payload.get("language"))
     return TaskResultRecord.model_validate(payload)
 
 
@@ -169,5 +184,24 @@ def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:
     return {str(row[0]) for row in con.execute(f"DESCRIBE {table}").fetchall()}
 
 
+def _table_exists(con: duckdb.DuckDBPyConnection, table: str) -> bool:
+    row = con.execute(
+        "SELECT count(*) FROM information_schema.tables WHERE table_name = ?",
+        [table],
+    )
+    count = row.fetchone()
+    return bool(count[0]) if count is not None else False
+
+
 def _column_or_null(columns: set[str], column: str) -> str:
-    return column if column in columns else "NULL"
+    return f"tr.{column}" if column in columns else "NULL"
+
+
+def _normalized_languages(value: Any, language: Any) -> list[str]:
+    if isinstance(value, list):
+        languages = [item for item in value if isinstance(item, str) and item]
+        if languages:
+            return languages
+    if isinstance(language, str) and language:
+        return [language]
+    return []

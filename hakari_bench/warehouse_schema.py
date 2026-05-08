@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class WarehouseModel(BaseModel):
@@ -189,6 +189,7 @@ class DatasetMetadataRow(WarehouseModel):
     task_name: str
     task_key: str
     language: str | None = None
+    languages: list[str] = Field(default_factory=list)
     category: str | None = None
     short_description: str | None = None
     citation_count: int | None = None
@@ -208,6 +209,7 @@ class DatasetMetadataRow(WarehouseModel):
             self.task_name,
             self.task_key,
             self.language,
+            self.languages,
             self.category,
             self.short_description,
             self.citation_count,

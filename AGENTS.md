@@ -39,6 +39,24 @@ under `config/datasets/`, and dataset collection definitions live under
 
 - Write project documentation in English unless the user explicitly requests
   another language.
+- Keep reusable project workflows under `docs/`, not only under `skills/`.
+  Skill files may point to the canonical docs, but they should not be the only
+  place where benchmark or metadata procedures are described.
+
+## Evaluation Execution
+
+- Before running or scheduling benchmark evaluations, read
+  `docs/benchmark_evaluation.md` and follow it as the source of truth for
+  commands, prompt/runtime choices, embedding variant policy, and result
+  coverage audits.
+- Dense evaluation automatically includes full-dimension `int8,binary` and
+  `rescore:int8,binary` variants unless `--no-default-embedding-variants` is
+  used. When dense truncation dims are supplied with
+  `--embedding-variant truncate:DIMS`, the CLI also expands them into standalone
+  truncation plus truncation x quantized/rescore variants.
+- After benchmark runs, audit result coverage before reporting or rebuilding
+  leaderboard comparisons. Confirm base task completeness and verify that every
+  intended variant category exists for each model.
 
 ## Leaderboard Viewer
 

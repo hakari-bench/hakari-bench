@@ -10,6 +10,7 @@ import pytest
 from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, create_app
 from hakari_bench.viewer.config import load_viewer_config
 from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, compute_leaderboard_rows
+from hakari_bench.viewer.model_display import model_cell_views
 from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore, resolve_duckdb_location
 
 
@@ -173,6 +174,74 @@ benchmarks:
     assert config.benchmarks[0].match_patterns == ["uploaded/bench-a"]
 
 
+def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/")
+
+    assert response.status_code == 200
+    assert "Benchmark coverage" in response.text
+    assert "Models" in response.text
+    assert 'hx-get="/leaderboard?view=Overall' in response.text
+
+    leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
+    assert leaderboard_response.status_code == 200
+    assert "Analysis views" in leaderboard_response.text
+    assert "Variant impact" in leaderboard_response.text
+    assert "Reranking diagnostics" in leaderboard_response.text
+    assert "Dataset diagnostics" in leaderboard_response.text
+    assert 'hx-get="/analysis?panel=variants&amp;view=BenchA"' in leaderboard_response.text
+    assert 'data-testid="summary-card-models"' in response.text
+
+
+def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "NanoMTEB-Japanese", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "NanoMTEB-Japanese", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        "benchmarks:\n  - name: NanoMTEB-Japanese\n  - name: NanoMedical\n",
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMTEB-Japanese\n",
+        encoding="utf-8",
+    )
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=NanoMTEB-Japanese")
+
+    assert response.status_code == 200
+    assert "Benchmark groups" in response.text
+    assert "Language-specific" in response.text
+    assert "Domain-specific" in response.text
+    assert "sticky left-0" in response.text
+    assert "z-20" in response.text
+
+
 def test_viewer_config_rejects_unknown_yaml_keys(tmp_path: Path) -> None:
     config_dir = tmp_path / "config"
     config_dir.mkdir()
@@ -244,6 +313,67 @@ benchmarks:
     assert result.rows[0].micro_mean == 80.0
 
 
+def test_leaderboard_language_filter_recomputes_ranking_for_matching_tasks(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "en", "task-en", "task-en", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "ja", "task-ja", "task-ja", 0.40, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "en", "task-en", "task-en", 0.80, 20, 24, 4096),
+            ("model/b", "BenchA", "bench/a", "BenchA", "ja", "task-ja", "task-ja", 0.95, 20, 24, 4096),
+        ],
+        dataset_metadata_rows=[
+            ("BenchA", "bench/a", "BenchA", "en", "task-en", "task-en", "en", ["en"]),
+            ("BenchA", "bench/a", "BenchA", "ja", "task-ja", "task-ja", "ja", ["ja"]),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA", language_filters=("ja",))
+
+    assert result.expected_tasks == 1
+    assert result.selected_languages == ("ja",)
+    assert [(option.code, option.task_count) for option in result.available_languages] == [("en", 1), ("ja", 1)]
+    assert [row.model_name for row in result.rows] == ["model/b", "model/a"]
+    assert [row.task_count for row in result.rows] == [1, 1]
+
+
+def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    rows = []
+    metadata_rows = []
+    for index, lang in enumerate(["en", "ja", "de", "fr", "es", "ko", "th", "vi", "pl", "ru", "zh", "ar", "fa"]):
+        task_key = f"task-{lang}"
+        rows.append(("model/a", "BenchA", "bench/a", "BenchA", lang, task_key, task_key, 0.50 + index / 100, 10, 12, 8192))
+        rows.append(("model/b", "BenchA", "bench/a", "BenchA", lang, task_key, task_key, 0.40 + index / 100, 20, 24, 4096))
+        metadata_rows.append(("BenchA", "bench/a", "BenchA", lang, task_key, task_key, lang, [lang]))
+    _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&lang_filter=ja")
+
+    assert response.status_code == 200
+    assert "Language pages" in response.text
+    assert "Languages (13)" in response.text
+    assert "max-h-72" in response.text
+    assert 'name="lang_filter" value="ja" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task&amp;lang_filter=en"' in response.text
+    assert 'data-language-page="ja"' in response.text
+    assert 'data-shown-count="2"' in response.text
+    assert "2 shown / 2 complete models / 1 tasks" in response.text
+
+
 def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
@@ -295,7 +425,8 @@ overalls:
     )
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    result = service.get_leaderboard("OverallGrouped")
+    assert service.get_leaderboard("Overall").metric_columns == []
+    result = service.get_leaderboard("OverallGrouped", show_task_scores=True)
 
     assert result.expected_tasks == 3
     assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
@@ -305,14 +436,28 @@ overalls:
     assert by_model["model/b"].borda_score == 100 / 3
     assert by_model["model/a"].micro_mean == (70 + 50 + 80) / 3
     assert by_model["model/a"].macro_mean == 70.0
+    assert result.metric_columns == [
+        "BenchMean::BenchMean",
+        "BenchTask::task1",
+        "BenchTask::task2",
+    ]
+    assert by_model["model/a"].metric_values == {
+        "BenchMean::BenchMean": 80.0,
+        "BenchTask::task1": 70.0,
+        "BenchTask::task2": 50.0,
+    }
 
     from fastapi.testclient import TestClient
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=OverallGrouped")
+    response = TestClient(app).get("/leaderboard?view=OverallGrouped&task_scores=1")
 
     assert response.status_code == 200
     assert "Overall Grouped" in response.text
+    assert "BenchMean::BenchMean" in response.text
+    assert "BenchTask::task1" in response.text
+    assert "BenchTask::task2" in response.text
+    assert "metric%3ABenchTask%3A%3Atask1" in response.text
 
 
 def test_configured_excluded_tasks_are_not_used_in_leaderboards(tmp_path: Path) -> None:
@@ -360,7 +505,7 @@ overalls:
     )
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    bench_result = service.get_leaderboard("BenchA")
+    bench_result = service.get_leaderboard("BenchA", show_task_scores=True)
     overall_result = service.get_leaderboard("Overall")
     grouped_result = service.get_leaderboard("OverallGrouped")
 
@@ -385,6 +530,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.83, 10, 12, 8192, "truncate_dim_384", 384, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.85, 10, 12, 8192, "truncate_dim_512", 512, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.82, 10, 12, 8192, "truncate_dim_256_quantize_int8_docs", 256, "int8"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.81, 10, 12, 8192, "binary_rescore", 768, "binary"),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.75, 10, 12, 8192, "custom_variant", 2048, None),
             ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 20, 24, 4096, None, 512, None),
         ],
@@ -404,22 +550,24 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         include_quantization_variants=True,
         include_truncate_variants=True,
     )
+    rescore_result = service.get_leaderboard("BenchA", include_rescore_variants=True)
     other_variant_result = service.get_leaderboard("BenchA", include_other_variants=True)
 
     assert [row.model_name for row in base_result.rows] == ["model/a", "model/b"]
     assert [row.model_name for row in quantization_result.rows] == [
         "model/a (768 dims)",
-        "model/a (256 dims, int8)",
         "model/a (768 dims, uint8)",
         "model/b (512 dims)",
     ]
+    assert all("rescore" not in row.model_name for row in quantization_result.rows)
+    assert all("256 dims" not in row.model_name for row in quantization_result.rows)
     assert [row.model_name for row in truncate_result.rows] == [
         "model/a (768 dims)",
         "model/a (512 dims)",
         "model/a (384 dims)",
-        "model/a (256 dims, int8)",
         "model/b (512 dims)",
     ]
+    assert all("int8" not in row.model_name for row in truncate_result.rows)
     assert [row.model_name for row in all_variant_result.rows] == [
         "model/a (768 dims)",
         "model/a (512 dims)",
@@ -430,6 +578,17 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     ]
     assert all_variant_result.rows[3].embedding_dim == 256
     assert all_variant_result.rows[3].quantization == "int8"
+    delta_by_model = {row.model_name: row.base_score_delta_percent for row in quantization_result.rows}
+    assert delta_by_model == {
+        "model/a (768 dims)": None,
+        "model/a (768 dims, uint8)": pytest.approx(-11.1111111111),
+        "model/b (512 dims)": None,
+    }
+    assert [row.model_name for row in rescore_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (768 dims, binary)",
+        "model/b (512 dims)",
+    ]
     assert [row.model_name for row in other_variant_result.rows] == [
         "model/a (768 dims)",
         "model/a (2048 dims)",
@@ -453,21 +612,30 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'id="display-controls"' in response.text
     assert 'id="facet-filters"' in response.text
     assert 'from:input[type=' not in response.text
-    assert 'hx-trigger="change"' in response.text
-    assert 'hx-include="#display-controls"' in response.text
+    assert 'hx-trigger="change, submit"' in response.text
+    assert 'hx-include="#display-controls"' not in response.text
     assert "Truncate dims" in response.text
+    assert "Rescore" in response.text
+    assert 'id="model-filter-input"' in response.text
     assert 'name="model_filter"' in response.text
+    assert "Apply" in response.text
     assert 'value="model/b"' in response.text
-    assert "model/a (768 dims, uint8)" not in response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
     assert "model/a" in response.text
     assert "bg-cyan-50" in response.text
     assert "768 dims" in response.text
     assert "bg-amber-50" in response.text
     assert "uint8" in response.text
+    assert "binary_rescore" not in response.text
+    assert "Δ vs Base" in response.text
+    assert "-11.1%" in response.text
+    assert "-8.9%" not in response.text
     assert 'data-filter-hidden="true"' in response.text
     assert "Dims" in response.text
     assert "Quantization" in response.text
-    assert "delay:700ms" in response.text
+    assert "delay:700ms" not in response.text
+    assert "htmx:afterSwap" in response.text
+    assert "window.__hakariRestoreModelFilterFocus" in response.text
     assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
 
@@ -494,22 +662,106 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "quant_filter=uint8" in facet_response.text
     assert 'data-filter-hidden="true"' in facet_response.text
 
-    inferred_truncate_response = TestClient(app).get(
+    explicit_truncate_off_response = TestClient(app).get(
         "/leaderboard?view=BenchA&filters=1&dim_filter=384&quant_filter=__none__"
     )
 
-    assert inferred_truncate_response.status_code == 200
-    assert 'name="truncate" value="1" class="h-4 w-4 accent-cyan-700" checked' in inferred_truncate_response.text
-    assert "384 dims" in inferred_truncate_response.text
-    assert "model/a" in inferred_truncate_response.text
+    assert explicit_truncate_off_response.status_code == 200
+    assert 'name="truncate" value="1" class="h-4 w-4 accent-cyan-700" checked' not in explicit_truncate_off_response.text
+    assert "384 dims" not in explicit_truncate_off_response.text
 
-    inferred_quant_response = TestClient(app).get(
+    explicit_quantization_off_response = TestClient(app).get(
         "/leaderboard?view=BenchA&filters=1&dim_filter=768&quant_filter=uint8"
     )
 
-    assert inferred_quant_response.status_code == 200
-    assert 'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked' in inferred_quant_response.text
-    assert "uint8" in inferred_quant_response.text
+    assert explicit_quantization_off_response.status_code == 200
+    assert (
+        'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked'
+        not in explicit_quantization_off_response.text
+    )
+    assert ">uint8</td>" not in explicit_quantization_off_response.text
+
+    rescore_response = TestClient(app).get("/leaderboard?view=BenchA&rescore=1")
+
+    assert rescore_response.status_code == 200
+    assert 'name="rescore" value="1" class="h-4 w-4 accent-cyan-700" checked' in rescore_response.text
+    assert "binary_rescore" in rescore_response.text
+    assert "Δ vs Base" not in rescore_response.text
+
+
+def test_base_score_delta_percent_can_be_positive() -> None:
+    rows = compute_leaderboard_rows(
+        [
+            TaskScore(
+                "model/a (768 dims)",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.50,
+                None,
+                None,
+                None,
+                source_model_name="model/a",
+            ),
+            TaskScore(
+                "model/a (768 dims, uint8)",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.55,
+                None,
+                None,
+                None,
+                embedding_variant_name="quantize_uint8_docs",
+                embedding_dim=768,
+                quantization="uint8",
+                source_model_name="model/a",
+            ),
+            TaskScore(
+                "model/a (768 dims)",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a2",
+                "a2",
+                "a2",
+                0.50,
+                None,
+                None,
+                None,
+                source_model_name="model/a",
+            ),
+            TaskScore(
+                "model/a (768 dims, uint8)",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a2",
+                "a2",
+                "a2",
+                0.55,
+                None,
+                None,
+                None,
+                embedding_variant_name="quantize_uint8_docs",
+                embedding_dim=768,
+                quantization="uint8",
+                source_model_name="model/a",
+            ),
+        ],
+        is_overall=False,
+    )
+
+    by_model = {row.model_name: row for row in rows}
+
+    assert by_model["model/a (768 dims)"].base_score_delta_percent is None
+    assert by_model["model/a (768 dims, uint8)"].base_score_delta_percent == pytest.approx(10.0)
 
 
 def test_variant_display_names_stay_unique_when_dimension_and_quantization_collide(tmp_path: Path) -> None:
@@ -560,15 +812,205 @@ def test_variant_display_names_stay_unique_when_dimension_and_quantization_colli
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    result = service.get_leaderboard("BenchA", include_quantization_variants=True)
+    quantization_result = service.get_leaderboard("BenchA", include_quantization_variants=True)
+    cross_variant_result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+    )
 
-    assert [row.model_name for row in result.rows] == [
+    assert [row.model_name for row in quantization_result.rows] == [
+        "model/a (768 dims)",
+        "model/a (768 dims, int8)",
+        "model/b (512 dims)",
+    ]
+    assert [row.model_name for row in cross_variant_result.rows] == [
         "model/a (768 dims)",
         "model/a (768 dims, int8, quantize_int8_docs)",
         "model/a (768 dims, int8, truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_64_quantize_int8_docs)",
         "model/b (512 dims)",
     ]
-    assert all(row.borda_score >= 0.0 for row in result.rows)
+    assert all(row.borda_score >= 0.0 for row in cross_variant_result.rows)
+
+
+def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "jinaai/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.90,
+                10,
+                12,
+                8192,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                True,
+                None,
+                768,
+                None,
+            ),
+            (
+                "jinaai/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.80,
+                10,
+                12,
+                8192,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                True,
+                "binary",
+                768,
+                "binary",
+            ),
+            (
+                "Qwen/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.70,
+                20,
+                24,
+                4096,
+                "fp32",
+                "sdpa",
+                None,
+                None,
+                "query",
+                "document",
+                None,
+                None,
+                False,
+                None,
+                768,
+                None,
+            ),
+        ],
+        include_embedding_variant_columns=True,
+        include_runtime_option_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1")
+
+    assert response.status_code == 200
+    assert "jinaai/jina-embeddings-v5-text-nano (768 dims, binary, binary)" not in response.text
+    assert "jinaai/jina-embeddings-v5-text-nano" in response.text
+    assert "Qwen/jina-embeddings-v5-text-nano" in response.text
+    assert "768 dims" in response.text
+    assert "binary" in response.text
+    assert ">remote code<" not in response.text
+    assert 'data-model-metadata="' in response.text
+    assert "&quot;dtype&quot;:&quot;bf16&quot;" in response.text
+    assert "&quot;attention&quot;:&quot;flash_attention_2&quot;" in response.text
+    assert "&quot;trust_remote_code&quot;:true" in response.text
+    assert "Model Details" in response.text
+    assert "JSON.parse" in response.text
+    assert 'modal.addEventListener("click"' in response.text
+    assert "if (event.target === modal) modal.close();" in response.text
+
+
+def test_model_cell_views_shorten_names_unless_short_name_collides() -> None:
+    unique = compute_leaderboard_rows(
+        [
+            TaskScore(
+                "jinaai/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.90,
+                10,
+                12,
+                8192,
+                dtype="bf16",
+                attn_implementation="flash_attention_2",
+                prompt_summary="model default",
+                trust_remote_code=True,
+                embedding_dim=768,
+            )
+        ],
+        is_overall=False,
+    )
+    unique_views = model_cell_views(unique)
+
+    assert unique_views[unique[0].model_name].display_name == "jina-embeddings-v5-text-nano"
+    assert unique_views[unique[0].model_name].metadata["model_name"] == "jinaai/jina-embeddings-v5-text-nano"
+    assert unique_views[unique[0].model_name].metadata["dtype"] == "bf16"
+    assert unique_views[unique[0].model_name].metadata["attention"] == "flash_attention_2"
+    assert unique_views[unique[0].model_name].metadata["trust_remote_code"] is True
+
+    colliding = compute_leaderboard_rows(
+        [
+            TaskScore(
+                "jinaai/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.90,
+                None,
+                None,
+                None,
+            ),
+            TaskScore(
+                "other/jina-embeddings-v5-text-nano",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.80,
+                None,
+                None,
+                None,
+            ),
+        ],
+        is_overall=False,
+    )
+    colliding_views = model_cell_views(colliding)
+
+    assert colliding_views[colliding[0].model_name].display_name == "jinaai/jina-embeddings-v5-text-nano"
+    assert colliding_views[colliding[1].model_name].display_name == "other/jina-embeddings-v5-text-nano"
 
 
 def test_model_filter_matches_any_whitespace_separated_token_case_insensitively(tmp_path: Path) -> None:
@@ -690,13 +1132,16 @@ def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
     assert ">Attention</summary>" in response.text
     assert ">Dtype</summary>" in response.text
     assert ">Prompt</summary>" in response.text
-    assert "FA2" in response.text
-    assert "SDPA" in response.text
-    assert "BF16" in response.text
+    assert ">Attention</span>" not in response.text
+    assert ">Dtype</span>" not in response.text
+    assert ">Prompt</span>" not in response.text
+    assert ">FA2</td>" not in response.text
+    assert ">SDPA</td>" not in response.text
+    assert ">BF16</td>" not in response.text
     assert "Explicit prefixes" in response.text
     assert "Prompt names" in response.text
     assert "Prompt names + encode tasks" in response.text
-    assert "remote code" in response.text
+    assert ">remote code<" not in response.text
     assert 'name="attn_filter" value="flash_attention_2" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="prompt_filter" value="explicit_prefixes" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'data-shown-count="1"' in response.text
@@ -788,9 +1233,16 @@ benchmarks:
     )
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    task_result = service.get_leaderboard("MNanoBEIR", score_group_name="task_mean")
-    lang_result = service.get_leaderboard("MNanoBEIR", score_group_name="lang_mean", sort="metric:NanoBEIR-ja")
+    hidden_result = service.get_leaderboard("MNanoBEIR", score_group_name="task_mean")
+    task_result = service.get_leaderboard("MNanoBEIR", score_group_name="task_mean", show_task_scores=True)
+    lang_result = service.get_leaderboard(
+        "MNanoBEIR",
+        score_group_name="lang_mean",
+        sort="metric:NanoBEIR-ja",
+        show_task_scores=True,
+    )
 
+    assert hidden_result.metric_columns == []
     assert task_result.metric_columns == ["arguana", "fever"]
     assert task_result.rows[0].metric_values["arguana"] == 75.0
     assert lang_result.metric_columns == ["NanoBEIR-en", "NanoBEIR-ja"]
@@ -800,11 +1252,15 @@ benchmarks:
     from fastapi.testclient import TestClient
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=MNanoBEIR&group=lang_mean&sort=metric:NanoBEIR-ja")
+    response = TestClient(app).get(
+        "/leaderboard?view=MNanoBEIR&group=lang_mean&task_scores=1&sort=metric:NanoBEIR-ja"
+    )
 
     assert response.status_code == 200
     assert "Task Mean" in response.text
     assert "Lang Mean" in response.text
+    assert "Task score columns" in response.text
+    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "Mean Score" in response.text
     assert ">BEIR-ja</span>" in response.text
     assert "[overflow-wrap:anywhere]" in response.text
@@ -813,11 +1269,53 @@ benchmarks:
     assert 'hx-push-url="/?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja' in response.text
 
 
+def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "NanoArguAna", "arguana", "bench::arguana", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "NanoFEVER", "fever", "bench::fever", 0.80, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "NanoArguAna", "arguana", "bench::arguana", 0.70, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "NanoFEVER", "fever", "bench::fever", 0.60, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    hidden_result = service.get_leaderboard("BenchA")
+    full_result = service.get_leaderboard("BenchA", show_task_scores=True)
+    filtered_result = service.get_leaderboard("BenchA", show_task_scores=True, task_filter="arguana qwen")
+
+    assert hidden_result.metric_columns == []
+    assert full_result.metric_columns == ["arguana", "fever"]
+    assert filtered_result.metric_columns == ["arguana"]
+    assert filtered_result.rows[0].metric_values["arguana"] == 90.0
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&task_scores=1&task_filter=ARGUANA%20qw")
+
+    assert response.status_code == 200
+    assert 'id="task-filter-input"' in response.text
+    assert 'name="task_filter"' in response.text
+    assert 'value="ARGUANA qw"' in response.text
+    assert ">arguana</span>" in response.text
+    assert ">fever</span>" not in response.text
+    assert "metric%3Aarguana" in response.text
+
+
 def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
     assert _metric_column_label("NanoAILAStatutes") == "AILAStatutes"
     assert _metric_column_label("NanoBEIR-ja") == "BEIR-ja"
     assert _metric_column_label("NanoWikipediaRetrievalMultilingual") == "WikipediaRetrievalMultilingual"
     assert _metric_column_label("arguana") == "arguana"
+    assert _metric_column_label("NanoBIRCO::NanoBIRCO") == "NanoBIRCO::NanoBIRCO"
+    assert _metric_column_label("NanoMMTEB::NanoArguAna") == "NanoMMTEB::NanoArguAna"
 
 
 def test_max_len_is_formatted_with_grouping_separator() -> None:
@@ -940,6 +1438,7 @@ def _write_task_results(
     *,
     include_embedding_variant_columns: bool = False,
     include_runtime_option_columns: bool = False,
+    dataset_metadata_rows: list[tuple] | None = None,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
@@ -991,5 +1490,24 @@ def _write_task_results(
         )
         placeholders = ", ".join("?" for _ in rows[0])
         con.executemany(f"INSERT INTO task_results VALUES ({placeholders})", rows)
+        if dataset_metadata_rows is not None:
+            con.execute(
+                """
+                CREATE TABLE dataset_metadata (
+                    benchmark VARCHAR,
+                    dataset_id VARCHAR,
+                    dataset_name VARCHAR,
+                    split_name VARCHAR,
+                    task_name VARCHAR,
+                    task_key VARCHAR,
+                    language VARCHAR,
+                    languages VARCHAR[]
+                )
+                """
+            )
+            con.executemany(
+                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                dataset_metadata_rows,
+            )
     finally:
         con.close()

@@ -56,6 +56,44 @@ def _quantized_variant(
     return _pipeline_variant(name, _normalize_step(), _quantized_step(precision, rescore=rescore, device=device))
 
 
+def _default_dense_quantized_variants() -> list[dict[str, object]]:
+    return [
+        _quantized_variant("int8", "int8"),
+        _quantized_variant("binary", "binary"),
+        _quantized_variant("int8_rescore", "int8", rescore=True),
+        _quantized_variant("binary_rescore", "binary", rescore=True),
+    ]
+
+
+def _truncate_quantized_variants(*dims: int) -> list[dict[str, object]]:
+    variants: list[dict[str, object]] = []
+    for dim in dims:
+        variants.extend(
+            [
+                _pipeline_variant(f"truncate_dim_{dim}_int8", _truncate_step(dim), _normalize_step(), _quantized_step("int8")),
+                _pipeline_variant(
+                    f"truncate_dim_{dim}_binary",
+                    _truncate_step(dim),
+                    _normalize_step(),
+                    _quantized_step("binary"),
+                ),
+                _pipeline_variant(
+                    f"truncate_dim_{dim}_int8_rescore",
+                    _truncate_step(dim),
+                    _normalize_step(),
+                    _quantized_step("int8", rescore=True),
+                ),
+                _pipeline_variant(
+                    f"truncate_dim_{dim}_binary_rescore",
+                    _truncate_step(dim),
+                    _normalize_step(),
+                    _quantized_step("binary", rescore=True),
+                ),
+            ]
+        )
+    return variants
+
+
 def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model"])
 
@@ -67,12 +105,7 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.retrieval_score_device == "auto"
     assert args.dataset == ["hakari-bench/NanoBEIR-en"]
     assert args.results_dir == "output/results"
-    assert args.embedding_variants == [
-        _quantized_variant("int8", "int8"),
-        _quantized_variant("binary", "binary"),
-        _quantized_variant("int8_rescore", "int8", rescore=True),
-        _quantized_variant("binary_rescore", "binary", rescore=True),
-    ]
+    assert args.embedding_variants == _default_dense_quantized_variants()
 
 
 def test_parse_args_normalizes_local_model_alias() -> None:
@@ -208,23 +241,13 @@ def test_parse_args_web_defaults_to_hakari_bench_paths() -> None:
 def test_parse_args_defaults_to_quantized_variants_on_cpu() -> None:
     args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--device", "cpu"])
 
-    assert args.embedding_variants == [
-        _quantized_variant("int8", "int8"),
-        _quantized_variant("binary", "binary"),
-        _quantized_variant("int8_rescore", "int8", rescore=True),
-        _quantized_variant("binary_rescore", "binary", rescore=True),
-    ]
+    assert args.embedding_variants == _default_dense_quantized_variants()
 
 
 def test_parse_args_defaults_to_quantized_variants_on_cuda() -> None:
     args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--device", "cuda"])
 
-    assert args.embedding_variants == [
-        _quantized_variant("int8", "int8"),
-        _quantized_variant("binary", "binary"),
-        _quantized_variant("int8_rescore", "int8", rescore=True),
-        _quantized_variant("binary_rescore", "binary", rescore=True),
-    ]
+    assert args.embedding_variants == _default_dense_quantized_variants()
 
 
 def test_parse_args_score_device_cpu_forces_cpu_quantized_matrix_work() -> None:
@@ -259,6 +282,24 @@ def test_parse_args_can_disable_default_dense_quantized_variants() -> None:
     args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--no-default-embedding-variants"])
 
     assert args.embedding_variants == []
+
+
+def test_parse_args_no_default_keeps_explicit_truncate_variants_only() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "dense",
+            "--model",
+            "hotchpotch/model",
+            "--no-default-embedding-variants",
+            "--embedding-variant",
+            "truncate:256",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _pipeline_variant("truncate_dim_256", _truncate_step(256)),
+    ]
 
 
 def test_parse_args_does_not_add_default_quantized_variants_to_sparse_models() -> None:
@@ -313,7 +354,7 @@ def test_parse_args_accepts_late_interaction_options() -> None:
     ]
 
 
-def test_parse_args_does_not_add_default_quantized_variants_when_variants_are_explicit() -> None:
+def test_parse_args_adds_default_quantized_variants_when_variants_are_explicit() -> None:
     args = parse_args(
         [
             "evaluate",
@@ -327,6 +368,8 @@ def test_parse_args_does_not_add_default_quantized_variants_when_variants_are_ex
 
     assert args.embedding_variants == [
         _pipeline_variant("truncate_dim_256", _truncate_step(256)),
+        *_default_dense_quantized_variants(),
+        *_truncate_quantized_variants(256),
     ]
 
 
@@ -634,6 +677,8 @@ def test_parse_args_accepts_embedding_variants() -> None:
     assert args.embedding_variants == [
         _pipeline_variant("truncate_dim_256", _truncate_step(256)),
         _pipeline_variant("truncate_dim_128", _truncate_step(128)),
+        *_default_dense_quantized_variants(),
+        *_truncate_quantized_variants(256, 128),
     ]
 
 
@@ -653,8 +698,24 @@ def test_parse_args_accepts_compact_truncate_embedding_variants() -> None:
         "truncate_dim_512",
         "truncate_dim_256",
         "truncate_dim_128",
+        "int8",
+        "binary",
+        "int8_rescore",
+        "binary_rescore",
+        "truncate_dim_512_int8",
+        "truncate_dim_512_binary",
+        "truncate_dim_512_int8_rescore",
+        "truncate_dim_512_binary_rescore",
+        "truncate_dim_256_int8",
+        "truncate_dim_256_binary",
+        "truncate_dim_256_int8_rescore",
+        "truncate_dim_256_binary_rescore",
+        "truncate_dim_128_int8",
+        "truncate_dim_128_binary",
+        "truncate_dim_128_int8_rescore",
+        "truncate_dim_128_binary_rescore",
     ]
-    assert [variant["transform"]["steps"][0]["parameters"]["dim"] for variant in args.embedding_variants] == [
+    assert [variant["transform"]["steps"][0]["parameters"]["dim"] for variant in args.embedding_variants[:3]] == [
         512,
         256,
         128,
@@ -929,6 +990,8 @@ def test_parse_args_accepts_suffix_rescore_quantized_embedding_variants() -> Non
     assert args.embedding_variants == [
         _quantized_variant("int8_rescore", "int8", rescore=True),
         _quantized_variant("binary_rescore", "binary", rescore=True),
+        _quantized_variant("int8", "int8"),
+        _quantized_variant("binary", "binary"),
     ]
 
 
@@ -946,6 +1009,62 @@ def test_parse_args_accepts_normalize_embedding_variant() -> None:
 
     assert args.embedding_variants == [
         _pipeline_variant("normalize", _normalize_step()),
+        *_default_dense_quantized_variants(),
+    ]
+
+
+def test_parse_args_default_dense_variants_fill_missing_explicit_quantized_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "dense",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "int8",
+        ]
+    )
+
+    assert args.embedding_variants == _default_dense_quantized_variants()
+
+
+def test_parse_args_dedupes_auto_truncate_quantized_variants_against_explicit_grid() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "dense",
+            "--model",
+            "hotchpotch/model",
+            "--embedding-variant",
+            "truncate:128",
+            "--embedding-variant-grid",
+            "truncate:128",
+            "int8",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _pipeline_variant("truncate_dim_128", _truncate_step(128)),
+        _pipeline_variant("truncate_dim_128_int8", _truncate_step(128), _normalize_step(), _quantized_step("int8")),
+        *_default_dense_quantized_variants(),
+        _pipeline_variant(
+            "truncate_dim_128_binary",
+            _truncate_step(128),
+            _normalize_step(),
+            _quantized_step("binary"),
+        ),
+        _pipeline_variant(
+            "truncate_dim_128_int8_rescore",
+            _truncate_step(128),
+            _normalize_step(),
+            _quantized_step("int8", rescore=True),
+        ),
+        _pipeline_variant(
+            "truncate_dim_128_binary_rescore",
+            _truncate_step(128),
+            _normalize_step(),
+            _quantized_step("binary", rescore=True),
+        ),
     ]
 
 
@@ -972,6 +1091,46 @@ def test_parse_args_accepts_embedding_variant_cross_product() -> None:
         _pipeline_variant("truncate_dim_128_binary", _truncate_step(128), _normalize_step(), _quantized_step("binary")),
         _pipeline_variant("truncate_dim_64_int8", _truncate_step(64), _normalize_step(), _quantized_step("int8")),
         _pipeline_variant("truncate_dim_64_binary", _truncate_step(64), _normalize_step(), _quantized_step("binary")),
+        *_default_dense_quantized_variants(),
+        _pipeline_variant("truncate_dim_256", _truncate_step(256)),
+        _pipeline_variant("truncate_dim_128", _truncate_step(128)),
+        _pipeline_variant("truncate_dim_64", _truncate_step(64)),
+        _pipeline_variant(
+            "truncate_dim_256_int8_rescore",
+            _truncate_step(256),
+            _normalize_step(),
+            _quantized_step("int8", rescore=True),
+        ),
+        _pipeline_variant(
+            "truncate_dim_256_binary_rescore",
+            _truncate_step(256),
+            _normalize_step(),
+            _quantized_step("binary", rescore=True),
+        ),
+        _pipeline_variant(
+            "truncate_dim_128_int8_rescore",
+            _truncate_step(128),
+            _normalize_step(),
+            _quantized_step("int8", rescore=True),
+        ),
+        _pipeline_variant(
+            "truncate_dim_128_binary_rescore",
+            _truncate_step(128),
+            _normalize_step(),
+            _quantized_step("binary", rescore=True),
+        ),
+        _pipeline_variant(
+            "truncate_dim_64_int8_rescore",
+            _truncate_step(64),
+            _normalize_step(),
+            _quantized_step("int8", rescore=True),
+        ),
+        _pipeline_variant(
+            "truncate_dim_64_binary_rescore",
+            _truncate_step(64),
+            _normalize_step(),
+            _quantized_step("binary", rescore=True),
+        ),
     ]
 
 
@@ -991,6 +1150,7 @@ def test_parse_args_accepts_normalize_quantized_cross_product() -> None:
     assert args.embedding_variants == [
         _pipeline_variant("normalize_int8", _normalize_step(), _quantized_step("int8")),
         _pipeline_variant("normalize_binary", _normalize_step(), _quantized_step("binary")),
+        *_default_dense_quantized_variants(),
     ]
 
 

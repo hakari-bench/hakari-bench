@@ -9,6 +9,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
+from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
 
 SortDirection = Literal["asc", "desc"]
 
@@ -26,6 +28,8 @@ class TaskScore:
     active_parameters: int | None
     total_parameters: int | None
     max_seq_length: int | None
+    language: str | None = None
+    languages: tuple[str, ...] = ()
     dtype: str | None = None
     attn_implementation: str | None = None
     prompt_summary: str | None = None
@@ -33,6 +37,7 @@ class TaskScore:
     embedding_variant_name: str | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
+    source_model_name: str | None = None
 
 
 class LeaderboardRow(BaseModel):
@@ -53,8 +58,11 @@ class LeaderboardRow(BaseModel):
     attn_implementation: str | None = None
     prompt_summary: str | None = None
     trust_remote_code: bool | None = None
+    embedding_variant_name: str | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
+    source_model_name: str | None = None
+    base_score_delta_percent: float | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
 
 
@@ -63,6 +71,14 @@ class ScoreGroup(BaseModel):
 
     name: str
     label: str
+
+
+class LanguageOption(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    code: str
+    label: str
+    task_count: int
 
 
 class LeaderboardResult(BaseModel):
@@ -77,10 +93,15 @@ class LeaderboardResult(BaseModel):
     available_view_labels: dict[str, str]
     include_quantization_variants: bool = False
     include_truncate_variants: bool = False
+    include_rescore_variants: bool = False
     include_other_variants: bool = False
+    show_task_scores: bool = False
+    task_filter: str = ""
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
     metric_columns: list[str]
+    available_languages: list[LanguageOption] = Field(default_factory=list)
+    selected_languages: tuple[str, ...] = ()
 
 
 SORT_COLUMNS = {
@@ -95,12 +116,9 @@ SORT_COLUMNS = {
     "active_parameters",
     "total_parameters",
     "max_seq_length",
-    "dtype",
-    "attn_implementation",
-    "prompt_summary",
-    "trust_remote_code",
     "embedding_dim",
     "quantization",
+    "base_score_delta_percent",
 }
 
 
@@ -118,7 +136,11 @@ class LeaderboardService:
         score_group_name: str | None = None,
         include_quantization_variants: bool = False,
         include_truncate_variants: bool = False,
+        include_rescore_variants: bool = False,
         include_other_variants: bool = False,
+        language_filters: tuple[str, ...] = (),
+        show_task_scores: bool = False,
+        task_filter: str = "",
     ) -> LeaderboardResult:
         overall = self.config.overall_for_view(view_name)
         benchmarks = self.config.benchmarks_for_view(view_name)
@@ -129,16 +151,26 @@ class LeaderboardService:
             benchmarks,
             include_quantization_variants=include_quantization_variants,
             include_truncate_variants=include_truncate_variants,
+            include_rescore_variants=include_rescore_variants,
             include_other_variants=include_other_variants,
         )
         rows = _exclude_configured_tasks(rows, self.config)
+        available_languages = _language_options(rows)
+        selected_languages = _selected_languages(language_filters, available_languages)
+        if selected_languages:
+            rows = _filter_rows_by_languages(rows, selected_languages)
+        metric_score_group = selected_score_group
         if overall is not None:
             rows = _aggregate_overall_scores(rows, overall)
-        metric_columns = _metric_columns(rows, selected_score_group) if selected_score_group is not None else []
+            metric_score_group = _overall_metric_score_group(overall)
+        if show_task_scores and metric_score_group is None:
+            metric_score_group = ScoreGroupConfig(name="task_scores", label="Task Scores", group_by="task_key")
+        metric_columns = _metric_columns(rows, metric_score_group) if show_task_scores and metric_score_group is not None else []
+        metric_columns = _filter_metric_columns(rows, metric_score_group, metric_columns, task_filter)
         leaderboard_rows = compute_leaderboard_rows(
             rows,
             is_overall=is_overall,
-            score_group=selected_score_group,
+            score_group=metric_score_group,
             metric_columns=metric_columns,
         )
         return LeaderboardResult(
@@ -151,7 +183,10 @@ class LeaderboardService:
             available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
             include_quantization_variants=include_quantization_variants,
             include_truncate_variants=include_truncate_variants,
+            include_rescore_variants=include_rescore_variants,
             include_other_variants=include_other_variants,
+            show_task_scores=show_task_scores,
+            task_filter=task_filter.strip(),
             score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
             selected_score_group=(
                 ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
@@ -159,6 +194,8 @@ class LeaderboardService:
                 else None
             ),
             metric_columns=metric_columns,
+            available_languages=available_languages,
+            selected_languages=selected_languages,
         )
 
     def _load_task_scores(
@@ -167,10 +204,16 @@ class LeaderboardService:
         *,
         include_quantization_variants: bool,
         include_truncate_variants: bool,
+        include_rescore_variants: bool,
         include_other_variants: bool,
     ) -> list[TaskScore]:
         task_scores: list[TaskScore] = []
-        include_any_variants = include_quantization_variants or include_truncate_variants or include_other_variants
+        include_any_variants = (
+            include_quantization_variants
+            or include_truncate_variants
+            or include_rescore_variants
+            or include_other_variants
+        )
         records = self.task_results_repository.fetch_task_results(
             benchmarks=benchmarks,
             include_embedding_variants=include_any_variants,
@@ -178,12 +221,15 @@ class LeaderboardService:
         filtered_records = [
             record
             for record in records
-            if _include_variant_row(
+            if include_variant_row(
                 embedding_variant_name=record.embedding_variant_name,
                 quantization=record.quantization,
-                include_quantization_variants=include_quantization_variants,
-                include_truncate_variants=include_truncate_variants,
-                include_other_variants=include_other_variants,
+                flags=VariantDisplayFlags(
+                    quantization=include_quantization_variants,
+                    truncate=include_truncate_variants,
+                    rescore=include_rescore_variants,
+                    other=include_other_variants,
+                ),
             )
         ]
         model_names = _record_display_model_names(filtered_records, include_variant_details=include_any_variants)
@@ -198,6 +244,8 @@ class LeaderboardService:
                     task_name=record.task_name,
                     task_key=record.task_key,
                     score=record.score,
+                    language=record.language,
+                    languages=tuple(record.languages),
                     active_parameters=record.active_parameters,
                     total_parameters=record.total_parameters,
                     max_seq_length=record.max_seq_length,
@@ -208,6 +256,7 @@ class LeaderboardService:
                     embedding_variant_name=record.embedding_variant_name,
                     embedding_dim=record.embedding_dim,
                     quantization=record.quantization,
+                    source_model_name=record.model_name,
                 )
             )
         return task_scores
@@ -265,18 +314,21 @@ def compute_leaderboard_rows(
                 attn_implementation=first.attn_implementation,
                 prompt_summary=first.prompt_summary,
                 trust_remote_code=first.trust_remote_code,
+                embedding_variant_name=first.embedding_variant_name,
                 embedding_dim=first.embedding_dim,
                 quantization=first.quantization,
+                source_model_name=first.source_model_name,
                 metric_values=metric_values,
             )
         )
 
     borda_rank_by_model = _rank_desc((row.model_name, row.borda_score) for row in leaderboard_rows)
     mean_rank_by_model = _rank_desc((row.model_name, row.mean_score) for row in leaderboard_rows)
-    return [
+    ranked_rows = [
         row.model_copy(update={"borda_rank": borda_rank_by_model[row.model_name], "mean_rank": mean_rank_by_model[row.model_name]})
         for row in leaderboard_rows
     ]
+    return _with_base_score_delta_percent(ranked_rows)
 
 
 def sort_rows(rows: list[LeaderboardRow], *, sort: str, direction: SortDirection) -> list[LeaderboardRow]:
@@ -366,6 +418,8 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
                 task_name=aggregate_key,
                 task_key=f"{benchmark}::{aggregate_key}",
                 score=_mean(row.score for row in aggregate_rows),
+                language=first.language,
+                languages=tuple(sorted({language for row in aggregate_rows for language in row.languages})),
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
@@ -376,9 +430,45 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
                 embedding_variant_name=first.embedding_variant_name,
                 embedding_dim=first.embedding_dim,
                 quantization=first.quantization,
+                source_model_name=first.source_model_name,
             )
         )
     return aggregated
+
+
+def _with_base_score_delta_percent(rows: list[LeaderboardRow]) -> list[LeaderboardRow]:
+    base_score_by_source_model = {
+        row.source_model_name: row.mean_score
+        for row in rows
+        if row.source_model_name is not None and row.embedding_variant_name is None and row.mean_score != 0.0
+    }
+    return [
+        row.model_copy(
+            update={
+                "base_score_delta_percent": _base_score_delta_percent(
+                    score=row.mean_score,
+                    base_score=(
+                        base_score_by_source_model.get(row.source_model_name)
+                        if row.source_model_name is not None
+                        else None
+                    ),
+                    embedding_variant_name=row.embedding_variant_name,
+                )
+            }
+        )
+        for row in rows
+    ]
+
+
+def _base_score_delta_percent(
+    *,
+    score: float,
+    base_score: float | None,
+    embedding_variant_name: str | None,
+) -> float | None:
+    if embedding_variant_name is None or base_score is None:
+        return None
+    return 100.0 * (score - base_score) / base_score
 
 
 def _exclude_configured_tasks(rows: list[TaskScore], config: ViewerConfig) -> list[TaskScore]:
@@ -397,9 +487,47 @@ def _exclude_configured_tasks(rows: list[TaskScore], config: ViewerConfig) -> li
     ]
 
 
+def _language_options(rows: list[TaskScore]) -> list[LanguageOption]:
+    task_keys_by_language: dict[str, set[str]] = defaultdict(set)
+    for row in rows:
+        for language in row.languages:
+            task_keys_by_language[language].add(row.task_key)
+    return [
+        LanguageOption(code=language, label=_language_label(language), task_count=len(task_keys))
+        for language, task_keys in sorted(
+            task_keys_by_language.items(),
+            key=lambda item: (-len(item[1]), item[0]),
+        )
+    ]
+
+
+def _selected_languages(language_filters: tuple[str, ...], options: list[LanguageOption]) -> tuple[str, ...]:
+    available = {option.code for option in options}
+    selected = []
+    for language in language_filters:
+        if language in available and language not in selected:
+            selected.append(language)
+    return tuple(selected)
+
+
+def _filter_rows_by_languages(rows: list[TaskScore], selected_languages: tuple[str, ...]) -> list[TaskScore]:
+    selected = set(selected_languages)
+    return [row for row in rows if selected.intersection(row.languages)]
+
+
+def _language_label(language: str) -> str:
+    return language.upper() if 2 <= len(language) <= 3 else language
+
+
 def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGroupConfig]:
     benchmark = config.benchmark_for_view(view_name)
     return benchmark.resolved_score_groups if benchmark is not None else []
+
+
+def _overall_metric_score_group(overall: OverallConfig) -> ScoreGroupConfig | None:
+    if not any(component.group_by is not None for component in overall.benchmark_components):
+        return None
+    return ScoreGroupConfig(name="grouped_tasks", label="Grouped Tasks", group_by="task_key")
 
 
 def _record_display_model_names(records: list[TaskResultRecord], *, include_variant_details: bool) -> list[str]:
@@ -452,27 +580,6 @@ def _display_model_name(
     return f"{model_name} ({', '.join(details)})"
 
 
-def _include_variant_row(
-    *,
-    embedding_variant_name: str | None,
-    quantization: str | None,
-    include_quantization_variants: bool,
-    include_truncate_variants: bool,
-    include_other_variants: bool,
-) -> bool:
-    if embedding_variant_name is None:
-        return True
-    normalized_name = embedding_variant_name.lower()
-    is_quantization = quantization is not None or "quantize" in normalized_name
-    is_truncate = "truncate" in normalized_name
-    is_other = not is_quantization and not is_truncate
-    return (
-        (include_quantization_variants and is_quantization)
-        or (include_truncate_variants and is_truncate)
-        or (include_other_variants and is_other)
-    )
-
-
 def _select_score_group(
     groups: list[ScoreGroupConfig],
     score_group_name: str | None,
@@ -489,6 +596,35 @@ def _metric_columns(rows: list[TaskScore], score_group: ScoreGroupConfig | None)
     if score_group is None:
         return []
     return sorted({_score_group_key(row, score_group.group_by) for row in rows})
+
+
+def _filter_metric_columns(
+    rows: list[TaskScore],
+    score_group: ScoreGroupConfig | None,
+    columns: list[str],
+    task_filter: str,
+) -> list[str]:
+    terms = active_filter_terms(task_filter)
+    if not terms or score_group is None:
+        return columns
+    labels_by_column: dict[str, set[str]] = defaultdict(set)
+    for row in rows:
+        column = _score_group_key(row, score_group.group_by)
+        labels_by_column[column].update(
+            {
+                column,
+                row.task_name,
+                row.task_key,
+                row.dataset_name,
+                row.dataset_id,
+                row.benchmark,
+            }
+        )
+    return [
+        column
+        for column in columns
+        if any(text_matches_filter_terms(label, terms) for label in labels_by_column.get(column, {column}))
+    ]
 
 
 def _metric_values(
