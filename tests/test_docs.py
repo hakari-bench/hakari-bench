@@ -28,5 +28,18 @@ def test_documented_hakari_bench_commands_parse() -> None:
         parse_args(tokens[3:])
 
 
+def test_nano_readme_template_documents_fill_requirements() -> None:
+    template = Path("docs/NanoREADME.template.md")
+
+    assert template.exists()
+    text = template.read_text(encoding="utf-8")
+    assert "[HAKARI-Bench](https://github.com/hotchpotch/hakari-bench)" in text
+    assert "[NanoBEIR](https://huggingface.co/blog/sionic-ai/eval-sionic-nano-beir)" in text
+    assert "{{SPLIT_STATISTICS_ROWS}}" in text
+    assert "{{BM25_SCORE_ROWS}}" in text
+    assert "Do not include this checklist in the actual dataset README." in text
+    assert "- [ ] every config lists the same Nano splits" in text
+
+
 def _normalize_shell_command(block: str) -> str:
     return " ".join(line.rstrip("\\").strip() for line in block.splitlines()).strip()
