@@ -7,6 +7,7 @@ from urllib.parse import urlencode
 
 from pydantic import BaseModel, ConfigDict
 
+from hakari_bench.viewer.analytics import ViewerAnalyticsRepository, ViewerSummary
 from hakari_bench.viewer.config import ViewerConfig, load_viewer_config
 from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
@@ -15,6 +16,7 @@ from hakari_bench.viewer.filters import (
     visible_row_count,
 )
 from hakari_bench.viewer.leaderboard import (
+    LanguageOption,
     LeaderboardResult,
     LeaderboardRow,
     LeaderboardService,
@@ -62,13 +64,16 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         truncate: bool = Query(default=False),
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
+        task_scores: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
         prompt_filter: list[str] | None = Query(default=None),
+        lang_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
+        task_filter: str = Query(default=""),
     ) -> str:
         store.ensure_current()
         initial_query = normalize_query_state(
@@ -82,15 +87,24 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             truncate=truncate,
             rescore=rescore,
             other_variant=other_variant,
+            task_scores=task_scores,
             filters=filters,
             dim_filter=dim_filter,
             quant_filter=quant_filter,
             dtype_filter=dtype_filter,
             attn_filter=attn_filter,
             prompt_filter=prompt_filter,
+            lang_filter=lang_filter,
             model_filter=model_filter,
+            task_filter=task_filter,
         )
-        return render_page(viewer_config=viewer_config, duckdb_path=store.path, initial_query=initial_query)
+        summary = ViewerAnalyticsRepository(store.path).fetch_summary()
+        return render_page(
+            viewer_config=viewer_config,
+            duckdb_path=store.path,
+            summary=summary,
+            initial_query=initial_query,
+        )
 
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
@@ -103,13 +117,16 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         truncate: bool = Query(default=False),
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
+        task_scores: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
         prompt_filter: list[str] | None = Query(default=None),
+        lang_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
+        task_filter: str = Query(default=""),
     ) -> HTMLResponse:
         store.ensure_current()
         state_query = normalize_query_state(
@@ -123,13 +140,16 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             truncate=truncate,
             rescore=rescore,
             other_variant=other_variant,
+            task_scores=task_scores,
             filters=filters,
             dim_filter=dim_filter,
             quant_filter=quant_filter,
             dtype_filter=dtype_filter,
             attn_filter=attn_filter,
             prompt_filter=prompt_filter,
+            lang_filter=lang_filter,
             model_filter=model_filter,
+            task_filter=task_filter,
         )
         view = query_string(state_query["view"])
         sort = query_string(state_query["sort"])
@@ -147,14 +167,59 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             include_truncate_variants=display_flags.truncate,
             include_rescore_variants=display_flags.rescore,
             include_other_variants=display_flags.other,
+            language_filters=filter_state.language_filters,
+            show_task_scores=state_query.get("task_scores") == "1",
+            task_filter=filter_state.task_filter,
         )
         content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
         return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}"})
 
+    @app.get("/analysis", response_class=HTMLResponse)
+    def analysis(
+        panel: str = Query(default="variants", pattern="^(variants|reranking|datasets)$"),
+        view: str = Query(default=viewer_config.overall.name),
+        include_rescore: bool = Query(default=False),
+        include_truncate: bool = Query(default=False),
+    ) -> HTMLResponse:
+        store.ensure_current()
+        if view not in viewer_config.view_names:
+            view = viewer_config.overall.name
+        benchmarks = viewer_config.benchmarks_for_view(view)
+        repository = ViewerAnalyticsRepository(store.path)
+        if panel == "reranking":
+            content = render_reranking_panel(
+                view_label=viewer_config.label_for_view(view),
+                rows=repository.fetch_rerank_diagnostics(benchmarks=benchmarks),
+            )
+        elif panel == "datasets":
+            content = render_dataset_diagnostics_panel(
+                view_label=viewer_config.label_for_view(view),
+                rows=repository.fetch_dataset_diagnostics(benchmarks=benchmarks),
+            )
+        else:
+            content = render_variant_panel(
+                view_name=view,
+                view_label=viewer_config.label_for_view(view),
+                rows=repository.fetch_variant_analysis(
+                    benchmarks=benchmarks,
+                    include_rescore=include_rescore,
+                    include_truncate=include_truncate,
+                ),
+                include_rescore=include_rescore,
+                include_truncate=include_truncate,
+            )
+        return HTMLResponse(content=content)
+
     return app
 
 
-def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query: QueryState | None = None) -> str:
+def render_page(
+    *,
+    viewer_config: ViewerConfig,
+    duckdb_path: Path,
+    summary: ViewerSummary | None = None,
+    initial_query: QueryState | None = None,
+) -> str:
     query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
     return f"""<!doctype html>
 <html lang="ja">
@@ -167,12 +232,14 @@ def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query
   <script src="https://unpkg.com/htmx.org@2.0.8"></script>
 </head>
 <body class="bg-zinc-50 text-zinc-950">
-  <main class="mx-auto max-w-[1500px] px-4 py-6 sm:px-6">
+  <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
     <header class="mb-5 border-b border-zinc-200 pb-4">
       <p class="text-sm font-medium text-cyan-700">HAKARI-Bench viewer</p>
-      <h1 class="mt-1 text-2xl font-semibold">Borda leaderboard</h1>
-      <p class="mt-2 text-sm text-zinc-600">DuckDB: <span class="font-mono">{escape(str(duckdb_path))}</span></p>
+      <h1 class="mt-1 text-2xl font-semibold">Retrieval benchmark explorer</h1>
+      <p class="mt-2 max-w-4xl text-sm text-zinc-600">Compare multilingual retrieval models, inspect compression variants, and audit reranking and Nano subset diagnostics from the DuckDB result warehouse.</p>
+      <p class="mt-2 text-xs text-zinc-500">DuckDB: <span class="font-mono">{escape(str(duckdb_path))}</span></p>
     </header>
+    {render_summary_cards(summary or ViewerSummary())}
     <section
       id="leaderboard-panel"
       hx-get="{_leaderboard_url(query)}"
@@ -184,6 +251,70 @@ def render_page(*, viewer_config: ViewerConfig, duckdb_path: Path, initial_query
   </main>
 </body>
 </html>"""
+
+
+def render_summary_cards(summary: ViewerSummary) -> str:
+    cards = [
+        ("Models", f"{summary.model_count:,}", "summary-card-models"),
+        ("Benchmarks", f"{summary.benchmark_count:,}", "summary-card-benchmarks"),
+        ("Tasks", f"{summary.task_count:,}", "summary-card-tasks"),
+        ("Languages", f"{summary.language_count:,}", "summary-card-languages"),
+        ("Base rows", f"{summary.base_result_count:,}", "summary-card-base"),
+        ("Variant rows", f"{summary.variant_result_count:,}", "summary-card-variants"),
+    ]
+    card_html = "".join(
+        f"""
+        <div data-testid="{escape(testid)}" class="border border-zinc-200 bg-white px-3 py-2">
+          <p class="text-xs font-medium uppercase text-zinc-500">{escape(label)}</p>
+          <p class="mt-1 text-xl font-semibold tabular-nums text-zinc-950">{escape(value)}</p>
+        </div>
+        """
+        for label, value, testid in cards
+    )
+    timestamp = (
+        f"""<p class="mt-2 text-xs text-zinc-500">Latest result: <span class="font-mono">{escape(summary.latest_finished_at_utc)}</span></p>"""
+        if summary.latest_finished_at_utc
+        else ""
+    )
+    return f"""
+    <section class="mb-5" aria-label="Benchmark coverage">
+      <div class="mb-2 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h2 class="text-base font-semibold">Benchmark coverage</h2>
+          <p class="text-sm text-zinc-600">Result warehouse size and coverage visible in this viewer.</p>
+        </div>
+        {timestamp}
+      </div>
+      <div class="grid gap-2 sm:grid-cols-3 lg:grid-cols-6">{card_html}</div>
+    </section>
+    """
+
+
+def render_analysis_shell(*, view: str) -> str:
+    variant_query = urlencode({"panel": "variants", "view": view})
+    rerank_query = urlencode({"panel": "reranking", "view": view})
+    dataset_query = urlencode({"panel": "datasets", "view": view})
+    return f"""
+    <section class="mb-5 border border-zinc-200 bg-white" aria-label="Analysis views">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 px-3 py-2">
+        <div>
+          <h2 class="text-base font-semibold">Analysis views</h2>
+          <p class="text-sm text-zinc-600">Use these panels for paper-facing variant, reranking, and Nano subset audits.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" class="border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+                  hx-get="/analysis?{escape(variant_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">Variant impact</button>
+          <button type="button" class="border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+                  hx-get="/analysis?{escape(rerank_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">Reranking diagnostics</button>
+          <button type="button" class="border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+                  hx-get="/analysis?{escape(dataset_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">Dataset diagnostics</button>
+        </div>
+      </div>
+      <div id="analysis-panel">
+        <div class="border-t border-zinc-200 px-3 py-3 text-sm text-zinc-600">Select an analysis view to load paper-facing diagnostics for the current benchmark view.</div>
+      </div>
+    </section>
+    """
 
 
 def render_leaderboard(
@@ -198,7 +329,9 @@ def render_leaderboard(
     shown_count = visible_row_count(result.rows, filter_context)
     return f"""
 <div>
+  {render_analysis_shell(view=result.view_name)}
   {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+  {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
   {render_score_groups(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
@@ -220,7 +353,12 @@ def render_leaderboard(
 
 def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
     filter_state = filter_state or FilterState()
-    buttons: list[str] = []
+    grouped_buttons: dict[str, list[str]] = {
+        "Overall": [],
+        "Core benchmarks": [],
+        "Language-specific": [],
+        "Domain-specific": [],
+    }
     for view_name in result.available_views:
         active = view_name == result.view_name
         view_label = result.available_view_labels.get(view_name, view_name)
@@ -234,14 +372,148 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         query_payload["view"] = view_name
         query = urlencode(query_payload, doseq=True)
-        buttons.append(
+        grouped_buttons[_view_group(view_name)].append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                   hx-target="#leaderboard-panel" hx-swap="innerHTML">
                   {escape(view_label)}
                 </button>"""
         )
-    return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Benchmark views">{''.join(buttons)}</nav>"""
+    groups = []
+    for label, buttons in grouped_buttons.items():
+        if not buttons:
+            continue
+        groups.append(
+            f"""
+            <div class="min-w-0">
+              <p class="mb-1 text-xs font-semibold uppercase text-zinc-500">{escape(label)}</p>
+              <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
+            </div>
+            """
+        )
+    return f"""
+    <nav class="mb-4 border border-zinc-200 bg-white p-3" aria-label="Benchmark views">
+      <div class="mb-2 flex items-center justify-between gap-2">
+        <h2 class="text-sm font-semibold">Benchmark groups</h2>
+        <p class="text-xs text-zinc-500">Views are grouped to keep multilingual and domain-specific suites scannable.</p>
+      </div>
+      <div class="grid gap-3 lg:grid-cols-2 xl:grid-cols-4">{''.join(groups)}</div>
+    </nav>
+    """
+
+
+def _view_group(view_name: str) -> str:
+    if view_name.startswith("Overall"):
+        return "Overall"
+    if view_name.startswith("NanoMTEB-") or view_name == "NanoMIRACL":
+        return "Language-specific"
+    if view_name in {"MNanoBEIR", "NanoMMTEB", "NanoRTEB", "NanoMTEB", "NanoMLDR", "NanoLongEmbed"}:
+        return "Core benchmarks"
+    return "Domain-specific"
+
+
+def render_language_pages(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState | None = None,
+) -> str:
+    filter_state = filter_state or FilterState()
+    if not result.available_languages:
+        return ""
+
+    buttons = [
+        _language_page_button(
+            option=None,
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+        )
+    ]
+    visible_options = result.available_languages[:12]
+    more_options = result.available_languages[12:]
+    buttons.extend(
+        _language_page_button(
+            option=option,
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+        )
+        for option in visible_options
+    )
+    more = ""
+    if more_options:
+        more_buttons = "".join(
+            _language_page_button(
+                option=option,
+                result=result,
+                sort=sort,
+                direction=direction,
+                filter_state=filter_state,
+            )
+            for option in more_options
+        )
+        more = f"""
+          <details class="relative">
+            <summary class="cursor-pointer border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">More</summary>
+            <div class="absolute z-10 mt-1 grid max-h-72 min-w-[28rem] grid-cols-3 gap-1 overflow-auto border border-zinc-300 bg-white p-2 shadow-sm sm:grid-cols-5">
+              {more_buttons}
+            </div>
+          </details>
+        """
+    return f"""
+      <nav class="mb-4 flex flex-wrap items-start gap-2" aria-label="Language pages">
+        <span class="pt-1.5 text-sm font-medium text-zinc-800">Language pages</span>
+        {''.join(buttons)}
+        {more}
+      </nav>
+    """
+
+
+def _language_page_button(
+    *,
+    option: LanguageOption | None,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+) -> str:
+    language_filters = () if option is None else (option.code,)
+    active = result.selected_languages == language_filters
+    label = "All" if option is None else f"{option.label} {option.task_count}"
+    classes = (
+        "border-cyan-700 bg-cyan-50 text-cyan-900"
+        if active
+        else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
+    )
+    query_payload = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=_filter_state_with_languages(filter_state, language_filters),
+    )
+    query = urlencode(query_payload, doseq=True)
+    data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
+    return f"""<button type="button"{data_attr} class="border px-3 py-1.5 text-sm {classes}"
+              hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+              hx-target="#leaderboard-panel" hx-swap="innerHTML">{escape(label)}</button>"""
+
+
+def _filter_state_with_languages(filter_state: FilterState, language_filters: tuple[str, ...]) -> FilterState:
+    return FilterState(
+        model_filter=filter_state.model_filter,
+        task_filter=filter_state.task_filter,
+        language_filters=language_filters,
+        filters_active=filter_state.filters_active,
+        dim_filters=filter_state.dim_filters,
+        quant_filters=filter_state.quant_filters,
+        dtype_filters=filter_state.dtype_filters,
+        attn_filters=filter_state.attn_filters,
+        prompt_filters=filter_state.prompt_filters,
+    )
 
 
 def render_controls(
@@ -258,6 +530,7 @@ def render_controls(
     truncate_checked = " checked" if result.include_truncate_variants else ""
     rescore_checked = " checked" if result.include_rescore_variants else ""
     other_variant_checked = " checked" if result.include_other_variants else ""
+    task_scores_checked = " checked" if result.show_task_scores else ""
     state_fields = [
         ("view", result.view_name),
         ("sort", sort),
@@ -266,7 +539,12 @@ def render_controls(
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
     display_hidden_html = _hidden_inputs(state_fields + active_filter_hidden_fields(filter_state))
-    filter_hidden_fields = [*state_fields, ("filters", "1"), ("model_filter", filter_state.model_filter)]
+    filter_hidden_fields = [
+        *state_fields,
+        ("filters", "1"),
+        ("model_filter", filter_state.model_filter),
+        ("task_filter", filter_state.task_filter),
+    ]
     if result.include_quantization_variants:
         filter_hidden_fields.append(("quantization", "1"))
     if result.include_truncate_variants:
@@ -275,12 +553,15 @@ def render_controls(
         filter_hidden_fields.append(("rescore", "1"))
     if result.include_other_variants:
         filter_hidden_fields.append(("other_variant", "1"))
+    if result.show_task_scores:
+        filter_hidden_fields.append(("task_scores", "1"))
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
     dim_options = filter_context.dim_options
     quant_options = filter_context.quant_options
     dtype_options = filter_context.dtype_options
     attn_options = filter_context.attn_options
     prompt_options = filter_context.prompt_options
+    language_options = [(option.code, f"{option.label} ({option.task_count})") for option in result.available_languages]
     selected_dims = filter_context.selected_dims
     selected_quants = filter_context.selected_quants
     selected_dtypes = filter_context.selected_dtypes
@@ -292,6 +573,8 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(value for value, _ in dim_options),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -306,6 +589,8 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=(FILTER_NONE_VALUE,),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -320,6 +605,8 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(value for value, _ in quant_options),
@@ -334,6 +621,8 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=(FILTER_NONE_VALUE,),
@@ -348,6 +637,8 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -362,6 +653,8 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -376,6 +669,8 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -390,6 +685,8 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -404,6 +701,8 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -418,6 +717,8 @@ def render_controls(
         direction=direction,
         filter_state=FilterState(
             model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
@@ -425,6 +726,49 @@ def render_controls(
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=(FILTER_NONE_VALUE,),
         ),
+    )
+    language_all_query = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            filters_active=filter_state.filters_active,
+            dim_filters=filter_state.dim_filters,
+            quant_filters=filter_state.quant_filters,
+            dtype_filters=filter_state.dtype_filters,
+            attn_filters=filter_state.attn_filters,
+            prompt_filters=filter_state.prompt_filters,
+        ),
+    )
+    language_none_query = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            filters_active=filter_state.filters_active,
+            dim_filters=filter_state.dim_filters,
+            quant_filters=filter_state.quant_filters,
+            dtype_filters=filter_state.dtype_filters,
+            attn_filters=filter_state.attn_filters,
+            prompt_filters=filter_state.prompt_filters,
+        ),
+    )
+    language_filter_html = (
+        _render_filter_details(
+            name="lang_filter",
+            summary=f"Languages ({len(result.available_languages)})",
+            options=language_options,
+            selected_values=set(result.selected_languages),
+            all_query=language_all_query,
+            none_query=language_none_query,
+            grid_class="grid max-h-72 min-w-[28rem] grid-cols-3 gap-x-2 gap-y-1 overflow-auto sm:grid-cols-5",
+        )
+        if language_options
+        else ""
     )
     return f"""
     <div class="mb-4 text-sm text-zinc-700">
@@ -450,12 +794,25 @@ def render_controls(
           <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
           <span>Other variants</span>
         </label>
+        <label class="inline-flex items-center gap-2">
+          <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
+          <span>Task score columns</span>
+        </label>
         <label class="flex min-w-64 items-center gap-2">
-          <span class="font-medium text-zinc-800">Model name</span>
+          <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model name</span>
           <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
                  class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
                  autocomplete="off">
         </label>
+        <label class="flex min-w-64 items-center gap-2">
+          <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Task name</span>
+          <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
+                 class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
+                 autocomplete="off">
+        </label>
+        <button type="submit" class="border border-zinc-300 bg-zinc-50 px-3 py-1 text-sm font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
+          Apply
+        </button>
       </form>
       <div class="mt-3 flex flex-wrap items-start gap-3">
         <p class="pt-1 font-medium text-zinc-800">Filters:</p>
@@ -464,6 +821,7 @@ def render_controls(
               hx-target="#leaderboard-panel" hx-swap="innerHTML"
               hx-trigger="change">
           {filter_hidden_html}
+          {language_filter_html}
           {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
           {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
           <div class="flex flex-wrap items-start gap-3 border-l border-zinc-200 pl-3">
@@ -546,9 +904,10 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
         th_spacing = "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 normal-case" if is_metric else "px-3 uppercase"
+        sticky = _sticky_head_class(key)
         label_class = "min-w-0 leading-tight [overflow-wrap:anywhere]" if is_metric else ""
         heads.append(
-            f"""<th scope="col" class="bg-zinc-100 py-2 text-xs font-semibold text-zinc-600 {text_align} {th_spacing}">
+            f"""<th scope="col" class="bg-zinc-100 py-2 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
                  <button type="button" class="inline-flex w-full {justify} hover:text-cyan-700"
                          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                          hx-target="#leaderboard-panel" hx-swap="innerHTML">
@@ -557,6 +916,16 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
                </th>"""
         )
     return f"<thead><tr>{''.join(heads)}</tr></thead>"
+
+
+def _sticky_head_class(key: str) -> str:
+    if key == "borda_rank":
+        return "sticky left-0 z-20 min-w-16"
+    if key == "mean_rank":
+        return "sticky left-16 z-20 min-w-16"
+    if key == "model_name":
+        return "sticky left-32 z-20 min-w-72"
+    return ""
 
 
 def render_table_body(*, result: LeaderboardResult, filter_context: FilterContext | None = None) -> str:
@@ -577,8 +946,8 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         )
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
+              <td class="sticky left-0 z-10 bg-inherit px-3 py-2 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
+              <td class="sticky left-16 z-10 bg-inherit px-3 py-2 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
               {render_model_name_cell(row, model_views[row.model_name])}
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
@@ -593,6 +962,228 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
+
+
+def render_variant_panel(
+    *,
+    view_label: str,
+    rows,
+    include_rescore: bool = False,
+    include_truncate: bool = False,
+    view_name: str | None = None,
+) -> str:
+    rescore_toggle = _variant_analysis_toggle(
+        view_name=view_name,
+        label_enabled="Hide rescore",
+        label_disabled="Include rescore",
+        flag_name="include_rescore",
+        flag_value=include_rescore,
+        other_flags={"include_truncate": include_truncate},
+    )
+    truncate_toggle = _variant_analysis_toggle(
+        view_name=view_name,
+        label_enabled="Hide truncate_dim",
+        label_disabled="Include truncate_dim",
+        flag_name="include_truncate",
+        flag_value=include_truncate,
+        other_flags={"include_rescore": include_rescore},
+    )
+    if not rows:
+        body = """<tr><td class="px-3 py-5 text-center text-zinc-500" colspan="7">No embedding variant rows are available for this view.</td></tr>"""
+    else:
+        body = "".join(
+            f"""
+            <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
+              <td class="px-3 py-2 font-medium">{escape(row.model_name)}</td>
+              <td class="px-3 py-2">{escape(row.variant_name)}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
+              <td class="px-3 py-2">{escape(row.quantization or "original")}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score_100)}</td>
+              <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent_delta(row.base_delta_percent)}</td>
+            </tr>
+            """
+            for row in rows
+        )
+    return f"""
+    <div class="px-3 py-3">
+      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h3 class="text-base font-semibold">Variant impact</h3>
+          <p class="text-sm text-zinc-600">{escape(view_label)}: base-relative score changes for embedding variants. Rescore and truncate_dim variants are hidden by default.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          {rescore_toggle}
+          {truncate_toggle}
+          <p class="text-xs text-zinc-500">{len(rows):,} variant groups</p>
+        </div>
+      </div>
+      <div class="max-h-80 overflow-auto border border-zinc-200">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
+              <th class="px-3 py-2 text-left">Model</th>
+              <th class="px-3 py-2 text-left">Variant</th>
+              <th class="px-3 py-2 text-right">Dims</th>
+              <th class="px-3 py-2 text-left">Quantization</th>
+              <th class="px-3 py-2 text-right">Tasks</th>
+              <th class="px-3 py-2 text-right">Mean score</th>
+              <th class="px-3 py-2 text-right">Delta vs base</th>
+            </tr>
+          </thead>
+          <tbody>{body}</tbody>
+        </table>
+      </div>
+    </div>
+    """
+
+
+def _variant_analysis_toggle(
+    *,
+    view_name: str | None,
+    label_enabled: str,
+    label_disabled: str,
+    flag_name: str,
+    flag_value: bool,
+    other_flags: dict[str, bool],
+) -> str:
+    if view_name is None:
+        return ""
+    query_payload = {
+        "panel": "variants",
+        "view": view_name,
+        flag_name: "0" if flag_value else "1",
+    }
+    query_payload.update({name: "1" for name, value in other_flags.items() if value})
+    toggle_query = urlencode(query_payload)
+    toggle_label = label_enabled if flag_value else label_disabled
+    toggle_classes = (
+        "border-cyan-700 bg-cyan-50 text-cyan-900"
+        if flag_value
+        else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-600 hover:text-cyan-700"
+    )
+    return f"""
+    <button type="button" class="border px-3 py-1.5 text-sm {toggle_classes}"
+            hx-get="/analysis?{escape(toggle_query, quote=True)}"
+            hx-target="#analysis-panel" hx-swap="innerHTML">{escape(toggle_label)}</button>
+    """
+
+
+def render_reranking_panel(*, view_label: str, rows) -> str:
+    if not rows:
+        return _empty_analysis_panel(
+            title="Reranking diagnostics",
+            body="No reranking diagnostic rows are available for this view.",
+        )
+    body = "".join(
+        f"""
+        <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
+          <td class="px-3 py-2 font-medium">{escape(row.benchmark)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.query_coverage_percent)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.relevant_coverage_percent)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_signed_points(row.mean_lift_points)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_max_len(row.rerank_top_k)}</td>
+          <td class="px-3 py-2">{escape(row.candidate_source or "")}</td>
+          <td class="px-3 py-2">{escape(row.candidate_ranking or "")}</td>
+          <td class="px-3 py-2">{escape(row.bm25_source or "")}</td>
+        </tr>
+        """
+        for row in rows
+    )
+    return f"""
+    <div class="px-3 py-3">
+      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h3 class="text-base font-semibold">Reranking diagnostics</h3>
+          <p class="text-sm text-zinc-600">{escape(view_label)}: candidate coverage and second-stage rerank lift.</p>
+        </div>
+        <p class="text-xs text-zinc-500">{len(rows):,} benchmark rows</p>
+      </div>
+      <div class="max-h-80 overflow-auto border border-zinc-200">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
+              <th class="px-3 py-2 text-left">Benchmark</th>
+              <th class="px-3 py-2 text-right">Tasks</th>
+              <th class="px-3 py-2 text-right">Query coverage</th>
+              <th class="px-3 py-2 text-right">Relevant coverage</th>
+              <th class="px-3 py-2 text-right">Lift</th>
+              <th class="px-3 py-2 text-right">Top K</th>
+              <th class="px-3 py-2 text-left">Candidate source</th>
+              <th class="px-3 py-2 text-left">Ranking</th>
+              <th class="px-3 py-2 text-left">BM25 source</th>
+            </tr>
+          </thead>
+          <tbody>{body}</tbody>
+        </table>
+      </div>
+    </div>
+    """
+
+
+def render_dataset_diagnostics_panel(*, view_label: str, rows) -> str:
+    if not rows:
+        return _empty_analysis_panel(
+            title="Dataset diagnostics",
+            body="No dataset metadata rows are available for this view.",
+        )
+    body = "".join(
+        f"""
+        <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
+          <td class="px-3 py-2 font-medium">{escape(row.benchmark)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.language_count:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.category_count:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{row.base_rows:,}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.saturation_percent)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_query_count)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_document_count)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_query_chars)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_document_chars)}</td>
+        </tr>
+        """
+        for row in rows
+    )
+    return f"""
+    <div class="px-3 py-3">
+      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h3 class="text-base font-semibold">Dataset diagnostics</h3>
+          <p class="text-sm text-zinc-600">{escape(view_label)}: metadata coverage, sample sizes, text lengths, and score saturation.</p>
+        </div>
+        <p class="text-xs text-zinc-500">{len(rows):,} benchmark rows</p>
+      </div>
+      <div class="max-h-80 overflow-auto border border-zinc-200">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
+              <th class="px-3 py-2 text-left">Benchmark</th>
+              <th class="px-3 py-2 text-right">Tasks</th>
+              <th class="px-3 py-2 text-right">Languages</th>
+              <th class="px-3 py-2 text-right">Categories</th>
+              <th class="px-3 py-2 text-right">Base rows</th>
+              <th class="px-3 py-2 text-right">Saturation</th>
+              <th class="px-3 py-2 text-right">Queries</th>
+              <th class="px-3 py-2 text-right">Docs</th>
+              <th class="px-3 py-2 text-right">Query chars</th>
+              <th class="px-3 py-2 text-right">Doc chars</th>
+            </tr>
+          </thead>
+          <tbody>{body}</tbody>
+        </table>
+      </div>
+    </div>
+    """
+
+
+def _empty_analysis_panel(*, title: str, body: str) -> str:
+    return f"""
+    <div class="px-3 py-4">
+      <h3 class="text-base font-semibold">{escape(title)}</h3>
+      <p class="mt-1 text-sm text-zinc-600">{escape(body)}</p>
+    </div>
+    """
 
 
 def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
@@ -621,6 +1212,7 @@ def _render_filter_details(
     selected_values: set[str],
     all_query: QueryState,
     none_query: QueryState,
+    grid_class: str = "grid max-h-60 min-w-64 grid-cols-2 gap-x-2 gap-y-1 overflow-auto sm:grid-cols-3",
 ) -> str:
     checkboxes = []
     for value, label in options:
@@ -647,7 +1239,7 @@ def _render_filter_details(
                     hx-get="{none_url}" hx-push-url="{none_page_url}"
                     hx-target="#leaderboard-panel" hx-swap="innerHTML">None</button>
           </div>
-          <div class="grid max-h-60 min-w-64 grid-cols-2 gap-x-2 gap-y-1 overflow-auto sm:grid-cols-3">
+          <div class="{escape(grid_class)}">
             {''.join(checkboxes)}
           </div>
         </div>
@@ -695,7 +1287,21 @@ def _fmt_percent_delta(value: float | None) -> str:
     return "" if value is None else f"{value:+.1f}%"
 
 
+def _fmt_percent(value: float | None) -> str:
+    return "" if value is None else f"{value:.1f}%"
+
+
+def _fmt_signed_points(value: float | None) -> str:
+    return "" if value is None else f"{value:+.2f}"
+
+
+def _fmt_number(value: float | None) -> str:
+    return "" if value is None else f"{value:,.1f}"
+
+
 def _metric_column_label(column: str) -> str:
+    if "::" in column:
+        return column
     return column.removeprefix("Nano")
 
 

@@ -470,6 +470,7 @@ def _dataset_metadata_row(*, common: dict[str, Any], registry: DatasetRegistry) 
         task_name=str(common["task_name"]),
         task_key=str(common["task_key"]),
         language=_str_or_none(metadata.get("language")),
+        languages=_metadata_languages(metadata),
         category=_str_or_none(metadata.get("category")),
         short_description=_str_or_none(metadata.get("short_description")),
         citation_count=len(citation_keys) if isinstance(citation_keys, list) else None,
@@ -495,6 +496,14 @@ def _metadata_for_common_task(*, common: dict[str, Any], registry: DatasetRegist
             task_name=str(common.get("task_name") or ""),
         )
     return {}
+
+
+def _metadata_languages(metadata: dict[str, Any]) -> list[str]:
+    languages = metadata.get("languages")
+    if isinstance(languages, list):
+        return [str(language) for language in languages if isinstance(language, str) and language]
+    language = _str_or_none(metadata.get("language"))
+    return [language] if language else []
 
 
 def _task_diagnostic_row(
@@ -829,7 +838,7 @@ def write_duckdb(
             """
             CREATE TABLE dataset_metadata (
                 benchmark VARCHAR, dataset_id VARCHAR, dataset_name VARCHAR, split_name VARCHAR,
-                task_name VARCHAR, task_key VARCHAR, language VARCHAR, category VARCHAR,
+                task_name VARCHAR, task_key VARCHAR, language VARCHAR, languages VARCHAR[], category VARCHAR,
                 short_description VARCHAR, citation_count INTEGER, reference_count INTEGER,
                 has_bibtex BOOLEAN, query_count INTEGER, document_count INTEGER,
                 query_mean_chars DOUBLE, document_mean_chars DOUBLE
@@ -838,7 +847,7 @@ def write_duckdb(
         )
         if normalized_dataset_metadata_rows:
             con.executemany(
-                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [row.duckdb_values() for row in normalized_dataset_metadata_rows],
             )
         score_rows = [row for view_rows in standings.values() for row in view_rows]

@@ -7,10 +7,11 @@ The main source table for the HTMX leaderboard viewer is `task_results`.
 `runs` contains run-level metadata, `metrics_long` contains detailed task
 metrics, `task_diagnostics` contains analysis-oriented rerank, candidate, and
 latency fields, `dataset_metadata` exposes YAML task metadata for language,
-category, citation, and text-stat analysis, and `model_scores` / `borda_task_scores` are precomputed tables used
-by the static HTML report. The current HTMX viewer does not read
-`model_scores`; it computes the leaderboard from `task_results` on each
-request.
+category, citation, and text-stat analysis, and `model_scores` /
+`borda_task_scores` are precomputed tables used by the static HTML report. The
+current HTMX viewer computes the leaderboard from `task_results` on each
+request and reads `task_diagnostics` / `dataset_metadata` for paper-facing
+analysis panels. It does not read `model_scores`.
 
 ## Generation
 
@@ -99,6 +100,22 @@ Main `benchmarks.yaml` fields:
 
 Unknown `group_by` values and unknown YAML keys are rejected at viewer config
 load time.
+
+## HTMX Viewer Query Surfaces
+
+The web viewer exposes four user-facing query surfaces over the DuckDB file:
+
+| UI surface | source tables | semantics |
+| --- | --- | --- |
+| Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
+| Leaderboard | `task_results`, optionally joined to `dataset_metadata` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. Base rows are used unless the user explicitly enables variant categories. |
+| Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for quantization-first comparisons; rescore and `truncate_dim` variants are hidden unless explicitly enabled in the panel. |
+| Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
+| Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
+
+Analysis panels are scoped by the same YAML view selection as the leaderboard.
+`Overall` views expand to their configured benchmark components before querying.
+The diagnostics panels are descriptive and do not alter leaderboard ranking.
 
 ## Table Overview
 
@@ -245,7 +262,8 @@ language, category, citation coverage, or text length profile.
 | `split_name` | `VARCHAR` | Split name. |
 | `task_name` | `VARCHAR` | Task name. |
 | `task_key` | `VARCHAR` | Ranking task identity. |
-| `language` | `VARCHAR` | Metadata language code, or `multilingual`. |
+| `language` | `VARCHAR` | Primary metadata language code, or `multilingual`. |
+| `languages` | `VARCHAR[]` | Main detected language codes for the task, copied from YAML `metadata.languages`. Falls back conceptually to `[language]` for older metadata. |
 | `category` | `VARCHAR` | Metadata category, such as `natural_language` or `code`. |
 | `short_description` | `VARCHAR` | Short human-readable task description. |
 | `citation_count` | `INTEGER` | Number of citation keys recorded for the task. |
@@ -384,6 +402,16 @@ Quantization and Truncate dims flags are enabled. Facet filter query parameters
 such as `dim_filter` and `quant_filter` do not infer or re-enable display
 flags; the display flags come only from the explicit display controls.
 
+Task score columns are also controlled by an explicit display flag. The viewer
+does not render per-task or per-score-group metric columns by default. When
+`task_scores=1` is present, the leaderboard computes columns for the current
+selection: the selected score group for benchmark views, configured grouped
+tasks for grouped overall views, or task-level columns when no score group is
+available. `task_filter` filters only those task score columns, not the ranked
+model population. It uses the same matching behavior as the model-name filter:
+case-insensitive whitespace-separated tokens of at least three characters, with
+OR semantics.
+
 When variants are displayed, the leaderboard keeps a unique internal row label
 by appending `embedding_dim`, `quantization`, and sometimes
 `embedding_variant_name` to `model_name`. The rendered model-name cell strips
@@ -423,6 +451,12 @@ choices:
 - Surface runtime metadata such as dtype, attention implementation, prompt
   mode, and `trust_remote_code` in model details metadata; dtype, attention,
   and prompt remain available as facet filters.
+- Join `dataset_metadata` when present to attach `language` and `languages`
+  to task rows. The HTMX viewer uses `lang_filter` query parameters as
+  task-level ranking filters: Borda, mean scores, expected task counts, and
+  completeness are recomputed only over tasks whose `languages` contains at
+  least one selected language. If no `lang_filter` is set, all tasks in the
+  selected view are ranked.
 
 Conceptually, it runs this query:
 
@@ -533,6 +567,8 @@ source_rows AS (
     tr.task_key,
     tr.score,
     tr.score * 100.0 AS score_100,
+    dm.language,
+    dm.languages,
     tr.active_parameters,
     tr.total_parameters,
     tr.max_seq_length,
@@ -540,6 +576,7 @@ source_rows AS (
     tr.embedding_dim,
     tr.quantization
   FROM task_results AS tr
+  LEFT JOIN dataset_metadata AS dm ON dm.task_key = tr.task_key
   JOIN selected_benchmarks AS sb USING (benchmark)
   CROSS JOIN params AS p
   WHERE tr.score IS NOT NULL
@@ -1023,7 +1060,8 @@ population unless the UI makes that behavior explicit.
    metadata columns.
 7. For overall views, return both `macro_mean` and `micro_mean`, and use
    `macro_mean` as `mean_score`.
-8. For benchmark metric columns, compute score-group values in long format and
-   pivot in the UI if needed.
+8. Only compute and render benchmark metric columns when `task_scores=1` is
+   active. Use the selected score group when present; otherwise use task-level
+   values. Apply `task_filter` to the displayed metric columns only.
 9. Default sort should be `borda_rank ASC`. Metric-column sorts should place
    missing values after present values.

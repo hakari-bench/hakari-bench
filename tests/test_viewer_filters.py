@@ -4,6 +4,7 @@ from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
     FilterContext,
     active_model_filter_terms,
+    task_name_matches_filter_terms,
     row_filter_context,
     visible_row_count,
 )
@@ -54,6 +55,14 @@ def test_short_model_filter_terms_do_not_hide_rows() -> None:
 
     assert active_model_filter_terms("ji") == ()
     assert visible_row_count(_rows(), context) == 4
+
+
+def test_task_name_filter_uses_same_token_matching_as_model_filter() -> None:
+    terms = active_model_filter_terms("GeRmAn arguana")
+
+    assert task_name_matches_filter_terms("NanoMTEB-German::NanoArguAna", terms)
+    assert task_name_matches_filter_terms("NanoArguAna retrieval", terms)
+    assert not task_name_matches_filter_terms("NanoFEVER", terms)
 
 
 def test_filter_context_can_order_selected_values_for_query_payloads() -> None:

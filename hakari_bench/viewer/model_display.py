@@ -121,7 +121,7 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> st
             f"""<span class="inline-flex items-center border border-violet-200 bg-violet-50 px-1.5 py-0.5 text-xs font-medium text-violet-800">{escape(model_view.variant_label)}</span>"""
         )
     badge_html = f"""<span class="ml-2 inline-flex flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
-    return f"""<td class="whitespace-nowrap px-3 py-2 font-medium">
+    return f"""<td class="sticky left-32 z-10 whitespace-nowrap bg-inherit px-3 py-2 font-medium">
       <button type="button" class="model-detail-trigger text-left font-medium text-cyan-800 underline-offset-2 hover:underline"
               data-model-metadata="{escape(metadata_json)}">{escape(model_view.display_name)}</button>{badge_html}
     </td>"""
@@ -145,11 +145,12 @@ def render_model_detail_modal() -> str:
 (() => {
   if (window.__hakariModelDetailsBound) return;
   window.__hakariModelDetailsBound = true;
-  const fields = [
+    const fields = [
     ["Ranking label", "ranking_model_name"],
     ["Variant", "embedding_variant_name"],
     ["Dimensions", "embedding_dim"],
     ["Quantization", "quantization"],
+    ["Base delta", "base_score_delta_percent"],
     ["Active params", "active_parameters"],
     ["Total params", "total_parameters"],
     ["Max len", "max_seq_length"],
@@ -195,12 +196,19 @@ def render_model_detail_modal() -> str:
   }
   document.addEventListener("submit", (event) => {
     if (event.target?.id !== "display-controls") return;
-    window.__hakariRestoreModelFilterFocus = document.activeElement?.id === "model-filter-input";
+    const activeId = document.activeElement?.id;
+    window.__hakariRestoreModelFilterFocus = activeId === "model-filter-input";
+    window.__hakariRestoreTaskFilterFocus = activeId === "task-filter-input";
   });
   document.addEventListener("htmx:afterSwap", (event) => {
-    if (event.target?.id !== "leaderboard-panel" || !window.__hakariRestoreModelFilterFocus) return;
+    if (
+      event.target?.id !== "leaderboard-panel" ||
+      (!window.__hakariRestoreModelFilterFocus && !window.__hakariRestoreTaskFilterFocus)
+    ) return;
+    const inputId = window.__hakariRestoreTaskFilterFocus ? "task-filter-input" : "model-filter-input";
     window.__hakariRestoreModelFilterFocus = false;
-    const input = document.getElementById("model-filter-input");
+    window.__hakariRestoreTaskFilterFocus = false;
+    const input = document.getElementById(inputId);
     if (!input) return;
     input.focus();
     const end = input.value.length;

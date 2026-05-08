@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-import re
 
 from hakari_bench.viewer.leaderboard import LeaderboardRow
 from hakari_bench.viewer.state import FilterState
+from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
 
 
 FILTER_NONE_VALUE = "__none_selected__"
@@ -97,12 +97,15 @@ def visible_row_count(rows: list[LeaderboardRow], context: FilterContext) -> int
 
 
 def active_model_filter_terms(model_filter: str) -> tuple[str, ...]:
-    return tuple(token.casefold() for token in re.split(r"\s+", model_filter.strip()) if len(token) >= 3)
+    return active_filter_terms(model_filter)
 
 
 def model_name_matches_filter_terms(model_name: str, terms: tuple[str, ...]) -> bool:
-    normalized = model_name.casefold()
-    return any(term in normalized for term in terms)
+    return text_matches_filter_terms(model_name, terms)
+
+
+def task_name_matches_filter_terms(task_name: str, terms: tuple[str, ...]) -> bool:
+    return text_matches_filter_terms(task_name, terms)
 
 
 def dim_filter_options(rows: list[LeaderboardRow]) -> list[FilterOption]:

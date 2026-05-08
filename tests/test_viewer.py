@@ -175,6 +175,74 @@ benchmarks:
     assert config.benchmarks[0].match_patterns == ["uploaded/bench-a"]
 
 
+def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/")
+
+    assert response.status_code == 200
+    assert "Benchmark coverage" in response.text
+    assert "Models" in response.text
+    assert 'hx-get="/leaderboard?view=Overall' in response.text
+
+    leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
+    assert leaderboard_response.status_code == 200
+    assert "Analysis views" in leaderboard_response.text
+    assert "Variant impact" in leaderboard_response.text
+    assert "Reranking diagnostics" in leaderboard_response.text
+    assert "Dataset diagnostics" in leaderboard_response.text
+    assert 'hx-get="/analysis?panel=variants&amp;view=BenchA"' in leaderboard_response.text
+    assert 'data-testid="summary-card-models"' in response.text
+
+
+def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "NanoMTEB-Japanese", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "NanoMTEB-Japanese", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        "benchmarks:\n  - name: NanoMTEB-Japanese\n  - name: NanoMedical\n",
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMTEB-Japanese\n",
+        encoding="utf-8",
+    )
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=NanoMTEB-Japanese")
+
+    assert response.status_code == 200
+    assert "Benchmark groups" in response.text
+    assert "Language-specific" in response.text
+    assert "Domain-specific" in response.text
+    assert "sticky left-0" in response.text
+    assert "z-20" in response.text
+
+
 def test_viewer_config_rejects_unknown_yaml_keys(tmp_path: Path) -> None:
     config_dir = tmp_path / "config"
     config_dir.mkdir()
@@ -246,6 +314,67 @@ benchmarks:
     assert result.rows[0].micro_mean == 80.0
 
 
+def test_leaderboard_language_filter_recomputes_ranking_for_matching_tasks(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "en", "task-en", "task-en", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "ja", "task-ja", "task-ja", 0.40, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "en", "task-en", "task-en", 0.80, 20, 24, 4096),
+            ("model/b", "BenchA", "bench/a", "BenchA", "ja", "task-ja", "task-ja", 0.95, 20, 24, 4096),
+        ],
+        dataset_metadata_rows=[
+            ("BenchA", "bench/a", "BenchA", "en", "task-en", "task-en", "en", ["en"]),
+            ("BenchA", "bench/a", "BenchA", "ja", "task-ja", "task-ja", "ja", ["ja"]),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA", language_filters=("ja",))
+
+    assert result.expected_tasks == 1
+    assert result.selected_languages == ("ja",)
+    assert [(option.code, option.task_count) for option in result.available_languages] == [("en", 1), ("ja", 1)]
+    assert [row.model_name for row in result.rows] == ["model/b", "model/a"]
+    assert [row.task_count for row in result.rows] == [1, 1]
+
+
+def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    rows = []
+    metadata_rows = []
+    for index, lang in enumerate(["en", "ja", "de", "fr", "es", "ko", "th", "vi", "pl", "ru", "zh", "ar", "fa"]):
+        task_key = f"task-{lang}"
+        rows.append(("model/a", "BenchA", "bench/a", "BenchA", lang, task_key, task_key, 0.50 + index / 100, 10, 12, 8192))
+        rows.append(("model/b", "BenchA", "bench/a", "BenchA", lang, task_key, task_key, 0.40 + index / 100, 20, 24, 4096))
+        metadata_rows.append(("BenchA", "bench/a", "BenchA", lang, task_key, task_key, lang, [lang]))
+    _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&lang_filter=ja")
+
+    assert response.status_code == 200
+    assert "Language pages" in response.text
+    assert "Languages (13)" in response.text
+    assert "max-h-72" in response.text
+    assert 'name="lang_filter" value="ja" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task&amp;lang_filter=en"' in response.text
+    assert 'data-language-page="ja"' in response.text
+    assert 'data-shown-count="2"' in response.text
+    assert "2 shown / 2 complete models / 1 tasks" in response.text
+
+
 def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
@@ -298,7 +427,7 @@ overalls:
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
     assert service.get_leaderboard("Overall").metric_columns == []
-    result = service.get_leaderboard("OverallGrouped")
+    result = service.get_leaderboard("OverallGrouped", show_task_scores=True)
 
     assert result.expected_tasks == 3
     assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
@@ -322,7 +451,7 @@ overalls:
     from fastapi.testclient import TestClient
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=OverallGrouped")
+    response = TestClient(app).get("/leaderboard?view=OverallGrouped&task_scores=1")
 
     assert response.status_code == 200
     assert "Overall Grouped" in response.text
@@ -377,7 +506,7 @@ overalls:
     )
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    bench_result = service.get_leaderboard("BenchA")
+    bench_result = service.get_leaderboard("BenchA", show_task_scores=True)
     overall_result = service.get_leaderboard("Overall")
     grouped_result = service.get_leaderboard("OverallGrouped")
 
@@ -490,6 +619,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Rescore" in response.text
     assert 'id="model-filter-input"' in response.text
     assert 'name="model_filter"' in response.text
+    assert "Apply" in response.text
     assert 'value="model/b"' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
     assert "model/a" in response.text
@@ -1104,9 +1234,16 @@ benchmarks:
     )
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    task_result = service.get_leaderboard("MNanoBEIR", score_group_name="task_mean")
-    lang_result = service.get_leaderboard("MNanoBEIR", score_group_name="lang_mean", sort="metric:NanoBEIR-ja")
+    hidden_result = service.get_leaderboard("MNanoBEIR", score_group_name="task_mean")
+    task_result = service.get_leaderboard("MNanoBEIR", score_group_name="task_mean", show_task_scores=True)
+    lang_result = service.get_leaderboard(
+        "MNanoBEIR",
+        score_group_name="lang_mean",
+        sort="metric:NanoBEIR-ja",
+        show_task_scores=True,
+    )
 
+    assert hidden_result.metric_columns == []
     assert task_result.metric_columns == ["arguana", "fever"]
     assert task_result.rows[0].metric_values["arguana"] == 75.0
     assert lang_result.metric_columns == ["NanoBEIR-en", "NanoBEIR-ja"]
@@ -1116,11 +1253,15 @@ benchmarks:
     from fastapi.testclient import TestClient
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=MNanoBEIR&group=lang_mean&sort=metric:NanoBEIR-ja")
+    response = TestClient(app).get(
+        "/leaderboard?view=MNanoBEIR&group=lang_mean&task_scores=1&sort=metric:NanoBEIR-ja"
+    )
 
     assert response.status_code == 200
     assert "Task Mean" in response.text
     assert "Lang Mean" in response.text
+    assert "Task score columns" in response.text
+    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "Mean Score" in response.text
     assert ">BEIR-ja</span>" in response.text
     assert "[overflow-wrap:anywhere]" in response.text
@@ -1129,11 +1270,53 @@ benchmarks:
     assert 'hx-push-url="/?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja' in response.text
 
 
+def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "NanoArguAna", "arguana", "bench::arguana", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "NanoFEVER", "fever", "bench::fever", 0.80, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "NanoArguAna", "arguana", "bench::arguana", 0.70, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "NanoFEVER", "fever", "bench::fever", 0.60, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    hidden_result = service.get_leaderboard("BenchA")
+    full_result = service.get_leaderboard("BenchA", show_task_scores=True)
+    filtered_result = service.get_leaderboard("BenchA", show_task_scores=True, task_filter="arguana qwen")
+
+    assert hidden_result.metric_columns == []
+    assert full_result.metric_columns == ["arguana", "fever"]
+    assert filtered_result.metric_columns == ["arguana"]
+    assert filtered_result.rows[0].metric_values["arguana"] == 90.0
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&task_scores=1&task_filter=ARGUANA%20qw")
+
+    assert response.status_code == 200
+    assert 'id="task-filter-input"' in response.text
+    assert 'name="task_filter"' in response.text
+    assert 'value="ARGUANA qw"' in response.text
+    assert ">arguana</span>" in response.text
+    assert ">fever</span>" not in response.text
+    assert "metric%3Aarguana" in response.text
+
+
 def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
     assert _metric_column_label("NanoAILAStatutes") == "AILAStatutes"
     assert _metric_column_label("NanoBEIR-ja") == "BEIR-ja"
     assert _metric_column_label("NanoWikipediaRetrievalMultilingual") == "WikipediaRetrievalMultilingual"
     assert _metric_column_label("arguana") == "arguana"
+    assert _metric_column_label("NanoBIRCO::NanoBIRCO") == "NanoBIRCO::NanoBIRCO"
+    assert _metric_column_label("NanoMMTEB::NanoArguAna") == "NanoMMTEB::NanoArguAna"
 
 
 def test_max_len_is_formatted_with_grouping_separator() -> None:
@@ -1256,6 +1439,7 @@ def _write_task_results(
     *,
     include_embedding_variant_columns: bool = False,
     include_runtime_option_columns: bool = False,
+    dataset_metadata_rows: list[tuple] | None = None,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
@@ -1307,5 +1491,24 @@ def _write_task_results(
         )
         placeholders = ", ".join("?" for _ in rows[0])
         con.executemany(f"INSERT INTO task_results VALUES ({placeholders})", rows)
+        if dataset_metadata_rows is not None:
+            con.execute(
+                """
+                CREATE TABLE dataset_metadata (
+                    benchmark VARCHAR,
+                    dataset_id VARCHAR,
+                    dataset_name VARCHAR,
+                    split_name VARCHAR,
+                    task_name VARCHAR,
+                    task_key VARCHAR,
+                    language VARCHAR,
+                    languages VARCHAR[]
+                )
+                """
+            )
+            con.executemany(
+                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                dataset_metadata_rows,
+            )
     finally:
         con.close()
