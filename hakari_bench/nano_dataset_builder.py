@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import json
 import math
 from pathlib import Path
+import re
 from typing import Any
 
 import pyarrow.parquet as pq
@@ -630,7 +631,7 @@ def _readme_context(
             f"{dataset_name} is a Nano-style retrieval dataset.",
         ),
         "NAMING_NOTE_SECTION": _metadata_text(metadata, "naming_note", ""),
-        "SOURCE_LINKS_LIST": _source_links_list(metadata, dataset_id),
+        "SOURCE_LINKS_LIST": _source_links_list(metadata, dataset_id, output_dir=output_dir, splits=splits),
         "SOURCE_DATASET_LOCATION": _metadata_text(
             metadata,
             "source_dataset_location",
@@ -703,13 +704,35 @@ def _tag_list_yaml(metadata: Mapping[str, Any]) -> str:
     return yaml.safe_dump(tags, sort_keys=False, allow_unicode=True).rstrip()
 
 
-def _source_links_list(metadata: Mapping[str, Any], dataset_id: str) -> str:
+def _source_links_list(metadata: Mapping[str, Any], dataset_id: str, *, output_dir: Path, splits: list[str]) -> str:
+    formatted_links: list[str] = []
+    for split in splits:
+        source_dataset_id = _split_metadata_text(output_dir, split, "source_dataset_id", "")
+        if source_dataset_id:
+            formatted_links.append(_hf_dataset_link(source_dataset_id))
     raw_links = metadata.get("source_links")
     if isinstance(raw_links, list):
         links = [str(link) for link in raw_links if str(link).strip()]
-        if links:
-            return "\n".join(f"- {link}" for link in links)
-    return f"- Final dataset: [`{dataset_id}`](https://huggingface.co/datasets/{dataset_id})"
+        formatted_links.extend(_format_source_link(link) for link in links)
+    if not formatted_links:
+        formatted_links.append(f"Final dataset: {_hf_dataset_link(dataset_id)}")
+    unique_links = list(dict.fromkeys(formatted_links))
+    return "\n".join(f"- {link}" for link in unique_links)
+
+
+def _format_source_link(link: str) -> str:
+    match = re.match(r"^https://huggingface\.co/datasets/([^?#]+)(.*)$", link)
+    if match is None:
+        return link
+    dataset_id = match.group(1).rstrip("/")
+    suffix = match.group(2)
+    return f"[{dataset_id}](https://huggingface.co/datasets/{dataset_id}{suffix})"
+
+
+def _hf_dataset_link(dataset_id: str) -> str:
+    if not dataset_id.strip():
+        return "`unknown`"
+    return f"[{dataset_id}](https://huggingface.co/datasets/{dataset_id})"
 
 
 def _split_statistics_rows(output_dir: Path, splits: list[str]) -> str:
@@ -751,7 +774,9 @@ def _split_mapping_rows(
         qrels = len(_read_optional_parquet(output_dir / "qrels" / f"{split}.parquet"))
         source_task = _split_metadata_text(output_dir, split, "source_task", split)
         split_source_dataset = _split_metadata_text(output_dir, split, "source_dataset_id", source_dataset)
-        rows.append(f"| {split} | {source_task} | `{split_source_dataset}` | {queries} | {corpus} | {qrels} |")
+        rows.append(
+            f"| {split} | {source_task} | {_hf_dataset_link(split_source_dataset)} | {queries} | {corpus} | {qrels} |"
+        )
     return "\n".join(rows)
 
 
