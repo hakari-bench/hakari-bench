@@ -83,6 +83,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     bm25 = evaluate_methods.add_parser("bm25", help="Evaluate BM25 rankings.")
     _add_params_arg(bm25)
+    bm25.add_argument("--model", default=None, help="Display/storage model id for BM25 result metadata.")
     _add_dataset_args(bm25, action="evaluate")
     _add_candidate_args(bm25)
     _add_output_args(bm25, results_default="output/results")
@@ -485,6 +486,10 @@ def _default_bm25_model_id(args: argparse.Namespace) -> str:
 
 def _apply_model_identity(args: argparse.Namespace) -> None:
     if args.model_type == "bm25":
+        model = getattr(args, "model", None)
+        if model:
+            args.model_id = model
+            args.model_source = {"type": "bm25", "name": model}
         return
     model = getattr(args, "model", None)
     alias = getattr(args, "model_alias", None)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from collections import defaultdict
 from collections.abc import Sequence
 from datetime import datetime, timezone
@@ -1305,7 +1306,11 @@ def mean(values: Any) -> float:
 
 
 def _int_or_none(value: Any) -> int | None:
-    return int(value) if isinstance(value, int | float) else None
+    if not isinstance(value, int | float):
+        return None
+    if isinstance(value, float) and not math.isfinite(value):
+        return None
+    return int(value)
 
 
 def _float_or_none(value: Any) -> float | None:

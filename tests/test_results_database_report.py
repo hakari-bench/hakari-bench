@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 import duckdb
@@ -42,6 +43,12 @@ def test_new_nano_benchmarks_are_ranked_benchmarks() -> None:
     assert "NanoDAPFAM" in report.TARGET_BENCHMARKS
     assert report.benchmark_name("hakari-bench/NanoBIRCO", "NanoBIRCO") == "NanoBIRCO"
     assert report.benchmark_name("hakari-bench/NanoDAPFAM", "NanoDAPFAM") == "NanoDAPFAM"
+
+
+def test_int_or_none_ignores_non_finite_numbers() -> None:
+    assert report._int_or_none(math.inf) is None
+    assert report._int_or_none(-math.inf) is None
+    assert report._int_or_none(math.nan) is None
 
 
 def test_language_specific_nanomteb_benchmarks_are_ranked_separately() -> None:

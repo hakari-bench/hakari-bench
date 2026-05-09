@@ -412,6 +412,15 @@ def test_parse_args_defaults_bm25_tokenizer_to_auto_when_omitted() -> None:
     assert args.bm25_tokenizer is None
 
 
+def test_parse_args_accepts_bm25_model_name_override() -> None:
+    args = parse_args(["evaluate", "bm25", "--model", "bm25"])
+
+    assert args.model == "bm25"
+    assert args.model_id == "bm25"
+    assert args.model_source == {"type": "bm25", "name": "bm25"}
+    assert args.bm25_source == "dataset"
+
+
 def test_parse_args_accepts_wordseg_bm25_tokenizer() -> None:
     args = parse_args(
         [
