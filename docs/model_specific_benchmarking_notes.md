@@ -93,3 +93,413 @@ uv run hakari-bench evaluate dense \
   --query-prompt 'query: ' \
   --document-prompt 'passage: '
 ```
+
+## Qwen Qwen3 Embedding
+
+Applies to:
+
+- `Qwen/Qwen3-Embedding-0.6B`
+
+Use the Sentence Transformers prompt configuration:
+
+- query prompt name: `query`
+- document prompt name: `document`
+
+The model card describes query-side instruction use as recommended for
+retrieval. The stored `query` prompt is:
+
+```text
+Instruct: Given a web search query, retrieve relevant passages that answer the query
+Query:
+```
+
+Example:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model Qwen/Qwen3-Embedding-0.6B \
+  --query-prompt-name query \
+  --document-prompt-name document
+```
+
+Truncation notes:
+
+- The model supports user-defined embedding dimensions from 32 to 1024.
+- Use `--embedding-variant truncate:768,512,256,128,64,32` when measuring
+  dimensional trade-offs.
+
+## Google EmbeddingGemma
+
+Applies to:
+
+- `google/embeddinggemma-300m`
+
+Use the Sentence Transformers retrieval prompt names:
+
+- query prompt name: `Retrieval-query`
+- document prompt name: `Retrieval-document`
+
+These map to the model card's retrieval prompt formats:
+
+- query: `task: search result | query: `
+- document: `title: none | text: `
+
+Example:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model google/embeddinggemma-300m \
+  --query-prompt-name Retrieval-query \
+  --document-prompt-name Retrieval-document
+```
+
+Truncation notes:
+
+- The model has 768-dimensional base embeddings and documented Matryoshka
+  dimensions of 512, 256, and 128.
+- Use `--embedding-variant truncate:512,256,128` when measuring dimensional
+  trade-offs.
+
+## hotchpotch Bekko Embeddings
+
+Applies to:
+
+- `hotchpotch/bekko-embedding-pico-beta-unir-v7`
+- `hotchpotch/bekko-embedding-small-beta-unir-v8`
+- `hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT`
+
+Use the stored Sentence Transformers retrieval prompt names:
+
+- query prompt name: `query`
+- document prompt name: `document`
+
+These map to:
+
+- query: `query: `
+- document: `passage: `
+
+Example:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model hotchpotch/bekko-embedding-small-beta-unir-v8 \
+  --query-prompt-name query \
+  --document-prompt-name document
+```
+
+Truncation notes:
+
+- `hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT` documents
+  Matryoshka support.
+- Use `--embedding-variant truncate:384,256,128,64` for that model.
+- Do not assume the same truncation plan for the other Bekko checkpoints unless
+  their model cards or configs explicitly document it.
+
+## Jina Embeddings v5
+
+Applies to:
+
+- `jinaai/jina-embeddings-v5-text-nano`
+- `jinaai/jina-embeddings-v5-text-small`
+
+Use remote code, retrieval encode tasks, and the stored retrieval prompt names:
+
+- `--trust-remote-code`
+- query encode task: `retrieval`
+- document encode task: `retrieval`
+- query prompt name: `query`
+- document prompt name: `document`
+
+These prompt names map to:
+
+- query: `Query: `
+- document: `Document: `
+
+Example:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model jinaai/jina-embeddings-v5-text-small \
+  --trust-remote-code \
+  --query-encode-task retrieval \
+  --document-encode-task retrieval \
+  --query-prompt-name query \
+  --document-prompt-name document
+```
+
+Without the explicit retrieval encode task, the custom module can reject
+Sentence Transformers' default `query` task with:
+`Invalid task: query. Must be one of ['retrieval', 'text-matching',
+'clustering', 'classification']`.
+
+Truncation notes:
+
+- `jinaai/jina-embeddings-v5-text-nano` supports Matryoshka dimensions
+  512, 256, 128, 64, and 32 in addition to its 768-dimensional base output.
+- `jinaai/jina-embeddings-v5-text-small` supports Matryoshka dimensions
+  768, 512, 256, 128, 64, and 32 in addition to its 1024-dimensional base
+  output.
+- Use the matching `--embedding-variant truncate:...` list when measuring
+  dimensional trade-offs.
+
+## Jina Embeddings v3
+
+Applies to:
+
+- `jinaai/jina-embeddings-v3`
+
+The model card and Sentence Transformers config define retrieval-specific
+tasks and prompt names:
+
+- query encode task: `retrieval.query`
+- document encode task: `retrieval.passage`
+- query prompt name: `retrieval.query`
+- document prompt name: `retrieval.passage`
+- `--trust-remote-code`
+
+The prompts map to:
+
+- query: `Represent the query for retrieving evidence documents: `
+- document: `Represent the document for retrieval: `
+
+Example:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model jinaai/jina-embeddings-v3 \
+  --trust-remote-code \
+  --query-encode-task retrieval.query \
+  --document-encode-task retrieval.passage \
+  --query-prompt-name retrieval.query \
+  --document-prompt-name retrieval.passage
+```
+
+Truncation notes:
+
+- The model card documents Matryoshka dimensions
+  768, 512, 256, 128, 64, and 32 in addition to the 1024-dimensional base
+  output.
+
+Compatibility notes:
+
+- In this project environment with `transformers==5.3.0`, `torch==2.9.0`, and
+  `sentence-transformers==5.4.1`, loading failed even after adding `einops`:
+  `AttributeError: 'XLMRobertaLoRA' object has no attribute
+  'all_tied_weights_keys'`.
+- Revalidate with the model card's Transformers 4.x-era runtime before
+  treating this model as skipped.
+
+## Snowflake Arctic Embed v2
+
+Applies to:
+
+- `Snowflake/snowflake-arctic-embed-l-v2.0`
+- `Snowflake/snowflake-arctic-embed-m-v2.0`
+
+Use the stored query prompt name:
+
+- query prompt name: `query`
+- no document prompt
+
+The query prompt maps to `query: `.
+
+Example:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model Snowflake/snowflake-arctic-embed-l-v2.0 \
+  --query-prompt-name query
+```
+
+Truncation notes:
+
+- The v2 model card documents 256-dimensional MRL.
+- Use `--embedding-variant truncate:256` when measuring dimensional trade-offs.
+
+Compatibility notes:
+
+- `Snowflake/snowflake-arctic-embed-m-v2.0` requires `--trust-remote-code` in
+  this environment.
+- The medium checkpoint failed on NanoMIRACL/en with CUDA index assertions even
+  after adding `xformers` and trying `--model-max-seq-length 8192`; do not treat
+  it as verified until the runtime is revalidated.
+
+## IBM Granite Embeddings
+
+Applies to:
+
+- `ibm-granite/granite-embedding-311m-multilingual-r2`
+- `ibm-granite/granite-embedding-278m-multilingual`
+- `ibm-granite/granite-embedding-107m-multilingual`
+
+No non-empty retrieval prompts were found in the Sentence Transformers configs
+used for these checkpoints. Preserve the model default behavior unless the model
+card changes.
+
+Truncation notes:
+
+- `ibm-granite/granite-embedding-311m-multilingual-r2` documents Matryoshka
+  dimensions of 512, 384, 256, and 128 in addition to its 768-dimensional base
+  output.
+- Use `--embedding-variant truncate:512,384,256,128` for that R2 checkpoint when
+  measuring dimensional trade-offs.
+- Do not assume Matryoshka support for the older 278M and 107M multilingual
+  checkpoints.
+
+## CodeFuse F2LLM v2
+
+Applies to:
+
+- `codefuse-ai/F2LLM-v2-80M`
+- `codefuse-ai/F2LLM-v2-160M`
+- `codefuse-ai/F2LLM-v2-330M`
+
+Use the stored Sentence Transformers prompt names:
+
+- query prompt name: `query`
+- document prompt name: `document`
+
+The query prompt maps to:
+
+```text
+Instruct: Given a question, retrieve passages that can help answer the question.
+Query:
+```
+
+Example:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model codefuse-ai/F2LLM-v2-330M \
+  --query-prompt-name query \
+  --document-prompt-name document
+```
+
+No Matryoshka/truncate dimensions were found in the model cards or Sentence
+Transformers configs checked for these models.
+
+## Perplexity pplx Embed
+
+Applies to:
+
+- `perplexity-ai/pplx-embed-v1-0.6b`
+
+Use:
+
+- `--trust-remote-code`
+
+Example:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model perplexity-ai/pplx-embed-v1-0.6b \
+  --trust-remote-code
+```
+
+No model-specific prompt or Matryoshka/truncate dimensions were found in the
+files checked for this model.
+
+## Alibaba GTE Multilingual Base
+
+Applies to:
+
+- `Alibaba-NLP/gte-multilingual-base`
+
+Use:
+
+- `--trust-remote-code`
+
+Compatibility notes:
+
+- The Sentence Transformers config sets `max_seq_length` to 8192.
+- In this project environment with `transformers==5.3.0`, `torch==2.9.0`, and
+  `sentence-transformers==5.4.1`, NanoMIRACL/en failed with CUDA device-side
+  index assertions even with `--model-max-seq-length 8192`.
+- Revalidate runtime compatibility before treating this model as benchmarkable.
+
+## Lajavaness Bilingual Embeddings
+
+Applies to:
+
+- `Lajavaness/bilingual-embedding-base`
+- `Lajavaness/bilingual-embedding-small`
+
+Use:
+
+- `--trust-remote-code`
+
+Compatibility notes:
+
+- In this project environment with Transformers 5.x, loading failed because the
+  custom code imports `transformers.onnx`, which is unavailable.
+- Revalidate with a Transformers 4.x-compatible runtime before treating these
+  models as skipped.
+
+## naver SPLADE v3
+
+Applies to:
+
+- `naver/splade-v3`
+
+Use the sparse evaluator:
+
+```bash
+uv run hakari-bench evaluate sparse \
+  --model naver/splade-v3
+```
+
+No non-empty query/document prompts were found in the Sentence Transformers
+SparseEncoder config.
+
+## LightOn ColBERT Zero
+
+Applies to:
+
+- `lightonai/ColBERT-Zero`
+
+Use the late-interaction evaluator and the ColBERT-specific settings stored in
+the model config:
+
+- query prompt name: `query`
+- document prompt name: `document`
+- query prefix: `[Q] `
+- document prefix: `[D] `
+- query length: `39`
+- document length: `519`
+
+Example:
+
+```bash
+uv run --group pylate hakari-bench evaluate late-interaction \
+  --model lightonai/ColBERT-Zero \
+  --query-prompt-name query \
+  --document-prompt-name document \
+  --late-interaction-query-prefix '[Q] ' \
+  --late-interaction-document-prefix '[D] ' \
+  --late-interaction-query-length 39 \
+  --late-interaction-document-length 519
+```
+
+Compatibility notes:
+
+- This repository keeps PyLate behind the `pylate` dependency group, so use
+  `uv run --group pylate ...` for this model.
+- In this project environment, loading with PyLate succeeded but evaluation
+  failed because `pylate.models.ColBERT` lacked `_text_length`. Revalidate
+  PyLate compatibility before treating this model as benchmarkable.
+
+## Sentence Transformers Static Similarity MRL
+
+Applies to:
+
+- `sentence-transformers/static-similarity-mrl-multilingual-v1`
+
+The model card says this model is not intended for retrieval use cases, even
+though it can be evaluated as a dense Sentence Transformers model. Keep that
+limitation visible when reporting retrieval scores.
+
+Truncation notes:
+
+- The model card documents Matryoshka support.
+- Use `--embedding-variant truncate:512,256,128,64,32` when measuring
+  dimensional trade-offs.

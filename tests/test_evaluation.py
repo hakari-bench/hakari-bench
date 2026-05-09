@@ -349,6 +349,16 @@ class FakeLateInteractionModel:
         ]
 
 
+class FakeRenamedTextLengthLateInteractionModel(FakeLateInteractionModel):
+    def _input_length(self, sentence: str) -> int:
+        return len(sentence)
+
+    def encode(self, sentences: list[str], **kwargs: object) -> list[np.ndarray]:
+        text_length = getattr(self, "_text_length")
+        assert [text_length(sentence) for sentence in sentences] == [len(sentence) for sentence in sentences]
+        return super().encode(sentences, **kwargs)
+
+
 class FakeRankReranker:
     def rank(self, query: str, documents: list[str], **kwargs: object) -> list[dict[str, object]]:
         del kwargs
@@ -1565,6 +1575,28 @@ def test_evaluate_late_interaction_task_can_score_exact_maxsim() -> None:
             "retrieve_seconds": pytest.approx(result.timing["score_and_topk_seconds"]),
         },
     }
+
+
+def test_evaluate_late_interaction_task_aliases_pylate_renamed_text_length() -> None:
+    model = FakeRenamedTextLengthLateInteractionModel()
+
+    result = evaluate_late_interaction_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        exact_doc_batch_size=2,
+        exact_query_batch_size=2,
+        device="cpu",
+        aggregate_metric="ndcg@10",
+    )
+
+    assert result.metrics["ToyData_test_late_interaction_exact_maxsim_ndcg@10"] == pytest.approx(1.0)
+    assert getattr(model, "_text_length")("abc") == 3
 
 
 def test_evaluate_late_interaction_task_truncates_variants_after_single_encode() -> None:

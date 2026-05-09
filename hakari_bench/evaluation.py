@@ -672,7 +672,17 @@ def _encode_late_interaction(
         kwargs["prompt"] = prompt
     elif prompt_name is not None:
         kwargs["prompt_name"] = prompt_name
+    _ensure_late_interaction_encode_compat(model)
     return model.encode(sentences, **kwargs)
+
+
+def _ensure_late_interaction_encode_compat(model: Any) -> None:
+    if hasattr(model, "_text_length") or not hasattr(model, "_input_length"):
+        return
+    try:
+        setattr(model, "_text_length", getattr(model, "_input_length"))
+    except Exception:
+        return
 
 
 def _rank_late_interaction_exact_maxsim(
