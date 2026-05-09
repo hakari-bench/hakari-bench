@@ -271,6 +271,11 @@ def _add_output_args(parser: argparse.ArgumentParser, *, results_default: str) -
     _add_execution_args(parser)
     parser.add_argument("--results-dir", default=results_default)
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument(
+        "--save-top-rankings",
+        action="store_true",
+        help="Write optional top-100 ranking artifacts next to task result JSON files.",
+    )
     parser.add_argument("--primary-metric", default="ndcg@10")
 
 
@@ -444,6 +449,7 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
     args.truncate_sparse_docs_max_dims = getattr(args, "sparse_document_max_active_dims", None)
     args.output_dir = getattr(args, "results_dir", "output/results")
     args.override = getattr(args, "overwrite", False)
+    args.save_top_rankings = getattr(args, "save_top_rankings", False)
     args.aggregate_metric = getattr(args, "primary_metric", "ndcg@10")
     _bridge_new_bm25_args(args)
 
@@ -622,13 +628,19 @@ def _apply_runtime_params(args: argparse.Namespace, value: dict[str, Any]) -> No
 
 
 def _apply_output_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
-    _reject_unknown_keys(value, allowed={"results_dir", "candidates_dir", "overwrite"}, path="params.output")
+    _reject_unknown_keys(
+        value,
+        allowed={"results_dir", "candidates_dir", "overwrite", "save_top_rankings"},
+        path="params.output",
+    )
     if "results_dir" in value:
         args.results_dir = _string_param(value["results_dir"], "params.output.results_dir")
     if "candidates_dir" in value:
         args.candidates_dir = _string_param(value["candidates_dir"], "params.output.candidates_dir")
     if "overwrite" in value:
         args.overwrite = _bool_param(value["overwrite"], "params.output.overwrite")
+    if "save_top_rankings" in value:
+        args.save_top_rankings = _bool_param(value["save_top_rankings"], "params.output.save_top_rankings")
 
 
 def _apply_build_candidates_output_params(args: argparse.Namespace, value: dict[str, Any]) -> None:

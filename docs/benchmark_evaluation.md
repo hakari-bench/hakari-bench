@@ -248,12 +248,14 @@ Per-task result JSON should preserve enough metadata to explain the run:
 - parameter counts,
 - model maximum sequence length.
 
-Each evaluated task also writes a referenced top-100 ranking artifact under the
-task result directory at `rankings/{split_or_task}.top100.json`. The artifact
-stores query ids and ranked corpus ids for base retrieval, available embedding
-variants, BM25/reranker outputs, and candidate-rerank outputs. Rebuild the
-DuckDB warehouse after evaluation to expose these rows in `retrieval_rankings`
-for metric recomputation and rank-fusion analysis.
+Top-100 ranking artifacts are optional because they are much larger than the
+summary task JSON. Pass `--save-top-rankings` when a run needs per-query ranked
+corpus ids for metric recomputation, rank-fusion analysis, or candidate audits.
+When enabled, each evaluated task writes a referenced artifact under
+`rankings/{split_or_task}.top100.json` containing base retrieval, available
+embedding variants, BM25/reranker outputs, and candidate-rerank outputs. Rebuild
+the DuckDB warehouse after evaluation to expose these rows in
+`retrieval_rankings`.
 
 When comparing models, check that prompt and embedding-variant choices are fair
 and intentional.

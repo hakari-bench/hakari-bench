@@ -252,6 +252,7 @@ def run_or_load_task(
             "encode_devices": getattr(args, "encode_devices", None),
             "encode_chunk_size": getattr(args, "encode_chunk_size", None),
             "embedding_variants": getattr(args, "embedding_variants", []),
+            "save_top_rankings": bool(getattr(args, "save_top_rankings", False)),
             "reranker_init_kwargs": getattr(args, "cross_encoder_kwargs", {})
             if args.model_type == "reranker"
             else {},
@@ -290,12 +291,12 @@ def run_or_load_task(
         "metrics": evaluation.metrics,
         "rerank_metrics": evaluation.rerank_metrics,
     }
-    if evaluation.top_rankings:
-        ranking_path = top_rankings_path_for_task(
-            output_dir=Path(args.output_dir),
-            model_id=getattr(args, "model_id", args.model),
-            task=task,
-        )
+    ranking_path = top_rankings_path_for_task(
+        output_dir=Path(args.output_dir),
+        model_id=getattr(args, "model_id", args.model),
+        task=task,
+    )
+    if getattr(args, "save_top_rankings", False) and evaluation.top_rankings:
         artifact_payload = _top_rankings_artifact_payload(
             payload=payload,
             top_rankings=evaluation.top_rankings,
@@ -310,9 +311,20 @@ def run_or_load_task(
             }
         }
         _write_json(ranking_path, artifact_payload)
+    else:
+        _remove_optional_artifact(ranking_path)
     payload["experiment_manifest"] = build_experiment_manifest(payload)
     _write_json(output_path, payload)
     return TaskRunResult(task=task, cache_hit=False, output_path=output_path, payload=payload)
+
+
+def _remove_optional_artifact(path: Path) -> None:
+    if path.exists():
+        path.unlink()
+    try:
+        path.parent.rmdir()
+    except OSError:
+        pass
 
 
 def _top_rankings_artifact_payload(

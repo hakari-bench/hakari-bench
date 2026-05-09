@@ -105,6 +105,7 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.retrieval_score_device == "auto"
     assert args.dataset == ["hakari-bench/NanoBEIR-en"]
     assert args.results_dir == "output/results"
+    assert args.save_top_rankings is False
     assert args.embedding_variants == _default_dense_quantized_variants()
 
 
@@ -148,7 +149,7 @@ def test_parse_args_accepts_structured_params_json() -> None:
                 '"target":{"collections":["MNanoBEIR"]},'
                 '"runtime":{"batch_size":16,"dtype":"fp16",'
                 '"encode_devices":["cuda:0","cuda:1"],"encode_chunk_size":64},'
-                '"output":{"results_dir":"output/custom","overwrite":true}}'
+                '"output":{"results_dir":"output/custom","overwrite":true,"save_top_rankings":true}}'
             ),
         ]
     )
@@ -163,6 +164,13 @@ def test_parse_args_accepts_structured_params_json() -> None:
     assert args.encode_chunk_size == 64
     assert args.results_dir == "output/custom"
     assert args.overwrite is True
+    assert args.save_top_rankings is True
+
+
+def test_parse_args_accepts_save_top_rankings_flag() -> None:
+    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--save-top-rankings"])
+
+    assert args.save_top_rankings is True
 
 
 def test_parse_args_accepts_dense_encode_devices() -> None:

@@ -31,7 +31,8 @@ The input files are:
 - `output/results/{model_dir}/{huggingface_dataset_name}/{split_or_task}.json`:
   task-level benchmark results.
 - `output/results/{model_dir}/{huggingface_dataset_name}/rankings/{split_or_task}.top100.json`:
-  optional per-query top-100 ranking artifacts referenced by task JSON
+  optional per-query top-100 ranking artifacts written only when evaluation is
+  run with `--save-top-rankings` and referenced by task JSON
   `artifacts.top_rankings`.
 
 `load_results()` determines `benchmark` from `target.dataset_id` and
@@ -220,10 +221,11 @@ does not use it for ranking.
 
 ### `retrieval_rankings`
 
-`retrieval_rankings` is a normalized view of top-100 ranking artifact JSON. It
-is intended for offline metric recomputation, rank-fusion experiments, hybrid
-search simulations, and reranker candidate analysis. It is not used for
-leaderboard ranking.
+`retrieval_rankings` is a normalized view of optional top-100 ranking artifact
+JSON. It is populated only for task results that were produced with
+`--save-top-rankings`. It is intended for offline metric recomputation,
+rank-fusion experiments, hybrid search simulations, and reranker candidate
+analysis. It is not used for leaderboard ranking.
 
 | column | type | meaning |
 | --- | --- | --- |

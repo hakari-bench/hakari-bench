@@ -1974,6 +1974,7 @@ def test_run_or_load_task_writes_top100_ranking_artifact(tmp_path: Path) -> None
         embedding_variants=[],
         candidate_subset_name="bm25",
         rerank_top_n=1,
+        save_top_rankings=True,
         aggregate_metric="ndcg@10",
         override=False,
     )
@@ -2014,6 +2015,42 @@ def test_run_or_load_task_writes_top100_ranking_artifact(tmp_path: Path) -> None
         "query_id": "q1",
         "corpus_ids": ["d3"],
     } in ranking_payload["rankings"]
+
+
+def test_run_or_load_task_skips_top100_ranking_artifact_by_default(tmp_path: Path) -> None:
+    task = _toy_task()
+    stale_path = tmp_path / "hotchpotch__model" / "toy__data" / "rankings" / "test.top100.json"
+    stale_path.parent.mkdir(parents=True)
+    stale_path.write_text("stale", encoding="utf-8")
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        embedding_variants=[],
+        candidate_subset_name="bm25",
+        rerank_top_n=1,
+        aggregate_metric="ndcg@10",
+        override=True,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"id": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    assert "artifacts" not in result.payload
+    assert not stale_path.exists()
 
 
 def test_run_or_load_task_records_score_device(tmp_path: Path) -> None:
