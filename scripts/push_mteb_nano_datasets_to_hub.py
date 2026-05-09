@@ -194,6 +194,7 @@ def _write_hub_readme(
         metadata = json.loads(components["metadata"].read_text(encoding="utf-8"))
         source_dataset_id = str(metadata.get("source_dataset_id") or "")
         source_task = str(metadata.get("source_task") or split)
+        source_eval_split = _source_eval_split_label(metadata)
         queries = int(metadata.get("queries") or 0)
         corpus = int(metadata.get("corpus") or 0)
         qrels = int(metadata.get("qrels") or 0)
@@ -201,7 +202,7 @@ def _write_hub_readme(
         if source_dataset_id:
             source_links.append(source_link)
         rows.append(
-            f"| {hub_splits[split]} | {split} | {source_task} | {source_link} | {queries} | {corpus} | {qrels} |"
+            f"| {hub_splits[split]} | {split} | {source_task} | {source_link} | {source_eval_split} | {queries} | {corpus} | {qrels} |"
         )
 
     configs = []
@@ -235,8 +236,8 @@ def _write_hub_readme(
         + "the original Nano split names with underscores; the original split names are listed below and stored "
         + "in `metadata/{hub_split}.json`.\n\n"
         + "## Split Mapping\n\n"
-        + "| Hub split | Original Nano split | Source task | Source dataset | Queries | Corpus | Qrels |\n"
-        + "|---|---|---|---|---:|---:|---:|\n"
+        + "| Hub split | Original Nano split | Source task | Source dataset | Source eval split | Queries | Corpus | Qrels |\n"
+        + "|---|---|---|---|---|---:|---:|---:|\n"
         + split_rows
         + "\n\n"
         + "## License\n\n"
@@ -250,6 +251,13 @@ def _hf_dataset_link(dataset_id: str) -> str:
     if not dataset_id:
         return "unknown"
     return f"[{dataset_id}](https://huggingface.co/datasets/{dataset_id})"
+
+
+def _source_eval_split_label(metadata: dict[str, object]) -> str:
+    eval_splits = metadata.get("source_eval_splits")
+    if isinstance(eval_splits, list) and eval_splits:
+        return ", ".join(str(split) for split in eval_splits)
+    return str(metadata.get("source_eval_split") or "")
 
 
 if __name__ == "__main__":

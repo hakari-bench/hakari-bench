@@ -58,6 +58,8 @@ ADDON_GROUPS = {
     "NanoVNMTEB",
 }
 
+LEMBPASSKEY_TASK = "LEMBPasskeyRetrieval"
+
 
 @dataclass(frozen=True)
 class PlannedTask:
@@ -93,7 +95,7 @@ def main() -> None:
     args = parse_args()
     selected_groups = _parse_csv(args.groups)
     selected_splits = _parse_csv(args.splits)
-    plans = build_plan(config_root=args.config_root)
+    plans = build_plan(config_root=args.config_root, selected_groups=selected_groups)
     plans = [
         plan
         for plan in plans
@@ -140,7 +142,7 @@ def main() -> None:
     write_group_readmes_and_audits(output_root=args.output_root, plans=plans)
 
 
-def build_plan(*, config_root: Path) -> list[PlannedTask]:
+def build_plan(*, config_root: Path, selected_groups: set[str] | None = None) -> list[PlannedTask]:
     mteb = _mteb_module()
     plans: list[PlannedTask] = []
     for benchmark in mteb.get_benchmarks():
@@ -152,30 +154,31 @@ def build_plan(*, config_root: Path) -> list[PlannedTask]:
                 continue
             plans.extend(_official_plans(group=group, benchmark_name=str(benchmark.name), task=task))
 
-    legacy_misc = build_legacy_plan(
-        config_root=config_root,
-        selected_datasets={"NanoMTEB-Misc"},
-        selected_splits=set(),
-    )
-    for legacy in legacy_misc:
-        group = _misc_group(legacy.split_name)
-        if group is None:
-            continue
-        task = mteb.get_tasks(tasks=[legacy.task_name])[0]
-        subset = _source_config_name(str(task.metadata.dataset.get("path") or ""))
-        split = _misc_split_name(legacy.split_name)
-        plans.append(
-            PlannedTask(
-                group=group,
-                subset=subset,
-                split=split,
-                task_name=str(task.metadata.name),
-                source_subsets=legacy.source_subsets,
-                benchmark_name="NanoMTEB-Misc regrouped source",
-                status="addon-regrouped",
-                note=_misc_note(legacy.split_name),
-            )
+    if selected_groups is None or selected_groups & ADDON_GROUPS:
+        legacy_misc = build_legacy_plan(
+            config_root=config_root,
+            selected_datasets={"NanoMTEB-Misc"},
+            selected_splits=set(),
         )
+        for legacy in legacy_misc:
+            group = _misc_group(legacy.split_name)
+            if group is None:
+                continue
+            task = mteb.get_tasks(tasks=[legacy.task_name])[0]
+            subset = _source_config_name(str(task.metadata.dataset.get("path") or ""))
+            split = _misc_split_name(legacy.split_name)
+            plans.append(
+                PlannedTask(
+                    group=group,
+                    subset=subset,
+                    split=split,
+                    task_name=str(task.metadata.name),
+                    source_subsets=legacy.source_subsets,
+                    benchmark_name="NanoMTEB-Misc regrouped source",
+                    status="addon-regrouped",
+                    note=_misc_note(legacy.split_name),
+                )
+            )
     return _dedupe_plans(plans)
 
 
@@ -275,19 +278,52 @@ def build_task(
 ) -> None:
     mteb = _mteb_module()
     task = mteb.get_tasks(tasks=[plan.task_name])[0]
-    eval_split = _eval_split(task)
-    source = _load_mteb_source(
-        task=task,
-        eval_split=eval_split,
-        split_name=plan.split,
-        source_subsets=plan.source_subsets,
-    )
+    if _uses_combined_lembpasskey_splits(plan=plan, task=task):
+        source = _load_stratified_lembpasskey_source(task=task, plan=plan)
+        eval_split = str(source["source_eval_split"])
+        effective_query_limit = max(query_limit, len(source["query_rows"]))
+    else:
+        eval_split = _eval_split(task)
+        source = _load_mteb_source(
+            task=task,
+            eval_split=eval_split,
+            split_name=plan.split,
+            source_subsets=plan.source_subsets,
+        )
+        effective_query_limit = query_limit
     metadata = _task_metadata(
         task=task,
         plan=plan,
         source_subset=str(source["source_subset"]),
         eval_split=eval_split,
     )
+    if _uses_combined_lembpasskey_splits(plan=plan, task=task):
+        eval_splits = [str(split) for split in source["source_eval_splits"]]
+        metadata.update(
+            {
+                "description": (
+                    f"{metadata['description']} This Nano split samples one positive pair per unique "
+                    f"query text from all official {LEMBPASSKEY_TASK} eval splits "
+                    f"({', '.join(eval_splits)}) instead of using only the shortest `test_256` split. "
+                    "Unselected positive documents for the same query text are excluded from the corpus "
+                    "to avoid false negatives."
+                ),
+                "source_eval_splits": eval_splits,
+                "source_split_policy": (
+                    f"a stratified policy over MTEB eval splits `{', '.join(eval_splits)}` where "
+                    "for each duplicate query text, exactly one source positive pair is selected, balanced "
+                    "across available context lengths when possible. LEMBPasskey documents whose source ids "
+                    "share the selected query identity are excluded from the corpus unless they are the selected "
+                    "qrels-positive document, because those documents answer the same passkey query and would "
+                    "otherwise become false negatives"
+                ),
+                "source_query_selection_policy": str(source["source_query_selection_policy"]),
+                "source_eval_split_counts": dict(source["source_eval_split_counts"]),
+                "source_excluded_positive_docs": int(source["source_excluded_positive_docs"]),
+                "source_excluded_positive_like_docs": int(source["source_excluded_positive_like_docs"]),
+                "source_positive_like_exclusion_policy": str(source["source_positive_like_exclusion_policy"]),
+            }
+        )
     build_nano_dataset_from_rows(
         output_dir=output_root / plan.group / plan.subset,
         dataset_name=plan.group,
@@ -296,11 +332,120 @@ def build_task(
         corpus_rows=source["corpus_rows"],
         query_rows=source["query_rows"],
         qrels_rows=source["qrels_rows"],
-        query_limit=query_limit,
+        query_limit=effective_query_limit,
         doc_limit=doc_limit,
         bm25_config=bm25_config,
         metadata=metadata,
     )
+
+
+def _uses_combined_lembpasskey_splits(*, plan: PlannedTask, task: Any) -> bool:
+    return plan.group == "NanoMMTEB-v2" and str(task.metadata.name) == LEMBPASSKEY_TASK
+
+
+def _load_stratified_lembpasskey_source(*, task: Any, plan: PlannedTask) -> dict[str, Any]:
+    eval_splits = [str(split) for split in task.metadata.eval_splits]
+    corpus_by_id: dict[str, dict[str, Any]] = {}
+    records_by_query_text: dict[str, list[dict[str, Any]]] = {}
+    corpus_identity_by_id: dict[str, str] = {}
+    source_subsets: set[str] = set()
+    for eval_split in eval_splits:
+        source = _load_mteb_source(
+            task=task,
+            eval_split=eval_split,
+            split_name=plan.split,
+            source_subsets=plan.source_subsets,
+        )
+        source_subsets.add(str(source["source_subset"]))
+        split_corpus_rows = cast(list[dict[str, Any]], list(source["corpus_rows"]))
+        split_query_rows = cast(list[dict[str, Any]], list(source["query_rows"]))
+        split_qrels_rows = cast(list[dict[str, Any]], list(source["qrels_rows"]))
+        for row in split_corpus_rows:
+            corpus_id = _row_id(row)
+            corpus_by_id[corpus_id] = row
+            identity = _lembpasskey_identity(corpus_id)
+            if identity is not None:
+                corpus_identity_by_id[corpus_id] = identity
+        queries_by_id = {_row_id(row): row for row in split_query_rows}
+        for qrel in split_qrels_rows:
+            score = float(qrel.get("score", 1) or 0)
+            if score <= 0:
+                continue
+            query_id = str(qrel["query-id"])
+            corpus_id = str(qrel["corpus-id"])
+            identity = _lembpasskey_identity(query_id)
+            if identity is None:
+                identity = _lembpasskey_identity(corpus_id)
+            if identity is None:
+                raise ValueError(f"Could not derive LEMBPasskey identity from {query_id=} {corpus_id=}.")
+            query_row = queries_by_id[query_id]
+            query_text = str(query_row.get("text") or query_row.get("query") or query_row.get("question") or "")
+            records_by_query_text.setdefault(query_text, []).append(
+                {
+                    "eval_split": eval_split,
+                    "query": query_row,
+                    "qrel": {"query-id": query_id, "corpus-id": corpus_id, "score": score},
+                    "corpus_id": corpus_id,
+                    "identity": identity,
+                }
+            )
+
+    split_order = {split: index for index, split in enumerate(eval_splits)}
+    selected_records: list[dict[str, Any]] = []
+    selected_counts = {split: 0 for split in eval_splits}
+    excluded_qrels_positive_doc_ids: set[str] = set()
+    selected_doc_by_identity: dict[str, str] = {}
+    for query_text in sorted(records_by_query_text):
+        records = records_by_query_text[query_text]
+        selected = min(records, key=lambda record: (selected_counts[str(record["eval_split"])], split_order[str(record["eval_split"])]))
+        selected_records.append(selected)
+        selected_counts[str(selected["eval_split"])] += 1
+        selected_doc_id = str(selected["corpus_id"])
+        identity = str(selected["identity"])
+        selected_doc_by_identity[identity] = selected_doc_id
+        excluded_qrels_positive_doc_ids.update(str(record["corpus_id"]) for record in records if str(record["corpus_id"]) != selected_doc_id)
+
+    selected_doc_ids = set(selected_doc_by_identity.values())
+    excluded_qrels_positive_doc_ids.difference_update(selected_doc_ids)
+    excluded_positive_like_doc_ids = {
+        corpus_id
+        for corpus_id, identity in corpus_identity_by_id.items()
+        if identity in selected_doc_by_identity and corpus_id != selected_doc_by_identity[identity]
+    }
+    excluded_positive_like_doc_ids.difference_update(selected_doc_ids)
+    excluded_doc_ids = excluded_qrels_positive_doc_ids | excluded_positive_like_doc_ids
+    return {
+        "source_subset": "+".join(sorted(source_subsets)),
+        "source_eval_split": "+".join(eval_splits),
+        "source_eval_splits": eval_splits,
+        "source_eval_split_counts": selected_counts,
+        "source_query_selection_policy": (
+            "one positive pair per unique query text, greedily balanced across available LEMBPasskeyRetrieval context lengths"
+        ),
+        "source_excluded_positive_docs": len(excluded_qrels_positive_doc_ids),
+        "source_excluded_positive_like_docs": len(excluded_positive_like_doc_ids),
+        "source_positive_like_exclusion_policy": (
+            "for every selected LEMBPasskey identity, all corpus documents with the same ctx index are excluded "
+            "unless they are the selected qrels-positive document"
+        ),
+        "corpus_rows": [row for corpus_id, row in corpus_by_id.items() if corpus_id not in excluded_doc_ids],
+        "query_rows": [cast(dict[str, Any], record["query"]) for record in selected_records],
+        "qrels_rows": [cast(dict[str, Any], record["qrel"]) for record in selected_records],
+    }
+
+
+def _row_id(row: dict[str, Any]) -> str:
+    value = row.get("_id", row.get("id"))
+    if value is None:
+        raise ValueError(f"row is missing _id/id: {row}")
+    return str(value)
+
+
+def _lembpasskey_identity(value: str) -> str | None:
+    match = re.search(r"(?:^|::)ctx\d+_(?:query|doc)(\d+)$", value)
+    if match is None:
+        return None
+    return match.group(1)
 
 
 def _task_metadata(*, task: Any, plan: PlannedTask, source_subset: str, eval_split: str) -> dict[str, Any]:
@@ -408,6 +553,28 @@ def _readme_metadata_for_plan(plan: PlannedTask) -> dict[str, Any]:
     mteb = _mteb_module()
     task = mteb.get_tasks(tasks=[plan.task_name])[0]
     source_subset = plan.source_subsets[0] if plan.source_subsets else "combined"
+    if _uses_combined_lembpasskey_splits(plan=plan, task=task):
+        eval_splits = [str(split) for split in task.metadata.eval_splits]
+        metadata = _task_metadata(
+            task=task,
+            plan=plan,
+            source_subset=source_subset,
+            eval_split="+".join(eval_splits),
+        )
+        metadata.update(
+            {
+                "source_eval_splits": eval_splits,
+                "source_split_policy": (
+                    f"a stratified policy over MTEB eval splits `{', '.join(eval_splits)}` where "
+                    "for each duplicate query text, exactly one source positive pair is selected, balanced "
+                    "across available context lengths when possible. LEMBPasskey documents whose source ids "
+                    "share the selected query identity are excluded from the corpus unless they are the selected "
+                    "qrels-positive document, because those documents answer the same passkey query and would "
+                    "otherwise become false negatives"
+                ),
+            }
+        )
+        return metadata
     return _task_metadata(task=task, plan=plan, source_subset=source_subset, eval_split=_eval_split(task))
 
 

@@ -456,11 +456,19 @@ def build_nano_dataset_from_rows(
     }
     if metadata is not None:
         for key in (
+            "description",
             "source_task",
             "source_dataset_id",
             "source_dataset_revision",
             "source_dataset_subset",
             "source_eval_split",
+            "source_eval_splits",
+            "source_split_policy",
+            "source_query_selection_policy",
+            "source_eval_split_counts",
+            "source_excluded_positive_docs",
+            "source_excluded_positive_like_docs",
+            "source_positive_like_exclusion_policy",
         ):
             if key in metadata:
                 split_metadata[key] = metadata[key]

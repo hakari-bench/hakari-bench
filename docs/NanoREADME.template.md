@@ -79,7 +79,7 @@ revise this section before publishing the README.
 
 1. Use {{SOURCE_BENCHMARK_NAME}} as the upstream benchmark or dataset family.
 2. Load source datasets from {{SOURCE_DATASET_LOCATION}}.
-3. Use {{SOURCE_SPLIT_POLICY}} as the source evaluation split policy.
+3. Source evaluation split policy: {{SOURCE_SPLIT_POLICY}}.
 4. Create one Nano split for each selected source retrieval task.
 5. Keep up to {{MAX_QUERIES_PER_SPLIT}} eligible queries per Nano split.
 6. Treat source relevance rows with `score > 0` as qrels-positive documents.

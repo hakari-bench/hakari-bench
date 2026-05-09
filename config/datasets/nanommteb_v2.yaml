@@ -458,12 +458,46 @@ task_metadata:
     category: natural_language
     short_description: LEMBPasskeyRetrieval retrieval split.
     description: 'passkey subset of dwzhu/LongEmbed dataset. Source dataset: mteb/LEMBPasskeyRetrieval;
-      source subset: default; eval split: test_256.'
+      source subset: default; eval splits: test_256, test_512, test_1024, test_2048,
+      test_4096, test_8192, test_16384, test_32768. This Nano split samples
+      one positive pair per unique query text and excludes all other source documents
+      with the same LEMBPasskey identity from the corpus to avoid false negatives.'
     source_task: LEMBPasskeyRetrieval
     source_dataset_id: mteb/LEMBPasskeyRetrieval
     source_dataset_revision: 86ac5a6437198a94ecd666440c78b3e78f258274
     source_dataset_subset: default
-    source_eval_split: test_256
+    source_eval_split: test_256+test_512+test_1024+test_2048+test_4096+test_8192+test_16384+test_32768
+    source_eval_splits:
+    - test_256
+    - test_512
+    - test_1024
+    - test_2048
+    - test_4096
+    - test_8192
+    - test_16384
+    - test_32768
+    source_split_policy: a stratified policy over all official LEMBPasskeyRetrieval
+      eval splits where for each duplicate query text, exactly one source positive
+      pair is selected, balanced across available context lengths when possible.
+      Any source document whose ctx id shares the selected query identity is excluded
+      from the corpus unless it is the selected qrels-positive document, because
+      it answers the same passkey query and would otherwise become a false negative.
+    source_query_selection_policy: one positive pair per unique query text, greedily
+      balanced across available LEMBPasskeyRetrieval context lengths
+    source_eval_split_counts:
+      test_256: 13
+      test_512: 12
+      test_1024: 13
+      test_2048: 13
+      test_4096: 13
+      test_8192: 12
+      test_16384: 12
+      test_32768: 12
+    source_excluded_positive_docs: 300
+    source_excluded_positive_like_docs: 700
+    source_positive_like_exclusion_policy: for every selected LEMBPasskey identity,
+      all corpus documents with the same ctx index are excluded unless they are the
+      selected qrels-positive document
     source_nano_split: lembpasskey
     hub_split: lembpasskey
     languages:
@@ -482,23 +516,23 @@ task_metadata:
       is_paper: false
       source_confidence: probably_correct
     query_text_stats:
-      count: 50
-      min_chars: 35
+      count: 100
+      min_chars: 33
       max_chars: 45
-      mean_chars: 38.1
+      mean_chars: 37.8
       median_chars: 38.0
     document_text_stats:
       count: 100
-      min_chars: 866
-      max_chars: 890
-      mean_chars: 875.24
-      median_chars: 876.0
+      min_chars: 868
+      max_chars: 116383
+      mean_chars: 28060.87
+      median_chars: 7244.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
       main_language_percent: 10.0
       query:
-        sample_count: 50
+        sample_count: 100
         languages:
           en: 100.0
       document:
