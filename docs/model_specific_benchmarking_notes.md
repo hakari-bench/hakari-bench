@@ -4,6 +4,59 @@ When measuring specific models, follow the notes in this document. These notes
 override generic benchmarking defaults when they are more specific, because some
 models require exact prompts or runtime choices for comparable retrieval scores.
 
+## NanoMIRACL/en Runtime Matrix
+
+On 2026-05-09, these models were revalidated on NanoMIRACL/en with a separate
+output root for each runtime:
+
+- logs: `tmp/runtime_matrix_nanomiracl_en_20260509_1935/`
+- results: `output/runtime_matrix_nanomiracl_en_20260509_1935/`
+
+The runtime order was:
+
+1. Transformers 4.x + Flash Attention 2 (`tf4-fa2`)
+2. Transformers 5.x + SDPA (`tf5-sdpa`)
+3. Transformers 4.x + SDPA (`tf4-sdpa`)
+4. Transformers 4.x default attention (`tf4-default`)
+
+Use the first successful runtime below unless a later note for a specific model
+has been superseded by a newer validation.
+
+| model | method | first successful runtime |
+| --- | --- | --- |
+| `BAAI/bge-m3` | dense | `tf5-sdpa` |
+| `Qwen/Qwen3-Embedding-0.6B` | dense | `tf4-fa2` |
+| `google/embeddinggemma-300m` | dense | `tf4-fa2` |
+| `hotchpotch/bekko-embedding-pico-beta-unir-v7` | dense | `tf4-fa2` |
+| `hotchpotch/bekko-embedding-small-beta-unir-v8` | dense | `tf4-fa2` |
+| `intfloat/multilingual-e5-large` | dense | `tf5-sdpa` |
+| `intfloat/multilingual-e5-small` | dense | `tf5-sdpa` |
+| `jinaai/jina-embeddings-v5-text-nano` | dense | `tf4-fa2` |
+| `jinaai/jina-embeddings-v5-text-small` | dense | `tf4-fa2` |
+| `cl-nagoya/ruri-v3-30m` | dense | `tf4-fa2` |
+| `cl-nagoya/ruri-v3-310m` | dense | `tf4-fa2` |
+| `perplexity-ai/pplx-embed-v1-0.6b` | dense | `tf4-fa2` |
+| `ibm-granite/granite-embedding-311m-multilingual-r2` | dense | `tf4-fa2` |
+| `Snowflake/snowflake-arctic-embed-l-v2.0` | dense | `tf5-sdpa` |
+| `Alibaba-NLP/gte-multilingual-base` | dense | `tf4-sdpa` |
+| `codefuse-ai/F2LLM-v2-330M` | dense | `tf4-fa2` |
+| `jinaai/jina-embeddings-v3` | dense | `tf4-default` |
+| `Snowflake/snowflake-arctic-embed-m-v2.0` | dense | failed in all four requested runtimes |
+| `HIT-TMG/KaLM-embedding-multilingual-mini-v1` | dense | `tf4-fa2` |
+| `codefuse-ai/F2LLM-v2-160M` | dense | `tf4-fa2` |
+| `Lajavaness/bilingual-embedding-base` | dense | `tf4-default` |
+| `intfloat/multilingual-e5-base` | dense | `tf5-sdpa` |
+| `ibm-granite/granite-embedding-278m-multilingual` | dense | `tf5-sdpa` |
+| `codefuse-ai/F2LLM-v2-80M` | dense | `tf4-fa2` |
+| `Lajavaness/bilingual-embedding-small` | dense | `tf4-default` |
+| `ibm-granite/granite-embedding-107m-multilingual` | dense | `tf5-sdpa` |
+| `sentence-transformers/static-similarity-mrl-multilingual-v1` | dense | `tf4-fa2` |
+| `sentence-transformers/all-MiniLM-L6-v2` | dense | `tf5-sdpa` |
+| `naver/splade-v3` | sparse | `tf5-sdpa` |
+| `lightonai/ColBERT-Zero` | late-interaction | `tf5-sdpa` with `uv run --group pylate` |
+| `hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT` | dense | `tf4-fa2` |
+| `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` | dense | `tf5-sdpa` |
+
 ## cl-nagoya/ruri-v3
 
 Applies to:
@@ -282,12 +335,10 @@ Truncation notes:
 
 Compatibility notes:
 
-- In this project environment with `transformers==5.3.0`, `torch==2.9.0`, and
-  `sentence-transformers==5.4.1`, loading failed even after adding `einops`:
-  `AttributeError: 'XLMRobertaLoRA' object has no attribute
-  'all_tied_weights_keys'`.
-- Revalidate with the model card's Transformers 4.x-era runtime before
-  treating this model as skipped.
+- On NanoMIRACL/en, this model succeeded with Transformers 4.x default
+  attention after failing with `tf4-fa2`, `tf5-sdpa`, and `tf4-sdpa`.
+- Do not pass an attention override for this model unless that runtime has been
+  revalidated.
 
 ## Snowflake Arctic Embed v2
 
@@ -320,9 +371,15 @@ Compatibility notes:
 
 - `Snowflake/snowflake-arctic-embed-m-v2.0` requires `--trust-remote-code` in
   this environment.
-- The medium checkpoint failed on NanoMIRACL/en with CUDA index assertions even
-  after adding `xformers` and trying `--model-max-seq-length 8192`; do not treat
-  it as verified until the runtime is revalidated.
+- `Snowflake/snowflake-arctic-embed-l-v2.0` succeeded on NanoMIRACL/en with
+  `tf5-sdpa` in the 2026-05-09 runtime matrix.
+- `Snowflake/snowflake-arctic-embed-m-v2.0` failed in all four requested
+  runtimes (`tf4-fa2`, `tf5-sdpa`, `tf4-sdpa`, `tf4-default`). The immediate
+  failure was `please install xformers` after the remote code forced eager
+  attention because `use_memory_efficient_attention=true`.
+- A prior same-day check with `xformers` installed reached CUDA index
+  assertions even with `--model-max-seq-length 8192`; do not treat the medium
+  checkpoint as verified until a working runtime is revalidated.
 
 ## IBM Granite Embeddings
 
@@ -412,10 +469,8 @@ Use:
 Compatibility notes:
 
 - The Sentence Transformers config sets `max_seq_length` to 8192.
-- In this project environment with `transformers==5.3.0`, `torch==2.9.0`, and
-  `sentence-transformers==5.4.1`, NanoMIRACL/en failed with CUDA device-side
-  index assertions even with `--model-max-seq-length 8192`.
-- Revalidate runtime compatibility before treating this model as benchmarkable.
+- On NanoMIRACL/en, this model succeeded with `tf4-sdpa` after failing with
+  `tf4-fa2` and `tf5-sdpa`.
 
 ## Lajavaness Bilingual Embeddings
 
@@ -432,8 +487,10 @@ Compatibility notes:
 
 - In this project environment with Transformers 5.x, loading failed because the
   custom code imports `transformers.onnx`, which is unavailable.
-- Revalidate with a Transformers 4.x-compatible runtime before treating these
-  models as skipped.
+- On NanoMIRACL/en, both checkpoints succeeded with Transformers 4.x default
+  attention after failing with `tf4-fa2`, `tf5-sdpa`, and `tf4-sdpa`.
+- Do not pass an attention override for these models unless that runtime has
+  been revalidated.
 
 ## naver SPLADE v3
 
@@ -484,9 +541,11 @@ Compatibility notes:
 
 - This repository keeps PyLate behind the `pylate` dependency group, so use
   `uv run --group pylate ...` for this model.
-- In this project environment, loading with PyLate succeeded but evaluation
-  failed because `pylate.models.ColBERT` lacked `_text_length`. Revalidate
-  PyLate compatibility before treating this model as benchmarkable.
+- PyLate currently requires Transformers 5.x in this project, so the
+  Transformers 4.x runtime matrix entries were skipped for this model.
+- The local evaluator aliases PyLate's renamed `_input_length` helper to
+  `_text_length` before encoding. With that compatibility shim, NanoMIRACL/en
+  succeeded with `tf5-sdpa`.
 
 ## Sentence Transformers Static Similarity MRL
 
