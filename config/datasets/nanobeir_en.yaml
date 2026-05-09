@@ -5,6 +5,20 @@ corpus_config: corpus
 queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
+splits:
+- NanoClimateFEVER
+- NanoDBPedia
+- NanoFEVER
+- NanoFiQA2018
+- NanoHotpotQA
+- NanoMSMARCO
+- NanoNFCorpus
+- NanoNQ
+- NanoQuoraRetrieval
+- NanoSCIDOCS
+- NanoArguAna
+- NanoSciFact
+- NanoTouche2020
 metadata:
   language: en
   category: natural_language

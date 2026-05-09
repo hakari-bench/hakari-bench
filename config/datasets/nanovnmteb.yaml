@@ -6,23 +6,39 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoCQADupstackAndroidVN
-- NanoCQADupstackGisVN
-- NanoCQADupstackMathematicaVN
-- NanoCQADupstackPhysicsVN
-- NanoCQADupstackProgrammersVN
-- NanoCQADupstackStatsVN
-- NanoCQADupstackTexVN
-- NanoCQADupstackWebmastersVN
-- NanoCQADupstackWordpressVN
-- NanoFEVERVN
-- NanoNQVN
-- NanoQuoraVN
+- argu_ana_vn
+- climate_fever_vn
+- cqadupstack_android_vn
+- cqadupstack_gis_vn
+- cqadupstack_mathematica_vn
+- cqadupstack_physics_vn
+- cqadupstack_programmers_vn
+- cqadupstack_stats_vn
+- cqadupstack_tex_vn
+- cqadupstack_unix_vn
+- cqadupstack_webmasters_vn
+- cqadupstack_wordpress_vn
+- dbpedia_vn
+- fever_vn
+- fi_qa2018_vn
+- hotpot_qa_vn
+- msmarco_vn
+- nano_fever
+- nano_nq
+- nfcorpus_vn
+- nq_vn
+- quora_vn
+- sci_fact_vn
+- scidocs_vn
+- touche2020_vn
+- treccovid_vn
 metadata:
-  language: vi
+  language: multilingual
   category: natural_language
-  short_description: Vietnamese Nano retrieval benchmark based on VN-MTEB retrieval tasks.
-  description: NanoVNMTEB is a compact Vietnamese retrieval benchmark assembled from VN-MTEB full retrieval tasks. Nested task-level Nano variants are placed in NanoMTEB-Misc.
+  short_description: Vietnamese Nano retrieval benchmark based on VN-MTEB retrieval
+    tasks.
+  description: NanoVNMTEB is a compact Vietnamese retrieval benchmark assembled from
+    VN-MTEB full retrieval tasks. Nested task-level Nano variants are placed in NanoMTEB-Misc.
   citation_keys:
   - muennighoff2023mteb
   - pham-etal-2026-vn
@@ -38,8 +54,7 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2210.07316
-  - &id001
-    title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
     authors:
     - Loc Pham
     - Tung Luu
@@ -51,31 +66,179 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2026.findings-eacl.86
-  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n  doi = {10.48550/arXiv.2210.07316}\n}\n@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n"
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
+    \ and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n\
+    \  doi = {10.48550/arXiv.2210.07316}\n}\n@inproceedings{pham-etal-2026-vn,\n \
+    \ title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author\
+    \ = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n\
+    \  booktitle = {Findings of the Association for Computational Linguistics: EACL\
+    \ 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n\
+    \  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n"
 task_metadata:
-  NanoCQADupstackAndroidVN:
+  argu_ana_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese duplicate question retrieval for Android Q&A.
-    description: A compact VN-MTEB translation of the CQADupStack Android duplicate-question retrieval task.
-    citation_keys: &id002
-    - pham-etal-2026-vn
-    - hoogeveen2015cqadupstack
-    references: &id003
-    - *id001
-    - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
-      authors:
-      - Doris Hoogeveen
-      - Karin M. Verspoor
-      - Timothy Baldwin
-      year: 2015
-      url: https://doi.org/10.1145/2838931.2838934
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1145/2838931.2838934
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n}\n"
+    short_description: ArguAna-VN retrieval split.
+    description: 'A translated dataset from NFCorpus: A Full-Text Learning to Rank
+      Dataset for Medical Information Retrieval The process of creating the VN-MTEB
+      (Vietnamese Massive Text Embedding Benchmark) from English samples involves
+      a new automated system: - The system uses large language models (LLMs), specifically
+      Coherence''s Aya model, for translation. - Applies advanced embedding models
+      to filter the translations. - Use LLM-as-a-judge to scoring the quality of the
+      samples base on multiple criteria. Source dataset: GreenNode/arguana-vn; source
+      subset: default; eval split: test.'
+    source_task: ArguAna-VN
+    source_dataset_id: GreenNode/arguana-vn
+    source_dataset_revision: 2a5133a05d7430e6f353497b1624a6e73148105b
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: argu-ana-vn
+    hub_split: argu_ana_vn
     languages:
     - vi
+    references:
+    - title: ArguAna-VN source reference
+      url: http://argumentation.bplaced.net/arguana/data
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/arguana-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/arguana-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 199
+      min_chars: 370
+      max_chars: 5192
+      mean_chars: 1183.8793969849246
+      median_chars: 999.0
+    document_text_stats:
+      count: 8674
+      min_chars: 56
+      max_chars: 9177
+      mean_chars: 1080.336407655061
+      median_chars: 964.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 199
+        languages:
+          vi: 100.0
+      document:
+        sample_count: 8674
+        languages:
+          vi: 99.908
+  climate_fever_vn:
+    language: vi
+    category: natural_language
+    short_description: ClimateFEVER-VN retrieval split.
+    description: 'A translated dataset from CLIMATE-FEVER is a dataset adopting the
+      FEVER methodology that consists of 1,535 real-world claims regarding climate-change.
+      The process of creating the VN-MTEB (Vietnamese Massive Text Embedding Benchmark)
+      from English samples involves a new automated system: - The system uses large
+      language models (LLMs), specifically Coherence''s Aya model, for translation.
+      - Applies advanced embedding models to filter the translations. - Use LLM-as-a-judge
+      to scoring the quality of the samples base on multiple criteria. Source dataset:
+      GreenNode/climate-fever-vn; source subset: default; eval split: test.'
+    source_task: ClimateFEVER-VN
+    source_dataset_id: GreenNode/climate-fever-vn
+    source_dataset_revision: 42328bf787e17b1ad1a88be4f5e87ea9fb668511
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: climate-fever-vn
+    hub_split: climate_fever_vn
+    languages:
+    - vi
+    references:
+    - title: ClimateFEVER-VN source reference
+      url: https://www.sustainablefinance.uzh.ch/en/research/climate-fever.html
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/climate-fever-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/climate-fever-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 44
+      max_chars: 329
+      mean_chars: 129.965
+      median_chars: 119.0
+    document_text_stats:
+      count: 10000
+      min_chars: 13
+      max_chars: 5734
+      mean_chars: 407.0829
+      median_chars: 279.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.0
+          en: 0.86
+  cqadupstack_android_vn:
+    language: vi
+    category: natural_language
+    short_description: CQADupstackAndroid-VN retrieval split.
+    description: 'A translated dataset from CQADupStack: A Benchmark Data Set for
+      Community Question-Answering Research The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/cqadupstack-android-vn; source
+      subset: default; eval split: test.'
+    source_task: CQADupstackAndroid-VN
+    source_dataset_id: GreenNode/cqadupstack-android-vn
+    source_dataset_revision: 4a022e7213ccc05ee970a176abd0293b3a0a2da0
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-android-vn
+    hub_split: cqadupstack_android_vn
+    languages:
+    - vi
+    references:
+    - title: CQADupstackAndroid-VN source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/cqadupstack-android-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 129
+      mean_chars: 55.64
+      median_chars: 53.0
+    document_text_stats:
+      count: 10000
+      min_chars: 47
+      max_chars: 7664
+      mean_chars: 604.7554
+      median_chars: 482.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -89,16 +252,52 @@ task_metadata:
         sample_count: 10000
         languages:
           vi: 99.86
-  NanoCQADupstackGisVN:
+  cqadupstack_gis_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese duplicate question retrieval for GIS Q&A.
-    description: A compact VN-MTEB translation of the CQADupStack GIS duplicate-question retrieval task.
-    citation_keys: *id002
-    references: *id003
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n}\n"
+    short_description: CQADupstackGis-VN retrieval split.
+    description: 'A translated dataset from CQADupStack: A Benchmark Data Set for
+      Community Question-Answering Research The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/cqadupstack-gis-vn; source subset:
+      default; eval split: test.'
+    source_task: CQADupstackGis-VN
+    source_dataset_id: GreenNode/cqadupstack-gis-vn
+    source_dataset_revision: 755156d548a8288efdb29b80bad302750ab33977
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-gis-vn
+    hub_split: cqadupstack_gis_vn
     languages:
     - vi
+    references:
+    - title: CQADupstackGis-VN source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/cqadupstack-gis-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-gis-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 157
+      mean_chars: 59.155
+      median_chars: 54.0
+    document_text_stats:
+      count: 10000
+      min_chars: 47
+      max_chars: 12244
+      mean_chars: 929.2255
+      median_chars: 656.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -112,17 +311,53 @@ task_metadata:
       document:
         sample_count: 10000
         languages:
-          vi: 99.81
-  NanoCQADupstackMathematicaVN:
+          vi: 99.8
+  cqadupstack_mathematica_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese duplicate question retrieval for Mathematica Q&A.
-    description: A compact VN-MTEB translation of the CQADupStack Mathematica duplicate-question retrieval task.
-    citation_keys: *id002
-    references: *id003
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n}\n"
+    short_description: CQADupstackMathematica-VN retrieval split.
+    description: 'A translated dataset from CQADupStack: A Benchmark Data Set for
+      Community Question-Answering Research The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/cqadupstack-mathematica-vn;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackMathematica-VN
+    source_dataset_id: GreenNode/cqadupstack-mathematica-vn
+    source_dataset_revision: d0cc9b60ba66faa3fb21cb9a54ef969af548b312
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-mathematica-vn
+    hub_split: cqadupstack_mathematica_vn
     languages:
     - vi
+    references:
+    - title: CQADupstackMathematica-VN source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/cqadupstack-mathematica-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-mathematica-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 14
+      max_chars: 124
+      mean_chars: 49.345
+      median_chars: 48.0
+    document_text_stats:
+      count: 10000
+      min_chars: 53
+      max_chars: 8156
+      mean_chars: 1045.7923
+      median_chars: 773.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -135,16 +370,52 @@ task_metadata:
         sample_count: 10000
         languages:
           vi: 99.94
-  NanoCQADupstackPhysicsVN:
+  cqadupstack_physics_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese duplicate question retrieval for physics Q&A.
-    description: A compact VN-MTEB translation of the CQADupStack physics duplicate-question retrieval task.
-    citation_keys: *id002
-    references: *id003
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n}\n"
+    short_description: CQADupstackPhysics-VN retrieval split.
+    description: 'A translated dataset from CQADupStack: A Benchmark Data Set for
+      Community Question-Answering Research The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/cqadupstack-physics-vn; source
+      subset: default; eval split: test.'
+    source_task: CQADupstackPhysics-VN
+    source_dataset_id: GreenNode/cqadupstack-physics-vn
+    source_dataset_revision: 8b6b68b59933cc72985f674f76c80a678c27d6be
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-physics-vn
+    hub_split: cqadupstack_physics_vn
     languages:
     - vi
+    references:
+    - title: CQADupstackPhysics-VN source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/cqadupstack-physics-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-physics-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 14
+      max_chars: 170
+      mean_chars: 58.56
+      median_chars: 53.0
+    document_text_stats:
+      count: 10000
+      min_chars: 45
+      max_chars: 10165
+      mean_chars: 800.961
+      median_chars: 612.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -157,17 +428,53 @@ task_metadata:
       document:
         sample_count: 10000
         languages:
-          vi: 99.92
-  NanoCQADupstackProgrammersVN:
+          vi: 99.91
+  cqadupstack_programmers_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese duplicate question retrieval for programmers Q&A.
-    description: A compact VN-MTEB translation of the CQADupStack programmers duplicate-question retrieval task.
-    citation_keys: *id002
-    references: *id003
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n}\n"
+    short_description: CQADupstackProgrammers-VN retrieval split.
+    description: 'A translated dataset from CQADupStack: A Benchmark Data Set for
+      Community Question-Answering Research The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/cqadupstack-programmers-vn;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackProgrammers-VN
+    source_dataset_id: GreenNode/cqadupstack-programmers-vn
+    source_dataset_revision: 1a628c4e61f71ffdb7707d6d4024d25cfe68215a
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-programmers-vn
+    hub_split: cqadupstack_programmers_vn
     languages:
     - vi
+    references:
+    - title: CQADupstackProgrammers-VN source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/cqadupstack-programmers-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-programmers-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 150
+      mean_chars: 58.73
+      median_chars: 55.5
+    document_text_stats:
+      count: 10000
+      min_chars: 27
+      max_chars: 9860
+      mean_chars: 1070.5566
+      median_chars: 840.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -180,17 +487,53 @@ task_metadata:
       document:
         sample_count: 10000
         languages:
-          vi: 99.92
-  NanoCQADupstackStatsVN:
+          vi: 99.91
+  cqadupstack_stats_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese duplicate question retrieval for statistics Q&A.
-    description: A compact VN-MTEB translation of the CQADupStack statistics duplicate-question retrieval task.
-    citation_keys: *id002
-    references: *id003
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n}\n"
+    short_description: CQADupstackStats-VN retrieval split.
+    description: 'A translated dataset from CQADupStack: A Benchmark Data Set for
+      Community Question-Answering Research The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/cqadupstack-stats-vn; source
+      subset: default; eval split: test.'
+    source_task: CQADupstackStats-VN
+    source_dataset_id: GreenNode/cqadupstack-stats-vn
+    source_dataset_revision: 6b8164f3af61f3bb7728724229ba36213fb46c25
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-stats-vn
+    hub_split: cqadupstack_stats_vn
     languages:
     - vi
+    references:
+    - title: CQADupstackStats-VN source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/cqadupstack-stats-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-stats-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 111
+      mean_chars: 52.76
+      median_chars: 49.0
+    document_text_stats:
+      count: 10000
+      min_chars: 78
+      max_chars: 8209
+      mean_chars: 998.8628
+      median_chars: 789.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -204,17 +547,53 @@ task_metadata:
       document:
         sample_count: 10000
         languages:
-          vi: 99.93
-  NanoCQADupstackTexVN:
+          vi: 99.92
+  cqadupstack_tex_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese duplicate question retrieval for TeX Q&A.
-    description: A compact VN-MTEB translation of the CQADupStack TeX duplicate-question retrieval task.
-    citation_keys: *id002
-    references: *id003
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n}\n"
+    short_description: CQADupstackTex-VN retrieval split.
+    description: 'A translated dataset from CQADupStack: A Benchmark Data Set for
+      Community Question-Answering Research The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/cqadupstack-tex-vn; source subset:
+      default; eval split: test.'
+    source_task: CQADupstackTex-VN
+    source_dataset_id: GreenNode/cqadupstack-tex-vn
+    source_dataset_revision: aec43e5ae40451526528b3fc80dd5983ec388e21
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-tex-vn
+    hub_split: cqadupstack_tex_vn
     languages:
     - vi
+    references:
+    - title: CQADupstackTex-VN source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/cqadupstack-tex-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-tex-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 14
+      max_chars: 122
+      mean_chars: 47.79
+      median_chars: 43.0
+    document_text_stats:
+      count: 10000
+      min_chars: 64
+      max_chars: 56546
+      mean_chars: 1090.5561
+      median_chars: 758.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -230,16 +609,113 @@ task_metadata:
         sample_count: 10000
         languages:
           vi: 99.93
-  NanoCQADupstackWebmastersVN:
+  cqadupstack_unix_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese duplicate question retrieval for webmasters Q&A.
-    description: A compact VN-MTEB translation of the CQADupStack webmasters duplicate-question retrieval task.
-    citation_keys: *id002
-    references: *id003
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n}\n"
+    short_description: CQADupstackUnix-VN retrieval split.
+    description: 'A translated dataset from CQADupStack: A Benchmark Data Set for
+      Community Question-Answering Research The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/cqadupstack-unix-vn; source
+      subset: default; eval split: test.'
+    source_task: CQADupstackUnix-VN
+    source_dataset_id: GreenNode/cqadupstack-unix-vn
+    source_dataset_revision: f8b884697871cb38901139f2435c273135f83a3f
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-unix-vn
+    hub_split: cqadupstack_unix_vn
     languages:
     - vi
+    references:
+    - title: CQADupstackUnix-VN source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/cqadupstack-unix-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-unix-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 14
+      max_chars: 125
+      mean_chars: 52.795
+      median_chars: 50.0
+    document_text_stats:
+      count: 10000
+      min_chars: 69
+      max_chars: 10176
+      mean_chars: 875.765
+      median_chars: 611.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 98.0
+          en: 1.0
+          ceb: 0.5
+          pt: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.86
+  cqadupstack_webmasters_vn:
+    language: vi
+    category: natural_language
+    short_description: CQADupstackWebmasters-VN retrieval split.
+    description: 'A translated dataset from CQADupStack: A Benchmark Data Set for
+      Community Question-Answering Research The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/cqadupstack-webmasters-vn; source
+      subset: default; eval split: test.'
+    source_task: CQADupstackWebmasters-VN
+    source_dataset_id: GreenNode/cqadupstack-webmasters-vn
+    source_dataset_revision: 482d6e560d977b137e435d33379c5a8049e70e8d
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-webmasters-vn
+    hub_split: cqadupstack_webmasters_vn
+    languages:
+    - vi
+    references:
+    - title: CQADupstackWebmasters-VN source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/cqadupstack-webmasters-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-webmasters-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 146
+      mean_chars: 58.005
+      median_chars: 56.5
+    document_text_stats:
+      count: 10000
+      min_chars: 53
+      max_chars: 8098
+      mean_chars: 731.448
+      median_chars: 592.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -255,16 +731,52 @@ task_metadata:
         sample_count: 10000
         languages:
           vi: 99.91
-  NanoCQADupstackWordpressVN:
+  cqadupstack_wordpress_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese duplicate question retrieval for WordPress Q&A.
-    description: A compact VN-MTEB translation of the CQADupStack WordPress duplicate-question retrieval task.
-    citation_keys: *id002
-    references: *id003
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@inproceedings{hoogeveen2015cqadupstack,\n  title = {{CQADupStack}: A Benchmark Data Set for Community Question-Answering Research},\n  author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy},\n  booktitle = {Proceedings of ADCS},\n  year = {2015},\n  url = {https://doi.org/10.1145/2838931.2838934},\n  doi = {10.1145/2838931.2838934}\n}\n"
+    short_description: CQADupstackWordpress-VN retrieval split.
+    description: 'A translated dataset from CQADupStack: A Benchmark Data Set for
+      Community Question-Answering Research The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/cqadupstack-wordpress-vn; source
+      subset: default; eval split: test.'
+    source_task: CQADupstackWordpress-VN
+    source_dataset_id: GreenNode/cqadupstack-wordpress-vn
+    source_dataset_revision: 2230f80e1baf42aa005731ca86577621c566fcd7
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-wordpress-vn
+    hub_split: cqadupstack_wordpress_vn
     languages:
     - vi
+    references:
+    - title: CQADupstackWordpress-VN source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/cqadupstack-wordpress-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-wordpress-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 14
+      max_chars: 130
+      mean_chars: 52.37
+      median_chars: 51.0
+    document_text_stats:
+      count: 10000
+      min_chars: 68
+      max_chars: 8858
+      mean_chars: 1028.8101
+      median_chars: 729.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -278,31 +790,116 @@ task_metadata:
       document:
         sample_count: 10000
         languages:
-          vi: 99.91
-  NanoFEVERVN:
+          vi: 99.92
+  dbpedia_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese FEVER evidence retrieval.
-    description: A compact VN-MTEB translation of FEVER claim-to-Wikipedia evidence retrieval.
-    citation_keys:
-    - pham-etal-2026-vn
-    - thorne2018fever
-    references:
-    - *id001
-    - title: 'FEVER: a Large-scale Dataset for Fact Extraction and Verification'
-      authors:
-      - James Thorne
-      - Andreas Vlachos
-      - Christos Christodoulopoulos
-      - Arpit Mittal
-      year: 2018
-      url: https://aclanthology.org/N18-1074/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/N18-1074
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@inproceedings{thorne2018fever,\n  title = {{FEVER}: a Large-scale Dataset for Fact Extraction and Verification},\n  author = {Thorne, James and Vlachos, Andreas and Christodoulopoulos, Christos and Mittal, Arpit},\n  booktitle = {Proceedings of NAACL-HLT},\n  year = {2018},\n  url = {https://aclanthology.org/N18-1074/},\n  doi = {10.18653/v1/N18-1074}\n}\n"
+    short_description: DBPedia-VN retrieval split.
+    description: 'A translated dataset from DBpedia-Entity is a standard test collection
+      for entity search over the DBpedia knowledge base The process of creating the
+      VN-MTEB (Vietnamese Massive Text Embedding Benchmark) from English samples involves
+      a new automated system: - The system uses large language models (LLMs), specifically
+      Coherence''s Aya model, for translation. - Applies advanced embedding models
+      to filter the translations. - Use LLM-as-a-judge to scoring the quality of the
+      samples base on multiple criteria. Source dataset: GreenNode/dbpedia-vn; source
+      subset: default; eval split: test.'
+    source_task: DBPedia-VN
+    source_dataset_id: GreenNode/dbpedia-vn
+    source_dataset_revision: c3e20179fbcee16217ef9461a14a54b7faca9b63
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: dbpedia-vn
+    hub_split: dbpedia_vn
     languages:
     - vi
+    references:
+    - title: DBPedia-VN source reference
+      url: https://github.com/iai-group/DBpedia-Entity/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/dbpedia-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/dbpedia-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 9
+      max_chars: 100
+      mean_chars: 42.085
+      median_chars: 40.0
+    document_text_stats:
+      count: 10000
+      min_chars: 27
+      max_chars: 1817
+      mean_chars: 340.3752
+      median_chars: 346.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 97.5
+          en: 2.0
+          os: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 97.86
+          en: 1.17
+  fever_vn:
+    language: vi
+    category: natural_language
+    short_description: FEVER-VN retrieval split.
+    description: 'A translated dataset from FEVER (Fact Extraction and VERification)
+      consists of 185,445 claims generated by altering sentences extracted from Wikipedia
+      and subsequently verified without knowledge of the sentence they were derived
+      from. The process of creating the VN-MTEB (Vietnamese Massive Text Embedding
+      Benchmark) from English samples involves a new automated system: - The system
+      uses large language models (LLMs), specifically Coherence''s Aya model, for
+      translation. - Applies advanced embedding models to filter the translations.
+      - Use LLM-as-a-judge to scoring the quality of the samples base on multiple
+      criteria. Source dataset: GreenNode/fever-vn; source subset: default; eval split:
+      test.'
+    source_task: FEVER-VN
+    source_dataset_id: GreenNode/fever-vn
+    source_dataset_revision: a543dd8b98aed3603110c01d26db05ba39b87d49
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: fever-vn
+    hub_split: fever_vn
+    languages:
+    - vi
+    references:
+    - title: FEVER-VN source reference
+      url: https://fever.ai/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/fever-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/fever-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 149
+      mean_chars: 56.03
+      median_chars: 51.5
+    document_text_stats:
+      count: 10000
+      min_chars: 13
+      max_chars: 4806
+      mean_chars: 392.3979
+      median_chars: 277.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -314,46 +911,294 @@ task_metadata:
       document:
         sample_count: 10000
         languages:
-          vi: 99.03
-          en: 0.83
-  NanoNQVN:
+          vi: 99.0
+          en: 0.85
+  fi_qa2018_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese Natural Questions retrieval.
-    description: A compact VN-MTEB translation of Natural Questions Wikipedia retrieval.
-    citation_keys:
-    - pham-etal-2026-vn
-    - kwiatkowski2019nq
-    references:
-    - *id001
-    - title: 'Natural Questions: A Benchmark for Question Answering Research'
-      authors:
-      - Tom Kwiatkowski
-      - Jennimaria Palomaki
-      - Olivia Redfield
-      - Michael Collins
-      - Ankur Parikh
-      - Chris Alberti
-      - Danielle Epstein
-      - Illia Polosukhin
-      - Jacob Devlin
-      - Kenton Lee
-      - Kristina Toutanova
-      - Llion Jones
-      - Matthew Kelcey
-      - Ming-Wei Chang
-      - Andrew M. Dai
-      - Jakob Uszkoreit
-      - Quoc Le
-      - Slav Petrov
-      year: 2019
-      url: https://aclanthology.org/Q19-1026/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00276
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@article{kwiatkowski2019nq,\n  title = {Natural Questions: A Benchmark for Question Answering Research},\n  author = {Kwiatkowski, Tom and Palomaki, Jennimaria and Redfield, Olivia and Collins, Michael and Parikh, Ankur and Alberti, Chris and Epstein, Danielle and Polosukhin, Illia and Devlin, Jacob and Lee, Kenton and others},\n  journal = {Transactions of the Association for Computational Linguistics},\n  volume = {7},\n  pages = {452--466},\n  year = {2019},\n  url = {https://aclanthology.org/Q19-1026/},\n  doi = {10.1162/tacl_a_00276}\n}\n"
+    short_description: FiQA2018-VN retrieval split.
+    description: 'A translated dataset from Financial Opinion Mining and Question
+      Answering The process of creating the VN-MTEB (Vietnamese Massive Text Embedding
+      Benchmark) from English samples involves a new automated system: - The system
+      uses large language models (LLMs), specifically Coherence''s Aya model, for
+      translation. - Applies advanced embedding models to filter the translations.
+      - Use LLM-as-a-judge to scoring the quality of the samples base on multiple
+      criteria. Source dataset: GreenNode/fiqa-vn; source subset: default; eval split:
+      test.'
+    source_task: FiQA2018-VN
+    source_dataset_id: GreenNode/fiqa-vn
+    source_dataset_revision: 6c3cdf6f102151dbbbbc1d2cf999b305eba44dae
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: fi-qa2018-vn
+    hub_split: fi_qa2018_vn
     languages:
     - vi
+    references:
+    - title: FiQA2018-VN source reference
+      url: https://sites.google.com/view/fiqa/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/fiqa-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/fiqa-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 22
+      max_chars: 139
+      mean_chars: 69.43
+      median_chars: 68.5
+    document_text_stats:
+      count: 10000
+      min_chars: 5
+      max_chars: 8805
+      mean_chars: 811.0306
+      median_chars: 555.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.79
+  hotpot_qa_vn:
+    language: vi
+    category: natural_language
+    short_description: HotpotQA-VN retrieval split.
+    description: 'A translated dataset from HotpotQA is a question answering dataset
+      featuring natural, multi-hop questions, with strong supervision for supporting
+      facts to enable more explainable question answering systems. The process of
+      creating the VN-MTEB (Vietnamese Massive Text Embedding Benchmark) from English
+      samples involves a new automated system: - The system uses large language models
+      (LLMs), specifically Coherence''s Aya model, for translation. - Applies advanced
+      embedding models to filter the translations. - Use LLM-as-a-judge to scoring
+      the quality of the samples base on multiple criteria. Source dataset: GreenNode/hotpotqa-vn;
+      source subset: default; eval split: test.'
+    source_task: HotpotQA-VN
+    source_dataset_id: GreenNode/hotpotqa-vn
+    source_dataset_revision: 8a5220c7af5084f0d5d2afeb74f9c2b41b759ff0
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: hotpot-qa-vn
+    hub_split: hotpot_qa_vn
+    languages:
+    - vi
+    references:
+    - title: HotpotQA-VN source reference
+      url: https://hotpotqa.github.io/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/hotpotqa-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/hotpotqa-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 31
+      max_chars: 249
+      mean_chars: 99.525
+      median_chars: 96.0
+    document_text_stats:
+      count: 10000
+      min_chars: 28
+      max_chars: 2747
+      mean_chars: 445.2743
+      median_chars: 409.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 99.5
+          en: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 98.39
+          en: 0.94
+  msmarco_vn:
+    language: vi
+    category: natural_language
+    short_description: MSMARCO-VN retrieval split.
+    description: 'A translated dataset from MS MARCO is a collection of datasets focused
+      on deep learning in search The process of creating the VN-MTEB (Vietnamese Massive
+      Text Embedding Benchmark) from English samples involves a new automated system:
+      - The system uses large language models (LLMs), specifically Coherence''s Aya
+      model, for translation. - Applies advanced embedding models to filter the translations.
+      - Use LLM-as-a-judge to scoring the quality of the samples base on multiple
+      criteria. Source dataset: GreenNode/msmarco-vn; source subset: default; eval
+      split: dev.'
+    source_task: MSMARCO-VN
+    source_dataset_id: GreenNode/msmarco-vn
+    source_dataset_revision: 85d1ad4cc9070b8d019d65f5af1631a2ab91e294
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: msmarco-vn
+    hub_split: msmarco_vn
+    languages:
+    - vi
+    references:
+    - title: MSMARCO-VN source reference
+      url: https://microsoft.github.io/msmarco/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/msmarco-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/msmarco-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 9
+      max_chars: 190
+      mean_chars: 33.395
+      median_chars: 30.5
+    document_text_stats:
+      count: 10000
+      min_chars: 4
+      max_chars: 1122
+      mean_chars: 306.6902
+      median_chars: 290.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 95.0
+          en: 5.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.27
+          en: 0.66
+  nano_fever:
+    language: vi
+    category: natural_language
+    short_description: NanoFEVER-VN retrieval split.
+    description: 'NanoFEVERVN is a small version of A translated dataset from FEVER
+      (Fact Extraction and VERification) consists of 185,445 claims generated by altering
+      sentences extracted from Wikipedia and subsequently verified without knowledge
+      of the sentence they were derived from. The process of creating the VN-MTEB
+      (Vietnamese Massive Text Embedding Benchmark) from English samples involves
+      a new automated system: - The system uses large language models (LLMs), specifically
+      Coherence''s Aya model, for translation. - Applies advanced embedding models
+      to filter the translations. - Use LLM-as-a-judge to scoring the quality of the
+      samples base on multiple criteria. Source dataset: GreenNode/nano-fever-vn;
+      source subset: default; eval split: test.'
+    source_task: NanoFEVER-VN
+    source_dataset_id: GreenNode/nano-fever-vn
+    source_dataset_revision: 457ca6b058ed19b28f2359e2d816d7527af6bef8
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nano-fever
+    hub_split: nano_fever
+    languages:
+    - vi
+    references:
+    - title: NanoFEVER-VN source reference
+      url: https://fever.ai/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/nano-fever-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/nano-fever-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 149
+      mean_chars: 56.03
+      median_chars: 51.5
+    document_text_stats:
+      count: 10000
+      min_chars: 17
+      max_chars: 5110
+      mean_chars: 462.2504
+      median_chars: 324.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 97.47
+          en: 1.64
+  nano_nq:
+    language: vi
+    category: natural_language
+    short_description: NanoNQ-VN retrieval split.
+    description: 'NanoNQVN is a small version of A translated dataset from NFCorpus:
+      A Full-Text Learning to Rank Dataset for Medical Information Retrieval The process
+      of creating the VN-MTEB (Vietnamese Massive Text Embedding Benchmark) from English
+      samples involves a new automated system: - The system uses large language models
+      (LLMs), specifically Coherence''s Aya model, for translation. - Applies advanced
+      embedding models to filter the translations. - Use LLM-as-a-judge to scoring
+      the quality of the samples base on multiple criteria. Source dataset: GreenNode/nano-nq-vn;
+      source subset: default; eval split: test.'
+    source_task: NanoNQ-VN
+    source_dataset_id: GreenNode/nano-nq-vn
+    source_dataset_revision: 1ad4d6556fe0e5314994839089ce070fb0db8b19
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nano-nq
+    hub_split: nano_nq
+    languages:
+    - vi
+    references:
+    - title: NanoNQ-VN source reference
+      url: https://ai.google.com/research/NaturalQuestions/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/nano-nq-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/nano-nq-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 22
+      max_chars: 57
+      mean_chars: 39.4
+      median_chars: 39.0
+    document_text_stats:
+      count: 10000
+      min_chars: 14
+      max_chars: 4025
+      mean_chars: 565.2831
+      median_chars: 494.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -366,28 +1211,187 @@ task_metadata:
       document:
         sample_count: 10000
         languages:
-          vi: 99.33
-          en: 0.65
-  NanoQuoraVN:
+          vi: 99.38
+          en: 0.51
+  nfcorpus_vn:
+    language: multilingual
+    category: natural_language
+    short_description: NFCorpus-VN retrieval split.
+    description: 'A translated dataset from NFCorpus: A Full-Text Learning to Rank
+      Dataset for Medical Information Retrieval The process of creating the VN-MTEB
+      (Vietnamese Massive Text Embedding Benchmark) from English samples involves
+      a new automated system: - The system uses large language models (LLMs), specifically
+      Coherence''s Aya model, for translation. - Applies advanced embedding models
+      to filter the translations. - Use LLM-as-a-judge to scoring the quality of the
+      samples base on multiple criteria. Source dataset: GreenNode/nfcorpus-vn; source
+      subset: default; eval split: test.'
+    source_task: NFCorpus-VN
+    source_dataset_id: GreenNode/nfcorpus-vn
+    source_dataset_revision: a13d72fbb859be3dc19ab669d1ec9510407d2dcd
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nfcorpus-vn
+    hub_split: nfcorpus_vn
+    languages:
+    - vi
+    - en
+    references:
+    - title: NFCorpus-VN source reference
+      url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/nfcorpus-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/nfcorpus-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 166
+      min_chars: 3
+      max_chars: 80
+      mean_chars: 24.72289156626506
+      median_chars: 18.0
+    document_text_stats:
+      count: 3618
+      min_chars: 106
+      max_chars: 8328
+      mean_chars: 1584.2515201768933
+      median_chars: 1610.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 166
+        languages:
+          vi: 68.675
+          en: 18.072
+          it: 4.217
+          es: 1.807
+          fr: 1.205
+          nl: 1.205
+          de: 0.602
+          el: 0.602
+          kw: 0.602
+          pt: 0.602
+          sk: 0.602
+          sl: 0.602
+          tr: 0.602
+          ur: 0.602
+      document:
+        sample_count: 3618
+        languages:
+          vi: 99.972
+  nq_vn:
     language: vi
     category: natural_language
-    short_description: Vietnamese duplicate question retrieval from Quora pairs.
-    description: A compact VN-MTEB translation of Quora duplicate-question retrieval.
-    citation_keys:
-    - pham-etal-2026-vn
-    - quora2017questionpairs
+    short_description: NQ-VN retrieval split.
+    description: 'A translated dataset from NFCorpus: A Full-Text Learning to Rank
+      Dataset for Medical Information Retrieval The process of creating the VN-MTEB
+      (Vietnamese Massive Text Embedding Benchmark) from English samples involves
+      a new automated system: - The system uses large language models (LLMs), specifically
+      Coherence''s Aya model, for translation. - Applies advanced embedding models
+      to filter the translations. - Use LLM-as-a-judge to scoring the quality of the
+      samples base on multiple criteria. Source dataset: GreenNode/nq-vn; source subset:
+      default; eval split: test.'
+    source_task: NQ-VN
+    source_dataset_id: GreenNode/nq-vn
+    source_dataset_revision: 40a6d7f343b9c9f4855a426d8c431ad5f8aaf56b
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nq-vn
+    hub_split: nq_vn
+    languages:
+    - vi
     references:
-    - *id001
-    - title: First Quora Dataset Release - Question Pairs
-      authors:
-      - Quora
-      year: 2017
+    - title: NQ-VN source reference
+      url: https://ai.google.com/research/NaturalQuestions/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/nq-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/nq-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 22
+      max_chars: 57
+      mean_chars: 39.4
+      median_chars: 39.0
+    document_text_stats:
+      count: 10000
+      min_chars: 12
+      max_chars: 10752
+      mean_chars: 557.6004
+      median_chars: 492.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 97.5
+          en: 2.5
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.35
+          en: 0.63
+  quora_vn:
+    language: vi
+    category: natural_language
+    short_description: Quora-VN retrieval split.
+    description: 'A translated dataset from QuoraRetrieval is based on questions that
+      are marked as duplicates on the Quora platform. Given a question, find other
+      (duplicate) questions. The process of creating the VN-MTEB (Vietnamese Massive
+      Text Embedding Benchmark) from English samples involves a new automated system:
+      - The system uses large language models (LLMs), specifically Coherence''s Aya
+      model, for translation. - Applies advanced embedding models to filter the translations.
+      - Use LLM-as-a-judge to scoring the quality of the samples base on multiple
+      criteria. Source dataset: GreenNode/quora-vn; source subset: default; eval split:
+      test.'
+    source_task: Quora-VN
+    source_dataset_id: GreenNode/quora-vn
+    source_dataset_revision: 3363d81e41b67c1032bf3b234882a03d271e2289
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: quora-vn
+    hub_split: quora_vn
+    languages:
+    - vi
+    references:
+    - title: Quora-VN source reference
       url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@inproceedings{pham-etal-2026-vn,\n  title = {{VN}-{MTEB}: Vietnamese Massive Text Embedding Benchmark},\n  author = {Pham, Loc and Luu, Tung and Vo, Thu and Nguyen, Minh and Hoang, Viet},\n  booktitle = {Findings of the Association for Computational Linguistics: EACL 2026},\n  year = {2026},\n  url = {https://aclanthology.org/2026.findings-eacl.86/},\n  doi = {10.18653/v1/2026.findings-eacl.86}\n}\n@misc{quora2017questionpairs,\n  title = {First Quora Dataset Release - Question Pairs},\n  author = {{Quora}},\n  year = {2017},\n  url = {https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs}\n}\n"
-    languages:
-    - vi
+    - title: GreenNode/quora-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/quora-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 235
+      mean_chars: 76.51
+      median_chars: 60.5
+    document_text_stats:
+      count: 10000
+      min_chars: 25
+      max_chars: 4328
+      mean_chars: 129.2151
+      median_chars: 114.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -400,3 +1404,240 @@ task_metadata:
         sample_count: 10000
         languages:
           vi: 99.98
+  sci_fact_vn:
+    language: vi
+    category: natural_language
+    short_description: SciFact-VN retrieval split.
+    description: 'A translated dataset from SciFact verifies scientific claims using
+      evidence from the research literature containing scientific paper abstracts.
+      The process of creating the VN-MTEB (Vietnamese Massive Text Embedding Benchmark)
+      from English samples involves a new automated system: - The system uses large
+      language models (LLMs), specifically Coherence''s Aya model, for translation.
+      - Applies advanced embedding models to filter the translations. - Use LLM-as-a-judge
+      to scoring the quality of the samples base on multiple criteria. Source dataset:
+      GreenNode/scifact-vn; source subset: default; eval split: test.'
+    source_task: SciFact-VN
+    source_dataset_id: GreenNode/scifact-vn
+    source_dataset_revision: 483a7cf890c523c954e7751d328c5bb65061dcff
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: sci-fact-vn
+    hub_split: sci_fact_vn
+    languages:
+    - vi
+    references:
+    - title: SciFact-VN source reference
+      url: https://github.com/allenai/scifact
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/scifact-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/scifact-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 134
+      min_chars: 29
+      max_chars: 202
+      mean_chars: 90.64179104477611
+      median_chars: 83.0
+    document_text_stats:
+      count: 5183
+      min_chars: 155
+      max_chars: 11634
+      mean_chars: 1518.8400540227667
+      median_chars: 1443.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 134
+        languages:
+          vi: 98.507
+          en: 1.493
+      document:
+        sample_count: 5183
+        languages:
+          vi: 99.826
+  scidocs_vn:
+    language: vi
+    category: natural_language
+    short_description: SCIDOCS-VN retrieval split.
+    description: 'A translated dataset from SciDocs, a new evaluation benchmark consisting
+      of seven document-level tasks ranging from citation prediction, to document
+      classification and recommendation. The process of creating the VN-MTEB (Vietnamese
+      Massive Text Embedding Benchmark) from English samples involves a new automated
+      system: - The system uses large language models (LLMs), specifically Coherence''s
+      Aya model, for translation. - Applies advanced embedding models to filter the
+      translations. - Use LLM-as-a-judge to scoring the quality of the samples base
+      on multiple criteria. Source dataset: GreenNode/scidocs-vn; source subset: default;
+      eval split: test.'
+    source_task: SCIDOCS-VN
+    source_dataset_id: GreenNode/scidocs-vn
+    source_dataset_revision: 724cddfa9d328a193f303a0a9b7789468ac79f26
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: scidocs-vn
+    hub_split: scidocs_vn
+    languages:
+    - vi
+    references:
+    - title: SCIDOCS-VN source reference
+      url: https://allenai.org/data/scidocs
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/scidocs-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/scidocs-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 26
+      max_chars: 202
+      mean_chars: 73.355
+      median_chars: 70.5
+    document_text_stats:
+      count: 10000
+      min_chars: 43
+      max_chars: 10254
+      mean_chars: 1226.7277
+      median_chars: 1133.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          vi: 98.0
+          en: 2.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.64
+  touche2020_vn:
+    language: vi
+    category: natural_language
+    short_description: Touche2020-VN retrieval split.
+    description: 'A translated dataset from Touché Task 1: Argument Retrieval for
+      Controversial Questions The process of creating the VN-MTEB (Vietnamese Massive
+      Text Embedding Benchmark) from English samples involves a new automated system:
+      - The system uses large language models (LLMs), specifically Coherence''s Aya
+      model, for translation. - Applies advanced embedding models to filter the translations.
+      - Use LLM-as-a-judge to scoring the quality of the samples base on multiple
+      criteria. Source dataset: GreenNode/webis-touche2020-vn; source subset: default;
+      eval split: test.'
+    source_task: Touche2020-VN
+    source_dataset_id: GreenNode/webis-touche2020-vn
+    source_dataset_revision: cd4389b182aec622c8121ee8db988359197159c1
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: touche2020-vn
+    hub_split: touche2020_vn
+    languages:
+    - vi
+    references:
+    - title: Touche2020-VN source reference
+      url: https://webis.de/events/touche-20/shared-task-1.html
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/webis-touche2020-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/webis-touche2020-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 25
+      min_chars: 29
+      max_chars: 89
+      mean_chars: 52.2
+      median_chars: 51.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 64898
+      mean_chars: 1939.6177
+      median_chars: 837.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 25
+        languages:
+          vi: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.02
+          en: 0.56
+  treccovid_vn:
+    language: vi
+    category: natural_language
+    short_description: TRECCOVID-VN retrieval split.
+    description: 'A translated dataset from TRECCOVID is an ad-hoc search challenge
+      based on the COVID-19 dataset containing scientific articles related to the
+      COVID-19 pandemic. The process of creating the VN-MTEB (Vietnamese Massive Text
+      Embedding Benchmark) from English samples involves a new automated system: -
+      The system uses large language models (LLMs), specifically Coherence''s Aya
+      model, for translation. - Applies advanced embedding models to filter the translations.
+      - Use LLM-as-a-judge to scoring the quality of the samples base on multiple
+      criteria. Source dataset: GreenNode/trec-covid-vn; source subset: default; eval
+      split: test.'
+    source_task: TRECCOVID-VN
+    source_dataset_id: GreenNode/trec-covid-vn
+    source_dataset_revision: 54d73a1ea11ea0ae4ec0214ec519c93db79dee88
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: treccovid-vn
+    hub_split: treccovid_vn
+    languages:
+    - vi
+    references:
+    - title: TRECCOVID-VN source reference
+      url: https://ir.nist.gov/covidSubmit/index.html
+      is_paper: false
+      source_confidence: probably_correct
+    - title: GreenNode/trec-covid-vn Hugging Face dataset
+      url: https://huggingface.co/datasets/GreenNode/trec-covid-vn
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 44
+      min_chars: 29
+      max_chars: 176
+      mean_chars: 70.54545454545455
+      median_chars: 65.5
+    document_text_stats:
+      count: 10000
+      min_chars: 33
+      max_chars: 8275
+      mean_chars: 1315.6452
+      median_chars: 1350.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 44
+        languages:
+          vi: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          vi: 99.93

@@ -6,19 +6,20 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoRiaNews
-- NanoRiaNewsHardNegativesV2
-- NanoRuBQ
+- miracl_ru
+- ria_news
+- ru_bq
 metadata:
   language: ru
   category: natural_language
   short_description: Russian Nano retrieval benchmark based on ruMTEB retrieval tasks.
-  description: NanoRuMTEB is a compact Russian retrieval benchmark assembled from ruMTEB retrieval tasks. RuSciBench retrieval tasks are placed in NanoMTEB-Misc.
+  description: NanoRuMTEB is a compact Russian retrieval benchmark assembled from
+    ruMTEB retrieval tasks. RuSciBench retrieval tasks are placed in NanoMTEB-Misc.
   citation_keys:
   - snegirev-etal-2025-russian
   references:
-  - &id001
-    title: 'The Russian-focused embedders'' exploration: ruMTEB benchmark and Russian embedding model design'
+  - title: 'The Russian-focused embedders'' exploration: ruMTEB benchmark and Russian
+      embedding model design'
     authors:
     - Artem Snegirev
     - Maria Tikhonova
@@ -30,30 +31,61 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2025.naacl-long.12
-  bibtex: "@inproceedings{snegirev-etal-2025-russian,\n  title = \"The {R}ussian-focused embedders' exploration: ru{MTEB} benchmark and {R}ussian embedding model design\",\n  author = {Snegirev, Artem and Tikhonova, Maria and Anna, Maksimova and Fenogenova, Alena and Abramov, Aleksandr},\n  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  year = {2025},\n  pages = {236--254},\n  url = {https://aclanthology.org/2025.naacl-long.12/},\n  doi = {10.18653/v1/2025.naacl-long.12}\n}\n"
+  bibtex: "@inproceedings{snegirev-etal-2025-russian,\n  title = \"The {R}ussian-focused\
+    \ embedders' exploration: ru{MTEB} benchmark and {R}ussian embedding model design\"\
+    ,\n  author = {Snegirev, Artem and Tikhonova, Maria and Anna, Maksimova and Fenogenova,\
+    \ Alena and Abramov, Aleksandr},\n  booktitle = {Proceedings of the 2025 Conference\
+    \ of the Nations of the Americas Chapter of the Association for Computational\
+    \ Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  year =\
+    \ {2025},\n  pages = {236--254},\n  url = {https://aclanthology.org/2025.naacl-long.12/},\n\
+    \  doi = {10.18653/v1/2025.naacl-long.12}\n}\n"
 task_metadata:
-  NanoRiaNews:
+  miracl_ru:
     language: ru
     category: natural_language
-    short_description: Russian RIA news headline retrieval.
-    description: A compact retrieval task derived from the RIA news headline-generation corpus, retrieving news articles from headlines.
-    citation_keys:
-    - gavrilov2019self
-    references:
-    - &id002
-      title: Self-Attentive Model for Headline Generation
-      authors:
-      - Daniil Gavrilov
-      - Pavel Kalaidin
-      - Valentin Malykh
-      year: 2019
-      url: https://arxiv.org/abs/1901.07786
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.1901.07786
-    bibtex: "@inproceedings{gavrilov2019self,\n  title = {Self-Attentive Model for Headline Generation},\n  author = {Gavrilov, Daniil and Kalaidin, Pavel and Malykh, Valentin},\n  booktitle = {Proceedings of the 41st European Conference on Information Retrieval},\n  year = {2019},\n  url = {https://arxiv.org/abs/1901.07786},\n  doi = {10.48550/arXiv.1901.07786}\n}\n"
+    short_description: MIRACLRetrievalHardNegatives.v2 retrieval split.
+    description: 'MIRACL (Multilingual Information Retrieval Across a Continuum of
+      Languages) is a multilingual retrieval dataset that focuses on search across
+      18 different languages. The hard negative version has been created by pooling
+      the 250 top documents per query from BM25, e5-multilingual-large and e5-mistral-instruct.V2
+      uses a more appropriate prompt rather than the default prompt for retrieval.
+      You can get more information on the effect of different prompt in the [PR](https://github.com/embeddings-benchmark/mteb/pull/3469#issuecomment-3436467106)
+      Source dataset: mteb/MIRACLRetrievalHardNegatives; source subset: ru; eval split:
+      dev.'
+    source_task: MIRACLRetrievalHardNegatives.v2
+    source_dataset_id: mteb/MIRACLRetrievalHardNegatives
+    source_dataset_revision: d7d94fa4b946cec4a27c84653aa0cf6b33f74a3c
+    source_dataset_subset: ru
+    source_eval_split: dev
+    source_nano_split: miracl-ru
+    hub_split: miracl_ru
     languages:
     - ru
+    references:
+    - title: MIRACLRetrievalHardNegatives.v2 source reference
+      url: http://miracl.ai/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MIRACLRetrievalHardNegatives Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 108
+      mean_chars: 45.365
+      median_chars: 41.0
+    document_text_stats:
+      count: 10000
+      min_chars: 11
+      max_chars: 6877
+      mean_chars: 517.2626
+      median_chars: 404.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -65,21 +97,52 @@ task_metadata:
       document:
         sample_count: 10000
         languages:
-          ru: 99.98
-  NanoRiaNewsHardNegativesV2:
+          ru: 99.41
+  ria_news:
     language: ru
     category: natural_language
-    short_description: Russian RIA news hard-negative retrieval.
-    description: A compact hard-negative RIA news headline retrieval variant used in ruMTEB v1.1.
-    citation_keys:
-    - snegirev-etal-2025-russian
-    - gavrilov2019self
-    references:
-    - *id001
-    - *id002
-    bibtex: "@inproceedings{snegirev-etal-2025-russian,\n  title = \"The {R}ussian-focused embedders' exploration: ru{MTEB} benchmark and {R}ussian embedding model design\",\n  author = {Snegirev, Artem and Tikhonova, Maria and Anna, Maksimova and Fenogenova, Alena and Abramov, Aleksandr},\n  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},\n  year = {2025},\n  pages = {236--254},\n  url = {https://aclanthology.org/2025.naacl-long.12/},\n  doi = {10.18653/v1/2025.naacl-long.12}\n}\n@inproceedings{gavrilov2019self,\n  title = {Self-Attentive Model for Headline Generation},\n  author = {Gavrilov, Daniil and Kalaidin, Pavel and Malykh, Valentin},\n  booktitle = {Proceedings of the 41st European Conference on Information Retrieval},\n  year = {2019},\n  url = {https://arxiv.org/abs/1901.07786},\n  doi = {10.48550/arXiv.1901.07786}\n}\n"
+    short_description: RiaNewsRetrievalHardNegatives.v2 retrieval split.
+    description: 'News article retrieval by headline. Based on Rossiya Segodnya dataset.
+      The hard negative version has been created by pooling the 250 top documents
+      per query from BM25, e5-multilingual-large and e5-mistral-instruct.V2 uses a
+      more appropriate prompt rather than the default prompt for retrieval. You can
+      get more information on the effect of different prompt in the [PR](https://github.com/embeddings-benchmark/mteb/pull/3469#issuecomment-3436467106)
+      Source dataset: mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2; source
+      subset: default; eval split: test.'
+    source_task: RiaNewsRetrievalHardNegatives.v2
+    source_dataset_id: mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2
+    source_dataset_revision: d42860a6c15f0a2c4485bda10c6e5b641fdfe479
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: ria-news
+    hub_split: ria_news
     languages:
     - ru
+    references:
+    - title: RiaNewsRetrievalHardNegatives.v2 source reference
+      url: https://arxiv.org/abs/1901.07786
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2 Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 4
+      max_chars: 79
+      mean_chars: 61.99
+      median_chars: 65.0
+    document_text_stats:
+      count: 10000
+      min_chars: 5
+      max_chars: 2000
+      mean_chars: 1145.3386
+      median_chars: 1169.5
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -95,27 +158,47 @@ task_metadata:
         languages:
           ru: 98.33
           pl: 1.35
-  NanoRuBQ:
+  ru_bq:
     language: ru
     category: natural_language
-    short_description: Russian RuBQ question-answer retrieval.
-    description: A compact retrieval task based on RuBQ 2.0, a Russian KBQA and MRC dataset with answer-bearing Wikipedia paragraphs.
-    citation_keys:
-    - RuBQ2021
-    references:
-    - title: 'RuBQ 2.0: An Innovated Russian Question Answering Dataset'
-      authors:
-      - Ivan Rybin
-      - Vladislav Korablinov
-      - Pavel Efimov
-      - Pavel Braslavski
-      year: 2021
-      url: https://openreview.net/pdf?id=P5UQFFoQ4PJ
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{RuBQ2021,\n  title = {{RuBQ} 2.0: An Innovated Russian Question Answering Dataset},\n  author = {Rybin, Ivan and Korablinov, Vladislav and Efimov, Pavel and Braslavski, Pavel},\n  booktitle = {The Semantic Web},\n  pages = {532--547},\n  year = {2021},\n  url = {https://openreview.net/pdf?id=P5UQFFoQ4PJ}\n}\n"
+    short_description: RuBQRetrieval retrieval split.
+    description: 'Paragraph retrieval based on RuBQ 2.0. Retrieve paragraphs from
+      Wikipedia that answer the question. Source dataset: ai-forever/rubq-retrieval;
+      source subset: default; eval split: test.'
+    source_task: RuBQRetrieval
+    source_dataset_id: ai-forever/rubq-retrieval
+    source_dataset_revision: e19b6ffa60b3bc248e0b41f4cc37c26a55c2a67b
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: ru-bq
+    hub_split: ru_bq
     languages:
     - ru
+    references:
+    - title: RuBQRetrieval source reference
+      url: https://openreview.net/pdf?id=P5UQFFoQ4PJ
+      is_paper: false
+      source_confidence: probably_correct
+    - title: ai-forever/rubq-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/ai-forever/rubq-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 21
+      max_chars: 119
+      mean_chars: 52.19
+      median_chars: 48.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 10035
+      mean_chars: 484.4884
+      median_chars: 380.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5

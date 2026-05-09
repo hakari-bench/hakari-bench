@@ -6,17 +6,39 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoDutchNewsArticles
-- NanoLegalQANL
-- NanoOpenTender
-- NanoVABB
-- NanoWebFAQNL
-- NanobBSARDNL
+- argu_ana_nl
+- b_bsardnl
+- belebele_eng_latn_nld_latn
+- belebele_nld_latn_eng_latn
+- belebele_nld_latn_nld_latn
+- cqadupstack_android
+- cqadupstack_english
+- cqadupstack_gis
+- cqadupstack_mathematica
+- cqadupstack_physics
+- cqadupstack_programmers
+- cqadupstack_stats
+- cqadupstack_tex
+- cqadupstack_webmasters
+- cqadupstack_wordpress
+- dutch_news_articles
+- fever
+- legal_qanl
+- nfcorpus_nl
+- nq
+- open_tender
+- quora
+- sci_fact_nl
+- scidocs_nl
+- vabb
+- web_faq_nld
+- wikipedia_multilingual_nl
 metadata:
-  language: nl
+  language: multilingual
   category: natural_language
   short_description: Dutch NanoMTEB retrieval benchmark.
-  description: NanoMTEB-Dutch is a compact Dutch retrieval benchmark containing the MTEB-NL retrieval-family splits. BEIR-NL-only splits are placed in NanoMTEB-Misc.
+  description: NanoMTEB-Dutch is a compact Dutch retrieval benchmark containing the
+    MTEB-NL retrieval-family splits. BEIR-NL-only splits are placed in NanoMTEB-Misc.
   citation_keys:
   - muennighoff2023mteb
   - banar2025mtebnl
@@ -32,8 +54,7 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2210.07316
-  - &id001
-    title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+  - title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
     authors:
     - Nikolay Banar
     - Ehsan Lotfi
@@ -46,26 +67,856 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2509.12340
-  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n  doi = {10.48550/arXiv.2210.07316}\n}\n\n@misc{banar2025mtebnl,\n  title = {{MTEB-NL} and {E5-NL}: Embedding Benchmark and Models for Dutch},\n  author = {Banar, Nikolay and Lotfi, Ehsan and Van Nooten, Jens and Arhiliuc, Cristina and Kliocaite, Marija and Daelemans, Walter},\n  year = {2025},\n  url = {https://arxiv.org/abs/2509.12340},\n  doi = {10.48550/arXiv.2509.12340}\n}\n"
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
+    \ and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n\
+    \  doi = {10.48550/arXiv.2210.07316}\n}\n\n@misc{banar2025mtebnl,\n  title = {{MTEB-NL}\
+    \ and {E5-NL}: Embedding Benchmark and Models for Dutch},\n  author = {Banar,\
+    \ Nikolay and Lotfi, Ehsan and Van Nooten, Jens and Arhiliuc, Cristina and Kliocaite,\
+    \ Marija and Daelemans, Walter},\n  year = {2025},\n  url = {https://arxiv.org/abs/2509.12340},\n\
+    \  doi = {10.48550/arXiv.2509.12340}\n}\n"
 task_metadata:
-  NanoDutchNewsArticles:
+  argu_ana_nl:
     language: nl
     category: natural_language
-    short_description: Dutch news article retrieval from NOS titles.
-    description: A compact retrieval task built from Dutch NOS news articles, retrieving article content from titles.
-    citation_keys:
-    - scheijen2022dutchnewsarticles
+    short_description: ArguAna-NL.v2 retrieval split.
+    description: 'ArguAna involves the task of retrieval of the best counterargument
+      to an argument. ArguAna-NL is a Dutch translation. This version adds a Dutch
+      prompt to the dataset. Source dataset: clips/beir-nl-arguana; source subset:
+      default; eval split: test.'
+    source_task: ArguAna-NL.v2
+    source_dataset_id: clips/beir-nl-arguana
+    source_dataset_revision: 4cd085d148fe2cac923bb7758d6ef585926170ba
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: argu-ana-nl
+    hub_split: argu_ana_nl
+    languages:
+    - nl
     references:
-    - title: Dutch News Articles
-      authors:
-      - Max Scheijen
-      year: 2022
+    - title: ArguAna-NL.v2 source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-arguana
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 199
+      min_chars: 439
+      max_chars: 6050
+      mean_chars: 1316.9045226130654
+      median_chars: 1106.0
+    document_text_stats:
+      count: 8624
+      min_chars: 1
+      max_chars: 7337
+      mean_chars: 1141.1348562152134
+      median_chars: 1029.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 199
+        languages:
+          nl: 100.0
+      document:
+        sample_count: 8624
+        languages:
+          nl: 99.559
+  b_bsardnl:
+    language: nl
+    category: natural_language
+    short_description: bBSARDNLRetrieval retrieval split.
+    description: 'Building on the Belgian Statutory Article Retrieval Dataset (BSARD)
+      in French, we introduce the bilingual version of this dataset, bBSARD. The dataset
+      contains parallel Belgian statutory articles in both French and Dutch, along
+      with legal questions from BSARD and their Dutch translation. Source dataset:
+      clips/mteb-nl-bbsard; source subset: default; eval split: test.'
+    source_task: bBSARDNLRetrieval
+    source_dataset_id: clips/mteb-nl-bbsard
+    source_dataset_revision: 52027c212ba9765a3e9737c9cbf9a06ae83cbb93
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: b-bsardnl
+    hub_split: b_bsardnl
+    languages:
+    - nl
+    references:
+    - title: bBSARDNLRetrieval source reference
+      url: https://aclanthology.org/2025.regnlp-1.3.pdf
+      is_paper: false
+      source_confidence: probably_correct
+    - title: clips/mteb-nl-bbsard Hugging Face dataset
+      url: https://huggingface.co/datasets/clips/mteb-nl-bbsard
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 22
+      max_chars: 250
+      mean_chars: 93.845
+      median_chars: 89.0
+    document_text_stats:
+      count: 10000
+      min_chars: 7
+      max_chars: 29639
+      mean_chars: 863.1596
+      median_chars: 471.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.52
+  belebele_eng_latn_nld_latn:
+    language: multilingual
+    category: natural_language
+    short_description: BelebeleRetrieval retrieval split.
+    description: 'Belebele is a multiple-choice machine reading comprehension (MRC)
+      dataset spanning 122 language variants (including 115 distinct languages and
+      their scripts) Source dataset: mteb/belebele; source subset: eng_Latn-nld_Latn;
+      eval split: test.'
+    source_task: BelebeleRetrieval
+    source_dataset_id: mteb/belebele
+    source_dataset_revision: 979a211276faa22f671e69d096634193567cfd05
+    source_dataset_subset: eng_Latn-nld_Latn
+    source_eval_split: test
+    source_nano_split: belebele-eng-latn-nld-latn
+    hub_split: belebele_eng_latn_nld_latn
+    languages:
+    - en
+    - nl
+    references:
+    - title: BelebeleRetrieval source reference
+      url: https://arxiv.org/abs/2308.16884
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/belebele Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/belebele
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 21
+      max_chars: 153
+      mean_chars: 69.39
+      median_chars: 68.5
+    document_text_stats:
+      count: 488
+      min_chars: 144
+      max_chars: 1352
+      mean_chars: 475.51024590163934
+      median_chars: 456.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 98.5
+          en: 1.0
+          de: 0.5
+      document:
+        sample_count: 488
+        languages:
+          en: 100.0
+  belebele_nld_latn_eng_latn:
+    language: multilingual
+    category: natural_language
+    short_description: BelebeleRetrieval retrieval split.
+    description: 'Belebele is a multiple-choice machine reading comprehension (MRC)
+      dataset spanning 122 language variants (including 115 distinct languages and
+      their scripts) Source dataset: mteb/belebele; source subset: nld_Latn-eng_Latn;
+      eval split: test.'
+    source_task: BelebeleRetrieval
+    source_dataset_id: mteb/belebele
+    source_dataset_revision: 979a211276faa22f671e69d096634193567cfd05
+    source_dataset_subset: nld_Latn-eng_Latn
+    source_eval_split: test
+    source_nano_split: belebele-nld-latn-eng-latn
+    hub_split: belebele_nld_latn_eng_latn
+    languages:
+    - en
+    - nl
+    references:
+    - title: BelebeleRetrieval source reference
+      url: https://arxiv.org/abs/2308.16884
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/belebele Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/belebele
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 31
+      max_chars: 171
+      mean_chars: 81.305
+      median_chars: 81.0
+    document_text_stats:
+      count: 488
+      min_chars: 180
+      max_chars: 1617
+      mean_chars: 529.1434426229508
+      median_chars: 520.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 488
+        languages:
+          nl: 99.385
+  belebele_nld_latn_nld_latn:
+    language: nl
+    category: natural_language
+    short_description: BelebeleRetrieval retrieval split.
+    description: 'Belebele is a multiple-choice machine reading comprehension (MRC)
+      dataset spanning 122 language variants (including 115 distinct languages and
+      their scripts) Source dataset: mteb/belebele; source subset: nld_Latn-nld_Latn;
+      eval split: test.'
+    source_task: BelebeleRetrieval
+    source_dataset_id: mteb/belebele
+    source_dataset_revision: 979a211276faa22f671e69d096634193567cfd05
+    source_dataset_subset: nld_Latn-nld_Latn
+    source_eval_split: test
+    source_nano_split: belebele-nld-latn-nld-latn
+    hub_split: belebele_nld_latn_nld_latn
+    languages:
+    - nl
+    references:
+    - title: BelebeleRetrieval source reference
+      url: https://arxiv.org/abs/2308.16884
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/belebele Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/belebele
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 21
+      max_chars: 153
+      mean_chars: 69.39
+      median_chars: 68.5
+    document_text_stats:
+      count: 488
+      min_chars: 180
+      max_chars: 1617
+      mean_chars: 529.1434426229508
+      median_chars: 520.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 98.5
+          en: 1.0
+          de: 0.5
+      document:
+        sample_count: 488
+        languages:
+          nl: 99.385
+  cqadupstack_android:
+    language: nl
+    category: natural_language
+    short_description: CQADupstackAndroid-NL retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research. This a Dutch-translated version. Source dataset: clips/beir-nl-cqadupstack;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackAndroid-NL
+    source_dataset_id: clips/beir-nl-cqadupstack
+    source_dataset_revision: 1de13232f452f0b4f5525d8c6c41cd6a9ae1d084
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-android
+    hub_split: cqadupstack_android
+    languages:
+    - nl
+    references:
+    - title: CQADupstackAndroid-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 134
+      mean_chars: 59.105
+      median_chars: 56.0
+    document_text_stats:
+      count: 10000
+      min_chars: 30
+      max_chars: 7039
+      mean_chars: 638.0803
+      median_chars: 505.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 95.0
+          en: 3.0
+          de: 2.0
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.73
+  cqadupstack_english:
+    language: nl
+    category: natural_language
+    short_description: CQADupstackEnglish-NL retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research. This a Dutch-translated version. Source dataset: clips/beir-nl-cqadupstack;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackEnglish-NL
+    source_dataset_id: clips/beir-nl-cqadupstack
+    source_dataset_revision: 1de13232f452f0b4f5525d8c6c41cd6a9ae1d084
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-english
+    hub_split: cqadupstack_english
+    languages:
+    - nl
+    references:
+    - title: CQADupstackEnglish-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 121
+      mean_chars: 49.65
+      median_chars: 47.0
+    document_text_stats:
+      count: 10000
+      min_chars: 31
+      max_chars: 6782
+      mean_chars: 521.6717
+      median_chars: 408.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 91.5
+          en: 7.5
+          af: 0.5
+          de: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 98.67
+          en: 1.1
+  cqadupstack_gis:
+    language: nl
+    category: natural_language
+    short_description: CQADupstackGis-NL retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research. This a Dutch-translated version. Source dataset: clips/beir-nl-cqadupstack;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackGis-NL
+    source_dataset_id: clips/beir-nl-cqadupstack
+    source_dataset_revision: 1de13232f452f0b4f5525d8c6c41cd6a9ae1d084
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-gis
+    hub_split: cqadupstack_gis
+    languages:
+    - nl
+    references:
+    - title: CQADupstackGis-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 141
+      mean_chars: 62.705
+      median_chars: 58.0
+    document_text_stats:
+      count: 10000
+      min_chars: 54
+      max_chars: 10051
+      mean_chars: 1036.0503
+      median_chars: 718.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 95.5
+          en: 2.0
+          af: 1.0
+          de: 1.0
+          es: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.56
+  cqadupstack_mathematica:
+    language: nl
+    category: natural_language
+    short_description: CQADupstackMathematica-NL retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research. This a Dutch-translated version. Source dataset: clips/beir-nl-cqadupstack;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackMathematica-NL
+    source_dataset_id: clips/beir-nl-cqadupstack
+    source_dataset_revision: 1de13232f452f0b4f5525d8c6c41cd6a9ae1d084
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-mathematica
+    hub_split: cqadupstack_mathematica
+    languages:
+    - nl
+    references:
+    - title: CQADupstackMathematica-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 134
+      mean_chars: 55.3
+      median_chars: 53.0
+    document_text_stats:
+      count: 10000
+      min_chars: 81
+      max_chars: 7955
+      mean_chars: 1166.6578
+      median_chars: 874.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 95.0
+          en: 3.0
+          de: 0.5
+          es: 0.5
+          fr: 0.5
+          nds: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.57
+  cqadupstack_physics:
+    language: nl
+    category: natural_language
+    short_description: CQADupstackPhysics-NL retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research. This a Dutch-translated version. Source dataset: clips/beir-nl-cqadupstack;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackPhysics-NL
+    source_dataset_id: clips/beir-nl-cqadupstack
+    source_dataset_revision: 1de13232f452f0b4f5525d8c6c41cd6a9ae1d084
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-physics
+    hub_split: cqadupstack_physics
+    languages:
+    - nl
+    references:
+    - title: CQADupstackPhysics-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 167
+      mean_chars: 62.095
+      median_chars: 55.0
+    document_text_stats:
+      count: 10000
+      min_chars: 49
+      max_chars: 8581
+      mean_chars: 870.4386
+      median_chars: 668.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 98.5
+          de: 1.0
+          en: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.55
+  cqadupstack_programmers:
+    language: nl
+    category: natural_language
+    short_description: CQADupstackProgrammers-NL retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research. This a Dutch-translated version. Source dataset: clips/beir-nl-cqadupstack;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackProgrammers-NL
+    source_dataset_id: clips/beir-nl-cqadupstack
+    source_dataset_revision: 1de13232f452f0b4f5525d8c6c41cd6a9ae1d084
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-programmers
+    hub_split: cqadupstack_programmers
+    languages:
+    - nl
+    references:
+    - title: CQADupstackProgrammers-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 137
+      mean_chars: 61.25
+      median_chars: 59.0
+    document_text_stats:
+      count: 10000
+      min_chars: 32
+      max_chars: 10507
+      mean_chars: 1142.3499
+      median_chars: 893.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 97.0
+          en: 2.5
+          de: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.7
+  cqadupstack_stats:
+    language: nl
+    category: natural_language
+    short_description: CQADupstackStats-NL retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research. This a Dutch-translated version. Source dataset: clips/beir-nl-cqadupstack;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackStats-NL
+    source_dataset_id: clips/beir-nl-cqadupstack
+    source_dataset_revision: 1de13232f452f0b4f5525d8c6c41cd6a9ae1d084
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-stats
+    hub_split: cqadupstack_stats
+    languages:
+    - nl
+    references:
+    - title: CQADupstackStats-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 159
+      mean_chars: 64.265
+      median_chars: 60.5
+    document_text_stats:
+      count: 10000
+      min_chars: 43
+      max_chars: 9690
+      mean_chars: 1097.6471
+      median_chars: 862.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 94.5
+          en: 3.0
+          de: 1.5
+          es: 0.5
+          fr: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.51
+  cqadupstack_tex:
+    language: nl
+    category: natural_language
+    short_description: CQADupstackTex-NL retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research. This a Dutch-translated version. Source dataset: clips/beir-nl-cqadupstack;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackTex-NL
+    source_dataset_id: clips/beir-nl-cqadupstack
+    source_dataset_revision: 1de13232f452f0b4f5525d8c6c41cd6a9ae1d084
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-tex
+    hub_split: cqadupstack_tex
+    languages:
+    - nl
+    references:
+    - title: CQADupstackTex-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 133
+      mean_chars: 53.53
+      median_chars: 49.5
+    document_text_stats:
+      count: 10000
+      min_chars: 37
+      max_chars: 13391
+      mean_chars: 1211.7541
+      median_chars: 864.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 95.5
+          en: 3.0
+          es: 0.5
+          fr: 0.5
+          la: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.7
+  cqadupstack_webmasters:
+    language: nl
+    category: natural_language
+    short_description: CQADupstackWebmasters-NL retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research. This a Dutch-translated version. Source dataset: clips/beir-nl-cqadupstack;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackWebmasters-NL
+    source_dataset_id: clips/beir-nl-cqadupstack
+    source_dataset_revision: 1de13232f452f0b4f5525d8c6c41cd6a9ae1d084
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-webmasters
+    hub_split: cqadupstack_webmasters
+    languages:
+    - nl
+    references:
+    - title: CQADupstackWebmasters-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 153
+      mean_chars: 58.825
+      median_chars: 56.5
+    document_text_stats:
+      count: 10000
+      min_chars: 32
+      max_chars: 8734
+      mean_chars: 761.2033
+      median_chars: 613.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 94.5
+          en: 3.5
+          de: 0.5
+          fr: 0.5
+          id: 0.5
+          pl: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.62
+  cqadupstack_wordpress:
+    language: nl
+    category: natural_language
+    short_description: CQADupstackWordpress-NL retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research. This a Dutch-translated version. Source dataset: clips/beir-nl-cqadupstack;
+      source subset: default; eval split: test.'
+    source_task: CQADupstackWordpress-NL
+    source_dataset_id: clips/beir-nl-cqadupstack
+    source_dataset_revision: 1de13232f452f0b4f5525d8c6c41cd6a9ae1d084
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-wordpress
+    hub_split: cqadupstack_wordpress
+    languages:
+    - nl
+    references:
+    - title: CQADupstackWordpress-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 140
+      mean_chars: 56.55
+      median_chars: 55.5
+    document_text_stats:
+      count: 10000
+      min_chars: 80
+      max_chars: 9701
+      mean_chars: 1183.4007
+      median_chars: 811.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 97.0
+          en: 2.0
+          it: 0.5
+          th: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.68
+  dutch_news_articles:
+    language: nl
+    category: natural_language
+    short_description: DutchNewsArticlesRetrieval retrieval split.
+    description: 'This dataset contains all the articles published by the NOS as of
+      the 1st of January 2010. The data is obtained by scraping the NOS website. The
+      NOS is one of the biggest (online) news organizations in the Netherlands. Source
+      dataset: clips/mteb-nl-news-articles-ret; source subset: default; eval split:
+      test.'
+    source_task: DutchNewsArticlesRetrieval
+    source_dataset_id: clips/mteb-nl-news-articles-ret
+    source_dataset_revision: c8042a86f3eb0d1fcec79a4a44ebf1eafe635462
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: dutch-news-articles
+    hub_split: dutch_news_articles
+    languages:
+    - nl
+    references:
+    - title: DutchNewsArticlesRetrieval source reference
       url: https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@misc{scheijen2022dutchnewsarticles,\n  title = {Dutch News Articles},\n  author = {Scheijen, Max},\n  year = {2022},\n  url = {https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles}\n}\n"
-    languages:
-    - nl
+    - title: clips/mteb-nl-news-articles-ret Hugging Face dataset
+      url: https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 22
+      max_chars: 90
+      mean_chars: 48.96
+      median_chars: 47.0
+    document_text_stats:
+      count: 10000
+      min_chars: 16
+      max_chars: 17590
+      mean_chars: 1146.6649
+      median_chars: 799.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -81,28 +932,102 @@ task_metadata:
         sample_count: 10000
         languages:
           nl: 99.83
-  NanoLegalQANL:
+  fever:
     language: nl
     category: natural_language
-    short_description: Dutch legal QA attribution retrieval.
-    description: A compact retrieval task for Dutch legal question answering with attributions to relevant law articles.
-    citation_keys:
-    - redelaar2024attributed
-    references:
-    - title: Attributed Question Answering for Preconditions in the Dutch Law
-      authors:
-      - Felicia Redelaar
-      - Romy Van Drie
-      - Suzan Verberne
-      - Maaike De Boer
-      year: 2024
-      url: https://aclanthology.org/2024.nllp-1.12/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2024.nllp-1.12
-    bibtex: "@inproceedings{redelaar2024attributed,\n  title = {Attributed Question Answering for Preconditions in the Dutch Law},\n  author = {Redelaar, Felicia and Van Drie, Romy and Verberne, Suzan and De Boer, Maaike},\n  booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2024},\n  year = {2024},\n  url = {https://aclanthology.org/2024.nllp-1.12/},\n  doi = {10.18653/v1/2024.nllp-1.12}\n}\n"
+    short_description: FEVER-NL retrieval split.
+    description: 'FEVER (Fact Extraction and VERification) consists of 185,445 claims
+      generated by altering sentences extracted from Wikipedia and subsequently verified
+      without knowledge of the sentence they were derived from. FEVER-NL is a Dutch
+      translation. Source dataset: clips/beir-nl-fever; source subset: default; eval
+      split: test.'
+    source_task: FEVER-NL
+    source_dataset_id: clips/beir-nl-fever
+    source_dataset_revision: ee0f58854a2555a8e666a3b248a8f9e856568785
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: fever
+    hub_split: fever
     languages:
     - nl
+    references:
+    - title: FEVER-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-fever
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 20
+      max_chars: 165
+      mean_chars: 54.865
+      median_chars: 50.5
+    document_text_stats:
+      count: 10000
+      min_chars: 4
+      max_chars: 5686
+      mean_chars: 445.7136
+      median_chars: 295.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 98.0
+          en: 1.5
+          de: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 90.22
+          en: 7.99
+          fr: 0.59
+  legal_qanl:
+    language: nl
+    category: natural_language
+    short_description: LegalQANLRetrieval retrieval split.
+    description: 'To this end, we create and publish a Dutch legal QA dataset, consisting
+      of question-answer pairs with attributions to Dutch law articles. Source dataset:
+      clips/mteb-nl-legalqa-pr; source subset: default; eval split: test.'
+    source_task: LegalQANLRetrieval
+    source_dataset_id: clips/mteb-nl-legalqa-pr
+    source_dataset_revision: 8f593522dfbe7ec07055ca9d38a700e7643d3882
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: legal-qanl
+    hub_split: legal_qanl
+    languages:
+    - nl
+    references:
+    - title: LegalQANLRetrieval source reference
+      url: https://aclanthology.org/2024.nllp-1.12/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: clips/mteb-nl-legalqa-pr Hugging Face dataset
+      url: https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 102
+      min_chars: 27
+      max_chars: 369
+      mean_chars: 104.29411764705883
+      median_chars: 87.0
+    document_text_stats:
+      count: 10000
+      min_chars: 41
+      max_chars: 1670
+      mean_chars: 665.007
+      median_chars: 634.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -117,18 +1042,112 @@ task_metadata:
         languages:
           nl: 98.51
           de: 1.45
-  NanoOpenTender:
-    language: nl
+  nfcorpus_nl:
+    language: multilingual
     category: natural_language
-    short_description: Dutch tender-call retrieval from titles.
-    description: A compact OpenTender retrieval task over Belgian and Dutch tender calls in Dutch.
-    citation_keys:
-    - banar2025mtebnl
-    references:
-    - *id001
-    bibtex: "@misc{banar2025mtebnl,\n  title = {{MTEB-NL} and {E5-NL}: Embedding Benchmark and Models for Dutch},\n  author = {Banar, Nikolay and Lotfi, Ehsan and Van Nooten, Jens and Arhiliuc, Cristina and Kliocaite, Marija and Daelemans, Walter},\n  year = {2025},\n  url = {https://arxiv.org/abs/2509.12340},\n  doi = {10.48550/arXiv.2509.12340}\n}\n"
+    short_description: NFCorpus-NL.v2 retrieval split.
+    description: 'NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information
+      Retrieval. NFCorpus-NL is a Dutch translation. This version adds a Dutch prompt
+      to the dataset. Source dataset: clips/beir-nl-nfcorpus; source subset: default;
+      eval split: test.'
+    source_task: NFCorpus-NL.v2
+    source_dataset_id: clips/beir-nl-nfcorpus
+    source_dataset_revision: 942953e674fd0f619ff89897abb806dc3df5dd39
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nfcorpus-nl
+    hub_split: nfcorpus_nl
     languages:
     - nl
+    - en
+    references:
+    - title: NFCorpus-NL.v2 source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-nfcorpus
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 199
+      min_chars: 3
+      max_chars: 89
+      mean_chars: 18.507537688442213
+      median_chars: 12.0
+    document_text_stats:
+      count: 3593
+      min_chars: 145
+      max_chars: 8481
+      mean_chars: 1743.7244642360145
+      median_chars: 1769.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 199
+        languages:
+          nl: 51.759
+          en: 21.608
+          de: 6.03
+          it: 3.518
+          fr: 3.015
+          es: 2.513
+          et: 2.01
+          pl: 2.01
+          ca: 1.508
+          da: 1.005
+          sl: 1.005
+          ceb: 0.503
+          fy: 0.503
+          kw: 0.503
+          lt: 0.503
+          nds: 0.503
+          'no': 0.503
+          pt: 0.503
+          zh: 0.503
+      document:
+        sample_count: 3593
+        languages:
+          nl: 98.803
+          en: 0.529
+  nq:
+    language: nl
+    category: natural_language
+    short_description: NQ-NL retrieval split.
+    description: 'NQ-NL is a translation of NQ Source dataset: clips/beir-nl-nq; source
+      subset: default; eval split: test.'
+    source_task: NQ-NL
+    source_dataset_id: clips/beir-nl-nq
+    source_dataset_revision: caaaf6d6e44d92733775172256472abb3a438b42
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nq
+    hub_split: nq
+    languages:
+    - nl
+    references:
+    - title: NQ-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-nq
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 21
+      max_chars: 115
+      mean_chars: 52.685
+      median_chars: 49.0
+    document_text_stats:
+      count: 10000
+      min_chars: 6
+      max_chars: 4912
+      mean_chars: 595.3998
+      median_chars: 530.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -136,36 +1155,277 @@ task_metadata:
       query:
         sample_count: 200
         languages:
-          nl: 90.0
-          en: 4.0
-          de: 3.5
-          fr: 2.0
-          sv: 0.5
+          nl: 91.5
+          en: 5.5
+          de: 2.5
+          nds: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 96.48
+          en: 2.89
+  open_tender:
+    language: nl
+    category: natural_language
+    short_description: OpenTenderRetrieval retrieval split.
+    description: 'This dataset contains Belgian and Dutch tender calls from OpenTender
+      in Dutch Source dataset: clips/mteb-nl-opentender-ret; source subset: default;
+      eval split: test.'
+    source_task: OpenTenderRetrieval
+    source_dataset_id: clips/mteb-nl-opentender-ret
+    source_dataset_revision: 83eec1aa9c58f1dc8acfac015f653a9c25bda3f4
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: open-tender
+    hub_split: open_tender
+    languages:
+    - nl
+    references:
+    - title: OpenTenderRetrieval source reference
+      url: https://arxiv.org/abs/2509.12340
+      is_paper: false
+      source_confidence: probably_correct
+    - title: clips/mteb-nl-opentender-ret Hugging Face dataset
+      url: https://huggingface.co/datasets/clips/mteb-nl-opentender-ret
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 199
+      min_chars: 9
+      max_chars: 238
+      mean_chars: 62.185929648241206
+      median_chars: 52.0
+    document_text_stats:
+      count: 10000
+      min_chars: 8
+      max_chars: 9950
+      mean_chars: 442.0317
+      median_chars: 338.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 199
+        languages:
+          nl: 89.95
+          en: 4.02
+          de: 3.518
+          fr: 2.01
+          sv: 0.503
       document:
         sample_count: 10000
         languages:
           nl: 98.98
-  NanoVABB:
+  quora:
     language: nl
     category: natural_language
-    short_description: Flemish academic bibliography abstract retrieval.
-    description: A compact retrieval task built from VABB-SHW edition 14, retrieving academic abstracts from titles.
-    citation_keys:
-    - aspeslagh2024vabb
+    short_description: Quora-NL retrieval split.
+    description: 'QuoraRetrieval is based on questions that are marked as duplicates
+      on the Quora platform. Given a question, find other (duplicate) questions. QuoraRetrieval-NL
+      is a Dutch translation. Source dataset: clips/beir-nl-quora; source subset:
+      default; eval split: test.'
+    source_task: Quora-NL
+    source_dataset_id: clips/beir-nl-quora
+    source_dataset_revision: 698f8a5922a49e50e3c71b52a2e9d63b22756843
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: quora
+    hub_split: quora
+    languages:
+    - nl
     references:
-    - title: 'VABB-SHW: Dataset of Flemish Academic Bibliography for the Social Sciences and Humanities (edition 14)'
-      authors:
-      - Pieter Aspeslagh
-      - Raf Guns
-      - Tim C. E. Engels
-      year: 2024
+    - title: Quora-NL source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-quora
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 11
+      max_chars: 152
+      mean_chars: 51.795
+      median_chars: 49.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 1350
+      mean_chars: 66.5588
+      median_chars: 57.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 97.5
+          en: 2.0
+          de: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          nl: 97.61
+          en: 1.74
+  sci_fact_nl:
+    language: nl
+    category: natural_language
+    short_description: SciFact-NL.v2 retrieval split.
+    description: 'SciFactNL verifies scientific claims in Dutch using evidence from
+      the research literature containing scientific paper abstracts. This version
+      adds a Dutch prompt to the dataset. Source dataset: clips/beir-nl-scifact; source
+      subset: default; eval split: test.'
+    source_task: SciFact-NL.v2
+    source_dataset_id: clips/beir-nl-scifact
+    source_dataset_revision: 856d8dfc294b138856bbf3042450e3782321e44e
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: sci-fact-nl
+    hub_split: sci_fact_nl
+    languages:
+    - nl
+    references:
+    - title: SciFact-NL.v2 source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-scifact
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 24
+      max_chars: 228
+      mean_chars: 100.13
+      median_chars: 92.5
+    document_text_stats:
+      count: 5183
+      min_chars: 229
+      max_chars: 9188
+      mean_chars: 1640.3162261238665
+      median_chars: 1555.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 98.5
+          de: 0.5
+          fi: 0.5
+          pt: 0.5
+      document:
+        sample_count: 5183
+        languages:
+          nl: 97.588
+          en: 1.408
+          de: 0.502
+  scidocs_nl:
+    language: nl
+    category: natural_language
+    short_description: SCIDOCS-NL.v2 retrieval split.
+    description: 'SciDocs, a new evaluation benchmark consisting of seven document-level
+      tasks ranging from citation prediction, to document classification and recommendation.
+      SciDocs-NL is a Dutch translation. This version adds a Dutch prompt to the dataset.
+      Source dataset: clips/beir-nl-scidocs; source subset: default; eval split: test.'
+    source_task: SCIDOCS-NL.v2
+    source_dataset_id: clips/beir-nl-scidocs
+    source_dataset_revision: 4e018aa220029f9d1bd5a31de3650e322e32ea38
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: scidocs-nl
+    hub_split: scidocs_nl
+    languages:
+    - nl
+    references:
+    - title: SCIDOCS-NL.v2 source reference
+      url: https://huggingface.co/datasets/clips/beir-nl-scidocs
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 25
+      max_chars: 226
+      mean_chars: 77.725
+      median_chars: 74.0
+    document_text_stats:
+      count: 10000
+      min_chars: 20
+      max_chars: 9144
+      mean_chars: 1331.5728
+      median_chars: 1235.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 99.0
+          de: 1.0
+      document:
+        sample_count: 10000
+        languages:
+          nl: 98.92
+          en: 0.72
+  vabb:
+    language: nl
+    category: natural_language
+    short_description: VABBRetrieval retrieval split.
+    description: 'This dataset contains the fourteenth edition of the Flemish Academic
+      Bibliography for the Social Sciences and Humanities (VABB-SHW), a database of
+      academic publications from the social sciences and humanities authored by researchers
+      affiliated to Flemish universities (more information). Publications in the database
+      are used as one of the parameters of the Flemish performance-based research
+      funding system Source dataset: clips/mteb-nl-vabb-ret; source subset: default;
+      eval split: test.'
+    source_task: VABBRetrieval
+    source_dataset_id: clips/mteb-nl-vabb-ret
+    source_dataset_revision: af4a1e5b3ed451103894f86ff6b3ce85085d7b48
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: vabb
+    hub_split: vabb
+    languages:
+    - nl
+    references:
+    - title: VABBRetrieval source reference
       url: https://zenodo.org/records/14214806
       is_paper: false
       source_confidence: probably_correct
-      doi: 10.5281/zenodo.14214806
-    bibtex: "@dataset{aspeslagh2024vabb,\n  title = {{VABB-SHW}: Dataset of Flemish Academic Bibliography for the Social Sciences and Humanities (edition 14)},\n  author = {Aspeslagh, Pieter and Guns, Raf and Engels, Tim C. E.},\n  publisher = {Zenodo},\n  year = {2024},\n  url = {https://zenodo.org/records/14214806},\n  doi = {10.5281/zenodo.14214806}\n}\n"
-    languages:
-    - nl
+    - title: clips/mteb-nl-vabb-ret Hugging Face dataset
+      url: https://huggingface.co/datasets/clips/mteb-nl-vabb-ret
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 10
+      max_chars: 235
+      mean_chars: 74.47
+      median_chars: 71.5
+    document_text_stats:
+      count: 9123
+      min_chars: 9
+      max_chars: 35146
+      mean_chars: 837.8909349994519
+      median_chars: 661.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -185,29 +1445,47 @@ task_metadata:
         languages:
           nl: 98.761
           en: 0.877
-  NanoWebFAQNL:
+  web_faq_nld:
     language: nl
     category: natural_language
-    short_description: Dutch WebFAQ question-answer retrieval.
-    description: A compact Dutch split of WebFAQ for retrieving FAQ answers from natural questions.
-    citation_keys:
-    - dinzinger2025webfaq
-    references:
-    - title: 'WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval'
-      authors:
-      - Michael Dinzinger
-      - Laura Caspari
-      - Kanishka Ghosh Dastidar
-      - Jelena Mitrovic
-      - Michael Granitzer
-      year: 2025
-      url: https://arxiv.org/abs/2502.20936
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2502.20936
-    bibtex: "@misc{dinzinger2025webfaq,\n  title = {{WebFAQ}: A Multilingual Collection of Natural {Q&A} Datasets for Dense Retrieval},\n  author = {Dinzinger, Michael and Caspari, Laura and Ghosh Dastidar, Kanishka and Mitrovic, Jelena and Granitzer, Michael},\n  year = {2025},\n  url = {https://arxiv.org/abs/2502.20936},\n  doi = {10.48550/arXiv.2502.20936}\n}\n"
+    short_description: WebFAQRetrieval retrieval split.
+    description: 'WebFAQ is a broad-coverage corpus of natural question-answer pairs
+      in 75 languages, gathered from FAQ pages on the web. Source dataset: mteb/WebFAQRetrieval;
+      source subset: nld; eval split: test.'
+    source_task: WebFAQRetrieval
+    source_dataset_id: mteb/WebFAQRetrieval
+    source_dataset_revision: f64f483ad0f31d2e78209d524c14a4a867965959
+    source_dataset_subset: nld
+    source_eval_split: test
+    source_nano_split: web-faq-nld
+    hub_split: web_faq_nld
     languages:
     - nl
+    references:
+    - title: WebFAQRetrieval source reference
+      url: https://huggingface.co/PaDaS-Lab
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/WebFAQRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 273
+      mean_chars: 50.445
+      median_chars: 45.5
+    document_text_stats:
+      count: 10000
+      min_chars: 30
+      max_chars: 3562
+      mean_chars: 322.1842
+      median_chars: 263.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -224,27 +1502,47 @@ task_metadata:
         sample_count: 10000
         languages:
           nl: 99.65
-  NanobBSARDNL:
+  wikipedia_multilingual_nl:
     language: nl
     category: natural_language
-    short_description: Dutch statutory article retrieval from bBSARD.
-    description: A compact Dutch bBSARD split for retrieving Belgian statutory articles relevant to legal questions.
-    citation_keys:
-    - lotfi2025bbsard
-    references:
-    - title: 'Bilingual BSARD: Extending Statutory Article Retrieval to Dutch'
-      authors:
-      - Ehsan Lotfi
-      - Nikolay Banar
-      - Nerses Yuzbashyan
-      - Walter Daelemans
-      year: 2025
-      url: https://aclanthology.org/2025.regnlp-1.3/
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{lotfi2025bbsard,\n  title = {Bilingual {BSARD}: Extending Statutory Article Retrieval to Dutch},\n  author = {Lotfi, Ehsan and Banar, Nikolay and Yuzbashyan, Nerses and Daelemans, Walter},\n  booktitle = {Proceedings of the 1st Regulatory NLP Workshop},\n  year = {2025},\n  url = {https://aclanthology.org/2025.regnlp-1.3/}\n}\n"
+    short_description: WikipediaRetrievalMultilingual retrieval split.
+    description: 'The dataset is derived from Cohere''s wikipedia-2023-11 dataset
+      and contains synthetically generated queries. Source dataset: mteb/WikipediaRetrievalMultilingual;
+      source subset: nl; eval split: test.'
+    source_task: WikipediaRetrievalMultilingual
+    source_dataset_id: mteb/WikipediaRetrievalMultilingual
+    source_dataset_revision: 5f6c91d21f2f5b9afb663858d19848fbd223c775
+    source_dataset_subset: nl
+    source_eval_split: test
+    source_nano_split: wikipedia-multilingual-nl
+    hub_split: wikipedia_multilingual_nl
     languages:
     - nl
+    references:
+    - title: WikipediaRetrievalMultilingual source reference
+      url: https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/WikipediaRetrievalMultilingual Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 130
+      mean_chars: 63.54
+      median_chars: 62.0
+    document_text_stats:
+      count: 10000
+      min_chars: 100
+      max_chars: 3641
+      mean_chars: 381.0117
+      median_chars: 309.5
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -252,8 +1550,10 @@ task_metadata:
       query:
         sample_count: 200
         languages:
-          nl: 100.0
+          nl: 98.0
+          en: 2.0
       document:
         sample_count: 10000
         languages:
-          nl: 99.52
+          nl: 98.72
+          en: 0.65

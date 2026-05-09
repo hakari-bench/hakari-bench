@@ -6,8 +6,8 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoChemNQ
 - NanoChemHotpotQA
+- NanoChemNQ
 - NanoChemRxiv
 metadata:
   language: en
@@ -64,6 +64,86 @@ metadata:
     \ arXiv:2508.01643},\n  year = {2025},\n  url = {https://arxiv.org/abs/2508.01643},\n\
     \  doi = {10.48550/arXiv.2508.01643}\n}\n"
 task_metadata:
+  NanoChemHotpotQA:
+    language: en
+    category: natural_language
+    short_description: Chemical-domain multi-hop QA retrieval.
+    description: Chemistry-focused multi-hop question answering retrieval task in
+      ChemTEB, with queries matched to relevant evidence passages.
+    citation_keys:
+    - kasmaee2024chemteb
+    - yang2018hotpotqa
+    references:
+    - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding
+        Models Performance & Efficiency on a Specific Domain'
+      authors:
+      - Ali Shiraee Kasmaee
+      - Mohammad Khodadad
+      - Mohammad Arshi Saloot
+      - Nick Sherck
+      - Stephen Dokas
+      - Hamidreza Mahyar
+      - Soheila Samiee
+      year: 2024
+      url: https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering'
+      authors:
+      - Zhilin Yang
+      - Peng Qi
+      - Saizheng Zhang
+      - Yoshua Bengio
+      - William Cohen
+      - Ruslan Salakhutdinov
+      - Christopher D. Manning
+      year: 2018
+      url: https://aclanthology.org/D18-1259/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/D18-1259
+    bibtex: "@inproceedings{kasmaee2024chemteb,\n  title = {{ChemTEB}: Chemical Text\
+      \ Embedding Benchmark, an Overview of Embedding Models Performance \\& Efficiency\
+      \ on a Specific Domain},\n  author = {Shiraee Kasmaee, Ali and Khodadad, Mohammad\
+      \ and Arshi Saloot, Mohammad and Sherck, Nick and Dokas, Stephen and Mahyar,\
+      \ Hamidreza and Samiee, Soheila},\n  booktitle = {Proceedings of The 4th NeurIPS\
+      \ Efficient Natural Language and Speech Processing Workshop},\n  pages = {512--531},\n\
+      \  year = {2024},\n  volume = {262},\n  series = {Proceedings of Machine Learning\
+      \ Research},\n  publisher = {PMLR},\n  url = {https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html}\n\
+      }\n@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
+      \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi,\
+      \ Peng and Zhang, Saizheng and Bengio, Yoshua and Cohen, William and Salakhutdinov,\
+      \ Ruslan and Manning, Christopher D.},\n  booktitle = {Proceedings of the 2018\
+      \ Conference on Empirical Methods in Natural Language Processing},\n  pages\
+      \ = {2369--2380},\n  year = {2018},\n  address = {Brussels, Belgium},\n  publisher\
+      \ = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/D18-1259/},\n\
+      \  doi = {10.18653/v1/D18-1259}\n}\n"
+    query_text_stats:
+      count: 18
+      min_chars: 46
+      max_chars: 179
+      mean_chars: 104.22222222222223
+      median_chars: 104.5
+    document_text_stats:
+      count: 10000
+      min_chars: 36
+      max_chars: 2661
+      mean_chars: 402.3997
+      median_chars: 349.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 18
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 98.98
   NanoChemNQ:
     language: en
     category: natural_language
@@ -157,86 +237,6 @@ task_metadata:
         sample_count: 10000
         languages:
           en: 99.72
-  NanoChemHotpotQA:
-    language: en
-    category: natural_language
-    short_description: Chemical-domain multi-hop QA retrieval.
-    description: Chemistry-focused multi-hop question answering retrieval task in
-      ChemTEB, with queries matched to relevant evidence passages.
-    citation_keys:
-    - kasmaee2024chemteb
-    - yang2018hotpotqa
-    references:
-    - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding
-        Models Performance & Efficiency on a Specific Domain'
-      authors:
-      - Ali Shiraee Kasmaee
-      - Mohammad Khodadad
-      - Mohammad Arshi Saloot
-      - Nick Sherck
-      - Stephen Dokas
-      - Hamidreza Mahyar
-      - Soheila Samiee
-      year: 2024
-      url: https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering'
-      authors:
-      - Zhilin Yang
-      - Peng Qi
-      - Saizheng Zhang
-      - Yoshua Bengio
-      - William Cohen
-      - Ruslan Salakhutdinov
-      - Christopher D. Manning
-      year: 2018
-      url: https://aclanthology.org/D18-1259/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/D18-1259
-    bibtex: "@inproceedings{kasmaee2024chemteb,\n  title = {{ChemTEB}: Chemical Text\
-      \ Embedding Benchmark, an Overview of Embedding Models Performance \\& Efficiency\
-      \ on a Specific Domain},\n  author = {Shiraee Kasmaee, Ali and Khodadad, Mohammad\
-      \ and Arshi Saloot, Mohammad and Sherck, Nick and Dokas, Stephen and Mahyar,\
-      \ Hamidreza and Samiee, Soheila},\n  booktitle = {Proceedings of The 4th NeurIPS\
-      \ Efficient Natural Language and Speech Processing Workshop},\n  pages = {512--531},\n\
-      \  year = {2024},\n  volume = {262},\n  series = {Proceedings of Machine Learning\
-      \ Research},\n  publisher = {PMLR},\n  url = {https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html}\n\
-      }\n@inproceedings{yang2018hotpotqa,\n  title = {{HotpotQA}: A Dataset for Diverse,\
-      \ Explainable Multi-hop Question Answering},\n  author = {Yang, Zhilin and Qi,\
-      \ Peng and Zhang, Saizheng and Bengio, Yoshua and Cohen, William and Salakhutdinov,\
-      \ Ruslan and Manning, Christopher D.},\n  booktitle = {Proceedings of the 2018\
-      \ Conference on Empirical Methods in Natural Language Processing},\n  pages\
-      \ = {2369--2380},\n  year = {2018},\n  address = {Brussels, Belgium},\n  publisher\
-      \ = {Association for Computational Linguistics},\n  url = {https://aclanthology.org/D18-1259/},\n\
-      \  doi = {10.18653/v1/D18-1259}\n}\n"
-    query_text_stats:
-      count: 18
-      min_chars: 46
-      max_chars: 179
-      mean_chars: 104.22222222222223
-      median_chars: 104.5
-    document_text_stats:
-      count: 10000
-      min_chars: 36
-      max_chars: 2661
-      mean_chars: 402.3997
-      median_chars: 349.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 18
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 98.98
   NanoChemRxiv:
     language: en
     category: natural_language

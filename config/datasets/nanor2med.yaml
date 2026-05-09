@@ -6,14 +6,14 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoR2MEDBiology
 - NanoR2MEDBioinformatics
-- NanoR2MEDMedicalSciences
-- NanoR2MEDMedXpertQAExam
-- NanoR2MEDMedQADiag
-- NanoR2MEDPMCTreatment
-- NanoR2MEDPMCClinical
+- NanoR2MEDBiology
 - NanoR2MEDIIYiClinical
+- NanoR2MEDMedQADiag
+- NanoR2MEDMedXpertQAExam
+- NanoR2MEDMedicalSciences
+- NanoR2MEDPMCClinical
+- NanoR2MEDPMCTreatment
 metadata:
   language: en
   category: natural_language
@@ -38,6 +38,55 @@ metadata:
     \ and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title = {R2MED:\
     \ A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n}\n"
 task_metadata:
+  NanoR2MEDBioinformatics:
+    language: en
+    category: natural_language
+    short_description: Bioinformatics reasoning-driven medical retrieval.
+    description: NanoR2MEDBioinformatics evaluates retrieval for bioinformatics-focused
+      R2MED queries against biomedical passages.
+    citation_keys:
+    - li2025r2med
+    references:
+    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
+      authors:
+      - Xiangxu Zhang
+      - Lei Li
+      - Xiao Zhou
+      - Zheng Liu
+      year: 2025
+      url: https://arxiv.org/abs/2505.14558
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
+      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
+      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
+      }\n"
+    query_text_stats:
+      count: 77
+      min_chars: 197
+      max_chars: 4984
+      mean_chars: 890.3246753246754
+      median_chars: 727.0
+    document_text_stats:
+      count: 10000
+      min_chars: 109
+      max_chars: 13214
+      mean_chars: 666.8386
+      median_chars: 679.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 77
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.52
   NanoR2MEDBiology:
     language: en
     category: natural_language
@@ -92,300 +141,6 @@ task_metadata:
           es: 0.98
           it: 0.85
           fr: 0.61
-  NanoR2MEDBioinformatics:
-    language: en
-    category: natural_language
-    short_description: Bioinformatics reasoning-driven medical retrieval.
-    description: NanoR2MEDBioinformatics evaluates retrieval for bioinformatics-focused
-      R2MED queries against biomedical passages.
-    citation_keys:
-    - li2025r2med
-    references:
-    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
-      authors:
-      - Xiangxu Zhang
-      - Lei Li
-      - Xiao Zhou
-      - Zheng Liu
-      year: 2025
-      url: https://arxiv.org/abs/2505.14558
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
-      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
-      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
-      }\n"
-    query_text_stats:
-      count: 77
-      min_chars: 197
-      max_chars: 4984
-      mean_chars: 890.3246753246754
-      median_chars: 727.0
-    document_text_stats:
-      count: 10000
-      min_chars: 109
-      max_chars: 13214
-      mean_chars: 666.8386
-      median_chars: 679.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 77
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 99.52
-  NanoR2MEDMedicalSciences:
-    language: en
-    category: natural_language
-    short_description: Medical-sciences reasoning-driven retrieval.
-    description: NanoR2MEDMedicalSciences evaluates retrieval for medical-sciences
-      R2MED queries against biomedical passages.
-    citation_keys:
-    - li2025r2med
-    references:
-    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
-      authors:
-      - Xiangxu Zhang
-      - Lei Li
-      - Xiao Zhou
-      - Zheng Liu
-      year: 2025
-      url: https://arxiv.org/abs/2505.14558
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
-      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
-      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
-      }\n"
-    query_text_stats:
-      count: 88
-      min_chars: 148
-      max_chars: 2535
-      mean_chars: 477.625
-      median_chars: 378.0
-    document_text_stats:
-      count: 10000
-      min_chars: 76
-      max_chars: 6564
-      mean_chars: 678.5968
-      median_chars: 679.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 88
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 98.53
-  NanoR2MEDMedXpertQAExam:
-    language: en
-    category: natural_language
-    short_description: Medical exam question retrieval from R2MED.
-    description: NanoR2MEDMedXpertQAExam evaluates retrieval for exam-style MedXpertQA
-      questions in the R2MED benchmark.
-    citation_keys:
-    - li2025r2med
-    references:
-    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
-      authors:
-      - Xiangxu Zhang
-      - Lei Li
-      - Xiao Zhou
-      - Zheng Liu
-      year: 2025
-      url: https://arxiv.org/abs/2505.14558
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
-      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
-      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
-      }\n"
-    query_text_stats:
-      count: 97
-      min_chars: 223
-      max_chars: 2334
-      mean_chars: 928.4432989690722
-      median_chars: 879.0
-    document_text_stats:
-      count: 10000
-      min_chars: 119
-      max_chars: 1000
-      mean_chars: 723.8511
-      median_chars: 767.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 97
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 99.88
-  NanoR2MEDMedQADiag:
-    language: en
-    category: natural_language
-    short_description: Diagnostic medical question retrieval from R2MED.
-    description: NanoR2MEDMedQADiag evaluates retrieval for diagnostic MedQA-style
-      questions in the R2MED benchmark.
-    citation_keys:
-    - li2025r2med
-    references:
-    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
-      authors:
-      - Xiangxu Zhang
-      - Lei Li
-      - Xiao Zhou
-      - Zheng Liu
-      year: 2025
-      url: https://arxiv.org/abs/2505.14558
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
-      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
-      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
-      }\n"
-    query_text_stats:
-      count: 118
-      min_chars: 204
-      max_chars: 1591
-      mean_chars: 706.7372881355932
-      median_chars: 630.0
-    document_text_stats:
-      count: 10000
-      min_chars: 15
-      max_chars: 999
-      mean_chars: 791.422
-      median_chars: 882.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 118
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 99.33
-  NanoR2MEDPMCTreatment:
-    language: en
-    category: natural_language
-    short_description: PMC treatment evidence retrieval from R2MED.
-    description: NanoR2MEDPMCTreatment evaluates retrieval for treatment-oriented
-      queries over PMC-derived medical passages.
-    citation_keys:
-    - li2025r2med
-    references:
-    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
-      authors:
-      - Xiangxu Zhang
-      - Lei Li
-      - Xiao Zhou
-      - Zheng Liu
-      year: 2025
-      url: https://arxiv.org/abs/2505.14558
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
-      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
-      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
-      }\n"
-    query_text_stats:
-      count: 150
-      min_chars: 991
-      max_chars: 2637
-      mean_chars: 1755.8266666666666
-      median_chars: 1750.5
-    document_text_stats:
-      count: 10000
-      min_chars: 42
-      max_chars: 8758
-      mean_chars: 726.6314
-      median_chars: 608.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 150
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 99.98
-  NanoR2MEDPMCClinical:
-    language: en
-    category: natural_language
-    short_description: PMC clinical evidence retrieval from R2MED.
-    description: NanoR2MEDPMCClinical evaluates retrieval for clinical queries over
-      PMC-derived medical passages.
-    citation_keys:
-    - li2025r2med
-    references:
-    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
-      authors:
-      - Xiangxu Zhang
-      - Lei Li
-      - Xiao Zhou
-      - Zheng Liu
-      year: 2025
-      url: https://arxiv.org/abs/2505.14558
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
-      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
-      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
-      }\n"
-    query_text_stats:
-      count: 114
-      min_chars: 338
-      max_chars: 1361
-      mean_chars: 827.6754385964912
-      median_chars: 832.0
-    document_text_stats:
-      count: 10000
-      min_chars: 283
-      max_chars: 7217
-      mean_chars: 2103.4971
-      median_chars: 2131.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 114
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 99.99
   NanoR2MEDIIYiClinical:
     language: en
     category: natural_language
@@ -435,3 +190,248 @@ task_metadata:
         sample_count: 10000
         languages:
           en: 100.0
+  NanoR2MEDMedQADiag:
+    language: en
+    category: natural_language
+    short_description: Diagnostic medical question retrieval from R2MED.
+    description: NanoR2MEDMedQADiag evaluates retrieval for diagnostic MedQA-style
+      questions in the R2MED benchmark.
+    citation_keys:
+    - li2025r2med
+    references:
+    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
+      authors:
+      - Xiangxu Zhang
+      - Lei Li
+      - Xiao Zhou
+      - Zheng Liu
+      year: 2025
+      url: https://arxiv.org/abs/2505.14558
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
+      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
+      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
+      }\n"
+    query_text_stats:
+      count: 118
+      min_chars: 204
+      max_chars: 1591
+      mean_chars: 706.7372881355932
+      median_chars: 630.0
+    document_text_stats:
+      count: 10000
+      min_chars: 15
+      max_chars: 999
+      mean_chars: 791.422
+      median_chars: 882.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 118
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.33
+  NanoR2MEDMedXpertQAExam:
+    language: en
+    category: natural_language
+    short_description: Medical exam question retrieval from R2MED.
+    description: NanoR2MEDMedXpertQAExam evaluates retrieval for exam-style MedXpertQA
+      questions in the R2MED benchmark.
+    citation_keys:
+    - li2025r2med
+    references:
+    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
+      authors:
+      - Xiangxu Zhang
+      - Lei Li
+      - Xiao Zhou
+      - Zheng Liu
+      year: 2025
+      url: https://arxiv.org/abs/2505.14558
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
+      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
+      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
+      }\n"
+    query_text_stats:
+      count: 97
+      min_chars: 223
+      max_chars: 2334
+      mean_chars: 928.4432989690722
+      median_chars: 879.0
+    document_text_stats:
+      count: 10000
+      min_chars: 119
+      max_chars: 1000
+      mean_chars: 723.8511
+      median_chars: 767.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 97
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.88
+  NanoR2MEDMedicalSciences:
+    language: en
+    category: natural_language
+    short_description: Medical-sciences reasoning-driven retrieval.
+    description: NanoR2MEDMedicalSciences evaluates retrieval for medical-sciences
+      R2MED queries against biomedical passages.
+    citation_keys:
+    - li2025r2med
+    references:
+    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
+      authors:
+      - Xiangxu Zhang
+      - Lei Li
+      - Xiao Zhou
+      - Zheng Liu
+      year: 2025
+      url: https://arxiv.org/abs/2505.14558
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
+      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
+      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
+      }\n"
+    query_text_stats:
+      count: 88
+      min_chars: 148
+      max_chars: 2535
+      mean_chars: 477.625
+      median_chars: 378.0
+    document_text_stats:
+      count: 10000
+      min_chars: 76
+      max_chars: 6564
+      mean_chars: 678.5968
+      median_chars: 679.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 88
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 98.53
+  NanoR2MEDPMCClinical:
+    language: en
+    category: natural_language
+    short_description: PMC clinical evidence retrieval from R2MED.
+    description: NanoR2MEDPMCClinical evaluates retrieval for clinical queries over
+      PMC-derived medical passages.
+    citation_keys:
+    - li2025r2med
+    references:
+    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
+      authors:
+      - Xiangxu Zhang
+      - Lei Li
+      - Xiao Zhou
+      - Zheng Liu
+      year: 2025
+      url: https://arxiv.org/abs/2505.14558
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
+      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
+      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
+      }\n"
+    query_text_stats:
+      count: 114
+      min_chars: 338
+      max_chars: 1361
+      mean_chars: 827.6754385964912
+      median_chars: 832.0
+    document_text_stats:
+      count: 10000
+      min_chars: 283
+      max_chars: 7217
+      mean_chars: 2103.4971
+      median_chars: 2131.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 114
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.99
+  NanoR2MEDPMCTreatment:
+    language: en
+    category: natural_language
+    short_description: PMC treatment evidence retrieval from R2MED.
+    description: NanoR2MEDPMCTreatment evaluates retrieval for treatment-oriented
+      queries over PMC-derived medical passages.
+    citation_keys:
+    - li2025r2med
+    references:
+    - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
+      authors:
+      - Xiangxu Zhang
+      - Lei Li
+      - Xiao Zhou
+      - Zheng Liu
+      year: 2025
+      url: https://arxiv.org/abs/2505.14558
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{li2025r2med,\n  author = {Xiangxu Zhang and Lei Li and Xiao\
+      \ Zhou and Zheng Liu},\n  journal = {arXiv preprint arXiv:2505.14558},\n  title\
+      \ = {R2MED: A Benchmark for Reasoning-Driven Medical Retrieval},\n  year = {2025},\n\
+      }\n"
+    query_text_stats:
+      count: 150
+      min_chars: 991
+      max_chars: 2637
+      mean_chars: 1755.8266666666666
+      median_chars: 1750.5
+    document_text_stats:
+      count: 10000
+      min_chars: 42
+      max_chars: 8758
+      mean_chars: 726.6314
+      median_chars: 608.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 150
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.98

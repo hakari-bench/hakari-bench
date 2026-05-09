@@ -6,11 +6,15 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoSpanishPassageS2P
-- NanoSpanishPassageS2S
-- NanoXPQAEs
+- mintaka_es
+- miracl_es
+- spanish_passage_s2_p
+- spanish_passage_s2_s
+- xpqa_eng_spa
+- xpqa_spa_eng
+- xpqa_spa_spa
 metadata:
-  language: es
+  language: multilingual
   category: natural_language
   short_description: Spanish NanoMTEB retrieval benchmark.
   description: NanoMTEB-Spanish is a compact Spanish retrieval benchmark aligned with
@@ -34,38 +38,174 @@ metadata:
     \ and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n\
     \  doi = {10.48550/arXiv.2210.07316}\n}\n"
 task_metadata:
-  NanoSpanishPassageS2P:
-    language: es
+  mintaka_es:
+    language: multilingual
     category: natural_language
-    short_description: Spanish health passage retrieval.
-    description: A compact sentence-to-passage retrieval split from a Spanish health-related
-      web passage retrieval test collection.
-    citation_keys:
-    - kamateri2019spanishpassage
-    references:
-    - title: A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related
-        Resources
-      authors:
-      - Eleni Kamateri
-      - Theodora Tsikrika
-      - Spyridon Symeonidis
-      - Stefanos Vrochidis
-      - Wolfgang Minker
-      - Yiannis Kompatsiaris
-      year: 2019
-      url: https://doi.org/10.1007/978-3-030-15719-7_19
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1007/978-3-030-15719-7_19
-    bibtex: "@inproceedings{kamateri2019spanishpassage,\n  title = {A Test Collection\
-      \ for Passage Retrieval Evaluation of Spanish Health-Related Resources},\n \
-      \ author = {Kamateri, Eleni and Tsikrika, Theodora and Symeonidis, Spyridon\
-      \ and Vrochidis, Stefanos and Minker, Wolfgang and Kompatsiaris, Yiannis},\n\
-      \  booktitle = {Advances in Information Retrieval},\n  year = {2019},\n  url\
-      \ = {https://doi.org/10.1007/978-3-030-15719-7_19},\n  doi = {10.1007/978-3-030-15719-7_19}\n\
-      }\n"
+    short_description: MintakaRetrieval retrieval split.
+    description: 'We introduce Mintaka, a complex, natural, and multilingual dataset
+      designed for experimenting with end-to-end question-answering models. Mintaka
+      is composed of 20,000 question-answer pairs collected in English, annotated
+      with Wikidata entities, and translated into Arabic, French, German, Hindi, Italian,
+      Japanese, Portuguese, and Spanish for a total of 180,000 samples. Mintaka includes
+      8 types of complex questions, including superlative, intersection, and multi-hop
+      questions, which were naturally elicited from crowd workers.  Source dataset:
+      mteb/MintakaRetrieval; source subset: es; eval split: test.'
+    source_task: MintakaRetrieval
+    source_dataset_id: mteb/MintakaRetrieval
+    source_dataset_revision: 43bc699486e768138ce3a6d4cd859da306ac9eef
+    source_dataset_subset: es
+    source_eval_split: test
+    source_nano_split: mintaka-es
+    hub_split: mintaka_es
     languages:
     - es
+    - en
+    references:
+    - title: MintakaRetrieval source reference
+      url: https://aclanthology.org/2022.coling-1.138
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MintakaRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MintakaRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 33
+      max_chars: 181
+      mean_chars: 66.925
+      median_chars: 65.0
+    document_text_stats:
+      count: 1693
+      min_chars: 1
+      max_chars: 71
+      mean_chars: 14.291789722386296
+      median_chars: 13.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          es: 100.0
+      document:
+        sample_count: 1693
+        languages:
+          en: 62.552
+          es: 22.032
+          de: 2.835
+          it: 2.717
+          fr: 2.245
+          pt: 1.654
+          nl: 0.768
+          sv: 0.591
+          pl: 0.532
+  miracl_es:
+    language: es
+    category: natural_language
+    short_description: MIRACLRetrievalHardNegatives.v2 retrieval split.
+    description: 'MIRACL (Multilingual Information Retrieval Across a Continuum of
+      Languages) is a multilingual retrieval dataset that focuses on search across
+      18 different languages. The hard negative version has been created by pooling
+      the 250 top documents per query from BM25, e5-multilingual-large and e5-mistral-instruct.V2
+      uses a more appropriate prompt rather than the default prompt for retrieval.
+      You can get more information on the effect of different prompt in the [PR](https://github.com/embeddings-benchmark/mteb/pull/3469#issuecomment-3436467106)
+      Source dataset: mteb/MIRACLRetrievalHardNegatives; source subset: es; eval split:
+      dev.'
+    source_task: MIRACLRetrievalHardNegatives.v2
+    source_dataset_id: mteb/MIRACLRetrievalHardNegatives
+    source_dataset_revision: d7d94fa4b946cec4a27c84653aa0cf6b33f74a3c
+    source_dataset_subset: es
+    source_eval_split: dev
+    source_nano_split: miracl-es
+    hub_split: miracl_es
+    languages:
+    - es
+    references:
+    - title: MIRACLRetrievalHardNegatives.v2 source reference
+      url: http://miracl.ai/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MIRACLRetrievalHardNegatives Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 20
+      max_chars: 83
+      mean_chars: 47.65
+      median_chars: 47.0
+    document_text_stats:
+      count: 10000
+      min_chars: 12
+      max_chars: 6276
+      mean_chars: 555.024
+      median_chars: 469.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          es: 99.5
+          sk: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          es: 96.7
+          en: 1.47
+  spanish_passage_s2_p:
+    language: es
+    category: natural_language
+    short_description: SpanishPassageRetrievalS2P retrieval split.
+    description: 'Test collection for passage retrieval from health-related Web resources
+      in Spanish. Source dataset: mteb/SpanishPassageRetrievalS2P; source subset:
+      default; eval split: test.'
+    source_task: SpanishPassageRetrievalS2P
+    source_dataset_id: mteb/SpanishPassageRetrievalS2P
+    source_dataset_revision: 35c4548ee4e971ea81bcd3f4b431db6ff599ff88
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: spanish-passage-s2-p
+    hub_split: spanish_passage_s2_p
+    languages:
+    - es
+    references:
+    - title: SpanishPassageRetrievalS2P source reference
+      url: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/SpanishPassageRetrievalS2P Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2P
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 167
+      min_chars: 24
+      max_chars: 116
+      mean_chars: 67.55688622754491
+      median_chars: 65.0
+    document_text_stats:
+      count: 7501
+      min_chars: 20
+      max_chars: 22034
+      mean_chars: 2710.8465537928278
+      median_chars: 2164.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -78,38 +218,47 @@ task_metadata:
         sample_count: 7501
         languages:
           es: 99.613
-  NanoSpanishPassageS2S:
+  spanish_passage_s2_s:
     language: es
     category: natural_language
-    short_description: Spanish health sentence retrieval.
-    description: A compact sentence-to-sentence retrieval split from a Spanish health-related
-      web passage retrieval test collection.
-    citation_keys:
-    - kamateri2019spanishpassage
-    references:
-    - title: A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related
-        Resources
-      authors:
-      - Eleni Kamateri
-      - Theodora Tsikrika
-      - Spyridon Symeonidis
-      - Stefanos Vrochidis
-      - Wolfgang Minker
-      - Yiannis Kompatsiaris
-      year: 2019
-      url: https://doi.org/10.1007/978-3-030-15719-7_19
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1007/978-3-030-15719-7_19
-    bibtex: "@inproceedings{kamateri2019spanishpassage,\n  title = {A Test Collection\
-      \ for Passage Retrieval Evaluation of Spanish Health-Related Resources},\n \
-      \ author = {Kamateri, Eleni and Tsikrika, Theodora and Symeonidis, Spyridon\
-      \ and Vrochidis, Stefanos and Minker, Wolfgang and Kompatsiaris, Yiannis},\n\
-      \  booktitle = {Advances in Information Retrieval},\n  year = {2019},\n  url\
-      \ = {https://doi.org/10.1007/978-3-030-15719-7_19},\n  doi = {10.1007/978-3-030-15719-7_19}\n\
-      }\n"
+    short_description: SpanishPassageRetrievalS2S retrieval split.
+    description: 'Test collection for passage retrieval from health-related Web resources
+      in Spanish. Source dataset: mteb/SpanishPassageRetrievalS2S; source subset:
+      default; eval split: test.'
+    source_task: SpanishPassageRetrievalS2S
+    source_dataset_id: mteb/SpanishPassageRetrievalS2S
+    source_dataset_revision: 6f276e4831066ee6d81d5f6d18b8949d17e65566
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: spanish-passage-s2-s
+    hub_split: spanish_passage_s2_s
     languages:
     - es
+    references:
+    - title: SpanishPassageRetrievalS2S source reference
+      url: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/SpanishPassageRetrievalS2S Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2S
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 167
+      min_chars: 24
+      max_chars: 116
+      mean_chars: 67.55688622754491
+      median_chars: 65.0
+    document_text_stats:
+      count: 250
+      min_chars: 51
+      max_chars: 2083
+      mean_chars: 442.432
+      median_chars: 305.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -122,34 +271,157 @@ task_metadata:
         sample_count: 250
         languages:
           es: 100.0
-  NanoXPQAEs:
+  xpqa_eng_spa:
+    language: multilingual
+    category: natural_language
+    short_description: XPQARetrieval retrieval split.
+    description: 'XPQARetrieval Source dataset: mteb/XPQARetrieval; source subset:
+      eng-spa; eval split: test.'
+    source_task: XPQARetrieval
+    source_dataset_id: mteb/XPQARetrieval
+    source_dataset_revision: fc4624be978945a0ceebbc4b85737258fe26330b
+    source_dataset_subset: eng-spa
+    source_eval_split: test
+    source_nano_split: xpqa-eng-spa
+    hub_split: xpqa_eng_spa
+    languages:
+    - en
+    - es
+    references:
+    - title: XPQARetrieval source reference
+      url: https://arxiv.org/abs/2305.09249
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/XPQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/XPQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 123
+      mean_chars: 45.16
+      median_chars: 40.0
+    document_text_stats:
+      count: 1936
+      min_chars: 13
+      max_chars: 1401
+      mean_chars: 123.42923553719008
+      median_chars: 94.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          es: 97.0
+          pt: 1.5
+          ca: 0.5
+          fr: 0.5
+          it: 0.5
+      document:
+        sample_count: 1936
+        languages:
+          en: 98.244
+          es: 0.981
+  xpqa_spa_eng:
+    language: multilingual
+    category: natural_language
+    short_description: XPQARetrieval retrieval split.
+    description: 'XPQARetrieval Source dataset: mteb/XPQARetrieval; source subset:
+      spa-eng; eval split: test.'
+    source_task: XPQARetrieval
+    source_dataset_id: mteb/XPQARetrieval
+    source_dataset_revision: fc4624be978945a0ceebbc4b85737258fe26330b
+    source_dataset_subset: spa-eng
+    source_eval_split: test
+    source_nano_split: xpqa-spa-eng
+    hub_split: xpqa_spa_eng
+    languages:
+    - en
+    - es
+    references:
+    - title: XPQARetrieval source reference
+      url: https://arxiv.org/abs/2305.09249
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/XPQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/XPQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 14
+      max_chars: 120
+      mean_chars: 47.415
+      median_chars: 41.0
+    document_text_stats:
+      count: 1941
+      min_chars: 11
+      max_chars: 266
+      mean_chars: 68.27511591962906
+      median_chars: 67.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 1941
+        languages:
+          es: 99.485
+  xpqa_spa_spa:
     language: es
     category: natural_language
-    short_description: Spanish xPQA product question retrieval.
-    description: A compact Spanish xPQA retrieval split for selecting product information
-      that answers customer questions.
-    citation_keys:
-    - shen2023xpqa
-    references:
-    - title: 'xPQA: Cross-Lingual Product Question Answering in 12 Languages'
-      authors:
-      - Xiaoyu Shen
-      - Akari Asai
-      - Bill Byrne
-      - Adria De Gispert
-      year: 2023
-      url: https://aclanthology.org/2023.acl-industry.12/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2023.acl-industry.12
-    bibtex: "@inproceedings{shen2023xpqa,\n  title = {x{PQA}: Cross-Lingual Product\
-      \ Question Answering in 12 Languages},\n  author = {Shen, Xiaoyu and Asai, Akari\
-      \ and Byrne, Bill and De Gispert, Adria},\n  booktitle = {Proceedings of the\
-      \ 61st Annual Meeting of the Association for Computational Linguistics (Volume\
-      \ 5: Industry Track)},\n  year = {2023},\n  url = {https://aclanthology.org/2023.acl-industry.12/},\n\
-      \  doi = {10.18653/v1/2023.acl-industry.12}\n}\n"
+    short_description: XPQARetrieval retrieval split.
+    description: 'XPQARetrieval Source dataset: mteb/XPQARetrieval; source subset:
+      spa-spa; eval split: test.'
+    source_task: XPQARetrieval
+    source_dataset_id: mteb/XPQARetrieval
+    source_dataset_revision: fc4624be978945a0ceebbc4b85737258fe26330b
+    source_dataset_subset: spa-spa
+    source_eval_split: test
+    source_nano_split: xpqa-spa-spa
+    hub_split: xpqa_spa_spa
     languages:
     - es
+    references:
+    - title: XPQARetrieval source reference
+      url: https://arxiv.org/abs/2305.09249
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/XPQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/XPQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 123
+      mean_chars: 45.16
+      median_chars: 40.0
+    document_text_stats:
+      count: 1941
+      min_chars: 11
+      max_chars: 266
+      mean_chars: 68.27511591962906
+      median_chars: 67.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5

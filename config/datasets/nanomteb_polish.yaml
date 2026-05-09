@@ -1,0 +1,785 @@
+name: NanoMTEB-Polish
+dataset_id: hakari-bench/NanoMTEB-Polish
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- cqadupstack_android
+- cqadupstack_english
+- cqadupstack_gis
+- cqadupstack_mathematica
+- cqadupstack_physics
+- cqadupstack_programmers
+- cqadupstack_stats
+- cqadupstack_tex
+- cqadupstack_webmasters
+- cqadupstack_wordpress
+- fiqa
+- nq
+- pugg
+- quora
+metadata:
+  language: pl
+  category: natural_language
+  short_description: NanoMTEB-Polish retrieval benchmark.
+  description: NanoMTEB-Polish is a Nano-style retrieval dataset hosted by hakari-bench.
+task_metadata:
+  cqadupstack_android:
+    language: pl
+    category: natural_language
+    short_description: CQADupstack-Android-PL retrieval split.
+    description: 'CQADupStack: A Stack Exchange Question Duplicate Pairs Dataset Source
+      dataset: mteb/CQADupstack-Android-PL; source subset: default; eval split: test.'
+    source_task: CQADupstack-Android-PL
+    source_dataset_id: mteb/CQADupstack-Android-PL
+    source_dataset_revision: 1f7d469f28e94c23164476fc4115f14fb3b95a6c
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-android
+    hub_split: cqadupstack_android
+    languages:
+    - pl
+    references:
+    - title: CQADupstack-Android-PL source reference
+      url: https://huggingface.co/datasets/clarin-knext/cqadupstack-android-pl
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CQADupstack-Android-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CQADupstack-Android-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 139
+      mean_chars: 59.255
+      median_chars: 56.5
+    document_text_stats:
+      count: 10000
+      min_chars: 69
+      max_chars: 26776
+      mean_chars: 626.6791
+      median_chars: 484.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 99.0
+          cs: 0.5
+          de: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.92
+  cqadupstack_english:
+    language: pl
+    category: natural_language
+    short_description: CQADupstack-English-PL retrieval split.
+    description: 'CQADupStack: A Stack Exchange Question Duplicate Pairs Dataset Source
+      dataset: mteb/CQADupstack-English-PL; source subset: default; eval split: test.'
+    source_task: CQADupstack-English-PL
+    source_dataset_id: mteb/CQADupstack-English-PL
+    source_dataset_revision: 27402a7ed3c8a51f45f2a84cb7dfaf6ab4729dad
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-english
+    hub_split: cqadupstack_english
+    languages:
+    - pl
+    references:
+    - title: CQADupstack-English-PL source reference
+      url: https://huggingface.co/datasets/clarin-knext/cqadupstack-english-pl
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CQADupstack-English-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CQADupstack-English-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 11
+      max_chars: 134
+      mean_chars: 46.515
+      median_chars: 43.0
+    document_text_stats:
+      count: 10000
+      min_chars: 27
+      max_chars: 6481
+      mean_chars: 488.136
+      median_chars: 383.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 99.5
+          en: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.98
+  cqadupstack_gis:
+    language: pl
+    category: natural_language
+    short_description: CQADupstack-Gis-PL retrieval split.
+    description: 'CQADupStack: A Stack Exchange Question Duplicate Pairs Dataset Source
+      dataset: mteb/CQADupstack-Gis-PL; source subset: default; eval split: test.'
+    source_task: CQADupstack-Gis-PL
+    source_dataset_id: mteb/CQADupstack-Gis-PL
+    source_dataset_revision: 784afb42ad5c0f2e71630644a32f08645bbc87fa
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-gis
+    hub_split: cqadupstack_gis
+    languages:
+    - pl
+    references:
+    - title: CQADupstack-Gis-PL source reference
+      url: https://huggingface.co/datasets/clarin-knext/cqadupstack-gis-pl
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CQADupstack-Gis-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CQADupstack-Gis-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 149
+      mean_chars: 60.61
+      median_chars: 58.0
+    document_text_stats:
+      count: 10000
+      min_chars: 72
+      max_chars: 27867
+      mean_chars: 965.9695
+      median_chars: 667.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 98.0
+          en: 1.5
+          lt: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.88
+  cqadupstack_mathematica:
+    language: pl
+    category: natural_language
+    short_description: CQADupstack-Mathematica-PL retrieval split.
+    description: 'CQADupStack: A Stack Exchange Question Duplicate Pairs Dataset Source
+      dataset: mteb/CQADupstack-Mathematica-PL; source subset: default; eval split:
+      test.'
+    source_task: CQADupstack-Mathematica-PL
+    source_dataset_id: mteb/CQADupstack-Mathematica-PL
+    source_dataset_revision: f8c9c441534d4823bf9b06573e239841900dec3e
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-mathematica
+    hub_split: cqadupstack_mathematica
+    languages:
+    - pl
+    references:
+    - title: CQADupstack-Mathematica-PL source reference
+      url: https://huggingface.co/datasets/clarin-knext/cqadupstack-mathematica-pl
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CQADupstack-Mathematica-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CQADupstack-Mathematica-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 135
+      mean_chars: 50.405
+      median_chars: 46.0
+    document_text_stats:
+      count: 10000
+      min_chars: 80
+      max_chars: 26310
+      mean_chars: 1088.5234
+      median_chars: 782.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 99.0
+          cs: 0.5
+          lt: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.87
+  cqadupstack_physics:
+    language: pl
+    category: natural_language
+    short_description: CQADupstack-Physics-PL retrieval split.
+    description: 'CQADupStack: A Stack Exchange Question Duplicate Pairs Dataset Source
+      dataset: mteb/CQADupstack-Physics-PL; source subset: default; eval split: test.'
+    source_task: CQADupstack-Physics-PL
+    source_dataset_id: mteb/CQADupstack-Physics-PL
+    source_dataset_revision: a61c9ba627e0fa44b85578812577e6665a60661c
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-physics
+    hub_split: cqadupstack_physics
+    languages:
+    - pl
+    references:
+    - title: CQADupstack-Physics-PL source reference
+      url: https://huggingface.co/datasets/clarin-knext/cqadupstack-physics-pl
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CQADupstack-Physics-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CQADupstack-Physics-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 20
+      max_chars: 149
+      mean_chars: 58.795
+      median_chars: 51.5
+    document_text_stats:
+      count: 10000
+      min_chars: 47
+      max_chars: 21333
+      mean_chars: 814.7388
+      median_chars: 622.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.88
+  cqadupstack_programmers:
+    language: pl
+    category: natural_language
+    short_description: CQADupstack-Programmers-PL retrieval split.
+    description: 'CQADupStack: A Stack Exchange Question Duplicate Pairs Dataset Source
+      dataset: mteb/CQADupstack-Programmers-PL; source subset: default; eval split:
+      test.'
+    source_task: CQADupstack-Programmers-PL
+    source_dataset_id: mteb/CQADupstack-Programmers-PL
+    source_dataset_revision: 6536329882b0f06bf6406fdafedc434603fe8ed9
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-programmers
+    hub_split: cqadupstack_programmers
+    languages:
+    - pl
+    references:
+    - title: CQADupstack-Programmers-PL source reference
+      url: https://huggingface.co/datasets/clarin-knext/cqadupstack-programmers-pl
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CQADupstack-Programmers-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CQADupstack-Programmers-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 114
+      mean_chars: 59.12
+      median_chars: 57.0
+    document_text_stats:
+      count: 10000
+      min_chars: 69
+      max_chars: 17135
+      mean_chars: 1075.295
+      median_chars: 843.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.99
+  cqadupstack_stats:
+    language: pl
+    category: natural_language
+    short_description: CQADupstack-Stats-PL retrieval split.
+    description: 'CQADupStack: A Stack Exchange Question Duplicate Pairs Dataset Source
+      dataset: mteb/CQADupstack-Stats-PL; source subset: default; eval split: test.'
+    source_task: CQADupstack-Stats-PL
+    source_dataset_id: mteb/CQADupstack-Stats-PL
+    source_dataset_revision: c1fac8ba4c0f1ed59910f5278c6bf071008b0180
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-stats
+    hub_split: cqadupstack_stats
+    languages:
+    - pl
+    references:
+    - title: CQADupstack-Stats-PL source reference
+      url: https://huggingface.co/datasets/clarin-knext/cqadupstack-stats-pl
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CQADupstack-Stats-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CQADupstack-Stats-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 155
+      mean_chars: 60.95
+      median_chars: 60.0
+    document_text_stats:
+      count: 10000
+      min_chars: 78
+      max_chars: 24991
+      mean_chars: 1016.6094
+      median_chars: 792.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 99.5
+          it: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.92
+  cqadupstack_tex:
+    language: pl
+    category: natural_language
+    short_description: CQADupstack-Tex-PL retrieval split.
+    description: 'CQADupStack: A Stack Exchange Question Duplicate Pairs Dataset Source
+      dataset: mteb/CQADupstack-Tex-PL; source subset: default; eval split: test.'
+    source_task: CQADupstack-Tex-PL
+    source_dataset_id: mteb/CQADupstack-Tex-PL
+    source_dataset_revision: 7e24a1d7543917b655899680f7e03fed3fe967d4
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-tex
+    hub_split: cqadupstack_tex
+    languages:
+    - pl
+    references:
+    - title: CQADupstack-Tex-PL source reference
+      url: https://huggingface.co/datasets/clarin-knext/cqadupstack-tex-pl
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CQADupstack-Tex-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CQADupstack-Tex-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 138
+      mean_chars: 50.3
+      median_chars: 46.0
+    document_text_stats:
+      count: 10000
+      min_chars: 82
+      max_chars: 27878
+      mean_chars: 1106.1253
+      median_chars: 753.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 98.0
+          en: 2.0
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.9
+  cqadupstack_webmasters:
+    language: pl
+    category: natural_language
+    short_description: CQADupstack-Webmasters-PL retrieval split.
+    description: 'CQADupStack: A Stack Exchange Question Duplicate Pairs Dataset Source
+      dataset: mteb/CQADupstack-Webmasters-PL; source subset: default; eval split:
+      test.'
+    source_task: CQADupstack-Webmasters-PL
+    source_dataset_id: mteb/CQADupstack-Webmasters-PL
+    source_dataset_revision: aca4f7fb71a6d367e1c8f5e3fda118a4bcdb41d3
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-webmasters
+    hub_split: cqadupstack_webmasters
+    languages:
+    - pl
+    references:
+    - title: CQADupstack-Webmasters-PL source reference
+      url: https://huggingface.co/datasets/clarin-knext/cqadupstack-webmasters-pl
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CQADupstack-Webmasters-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CQADupstack-Webmasters-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 143
+      mean_chars: 59.75
+      median_chars: 59.0
+    document_text_stats:
+      count: 10000
+      min_chars: 59
+      max_chars: 25496
+      mean_chars: 739.1547
+      median_chars: 592.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 99.0
+          en: 0.5
+          sl: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.92
+  cqadupstack_wordpress:
+    language: pl
+    category: natural_language
+    short_description: CQADupstack-Wordpress-PL retrieval split.
+    description: 'CQADupStack: A Stack Exchange Question Duplicate Pairs Dataset Source
+      dataset: mteb/CQADupstack-Wordpress-PL; source subset: default; eval split:
+      test.'
+    source_task: CQADupstack-Wordpress-PL
+    source_dataset_id: mteb/CQADupstack-Wordpress-PL
+    source_dataset_revision: b93d34a19cea03d6c7b00e261eccace6b29535ee
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-wordpress
+    hub_split: cqadupstack_wordpress
+    languages:
+    - pl
+    references:
+    - title: CQADupstack-Wordpress-PL source reference
+      url: https://huggingface.co/datasets/clarin-knext/cqadupstack-wordpress-pl
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CQADupstack-Wordpress-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CQADupstack-Wordpress-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 129
+      mean_chars: 55.795
+      median_chars: 54.0
+    document_text_stats:
+      count: 10000
+      min_chars: 91
+      max_chars: 20591
+      mean_chars: 1040.6015
+      median_chars: 736.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 97.5
+          en: 1.5
+          cs: 0.5
+          es: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.97
+  fiqa:
+    language: pl
+    category: natural_language
+    short_description: FiQA-PL retrieval split.
+    description: 'Financial Opinion Mining and Question Answering Source dataset:
+      mteb/FiQA-PL; source subset: default; eval split: test.'
+    source_task: FiQA-PL
+    source_dataset_id: mteb/FiQA-PL
+    source_dataset_revision: 788508256800f93c2ad033e96243bc801f9ee525
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: fiqa
+    hub_split: fiqa
+    languages:
+    - pl
+    references:
+    - title: FiQA-PL source reference
+      url: https://sites.google.com/view/fiqa/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/FiQA-PL Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/FiQA-PL
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 20
+      max_chars: 159
+      mean_chars: 68.51
+      median_chars: 66.5
+    document_text_stats:
+      count: 10000
+      min_chars: 5
+      max_chars: 13848
+      mean_chars: 808.8181
+      median_chars: 551.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.27
+  nq:
+    language: pl
+    category: natural_language
+    short_description: NQ-PLHardNegatives retrieval split.
+    description: 'Natural Questions: A Benchmark for Question Answering Research.
+      The hard negative version has been created by pooling the 250 top documents
+      per query from BM25, e5-multilingual-large and e5-mistral-instruct. Source dataset:
+      mteb/NQ-PLHardNegatives; source subset: default; eval split: test.'
+    source_task: NQ-PLHardNegatives
+    source_dataset_id: mteb/NQ-PLHardNegatives
+    source_dataset_revision: cd0cab9433aa7f4e939883d822fb93e362fd493a
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nq
+    hub_split: nq
+    languages:
+    - pl
+    references:
+    - title: NQ-PLHardNegatives source reference
+      url: https://ai.google.com/research/NaturalQuestions/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/NQ-PLHardNegatives Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/NQ-PLHardNegatives
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 103
+      mean_chars: 48.565
+      median_chars: 46.0
+    document_text_stats:
+      count: 10000
+      min_chars: 15
+      max_chars: 9323
+      mean_chars: 616.7722
+      median_chars: 528.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 99.5
+          es: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.27
+          en: 0.52
+  pugg:
+    language: pl
+    category: natural_language
+    short_description: PUGGRetrieval retrieval split.
+    description: 'Information Retrieval PUGG dataset for the Polish language. Source
+      dataset: clarin-pl/PUGG_IR; source subset: default; eval split: test.'
+    source_task: PUGGRetrieval
+    source_dataset_id: clarin-pl/PUGG_IR
+    source_dataset_revision: 48eff464950391ce7a3d58f37355fceccf613725
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: pugg
+    hub_split: pugg
+    languages:
+    - pl
+    references:
+    - title: PUGGRetrieval source reference
+      url: https://aclanthology.org/2024.findings-acl.652/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: clarin-pl/PUGG_IR Hugging Face dataset
+      url: https://huggingface.co/datasets/clarin-pl/PUGG_IR
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 13
+      max_chars: 90
+      mean_chars: 36.19
+      median_chars: 33.0
+    document_text_stats:
+      count: 10000
+      min_chars: 25
+      max_chars: 1664
+      mean_chars: 850.3113
+      median_chars: 861.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 98.0
+          tr: 1.0
+          hr: 0.5
+          id: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          pl: 98.66
+  quora:
+    language: pl
+    category: natural_language
+    short_description: Quora-PLHardNegatives retrieval split.
+    description: 'QuoraRetrieval is based on questions that are marked as duplicates
+      on the Quora platform. Given a question, find other (duplicate) questions. The
+      hard negative version has been created by pooling the 250 top documents per
+      query from BM25, e5-multilingual-large and e5-mistral-instruct. Source dataset:
+      mteb/Quora-PLHardNegatives; source subset: default; eval split: test.'
+    source_task: Quora-PLHardNegatives
+    source_dataset_id: mteb/Quora-PLHardNegatives
+    source_dataset_revision: f9135f0b4610db2225a957c1dd68960b5c572270
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: quora
+    hub_split: quora
+    languages:
+    - pl
+    references:
+    - title: Quora-PLHardNegatives source reference
+      url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/Quora-PLHardNegatives Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/Quora-PLHardNegatives
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 2
+      max_chars: 169
+      mean_chars: 52.505
+      median_chars: 47.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 1265
+      mean_chars: 64.6365
+      median_chars: 55.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 99.5
+          sk: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.78

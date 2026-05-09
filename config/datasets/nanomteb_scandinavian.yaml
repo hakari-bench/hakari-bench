@@ -6,12 +6,13 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoDanFever
-- NanoNorQuad
-- NanoSNL
-- NanoSweFaq
-- NanoSwedn
-- NanoTV2Nord
+- dan_fever
+- nor_quad
+- snl
+- swe_faq
+- swedn
+- tv2_nordretrieval
+- twitter_hjerne
 metadata:
   language: multilingual
   category: natural_language
@@ -40,31 +41,49 @@ metadata:
     \  year = {2024},\n  url = {https://arxiv.org/abs/2406.02396},\n  doi = {10.48550/arXiv.2406.02396}\n\
     }\n"
 task_metadata:
-  NanoDanFever:
-    language: da
+  dan_fever:
+    language: multilingual
     category: natural_language
-    short_description: Danish claim-evidence retrieval.
-    description: A compact Danish retrieval task derived from DanFEVER, retrieving
-      evidence for Danish factual claims.
-    citation_keys:
-    - norregaard-derczynski-2021-danfever
-    references:
-    - title: 'DanFEVER: claim verification dataset for Danish'
-      authors:
-      - Jeppe Nørregaard
-      - Leon Derczynski
-      year: 2021
-      url: https://aclanthology.org/2021.nodalida-main.47/
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{norregaard-derczynski-2021-danfever,\n  title = {{D}an{FEVER}:\
-      \ claim verification dataset for {D}anish},\n  author = {N{\\o}rregaard, Jeppe\
-      \ and Derczynski, Leon},\n  booktitle = {Proceedings of the 23rd Nordic Conference\
-      \ on Computational Linguistics (NoDaLiDa)},\n  pages = {422--428},\n  year =\
-      \ {2021},\n  url = {https://aclanthology.org/2021.nodalida-main.47/}\n}\n"
+    short_description: DanFeverRetrieval retrieval split.
+    description: 'A Danish dataset intended for misinformation research. It follows
+      the same format as the English FEVER dataset. DanFeverRetrieval fixed an issue
+      in DanFever where some corpus entries were incorrectly removed. Source dataset:
+      strombergnlp/danfever; source subset: default; eval split: train.'
+    source_task: DanFeverRetrieval
+    source_dataset_id: strombergnlp/danfever
+    source_dataset_revision: 3b17b754ed5bf356582b93ec11d1c72469f7bb9c
+    source_dataset_subset: default
+    source_eval_split: train
+    source_nano_split: dan-fever
+    hub_split: dan_fever
     languages:
     - da
     - 'no'
+    references:
+    - title: DanFeverRetrieval source reference
+      url: https://aclanthology.org/2021.nodalida-main.47/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: strombergnlp/danfever Hugging Face dataset
+      url: https://huggingface.co/datasets/strombergnlp/danfever
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 112
+      mean_chars: 59.48
+      median_chars: 55.0
+    document_text_stats:
+      count: 2522
+      min_chars: 28
+      max_chars: 1748
+      mean_chars: 312.1514670896114
+      median_chars: 249.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -87,48 +106,60 @@ task_metadata:
           en: 1.348
           sv: 1.11
           nn: 0.793
-  NanoNorQuad:
-    language: 'no'
+  nor_quad:
+    language: multilingual
     category: natural_language
-    short_description: Norwegian question-answer retrieval.
-    description: A compact retrieval task derived from NorQuAD, the Norwegian question
-      answering dataset.
-    citation_keys:
-    - ivanova-etal-2023-norquad
-    references:
-    - title: 'NorQuAD: Norwegian Question Answering Dataset'
-      authors:
-      - Sardana Ivanova
-      - Fredrik Andreassen
-      - Matias Jentoft
-      - Sondre Wold
-      - Lilja Øvrelid
-      year: 2023
-      url: https://aclanthology.org/2023.nodalida-1.17/
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{ivanova-etal-2023-norquad,\n  title = {{N}or{Q}u{AD}:\
-      \ {N}orwegian Question Answering Dataset},\n  author = {Ivanova, Sardana and\
-      \ Andreassen, Fredrik and Jentoft, Matias and Wold, Sondre and {\\O}vrelid,\
-      \ Lilja},\n  booktitle = {Proceedings of the 24th Nordic Conference on Computational\
-      \ Linguistics (NoDaLiDa)},\n  pages = {159--168},\n  year = {2023},\n  url =\
-      \ {https://aclanthology.org/2023.nodalida-1.17/}\n}\n"
+    short_description: NorQuadRetrieval retrieval split.
+    description: 'Human-created question for Norwegian wikipedia passages. Source
+      dataset: mteb/norquad_retrieval; source subset: default; eval split: test.'
+    source_task: NorQuadRetrieval
+    source_dataset_id: mteb/norquad_retrieval
+    source_dataset_revision: 9dcfcdb2aa578dd178330d49bf564248935f7fbe
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nor-quad
+    hub_split: nor_quad
     languages:
     - 'no'
     - da
     - en
+    references:
+    - title: NorQuadRetrieval source reference
+      url: https://aclanthology.org/2023.nodalida-1.17/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/norquad_retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/norquad_retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 196
+      min_chars: 12
+      max_chars: 98
+      mean_chars: 48.607142857142854
+      median_chars: 47.0
+    document_text_stats:
+      count: 1048
+      min_chars: 1
+      max_chars: 2603
+      mean_chars: 214.4083969465649
+      median_chars: 19.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
       main_language_percent: 10.0
       query:
-        sample_count: 200
+        sample_count: 196
         languages:
-          'no': 66.0
-          da: 30.5
-          sv: 2.5
-          en: 0.5
-          vi: 0.5
+          'no': 66.327
+          da: 30.102
+          sv: 2.551
+          en: 0.51
+          vi: 0.51
       document:
         sample_count: 1048
         languages:
@@ -144,33 +175,49 @@ task_metadata:
           it: 0.859
           nl: 0.859
           ru: 0.859
-  NanoSNL:
-    language: 'no'
+  snl:
+    language: multilingual
     category: natural_language
-    short_description: Norwegian encyclopedia article retrieval.
-    description: A compact Store Norske Leksikon retrieval task using Norwegian lexicon
-      headlines as queries.
-    citation_keys:
-    - navjord2023beyond
-    references:
-    - title: 'Beyond extractive: advancing abstractive automatic text summarization
-        in Norwegian with transformers'
-      authors:
-      - Jørgen Johnsen Navjord
-      - Jon-Mikkel Ryen Korsvik
-      year: 2023
-      url: https://hdl.handle.net/11250/3079868
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@mastersthesis{navjord2023beyond,\n  title = {Beyond extractive: advancing\
-      \ abstractive automatic text summarization in Norwegian with transformers},\n\
-      \  author = {Navjord, J{\\o}rgen Johnsen and Korsvik, Jon-Mikkel Ryen},\n  school\
-      \ = {Norwegian University of Life Sciences, {\\AA}s},\n  year = {2023},\n  url\
-      \ = {https://hdl.handle.net/11250/3079868}\n}\n"
+    short_description: SNLRetrieval retrieval split.
+    description: 'Webscrabed articles and ingresses from the Norwegian lexicon ''Det
+      Store Norske Leksikon''. Source dataset: adrlau/navjordj-SNL_summarization_copy;
+      source subset: default; eval split: test.'
+    source_task: SNLRetrieval
+    source_dataset_id: adrlau/navjordj-SNL_summarization_copy
+    source_dataset_revision: 22c474c88fb4678052f9099bb917ad8f9e155f9f
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: snl
+    hub_split: snl
     languages:
     - 'no'
     - en
     - de
+    references:
+    - title: SNLRetrieval source reference
+      url: https://huggingface.co/datasets/mteb/SNLRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: adrlau/navjordj-SNL_summarization_copy Hugging Face dataset
+      url: https://huggingface.co/datasets/adrlau/navjordj-SNL_summarization_copy
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 3
+      max_chars: 50
+      mean_chars: 13.97
+      median_chars: 13.0
+    document_text_stats:
+      count: 1300
+      min_chars: 400
+      max_chars: 68710
+      mean_chars: 1986.9446153846154
+      median_chars: 1006.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -211,52 +258,46 @@ task_metadata:
           da: 5.231
           nn: 3.0
           sv: 2.846
-  NanoSweFaq:
+  swe_faq:
     language: sv
     category: natural_language
-    short_description: Swedish FAQ answer retrieval.
-    description: A compact Swedish FAQ retrieval task distributed through SuperLim
-      2.
-    citation_keys:
-    - berdicevskis-etal-2023-superlim
-    references:
-    - title: 'Superlim: A Swedish Language Understanding Evaluation Benchmark'
-      authors:
-      - Aleksandrs Berdicevskis
-      - Gerlof Bouma
-      - Robin Kurtz
-      - Felix Morger
-      - Joey Öhman
-      - Yvonne Adesam
-      - Lars Borin
-      - Dana Dannélls
-      - Markus Forsberg
-      - Tim Isbister
-      - Anna Lindahl
-      - Martin Malmsten
-      - Faton Rekathati
-      - Magnus Sahlgren
-      - Elena Volodina
-      - Love Börjeson
-      - Simon Hengchen
-      - Nina Tahmasebi
-      year: 2023
-      url: https://aclanthology.org/2023.emnlp-main.506/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2023.emnlp-main.506
-    bibtex: "@inproceedings{berdicevskis-etal-2023-superlim,\n  title = {Superlim:\
-      \ A {S}wedish Language Understanding Evaluation Benchmark},\n  author = {Berdicevskis,\
-      \ Aleksandrs and Bouma, Gerlof and Kurtz, Robin and Morger, Felix and {\\\"\
-      O}hman, Joey and Adesam, Yvonne and Borin, Lars and Dann{\\'e}lls, Dana and\
-      \ Forsberg, Markus and Isbister, Tim and Lindahl, Anna and Malmsten, Martin\
-      \ and Rekathati, Faton and Sahlgren, Magnus and Volodina, Elena and B{\\\"o}rjeson,\
-      \ Love and Hengchen, Simon and Tahmasebi, Nina},\n  booktitle = {Proceedings\
-      \ of the 2023 Conference on Empirical Methods in Natural Language Processing},\n\
-      \  pages = {8137--8153},\n  year = {2023},\n  url = {https://aclanthology.org/2023.emnlp-main.506/},\n\
-      \  doi = {10.18653/v1/2023.emnlp-main.506}\n}\n"
+    short_description: SweFaqRetrieval retrieval split.
+    description: 'A Swedish QA dataset derived from FAQ Source dataset: mteb/SweFaqRetrieval;
+      source subset: default; eval split: test.'
+    source_task: SweFaqRetrieval
+    source_dataset_id: mteb/SweFaqRetrieval
+    source_dataset_revision: 208cb812631068a4bd8b93c8b9291370b47f282c
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: swe-faq
+    hub_split: swe_faq
     languages:
     - sv
+    references:
+    - title: SweFaqRetrieval source reference
+      url: https://spraakbanken.gu.se/en/resources/superlim
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/SweFaqRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/SweFaqRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 11
+      max_chars: 191
+      mean_chars: 73.325
+      median_chars: 65.0
+    document_text_stats:
+      count: 511
+      min_chars: 31
+      max_chars: 1904
+      mean_chars: 319.81996086105676
+      median_chars: 263.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -270,42 +311,48 @@ task_metadata:
         sample_count: 511
         languages:
           sv: 99.609
-  NanoSwedn:
+  swedn:
     language: sv
     category: natural_language
-    short_description: Swedish news summary retrieval.
-    description: A compact retrieval task derived from SWE-DN, a Swedish Dagens Nyheter
-      news summarization corpus.
-    citation_keys:
-    - monsen2021method
-    - monsen2025swedn
+    short_description: SwednRetrieval retrieval split.
+    description: 'The SWE-DN corpus is based on 1,963,576 news articles from the Swedish
+      newspaper Dagens Nyheter (DN) during the years 2000--2020. The articles are
+      filtered to resemble the CNN/DailyMail dataset both regarding textual structure
+      Source dataset: mteb/SwednRetrieval; source subset: default; eval split: test.'
+    source_task: SwednRetrieval
+    source_dataset_id: mteb/SwednRetrieval
+    source_dataset_revision: 3920fa0e9ae78f6af3d8a20b33b39e1f9acdfdf9
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: swedn
+    hub_split: swedn
+    languages:
+    - sv
     references:
-    - title: A method for building non-English corpora for abstractive text summarization
-      authors:
-      - Julius Monsen
-      - Arne Jönsson
-      year: 2021
-      url: https://www.ida.liu.se/~arnjo82/papers/clarin-21-julius.pdf
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: SweDN 1.0
-      authors:
-      - Julius Monsen
-      - Arne Jönsson
-      year: 2025
+    - title: SwednRetrieval source reference
       url: https://spraakbanken.gu.se/en/resources/swedn
       is_paper: false
       source_confidence: probably_correct
-      doi: 10.23695/36v9-9017
-    bibtex: "@inproceedings{monsen2021method,\n  title = {A method for building non-English\
-      \ corpora for abstractive text summarization},\n  author = {Monsen, Julius and\
-      \ J{\\\"o}nsson, Arne},\n  booktitle = {Proceedings of the CLARIN Annual Conference},\n\
-      \  year = {2021},\n  url = {https://www.ida.liu.se/~arnjo82/papers/clarin-21-julius.pdf}\n\
-      }\n@misc{monsen2025swedn,\n  title = {{SweDN} 1.0},\n  author = {Monsen, Julius\
-      \ and J{\\\"o}nsson, Arne},\n  year = {2025},\n  url = {https://spraakbanken.gu.se/en/resources/swedn},\n\
-      \  doi = {10.23695/36v9-9017}\n}\n"
-    languages:
-    - sv
+    - title: mteb/SwednRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/SwednRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 7
+      max_chars: 122
+      mean_chars: 45.26
+      median_chars: 47.5
+    document_text_stats:
+      count: 2046
+      min_chars: 63
+      max_chars: 33778
+      mean_chars: 2896.0151515151515
+      median_chars: 916.5
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -326,28 +373,43 @@ task_metadata:
         sample_count: 2046
         languages:
           sv: 99.707
-  NanoTV2Nord:
+  tv2_nordretrieval:
     language: da
     category: natural_language
-    short_description: Danish TV2 Nord news article retrieval.
-    description: A compact retrieval task derived from the Nordjylland news summarization
-      dataset, matching Danish summaries to articles.
-    citation_keys:
-    - alexandrainst2025nordjylland
+    short_description: TV2Nordretrieval retrieval split.
+    description: 'News Article and corresponding summaries extracted from the Danish
+      newspaper TV2 Nord. Source dataset: alexandrainst/nordjylland-news-summarization;
+      source subset: default; eval split: test.'
+    source_task: TV2Nordretrieval
+    source_dataset_id: alexandrainst/nordjylland-news-summarization
+    source_dataset_revision: 80cdb115ec2ef46d4e926b252f2b59af62d6c070
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: tv2-nordretrieval
+    hub_split: tv2_nordretrieval
+    languages:
+    - da
     references:
-    - title: nordjylland-news-summarization
-      authors:
-      - Alexandra Institute
-      year: 2025
+    - title: TV2Nordretrieval source reference
       url: https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization
       is_paper: false
       source_confidence: probably_correct
-      doi: 10.57967/hf/5620
-    bibtex: "@misc{alexandrainst2025nordjylland,\n  title = {nordjylland-news-summarization},\n\
-      \  author = {{Alexandra Institute}},\n  year = {2025},\n  url = {https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization},\n\
-      \  doi = {10.57967/hf/5620}\n}\n"
-    languages:
-    - da
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 26
+      max_chars: 400
+      mean_chars: 127.975
+      median_chars: 118.0
+    document_text_stats:
+      count: 2048
+      min_chars: 28
+      max_chars: 15619
+      mean_chars: 1440.66552734375
+      median_chars: 1219.5
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -363,3 +425,60 @@ task_metadata:
         languages:
           da: 94.287
           'no': 5.078
+  twitter_hjerne:
+    language: da
+    category: natural_language
+    short_description: TwitterHjerneRetrieval retrieval split.
+    description: 'Danish question asked on Twitter with the Hashtag #Twitterhjerne
+      (''Twitter brain'') and their corresponding answer. Source dataset: mteb/TwitterHjerneRetrieval;
+      source subset: default; eval split: train.'
+    source_task: TwitterHjerneRetrieval
+    source_dataset_id: mteb/TwitterHjerneRetrieval
+    source_dataset_revision: 97ad55673cf9746f8e4b3aaa92b1bb92d82e52db
+    source_dataset_subset: default
+    source_eval_split: train
+    source_nano_split: twitter-hjerne
+    hub_split: twitter_hjerne
+    languages:
+    - da
+    references:
+    - title: TwitterHjerneRetrieval source reference
+      url: https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/TwitterHjerneRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/TwitterHjerneRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 77
+      min_chars: 48
+      max_chars: 383
+      mean_chars: 165.75324675324674
+      median_chars: 148.0
+    document_text_stats:
+      count: 262
+      min_chars: 16
+      max_chars: 595
+      mean_chars: 128.7709923664122
+      median_chars: 119.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 77
+        languages:
+          da: 97.403
+          'no': 2.597
+      document:
+        sample_count: 262
+        languages:
+          da: 88.931
+          'no': 5.725
+          en: 3.817
+          de: 0.763

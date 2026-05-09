@@ -9,22 +9,22 @@ splits:
 - NanoARCChallenge
 - NanoAlphaNLI
 - NanoHellaSwag
-- NanoWinoGrande
 - NanoPIQA
-- NanoSIQA
 - NanoQuail
-- NanoSpartQA
-- NanoTempReasonL1
-- NanoTempReasonL2Pure
-- NanoTempReasonL2Fact
-- NanoTempReasonL2Context
-- NanoTempReasonL3Pure
-- NanoTempReasonL3Fact
-- NanoTempReasonL3Context
 - NanoRARbCode
 - NanoRARbMath
+- NanoSIQA
+- NanoSpartQA
+- NanoTempReasonL1
+- NanoTempReasonL2Context
+- NanoTempReasonL2Fact
+- NanoTempReasonL2Pure
+- NanoTempReasonL3Context
+- NanoTempReasonL3Fact
+- NanoTempReasonL3Pure
+- NanoWinoGrande
 metadata:
-  language: en
+  language: multilingual
   category: natural_language
   short_description: Nano subset of the RAR-b reasoning-as-retrieval benchmark.
   description: NanoRARb converts reasoning benchmarks into retrieval tasks, evaluating
@@ -247,78 +247,6 @@ task_metadata:
         sample_count: 10000
         languages:
           en: 99.98
-  NanoWinoGrande:
-    language: en
-    category: natural_language
-    short_description: WinoGrande pronoun reasoning retrieval.
-    description: Retrieves the answer that resolves a Winograd-style pronoun or masked
-      referent in WinoGrande.
-    citation_keys:
-    - xiao2024rarb
-    - sakaguchi2021winogrande
-    references:
-    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
-      authors:
-      - Chenghao Xiao
-      - G. Thomas Hudson
-      - Noura Al Moubayed
-      year: 2024
-      url: https://arxiv.org/abs/2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: 'WinoGrande: An Adversarial Winograd Schema Challenge at Scale'
-      authors:
-      - Keisuke Sakaguchi
-      - Ronan Le Bras
-      - Chandra Bhagavatula
-      - Yejin Choi
-      year: 2021
-      url: https://arxiv.org/abs/1907.10641
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
-      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{sakaguchi2021winogrande,\n\
-      \  title = {WinoGrande: An Adversarial Winograd Schema Challenge at Scale},\n\
-      \  author = {Keisuke Sakaguchi and Ronan Le Bras and Chandra Bhagavatula and\
-      \ Yejin Choi},\n  journal = {Communications of the ACM},\n  volume = {64},\n\
-      \  number = {9},\n  pages = {99--106},\n  year = {2021},\n  url = {https://arxiv.org/abs/1907.10641}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 79
-      max_chars: 166
-      mean_chars: 111.975
-      median_chars: 110.0
-    document_text_stats:
-      count: 5095
-      min_chars: 2
-      max_chars: 31
-      mean_chars: 7.68243375858685
-      median_chars: 7.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 5095
-        languages:
-          en: 82.728
-          fr: 2.689
-          de: 1.786
-          es: 1.747
-          it: 1.708
-          nl: 1.178
-          pt: 0.707
-          sv: 0.687
-          ca: 0.628
-          pl: 0.53
   NanoPIQA:
     language: en
     category: natural_language
@@ -386,69 +314,6 @@ task_metadata:
         sample_count: 10000
         languages:
           en: 99.5
-  NanoSIQA:
-    language: en
-    category: natural_language
-    short_description: Social commonsense answer retrieval.
-    description: Retrieves the correct answer for SocialIQA questions about social
-      situations and likely intentions or effects.
-    citation_keys:
-    - xiao2024rarb
-    - sap2019socialiqa
-    references:
-    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
-      authors:
-      - Chenghao Xiao
-      - G. Thomas Hudson
-      - Noura Al Moubayed
-      year: 2024
-      url: https://arxiv.org/abs/2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: 'SocialIQA: Commonsense Reasoning about Social Interactions'
-      authors:
-      - Maarten Sap
-      - Hannah Rashkin
-      - Derek Chen
-      - Ronan Le Bras
-      - Yejin Choi
-      year: 2019
-      url: https://arxiv.org/abs/1904.09728
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
-      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{sap2019socialiqa,\n\
-      \  title = {SocialIQA: Commonsense Reasoning about Social Interactions},\n \
-      \ author = {Maarten Sap and Hannah Rashkin and Derek Chen and Ronan Le Bras\
-      \ and Yejin Choi},\n  journal = {arXiv preprint arXiv:1904.09728},\n  year =\
-      \ {2019}\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 70
-      max_chars: 220
-      mean_chars: 126.94
-      median_chars: 124.0
-    document_text_stats:
-      count: 10000
-      min_chars: 2
-      max_chars: 152
-      mean_chars: 21.509
-      median_chars: 19.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 98.04
   NanoQuail:
     language: en
     category: natural_language
@@ -514,584 +379,6 @@ task_metadata:
         languages:
           en: 96.66
           fr: 0.65
-  NanoSpartQA:
-    language: en
-    category: natural_language
-    short_description: Spatial reasoning answer retrieval.
-    description: Retrieves correct answers for SpartQA spatial reasoning questions
-      grounded in textual scenes.
-    citation_keys:
-    - xiao2024rarb
-    - mirzaee2021spartqa
-    references:
-    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
-      authors:
-      - Chenghao Xiao
-      - G. Thomas Hudson
-      - Noura Al Moubayed
-      year: 2024
-      url: https://arxiv.org/abs/2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: 'SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning'
-      authors:
-      - Roshanak Mirzaee
-      - Hossein Rajaby Faghihi
-      - Qiang Ning
-      - Parisa Kordjamshidi
-      year: 2021
-      url: https://arxiv.org/abs/2104.05832
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
-      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{mirzaee2021spartqa,\n\
-      \  title = {SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning},\n\
-      \  author = {Roshanak Mirzaee and Hossein Rajaby Faghihi and Qiang Ning and\
-      \ Parisa Kordjamshidi},\n  journal = {arXiv preprint arXiv:2104.05832},\n  year\
-      \ = {2021}\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 429
-      max_chars: 1306
-      mean_chars: 654.85
-      median_chars: 621.0
-    document_text_stats:
-      count: 1592
-      min_chars: 6
-      max_chars: 90
-      mean_chars: 49.79711055276382
-      median_chars: 55.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 1592
-        languages:
-          en: 99.623
-  NanoTempReasonL1:
-    language: en
-    category: natural_language
-    short_description: Temporal reasoning level-1 retrieval.
-    description: Retrieves answers for TempReason level-1 temporal questions with
-      minimal additional evidence.
-    citation_keys:
-    - xiao2024rarb
-    - tan2023tempreason
-    references:
-    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
-      authors:
-      - Chenghao Xiao
-      - G. Thomas Hudson
-      - Noura Al Moubayed
-      year: 2024
-      url: https://arxiv.org/abs/2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
-        of Large Language Models
-      authors:
-      - Qingyu Tan
-      - Hwee Tou Ng
-      - Lidong Bing
-      year: 2023
-      url: https://arxiv.org/abs/2306.08952
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
-      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
-      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
-      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
-      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 39
-      max_chars: 53
-      mean_chars: 49.875
-      median_chars: 51.0
-    document_text_stats:
-      count: 10000
-      min_chars: 8
-      max_chars: 9
-      mean_chars: 8.9975
-      median_chars: 9.0
-    languages:
-    - en
-    - de
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 60.59
-          de: 37.16
-          sl: 0.68
-          fr: 0.65
-  NanoTempReasonL2Pure:
-    language: en
-    category: natural_language
-    short_description: Temporal reasoning level-2 pure retrieval.
-    description: Retrieves answers for TempReason level-2 temporal questions without
-      supplied supporting facts or context.
-    citation_keys:
-    - xiao2024rarb
-    - tan2023tempreason
-    references:
-    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
-      authors:
-      - Chenghao Xiao
-      - G. Thomas Hudson
-      - Noura Al Moubayed
-      year: 2024
-      url: https://arxiv.org/abs/2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
-        of Large Language Models
-      authors:
-      - Qingyu Tan
-      - Hwee Tou Ng
-      - Lidong Bing
-      year: 2023
-      url: https://arxiv.org/abs/2306.08952
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
-      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
-      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
-      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
-      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 40
-      max_chars: 71
-      mean_chars: 52.955
-      median_chars: 53.0
-    document_text_stats:
-      count: 10000
-      min_chars: 2
-      max_chars: 140
-      mean_chars: 19.9135
-      median_chars: 17.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 61.97
-          de: 9.14
-          fr: 7.88
-          es: 4.08
-          it: 3.0
-          nl: 2.39
-          pt: 1.4
-          pl: 1.2
-          ro: 1.19
-          ca: 1.02
-          sv: 0.94
-          cs: 0.8
-          fi: 0.63
-          hu: 0.55
-  NanoTempReasonL2Fact:
-    language: en
-    category: natural_language
-    short_description: Temporal reasoning level-2 fact retrieval.
-    description: Retrieves answers for TempReason level-2 questions where the query
-      includes supporting facts.
-    citation_keys:
-    - xiao2024rarb
-    - tan2023tempreason
-    references:
-    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
-      authors:
-      - Chenghao Xiao
-      - G. Thomas Hudson
-      - Noura Al Moubayed
-      year: 2024
-      url: https://arxiv.org/abs/2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
-        of Large Language Models
-      authors:
-      - Qingyu Tan
-      - Hwee Tou Ng
-      - Lidong Bing
-      year: 2023
-      url: https://arxiv.org/abs/2306.08952
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
-      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
-      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
-      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
-      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 324
-      max_chars: 4822
-      mean_chars: 1744.39
-      median_chars: 672.0
-    document_text_stats:
-      count: 10000
-      min_chars: 2
-      max_chars: 140
-      mean_chars: 19.9135
-      median_chars: 17.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 61.97
-          de: 9.14
-          fr: 7.88
-          es: 4.08
-          it: 3.0
-          nl: 2.39
-          pt: 1.4
-          pl: 1.2
-          ro: 1.19
-          ca: 1.02
-          sv: 0.94
-          cs: 0.8
-          fi: 0.63
-          hu: 0.55
-  NanoTempReasonL2Context:
-    language: en
-    category: natural_language
-    short_description: Temporal reasoning level-2 context retrieval.
-    description: Retrieves answers for TempReason level-2 questions with longer factual
-      context in the query.
-    citation_keys:
-    - xiao2024rarb
-    - tan2023tempreason
-    references:
-    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
-      authors:
-      - Chenghao Xiao
-      - G. Thomas Hudson
-      - Noura Al Moubayed
-      year: 2024
-      url: https://arxiv.org/abs/2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
-        of Large Language Models
-      authors:
-      - Qingyu Tan
-      - Hwee Tou Ng
-      - Lidong Bing
-      year: 2023
-      url: https://arxiv.org/abs/2306.08952
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
-      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
-      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
-      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
-      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 737
-      max_chars: 75421
-      mean_chars: 28755.18
-      median_chars: 6562.0
-    document_text_stats:
-      count: 10000
-      min_chars: 2
-      max_chars: 140
-      mean_chars: 19.9135
-      median_chars: 17.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 61.97
-          de: 9.14
-          fr: 7.88
-          es: 4.08
-          it: 3.0
-          nl: 2.39
-          pt: 1.4
-          pl: 1.2
-          ro: 1.19
-          ca: 1.02
-          sv: 0.94
-          cs: 0.8
-          fi: 0.63
-          hu: 0.55
-  NanoTempReasonL3Pure:
-    language: en
-    category: natural_language
-    short_description: Temporal reasoning level-3 pure retrieval.
-    description: Retrieves answers for harder TempReason level-3 temporal questions
-      without extra facts or context.
-    citation_keys:
-    - xiao2024rarb
-    - tan2023tempreason
-    references:
-    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
-      authors:
-      - Chenghao Xiao
-      - G. Thomas Hudson
-      - Noura Al Moubayed
-      year: 2024
-      url: https://arxiv.org/abs/2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
-        of Large Language Models
-      authors:
-      - Qingyu Tan
-      - Hwee Tou Ng
-      - Lidong Bing
-      year: 2023
-      url: https://arxiv.org/abs/2306.08952
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
-      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
-      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
-      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
-      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 43
-      max_chars: 115
-      mean_chars: 65.13
-      median_chars: 62.0
-    document_text_stats:
-      count: 10000
-      min_chars: 2
-      max_chars: 140
-      mean_chars: 19.8842
-      median_chars: 17.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 61.91
-          de: 9.2
-          fr: 7.94
-          es: 4.06
-          it: 2.98
-          nl: 2.41
-          pt: 1.41
-          pl: 1.17
-          ro: 1.16
-          ca: 1.02
-          sv: 0.93
-          cs: 0.79
-          fi: 0.63
-          hu: 0.54
-  NanoTempReasonL3Fact:
-    language: en
-    category: natural_language
-    short_description: Temporal reasoning level-3 fact retrieval.
-    description: Retrieves answers for harder TempReason level-3 questions that include
-      supporting facts.
-    citation_keys:
-    - xiao2024rarb
-    - tan2023tempreason
-    references:
-    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
-      authors:
-      - Chenghao Xiao
-      - G. Thomas Hudson
-      - Noura Al Moubayed
-      year: 2024
-      url: https://arxiv.org/abs/2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
-        of Large Language Models
-      authors:
-      - Qingyu Tan
-      - Hwee Tou Ng
-      - Lidong Bing
-      year: 2023
-      url: https://arxiv.org/abs/2306.08952
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
-      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
-      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
-      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
-      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 320
-      max_chars: 4791
-      mean_chars: 1981.07
-      median_chars: 836.0
-    document_text_stats:
-      count: 10000
-      min_chars: 2
-      max_chars: 140
-      mean_chars: 19.8842
-      median_chars: 17.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 61.91
-          de: 9.2
-          fr: 7.94
-          es: 4.06
-          it: 2.98
-          nl: 2.41
-          pt: 1.41
-          pl: 1.17
-          ro: 1.16
-          ca: 1.02
-          sv: 0.93
-          cs: 0.79
-          fi: 0.63
-          hu: 0.54
-  NanoTempReasonL3Context:
-    language: en
-    category: natural_language
-    short_description: Temporal reasoning level-3 context retrieval.
-    description: Retrieves answers for harder TempReason level-3 questions with long
-      contextual evidence.
-    citation_keys:
-    - xiao2024rarb
-    - tan2023tempreason
-    references:
-    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
-      authors:
-      - Chenghao Xiao
-      - G. Thomas Hudson
-      - Noura Al Moubayed
-      year: 2024
-      url: https://arxiv.org/abs/2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
-        of Large Language Models
-      authors:
-      - Qingyu Tan
-      - Hwee Tou Ng
-      - Lidong Bing
-      year: 2023
-      url: https://arxiv.org/abs/2306.08952
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
-      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
-      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
-      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
-      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
-      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
-      }\n"
-    query_text_stats:
-      count: 200
-      min_chars: 733
-      max_chars: 75390
-      mean_chars: 31804.13
-      median_chars: 7032.0
-    document_text_stats:
-      count: 10000
-      min_chars: 2
-      max_chars: 140
-      mean_chars: 19.8842
-      median_chars: 17.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 10000
-        languages:
-          en: 61.91
-          de: 9.2
-          fr: 7.94
-          es: 4.06
-          it: 2.98
-          nl: 2.41
-          pt: 1.41
-          pl: 1.17
-          ro: 1.16
-          ca: 1.02
-          sv: 0.93
-          cs: 0.79
-          fi: 0.63
-          hu: 0.54
   NanoRARbCode:
     language: en
     category: code
@@ -1297,3 +584,716 @@ task_metadata:
         sample_count: 10000
         languages:
           en: 99.55
+  NanoSIQA:
+    language: en
+    category: natural_language
+    short_description: Social commonsense answer retrieval.
+    description: Retrieves the correct answer for SocialIQA questions about social
+      situations and likely intentions or effects.
+    citation_keys:
+    - xiao2024rarb
+    - sap2019socialiqa
+    references:
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+      authors:
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: 'SocialIQA: Commonsense Reasoning about Social Interactions'
+      authors:
+      - Maarten Sap
+      - Hannah Rashkin
+      - Derek Chen
+      - Ronan Le Bras
+      - Yejin Choi
+      year: 2019
+      url: https://arxiv.org/abs/1904.09728
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
+      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{sap2019socialiqa,\n\
+      \  title = {SocialIQA: Commonsense Reasoning about Social Interactions},\n \
+      \ author = {Maarten Sap and Hannah Rashkin and Derek Chen and Ronan Le Bras\
+      \ and Yejin Choi},\n  journal = {arXiv preprint arXiv:1904.09728},\n  year =\
+      \ {2019}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 70
+      max_chars: 220
+      mean_chars: 126.94
+      median_chars: 124.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 152
+      mean_chars: 21.509
+      median_chars: 19.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 98.04
+  NanoSpartQA:
+    language: en
+    category: natural_language
+    short_description: Spatial reasoning answer retrieval.
+    description: Retrieves correct answers for SpartQA spatial reasoning questions
+      grounded in textual scenes.
+    citation_keys:
+    - xiao2024rarb
+    - mirzaee2021spartqa
+    references:
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+      authors:
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: 'SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning'
+      authors:
+      - Roshanak Mirzaee
+      - Hossein Rajaby Faghihi
+      - Qiang Ning
+      - Parisa Kordjamshidi
+      year: 2021
+      url: https://arxiv.org/abs/2104.05832
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
+      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{mirzaee2021spartqa,\n\
+      \  title = {SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning},\n\
+      \  author = {Roshanak Mirzaee and Hossein Rajaby Faghihi and Qiang Ning and\
+      \ Parisa Kordjamshidi},\n  journal = {arXiv preprint arXiv:2104.05832},\n  year\
+      \ = {2021}\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 429
+      max_chars: 1306
+      mean_chars: 654.85
+      median_chars: 621.0
+    document_text_stats:
+      count: 1592
+      min_chars: 6
+      max_chars: 90
+      mean_chars: 49.79711055276382
+      median_chars: 55.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 1592
+        languages:
+          en: 99.623
+  NanoTempReasonL1:
+    language: multilingual
+    category: natural_language
+    short_description: Temporal reasoning level-1 retrieval.
+    description: Retrieves answers for TempReason level-1 temporal questions with
+      minimal additional evidence.
+    citation_keys:
+    - xiao2024rarb
+    - tan2023tempreason
+    references:
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+      authors:
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
+        of Large Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
+      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
+      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
+      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 39
+      max_chars: 53
+      mean_chars: 49.875
+      median_chars: 51.0
+    document_text_stats:
+      count: 10000
+      min_chars: 8
+      max_chars: 9
+      mean_chars: 8.9975
+      median_chars: 9.0
+    languages:
+    - en
+    - de
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 60.59
+          de: 37.16
+          sl: 0.68
+          fr: 0.65
+  NanoTempReasonL2Context:
+    language: en
+    category: natural_language
+    short_description: Temporal reasoning level-2 context retrieval.
+    description: Retrieves answers for TempReason level-2 questions with longer factual
+      context in the query.
+    citation_keys:
+    - xiao2024rarb
+    - tan2023tempreason
+    references:
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+      authors:
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
+        of Large Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
+      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
+      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
+      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 737
+      max_chars: 75421
+      mean_chars: 28755.18
+      median_chars: 6562.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.9135
+      median_chars: 17.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 61.97
+          de: 9.14
+          fr: 7.88
+          es: 4.08
+          it: 3.0
+          nl: 2.39
+          pt: 1.4
+          pl: 1.2
+          ro: 1.19
+          ca: 1.02
+          sv: 0.94
+          cs: 0.8
+          fi: 0.63
+          hu: 0.55
+  NanoTempReasonL2Fact:
+    language: en
+    category: natural_language
+    short_description: Temporal reasoning level-2 fact retrieval.
+    description: Retrieves answers for TempReason level-2 questions where the query
+      includes supporting facts.
+    citation_keys:
+    - xiao2024rarb
+    - tan2023tempreason
+    references:
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+      authors:
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
+        of Large Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
+      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
+      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
+      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 324
+      max_chars: 4822
+      mean_chars: 1744.39
+      median_chars: 672.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.9135
+      median_chars: 17.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 61.97
+          de: 9.14
+          fr: 7.88
+          es: 4.08
+          it: 3.0
+          nl: 2.39
+          pt: 1.4
+          pl: 1.2
+          ro: 1.19
+          ca: 1.02
+          sv: 0.94
+          cs: 0.8
+          fi: 0.63
+          hu: 0.55
+  NanoTempReasonL2Pure:
+    language: en
+    category: natural_language
+    short_description: Temporal reasoning level-2 pure retrieval.
+    description: Retrieves answers for TempReason level-2 temporal questions without
+      supplied supporting facts or context.
+    citation_keys:
+    - xiao2024rarb
+    - tan2023tempreason
+    references:
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+      authors:
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
+        of Large Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
+      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
+      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
+      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 40
+      max_chars: 71
+      mean_chars: 52.955
+      median_chars: 53.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.9135
+      median_chars: 17.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 61.97
+          de: 9.14
+          fr: 7.88
+          es: 4.08
+          it: 3.0
+          nl: 2.39
+          pt: 1.4
+          pl: 1.2
+          ro: 1.19
+          ca: 1.02
+          sv: 0.94
+          cs: 0.8
+          fi: 0.63
+          hu: 0.55
+  NanoTempReasonL3Context:
+    language: en
+    category: natural_language
+    short_description: Temporal reasoning level-3 context retrieval.
+    description: Retrieves answers for harder TempReason level-3 questions with long
+      contextual evidence.
+    citation_keys:
+    - xiao2024rarb
+    - tan2023tempreason
+    references:
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+      authors:
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
+        of Large Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
+      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
+      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
+      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 733
+      max_chars: 75390
+      mean_chars: 31804.13
+      median_chars: 7032.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.8842
+      median_chars: 17.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 61.91
+          de: 9.2
+          fr: 7.94
+          es: 4.06
+          it: 2.98
+          nl: 2.41
+          pt: 1.41
+          pl: 1.17
+          ro: 1.16
+          ca: 1.02
+          sv: 0.93
+          cs: 0.79
+          fi: 0.63
+          hu: 0.54
+  NanoTempReasonL3Fact:
+    language: en
+    category: natural_language
+    short_description: Temporal reasoning level-3 fact retrieval.
+    description: Retrieves answers for harder TempReason level-3 questions that include
+      supporting facts.
+    citation_keys:
+    - xiao2024rarb
+    - tan2023tempreason
+    references:
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+      authors:
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
+        of Large Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
+      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
+      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
+      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 320
+      max_chars: 4791
+      mean_chars: 1981.07
+      median_chars: 836.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.8842
+      median_chars: 17.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 61.91
+          de: 9.2
+          fr: 7.94
+          es: 4.06
+          it: 2.98
+          nl: 2.41
+          pt: 1.41
+          pl: 1.17
+          ro: 1.16
+          ca: 1.02
+          sv: 0.93
+          cs: 0.79
+          fi: 0.63
+          hu: 0.54
+  NanoTempReasonL3Pure:
+    language: en
+    category: natural_language
+    short_description: Temporal reasoning level-3 pure retrieval.
+    description: Retrieves answers for harder TempReason level-3 temporal questions
+      without extra facts or context.
+    citation_keys:
+    - xiao2024rarb
+    - tan2023tempreason
+    references:
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+      authors:
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: Towards Benchmarking and Improving the Temporal Reasoning Capability
+        of Large Language Models
+      authors:
+      - Qingyu Tan
+      - Hwee Tou Ng
+      - Lidong Bing
+      year: 2023
+      url: https://arxiv.org/abs/2306.08952
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
+      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{tan2023tempreason,\n\
+      \  title = {Towards Benchmarking and Improving the Temporal Reasoning Capability\
+      \ of Large Language Models},\n  author = {Qingyu Tan and Hwee Tou Ng and Lidong\
+      \ Bing},\n  journal = {arXiv preprint arXiv:2306.08952},\n  year = {2023}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 43
+      max_chars: 115
+      mean_chars: 65.13
+      median_chars: 62.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 140
+      mean_chars: 19.8842
+      median_chars: 17.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 61.91
+          de: 9.2
+          fr: 7.94
+          es: 4.06
+          it: 2.98
+          nl: 2.41
+          pt: 1.41
+          pl: 1.17
+          ro: 1.16
+          ca: 1.02
+          sv: 0.93
+          cs: 0.79
+          fi: 0.63
+          hu: 0.54
+  NanoWinoGrande:
+    language: en
+    category: natural_language
+    short_description: WinoGrande pronoun reasoning retrieval.
+    description: Retrieves the answer that resolves a Winograd-style pronoun or masked
+      referent in WinoGrande.
+    citation_keys:
+    - xiao2024rarb
+    - sakaguchi2021winogrande
+    references:
+    - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+      authors:
+      - Chenghao Xiao
+      - G. Thomas Hudson
+      - Noura Al Moubayed
+      year: 2024
+      url: https://arxiv.org/abs/2404.06347
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: 'WinoGrande: An Adversarial Winograd Schema Challenge at Scale'
+      authors:
+      - Keisuke Sakaguchi
+      - Ronan Le Bras
+      - Chandra Bhagavatula
+      - Yejin Choi
+      year: 2021
+      url: https://arxiv.org/abs/1907.10641
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{xiao2024rarb,\n  title = {RAR-b: Reasoning as Retrieval Benchmark},\n\
+      \  author = {Chenghao Xiao and G. Thomas Hudson and Noura Al Moubayed},\n  journal\
+      \ = {arXiv preprint arXiv:2404.06347},\n  year = {2024}\n}\n\n@article{sakaguchi2021winogrande,\n\
+      \  title = {WinoGrande: An Adversarial Winograd Schema Challenge at Scale},\n\
+      \  author = {Keisuke Sakaguchi and Ronan Le Bras and Chandra Bhagavatula and\
+      \ Yejin Choi},\n  journal = {Communications of the ACM},\n  volume = {64},\n\
+      \  number = {9},\n  pages = {99--106},\n  year = {2021},\n  url = {https://arxiv.org/abs/1907.10641}\n\
+      }\n"
+    query_text_stats:
+      count: 200
+      min_chars: 79
+      max_chars: 166
+      mean_chars: 111.975
+      median_chars: 110.0
+    document_text_stats:
+      count: 5095
+      min_chars: 2
+      max_chars: 31
+      mean_chars: 7.68243375858685
+      median_chars: 7.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 5095
+        languages:
+          en: 82.728
+          fr: 2.689
+          de: 1.786
+          es: 1.747
+          it: 1.708
+          nl: 1.178
+          pt: 0.707
+          sv: 0.687
+          ca: 0.628
+          pl: 0.53

@@ -6,15 +6,21 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoAlloprof
-- NanoBSARDV2
-- NanoSyntec
-- NanoXPQAFr
+- alloprof
+- bsard
+- fquad
+- mintaka_fr
+- syntec
+- xpqa_eng_fra
+- xpqa_fra_eng
+- xpqa_fra_fra
 metadata:
-  language: fr
+  language: multilingual
   category: natural_language
   short_description: French NanoMTEB retrieval benchmark.
-  description: NanoMTEB-French is a compact French retrieval benchmark containing the MTEB(fra, v1) retrieval-family splits. Non-benchmark French retrieval tasks are placed in NanoMTEB-Misc.
+  description: NanoMTEB-French is a compact French retrieval benchmark containing
+    the MTEB(fra, v1) retrieval-family splits. Non-benchmark French retrieval tasks
+    are placed in NanoMTEB-Misc.
   citation_keys:
   - muennighoff2023mteb
   - ciancone2024mtebfrench
@@ -30,8 +36,7 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2210.07316
-  - &id001
-    title: 'MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis'
+  - title: 'MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis'
     authors:
     - Mathieu Ciancone
     - Imene Kerboua
@@ -42,29 +47,57 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2405.20468
-  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n  doi = {10.48550/arXiv.2210.07316}\n}\n\n@misc{ciancone2024mtebfrench,\n  title = {{MTEB-French}: Resources for French Sentence Embedding Evaluation and Analysis},\n  author = {Ciancone, Mathieu and Kerboua, Imene and Schaeffer, Marion and Siblini, Wissam},\n  year = {2024},\n  url = {https://arxiv.org/abs/2405.20468},\n  doi = {10.48550/arXiv.2405.20468}\n}\n"
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
+    \ and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n\
+    \  doi = {10.48550/arXiv.2210.07316}\n}\n\n@misc{ciancone2024mtebfrench,\n  title\
+    \ = {{MTEB-French}: Resources for French Sentence Embedding Evaluation and Analysis},\n\
+    \  author = {Ciancone, Mathieu and Kerboua, Imene and Schaeffer, Marion and Siblini,\
+    \ Wissam},\n  year = {2024},\n  url = {https://arxiv.org/abs/2405.20468},\n  doi\
+    \ = {10.48550/arXiv.2405.20468}\n}\n"
 task_metadata:
-  NanoAlloprof:
+  alloprof:
     language: fr
     category: natural_language
-    short_description: French educational question-answer retrieval.
-    description: A compact Alloprof retrieval task over French educational questions and reference answers from Quebec.
-    citation_keys:
-    - lefebvre2023alloprof
-    references:
-    - title: 'Alloprof: a new French question-answer education dataset and its use in an information retrieval case study'
-      authors:
-      - Antoine Lefebvre-Brossard
-      - Stephane Gazaille
-      - Michel C. Desmarais
-      year: 2023
-      url: https://arxiv.org/abs/2302.07738
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2302.07738
-    bibtex: "@misc{lefebvre2023alloprof,\n  title = {Alloprof: a new French question-answer education dataset and its use in an information retrieval case study},\n  author = {Lefebvre-Brossard, Antoine and Gazaille, Stephane and Desmarais, Michel C.},\n  year = {2023},\n  url = {https://arxiv.org/abs/2302.07738},\n  doi = {10.48550/arXiv.2302.07738}\n}\n"
+    short_description: AlloprofRetrieval retrieval split.
+    description: 'This dataset was provided by AlloProf, an organisation in Quebec,
+      Canada offering resources and a help forum curated by a large number of teachers
+      to students on all subjects taught from in primary and secondary school Source
+      dataset: mteb/AlloprofRetrieval; source subset: default; eval split: test.'
+    source_task: AlloprofRetrieval
+    source_dataset_id: mteb/AlloprofRetrieval
+    source_dataset_revision: 96a52a1744e2d1981a66d93ff3b5a595f9a150d5
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: alloprof
+    hub_split: alloprof
     languages:
     - fr
+    references:
+    - title: AlloprofRetrieval source reference
+      url: https://huggingface.co/datasets/antoinelb7/alloprof
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/AlloprofRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/AlloprofRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 8
+      max_chars: 1549
+      mean_chars: 179.285
+      median_chars: 124.5
+    document_text_stats:
+      count: 2556
+      min_chars: 8
+      max_chars: 47929
+      mean_chars: 3504.527386541471
+      median_chars: 2527.5
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -80,24 +113,39 @@ task_metadata:
         languages:
           fr: 91.823
           en: 8.02
-  NanoBSARDV2:
+  bsard:
     language: fr
     category: natural_language
-    short_description: French statutory article retrieval.
-    description: A compact BSARD v2 retrieval task for matching French legal questions to Belgian statutory articles.
-    citation_keys:
-    - louis2022statutory
+    short_description: BSARDRetrieval retrieval split.
+    description: bsard is a retrieval split in NanoMTEB-French.
+    source_task: BSARDRetrieval
+    source_dataset_id: mteb/BSARDRetrieval
+    source_dataset_revision: 8c492add6a14ac188f2debdaf6cbdfb406fd6be3
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: bsard
+    hub_split: bsard
     references:
-    - title: A Statutory Article Retrieval Dataset in French
-      authors:
-      - Antoine Louis
-      - Gerasimos Spanakis
-      year: 2022
-      url: https://aclanthology.org/2022.acl-long.468/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2022.acl-long.468
-    bibtex: "@inproceedings{louis2022statutory,\n  title = {A Statutory Article Retrieval Dataset in French},\n  author = {Louis, Antoine and Spanakis, Gerasimos},\n  booktitle = {Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics},\n  year = {2022},\n  url = {https://aclanthology.org/2022.acl-long.468/},\n  doi = {10.18653/v1/2022.acl-long.468}\n}\n"
+    - title: mteb/BSARDRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/BSARDRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 36
+      max_chars: 293
+      mean_chars: 144.965
+      median_chars: 140.5
+    document_text_stats:
+      count: 10000
+      min_chars: 11
+      max_chars: 30157
+      mean_chars: 793.0132
+      median_chars: 430.0
     languages:
     - fr
     language_detection:
@@ -112,18 +160,157 @@ task_metadata:
         sample_count: 10000
         languages:
           fr: 99.95
-  NanoSyntec:
+  fquad:
     language: fr
     category: natural_language
-    short_description: French Syntec collective-agreement retrieval.
-    description: A compact legal retrieval task built from the Syntec collective bargaining agreement and introduced with MTEB-French.
-    citation_keys:
-    - ciancone2024mtebfrench
-    references:
-    - *id001
-    bibtex: "@misc{ciancone2024mtebfrench,\n  title = {{MTEB-French}: Resources for French Sentence Embedding Evaluation and Analysis},\n  author = {Ciancone, Mathieu and Kerboua, Imene and Schaeffer, Marion and Siblini, Wissam},\n  year = {2024},\n  url = {https://arxiv.org/abs/2405.20468},\n  doi = {10.48550/arXiv.2405.20468}\n}\n"
+    short_description: FQuADRetrieval retrieval split.
+    description: 'This dataset has been built from the French SQuad dataset. Source
+      dataset: manu/fquad2_test; source subset: default; eval split: test.'
+    source_task: FQuADRetrieval
+    source_dataset_id: manu/fquad2_test
+    source_dataset_revision: 5384ce827bbc2156d46e6fcba83d75f8e6e1b4a6
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: fquad
+    hub_split: fquad
     languages:
     - fr
+    references:
+    - title: FQuADRetrieval source reference
+      url: https://huggingface.co/datasets/manu/fquad2_test
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 132
+      mean_chars: 56.21
+      median_chars: 52.0
+    document_text_stats:
+      count: 269
+      min_chars: 515
+      max_chars: 1881
+      mean_chars: 898.3122676579926
+      median_chars: 817.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fr: 99.5
+          pt: 0.5
+      document:
+        sample_count: 269
+        languages:
+          fr: 99.257
+  mintaka_fr:
+    language: multilingual
+    category: natural_language
+    short_description: MintakaRetrieval retrieval split.
+    description: 'We introduce Mintaka, a complex, natural, and multilingual dataset
+      designed for experimenting with end-to-end question-answering models. Mintaka
+      is composed of 20,000 question-answer pairs collected in English, annotated
+      with Wikidata entities, and translated into Arabic, French, German, Hindi, Italian,
+      Japanese, Portuguese, and Spanish for a total of 180,000 samples. Mintaka includes
+      8 types of complex questions, including superlative, intersection, and multi-hop
+      questions, which were naturally elicited from crowd workers.  Source dataset:
+      mteb/MintakaRetrieval; source subset: fr; eval split: test.'
+    source_task: MintakaRetrieval
+    source_dataset_id: mteb/MintakaRetrieval
+    source_dataset_revision: 43bc699486e768138ce3a6d4cd859da306ac9eef
+    source_dataset_subset: fr
+    source_eval_split: test
+    source_nano_split: mintaka-fr
+    hub_split: mintaka_fr
+    languages:
+    - fr
+    - en
+    references:
+    - title: MintakaRetrieval source reference
+      url: https://aclanthology.org/2022.coling-1.138
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MintakaRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MintakaRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 33
+      max_chars: 201
+      mean_chars: 71.61
+      median_chars: 65.5
+    document_text_stats:
+      count: 1714
+      min_chars: 1
+      max_chars: 71
+      mean_chars: 14.407234539089849
+      median_chars: 13.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fr: 100.0
+      document:
+        sample_count: 1714
+        languages:
+          en: 60.443
+          fr: 25.904
+          de: 3.267
+          es: 2.392
+          it: 1.984
+          nl: 0.758
+          pt: 0.758
+  syntec:
+    language: fr
+    category: natural_language
+    short_description: SyntecRetrieval retrieval split.
+    description: 'This dataset has been built from the Syntec Collective bargaining
+      agreement. Source dataset: lyon-nlp/mteb-fr-retrieval-syntec-s2p; source subset:
+      default; eval split: test.'
+    source_task: SyntecRetrieval
+    source_dataset_id: lyon-nlp/mteb-fr-retrieval-syntec-s2p
+    source_dataset_revision: 19661ccdca4dfc2d15122d776b61685f48c68ca9
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: syntec
+    hub_split: syntec
+    languages:
+    - fr
+    references:
+    - title: SyntecRetrieval source reference
+      url: https://huggingface.co/datasets/lyon-nlp/mteb-fr-retrieval-syntec-s2p
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 100
+      min_chars: 18
+      max_chars: 175
+      mean_chars: 72.8
+      median_chars: 71.5
+    document_text_stats:
+      count: 90
+      min_chars: 84
+      max_chars: 6900
+      mean_chars: 1226.2666666666667
+      median_chars: 846.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -136,28 +323,156 @@ task_metadata:
         sample_count: 90
         languages:
           fr: 100.0
-  NanoXPQAFr:
+  xpqa_eng_fra:
+    language: multilingual
+    category: natural_language
+    short_description: XPQARetrieval retrieval split.
+    description: 'XPQARetrieval Source dataset: mteb/XPQARetrieval; source subset:
+      eng-fra; eval split: test.'
+    source_task: XPQARetrieval
+    source_dataset_id: mteb/XPQARetrieval
+    source_dataset_revision: fc4624be978945a0ceebbc4b85737258fe26330b
+    source_dataset_subset: eng-fra
+    source_eval_split: test
+    source_nano_split: xpqa-eng-fra
+    hub_split: xpqa_eng_fra
+    languages:
+    - en
+    - fr
+    references:
+    - title: XPQARetrieval source reference
+      url: https://arxiv.org/abs/2305.09249
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/XPQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/XPQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 12
+      max_chars: 104
+      mean_chars: 54.61
+      median_chars: 53.0
+    document_text_stats:
+      count: 1674
+      min_chars: 7
+      max_chars: 1798
+      mean_chars: 137.30465949820788
+      median_chars: 100.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fr: 98.5
+          en: 0.5
+          pt: 0.5
+          tl: 0.5
+      document:
+        sample_count: 1674
+        languages:
+          en: 98.865
+          fr: 0.896
+  xpqa_fra_eng:
+    language: multilingual
+    category: natural_language
+    short_description: XPQARetrieval retrieval split.
+    description: 'XPQARetrieval Source dataset: mteb/XPQARetrieval; source subset:
+      fra-eng; eval split: test.'
+    source_task: XPQARetrieval
+    source_dataset_id: mteb/XPQARetrieval
+    source_dataset_revision: fc4624be978945a0ceebbc4b85737258fe26330b
+    source_dataset_subset: fra-eng
+    source_eval_split: test
+    source_nano_split: xpqa-fra-eng
+    hub_split: xpqa_fra_eng
+    languages:
+    - en
+    - fr
+    references:
+    - title: XPQARetrieval source reference
+      url: https://arxiv.org/abs/2305.09249
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/XPQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/XPQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 14
+      max_chars: 98
+      mean_chars: 52.11
+      median_chars: 51.0
+    document_text_stats:
+      count: 1547
+      min_chars: 16
+      max_chars: 359
+      mean_chars: 76.98125404007757
+      median_chars: 69.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 1547
+        languages:
+          fr: 99.935
+  xpqa_fra_fra:
     language: fr
     category: natural_language
-    short_description: French product question-answer retrieval.
-    description: A compact French xPQA split for cross-lingual product question answering and candidate retrieval.
-    citation_keys:
-    - shen2023xpqa
-    references:
-    - title: 'xPQA: Cross-Lingual Product Question Answering in 12 Languages'
-      authors:
-      - Xiaoyu Shen
-      - Akari Asai
-      - Bill Byrne
-      - Adria De Gispert
-      year: 2023
-      url: https://aclanthology.org/2023.acl-industry.12/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2023.acl-industry.12
-    bibtex: "@inproceedings{shen2023xpqa,\n  title = {{xPQA}: Cross-Lingual Product Question Answering in 12 Languages},\n  author = {Shen, Xiaoyu and Asai, Akari and Byrne, Bill and De Gispert, Adria},\n  booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 5: Industry Track)},\n  year = {2023},\n  url = {https://aclanthology.org/2023.acl-industry.12/},\n  doi = {10.18653/v1/2023.acl-industry.12}\n}\n"
+    short_description: XPQARetrieval retrieval split.
+    description: 'XPQARetrieval Source dataset: mteb/XPQARetrieval; source subset:
+      fra-fra; eval split: test.'
+    source_task: XPQARetrieval
+    source_dataset_id: mteb/XPQARetrieval
+    source_dataset_revision: fc4624be978945a0ceebbc4b85737258fe26330b
+    source_dataset_subset: fra-fra
+    source_eval_split: test
+    source_nano_split: xpqa-fra-fra
+    hub_split: xpqa_fra_fra
     languages:
     - fr
+    references:
+    - title: XPQARetrieval source reference
+      url: https://arxiv.org/abs/2305.09249
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/XPQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/XPQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 12
+      max_chars: 104
+      mean_chars: 54.61
+      median_chars: 53.0
+    document_text_stats:
+      count: 1547
+      min_chars: 16
+      max_chars: 359
+      mean_chars: 76.98125404007757
+      median_chars: 69.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5

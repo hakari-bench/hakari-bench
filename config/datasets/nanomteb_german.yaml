@@ -6,15 +6,18 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoGerDaLIR
-- NanoGermanDPR
-- NanoGermanQuAD
-- NanoXMarket
+- ger_da_lir
+- german_dpr
+- german_qu_ad
+- gov_service
+- xmarket_de
 metadata:
-  language: de
+  language: multilingual
   category: natural_language
   short_description: German NanoMTEB retrieval benchmark.
-  description: NanoMTEB-German is a compact German retrieval benchmark containing the MTEB(deu, v1) retrieval-family splits. Non-benchmark German retrieval tasks are placed in NanoMTEB-Misc.
+  description: NanoMTEB-German is a compact German retrieval benchmark containing
+    the MTEB(deu, v1) retrieval-family splits. Non-benchmark German retrieval tasks
+    are placed in NanoMTEB-Misc.
   citation_keys:
   - muennighoff2023mteb
   references:
@@ -29,28 +32,52 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.48550/arXiv.2210.07316
-  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n  doi = {10.48550/arXiv.2210.07316}\n}\n"
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
+    \ and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n\
+    \  doi = {10.48550/arXiv.2210.07316}\n}\n"
 task_metadata:
-  NanoGerDaLIR:
+  ger_da_lir:
     language: de
     category: natural_language
-    short_description: German legal information retrieval.
-    description: A compact GerDaLIR split for retrieving German legal case documents from legal queries.
-    citation_keys:
-    - wrzalik2021gerdalir
-    references:
-    - title: 'GerDaLIR: A German Dataset for Legal Information Retrieval'
-      authors:
-      - Marco Wrzalik
-      - Dirk Krechel
-      year: 2021
-      url: https://aclanthology.org/2021.nllp-1.13/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2021.nllp-1.13
-    bibtex: "@inproceedings{wrzalik2021gerdalir,\n  title = {{GerDaLIR}: A German Dataset for Legal Information Retrieval},\n  author = {Wrzalik, Marco and Krechel, Dirk},\n  booktitle = {Proceedings of the Natural Legal Language Processing Workshop 2021},\n  year = {2021},\n  url = {https://aclanthology.org/2021.nllp-1.13/},\n  doi = {10.18653/v1/2021.nllp-1.13}\n}\n"
+    short_description: GerDaLIR retrieval split.
+    description: 'GerDaLIR is a legal information retrieval dataset created from the
+      Open Legal Data platform. Source dataset: mteb/GerDaLIR; source subset: default;
+      eval split: test.'
+    source_task: GerDaLIR
+    source_dataset_id: mteb/GerDaLIR
+    source_dataset_revision: 735f2cca1298426b3c792de3527b4bdc18537fc0
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: ger-da-lir
+    hub_split: ger_da_lir
     languages:
     - de
+    references:
+    - title: GerDaLIR source reference
+      url: https://github.com/lavis-nlp/GerDaLIR
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/GerDaLIR Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/GerDaLIR
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 155
+      max_chars: 3059
+      mean_chars: 879.53
+      median_chars: 703.5
+    document_text_stats:
+      count: 10000
+      min_chars: 150
+      max_chars: 307904
+      mean_chars: 18071.4799
+      median_chars: 13329.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -63,28 +90,47 @@ task_metadata:
         sample_count: 10000
         languages:
           de: 99.99
-  NanoGermanDPR:
+  german_dpr:
     language: de
     category: natural_language
-    short_description: German open-domain QA passage retrieval.
-    description: A compact GermanDPR retrieval task for German open-domain question answering over passages.
-    citation_keys:
-    - moeller2021germanquad
-    references:
-    - &id001
-      title: 'GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval'
-      authors:
-      - Timo Moller
-      - Julian Risch
-      - Malte Pietsch
-      year: 2021
-      url: https://arxiv.org/abs/2104.12741
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2104.12741
-    bibtex: "@misc{moeller2021germanquad,\n  title = {{GermanQuAD} and {GermanDPR}: Improving Non-English Question Answering and Passage Retrieval},\n  author = {Moller, Timo and Risch, Julian and Pietsch, Malte},\n  year = {2021},\n  url = {https://arxiv.org/abs/2104.12741},\n  doi = {10.48550/arXiv.2104.12741}\n}\n"
+    short_description: GermanDPR retrieval split.
+    description: 'GermanDPR is a German Question Answering dataset for open-domain
+      QA. It associates questions with a textual context containing the answer Source
+      dataset: mteb/GermanDPR; source subset: default; eval split: test.'
+    source_task: GermanDPR
+    source_dataset_id: mteb/GermanDPR
+    source_dataset_revision: 64a4860e55ba6d8fcb923d5306d08e08b1c72794
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: german-dpr
+    hub_split: german_dpr
     languages:
     - de
+    references:
+    - title: GermanDPR source reference
+      url: https://huggingface.co/datasets/deepset/germandpr
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/GermanDPR Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/GermanDPR
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 128
+      mean_chars: 63.735
+      median_chars: 62.0
+    document_text_stats:
+      count: 2876
+      min_chars: 480
+      max_chars: 4786
+      mean_chars: 1290.3115438108484
+      median_chars: 1146.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -97,20 +143,48 @@ task_metadata:
       document:
         sample_count: 2876
         languages:
-          de: 97.497
-          en: 2.017
-  NanoGermanQuAD:
+          de: 97.531
+          en: 2.051
+  german_qu_ad:
     language: de
     category: natural_language
-    short_description: German extractive QA context retrieval.
-    description: A compact GermanQuAD retrieval task for retrieving German contexts that answer extractive QA questions.
-    citation_keys:
-    - moeller2021germanquad
-    references:
-    - *id001
-    bibtex: "@misc{moeller2021germanquad,\n  title = {{GermanQuAD} and {GermanDPR}: Improving Non-English Question Answering and Passage Retrieval},\n  author = {Moller, Timo and Risch, Julian and Pietsch, Malte},\n  year = {2021},\n  url = {https://arxiv.org/abs/2104.12741},\n  doi = {10.48550/arXiv.2104.12741}\n}\n"
+    short_description: GermanQuAD-Retrieval retrieval split.
+    description: 'Context Retrieval for German Question Answering Source dataset:
+      mteb/germanquad-retrieval; source subset: default; eval split: test.'
+    source_task: GermanQuAD-Retrieval
+    source_dataset_id: mteb/germanquad-retrieval
+    source_dataset_revision: f5c87ae5a2e7a5106606314eef45255f03151bb3
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: german-qu-ad
+    hub_split: german_qu_ad
     languages:
     - de
+    references:
+    - title: GermanQuAD-Retrieval source reference
+      url: https://huggingface.co/datasets/deepset/germanquad
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/germanquad-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/germanquad-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 115
+      mean_chars: 54.88
+      median_chars: 52.5
+    document_text_stats:
+      count: 474
+      min_chars: 507
+      max_chars: 11647
+      mean_chars: 1941.048523206751
+      median_chars: 1451.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -124,30 +198,44 @@ task_metadata:
         languages:
           de: 97.89
           en: 2.11
-  NanoXMarket:
+  gov_service:
     language: de
     category: natural_language
-    short_description: German cross-market product retrieval.
-    description: A compact German XMarket split for query-product relevance in cross-market product recommendation.
-    citation_keys:
-    - bonab2021crossmarket
-    references:
-    - title: Cross-Market Product Recommendation
-      authors:
-      - Hamed Bonab
-      - Mohammad Aliannejadi
-      - Ali Vardasbi
-      - Evangelos Kanoulas
-      - James Allan
-      year: 2021
-      url: https://doi.org/10.1145/3459637.3482493
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1145/3459637.3482493
-    bibtex: "@inproceedings{bonab2021crossmarket,\n  title = {Cross-Market Product Recommendation},\n  author = {Bonab, Hamed and Aliannejadi, Mohammad and Vardasbi, Ali and Kanoulas, Evangelos and Allan, James},\n  booktitle = {Proceedings of the 30th ACM International Conference on Information and Knowledge Management},\n  year = {2021},\n  url = {https://doi.org/10.1145/3459637.3482493},\n  doi = {10.1145/3459637.3482493}\n}\n"
+    short_description: GermanGovServiceRetrieval retrieval split.
+    description: 'LHM-Dienstleistungen-QA is a German question answering dataset for
+      government services of the Munich city administration. It associates questions
+      with a textual context containing the answer Source dataset: it-at-m/LHM-Dienstleistungen-QA;
+      source subset: default; eval split: test.'
+    source_task: GermanGovServiceRetrieval
+    source_dataset_id: it-at-m/LHM-Dienstleistungen-QA
+    source_dataset_revision: ed40131b56ce86ce3666f2942953595dd9d29608
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: gov-service
+    hub_split: gov_service
     languages:
     - de
-    - en
+    references:
+    - title: GermanGovServiceRetrieval source reference
+      url: https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 145
+      mean_chars: 63.875
+      median_chars: 59.5
+    document_text_stats:
+      count: 105
+      min_chars: 638
+      max_chars: 1541
+      mean_chars: 1248.4571428571428
+      median_chars: 1259.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -155,18 +243,70 @@ task_metadata:
       query:
         sample_count: 200
         languages:
-          de: 81.0
-          en: 11.0
-          sv: 2.5
-          es: 1.5
-          nl: 1.5
-          it: 1.0
-          et: 0.5
-          fr: 0.5
-          pt: 0.5
+          de: 100.0
+      document:
+        sample_count: 105
+        languages:
+          de: 100.0
+  xmarket_de:
+    language: multilingual
+    category: natural_language
+    short_description: XMarket retrieval split.
+    description: 'XMarket Source dataset: mteb/XMarket; source subset: de; eval split:
+      test.'
+    source_task: XMarket
+    source_dataset_id: mteb/XMarket
+    source_dataset_revision: 07b0172d008ab25b0a9702119f521bf477267090
+    source_dataset_subset: de
+    source_eval_split: test
+    source_nano_split: xmarket-de
+    hub_split: xmarket_de
+    languages:
+    - de
+    - en
+    references:
+    - title: XMarket source reference
+      url: http://dx.doi.org/10.1145/3459637.3482493
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/XMarket Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/XMarket
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 182
+      min_chars: 4
+      max_chars: 44
+      mean_chars: 14.571428571428571
+      median_chars: 12.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 152116
+      mean_chars: 456.9879
+      median_chars: 101.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 182
+        languages:
+          de: 81.319
+          en: 10.44
+          sv: 2.747
+          es: 1.648
+          nl: 1.648
+          it: 1.099
+          et: 0.549
+          pt: 0.549
       document:
         sample_count: 10000
         languages:
-          en: 78.11
-          de: 19.28
-          fr: 0.51
+          de: 75.93
+          en: 20.8
+          sk: 1.1

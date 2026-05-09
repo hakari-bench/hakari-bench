@@ -1,0 +1,811 @@
+name: NanoMuPLeR
+dataset_id: hakari-bench/NanoMuPLeR
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- el
+- en
+- es
+- fi
+- fr
+- it
+- lt
+- lv
+- nl
+- pl
+- pt
+- sk
+- sl
+- sv
+metadata:
+  language: multilingual
+  category: natural_language
+  short_description: NanoMuPLeR retrieval benchmark.
+  description: NanoMuPLeR is a Nano-style retrieval dataset hosted by hakari-bench.
+task_metadata:
+  el:
+    language: el
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: el; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: el
+    source_eval_split: test
+    source_nano_split: el
+    hub_split: el
+    languages:
+    - el
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 82
+      max_chars: 185
+      mean_chars: 141.285
+      median_chars: 143.0
+    document_text_stats:
+      count: 10000
+      min_chars: 388
+      max_chars: 1131
+      mean_chars: 744.818
+      median_chars: 740.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          el: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          el: 99.96
+  en:
+    language: en
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: en; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: en
+    source_eval_split: test
+    source_nano_split: en
+    hub_split: en
+    languages:
+    - en
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 86
+      max_chars: 181
+      mean_chars: 134.865
+      median_chars: 134.5
+    document_text_stats:
+      count: 10000
+      min_chars: 353
+      max_chars: 1120
+      mean_chars: 650.5809
+      median_chars: 645.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.83
+  es:
+    language: es
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: es; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: es
+    source_eval_split: test
+    source_nano_split: es
+    hub_split: es
+    languages:
+    - es
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 97
+      max_chars: 178
+      mean_chars: 134.67
+      median_chars: 134.0
+    document_text_stats:
+      count: 10000
+      min_chars: 371
+      max_chars: 1037
+      mean_chars: 734.5829
+      median_chars: 731.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          es: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          es: 99.9
+  fi:
+    language: fi
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: fi; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: fi
+    source_eval_split: test
+    source_nano_split: fi
+    hub_split: fi
+    languages:
+    - fi
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 73
+      max_chars: 234
+      mean_chars: 160.16
+      median_chars: 157.5
+    document_text_stats:
+      count: 10000
+      min_chars: 420
+      max_chars: 1158
+      mean_chars: 683.6369
+      median_chars: 673.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fi: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fi: 99.83
+  fr:
+    language: fr
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: fr; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: fr
+    source_eval_split: test
+    source_nano_split: fr
+    hub_split: fr
+    languages:
+    - fr
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 81
+      max_chars: 206
+      mean_chars: 141.22
+      median_chars: 141.0
+    document_text_stats:
+      count: 10000
+      min_chars: 408
+      max_chars: 1109
+      mean_chars: 746.4279
+      median_chars: 743.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fr: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fr: 99.85
+  it:
+    language: it
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: it; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: it
+    source_eval_split: test
+    source_nano_split: it
+    hub_split: it
+    languages:
+    - it
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 92
+      max_chars: 190
+      mean_chars: 140.77
+      median_chars: 142.0
+    document_text_stats:
+      count: 10000
+      min_chars: 375
+      max_chars: 1117
+      mean_chars: 726.1448
+      median_chars: 722.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          it: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          it: 99.83
+  lt:
+    language: lt
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: lt; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: lt
+    source_eval_split: test
+    source_nano_split: lt
+    hub_split: lt
+    languages:
+    - lt
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 63
+      max_chars: 184
+      mean_chars: 143.04
+      median_chars: 145.5
+    document_text_stats:
+      count: 10000
+      min_chars: 357
+      max_chars: 1101
+      mean_chars: 621.8122
+      median_chars: 612.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          lt: 99.5
+          war: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          lt: 99.57
+  lv:
+    language: lv
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: lv; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: lv
+    source_eval_split: test
+    source_nano_split: lv
+    hub_split: lv
+    languages:
+    - lv
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 54
+      max_chars: 188
+      mean_chars: 140.47
+      median_chars: 142.0
+    document_text_stats:
+      count: 10000
+      min_chars: 359
+      max_chars: 1087
+      mean_chars: 608.9491
+      median_chars: 600.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          lv: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          lv: 99.48
+  nl:
+    language: nl
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: nl; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: nl
+    source_eval_split: test
+    source_nano_split: nl
+    hub_split: nl
+    languages:
+    - nl
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 88
+      max_chars: 189
+      mean_chars: 147.865
+      median_chars: 151.0
+    document_text_stats:
+      count: 10000
+      min_chars: 379
+      max_chars: 1087
+      mean_chars: 716.3288
+      median_chars: 713.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          nl: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          nl: 99.74
+  pl:
+    language: pl
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: pl; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: pl
+    source_eval_split: test
+    source_nano_split: pl
+    hub_split: pl
+    languages:
+    - pl
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 85
+      max_chars: 193
+      mean_chars: 143.975
+      median_chars: 143.5
+    document_text_stats:
+      count: 10000
+      min_chars: 331
+      max_chars: 1184
+      mean_chars: 686.1236
+      median_chars: 677.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          pl: 99.89
+  pt:
+    language: pt
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: pt; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: pt
+    source_eval_split: test
+    source_nano_split: pt
+    hub_split: pt
+    languages:
+    - pt
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 71
+      max_chars: 173
+      mean_chars: 135.455
+      median_chars: 136.0
+    document_text_stats:
+      count: 10000
+      min_chars: 375
+      max_chars: 1037
+      mean_chars: 702.8988
+      median_chars: 696.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pt: 99.0
+          gl: 1.0
+      document:
+        sample_count: 10000
+        languages:
+          pt: 98.9
+          es: 0.59
+  sk:
+    language: sk
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: sk; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: sk
+    source_eval_split: test
+    source_nano_split: sk
+    hub_split: sk
+    languages:
+    - sk
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 84
+      max_chars: 193
+      mean_chars: 136.245
+      median_chars: 137.0
+    document_text_stats:
+      count: 10000
+      min_chars: 362
+      max_chars: 1115
+      mean_chars: 628.2437
+      median_chars: 622.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          sk: 99.0
+          cs: 1.0
+      document:
+        sample_count: 10000
+        languages:
+          sk: 96.11
+          cs: 3.5
+  sl:
+    language: sl
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: sl; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: sl
+    source_eval_split: test
+    source_nano_split: sl
+    hub_split: sl
+    languages:
+    - sl
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 80
+      max_chars: 170
+      mean_chars: 136.35
+      median_chars: 139.0
+    document_text_stats:
+      count: 10000
+      min_chars: 345
+      max_chars: 1087
+      mean_chars: 607.824
+      median_chars: 601.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          sl: 97.0
+          cs: 1.0
+          sr: 1.0
+          bs: 0.5
+          hr: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          sl: 95.22
+          sr: 1.71
+          hr: 1.14
+          sh: 0.65
+          bs: 0.63
+  sv:
+    language: sv
+    category: natural_language
+    short_description: MuPLeR-retrieval retrieval split.
+    description: 'MuPLeR-retrieval is a multilingual, parallel legal dataset designed
+      for evaluating retrieval and cross-lingual retrieval tasks. Dataset contains
+      10,000 human-translated parallel passages (derived from the European Union''s
+      DGT-Acquis corpus) & 200 parallel queries (synthetic) across 14 European languages.
+      Source dataset: mteb/MuPLeR-retrieval; source subset: sv; eval split: test.'
+    source_task: MuPLeR-retrieval
+    source_dataset_id: mteb/MuPLeR-retrieval
+    source_dataset_revision: 43dff1bca775c1298511f6776f0ac1d5cc144ccb
+    source_dataset_subset: sv
+    source_eval_split: test
+    source_nano_split: sv
+    hub_split: sv
+    languages:
+    - sv
+    references:
+    - title: MuPLeR-retrieval source reference
+      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MuPLeR-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 74
+      max_chars: 193
+      mean_chars: 143.74
+      median_chars: 147.0
+    document_text_stats:
+      count: 10000
+      min_chars: 362
+      max_chars: 1104
+      mean_chars: 656.7819
+      median_chars: 650.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          sv: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          sv: 99.65

@@ -6,11 +6,17 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoMKQATh
-- NanoWebFAQTh
-- NanoXQuADTh
+- belebele_eng_latn_tha_thai
+- belebele_tha_thai_eng_latn
+- belebele_tha_thai_tha_thai
+- miracl_th
+- mkqa_th
+- mr_tidy_thai
+- multi_long_doc_th
+- web_faq_tha
+- xqu_ad_th
 metadata:
-  language: th
+  language: multilingual
   category: natural_language
   short_description: Thai NanoMTEB retrieval benchmark.
   description: NanoMTEB-Thai is a compact Thai retrieval benchmark aligned with MTEB-style
@@ -34,34 +40,272 @@ metadata:
     \ and Reimers, Nils},\n  year = {2023},\n  url = {https://arxiv.org/abs/2210.07316},\n\
     \  doi = {10.48550/arXiv.2210.07316}\n}\n"
 task_metadata:
-  NanoMKQATh:
-    language: th
+  belebele_eng_latn_tha_thai:
+    language: multilingual
     category: natural_language
-    short_description: Thai MKQA open-domain question retrieval.
-    description: A compact Thai MKQA retrieval split derived from multilingual Natural
-      Questions questions and language-aligned answers.
-    citation_keys:
-    - longpre2021mkqa
+    short_description: BelebeleRetrieval retrieval split.
+    description: 'Belebele is a multiple-choice machine reading comprehension (MRC)
+      dataset spanning 122 language variants (including 115 distinct languages and
+      their scripts) Source dataset: mteb/belebele; source subset: eng_Latn-tha_Thai;
+      eval split: test.'
+    source_task: BelebeleRetrieval
+    source_dataset_id: mteb/belebele
+    source_dataset_revision: 979a211276faa22f671e69d096634193567cfd05
+    source_dataset_subset: eng_Latn-tha_Thai
+    source_eval_split: test
+    source_nano_split: belebele-eng-latn-tha-thai
+    hub_split: belebele_eng_latn_tha_thai
+    languages:
+    - en
+    - th
     references:
-    - title: 'MKQA: A Linguistically Diverse Benchmark for Multilingual Open Domain
-        Question Answering'
-      authors:
-      - Shayne Longpre
-      - Yi Lu
-      - Joachim Daiber
-      year: 2021
-      url: https://aclanthology.org/2021.tacl-1.82/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00433
-    bibtex: "@article{longpre2021mkqa,\n  title = {{MKQA}: A Linguistically Diverse\
-      \ Benchmark for Multilingual Open Domain Question Answering},\n  author = {Longpre,\
-      \ Shayne and Lu, Yi and Daiber, Joachim},\n  journal = {Transactions of the\
-      \ Association for Computational Linguistics},\n  year = {2021},\n  url = {https://aclanthology.org/2021.tacl-1.82/},\n\
-      \  doi = {10.1162/tacl_a_00433}\n}\n"
+    - title: BelebeleRetrieval source reference
+      url: https://arxiv.org/abs/2308.16884
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/belebele Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/belebele
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 25
+      max_chars: 123
+      mean_chars: 57.67
+      median_chars: 55.0
+    document_text_stats:
+      count: 488
+      min_chars: 144
+      max_chars: 1352
+      mean_chars: 475.51024590163934
+      median_chars: 456.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          th: 100.0
+      document:
+        sample_count: 488
+        languages:
+          en: 100.0
+  belebele_tha_thai_eng_latn:
+    language: multilingual
+    category: natural_language
+    short_description: BelebeleRetrieval retrieval split.
+    description: 'Belebele is a multiple-choice machine reading comprehension (MRC)
+      dataset spanning 122 language variants (including 115 distinct languages and
+      their scripts) Source dataset: mteb/belebele; source subset: tha_Thai-eng_Latn;
+      eval split: test.'
+    source_task: BelebeleRetrieval
+    source_dataset_id: mteb/belebele
+    source_dataset_revision: 979a211276faa22f671e69d096634193567cfd05
+    source_dataset_subset: tha_Thai-eng_Latn
+    source_eval_split: test
+    source_nano_split: belebele-tha-thai-eng-latn
+    hub_split: belebele_tha_thai_eng_latn
     languages:
     - th
     - en
+    references:
+    - title: BelebeleRetrieval source reference
+      url: https://arxiv.org/abs/2308.16884
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/belebele Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/belebele
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 31
+      max_chars: 171
+      mean_chars: 81.305
+      median_chars: 81.0
+    document_text_stats:
+      count: 488
+      min_chars: 126
+      max_chars: 1245
+      mean_chars: 456.1659836065574
+      median_chars: 440.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 488
+        languages:
+          th: 100.0
+  belebele_tha_thai_tha_thai:
+    language: th
+    category: natural_language
+    short_description: BelebeleRetrieval retrieval split.
+    description: 'Belebele is a multiple-choice machine reading comprehension (MRC)
+      dataset spanning 122 language variants (including 115 distinct languages and
+      their scripts) Source dataset: mteb/belebele; source subset: tha_Thai-tha_Thai;
+      eval split: test.'
+    source_task: BelebeleRetrieval
+    source_dataset_id: mteb/belebele
+    source_dataset_revision: 979a211276faa22f671e69d096634193567cfd05
+    source_dataset_subset: tha_Thai-tha_Thai
+    source_eval_split: test
+    source_nano_split: belebele-tha-thai-tha-thai
+    hub_split: belebele_tha_thai_tha_thai
+    languages:
+    - th
+    references:
+    - title: BelebeleRetrieval source reference
+      url: https://arxiv.org/abs/2308.16884
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/belebele Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/belebele
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 25
+      max_chars: 123
+      mean_chars: 57.67
+      median_chars: 55.0
+    document_text_stats:
+      count: 488
+      min_chars: 126
+      max_chars: 1245
+      mean_chars: 456.1659836065574
+      median_chars: 440.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          th: 100.0
+      document:
+        sample_count: 488
+        languages:
+          th: 100.0
+  miracl_th:
+    language: th
+    category: natural_language
+    short_description: MIRACLRetrievalHardNegatives.v2 retrieval split.
+    description: 'MIRACL (Multilingual Information Retrieval Across a Continuum of
+      Languages) is a multilingual retrieval dataset that focuses on search across
+      18 different languages. The hard negative version has been created by pooling
+      the 250 top documents per query from BM25, e5-multilingual-large and e5-mistral-instruct.V2
+      uses a more appropriate prompt rather than the default prompt for retrieval.
+      You can get more information on the effect of different prompt in the [PR](https://github.com/embeddings-benchmark/mteb/pull/3469#issuecomment-3436467106)
+      Source dataset: mteb/MIRACLRetrievalHardNegatives; source subset: th; eval split:
+      dev.'
+    source_task: MIRACLRetrievalHardNegatives.v2
+    source_dataset_id: mteb/MIRACLRetrievalHardNegatives
+    source_dataset_revision: d7d94fa4b946cec4a27c84653aa0cf6b33f74a3c
+    source_dataset_subset: th
+    source_eval_split: dev
+    source_nano_split: miracl-th
+    hub_split: miracl_th
+    languages:
+    - th
+    references:
+    - title: MIRACLRetrievalHardNegatives.v2 source reference
+      url: http://miracl.ai/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MIRACLRetrievalHardNegatives Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 112
+      mean_chars: 43.585
+      median_chars: 40.0
+    document_text_stats:
+      count: 10000
+      min_chars: 14
+      max_chars: 4858
+      mean_chars: 471.8264
+      median_chars: 409.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          th: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          th: 99.95
+  mkqa_th:
+    language: multilingual
+    category: natural_language
+    short_description: MKQARetrieval retrieval split.
+    description: 'Multilingual Knowledge Questions & Answers (MKQA)contains 10,000
+      queries sampled from the Google Natural Questions dataset. For each query we
+      collect new passage-independent answers. These queries and answers are then
+      human translated into 25 Non-English languages. Source dataset: mteb/MKQARetrieval;
+      source subset: th; eval split: train.'
+    source_task: MKQARetrieval
+    source_dataset_id: mteb/MKQARetrieval
+    source_dataset_revision: 3e069e7a30079d214a859741f5a0de75cf878867
+    source_dataset_subset: th
+    source_eval_split: train
+    source_nano_split: mkqa-th
+    hub_split: mkqa_th
+    languages:
+    - th
+    - en
+    references:
+    - title: MKQARetrieval source reference
+      url: https://github.com/apple/ml-mkqa
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MKQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MKQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 19
+      max_chars: 80
+      mean_chars: 40.205
+      median_chars: 40.0
+    document_text_stats:
+      count: 6652
+      min_chars: 1
+      max_chars: 141
+      mean_chars: 13.403938665063139
+      median_chars: 12.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -81,35 +325,166 @@ task_metadata:
           ru: 0.827
           'no': 0.752
           es: 0.571
-  NanoWebFAQTh:
+  mr_tidy_thai:
     language: th
     category: natural_language
-    short_description: Thai WebFAQ dense retrieval.
-    description: A compact Thai WebFAQ retrieval split over natural FAQ-style question-answer
-      pairs collected from web pages.
-    citation_keys:
-    - dinzinger2025webfaq
-    references:
-    - title: 'WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense
-        Retrieval'
-      authors:
-      - Michael Dinzinger
-      - Laura Caspari
-      - Kanishka Ghosh Dastidar
-      - Jelena Mitrovic
-      - Michael Granitzer
-      year: 2025
-      url: https://arxiv.org/abs/2502.20936
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.48550/arXiv.2502.20936
-    bibtex: "@misc{dinzinger2025webfaq,\n  title = {{WebFAQ}: A Multilingual Collection\
-      \ of Natural Q\\&A Datasets for Dense Retrieval},\n  author = {Dinzinger, Michael\
-      \ and Caspari, Laura and Ghosh Dastidar, Kanishka and Mitrovic, Jelena and Granitzer,\
-      \ Michael},\n  year = {2025},\n  url = {https://arxiv.org/abs/2502.20936},\n\
-      \  doi = {10.48550/arXiv.2502.20936}\n}\n"
+    short_description: MrTidyRetrieval retrieval split.
+    description: 'Mr. TyDi is a multi-lingual benchmark dataset built on TyDi, covering
+      eleven typologically diverse languages. It is designed for monolingual retrieval,
+      specifically to evaluate ranking with learned dense representations. Source
+      dataset: mteb/mrtidy; source subset: thai; eval split: test.'
+    source_task: MrTidyRetrieval
+    source_dataset_id: mteb/mrtidy
+    source_dataset_revision: fc24a3ce8f09746410daee3d5cd823ff7a0675b7
+    source_dataset_subset: thai
+    source_eval_split: test
+    source_nano_split: mr-tidy-thai
+    hub_split: mr_tidy_thai
     languages:
     - th
+    references:
+    - title: MrTidyRetrieval source reference
+      url: https://huggingface.co/datasets/castorini/mr-tydi
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/mrtidy Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/mrtidy
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 140
+      mean_chars: 41.59
+      median_chars: 38.0
+    document_text_stats:
+      count: 10000
+      min_chars: 8
+      max_chars: 10682
+      mean_chars: 416.3137
+      median_chars: 350.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          th: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          th: 99.76
+  multi_long_doc_th:
+    language: th
+    category: natural_language
+    short_description: MultiLongDocRetrieval retrieval split.
+    description: 'Multi Long Doc Retrieval (MLDR) ''is curated by the multilingual
+      articles from Wikipedia, Wudao and mC4 (see Table 7), and NarrativeQA (Kocˇisky
+      ́ et al., 2018; Gu ̈nther et al., 2023), which is only for English.'' (Chen
+      et al., 2024). It is constructed by sampling lengthy articles from Wikipedia,
+      Wudao and mC4 datasets and randomly choose paragraphs from them. Then we use
+      GPT-3.5 to generate questions based on these paragraphs. The generated question
+      and the sampled article constitute a new text pair to the dataset. Source dataset:
+      mteb/MultiLongDocRetrieval; source subset: th; eval split: dev.'
+    source_task: MultiLongDocRetrieval
+    source_dataset_id: mteb/MultiLongDocRetrieval
+    source_dataset_revision: 837028901907a7d419b4ab906f28e011ce1cc824
+    source_dataset_subset: th
+    source_eval_split: dev
+    source_nano_split: multi-long-doc-th
+    hub_split: multi_long_doc_th
+    languages:
+    - th
+    references:
+    - title: MultiLongDocRetrieval source reference
+      url: https://arxiv.org/abs/2402.03216
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MultiLongDocRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MultiLongDocRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 30
+      max_chars: 1123
+      mean_chars: 107.79
+      median_chars: 84.0
+    document_text_stats:
+      count: 10000
+      min_chars: 36
+      max_chars: 183497
+      mean_chars: 25993.2696
+      median_chars: 28371.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          th: 86.5
+          en: 4.0
+          fr: 3.0
+          de: 2.0
+          it: 2.0
+          es: 1.5
+          ca: 0.5
+          zh: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          th: 99.37
+  web_faq_tha:
+    language: th
+    category: natural_language
+    short_description: WebFAQRetrieval retrieval split.
+    description: 'WebFAQ is a broad-coverage corpus of natural question-answer pairs
+      in 75 languages, gathered from FAQ pages on the web. Source dataset: mteb/WebFAQRetrieval;
+      source subset: tha; eval split: test.'
+    source_task: WebFAQRetrieval
+    source_dataset_id: mteb/WebFAQRetrieval
+    source_dataset_revision: f64f483ad0f31d2e78209d524c14a4a867965959
+    source_dataset_subset: tha
+    source_eval_split: test
+    source_nano_split: web-faq-tha
+    hub_split: web_faq_tha
+    languages:
+    - th
+    references:
+    - title: WebFAQRetrieval source reference
+      url: https://huggingface.co/PaDaS-Lab
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/WebFAQRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 13
+      max_chars: 100
+      mean_chars: 43.885
+      median_chars: 41.0
+    document_text_stats:
+      count: 10000
+      min_chars: 30
+      max_chars: 5182
+      mean_chars: 224.3216
+      median_chars: 166.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -123,33 +498,47 @@ task_metadata:
         sample_count: 10000
         languages:
           th: 99.76
-  NanoXQuADTh:
+  xqu_ad_th:
     language: th
     category: natural_language
-    short_description: Thai XQuAD context retrieval.
-    description: A compact Thai XQuAD retrieval split that asks models to retrieve
-      the translated SQuAD context passage for each question.
-    citation_keys:
-    - artetxe2020xquad
-    references:
-    - title: On the Cross-lingual Transferability of Monolingual Representations
-      authors:
-      - Mikel Artetxe
-      - Sebastian Ruder
-      - Dani Yogatama
-      year: 2020
-      url: https://aclanthology.org/2020.acl-main.421/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2020.acl-main.421
-    bibtex: "@inproceedings{artetxe2020xquad,\n  title = {On the Cross-lingual Transferability\
-      \ of Monolingual Representations},\n  author = {Artetxe, Mikel and Ruder, Sebastian\
-      \ and Yogatama, Dani},\n  booktitle = {Proceedings of the 58th Annual Meeting\
-      \ of the Association for Computational Linguistics},\n  year = {2020},\n  url\
-      \ = {https://aclanthology.org/2020.acl-main.421/},\n  doi = {10.18653/v1/2020.acl-main.421}\n\
-      }\n"
+    short_description: XQuADRetrieval retrieval split.
+    description: 'XQuAD is a benchmark dataset for evaluating cross-lingual question
+      answering performance. It is repurposed retrieving relevant context for each
+      question. Source dataset: google/xquad; source subset: th; eval split: validation.'
+    source_task: XQuADRetrieval
+    source_dataset_id: google/xquad
+    source_dataset_revision: 51adfef1c1287aab1d2d91b5bead9bcfb9c68583
+    source_dataset_subset: th
+    source_eval_split: validation
+    source_nano_split: xqu-ad-th
+    hub_split: xqu_ad_th
     languages:
     - th
+    references:
+    - title: XQuADRetrieval source reference
+      url: https://huggingface.co/datasets/xquad
+      is_paper: false
+      source_confidence: probably_correct
+    - title: google/xquad Hugging Face dataset
+      url: https://huggingface.co/datasets/google/xquad
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 161
+      mean_chars: 54.18
+      median_chars: 51.0
+    document_text_stats:
+      count: 240
+      min_chars: 154
+      max_chars: 2891
+      mean_chars: 736.7583333333333
+      median_chars: 661.5
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5

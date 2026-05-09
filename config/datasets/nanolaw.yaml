@@ -8,12 +8,12 @@ candidate_config: bm25
 splits:
 - NanoAILACasedocs
 - NanoAILAStatutes
-- NanoLegalSummarization
 - NanoGerDaLIRSmall
 - NanoLeCaRDv2
 - NanoLegalBenchConsumerContractsQA
 - NanoLegalBenchCorporateLobbying
 - NanoLegalQuAD
+- NanoLegalSummarization
 metadata:
   language: multilingual
   category: natural_language
@@ -276,54 +276,6 @@ task_metadata:
           en: 100.0
       document:
         sample_count: 82
-        languages:
-          en: 100.0
-  NanoLegalSummarization:
-    language: en
-    category: natural_language
-    short_description: Contract-to-summary legal retrieval.
-    description: NanoLegalSummarization evaluates matching between legal contract
-      text and plain-English summaries drawn from contract summarization resources.
-    citation_keys:
-    - manor2019plain
-    references:
-    - title: Plain English Summarization of Contracts
-      authors:
-      - Laura Manor
-      - Junyi Jessy Li
-      year: 2019
-      url: https://aclanthology.org/W19-2201/
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{manor2019plain,\n  author = {Laura Manor and Junyi Jessy\
-      \ Li},\n  booktitle = {Proceedings of the Natural Legal Language Processing\
-      \ Workshop 2019},\n  pages = {1--11},\n  publisher = {Association for Computational\
-      \ Linguistics},\n  title = {Plain English Summarization of Contracts},\n  url\
-      \ = {https://aclanthology.org/W19-2201/},\n  year = {2019},\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 17
-      max_chars: 466
-      mean_chars: 103.055
-      median_chars: 82.5
-    document_text_stats:
-      count: 438
-      min_chars: 44
-      max_chars: 6496
-      mean_chars: 606.1643835616438
-      median_chars: 340.5
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 438
         languages:
           en: 100.0
   NanoGerDaLIRSmall:
@@ -686,3 +638,51 @@ task_metadata:
         sample_count: 200
         languages:
           de: 100.0
+  NanoLegalSummarization:
+    language: en
+    category: natural_language
+    short_description: Contract-to-summary legal retrieval.
+    description: NanoLegalSummarization evaluates matching between legal contract
+      text and plain-English summaries drawn from contract summarization resources.
+    citation_keys:
+    - manor2019plain
+    references:
+    - title: Plain English Summarization of Contracts
+      authors:
+      - Laura Manor
+      - Junyi Jessy Li
+      year: 2019
+      url: https://aclanthology.org/W19-2201/
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@inproceedings{manor2019plain,\n  author = {Laura Manor and Junyi Jessy\
+      \ Li},\n  booktitle = {Proceedings of the Natural Legal Language Processing\
+      \ Workshop 2019},\n  pages = {1--11},\n  publisher = {Association for Computational\
+      \ Linguistics},\n  title = {Plain English Summarization of Contracts},\n  url\
+      \ = {https://aclanthology.org/W19-2201/},\n  year = {2019},\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 466
+      mean_chars: 103.055
+      median_chars: 82.5
+    document_text_stats:
+      count: 438
+      min_chars: 44
+      max_chars: 6496
+      mean_chars: 606.1643835616438
+      median_chars: 340.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 438
+        languages:
+          en: 100.0

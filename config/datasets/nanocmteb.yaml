@@ -6,19 +6,20 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoT2Retrieval
-- NanoMMarcoRetrieval
-- NanoDuRetrieval
-- NanoCovidRetrieval
-- NanoCmedqaRetrieval
-- NanoEcomRetrieval
-- NanoMedicalRetrieval
-- NanoVideoRetrieval
+- cmedqa
+- covid
+- du
+- ecom
+- medical
+- mmarco
+- t2
+- video
 metadata:
-  language: zh
+  language: multilingual
   category: natural_language
   short_description: Chinese Nano retrieval benchmark based on C-MTEB retrieval tasks.
-  description: NanoCMTEB is a compact Chinese retrieval benchmark assembled from C-MTEB / MTEB(cmn, v1) retrieval tasks.
+  description: NanoCMTEB is a compact Chinese retrieval benchmark assembled from C-MTEB
+    / MTEB(cmn, v1) retrieval tasks.
   citation_keys:
   - xiao2024cpack
   references:
@@ -35,117 +36,54 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.1145/3626772.3657878
-  bibtex: "@inproceedings{xiao2024cpack,\n  author = {Xiao, Shitao and Liu, Zheng and Zhang, Peitian and Muennighoff, Niklas and Lian, Defu and Nie, Jian-Yun},\n  booktitle = {Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval},\n  doi = {10.1145/3626772.3657878},\n  title = {C-Pack: Packed Resources For General Chinese Embeddings},\n  url = {https://doi.org/10.1145/3626772.3657878},\n  year = {2024}\n}\n"
+  bibtex: "@inproceedings{xiao2024cpack,\n  author = {Xiao, Shitao and Liu, Zheng\
+    \ and Zhang, Peitian and Muennighoff, Niklas and Lian, Defu and Nie, Jian-Yun},\n\
+    \  booktitle = {Proceedings of the 47th International ACM SIGIR Conference on\
+    \ Research and Development in Information Retrieval},\n  doi = {10.1145/3626772.3657878},\n\
+    \  title = {C-Pack: Packed Resources For General Chinese Embeddings},\n  url =\
+    \ {https://doi.org/10.1145/3626772.3657878},\n  year = {2024}\n}\n"
 task_metadata:
-  NanoT2Retrieval:
+  cmedqa:
     language: zh
     category: natural_language
-    short_description: Chinese passage ranking from T2Ranking.
-    description: NanoT2Retrieval evaluates Chinese passage ranking from T2Ranking, a large-scale Chinese web passage retrieval benchmark with human relevance annotations across several domains.
-    citation_keys:
-    - xie2023t2ranking
-    references:
-    - title: 'T2Ranking: A Large-scale Chinese Benchmark for Passage Ranking'
-      authors:
-      - Xiaohui Xie
-      - Qian Dong
-      - Bingning Wang
-      - Feiyang Lv
-      - Ting Yao
-      - Weinan Gan
-      - Zhijing Wu
-      - Xiangsheng Li
-      - Haitao Li
-      - Yiqun Liu
-      - Jin Ma
-      year: 2023
-      url: https://doi.org/10.1145/3539618.3591874
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1145/3539618.3591874
-    bibtex: "@inproceedings{xie2023t2ranking,\n  author = {Xie, Xiaohui and Dong, Qian and Wang, Bingning and Lv, Feiyang and Yao, Ting and Gan, Weinan and Wu, Zhijing and Li, Xiangsheng and Li, Haitao and Liu, Yiqun and Ma, Jin},\n  booktitle = {Proceedings of the 46th International ACM SIGIR Conference on Research and Development in Information Retrieval},\n  doi = {10.1145/3539618.3591874},\n  title = {T2Ranking: A Large-scale Chinese Benchmark for Passage Ranking},\n  url = {https://doi.org/10.1145/3539618.3591874},\n  year = {2023}\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 5
-      max_chars: 19
-      mean_chars: 10.74
-      median_chars: 10.0
-    document_text_stats:
-      count: 10000
-      min_chars: 1
-      max_chars: 41949
-      mean_chars: 913.4993
-      median_chars: 482.5
+    short_description: CmedqaRetrieval retrieval split.
+    description: 'Online medical consultation text. Used the CMedQAv2 as its underlying
+      dataset. Source dataset: mteb/CmedqaRetrieval; source subset: default; eval
+      split: dev.'
+    source_task: CmedqaRetrieval
+    source_dataset_id: mteb/CmedqaRetrieval
+    source_dataset_revision: c476f85bf03d6642ec66bf54b9a551c88108bbb4
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: cmedqa
+    hub_split: cmedqa
     languages:
     - zh
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          zh: 92.0
-          ja: 6.0
-          en: 1.0
-          de: 0.5
-          fr: 0.5
-      document:
-        sample_count: 10000
-        languages:
-          zh: 98.07
-          ja: 0.9
-          en: 0.58
-  NanoMMarcoRetrieval:
-    language: zh
-    category: natural_language
-    short_description: Chinese MS MARCO-style passage retrieval.
-    description: NanoMMarcoRetrieval evaluates Chinese passage retrieval in the MMarco/C-MTEB setting. Queries follow web-search question answering intent and documents are relevant passages translated or adapted from MS MARCO-style resources.
-    citation_keys:
-    - xiao2024cpack
-    - bonifacio2021mmarco
     references:
-    - title: 'C-Pack: Packed Resources For General Chinese Embeddings'
-      authors:
-      - Shitao Xiao
-      - Zheng Liu
-      - Peitian Zhang
-      - Niklas Muennighoff
-      - Defu Lian
-      - Jian-Yun Nie
-      year: 2024
-      url: https://doi.org/10.1145/3626772.3657878
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1145/3626772.3657878
-    - title: 'mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset'
-      authors:
-      - Luiz Henrique Bonifacio
-      - Vitor Jeronymo
-      - Hugo Queiroz Abonizio
-      - Israel Campiotti
-      - Marzieh Fadaee
-      - Roberto Lotufo
-      - Rodrigo Nogueira
-      year: 2021
-      url: https://arxiv.org/abs/2108.13897
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{xiao2024cpack,\n  author = {Xiao, Shitao and Liu, Zheng and Zhang, Peitian and Muennighoff, Niklas and Lian, Defu and Nie, Jian-Yun},\n  booktitle = {Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval},\n  doi = {10.1145/3626772.3657878},\n  title = {C-Pack: Packed Resources For General Chinese Embeddings},\n  url = {https://doi.org/10.1145/3626772.3657878},\n  year = {2024}\n}\n\n@article{bonifacio2021mmarco,\n  author = {Luiz Henrique Bonifacio and Vitor Jeronymo and Hugo Queiroz Abonizio and Israel Campiotti and Marzieh Fadaee and Roberto Lotufo and Rodrigo Nogueira},\n  journal = {arXiv preprint arXiv:2108.13897},\n  title = {mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset},\n  year = {2021},\n  url = {https://arxiv.org/abs/2108.13897}\n}\n"
+    - title: CmedqaRetrieval source reference
+      url: https://aclanthology.org/2022.emnlp-main.357.pdf
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CmedqaRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CmedqaRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
     query_text_stats:
       count: 200
+      min_chars: 11
+      max_chars: 151
+      mean_chars: 51.995
+      median_chars: 44.0
+    document_text_stats:
+      count: 10000
       min_chars: 4
-      max_chars: 61
-      mean_chars: 10.09
-      median_chars: 9.0
-    document_text_stats:
-      count: 10000
-      min_chars: 15
-      max_chars: 541
-      mean_chars: 113.8547
-      median_chars: 101.0
-    languages:
-    - zh
+      max_chars: 4341
+      mean_chars: 157.5694
+      median_chars: 112.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -153,40 +91,95 @@ task_metadata:
       query:
         sample_count: 200
         languages:
-          zh: 93.5
-          ja: 5.0
-          en: 0.5
-          fr: 0.5
-          ru: 0.5
+          zh: 99.0
+          ja: 1.0
       document:
         sample_count: 10000
         languages:
-          zh: 99.02
-          en: 0.74
-  NanoDuRetrieval:
+          zh: 99.5
+  covid:
     language: zh
     category: natural_language
-    short_description: Chinese web passage retrieval from DuReader-Retrieval.
-    description: NanoDuRetrieval evaluates Chinese passage retrieval from DuReader-Retrieval, where search-engine queries must retrieve web passages that answer the question.
-    citation_keys:
-    - qiu2022dureaderretrieval
+    short_description: CovidRetrieval retrieval split.
+    description: 'COVID-19 news articles Source dataset: mteb/CovidRetrieval; source
+      subset: default; eval split: dev.'
+    source_task: CovidRetrieval
+    source_dataset_id: mteb/CovidRetrieval
+    source_dataset_revision: 9c6dc4b276bb47c3ff725bbc5ffcafd56dded38b
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: covid
+    hub_split: covid
+    languages:
+    - zh
     references:
-    - title: 'DuReader-Retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from Web Search Engine'
-      authors:
-      - Yifu Qiu
-      - Hongyu Li
-      - Yingqi Qu
-      - Ying Chen
-      - QiaoQiao She
-      - Jing Liu
-      - Hua Wu
-      - Haifeng Wang
-      year: 2022
-      url: https://aclanthology.org/2022.emnlp-main.357/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2022.emnlp-main.357
-    bibtex: "@inproceedings{qiu2022dureaderretrieval,\n  author = {Qiu, Yifu and Li, Hongyu and Qu, Yingqi and Chen, Ying and She, QiaoQiao and Liu, Jing and Wu, Hua and Wang, Haifeng},\n  booktitle = {Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing},\n  doi = {10.18653/v1/2022.emnlp-main.357},\n  title = {DuReader-Retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from Web Search Engine},\n  url = {https://aclanthology.org/2022.emnlp-main.357/},\n  year = {2022}\n}\n"
+    - title: CovidRetrieval source reference
+      url: https://arxiv.org/abs/2203.03367
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CovidRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CovidRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 10
+      max_chars: 57
+      mean_chars: 25.735
+      median_chars: 24.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 15408
+      mean_chars: 409.3471
+      median_chars: 275.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          zh: 99.5
+          ja: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          zh: 98.54
+          en: 0.78
+  du:
+    language: zh
+    category: natural_language
+    short_description: DuRetrieval retrieval split.
+    description: 'A Large-scale Chinese Benchmark for Passage Retrieval from Web Search
+      Engine Source dataset: mteb/DuRetrieval; source subset: default; eval split:
+      dev.'
+    source_task: DuRetrieval
+    source_dataset_id: mteb/DuRetrieval
+    source_dataset_revision: 313c81b51311893c8fd09ca432f96b841ed0ebb3
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: du
+    hub_split: du
+    languages:
+    - zh
+    references:
+    - title: DuRetrieval source reference
+      url: https://aclanthology.org/2022.emnlp-main.357.pdf
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/DuRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/DuRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
     query_text_stats:
       count: 200
       min_chars: 4
@@ -199,8 +192,6 @@ task_metadata:
       max_chars: 33125
       mean_chars: 397.3869
       median_chars: 280.0
-    languages:
-    - zh
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -219,150 +210,35 @@ task_metadata:
         languages:
           zh: 98.94
           en: 0.63
-  NanoCovidRetrieval:
-    language: zh
+  ecom:
+    language: multilingual
     category: natural_language
-    short_description: Chinese COVID-19 news passage retrieval.
-    description: NanoCovidRetrieval evaluates retrieval over Chinese COVID-19 news articles from the Multi-CPR benchmark. Queries ask COVID-related questions and documents are candidate news passages.
-    citation_keys:
-    - long2022multicpr
-    references:
-    - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
-      authors:
-      - Dingkun Long
-      - Qiong Gao
-      - Kuan Zou
-      - Guangwei Xu
-      - Pengjun Xie
-      - Ruijie Guo
-      - Jian Xu
-      - Guanjun Jiang
-      - Luxi Xing
-      - Ping Yang
-      year: 2022
-      url: https://doi.org/10.1145/3477495.3531736
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1145/3477495.3531736
-    bibtex: "@inproceedings{long2022multicpr,\n  author = {Long, Dingkun and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},\n  doi = {10.1145/3477495.3531736},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n  year = {2022}\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 10
-      max_chars: 57
-      mean_chars: 25.735
-      median_chars: 24.0
-    document_text_stats:
-      count: 10000
-      min_chars: 3
-      max_chars: 15408
-      mean_chars: 409.3471
-      median_chars: 275.0
+    short_description: EcomRetrieval retrieval split.
+    description: 'EcomRetrieval Source dataset: mteb/EcomRetrieval; source subset:
+      default; eval split: dev.'
+    source_task: EcomRetrieval
+    source_dataset_id: mteb/EcomRetrieval
+    source_dataset_revision: fa705ce5418e91636b1eaeaf43f34c15aa3f5a8a
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: ecom
+    hub_split: ecom
     languages:
     - zh
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          zh: 99.5
-          ja: 0.5
-      document:
-        sample_count: 10000
-        languages:
-          zh: 98.54
-          en: 0.78
-  NanoCmedqaRetrieval:
-    language: zh
-    category: natural_language
-    short_description: Chinese community medical QA retrieval.
-    description: NanoCmedqaRetrieval evaluates Chinese medical consultation retrieval based on CMedQAv2-style question-answer data, where a community medical question must retrieve relevant replies.
-    citation_keys:
-    - qiu2022dureaderretrieval
-    - zhang2018cmedqav2
+    - ja
     references:
-    - title: 'DuReader-Retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from Web Search Engine'
-      authors:
-      - Yifu Qiu
-      - Hongyu Li
-      - Yingqi Qu
-      - Ying Chen
-      - QiaoQiao She
-      - Jing Liu
-      - Hua Wu
-      - Haifeng Wang
-      year: 2022
-      url: https://aclanthology.org/2022.emnlp-main.357/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2022.emnlp-main.357
-    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer Selection
-      authors:
-      - Sheng Zhang
-      - Xin Zhang
-      - Hui Wang
-      - Liang Guo
-      - Shanshan Liu
-      year: 2018
-      url: https://doi.org/10.1109/ACCESS.2018.2883637
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1109/ACCESS.2018.2883637
-    bibtex: "@inproceedings{qiu2022dureaderretrieval,\n  author = {Qiu, Yifu and Li, Hongyu and Qu, Yingqi and Chen, Ying and She, QiaoQiao and Liu, Jing and Wu, Hua and Wang, Haifeng},\n  booktitle = {Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing},\n  doi = {10.18653/v1/2022.emnlp-main.357},\n  title = {DuReader-Retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from Web Search Engine},\n  url = {https://aclanthology.org/2022.emnlp-main.357/},\n  year = {2022}\n}\n\n@article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and Hui Wang and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n  journal = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer Selection},\n  volume = {6},\n  year = {2018}\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 11
-      max_chars: 151
-      mean_chars: 51.995
-      median_chars: 44.0
-    document_text_stats:
-      count: 10000
-      min_chars: 4
-      max_chars: 4341
-      mean_chars: 157.5694
-      median_chars: 112.0
-    languages:
-    - zh
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          zh: 99.0
-          ja: 1.0
-      document:
-        sample_count: 10000
-        languages:
-          zh: 99.5
-  NanoEcomRetrieval:
-    language: zh
-    category: natural_language
-    short_description: Chinese e-commerce product retrieval.
-    description: NanoEcomRetrieval evaluates product retrieval from Chinese e-commerce queries in Multi-CPR. Queries are shopping search intents and documents are product description sentences.
-    citation_keys:
-    - long2022multicpr
-    references:
-    - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
-      authors:
-      - Dingkun Long
-      - Qiong Gao
-      - Kuan Zou
-      - Guangwei Xu
-      - Pengjun Xie
-      - Ruijie Guo
-      - Jian Xu
-      - Guanjun Jiang
-      - Luxi Xing
-      - Ping Yang
-      year: 2022
-      url: https://doi.org/10.1145/3477495.3531736
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1145/3477495.3531736
-    bibtex: "@inproceedings{long2022multicpr,\n  author = {Long, Dingkun and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},\n  doi = {10.1145/3477495.3531736},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n  year = {2022}\n}\n"
+    - title: EcomRetrieval source reference
+      url: https://arxiv.org/abs/2203.03367
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/EcomRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/EcomRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
     query_text_stats:
       count: 200
       min_chars: 3
@@ -375,9 +251,6 @@ task_metadata:
       max_chars: 98
       mean_chars: 33.0862
       median_chars: 31.0
-    languages:
-    - zh
-    - ja
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -405,32 +278,34 @@ task_metadata:
           zh: 85.79
           ja: 9.2
           en: 3.7
-  NanoMedicalRetrieval:
+  medical:
     language: zh
     category: natural_language
-    short_description: Chinese medical question-answer retrieval.
-    description: NanoMedicalRetrieval evaluates medical answer retrieval from Multi-CPR, matching Chinese medical questions to user replies or medical information that best answer them.
-    citation_keys:
-    - long2022multicpr
+    short_description: MedicalRetrieval retrieval split.
+    description: 'MedicalRetrieval Source dataset: mteb/MedicalRetrieval; source subset:
+      default; eval split: dev.'
+    source_task: MedicalRetrieval
+    source_dataset_id: mteb/MedicalRetrieval
+    source_dataset_revision: 023ae3b2c6b96f583c4ff9b3f9239c93f7885c20
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: medical
+    hub_split: medical
+    languages:
+    - zh
     references:
-    - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
-      authors:
-      - Dingkun Long
-      - Qiong Gao
-      - Kuan Zou
-      - Guangwei Xu
-      - Pengjun Xie
-      - Ruijie Guo
-      - Jian Xu
-      - Guanjun Jiang
-      - Luxi Xing
-      - Ping Yang
-      year: 2022
-      url: https://doi.org/10.1145/3477495.3531736
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1145/3477495.3531736
-    bibtex: "@inproceedings{long2022multicpr,\n  author = {Long, Dingkun and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},\n  doi = {10.1145/3477495.3531736},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n  year = {2022}\n}\n"
+    - title: MedicalRetrieval source reference
+      url: https://arxiv.org/abs/2203.03367
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MedicalRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MedicalRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
     query_text_stats:
       count: 200
       min_chars: 6
@@ -443,8 +318,6 @@ task_metadata:
       max_chars: 512
       mean_chars: 119.7008
       median_chars: 101.0
-    languages:
-    - zh
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -462,32 +335,151 @@ task_metadata:
         sample_count: 10000
         languages:
           zh: 99.94
-  NanoVideoRetrieval:
+  mmarco:
     language: zh
     category: natural_language
-    short_description: Chinese video search retrieval.
-    description: NanoVideoRetrieval evaluates Chinese video title retrieval from Multi-CPR. Given a video search query, models rank relevant video-title documents.
-    citation_keys:
-    - long2022multicpr
+    short_description: MMarcoRetrieval retrieval split.
+    description: 'MMarcoRetrieval Source dataset: mteb/MMarcoRetrieval; source subset:
+      default; eval split: dev.'
+    source_task: MMarcoRetrieval
+    source_dataset_id: mteb/MMarcoRetrieval
+    source_dataset_revision: 4940a7b26bf53463cfe3435bb8e201963e9c31ae
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: mmarco
+    hub_split: mmarco
+    languages:
+    - zh
     references:
-    - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
-      authors:
-      - Dingkun Long
-      - Qiong Gao
-      - Kuan Zou
-      - Guangwei Xu
-      - Pengjun Xie
-      - Ruijie Guo
-      - Jian Xu
-      - Guanjun Jiang
-      - Luxi Xing
-      - Ping Yang
-      year: 2022
-      url: https://doi.org/10.1145/3477495.3531736
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1145/3477495.3531736
-    bibtex: "@inproceedings{long2022multicpr,\n  author = {Long, Dingkun and Gao, Qiong and Zou, Kuan and Xu, Guangwei and Xie, Pengjun and Guo, Ruijie and Xu, Jian and Jiang, Guanjun and Xing, Luxi and Yang, Ping},\n  booktitle = {Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},\n  doi = {10.1145/3477495.3531736},\n  title = {Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval},\n  url = {https://doi.org/10.1145/3477495.3531736},\n  year = {2022}\n}\n"
+    - title: MMarcoRetrieval source reference
+      url: https://arxiv.org/abs/2309.07597
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MMarcoRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MMarcoRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 3
+      max_chars: 44
+      mean_chars: 10.44
+      median_chars: 9.0
+    document_text_stats:
+      count: 10000
+      min_chars: 15
+      max_chars: 541
+      mean_chars: 113.9105
+      median_chars: 102.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          zh: 94.0
+          ja: 3.5
+          en: 0.5
+          eo: 0.5
+          fr: 0.5
+          hu: 0.5
+          id: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          zh: 99.02
+          en: 0.74
+  t2:
+    language: zh
+    category: natural_language
+    short_description: T2Retrieval retrieval split.
+    description: 'T2Ranking: A large-scale Chinese Benchmark for Passage Ranking Source
+      dataset: mteb/T2Retrieval; source subset: default; eval split: dev.'
+    source_task: T2Retrieval
+    source_dataset_id: mteb/T2Retrieval
+    source_dataset_revision: cf778c0ea4168ec5174a34d888d6453e4cde9222
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: t2
+    hub_split: t2
+    languages:
+    - zh
+    references:
+    - title: T2Retrieval source reference
+      url: https://arxiv.org/abs/2304.03679
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/T2Retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/T2Retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 5
+      max_chars: 19
+      mean_chars: 10.74
+      median_chars: 10.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1
+      max_chars: 41949
+      mean_chars: 913.4993
+      median_chars: 482.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          zh: 92.0
+          ja: 6.0
+          en: 1.0
+          de: 0.5
+          fr: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          zh: 98.07
+          ja: 0.9
+          en: 0.58
+  video:
+    language: zh
+    category: natural_language
+    short_description: VideoRetrieval retrieval split.
+    description: 'VideoRetrieval Source dataset: mteb/VideoRetrieval; source subset:
+      default; eval split: dev.'
+    source_task: VideoRetrieval
+    source_dataset_id: mteb/VideoRetrieval
+    source_dataset_revision: 146a9d5e4fd7a9c182b6b92cccb6a3753994305c
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: video
+    hub_split: video
+    languages:
+    - zh
+    references:
+    - title: VideoRetrieval source reference
+      url: https://arxiv.org/abs/2203.03367
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/VideoRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/VideoRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
     query_text_stats:
       count: 200
       min_chars: 3
@@ -500,8 +492,6 @@ task_metadata:
       max_chars: 1220
       mean_chars: 30.5164
       median_chars: 24.0
-    languages:
-    - zh
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5

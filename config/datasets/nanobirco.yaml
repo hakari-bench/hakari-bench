@@ -82,6 +82,18 @@ task_metadata:
         sample_count: 3081
         languages:
           en: 100.0
+    query_text_stats:
+      count: 98
+      min_chars: 421
+      max_chars: 2472
+      mean_chars: 1123.9897959183672
+      median_chars: 1101.5
+    document_text_stats:
+      count: 3081
+      min_chars: 221
+      max_chars: 2555
+      mean_chars: 1140.1054852320676
+      median_chars: 1082.0
   NanoBIRCOClinicalTrial:
     language: en
     category: natural_language
@@ -124,6 +136,18 @@ task_metadata:
         sample_count: 3375
         languages:
           en: 100.0
+    query_text_stats:
+      count: 50
+      min_chars: 245
+      max_chars: 1290
+      mean_chars: 496.98
+      median_chars: 438.5
+    document_text_stats:
+      count: 3375
+      min_chars: 62
+      max_chars: 2736
+      mean_chars: 1174.340148148148
+      median_chars: 1421.0
   NanoBIRCODorisMae:
     language: en
     category: natural_language
@@ -166,6 +190,18 @@ task_metadata:
         sample_count: 5544
         languages:
           en: 100.0
+    query_text_stats:
+      count: 60
+      min_chars: 720
+      max_chars: 1367
+      mean_chars: 995.5333333333333
+      median_chars: 993.5
+    document_text_stats:
+      count: 5544
+      min_chars: 34
+      max_chars: 3440
+      mean_chars: 1220.2736291486292
+      median_chars: 1208.5
   NanoBIRCORelic:
     language: en
     category: natural_language
@@ -208,6 +244,18 @@ task_metadata:
         sample_count: 5023
         languages:
           en: 99.96
+    query_text_stats:
+      count: 100
+      min_chars: 588
+      max_chars: 1472
+      mean_chars: 1016.31
+      median_chars: 1054.0
+    document_text_stats:
+      count: 5023
+      min_chars: 12
+      max_chars: 2578
+      mean_chars: 477.33824407724467
+      median_chars: 438.0
   NanoBIRCOWTB:
     language: en
     category: natural_language
@@ -250,3 +298,15 @@ task_metadata:
         sample_count: 1766
         languages:
           en: 99.887
+    query_text_stats:
+      count: 100
+      min_chars: 475
+      max_chars: 1376
+      mean_chars: 811.34
+      median_chars: 788.5
+    document_text_stats:
+      count: 1766
+      min_chars: 523
+      max_chars: 1598
+      mean_chars: 1091.2355605889015
+      median_chars: 1108.0

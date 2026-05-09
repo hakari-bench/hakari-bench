@@ -1,0 +1,543 @@
+name: NanoMTEB-v2
+dataset_id: hakari-bench/NanoMTEB-v2
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- argu_ana
+- climate_fever
+- cqadupstack_gaming
+- cqadupstack_unix
+- fever
+- fi_qa2018
+- hotpot_qa
+- scidocs
+- touche2020_v3
+- treccovid
+metadata:
+  language: en
+  category: natural_language
+  short_description: NanoMTEB-v2 retrieval benchmark.
+  description: NanoMTEB-v2 is a Nano-style retrieval dataset hosted by hakari-bench.
+task_metadata:
+  argu_ana:
+    language: en
+    category: natural_language
+    short_description: ArguAna retrieval split.
+    description: 'ArguAna: Retrieval of the Best Counterargument without Prior Topic
+      Knowledge Source dataset: mteb/arguana; source subset: default; eval split:
+      test.'
+    source_task: ArguAna
+    source_dataset_id: mteb/arguana
+    source_dataset_revision: c22ab2a51041ffd869aaddef7af8d8215647e41a
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: argu-ana
+    hub_split: argu_ana
+    languages:
+    - en
+    references:
+    - title: ArguAna source reference
+      url: http://argumentation.bplaced.net/arguana/data
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/arguana Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/arguana
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 199
+      min_chars: 358
+      max_chars: 5500
+      mean_chars: 1199.8040201005026
+      median_chars: 1002.0
+    document_text_stats:
+      count: 8626
+      min_chars: 2
+      max_chars: 6673
+      mean_chars: 1029.6044516577788
+      median_chars: 927.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 199
+        languages:
+          en: 100.0
+      document:
+        sample_count: 8626
+        languages:
+          en: 100.0
+  climate_fever:
+    language: en
+    category: natural_language
+    short_description: ClimateFEVERHardNegatives retrieval split.
+    description: climate_fever is a retrieval split in NanoMTEB-v2.
+    source_task: ClimateFEVERHardNegatives
+    source_dataset_id: mteb/ClimateFEVER_test_top_250_only_w_correct-v2
+    source_dataset_revision: 3a309e201f3c2c4b13bd4a367a8f37eee2ec1d21
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: climate-fever
+    hub_split: climate_fever
+    references:
+    - title: mteb/ClimateFEVER_test_top_250_only_w_correct-v2 Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 35
+      max_chars: 300
+      mean_chars: 114.965
+      median_chars: 109.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 32689
+      mean_chars: 1115.9307
+      median_chars: 921.5
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 94.92
+          de: 1.02
+          pl: 0.81
+          fr: 0.55
+  cqadupstack_gaming:
+    language: en
+    category: natural_language
+    short_description: CQADupstackGamingRetrieval retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research Source dataset: mteb/cqadupstack-gaming; source subset: default; eval
+      split: test.'
+    source_task: CQADupstackGamingRetrieval
+    source_dataset_id: mteb/cqadupstack-gaming
+    source_dataset_revision: 4885aa143210c98657558c04aaf3dc47cfb54340
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-gaming
+    hub_split: cqadupstack_gaming
+    languages:
+    - en
+    references:
+    - title: CQADupstackGamingRetrieval source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/cqadupstack-gaming Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/cqadupstack-gaming
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 100
+      mean_chars: 47.62
+      median_chars: 45.0
+    document_text_stats:
+      count: 10000
+      min_chars: 47
+      max_chars: 15438
+      mean_chars: 481.0841
+      median_chars: 387.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 99.5
+          es: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          en: 100.0
+  cqadupstack_unix:
+    language: en
+    category: natural_language
+    short_description: CQADupstackUnixRetrieval retrieval split.
+    description: 'CQADupStack: A Benchmark Data Set for Community Question-Answering
+      Research Source dataset: mteb/cqadupstack-unix; source subset: default; eval
+      split: test.'
+    source_task: CQADupstackUnixRetrieval
+    source_dataset_id: mteb/cqadupstack-unix
+    source_dataset_revision: 6c6430d3a6d36f8d2a829195bc5dc94d7e063e53
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: cqadupstack-unix
+    hub_split: cqadupstack_unix
+    languages:
+    - en
+    references:
+    - title: CQADupstackUnixRetrieval source reference
+      url: http://nlp.cis.unimelb.edu.au/resources/cqadupstack/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/cqadupstack-unix Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/cqadupstack-unix
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 15
+      max_chars: 100
+      mean_chars: 49.205
+      median_chars: 46.0
+    document_text_stats:
+      count: 10000
+      min_chars: 36
+      max_chars: 30611
+      mean_chars: 969.1243
+      median_chars: 602.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 99.5
+          ceb: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.96
+  fever:
+    language: en
+    category: natural_language
+    short_description: FEVERHardNegatives retrieval split.
+    description: fever is a retrieval split in NanoMTEB-v2.
+    source_task: FEVERHardNegatives
+    source_dataset_id: mteb/FEVER_test_top_250_only_w_correct-v2
+    source_dataset_revision: 080c9ed6267b65029207906e815d44a9240bafca
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: fever
+    hub_split: fever
+    references:
+    - title: mteb/FEVER_test_top_250_only_w_correct-v2 Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/FEVER_test_top_250_only_w_correct-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 21
+      max_chars: 141
+      mean_chars: 50.565
+      median_chars: 46.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 6029
+      mean_chars: 565.9753
+      median_chars: 373.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 94.67
+          de: 1.13
+          pl: 0.77
+  fi_qa2018:
+    language: en
+    category: natural_language
+    short_description: FiQA2018 retrieval split.
+    description: 'Financial Opinion Mining and Question Answering Source dataset:
+      mteb/fiqa; source subset: default; eval split: test.'
+    source_task: FiQA2018
+    source_dataset_id: mteb/fiqa
+    source_dataset_revision: 27a168819829fe9bcd655c2df245fb19452e8e06
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: fi-qa2018
+    hub_split: fi_qa2018
+    languages:
+    - en
+    references:
+    - title: FiQA2018 source reference
+      url: https://sites.google.com/view/fiqa/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/fiqa Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/fiqa
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 19
+      max_chars: 140
+      mean_chars: 61.695
+      median_chars: 63.0
+    document_text_stats:
+      count: 10000
+      min_chars: 6
+      max_chars: 13080
+      mean_chars: 780.3921
+      median_chars: 531.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.58
+  hotpot_qa:
+    language: en
+    category: natural_language
+    short_description: HotpotQAHardNegatives retrieval split.
+    description: hotpot_qa is a retrieval split in NanoMTEB-v2.
+    source_task: HotpotQAHardNegatives
+    source_dataset_id: mteb/HotpotQA_test_top_250_only_w_correct-v2
+    source_dataset_revision: 617612fa63afcb60e3b134bed8b7216a99707c37
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: hotpot-qa
+    hub_split: hotpot_qa
+    references:
+    - title: mteb/HotpotQA_test_top_250_only_w_correct-v2 Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 34
+      max_chars: 238
+      mean_chars: 95.83
+      median_chars: 89.5
+    document_text_stats:
+      count: 10000
+      min_chars: 54
+      max_chars: 1838
+      mean_chars: 421.1971
+      median_chars: 378.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 99.5
+          sv: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          en: 98.7
+  scidocs:
+    language: en
+    category: natural_language
+    short_description: SCIDOCS retrieval split.
+    description: 'SciDocs, a new evaluation benchmark consisting of seven document-level
+      tasks ranging from citation prediction, to document classification and recommendation.
+      Source dataset: mteb/scidocs; source subset: default; eval split: test.'
+    source_task: SCIDOCS
+    source_dataset_id: mteb/scidocs
+    source_dataset_revision: f8c2fcf00f625baaa80f62ec5bd9e1fff3b8ae88
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: scidocs
+    hub_split: scidocs
+    languages:
+    - en
+    references:
+    - title: SCIDOCS source reference
+      url: https://allenai.org/data/scidocs
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/scidocs Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/scidocs
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 30
+      max_chars: 192
+      mean_chars: 69.79
+      median_chars: 67.0
+    document_text_stats:
+      count: 10000
+      min_chars: 19
+      max_chars: 10170
+      mean_chars: 1202.6798
+      median_chars: 1102.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 99.5
+          fr: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.94
+  touche2020_v3:
+    language: en
+    category: natural_language
+    short_description: Touche2020Retrieval.v3 retrieval split.
+    description: 'Touché Task 1: Argument Retrieval for Controversial Questions Source
+      dataset: mteb/webis-touche2020-v3; source subset: default; eval split: test.'
+    source_task: Touche2020Retrieval.v3
+    source_dataset_id: mteb/webis-touche2020-v3
+    source_dataset_revision: 431886eaecc48f067a3975b70d0949ea2862463c
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: touche2020.v3
+    hub_split: touche2020_v3
+    languages:
+    - en
+    references:
+    - title: Touche2020Retrieval.v3 source reference
+      url: https://github.com/castorini/touche-error-analysis
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/webis-touche2020-v3 Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/webis-touche2020-v3
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 49
+      min_chars: 16
+      max_chars: 83
+      mean_chars: 43.42857142857143
+      median_chars: 40.0
+    document_text_stats:
+      count: 10000
+      min_chars: 81
+      max_chars: 105982
+      mean_chars: 2386.2117
+      median_chars: 1198.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 49
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.92
+  treccovid:
+    language: en
+    category: natural_language
+    short_description: TRECCOVID retrieval split.
+    description: 'TRECCOVID is an ad-hoc search challenge based on the COVID-19 dataset
+      containing scientific articles related to the COVID-19 pandemic. Source dataset:
+      mteb/trec-covid; source subset: default; eval split: test.'
+    source_task: TRECCOVID
+    source_dataset_id: mteb/trec-covid
+    source_dataset_revision: bb9466bac8153a0349341eb1b22e06409e78ef4e
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: treccovid
+    hub_split: treccovid
+    languages:
+    - en
+    references:
+    - title: TRECCOVID source reference
+      url: https://ir.nist.gov/covidSubmit/index.html
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/trec-covid Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/trec-covid
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 50
+      min_chars: 30
+      max_chars: 165
+      mean_chars: 69.24
+      median_chars: 64.5
+    document_text_stats:
+      count: 10000
+      min_chars: 13
+      max_chars: 27073
+      mean_chars: 1326.6045
+      median_chars: 1365.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.37

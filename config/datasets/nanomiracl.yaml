@@ -5,6 +5,25 @@ corpus_config: corpus
 queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
+splits:
+- ar
+- bn
+- de
+- en
+- es
+- fa
+- fi
+- fr
+- hi
+- id
+- ja
+- ko
+- ru
+- sw
+- te
+- th
+- yo
+- zh
 metadata:
   language: multilingual
   category: natural_language
@@ -826,7 +845,7 @@ task_metadata:
         languages:
           ru: 99.942
   sw:
-    language: sw
+    language: multilingual
     category: natural_language
     short_description: Swahili MIRACL passage retrieval task.
     description: The Swahili split of NanoMIRACL evaluates retrieval of Swahili Wikipedia
@@ -1025,7 +1044,7 @@ task_metadata:
         languages:
           th: 100.0
   yo:
-    language: yo
+    language: multilingual
     category: natural_language
     short_description: Yoruba MIRACL passage retrieval task.
     description: The Yoruba split of NanoMIRACL evaluates retrieval of Yoruba Wikipedia

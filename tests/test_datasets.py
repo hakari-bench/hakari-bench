@@ -21,10 +21,10 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoBEIR-en").dataset_id == "hakari-bench/NanoBEIR-en"
     assert registry.get_dataset("NanoMIRACL").dataset_id == "hakari-bench/NanoMIRACL"
     assert registry.get_dataset("NanoMLDR").dataset_id == "hakari-bench/NanoMLDR"
-    assert registry.get_dataset("NanoJMTEB").dataset_id == "hakari-bench/NanoJMTEB"
+    assert registry.get_dataset("NanoJMTEB-v2").dataset_id == "hakari-bench/NanoJMTEB-v2"
     assert registry.get_dataset("NanoRTEB").dataset_id == "hakari-bench/NanoRTEB"
-    assert registry.get_dataset("NanoMTEB").dataset_id == "hakari-bench/NanoMTEB"
-    assert registry.get_dataset("NanoMMTEB").dataset_id == "hakari-bench/NanoMMTEB"
+    assert registry.get_dataset("NanoMTEB-v2").dataset_id == "hakari-bench/NanoMTEB-v2"
+    assert registry.get_dataset("NanoMMTEB-v2").dataset_id == "hakari-bench/NanoMMTEB-v2"
     assert registry.get_dataset("NanoCMTEB").dataset_id == "hakari-bench/NanoCMTEB"
     assert registry.get_dataset("NanoLongEmbed").dataset_id == "hakari-bench/NanoLongEmbed"
     assert registry.get_dataset("NanoCoIR").dataset_id == "hakari-bench/NanoCoIR"
@@ -39,13 +39,15 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoBuiltBench").dataset_id == "hakari-bench/NanoBuiltBench"
     assert registry.get_dataset("NanoBIRCO").dataset_id == "hakari-bench/NanoBIRCO"
     assert registry.get_dataset("NanoDAPFAM").dataset_id == "hakari-bench/NanoDAPFAM"
+    assert registry.get_dataset("NanoFaMTEB-v2").dataset_id == "hakari-bench/NanoFaMTEB-v2"
+    assert registry.get_dataset("NanoIndicQA").dataset_id == "hakari-bench/NanoIndicQA"
+    assert registry.get_dataset("NanoMuPLeR").dataset_id == "hakari-bench/NanoMuPLeR"
     assert registry.get_dataset("NanoMTEB-Dutch").dataset_id == "hakari-bench/NanoMTEB-Dutch"
     assert registry.get_dataset("NanoMTEB-Misc").dataset_id == "hakari-bench/NanoMTEB-Misc"
+    assert registry.get_dataset("NanoMTEB-Polish").dataset_id == "hakari-bench/NanoMTEB-Polish"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
     with pytest.raises(KeyError):
         registry.get_collection("NanoMTEB_Family")
-    with pytest.raises(KeyError):
-        registry.get_dataset("NanoMTEB-Polish")
 
 
 def test_builtin_config_lives_in_repo_config() -> None:
@@ -60,45 +62,46 @@ def test_builtin_config_lives_in_repo_config() -> None:
 def test_resolve_eval_tasks_for_builtin_nanomteb_uses_declared_splits() -> None:
     registry = DatasetRegistry.load_builtin()
 
-    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMTEB"], collection_values=[], split_values=[])
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMTEB-v2"], collection_values=[], split_values=[])
 
     assert [(task.dataset_name, task.split_name) for task in tasks] == [
-        ("NanoMTEB", "NanoArguAna"),
-        ("NanoMTEB", "NanoCQADupstackGaming"),
-        ("NanoMTEB", "NanoCQADupstackUnix"),
-        ("NanoMTEB", "NanoClimateFEVERHardNegatives"),
-        ("NanoMTEB", "NanoFEVERHardNegatives"),
-        ("NanoMTEB", "NanoFiQA2018"),
-        ("NanoMTEB", "NanoHotpotQAHardNegatives"),
-        ("NanoMTEB", "NanoSCIDOCS"),
-        ("NanoMTEB", "NanoTouche2020"),
+        ("NanoMTEB-v2", "argu_ana"),
+        ("NanoMTEB-v2", "climate_fever"),
+        ("NanoMTEB-v2", "cqadupstack_gaming"),
+        ("NanoMTEB-v2", "cqadupstack_unix"),
+        ("NanoMTEB-v2", "fever"),
+        ("NanoMTEB-v2", "fi_qa2018"),
+        ("NanoMTEB-v2", "hotpot_qa"),
+        ("NanoMTEB-v2", "scidocs"),
+        ("NanoMTEB-v2", "touche2020_v3"),
+        ("NanoMTEB-v2", "treccovid"),
     ]
 
 
 def test_resolve_eval_tasks_for_builtin_nanommteb_uses_declared_splits() -> None:
     registry = DatasetRegistry.load_builtin()
 
-    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMMTEB"], collection_values=[], split_values=[])
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoMMTEB-v2"], collection_values=[], split_values=[])
 
     assert [(task.dataset_name, task.split_name) for task in tasks] == [
-        ("NanoMMTEB", "NanoStackOverflowQA"),
-        ("NanoMMTEB", "NanoTwitterHjerne"),
-        ("NanoMMTEB", "NanoAILAStatutes"),
-        ("NanoMMTEB", "NanoArguAna"),
-        ("NanoMMTEB", "NanoHagrid"),
-        ("NanoMMTEB", "NanoLegalBenchCorporateLobbying"),
-        ("NanoMMTEB", "NanoLEMBPasskey"),
-        ("NanoMMTEB", "NanoSCIDOCS"),
-        ("NanoMMTEB", "NanoSpartQA"),
-        ("NanoMMTEB", "NanoTempReasonL1"),
-        ("NanoMMTEB", "NanoWinoGrande"),
-        ("NanoMMTEB", "NanoBelebele"),
-        ("NanoMMTEB", "NanoMLQA"),
-        ("NanoMMTEB", "NanoStatcanDialogueDataset"),
-        ("NanoMMTEB", "NanoWikipediaRetrievalMultilingual"),
-        ("NanoMMTEB", "NanoCovid"),
-        ("NanoMMTEB", "NanoNews21Instruction"),
-        ("NanoMMTEB", "NanoMIRACLRetrievalHardNegatives"),
+        ("NanoMMTEB-v2", "ailastatutes"),
+        ("NanoMMTEB-v2", "argu_ana"),
+        ("NanoMMTEB-v2", "belebele"),
+        ("NanoMMTEB-v2", "covid"),
+        ("NanoMMTEB-v2", "hagrid"),
+        ("NanoMMTEB-v2", "legal_bench_corporate_lobbying"),
+        ("NanoMMTEB-v2", "lembpasskey"),
+        ("NanoMMTEB-v2", "miracl"),
+        ("NanoMMTEB-v2", "mlqa"),
+        ("NanoMMTEB-v2", "scidocs"),
+        ("NanoMMTEB-v2", "spart_qa"),
+        ("NanoMMTEB-v2", "stack_overflow_qa"),
+        ("NanoMMTEB-v2", "statcan_dialogue_dataset"),
+        ("NanoMMTEB-v2", "temp_reason_l1"),
+        ("NanoMMTEB-v2", "treccovid"),
+        ("NanoMMTEB-v2", "twitter_hjerne"),
+        ("NanoMMTEB-v2", "wikipedia_multilingual"),
+        ("NanoMMTEB-v2", "wino_grande"),
     ]
 
 
@@ -108,14 +111,14 @@ def test_resolve_eval_tasks_for_builtin_nanomteb_chinese_uses_declared_splits() 
     tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoCMTEB"], collection_values=[], split_values=[])
 
     assert [(task.dataset_name, task.split_name) for task in tasks] == [
-        ("NanoCMTEB", "NanoT2Retrieval"),
-        ("NanoCMTEB", "NanoMMarcoRetrieval"),
-        ("NanoCMTEB", "NanoDuRetrieval"),
-        ("NanoCMTEB", "NanoCovidRetrieval"),
-        ("NanoCMTEB", "NanoCmedqaRetrieval"),
-        ("NanoCMTEB", "NanoEcomRetrieval"),
-        ("NanoCMTEB", "NanoMedicalRetrieval"),
-        ("NanoCMTEB", "NanoVideoRetrieval"),
+        ("NanoCMTEB", "cmedqa"),
+        ("NanoCMTEB", "covid"),
+        ("NanoCMTEB", "du"),
+        ("NanoCMTEB", "ecom"),
+        ("NanoCMTEB", "medical"),
+        ("NanoCMTEB", "mmarco"),
+        ("NanoCMTEB", "t2"),
+        ("NanoCMTEB", "video"),
     ]
 
 
@@ -145,20 +148,20 @@ def test_resolve_eval_tasks_for_builtin_nanorteb_uses_declared_splits() -> None:
 def test_resolve_eval_tasks_for_builtin_nanomteb_japanese_uses_declared_splits() -> None:
     registry = DatasetRegistry.load_builtin()
 
-    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoJMTEB"], collection_values=[], split_values=[])
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoJMTEB-v2"], collection_values=[], split_values=[])
 
     assert [(task.dataset_name, task.split_name) for task in tasks] == [
-        ("NanoJMTEB", "NanoJaCWIR"),
-        ("NanoJMTEB", "NanoJaGovFaqs"),
-        ("NanoJMTEB", "NanoJaqket"),
-        ("NanoJMTEB", "NanoMIRACL"),
-        ("NanoJMTEB", "NanoMintaka"),
-        ("NanoJMTEB", "NanoMrTidy"),
-        ("NanoJMTEB", "NanoMultiLongDoc"),
-        ("NanoJMTEB", "NanoNLPJournalAbsArticle"),
-        ("NanoJMTEB", "NanoNLPJournalAbsIntro"),
-        ("NanoJMTEB", "NanoNLPJournalTitleAbs"),
-        ("NanoJMTEB", "NanoNLPJournalTitleIntro"),
+        ("NanoJMTEB-v2", "ja_cwir"),
+        ("NanoJMTEB-v2", "ja_gov_faqs"),
+        ("NanoJMTEB-v2", "jaqket"),
+        ("NanoJMTEB-v2", "mintaka_ja"),
+        ("NanoJMTEB-v2", "miracl_ja"),
+        ("NanoJMTEB-v2", "mr_tidy_japanese"),
+        ("NanoJMTEB-v2", "multi_long_doc_ja"),
+        ("NanoJMTEB-v2", "nlpjournal_abs_article"),
+        ("NanoJMTEB-v2", "nlpjournal_abs_intro"),
+        ("NanoJMTEB-v2", "nlpjournal_title_abs"),
+        ("NanoJMTEB-v2", "nlpjournal_title_intro"),
     ]
 
 
@@ -234,65 +237,65 @@ def test_resolve_eval_tasks_for_new_builtin_nano_datasets_use_declared_splits() 
         "NanoLaw": [
             "NanoAILACasedocs",
             "NanoAILAStatutes",
-            "NanoLegalSummarization",
             "NanoGerDaLIRSmall",
             "NanoLeCaRDv2",
             "NanoLegalBenchConsumerContractsQA",
             "NanoLegalBenchCorporateLobbying",
             "NanoLegalQuAD",
+            "NanoLegalSummarization",
         ],
         "NanoMedical": [
+            "NanoCMedQAv2reranking",
             "NanoCUREv1",
+            "NanoCmedqa",
+            "NanoMedicalQA",
             "NanoNFCorpus",
-            "NanoTRECCOVID",
-            "NanoTRECCOVIDPL",
+            "NanoPublicHealthQA",
             "NanoSciFact",
             "NanoSciFactPL",
-            "NanoMedicalQA",
-            "NanoPublicHealthQA",
-            "NanoCmedqa",
-            "NanoCMedQAv2reranking",
+            "NanoTRECCOVID",
+            "NanoTRECCOVIDPL",
         ],
         "NanoRARb": [
             "NanoARCChallenge",
             "NanoAlphaNLI",
             "NanoHellaSwag",
-            "NanoWinoGrande",
             "NanoPIQA",
-            "NanoSIQA",
             "NanoQuail",
-            "NanoSpartQA",
-            "NanoTempReasonL1",
-            "NanoTempReasonL2Pure",
-            "NanoTempReasonL2Fact",
-            "NanoTempReasonL2Context",
-            "NanoTempReasonL3Pure",
-            "NanoTempReasonL3Fact",
-            "NanoTempReasonL3Context",
             "NanoRARbCode",
             "NanoRARbMath",
+            "NanoSIQA",
+            "NanoSpartQA",
+            "NanoTempReasonL1",
+            "NanoTempReasonL2Context",
+            "NanoTempReasonL2Fact",
+            "NanoTempReasonL2Pure",
+            "NanoTempReasonL3Context",
+            "NanoTempReasonL3Fact",
+            "NanoTempReasonL3Pure",
+            "NanoWinoGrande",
         ],
         "NanoBRIGHT": [
-            "NanoBrightBiology",
-            "NanoBrightEarthScience",
-            "NanoBrightEconomics",
-            "NanoBrightPsychology",
-            "NanoBrightRobotics",
-            "NanoBrightStackoverflow",
-            "NanoBrightSustainableLiving",
-            "NanoBrightPony",
-            "NanoBrightLeetcode",
             "NanoBrightAops",
-            "NanoBrightTheoremQATheorems",
-            "NanoBrightTheoremQAQuestions",
+            "NanoBrightBiology",
             "NanoBrightBiologyLong",
+            "NanoBrightEarthScience",
             "NanoBrightEarthScienceLong",
+            "NanoBrightEconomics",
             "NanoBrightEconomicsLong",
-            "NanoBrightPsychologyLong",
-            "NanoBrightRoboticsLong",
-            "NanoBrightStackoverflowLong",
-            "NanoBrightSustainableLivingLong",
+            "NanoBrightLeetcode",
+            "NanoBrightPony",
             "NanoBrightPonyLong",
+            "NanoBrightPsychology",
+            "NanoBrightPsychologyLong",
+            "NanoBrightRobotics",
+            "NanoBrightRoboticsLong",
+            "NanoBrightStackoverflow",
+            "NanoBrightStackoverflowLong",
+            "NanoBrightSustainableLiving",
+            "NanoBrightSustainableLivingLong",
+            "NanoBrightTheoremQAQuestions",
+            "NanoBrightTheoremQATheorems",
         ],
         "NanoCodeRAG": [
             "NanoCodeRAGLibraryDocumentationSolutions",
@@ -300,16 +303,16 @@ def test_resolve_eval_tasks_for_new_builtin_nano_datasets_use_declared_splits() 
             "NanoCodeRAGProgrammingSolutions",
             "NanoCodeRAGStackoverflowPosts",
         ],
-        "NanoChemTEB": ["NanoChemNQ", "NanoChemHotpotQA", "NanoChemRxiv"],
+        "NanoChemTEB": ["NanoChemHotpotQA", "NanoChemNQ", "NanoChemRxiv"],
         "NanoR2MED": [
-            "NanoR2MEDBiology",
             "NanoR2MEDBioinformatics",
-            "NanoR2MEDMedicalSciences",
-            "NanoR2MEDMedXpertQAExam",
-            "NanoR2MEDMedQADiag",
-            "NanoR2MEDPMCTreatment",
-            "NanoR2MEDPMCClinical",
+            "NanoR2MEDBiology",
             "NanoR2MEDIIYiClinical",
+            "NanoR2MEDMedQADiag",
+            "NanoR2MEDMedXpertQAExam",
+            "NanoR2MEDMedicalSciences",
+            "NanoR2MEDPMCClinical",
+            "NanoR2MEDPMCTreatment",
         ],
         "NanoBuiltBench": ["NanoBuiltBench", "NanoBuiltBenchReranking"],
     }
@@ -341,14 +344,14 @@ def test_resolve_eval_tasks_accepts_direct_dataset_id(monkeypatch: pytest.Monkey
 
     tasks = resolve_eval_tasks(
         registry=registry,
-        dataset_values=["hakari-bench/NanoMIRACL"],
+        dataset_values=["example/NanoToy"],
         collection_values=[],
         split_values=[],
     )
 
     assert [(task.dataset_name, task.split_name) for task in tasks] == [
-        ("NanoMIRACL", "ja"),
-        ("NanoMIRACL", "en"),
+        ("NanoToy", "ja"),
+        ("NanoToy", "en"),
     ]
 
 

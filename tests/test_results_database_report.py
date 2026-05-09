@@ -13,8 +13,8 @@ from scripts import build_results_database_and_report as report
 
 
 def test_nanomteb_japanese_is_a_ranked_benchmark() -> None:
-    assert "NanoJMTEB" in report.TARGET_BENCHMARKS
-    assert report.benchmark_name("hakari-bench/NanoJMTEB", "NanoJMTEB") == "NanoJMTEB"
+    assert "NanoJMTEB-v2" in report.TARGET_BENCHMARKS
+    assert report.benchmark_name("hakari-bench/NanoJMTEB-v2", "NanoJMTEB-v2") == "NanoJMTEB-v2"
 
 
 def test_nanorteb_is_a_ranked_benchmark() -> None:
@@ -49,9 +49,10 @@ def test_language_specific_nanomteb_benchmarks_are_ranked_separately() -> None:
         "NanoMTEB-Dutch",
         "NanoMTEB-French",
         "NanoMTEB-German",
-        "NanoJMTEB",
+        "NanoJMTEB-v2",
         "NanoMTEB-Korean",
-        "NanoFaMTEB",
+        "NanoFaMTEB-v2",
+        "NanoMTEB-Polish",
         "NanoRuMTEB",
         "NanoMTEB-Scandinavian",
         "NanoMTEB-Spanish",
@@ -129,7 +130,7 @@ def test_load_results_uses_yaml_benchmark_matches(tmp_path: Path) -> None:
 
 def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
-    task_path = model_dir / "hakari-bench__NanoJMTEB" / "NanoJaCWIR.json"
+    task_path = model_dir / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
     task_path.parent.mkdir(parents=True)
     task_path.write_text(
         json.dumps(
@@ -160,22 +161,22 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
                 },
                 "experiment_manifest": {"fingerprint_sha256": "abc123"},
                 "target": {
-                    "dataset_name": "NanoJMTEB",
-                    "dataset_id": "hakari-bench/NanoJMTEB",
+                    "dataset_name": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
                     "dataset_revision": {
                         "requested": None,
                         "resolved": "dataset-sha",
                         "source": "huggingface_hub",
                     },
-                    "split_name": "NanoJaCWIR",
-                    "task_name": "NanoJaCWIR",
+                    "split_name": "ja_cwir",
+                    "task_name": "ja_cwir",
                 },
                 "evaluation": {
                     "aggregate_metric": "ndcg@10",
                     "aggregate_metric_value": 0.42,
                     "evaluated_at_utc": "2026-04-29T00:00:00+00:00",
                 },
-                "metrics": {"NanoJaCWIR_ndcg@10": 0.42},
+                "metrics": {"ja_cwir_ndcg@10": 0.42},
             }
         ),
         encoding="utf-8",
@@ -184,9 +185,9 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows = report.load_results(tmp_path)
 
     assert len(rows) == 1
-    assert rows[0].benchmark == "NanoJMTEB"
-    assert rows[0].dataset_id == "hakari-bench/NanoJMTEB"
-    assert rows[0].dataset_name == "NanoJMTEB"
+    assert rows[0].benchmark == "NanoJMTEB-v2"
+    assert rows[0].dataset_id == "hakari-bench/NanoJMTEB-v2"
+    assert rows[0].dataset_name == "NanoJMTEB-v2"
     assert rows[0].score == 0.42
     assert rows[0].dataset_revision == "dataset-sha"
     assert rows[0].experiment_fingerprint == "abc123"
@@ -202,7 +203,7 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert dataset_metadata_rows[0].language == "ja"
     assert dataset_metadata_rows[0].languages == ["ja"]
     assert dataset_metadata_rows[0].category == "natural_language"
-    assert dataset_metadata_rows[0].citation_count is not None
+    assert dataset_metadata_rows[0].reference_count is not None
     assert dataset_metadata_rows[0].query_count == 200
 
 
@@ -212,11 +213,11 @@ def test_task_result_row_schema_rejects_unknown_fields() -> None:
             {
                 "model_dir": "model",
                 "model_name": "example/model",
-                "benchmark": "NanoJMTEB",
-                "dataset_id": "hakari-bench/NanoJMTEB",
-                "dataset_name": "NanoJMTEB",
-                "task_name": "NanoJaCWIR",
-                "task_key": "NanoJMTEB::hakari-bench/NanoJMTEB::NanoJaCWIR",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "dataset_name": "NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "task_key": "NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
                 "score": 0.42,
                 "result_path": "result.json",
                 "unexpected": True,
@@ -228,10 +229,10 @@ def test_metric_long_row_schema_exports_duckdb_values() -> None:
     row = MetricLongRow(
         model_dir="model",
         model_name="example/model",
-        benchmark="NanoJMTEB",
-        dataset_id="hakari-bench/NanoJMTEB",
-        task_name="NanoJaCWIR",
-        metric_name="NanoJaCWIR_ndcg@10",
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
+        task_name="ja_cwir",
+        metric_name="ja_cwir_ndcg@10",
         metric_value=0.42,
         result_path="result.json",
     )
@@ -239,28 +240,28 @@ def test_metric_long_row_schema_exports_duckdb_values() -> None:
     assert row.duckdb_values() == (
         "model",
         "example/model",
-        "NanoJMTEB",
-        "hakari-bench/NanoJMTEB",
-        "NanoJaCWIR",
-        "NanoJaCWIR_ndcg@10",
+        "NanoJMTEB-v2",
+        "hakari-bench/NanoJMTEB-v2",
+        "ja_cwir",
+        "ja_cwir_ndcg@10",
         0.42,
         "result.json",
     )
 
 
 def test_load_results_extracts_task_diagnostics(tmp_path: Path) -> None:
-    task_dir = tmp_path / "model" / "hakari-bench__NanoJMTEB"
+    task_dir = tmp_path / "model" / "hakari-bench__NanoJMTEB-v2"
     task_dir.mkdir(parents=True)
-    (task_dir / "NanoJaCWIR.json").write_text(
+    (task_dir / "ja_cwir.json").write_text(
         json.dumps(
             {
                 "model": {"id": "example/model"},
                 "environment": {"package_versions": {}},
                 "target": {
-                    "dataset_name": "NanoJMTEB",
-                    "dataset_id": "hakari-bench/NanoJMTEB",
-                    "split_name": "NanoJaCWIR",
-                    "task_name": "NanoJaCWIR",
+                    "dataset_name": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "split_name": "ja_cwir",
+                    "task_name": "ja_cwir",
                 },
                 "config": {
                     "candidate_ranking": "bm25",
@@ -296,7 +297,7 @@ def test_load_results_extracts_task_diagnostics(tmp_path: Path) -> None:
                         }
                     ],
                 },
-                "metrics": {"NanoJaCWIR_ndcg@10": 0.42},
+                "metrics": {"ja_cwir_ndcg@10": 0.42},
             }
         ),
         encoding="utf-8",
@@ -315,9 +316,9 @@ def test_load_results_extracts_task_diagnostics(tmp_path: Path) -> None:
 
 
 def test_load_results_builds_runs_from_task_json(tmp_path: Path) -> None:
-    task_dir = tmp_path / "local__model_A" / "hakari-bench__NanoJMTEB"
+    task_dir = tmp_path / "local__model_A" / "hakari-bench__NanoJMTEB-v2"
     task_dir.mkdir(parents=True)
-    (task_dir / "NanoJaCWIR.json").write_text(
+    (task_dir / "ja_cwir.json").write_text(
         json.dumps(
             {
                 "generated_at_utc": "2026-05-04T00:00:00+00:00",
@@ -337,10 +338,10 @@ def test_load_results_builds_runs_from_task_json(tmp_path: Path) -> None:
                     }
                 },
                 "target": {
-                    "dataset_name": "NanoJMTEB",
-                    "dataset_id": "hakari-bench/NanoJMTEB",
-                    "split_name": "NanoJaCWIR",
-                    "task_name": "NanoJaCWIR",
+                    "dataset_name": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "split_name": "ja_cwir",
+                    "task_name": "ja_cwir",
                 },
                 "evaluation": {
                     "aggregate_metric": "ndcg@10",
@@ -348,7 +349,7 @@ def test_load_results_builds_runs_from_task_json(tmp_path: Path) -> None:
                     "started_at_utc": "2026-05-04T00:00:01+00:00",
                     "finished_at_utc": "2026-05-04T00:00:03+00:00",
                 },
-                "metrics": {"NanoJaCWIR_ndcg@10": 0.42},
+                "metrics": {"ja_cwir_ndcg@10": 0.42},
             }
         ),
         encoding="utf-8",
@@ -389,7 +390,7 @@ def test_render_html_includes_total_parameters_column() -> None:
 
 def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
-    task_path = model_dir / "hakari-bench__NanoJMTEB" / "NanoJaCWIR.json"
+    task_path = model_dir / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
     task_path.parent.mkdir(parents=True)
     task_path.write_text(
         json.dumps(
@@ -397,10 +398,10 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
                 "model": {"id": "example/model"},
                 "environment": {"package_versions": {}},
                 "target": {
-                    "dataset_name": "NanoJMTEB",
-                    "dataset_id": "hakari-bench/NanoJMTEB",
-                    "split_name": "NanoJaCWIR",
-                    "task_name": "NanoJaCWIR",
+                    "dataset_name": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "split_name": "ja_cwir",
+                    "task_name": "ja_cwir",
                 },
                 "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.42},
                 "embedding_evaluations": [
@@ -426,7 +427,7 @@ def test_load_results_adds_embedding_variant_rows(tmp_path: Path) -> None:
                         },
                     },
                 ],
-                "metrics": {"NanoJaCWIR_ndcg@10": 0.42},
+                "metrics": {"ja_cwir_ndcg@10": 0.42},
             }
         ),
         encoding="utf-8",
@@ -443,14 +444,14 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
     row = report.TaskResult(
         model_dir="model",
         model_name="example/model",
-        benchmark="NanoJMTEB",
-        dataset_id="hakari-bench/NanoJMTEB",
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
         dataset_revision="dataset-sha",
         dataset_revision_requested="main",
-        dataset_name="NanoJMTEB",
-        split_name="NanoJaCWIR",
-        task_name="NanoJaCWIR",
-        task_key="NanoJMTEB::hakari-bench/NanoJMTEB::NanoJaCWIR",
+        dataset_name="NanoJMTEB-v2",
+        split_name="ja_cwir",
+        task_name="ja_cwir",
+        task_key="NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
         score=0.42,
         aggregate_metric="ndcg@10",
         result_path="result.json",
@@ -491,10 +492,10 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
             {
                 "model_dir": "model",
                 "model_name": "example/model",
-                "benchmark": "NanoJMTEB",
-                "dataset_id": "hakari-bench/NanoJMTEB",
-                "task_name": "NanoJaCWIR",
-                "metric_name": "NanoJaCWIR_ndcg@10",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_ndcg@10",
                 "metric_value": 0.42,
                 "result_path": "result.json",
             }
@@ -546,14 +547,14 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
     row = report.TaskResult(
         model_dir="model",
         model_name="example/model",
-        benchmark="NanoJMTEB",
-        dataset_id="hakari-bench/NanoJMTEB",
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
         dataset_revision=None,
         dataset_revision_requested=None,
-        dataset_name="NanoJMTEB",
-        split_name="NanoJaCWIR",
-        task_name="NanoJaCWIR",
-        task_key="NanoJMTEB::hakari-bench/NanoJMTEB::NanoJaCWIR",
+        dataset_name="NanoJMTEB-v2",
+        split_name="ja_cwir",
+        task_name="ja_cwir",
+        task_key="NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
         score=0.42,
         aggregate_metric="ndcg@10",
         result_path="result.json",
@@ -589,10 +590,10 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
             {
                 "model_dir": "model",
                 "model_name": "example/model",
-                "benchmark": "NanoJMTEB",
-                "dataset_id": "hakari-bench/NanoJMTEB",
-                "task_name": "NanoJaCWIR",
-                "metric_name": "NanoJaCWIR_ndcg@10",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_ndcg@10",
                 "metric_value": 0.42,
                 "result_path": "result.json",
             }

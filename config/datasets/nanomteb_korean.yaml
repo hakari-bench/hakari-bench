@@ -6,12 +6,18 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
-- NanoKoStrategyQA
+- autorag
+- ko_strategy_qa
+- lawir_ko
+- miracl_ko
+- squad_kor_v1
 metadata:
   language: ko
   category: natural_language
   short_description: Korean NanoMTEB retrieval benchmark.
-  description: NanoMTEB-Korean is a compact Korean retrieval benchmark containing the MTEB(kor, v1) retrieval-family splits available in the Nano collection. Other Korean retrieval tasks are placed in NanoMTEB-Misc.
+  description: NanoMTEB-Korean is a compact Korean retrieval benchmark containing
+    the MTEB(kor, v1) retrieval-family splits available in the Nano collection. Other
+    Korean retrieval tasks are placed in NanoMTEB-Misc.
   citation_keys:
   - muennighoff2023mteb
   references:
@@ -26,40 +32,108 @@ metadata:
     is_paper: true
     source_confidence: definitive_paper_link
     doi: 10.18653/v1/2023.eacl-main.148
-  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic and Reimers, Nils},\n  booktitle = {Proceedings of the 17th Conference of the European Chapter of the Association for Computational Linguistics},\n  pages = {2014--2037},\n  year = {2023},\n  url = {https://aclanthology.org/2023.eacl-main.148/},\n  doi = {10.18653/v1/2023.eacl-main.148}\n}\n"
+  bibtex: "@inproceedings{muennighoff2023mteb,\n  title = {{MTEB}: Massive Text Embedding\
+    \ Benchmark},\n  author = {Muennighoff, Niklas and Tazi, Nouamane and Magne, Loic\
+    \ and Reimers, Nils},\n  booktitle = {Proceedings of the 17th Conference of the\
+    \ European Chapter of the Association for Computational Linguistics},\n  pages\
+    \ = {2014--2037},\n  year = {2023},\n  url = {https://aclanthology.org/2023.eacl-main.148/},\n\
+    \  doi = {10.18653/v1/2023.eacl-main.148}\n}\n"
 task_metadata:
-  NanoKoStrategyQA:
+  autorag:
     language: ko
     category: natural_language
-    short_description: Korean StrategyQA evidence retrieval.
-    description: NanoKoStrategyQA evaluates Korean retrieval for implicit multi-hop StrategyQA questions converted to a BEIR/MTEB-style evidence retrieval format.
-    citation_keys:
-    - geva2021strategyqa
-    - lee2021kostrategyqa
+    short_description: AutoRAGRetrieval retrieval split.
+    description: 'This dataset enables the evaluation of Korean RAG performance across
+      various domains—finance, public sector, healthcare, legal, and commerce—by providing
+      publicly accessible documents, questions, and answers. Source dataset: yjoonjang/markers_bm;
+      source subset: default; eval split: test.'
+    source_task: AutoRAGRetrieval
+    source_dataset_id: yjoonjang/markers_bm
+    source_dataset_revision: fd7df84ac089bbec763b1c6bb1b56e985df5cc5c
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: autorag
+    hub_split: autorag
+    languages:
+    - ko
     references:
-    - title: Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies
-      authors:
-      - Mor Geva
-      - Daniel Khashabi
-      - Elad Segal
-      - Tushar Khot
-      - Dan Roth
-      - Jonathan Berant
-      year: 2021
-      url: https://aclanthology.org/2021.tacl-1.21/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.1162/tacl_a_00370
-    - title: Ko-StrategyQA
-      authors:
-      - Taemin Lee
-      year: 2021
+    - title: AutoRAGRetrieval source reference
+      url: https://arxiv.org/abs/2410.20878
+      is_paper: false
+      source_confidence: probably_correct
+    - title: yjoonjang/markers_bm Hugging Face dataset
+      url: https://huggingface.co/datasets/yjoonjang/markers_bm
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 114
+      min_chars: 34
+      max_chars: 157
+      mean_chars: 69.6140350877193
+      median_chars: 69.0
+    document_text_stats:
+      count: 720
+      min_chars: 7
+      max_chars: 2484
+      mean_chars: 823.6027777777778
+      median_chars: 870.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 114
+        languages:
+          ko: 100.0
+      document:
+        sample_count: 720
+        languages:
+          ko: 97.917
+          en: 1.944
+  ko_strategy_qa:
+    language: ko
+    category: natural_language
+    short_description: Ko-StrategyQA retrieval split.
+    description: 'Ko-StrategyQA Source dataset: taeminlee/Ko-StrategyQA; source subset:
+      default; eval split: dev.'
+    source_task: Ko-StrategyQA
+    source_dataset_id: taeminlee/Ko-StrategyQA
+    source_dataset_revision: d243889a3eb6654029dbd7e7f9319ae31d58f97c
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: ko-strategy-qa
+    hub_split: ko_strategy_qa
+    languages:
+    - ko
+    references:
+    - title: Ko-StrategyQA source reference
+      url: https://arxiv.org/abs/2101.02235
+      is_paper: false
+      source_confidence: probably_correct
+    - title: taeminlee/Ko-StrategyQA Hugging Face dataset
       url: https://huggingface.co/datasets/taeminlee/Ko-StrategyQA
       is_paper: false
       source_confidence: probably_correct
-    bibtex: "@article{geva2021strategyqa,\n  title = {Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies},\n  author = {Geva, Mor and Khashabi, Daniel and Segal, Elad and Khot, Tushar and Roth, Dan and Berant, Jonathan},\n  journal = {Transactions of the Association for Computational Linguistics},\n  volume = {9},\n  pages = {346--361},\n  year = {2021},\n  url = {https://aclanthology.org/2021.tacl-1.21/},\n  doi = {10.1162/tacl_a_00370}\n}\n@misc{lee2021kostrategyqa,\n  title = {{Ko-StrategyQA}},\n  author = {Lee, Taemin},\n  year = {2021},\n  url = {https://huggingface.co/datasets/taeminlee/Ko-StrategyQA}\n}\n"
-    languages:
-    - ko
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 10
+      max_chars: 60
+      mean_chars: 22.43
+      median_chars: 22.0
+    document_text_stats:
+      count: 9251
+      min_chars: 30
+      max_chars: 5017
+      mean_chars: 321.25953950924225
+      median_chars: 276.0
     language_detection:
       detector: fast-langdetect
       min_language_percent: 0.5
@@ -71,4 +145,163 @@ task_metadata:
       document:
         sample_count: 9251
         languages:
-          ko: 99.697
+          ko: 99.643
+  lawir_ko:
+    language: ko
+    category: natural_language
+    short_description: LawIRKo retrieval split.
+    description: 'This dataset assesses a model''s ability to retrieve relevant legal
+      articles from queries referencing specific Korean laws and provisions. The corpus
+      comprises official legal texts including statutes, acts, and regulations, with
+      each document representing a single article. Queries are derived from law titles
+      paired and article identifiers. For instance the law title might be "건축법" (Building
+      Act) and the article name "기술적 기준" (Technical Standards), which would become
+      "건축법에 명시된 법률 중에 ''기술적 기준''에 대해 설명하고 있는 세부 항목은 무엇입니까?" ("Which specific articles
+      in the Building Act explain the ''technical standards''?"). Source dataset:
+      on-and-on/lawgov_ir-ko; source subset: default; eval split: test.'
+    source_task: LawIRKo
+    source_dataset_id: on-and-on/lawgov_ir-ko
+    source_dataset_revision: bd5361e486ef4be7052c506adfdf0610d04abbfe
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: lawir-ko
+    hub_split: lawir_ko
+    languages:
+    - ko
+    references:
+    - title: LawIRKo source reference
+      url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 89
+      mean_chars: 50.62
+      median_chars: 51.0
+    document_text_stats:
+      count: 3562
+      min_chars: 61
+      max_chars: 1186
+      mean_chars: 387.7877596855699
+      median_chars: 313.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ko: 100.0
+      document:
+        sample_count: 3562
+        languages:
+          ko: 100.0
+  miracl_ko:
+    language: ko
+    category: natural_language
+    short_description: MIRACLRetrieval retrieval split.
+    description: 'MIRACL (Multilingual Information Retrieval Across a Continuum of
+      Languages) is a multilingual retrieval dataset that focuses on search across
+      18 different languages. Source dataset: mteb/MIRACLRetrieval; source subset:
+      ko; eval split: dev.'
+    source_task: MIRACLRetrieval
+    source_dataset_id: mteb/MIRACLRetrieval
+    source_dataset_revision: 9c09abc13478308c27598f350e31d8f06b9b5481
+    source_dataset_subset: ko
+    source_eval_split: dev
+    source_nano_split: miracl-ko
+    hub_split: miracl_ko
+    languages:
+    - ko
+    references:
+    - title: MIRACLRetrieval source reference
+      url: http://miracl.ai/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MIRACLRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MIRACLRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 5
+      max_chars: 92
+      mean_chars: 21.71
+      median_chars: 19.0
+    document_text_stats:
+      count: 10000
+      min_chars: 7
+      max_chars: 4614
+      mean_chars: 193.2391
+      median_chars: 149.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ko: 99.5
+          en: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          ko: 99.87
+  squad_kor_v1:
+    language: ko
+    category: natural_language
+    short_description: SQuADKorV1Retrieval retrieval split.
+    description: 'Korean translation of SQuAD v1.0 dataset for retrieval task, based
+      on Korean Wikipedia articles. Source dataset: yjoonjang/squad_kor_v1; source
+      subset: default; eval split: test.'
+    source_task: SQuADKorV1Retrieval
+    source_dataset_id: yjoonjang/squad_kor_v1
+    source_dataset_revision: 2b4ee1f3b143a04792da93a3df21933c5fe9eed3
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: squad-kor-v1
+    hub_split: squad_kor_v1
+    languages:
+    - ko
+    references:
+    - title: SQuADKorV1Retrieval source reference
+      url: https://huggingface.co/datasets/yjoonjang/squad_kor_v1
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 13
+      max_chars: 78
+      mean_chars: 35.775
+      median_chars: 34.0
+    document_text_stats:
+      count: 960
+      min_chars: 353
+      max_chars: 2953
+      mean_chars: 546.1958333333333
+      median_chars: 465.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ko: 100.0
+      document:
+        sample_count: 960
+        languages:
+          ko: 100.0

@@ -1,6 +1,6 @@
 benchmarks:
-  - name: NanoMMTEB
-    label: NanoMMTEB
+  - name: NanoMMTEB-v2
+    label: NanoMMTEB-v2
     include_in_overall: true
   - name: NanoRTEB
     label: NanoRTEB
@@ -36,7 +36,7 @@ benchmarks:
     label: NanoIFIR
     include_in_overall: true
     excluded_tasks:
-      # Duplicates FiQA-style tasks in MNanoBEIR/NanoMTEB, so this uploaded copy is excluded from leaderboard calculations.
+      # Duplicates FiQA-style tasks in MNanoBEIR/NanoMTEB-v2, so this uploaded copy is excluded from leaderboard calculations.
       - NanoIFIRFiQA
       # Duplicates NFCorpus-style tasks in MNanoBEIR, so this uploaded copy is excluded from leaderboard calculations.
       - NanoIFIRNFCorpus
@@ -48,11 +48,11 @@ benchmarks:
     excluded_tasks:
       # Duplicates NanoRTEB/NanoAILACasedocs, so this uploaded copy is excluded from leaderboard calculations.
       - NanoAILACasedocs
-      # Duplicates NanoRTEB/NanoAILAStatutes and NanoMMTEB/NanoAILAStatutes, so this uploaded copy is excluded from leaderboard calculations.
+      # Duplicates NanoRTEB/NanoAILAStatutes and NanoMMTEB-v2/NanoAILAStatutes, so this uploaded copy is excluded from leaderboard calculations.
       - NanoAILAStatutes
       # Duplicates NanoRTEB/NanoLegalSummarization, so this uploaded copy is excluded from leaderboard calculations.
       - NanoLegalSummarization
-      # Duplicates NanoMMTEB/NanoLegalBenchCorporateLobbying, so this uploaded copy is excluded from leaderboard calculations.
+      # Duplicates NanoMMTEB-v2/NanoLegalBenchCorporateLobbying, so this uploaded copy is excluded from leaderboard calculations.
       - NanoLegalBenchCorporateLobbying
   - name: NanoMedical
     label: NanoMedical
@@ -68,11 +68,11 @@ benchmarks:
     label: NanoRARb
     include_in_overall: true
     excluded_tasks:
-      # Duplicates NanoMMTEB/NanoWinoGrande, so this uploaded copy is excluded from leaderboard calculations.
+      # Duplicates NanoMMTEB-v2/NanoWinoGrande, so this uploaded copy is excluded from leaderboard calculations.
       - NanoWinoGrande
-      # Duplicates NanoMMTEB/NanoSpartQA, so this uploaded copy is excluded from leaderboard calculations.
+      # Duplicates NanoMMTEB-v2/NanoSpartQA, so this uploaded copy is excluded from leaderboard calculations.
       - NanoSpartQA
-      # Duplicates NanoMMTEB/NanoTempReasonL1, so this uploaded copy is excluded from leaderboard calculations.
+      # Duplicates NanoMMTEB-v2/NanoTempReasonL1, so this uploaded copy is excluded from leaderboard calculations.
       - NanoTempReasonL1
   - name: NanoBRIGHT
     label: NanoBRIGHT
@@ -92,8 +92,14 @@ benchmarks:
   - name: NanoCMTEB
     label: NanoCMTEB
     include_in_overall: true
-  - name: NanoMTEB
-    label: NanoMTEB
+  - name: NanoIndicQA
+    label: NanoIndicQA
+    include_in_overall: true
+  - name: NanoMuPLeR
+    label: NanoMuPLeR
+    include_in_overall: true
+  - name: NanoMTEB-v2
+    label: NanoMTEB-v2
     include_in_overall: false
   - name: NanoMTEB-Dutch
     label: NanoMTEB-Dutch
@@ -104,14 +110,17 @@ benchmarks:
   - name: NanoMTEB-German
     label: NanoMTEB-German
     include_in_overall: false
-  - name: NanoJMTEB
-    label: NanoJMTEB
+  - name: NanoJMTEB-v2
+    label: NanoJMTEB-v2
     include_in_overall: false
   - name: NanoMTEB-Korean
     label: NanoMTEB-Korean
     include_in_overall: false
-  - name: NanoFaMTEB
-    label: NanoFaMTEB
+  - name: NanoFaMTEB-v2
+    label: NanoFaMTEB-v2
+    include_in_overall: false
+  - name: NanoMTEB-Polish
+    label: NanoMTEB-Polish
     include_in_overall: false
   - name: NanoRuMTEB
     label: NanoRuMTEB

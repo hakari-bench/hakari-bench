@@ -6,16 +6,16 @@ queries_config: queries
 qrels_config: qrels
 candidate_config: bm25
 splits:
+- NanoCMedQAv2reranking
 - NanoCUREv1
+- NanoCmedqa
+- NanoMedicalQA
 - NanoNFCorpus
-- NanoTRECCOVID
-- NanoTRECCOVIDPL
+- NanoPublicHealthQA
 - NanoSciFact
 - NanoSciFactPL
-- NanoMedicalQA
-- NanoPublicHealthQA
-- NanoCmedqa
-- NanoCMedQAv2reranking
+- NanoTRECCOVID
+- NanoTRECCOVIDPL
 metadata:
   language: multilingual
   category: natural_language
@@ -180,8 +180,62 @@ metadata:
     \ for Chinese Medical Question Answer Selection},\n  volume = {6},\n  year = {2018},\n\
     }\n"
 task_metadata:
+  NanoCMedQAv2reranking:
+    language: zh
+    category: natural_language
+    short_description: Chinese CMedQAv2 medical answer reranking.
+    description: NanoCMedQAv2reranking evaluates answer selection for Chinese community
+      medical questions using the CMedQAv2 reranking formulation.
+    citation_keys:
+    - zhang2018cmedqav2
+    references:
+    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question
+        Answer Selection
+      authors:
+      - Sheng Zhang
+      - Xin Zhang
+      - Hui Wang
+      - Liang Guo
+      - Shanshan Liu
+      year: 2018
+      url: https://doi.org/10.1109/ACCESS.2018.2883637
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and\
+      \ Hui Wang and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n\
+      \  journal = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale\
+      \ Attentive Interaction Networks for Chinese Medical Question Answer Selection},\n\
+      \  volume = {6},\n  year = {2018},\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 11
+      max_chars: 146
+      mean_chars: 50.105
+      median_chars: 39.0
+    document_text_stats:
+      count: 10000
+      min_chars: 11
+      max_chars: 260
+      mean_chars: 100.8981
+      median_chars: 91.0
+    languages:
+    - zh
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          zh: 98.0
+          ja: 1.5
+          sr: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          zh: 99.92
   NanoCUREv1:
-    language: multilingual
+    language: en
     category: natural_language
     short_description: Clinical query-passage retrieval from CUREv1.
     description: NanoCUREv1 evaluates retrieval of medical passages for clinician-oriented
@@ -234,6 +288,129 @@ task_metadata:
         sample_count: 10000
         languages:
           en: 99.93
+  NanoCmedqa:
+    language: zh
+    category: natural_language
+    short_description: Chinese medical consultation answer retrieval.
+    description: NanoCmedqa evaluates retrieval over Chinese online medical consultation
+      text, matching community medical questions to useful answer replies.
+    citation_keys:
+    - qiu2022dureaderretrieval
+    - zhang2018cmedqav2
+    references:
+    - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval
+        from Web Search Engine'
+      authors:
+      - Yifu Qiu
+      - Hongyu Li
+      - Yingqi Qu
+      - Ying Chen
+      - Qiaoqiao She
+      - Jing Liu
+      - Hua Wu
+      - Haifeng Wang
+      year: 2022
+      url: https://aclanthology.org/2022.emnlp-main.357/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2022.emnlp-main.357
+    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question
+        Answer Selection
+      authors:
+      - Sheng Zhang
+      - Xin Zhang
+      - Hui Wang
+      - Liang Guo
+      - Shanshan Liu
+      year: 2018
+      url: https://doi.org/10.1109/ACCESS.2018.2883637
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@misc{qiu2022dureaderretrieval,\n  archivePrefix = {arXiv},\n  author\
+      \ = {Yifu Qiu and Hongyu Li and Yingqi Qu and Ying Chen and Qiaoqiao She and\
+      \ Jing Liu and Hua Wu and Haifeng Wang},\n  eprint = {2203.10232},\n  primaryClass\
+      \ = {cs.CL},\n  title = {DuReader_retrieval: A Large-scale Chinese Benchmark\
+      \ for Passage Retrieval from Web Search Engine},\n  year = {2022},\n}\n\n\n\
+      @article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and Hui Wang\
+      \ and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n\
+      \  journal = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale\
+      \ Attentive Interaction Networks for Chinese Medical Question Answer Selection},\n\
+      \  volume = {6},\n  year = {2018},\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 11
+      max_chars: 151
+      mean_chars: 51.995
+      median_chars: 44.0
+    document_text_stats:
+      count: 10000
+      min_chars: 4
+      max_chars: 4341
+      mean_chars: 157.5694
+      median_chars: 112.0
+    languages:
+    - zh
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          zh: 99.0
+          ja: 1.0
+      document:
+        sample_count: 10000
+        languages:
+          zh: 99.5
+  NanoMedicalQA:
+    language: en
+    category: natural_language
+    short_description: Medical question-answer retrieval.
+    description: NanoMedicalQA evaluates retrieval for medical question answering
+      using question-answer pairs associated with a question-entailment approach to
+      medical QA.
+    citation_keys:
+    - benabacha2019question
+    references:
+    - title: A Question-Entailment Approach to Question Answering
+      authors:
+      - Asma Ben Abacha
+      - Dina Demner-Fushman
+      year: 2019
+      url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@article{benabacha2019question,\n  author = {Asma Ben Abacha and Dina\
+      \ Demner-Fushman},\n  doi = {10.1186/s12859-019-3119-4},\n  journal = {BMC Bioinformatics},\n\
+      \  number = {1},\n  pages = {511},\n  title = {A Question-Entailment Approach\
+      \ to Question Answering},\n  volume = {20},\n  year = {2019},\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 102
+      mean_chars: 54.23
+      median_chars: 50.0
+    document_text_stats:
+      count: 2007
+      min_chars: 6
+      max_chars: 14441
+      mean_chars: 1102.433981066268
+      median_chars: 683.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 2007
+        languages:
+          en: 100.0
   NanoNFCorpus:
     language: en
     category: natural_language
@@ -300,6 +477,176 @@ task_metadata:
         sample_count: 3593
         languages:
           en: 99.972
+  NanoPublicHealthQA:
+    language: ar
+    category: natural_language
+    short_description: Public-health FAQ answer retrieval.
+    description: NanoPublicHealthQA evaluates retrieval of public-health FAQ answers
+      for questions sourced from CDC and WHO material in a multilingual public-health
+      QA dataset.
+    citation_keys:
+    - lu2024publichealthqa
+    references:
+    - title: publichealth-qa
+      authors:
+      - Xing Han Lu
+      year: 2024
+      url: https://huggingface.co/datasets/xhluca/publichealth-qa
+      is_paper: false
+      source_confidence: probably_correct
+    bibtex: "@misc{lu2024publichealthqa,\n  author = {Xing Han Lu},\n  doi = {10.57967/hf/2247},\n\
+      \  publisher = {Hugging Face},\n  title = {publichealth-qa},\n  url = {https://huggingface.co/datasets/xhluca/publichealth-qa},\n\
+      \  year = {2024},\n}\n"
+    query_text_stats:
+      count: 86
+      min_chars: 19
+      max_chars: 310
+      mean_chars: 79.84883720930233
+      median_chars: 70.0
+    document_text_stats:
+      count: 86
+      min_chars: 181
+      max_chars: 3749
+      mean_chars: 828.1511627906976
+      median_chars: 625.0
+    languages:
+    - ar
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 86
+        languages:
+          ar: 100.0
+      document:
+        sample_count: 86
+        languages:
+          ar: 100.0
+  NanoSciFact:
+    language: en
+    category: natural_language
+    short_description: Scientific claim evidence retrieval from SciFact.
+    description: NanoSciFact is a compact SciFact evidence-retrieval task where scientific
+      claims are matched to research abstracts that support or refute them.
+    citation_keys:
+    - wadden2020fact
+    references:
+    - title: 'Fact or Fiction: Verifying Scientific Claims'
+      authors:
+      - David Wadden
+      - Shanchuan Lin
+      - Kyle Lo
+      - Lucy Lu Wang
+      - Madeleine van Zuylen
+      - Arman Cohan
+      - Hannaneh Hajishirzi
+      year: 2020
+      url: https://aclanthology.org/2020.emnlp-main.609/
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@inproceedings{wadden2020fact,\n  author = {David Wadden and Shanchuan\
+      \ Lin and Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen and Arman Cohan\
+      \ and Hannaneh Hajishirzi},\n  booktitle = {Proceedings of the 2020 Conference\
+      \ on Empirical Methods in Natural Language Processing},\n  title = {Fact or\
+      \ Fiction: Verifying Scientific Claims},\n  url = {https://aclanthology.org/2020.emnlp-main.609/},\n\
+      \  year = {2020},\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 28
+      max_chars: 204
+      mean_chars: 90.065
+      median_chars: 83.0
+    document_text_stats:
+      count: 5183
+      min_chars: 221
+      max_chars: 10127
+      mean_chars: 1499.4072930735097
+      median_chars: 1426.0
+    languages:
+    - en
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 5183
+        languages:
+          en: 99.981
+  NanoSciFactPL:
+    language: pl
+    category: natural_language
+    short_description: Polish scientific claim evidence retrieval.
+    description: NanoSciFactPL is the Polish BEIR-PL adaptation of SciFact, evaluating
+      retrieval of scientific evidence abstracts for Polish claims.
+    citation_keys:
+    - wojtasik2024beirpl
+    - wadden2020fact
+    references:
+    - title: 'BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language'
+      authors:
+      - Konrad Wojtasik
+      - Kacper Wołowiec
+      - Vadim Shishkin
+      - Arkadiusz Janz
+      - Maciej Piasecki
+      year: 2024
+      url: https://aclanthology.org/2024.lrec-main.194/
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: 'Fact or Fiction: Verifying Scientific Claims'
+      authors:
+      - David Wadden
+      - Shanchuan Lin
+      - Kyle Lo
+      - Lucy Lu Wang
+      - Madeleine van Zuylen
+      - Arman Cohan
+      - Hannaneh Hajishirzi
+      year: 2020
+      url: https://aclanthology.org/2020.emnlp-main.609/
+      is_paper: true
+      source_confidence: definitive_paper_link
+    bibtex: "@misc{wojtasik2024beirpl,\n  archivePrefix = {arXiv},\n  author = {Konrad\
+      \ Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej\
+      \ Piasecki},\n  eprint = {2305.19840},\n  primaryClass = {cs.IR},\n  title =\
+      \ {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},\n\
+      \  year = {2024},\n}\n\n\n@inproceedings{wadden2020fact,\n  author = {David\
+      \ Wadden and Shanchuan Lin and Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen\
+      \ and Arman Cohan and Hannaneh Hajishirzi},\n  booktitle = {Proceedings of the\
+      \ 2020 Conference on Empirical Methods in Natural Language Processing},\n  title\
+      \ = {Fact or Fiction: Verifying Scientific Claims},\n  url = {https://aclanthology.org/2020.emnlp-main.609/},\n\
+      \  year = {2020},\n}\n"
+    query_text_stats:
+      count: 200
+      min_chars: 27
+      max_chars: 227
+      mean_chars: 95.52
+      median_chars: 88.0
+    document_text_stats:
+      count: 5183
+      min_chars: 233
+      max_chars: 10870
+      mean_chars: 1554.5178468068686
+      median_chars: 1467.0
+    languages:
+    - pl
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pl: 100.0
+      document:
+        sample_count: 5183
+        languages:
+          pl: 99.846
   NanoTRECCOVID:
     language: en
     category: natural_language
@@ -434,350 +781,3 @@ task_metadata:
           de: 2.52
           fr: 0.65
           es: 0.55
-  NanoSciFact:
-    language: en
-    category: natural_language
-    short_description: Scientific claim evidence retrieval from SciFact.
-    description: NanoSciFact is a compact SciFact evidence-retrieval task where scientific
-      claims are matched to research abstracts that support or refute them.
-    citation_keys:
-    - wadden2020fact
-    references:
-    - title: 'Fact or Fiction: Verifying Scientific Claims'
-      authors:
-      - David Wadden
-      - Shanchuan Lin
-      - Kyle Lo
-      - Lucy Lu Wang
-      - Madeleine van Zuylen
-      - Arman Cohan
-      - Hannaneh Hajishirzi
-      year: 2020
-      url: https://aclanthology.org/2020.emnlp-main.609/
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@inproceedings{wadden2020fact,\n  author = {David Wadden and Shanchuan\
-      \ Lin and Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen and Arman Cohan\
-      \ and Hannaneh Hajishirzi},\n  booktitle = {Proceedings of the 2020 Conference\
-      \ on Empirical Methods in Natural Language Processing},\n  title = {Fact or\
-      \ Fiction: Verifying Scientific Claims},\n  url = {https://aclanthology.org/2020.emnlp-main.609/},\n\
-      \  year = {2020},\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 28
-      max_chars: 204
-      mean_chars: 90.065
-      median_chars: 83.0
-    document_text_stats:
-      count: 5183
-      min_chars: 221
-      max_chars: 10127
-      mean_chars: 1499.4072930735097
-      median_chars: 1426.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 5183
-        languages:
-          en: 99.981
-  NanoSciFactPL:
-    language: pl
-    category: natural_language
-    short_description: Polish scientific claim evidence retrieval.
-    description: NanoSciFactPL is the Polish BEIR-PL adaptation of SciFact, evaluating
-      retrieval of scientific evidence abstracts for Polish claims.
-    citation_keys:
-    - wojtasik2024beirpl
-    - wadden2020fact
-    references:
-    - title: 'BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language'
-      authors:
-      - Konrad Wojtasik
-      - Kacper Wołowiec
-      - Vadim Shishkin
-      - Arkadiusz Janz
-      - Maciej Piasecki
-      year: 2024
-      url: https://aclanthology.org/2024.lrec-main.194/
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: 'Fact or Fiction: Verifying Scientific Claims'
-      authors:
-      - David Wadden
-      - Shanchuan Lin
-      - Kyle Lo
-      - Lucy Lu Wang
-      - Madeleine van Zuylen
-      - Arman Cohan
-      - Hannaneh Hajishirzi
-      year: 2020
-      url: https://aclanthology.org/2020.emnlp-main.609/
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@misc{wojtasik2024beirpl,\n  archivePrefix = {arXiv},\n  author = {Konrad\
-      \ Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej\
-      \ Piasecki},\n  eprint = {2305.19840},\n  primaryClass = {cs.IR},\n  title =\
-      \ {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},\n\
-      \  year = {2024},\n}\n\n\n@inproceedings{wadden2020fact,\n  author = {David\
-      \ Wadden and Shanchuan Lin and Kyle Lo and Lucy Lu Wang and Madeleine van Zuylen\
-      \ and Arman Cohan and Hannaneh Hajishirzi},\n  booktitle = {Proceedings of the\
-      \ 2020 Conference on Empirical Methods in Natural Language Processing},\n  title\
-      \ = {Fact or Fiction: Verifying Scientific Claims},\n  url = {https://aclanthology.org/2020.emnlp-main.609/},\n\
-      \  year = {2020},\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 27
-      max_chars: 227
-      mean_chars: 95.52
-      median_chars: 88.0
-    document_text_stats:
-      count: 5183
-      min_chars: 233
-      max_chars: 10870
-      mean_chars: 1554.5178468068686
-      median_chars: 1467.0
-    languages:
-    - pl
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          pl: 100.0
-      document:
-        sample_count: 5183
-        languages:
-          pl: 99.846
-  NanoMedicalQA:
-    language: en
-    category: natural_language
-    short_description: Medical question-answer retrieval.
-    description: NanoMedicalQA evaluates retrieval for medical question answering
-      using question-answer pairs associated with a question-entailment approach to
-      medical QA.
-    citation_keys:
-    - benabacha2019question
-    references:
-    - title: A Question-Entailment Approach to Question Answering
-      authors:
-      - Asma Ben Abacha
-      - Dina Demner-Fushman
-      year: 2019
-      url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{benabacha2019question,\n  author = {Asma Ben Abacha and Dina\
-      \ Demner-Fushman},\n  doi = {10.1186/s12859-019-3119-4},\n  journal = {BMC Bioinformatics},\n\
-      \  number = {1},\n  pages = {511},\n  title = {A Question-Entailment Approach\
-      \ to Question Answering},\n  volume = {20},\n  year = {2019},\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 16
-      max_chars: 102
-      mean_chars: 54.23
-      median_chars: 50.0
-    document_text_stats:
-      count: 2007
-      min_chars: 6
-      max_chars: 14441
-      mean_chars: 1102.433981066268
-      median_chars: 683.0
-    languages:
-    - en
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          en: 100.0
-      document:
-        sample_count: 2007
-        languages:
-          en: 100.0
-  NanoPublicHealthQA:
-    language: multilingual
-    category: natural_language
-    short_description: Public-health FAQ answer retrieval.
-    description: NanoPublicHealthQA evaluates retrieval of public-health FAQ answers
-      for questions sourced from CDC and WHO material in a multilingual public-health
-      QA dataset.
-    citation_keys:
-    - lu2024publichealthqa
-    references:
-    - title: publichealth-qa
-      authors:
-      - Xing Han Lu
-      year: 2024
-      url: https://huggingface.co/datasets/xhluca/publichealth-qa
-      is_paper: false
-      source_confidence: probably_correct
-    bibtex: "@misc{lu2024publichealthqa,\n  author = {Xing Han Lu},\n  doi = {10.57967/hf/2247},\n\
-      \  publisher = {Hugging Face},\n  title = {publichealth-qa},\n  url = {https://huggingface.co/datasets/xhluca/publichealth-qa},\n\
-      \  year = {2024},\n}\n"
-    query_text_stats:
-      count: 86
-      min_chars: 19
-      max_chars: 310
-      mean_chars: 79.84883720930233
-      median_chars: 70.0
-    document_text_stats:
-      count: 86
-      min_chars: 181
-      max_chars: 3749
-      mean_chars: 828.1511627906976
-      median_chars: 625.0
-    languages:
-    - ar
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 86
-        languages:
-          ar: 100.0
-      document:
-        sample_count: 86
-        languages:
-          ar: 100.0
-  NanoCmedqa:
-    language: zh
-    category: natural_language
-    short_description: Chinese medical consultation answer retrieval.
-    description: NanoCmedqa evaluates retrieval over Chinese online medical consultation
-      text, matching community medical questions to useful answer replies.
-    citation_keys:
-    - qiu2022dureaderretrieval
-    - zhang2018cmedqav2
-    references:
-    - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval
-        from Web Search Engine'
-      authors:
-      - Yifu Qiu
-      - Hongyu Li
-      - Yingqi Qu
-      - Ying Chen
-      - Qiaoqiao She
-      - Jing Liu
-      - Hua Wu
-      - Haifeng Wang
-      year: 2022
-      url: https://aclanthology.org/2022.emnlp-main.357/
-      is_paper: true
-      source_confidence: definitive_paper_link
-      doi: 10.18653/v1/2022.emnlp-main.357
-    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question
-        Answer Selection
-      authors:
-      - Sheng Zhang
-      - Xin Zhang
-      - Hui Wang
-      - Liang Guo
-      - Shanshan Liu
-      year: 2018
-      url: https://doi.org/10.1109/ACCESS.2018.2883637
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@misc{qiu2022dureaderretrieval,\n  archivePrefix = {arXiv},\n  author\
-      \ = {Yifu Qiu and Hongyu Li and Yingqi Qu and Ying Chen and Qiaoqiao She and\
-      \ Jing Liu and Hua Wu and Haifeng Wang},\n  eprint = {2203.10232},\n  primaryClass\
-      \ = {cs.CL},\n  title = {DuReader_retrieval: A Large-scale Chinese Benchmark\
-      \ for Passage Retrieval from Web Search Engine},\n  year = {2022},\n}\n\n\n\
-      @article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and Hui Wang\
-      \ and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n\
-      \  journal = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale\
-      \ Attentive Interaction Networks for Chinese Medical Question Answer Selection},\n\
-      \  volume = {6},\n  year = {2018},\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 11
-      max_chars: 151
-      mean_chars: 51.995
-      median_chars: 44.0
-    document_text_stats:
-      count: 10000
-      min_chars: 4
-      max_chars: 4341
-      mean_chars: 157.5694
-      median_chars: 112.0
-    languages:
-    - zh
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          zh: 99.0
-          ja: 1.0
-      document:
-        sample_count: 10000
-        languages:
-          zh: 99.5
-  NanoCMedQAv2reranking:
-    language: zh
-    category: natural_language
-    short_description: Chinese CMedQAv2 medical answer reranking.
-    description: NanoCMedQAv2reranking evaluates answer selection for Chinese community
-      medical questions using the CMedQAv2 reranking formulation.
-    citation_keys:
-    - zhang2018cmedqav2
-    references:
-    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question
-        Answer Selection
-      authors:
-      - Sheng Zhang
-      - Xin Zhang
-      - Hui Wang
-      - Liang Guo
-      - Shanshan Liu
-      year: 2018
-      url: https://doi.org/10.1109/ACCESS.2018.2883637
-      is_paper: true
-      source_confidence: definitive_paper_link
-    bibtex: "@article{zhang2018cmedqav2,\n  author = {Sheng Zhang and Xin Zhang and\
-      \ Hui Wang and Liang Guo and Shanshan Liu},\n  doi = {10.1109/ACCESS.2018.2883637},\n\
-      \  journal = {IEEE Access},\n  pages = {74061--74071},\n  title = {Multi-Scale\
-      \ Attentive Interaction Networks for Chinese Medical Question Answer Selection},\n\
-      \  volume = {6},\n  year = {2018},\n}\n"
-    query_text_stats:
-      count: 200
-      min_chars: 11
-      max_chars: 146
-      mean_chars: 50.105
-      median_chars: 39.0
-    document_text_stats:
-      count: 10000
-      min_chars: 11
-      max_chars: 260
-      mean_chars: 100.8981
-      median_chars: 91.0
-    languages:
-    - zh
-    language_detection:
-      detector: fast-langdetect
-      min_language_percent: 0.5
-      main_language_percent: 10.0
-      query:
-        sample_count: 200
-        languages:
-          zh: 98.0
-          ja: 1.5
-          sr: 0.5
-      document:
-        sample_count: 10000
-        languages:
-          zh: 99.92

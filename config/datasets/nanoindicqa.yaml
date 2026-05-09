@@ -1,0 +1,623 @@
+name: NanoIndicQA
+dataset_id: hakari-bench/NanoIndicQA
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- as
+- bn
+- gu
+- hi
+- kn
+- ml
+- mr
+- or
+- pa
+- ta
+- te
+metadata:
+  language: multilingual
+  category: natural_language
+  short_description: NanoIndicQA retrieval benchmark.
+  description: NanoIndicQA is a Nano-style retrieval dataset hosted by hakari-bench.
+task_metadata:
+  as:
+    language: as
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: as; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: as
+    source_eval_split: test
+    source_nano_split: as
+    hub_split: as
+    languages:
+    - as
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 160
+      mean_chars: 55.3
+      median_chars: 52.0
+    document_text_stats:
+      count: 250
+      min_chars: 355
+      max_chars: 6654
+      mean_chars: 1401.28
+      median_chars: 1027.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          as: 98.5
+          bn: 1.5
+      document:
+        sample_count: 250
+        languages:
+          as: 99.6
+  bn:
+    language: bn
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: bn; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: bn
+    source_eval_split: test
+    source_nano_split: bn
+    hub_split: bn
+    languages:
+    - bn
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 166
+      mean_chars: 52.08
+      median_chars: 47.0
+    document_text_stats:
+      count: 250
+      min_chars: 684
+      max_chars: 6767
+      mean_chars: 2196.012
+      median_chars: 1572.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          bn: 99.5
+          as: 0.5
+      document:
+        sample_count: 250
+        languages:
+          bn: 100.0
+  gu:
+    language: gu
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: gu; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: gu
+    source_eval_split: test
+    source_nano_split: gu
+    hub_split: gu
+    languages:
+    - gu
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 20
+      max_chars: 155
+      mean_chars: 61.01
+      median_chars: 55.5
+    document_text_stats:
+      count: 248
+      min_chars: 147
+      max_chars: 3253
+      mean_chars: 960.4959677419355
+      median_chars: 841.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          gu: 100.0
+      document:
+        sample_count: 248
+        languages:
+          gu: 100.0
+  hi:
+    language: hi
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: hi; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: hi
+    source_eval_split: test
+    source_nano_split: hi
+    hub_split: hi
+    languages:
+    - hi
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 21
+      max_chars: 124
+      mean_chars: 56.915
+      median_chars: 55.0
+    document_text_stats:
+      count: 261
+      min_chars: 1156
+      max_chars: 8857
+      mean_chars: 2550.770114942529
+      median_chars: 1997.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          hi: 100.0
+      document:
+        sample_count: 261
+        languages:
+          hi: 100.0
+  kn:
+    language: kn
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: kn; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: kn
+    source_eval_split: test
+    source_nano_split: kn
+    hub_split: kn
+    languages:
+    - kn
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 133
+      mean_chars: 53.265
+      median_chars: 50.5
+    document_text_stats:
+      count: 257
+      min_chars: 146
+      max_chars: 3130
+      mean_chars: 882.7354085603113
+      median_chars: 787.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          kn: 100.0
+      document:
+        sample_count: 257
+        languages:
+          kn: 100.0
+  ml:
+    language: ml
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: ml; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: ml
+    source_eval_split: test
+    source_nano_split: ml
+    hub_split: ml
+    languages:
+    - ml
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 28
+      max_chars: 219
+      mean_chars: 81.55
+      median_chars: 77.0
+    document_text_stats:
+      count: 247
+      min_chars: 859
+      max_chars: 11919
+      mean_chars: 2522.6437246963565
+      median_chars: 1864.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ml: 100.0
+      document:
+        sample_count: 247
+        languages:
+          ml: 100.0
+  mr:
+    language: mr
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: mr; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: mr
+    source_eval_split: test
+    source_nano_split: mr
+    hub_split: mr
+    languages:
+    - mr
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 167
+      mean_chars: 59.85
+      median_chars: 56.0
+    document_text_stats:
+      count: 250
+      min_chars: 746
+      max_chars: 6702
+      mean_chars: 1711.74
+      median_chars: 1305.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          mr: 100.0
+      document:
+        sample_count: 250
+        languages:
+          mr: 98.4
+          hi: 1.6
+  or:
+    language: or
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: or; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: or
+    source_eval_split: test
+    source_nano_split: or
+    hub_split: or
+    languages:
+    - or
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 20
+      max_chars: 169
+      mean_chars: 57.16
+      median_chars: 52.5
+    document_text_stats:
+      count: 252
+      min_chars: 260
+      max_chars: 2277
+      mean_chars: 801.9206349206349
+      median_chars: 711.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          or: 100.0
+      document:
+        sample_count: 252
+        languages:
+          or: 100.0
+  pa:
+    language: pa
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: pa; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: pa
+    source_eval_split: test
+    source_nano_split: pa
+    hub_split: pa
+    languages:
+    - pa
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 22
+      max_chars: 226
+      mean_chars: 63.51
+      median_chars: 59.0
+    document_text_stats:
+      count: 241
+      min_chars: 422
+      max_chars: 6082
+      mean_chars: 1423.5062240663901
+      median_chars: 1156.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          pa: 100.0
+      document:
+        sample_count: 241
+        languages:
+          pa: 100.0
+  ta:
+    language: ta
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: ta; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: ta
+    source_eval_split: test
+    source_nano_split: ta
+    hub_split: ta
+    languages:
+    - ta
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 19
+      max_chars: 196
+      mean_chars: 56.335
+      median_chars: 52.0
+    document_text_stats:
+      count: 253
+      min_chars: 769
+      max_chars: 6940
+      mean_chars: 2288.2608695652175
+      median_chars: 1854.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ta: 100.0
+      document:
+        sample_count: 253
+        languages:
+          ta: 100.0
+  te:
+    language: te
+    category: natural_language
+    short_description: IndicQARetrieval retrieval split.
+    description: 'IndicQA is a manually curated cloze-style reading comprehension
+      dataset that can be used for evaluating question-answering models in 11 Indic
+      languages. It is repurposed retrieving relevant context for each question. Source
+      dataset: mteb/IndicQARetrieval; source subset: te; eval split: test.'
+    source_task: IndicQARetrieval
+    source_dataset_id: mteb/IndicQARetrieval
+    source_dataset_revision: 51e8b328988795d658f6f34acd34044e9346e2ee
+    source_dataset_subset: te
+    source_eval_split: test
+    source_nano_split: te
+    hub_split: te
+    languages:
+    - te
+    references:
+    - title: IndicQARetrieval source reference
+      url: https://arxiv.org/abs/2212.05409
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/IndicQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 14
+      max_chars: 127
+      mean_chars: 64.96
+      median_chars: 63.0
+    document_text_stats:
+      count: 250
+      min_chars: 1072
+      max_chars: 14782
+      mean_chars: 2936.176
+      median_chars: 2203.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          te: 100.0
+      document:
+        sample_count: 250
+        languages:
+          te: 99.2
+          en: 0.8

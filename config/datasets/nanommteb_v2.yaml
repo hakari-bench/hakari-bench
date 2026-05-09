@@ -1,0 +1,1195 @@
+name: NanoMMTEB-v2
+dataset_id: hakari-bench/NanoMMTEB-v2
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- ailastatutes
+- argu_ana
+- belebele
+- covid
+- hagrid
+- legal_bench_corporate_lobbying
+- lembpasskey
+- miracl
+- mlqa
+- scidocs
+- spart_qa
+- stack_overflow_qa
+- statcan_dialogue_dataset
+- temp_reason_l1
+- treccovid
+- twitter_hjerne
+- wikipedia_multilingual
+- wino_grande
+metadata:
+  language: multilingual
+  category: natural_language
+  short_description: NanoMMTEB-v2 retrieval benchmark.
+  description: NanoMMTEB-v2 is a Nano-style retrieval dataset hosted by hakari-bench.
+task_metadata:
+  ailastatutes:
+    language: en
+    category: natural_language
+    short_description: AILAStatutes retrieval split.
+    description: 'This dataset is structured for the task of identifying the most
+      relevant statutes for a given situation. Source dataset: mteb/AILA_statutes;
+      source subset: default; eval split: test.'
+    source_task: AILAStatutes
+    source_dataset_id: mteb/AILA_statutes
+    source_dataset_revision: ebfcd844eadd3d667efa3c57fc5c8c87f5c2867e
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: ailastatutes
+    hub_split: ailastatutes
+    languages:
+    - en
+    references:
+    - title: AILAStatutes source reference
+      url: https://zenodo.org/records/4063986
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/AILA_statutes Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/AILA_statutes
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 50
+      min_chars: 1174
+      max_chars: 5936
+      mean_chars: 3038.42
+      median_chars: 3063.0
+    document_text_stats:
+      count: 82
+      min_chars: 162
+      max_chars: 26037
+      mean_chars: 1972.6341463414635
+      median_chars: 898.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 100.0
+      document:
+        sample_count: 82
+        languages:
+          en: 100.0
+  argu_ana:
+    language: en
+    category: natural_language
+    short_description: ArguAna retrieval split.
+    description: 'ArguAna: Retrieval of the Best Counterargument without Prior Topic
+      Knowledge Source dataset: mteb/arguana; source subset: default; eval split:
+      test.'
+    source_task: ArguAna
+    source_dataset_id: mteb/arguana
+    source_dataset_revision: c22ab2a51041ffd869aaddef7af8d8215647e41a
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: argu-ana
+    hub_split: argu_ana
+    languages:
+    - en
+    references:
+    - title: ArguAna source reference
+      url: http://argumentation.bplaced.net/arguana/data
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/arguana Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/arguana
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 199
+      min_chars: 358
+      max_chars: 5500
+      mean_chars: 1199.8040201005026
+      median_chars: 1002.0
+    document_text_stats:
+      count: 8626
+      min_chars: 2
+      max_chars: 6673
+      mean_chars: 1029.6044516577788
+      median_chars: 927.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 199
+        languages:
+          en: 100.0
+      document:
+        sample_count: 8626
+        languages:
+          en: 100.0
+  belebele:
+    language: multilingual
+    category: natural_language
+    short_description: BelebeleRetrieval retrieval split.
+    description: 'Belebele is a multiple-choice machine reading comprehension (MRC)
+      dataset spanning 122 language variants (including 115 distinct languages and
+      their scripts) Source dataset: mteb/belebele; source subset: combined; eval
+      split: test.'
+    source_task: BelebeleRetrieval
+    source_dataset_id: mteb/belebele
+    source_dataset_revision: 979a211276faa22f671e69d096634193567cfd05
+    source_dataset_subset: combined
+    source_eval_split: test
+    source_nano_split: belebele
+    hub_split: belebele
+    languages:
+    - ar
+    - en
+    references:
+    - title: BelebeleRetrieval source reference
+      url: https://arxiv.org/abs/2308.16884
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/belebele Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/belebele
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 28
+      max_chars: 155
+      mean_chars: 82.6
+      median_chars: 84.0
+    document_text_stats:
+      count: 10000
+      min_chars: 92
+      max_chars: 1708
+      mean_chars: 471.3895
+      median_chars: 450.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 9.5
+          ar: 6.0
+          tl: 3.5
+          de: 2.0
+          fi: 2.0
+          it: 2.0
+          sw: 2.0
+          af: 1.5
+          am: 1.5
+          bn: 1.5
+          es: 1.5
+          hr: 1.5
+          hu: 1.5
+          id: 1.5
+          jv: 1.5
+          my: 1.5
+          pl: 1.5
+          tr: 1.5
+          war: 1.5
+          az: 1.0
+          bg: 1.0
+          bo: 1.0
+          ca: 1.0
+          ceb: 1.0
+          ckb: 1.0
+          cs: 1.0
+          da: 1.0
+          el: 1.0
+          eo: 1.0
+          et: 1.0
+          eu: 1.0
+          fr: 1.0
+          gu: 1.0
+          he: 1.0
+          hi: 1.0
+          hy: 1.0
+          ilo: 1.0
+          is: 1.0
+          ja: 1.0
+          ka: 1.0
+          kk: 1.0
+          km: 1.0
+          kn: 1.0
+          ko: 1.0
+          ky: 1.0
+          lo: 1.0
+          lt: 1.0
+          lv: 1.0
+          mk: 1.0
+          ml: 1.0
+          mn: 1.0
+          mr: 1.0
+          mt: 1.0
+          ne: 1.0
+          nl: 1.0
+          'no': 1.0
+          or: 1.0
+          pa: 1.0
+          sq: 1.0
+          uz: 1.0
+          zh: 1.0
+          as: 0.5
+          fa: 0.5
+          ht: 0.5
+          kw: 0.5
+          mg: 0.5
+          pms: 0.5
+          ps: 0.5
+          pt: 0.5
+          ro: 0.5
+          ru: 0.5
+          sd: 0.5
+          si: 0.5
+          sk: 0.5
+          sl: 0.5
+          so: 0.5
+          sr: 0.5
+          su: 0.5
+          sv: 0.5
+          ta: 0.5
+          te: 0.5
+          tg: 0.5
+          th: 0.5
+          uk: 0.5
+          ur: 0.5
+          vi: 0.5
+          yo: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          ar: 27.8
+          en: 14.19
+          bn: 4.91
+          sq: 4.9
+          am: 4.89
+          bo: 4.88
+          bg: 4.86
+          ca: 4.86
+          as: 4.85
+          az: 4.81
+          ceb: 4.43
+          af: 3.06
+          cs: 2.79
+          nl: 1.77
+          tl: 0.97
+  covid:
+    language: zh
+    category: natural_language
+    short_description: CovidRetrieval retrieval split.
+    description: 'COVID-19 news articles Source dataset: mteb/CovidRetrieval; source
+      subset: default; eval split: dev.'
+    source_task: CovidRetrieval
+    source_dataset_id: mteb/CovidRetrieval
+    source_dataset_revision: 9c6dc4b276bb47c3ff725bbc5ffcafd56dded38b
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: covid
+    hub_split: covid
+    languages:
+    - zh
+    references:
+    - title: CovidRetrieval source reference
+      url: https://arxiv.org/abs/2203.03367
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/CovidRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/CovidRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 10
+      max_chars: 57
+      mean_chars: 25.735
+      median_chars: 24.0
+    document_text_stats:
+      count: 10000
+      min_chars: 3
+      max_chars: 15408
+      mean_chars: 409.3471
+      median_chars: 275.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          zh: 99.5
+          ja: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          zh: 98.54
+          en: 0.78
+  hagrid:
+    language: en
+    category: natural_language
+    short_description: HagridRetrieval retrieval split.
+    description: 'HAGRID (Human-in-the-loop Attributable Generative Retrieval for
+      Information-seeking Dataset)is a dataset for generative information-seeking
+      scenarios. It consists of queriesalong with a set of manually labelled relevant
+      passages Source dataset: mteb/HagridRetrieval; source subset: default; eval
+      split: dev.'
+    source_task: HagridRetrieval
+    source_dataset_id: mteb/HagridRetrieval
+    source_dataset_revision: ae4f8bebcb82af2028863b778e1eebf4f5f23628
+    source_dataset_subset: default
+    source_eval_split: dev
+    source_nano_split: hagrid
+    hub_split: hagrid
+    languages:
+    - en
+    references:
+    - title: HagridRetrieval source reference
+      url: https://github.com/project-miracl/hagrid
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/HagridRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/HagridRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 16
+      max_chars: 122
+      mean_chars: 38.36
+      median_chars: 36.0
+    document_text_stats:
+      count: 493
+      min_chars: 27
+      max_chars: 1205
+      mean_chars: 229.56795131845843
+      median_chars: 133.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 493
+        languages:
+          en: 100.0
+  legal_bench_corporate_lobbying:
+    language: en
+    category: natural_language
+    short_description: LegalBenchCorporateLobbying retrieval split.
+    description: 'The dataset includes bill titles and bill summaries related to corporate
+      lobbying. Source dataset: mteb/legalbench_corporate_lobbying; source subset:
+      default; eval split: test.'
+    source_task: LegalBenchCorporateLobbying
+    source_dataset_id: mteb/legalbench_corporate_lobbying
+    source_dataset_revision: f69691c650464e62546d7f2a4536f8f87c891e38
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: legal-bench-corporate-lobbying
+    hub_split: legal_bench_corporate_lobbying
+    languages:
+    - en
+    references:
+    - title: LegalBenchCorporateLobbying source reference
+      url: https://huggingface.co/datasets/nguha/legalbench/viewer/corporate_lobbying
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/legalbench_corporate_lobbying Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/legalbench_corporate_lobbying
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 41
+      max_chars: 733
+      mean_chars: 179.67
+      median_chars: 155.0
+    document_text_stats:
+      count: 319
+      min_chars: 136
+      max_chars: 11450
+      mean_chars: 1157.2131661442006
+      median_chars: 1033.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 319
+        languages:
+          en: 100.0
+  lembpasskey:
+    language: en
+    category: natural_language
+    short_description: LEMBPasskeyRetrieval retrieval split.
+    description: 'passkey subset of dwzhu/LongEmbed dataset. Source dataset: mteb/LEMBPasskeyRetrieval;
+      source subset: default; eval split: test_256.'
+    source_task: LEMBPasskeyRetrieval
+    source_dataset_id: mteb/LEMBPasskeyRetrieval
+    source_dataset_revision: 86ac5a6437198a94ecd666440c78b3e78f258274
+    source_dataset_subset: default
+    source_eval_split: test_256
+    source_nano_split: lembpasskey
+    hub_split: lembpasskey
+    languages:
+    - en
+    references:
+    - title: LEMBPasskeyRetrieval source reference
+      url: https://huggingface.co/datasets/dwzhu/LongEmbed
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/LEMBPasskeyRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/LEMBPasskeyRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 50
+      min_chars: 35
+      max_chars: 45
+      mean_chars: 38.1
+      median_chars: 38.0
+    document_text_stats:
+      count: 100
+      min_chars: 866
+      max_chars: 890
+      mean_chars: 875.24
+      median_chars: 876.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 100.0
+      document:
+        sample_count: 100
+        languages:
+          en: 100.0
+  miracl:
+    language: ar
+    category: natural_language
+    short_description: MIRACLRetrievalHardNegatives retrieval split.
+    description: 'MIRACL (Multilingual Information Retrieval Across a Continuum of
+      Languages) is a multilingual retrieval dataset that focuses on search across
+      18 different languages. The hard negative version has been created by pooling
+      the 250 top documents per query from BM25, e5-multilingual-large and e5-mistral-instruct.
+      Source dataset: mteb/MIRACLRetrievalHardNegatives; source subset: combined;
+      eval split: dev.'
+    source_task: MIRACLRetrievalHardNegatives
+    source_dataset_id: mteb/MIRACLRetrievalHardNegatives
+    source_dataset_revision: d7d94fa4b946cec4a27c84653aa0cf6b33f74a3c
+    source_dataset_subset: combined
+    source_eval_split: dev
+    source_nano_split: miracl
+    hub_split: miracl
+    languages:
+    - ar
+    references:
+    - title: MIRACLRetrievalHardNegatives source reference
+      url: http://miracl.ai/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MIRACLRetrievalHardNegatives Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 8
+      max_chars: 98
+      mean_chars: 37.215
+      median_chars: 35.5
+    document_text_stats:
+      count: 10000
+      min_chars: 8
+      max_chars: 48552
+      mean_chars: 448.2123
+      median_chars: 359.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 6.5
+          es: 6.5
+          ar: 6.0
+          bn: 6.0
+          de: 5.5
+          fa: 5.5
+          fi: 5.5
+          fr: 5.5
+          hi: 5.5
+          ja: 5.5
+          ko: 5.5
+          ru: 5.5
+          sw: 5.5
+          te: 5.5
+          th: 5.5
+          zh: 5.5
+          id: 5.0
+          ro: 1.0
+          cbk: 0.5
+          eo: 0.5
+          it: 0.5
+          lv: 0.5
+          tr: 0.5
+          yo: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          ar: 83.32
+          en: 1.52
+          ko: 1.39
+          bn: 1.24
+          es: 1.09
+          fr: 1.03
+          zh: 1.02
+          hi: 1.01
+          fi: 0.99
+          th: 0.99
+          fa: 0.98
+          sw: 0.96
+          ja: 0.93
+          id: 0.84
+          ru: 0.81
+          de: 0.79
+  mlqa:
+    language: multilingual
+    category: natural_language
+    short_description: MLQARetrieval retrieval split.
+    description: 'MLQA (MultiLingual Question Answering) is a benchmark dataset for
+      evaluating cross-lingual question answering performance. MLQA consists of over
+      5K extractive QA instances (12K in English) in SQuAD format in seven languages
+      - English, Arabic, German, Spanish, Hindi, Vietnamese and Simplified Chinese.
+      MLQA is highly parallel, with QA instances parallel between 4 different languages
+      on average. Source dataset: mteb/MLQARetrieval; source subset: combined; eval
+      split: validation.'
+    source_task: MLQARetrieval
+    source_dataset_id: mteb/MLQARetrieval
+    source_dataset_revision: 5bef8b6e2601af974fb1a1cca03fd702229be4b6
+    source_dataset_subset: combined
+    source_eval_split: validation
+    source_nano_split: mlqa
+    hub_split: mlqa
+    languages:
+    - en
+    - de
+    - ar
+    - zh
+    - vi
+    - hi
+    - es
+    references:
+    - title: MLQARetrieval source reference
+      url: https://huggingface.co/datasets/mlqa
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MLQARetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MLQARetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 128
+      min_chars: 7
+      max_chars: 148
+      mean_chars: 43.71875
+      median_chars: 40.0
+    document_text_stats:
+      count: 3640
+      min_chars: 51
+      max_chars: 12791
+      mean_chars: 727.928021978022
+      median_chars: 519.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 128
+        languages:
+          de: 23.438
+          ar: 19.531
+          zh: 17.188
+          hi: 15.625
+          vi: 15.625
+          en: 5.469
+          es: 3.125
+      document:
+        sample_count: 3640
+        languages:
+          en: 26.896
+          de: 12.39
+          es: 12.308
+          vi: 12.253
+          zh: 12.088
+          ar: 11.978
+          hi: 11.648
+  scidocs:
+    language: en
+    category: natural_language
+    short_description: SCIDOCS retrieval split.
+    description: 'SciDocs, a new evaluation benchmark consisting of seven document-level
+      tasks ranging from citation prediction, to document classification and recommendation.
+      Source dataset: mteb/scidocs; source subset: default; eval split: test.'
+    source_task: SCIDOCS
+    source_dataset_id: mteb/scidocs
+    source_dataset_revision: f8c2fcf00f625baaa80f62ec5bd9e1fff3b8ae88
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: scidocs
+    hub_split: scidocs
+    languages:
+    - en
+    references:
+    - title: SCIDOCS source reference
+      url: https://allenai.org/data/scidocs
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/scidocs Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/scidocs
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 30
+      max_chars: 192
+      mean_chars: 69.79
+      median_chars: 67.0
+    document_text_stats:
+      count: 10000
+      min_chars: 19
+      max_chars: 10170
+      mean_chars: 1202.6798
+      median_chars: 1102.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 99.5
+          fr: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.94
+  spart_qa:
+    language: en
+    category: natural_language
+    short_description: SpartQA retrieval split.
+    description: 'Measuring the ability to retrieve the groundtruth answers to reasoning
+      task queries on SpartQA. Source dataset: mteb/SpartQA; source subset: default;
+      eval split: test.'
+    source_task: SpartQA
+    source_dataset_id: mteb/SpartQA
+    source_dataset_revision: 1c858df377e57725a014a1b7321ebd79d62016b6
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: spart-qa
+    hub_split: spart_qa
+    languages:
+    - en
+    references:
+    - title: SpartQA source reference
+      url: https://github.com/HLR/SpartQA_generation
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/SpartQA Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/SpartQA
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 429
+      max_chars: 1306
+      mean_chars: 654.85
+      median_chars: 621.0
+    document_text_stats:
+      count: 1592
+      min_chars: 6
+      max_chars: 90
+      mean_chars: 49.79711055276382
+      median_chars: 55.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 1592
+        languages:
+          en: 99.623
+  stack_overflow_qa:
+    language: en
+    category: natural_language
+    short_description: StackOverflowQA retrieval split.
+    description: 'The dataset is a collection of natural language queries and their
+      corresponding response which may include some text mixed with code snippets.
+      The task is to retrieve the most relevant response for a given query. Source
+      dataset: mteb/StackOverflowQA; source subset: default; eval split: test.'
+    source_task: StackOverflowQA
+    source_dataset_id: mteb/StackOverflowQA
+    source_dataset_revision: 7b46f5ebd2365278c1bb025986dda2fee893bbf5
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: stack-overflow-qa
+    hub_split: stack_overflow_qa
+    languages:
+    - en
+    references:
+    - title: StackOverflowQA source reference
+      url: https://arxiv.org/abs/2407.02883
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/StackOverflowQA Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/StackOverflowQA
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 61
+      max_chars: 15121
+      mean_chars: 1361.805
+      median_chars: 908.5
+    document_text_stats:
+      count: 10000
+      min_chars: 29
+      max_chars: 46027
+      mean_chars: 1218.0589
+      median_chars: 730.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.3
+  statcan_dialogue_dataset:
+    language: multilingual
+    category: natural_language
+    short_description: StatcanDialogueDatasetRetrieval retrieval split.
+    description: 'A Dataset for Retrieving Data Tables through Conversations with
+      Genuine Intents, available in English and French. Source dataset: mteb/StatcanDialogueDatasetRetrieval;
+      source subset: combined; eval split: dev.'
+    source_task: StatcanDialogueDatasetRetrieval
+    source_dataset_id: mteb/StatcanDialogueDatasetRetrieval
+    source_dataset_revision: 6f9747b22a93c6cf714945bca43576089fb80de3
+    source_dataset_subset: combined
+    source_eval_split: dev
+    source_nano_split: statcan-dialogue-dataset
+    hub_split: statcan_dialogue_dataset
+    languages:
+    - en
+    - fr
+    references:
+    - title: StatcanDialogueDatasetRetrieval source reference
+      url: https://mcgill-nlp.github.io/statcan-dialogue-dataset/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/StatcanDialogueDatasetRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 72
+      max_chars: 5377
+      mean_chars: 794.77
+      median_chars: 539.0
+    document_text_stats:
+      count: 10000
+      min_chars: 257
+      max_chars: 398046
+      mean_chars: 7237.6861
+      median_chars: 2211.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fr: 49.0
+          en: 48.5
+          pt: 1.0
+          tr: 1.0
+          hi: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          en: 59.07
+          fr: 40.93
+  temp_reason_l1:
+    language: multilingual
+    category: natural_language
+    short_description: TempReasonL1 retrieval split.
+    description: 'Measuring the ability to retrieve the groundtruth answers to reasoning
+      task queries on TempReason l1. Source dataset: mteb/TempReasonL1; source subset:
+      default; eval split: test.'
+    source_task: TempReasonL1
+    source_dataset_id: mteb/TempReasonL1
+    source_dataset_revision: 2065ce0bde70750ed98bb91abd96d0d68ab94324
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: temp-reason-l1
+    hub_split: temp_reason_l1
+    languages:
+    - en
+    - de
+    references:
+    - title: TempReasonL1 source reference
+      url: https://github.com/DAMO-NLP-SG/TempReason
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/TempReasonL1 Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/TempReasonL1
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 39
+      max_chars: 53
+      mean_chars: 49.875
+      median_chars: 51.0
+    document_text_stats:
+      count: 10000
+      min_chars: 8
+      max_chars: 9
+      mean_chars: 8.9975
+      median_chars: 9.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 60.59
+          de: 37.16
+          sl: 0.68
+          fr: 0.65
+  treccovid:
+    language: en
+    category: natural_language
+    short_description: TRECCOVID retrieval split.
+    description: 'TRECCOVID is an ad-hoc search challenge based on the COVID-19 dataset
+      containing scientific articles related to the COVID-19 pandemic. Source dataset:
+      mteb/trec-covid; source subset: default; eval split: test.'
+    source_task: TRECCOVID
+    source_dataset_id: mteb/trec-covid
+    source_dataset_revision: bb9466bac8153a0349341eb1b22e06409e78ef4e
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: treccovid
+    hub_split: treccovid
+    languages:
+    - en
+    references:
+    - title: TRECCOVID source reference
+      url: https://ir.nist.gov/covidSubmit/index.html
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/trec-covid Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/trec-covid
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 50
+      min_chars: 30
+      max_chars: 165
+      mean_chars: 69.24
+      median_chars: 64.5
+    document_text_stats:
+      count: 10000
+      min_chars: 13
+      max_chars: 27073
+      mean_chars: 1321.5673
+      median_chars: 1359.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          en: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          en: 99.39
+  twitter_hjerne:
+    language: da
+    category: natural_language
+    short_description: TwitterHjerneRetrieval retrieval split.
+    description: 'Danish question asked on Twitter with the Hashtag #Twitterhjerne
+      (''Twitter brain'') and their corresponding answer. Source dataset: mteb/TwitterHjerneRetrieval;
+      source subset: default; eval split: train.'
+    source_task: TwitterHjerneRetrieval
+    source_dataset_id: mteb/TwitterHjerneRetrieval
+    source_dataset_revision: 97ad55673cf9746f8e4b3aaa92b1bb92d82e52db
+    source_dataset_subset: default
+    source_eval_split: train
+    source_nano_split: twitter-hjerne
+    hub_split: twitter_hjerne
+    languages:
+    - da
+    references:
+    - title: TwitterHjerneRetrieval source reference
+      url: https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/TwitterHjerneRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/TwitterHjerneRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 77
+      min_chars: 48
+      max_chars: 383
+      mean_chars: 165.75324675324674
+      median_chars: 148.0
+    document_text_stats:
+      count: 262
+      min_chars: 16
+      max_chars: 595
+      mean_chars: 128.7709923664122
+      median_chars: 119.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 77
+        languages:
+          da: 97.403
+          'no': 2.597
+      document:
+        sample_count: 262
+        languages:
+          da: 88.931
+          'no': 5.725
+          en: 3.817
+          de: 0.763
+  wikipedia_multilingual:
+    language: bg
+    category: natural_language
+    short_description: WikipediaRetrievalMultilingual retrieval split.
+    description: 'The dataset is derived from Cohere''s wikipedia-2023-11 dataset
+      and contains synthetically generated queries. Source dataset: mteb/WikipediaRetrievalMultilingual;
+      source subset: combined; eval split: test.'
+    source_task: WikipediaRetrievalMultilingual
+    source_dataset_id: mteb/WikipediaRetrievalMultilingual
+    source_dataset_revision: 5f6c91d21f2f5b9afb663858d19848fbd223c775
+    source_dataset_subset: combined
+    source_eval_split: test
+    source_nano_split: wikipedia-multilingual
+    hub_split: wikipedia_multilingual
+    languages:
+    - bg
+    references:
+    - title: WikipediaRetrievalMultilingual source reference
+      url: https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/WikipediaRetrievalMultilingual Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 19
+      max_chars: 129
+      mean_chars: 59.16
+      median_chars: 55.0
+    document_text_stats:
+      count: 10000
+      min_chars: 100
+      max_chars: 4869
+      mean_chars: 383.2946
+      median_chars: 301.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 7.5
+          da: 7.0
+          bg: 6.5
+          bn: 6.5
+          cs: 6.5
+          de: 6.5
+          fa: 6.5
+          fi: 6.5
+          it: 6.5
+          sv: 6.5
+          hi: 6.0
+          nl: 6.0
+          pt: 6.0
+          ro: 5.5
+          sr: 5.5
+          'no': 4.5
+      document:
+        sample_count: 10000
+        languages:
+          bg: 96.36
+          ru: 0.83
+          en: 0.73
+  wino_grande:
+    language: en
+    category: natural_language
+    short_description: WinoGrande retrieval split.
+    description: 'Measuring the ability to retrieve the groundtruth answers to reasoning
+      task queries on winogrande. Source dataset: mteb/WinoGrande; source subset:
+      default; eval split: test.'
+    source_task: WinoGrande
+    source_dataset_id: mteb/WinoGrande
+    source_dataset_revision: 4dec9c5666e9f84702ac614363db6d96a68bc6de
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: wino-grande
+    hub_split: wino_grande
+    languages:
+    - en
+    references:
+    - title: WinoGrande source reference
+      url: https://winogrande.allenai.org/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/WinoGrande Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/WinoGrande
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 79
+      max_chars: 166
+      mean_chars: 111.975
+      median_chars: 110.0
+    document_text_stats:
+      count: 5095
+      min_chars: 2
+      max_chars: 31
+      mean_chars: 7.68243375858685
+      median_chars: 7.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          en: 100.0
+      document:
+        sample_count: 5095
+        languages:
+          en: 82.728
+          fr: 2.689
+          de: 1.786
+          es: 1.747
+          it: 1.708
+          nl: 1.178
+          pt: 0.707
+          sv: 0.687
+          ca: 0.628
+          pl: 0.53

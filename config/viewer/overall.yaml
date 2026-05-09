@@ -2,7 +2,7 @@ overalls:
   - name: Overall
     label: Overall
     benchmarks:
-      - NanoMMTEB
+      - NanoMMTEB-v2
       - NanoRTEB
       - MNanoBEIR
       - NanoBIRCO
@@ -20,6 +20,8 @@ overalls:
       - NanoR2MED
       - NanoBuiltBench
       - NanoCMTEB
+      - NanoIndicQA
+      - NanoMuPLeR
   - name: OverallGrouped
     label: Overall Grouped
     benchmarks:
@@ -27,7 +29,7 @@ overalls:
         group_by: task_name
       - name: NanoRTEB
         group_by: task_name
-      - name: NanoMMTEB
+      - name: NanoMMTEB-v2
         group_by: task_name
       - name: NanoBIRCO
         group_by: benchmark
@@ -59,7 +61,11 @@ overalls:
         group_by: benchmark
       - name: NanoCMTEB
         group_by: benchmark
-      - name: NanoMTEB
+      - name: NanoIndicQA
+        group_by: benchmark
+      - name: NanoMuPLeR
+        group_by: benchmark
+      - name: NanoMTEB-v2
         group_by: benchmark
       - name: NanoMTEB-Dutch
         group_by: benchmark
@@ -67,11 +73,13 @@ overalls:
         group_by: benchmark
       - name: NanoMTEB-German
         group_by: benchmark
-      - name: NanoJMTEB
+      - name: NanoJMTEB-v2
         group_by: benchmark
       - name: NanoMTEB-Korean
         group_by: benchmark
-      - name: NanoFaMTEB
+      - name: NanoFaMTEB-v2
+        group_by: benchmark
+      - name: NanoMTEB-Polish
         group_by: benchmark
       - name: NanoRuMTEB
         group_by: benchmark

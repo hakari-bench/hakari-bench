@@ -20,9 +20,10 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoMTEB-Dutch",
         "NanoMTEB-French",
         "NanoMTEB-German",
-        "NanoJMTEB",
+        "NanoJMTEB-v2",
         "NanoMTEB-Korean",
-        "NanoFaMTEB",
+        "NanoFaMTEB-v2",
+        "NanoMTEB-Polish",
         "NanoRuMTEB",
         "NanoMTEB-Scandinavian",
         "NanoMTEB-Spanish",
@@ -31,7 +32,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoMTEB-Misc",
     ]
     expected_overall_benchmarks = [
-        "NanoMMTEB",
+        "NanoMMTEB-v2",
         "NanoRTEB",
         "MNanoBEIR",
         "NanoBIRCO",
@@ -49,6 +50,8 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoR2MED",
         "NanoBuiltBench",
         "NanoCMTEB",
+        "NanoIndicQA",
+        "NanoMuPLeR",
     ]
 
     assert config.overall.benchmark_names == expected_overall_benchmarks
@@ -57,7 +60,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
     assert [component.name for component in grouped_overall.benchmark_components] == [
         "MNanoBEIR",
         "NanoRTEB",
-        "NanoMMTEB",
+        "NanoMMTEB-v2",
         "NanoBIRCO",
         "NanoMLDR",
         "NanoLongEmbed",
@@ -73,7 +76,9 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoR2MED",
         "NanoBuiltBench",
         "NanoCMTEB",
-        "NanoMTEB",
+        "NanoIndicQA",
+        "NanoMuPLeR",
+        "NanoMTEB-v2",
         *language_nanomteb_benchmarks,
         "NanoMIRACL",
     ]
@@ -86,6 +91,8 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "benchmark",
         "benchmark",
         "task_name",
+        "benchmark",
+        "benchmark",
         "benchmark",
         "benchmark",
         "benchmark",

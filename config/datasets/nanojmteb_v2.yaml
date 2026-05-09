@@ -1,0 +1,641 @@
+name: NanoJMTEB-v2
+dataset_id: hakari-bench/NanoJMTEB-v2
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- ja_cwir
+- ja_gov_faqs
+- jaqket
+- mintaka_ja
+- miracl_ja
+- mr_tidy_japanese
+- multi_long_doc_ja
+- nlpjournal_abs_article
+- nlpjournal_abs_intro
+- nlpjournal_title_abs
+- nlpjournal_title_intro
+metadata:
+  language: ja
+  category: natural_language
+  short_description: NanoJMTEB-v2 retrieval benchmark.
+  description: NanoJMTEB-v2 is a Nano-style retrieval dataset hosted by hakari-bench.
+task_metadata:
+  ja_cwir:
+    language: ja
+    category: natural_language
+    short_description: JaCWIRRetrieval retrieval split.
+    description: 'JaCWIR is a small-scale Japanese information retrieval evaluation
+      dataset consisting of 5000 question texts and approximately 500k web page titles
+      and web page introductions or summaries (meta descriptions, etc.). The question
+      texts are created based on one of the 500k web pages, and that data is used
+      as a positive example for the question text. Source dataset: mteb/JaCWIRRetrieval;
+      source subset: default; eval split: test.'
+    source_task: JaCWIRRetrieval
+    source_dataset_id: mteb/JaCWIRRetrieval
+    source_dataset_revision: abf6d5fb6759ad516f998bd887b75420d595672e
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: ja-cwir
+    hub_split: ja_cwir
+    languages:
+    - ja
+    references:
+    - title: JaCWIRRetrieval source reference
+      url: https://huggingface.co/datasets/hotchpotch/JaCWIR
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/JaCWIRRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/JaCWIRRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 14
+      max_chars: 107
+      mean_chars: 33.795
+      median_chars: 31.5
+    document_text_stats:
+      count: 10000
+      min_chars: 142
+      max_chars: 252
+      mean_chars: 187.0093
+      median_chars: 185.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.82
+  ja_gov_faqs:
+    language: ja
+    category: natural_language
+    short_description: JaGovFaqsRetrieval retrieval split.
+    description: 'JaGovFaqs is a dataset consisting of FAQs manually extracted from
+      the website of Japanese bureaus. The dataset consists of 22k FAQs, where the
+      queries (questions) and corpus (answers) have been shuffled, and the goal is
+      to match the answer with the question. Source dataset: mteb/JaGovFaqsRetrieval;
+      source subset: default; eval split: test.'
+    source_task: JaGovFaqsRetrieval
+    source_dataset_id: mteb/JaGovFaqsRetrieval
+    source_dataset_revision: 0726b2af53c907628067871e2e7c84e0d8e099c2
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: ja-gov-faqs
+    hub_split: ja_gov_faqs
+    languages:
+    - ja
+    references:
+    - title: JaGovFaqsRetrieval source reference
+      url: https://github.com/sbintuitions/JMTEB
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/JaGovFaqsRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/JaGovFaqsRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 10
+      max_chars: 355
+      mean_chars: 59.97
+      median_chars: 46.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 2934
+      mean_chars: 193.3841
+      median_chars: 137.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.89
+  jaqket:
+    language: ja
+    category: natural_language
+    short_description: JaqketRetrieval retrieval split.
+    description: 'JAQKET (JApanese Questions on Knowledge of EnTities) is a QA dataset
+      that is created based on quiz questions. Source dataset: mteb/jaqket; source
+      subset: default; eval split: test.'
+    source_task: JaqketRetrieval
+    source_dataset_id: mteb/jaqket
+    source_dataset_revision: 3a5b92dad489a61e664c05ed2175bc9220230199
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: jaqket
+    hub_split: jaqket
+    languages:
+    - ja
+    references:
+    - title: JaqketRetrieval source reference
+      url: https://github.com/kumapo/JAQKET-dataset
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/jaqket Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/jaqket
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 27
+      max_chars: 98
+      mean_chars: 52.985
+      median_chars: 52.0
+    document_text_stats:
+      count: 10000
+      min_chars: 9
+      max_chars: 139336
+      mean_chars: 4382.4384
+      median_chars: 1752.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.78
+  mintaka_ja:
+    language: ja
+    category: natural_language
+    short_description: MintakaRetrieval retrieval split.
+    description: 'We introduce Mintaka, a complex, natural, and multilingual dataset
+      designed for experimenting with end-to-end question-answering models. Mintaka
+      is composed of 20,000 question-answer pairs collected in English, annotated
+      with Wikidata entities, and translated into Arabic, French, German, Hindi, Italian,
+      Japanese, Portuguese, and Spanish for a total of 180,000 samples. Mintaka includes
+      8 types of complex questions, including superlative, intersection, and multi-hop
+      questions, which were naturally elicited from crowd workers.  Source dataset:
+      mteb/MintakaRetrieval; source subset: ja; eval split: test.'
+    source_task: MintakaRetrieval
+    source_dataset_id: mteb/MintakaRetrieval
+    source_dataset_revision: 43bc699486e768138ce3a6d4cd859da306ac9eef
+    source_dataset_subset: ja
+    source_eval_split: test
+    source_nano_split: mintaka-ja
+    hub_split: mintaka_ja
+    languages:
+    - ja
+    references:
+    - title: MintakaRetrieval source reference
+      url: https://aclanthology.org/2022.coling-1.138
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MintakaRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MintakaRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 68
+      mean_chars: 35.185
+      median_chars: 34.0
+    document_text_stats:
+      count: 1592
+      min_chars: 1
+      max_chars: 71
+      mean_chars: 9.167713567839195
+      median_chars: 9.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 1592
+        languages:
+          ja: 91.897
+          en: 4.774
+          zh: 1.319
+  miracl_ja:
+    language: ja
+    category: natural_language
+    short_description: MIRACLRetrieval retrieval split.
+    description: 'MIRACL (Multilingual Information Retrieval Across a Continuum of
+      Languages) is a multilingual retrieval dataset that focuses on search across
+      18 different languages. Source dataset: mteb/MIRACLRetrieval; source subset:
+      ja; eval split: dev.'
+    source_task: MIRACLRetrieval
+    source_dataset_id: mteb/MIRACLRetrieval
+    source_dataset_revision: 9c09abc13478308c27598f350e31d8f06b9b5481
+    source_dataset_subset: ja
+    source_eval_split: dev
+    source_nano_split: miracl-ja
+    hub_split: miracl_ja
+    languages:
+    - ja
+    references:
+    - title: MIRACLRetrieval source reference
+      url: http://miracl.ai/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MIRACLRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MIRACLRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 8
+      max_chars: 43
+      mean_chars: 17.5
+      median_chars: 17.0
+    document_text_stats:
+      count: 10000
+      min_chars: 2
+      max_chars: 3279
+      mean_chars: 180.4809
+      median_chars: 148.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.94
+  mr_tidy_japanese:
+    language: ja
+    category: natural_language
+    short_description: MrTidyRetrieval retrieval split.
+    description: 'Mr. TyDi is a multi-lingual benchmark dataset built on TyDi, covering
+      eleven typologically diverse languages. It is designed for monolingual retrieval,
+      specifically to evaluate ranking with learned dense representations. Source
+      dataset: mteb/mrtidy; source subset: japanese; eval split: test.'
+    source_task: MrTidyRetrieval
+    source_dataset_id: mteb/mrtidy
+    source_dataset_revision: fc24a3ce8f09746410daee3d5cd823ff7a0675b7
+    source_dataset_subset: japanese
+    source_eval_split: test
+    source_nano_split: mr-tidy-japanese
+    hub_split: mr_tidy_japanese
+    languages:
+    - ja
+    references:
+    - title: MrTidyRetrieval source reference
+      url: https://huggingface.co/datasets/castorini/mr-tydi
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/mrtidy Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/mrtidy
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 7
+      max_chars: 44
+      mean_chars: 18.44
+      median_chars: 17.5
+    document_text_stats:
+      count: 880
+      min_chars: 30
+      max_chars: 4324
+      mean_chars: 290.9522727272727
+      median_chars: 220.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 99.5
+          ko: 0.5
+      document:
+        sample_count: 880
+        languages:
+          ja: 99.773
+  multi_long_doc_ja:
+    language: ja
+    category: natural_language
+    short_description: MultiLongDocRetrieval retrieval split.
+    description: 'Multi Long Doc Retrieval (MLDR) ''is curated by the multilingual
+      articles from Wikipedia, Wudao and mC4 (see Table 7), and NarrativeQA (Kocˇisky
+      ́ et al., 2018; Gu ̈nther et al., 2023), which is only for English.'' (Chen
+      et al., 2024). It is constructed by sampling lengthy articles from Wikipedia,
+      Wudao and mC4 datasets and randomly choose paragraphs from them. Then we use
+      GPT-3.5 to generate questions based on these paragraphs. The generated question
+      and the sampled article constitute a new text pair to the dataset. Source dataset:
+      mteb/MultiLongDocRetrieval; source subset: ja; eval split: dev.'
+    source_task: MultiLongDocRetrieval
+    source_dataset_id: mteb/MultiLongDocRetrieval
+    source_dataset_revision: 837028901907a7d419b4ab906f28e011ce1cc824
+    source_dataset_subset: ja
+    source_eval_split: dev
+    source_nano_split: multi-long-doc-ja
+    hub_split: multi_long_doc_ja
+    languages:
+    - ja
+    references:
+    - title: MultiLongDocRetrieval source reference
+      url: https://arxiv.org/abs/2402.03216
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MultiLongDocRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MultiLongDocRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 3
+      max_chars: 576
+      mean_chars: 61.625
+      median_chars: 42.0
+    document_text_stats:
+      count: 10000
+      min_chars: 1244
+      max_chars: 234887
+      mean_chars: 14479.4331
+      median_chars: 13069.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          ja: 99.97
+  nlpjournal_abs_article:
+    language: ja
+    category: natural_language
+    short_description: NLPJournalAbsArticleRetrieval.V2 retrieval split.
+    description: 'This dataset was created from the Japanese NLP Journal LaTeX Corpus.
+      The titles, abstracts and introductions of the academic papers were shuffled.
+      The goal is to find the corresponding full article with the given abstract.
+      This is the V2 dataset (last updated 2025-06-15). Source dataset: mteb/NLPJournalAbsArticleRetrieval.V2;
+      source subset: default; eval split: test.'
+    source_task: NLPJournalAbsArticleRetrieval.V2
+    source_dataset_id: mteb/NLPJournalAbsArticleRetrieval.V2
+    source_dataset_revision: 683ad149644acc21180dceeac3a5c57eac171df3
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nlpjournal-abs-article
+    hub_split: nlpjournal_abs_article
+    languages:
+    - ja
+    references:
+    - title: NLPJournalAbsArticleRetrieval.V2 source reference
+      url: https://huggingface.co/datasets/sbintuitions/JMTEB
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/NLPJournalAbsArticleRetrieval.V2 Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/NLPJournalAbsArticleRetrieval.V2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 120
+      max_chars: 950
+      mean_chars: 494.52
+      median_chars: 486.0
+    document_text_stats:
+      count: 637
+      min_chars: 8537
+      max_chars: 92725
+      mean_chars: 28330.390894819466
+      median_chars: 26570.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 637
+        languages:
+          ja: 97.488
+          en: 1.57
+  nlpjournal_abs_intro:
+    language: ja
+    category: natural_language
+    short_description: NLPJournalAbsIntroRetrieval.V2 retrieval split.
+    description: 'This dataset was created from the Japanese NLP Journal LaTeX Corpus.
+      The titles, abstracts and introductions of the academic papers were shuffled.
+      The goal is to find the corresponding introduction with the given abstract.
+      This is the V2 dataset (last update 2025-06-15). Source dataset: mteb/NLPJournalAbsIntroRetrieval.V2;
+      source subset: default; eval split: test.'
+    source_task: NLPJournalAbsIntroRetrieval.V2
+    source_dataset_id: mteb/NLPJournalAbsIntroRetrieval.V2
+    source_dataset_revision: 8a7ae2cbcd62a3df5a880f4e4afff30a977afe0d
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nlpjournal-abs-intro
+    hub_split: nlpjournal_abs_intro
+    languages:
+    - ja
+    references:
+    - title: NLPJournalAbsIntroRetrieval.V2 source reference
+      url: https://huggingface.co/datasets/sbintuitions/JMTEB
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/NLPJournalAbsIntroRetrieval.V2 Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/NLPJournalAbsIntroRetrieval.V2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 120
+      max_chars: 950
+      mean_chars: 494.52
+      median_chars: 486.0
+    document_text_stats:
+      count: 637
+      min_chars: 304
+      max_chars: 9565
+      mean_chars: 2148.0376766091053
+      median_chars: 1990.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 100.0
+      document:
+        sample_count: 637
+        languages:
+          ja: 98.116
+          en: 0.942
+  nlpjournal_title_abs:
+    language: ja
+    category: natural_language
+    short_description: NLPJournalTitleAbsRetrieval.V2 retrieval split.
+    description: 'This dataset was created from the Japanese NLP Journal LaTeX Corpus.
+      The titles, abstracts and introductions of the academic papers were shuffled.
+      The goal is to find the corresponding abstract with the given title. This is
+      the V2 dataset (last updated 2025-06-15). Source dataset: mteb/NLPJournalTitleAbsRetrieval.V2;
+      source subset: default; eval split: test.'
+    source_task: NLPJournalTitleAbsRetrieval.V2
+    source_dataset_id: mteb/NLPJournalTitleAbsRetrieval.V2
+    source_dataset_revision: 7ea085c4107e8554f92409193358790fe40516f8
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nlpjournal-title-abs
+    hub_split: nlpjournal_title_abs
+    languages:
+    - ja
+    references:
+    - title: NLPJournalTitleAbsRetrieval.V2 source reference
+      url: https://huggingface.co/datasets/sbintuitions/JMTEB
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/NLPJournalTitleAbsRetrieval.V2 Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/NLPJournalTitleAbsRetrieval.V2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 5
+      max_chars: 71
+      mean_chars: 27.02
+      median_chars: 26.0
+    document_text_stats:
+      count: 637
+      min_chars: 18
+      max_chars: 1290
+      mean_chars: 461.51962323390893
+      median_chars: 436.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 99.5
+          en: 0.5
+      document:
+        sample_count: 637
+        languages:
+          ja: 100.0
+  nlpjournal_title_intro:
+    language: ja
+    category: natural_language
+    short_description: NLPJournalTitleIntroRetrieval.V2 retrieval split.
+    description: 'This dataset was created from the Japanese NLP Journal LaTeX Corpus.
+      The titles, abstracts and introductions of the academic papers were shuffled.
+      The goal is to find the corresponding introduction with the given title. This
+      is the V2 dataset (last updated 2025-06-15). Source dataset: mteb/NLPJournalTitleIntroRetrieval.V2;
+      source subset: default; eval split: test.'
+    source_task: NLPJournalTitleIntroRetrieval.V2
+    source_dataset_id: mteb/NLPJournalTitleIntroRetrieval.V2
+    source_dataset_revision: 39b53c8298ce1948d2a4caaa55fee5b34eeb647e
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nlpjournal-title-intro
+    hub_split: nlpjournal_title_intro
+    languages:
+    - ja
+    references:
+    - title: NLPJournalTitleIntroRetrieval.V2 source reference
+      url: https://huggingface.co/datasets/sbintuitions/JMTEB
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/NLPJournalTitleIntroRetrieval.V2 Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/NLPJournalTitleIntroRetrieval.V2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 5
+      max_chars: 71
+      mean_chars: 27.02
+      median_chars: 26.0
+    document_text_stats:
+      count: 637
+      min_chars: 304
+      max_chars: 9565
+      mean_chars: 2148.0376766091053
+      median_chars: 1990.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          ja: 99.5
+          en: 0.5
+      document:
+        sample_count: 637
+        languages:
+          ja: 98.116
+          en: 0.942

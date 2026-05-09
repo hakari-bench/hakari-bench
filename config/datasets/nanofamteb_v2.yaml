@@ -1,0 +1,893 @@
+name: NanoFaMTEB-v2
+dataset_id: hakari-bench/NanoFaMTEB-v2
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+- argu_ana_fa
+- fever_fa
+- fi_qa2018_fa
+- hotpot_qa_fa
+- miracl_fa
+- msmarco_fa
+- neu_clir2023_fas
+- nq_fa
+- persian_web_document
+- quora_fa
+- sci_fact_fa
+- scidocs_fa
+- syn_per_chatbot_ragfaq
+- syn_per_qa
+- treccovid_fa
+- web_faq_fas
+- wikipedia_multilingual_fa
+metadata:
+  language: fa
+  category: natural_language
+  short_description: NanoFaMTEB-v2 retrieval benchmark.
+  description: NanoFaMTEB-v2 is a Nano-style retrieval dataset hosted by hakari-bench.
+task_metadata:
+  argu_ana_fa:
+    language: fa
+    category: natural_language
+    short_description: ArguAna-Fa.v2 retrieval split.
+    description: 'ArguAna-Fa.v2 Source dataset: MCINext/arguana-fa-v2; source subset:
+      default; eval split: test.'
+    source_task: ArguAna-Fa.v2
+    source_dataset_id: MCINext/arguana-fa-v2
+    source_dataset_revision: 3c742a98c0c17f7041acf0895680e0ec0000786f
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: argu-ana-fa
+    hub_split: argu_ana_fa
+    languages:
+    - fa
+    references:
+    - title: ArguAna-Fa.v2 source reference
+      url: https://huggingface.co/datasets/MCINext/arguana-fa-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 199
+      min_chars: 371
+      max_chars: 4661
+      mean_chars: 1100.9849246231156
+      median_chars: 946.0
+    document_text_stats:
+      count: 8669
+      min_chars: 65
+      max_chars: 6216
+      mean_chars: 973.1475372015227
+      median_chars: 880.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 199
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 8669
+        languages:
+          fa: 100.0
+  fever_fa:
+    language: fa
+    category: natural_language
+    short_description: FEVER-FaHardNegatives retrieval split.
+    description: 'FEVER-FaHardNegatives Source dataset: MCINext/FEVER_FA_test_top_250_only_w_correct-v2;
+      source subset: default; eval split: test.'
+    source_task: FEVER-FaHardNegatives
+    source_dataset_id: MCINext/FEVER_FA_test_top_250_only_w_correct-v2
+    source_dataset_revision: 6eeb028da2a2c8f888e633a878310bf14ce33e09
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: fever-fa
+    hub_split: fever_fa
+    languages:
+    - fa
+    references:
+    - title: FEVER-FaHardNegatives source reference
+      url: https://huggingface.co/datasets/MCINext/FEVER_FA_test_top_250_only_w_correct-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 149
+      mean_chars: 47.09
+      median_chars: 43.0
+    document_text_stats:
+      count: 10000
+      min_chars: 17
+      max_chars: 5309
+      mean_chars: 523.2888
+      median_chars: 348.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 97.51
+          en: 1.63
+          mzn: 0.8
+  fi_qa2018_fa:
+    language: fa
+    category: natural_language
+    short_description: FiQA2018-Fa.v2 retrieval split.
+    description: 'FiQA2018-Fa.v2 Source dataset: MCINext/fiqa-fa-v2; source subset:
+      default; eval split: test.'
+    source_task: FiQA2018-Fa.v2
+    source_dataset_id: MCINext/fiqa-fa-v2
+    source_dataset_revision: 3443316360bb14c1ef68f609d6fe8f89b117977d
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: fi-qa2018-fa
+    hub_split: fi_qa2018_fa
+    languages:
+    - fa
+    references:
+    - title: FiQA2018-Fa.v2 source reference
+      url: https://huggingface.co/datasets/MCINext/fiqa-fa-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 12
+      max_chars: 162
+      mean_chars: 65.775
+      median_chars: 64.5
+    document_text_stats:
+      count: 10000
+      min_chars: 4
+      max_chars: 12187
+      mean_chars: 763.4903
+      median_chars: 521.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.91
+  hotpot_qa_fa:
+    language: fa
+    category: natural_language
+    short_description: HotpotQA-FaHardNegatives retrieval split.
+    description: 'HotpotQA-FaHardNegatives Source dataset: MCINext/HotpotQA_FA_test_top_250_only_w_correct-v2;
+      source subset: default; eval split: test.'
+    source_task: HotpotQA-FaHardNegatives
+    source_dataset_id: MCINext/HotpotQA_FA_test_top_250_only_w_correct-v2
+    source_dataset_revision: 42a3220e6adc48e678a6f4bbe49f226ca7d0ed83
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: hotpot-qa-fa
+    hub_split: hotpot_qa_fa
+    languages:
+    - fa
+    references:
+    - title: HotpotQA-FaHardNegatives source reference
+      url: https://huggingface.co/datasets/MCINext/HotpotQA_FA_test_top_250_only_w_correct-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 30
+      max_chars: 183
+      mean_chars: 87.885
+      median_chars: 83.5
+    document_text_stats:
+      count: 10000
+      min_chars: 35
+      max_chars: 1839
+      mean_chars: 394.8982
+      median_chars: 359.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.83
+  miracl_fa:
+    language: fa
+    category: natural_language
+    short_description: MIRACLRetrievalHardNegatives retrieval split.
+    description: 'MIRACL (Multilingual Information Retrieval Across a Continuum of
+      Languages) is a multilingual retrieval dataset that focuses on search across
+      18 different languages. The hard negative version has been created by pooling
+      the 250 top documents per query from BM25, e5-multilingual-large and e5-mistral-instruct.
+      Source dataset: mteb/MIRACLRetrievalHardNegatives; source subset: fa; eval split:
+      dev.'
+    source_task: MIRACLRetrievalHardNegatives
+    source_dataset_id: mteb/MIRACLRetrievalHardNegatives
+    source_dataset_revision: d7d94fa4b946cec4a27c84653aa0cf6b33f74a3c
+    source_dataset_subset: fa
+    source_eval_split: dev
+    source_nano_split: miracl-fa
+    hub_split: miracl_fa
+    languages:
+    - fa
+    references:
+    - title: MIRACLRetrievalHardNegatives source reference
+      url: http://miracl.ai/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/MIRACLRetrievalHardNegatives Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 18
+      max_chars: 81
+      mean_chars: 39.99
+      median_chars: 38.0
+    document_text_stats:
+      count: 10000
+      min_chars: 11
+      max_chars: 4612
+      mean_chars: 413.5466
+      median_chars: 344.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.95
+  msmarco_fa:
+    language: fa
+    category: natural_language
+    short_description: MSMARCO-FaHardNegatives retrieval split.
+    description: 'MSMARCO-FaHardNegatives Source dataset: MCINext/MSMARCO_FA_test_top_250_only_w_correct-v2;
+      source subset: default; eval split: test.'
+    source_task: MSMARCO-FaHardNegatives
+    source_dataset_id: MCINext/MSMARCO_FA_test_top_250_only_w_correct-v2
+    source_dataset_revision: 1c67fef70e75a14e416a5da6e38d0b913f9fcc62
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: msmarco-fa
+    hub_split: msmarco_fa
+    languages:
+    - fa
+    references:
+    - title: MSMARCO-FaHardNegatives source reference
+      url: https://huggingface.co/datasets/MCINext/MSMARCO_FA_test_top_250_only_w_correct-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 43
+      min_chars: 11
+      max_chars: 59
+      mean_chars: 31.488372093023255
+      median_chars: 30.0
+    document_text_stats:
+      count: 8766
+      min_chars: 19
+      max_chars: 1097
+      mean_chars: 326.20146018708647
+      median_chars: 290.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 43
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 8766
+        languages:
+          fa: 99.989
+  neu_clir2023_fas:
+    language: fa
+    category: natural_language
+    short_description: NeuCLIR2023RetrievalHardNegatives retrieval split.
+    description: 'The task involves identifying and retrieving the documents that
+      are relevant to the queries. The hard negative version has been created by pooling
+      the 250 top documents per query from BM25, e5-multilingual-large and e5-mistral-instruct.
+      Source dataset: mteb/NeuCLIR2023RetrievalHardNegatives; source subset: fas;
+      eval split: test.'
+    source_task: NeuCLIR2023RetrievalHardNegatives
+    source_dataset_id: mteb/NeuCLIR2023RetrievalHardNegatives
+    source_dataset_revision: efb44bb789b9f82223aa819e18dba3748fd09e33
+    source_dataset_subset: fas
+    source_eval_split: test
+    source_nano_split: neu-clir2023-fas
+    hub_split: neu_clir2023_fas
+    languages:
+    - fa
+    references:
+    - title: NeuCLIR2023RetrievalHardNegatives source reference
+      url: https://neuclir.github.io/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/NeuCLIR2023RetrievalHardNegatives Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/NeuCLIR2023RetrievalHardNegatives
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 74
+      min_chars: 25
+      max_chars: 126
+      mean_chars: 65.82432432432432
+      median_chars: 62.5
+    document_text_stats:
+      count: 10000
+      min_chars: 99
+      max_chars: 24117
+      mean_chars: 3121.942
+      median_chars: 2115.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 74
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 97.25
+          en: 2.63
+  nq_fa:
+    language: fa
+    category: natural_language
+    short_description: NQ-FaHardNegatives retrieval split.
+    description: 'NQ-FaHardNegatives Source dataset: MCINext/NQ_FA_test_top_250_only_w_correct-v2;
+      source subset: default; eval split: test.'
+    source_task: NQ-FaHardNegatives
+    source_dataset_id: MCINext/NQ_FA_test_top_250_only_w_correct-v2
+    source_dataset_revision: 69bb4efac89a25da5e70d15793c4ec1498dbe06f
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: nq-fa
+    hub_split: nq_fa
+    languages:
+    - fa
+    references:
+    - title: NQ-FaHardNegatives source reference
+      url: https://huggingface.co/datasets/MCINext/NQ_FA_test_top_250_only_w_correct-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 21
+      max_chars: 104
+      mean_chars: 46.72
+      median_chars: 44.0
+    document_text_stats:
+      count: 10000
+      min_chars: 16
+      max_chars: 8759
+      mean_chars: 556.8156
+      median_chars: 497.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.95
+  persian_web_document:
+    language: fa
+    category: natural_language
+    short_description: PersianWebDocumentRetrieval retrieval split.
+    description: 'Persian dataset designed specifically for the task of text information
+      retrieval through the web. Source dataset: MCINext/persian-web-document-retrieval;
+      source subset: default; eval split: test.'
+    source_task: PersianWebDocumentRetrieval
+    source_dataset_id: MCINext/persian-web-document-retrieval
+    source_dataset_revision: b3dc818368a867b30ccb55a42ff287d253512c36
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: persian-web-document
+    hub_split: persian_web_document
+    languages:
+    - fa
+    references:
+    - title: PersianWebDocumentRetrieval source reference
+      url: https://ieeexplore.ieee.org/document/10553090
+      is_paper: false
+      source_confidence: probably_correct
+    - title: MCINext/persian-web-document-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/MCINext/persian-web-document-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 4
+      max_chars: 42
+      mean_chars: 16.35
+      median_chars: 14.0
+    document_text_stats:
+      count: 10000
+      min_chars: 4
+      max_chars: 73990
+      mean_chars: 228.3112
+      median_chars: 135.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 95.5
+          ur: 1.5
+          mzn: 1.0
+          ar: 0.5
+          azb: 0.5
+          pnb: 0.5
+          ps: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.12
+  quora_fa:
+    language: fa
+    category: natural_language
+    short_description: QuoraRetrieval-Fa.v2 retrieval split.
+    description: 'QuoraRetrieval-Fa.v2 Source dataset: MCINext/quora-fa-v2; source
+      subset: default; eval split: test.'
+    source_task: QuoraRetrieval-Fa.v2
+    source_dataset_id: MCINext/quora-fa-v2
+    source_dataset_revision: 4541104f8c0e1f3932838c99197fc4ce47843267
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: quora-fa
+    hub_split: quora_fa
+    languages:
+    - fa
+    references:
+    - title: QuoraRetrieval-Fa.v2 source reference
+      url: https://huggingface.co/datasets/MCINext/quora-fa-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 13
+      max_chars: 163
+      mean_chars: 48.67
+      median_chars: 47.5
+    document_text_stats:
+      count: 10000
+      min_chars: 6
+      max_chars: 1231
+      mean_chars: 60.814
+      median_chars: 52.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.86
+  sci_fact_fa:
+    language: fa
+    category: natural_language
+    short_description: SciFact-Fa.v2 retrieval split.
+    description: 'SciFact-Fa.v2 Source dataset: MCINext/scifact-fa-v2; source subset:
+      default; eval split: test.'
+    source_task: SciFact-Fa.v2
+    source_dataset_id: MCINext/scifact-fa-v2
+    source_dataset_revision: 75937d5e71adf8040e511fab41e06bc88825a52b
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: sci-fact-fa
+    hub_split: sci_fact_fa
+    languages:
+    - fa
+    references:
+    - title: SciFact-Fa.v2 source reference
+      url: https://huggingface.co/datasets/MCINext/scifact-fa-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 32
+      max_chars: 220
+      mean_chars: 84.485
+      median_chars: 78.0
+    document_text_stats:
+      count: 5183
+      min_chars: 201
+      max_chars: 9250
+      mean_chars: 1361.3071580165927
+      median_chars: 1297.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 5183
+        languages:
+          fa: 99.981
+  scidocs_fa:
+    language: fa
+    category: natural_language
+    short_description: SCIDOCS-Fa.v2 retrieval split.
+    description: 'SCIDOCS-Fa.v2 Source dataset: MCINext/scidocs-fa-v2; source subset:
+      default; eval split: test.'
+    source_task: SCIDOCS-Fa.v2
+    source_dataset_id: MCINext/scidocs-fa-v2
+    source_dataset_revision: 930aea79c05ad5c889399c41132229c1047c8c93
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: scidocs-fa
+    hub_split: scidocs_fa
+    languages:
+    - fa
+    references:
+    - title: SCIDOCS-Fa.v2 source reference
+      url: https://huggingface.co/datasets/MCINext/scidocs-fa-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 20
+      max_chars: 161
+      mean_chars: 61.565
+      median_chars: 58.5
+    document_text_stats:
+      count: 10000
+      min_chars: 38
+      max_chars: 9782
+      mean_chars: 1092.0389
+      median_chars: 1007.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 100.0
+  syn_per_chatbot_ragfaq:
+    language: fa
+    category: natural_language
+    short_description: SynPerChatbotRAGFAQRetrieval retrieval split.
+    description: 'Synthetic Persian Chatbot RAG FAQ Retrieval Source dataset: MCINext/synthetic-persian-chatbot-rag-faq-retrieval;
+      source subset: default; eval split: test.'
+    source_task: SynPerChatbotRAGFAQRetrieval
+    source_dataset_id: MCINext/synthetic-persian-chatbot-rag-faq-retrieval
+    source_dataset_revision: 9d32af6540970e2845028cbfffe6b0d0e8f52428
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: syn-per-chatbot-ragfaq
+    hub_split: syn_per_chatbot_ragfaq
+    languages:
+    - fa
+    references:
+    - title: SynPerChatbotRAGFAQRetrieval source reference
+      url: https://huggingface.co/datasets/MCINext/synthetic-persian-chatbot-rag-faq-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 46
+      max_chars: 2446
+      mean_chars: 597.44
+      median_chars: 535.0
+    document_text_stats:
+      count: 8696
+      min_chars: 56
+      max_chars: 342
+      mean_chars: 145.69319227230912
+      median_chars: 144.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 8696
+        languages:
+          fa: 100.0
+  syn_per_qa:
+    language: fa
+    category: natural_language
+    short_description: SynPerQARetrieval retrieval split.
+    description: 'Synthetic Persian QA Retrieval Source dataset: MCINext/synthetic-persian-qa-retrieval;
+      source subset: default; eval split: test.'
+    source_task: SynPerQARetrieval
+    source_dataset_id: MCINext/synthetic-persian-qa-retrieval
+    source_dataset_revision: e85114f13f42dc1edc456d58931cc38d44d697cf
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: syn-per-qa
+    hub_split: syn_per_qa
+    languages:
+    - fa
+    references:
+    - title: SynPerQARetrieval source reference
+      url: https://huggingface.co/datasets/MCINext/synthetic-persian-qa-retrieval/
+      is_paper: false
+      source_confidence: probably_correct
+    - title: MCINext/synthetic-persian-qa-retrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/MCINext/synthetic-persian-qa-retrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 19
+      max_chars: 129
+      mean_chars: 59.81
+      median_chars: 59.0
+    document_text_stats:
+      count: 10000
+      min_chars: 12
+      max_chars: 808
+      mean_chars: 306.2192
+      median_chars: 307.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.93
+  treccovid_fa:
+    language: fa
+    category: natural_language
+    short_description: TRECCOVID-Fa.v2 retrieval split.
+    description: 'TRECCOVID-Fa.v2 Source dataset: MCINext/trec-covid-fa-v2; source
+      subset: default; eval split: test.'
+    source_task: TRECCOVID-Fa.v2
+    source_dataset_id: MCINext/trec-covid-fa-v2
+    source_dataset_revision: 2290ff195683a996a0d3e17455ce6149d4cc7b58
+    source_dataset_subset: default
+    source_eval_split: test
+    source_nano_split: treccovid-fa
+    hub_split: treccovid_fa
+    languages:
+    - fa
+    references:
+    - title: TRECCOVID-Fa.v2 source reference
+      url: https://huggingface.co/datasets/MCINext/trec-covid-fa-v2
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 50
+      min_chars: 20
+      max_chars: 233
+      mean_chars: 64.58
+      median_chars: 55.5
+    document_text_stats:
+      count: 10000
+      min_chars: 32
+      max_chars: 9745
+      mean_chars: 1210.7024
+      median_chars: 1251.5
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 50
+        languages:
+          fa: 100.0
+      document:
+        sample_count: 10000
+        languages:
+          fa: 100.0
+  web_faq_fas:
+    language: fa
+    category: natural_language
+    short_description: WebFAQRetrieval retrieval split.
+    description: 'WebFAQ is a broad-coverage corpus of natural question-answer pairs
+      in 75 languages, gathered from FAQ pages on the web. Source dataset: mteb/WebFAQRetrieval;
+      source subset: fas; eval split: test.'
+    source_task: WebFAQRetrieval
+    source_dataset_id: mteb/WebFAQRetrieval
+    source_dataset_revision: f64f483ad0f31d2e78209d524c14a4a867965959
+    source_dataset_subset: fas
+    source_eval_split: test
+    source_nano_split: web-faq-fas
+    hub_split: web_faq_fas
+    languages:
+    - fa
+    references:
+    - title: WebFAQRetrieval source reference
+      url: https://huggingface.co/PaDaS-Lab
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/WebFAQRetrieval Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 13
+      max_chars: 222
+      mean_chars: 48.005
+      median_chars: 44.5
+    document_text_stats:
+      count: 10000
+      min_chars: 30
+      max_chars: 4214
+      mean_chars: 209.6025
+      median_chars: 166.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 99.5
+          en: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.84
+  wikipedia_multilingual_fa:
+    language: fa
+    category: natural_language
+    short_description: WikipediaRetrievalMultilingual retrieval split.
+    description: 'The dataset is derived from Cohere''s wikipedia-2023-11 dataset
+      and contains synthetically generated queries. Source dataset: mteb/WikipediaRetrievalMultilingual;
+      source subset: fa; eval split: test.'
+    source_task: WikipediaRetrievalMultilingual
+    source_dataset_id: mteb/WikipediaRetrievalMultilingual
+    source_dataset_revision: 5f6c91d21f2f5b9afb663858d19848fbd223c775
+    source_dataset_subset: fa
+    source_eval_split: test
+    source_nano_split: wikipedia-multilingual-fa
+    hub_split: wikipedia_multilingual_fa
+    languages:
+    - fa
+    references:
+    - title: WikipediaRetrievalMultilingual source reference
+      url: https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
+      is_paper: false
+      source_confidence: probably_correct
+    - title: mteb/WikipediaRetrievalMultilingual Hugging Face dataset
+      url: https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual
+      is_paper: false
+      source_confidence: probably_correct
+    - title: Massive Text Embedding Benchmark (MTEB)
+      url: https://github.com/embeddings-benchmark/mteb
+      is_paper: false
+      source_confidence: probably_correct
+    query_text_stats:
+      count: 200
+      min_chars: 17
+      max_chars: 119
+      mean_chars: 49.175
+      median_chars: 46.5
+    document_text_stats:
+      count: 10000
+      min_chars: 100
+      max_chars: 4707
+      mean_chars: 352.9324
+      median_chars: 280.0
+    language_detection:
+      detector: fast-langdetect
+      min_language_percent: 0.5
+      main_language_percent: 10.0
+      query:
+        sample_count: 200
+        languages:
+          fa: 99.5
+          en: 0.5
+      document:
+        sample_count: 10000
+        languages:
+          fa: 99.37
+          en: 0.5
