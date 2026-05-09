@@ -1958,6 +1958,64 @@ def test_run_or_load_task_records_embedding_model_reranking_evaluations(tmp_path
     assert "metrics" not in run_summary_payload["splits"][0]["reranking_evaluations"][0]["distance_evaluations"][0]
 
 
+def test_run_or_load_task_writes_top100_ranking_artifact(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        embedding_variants=[],
+        candidate_subset_name="bm25",
+        rerank_top_n=1,
+        aggregate_metric="ndcg@10",
+        override=False,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"id": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    artifact = result.payload["artifacts"]["top_rankings"]
+    ranking_path = result.output_path.parent / artifact["path"]
+    ranking_payload = json.loads(ranking_path.read_text(encoding="utf-8"))
+
+    assert artifact["top_k"] == 100
+    assert artifact["path"] == "rankings/test.top100.json"
+    assert ranking_payload["schema_version"] == 1
+    assert ranking_payload["top_k"] == 100
+    assert ranking_payload["target"]["task_name"] == "test"
+    assert ranking_payload["rankings"][0] == {
+        "name": "base",
+        "ranking_kind": "retrieval",
+        "embedding_variant_name": None,
+        "distance": "dot",
+        "score_name": "dot",
+        "query_id": "q1",
+        "corpus_ids": ["d1", "d2", "d3"],
+    }
+    assert {
+        "name": "base",
+        "ranking_kind": "candidate_rerank",
+        "embedding_variant_name": None,
+        "distance": "dot",
+        "score_name": "dot_bm25_top1_rerank",
+        "query_id": "q1",
+        "corpus_ids": ["d3"],
+    } in ranking_payload["rankings"]
+
+
 def test_run_or_load_task_records_score_device(tmp_path: Path) -> None:
     task = _toy_task()
     args = argparse.Namespace(

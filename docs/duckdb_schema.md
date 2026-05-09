@@ -5,9 +5,10 @@ data in DuckDB and how a viewer should query that data.
 
 The main source table for the HTMX leaderboard viewer is `task_results`.
 `runs` contains run-level metadata, `metrics_long` contains detailed task
-metrics, `task_diagnostics` contains analysis-oriented rerank, candidate, and
-latency fields, `dataset_metadata` exposes YAML task metadata for language,
-category, citation, and text-stat analysis, and `model_scores` /
+metrics, `retrieval_rankings` contains per-query top-100 retrieved document ids,
+`task_diagnostics` contains analysis-oriented rerank, candidate, and latency
+fields, `dataset_metadata` exposes YAML task metadata for language, category,
+citation, and text-stat analysis, and `model_scores` /
 `borda_task_scores` are precomputed tables used by the static HTML report. The
 current HTMX viewer computes the leaderboard from `task_results` on each
 request and reads `task_diagnostics` / `dataset_metadata` for paper-facing
@@ -29,6 +30,9 @@ The input files are:
 
 - `output/results/{model_dir}/{huggingface_dataset_name}/{split_or_task}.json`:
   task-level benchmark results.
+- `output/results/{model_dir}/{huggingface_dataset_name}/rankings/{split_or_task}.top100.json`:
+  optional per-query top-100 ranking artifacts referenced by task JSON
+  `artifacts.top_rankings`.
 
 `load_results()` determines `benchmark` from `target.dataset_id` and
 `target.dataset_name` using `config/viewer/benchmarks.yaml`, then writes only
@@ -54,7 +58,8 @@ leave this column `NULL`.
 
 When `--parquet-output-dir` is provided, the generator also writes Parquet
 snapshots for the canonical tables: `runs`, `task_results`, `metrics_long`,
-`task_diagnostics`, `dataset_metadata`, `model_scores`, and `borda_task_scores`. These files are intended for notebooks,
+`retrieval_rankings`, `task_diagnostics`, `dataset_metadata`, `model_scores`,
+and `borda_task_scores`. These files are intended for notebooks,
 ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
 not need the mutable DuckDB database file.
 
@@ -212,6 +217,35 @@ does not use it for ranking.
 | `metric_name` | `VARCHAR` | Metric name, such as `NanoJaCWIR_ndcg@10`. |
 | `metric_value` | `DOUBLE` | Metric value. |
 | `result_path` | `VARCHAR` | Source task JSON path. |
+
+### `retrieval_rankings`
+
+`retrieval_rankings` is a normalized view of top-100 ranking artifact JSON. It
+is intended for offline metric recomputation, rank-fusion experiments, hybrid
+search simulations, and reranker candidate analysis. It is not used for
+leaderboard ranking.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `model_dir` | `VARCHAR` | Model output directory. |
+| `model_name` | `VARCHAR` | Model name. |
+| `benchmark` | `VARCHAR` | Benchmark group. |
+| `dataset_id` | `VARCHAR` | Dataset id. |
+| `dataset_revision` | `VARCHAR` | Resolved dataset revision, when recorded. |
+| `dataset_name` | `VARCHAR` | Dataset name. |
+| `split_name` | `VARCHAR` | Split name. |
+| `task_name` | `VARCHAR` | Task name. |
+| `task_key` | `VARCHAR` | Ranking task identity. |
+| `result_path` | `VARCHAR` | Source task JSON path. |
+| `ranking_path` | `VARCHAR` | Source top-100 ranking artifact path. |
+| `ranking_name` | `VARCHAR` | Ranking label, such as `base`, variant name, `bm25`, or `reranker`. |
+| `ranking_kind` | `VARCHAR` | Ranking type, such as `retrieval` or `candidate_rerank`. |
+| `embedding_variant_name` | `VARCHAR` | Embedding variant name, or `NULL` for base rows. |
+| `distance` | `VARCHAR` | Distance or scorer label, such as `dot`, `cosine`, `bm25`, or `reranker`. |
+| `score_name` | `VARCHAR` | Metric score prefix used by the evaluation. |
+| `query_id` | `VARCHAR` | Query id. |
+| `rank` | `INTEGER` | One-based rank within the saved top-100 list. |
+| `corpus_id` | `VARCHAR` | Retrieved corpus document id. |
 
 ### `task_diagnostics`
 

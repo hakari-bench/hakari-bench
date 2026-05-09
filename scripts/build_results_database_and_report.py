@@ -18,7 +18,13 @@ from hakari_bench.viewer.task_names import (
     canonical_task_key,
     canonical_task_name,
 )
-from hakari_bench.warehouse_schema import DatasetMetadataRow, MetricLongRow, TaskDiagnosticRow, TaskResultRow
+from hakari_bench.warehouse_schema import (
+    DatasetMetadataRow,
+    MetricLongRow,
+    RetrievalRankingRow,
+    TaskDiagnosticRow,
+    TaskResultRow,
+)
 
 
 DEFAULT_VIEWER_CONFIG_DIR = Path("config/viewer")
@@ -38,6 +44,7 @@ WAREHOUSE_TABLES = (
     "runs",
     "task_results",
     "metrics_long",
+    "retrieval_rankings",
     "task_diagnostics",
     "dataset_metadata",
     "model_scores",
@@ -69,7 +76,7 @@ def main() -> None:
 
     benchmark_configs = load_benchmark_configs(args.viewer_config_dir)
     target_benchmarks = target_benchmark_names(benchmark_configs)
-    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows = load_results(
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = load_results(
         args.results_dir,
         benchmark_configs=benchmark_configs,
     )
@@ -82,6 +89,7 @@ def main() -> None:
         metric_rows=metric_rows,
         diagnostic_rows=diagnostic_rows,
         dataset_metadata_rows=dataset_metadata_rows,
+        ranking_rows=ranking_rows,
         standings=standings,
         borda_rows=borda_rows,
     )
@@ -107,12 +115,14 @@ def load_results(
     list[MetricLongRow],
     list[TaskDiagnosticRow],
     list[DatasetMetadataRow],
+    list[RetrievalRankingRow],
 ]:
     rows: list[TaskResult] = []
     run_accumulators: dict[str, dict[str, Any]] = {}
     metric_rows: list[MetricLongRow] = []
     diagnostic_rows: list[TaskDiagnosticRow] = []
     dataset_metadata_rows: list[DatasetMetadataRow] = []
+    ranking_rows: list[RetrievalRankingRow] = []
     registry = DatasetRegistry.load_builtin()
     benchmark_configs = list(benchmark_configs or load_benchmark_configs())
     target_benchmarks = set(target_benchmark_names(benchmark_configs))
@@ -255,6 +265,7 @@ def load_results(
                         result_path=str(result_path),
                     )
                 )
+        ranking_rows.extend(_retrieval_ranking_rows(common=common, task_payload=task_payload, result_path=result_path))
 
     return (
         _dedupe_task_results(rows),
@@ -262,6 +273,7 @@ def load_results(
         _dedupe_metric_rows(metric_rows),
         _dedupe_task_diagnostic_rows(diagnostic_rows),
         _dedupe_dataset_metadata_rows(dataset_metadata_rows),
+        _dedupe_retrieval_ranking_rows(ranking_rows),
     )
 
 
@@ -269,6 +281,71 @@ def _model_name_from_payload(model: Any, *, model_dir: str) -> str:
     if not isinstance(model, dict):
         return model_dir
     return str(model.get("id") or model_dir)
+
+
+def _retrieval_ranking_rows(
+    *,
+    common: dict[str, Any],
+    task_payload: dict[str, Any],
+    result_path: Path,
+) -> list[RetrievalRankingRow]:
+    artifact = _top_rankings_artifact(task_payload)
+    if artifact is None:
+        return []
+    ranking_path = result_path.parent / artifact["path"]
+    if not ranking_path.exists():
+        return []
+    ranking_payload = json.loads(ranking_path.read_text(encoding="utf-8"))
+    rankings = ranking_payload.get("rankings") if isinstance(ranking_payload, dict) else None
+    if not isinstance(rankings, list):
+        return []
+
+    rows: list[RetrievalRankingRow] = []
+    for ranking in rankings:
+        if not isinstance(ranking, dict):
+            continue
+        query_id = ranking.get("query_id")
+        corpus_ids = ranking.get("corpus_ids")
+        if query_id is None or not isinstance(corpus_ids, list):
+            continue
+        for rank_index, corpus_id in enumerate(corpus_ids, start=1):
+            rows.append(
+                RetrievalRankingRow(
+                    model_dir=str(common["model_dir"]),
+                    model_name=str(common["model_name"]),
+                    benchmark=str(common["benchmark"]),
+                    dataset_id=str(common["dataset_id"]),
+                    dataset_revision=_str_or_none(common.get("dataset_revision")),
+                    dataset_name=str(common["dataset_name"]),
+                    split_name=_str_or_none(common.get("split_name")),
+                    task_name=str(common["task_name"]),
+                    task_key=str(common["task_key"]),
+                    result_path=str(result_path),
+                    ranking_path=str(ranking_path),
+                    ranking_name=_str_or_none(ranking.get("name")),
+                    ranking_kind=_str_or_none(ranking.get("ranking_kind")),
+                    embedding_variant_name=_str_or_none(ranking.get("embedding_variant_name")),
+                    distance=_str_or_none(ranking.get("distance")),
+                    score_name=_str_or_none(ranking.get("score_name")),
+                    query_id=str(query_id),
+                    rank=rank_index,
+                    corpus_id=str(corpus_id),
+                )
+            )
+    return rows
+
+
+def _top_rankings_artifact(task_payload: dict[str, Any]) -> dict[str, Any] | None:
+    artifacts = task_payload.get("artifacts")
+    if not isinstance(artifacts, dict):
+        return None
+    artifact = artifacts.get("top_rankings")
+    if not isinstance(artifact, dict):
+        return None
+    path = artifact.get("path")
+    if not isinstance(path, str) or not path:
+        return None
+    return artifact
 
 
 def _accumulate_run(
@@ -451,6 +528,13 @@ def _dedupe_dataset_metadata_rows(rows: list[DatasetMetadataRow]) -> list[Datase
     deduped: dict[str, DatasetMetadataRow] = {}
     for row in rows:
         deduped[row.task_key] = row
+    return list(deduped.values())
+
+
+def _dedupe_retrieval_ranking_rows(rows: list[RetrievalRankingRow]) -> list[RetrievalRankingRow]:
+    deduped: dict[tuple[Any, ...], RetrievalRankingRow] = {}
+    for row in rows:
+        deduped[row.duckdb_values()] = row
     return list(deduped.values())
 
 
@@ -716,6 +800,7 @@ def write_duckdb(
     runs: list[dict[str, Any]],
     rows: list[TaskResult],
     metric_rows: Sequence[MetricLongRow | dict[str, Any]],
+    ranking_rows: Sequence[RetrievalRankingRow | dict[str, Any]] = (),
     diagnostic_rows: Sequence[TaskDiagnosticRow | dict[str, Any]] = (),
     dataset_metadata_rows: Sequence[DatasetMetadataRow | dict[str, Any]] = (),
     standings: dict[str, list[dict[str, Any]]],
@@ -725,6 +810,10 @@ def write_duckdb(
     normalized_metric_rows = [
         row if isinstance(row, MetricLongRow) else MetricLongRow.model_validate(row)
         for row in metric_rows
+    ]
+    normalized_ranking_rows = [
+        row if isinstance(row, RetrievalRankingRow) else RetrievalRankingRow.model_validate(row)
+        for row in ranking_rows
     ]
     normalized_diagnostic_rows = [
         row if isinstance(row, TaskDiagnosticRow) else TaskDiagnosticRow.model_validate(row)
@@ -811,6 +900,23 @@ def write_duckdb(
             "INSERT INTO metrics_long VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [row.duckdb_values() for row in normalized_metric_rows],
         )
+        con.execute(
+            """
+            CREATE TABLE retrieval_rankings (
+                model_dir VARCHAR, model_name VARCHAR, benchmark VARCHAR,
+                dataset_id VARCHAR, dataset_revision VARCHAR, dataset_name VARCHAR,
+                split_name VARCHAR, task_name VARCHAR, task_key VARCHAR,
+                result_path VARCHAR, ranking_path VARCHAR, ranking_name VARCHAR,
+                ranking_kind VARCHAR, embedding_variant_name VARCHAR, distance VARCHAR,
+                score_name VARCHAR, query_id VARCHAR, rank INTEGER, corpus_id VARCHAR
+            )
+            """
+        )
+        if normalized_ranking_rows:
+            con.executemany(
+                "INSERT INTO retrieval_rankings VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [row.duckdb_values() for row in normalized_ranking_rows],
+            )
         con.execute(
             """
             CREATE TABLE task_diagnostics (

@@ -24,6 +24,7 @@ LATE_INTERACTION_RANKING_DEPTH = 100
 QUANTIZED_RESCORE_SCORE_REPRESENTATIONS = {
     TORCH_RESCORE_SCORE_REPRESENTATION,
 }
+TOP_RANKING_ARTIFACT_DEPTH = 100
 
 
 @dataclass(frozen=True)
@@ -44,6 +45,7 @@ class TaskEvaluation:
     rerank_metrics: dict[str, float] = field(default_factory=dict)
     reranking_evaluations: list[dict[str, Any]] = field(default_factory=list)
     rerank_aggregate_metric_value: float | None = None
+    top_rankings: list[dict[str, Any]] = field(default_factory=list)
 
 
 def load_ir_dataset(
@@ -237,6 +239,7 @@ def evaluate_dense_task(
             aggregate_metric=aggregate_metric,
         )
     ]
+    top_rankings = list(cast(list[dict[str, Any]], base_scoring["top_rankings"]))
 
     variant_score_seconds = 0.0
     variant_metric_seconds = 0.0
@@ -264,6 +267,7 @@ def evaluate_dense_task(
 
         variant_metric_elapsed = float(variant_scoring["metric_seconds"])
         variant_metric_seconds += variant_metric_elapsed
+        top_rankings.extend(cast(list[dict[str, Any]], variant_scoring["top_rankings"]))
         embedding_evaluations.append(
             _embedding_evaluation_payload(
                 name=str(variant["name"]),
@@ -300,6 +304,7 @@ def evaluate_dense_task(
         },
         embedding_conversion=embedding_conversion,
         embedding_evaluations=embedding_evaluations,
+        top_rankings=top_rankings,
     )
 
 
@@ -371,6 +376,16 @@ def evaluate_reranker_task(
             "metric_compute_seconds": float(metric_seconds),
             "pure_compute_seconds": float(score_seconds + metric_seconds),
         },
+        top_rankings=[
+            top_ranking_payload(
+                name="reranker",
+                ranking_kind="candidate_rerank",
+                embedding_variant_name=None,
+                distance="reranker",
+                score_name="reranker",
+                rankings=rankings,
+            )
+        ],
     )
 
 
@@ -503,6 +518,16 @@ def evaluate_late_interaction_task(
     )
     embedding_evaluation["index"] = index_payload
     embedding_evaluations = [embedding_evaluation]
+    top_rankings = [
+        top_ranking_payload(
+            name="base",
+            ranking_kind="retrieval",
+            embedding_variant_name=None,
+            distance=distance_name,
+            score_name=score_name,
+            rankings=rankings,
+        )
+    ]
 
     variant_score_seconds = 0.0
     variant_metric_seconds = 0.0
@@ -582,6 +607,16 @@ def evaluate_late_interaction_task(
             },
         }
         embedding_evaluations.append(variant_evaluation)
+        top_rankings.append(
+            top_ranking_payload(
+                name=variant_name,
+                ranking_kind="retrieval",
+                embedding_variant_name=variant_name,
+                distance=distance_name,
+                score_name=variant_score_name,
+                rankings=variant_rankings,
+            )
+        )
 
     return TaskEvaluation(
         metrics=metrics,
@@ -614,6 +649,7 @@ def evaluate_late_interaction_task(
             ),
         },
         embedding_evaluations=embedding_evaluations,
+        top_rankings=top_rankings,
     )
 
 
@@ -1085,6 +1121,7 @@ def _score_embedding_distances(
     distance_evaluations: list[dict[str, Any]] = []
     rerank_distance_evaluations: list[dict[str, Any]] = []
     rerank_metrics_by_distance: list[dict[str, float]] = []
+    top_rankings: list[dict[str, Any]] = []
     candidate_coverage = (
         candidate_coverage_for_qrels(qrels=qrels, candidates=candidates, top_k=rerank_top_n)
         if candidates is not None
@@ -1115,6 +1152,16 @@ def _score_embedding_distances(
         )
         metric_elapsed = time.perf_counter() - metric_start
         metric_seconds += metric_elapsed
+        top_rankings.append(
+            top_ranking_payload(
+                name=variant_name or "base",
+                ranking_kind="retrieval",
+                embedding_variant_name=variant_name,
+                distance=distance,
+                score_name=metric_score_name,
+                rankings=rankings,
+            )
+        )
 
         if candidates is not None:
             rerank_score_name = f"{metric_score_name}_bm25_top{rerank_top_n}_rerank"
@@ -1137,6 +1184,16 @@ def _score_embedding_distances(
             rerank_metric_elapsed = time.perf_counter() - rerank_metric_start
             metric_seconds += rerank_metric_elapsed
             rerank_aggregate_metric_value = _aggregate_metric_value_for(rerank_metrics, aggregate_metric)
+            top_rankings.append(
+                top_ranking_payload(
+                    name=variant_name or "base",
+                    ranking_kind="candidate_rerank",
+                    embedding_variant_name=variant_name,
+                    distance=distance,
+                    score_name=rerank_score_name,
+                    rankings=rerank_rankings,
+                )
+            )
             rerank_distance_evaluations.append(
                 {
                     "distance": distance,
@@ -1186,8 +1243,29 @@ def _score_embedding_distances(
         "rerank_metrics": _merge_metric_dicts(rerank_metrics_by_distance),
         "rerank_aggregate_metric_value": reranking_evaluation.get("aggregate_metric_value"),
         "reranking_evaluation": reranking_evaluation,
+        "top_rankings": top_rankings,
         "score_seconds": score_seconds,
         "metric_seconds": metric_seconds,
+    }
+
+
+def top_ranking_payload(
+    *,
+    name: str,
+    ranking_kind: str,
+    embedding_variant_name: str | None,
+    distance: str,
+    score_name: str,
+    rankings: dict[str, list[str]],
+    top_k: int = TOP_RANKING_ARTIFACT_DEPTH,
+) -> dict[str, Any]:
+    return {
+        "name": name,
+        "ranking_kind": ranking_kind,
+        "embedding_variant_name": embedding_variant_name,
+        "distance": distance,
+        "score_name": score_name,
+        "rankings": {query_id: corpus_ids[:top_k] for query_id, corpus_ids in rankings.items()},
     }
 
 

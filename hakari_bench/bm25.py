@@ -212,6 +212,7 @@ def evaluate_bm25_task(
     source: BM25EvaluationSource = "dataset_candidate_subset",
 ) -> Any:
     from hakari_bench.evaluation import TaskEvaluation
+    from hakari_bench.evaluation import top_ranking_payload
 
     score_start = time.perf_counter()
     if source == "dataset_candidate_subset":
@@ -251,6 +252,16 @@ def evaluate_bm25_task(
             "metric_compute_seconds": float(metric_seconds),
             "pure_compute_seconds": float(score_seconds + metric_seconds),
         },
+        top_rankings=[
+            top_ranking_payload(
+                name="bm25",
+                ranking_kind="retrieval",
+                embedding_variant_name=None,
+                distance="bm25",
+                score_name=score_name,
+                rankings=rankings,
+            )
+        ],
     )
 
 

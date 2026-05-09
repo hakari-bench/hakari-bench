@@ -116,6 +116,51 @@ class MetricLongRow(WarehouseModel):
         )
 
 
+class RetrievalRankingRow(WarehouseModel):
+    model_dir: str
+    model_name: str
+    benchmark: str
+    dataset_id: str
+    dataset_revision: str | None = None
+    dataset_name: str
+    split_name: str | None = None
+    task_name: str
+    task_key: str
+    result_path: str
+    ranking_path: str
+    ranking_name: str | None = None
+    ranking_kind: str | None = None
+    embedding_variant_name: str | None = None
+    distance: str | None = None
+    score_name: str | None = None
+    query_id: str
+    rank: int
+    corpus_id: str
+
+    def duckdb_values(self) -> tuple[object, ...]:
+        return (
+            self.model_dir,
+            self.model_name,
+            self.benchmark,
+            self.dataset_id,
+            self.dataset_revision,
+            self.dataset_name,
+            self.split_name,
+            self.task_name,
+            self.task_key,
+            self.result_path,
+            self.ranking_path,
+            self.ranking_name,
+            self.ranking_kind,
+            self.embedding_variant_name,
+            self.distance,
+            self.score_name,
+            self.query_id,
+            self.rank,
+            self.corpus_id,
+        )
+
+
 class TaskDiagnosticRow(WarehouseModel):
     model_dir: str
     model_name: str

@@ -21,6 +21,7 @@ from hakari_bench.bm25 import (
 from hakari_bench.datasets import EvalTask, resolve_dataset_revision
 from hakari_bench.evaluation import (
     LoadedIrDataset,
+    TOP_RANKING_ARTIFACT_DEPTH,
     evaluate_dense_task,
     evaluate_late_interaction_task,
     evaluate_reranker_task,
@@ -85,6 +86,11 @@ def result_path_for_task(*, output_dir: Path, model_id: str, task: EvalTask) -> 
         / safe_path_part(task.dataset_id)
         / f"{safe_path_part(task.task_name)}.json"
     )
+
+
+def top_rankings_path_for_task(*, output_dir: Path, model_id: str, task: EvalTask) -> Path:
+    result_path = result_path_for_task(output_dir=output_dir, model_id=model_id, task=task)
+    return result_path.parent / "rankings" / f"{result_path.stem}.top100.json"
 
 
 def run_or_load_task(
@@ -284,9 +290,68 @@ def run_or_load_task(
         "metrics": evaluation.metrics,
         "rerank_metrics": evaluation.rerank_metrics,
     }
+    if evaluation.top_rankings:
+        ranking_path = top_rankings_path_for_task(
+            output_dir=Path(args.output_dir),
+            model_id=getattr(args, "model_id", args.model),
+            task=task,
+        )
+        artifact_payload = _top_rankings_artifact_payload(
+            payload=payload,
+            top_rankings=evaluation.top_rankings,
+            top_k=TOP_RANKING_ARTIFACT_DEPTH,
+        )
+        relative_ranking_path = ranking_path.relative_to(output_path.parent).as_posix()
+        payload["artifacts"] = {
+            "top_rankings": {
+                "schema_version": artifact_payload["schema_version"],
+                "top_k": artifact_payload["top_k"],
+                "path": relative_ranking_path,
+            }
+        }
+        _write_json(ranking_path, artifact_payload)
     payload["experiment_manifest"] = build_experiment_manifest(payload)
     _write_json(output_path, payload)
     return TaskRunResult(task=task, cache_hit=False, output_path=output_path, payload=payload)
+
+
+def _top_rankings_artifact_payload(
+    *,
+    payload: dict[str, Any],
+    top_rankings: list[dict[str, Any]],
+    top_k: int,
+) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "top_k": int(top_k),
+        "model": payload.get("model"),
+        "target": payload.get("target"),
+        "rankings": _top_ranking_rows(top_rankings, top_k=top_k),
+    }
+
+
+def _top_ranking_rows(top_rankings: list[dict[str, Any]], *, top_k: int) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for item in top_rankings:
+        rankings = item.get("rankings")
+        if not isinstance(rankings, dict):
+            continue
+        for query_id, corpus_ids in rankings.items():
+            if not isinstance(corpus_ids, list):
+                continue
+            rows.append(
+                {
+                    "name": item.get("name"),
+                    "ranking_kind": item.get("ranking_kind"),
+                    "embedding_variant_name": item.get("embedding_variant_name"),
+                    "distance": item.get("distance"),
+                    "score_name": item.get("score_name"),
+                    "query_id": str(query_id),
+                    "corpus_ids": [str(corpus_id) for corpus_id in corpus_ids[:top_k]],
+                }
+            )
+    return rows
 
 
 def build_experiment_manifest(payload: dict[str, Any]) -> dict[str, Any]:
