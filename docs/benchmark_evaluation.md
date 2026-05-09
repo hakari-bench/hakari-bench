@@ -217,6 +217,23 @@ Respect existing result JSON. Cached results are skipped unless `--overwrite`
 is provided. Use `--overwrite` only when correcting an intentionally changed run
 configuration.
 
+When all required Hugging Face datasets and models are already available in the
+local cache, run benchmark commands with `HF_DATASETS_OFFLINE=1` and
+`HF_HUB_OFFLINE=1`. This prevents the datasets and hub clients from calling the
+Hugging Face API for metadata checks, which can make repeated local evaluation
+runs faster and less sensitive to transient hub errors. Do not use these
+variables for a first run or any run that needs to download missing artifacts.
+
+Example:
+
+```bash
+HF_DATASETS_OFFLINE=1 HF_HUB_OFFLINE=1 \
+  uv run hakari-bench evaluate dense \
+    --model MODEL_NAME \
+    --dataset DATASET_NAME \
+    --dtype bf16
+```
+
 ## Result Hygiene
 
 Per-task result JSON should preserve enough metadata to explain the run:
