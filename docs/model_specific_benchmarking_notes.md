@@ -220,16 +220,23 @@ Applies to:
 - `hotchpotch/bekko-embedding-pico-beta-unir-v7`
 - `hotchpotch/bekko-embedding-small-beta-unir-v8`
 - `hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT`
+- `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR`
+- `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR-pt`
 
 Use the stored Sentence Transformers retrieval prompt names:
 
 - query prompt name: `query`
-- document prompt name: `document`
+- document prompt name: `passage`
 
 These map to:
 
 - query: `query: `
-- document: `passage: `
+- passage: `passage: `
+
+The configs also define `document` and `corpus` aliases that map to
+`passage: `, but use `passage` for benchmark runs so metadata follows the
+model card recommendation. Do not manually add `query: ` or `passage: ` when
+using prompt names; that would apply the prefix twice.
 
 Example:
 
@@ -237,16 +244,24 @@ Example:
 uv run hakari-bench evaluate dense \
   --model hotchpotch/bekko-embedding-small-beta-unir-v8 \
   --query-prompt-name query \
-  --document-prompt-name document
+  --document-prompt-name passage \
+  --embedding-variant truncate:256,128,64
 ```
 
 Truncation notes:
 
-- `hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT` documents
-  Matryoshka support.
-- Use `--embedding-variant truncate:384,256,128,64` for that model.
-- Do not assume the same truncation plan for the other Bekko checkpoints unless
-  their model cards or configs explicitly document it.
+- `hotchpotch/bekko-embedding-pico-beta-unir-v7` documents base dim 384 and
+  Matryoshka dims `256,128,64`.
+- `hotchpotch/bekko-embedding-small-beta-unir-v8` documents base dim 384 and
+  Matryoshka dims `256,128,64`.
+- `hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT` documents supported
+  `truncate_dim` values `384,256,128,64`.
+- `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR` documents supported
+  `truncate_dim` values `384,256,128,64`. Use `256,128,64` for compact
+  comparisons matching the GOR-pt run unless explicitly measuring the
+  standalone 384-dimensional truncation variant.
+- `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR-pt` recommends
+  `truncate_dim` values `256,128,64`.
 
 ## Jina Embeddings v5
 
