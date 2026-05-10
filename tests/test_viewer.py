@@ -7,11 +7,16 @@ from pathlib import Path
 import duckdb
 import pytest
 
-from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, create_app
+from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, _view_group, create_app
 from hakari_bench.viewer.config import load_viewer_config
 from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, compute_leaderboard_rows
 from hakari_bench.viewer.model_display import model_cell_views
-from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore, resolve_duckdb_location
+from hakari_bench.viewer.store import (
+    DuckDbLocation,
+    HuggingFaceDuckDbSource,
+    LocalDuckDbStore,
+    resolve_duckdb_location,
+)
 
 
 def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> None:
@@ -127,6 +132,15 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
     assert [group.name for group in mnanobeir.resolved_score_groups] == ["task_mean", "lang_mean"]
 
 
+def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> None:
+    assert _view_group("NanoMMTEB-v2") == "Core benchmarks"
+    assert _view_group("MNanoBEIR") == "Core benchmarks"
+    assert _view_group("NanoRTEB") == "Core benchmarks"
+    assert _view_group("NanoMLDR") == "Domain-specific"
+    assert _view_group("NanoLongEmbed") == "Domain-specific"
+    assert _view_group("NanoBIRCO") == "Domain-specific"
+
+
 def test_viewer_config_rejects_unknown_group_by(tmp_path: Path) -> None:
     config_dir = tmp_path / "config"
     config_dir.mkdir()
@@ -202,8 +216,22 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     response = TestClient(app).get("/")
 
     assert response.status_code == 200
+    assert "<title>HAKARI-bench leaderboard</title>" in response.text
+    assert "HAKARI-bench leaderboard" in response.text
+    assert '<p class="text-sm font-medium text-cyan-700">HAKARI-bench leaderboard</p>' not in response.text
+    assert (
+        "🚧 WIP: This leaderboard is currently under active implementation, "
+        "so specifications and data may change significantly."
+    ) in response.text
+    assert "DuckDB:" not in response.text
+    assert str(db_path) not in response.text
     assert "Benchmark coverage" in response.text
     assert "Models" in response.text
+    assert '<link rel="stylesheet" href="/assets/app.css">' in response.text
+    assert '<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">' in response.text
+    assert '<script src="/assets/htmx.min.js"></script>' in response.text
+    assert "https://cdn.tailwindcss.com" not in response.text
+    assert "https://unpkg.com/htmx.org" not in response.text
     assert 'hx-get="/leaderboard?view=Overall' in response.text
 
     leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
@@ -214,6 +242,39 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert "Dataset diagnostics" in leaderboard_response.text
     assert 'hx-get="/analysis?panel=variants&amp;view=BenchA"' in leaderboard_response.text
     assert 'data-testid="summary-card-models"' in response.text
+
+
+def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    client = TestClient(app)
+
+    response = client.get("/assets/favicon.svg")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("image/svg+xml")
+    assert '<title id="title">HAKARI favicon</title>' in response.text
+    assert 'mask id="scale-cutout"' in response.text
+
+    css_response = client.get("/assets/app.css")
+    assert css_response.status_code == 200
+    assert css_response.headers["content-type"].startswith("text/css")
+    assert "prefers-color-scheme:dark" in css_response.text
+    assert "color-scheme:light dark" in css_response.text
+
+    htmx_response = client.get("/assets/htmx.min.js")
+    assert htmx_response.status_code == 200
+    assert "htmx" in htmx_response.text
+
+    legacy_favicon_response = client.get("/favicon.svg")
+    assert legacy_favicon_response.status_code == 200
+    assert '<title id="title">HAKARI favicon</title>' in legacy_favicon_response.text
 
 
 def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_path: Path) -> None:
@@ -1372,6 +1433,71 @@ def test_resolve_duckdb_location_uses_source_results_dir(tmp_path: Path) -> None
     )
 
     assert location.source_path == source_duckdb
+
+
+def test_resolve_duckdb_location_uses_environment_paths(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    local = tmp_path / "from-env.duckdb"
+    source = tmp_path / "source.duckdb"
+    source.write_bytes(b"duckdb")
+    monkeypatch.setenv("HAKARI_BENCH_VIEWER_DUCKDB_PATH", str(local))
+    monkeypatch.setenv("HAKARI_BENCH_VIEWER_SOURCE_DUCKDB_PATH", str(source))
+
+    location = resolve_duckdb_location(
+        data_dir=tmp_path / "viewer",
+        duckdb_path=None,
+        source_results_dir=None,
+        source_duckdb_path=None,
+    )
+
+    assert location.local_path == local
+    assert location.source_path == source
+    assert location.hf_source is None
+
+
+def test_resolve_duckdb_location_uses_hf_dataset_environment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID", "hakari-bench/leaderboard_database")
+    monkeypatch.setenv("HAKARI_BENCH_VIEWER_HF_DATASET_PATH", "duckdb/hakari_bench.duckdb")
+    monkeypatch.setenv("HAKARI_BENCH_VIEWER_HF_DATASET_REVISION", "main")
+
+    location = resolve_duckdb_location(
+        data_dir=tmp_path,
+        duckdb_path=None,
+        source_results_dir=None,
+        source_duckdb_path=None,
+    )
+
+    assert location.local_path == tmp_path / "hakari_bench.duckdb"
+    assert location.source_path is None
+    assert location.hf_source == HuggingFaceDuckDbSource(
+        repo_id="hakari-bench/leaderboard_database",
+        filename="duckdb/hakari_bench.duckdb",
+        revision="main",
+    )
+
+
+def test_local_duckdb_store_downloads_hf_dataset_source(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    downloaded = tmp_path / "hf-cache.duckdb"
+    downloaded.write_bytes(b"hf")
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    calls: list[HuggingFaceDuckDbSource] = []
+
+    def fake_download(source: HuggingFaceDuckDbSource) -> Path:
+        calls.append(source)
+        return downloaded
+
+    monkeypatch.setattr("hakari_bench.viewer.store._download_hf_duckdb", fake_download)
+    source = HuggingFaceDuckDbSource(
+        repo_id="hakari-bench/leaderboard_database",
+        filename="duckdb/hakari_bench.duckdb",
+        revision="main",
+    )
+    store = LocalDuckDbStore(DuckDbLocation(local_path=local, hf_source=source))
+
+    assert store.ensure_current() is True
+    assert local.read_bytes() == b"hf"
+    assert calls == [source]
 
 
 def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:

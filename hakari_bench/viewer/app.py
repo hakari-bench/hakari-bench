@@ -38,6 +38,8 @@ from hakari_bench.viewer.variant_display import (
     variant_display_flags_from_query,
 )
 
+ASSETS_DIR = Path(__file__).with_name("assets")
+
 
 class ViewerAppConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -48,10 +50,16 @@ class ViewerAppConfig(BaseModel):
 
 def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewer")):
     from fastapi import FastAPI, Query
-    from fastapi.responses import HTMLResponse
+    from fastapi.responses import FileResponse, HTMLResponse
+    from fastapi.staticfiles import StaticFiles
 
     viewer_config = load_viewer_config(config_dir)
-    app = FastAPI(title="HAKARI-Bench Viewer")
+    app = FastAPI(title="HAKARI-bench leaderboard")
+    app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
+
+    @app.get("/favicon.svg")
+    def favicon() -> FileResponse:
+        return FileResponse(ASSETS_DIR / "favicon.svg", media_type="image/svg+xml")
 
     @app.get("/", response_class=HTMLResponse)
     def index(
@@ -226,18 +234,18 @@ def render_page(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HAKARI-Bench Viewer</title>
+  <title>HAKARI-bench leaderboard</title>
   <link rel="canonical" href="/">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/htmx.org@2.0.8"></script>
+  <link rel="stylesheet" href="/assets/app.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/htmx.min.js"></script>
 </head>
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
     <header class="mb-5 border-b border-zinc-200 pb-4">
-      <p class="text-sm font-medium text-cyan-700">HAKARI-Bench viewer</p>
-      <h1 class="mt-1 text-2xl font-semibold">Retrieval benchmark explorer</h1>
+      <h1 class="text-2xl font-semibold">HAKARI-bench leaderboard</h1>
+      <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
       <p class="mt-2 max-w-4xl text-sm text-zinc-600">Compare multilingual retrieval models, inspect compression variants, and audit reranking and Nano subset diagnostics from the DuckDB result warehouse.</p>
-      <p class="mt-2 text-xs text-zinc-500">DuckDB: <span class="font-mono">{escape(str(duckdb_path))}</span></p>
     </header>
     {render_summary_cards(summary or ViewerSummary())}
     <section
@@ -407,7 +415,7 @@ def _view_group(view_name: str) -> str:
         return "Overall"
     if view_name.startswith("NanoMTEB-") or view_name == "NanoMIRACL":
         return "Language-specific"
-    if view_name in {"MNanoBEIR", "NanoMMTEB", "NanoRTEB", "NanoMTEB", "NanoMLDR", "NanoLongEmbed"}:
+    if view_name in {"NanoMMTEB-v2", "MNanoBEIR", "NanoRTEB"}:
         return "Core benchmarks"
     return "Domain-specific"
 
