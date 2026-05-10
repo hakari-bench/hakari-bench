@@ -18,6 +18,7 @@ def _validate_non_empty_strings(value: list[str], field_name: str) -> list[str]:
 class ModelParams(ParamsModel):
     source: str | None = None
     alias: str | None = None
+    revision: str | None = None
 
 
 class TargetParams(ParamsModel):

@@ -125,6 +125,7 @@ def _add_evaluate_model_args(parser: argparse.ArgumentParser) -> None:
     _add_params_arg(parser)
     parser.add_argument("--model", default=None, help="Hugging Face model id or local model path.")
     parser.add_argument("--model-alias", default=None, help="Display/storage alias for a local model path.")
+    parser.add_argument("--model-revision", default=None, help="Hugging Face model revision to evaluate.")
 
 
 def _add_evaluate_runtime_args(parser: argparse.ArgumentParser) -> None:
@@ -427,6 +428,7 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
         args.no_default_embedding_variants = False
     args.model = getattr(args, "model", None)
     args.model_alias = getattr(args, "model_alias", None)
+    args.model_revision = getattr(args, "model_revision", None)
     args.dtype = getattr(args, "dtype", "bf16")
     args.trust_remote_code = getattr(args, "trust_remote_code", False)
     args.truncate_dim = getattr(args, "truncate_dim", None)
@@ -497,7 +499,7 @@ def _apply_model_identity(args: argparse.Namespace) -> None:
         return
     is_local = _is_local_model_path(model)
     args.model_id = _model_id_for(model, alias=alias, is_local=is_local)
-    args.model_source = _model_source_for(model, is_local=is_local)
+    args.model_source = _model_source_for(model, is_local=is_local, revision=args.model_revision)
 
 
 def _is_local_model_path(value: str) -> bool:
@@ -517,11 +519,14 @@ def _model_id_for(model: str, *, alias: str | None, is_local: bool) -> str:
     return model
 
 
-def _model_source_for(model: str, *, is_local: bool) -> dict[str, str]:
+def _model_source_for(model: str, *, is_local: bool, revision: str | None = None) -> dict[str, str]:
     if is_local:
         path = Path(model).expanduser().resolve(strict=False)
         return {"type": "local_path", "path": str(path)}
-    return {"type": "huggingface", "name": model}
+    source = {"type": "huggingface", "name": model}
+    if revision is not None:
+        source["revision_requested"] = revision
+    return source
 
 
 def _apply_evaluate_params_json(args: argparse.Namespace) -> None:
@@ -581,11 +586,13 @@ def _reject_unknown_keys(value: dict[str, Any], *, allowed: set[str], path: str)
 
 
 def _apply_model_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
-    _reject_unknown_keys(value, allowed={"source", "alias"}, path="params.model")
+    _reject_unknown_keys(value, allowed={"source", "alias", "revision"}, path="params.model")
     if "source" in value:
         args.model = _string_param(value["source"], "params.model.source")
     if "alias" in value:
         args.model_alias = _string_param(value["alias"], "params.model.alias")
+    if "revision" in value:
+        args.model_revision = _optional_string_param(value["revision"], "params.model.revision")
 
 
 def _apply_target_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
@@ -910,6 +917,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
             ModelLoadConfig(
                 model_name_or_path=args.model,
                 model_type=args.model_type,
+                model_revision=args.model_revision,
                 dtype=args.dtype,
                 attn_implementation=args.attn_implementation,
                 flash_attn2=args.flash_attn2,

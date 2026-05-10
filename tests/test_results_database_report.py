@@ -146,6 +146,12 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
             {
                 "model": {
                     "id": "example/model",
+                    "source": {
+                        "type": "huggingface",
+                        "name": "example/model",
+                        "revision_requested": "main",
+                        "revision": "model-sha",
+                    },
                     "active_parameters": 3,
                     "total_parameters": 5,
                     "max_seq_length": 8192,
@@ -232,6 +238,8 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert rows[0].dataset_name == "NanoJMTEB-v2"
     assert rows[0].score == 0.42
     assert rows[0].dataset_revision == "dataset-sha"
+    assert rows[0].model_revision == "model-sha"
+    assert rows[0].model_revision_requested == "main"
     assert rows[0].experiment_fingerprint == "abc123"
     assert rows[0].active_parameters == 3
     assert rows[0].total_parameters == 5
@@ -269,6 +277,34 @@ def test_task_result_row_schema_rejects_unknown_fields() -> None:
                 "unexpected": True,
             }
         )
+
+
+def test_load_results_allows_missing_model_revision_for_existing_results(tmp_path: Path) -> None:
+    model_dir = tmp_path / "model"
+    task_path = model_dir / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    task_path.parent.mkdir(parents=True)
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {"id": "example/model"},
+                "target": {
+                    "dataset_name": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "split_name": "ja_cwir",
+                    "task_name": "ja_cwir",
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.42},
+                "metrics": {"ja_cwir_ndcg@10": 0.42},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    rows, *_ = report.load_results(tmp_path)
+
+    assert len(rows) == 1
+    assert rows[0].model_revision is None
+    assert rows[0].model_revision_requested is None
 
 
 def test_metric_long_row_schema_exports_duckdb_values() -> None:
@@ -540,6 +576,8 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
         dataset_id="hakari-bench/NanoJMTEB-v2",
         dataset_revision="dataset-sha",
         dataset_revision_requested="main",
+        model_revision="model-sha",
+        model_revision_requested="main",
         dataset_name="NanoJMTEB-v2",
         split_name="ja_cwir",
         task_name="ja_cwir",
@@ -642,10 +680,9 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
             "transformers_version",
             "sentence_transformers_version",
         ]
-        assert con.execute("SELECT dataset_revision, dataset_revision_requested FROM task_results").fetchone() == (
-            "dataset-sha",
-            "main",
-        )
+        assert con.execute(
+            "SELECT dataset_revision, dataset_revision_requested, model_revision, model_revision_requested FROM task_results"
+        ).fetchone() == ("dataset-sha", "main", "model-sha", "main")
         assert con.execute(
             """
             SELECT query_prompt, document_prompt, query_prompt_name, document_prompt_name,
