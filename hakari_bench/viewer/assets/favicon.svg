@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">HAKARI favicon</title>
+  <desc id="desc">A white circular favicon with a transparent balance scale cutout.</desc>
+  <defs>
+    <mask id="scale-cutout" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="black"/>
+      <circle cx="32" cy="32" r="30" fill="white"/>
+      <g fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke-width="4.6" d="M32 15v35"/>
+        <path stroke-width="4.6" d="M18 22h28"/>
+        <path stroke-width="4.6" d="M32 17l-14 5"/>
+        <path stroke-width="4.6" d="M32 17l14 5"/>
+        <path stroke-width="3.8" d="M18 22l-7 15"/>
+        <path stroke-width="3.8" d="M18 22l7 15"/>
+        <path stroke-width="3.8" d="M46 22l-7 15"/>
+        <path stroke-width="3.8" d="M46 22l7 15"/>
+        <path stroke-width="4.4" d="M24 50h16"/>
+      </g>
+      <circle cx="32" cy="17" r="4.2" fill="black"/>
+      <path fill="black" d="M9.2 37.5h17.6c.9 0 1.5.9 1.2 1.7-1.7 4.2-5 6.6-9.9 6.6-5 0-8.3-2.4-10-6.6-.3-.8.2-1.7 1.1-1.7Z"/>
+      <path fill="black" d="M37.2 37.5h17.6c.9 0 1.5.9 1.2 1.7-1.7 4.2-5 6.6-9.9 6.6-5 0-8.3-2.4-10-6.6-.3-.8.2-1.7 1.1-1.7Z"/>
+      <path fill="black" d="M27.2 50h9.6l3.3 5H23.9l3.3-5Z"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="white" mask="url(#scale-cutout)"/>
+</svg>

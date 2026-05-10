@@ -109,10 +109,13 @@ def build_parser() -> argparse.ArgumentParser:
     web.add_argument("--duckdb-path", default=None, help="Local DuckDB path. Defaults to DATA_DIR/hakari_bench.duckdb.")
     web.add_argument(
         "--source-results-dir",
-        default="../hakari-bench/output/results",
+        default=None,
         help="Source benchmark results directory containing hakari_bench.duckdb.",
     )
     web.add_argument("--source-duckdb-path", default=None, help="Explicit source DuckDB path to copy from.")
+    web.add_argument("--hf-dataset-repo-id", default=None, help="Hugging Face dataset repo containing the viewer DuckDB.")
+    web.add_argument("--hf-dataset-path", default=None, help="DuckDB file path inside the Hugging Face dataset repo.")
+    web.add_argument("--hf-dataset-revision", default=None, help="Hugging Face dataset revision to download.")
     web.add_argument("--viewer-config-dir", default="config/viewer", help="Viewer YAML config directory.")
     return parser
 
@@ -1063,6 +1066,9 @@ def run_web(args: argparse.Namespace) -> None:
         duckdb_path=Path(args.duckdb_path) if args.duckdb_path else None,
         source_results_dir=Path(args.source_results_dir) if args.source_results_dir else None,
         source_duckdb_path=Path(args.source_duckdb_path) if args.source_duckdb_path else None,
+        hf_dataset_repo_id=args.hf_dataset_repo_id,
+        hf_dataset_path=args.hf_dataset_path,
+        hf_dataset_revision=args.hf_dataset_revision,
     )
     store = LocalDuckDbStore(location)
     store.ensure_current()
@@ -1071,6 +1077,8 @@ def run_web(args: argparse.Namespace) -> None:
     print(f"Local DuckDB: {location.local_path}")
     if location.source_path is not None:
         print(f"Source DuckDB: {location.source_path}")
+    if location.hf_source is not None:
+        print(f"Source DuckDB: hf://datasets/{location.hf_source.repo_id}/{location.hf_source.filename}")
     uvicorn.run(app, host=args.host, port=args.port)
 
 

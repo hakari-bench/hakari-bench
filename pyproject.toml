@@ -48,6 +48,9 @@ pythonpath = ["."]
 include = ["hakari_bench*"]
 exclude = ["config*", "tests*"]
 
+[tool.setuptools.package-data]
+"hakari_bench.viewer" = ["assets/*"]
+
 [tool.uv]
 package = true
 dependency-metadata = [

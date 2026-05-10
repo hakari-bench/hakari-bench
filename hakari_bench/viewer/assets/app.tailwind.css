@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer utilities {
+  @media (prefers-color-scheme: dark) {
+    .bg-white {
+      background-color: theme("colors.zinc.950");
+    }
+
+    .bg-zinc-50 {
+      background-color: theme("colors.zinc.950");
+    }
+
+    .bg-zinc-100,
+    .even\:bg-zinc-50:nth-child(even) {
+      background-color: theme("colors.zinc.900");
+    }
+
+    .odd\:bg-white:nth-child(odd) {
+      background-color: theme("colors.zinc.950");
+    }
+
+    .bg-cyan-50 {
+      background-color: theme("colors.cyan.950");
+    }
+
+    .bg-amber-50 {
+      background-color: theme("colors.amber.950");
+    }
+
+    .bg-violet-50 {
+      background-color: theme("colors.violet.950");
+    }
+
+    .bg-zinc-900 {
+      background-color: theme("colors.zinc.100");
+    }
+
+    .text-zinc-950,
+    .text-zinc-900,
+    .text-zinc-800 {
+      color: theme("colors.zinc.100");
+    }
+
+    .text-zinc-700 {
+      color: theme("colors.zinc.200");
+    }
+
+    .text-zinc-600 {
+      color: theme("colors.zinc.300");
+    }
+
+    .text-zinc-500,
+    .text-zinc-400 {
+      color: theme("colors.zinc.400");
+    }
+
+    .text-white {
+      color: theme("colors.zinc.950");
+    }
+
+    .text-cyan-900,
+    .text-cyan-800,
+    .text-cyan-700 {
+      color: theme("colors.cyan.200");
+    }
+
+    .text-amber-800 {
+      color: theme("colors.amber.200");
+    }
+
+    .text-violet-800 {
+      color: theme("colors.violet.200");
+    }
+
+    .border-zinc-200,
+    .border-zinc-300 {
+      border-color: theme("colors.zinc.700");
+    }
+
+    .border-cyan-200,
+    .border-cyan-500,
+    .border-cyan-600,
+    .border-cyan-700 {
+      border-color: theme("colors.cyan.500");
+    }
+
+    .border-amber-200 {
+      border-color: theme("colors.amber.600");
+    }
+
+    .border-violet-200 {
+      border-color: theme("colors.violet.600");
+    }
+
+    .shadow-sm {
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.45);
+    }
+
+    input,
+    select,
+    textarea,
+    button,
+    summary {
+      color-scheme: dark;
+    }
+
+    dialog::backdrop {
+      background-color: rgb(9 9 11 / 0.72);
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .odd\:bg-white:nth-child(odd) {
+    background-color: theme("colors.zinc.950") !important;
+  }
+
+  .even\:bg-zinc-50:nth-child(even) {
+    background-color: theme("colors.zinc.900") !important;
+  }
+
+  .hover\:text-cyan-700:hover {
+    color: theme("colors.cyan.200") !important;
+  }
+
+  .hover\:border-cyan-500:hover,
+  .hover\:border-cyan-600:hover,
+  .focus\:border-cyan-700:focus {
+    border-color: theme("colors.cyan.500") !important;
+  }
+}

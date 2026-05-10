@@ -1,0 +1,12 @@
+.git
+.venv
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.tox/
+output/
+tmp/
+tests/
+skills/
+docs/
+scripts/

@@ -1,3 +1,14 @@
+---
+title: HAKARI-Bench Leaderboard
+emoji: 📊
+colorFrom: blue
+colorTo: gray
+sdk: docker
+app_port: 7860
+pinned: false
+license: apache-2.0
+---
+
 # HAKARI-Bench
 
 HAKARI-Bench is a library, viewer, and leaderboard project for evaluating small information retrieval datasets.
@@ -387,6 +398,23 @@ By default, it binds to `127.0.0.1:8000` and keeps
 DuckDB when a page is loaded. Use `--host 0.0.0.0 --port 28090` for remote
 access, or pass `--source-results-dir` / `--source-duckdb-path` to point at a
 different source.
+
+The viewer can also sync its local DuckDB cache from a Hugging Face dataset:
+
+```bash
+uv run hakari-bench web \
+  --hf-dataset-repo-id hakari-bench/leaderboard_database \
+  --hf-dataset-path duckdb/hakari_bench.duckdb
+```
+
+The same configuration is available through environment variables:
+`HAKARI_BENCH_VIEWER_DUCKDB_PATH`,
+`HAKARI_BENCH_VIEWER_SOURCE_DUCKDB_PATH`,
+`HAKARI_BENCH_VIEWER_SOURCE_RESULTS_DIR`,
+`HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID`,
+`HAKARI_BENCH_VIEWER_HF_DATASET_PATH`, and
+`HAKARI_BENCH_VIEWER_HF_DATASET_REVISION`. The Docker Space defaults to
+`hakari-bench/leaderboard_database` and `duckdb/hakari_bench.duckdb`.
 
 The DuckDB warehouse includes `task_results`, `metrics_long`,
 `task_diagnostics`, and `dataset_metadata`. `task_diagnostics` is intended for

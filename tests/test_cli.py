@@ -243,7 +243,7 @@ def test_parse_args_web_defaults_to_hakari_bench_paths() -> None:
     args = parse_args(["web"])
 
     assert args.duckdb_path is None
-    assert args.source_results_dir == "../hakari-bench/output/results"
+    assert args.source_results_dir is None
 
 
 def test_parse_args_defaults_to_quantized_variants_on_cpu() -> None:
@@ -538,12 +538,31 @@ def test_parse_args_rejects_build_bm25_source_params_json() -> None:
 
 
 def test_parse_args_accepts_web_viewer_options() -> None:
-    args = parse_args(["web", "--host", "0.0.0.0", "--port", "28090", "--data-dir", "output/viewer"])
+    args = parse_args(
+        [
+            "web",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "28090",
+            "--data-dir",
+            "output/viewer",
+            "--hf-dataset-repo-id",
+            "hakari-bench/leaderboard_database",
+            "--hf-dataset-path",
+            "duckdb/hakari_bench.duckdb",
+            "--hf-dataset-revision",
+            "main",
+        ]
+    )
 
     assert args.command == "web"
     assert args.host == "0.0.0.0"
     assert args.port == 28090
     assert args.data_dir == "output/viewer"
+    assert args.hf_dataset_repo_id == "hakari-bench/leaderboard_database"
+    assert args.hf_dataset_path == "duckdb/hakari_bench.duckdb"
+    assert args.hf_dataset_revision == "main"
 
 
 def test_parse_args_accepts_prompt_and_reranker_options() -> None:
