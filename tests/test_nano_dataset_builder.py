@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pyarrow as pa
@@ -93,6 +94,52 @@ def test_build_nano_dataset_from_rows_writes_flat_subset_layout_yaml_and_bm25(tm
     assert config["queries_config"] == "queries"
     assert config["qrels_config"] == "qrels"
     assert config["candidate_config"] == "bm25"
+
+
+def test_build_nano_dataset_from_rows_can_preserve_duplicate_texts(tmp_path: Path) -> None:
+    output_dir = tmp_path / "NanoExample"
+
+    result = build_nano_dataset_from_rows(
+        output_dir=output_dir,
+        dataset_name="NanoExample",
+        dataset_id="hakari-bench/NanoExample",
+        split_name="NanoDuplicates",
+        corpus_rows=[
+            {"_id": "d1", "text": "parallel passage"},
+            {"_id": "d2", "text": "parallel passage"},
+        ],
+        query_rows=[
+            {"_id": "q1", "query": "parallel query"},
+            {"_id": "q2", "query": "parallel query"},
+        ],
+        qrels_rows=[
+            {"query-id": "q1", "corpus-id": "d1", "score": 1},
+            {"query-id": "q2", "corpus-id": "d2", "score": 1},
+        ],
+        query_limit=10,
+        doc_limit=10,
+        bm25_config=BM25Config(tokenizer="whitespace", top_k=2),
+        metadata={
+            "source_subset_count": 2,
+            "source_selected_query_count": 2,
+            "source_corpus_order_policy": "round-robin test policy",
+        },
+        dedupe_query_texts=False,
+        dedupe_doc_texts=False,
+    )
+
+    assert result.queries == 2
+    assert result.corpus == 2
+    assert result.qrels == 2
+    assert [row["_id"] for row in _read_parquet(output_dir / "queries" / "NanoDuplicates.parquet")] == ["q1", "q2"]
+    assert [row["_id"] for row in _read_parquet(output_dir / "corpus" / "NanoDuplicates.parquet")] == ["d1", "d2"]
+
+    metadata = json.loads((output_dir / "metadata" / "NanoDuplicates.json").read_text(encoding="utf-8"))
+    assert metadata["dedupe_query_texts"] is False
+    assert metadata["dedupe_doc_texts"] is False
+    assert metadata["source_subset_count"] == 2
+    assert metadata["source_selected_query_count"] == 2
+    assert metadata["source_corpus_order_policy"] == "round-robin test policy"
 
 
 def test_build_nano_dataset_from_local_source_supports_nested_mteb_layout(tmp_path: Path) -> None:

@@ -21,9 +21,14 @@ from scripts.recreate_nanomteb_datasets_from_mteb import (  # noqa: E402
     DEFAULT_DOC_LIMIT,
     DEFAULT_QUERY_LIMIT,
     DEFAULT_TOP_K,
+    _containers_from_loaded_task,
     _eval_split,
+    _has_component_configs,
+    _load_belebele_containers,
+    _load_component_containers,
     _load_mteb_source,
     _mteb_module,
+    _prefixed_rows,
     build_plan as build_legacy_plan,
     validate_dataset_dir,
 )
@@ -59,6 +64,7 @@ ADDON_GROUPS = {
 }
 
 LEMBPASSKEY_TASK = "LEMBPasskeyRetrieval"
+OFFICIAL_ALIGNED_COMBINED_TASKS = {"BelebeleRetrieval", "MLQARetrieval"}
 
 
 @dataclass(frozen=True)
@@ -278,7 +284,16 @@ def build_task(
 ) -> None:
     mteb = _mteb_module()
     task = mteb.get_tasks(tasks=[plan.task_name])[0]
-    if _uses_combined_lembpasskey_splits(plan=plan, task=task):
+    if _uses_official_aligned_combined_source(plan=plan, task=task):
+        eval_split = _eval_split(task)
+        source = _load_official_aligned_combined_source(
+            task=task,
+            eval_split=eval_split,
+            split_name=plan.split,
+            query_limit=query_limit,
+        )
+        effective_query_limit = int(source["recommended_query_limit"])
+    elif _uses_combined_lembpasskey_splits(plan=plan, task=task):
         source = _load_stratified_lembpasskey_source(task=task, plan=plan)
         eval_split = str(source["source_eval_split"])
         effective_query_limit = max(query_limit, len(source["query_rows"]))
@@ -324,6 +339,21 @@ def build_task(
                 "source_positive_like_exclusion_policy": str(source["source_positive_like_exclusion_policy"]),
             }
         )
+    if _uses_official_aligned_combined_source(plan=plan, task=task):
+        metadata.update(
+            {
+                "description": (
+                    f"{metadata['description']} This Nano split uses an official-aligned balanced "
+                    "sampling policy across the upstream MTEB hf_subsets so that the Nano task better "
+                    "approximates the official leaderboard's per-subset averaging."
+                ),
+                "source_split_policy": str(source["source_split_policy"]),
+                "source_query_selection_policy": str(source["source_query_selection_policy"]),
+                "source_subset_count": int(source["source_subset_count"]),
+                "source_selected_query_count": int(source["source_selected_query_count"]),
+                "source_corpus_order_policy": str(source["source_corpus_order_policy"]),
+            }
+        )
     build_nano_dataset_from_rows(
         output_dir=output_root / plan.group / plan.subset,
         dataset_name=plan.group,
@@ -336,11 +366,149 @@ def build_task(
         doc_limit=doc_limit,
         bm25_config=bm25_config,
         metadata=metadata,
+        dedupe_query_texts=not _uses_official_aligned_combined_source(plan=plan, task=task),
+        dedupe_doc_texts=not _uses_official_aligned_combined_source(plan=plan, task=task),
     )
 
 
 def _uses_combined_lembpasskey_splits(*, plan: PlannedTask, task: Any) -> bool:
     return plan.group == "NanoMMTEB-v2" and str(task.metadata.name) == LEMBPASSKEY_TASK
+
+
+def _uses_official_aligned_combined_source(*, plan: PlannedTask, task: Any) -> bool:
+    return plan.group == "NanoMMTEB-v2" and str(task.metadata.name) in OFFICIAL_ALIGNED_COMBINED_TASKS
+
+
+def _load_official_aligned_combined_source(
+    *,
+    task: Any,
+    eval_split: str,
+    split_name: str,
+    query_limit: int,
+) -> dict[str, Any]:
+    containers = _load_combined_containers(task=task, eval_split=eval_split)
+    if not containers:
+        raise ValueError(f"MTEB task {task.metadata.name} did not load split {eval_split}.")
+    selected_query_count = _official_aligned_query_count(
+        task_name=str(task.metadata.name),
+        subset_count=len(containers),
+        query_limit=query_limit,
+    )
+    selected_query_rows, selected_qrels_rows = _balanced_prefixed_queries_and_qrels(
+        containers=containers,
+        split_name=split_name,
+        selected_query_count=selected_query_count,
+    )
+    return {
+        "source_subset": "combined",
+        "corpus_rows": _balanced_prefixed_corpus_rows(containers=containers, split_name=split_name),
+        "query_rows": selected_query_rows,
+        "qrels_rows": selected_qrels_rows,
+        "recommended_query_limit": len(selected_query_rows),
+        "source_subset_count": len(containers),
+        "source_selected_query_count": len(selected_query_rows),
+        "source_split_policy": (
+            f"MTEB eval split `{eval_split}` from all {len(containers)} upstream hf_subsets, "
+            "balanced to better approximate official per-subset averaging"
+        ),
+        "source_query_selection_policy": _official_aligned_query_policy(
+            task_name=str(task.metadata.name),
+            subset_count=len(containers),
+            selected_query_count=len(selected_query_rows),
+        ),
+        "source_corpus_order_policy": (
+            "corpus rows are interleaved round-robin across upstream hf_subsets before Nano corpus "
+            "selection, preventing early source subsets from dominating the 10k document fill"
+        ),
+    }
+
+
+def _load_combined_containers(*, task: Any, eval_split: str) -> list[tuple[str, dict[str, Any]]]:
+    if str(task.metadata.name) == "BelebeleRetrieval":
+        return _load_belebele_containers(task=task, eval_split=eval_split)
+    if _has_component_configs(task, source_subsets=None):
+        return _load_component_containers(task=task, eval_split=eval_split, source_subsets=None)
+    task.load_data(eval_splits=[eval_split])
+    return _containers_from_loaded_task(task=task, eval_split=eval_split, source_subsets=None)
+
+
+def _official_aligned_query_count(*, task_name: str, subset_count: int, query_limit: int) -> int:
+    if task_name == "BelebeleRetrieval":
+        return subset_count
+    return min(query_limit, subset_count * max(1, query_limit // max(1, subset_count)))
+
+
+def _official_aligned_query_policy(*, task_name: str, subset_count: int, selected_query_count: int) -> str:
+    if task_name == "BelebeleRetrieval":
+        return (
+            f"one positive-query row per upstream hf_subset ({selected_query_count}/{subset_count}), "
+            "instead of taking multiple questions from only the earliest source subsets"
+        )
+    per_subset = selected_query_count // max(1, subset_count)
+    return (
+        f"{per_subset} positive-query rows per upstream hf_subset "
+        f"({selected_query_count} rows across {subset_count} subsets), ordered round-robin by subset"
+    )
+
+
+def _balanced_prefixed_queries_and_qrels(
+    *,
+    containers: list[tuple[str, dict[str, Any]]],
+    split_name: str,
+    selected_query_count: int,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    query_rows_by_subset: list[tuple[str, list[dict[str, Any]], dict[str, dict[str, int | float]]]] = []
+    for subset, container in containers:
+        rows = list(_prefixed_rows(rows=container["queries"], prefix="", row_kind="query"))
+        relevant_docs = cast(dict[str, dict[str, int | float]], container["relevant_docs"])
+        rows = [
+            row
+            for row in rows
+            if str(row["_id"]) in relevant_docs and any(float(score) > 0 for score in relevant_docs[str(row["_id"])].values())
+        ]
+        query_rows_by_subset.append((subset, rows, relevant_docs))
+
+    selected_queries: list[dict[str, Any]] = []
+    selected_qrels: list[dict[str, Any]] = []
+    index = 0
+    while len(selected_queries) < selected_query_count:
+        added = False
+        for subset, rows, relevant_docs in query_rows_by_subset:
+            if len(selected_queries) >= selected_query_count:
+                break
+            if index >= len(rows):
+                continue
+            raw_query = rows[index]
+            raw_query_id = str(raw_query["_id"])
+            query_id = f"{split_name}__{subset}::q::{raw_query_id}"
+            query = dict(raw_query)
+            query["_id"] = query_id
+            selected_queries.append(query)
+            corpus_prefix = f"{split_name}__{subset}::d::"
+            selected_qrels.extend(
+                {"query-id": query_id, "corpus-id": f"{corpus_prefix}{corpus_id}", "score": score}
+                for corpus_id, score in relevant_docs[raw_query_id].items()
+                if float(score) > 0
+            )
+            added = True
+        if not added:
+            break
+        index += 1
+    return selected_queries, selected_qrels
+
+
+def _balanced_prefixed_corpus_rows(*, containers: list[tuple[str, dict[str, Any]]], split_name: str) -> list[dict[str, Any]]:
+    rows_by_subset: list[list[dict[str, Any]]] = []
+    for subset, container in containers:
+        prefix = f"{split_name}__{subset}::d::"
+        rows_by_subset.append(list(_prefixed_rows(rows=container["corpus"], prefix=prefix, row_kind="corpus")))
+    output: list[dict[str, Any]] = []
+    max_rows = max((len(rows) for rows in rows_by_subset), default=0)
+    for index in range(max_rows):
+        for rows in rows_by_subset:
+            if index < len(rows):
+                output.append(rows[index])
+    return output
 
 
 def _load_stratified_lembpasskey_source(*, task: Any, plan: PlannedTask) -> dict[str, Any]:
