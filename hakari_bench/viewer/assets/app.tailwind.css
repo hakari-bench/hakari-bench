@@ -46,6 +46,54 @@
     opacity: 1;
   }
 
+  .leaderboard-loading-toast {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.5rem);
+    transition:
+      opacity 160ms ease-in-out,
+      transform 160ms ease-in-out;
+  }
+
+  .leaderboard-loading-toast.htmx-request {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  [data-leaderboard-pending="true"] {
+    cursor: progress;
+    opacity: 0.72;
+  }
+
+  [data-leaderboard-pending="true"]::after {
+    animation: hakari-leaderboard-spin 700ms linear infinite;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 9999px;
+    content: "";
+    display: inline-block;
+    height: 0.55rem;
+    margin-left: 0.375rem;
+    vertical-align: -0.075rem;
+    width: 0.55rem;
+  }
+
+  @keyframes hakari-leaderboard-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .leaderboard-loading-toast {
+      transition: none;
+    }
+
+    [data-leaderboard-pending="true"]::after {
+      animation: none;
+    }
+  }
+
   @media (prefers-color-scheme: dark) {
     .bg-white {
       background-color: theme("colors.zinc.950");

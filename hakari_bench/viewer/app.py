@@ -259,14 +259,33 @@ def render_page(
       id="leaderboard-panel"
       hx-get="{_leaderboard_url(query)}"
       hx-trigger="load"
-      hx-swap="innerHTML"
+      {_leaderboard_request_hx_attrs()}
     >
       <div class="border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">Loading leaderboard...</div>
     </section>
+    {render_leaderboard_loading_toast()}
     {render_hash_query_state_script()}
   </main>
 </body>
 </html>"""
+
+
+def _leaderboard_request_hx_attrs() -> str:
+    return 'hx-target="#leaderboard-panel" hx-swap="innerHTML" hx-indicator="#leaderboard-loading-toast" hx-sync="#leaderboard-panel:replace"'
+
+
+def _leaderboard_control_hx_attrs() -> str:
+    return f'{_leaderboard_request_hx_attrs()} data-leaderboard-control="true"'
+
+
+def render_leaderboard_loading_toast() -> str:
+    return """
+    <div id="leaderboard-loading-toast"
+         class="leaderboard-loading-toast fixed bottom-4 right-4 z-50 border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-800 shadow-sm"
+         role="status" aria-live="polite" aria-atomic="true">
+      Loading leaderboard...
+    </div>
+    """
 
 
 def render_hash_query_state_script() -> str:
@@ -307,8 +326,29 @@ def render_hash_query_state_script() -> str:
         }
       };
 
+      function leaderboardControlFrom(event) {
+        const source = event.detail && event.detail.elt;
+        if (!source || !source.closest) return null;
+        return source.closest("[data-leaderboard-control='true']");
+      }
+
+      window.__hakariSetLeaderboardPending = (event, pending) => {
+        const control = leaderboardControlFrom(event);
+        if (!control) return;
+        if (pending) {
+          control.dataset.leaderboardPending = "true";
+          control.setAttribute("aria-busy", "true");
+        } else {
+          delete control.dataset.leaderboardPending;
+          control.removeAttribute("aria-busy");
+        }
+      };
+
       window.__hakariApplyHashQueryState();
       document.addEventListener("DOMContentLoaded", window.__hakariSyncHashQueryStateToParent, { once: true });
+      document.addEventListener("htmx:beforeRequest", (event) => window.__hakariSetLeaderboardPending(event, true));
+      document.addEventListener("htmx:afterRequest", (event) => window.__hakariSetLeaderboardPending(event, false));
+      document.addEventListener("htmx:sendAbort", (event) => window.__hakariSetLeaderboardPending(event, false));
       document.addEventListener("htmx:pushedIntoHistory", window.__hakariSyncHashQueryStateToParent);
       document.addEventListener("htmx:replacedInHistory", window.__hakariSyncHashQueryStateToParent);
     })();
@@ -438,7 +478,7 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_
         grouped_buttons[_view_group(view_name)].append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                  hx-target="#leaderboard-panel" hx-swap="innerHTML">
+                  {_leaderboard_control_hx_attrs()}>
                   {escape(view_label)}
                 </button>"""
         )
@@ -511,7 +551,7 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
         buttons.append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                  hx-target="#leaderboard-panel" hx-swap="innerHTML">
+                  {_leaderboard_control_hx_attrs()}>
                   {escape(label)}
                 </button>"""
         )
@@ -626,7 +666,7 @@ def _language_page_button(
     data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
     return f"""<button type="button"{data_attr} class="border px-3 py-1.5 text-sm {classes}"
               hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-              hx-target="#leaderboard-panel" hx-swap="innerHTML">{escape(label)}</button>"""
+              {_leaderboard_control_hx_attrs()}>{escape(label)}</button>"""
 
 
 def _filter_state_with_languages(filter_state: FilterState, language_filters: tuple[str, ...]) -> FilterState:
@@ -903,7 +943,7 @@ def render_controls(
     <div class="mb-4 text-sm text-zinc-700">
       <form id="display-controls" class="flex flex-wrap items-center gap-x-5 gap-y-2"
             hx-get="/leaderboard" hx-push-url="true"
-            hx-target="#leaderboard-panel" hx-swap="innerHTML"
+            {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
         {display_hidden_html}
         <span class="font-medium text-zinc-800">Display:</span>
@@ -947,7 +987,7 @@ def render_controls(
         <p class="pt-1 font-medium text-zinc-800">Filters:</p>
         <form id="facet-filters" class="flex flex-wrap items-start gap-3"
               hx-get="/leaderboard" hx-push-url="true"
-              hx-target="#leaderboard-panel" hx-swap="innerHTML"
+              {_leaderboard_control_hx_attrs()}
               hx-trigger="change">
           {filter_hidden_html}
           {language_filter_html}
@@ -984,7 +1024,7 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
         buttons.append(
             f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{page_url}"
-                  hx-target="#leaderboard-panel" hx-swap="innerHTML">
+                  {_leaderboard_control_hx_attrs()}>
                   {escape(score_group.label)}
                 </button>"""
         )
@@ -1039,7 +1079,7 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
             f"""<th scope="col" class="bg-zinc-100 py-2 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
                  <button type="button" class="inline-flex w-full {justify} hover:text-cyan-700"
                          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                         hx-target="#leaderboard-panel" hx-swap="innerHTML">
+                         {_leaderboard_control_hx_attrs()}>
                    <span class="{label_class}">{escape(label)}</span><span class="shrink-0 text-zinc-400">{indicator}</span>
                  </button>
                </th>"""
@@ -1363,10 +1403,10 @@ def _render_filter_details(
           <div class="mb-2 flex gap-1">
             <button type="button" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
                     hx-get="{all_url}" hx-push-url="{all_page_url}"
-                    hx-target="#leaderboard-panel" hx-swap="innerHTML">All</button>
+                    {_leaderboard_control_hx_attrs()}>All</button>
             <button type="button" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
                     hx-get="{none_url}" hx-push-url="{none_page_url}"
-                    hx-target="#leaderboard-panel" hx-swap="innerHTML">None</button>
+                    {_leaderboard_control_hx_attrs()}>None</button>
           </div>
           <div class="{escape(grid_class)}">
             {''.join(checkboxes)}

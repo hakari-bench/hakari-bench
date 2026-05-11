@@ -232,11 +232,22 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert '<script src="/assets/htmx.min.js"></script>' in response.text
     assert "window.__hakariApplyHashQueryState" in response.text
     assert "window.__hakariSyncHashQueryStateToParent" in response.text
+    assert "window.__hakariSetLeaderboardPending" in response.text
     assert "const queryString = mergedStateQueryString();" in response.text
     assert 'window.parent.postMessage({ queryString: "", hash: hashValue }, "https://huggingface.co")' in response.text
     assert 'panel.setAttribute("hx-get", "/leaderboard?" + queryString);' in response.text
+    assert 'document.addEventListener("htmx:beforeRequest"' in response.text
+    assert 'document.addEventListener("htmx:afterRequest"' in response.text
+    assert 'document.addEventListener("htmx:sendAbort"' in response.text
     assert 'document.addEventListener("htmx:pushedIntoHistory"' in response.text
     assert 'document.addEventListener("htmx:replacedInHistory"' in response.text
+    assert 'id="leaderboard-loading-toast"' in response.text
+    assert "leaderboard-loading-toast fixed bottom-4 right-4" in response.text
+    assert 'role="status"' in response.text
+    assert 'aria-live="polite"' in response.text
+    assert "Loading leaderboard..." in response.text
+    assert 'hx-indicator="#leaderboard-loading-toast"' in response.text
+    assert 'hx-sync="#leaderboard-panel:replace"' in response.text
     assert "https://cdn.tailwindcss.com" not in response.text
     assert "https://unpkg.com/htmx.org" not in response.text
     assert 'hx-get="/leaderboard?view=Overall' in response.text
@@ -274,6 +285,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert css_response.headers["content-type"].startswith("text/css")
     assert "prefers-color-scheme:dark" in css_response.text
     assert "color-scheme:light dark" in css_response.text
+    assert ".leaderboard-loading-toast.htmx-request" in css_response.text
+    assert "hakari-leaderboard-spin" in css_response.text
+    assert "[data-leaderboard-pending=true]" in css_response.text
 
     htmx_response = client.get("/assets/htmx.min.js")
     assert htmx_response.status_code == 200
@@ -323,6 +337,9 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "data-tooltip-placement=\"left\"" in response.text
     assert "full-corpus retrieval nDCG@10" in response.text
     assert "BM25 top-100 reranking nDCG@10" in response.text
+    assert 'data-leaderboard-control="true"' in response.text
+    assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
+    assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
     assert 'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_rank&amp;direction=asc&amp;group=task&amp;target=reranking"' in response.text
     assert "Language-specific" in response.text
     assert "Domain-specific" in response.text
