@@ -67,6 +67,7 @@ class TaskResultsRepository:
         self,
         *,
         benchmarks: list[str],
+        score_target: str = "all",
         include_embedding_variants: bool,
     ) -> list[TaskResultRecord]:
         """Fetch leaderboard source rows from the canonical `task_results` table.
@@ -85,7 +86,27 @@ class TaskResultsRepository:
         try:
             columns = _table_columns(con, "task_results")
             metadata_columns = _table_columns(con, "dataset_metadata") if _table_exists(con, "dataset_metadata") else set()
+            diagnostic_columns = _table_columns(con, "task_diagnostics") if _table_exists(con, "task_diagnostics") else set()
             metadata_join = "LEFT JOIN dataset_metadata AS dm ON dm.task_key = tr.task_key" if metadata_columns else ""
+            diagnostic_join = ""
+            score_expr = "tr.score"
+            target_filter = ""
+            if score_target == "reranking" and {"model_name", "benchmark", "task_key", "rerank_score"}.issubset(diagnostic_columns):
+                diagnostic_join = """
+                    JOIN task_diagnostics AS td
+                      ON td.model_name = tr.model_name
+                     AND td.benchmark = tr.benchmark
+                     AND td.task_key = tr.task_key
+                """
+                score_expr = "td.rerank_score"
+                target_filter = """
+                  AND td.rerank_score IS NOT NULL
+                  AND (td.rerank_status IS NULL OR td.rerank_status = 'available')
+                  AND (td.candidate_ranking IS NULL OR td.candidate_ranking = 'bm25')
+                  AND (td.rerank_top_k IS NULL OR td.rerank_top_k = 100)
+                """
+            elif score_target == "reranking":
+                return []
             language_expr = "dm.language" if "language" in metadata_columns else "NULL"
             languages_expr = "dm.languages" if "languages" in metadata_columns else "NULL"
             variant_name_expr = _column_or_null(columns, "embedding_variant_name")
@@ -100,11 +121,9 @@ class TaskResultsRepository:
             query_encode_task_expr = _column_or_null(columns, "query_encode_task")
             document_encode_task_expr = _column_or_null(columns, "document_encode_task")
             trust_remote_code_expr = _column_or_null(columns, "trust_remote_code")
-            variant_filter = (
-                ""
-                if include_embedding_variants or "embedding_variant_name" not in columns
-                else "AND tr.embedding_variant_name IS NULL"
-            )
+            variant_filter = ""
+            if "embedding_variant_name" in columns and (score_target == "reranking" or not include_embedding_variants):
+                variant_filter = "AND tr.embedding_variant_name IS NULL"
             variant_order = (
                 ", tr.embedding_variant_name IS NOT NULL, tr.embedding_variant_name"
                 if "embedding_variant_name" in columns
@@ -120,7 +139,7 @@ class TaskResultsRepository:
                     COALESCE(tr.split_name, '') AS split_name,
                     tr.task_name,
                     tr.task_key,
-                    tr.score,
+                    {score_expr} AS score,
                     {language_expr} AS language,
                     {languages_expr} AS languages,
                     tr.active_parameters,
@@ -140,9 +159,11 @@ class TaskResultsRepository:
                     {quantization_expr} AS quantization
                 FROM task_results AS tr
                 {metadata_join}
+                {diagnostic_join}
                 WHERE tr.benchmark IN ({placeholders})
-                  AND tr.score IS NOT NULL
+                  AND {score_expr} IS NOT NULL
                   {variant_filter}
+                  {target_filter}
                 ORDER BY tr.benchmark, tr.dataset_id, tr.task_name, tr.model_name{variant_order}
             """
             cursor = con.execute(query, benchmarks)

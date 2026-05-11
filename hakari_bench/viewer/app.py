@@ -20,6 +20,7 @@ from hakari_bench.viewer.leaderboard import (
     LeaderboardResult,
     LeaderboardRow,
     LeaderboardService,
+    ScoreTarget,
     SortDirection,
 )
 from hakari_bench.viewer.model_display import model_cell_views, render_model_detail_modal, render_model_name_cell
@@ -66,6 +67,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        target: str = Query(default="all", pattern="^(all|reranking)$"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
         quantization: bool = Query(default=False),
@@ -89,6 +91,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             view=view,
             sort=sort,
             direction=direction,
+            target=target,
             group=group,
             variants=variants,
             quantization=quantization,
@@ -119,6 +122,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        target: str = Query(default="all", pattern="^(all|reranking)$"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
         quantization: bool = Query(default=False),
@@ -142,6 +146,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             view=view,
             sort=sort,
             direction=direction,
+            target=target,
             group=group,
             variants=variants,
             quantization=quantization,
@@ -162,6 +167,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         view = query_string(state_query["view"])
         sort = query_string(state_query["sort"])
         direction = query_string(state_query["direction"])
+        target = query_string(state_query.get("target", "all"))
         group = optional_query_string(state_query.get("group"))
         display_flags = variant_display_flags_from_query(state_query)
         filter_state = filter_state_from_query(state_query)
@@ -170,6 +176,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             view,
             sort=sort,
             direction=cast(SortDirection, direction),
+            score_target=cast(ScoreTarget, target),
             score_group_name=group,
             include_quantization_variants=display_flags.quantization,
             include_truncate_variants=display_flags.truncate,
@@ -256,9 +263,57 @@ def render_page(
     >
       <div class="border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">Loading leaderboard...</div>
     </section>
+    {render_hash_query_state_script()}
   </main>
 </body>
 </html>"""
+
+
+def render_hash_query_state_script() -> str:
+    return """
+    <script>
+    (() => {
+      function paramsFrom(value) {
+        const raw = (value || "").replace(/^[#?]/, "");
+        return raw ? new URLSearchParams(raw) : new URLSearchParams();
+      }
+
+      function mergedStateQueryString() {
+        const params = new URLSearchParams(window.location.search);
+        paramsFrom(window.location.hash).forEach((value, key) => {
+          if (!params.has(key)) params.append(key, value);
+        });
+        return params.toString();
+      }
+
+      window.__hakariApplyHashQueryState = () => {
+        const hashParams = paramsFrom(window.location.hash);
+        if (Array.from(hashParams.keys()).length === 0) return;
+        const queryString = mergedStateQueryString();
+        if (!queryString) return;
+        const panel = document.getElementById("leaderboard-panel");
+        if (panel) panel.setAttribute("hx-get", "/leaderboard?" + queryString);
+      };
+
+      window.__hakariSyncHashQueryStateToParent = () => {
+        const queryString = mergedStateQueryString();
+        const hashValue = queryString ? "#" + queryString : "";
+        if (window.parent && window.parent !== window) {
+          try {
+            window.parent.postMessage({ queryString: "", hash: hashValue }, "https://huggingface.co");
+          } catch (_error) {
+            // Parent URL synchronization is best-effort for non-HF embeds.
+          }
+        }
+      };
+
+      window.__hakariApplyHashQueryState();
+      document.addEventListener("DOMContentLoaded", window.__hakariSyncHashQueryStateToParent, { once: true });
+      document.addEventListener("htmx:pushedIntoHistory", window.__hakariSyncHashQueryStateToParent);
+      document.addEventListener("htmx:replacedInHistory", window.__hakariSyncHashQueryStateToParent);
+    })();
+    </script>
+    """
 
 
 def render_summary_cards(summary: ViewerSummary) -> str:
@@ -387,15 +442,25 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_
                   {escape(view_label)}
                 </button>"""
         )
-    groups = []
+    primary_sections = [
+        _render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state),
+        _render_benchmark_group(label="Overall", buttons=grouped_buttons.pop("Overall")),
+        _render_benchmark_group(label="Core benchmarks", buttons=grouped_buttons.pop("Core benchmarks")),
+    ]
+    groups = [
+        f"""
+            <div class="min-w-0 space-y-3" data-testid="primary-benchmark-column">
+              {''.join(section for section in primary_sections if section)}
+            </div>
+            """
+    ]
     for label, buttons in grouped_buttons.items():
         if not buttons:
             continue
         groups.append(
             f"""
-            <div class="min-w-0">
-              <p class="mb-1 text-xs font-semibold uppercase text-zinc-500">{escape(label)}</p>
-              <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
+            <div class="min-w-0" data-testid="secondary-benchmark-column">
+              {_render_benchmark_group(label=label, buttons=buttons)}
             </div>
             """
         )
@@ -405,9 +470,63 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_
         <h2 class="text-sm font-semibold">Benchmark groups</h2>
         <p class="text-xs text-zinc-500">Views are grouped to keep multilingual and domain-specific suites scannable.</p>
       </div>
-      <div class="grid gap-3 lg:grid-cols-2 xl:grid-cols-4">{''.join(groups)}</div>
+      <div class="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">{''.join(groups)}</div>
     </nav>
     """
+
+
+def _render_benchmark_group(*, label: str, buttons: list[str]) -> str:
+    if not buttons:
+        return ""
+    return f"""
+              <div>
+                <p class="mb-1 text-xs font-semibold uppercase text-zinc-500">{escape(label)}</p>
+                <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
+              </div>
+            """
+
+
+def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState) -> str:
+    target_options = [
+        ("all", "All"),
+        ("reranking", "Reranking"),
+    ]
+    tooltip = "All shows full-corpus retrieval nDCG@10. Reranking shows BM25 top-100 reranking nDCG@10 when available."
+    buttons = []
+    for target, label in target_options:
+        active = result.score_target == target
+        classes = (
+            "border-cyan-700 bg-cyan-50 text-cyan-900"
+            if active
+            else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
+        )
+        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_direction = "asc" if sort.startswith("metric:") else direction
+        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        if target == "all":
+            query_payload.pop("target", None)
+        else:
+            query_payload["target"] = target
+        query = urlencode(query_payload, doseq=True)
+        buttons.append(
+            f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
+                  hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                  hx-target="#leaderboard-panel" hx-swap="innerHTML">
+                  {escape(label)}
+                </button>"""
+        )
+    return f"""
+            <div>
+              <p class="mb-1 inline-flex items-center gap-1 text-xs font-semibold uppercase text-zinc-500">
+                <span>Target</span>
+                <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
+                      data-tooltip="{escape(tooltip, quote=True)}"
+                      data-tooltip-placement="left"
+                      aria-label="{escape(tooltip, quote=True)}">?</span>
+              </p>
+              <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
+            </div>
+            """
 
 
 def _view_group(view_name: str) -> str:
@@ -544,6 +663,8 @@ def render_controls(
         ("sort", sort),
         ("direction", direction),
     ]
+    if result.score_target != "all":
+        state_fields.append(("target", result.score_target))
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
     display_hidden_html = _hidden_inputs(state_fields + active_filter_hidden_fields(filter_state))

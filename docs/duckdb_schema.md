@@ -117,7 +117,7 @@ The web viewer exposes four user-facing query surfaces over the DuckDB file:
 | UI surface | source tables | semantics |
 | --- | --- | --- |
 | Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
-| Leaderboard | `task_results`, optionally joined to `dataset_metadata` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. Base rows are used unless the user explicitly enables variant categories. |
+| Leaderboard | `task_results`, optionally joined to `dataset_metadata` and `task_diagnostics` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector defaults to `All`, which uses `task_results.score` for full-corpus retrieval. `Reranking` joins `task_diagnostics` and uses available BM25 top-100 `rerank_score` values. Base rows are used unless the user explicitly enables variant categories; reranking currently ranks base rows because `task_diagnostics` has no embedding-variant identity. |
 | Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for quantization-first comparisons; rescore and `truncate_dim` variants are hidden unless explicitly enabled in the panel. |
 | Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
 | Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
@@ -252,8 +252,10 @@ analysis. It is not used for leaderboard ranking.
 ### `task_diagnostics`
 
 `task_diagnostics` is a notebook-friendly table for analyzing why a model did
-or did not improve under BM25 candidate reranking. It is not used for
-leaderboard ranking.
+or did not improve under BM25 candidate reranking. The viewer also uses
+`rerank_score` for the optional `Target: Reranking` leaderboard mode when
+`rerank_status = 'available'`, `candidate_ranking = 'bm25'`, and
+`rerank_top_k = 100` where those columns are present.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -482,10 +484,13 @@ keeping Borda and complete-model semantics in `LeaderboardService`.
 `TaskResultsRepository.fetch_task_results()` is responsible for these SQL
 choices:
 
-- Read only the canonical `task_results` source.
+- Read `task_results.score` for the default `Target: All` leaderboard source.
+- Join `task_diagnostics` and read `rerank_score` for `Target: Reranking`;
+  rows without available BM25 top-100 rerank scores are excluded.
 - Exclude `score IS NULL` rows because they cannot participate in ranking.
 - Read only benchmarks requested by the selected view.
-- Read only base rows when variants are not requested.
+- Read only base rows when variants are not requested; reranking also reads
+  base rows because diagnostics are not variant-specific.
 - Select missing variant/runtime columns as `NULL` for old DuckDB files.
 - Surface runtime metadata such as dtype, attention implementation, prompt
   mode, and `trust_remote_code` in model details metadata; dtype, attention,

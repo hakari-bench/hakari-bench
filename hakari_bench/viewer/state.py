@@ -30,6 +30,7 @@ def normalize_query_state(
     view: str,
     sort: str,
     direction: str,
+    target: str = "all",
     group: str | None,
     variants: bool,
     quantization: bool,
@@ -53,6 +54,8 @@ def normalize_query_state(
         sort = "borda_rank"
     if direction not in {"asc", "desc"}:
         direction = "asc"
+    if target not in {"all", "reranking"}:
+        target = "all"
     display_flags = variant_display_flags_from_values(
         variants=variants,
         quantization=quantization,
@@ -62,6 +65,8 @@ def normalize_query_state(
     )
     task_filter = task_filter.strip()
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
+    if target != "all":
+        query["target"] = target
     if group:
         query["group"] = group
     if task_scores or task_filter:
@@ -115,6 +120,8 @@ def state_payload(
 ) -> QueryState:
     filter_state = filter_state or FilterState()
     query_payload: QueryState = {"view": result.view_name, "sort": sort, "direction": direction}
+    if result.score_target != "all":
+        query_payload["target"] = result.score_target
     if result.selected_score_group is not None:
         query_payload["group"] = result.selected_score_group.name
     if result.show_task_scores:

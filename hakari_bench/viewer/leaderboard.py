@@ -13,6 +13,7 @@ from hakari_bench.viewer.text_match import active_filter_terms, text_matches_fil
 from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
 
 SortDirection = Literal["asc", "desc"]
+ScoreTarget = Literal["all", "reranking"]
 
 
 @dataclass(frozen=True)
@@ -87,6 +88,7 @@ class LeaderboardResult(BaseModel):
     view_name: str
     view_label: str
     is_overall: bool
+    score_target: ScoreTarget = "all"
     expected_tasks: int
     rows: list[LeaderboardRow]
     available_views: list[str]
@@ -133,6 +135,7 @@ class LeaderboardService:
         *,
         sort: str = "borda_rank",
         direction: SortDirection = "asc",
+        score_target: ScoreTarget = "all",
         score_group_name: str | None = None,
         include_quantization_variants: bool = False,
         include_truncate_variants: bool = False,
@@ -149,6 +152,7 @@ class LeaderboardService:
         selected_score_group = _select_score_group(score_groups, score_group_name)
         rows = self._load_task_scores(
             benchmarks,
+            score_target=score_target,
             include_quantization_variants=include_quantization_variants,
             include_truncate_variants=include_truncate_variants,
             include_rescore_variants=include_rescore_variants,
@@ -177,6 +181,7 @@ class LeaderboardService:
             view_name=view_name,
             view_label=self.config.label_for_view(view_name),
             is_overall=is_overall,
+            score_target=score_target,
             expected_tasks=len({row.task_key for row in rows}),
             rows=sort_rows(leaderboard_rows, sort=sort, direction=direction),
             available_views=self.config.view_names,
@@ -202,6 +207,7 @@ class LeaderboardService:
         self,
         benchmarks: list[str],
         *,
+        score_target: ScoreTarget,
         include_quantization_variants: bool,
         include_truncate_variants: bool,
         include_rescore_variants: bool,
@@ -216,6 +222,7 @@ class LeaderboardService:
         )
         records = self.task_results_repository.fetch_task_results(
             benchmarks=benchmarks,
+            score_target=score_target,
             include_embedding_variants=include_any_variants,
         )
         filtered_records = [

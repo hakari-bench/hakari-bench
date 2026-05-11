@@ -230,6 +230,13 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert '<link rel="stylesheet" href="/assets/app.css">' in response.text
     assert '<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">' in response.text
     assert '<script src="/assets/htmx.min.js"></script>' in response.text
+    assert "window.__hakariApplyHashQueryState" in response.text
+    assert "window.__hakariSyncHashQueryStateToParent" in response.text
+    assert "const queryString = mergedStateQueryString();" in response.text
+    assert 'window.parent.postMessage({ queryString: "", hash: hashValue }, "https://huggingface.co")' in response.text
+    assert 'panel.setAttribute("hx-get", "/leaderboard?" + queryString);' in response.text
+    assert 'document.addEventListener("htmx:pushedIntoHistory"' in response.text
+    assert 'document.addEventListener("htmx:replacedInHistory"' in response.text
     assert "https://cdn.tailwindcss.com" not in response.text
     assert "https://unpkg.com/htmx.org" not in response.text
     assert 'hx-get="/leaderboard?view=Overall' in response.text
@@ -291,7 +298,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     config_dir = tmp_path / "config"
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text(
-        "benchmarks:\n  - name: NanoMTEB-Japanese\n  - name: NanoMedical\n",
+        "benchmarks:\n  - name: NanoMTEB-Japanese\n  - name: NanoRTEB\n  - name: NanoMedical\n",
         encoding="utf-8",
     )
     (config_dir / "overall.yaml").write_text(
@@ -304,10 +311,66 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
 
     assert response.status_code == 200
     assert "Benchmark groups" in response.text
+    assert response.text.index("Target") < response.text.index("Overall")
+    assert 'data-testid="primary-benchmark-column"' in response.text
+    primary_column = response.text.split('data-testid="primary-benchmark-column"', 1)[1].split('data-testid="secondary-benchmark-column"', 1)[0]
+    assert "Target" in primary_column
+    assert "Overall" in primary_column
+    assert "Core benchmarks" in primary_column
+    assert "All" in response.text
+    assert "Reranking" in response.text
+    assert "data-tooltip=" in response.text
+    assert "data-tooltip-placement=\"left\"" in response.text
+    assert "full-corpus retrieval nDCG@10" in response.text
+    assert "BM25 top-100 reranking nDCG@10" in response.text
+    assert 'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_rank&amp;direction=asc&amp;group=task&amp;target=reranking"' in response.text
     assert "Language-specific" in response.text
     assert "Domain-specific" in response.text
     assert "sticky left-0" in response.text
     assert "z-20" in response.text
+
+
+def test_leaderboard_target_reranking_uses_bm25_top100_rerank_scores(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.80, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.40, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.30, 10, 12, 8192),
+        ],
+        task_diagnostics_rows=[
+            ("model/a", "BenchA", "bench/a", "a1", "BenchA::a1", 0.90, 0.20, -0.70, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
+            ("model/b", "BenchA", "bench/a", "a1", "BenchA::a1", 0.80, 0.90, 0.10, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
+            ("model/a", "BenchA", "bench/a", "a2", "BenchA::a2", 0.40, 0.20, -0.20, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
+            ("model/b", "BenchA", "bench/a", "a2", "BenchA::a2", 0.30, 0.90, 0.60, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    all_result = service.get_leaderboard("BenchA")
+    rerank_result = service.get_leaderboard("BenchA", score_target="reranking")
+
+    assert [row.model_name for row in all_result.rows] == ["model/a", "model/b"]
+    assert all_result.rows[0].mean_score == pytest.approx(65.0)
+    assert [row.model_name for row in rerank_result.rows] == ["model/b", "model/a"]
+    assert rerank_result.rows[0].mean_score == pytest.approx(90.0)
+    assert rerank_result.score_target == "reranking"
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&target=reranking")
+
+    assert response.status_code == 200
+    assert "target=reranking" in response.text
+    assert response.text.index("model/b") < response.text.index("model/a")
 
 
 def test_viewer_config_rejects_unknown_yaml_keys(tmp_path: Path) -> None:
@@ -1572,6 +1635,7 @@ def _write_task_results(
     include_embedding_variant_columns: bool = False,
     include_runtime_option_columns: bool = False,
     dataset_metadata_rows: list[tuple] | None = None,
+    task_diagnostics_rows: list[tuple] | None = None,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
@@ -1641,6 +1705,32 @@ def _write_task_results(
             con.executemany(
                 "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 dataset_metadata_rows,
+            )
+        if task_diagnostics_rows is not None:
+            con.execute(
+                """
+                CREATE TABLE task_diagnostics (
+                    model_name VARCHAR,
+                    benchmark VARCHAR,
+                    dataset_id VARCHAR,
+                    task_name VARCHAR,
+                    task_key VARCHAR,
+                    base_score DOUBLE,
+                    rerank_score DOUBLE,
+                    rerank_lift DOUBLE,
+                    rerank_status VARCHAR,
+                    rerank_top_k INTEGER,
+                    candidate_source VARCHAR,
+                    candidate_ranking VARCHAR,
+                    bm25_source VARCHAR,
+                    query_coverage DOUBLE,
+                    relevant_coverage DOUBLE
+                )
+                """
+            )
+            con.executemany(
+                "INSERT INTO task_diagnostics VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                task_diagnostics_rows,
             )
     finally:
         con.close()

@@ -185,6 +185,23 @@ The same viewer can be pointed at a different source locally or in a Space with:
 - `HAKARI_BENCH_VIEWER_HF_DATASET_PATH`
 - `HAKARI_BENCH_VIEWER_HF_DATASET_REVISION`
 
+## URL State in Embedded Spaces
+
+Hugging Face propagates the parent Space page query string and hash to the
+embedded `*.hf.space` application on initial load. The viewer supports both URL
+forms:
+
+- Query strings such as `?view=Overall&target=reranking` are handled by the
+  server as before.
+- Hash parameters such as `#view=Overall&target=reranking` are merged into the
+  first HTMX leaderboard request before it loads, which keeps deep links working
+  inside embedded Space URLs.
+
+After HTMX changes the leaderboard state, the viewer sends a best-effort
+`window.parent.postMessage` update to `https://huggingface.co` with the state in
+the hash and an empty query string. This keeps the parent Hugging Face Space URL
+shareable while avoiding duplicate query and hash state.
+
 ## Verification
 
 Wait for the deployed Space commit to become `RUNNING`:
