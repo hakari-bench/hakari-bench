@@ -47,8 +47,8 @@ def main() -> None:
     logging.basicConfig(format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level=logging.INFO)
     args = parse_args()
     if args.smoke_train:
-        args.train_samples = min(args.train_samples, 128)
-        args.eval_samples = min(args.eval_samples, 32)
+        args.train_samples = min(args.train_samples, 8)
+        args.eval_samples = min(args.eval_samples, 8)
         args.batch_size = min(args.batch_size, 8)
         args.eval_steps = 2
         args.save_steps = 2
