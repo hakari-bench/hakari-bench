@@ -45,11 +45,14 @@ wordseg = [
 pythonpath = ["."]
 
 [tool.setuptools.packages.find]
-include = ["hakari_bench*"]
-exclude = ["config*", "tests*"]
+include = ["hakari_bench*", "config*"]
+exclude = ["tests*"]
 
 [tool.setuptools.package-data]
 "hakari_bench.viewer" = ["assets/*"]
+"config.datasets" = ["*.yaml"]
+"config.dataset_collections" = ["*.yaml"]
+"config.viewer" = ["*.yaml"]
 
 [tool.uv]
 package = true

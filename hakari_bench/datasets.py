@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+import importlib.resources
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -218,7 +219,15 @@ class DatasetRegistry:
 
     @classmethod
     def load_builtin(cls) -> DatasetRegistry:
-        return cls.load_from_root(Path("config"))
+        local_config_root = Path("config")
+        if local_config_root.exists():
+            return cls.load_from_root(local_config_root)
+        try:
+            config_resources = importlib.resources.files("config")
+        except ModuleNotFoundError as exc:
+            raise FileNotFoundError("Built-in HAKARI dataset config was not found.") from exc
+        with importlib.resources.as_file(config_resources) as config_root:
+            return cls.load_from_root(config_root)
 
     @classmethod
     def load_from_root(cls, root: Path) -> DatasetRegistry:

@@ -106,6 +106,11 @@ Sparse SentenceTransformers models can be evaluated with `evaluate sparse`.
 HAKARI-Bench requests sparse tensor output from `SparseEncoder` models and
 keeps sparse embeddings in a sparse matrix format for scoring.
 
+SentenceTransformers training integrations are documented in
+[`docs/sentence_transformers_integration.md`](docs/sentence_transformers_integration.md).
+They provide `BaseEvaluator`-compatible dense, sparse, reranker, and BM25
+evaluators for use inside SentenceTransformers training loops.
+
 ```bash
 uv run hakari-bench evaluate sparse \
   --model naver/splade-v3 \
