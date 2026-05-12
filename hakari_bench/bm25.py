@@ -210,6 +210,7 @@ def evaluate_bm25_task(
     dataset: Any,
     config: BM25Config,
     source: BM25EvaluationSource = "dataset_candidate_subset",
+    metric_names: Sequence[str] | None = None,
 ) -> Any:
     from hakari_bench.evaluation import TaskEvaluation
     from hakari_bench.evaluation import top_ranking_payload
@@ -241,6 +242,7 @@ def evaluate_bm25_task(
         qrels=dataset.qrels,
         evaluator_name=dataset.evaluator_name,
         score_name=score_name,
+        metric_names=metric_names,
     )
     metric_seconds = time.perf_counter() - metric_start
     return TaskEvaluation(

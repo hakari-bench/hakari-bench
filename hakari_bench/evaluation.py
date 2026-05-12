@@ -3,6 +3,7 @@ from __future__ import annotations
 import inspect
 import time
 from dataclasses import dataclass, field
+from collections.abc import Sequence
 from typing import Any, Literal, cast
 
 import numpy as np
@@ -125,6 +126,7 @@ def evaluate_dense_task(
     encode_devices: list[str] | None = None,
     encode_chunk_size: int | None = None,
     encode_pool: dict[str, Any] | None = None,
+    metric_names: Sequence[str] | None = None,
 ) -> TaskEvaluation:
     query_ids = list(dataset.queries)
     corpus_ids = list(dataset.corpus)
@@ -206,6 +208,7 @@ def evaluate_dense_task(
         aggregate_metric=aggregate_metric,
         candidates=dataset.candidates,
         rerank_top_n=rerank_top_n,
+        metric_names=metric_names,
     )
     score_seconds = float(base_scoring["score_seconds"])
     metric_seconds = float(base_scoring["metric_seconds"])
@@ -261,6 +264,7 @@ def evaluate_dense_task(
             aggregate_metric=aggregate_metric,
             candidates=dataset.candidates,
             rerank_top_n=rerank_top_n,
+            metric_names=metric_names,
         )
         variant_score_elapsed = float(variant_scoring["score_seconds"])
         variant_score_seconds += variant_score_elapsed
@@ -317,6 +321,7 @@ def evaluate_reranker_task(
     rerank_top_n: int,
     aggregate_metric: str = "ndcg@10",
     score_kwargs: dict[str, Any] | None = None,
+    metric_names: Sequence[str] | None = None,
 ) -> TaskEvaluation:
     if dataset.candidates is None:
         raise ValueError("Reranker evaluation requires a candidate subset such as bm25.")
@@ -343,6 +348,7 @@ def evaluate_reranker_task(
         qrels=dataset.qrels,
         evaluator_name=dataset.evaluator_name,
         score_name="reranker",
+        metric_names=metric_names,
     )
     metric_seconds = time.perf_counter() - metric_start
     candidate_coverage = candidate_coverage_for_qrels(
@@ -1127,6 +1133,7 @@ def _score_embedding_distances(
     aggregate_metric: str,
     candidates: dict[str, list[str]] | None = None,
     rerank_top_n: int = 100,
+    metric_names: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     distance_evaluations: list[dict[str, Any]] = []
     rerank_distance_evaluations: list[dict[str, Any]] = []
@@ -1159,6 +1166,7 @@ def _score_embedding_distances(
             qrels=qrels,
             evaluator_name=evaluator_name,
             score_name=metric_score_name,
+            metric_names=metric_names,
         )
         metric_elapsed = time.perf_counter() - metric_start
         metric_seconds += metric_elapsed
@@ -1190,6 +1198,7 @@ def _score_embedding_distances(
                 qrels=qrels,
                 evaluator_name=evaluator_name,
                 score_name=rerank_score_name,
+                metric_names=metric_names,
             )
             rerank_metric_elapsed = time.perf_counter() - rerank_metric_start
             metric_seconds += rerank_metric_elapsed

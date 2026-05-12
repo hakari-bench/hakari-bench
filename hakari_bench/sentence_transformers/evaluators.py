@@ -13,26 +13,13 @@ import numpy as np
 from hakari_bench.bm25 import BM25Config, evaluate_bm25_task
 from hakari_bench.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
 from hakari_bench.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task, load_ir_dataset
-from hakari_bench.metrics import (
-    DEFAULT_ACCURACY_K,
-    DEFAULT_MAP_K,
-    DEFAULT_MRR_K,
-    DEFAULT_NDCG_K,
-    DEFAULT_PRECISION_RECALL_K,
-)
+from hakari_bench.metrics import normalize_ir_metric_names
 from sentence_transformers.base.evaluation import BaseEvaluator
 
 CorpusPolicy = Literal["full", "sampled_candidates"]
 BM25Source = Literal["dataset", "computed"]
 
-
-_METRIC_SUFFIXES = tuple(
-    [f"accuracy@{k}" for k in DEFAULT_ACCURACY_K]
-    + [item for k in DEFAULT_PRECISION_RECALL_K for item in (f"precision@{k}", f"recall@{k}")]
-    + [f"mrr@{k}" for k in DEFAULT_MRR_K]
-    + [f"ndcg@{k}" for k in DEFAULT_NDCG_K]
-    + [f"map@{k}" for k in DEFAULT_MAP_K]
-)
+DEFAULT_TRAINING_METRICS = ("nDCG@10", "mAP@10")
 
 
 @dataclass(frozen=True)
@@ -170,13 +157,20 @@ class _HakariNanoBaseEvaluator(BaseEvaluator):
         query_limit: int | None,
         query_sample_seed: int,
         corpus_policy: CorpusPolicy,
+        metrics: Sequence[str],
         write_csv: bool,
     ) -> None:
         super().__init__()
         self.name = name
         self.aggregate_key = aggregate_key
+        self.metric_suffixes = normalize_ir_metric_names(metrics)
         self.primary_metric_suffix = primary_metric
-        self.primary_metric = f"{self.name}_{self.aggregate_key}_{self.primary_metric_suffix}"
+        self.aggregate_metric_suffix = _aggregate_metric_suffix(primary_metric, fallback_metrics=self.metric_suffixes)
+        self.primary_metric = _primary_metric_name(
+            evaluator_name=self.name,
+            aggregate_key=self.aggregate_key,
+            primary_metric=primary_metric,
+        )
         self.batch_size = batch_size
         self.show_progress_bar = show_progress_bar
         self.candidate_ranking = candidate_ranking
@@ -212,9 +206,11 @@ class _HakariNanoBaseEvaluator(BaseEvaluator):
         results: dict[str, float] = {}
         for task_metrics in metrics:
             results.update(task_metrics)
-        aggregated = _aggregate_metrics(metrics)
+        aggregated = _aggregate_metrics(metrics, metric_suffixes=self.metric_suffixes)
         prefixed_aggregated = {f"{self.name}_{self.aggregate_key}_{key}": value for key, value in aggregated.items()}
         results.update(prefixed_aggregated)
+        combined_metrics = {f"{self.name}_{_combined_metric_name(key)}": value for key, value in aggregated.items()}
+        results.update(combined_metrics)
         if self.primary_metric not in results:
             raise ValueError(
                 f"Primary metric {self.primary_metric!r} was not produced. "
@@ -240,6 +236,7 @@ class _HakariNanoBaseEvaluator(BaseEvaluator):
             "query_limit": self.query_limit,
             "query_sample_seed": self.query_sample_seed,
             "corpus_policy": self.corpus_policy,
+            "metrics": list(self.metric_suffixes),
         }
 
 
@@ -248,7 +245,10 @@ class HakariNanoEmbeddingEvaluator(_HakariNanoBaseEvaluator):
 
     The evaluator follows the SentenceTransformers ``BaseEvaluator`` contract and
     can be passed to ``SentenceTransformerTrainer`` or ``SparseEncoderTrainer``.
-    It reuses HAKARI-Bench scoring, so metrics match the benchmark CLI.
+    It reuses HAKARI-Bench scoring but defaults to the small training-time
+    metric set ``("nDCG@10", "mAP@10")``. Additional metrics or embedding
+    variants can be requested explicitly when they are needed outside the simple
+    training feedback path.
 
     See also:
         - https://sbert.net/docs/package_reference/sentence_transformer/trainer.html
@@ -263,7 +263,8 @@ class HakariNanoEmbeddingEvaluator(_HakariNanoBaseEvaluator):
         *,
         name: str = "HakariNano",
         aggregate_key: str = "mean",
-        primary_metric: str = "ndcg@10",
+        primary_metric: str = "combined_nDCG@10",
+        metrics: Sequence[str] = DEFAULT_TRAINING_METRICS,
         batch_size: int = 32,
         show_progress_bar: bool = False,
         candidate_ranking: str | None = "bm25",
@@ -297,6 +298,7 @@ class HakariNanoEmbeddingEvaluator(_HakariNanoBaseEvaluator):
             query_limit=query_limit,
             query_sample_seed=query_sample_seed,
             corpus_policy=corpus_policy,
+            metrics=metrics,
             write_csv=write_csv,
         )
         self.query_prompt = query_prompt
@@ -339,9 +341,10 @@ class HakariNanoEmbeddingEvaluator(_HakariNanoBaseEvaluator):
                 truncate_sparse_query_max_dims=self.sparse_query_max_active_dims,
                 truncate_sparse_docs_max_dims=self.sparse_document_max_active_dims,
                 embedding_variants=self.embedding_variants,
-                aggregate_metric=self.primary_metric_suffix,
+                aggregate_metric=self.aggregate_metric_suffix,
                 score_device=self.retrieval_score_device,
                 rerank_top_n=self.rerank_top_k,
+                metric_names=self.metric_suffixes,
             )
             task_metrics.append(evaluation.metrics)
         return self._finalize(model=model, metrics=task_metrics, output_path=output_path, epoch=epoch, steps=steps)
@@ -352,7 +355,8 @@ class HakariNanoRerankerEvaluator(_HakariNanoBaseEvaluator):
 
     The evaluator reranks the selected candidate subset, usually BM25, and follows
     the same ``BaseEvaluator`` shape as SentenceTransformers'
-    ``CrossEncoderNanoBEIREvaluator``.
+    ``CrossEncoderNanoBEIREvaluator``. By default it computes only ``nDCG@10``
+    and ``mAP@10`` plus combined means across selected tasks.
 
     See also:
         - https://sbert.net/docs/package_reference/cross_encoder/trainer.html
@@ -365,7 +369,8 @@ class HakariNanoRerankerEvaluator(_HakariNanoBaseEvaluator):
         *,
         name: str | None = None,
         aggregate_key: str = "mean",
-        primary_metric: str = "ndcg@10",
+        primary_metric: str = "combined_nDCG@10",
+        metrics: Sequence[str] = DEFAULT_TRAINING_METRICS,
         batch_size: int = 32,
         show_progress_bar: bool = False,
         candidate_ranking: str = "bm25",
@@ -391,6 +396,7 @@ class HakariNanoRerankerEvaluator(_HakariNanoBaseEvaluator):
             query_limit=query_limit,
             query_sample_seed=query_sample_seed,
             corpus_policy=corpus_policy,
+            metrics=metrics,
             write_csv=write_csv,
         )
         self.inference_kwargs = dict(inference_kwargs or {})
@@ -413,15 +419,20 @@ class HakariNanoRerankerEvaluator(_HakariNanoBaseEvaluator):
                 batch_size=self.batch_size,
                 show_progress=self.show_progress_bar,
                 rerank_top_n=self.rerank_top_k,
-                aggregate_metric=self.primary_metric_suffix,
+                aggregate_metric=self.aggregate_metric_suffix,
                 score_kwargs=self.inference_kwargs,
+                metric_names=self.metric_suffixes,
             )
             task_metrics.append(evaluation.metrics)
         return self._finalize(model=model, metrics=task_metrics, output_path=output_path, epoch=epoch, steps=steps)
 
 
 class HakariNanoBM25Evaluator(_HakariNanoBaseEvaluator):
-    """Evaluate BM25 baselines on HAKARI Nano tasks without a neural model."""
+    """Evaluate BM25 baselines on HAKARI Nano tasks without a neural model.
+
+    The default metric set matches the training evaluators: ``nDCG@10`` and
+    ``mAP@10`` plus combined means across selected tasks.
+    """
 
     def __init__(
         self,
@@ -429,7 +440,8 @@ class HakariNanoBM25Evaluator(_HakariNanoBaseEvaluator):
         *,
         name: str = "HakariNanoBM25",
         aggregate_key: str = "mean",
-        primary_metric: str = "ndcg@10",
+        primary_metric: str = "combined_nDCG@10",
+        metrics: Sequence[str] = DEFAULT_TRAINING_METRICS,
         candidate_ranking: str = "bm25",
         dataset_revision: str | None = None,
         query_limit: int | None = None,
@@ -457,6 +469,7 @@ class HakariNanoBM25Evaluator(_HakariNanoBaseEvaluator):
             query_limit=query_limit,
             query_sample_seed=query_sample_seed,
             corpus_policy=corpus_policy,
+            metrics=metrics,
             write_csv=write_csv,
         )
         self.bm25_source = bm25_source
@@ -487,6 +500,7 @@ class HakariNanoBM25Evaluator(_HakariNanoBaseEvaluator):
                 dataset=dataset,
                 config=self.bm25_config,
                 source=source,
+                metric_names=self.metric_suffixes,
             )
             task_metrics.append(evaluation.metrics)
         return self._finalize(model=model, metrics=task_metrics, output_path=output_path, epoch=epoch, steps=steps)
@@ -536,23 +550,50 @@ def _stable_sample_query_ids(
     return {query_id for _score, query_id in sorted(scored)[:query_limit]}
 
 
-def _aggregate_metrics(metrics: list[dict[str, float]]) -> dict[str, float]:
-    values: dict[str, list[float]] = {suffix: [] for suffix in _METRIC_SUFFIXES}
+def _aggregate_metrics(metrics: list[dict[str, float]], *, metric_suffixes: Sequence[str]) -> dict[str, float]:
+    values: dict[str, list[float]] = {suffix: [] for suffix in metric_suffixes}
     for task_metrics in metrics:
         for key, value in task_metrics.items():
-            suffix = _metric_suffix(key)
+            suffix = _metric_suffix(key, metric_suffixes=metric_suffixes)
             if suffix is None:
                 continue
             values[suffix].append(float(value))
     return {suffix: float(np.mean(items)) for suffix, items in values.items() if items}
 
 
-def _metric_suffix(key: str) -> str | None:
+def _metric_suffix(key: str, *, metric_suffixes: Sequence[str]) -> str | None:
     lowered = key.lower()
-    for suffix in _METRIC_SUFFIXES:
+    for suffix in metric_suffixes:
         if lowered.endswith(suffix):
             return suffix
     return None
+
+
+def _primary_metric_name(*, evaluator_name: str, aggregate_key: str, primary_metric: str) -> str:
+    metric = primary_metric.strip()
+    if metric.startswith(f"{evaluator_name}_"):
+        return metric
+    if metric.lower().startswith("combined_"):
+        suffix = metric.split("_", 1)[1]
+        canonical_suffix = normalize_ir_metric_names([suffix])[0]
+        return f"{evaluator_name}_{_combined_metric_name(canonical_suffix)}"
+    canonical_suffix = normalize_ir_metric_names([metric])[0]
+    return f"{evaluator_name}_{aggregate_key}_{canonical_suffix}"
+
+
+def _aggregate_metric_suffix(primary_metric: str, *, fallback_metrics: Sequence[str]) -> str:
+    metric = primary_metric.strip()
+    if metric.lower().startswith("combined_"):
+        return normalize_ir_metric_names([metric.split("_", 1)[1]])[0]
+    if "@" in metric and not metric.startswith("Hakari"):
+        return normalize_ir_metric_names([metric.rsplit("_", 1)[-1]])[0]
+    return fallback_metrics[0]
+
+
+def _combined_metric_name(metric_suffix: str) -> str:
+    family, cutoff = metric_suffix.split("@", 1)
+    display_family = {"ndcg": "nDCG", "map": "mAP"}.get(family, family)
+    return f"combined_{display_family}@{cutoff}"
 
 
 def _store_metrics_if_available(

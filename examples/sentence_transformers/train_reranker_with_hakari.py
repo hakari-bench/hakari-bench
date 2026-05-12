@@ -1,3 +1,9 @@
+"""CrossEncoder reranker training with HAKARI Nano evaluation.
+
+See docs/sentence_transformers_evaluation_integration.md for metric keys,
+query sampling, smoke runs, and candidate reranking behavior.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -24,7 +30,10 @@ DEFAULT_MODEL = "hotchpotch/mmBERT-L4H384-pruned"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train a CrossEncoder reranker with HAKARI Nano evaluation.")
+    parser = argparse.ArgumentParser(
+        description="Train a CrossEncoder reranker with HAKARI Nano evaluation.",
+        epilog="Documentation: docs/sentence_transformers_evaluation_integration.md",
+    )
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--output-dir", default="output/sentence_transformers/reranker_hakari")
     parser.add_argument("--train-samples", type=int, default=50_000)
@@ -37,6 +46,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--rerank-top-k", type=int, default=100)
     parser.add_argument("--eval-query-limit", type=int, default=None)
     parser.add_argument("--query-sample-seed", type=int, default=13)
+    parser.add_argument(
+        "--hakari-metric",
+        action="append",
+        default=None,
+        help="HAKARI training-time metric to compute. Defaults to nDCG@10 and mAP@10.",
+    )
     parser.add_argument("--bf16", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--fp16", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--smoke-train", action="store_true")
@@ -76,6 +91,7 @@ def main() -> None:
         query_limit=args.eval_query_limit,
         query_sample_seed=args.query_sample_seed,
         smoke_train=args.smoke_train,
+        metrics=args.hakari_metric,
     )
     LOGGER.info("Evaluating the base reranker with HAKARI Nano targets")
     evaluator(model)
@@ -122,10 +138,12 @@ def build_hakari_evaluator(
     query_limit: int | None,
     query_sample_seed: int,
     smoke_train: bool,
+    metrics: list[str] | None,
 ) -> HakariNanoRerankerEvaluator:
     return HakariNanoRerankerEvaluator(
         targets=default_hakari_targets(),
         batch_size=batch_size,
+        metrics=metrics or ("nDCG@10", "mAP@10"),
         rerank_top_k=rerank_top_k,
         query_limit=query_limit,
         query_sample_seed=query_sample_seed,

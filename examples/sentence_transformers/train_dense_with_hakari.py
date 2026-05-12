@@ -1,3 +1,9 @@
+"""Dense SentenceTransformers training with HAKARI Nano evaluation.
+
+See docs/sentence_transformers_evaluation_integration.md for metric keys,
+query sampling, smoke runs, and optional embedding variant evaluation.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -6,6 +12,7 @@ from pathlib import Path
 
 from datasets import Dataset, load_dataset
 
+from hakari_bench.embedding_variants import parse_embedding_variants
 from hakari_bench.sentence_transformers import HakariNanoEmbeddingEvaluator, HakariNanoTarget
 from sentence_transformers import (
     SentenceTransformer,
@@ -21,7 +28,10 @@ DEFAULT_MODEL = "hotchpotch/mmBERT-L4H384-pruned"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train a dense SentenceTransformer with HAKARI Nano evaluation.")
+    parser = argparse.ArgumentParser(
+        description="Train a dense SentenceTransformer with HAKARI Nano evaluation.",
+        epilog="Documentation: docs/sentence_transformers_evaluation_integration.md",
+    )
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--output-dir", default="output/sentence_transformers/dense_hakari")
     parser.add_argument("--train-samples", type=int, default=50_000)
@@ -34,6 +44,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--save-steps", type=int, default=500)
     parser.add_argument("--eval-query-limit", type=int, default=None)
     parser.add_argument("--query-sample-seed", type=int, default=13)
+    parser.add_argument(
+        "--hakari-metric",
+        action="append",
+        default=None,
+        help="HAKARI training-time metric to compute. Defaults to nDCG@10 and mAP@10.",
+    )
+    parser.add_argument(
+        "--extra-embedding-variant",
+        action="append",
+        default=None,
+        help=(
+            "Optional separate embedding variant evaluation, e.g. int8, binary, "
+            "rescore:int8, or truncate:128. Omit for the simple training metric path."
+        ),
+    )
     parser.add_argument("--bf16", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--fp16", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--smoke-train", action="store_true")
@@ -73,6 +98,8 @@ def main() -> None:
         query_limit=args.eval_query_limit,
         query_sample_seed=args.query_sample_seed,
         smoke_train=args.smoke_train,
+        metrics=args.hakari_metric,
+        extra_embedding_variants=args.extra_embedding_variant,
     )
     LOGGER.info("Evaluating the base model with HAKARI Nano targets")
     evaluator(model)
@@ -119,15 +146,18 @@ def build_hakari_evaluator(
     query_limit: int | None,
     query_sample_seed: int,
     smoke_train: bool,
+    metrics: list[str] | None,
+    extra_embedding_variants: list[str] | None,
 ) -> HakariNanoEmbeddingEvaluator:
     return HakariNanoEmbeddingEvaluator(
         targets=default_hakari_targets(),
         batch_size=batch_size,
+        metrics=metrics or ("nDCG@10", "mAP@10"),
         query_limit=query_limit,
         query_sample_seed=query_sample_seed,
         corpus_policy="sampled_candidates" if smoke_train else "full",
         candidate_ranking="bm25",
-        embedding_variants=[],
+        embedding_variants=parse_embedding_variants(extra_embedding_variants),
     )
 
 
