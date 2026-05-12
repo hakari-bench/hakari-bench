@@ -45,6 +45,9 @@ For every model:
 - If reproducibility requires a fixed dataset state, use
   `--dataset-revision REV`. Otherwise verify that output JSON records the
   resolved Hugging Face dataset SHA.
+- If reproducibility requires a fixed model state, use `--model-revision REV`.
+  Output JSON records the resolved Hugging Face model SHA as a short revision
+  when it can be resolved.
 
 ## Dense Evaluation
 
@@ -239,6 +242,7 @@ HF_DATASETS_OFFLINE=1 HF_HUB_OFFLINE=1 \
 Per-task result JSON should preserve enough metadata to explain the run:
 
 - dataset revision,
+- model revision,
 - prompts and prompt names,
 - embedding variants and representation metadata,
 - dtype and attention implementation,

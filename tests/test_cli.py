@@ -145,7 +145,7 @@ def test_parse_args_accepts_structured_params_json() -> None:
             "dense",
             "--params-json",
             (
-                '{"model":{"source":"/local_model_A/","alias":"model_A"},'
+                '{"model":{"source":"/local_model_A/","alias":"model_A","revision":"abc123"},'
                 '"target":{"collections":["MNanoBEIR"]},'
                 '"runtime":{"batch_size":16,"dtype":"fp16",'
                 '"encode_devices":["cuda:0","cuda:1"],"encode_chunk_size":64},'
@@ -156,6 +156,7 @@ def test_parse_args_accepts_structured_params_json() -> None:
 
     assert args.model == "/local_model_A/"
     assert args.model_id == "local/model_A"
+    assert args.model_revision == "abc123"
     assert args.collection == ["MNanoBEIR"]
     assert args.dataset == []
     assert args.batch_size == 16
@@ -696,6 +697,26 @@ def test_parse_args_accepts_dataset_revision() -> None:
     )
 
     assert args.dataset_revision == "abc123"
+
+
+def test_parse_args_accepts_model_revision() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "dense",
+            "--model",
+            "hotchpotch/model",
+            "--model-revision",
+            "abc123",
+        ]
+    )
+
+    assert args.model_revision == "abc123"
+    assert args.model_source == {
+        "type": "huggingface",
+        "name": "hotchpotch/model",
+        "revision_requested": "abc123",
+    }
 
 
 def test_parse_args_accepts_embedding_variants() -> None:

@@ -156,6 +156,9 @@ def load_results(
         experiment_manifest = experiment_manifest if isinstance(experiment_manifest, dict) else {}
         model_dir = result_path.relative_to(results_dir).parts[0]
         model_name = _model_name_from_payload(model, model_dir=model_dir)
+        model_source = model.get("source", {}) if isinstance(model, dict) else {}
+        model_revision = _model_revision_value(model_source, key="revision")
+        model_revision_requested = _model_revision_value(model_source, key="revision_requested")
         dataset_id = str(target.get("dataset_id") or "")
         dataset_revision = _dataset_revision_value(target.get("dataset_revision"), key="resolved")
         dataset_revision_requested = _dataset_revision_value(target.get("dataset_revision"), key="requested")
@@ -180,6 +183,8 @@ def load_results(
         common: dict[str, Any] = {
             "model_dir": model_dir,
             "model_name": model_name,
+            "model_revision": model_revision,
+            "model_revision_requested": model_revision_requested,
             "benchmark": benchmark,
             "dataset_id": dataset_id,
             "dataset_revision": dataset_revision,
@@ -869,7 +874,9 @@ def write_duckdb(
         con.execute(
             """
             CREATE TABLE task_results (
-                model_dir VARCHAR, model_name VARCHAR, benchmark VARCHAR,
+                model_dir VARCHAR, model_name VARCHAR,
+                model_revision VARCHAR, model_revision_requested VARCHAR,
+                benchmark VARCHAR,
                 dataset_id VARCHAR, dataset_revision VARCHAR, dataset_revision_requested VARCHAR,
                 dataset_name VARCHAR, split_name VARCHAR, task_name VARCHAR, task_key VARCHAR,
                 score DOUBLE, score_100 DOUBLE, aggregate_metric VARCHAR, result_path VARCHAR,
@@ -886,7 +893,7 @@ def write_duckdb(
             """
         )
         con.executemany(
-            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [row.duckdb_values() for row in rows],
         )
         con.execute(
@@ -1332,6 +1339,13 @@ def _dataset_revision_value(value: Any, *, key: str) -> str | None:
     if key == "resolved" and value is not None:
         return str(value)
     return None
+
+
+def _model_revision_value(value: Any, *, key: str) -> str | None:
+    if not isinstance(value, dict):
+        return None
+    item = value.get(key)
+    return str(item) if item is not None else None
 
 
 if __name__ == "__main__":

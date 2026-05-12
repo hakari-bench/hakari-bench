@@ -9,6 +9,7 @@ from hakari_bench.models import (
     ModelLoadConfig,
     collect_model_metadata,
     load_model,
+    resolve_model_revision,
     resolve_attn_implementation,
     resolve_torch_dtype,
 )
@@ -59,6 +60,7 @@ def test_load_model_passes_dense_options(monkeypatch: pytest.MonkeyPatch) -> Non
         {
             "model_name_or_path": "hotchpotch/model",
             "device": "cpu",
+            "revision": None,
             "trust_remote_code": True,
             "model_kwargs": {
                 "torch_dtype": torch.bfloat16,
@@ -100,6 +102,7 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
         {
             "model_name_or_path": "lightonai/GTE-ModernColBERT-v1",
             "device": "cpu",
+            "revision": None,
             "trust_remote_code": True,
             "model_kwargs": {"torch_dtype": torch.float32},
             "query_length": 64,
@@ -144,6 +147,7 @@ def test_load_model_reranker_passes_cross_encoder_kwargs(monkeypatch: pytest.Mon
             "prompts": {"retrieval": "Retrieve relevant passages"},
             "default_prompt_name": "retrieval",
             "device": "cuda:0",
+            "revision": None,
             "trust_remote_code": True,
             "model_kwargs": {
                 "torch_dtype": torch.bfloat16,
@@ -151,6 +155,51 @@ def test_load_model_reranker_passes_cross_encoder_kwargs(monkeypatch: pytest.Mon
             },
         }
     ]
+
+
+def test_load_model_passes_model_revision_to_huggingface_loaders(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[dict[str, object]] = []
+
+    class FakeSentenceTransformer(torch.nn.Module):
+        def __init__(self, model_name_or_path: str, **kwargs: object) -> None:
+            super().__init__()
+            calls.append({"model_name_or_path": model_name_or_path, **kwargs})
+            self.projection = torch.nn.Linear(2, 2)
+
+    monkeypatch.setattr("hakari_bench.models._import_sentence_transformer", lambda: FakeSentenceTransformer)
+
+    load_model(
+        ModelLoadConfig(
+            model_name_or_path="hotchpotch/model",
+            model_type="dense",
+            dtype="bf16",
+            device="cpu",
+            trust_remote_code=True,
+            model_revision="abc123",
+        )
+    )
+
+    assert calls[0]["revision"] == "abc123"
+
+
+def test_resolve_model_revision_uses_short_huggingface_sha(monkeypatch: pytest.MonkeyPatch) -> None:
+    class FakeInfo:
+        sha = "0123456789abcdef0123456789abcdef01234567"
+
+    class FakeHfApi:
+        def model_info(self, *, repo_id: str, revision: str | None = None) -> FakeInfo:
+            assert repo_id == "hotchpotch/model"
+            assert revision == "main"
+            return FakeInfo()
+
+    monkeypatch.setattr("hakari_bench.models.HfApi", FakeHfApi)
+    resolve_model_revision.cache_clear()
+
+    assert resolve_model_revision("hotchpotch/model", requested_revision="main") == {
+        "requested": "main",
+        "resolved": "0123456789ab",
+        "source": "huggingface_hub",
+    }
 
 
 def test_collect_model_metadata_counts_parameters() -> None:
@@ -163,6 +212,7 @@ def test_collect_model_metadata_counts_parameters() -> None:
         trust_remote_code=False,
         attn_implementation=None,
         flash_attn2=False,
+        model_revision=None,
     )
 
     metadata = collect_model_metadata(model, args)
@@ -174,6 +224,39 @@ def test_collect_model_metadata_counts_parameters() -> None:
     assert metadata["trainable_parameters"] == 11
     assert metadata["embedding_parameters"] is None
     assert metadata["active_parameters"] is None
+
+
+def test_collect_model_metadata_records_model_revision(monkeypatch: pytest.MonkeyPatch) -> None:
+    model = torch.nn.Sequential(torch.nn.Linear(3, 2))
+    args = argparse.Namespace(
+        model="hotchpotch/model",
+        model_type="dense",
+        dtype="bf16",
+        device="cpu",
+        trust_remote_code=False,
+        attn_implementation=None,
+        flash_attn2=False,
+        model_revision="main",
+        model_source={"type": "huggingface", "name": "hotchpotch/model", "revision_requested": "main"},
+    )
+
+    monkeypatch.setattr(
+        "hakari_bench.models.resolve_model_revision",
+        lambda model_id, requested_revision=None: {
+            "requested": requested_revision,
+            "resolved": "0123456789ab",
+            "source": "huggingface_hub",
+        },
+    )
+
+    metadata = collect_model_metadata(model, args)
+
+    assert metadata["source"] == {
+        "type": "huggingface",
+        "name": "hotchpotch/model",
+        "revision_requested": "main",
+        "revision": "0123456789ab",
+    }
 
 
 def test_collect_model_metadata_counts_active_parameters_from_input_embeddings() -> None:

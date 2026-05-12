@@ -138,6 +138,8 @@ one model, one benchmark task, and one embedding variant. Base results use
 | --- | --- | --- |
 | `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
 | `model_name` | `VARCHAR` | `model.id` from result JSON, or `model_dir` when absent. |
+| `model_revision` | `VARCHAR` | Resolved Hugging Face model revision, stored as a short commit SHA when available. Existing result JSON may leave this `NULL`. |
+| `model_revision_requested` | `VARCHAR` | Requested Hugging Face model revision from the run, or `NULL` when not specified or unavailable. |
 | `benchmark` | `VARCHAR` | Viewer benchmark group, such as `MNanoBEIR` or `NanoJMTEB`. |
 | `dataset_id` | `VARCHAR` | `target.dataset_id`, usually a Hugging Face dataset repo. |
 | `dataset_revision` | `VARCHAR` | Resolved dataset revision, usually a commit SHA. |

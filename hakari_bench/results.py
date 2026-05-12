@@ -377,11 +377,14 @@ def build_experiment_manifest(payload: dict[str, Any]) -> dict[str, Any]:
     model = payload.get("model")
     target = payload.get("target")
     config = payload.get("config")
+    model_source = model.get("source") if isinstance(model, dict) else None
     return {
         "schema_version": 1,
         "fingerprint_sha256": fingerprint,
         "model_id": model.get("id") if isinstance(model, dict) else None,
         "method": model.get("method") if isinstance(model, dict) else None,
+        "model_revision": model_source.get("revision") if isinstance(model_source, dict) else None,
+        "model_revision_requested": model_source.get("revision_requested") if isinstance(model_source, dict) else None,
         "dataset_id": target.get("dataset_id") if isinstance(target, dict) else None,
         "dataset_revision": target.get("dataset_revision") if isinstance(target, dict) else None,
         "split_name": target.get("split_name") if isinstance(target, dict) else None,

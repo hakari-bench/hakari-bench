@@ -156,6 +156,7 @@ def _select_queries(
     queries: list[dict[str, str]],
     positive_qrels: list[dict[str, str]],
     query_limit: int,
+    dedupe_query_texts: bool = True,
 ) -> tuple[list[dict[str, str]], list[dict[str, str]], dict[str, int]]:
     positive_by_query: dict[str, list[dict[str, str]]] = defaultdict(list)
     for row in positive_qrels:
@@ -175,7 +176,7 @@ def _select_queries(
         if query_id in selected_qids:
             skipped_duplicate_query_ids += 1
             continue
-        if row["text"] in seen_query_texts:
+        if dedupe_query_texts and row["text"] in seen_query_texts:
             skipped_duplicate_text += 1
             continue
         selected_queries.append(row)
@@ -224,6 +225,7 @@ def _select_corpus(
     selected_qrels: list[dict[str, str]],
     non_positive_qrels: list[dict[str, str]],
     doc_limit: int,
+    dedupe_doc_texts: bool = True,
 ) -> tuple[list[dict[str, str]], dict[str, int | str]]:
     selected_qids = {row["query-id"] for row in selected_qrels}
     positive_doc_ids = [row["corpus-id"] for row in selected_qrels]
@@ -263,7 +265,7 @@ def _select_corpus(
                 missing_positive_docs += 1
             return
         text = row["text"]
-        if text in seen_texts:
+        if dedupe_doc_texts and text in seen_texts:
             duplicate_doc_texts_removed += 1
             return
         selected.append(row)
@@ -283,7 +285,7 @@ def _select_corpus(
         if doc_id in selected_ids:
             continue
         text = row["text"]
-        if text in seen_texts:
+        if dedupe_doc_texts and text in seen_texts:
             duplicate_doc_texts_removed += 1
             continue
         selected.append(row)
@@ -381,6 +383,8 @@ def build_nano_dataset_from_rows(
     doc_limit: int = DEFAULT_DOC_LIMIT,
     bm25_config: BM25Config | None = None,
     metadata: dict[str, Any] | None = None,
+    dedupe_query_texts: bool = True,
+    dedupe_doc_texts: bool = True,
 ) -> NanoBuildResult:
     if query_limit <= 0:
         raise ValueError("query_limit must be positive.")
@@ -393,12 +397,14 @@ def build_nano_dataset_from_rows(
         queries=queries,
         positive_qrels=positive_qrels,
         query_limit=query_limit,
+        dedupe_query_texts=dedupe_query_texts,
     )
     selected_corpus, corpus_metadata = _select_corpus(
         corpus_rows=corpus_rows,
         selected_qrels=selected_qrels,
         non_positive_qrels=non_positive_qrels,
         doc_limit=doc_limit,
+        dedupe_doc_texts=dedupe_doc_texts,
     )
     selected_query_ids = {row["_id"] for row in selected_queries}
     selected_doc_ids = {row["_id"] for row in selected_corpus}
@@ -444,6 +450,8 @@ def build_nano_dataset_from_rows(
         "source_non_positive_qrels": len(non_positive_qrels),
         "query_limit": query_limit,
         "doc_limit": doc_limit,
+        "dedupe_query_texts": dedupe_query_texts,
+        "dedupe_doc_texts": dedupe_doc_texts,
         "qrels_score_policy": "score > 0 kept as qrels; score <= 0 excluded and used as hard-negative corpus candidates",
         "query_selection": query_metadata,
         "corpus_selection": corpus_metadata,
@@ -465,6 +473,9 @@ def build_nano_dataset_from_rows(
             "source_eval_splits",
             "source_split_policy",
             "source_query_selection_policy",
+            "source_subset_count",
+            "source_selected_query_count",
+            "source_corpus_order_policy",
             "source_eval_split_counts",
             "source_excluded_positive_docs",
             "source_excluded_positive_like_docs",

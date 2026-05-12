@@ -5,15 +5,25 @@ import importlib.metadata
 import platform
 import sys
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import Any
 
 import torch
+
+try:
+    HfApi: Any = getattr(importlib.import_module("huggingface_hub"), "HfApi")
+except Exception:  # pragma: no cover
+    HfApi = None
+
+
+MODEL_REVISION_SHA_LENGTH = 12
 
 
 @dataclass(frozen=True)
 class ModelLoadConfig:
     model_name_or_path: str
     model_type: str = "dense"
+    model_revision: str | None = None
     dtype: str = "bf16"
     attn_implementation: str | None = None
     flash_attn2: bool = False
@@ -55,6 +65,30 @@ def _model_kwargs(config: ModelLoadConfig) -> dict[str, Any]:
     if attn_implementation is not None:
         kwargs["attn_implementation"] = attn_implementation
     return kwargs
+
+
+@lru_cache(maxsize=512)
+def resolve_model_revision(model_id: str, requested_revision: str | None = None) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "requested": requested_revision,
+        "resolved": None,
+        "source": "huggingface_hub",
+    }
+    if HfApi is None:
+        payload["error"] = "huggingface_hub is not installed."
+        return payload
+    try:
+        info = HfApi().model_info(repo_id=model_id, revision=requested_revision)
+    except Exception as exc:
+        payload["error"] = f"{type(exc).__name__}: {exc}"
+        return payload
+
+    sha = getattr(info, "sha", None)
+    if sha is None:
+        payload["error"] = "Model revision SHA was not returned by Hugging Face Hub."
+    else:
+        payload["resolved"] = str(sha)[:MODEL_REVISION_SHA_LENGTH]
+    return payload
 
 
 def _import_sentence_transformer() -> Any:
@@ -212,6 +246,7 @@ def load_model(config: ModelLoadConfig) -> Any:
     if config.model_type == "late-interaction":
         kwargs: dict[str, Any] = {
             "device": config.device,
+            "revision": config.model_revision,
             "trust_remote_code": config.trust_remote_code,
             "model_kwargs": model_kwargs,
         }
@@ -234,6 +269,7 @@ def load_model(config: ModelLoadConfig) -> Any:
         model = _import_sentence_transformer()(
             config.model_name_or_path,
             device=config.device,
+            revision=config.model_revision,
             trust_remote_code=config.trust_remote_code,
             model_kwargs=model_kwargs,
         )
@@ -246,6 +282,7 @@ def load_model(config: ModelLoadConfig) -> Any:
         model = _import_sparse_encoder()(
             config.model_name_or_path,
             device=config.device,
+            revision=config.model_revision,
             trust_remote_code=config.trust_remote_code,
             model_kwargs=model_kwargs,
         )
@@ -262,6 +299,7 @@ def load_model(config: ModelLoadConfig) -> Any:
                 raise ValueError("cross_encoder_kwargs.model_kwargs must be an object.")
             model_kwargs = {**model_kwargs, **extra_model_kwargs}
         kwargs.setdefault("device", config.device)
+        kwargs.setdefault("revision", config.model_revision)
         kwargs.setdefault("trust_remote_code", config.trust_remote_code)
         kwargs["model_kwargs"] = model_kwargs
         if config.max_seq_length is not None and "max_length" not in kwargs:
@@ -428,10 +466,14 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
         total_parameters=total_parameters,
         embedding_parameters=embedding_parameters,
     )
+    source = _model_source_with_revision(
+        getattr(args, "model_source", {"type": "huggingface", "name": args.model}),
+        requested_revision=getattr(args, "model_revision", None),
+    )
     payload: dict[str, Any] = {
         "method": args.model_type,
         "id": getattr(args, "model_id", args.model),
-        "source": getattr(args, "model_source", {"type": "huggingface", "name": args.model}),
+        "source": source,
         "device": args.device,
         "dtype": args.dtype,
         "attn_implementation": resolve_attn_implementation(
@@ -461,6 +503,31 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
             "do_query_expansion": getattr(model, "do_query_expansion", None),
             "attend_to_expansion_tokens": getattr(model, "attend_to_expansion_tokens", None),
         }
+    return payload
+
+
+def _model_source_with_revision(source: Any, *, requested_revision: str | None) -> Any:
+    if not isinstance(source, dict):
+        return source
+    payload = dict(source)
+    if payload.get("type") != "huggingface":
+        return payload
+    model_id = payload.get("name")
+    if not isinstance(model_id, str) or not model_id:
+        return payload
+    requested = requested_revision if requested_revision is not None else payload.get("revision_requested")
+    if requested is not None:
+        payload["revision_requested"] = str(requested)
+    elif "/" not in model_id:
+        return payload
+
+    revision = resolve_model_revision(model_id, requested_revision=str(requested) if requested is not None else None)
+    resolved = revision.get("resolved")
+    if resolved is not None:
+        payload["revision"] = str(resolved)
+    error = revision.get("error")
+    if error is not None:
+        payload["revision_error"] = str(error)
     return payload
 
 
