@@ -2,7 +2,13 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 from pathlib import Path
+
+# Keep the CrossEncoder example on one visible GPU by default. SentenceTransformers'
+# BinaryCrossEntropyLoss calls CrossEncoder.preprocess(), which is hidden when the
+# Transformers trainer wraps the model with torch.nn.DataParallel.
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
 
 import torch
 from datasets import Dataset, load_dataset
