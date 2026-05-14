@@ -9,7 +9,7 @@ dependencies = [
     "datasets>=4.8.4",
     "duckdb>=1.5.2",
     "fast-langdetect>=1.0.0",
-    "huggingface-hub>=1.12.0",
+    "huggingface-hub>=0.34,<2",
     "nltk>=3.9.4",
     "numpy>=2.4.4",
     "peft>=0.19.1",
@@ -21,7 +21,7 @@ dependencies = [
     "sentence-transformers>=5.4",
     "sentencepiece>=0.2.1",
     "torch>=2.9,<2.10",
-    "transformers>=5,<6",
+    "transformers>=4.57,<6",
 ]
 
 [build-system]
@@ -56,6 +56,12 @@ exclude = ["tests*"]
 
 [tool.uv]
 package = true
+conflicts = [
+    [
+        { group = "pylate" },
+        { group = "tf4-fa2" },
+    ],
+]
 dependency-metadata = [
     { name = "pylate", version = "1.4.0", requires-dist = ["accelerate", "datasets", "fast-plaid", "fastkmeans", "ninja", "pandas", "sentence-transformers>=5.4", "transformers>=5,<6", "ujson"] },
 ]
@@ -94,6 +100,10 @@ pylate = [
 ]
 flash-attn = [
     "flash-attn @ https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3%2Bcu12torch2.9cxx11abiTRUE-cp312-cp312-linux_x86_64.whl ; python_version == '3.12' and sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
+tf4-fa2 = [
+    { include-group = "flash-attn" },
+    "transformers>=4.57,<5",
 ]
 
 [tool.tox]

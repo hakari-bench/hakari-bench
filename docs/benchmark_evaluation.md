@@ -200,6 +200,16 @@ from `build-candidates bm25` when generating candidate subsets.
 - Compare practical options before large runs:
   - Transformers 4.x + Flash Attention 2.
   - Transformers 5.x + SDPA.
+- Use the `tf4-fa2` uv dependency group for the Transformers 4.x + Flash
+  Attention 2 runtime:
+
+  ```bash
+  uv run --group tf4-fa2 hakari-bench evaluate dense \
+    --model MODEL_ID \
+    --dataset DATASET_NAME \
+    --flash-attn2
+  ```
+
 - Treat Transformers 5.x + Flash Attention 2 as suspect unless already verified
   for that model in this environment.
 - Prefer the fastest verified configuration that preserves correctness and
