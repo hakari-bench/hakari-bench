@@ -10,7 +10,7 @@ import pytest
 
 from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, _view_group, create_app
 from hakari_bench.viewer.config import load_viewer_config
-from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, compute_leaderboard_rows
+from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, _clear_task_score_cache, compute_leaderboard_rows
 from hakari_bench.viewer.model_display import model_cell_views
 from hakari_bench.viewer.store import (
     DuckDbLocation,
@@ -18,6 +18,7 @@ from hakari_bench.viewer.store import (
     LocalDuckDbStore,
     resolve_duckdb_location,
 )
+from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
 def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> None:
@@ -474,6 +475,119 @@ def test_leaderboard_service_does_not_validate_pydantic_records_on_hot_path(
     result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard("BenchA")
 
     assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
+
+
+def test_leaderboard_service_reuses_task_score_cache_across_instances(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from hakari_bench.viewer.data import TaskResultsRepository
+
+    _clear_task_score_cache()
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.80, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    config = load_viewer_config(config_dir)
+    fetch_count = 0
+    original_fetch = TaskResultsRepository.fetch_task_result_rows
+
+    def counted_fetch(
+        self: TaskResultsRepository,
+        *,
+        benchmarks: list[str],
+        score_target: str = "all",
+        include_embedding_variants: bool,
+        variant_display_flags: VariantDisplayFlags | None = None,
+    ):
+        nonlocal fetch_count
+        fetch_count += 1
+        return original_fetch(
+            self,
+            benchmarks=benchmarks,
+            score_target=score_target,
+            include_embedding_variants=include_embedding_variants,
+            variant_display_flags=variant_display_flags,
+        )
+
+    monkeypatch.setattr(TaskResultsRepository, "fetch_task_result_rows", counted_fetch)
+
+    first = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard("BenchA")
+    second = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard("BenchA")
+
+    assert [row.model_name for row in first.rows] == ["model/a", "model/b"]
+    assert [row.model_name for row in second.rows] == ["model/a", "model/b"]
+    assert fetch_count == 1
+    _clear_task_score_cache()
+
+
+def test_leaderboard_service_cache_invalidates_when_duckdb_file_changes(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from hakari_bench.viewer.data import TaskResultsRepository
+
+    _clear_task_score_cache()
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.80, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    config = load_viewer_config(config_dir)
+    fetch_count = 0
+    original_fetch = TaskResultsRepository.fetch_task_result_rows
+
+    def counted_fetch(
+        self: TaskResultsRepository,
+        *,
+        benchmarks: list[str],
+        score_target: str = "all",
+        include_embedding_variants: bool,
+        variant_display_flags: VariantDisplayFlags | None = None,
+    ):
+        nonlocal fetch_count
+        fetch_count += 1
+        return original_fetch(
+            self,
+            benchmarks=benchmarks,
+            score_target=score_target,
+            include_embedding_variants=include_embedding_variants,
+            variant_display_flags=variant_display_flags,
+        )
+
+    monkeypatch.setattr(TaskResultsRepository, "fetch_task_result_rows", counted_fetch)
+
+    first = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard("BenchA")
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            ("model/c", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.70, 30, 36, 2048),
+        )
+    finally:
+        con.close()
+    os.utime(db_path)
+    second = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard("BenchA")
+
+    assert len(first.rows) == 2
+    assert len(second.rows) == 3
+    assert fetch_count == 2
+    _clear_task_score_cache()
 
 
 def test_leaderboard_endpoint_logs_request_and_render_timing(

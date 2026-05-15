@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable, Literal
 
@@ -9,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository
-from hakari_bench.viewer.observability import timed_operation
+from hakari_bench.viewer.observability import log_event, timed_operation
 from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
 from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
 
@@ -128,6 +129,7 @@ SORT_COLUMNS = {
 class LeaderboardService:
     def __init__(self, *, duckdb_path: Path, config: ViewerConfig) -> None:
         self.config = config
+        self.duckdb_path = duckdb_path
         self.task_results_repository = TaskResultsRepository(duckdb_path)
 
     def get_leaderboard(
@@ -237,73 +239,154 @@ class LeaderboardService:
         include_rescore_variants: bool,
         include_other_variants: bool,
     ) -> list[TaskScore]:
-        task_scores: list[TaskScore] = []
         include_any_variants = (
             include_quantization_variants
             or include_truncate_variants
             or include_rescore_variants
             or include_other_variants
         )
-        records = self.task_results_repository.fetch_task_result_rows(
-            benchmarks=benchmarks,
-            score_target=score_target,
-            include_embedding_variants=include_any_variants,
-            variant_display_flags=VariantDisplayFlags(
-                quantization=include_quantization_variants,
-                truncate=include_truncate_variants,
-                rescore=include_rescore_variants,
-                other=include_other_variants,
-            ),
+        variant_flags = VariantDisplayFlags(
+            quantization=include_quantization_variants,
+            truncate=include_truncate_variants,
+            rescore=include_rescore_variants,
+            other=include_other_variants,
         )
-        with timed_operation("viewer.leaderboard.phase", operation="filter_variant_records") as timing:
-            filtered_records = [
-                record
-                for record in records
-                if include_variant_row(
-                    embedding_variant_name=record.embedding_variant_name,
-                    quantization=record.quantization,
-                    flags=VariantDisplayFlags(
-                        quantization=include_quantization_variants,
-                        truncate=include_truncate_variants,
-                        rescore=include_rescore_variants,
-                        other=include_other_variants,
-                    ),
-                )
-            ]
-            timing["record_count"] = len(records)
-            timing["filtered_record_count"] = len(filtered_records)
-        with timed_operation("viewer.leaderboard.phase", operation="display_model_names") as timing:
-            model_names = _record_display_model_names(filtered_records, include_variant_details=include_any_variants)
-            timing["record_count"] = len(filtered_records)
-        with timed_operation("viewer.leaderboard.phase", operation="build_task_scores") as timing:
-            for record, model_name in zip(filtered_records, model_names, strict=True):
-                task_scores.append(
-                    TaskScore(
-                        model_name=model_name,
-                        benchmark=record.benchmark,
-                        dataset_id=record.dataset_id,
-                        dataset_name=record.dataset_name,
-                        split_name=record.split_name,
-                        task_name=record.task_name,
-                        task_key=record.task_key,
-                        score=record.score,
-                        language=record.language,
-                        languages=tuple(record.languages),
-                        active_parameters=record.active_parameters,
-                        total_parameters=record.total_parameters,
-                        max_seq_length=record.max_seq_length,
-                        dtype=record.dtype,
-                        attn_implementation=record.attn_implementation,
-                        prompt_summary=record.prompt_summary,
-                        trust_remote_code=record.trust_remote_code,
-                        embedding_variant_name=record.embedding_variant_name,
-                        embedding_dim=record.embedding_dim,
-                        quantization=record.quantization,
-                        source_model_name=record.model_name,
-                    )
-                )
-            timing["task_score_count"] = len(task_scores)
+        duckdb_path, duckdb_mtime_ns, duckdb_size = _duckdb_cache_identity(self.duckdb_path)
+        cache_before = _cached_task_scores.cache_info()
+        task_scores = list(
+            _cached_task_scores(
+                duckdb_path,
+                duckdb_mtime_ns,
+                duckdb_size,
+                tuple(benchmarks),
+                score_target,
+                include_any_variants,
+                variant_flags.quantization,
+                variant_flags.truncate,
+                variant_flags.rescore,
+                variant_flags.other,
+            )
+        )
+        cache_after = _cached_task_scores.cache_info()
+        log_event(
+            "viewer.leaderboard.cache",
+            operation="load_task_scores",
+            hit=cache_after.hits > cache_before.hits,
+            size=cache_after.currsize,
+            task_score_count=len(task_scores),
+        )
         return task_scores
+
+
+def _load_task_scores_uncached(
+    *,
+    duckdb_path: Path,
+    benchmarks: tuple[str, ...],
+    score_target: ScoreTarget,
+    include_any_variants: bool,
+    variant_flags: VariantDisplayFlags,
+) -> tuple[TaskScore, ...]:
+    records = TaskResultsRepository(duckdb_path).fetch_task_result_rows(
+        benchmarks=list(benchmarks),
+        score_target=score_target,
+        include_embedding_variants=include_any_variants,
+        variant_display_flags=variant_flags,
+    )
+    return tuple(_task_scores_from_records(records, include_any_variants=include_any_variants, variant_flags=variant_flags))
+
+
+@lru_cache(maxsize=64)
+def _cached_task_scores(
+    duckdb_path: str,
+    duckdb_mtime_ns: int,
+    duckdb_size: int,
+    benchmarks: tuple[str, ...],
+    score_target: ScoreTarget,
+    include_any_variants: bool,
+    include_quantization_variants: bool,
+    include_truncate_variants: bool,
+    include_rescore_variants: bool,
+    include_other_variants: bool,
+) -> tuple[TaskScore, ...]:
+    del duckdb_mtime_ns, duckdb_size
+    return _load_task_scores_uncached(
+        duckdb_path=Path(duckdb_path),
+        benchmarks=benchmarks,
+        score_target=score_target,
+        include_any_variants=include_any_variants,
+        variant_flags=VariantDisplayFlags(
+            quantization=include_quantization_variants,
+            truncate=include_truncate_variants,
+            rescore=include_rescore_variants,
+            other=include_other_variants,
+        ),
+    )
+
+
+def _clear_task_score_cache() -> None:
+    _cached_task_scores.cache_clear()
+
+
+def _duckdb_cache_identity(duckdb_path: Path) -> tuple[str, int, int]:
+    resolved_path = duckdb_path.resolve()
+    try:
+        stat_result = resolved_path.stat()
+    except FileNotFoundError:
+        return str(resolved_path), 0, 0
+    return str(resolved_path), stat_result.st_mtime_ns, stat_result.st_size
+
+
+def _task_scores_from_records(
+    records: list[TaskResultRow],
+    *,
+    include_any_variants: bool,
+    variant_flags: VariantDisplayFlags,
+) -> list[TaskScore]:
+    task_scores: list[TaskScore] = []
+    with timed_operation("viewer.leaderboard.phase", operation="filter_variant_records") as timing:
+        filtered_records = [
+            record
+            for record in records
+            if include_variant_row(
+                embedding_variant_name=record.embedding_variant_name,
+                quantization=record.quantization,
+                flags=variant_flags,
+            )
+        ]
+        timing["record_count"] = len(records)
+        timing["filtered_record_count"] = len(filtered_records)
+    with timed_operation("viewer.leaderboard.phase", operation="display_model_names") as timing:
+        model_names = _record_display_model_names(filtered_records, include_variant_details=include_any_variants)
+        timing["record_count"] = len(filtered_records)
+    with timed_operation("viewer.leaderboard.phase", operation="build_task_scores") as timing:
+        for record, model_name in zip(filtered_records, model_names, strict=True):
+            task_scores.append(
+                TaskScore(
+                    model_name=model_name,
+                    benchmark=record.benchmark,
+                    dataset_id=record.dataset_id,
+                    dataset_name=record.dataset_name,
+                    split_name=record.split_name,
+                    task_name=record.task_name,
+                    task_key=record.task_key,
+                    score=record.score,
+                    language=record.language,
+                    languages=tuple(record.languages),
+                    active_parameters=record.active_parameters,
+                    total_parameters=record.total_parameters,
+                    max_seq_length=record.max_seq_length,
+                    dtype=record.dtype,
+                    attn_implementation=record.attn_implementation,
+                    prompt_summary=record.prompt_summary,
+                    trust_remote_code=record.trust_remote_code,
+                    embedding_variant_name=record.embedding_variant_name,
+                    embedding_dim=record.embedding_dim,
+                    quantization=record.quantization,
+                    source_model_name=record.model_name,
+                )
+            )
+        timing["task_score_count"] = len(task_scores)
+    return task_scores
 
 
 def compute_leaderboard_rows(

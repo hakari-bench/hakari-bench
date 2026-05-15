@@ -533,6 +533,14 @@ The log fields include stable key-value pairs such as `operation`,
 coming from DuckDB scans, DTO conversion, variant filtering, overall
 aggregation, or row rendering.
 
+Leaderboard task-score loading uses an in-process LRU cache keyed by the
+resolved DuckDB path, file `mtime_ns`, file size, benchmark tuple, target, and
+variant flags. This lets repeated HTMX requests reuse the expensive DuckDB read
+and row-to-`TaskScore` conversion while still invalidating automatically when a
+new DuckDB file is downloaded or otherwise modified. The cache emits
+`viewer.leaderboard.cache` log records with `hit`, `size`, and
+`task_score_count` fields.
+
 Conceptually, it runs this query:
 
 ```sql
