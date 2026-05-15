@@ -554,6 +554,10 @@ Because `viewer_task_results` is already physically ordered, the viewer skips
 the query-time `ORDER BY` when reading it. Legacy `task_results` reads keep the
 explicit order clause for deterministic fallback behavior.
 
+The FastAPI viewer enables gzip compression for responses of at least 1 KiB.
+This primarily reduces transfer size for large HTMX leaderboard fragments when
+many model or variant rows are visible.
+
 Conceptually, it runs this query:
 
 ```sql

@@ -52,11 +52,13 @@ class ViewerAppConfig(BaseModel):
 
 def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewer")):
     from fastapi import FastAPI, Query
+    from fastapi.middleware.gzip import GZipMiddleware
     from fastapi.responses import FileResponse, HTMLResponse
     from fastapi.staticfiles import StaticFiles
 
     viewer_config = load_viewer_config(config_dir)
     app = FastAPI(title="HAKARI-bench leaderboard")
+    app.add_middleware(GZipMiddleware, minimum_size=1024)
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
     @app.get("/favicon.svg")

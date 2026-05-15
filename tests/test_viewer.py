@@ -624,6 +624,29 @@ def test_leaderboard_endpoint_logs_request_and_render_timing(
     assert any("viewer.render" in message and "operation=render_leaderboard" in message for message in messages)
 
 
+def test_leaderboard_endpoint_uses_gzip_for_large_html_responses(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (f"model/{index}", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192)
+            for index in range(20)
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+
+    response = TestClient(app).get("/leaderboard?view=BenchA", headers={"Accept-Encoding": "gzip"})
+
+    assert response.status_code == 200
+    assert response.headers["content-encoding"] == "gzip"
+
+
 def test_viewer_config_rejects_unknown_yaml_keys(tmp_path: Path) -> None:
     config_dir = tmp_path / "config"
     config_dir.mkdir()
