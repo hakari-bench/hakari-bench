@@ -11,10 +11,11 @@ builds also materialize `meta_database`, `schema_change_log`, and
 which represents each leaderboard score target as rows such as `all` and
 `reranking`, `fact_metric_score` for detailed metric values, and
 `viewer_task_results`, a viewer-optimized table with the metadata join already
-applied; the HTMX leaderboard uses `viewer_task_results` when present and
-falls back to `task_results` for older DuckDB files. `runs` contains run-level
-metadata, `metrics_long` contains detailed task metrics, `retrieval_rankings`
-contains per-query top-100 retrieved document ids, `task_diagnostics` contains
+applied, and `viewer_filter_values`, a precomputed filter-value mart; the HTMX
+leaderboard uses `viewer_task_results` when present and falls back to
+`task_results` for older DuckDB files. `runs` contains run-level metadata,
+`metrics_long` contains detailed task metrics, `retrieval_rankings` contains
+per-query top-100 retrieved document ids, `task_diagnostics` contains
 analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
 exposes YAML task metadata for language, category, citation, and text-stat
 analysis, and `model_scores` /
@@ -71,7 +72,7 @@ snapshots for the canonical tables: `meta_database`, `schema_change_log`,
 `ingestion_batches`, `source_load_state`, `result_extensions`, `runs`,
 `dim_model`, `dim_task`, `dim_variant`, `dim_metric`, `task_results`,
 `fact_task_score`, `fact_metric_score`, `metrics_long`, `retrieval_rankings`,
-`task_diagnostics`, `dataset_metadata`, `model_scores`, and
+`task_diagnostics`, `dataset_metadata`, `viewer_filter_values`, `model_scores`, and
 `borda_task_scores`. These files are intended for notebooks,
 ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
 not need the mutable DuckDB database file.
@@ -800,6 +801,19 @@ not have `score_target`.
 Because `viewer_task_results` is already physically ordered, the viewer skips
 the query-time `ORDER BY` when reading it. Legacy `task_results` reads keep the
 explicit order clause for deterministic fallback behavior.
+
+`viewer_filter_values` is generated from `viewer_task_results` and stores
+precomputed filter values for `target`, `benchmark`, `model`, and `variant`.
+It is intended for future viewer endpoints that need filter lists without
+running repeated `DISTINCT` scans over the leaderboard source rows.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `filter_name` | `VARCHAR` | Filter group, such as `target`, `benchmark`, `model`, or `variant`. |
+| `value` | `VARCHAR` | Machine-readable filter value. |
+| `label` | `VARCHAR` | Display label. |
+| `row_count` | `BIGINT` | Number of `viewer_task_results` rows with this value. |
+| `sort_key` | `VARCHAR` | Stable sort key for UI display. |
 
 The FastAPI viewer enables gzip compression for responses of at least 1 KiB.
 This primarily reduces transfer size for large HTMX leaderboard fragments when

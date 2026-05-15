@@ -63,6 +63,7 @@ WAREHOUSE_TABLES = (
     "task_diagnostics",
     "dataset_metadata",
     "viewer_task_results",
+    "viewer_filter_values",
     "model_scores",
     "borda_task_scores",
 )
@@ -1011,6 +1012,7 @@ def write_duckdb(
             )
         _create_canonical_dimension_tables(con)
         _create_viewer_task_results_table(con)
+        _create_viewer_filter_values_table(con)
         score_rows = [row for view_rows in standings.values() for row in view_rows]
         con.execute(
             """
@@ -1640,6 +1642,74 @@ def _create_viewer_task_results_table(con: duckdb.DuckDBPyConnection) -> None:
             fts.model_name,
             fts.embedding_variant_name IS NOT NULL,
             fts.embedding_variant_name
+        """
+    )
+
+
+def _create_viewer_filter_values_table(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE viewer_filter_values AS
+        SELECT *
+        FROM (
+            SELECT
+                'target' AS filter_name,
+                score_target AS value,
+                CASE score_target
+                    WHEN 'all' THEN 'All'
+                    WHEN 'reranking' THEN 'Reranking'
+                    ELSE score_target
+                END AS label,
+                count(*) AS row_count,
+                CASE score_target
+                    WHEN 'all' THEN '0:all'
+                    WHEN 'reranking' THEN '1:reranking'
+                    ELSE concat('9:', score_target)
+                END AS sort_key
+            FROM viewer_task_results
+            GROUP BY score_target
+
+            UNION ALL
+
+            SELECT
+                'benchmark' AS filter_name,
+                benchmark AS value,
+                benchmark AS label,
+                count(*) AS row_count,
+                benchmark AS sort_key
+            FROM viewer_task_results
+            GROUP BY benchmark
+
+            UNION ALL
+
+            SELECT
+                'model' AS filter_name,
+                model_name AS value,
+                model_name AS label,
+                count(*) AS row_count,
+                model_name AS sort_key
+            FROM viewer_task_results
+            GROUP BY model_name
+
+            UNION ALL
+
+            SELECT
+                'variant' AS filter_name,
+                COALESCE(embedding_variant_name, 'base') AS value,
+                CASE
+                    WHEN embedding_variant_name IS NULL THEN 'Base'
+                    ELSE embedding_variant_name
+                END AS label,
+                count(*) AS row_count,
+                CASE
+                    WHEN embedding_variant_name IS NULL THEN '0:base'
+                    ELSE concat('1:', embedding_variant_name)
+                END AS sort_key
+            FROM viewer_task_results
+            GROUP BY embedding_variant_name
+        ) AS filters
+        WHERE value IS NOT NULL
+        ORDER BY filter_name, sort_key
         """
     )
 

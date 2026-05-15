@@ -1095,6 +1095,78 @@ def test_write_duckdb_materializes_metric_dimension_and_fact(tmp_path: Path) -> 
         con.close()
 
 
+def test_write_duckdb_materializes_viewer_filter_values(tmp_path: Path) -> None:
+    row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
+        dataset_name="NanoJMTEB-v2",
+        split_name="ja_cwir",
+        task_name="ja_cwir",
+        task_key="NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
+        score=0.42,
+        aggregate_metric="ndcg@10",
+        result_path="result.json",
+    )
+    diagnostic_row = TaskDiagnosticRow(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
+        task_name="ja_cwir",
+        task_key="NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
+        result_path="result.json",
+        base_score=0.42,
+        rerank_score=0.50,
+        rerank_status="available",
+        rerank_top_k=100,
+        candidate_ranking="bm25",
+    )
+    standings, borda_rows = report.compute_standings([row])
+    db_path = tmp_path / "results.duckdb"
+
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=[row],
+        metric_rows=[
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_ndcg@10",
+                "metric_value": 0.42,
+                "result_path": "result.json",
+            }
+        ],
+        diagnostic_rows=[diagnostic_row],
+        standings=standings,
+        borda_rows=borda_rows,
+    )
+
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute(
+            """
+            SELECT filter_name, value, label, row_count, sort_key
+            FROM viewer_filter_values
+            WHERE filter_name IN ('target', 'benchmark', 'model', 'variant')
+            ORDER BY filter_name, sort_key
+            """
+        ).fetchall() == [
+            ("benchmark", "NanoJMTEB-v2", "NanoJMTEB-v2", 2, "NanoJMTEB-v2"),
+            ("model", "example/model", "example/model", 2, "example/model"),
+            ("target", "all", "All", 1, "0:all"),
+            ("target", "reranking", "Reranking", 1, "1:reranking"),
+            ("variant", "base", "Base", 2, "0:base"),
+        ]
+    finally:
+        con.close()
+
+
 def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path) -> None:
     row = report.TaskResult(
         model_dir="model",
@@ -1176,6 +1248,7 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
         "source_load_state.parquet",
         "task_diagnostics.parquet",
         "task_results.parquet",
+        "viewer_filter_values.parquet",
         "viewer_task_results.parquet",
     ]
     con = duckdb.connect()
