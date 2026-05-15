@@ -52,10 +52,12 @@ WAREHOUSE_TABLES = (
     "result_extensions",
     "runs",
     "dim_model",
+    "dim_metric",
     "dim_task",
     "dim_variant",
     "task_results",
     "fact_task_score",
+    "fact_metric_score",
     "metrics_long",
     "retrieval_rankings",
     "task_diagnostics",
@@ -949,6 +951,7 @@ def write_duckdb(
             "INSERT INTO metrics_long VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [row.duckdb_values() for row in normalized_metric_rows],
         )
+        _create_metric_dimension_and_fact_tables(con)
         con.execute(
             """
             CREATE TABLE retrieval_rankings (
@@ -1426,6 +1429,51 @@ def _create_canonical_dimension_tables(con: duckdb.DuckDBPyConnection) -> None:
             is_base
         FROM variant_values
         ORDER BY variant_id
+        """
+    )
+
+
+def _create_metric_dimension_and_fact_tables(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE dim_metric AS
+        WITH metric_values AS (
+            SELECT DISTINCT
+                metric_name,
+                nullif(lower(regexp_extract(metric_name, '([A-Za-z]+)@[0-9]+$', 1)), '') AS metric_family,
+                try_cast(regexp_extract(metric_name, '@([0-9]+)$', 1) AS INTEGER) AS cutoff
+            FROM metrics_long
+        )
+        SELECT
+            row_number() OVER (ORDER BY metric_name) AS metric_id,
+            metric_name,
+            metric_family,
+            cutoff
+        FROM metric_values
+        ORDER BY metric_id
+        """
+    )
+    con.execute(
+        """
+        CREATE TABLE fact_metric_score AS
+        SELECT
+            dm.metric_id,
+            ml.model_dir,
+            ml.model_name,
+            ml.benchmark,
+            ml.dataset_id,
+            ml.task_name,
+            ml.metric_value,
+            ml.result_path
+        FROM metrics_long AS ml
+        JOIN dim_metric AS dm
+          ON dm.metric_name = ml.metric_name
+        ORDER BY
+            ml.benchmark,
+            ml.dataset_id,
+            ml.task_name,
+            ml.model_name,
+            dm.metric_id
         """
     )
 

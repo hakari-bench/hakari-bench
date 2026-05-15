@@ -1026,6 +1026,75 @@ def test_write_duckdb_records_schema_metadata_and_result_extensions(tmp_path: Pa
         con.close()
 
 
+def test_write_duckdb_materializes_metric_dimension_and_fact(tmp_path: Path) -> None:
+    row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
+        dataset_name="NanoJMTEB-v2",
+        split_name="ja_cwir",
+        task_name="ja_cwir",
+        task_key="NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
+        score=0.42,
+        aggregate_metric="ndcg@10",
+        result_path="result.json",
+    )
+    standings, borda_rows = report.compute_standings([row])
+    db_path = tmp_path / "results.duckdb"
+
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=[row],
+        metric_rows=[
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_ndcg@10",
+                "metric_value": 0.42,
+                "result_path": "result.json",
+            },
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_recall@100",
+                "metric_value": 0.80,
+                "result_path": "result.json",
+            },
+        ],
+        standings=standings,
+        borda_rows=borda_rows,
+    )
+
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute(
+            "SELECT metric_id, metric_name, metric_family, cutoff FROM dim_metric ORDER BY metric_id"
+        ).fetchall() == [
+            (1, "ja_cwir_ndcg@10", "ndcg", 10),
+            (2, "ja_cwir_recall@100", "recall", 100),
+        ]
+        assert con.execute(
+            """
+            SELECT metric_id, model_name, benchmark, task_name, metric_value
+            FROM fact_metric_score
+            ORDER BY metric_id
+            """
+        ).fetchall() == [
+            (1, "example/model", "NanoJMTEB-v2", "ja_cwir", 0.42),
+            (2, "example/model", "NanoJMTEB-v2", "ja_cwir", 0.80),
+        ]
+    finally:
+        con.close()
+
+
 def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path) -> None:
     row = report.TaskResult(
         model_dir="model",
@@ -1090,9 +1159,11 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
     assert sorted(path.name for path in parquet_dir.glob("*.parquet")) == [
         "borda_task_scores.parquet",
         "dataset_metadata.parquet",
+        "dim_metric.parquet",
         "dim_model.parquet",
         "dim_task.parquet",
         "dim_variant.parquet",
+        "fact_metric_score.parquet",
         "fact_task_score.parquet",
         "ingestion_batches.parquet",
         "meta_database.parquet",

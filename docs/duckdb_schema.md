@@ -7,8 +7,9 @@ The canonical source table for benchmark results is `task_results`. New DuckDB
 builds also materialize `meta_database`, `schema_change_log`, and
 `result_extensions` for schema evolution, `ingestion_batches` and
 `source_load_state` for idempotent source tracking, `dim_model`, `dim_task`,
-and `dim_variant` as canonical dimensions, `fact_task_score`, which represents
-each leaderboard score target as rows such as `all` and `reranking`, and
+`dim_variant`, and `dim_metric` as canonical dimensions, `fact_task_score`,
+which represents each leaderboard score target as rows such as `all` and
+`reranking`, `fact_metric_score` for detailed metric values, and
 `viewer_task_results`, a viewer-optimized table with the metadata join already
 applied; the HTMX leaderboard uses `viewer_task_results` when present and
 falls back to `task_results` for older DuckDB files. `runs` contains run-level
@@ -68,9 +69,10 @@ leave this column `NULL`.
 When `--parquet-output-dir` is provided, the generator also writes Parquet
 snapshots for the canonical tables: `meta_database`, `schema_change_log`,
 `ingestion_batches`, `source_load_state`, `result_extensions`, `runs`,
-`dim_model`, `dim_task`, `dim_variant`, `task_results`, `fact_task_score`,
-`metrics_long`, `retrieval_rankings`, `task_diagnostics`, `dataset_metadata`,
-`model_scores`, and `borda_task_scores`. These files are intended for notebooks,
+`dim_model`, `dim_task`, `dim_variant`, `dim_metric`, `task_results`,
+`fact_task_score`, `fact_metric_score`, `metrics_long`, `retrieval_rankings`,
+`task_diagnostics`, `dataset_metadata`, `model_scores`, and
+`borda_task_scores`. These files are intended for notebooks,
 ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
 not need the mutable DuckDB database file.
 
@@ -331,6 +333,20 @@ rows with different embedding dimensions do not collide.
 | `quantization` | `VARCHAR` | Quantization precision. |
 | `is_base` | `BOOLEAN` | Whether this variant represents a base embedding result. |
 
+### `dim_metric`
+
+`dim_metric` contains one deterministic row for each metric name in
+`metrics_long`. The writer parses common IR metric names into a metric family
+and cutoff, so new cutoffs such as `recall@100` can be stored without adding
+columns.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `metric_id` | `BIGINT` | Deterministic metric dimension id. |
+| `metric_name` | `VARCHAR` | Original metric name from result JSON after canonicalization. |
+| `metric_family` | `VARCHAR` | Parsed metric family such as `ndcg`, `recall`, or `map`, when available. |
+| `cutoff` | `INTEGER` | Parsed cutoff after `@`, when available. |
+
 ### `fact_task_score`
 
 `fact_task_score` is the forward-compatible score fact table. It keeps the
@@ -426,6 +442,23 @@ does not use it for ranking.
 | `dataset_id` | `VARCHAR` | Dataset id. |
 | `task_name` | `VARCHAR` | Task name. |
 | `metric_name` | `VARCHAR` | Metric name, such as `NanoJaCWIR_ndcg@10`. |
+| `metric_value` | `DOUBLE` | Metric value. |
+| `result_path` | `VARCHAR` | Source task JSON path. |
+
+### `fact_metric_score`
+
+`fact_metric_score` is the normalized metric-value fact table derived from
+`metrics_long` and `dim_metric`. It keeps detailed metrics separate from the
+primary leaderboard score in `fact_task_score`.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `metric_id` | `BIGINT` | Foreign-key-style id from `dim_metric`. |
+| `model_dir` | `VARCHAR` | Model output directory. |
+| `model_name` | `VARCHAR` | Model name. |
+| `benchmark` | `VARCHAR` | Benchmark group. |
+| `dataset_id` | `VARCHAR` | Dataset id. |
+| `task_name` | `VARCHAR` | Task name. |
 | `metric_value` | `DOUBLE` | Metric value. |
 | `result_path` | `VARCHAR` | Source task JSON path. |
 
