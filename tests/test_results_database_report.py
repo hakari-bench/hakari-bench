@@ -64,6 +64,20 @@ def test_insert_duckdb_rows_loads_rows_in_chunks() -> None:
         con.close()
 
 
+def test_read_json_reads_utf8_bytes(tmp_path: Path) -> None:
+    path = tmp_path / "payload.json"
+    path.write_text(json.dumps({"name": "日本語", "score": 0.42}), encoding="utf-8")
+
+    assert report._read_json(path) == {"name": "日本語", "score": 0.42}
+
+
+def test_read_json_falls_back_for_non_standard_json_numbers(tmp_path: Path) -> None:
+    path = tmp_path / "payload.json"
+    path.write_text('{"score": NaN}', encoding="utf-8")
+
+    assert math.isnan(report._read_json(path)["score"])
+
+
 def test_nanomteb_chinese_is_a_ranked_benchmark() -> None:
     assert "NanoCMTEB" in report.TARGET_BENCHMARKS
     assert report.benchmark_name("hakari-bench/NanoCMTEB", "NanoCMTEB") == "NanoCMTEB"

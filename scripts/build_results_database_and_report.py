@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 import duckdb
+import orjson
 import pyarrow as pa
 
 from hakari_bench.datasets import DatasetRegistry
@@ -98,6 +99,14 @@ def _insert_duckdb_rows(
             con.execute(f"INSERT INTO {table_name} ({column_sql}) SELECT {column_sql} FROM _hakari_insert_rows")
         finally:
             con.unregister("_hakari_insert_rows")
+
+
+def _read_json(path: Path) -> Any:
+    payload = path.read_bytes()
+    try:
+        return orjson.loads(payload)
+    except orjson.JSONDecodeError:
+        return json.loads(payload.decode("utf-8"))
 
 
 def main() -> None:
@@ -190,7 +199,7 @@ def load_results(
     target_benchmarks = set(target_benchmark_names(benchmark_configs))
 
     for result_path in sorted(results_dir.glob("*/*/*.json")):
-        task_payload = json.loads(result_path.read_text(encoding="utf-8"))
+        task_payload = _read_json(result_path)
         target = task_payload.get("target", {})
         if not isinstance(target, dict):
             continue
@@ -363,7 +372,7 @@ def _retrieval_ranking_rows(
     ranking_path = result_path.parent / artifact["path"]
     if not ranking_path.exists():
         return []
-    ranking_payload = json.loads(ranking_path.read_text(encoding="utf-8"))
+    ranking_payload = _read_json(ranking_path)
     rankings = ranking_payload.get("rankings") if isinstance(ranking_payload, dict) else None
     if not isinstance(rankings, list):
         return []
@@ -1443,8 +1452,8 @@ def _result_extension_rows(
         if not path.exists() or not path.is_file():
             continue
         try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
+            payload = _read_json(path)
+        except (OSError, orjson.JSONDecodeError):
             continue
         if not isinstance(payload, dict):
             continue

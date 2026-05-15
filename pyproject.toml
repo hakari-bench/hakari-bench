@@ -23,6 +23,7 @@ dependencies = [
     "sentencepiece>=0.2.1",
     "torch>=2.9,<2.10",
     "transformers>=4.57,<6",
+    "orjson>=3.11.5",
 ]
 
 [build-system]
