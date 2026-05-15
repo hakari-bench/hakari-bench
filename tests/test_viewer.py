@@ -212,6 +212,25 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 -1.0,
             ],
         )
+        con.execute(
+            """
+            CREATE TABLE viewer_leaderboard_language_options (
+                view_name VARCHAR,
+                score_target VARCHAR,
+                include_quantization_variants BOOLEAN,
+                include_truncate_variants BOOLEAN,
+                include_rescore_variants BOOLEAN,
+                include_other_variants BOOLEAN,
+                code VARCHAR,
+                label VARCHAR,
+                task_count INTEGER
+            )
+            """
+        )
+        con.execute(
+            "INSERT INTO viewer_leaderboard_language_options VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            ["Overall", "all", True, False, False, False, "ja", "Japanese", 2],
+        )
     finally:
         con.close()
     config = ViewerConfig(
@@ -228,6 +247,9 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
     assert result.rows[0].model_name == "model/a (768 dims, int8)"
     assert result.rows[0].borda_score == 99.0
     assert result.rows[0].embedding_variant_name == "int8"
+    assert [(option.code, option.label, option.task_count) for option in result.available_languages] == [
+        ("ja", "Japanese", 2)
+    ]
 
 
 def test_viewer_config_rejects_unknown_group_by(tmp_path: Path) -> None:

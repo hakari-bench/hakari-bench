@@ -10,7 +10,7 @@ import duckdb
 import pytest
 from pydantic import ValidationError
 
-from hakari_bench.viewer.config import BenchmarkConfig
+from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig
 from hakari_bench.warehouse_schema import (
     DatasetMetadataRow,
     MetricLongRow,
@@ -1448,6 +1448,102 @@ def test_write_duckdb_materializes_viewer_filter_values(tmp_path: Path) -> None:
         con.close()
 
 
+def test_build_viewer_leaderboard_mart_materializes_display_modes(tmp_path: Path) -> None:
+    base_row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="BenchA",
+        dataset_id="bench/a",
+        dataset_name="BenchA",
+        split_name="task1",
+        task_name="task1",
+        task_key="BenchA::bench/a::task1",
+        score=0.42,
+        aggregate_metric="ndcg@10",
+        result_path="result.json",
+        embedding_dim=384,
+    )
+    variant_row = base_row.model_copy(
+        update={
+            "score": 0.40,
+            "embedding_variant_name": "int8",
+            "quantization": "int8",
+        }
+    )
+    db_path = tmp_path / "results.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=[base_row, variant_row],
+        metric_rows=[
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "BenchA",
+                "dataset_id": "bench/a",
+                "task_name": "task1",
+                "metric_name": "task1_ndcg@10",
+                "metric_value": 0.42,
+                "result_path": "result.json",
+            }
+        ],
+        dataset_metadata_rows=[
+            DatasetMetadataRow(
+                benchmark="BenchA",
+                dataset_id="bench/a",
+                dataset_name="BenchA",
+                split_name="task1",
+                task_name="task1",
+                task_key="BenchA::bench/a::task1",
+                language="en",
+                languages=["en"],
+            )
+        ],
+        standings={},
+        borda_rows=[],
+    )
+    viewer_config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
+    )
+
+    report.build_viewer_leaderboard_mart(db_path, viewer_config=viewer_config, view_names=["Overall"])
+
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute(
+            """
+            SELECT view_name, score_target, include_quantization_variants, model_name, mean_score, expected_tasks
+            FROM viewer_leaderboard_rows
+            WHERE view_name = 'Overall'
+              AND score_target = 'all'
+              AND include_quantization_variants IN (false, true)
+              AND include_truncate_variants = false
+              AND include_rescore_variants = false
+              AND include_other_variants = false
+            ORDER BY include_quantization_variants, model_name
+            """
+        ).fetchall() == [
+            ("Overall", "all", False, "example/model", 42.0, 1),
+            ("Overall", "all", True, "example/model (384 dims)", 42.0, 1),
+            ("Overall", "all", True, "example/model (384 dims, int8)", 40.0, 1),
+        ]
+        assert con.execute(
+            """
+            SELECT view_name, score_target, include_quantization_variants, code, label, task_count
+            FROM viewer_leaderboard_language_options
+            WHERE view_name = 'Overall'
+              AND score_target = 'all'
+              AND include_quantization_variants = true
+              AND include_truncate_variants = false
+              AND include_rescore_variants = false
+              AND include_other_variants = false
+            """
+        ).fetchall() == [("Overall", "all", True, "en", "EN", 1)]
+    finally:
+        con.close()
+
+
 def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path) -> None:
     row = report.TaskResult(
         model_dir="model",
@@ -1530,6 +1626,8 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
         "task_diagnostics.parquet",
         "task_results.parquet",
         "viewer_filter_values.parquet",
+        "viewer_leaderboard_language_options.parquet",
+        "viewer_leaderboard_rows.parquet",
         "viewer_task_results.parquet",
     ]
     con = duckdb.connect()

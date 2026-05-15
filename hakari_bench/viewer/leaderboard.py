@@ -178,7 +178,7 @@ class LeaderboardService:
                     variant_flags=include_flags,
                 )
                 if precomputed is not None:
-                    rows, expected_tasks = precomputed
+                    rows, expected_tasks, available_languages = precomputed
                     sorted_rows = sort_rows(rows, sort=sort, direction=direction)
                     request_timing["task_score_count"] = None
                     request_timing["leaderboard_row_count"] = len(sorted_rows)
@@ -205,7 +205,7 @@ class LeaderboardService:
                             else None
                         ),
                         metric_columns=[],
-                        available_languages=[],
+                        available_languages=available_languages,
                         selected_languages=(),
                     )
             with timed_operation("viewer.leaderboard.phase", operation="load_task_scores", view=view_name) as phase_timing:
@@ -379,7 +379,7 @@ def _load_precomputed_leaderboard_rows(
     view_name: str,
     score_target: ScoreTarget,
     variant_flags: VariantDisplayFlags,
-) -> tuple[list[LeaderboardRow], int] | None:
+) -> tuple[list[LeaderboardRow], int, list[LanguageOption]] | None:
     if not duckdb_path.exists():
         return None
     con = duckdb.connect(str(duckdb_path), read_only=True)
@@ -427,36 +427,66 @@ def _load_precomputed_leaderboard_rows(
                 variant_flags.other,
             ],
         ).fetchall()
+        language_options: list[LanguageOption] = []
+        if _table_exists(con, "viewer_leaderboard_language_options"):
+            language_options = [
+                LanguageOption(code=str(row[0]), label=str(row[1]), task_count=int(row[2]))
+                for row in con.execute(
+                    """
+                    SELECT code, label, task_count
+                    FROM viewer_leaderboard_language_options
+                    WHERE view_name = ?
+                      AND score_target = ?
+                      AND include_quantization_variants = ?
+                      AND include_truncate_variants = ?
+                      AND include_rescore_variants = ?
+                      AND include_other_variants = ?
+                    ORDER BY lower(label), code
+                    """,
+                    [
+                        view_name,
+                        score_target,
+                        variant_flags.quantization,
+                        variant_flags.truncate,
+                        variant_flags.rescore,
+                        variant_flags.other,
+                    ],
+                ).fetchall()
+            ]
     finally:
         con.close()
     if not rows:
         return None
     expected_tasks = int(rows[0][0])
-    return [
-        LeaderboardRow(
-            borda_rank=float(row[1]),
-            mean_rank=float(row[2]),
-            model_name=str(row[3]),
-            borda_score=float(row[4]),
-            mean_score=float(row[5]),
-            macro_mean=float(row[6]) if row[6] is not None else None,
-            micro_mean=float(row[7]) if row[7] is not None else None,
-            task_count=int(row[8]),
-            active_parameters=int(row[9]) if row[9] is not None else None,
-            total_parameters=int(row[10]) if row[10] is not None else None,
-            max_seq_length=int(row[11]) if row[11] is not None else None,
-            dtype=str(row[12]) if row[12] is not None else None,
-            attn_implementation=str(row[13]) if row[13] is not None else None,
-            prompt_summary=str(row[14]) if row[14] is not None else None,
-            trust_remote_code=bool(row[15]) if row[15] is not None else None,
-            embedding_variant_name=str(row[16]) if row[16] is not None else None,
-            embedding_dim=int(row[17]) if row[17] is not None else None,
-            quantization=str(row[18]) if row[18] is not None else None,
-            source_model_name=str(row[19]) if row[19] is not None else None,
-            base_score_delta_percent=float(row[20]) if row[20] is not None else None,
-        )
-        for row in rows
-    ], expected_tasks
+    return (
+        [
+            LeaderboardRow(
+                borda_rank=float(row[1]),
+                mean_rank=float(row[2]),
+                model_name=str(row[3]),
+                borda_score=float(row[4]),
+                mean_score=float(row[5]),
+                macro_mean=float(row[6]) if row[6] is not None else None,
+                micro_mean=float(row[7]) if row[7] is not None else None,
+                task_count=int(row[8]),
+                active_parameters=int(row[9]) if row[9] is not None else None,
+                total_parameters=int(row[10]) if row[10] is not None else None,
+                max_seq_length=int(row[11]) if row[11] is not None else None,
+                dtype=str(row[12]) if row[12] is not None else None,
+                attn_implementation=str(row[13]) if row[13] is not None else None,
+                prompt_summary=str(row[14]) if row[14] is not None else None,
+                trust_remote_code=bool(row[15]) if row[15] is not None else None,
+                embedding_variant_name=str(row[16]) if row[16] is not None else None,
+                embedding_dim=int(row[17]) if row[17] is not None else None,
+                quantization=str(row[18]) if row[18] is not None else None,
+                source_model_name=str(row[19]) if row[19] is not None else None,
+                base_score_delta_percent=float(row[20]) if row[20] is not None else None,
+            )
+            for row in rows
+        ],
+        expected_tasks,
+        language_options,
+    )
 
 
 def _duckdb_cache_identity(duckdb_path: Path) -> tuple[str, int, int]:
