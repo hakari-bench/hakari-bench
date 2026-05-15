@@ -150,6 +150,15 @@ def main() -> None:
 
     benchmark_configs = load_benchmark_configs(args.viewer_config_dir)
     target_benchmarks = target_benchmark_names(benchmark_configs)
+    if (
+        args.incremental
+        and args.html_output is None
+        and args.parquet_output_dir is None
+        and not args.include_retrieval_rankings
+        and not args.include_result_extensions
+        and _incremental_cache_current(_current_source_hashes(args.results_dir), args.duckdb_path)
+    ):
+        return
     rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = load_results(
         args.results_dir,
         benchmark_configs=benchmark_configs,
@@ -394,10 +403,8 @@ def _load_results_from_incremental_cache(
 ) -> LoadResultsPayload | None:
     if include_retrieval_rankings or not db_path.exists():
         return None
-    result_paths = sorted(results_dir.glob("*/*/*.json"))
-    current_hashes = {str(path): _payload_sha256(str(path)) for path in result_paths}
-    previous_hashes = _read_previous_source_hashes(db_path)
-    if not current_hashes or current_hashes != previous_hashes:
+    current_hashes = _current_source_hashes(results_dir)
+    if not _incremental_cache_current(current_hashes, db_path):
         return None
 
     con = duckdb.connect(str(db_path), read_only=True)
@@ -476,6 +483,25 @@ def _load_results_from_incremental_cache(
             ),
         )
         return rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, []
+    finally:
+        con.close()
+
+
+def _current_source_hashes(results_dir: Path) -> dict[str, str | None]:
+    return {str(path): _payload_sha256(str(path)) for path in sorted(results_dir.glob("*/*/*.json"))}
+
+
+def _incremental_cache_current(current_hashes: dict[str, str | None], db_path: Path) -> bool:
+    if not current_hashes or not db_path.exists():
+        return False
+    previous_hashes = _read_previous_source_hashes(db_path)
+    if current_hashes != previous_hashes:
+        return False
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        if not _duckdb_table_exists(con, "meta_database"):
+            return False
+        return con.execute("SELECT schema_version FROM meta_database").fetchone() == (WAREHOUSE_SCHEMA_VERSION,)
     finally:
         con.close()
 

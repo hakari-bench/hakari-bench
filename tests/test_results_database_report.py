@@ -274,6 +274,63 @@ def test_load_results_reuses_unchanged_incremental_duckdb_rows(
     assert cached_ranking_rows == []
 
 
+def test_main_incremental_noops_when_sources_are_unchanged(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    results_dir = tmp_path / "results"
+    task_path = results_dir / "model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    task_path.parent.mkdir(parents=True)
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {"id": "example/model"},
+                "target": {
+                    "dataset_name": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "split_name": "ja_cwir",
+                    "task_name": "ja_cwir",
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.42},
+                "metrics": {"ja_cwir_ndcg@10": 0.42},
+            }
+        ),
+        encoding="utf-8",
+    )
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = report.load_results(results_dir)
+    db_path = tmp_path / "hakari_bench.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=runs,
+        rows=rows,
+        metric_rows=metric_rows,
+        diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
+        ranking_rows=ranking_rows,
+        standings={},
+        borda_rows=[],
+    )
+    monkeypatch.setattr(
+        report,
+        "write_duckdb",
+        lambda *args, **kwargs: pytest.fail("unchanged incremental build should not rewrite DuckDB"),
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "build_results_database_and_report.py",
+            "--incremental",
+            "--results-dir",
+            str(results_dir),
+            "--duckdb-path",
+            str(db_path),
+        ],
+    )
+
+    report.main()
+
+
 def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
     task_path = model_dir / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
