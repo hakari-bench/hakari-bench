@@ -6,6 +6,7 @@ import json
 import math
 from collections import defaultdict
 from collections.abc import Iterable, Sequence
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from itertools import islice
 from pathlib import Path
@@ -114,9 +115,32 @@ def _read_json(path: Path) -> Any:
         return json.loads(payload.decode("utf-8"))
 
 
+@dataclass(frozen=True)
+class SelectedResultJson:
+    result_path: Path
+    results_dir: Path
+    source_priority: int
+    payload: dict[str, Any]
+    benchmark: str
+    model_dir: str
+    model_name: str
+    dataset_id: str
+    task_name: str
+    task_key: str
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--results-dir", type=Path, default=Path("output/results"))
+    parser.add_argument(
+        "--results-dir",
+        type=Path,
+        action="append",
+        default=None,
+        help=(
+            "Benchmark result directory. May be supplied multiple times; when duplicate task JSON exists, "
+            "earlier directories take priority."
+        ),
+    )
     parser.add_argument("--duckdb-path", type=Path, default=Path("output/results/hakari_bench.duckdb"))
     parser.add_argument(
         "--html-output",
@@ -151,10 +175,17 @@ def main() -> None:
         action="store_true",
         help="Reuse unchanged canonical rows from the existing DuckDB database when possible.",
     )
+    parser.add_argument(
+        "--exclude-model-name",
+        action="append",
+        default=None,
+        help="Model name to exclude from the generated DuckDB. May be supplied multiple times.",
+    )
     args = parser.parse_args()
 
     benchmark_configs = load_benchmark_configs(args.viewer_config_dir)
     target_benchmarks = target_benchmark_names(benchmark_configs)
+    results_dirs = args.results_dir or [Path("output/results")]
     # For deploy builds with no secondary artifacts requested, unchanged input
     # can return immediately after hash validation; rewriting the same DB would
     # dominate the incremental path.
@@ -164,14 +195,15 @@ def main() -> None:
         and args.parquet_output_dir is None
         and not args.include_retrieval_rankings
         and not args.include_result_extensions
-        and _incremental_cache_current(_current_source_hashes(args.results_dir), args.duckdb_path)
+        and _incremental_cache_current(_current_source_hashes(results_dirs), args.duckdb_path)
     ):
         return
     rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = load_results(
-        args.results_dir,
+        results_dirs,
         benchmark_configs=benchmark_configs,
         include_retrieval_rankings=args.include_retrieval_rankings,
         incremental_db_path=args.duckdb_path if args.incremental else None,
+        exclude_model_names=set(args.exclude_model_name or []),
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
@@ -205,11 +237,12 @@ def main() -> None:
 
 
 def load_results(
-    results_dir: Path,
+    results_dir: Path | Sequence[Path],
     *,
     benchmark_configs: Sequence[BenchmarkConfig] | None = None,
     include_retrieval_rankings: bool = False,
     incremental_db_path: Path | None = None,
+    exclude_model_names: set[str] | None = None,
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -224,7 +257,7 @@ def load_results(
     diagnostic_rows: list[TaskDiagnosticRow] = []
     dataset_metadata_rows: list[DatasetMetadataRow] = []
     ranking_rows: list[RetrievalRankingRow] = []
-    result_paths = sorted(results_dir.glob("*/*/*.json"))
+    selected_result_path_filter: set[str] | None = None
     rebuild_runs_from_rows = False
     if incremental_db_path is not None and not include_retrieval_rankings:
         # Incremental reuse is keyed by source path and payload hash. Added or
@@ -255,53 +288,48 @@ def load_results(
                 # changed JSON. Run summaries are rebuilt from the merged rows
                 # because cached run aggregates no longer match after changes.
                 rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = cached_rows
-                result_paths = [Path(path) for path in sorted(changed_paths)]
+                selected_result_path_filter = changed_paths
                 rebuild_runs_from_rows = True
     registry = DatasetRegistry.load_builtin()
     benchmark_configs = list(benchmark_configs or load_benchmark_configs())
     target_benchmarks = set(target_benchmark_names(benchmark_configs))
+    exclude_model_names = exclude_model_names or set()
 
-    for result_path in result_paths:
-        task_payload = _read_json(result_path)
-        target = task_payload.get("target", {})
-        if not isinstance(target, dict):
-            continue
-        benchmark = benchmark_name(
-            target.get("dataset_id"),
-            target.get("dataset_name"),
-            benchmark_configs=benchmark_configs,
-        )
-        if benchmark not in target_benchmarks:
-            continue
-        evaluation = task_payload.get("evaluation", {})
-        if not isinstance(evaluation, dict):
-            continue
+    for selected_result in _selected_result_jsons(
+        results_dir,
+        benchmark_configs=benchmark_configs,
+        target_benchmarks=target_benchmarks,
+        exclude_model_names=exclude_model_names,
+        result_paths=selected_result_path_filter,
+    ):
+        result_path = selected_result.result_path
+        task_payload = selected_result.payload
+        target = task_payload["target"]
+        benchmark = selected_result.benchmark
+        evaluation = task_payload["evaluation"]
         config = task_payload.get("config", {})
         if not isinstance(config, dict):
             config = {}
-        score = evaluation.get("aggregate_metric_value")
-        if not isinstance(score, int | float):
-            continue
+        score = evaluation["aggregate_metric_value"]
         model = task_payload.get("model", {})
         environment = task_payload.get("environment", {})
         package_versions = environment.get("package_versions", {}) if isinstance(environment, dict) else {}
         experiment_manifest = task_payload.get("experiment_manifest", {})
         experiment_manifest = experiment_manifest if isinstance(experiment_manifest, dict) else {}
-        model_dir = result_path.relative_to(results_dir).parts[0]
-        model_name = _model_name_from_payload(model, model_dir=model_dir)
+        model_dir = selected_result.model_dir
+        model_name = selected_result.model_name
         model_source = model.get("source", {}) if isinstance(model, dict) else {}
         model_revision = _model_revision_value(model_source, key="revision")
         model_revision_requested = _model_revision_value(model_source, key="revision_requested")
-        dataset_id = str(target.get("dataset_id") or "")
+        dataset_id = selected_result.dataset_id
         dataset_revision = _dataset_revision_value(target.get("dataset_revision"), key="resolved")
         dataset_revision_requested = _dataset_revision_value(target.get("dataset_revision"), key="requested")
-        raw_task_name = str(target.get("task_name") or target.get("split_name") or "")
-        task_name = canonical_task_name(benchmark, raw_task_name)
+        task_name = selected_result.task_name
         split_name = canonical_split_name(
             benchmark,
             str(target["split_name"]) if target.get("split_name") is not None else None,
         )
-        task_key = canonical_task_key(benchmark=benchmark, dataset_id=dataset_id, task_name=task_name)
+        task_key = selected_result.task_key
         _accumulate_run(
             run_accumulators,
             model_dir=model_dir,
@@ -429,7 +457,7 @@ LoadResultsPayload = tuple[
 
 
 def _load_results_from_incremental_cache(
-    results_dir: Path,
+    results_dir: Path | Sequence[Path],
     *,
     db_path: Path,
     include_retrieval_rankings: bool,
@@ -576,8 +604,15 @@ def _filter_rows_by_result_path(rows: list[Any], result_paths: set[str] | None) 
     return [row for row in rows if row.result_path in result_paths]
 
 
-def _current_source_hashes(results_dir: Path) -> dict[str, str | None]:
-    return {str(path): _payload_sha256(str(path)) for path in sorted(results_dir.glob("*/*/*.json"))}
+def _current_source_hashes(results_dir: Path | Sequence[Path]) -> dict[str, str | None]:
+    return {str(path): _payload_sha256(str(path)) for path in _result_json_paths(results_dir)}
+
+
+def _result_json_paths(results_dir: Path | Sequence[Path]) -> list[Path]:
+    paths: list[Path] = []
+    for source_dir in _results_dirs(results_dir):
+        paths.extend(sorted(source_dir.glob("*/*/*.json")))
+    return sorted(paths)
 
 
 def _incremental_cache_current(current_hashes: dict[str, str | None], db_path: Path) -> bool:
@@ -649,7 +684,11 @@ def _fetch_task_result_rows(con: duckdb.DuckDBPyConnection) -> list[TaskResult]:
 def _fetch_model_rows(
     con: duckdb.DuckDBPyConnection,
     table_name: str,
-    model_class: type[TaskResult] | type[MetricLongRow] | type[TaskDiagnosticRow] | type[DatasetMetadataRow],
+    model_class: type[TaskResult]
+    | type[MetricLongRow]
+    | type[TaskDiagnosticRow]
+    | type[DatasetMetadataRow]
+    | type[RetrievalRankingRow],
     columns: Sequence[str],
 ) -> Any:
     column_sql = ", ".join(columns)
@@ -660,6 +699,116 @@ def _fetch_dict_rows(con: duckdb.DuckDBPyConnection, table_name: str) -> list[di
     result = con.execute(f"SELECT * FROM {table_name}")
     columns = [description[0] for description in result.description]
     return [dict(zip(columns, row, strict=True)) for row in result.fetchall()]
+
+
+def _selected_result_jsons(
+    results_dir: Path | Sequence[Path],
+    *,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    target_benchmarks: set[str],
+    exclude_model_names: set[str],
+    result_paths: set[str] | None = None,
+) -> list[SelectedResultJson]:
+    selected_by_task: dict[tuple[str, str, str, str, str], SelectedResultJson] = {}
+    for source_priority, source_dir in enumerate(_results_dirs(results_dir)):
+        for result_path in sorted(source_dir.glob("*/*/*.json")):
+            if result_paths is not None and str(result_path) not in result_paths:
+                continue
+            selected = _selected_result_json(
+                result_path,
+                results_dir=source_dir,
+                source_priority=source_priority,
+                benchmark_configs=benchmark_configs,
+                target_benchmarks=target_benchmarks,
+                exclude_model_names=exclude_model_names,
+            )
+            if selected is None:
+                continue
+            key = (
+                selected.model_dir,
+                selected.model_name,
+                selected.benchmark,
+                selected.dataset_id,
+                selected.task_key,
+            )
+            current = selected_by_task.get(key)
+            if current is None or _prefer_selected_result_json(selected, current):
+                selected_by_task[key] = selected
+    return sorted(
+        selected_by_task.values(),
+        key=lambda selected: (
+            selected.model_dir,
+            selected.benchmark,
+            selected.dataset_id,
+            selected.task_name,
+            str(selected.result_path),
+        ),
+    )
+
+
+def _results_dirs(results_dir: Path | Sequence[Path]) -> list[Path]:
+    if isinstance(results_dir, Path):
+        return [results_dir]
+    return list(results_dir)
+
+
+def _selected_result_json(
+    result_path: Path,
+    *,
+    results_dir: Path,
+    source_priority: int,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    target_benchmarks: set[str],
+    exclude_model_names: set[str],
+) -> SelectedResultJson | None:
+    task_payload = _read_json(result_path)
+    target = task_payload.get("target", {})
+    if not isinstance(target, dict):
+        return None
+    benchmark = benchmark_name(
+        target.get("dataset_id"),
+        target.get("dataset_name"),
+        benchmark_configs=benchmark_configs,
+    )
+    if benchmark not in target_benchmarks:
+        return None
+    evaluation = task_payload.get("evaluation", {})
+    if not isinstance(evaluation, dict):
+        return None
+    score = evaluation.get("aggregate_metric_value")
+    if not isinstance(score, int | float):
+        return None
+    model_dir = result_path.relative_to(results_dir).parts[0]
+    model = task_payload.get("model", {})
+    model_name = _model_name_from_payload(model, model_dir=model_dir)
+    if model_name in exclude_model_names:
+        return None
+    dataset_id = str(target.get("dataset_id") or "")
+    raw_task_name = str(target.get("task_name") or target.get("split_name") or "")
+    task_name = canonical_task_name(benchmark, raw_task_name)
+    task_key = canonical_task_key(benchmark=benchmark, dataset_id=dataset_id, task_name=task_name)
+    return SelectedResultJson(
+        result_path=result_path,
+        results_dir=results_dir,
+        source_priority=source_priority,
+        payload=task_payload,
+        benchmark=benchmark,
+        model_dir=model_dir,
+        model_name=model_name,
+        dataset_id=dataset_id,
+        task_name=task_name,
+        task_key=task_key,
+    )
+
+
+def _prefer_selected_result_json(candidate: SelectedResultJson, current: SelectedResultJson) -> bool:
+    if candidate.source_priority != current.source_priority:
+        return candidate.source_priority < current.source_priority
+    return _selected_result_path_stem_matches_task(candidate) and not _selected_result_path_stem_matches_task(current)
+
+
+def _selected_result_path_stem_matches_task(selected: SelectedResultJson) -> bool:
+    return selected.result_path.stem == selected.task_name
 
 
 def _model_name_from_payload(model: Any, *, model_dir: str) -> str:
@@ -1841,16 +1990,15 @@ def _read_previous_source_hashes(db_path: Path) -> dict[str, str | None]:
 
 
 def _duckdb_table_exists(con: duckdb.DuckDBPyConnection, table_name: str) -> bool:
-    return bool(
-        con.execute(
-            """
-            SELECT count(*)
-            FROM information_schema.tables
-            WHERE table_name = ?
-            """,
-            [table_name],
-        ).fetchone()[0]
-    )
+    row = con.execute(
+        """
+        SELECT count(*)
+        FROM information_schema.tables
+        WHERE table_name = ?
+        """,
+        [table_name],
+    ).fetchone()
+    return bool(row is not None and row[0])
 
 
 def _create_ingestion_state_tables(

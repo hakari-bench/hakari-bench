@@ -179,7 +179,6 @@ def test_load_results_uses_yaml_benchmark_matches(tmp_path: Path) -> None:
     assert len(rows) == 1
     assert rows[0].benchmark == "CustomBench"
 
-
 def test_main_builds_duckdb_without_static_html_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     results_dir = tmp_path / "results"
     task_path = results_dir / "model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
@@ -406,6 +405,98 @@ def test_load_results_incremental_parses_only_changed_sources(
     assert cached_runs[0]["aggregate_metric_mean"] == pytest.approx(0.66)
 
 
+def test_load_results_merges_multiple_results_dirs_by_argument_order(tmp_path: Path) -> None:
+    preferred_dir = tmp_path / "preferred"
+    fallback_dir = tmp_path / "fallback"
+    _write_minimal_task_result(
+        preferred_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.80,
+    )
+    _write_minimal_task_result(
+        fallback_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.20,
+    )
+    _write_minimal_task_result(
+        fallback_dir / "model_B" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="example/model_B",
+        task_name="ja_cwir",
+        score=0.60,
+    )
+
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = report.load_results(
+        [preferred_dir, fallback_dir]
+    )
+
+    assert ranking_rows == []
+    assert len(diagnostic_rows) == 2
+    assert len(dataset_metadata_rows) == 1
+    assert [(row.model_dir, row.score) for row in rows] == [("model_A", 0.80), ("model_B", 0.60)]
+    assert rows[0].result_path == str(preferred_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json")
+    assert [(row.model_dir, row.metric_value) for row in metric_rows] == [("model_A", 0.80), ("model_B", 0.60)]
+    assert [(run["model_dir"], run["aggregate_metric_mean"]) for run in runs] == [("model_A", 0.80), ("model_B", 0.60)]
+
+
+def test_load_results_reversing_multiple_results_dirs_changes_duplicate_winner(tmp_path: Path) -> None:
+    first_dir = tmp_path / "first"
+    second_dir = tmp_path / "second"
+    _write_minimal_task_result(
+        first_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.80,
+    )
+    _write_minimal_task_result(
+        second_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.20,
+    )
+
+    rows, *_ = report.load_results([second_dir, first_dir])
+
+    assert [(row.model_dir, row.score) for row in rows] == [("model_A", 0.20)]
+    assert rows[0].result_path == str(second_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json")
+
+
+def test_load_results_can_filter_model_names(tmp_path: Path) -> None:
+    _write_minimal_task_result(
+        tmp_path / "hotchpotch__bekko-embedding-pico-beta-unir-v7" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="hotchpotch/bekko-embedding-pico-beta-unir-v7",
+        task_name="ja_cwir",
+        score=0.80,
+    )
+    _write_minimal_task_result(
+        tmp_path / "hotchpotch__bekko-embedding-pico-beta-unir-v9-GOR" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR",
+        task_name="ja_cwir",
+        score=0.70,
+    )
+    _write_minimal_task_result(
+        tmp_path / "example__other-model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="example/other-model",
+        task_name="ja_cwir",
+        score=0.60,
+    )
+
+    rows, runs, *_ = report.load_results(
+        tmp_path,
+        exclude_model_names={"hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR"},
+    )
+
+    assert [row.model_name for row in rows] == [
+        "example/other-model",
+        "hotchpotch/bekko-embedding-pico-beta-unir-v7",
+    ]
+    assert [run["model_name"] for run in runs] == [
+        "example/other-model",
+        "hotchpotch/bekko-embedding-pico-beta-unir-v7",
+    ]
+
+
 def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
     task_path = model_dir / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
@@ -536,6 +627,26 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert ranking_rows[0].ranking_path == str(ranking_path)
     assert ranking_rows[0].query_id == "q1"
     assert ranking_rows[0].corpus_id == "d1"
+
+
+def _write_minimal_task_result(path: Path, *, model_id: str, task_name: str, score: float) -> None:
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        json.dumps(
+            {
+                "model": {"id": model_id},
+                "target": {
+                    "dataset_name": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "split_name": task_name,
+                    "task_name": task_name,
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": score},
+                "metrics": {f"{task_name}_ndcg@10": score},
+            }
+        ),
+        encoding="utf-8",
+    )
 
 
 def test_task_result_row_schema_rejects_unknown_fields() -> None:

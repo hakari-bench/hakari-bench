@@ -139,6 +139,10 @@ output/results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
 
 - Run-level summaries are derived from per-task result JSON when building the
   DuckDB database; do not write aggregate result files.
+- `scripts/build_results_database_and_report.py` accepts repeated
+  `--results-dir` options for merging multiple result roots. Treat the argument
+  order as the merge priority: the first directory wins for duplicate logical
+  model-task JSON, and later directories only fill missing results.
 - Existing result files should be skipped unless `--overwrite` is provided.
 - Result JSON should preserve as much runtime detail as practical, including
   batch size, dtype, package versions, torch/CUDA info, prompts, total

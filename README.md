@@ -398,6 +398,31 @@ Start the HTMX/Tailwind leaderboard viewer:
 uv run hakari-bench web
 ```
 
+Build or rebuild the DuckDB warehouse from result JSON before publishing or
+reviewing fresh leaderboard data:
+
+```bash
+uv run python scripts/build_results_database_and_report.py \
+  --results-dir output/results \
+  --duckdb-path output/results/hakari_bench.duckdb \
+  --html-output output/results/report.html
+```
+
+To merge historical or separate result roots, repeat `--results-dir` in
+priority order. If the same model-task JSON exists in more than one root, the
+first directory wins and later directories fill only missing results.
+Use repeated `--exclude-model-name` options to omit known-bad or superseded
+model ids from the generated warehouse without deleting their JSON files.
+
+```bash
+uv run python scripts/build_results_database_and_report.py \
+  --results-dir output/results \
+  --results-dir output/results_combined_20260510_1340 \
+  --exclude-model-name hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR \
+  --duckdb-path output/results/hakari_bench.duckdb \
+  --html-output output/results/report.html
+```
+
 By default, it binds to `127.0.0.1:8000` and keeps
 `output/viewer/hakari_bench.duckdb` synchronized from the benchmark results
 DuckDB when a page is loaded. Use `--host 0.0.0.0 --port 28090` for remote

@@ -55,6 +55,22 @@ uv run python scripts/build_results_database_and_report.py \
   --include-result-extensions
 ```
 
+Multiple result roots can be merged by repeating `--results-dir`. Directory
+order is the conflict-resolution policy: when two roots contain the same
+logical model, benchmark, and task JSON, the first directory on the command line
+wins. Later directories only fill missing model-task results.
+Models can be omitted from the warehouse with repeated `--exclude-model-name`
+options; this filters rows by the JSON `model.id` / DuckDB `model_name` value.
+
+```bash
+uv run python scripts/build_results_database_and_report.py \
+  --results-dir output/results \
+  --results-dir output/results_combined_20260510_1340 \
+  --exclude-model-name hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR \
+  --duckdb-path output/results/hakari_bench.duckdb \
+  --html-output output/results/report.html
+```
+
 The input files are:
 
 - `output/results/{model_dir}/{huggingface_dataset_name}/{split_or_task}.json`:
@@ -66,8 +82,10 @@ The input files are:
 
 `load_results()` determines `benchmark` from `target.dataset_id` and
 `target.dataset_name` using `config/viewer/benchmarks.yaml`, then writes only
-configured benchmark rows into `task_results`. The base embedding result is
-stored as a row where
+configured benchmark rows into `task_results`. When multiple result roots are
+provided, it first selects one source JSON per logical
+`(model_dir, model_name, benchmark, dataset_id, task_key)` using the
+command-line directory order. The base embedding result is stored as a row where
 `embedding_variant_name IS NULL`. Derived embedding results from
 `evaluation.embedding_evaluations` are stored as additional variant rows.
 NanoMTEB family datasets are stored as distinct benchmark groups, separate from
