@@ -141,6 +141,11 @@ def main() -> None:
         action="store_true",
         help="Discover unknown top-level result JSON fields. Disabled by default for faster viewer builds.",
     )
+    parser.add_argument(
+        "--incremental",
+        action="store_true",
+        help="Reuse unchanged canonical rows from the existing DuckDB database when possible.",
+    )
     args = parser.parse_args()
 
     benchmark_configs = load_benchmark_configs(args.viewer_config_dir)
@@ -149,6 +154,7 @@ def main() -> None:
         args.results_dir,
         benchmark_configs=benchmark_configs,
         include_retrieval_rankings=args.include_retrieval_rankings,
+        incremental_db_path=args.duckdb_path if args.incremental else None,
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
@@ -186,6 +192,7 @@ def load_results(
     *,
     benchmark_configs: Sequence[BenchmarkConfig] | None = None,
     include_retrieval_rankings: bool = False,
+    incremental_db_path: Path | None = None,
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -194,6 +201,15 @@ def load_results(
     list[DatasetMetadataRow],
     list[RetrievalRankingRow],
 ]:
+    if incremental_db_path is not None and (
+        cached_results := _load_results_from_incremental_cache(
+            results_dir,
+            db_path=incremental_db_path,
+            include_retrieval_rankings=include_retrieval_rankings,
+        )
+    ) is not None:
+        return cached_results
+
     rows: list[TaskResult] = []
     run_accumulators: dict[str, dict[str, Any]] = {}
     metric_rows: list[MetricLongRow] = []
@@ -358,6 +374,171 @@ def load_results(
         _dedupe_dataset_metadata_rows(dataset_metadata_rows),
         _dedupe_retrieval_ranking_rows(ranking_rows),
     )
+
+
+LoadResultsPayload = tuple[
+    list[TaskResult],
+    list[dict[str, Any]],
+    list[MetricLongRow],
+    list[TaskDiagnosticRow],
+    list[DatasetMetadataRow],
+    list[RetrievalRankingRow],
+]
+
+
+def _load_results_from_incremental_cache(
+    results_dir: Path,
+    *,
+    db_path: Path,
+    include_retrieval_rankings: bool,
+) -> LoadResultsPayload | None:
+    if include_retrieval_rankings or not db_path.exists():
+        return None
+    result_paths = sorted(results_dir.glob("*/*/*.json"))
+    current_hashes = {str(path): _payload_sha256(str(path)) for path in result_paths}
+    previous_hashes = _read_previous_source_hashes(db_path)
+    if not current_hashes or current_hashes != previous_hashes:
+        return None
+
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        required_tables = ("meta_database", "runs", "task_results", "metrics_long", "task_diagnostics", "dataset_metadata")
+        if not all(_duckdb_table_exists(con, table) for table in required_tables):
+            return None
+        if con.execute("SELECT schema_version FROM meta_database").fetchone() != (WAREHOUSE_SCHEMA_VERSION,):
+            return None
+        rows = _fetch_task_result_rows(con)
+        runs = _fetch_dict_rows(con, "runs")
+        metric_rows = _fetch_model_rows(
+            con,
+            "metrics_long",
+            MetricLongRow,
+            ("model_dir", "model_name", "benchmark", "dataset_id", "task_name", "metric_name", "metric_value", "result_path"),
+        )
+        diagnostic_rows = _fetch_model_rows(
+            con,
+            "task_diagnostics",
+            TaskDiagnosticRow,
+            (
+                "model_dir",
+                "model_name",
+                "benchmark",
+                "dataset_id",
+                "task_name",
+                "task_key",
+                "result_path",
+                "base_score",
+                "rerank_score",
+                "rerank_lift",
+                "rerank_status",
+                "rerank_top_k",
+                "candidate_source",
+                "candidate_ranking",
+                "bm25_source",
+                "query_coverage",
+                "relevant_coverage",
+                "covered_query_count",
+                "query_with_relevance_count",
+                "covered_relevant_count",
+                "relevant_count",
+                "dataset_load_seconds",
+                "query_embedding_seconds",
+                "corpus_embedding_seconds",
+                "score_and_topk_seconds",
+                "metric_compute_seconds",
+                "pure_compute_seconds",
+                "wall_seconds",
+                "duration_seconds_including_dataset_load",
+            ),
+        )
+        dataset_metadata_rows = _fetch_model_rows(
+            con,
+            "dataset_metadata",
+            DatasetMetadataRow,
+            (
+                "benchmark",
+                "dataset_id",
+                "dataset_name",
+                "split_name",
+                "task_name",
+                "task_key",
+                "language",
+                "languages",
+                "category",
+                "short_description",
+                "citation_count",
+                "reference_count",
+                "has_bibtex",
+                "query_count",
+                "document_count",
+                "query_mean_chars",
+                "document_mean_chars",
+            ),
+        )
+        return rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, []
+    finally:
+        con.close()
+
+
+def _fetch_task_result_rows(con: duckdb.DuckDBPyConnection) -> list[TaskResult]:
+    columns = (
+        "model_dir",
+        "model_name",
+        "model_revision",
+        "model_revision_requested",
+        "benchmark",
+        "dataset_id",
+        "dataset_revision",
+        "dataset_revision_requested",
+        "dataset_name",
+        "split_name",
+        "task_name",
+        "task_key",
+        "score",
+        "aggregate_metric",
+        "result_path",
+        "experiment_fingerprint",
+        "active_parameters",
+        "total_parameters",
+        "max_seq_length",
+        "dtype",
+        "attn_implementation",
+        "query_prompt",
+        "document_prompt",
+        "query_prompt_name",
+        "document_prompt_name",
+        "query_encode_task",
+        "document_encode_task",
+        "trust_remote_code",
+        "torch_version",
+        "transformers_version",
+        "sentence_transformers_version",
+        "started_at_utc",
+        "finished_at_utc",
+        "evaluated_at_utc",
+        "duration_seconds_including_dataset_load",
+        "wall_seconds",
+        "embedding_variant_name",
+        "embedding_dim",
+        "quantization",
+    )
+    return _fetch_model_rows(con, "task_results", TaskResult, columns)
+
+
+def _fetch_model_rows(
+    con: duckdb.DuckDBPyConnection,
+    table_name: str,
+    model_class: type[TaskResult] | type[MetricLongRow] | type[TaskDiagnosticRow] | type[DatasetMetadataRow],
+    columns: Sequence[str],
+) -> Any:
+    column_sql = ", ".join(columns)
+    return [model_class.model_validate(dict(zip(columns, row, strict=True))) for row in con.execute(f"SELECT {column_sql} FROM {table_name}").fetchall()]
+
+
+def _fetch_dict_rows(con: duckdb.DuckDBPyConnection, table_name: str) -> list[dict[str, Any]]:
+    result = con.execute(f"SELECT * FROM {table_name}")
+    columns = [description[0] for description in result.description]
+    return [dict(zip(columns, row, strict=True)) for row in result.fetchall()]
 
 
 def _model_name_from_payload(model: Any, *, model_dir: str) -> str:
