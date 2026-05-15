@@ -247,3 +247,22 @@ Before considering a deploy complete, run local validation:
 ```bash
 uv run tox
 ```
+
+The viewer also has a Playwright-backed browser smoke test for the static
+JavaScript, HTMX load path, tooltip layer, and model details modal. Install the
+Chromium browser once for the local environment, then run the test through `uv`:
+
+```bash
+uv run playwright install chromium
+uv run --group all pytest -q tests/test_viewer_browser.py
+```
+
+CI is configured to run only on pull requests or explicit manual dispatches.
+The browser smoke test has its own lightweight dependency group so the browser
+job does not need to install the full benchmark/runtime stack:
+
+```bash
+uv sync --only-group viewer-browser-test --frozen
+uv run --only-group viewer-browser-test playwright install --with-deps chromium
+uv run --only-group viewer-browser-test pytest -q -m browser tests/test_viewer_browser.py
+```

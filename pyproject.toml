@@ -43,6 +43,9 @@ wordseg = [
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+markers = [
+    "browser: headless browser tests that require Playwright and an installed browser",
+]
 
 [tool.setuptools.packages.find]
 include = ["hakari_bench*", "config*"]
@@ -94,6 +97,12 @@ viewer = [
 all = [
     { include-group = "dev" },
     { include-group = "viewer" },
+    { include-group = "viewer-browser-test" },
+]
+viewer-browser-test = [
+    { include-group = "viewer" },
+    "playwright>=1.57,<2",
+    "pytest>=9.0.3",
 ]
 pylate = [
     "pylate",
