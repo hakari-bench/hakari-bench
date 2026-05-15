@@ -369,6 +369,14 @@ identity.
 | `embedding_variant_name` | `VARCHAR` | Embedding variant name. Reranking rows are currently `NULL`. |
 | `embedding_dim` | `INTEGER` | Embedding dimension. |
 | `quantization` | `VARCHAR` | Quantization precision. |
+| `attn_implementation` | `VARCHAR` | Attention implementation copied from `task_results`. |
+| `query_prompt` | `VARCHAR` | Explicit query prompt/prefix from `task_results`. |
+| `document_prompt` | `VARCHAR` | Explicit document prompt/prefix from `task_results`. |
+| `query_prompt_name` | `VARCHAR` | Query prompt name from `task_results`. |
+| `document_prompt_name` | `VARCHAR` | Document prompt name from `task_results`. |
+| `query_encode_task` | `VARCHAR` | Query encode task hint from `task_results`. |
+| `document_encode_task` | `VARCHAR` | Document encode task hint from `task_results`. |
+| `trust_remote_code` | `BOOLEAN` | Whether model loading used Hugging Face `trust_remote_code`. |
 | `candidate_source` | `VARCHAR` | Candidate source for reranking rows, otherwise `NULL`. |
 | `candidate_ranking` | `VARCHAR` | Candidate ranking label such as `bm25`, otherwise `NULL`. |
 | `rerank_top_k` | `INTEGER` | Candidate depth for reranking rows, otherwise `NULL`. |
@@ -692,9 +700,15 @@ keeping Borda and complete-model semantics in `LeaderboardService`.
 `TaskResultsRepository.fetch_task_results()` is responsible for these SQL
 choices:
 
-- Read `task_results.score` for the default `Target: All` leaderboard source.
-- Join `task_diagnostics` and read `rerank_score` for `Target: Reranking`;
-  rows without available BM25 top-100 rerank scores are excluded.
+- When `viewer_task_results.score_target` is available, filter it by the
+  selected target and read `viewer_task_results.score` directly. New DuckDB
+  builds materialize both `all` and available `reranking` rows through
+  `fact_task_score`.
+- For older DuckDB files without `score_target`, read `task_results.score` for
+  the default `Target: All` leaderboard source.
+- For older DuckDB files without `score_target`, join `task_diagnostics` and
+  read `rerank_score` for `Target: Reranking`; rows without available BM25
+  top-100 rerank scores are excluded.
 - Exclude `score IS NULL` rows because they cannot participate in ranking.
 - Read only benchmarks requested by the selected view.
 - Read only base rows when variants are not requested; reranking also reads
@@ -742,12 +756,14 @@ new DuckDB file is downloaded or otherwise modified. The cache emits
 `task_score_count` fields.
 
 DB build scripts create `viewer_task_results` as a physical table after
-`dataset_metadata` is written. It selects only the columns required by
-`TaskResultsRepository`, joins `dataset_metadata` by `(benchmark, dataset_id,
-task_key)`, and orders rows by `(benchmark, dataset_id, task_name, model_name,
-embedding_variant_name)`. This avoids repeated metadata joins and keeps
-DuckDB's zonemaps useful for benchmark and variant filtering while preserving
-compatibility with older databases that do not have the table.
+`dataset_metadata` and `fact_task_score` are written. It selects only the
+columns required by `TaskResultsRepository`, includes `score_target`, joins
+`dataset_metadata` by `(benchmark, dataset_id, task_key)`, and orders rows by
+`(benchmark, score_target, dataset_id, task_name, model_name,
+embedding_variant_name)`. This avoids repeated metadata joins and lets the
+viewer switch `Target: All` / `Target: Reranking` without joining diagnostics
+on the hot path, while preserving compatibility with older databases that do
+not have `score_target`.
 Because `viewer_task_results` is already physically ordered, the viewer skips
 the query-time `ORDER BY` when reading it. Legacy `task_results` reads keep the
 explicit order clause for deterministic fallback behavior.

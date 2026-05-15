@@ -1462,6 +1462,14 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
             tr.embedding_variant_name,
             tr.embedding_dim,
             tr.quantization,
+            tr.attn_implementation,
+            tr.query_prompt,
+            tr.document_prompt,
+            tr.query_prompt_name,
+            tr.document_prompt_name,
+            tr.query_encode_task,
+            tr.document_encode_task,
+            tr.trust_remote_code,
             NULL::VARCHAR AS candidate_source,
             NULL::VARCHAR AS candidate_ranking,
             NULL::INTEGER AS rerank_top_k,
@@ -1500,6 +1508,14 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
             tr.embedding_variant_name,
             tr.embedding_dim,
             tr.quantization,
+            tr.attn_implementation,
+            tr.query_prompt,
+            tr.document_prompt,
+            tr.query_prompt_name,
+            tr.document_prompt_name,
+            tr.query_encode_task,
+            tr.document_encode_task,
+            tr.trust_remote_code,
             td.candidate_source,
             td.candidate_ranking,
             td.rerank_top_k,
@@ -1537,43 +1553,45 @@ def _create_viewer_task_results_table(con: duckdb.DuckDBPyConnection) -> None:
         """
         CREATE TABLE viewer_task_results AS
         SELECT
-            tr.model_name,
-            tr.benchmark,
-            tr.dataset_id,
-            tr.dataset_name,
-            COALESCE(tr.split_name, '') AS split_name,
-            tr.task_name,
-            tr.task_key,
-            tr.score,
+            fts.model_name,
+            fts.benchmark,
+            fts.dataset_id,
+            fts.dataset_name,
+            COALESCE(fts.split_name, '') AS split_name,
+            fts.task_name,
+            fts.task_key,
+            fts.score_target,
+            fts.score,
             dm.language,
             dm.languages,
-            tr.active_parameters,
-            tr.total_parameters,
-            tr.max_seq_length,
-            tr.dtype,
-            tr.attn_implementation,
-            tr.query_prompt,
-            tr.document_prompt,
-            tr.query_prompt_name,
-            tr.document_prompt_name,
-            tr.query_encode_task,
-            tr.document_encode_task,
-            tr.trust_remote_code,
-            tr.embedding_variant_name,
-            tr.embedding_dim,
-            tr.quantization
-        FROM task_results AS tr
+            fts.active_parameters,
+            fts.total_parameters,
+            fts.max_seq_length,
+            fts.dtype,
+            fts.attn_implementation,
+            fts.query_prompt,
+            fts.document_prompt,
+            fts.query_prompt_name,
+            fts.document_prompt_name,
+            fts.query_encode_task,
+            fts.document_encode_task,
+            fts.trust_remote_code,
+            fts.embedding_variant_name,
+            fts.embedding_dim,
+            fts.quantization
+        FROM fact_task_score AS fts
         LEFT JOIN dataset_metadata AS dm
-          ON dm.benchmark = tr.benchmark
-         AND dm.dataset_id = tr.dataset_id
-         AND dm.task_key = tr.task_key
+          ON dm.benchmark = fts.benchmark
+         AND dm.dataset_id = fts.dataset_id
+         AND dm.task_key = fts.task_key
         ORDER BY
-            tr.benchmark,
-            tr.dataset_id,
-            tr.task_name,
-            tr.model_name,
-            tr.embedding_variant_name IS NOT NULL,
-            tr.embedding_variant_name
+            fts.benchmark,
+            fts.score_target,
+            fts.dataset_id,
+            fts.task_name,
+            fts.model_name,
+            fts.embedding_variant_name IS NOT NULL,
+            fts.embedding_variant_name
         """
     )
 

@@ -190,7 +190,11 @@ class TaskResultsRepository:
             diagnostic_join = ""
             score_expr = "tr.score"
             target_filter = ""
-            if score_target == "reranking" and {"model_name", "benchmark", "task_key", "rerank_score"}.issubset(diagnostic_columns):
+            query_params: list[Any] = list(benchmarks)
+            if "score_target" in columns:
+                target_filter = "AND tr.score_target = ?"
+                query_params.append(score_target)
+            elif score_target == "reranking" and {"model_name", "benchmark", "task_key", "rerank_score"}.issubset(diagnostic_columns):
                 diagnostic_join = _diagnostic_join(diagnostic_columns)
                 score_expr = "td.rerank_score"
                 target_filter = """
@@ -266,7 +270,7 @@ class TaskResultsRepository:
                 score_target=score_target,
                 variant_flags=_variant_flags_label(variant_display_flags),
             ) as timing:
-                cursor = con.execute(query, benchmarks)
+                cursor = con.execute(query, query_params)
                 field_names = [str(description[0]) for description in cursor.description]
                 rows = cursor.fetchall()
                 timing["row_count"] = len(rows)

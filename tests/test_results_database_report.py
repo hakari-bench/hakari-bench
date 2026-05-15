@@ -775,6 +775,13 @@ def test_write_duckdb_materializes_task_score_targets(tmp_path: Path) -> None:
             ("all", 0.42, None, None, None),
             ("reranking", 0.50, "bm25", 100, None),
         ]
+        assert con.execute(
+            """
+            SELECT score_target, score
+            FROM viewer_task_results
+            ORDER BY score_target
+            """
+        ).fetchall() == [("all", 0.42), ("reranking", 0.50)]
     finally:
         con.close()
 

@@ -458,6 +458,115 @@ def test_task_results_repository_prefers_materialized_viewer_task_results(tmp_pa
     ]
 
 
+def test_task_results_repository_reads_score_target_from_materialized_viewer_table(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            """
+            CREATE TABLE viewer_task_results (
+                model_name VARCHAR,
+                benchmark VARCHAR,
+                dataset_id VARCHAR,
+                dataset_name VARCHAR,
+                split_name VARCHAR,
+                task_name VARCHAR,
+                task_key VARCHAR,
+                score_target VARCHAR,
+                score DOUBLE,
+                language VARCHAR,
+                languages VARCHAR[],
+                active_parameters BIGINT,
+                total_parameters BIGINT,
+                max_seq_length INTEGER,
+                dtype VARCHAR,
+                attn_implementation VARCHAR,
+                query_prompt VARCHAR,
+                document_prompt VARCHAR,
+                query_prompt_name VARCHAR,
+                document_prompt_name VARCHAR,
+                query_encode_task VARCHAR,
+                document_encode_task VARCHAR,
+                trust_remote_code BOOLEAN,
+                embedding_variant_name VARCHAR,
+                embedding_dim INTEGER,
+                quantization VARCHAR
+            )
+            """
+        )
+        con.executemany(
+            "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                (
+                    "model/a",
+                    "BenchA",
+                    "bench/a",
+                    "BenchA",
+                    "",
+                    "a1",
+                    "task-a1",
+                    "all",
+                    0.80,
+                    "ja",
+                    ["ja"],
+                    10,
+                    12,
+                    8192,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    768,
+                    None,
+                ),
+                (
+                    "model/a",
+                    "BenchA",
+                    "bench/a",
+                    "BenchA",
+                    "",
+                    "a1",
+                    "task-a1",
+                    "reranking",
+                    0.92,
+                    "ja",
+                    ["ja"],
+                    10,
+                    12,
+                    8192,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    768,
+                    None,
+                ),
+            ],
+        )
+    finally:
+        con.close()
+
+    records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        score_target="reranking",
+        include_embedding_variants=False,
+    )
+
+    assert [(record.task_key, record.score) for record in records] == [("task-a1", 0.92)]
+
+
 def test_materialized_viewer_task_results_do_not_add_query_time_order_by() -> None:
     assert _task_results_order_by("viewer_task_results", {"embedding_variant_name"}) == ""
     assert _task_results_order_by("task_results", {"embedding_variant_name"}).startswith("ORDER BY")
