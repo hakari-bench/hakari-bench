@@ -690,6 +690,12 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
             FROM task_results
             """
         ).fetchone() == ("query: ", "passage: ", None, None, None, None, True)
+        assert con.execute(
+            """
+            SELECT model_name, benchmark, task_key, score, language, languages
+            FROM viewer_task_results
+            """
+        ).fetchone() == ("example/model", "NanoJMTEB-v2", "NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir", 0.42, None, None)
         assert con.execute("SELECT base_score FROM task_diagnostics").fetchone() is None
         assert con.execute("SELECT query_id, rank, corpus_id FROM retrieval_rankings").fetchone() == ("q1", 1, "d1")
     finally:
@@ -766,6 +772,7 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
         "runs.parquet",
         "task_diagnostics.parquet",
         "task_results.parquet",
+        "viewer_task_results.parquet",
     ]
     con = duckdb.connect()
     try:

@@ -401,6 +401,63 @@ def test_task_results_repository_reads_dataset_languages_when_present(tmp_path: 
     ]
 
 
+def test_task_results_repository_prefers_materialized_viewer_task_results(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "task-ja", 0.90, 10, 12, 8192),
+        ],
+        include_embedding_variant_columns=False,
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", None, "a1", "task-ja", "metadata-ja", ["metadata-ja"])],
+    )
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            """
+            CREATE TABLE viewer_task_results AS
+            SELECT
+                model_name,
+                benchmark,
+                dataset_id,
+                dataset_name,
+                COALESCE(split_name, '') AS split_name,
+                task_name,
+                task_key,
+                score,
+                'viewer-ja' AS language,
+                ['viewer-ja']::VARCHAR[] AS languages,
+                active_parameters,
+                total_parameters,
+                max_seq_length,
+                NULL AS dtype,
+                NULL AS attn_implementation,
+                NULL AS query_prompt,
+                NULL AS document_prompt,
+                NULL AS query_prompt_name,
+                NULL AS document_prompt_name,
+                NULL AS query_encode_task,
+                NULL AS document_encode_task,
+                NULL AS trust_remote_code,
+                NULL AS embedding_variant_name,
+                NULL AS embedding_dim,
+                NULL AS quantization
+            FROM task_results
+            """
+        )
+    finally:
+        con.close()
+
+    records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+    )
+
+    assert [(record.task_key, record.language, record.languages) for record in records] == [
+        ("task-ja", "viewer-ja", ["viewer-ja"])
+    ]
+
+
 def _write_task_results(
     db_path: Path,
     rows: list[tuple],

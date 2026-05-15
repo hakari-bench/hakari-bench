@@ -3,8 +3,10 @@
 This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
-The main source table for the HTMX leaderboard viewer is `task_results`.
-`runs` contains run-level metadata, `metrics_long` contains detailed task
+The canonical source table for benchmark results is `task_results`. New DuckDB
+builds also materialize `viewer_task_results`, a viewer-optimized table with
+the metadata join already applied; the HTMX leaderboard uses it when present and
+falls back to `task_results` for older DuckDB files. `runs` contains run-level metadata, `metrics_long` contains detailed task
 metrics, `retrieval_rankings` contains per-query top-100 retrieved document ids,
 `task_diagnostics` contains analysis-oriented rerank, candidate, and latency
 fields, `dataset_metadata` exposes YAML task metadata for language, category,
@@ -540,6 +542,14 @@ and row-to-`TaskScore` conversion while still invalidating automatically when a
 new DuckDB file is downloaded or otherwise modified. The cache emits
 `viewer.leaderboard.cache` log records with `hit`, `size`, and
 `task_score_count` fields.
+
+DB build scripts create `viewer_task_results` as a physical table after
+`dataset_metadata` is written. It selects only the columns required by
+`TaskResultsRepository`, joins `dataset_metadata` by `(benchmark, dataset_id,
+task_key)`, and orders rows by `(benchmark, dataset_id, task_name, model_name,
+embedding_variant_name)`. This avoids repeated metadata joins and keeps
+DuckDB's zonemaps useful for benchmark and variant filtering while preserving
+compatibility with older databases that do not have the table.
 
 Conceptually, it runs this query:
 

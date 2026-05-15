@@ -48,6 +48,7 @@ WAREHOUSE_TABLES = (
     "retrieval_rankings",
     "task_diagnostics",
     "dataset_metadata",
+    "viewer_task_results",
     "model_scores",
     "borda_task_scores",
 )
@@ -964,6 +965,7 @@ def write_duckdb(
                 "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [row.duckdb_values() for row in normalized_dataset_metadata_rows],
             )
+        _create_viewer_task_results_table(con)
         score_rows = [row for view_rows in standings.values() for row in view_rows]
         con.execute(
             """
@@ -1025,6 +1027,52 @@ def write_duckdb(
         )
     finally:
         con.close()
+
+
+def _create_viewer_task_results_table(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE viewer_task_results AS
+        SELECT
+            tr.model_name,
+            tr.benchmark,
+            tr.dataset_id,
+            tr.dataset_name,
+            COALESCE(tr.split_name, '') AS split_name,
+            tr.task_name,
+            tr.task_key,
+            tr.score,
+            dm.language,
+            dm.languages,
+            tr.active_parameters,
+            tr.total_parameters,
+            tr.max_seq_length,
+            tr.dtype,
+            tr.attn_implementation,
+            tr.query_prompt,
+            tr.document_prompt,
+            tr.query_prompt_name,
+            tr.document_prompt_name,
+            tr.query_encode_task,
+            tr.document_encode_task,
+            tr.trust_remote_code,
+            tr.embedding_variant_name,
+            tr.embedding_dim,
+            tr.quantization
+        FROM task_results AS tr
+        LEFT JOIN dataset_metadata AS dm
+          ON dm.benchmark = tr.benchmark
+         AND dm.dataset_id = tr.dataset_id
+         AND dm.task_key = tr.task_key
+        ORDER BY
+            tr.benchmark,
+            tr.dataset_id,
+            tr.task_name,
+            tr.model_name,
+            tr.embedding_variant_name IS NOT NULL,
+            tr.embedding_variant_name
+        """
+    )
 
 
 def export_duckdb_tables_to_parquet(db_path: Path, output_dir: Path) -> None:

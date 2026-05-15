@@ -176,8 +176,15 @@ class TaskResultsRepository:
             con = duckdb.connect(str(self.duckdb_path), read_only=True)
         try:
             with timed_operation("viewer.duckdb.schema", operation="fetch_task_results"):
-                columns = _table_columns(con, "task_results")
-                metadata_columns = _table_columns(con, "dataset_metadata") if _table_exists(con, "dataset_metadata") else set()
+                source_table = "viewer_task_results" if _table_exists(con, "viewer_task_results") else "task_results"
+                columns = _table_columns(con, source_table)
+                metadata_columns = (
+                    set()
+                    if source_table == "viewer_task_results"
+                    else _table_columns(con, "dataset_metadata")
+                    if _table_exists(con, "dataset_metadata")
+                    else set()
+                )
                 diagnostic_columns = _table_columns(con, "task_diagnostics") if _table_exists(con, "task_diagnostics") else set()
             metadata_join = _metadata_join(metadata_columns)
             diagnostic_join = ""
@@ -194,8 +201,8 @@ class TaskResultsRepository:
                 """
             elif score_target == "reranking":
                 return []
-            language_expr = "dm.language" if "language" in metadata_columns else "NULL"
-            languages_expr = "dm.languages" if "languages" in metadata_columns else "NULL"
+            language_expr = "tr.language" if "language" in columns else "dm.language" if "language" in metadata_columns else "NULL"
+            languages_expr = "tr.languages" if "languages" in columns else "dm.languages" if "languages" in metadata_columns else "NULL"
             variant_name_expr = _column_or_null(columns, "embedding_variant_name")
             embedding_dim_expr = _column_or_null(columns, "embedding_dim")
             quantization_expr = _column_or_null(columns, "quantization")
@@ -246,7 +253,7 @@ class TaskResultsRepository:
                     {variant_name_expr} AS embedding_variant_name,
                     {embedding_dim_expr} AS embedding_dim,
                     {quantization_expr} AS quantization
-                FROM task_results AS tr
+                FROM {source_table} AS tr
                 {metadata_join}
                 {diagnostic_join}
                 WHERE tr.benchmark IN ({placeholders})
