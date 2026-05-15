@@ -4,13 +4,16 @@ This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
 The canonical source table for benchmark results is `task_results`. New DuckDB
-builds also materialize `viewer_task_results`, a viewer-optimized table with
-the metadata join already applied; the HTMX leaderboard uses it when present and
-falls back to `task_results` for older DuckDB files. `runs` contains run-level metadata, `metrics_long` contains detailed task
-metrics, `retrieval_rankings` contains per-query top-100 retrieved document ids,
-`task_diagnostics` contains analysis-oriented rerank, candidate, and latency
-fields, `dataset_metadata` exposes YAML task metadata for language, category,
-citation, and text-stat analysis, and `model_scores` /
+builds also materialize `fact_task_score`, which represents each leaderboard
+score target as rows such as `all` and `reranking`, and `viewer_task_results`,
+a viewer-optimized table with the metadata join already applied; the HTMX
+leaderboard uses `viewer_task_results` when present and falls back to
+`task_results` for older DuckDB files. `runs` contains run-level metadata,
+`metrics_long` contains detailed task metrics, `retrieval_rankings` contains
+per-query top-100 retrieved document ids, `task_diagnostics` contains
+analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
+exposes YAML task metadata for language, category, citation, and text-stat
+analysis, and `model_scores` /
 `borda_task_scores` are precomputed tables used by the static HTML report. The
 current HTMX viewer computes the leaderboard from `task_results` on each
 request and reads `task_diagnostics` / `dataset_metadata` for paper-facing
@@ -60,9 +63,9 @@ that fingerprint into DuckDB for SQL-based run comparison. Older JSON files
 leave this column `NULL`.
 
 When `--parquet-output-dir` is provided, the generator also writes Parquet
-snapshots for the canonical tables: `runs`, `task_results`, `metrics_long`,
-`retrieval_rankings`, `task_diagnostics`, `dataset_metadata`, `model_scores`,
-and `borda_task_scores`. These files are intended for notebooks,
+snapshots for the canonical tables: `runs`, `task_results`,
+`fact_task_score`, `metrics_long`, `retrieval_rankings`, `task_diagnostics`,
+`dataset_metadata`, `model_scores`, and `borda_task_scores`. These files are intended for notebooks,
 ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
 not need the mutable DuckDB database file.
 
@@ -178,6 +181,52 @@ one model, one benchmark task, and one embedding variant. Base results use
 | `evaluated_at_utc` | `VARCHAR` | Evaluation completion time. Older JSON may only have this timestamp. |
 | `duration_seconds_including_dataset_load` | `DOUBLE` | Task duration including dataset loading. |
 | `wall_seconds` | `DOUBLE` | Task evaluation wall time in seconds. |
+
+### `fact_task_score`
+
+`fact_task_score` is the forward-compatible score fact table. It keeps the
+default full-corpus score and candidate-reranking score in the same row shape
+with a `score_target` discriminator instead of adding one score column per
+target. `score_target = 'all'` rows are copied from `task_results.score`.
+`score_target = 'reranking'` rows are copied from `task_diagnostics.rerank_score`
+when the diagnostic row is available for BM25 top-100 reranking. Reranking rows
+are currently base-only because diagnostics do not yet carry embedding-variant
+identity.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
+| `model_name` | `VARCHAR` | Model display/name identity. |
+| `model_revision` | `VARCHAR` | Resolved model revision, when available. |
+| `model_revision_requested` | `VARCHAR` | Requested model revision, when available. |
+| `benchmark` | `VARCHAR` | Viewer benchmark group. |
+| `dataset_id` | `VARCHAR` | Dataset id. |
+| `dataset_revision` | `VARCHAR` | Resolved dataset revision, when available. |
+| `dataset_revision_requested` | `VARCHAR` | Requested dataset revision, when available. |
+| `dataset_name` | `VARCHAR` | Dataset name from result JSON. |
+| `split_name` | `VARCHAR` | Split name, or `NULL`. |
+| `task_name` | `VARCHAR` | Canonical task name. |
+| `task_key` | `VARCHAR` | Canonical ranking task identity. |
+| `score_target` | `VARCHAR` | Score target such as `all` or `reranking`. |
+| `score` | `DOUBLE` | Raw aggregate score for the target. |
+| `score_100` | `DOUBLE` | `score * 100.0`, used for display. |
+| `aggregate_metric` | `VARCHAR` | Aggregate metric name, such as `ndcg@10`. |
+| `result_path` | `VARCHAR` | Source task JSON path. |
+| `experiment_fingerprint` | `VARCHAR` | Run fingerprint copied from `task_results`. |
+| `active_parameters` | `BIGINT` | Active parameter count. |
+| `total_parameters` | `BIGINT` | Total parameter count. |
+| `max_seq_length` | `INTEGER` | Model maximum sequence length. |
+| `dtype` | `VARCHAR` | Evaluation dtype. |
+| `embedding_variant_name` | `VARCHAR` | Embedding variant name. Reranking rows are currently `NULL`. |
+| `embedding_dim` | `INTEGER` | Embedding dimension. |
+| `quantization` | `VARCHAR` | Quantization precision. |
+| `candidate_source` | `VARCHAR` | Candidate source for reranking rows, otherwise `NULL`. |
+| `candidate_ranking` | `VARCHAR` | Candidate ranking label such as `bm25`, otherwise `NULL`. |
+| `rerank_top_k` | `INTEGER` | Candidate depth for reranking rows, otherwise `NULL`. |
+| `rerank_status` | `VARCHAR` | Reranking availability status, otherwise `NULL`. |
+| `started_at_utc` | `VARCHAR` | Task evaluation start time. |
+| `finished_at_utc` | `VARCHAR` | Task evaluation finish time. |
+| `evaluated_at_utc` | `VARCHAR` | Evaluation completion time. |
 
 ### `runs`
 

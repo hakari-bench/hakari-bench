@@ -44,6 +44,7 @@ VIEWS = ["Overall", *TARGET_BENCHMARKS]
 WAREHOUSE_TABLES = (
     "runs",
     "task_results",
+    "fact_task_score",
     "metrics_long",
     "retrieval_rankings",
     "task_diagnostics",
@@ -949,6 +950,7 @@ def write_duckdb(
                 "INSERT INTO task_diagnostics VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [row.duckdb_values() for row in normalized_diagnostic_rows],
             )
+        _create_fact_task_score_table(con)
         con.execute(
             """
             CREATE TABLE dataset_metadata (
@@ -1027,6 +1029,108 @@ def write_duckdb(
         )
     finally:
         con.close()
+
+
+def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE fact_task_score AS
+        SELECT *
+        FROM (
+        SELECT
+            tr.model_dir,
+            tr.model_name,
+            tr.model_revision,
+            tr.model_revision_requested,
+            tr.benchmark,
+            tr.dataset_id,
+            tr.dataset_revision,
+            tr.dataset_revision_requested,
+            tr.dataset_name,
+            tr.split_name,
+            tr.task_name,
+            tr.task_key,
+            'all' AS score_target,
+            tr.score,
+            tr.score_100,
+            tr.aggregate_metric,
+            tr.result_path,
+            tr.experiment_fingerprint,
+            tr.active_parameters,
+            tr.total_parameters,
+            tr.max_seq_length,
+            tr.dtype,
+            tr.embedding_variant_name,
+            tr.embedding_dim,
+            tr.quantization,
+            NULL::VARCHAR AS candidate_source,
+            NULL::VARCHAR AS candidate_ranking,
+            NULL::INTEGER AS rerank_top_k,
+            NULL::VARCHAR AS rerank_status,
+            tr.started_at_utc,
+            tr.finished_at_utc,
+            tr.evaluated_at_utc
+        FROM task_results AS tr
+        WHERE tr.score IS NOT NULL
+
+        UNION ALL
+
+        SELECT
+            tr.model_dir,
+            tr.model_name,
+            tr.model_revision,
+            tr.model_revision_requested,
+            tr.benchmark,
+            tr.dataset_id,
+            tr.dataset_revision,
+            tr.dataset_revision_requested,
+            tr.dataset_name,
+            tr.split_name,
+            tr.task_name,
+            tr.task_key,
+            'reranking' AS score_target,
+            td.rerank_score AS score,
+            td.rerank_score * 100.0 AS score_100,
+            tr.aggregate_metric,
+            tr.result_path,
+            tr.experiment_fingerprint,
+            tr.active_parameters,
+            tr.total_parameters,
+            tr.max_seq_length,
+            tr.dtype,
+            tr.embedding_variant_name,
+            tr.embedding_dim,
+            tr.quantization,
+            td.candidate_source,
+            td.candidate_ranking,
+            td.rerank_top_k,
+            td.rerank_status,
+            tr.started_at_utc,
+            tr.finished_at_utc,
+            tr.evaluated_at_utc
+        FROM task_results AS tr
+        JOIN task_diagnostics AS td
+          ON td.model_dir = tr.model_dir
+         AND td.model_name = tr.model_name
+         AND td.benchmark = tr.benchmark
+         AND td.task_key = tr.task_key
+         AND td.result_path = tr.result_path
+        WHERE tr.embedding_variant_name IS NULL
+          AND td.rerank_score IS NOT NULL
+          AND (td.rerank_status IS NULL OR td.rerank_status = 'available')
+          AND (td.candidate_ranking IS NULL OR td.candidate_ranking = 'bm25')
+          AND (td.rerank_top_k IS NULL OR td.rerank_top_k = 100)
+        ) AS scores
+        ORDER BY
+            benchmark,
+            score_target,
+            dataset_id,
+            task_name,
+            model_name,
+            embedding_variant_name IS NOT NULL,
+            embedding_variant_name
+        """
+    )
 
 
 def _create_viewer_task_results_table(con: duckdb.DuckDBPyConnection) -> None:
