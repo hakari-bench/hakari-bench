@@ -24,6 +24,7 @@ from hakari_bench.viewer.leaderboard import (
     SortDirection,
 )
 from hakari_bench.viewer.model_display import model_cell_views, render_model_detail_modal, render_model_name_cell
+from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.state import (
     FilterState,
     QueryState,
@@ -85,37 +86,41 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
     ) -> str:
-        store.ensure_current()
-        initial_query = normalize_query_state(
-            viewer_config=viewer_config,
-            view=view,
-            sort=sort,
-            direction=direction,
-            target=target,
-            group=group,
-            variants=variants,
-            quantization=quantization,
-            truncate=truncate,
-            rescore=rescore,
-            other_variant=other_variant,
-            task_scores=task_scores,
-            filters=filters,
-            dim_filter=dim_filter,
-            quant_filter=quant_filter,
-            dtype_filter=dtype_filter,
-            attn_filter=attn_filter,
-            prompt_filter=prompt_filter,
-            lang_filter=lang_filter,
-            model_filter=model_filter,
-            task_filter=task_filter,
-        )
-        summary = ViewerAnalyticsRepository(store.path).fetch_summary()
-        return render_page(
-            viewer_config=viewer_config,
-            duckdb_path=store.path,
-            summary=summary,
-            initial_query=initial_query,
-        )
+        with timed_operation("viewer.http.request", route="index") as request_timing:
+            store.ensure_current()
+            initial_query = normalize_query_state(
+                viewer_config=viewer_config,
+                view=view,
+                sort=sort,
+                direction=direction,
+                target=target,
+                group=group,
+                variants=variants,
+                quantization=quantization,
+                truncate=truncate,
+                rescore=rescore,
+                other_variant=other_variant,
+                task_scores=task_scores,
+                filters=filters,
+                dim_filter=dim_filter,
+                quant_filter=quant_filter,
+                dtype_filter=dtype_filter,
+                attn_filter=attn_filter,
+                prompt_filter=prompt_filter,
+                lang_filter=lang_filter,
+                model_filter=model_filter,
+                task_filter=task_filter,
+            )
+            summary = ViewerAnalyticsRepository(store.path).fetch_summary()
+            with timed_operation("viewer.render", operation="render_page"):
+                content = render_page(
+                    viewer_config=viewer_config,
+                    duckdb_path=store.path,
+                    summary=summary,
+                    initial_query=initial_query,
+                )
+            request_timing["view"] = initial_query["view"]
+            return content
 
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
@@ -140,54 +145,59 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
     ) -> HTMLResponse:
-        store.ensure_current()
-        state_query = normalize_query_state(
-            viewer_config=viewer_config,
-            view=view,
-            sort=sort,
-            direction=direction,
-            target=target,
-            group=group,
-            variants=variants,
-            quantization=quantization,
-            truncate=truncate,
-            rescore=rescore,
-            other_variant=other_variant,
-            task_scores=task_scores,
-            filters=filters,
-            dim_filter=dim_filter,
-            quant_filter=quant_filter,
-            dtype_filter=dtype_filter,
-            attn_filter=attn_filter,
-            prompt_filter=prompt_filter,
-            lang_filter=lang_filter,
-            model_filter=model_filter,
-            task_filter=task_filter,
-        )
-        view = query_string(state_query["view"])
-        sort = query_string(state_query["sort"])
-        direction = query_string(state_query["direction"])
-        target = query_string(state_query.get("target", "all"))
-        group = optional_query_string(state_query.get("group"))
-        display_flags = variant_display_flags_from_query(state_query)
-        filter_state = filter_state_from_query(state_query)
-        service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
-        result = service.get_leaderboard(
-            view,
-            sort=sort,
-            direction=cast(SortDirection, direction),
-            score_target=cast(ScoreTarget, target),
-            score_group_name=group,
-            include_quantization_variants=display_flags.quantization,
-            include_truncate_variants=display_flags.truncate,
-            include_rescore_variants=display_flags.rescore,
-            include_other_variants=display_flags.other,
-            language_filters=filter_state.language_filters,
-            show_task_scores=state_query.get("task_scores") == "1",
-            task_filter=filter_state.task_filter,
-        )
-        content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
-        return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}"})
+        with timed_operation("viewer.http.request", route="leaderboard") as request_timing:
+            store.ensure_current()
+            state_query = normalize_query_state(
+                viewer_config=viewer_config,
+                view=view,
+                sort=sort,
+                direction=direction,
+                target=target,
+                group=group,
+                variants=variants,
+                quantization=quantization,
+                truncate=truncate,
+                rescore=rescore,
+                other_variant=other_variant,
+                task_scores=task_scores,
+                filters=filters,
+                dim_filter=dim_filter,
+                quant_filter=quant_filter,
+                dtype_filter=dtype_filter,
+                attn_filter=attn_filter,
+                prompt_filter=prompt_filter,
+                lang_filter=lang_filter,
+                model_filter=model_filter,
+                task_filter=task_filter,
+            )
+            view = query_string(state_query["view"])
+            sort = query_string(state_query["sort"])
+            direction = query_string(state_query["direction"])
+            target = query_string(state_query.get("target", "all"))
+            group = optional_query_string(state_query.get("group"))
+            display_flags = variant_display_flags_from_query(state_query)
+            filter_state = filter_state_from_query(state_query)
+            service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
+            result = service.get_leaderboard(
+                view,
+                sort=sort,
+                direction=cast(SortDirection, direction),
+                score_target=cast(ScoreTarget, target),
+                score_group_name=group,
+                include_quantization_variants=display_flags.quantization,
+                include_truncate_variants=display_flags.truncate,
+                include_rescore_variants=display_flags.rescore,
+                include_other_variants=display_flags.other,
+                language_filters=filter_state.language_filters,
+                show_task_scores=state_query.get("task_scores") == "1",
+                task_filter=filter_state.task_filter,
+            )
+            with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
+                content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
+                render_timing["leaderboard_row_count"] = len(result.rows)
+            request_timing["view"] = view
+            request_timing["leaderboard_row_count"] = len(result.rows)
+            return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}"})
 
     @app.get("/analysis", response_class=HTMLResponse)
     def analysis(
@@ -196,34 +206,45 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         include_rescore: bool = Query(default=False),
         include_truncate: bool = Query(default=False),
     ) -> HTMLResponse:
-        store.ensure_current()
-        if view not in viewer_config.view_names:
-            view = viewer_config.overall.name
-        benchmarks = viewer_config.benchmarks_for_view(view)
-        repository = ViewerAnalyticsRepository(store.path)
-        if panel == "reranking":
-            content = render_reranking_panel(
-                view_label=viewer_config.label_for_view(view),
-                rows=repository.fetch_rerank_diagnostics(benchmarks=benchmarks),
-            )
-        elif panel == "datasets":
-            content = render_dataset_diagnostics_panel(
-                view_label=viewer_config.label_for_view(view),
-                rows=repository.fetch_dataset_diagnostics(benchmarks=benchmarks),
-            )
-        else:
-            content = render_variant_panel(
-                view_name=view,
-                view_label=viewer_config.label_for_view(view),
-                rows=repository.fetch_variant_analysis(
+        with timed_operation("viewer.http.request", route="analysis", panel=panel) as request_timing:
+            store.ensure_current()
+            if view not in viewer_config.view_names:
+                view = viewer_config.overall.name
+            benchmarks = viewer_config.benchmarks_for_view(view)
+            repository = ViewerAnalyticsRepository(store.path)
+            if panel == "reranking":
+                rows = repository.fetch_rerank_diagnostics(benchmarks=benchmarks)
+                with timed_operation("viewer.render", operation="render_reranking_panel", view=view) as render_timing:
+                    content = render_reranking_panel(
+                        view_label=viewer_config.label_for_view(view),
+                        rows=rows,
+                    )
+                    render_timing["row_count"] = len(rows)
+            elif panel == "datasets":
+                rows = repository.fetch_dataset_diagnostics(benchmarks=benchmarks)
+                with timed_operation("viewer.render", operation="render_dataset_diagnostics_panel", view=view) as render_timing:
+                    content = render_dataset_diagnostics_panel(
+                        view_label=viewer_config.label_for_view(view),
+                        rows=rows,
+                    )
+                    render_timing["row_count"] = len(rows)
+            else:
+                rows = repository.fetch_variant_analysis(
                     benchmarks=benchmarks,
                     include_rescore=include_rescore,
                     include_truncate=include_truncate,
-                ),
-                include_rescore=include_rescore,
-                include_truncate=include_truncate,
-            )
-        return HTMLResponse(content=content)
+                )
+                with timed_operation("viewer.render", operation="render_variant_panel", view=view) as render_timing:
+                    content = render_variant_panel(
+                        view_name=view,
+                        view_label=viewer_config.label_for_view(view),
+                        rows=rows,
+                        include_rescore=include_rescore,
+                        include_truncate=include_truncate,
+                    )
+                    render_timing["row_count"] = len(rows)
+            request_timing["view"] = view
+            return HTMLResponse(content=content)
 
     return app
 

@@ -6,6 +6,7 @@ from typing import Any, Iterable
 import duckdb
 from pydantic import BaseModel, ConfigDict, Field
 
+from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.task_names import (
     canonical_split_name,
     canonical_task_name,
@@ -82,22 +83,19 @@ class TaskResultsRepository:
 
         if not self.duckdb_path.exists() or not benchmarks:
             return []
-        con = duckdb.connect(str(self.duckdb_path), read_only=True)
+        with timed_operation("viewer.duckdb.connection", operation="fetch_task_results"):
+            con = duckdb.connect(str(self.duckdb_path), read_only=True)
         try:
-            columns = _table_columns(con, "task_results")
-            metadata_columns = _table_columns(con, "dataset_metadata") if _table_exists(con, "dataset_metadata") else set()
-            diagnostic_columns = _table_columns(con, "task_diagnostics") if _table_exists(con, "task_diagnostics") else set()
-            metadata_join = "LEFT JOIN dataset_metadata AS dm ON dm.task_key = tr.task_key" if metadata_columns else ""
+            with timed_operation("viewer.duckdb.schema", operation="fetch_task_results"):
+                columns = _table_columns(con, "task_results")
+                metadata_columns = _table_columns(con, "dataset_metadata") if _table_exists(con, "dataset_metadata") else set()
+                diagnostic_columns = _table_columns(con, "task_diagnostics") if _table_exists(con, "task_diagnostics") else set()
+            metadata_join = _metadata_join(metadata_columns)
             diagnostic_join = ""
             score_expr = "tr.score"
             target_filter = ""
             if score_target == "reranking" and {"model_name", "benchmark", "task_key", "rerank_score"}.issubset(diagnostic_columns):
-                diagnostic_join = """
-                    JOIN task_diagnostics AS td
-                      ON td.model_name = tr.model_name
-                     AND td.benchmark = tr.benchmark
-                     AND td.task_key = tr.task_key
-                """
+                diagnostic_join = _diagnostic_join(diagnostic_columns)
                 score_expr = "td.rerank_score"
                 target_filter = """
                   AND td.rerank_score IS NOT NULL
@@ -166,11 +164,28 @@ class TaskResultsRepository:
                   {target_filter}
                 ORDER BY tr.benchmark, tr.dataset_id, tr.task_name, tr.model_name{variant_order}
             """
-            cursor = con.execute(query, benchmarks)
-            field_names = [str(description[0]) for description in cursor.description]
-            return _dedupe_task_result_records(_task_result_record(field_names, row) for row in cursor.fetchall())
+            with timed_operation(
+                "viewer.duckdb.query",
+                operation="fetch_task_results",
+                benchmark_count=len(benchmarks),
+                include_embedding_variants=include_embedding_variants,
+                score_target=score_target,
+            ) as timing:
+                cursor = con.execute(query, benchmarks)
+                field_names = [str(description[0]) for description in cursor.description]
+                rows = cursor.fetchall()
+                timing["row_count"] = len(rows)
+            with timed_operation(
+                "viewer.transform",
+                operation="fetch_task_results.records",
+                row_count=len(rows),
+            ) as timing:
+                records = _dedupe_task_result_records(_task_result_record(field_names, row) for row in rows)
+                timing["deduped_row_count"] = len(records)
+                return records
         finally:
-            con.close()
+            with timed_operation("viewer.duckdb.connection_close", operation="fetch_task_results"):
+                con.close()
 
 
 def _task_result_record(field_names: list[str], row: tuple[Any, ...]) -> TaskResultRecord:
@@ -199,6 +214,28 @@ def _dedupe_task_result_records(records: Iterable[TaskResultRecord]) -> list[Tas
         if current is None:
             deduped[key] = record
     return list(deduped.values())
+
+
+def _metadata_join(metadata_columns: set[str]) -> str:
+    if not metadata_columns:
+        return ""
+    conditions = ["dm.task_key = tr.task_key"]
+    if "benchmark" in metadata_columns:
+        conditions.insert(0, "dm.benchmark = tr.benchmark")
+    if "dataset_id" in metadata_columns:
+        conditions.append("dm.dataset_id = tr.dataset_id")
+    return f"LEFT JOIN dataset_metadata AS dm ON {' AND '.join(conditions)}"
+
+
+def _diagnostic_join(diagnostic_columns: set[str]) -> str:
+    conditions = [
+        "td.model_name = tr.model_name",
+        "td.benchmark = tr.benchmark",
+        "td.task_key = tr.task_key",
+    ]
+    if "dataset_id" in diagnostic_columns:
+        conditions.append("td.dataset_id = tr.dataset_id")
+    return f"JOIN task_diagnostics AS td ON {' AND '.join(conditions)}"
 
 
 def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:

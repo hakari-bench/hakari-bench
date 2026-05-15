@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 import time
 from pathlib import Path
@@ -406,6 +407,77 @@ def test_leaderboard_target_reranking_uses_bm25_top100_rerank_scores(tmp_path: P
     assert response.status_code == 200
     assert "target=reranking" in response.text
     assert response.text.index("model/b") < response.text.index("model/a")
+
+
+def test_leaderboard_service_logs_request_and_phase_timing(
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.80, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    with caplog.at_level(logging.INFO, logger="hakari_bench.viewer"):
+        result = service.get_leaderboard("BenchA")
+
+    assert len(result.rows) == 2
+    messages = [record.getMessage() for record in caplog.records]
+    assert any(
+        "viewer.leaderboard.phase" in message
+        and "operation=load_task_scores" in message
+        and "task_score_count=2" in message
+        for message in messages
+    )
+    assert any(
+        "viewer.leaderboard.request" in message
+        and "view=BenchA" in message
+        and "leaderboard_row_count=2" in message
+        for message in messages
+    )
+
+
+def test_leaderboard_endpoint_logs_request_and_render_timing(
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.80, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+
+    with caplog.at_level(logging.INFO, logger="hakari_bench.viewer"):
+        response = TestClient(app).get("/leaderboard?view=BenchA")
+
+    assert response.status_code == 200
+    messages = [record.getMessage() for record in caplog.records]
+    assert any(
+        "viewer.http.request" in message
+        and "route=leaderboard" in message
+        and "leaderboard_row_count=2" in message
+        for message in messages
+    )
+    assert any("viewer.render" in message and "operation=render_leaderboard" in message for message in messages)
 
 
 def test_viewer_config_rejects_unknown_yaml_keys(tmp_path: Path) -> None:

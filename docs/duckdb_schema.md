@@ -504,7 +504,25 @@ choices:
   task-level ranking filters: Borda, mean scores, expected task counts, and
   completeness are recomputed only over tasks whose `languages` contains at
   least one selected language. If no `lang_filter` is set, all tasks in the
-  selected view are ranked.
+  selected view are ranked. When `benchmark` and `dataset_id` are available,
+  the metadata join includes them in addition to `task_key` to avoid row
+  multiplication from task-key reuse across datasets.
+
+The viewer logs timing records through the `hakari_bench.viewer` logger:
+
+- `viewer.duckdb.connection`, `viewer.duckdb.schema`,
+  `viewer.duckdb.query`, and `viewer.duckdb.connection_close` measure DuckDB
+  connection, schema inspection, query/fetch, and close time.
+- `viewer.transform` measures conversion from DuckDB rows to
+  `TaskResultRecord` DTOs and deduplication.
+- `viewer.leaderboard.phase` and `viewer.leaderboard.request` measure
+  leaderboard service phases and end-to-end leaderboard generation.
+
+The log fields include stable key-value pairs such as `operation`,
+`elapsed_ms`, `row_count`, `deduped_row_count`, `task_score_count`, and
+`leaderboard_row_count`, so production logs can identify whether UI latency is
+coming from DuckDB scans, DTO conversion, variant filtering, overall
+aggregation, or row rendering.
 
 Conceptually, it runs this query:
 

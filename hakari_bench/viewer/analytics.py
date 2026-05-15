@@ -6,6 +6,8 @@ from typing import Any
 
 import duckdb
 
+from hakari_bench.viewer.observability import timed_operation
+
 
 @dataclass(frozen=True)
 class ViewerSummary:
@@ -64,7 +66,8 @@ class ViewerAnalyticsRepository:
     def fetch_summary(self) -> ViewerSummary:
         if not self.duckdb_path.exists():
             return ViewerSummary()
-        con = duckdb.connect(str(self.duckdb_path), read_only=True)
+        with timed_operation("viewer.duckdb.connection", operation="fetch_summary"):
+            con = duckdb.connect(str(self.duckdb_path), read_only=True)
         try:
             if not _table_exists(con, "task_results"):
                 return ViewerSummary()
@@ -73,7 +76,12 @@ class ViewerAnalyticsRepository:
                 task_columns,
                 ["finished_at_utc", "evaluated_at_utc", "started_at_utc"],
             )
-            latest = _first_value(con.execute(f"SELECT max({finished_expr}) FROM task_results").fetchone()) if finished_expr != "NULL" else None
+            latest = None
+            if finished_expr != "NULL":
+                with timed_operation("viewer.duckdb.query", operation="fetch_summary.latest") as timing:
+                    latest_row = con.execute(f"SELECT max({finished_expr}) FROM task_results").fetchone()
+                    timing["row_count"] = 1 if latest_row is not None else 0
+                latest = _first_value(latest_row)
             base_count_expr = (
                 "count(*) FILTER (WHERE embedding_variant_name IS NULL)"
                 if "embedding_variant_name" in task_columns
@@ -84,42 +92,43 @@ class ViewerAnalyticsRepository:
                 if "embedding_variant_name" in task_columns
                 else "0"
             )
-            task_counts = con.execute(
-                f"""
-                SELECT
-                    count(DISTINCT model_name),
-                    count(DISTINCT benchmark),
-                    count(DISTINCT task_key),
-                    {base_count_expr},
-                    {variant_count_expr}
-                FROM task_results
-                """
-            ).fetchone() or (0, 0, 0, 0, 0)
+            with timed_operation("viewer.duckdb.query", operation="fetch_summary.counts") as timing:
+                task_counts_row = con.execute(
+                    f"""
+                    SELECT
+                        count(DISTINCT model_name),
+                        count(DISTINCT benchmark),
+                        count(DISTINCT task_key),
+                        {base_count_expr},
+                        {variant_count_expr}
+                    FROM task_results
+                    """
+                ).fetchone()
+                timing["row_count"] = 1 if task_counts_row is not None else 0
+            task_counts = task_counts_row or (0, 0, 0, 0, 0)
             language_count = 0
             if _table_exists(con, "dataset_metadata"):
                 metadata_columns = _table_columns(con, "dataset_metadata")
                 if "languages" in metadata_columns:
-                    language_count = int(
-                        _first_value(
-                            con.execute(
-                                """
-                                SELECT count(DISTINCT item.language)
-                                FROM dataset_metadata, unnest(languages) AS item(language)
-                                WHERE item.language IS NOT NULL AND item.language != ''
-                                """
-                            ).fetchone()
+                    with timed_operation("viewer.duckdb.query", operation="fetch_summary.languages") as timing:
+                        language_row = con.execute(
+                            """
+                            SELECT count(DISTINCT item.language)
+                            FROM dataset_metadata, unnest(languages) AS item(language)
+                            WHERE item.language IS NOT NULL AND item.language != ''
+                            """
                         )
-                        or 0
-                    )
+                        fetched_language_row = language_row.fetchone()
+                        timing["row_count"] = 1 if fetched_language_row is not None else 0
+                    language_count = int(_first_value(fetched_language_row) or 0)
                 elif "language" in metadata_columns:
-                    language_count = int(
-                        _first_value(
-                            con.execute(
-                                "SELECT count(DISTINCT language) FROM dataset_metadata WHERE language IS NOT NULL AND language != ''"
-                            ).fetchone()
+                    with timed_operation("viewer.duckdb.query", operation="fetch_summary.languages") as timing:
+                        fetched_language_row = con.execute(
+                            "SELECT count(DISTINCT language) FROM dataset_metadata WHERE language IS NOT NULL AND language != ''"
                         )
-                        or 0
-                    )
+                        language_row = fetched_language_row.fetchone()
+                        timing["row_count"] = 1 if language_row is not None else 0
+                    language_count = int(_first_value(language_row) or 0)
             return ViewerSummary(
                 model_count=int(task_counts[0] or 0),
                 benchmark_count=int(task_counts[1] or 0),
@@ -130,7 +139,8 @@ class ViewerAnalyticsRepository:
                 latest_finished_at_utc=str(latest) if latest else None,
             )
         finally:
-            con.close()
+            with timed_operation("viewer.duckdb.connection_close", operation="fetch_summary"):
+                con.close()
 
     def fetch_variant_analysis(
         self,
@@ -141,7 +151,8 @@ class ViewerAnalyticsRepository:
     ) -> list[VariantAnalysisRow]:
         if not self.duckdb_path.exists() or not benchmarks:
             return []
-        con = duckdb.connect(str(self.duckdb_path), read_only=True)
+        with timed_operation("viewer.duckdb.connection", operation="fetch_variant_analysis"):
+            con = duckdb.connect(str(self.duckdb_path), read_only=True)
         try:
             if not _table_exists(con, "task_results"):
                 return []
@@ -180,6 +191,15 @@ class ViewerAnalyticsRepository:
                 GROUP BY 1, 2, 3, 4
                 ORDER BY tr.model_name, tr.embedding_variant_name, embedding_dim, quantization
             """
+            with timed_operation(
+                "viewer.duckdb.query",
+                operation="fetch_variant_analysis",
+                benchmark_count=len(benchmarks),
+                include_rescore=include_rescore,
+                include_truncate=include_truncate,
+            ) as timing:
+                rows = con.execute(query, params).fetchall()
+                timing["row_count"] = len(rows)
             return [
                 VariantAnalysisRow(
                     model_name=str(row[0]),
@@ -190,15 +210,17 @@ class ViewerAnalyticsRepository:
                     mean_score_100=float(row[5]),
                     base_delta_percent=_float_or_none(row[6]),
                 )
-                for row in con.execute(query, params).fetchall()
+                for row in rows
             ]
         finally:
-            con.close()
+            with timed_operation("viewer.duckdb.connection_close", operation="fetch_variant_analysis"):
+                con.close()
 
     def fetch_rerank_diagnostics(self, *, benchmarks: list[str]) -> list[RerankDiagnosticRow]:
         if not self.duckdb_path.exists() or not benchmarks:
             return []
-        con = duckdb.connect(str(self.duckdb_path), read_only=True)
+        with timed_operation("viewer.duckdb.connection", operation="fetch_rerank_diagnostics"):
+            con = duckdb.connect(str(self.duckdb_path), read_only=True)
         try:
             if not _table_exists(con, "task_diagnostics"):
                 return []
@@ -223,6 +245,13 @@ class ViewerAnalyticsRepository:
                 GROUP BY benchmark
                 ORDER BY benchmark
             """
+            with timed_operation(
+                "viewer.duckdb.query",
+                operation="fetch_rerank_diagnostics",
+                benchmark_count=len(benchmarks),
+            ) as timing:
+                rows = con.execute(query, params).fetchall()
+                timing["row_count"] = len(rows)
             return [
                 RerankDiagnosticRow(
                     benchmark=str(row[0]),
@@ -235,15 +264,17 @@ class ViewerAnalyticsRepository:
                     candidate_ranking=_str_or_none(row[7]),
                     bm25_source=_str_or_none(row[8]),
                 )
-                for row in con.execute(query, params).fetchall()
+                for row in rows
             ]
         finally:
-            con.close()
+            with timed_operation("viewer.duckdb.connection_close", operation="fetch_rerank_diagnostics"):
+                con.close()
 
     def fetch_dataset_diagnostics(self, *, benchmarks: list[str]) -> list[DatasetDiagnosticRow]:
         if not self.duckdb_path.exists() or not benchmarks:
             return []
-        con = duckdb.connect(str(self.duckdb_path), read_only=True)
+        with timed_operation("viewer.duckdb.connection", operation="fetch_dataset_diagnostics"):
+            con = duckdb.connect(str(self.duckdb_path), read_only=True)
         try:
             if not _table_exists(con, "dataset_metadata") or not _table_exists(con, "task_results"):
                 return []
@@ -293,6 +324,13 @@ class ViewerAnalyticsRepository:
                 GROUP BY dm.benchmark
                 ORDER BY dm.benchmark
             """
+            with timed_operation(
+                "viewer.duckdb.query",
+                operation="fetch_dataset_diagnostics",
+                benchmark_count=len(benchmarks),
+            ) as timing:
+                rows = con.execute(query, params).fetchall()
+                timing["row_count"] = len(rows)
             return [
                 DatasetDiagnosticRow(
                     benchmark=str(row[0]),
@@ -307,10 +345,11 @@ class ViewerAnalyticsRepository:
                     mean_query_chars=_float_or_none(row[9]),
                     mean_document_chars=_float_or_none(row[10]),
                 )
-                for row in con.execute(query, params).fetchall()
+                for row in rows
             ]
         finally:
-            con.close()
+            with timed_operation("viewer.duckdb.connection_close", operation="fetch_dataset_diagnostics"):
+                con.close()
 
 
 def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:

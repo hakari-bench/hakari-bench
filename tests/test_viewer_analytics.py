@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 import duckdb
@@ -52,6 +53,26 @@ def test_variant_analysis_aggregates_base_relative_delta_by_variant(tmp_path: Pa
     )
 
     assert "binary_rescore" in {row.variant_name for row in rows_with_rescore}
+
+
+def test_viewer_analytics_repository_logs_duckdb_query_timing(
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_analytics_db(db_path)
+
+    with caplog.at_level(logging.INFO, logger="hakari_bench.viewer"):
+        rows = ViewerAnalyticsRepository(db_path).fetch_variant_analysis(benchmarks=["BenchA"])
+
+    assert rows
+    messages = [record.getMessage() for record in caplog.records]
+    assert any(
+        "viewer.duckdb.query" in message
+        and "operation=fetch_variant_analysis" in message
+        and "row_count=1" in message
+        for message in messages
+    )
 
 
 def test_rerank_diagnostics_aggregate_candidate_coverage_and_lift(tmp_path: Path) -> None:

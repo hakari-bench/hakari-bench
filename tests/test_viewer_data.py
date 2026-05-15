@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 import duckdb
+import pytest
 
 from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
 
@@ -115,6 +117,41 @@ def test_task_results_repository_can_fetch_embedding_variant_rows_when_requested
         (None, None),
         ("quantize_uint8_docs", "uint8"),
     ]
+
+
+def test_task_results_repository_logs_duckdb_query_and_record_transform_timing(
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
+        ],
+        include_embedding_variant_columns=True,
+    )
+
+    with caplog.at_level(logging.INFO, logger="hakari_bench.viewer"):
+        records = TaskResultsRepository(db_path).fetch_task_results(
+            benchmarks=["BenchA"],
+            include_embedding_variants=False,
+        )
+
+    assert len(records) == 1
+    messages = [record.getMessage() for record in caplog.records]
+    assert any(
+        "viewer.duckdb.query" in message
+        and "operation=fetch_task_results" in message
+        and "row_count=1" in message
+        for message in messages
+    )
+    assert any(
+        "viewer.transform" in message
+        and "operation=fetch_task_results.records" in message
+        and "deduped_row_count=1" in message
+        for message in messages
+    )
 
 
 def test_task_results_repository_reads_runtime_option_columns_when_present(tmp_path: Path) -> None:

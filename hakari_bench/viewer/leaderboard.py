@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
 from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
 
@@ -145,63 +146,86 @@ class LeaderboardService:
         show_task_scores: bool = False,
         task_filter: str = "",
     ) -> LeaderboardResult:
-        overall = self.config.overall_for_view(view_name)
-        benchmarks = self.config.benchmarks_for_view(view_name)
-        is_overall = overall is not None
-        score_groups = [] if is_overall else _score_groups_for_view(self.config, view_name)
-        selected_score_group = _select_score_group(score_groups, score_group_name)
-        rows = self._load_task_scores(
-            benchmarks,
+        with timed_operation(
+            "viewer.leaderboard.request",
+            view=view_name,
+            sort=sort,
+            direction=direction,
             score_target=score_target,
-            include_quantization_variants=include_quantization_variants,
-            include_truncate_variants=include_truncate_variants,
-            include_rescore_variants=include_rescore_variants,
-            include_other_variants=include_other_variants,
-        )
-        rows = _exclude_configured_tasks(rows, self.config)
-        available_languages = _language_options(rows)
-        selected_languages = _selected_languages(language_filters, available_languages)
-        if selected_languages:
-            rows = _filter_rows_by_languages(rows, selected_languages)
-        metric_score_group = selected_score_group
-        if overall is not None:
-            rows = _aggregate_overall_scores(rows, overall)
-            metric_score_group = _overall_metric_score_group(overall)
-        if show_task_scores and metric_score_group is None:
-            metric_score_group = ScoreGroupConfig(name="task_scores", label="Task Scores", group_by="task_key")
-        metric_columns = _metric_columns(rows, metric_score_group) if show_task_scores and metric_score_group is not None else []
-        metric_columns = _filter_metric_columns(rows, metric_score_group, metric_columns, task_filter)
-        leaderboard_rows = compute_leaderboard_rows(
-            rows,
-            is_overall=is_overall,
-            score_group=metric_score_group,
-            metric_columns=metric_columns,
-        )
-        return LeaderboardResult(
-            view_name=view_name,
-            view_label=self.config.label_for_view(view_name),
-            is_overall=is_overall,
-            score_target=score_target,
-            expected_tasks=len({row.task_key for row in rows}),
-            rows=sort_rows(leaderboard_rows, sort=sort, direction=direction),
-            available_views=self.config.view_names,
-            available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
-            include_quantization_variants=include_quantization_variants,
-            include_truncate_variants=include_truncate_variants,
-            include_rescore_variants=include_rescore_variants,
-            include_other_variants=include_other_variants,
             show_task_scores=show_task_scores,
-            task_filter=task_filter.strip(),
-            score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
-            selected_score_group=(
-                ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
-                if selected_score_group is not None
-                else None
-            ),
-            metric_columns=metric_columns,
-            available_languages=available_languages,
-            selected_languages=selected_languages,
-        )
+        ) as request_timing:
+            overall = self.config.overall_for_view(view_name)
+            benchmarks = self.config.benchmarks_for_view(view_name)
+            is_overall = overall is not None
+            request_timing["benchmark_count"] = len(benchmarks)
+            score_groups = [] if is_overall else _score_groups_for_view(self.config, view_name)
+            selected_score_group = _select_score_group(score_groups, score_group_name)
+            with timed_operation("viewer.leaderboard.phase", operation="load_task_scores", view=view_name) as phase_timing:
+                rows = self._load_task_scores(
+                    benchmarks,
+                    score_target=score_target,
+                    include_quantization_variants=include_quantization_variants,
+                    include_truncate_variants=include_truncate_variants,
+                    include_rescore_variants=include_rescore_variants,
+                    include_other_variants=include_other_variants,
+                )
+                phase_timing["task_score_count"] = len(rows)
+            rows = _exclude_configured_tasks(rows, self.config)
+            available_languages = _language_options(rows)
+            selected_languages = _selected_languages(language_filters, available_languages)
+            if selected_languages:
+                with timed_operation("viewer.leaderboard.phase", operation="filter_languages", view=view_name) as phase_timing:
+                    rows = _filter_rows_by_languages(rows, selected_languages)
+                    phase_timing["task_score_count"] = len(rows)
+                    phase_timing["language_count"] = len(selected_languages)
+            metric_score_group = selected_score_group
+            if overall is not None:
+                with timed_operation("viewer.leaderboard.phase", operation="aggregate_overall", view=view_name) as phase_timing:
+                    rows = _aggregate_overall_scores(rows, overall)
+                    metric_score_group = _overall_metric_score_group(overall)
+                    phase_timing["task_score_count"] = len(rows)
+            if show_task_scores and metric_score_group is None:
+                metric_score_group = ScoreGroupConfig(name="task_scores", label="Task Scores", group_by="task_key")
+            with timed_operation("viewer.leaderboard.phase", operation="metric_columns", view=view_name) as phase_timing:
+                metric_columns = _metric_columns(rows, metric_score_group) if show_task_scores and metric_score_group is not None else []
+                metric_columns = _filter_metric_columns(rows, metric_score_group, metric_columns, task_filter)
+                phase_timing["metric_column_count"] = len(metric_columns)
+            with timed_operation("viewer.leaderboard.phase", operation="compute_rows", view=view_name) as phase_timing:
+                leaderboard_rows = compute_leaderboard_rows(
+                    rows,
+                    is_overall=is_overall,
+                    score_group=metric_score_group,
+                    metric_columns=metric_columns,
+                )
+                sorted_rows = sort_rows(leaderboard_rows, sort=sort, direction=direction)
+                phase_timing["leaderboard_row_count"] = len(sorted_rows)
+            request_timing["task_score_count"] = len(rows)
+            request_timing["leaderboard_row_count"] = len(sorted_rows)
+            return LeaderboardResult(
+                view_name=view_name,
+                view_label=self.config.label_for_view(view_name),
+                is_overall=is_overall,
+                score_target=score_target,
+                expected_tasks=len({row.task_key for row in rows}),
+                rows=sorted_rows,
+                available_views=self.config.view_names,
+                available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
+                include_quantization_variants=include_quantization_variants,
+                include_truncate_variants=include_truncate_variants,
+                include_rescore_variants=include_rescore_variants,
+                include_other_variants=include_other_variants,
+                show_task_scores=show_task_scores,
+                task_filter=task_filter.strip(),
+                score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
+                selected_score_group=(
+                    ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
+                    if selected_score_group is not None
+                    else None
+                ),
+                metric_columns=metric_columns,
+                available_languages=available_languages,
+                selected_languages=selected_languages,
+            )
 
     def _load_task_scores(
         self,
@@ -225,47 +249,54 @@ class LeaderboardService:
             score_target=score_target,
             include_embedding_variants=include_any_variants,
         )
-        filtered_records = [
-            record
-            for record in records
-            if include_variant_row(
-                embedding_variant_name=record.embedding_variant_name,
-                quantization=record.quantization,
-                flags=VariantDisplayFlags(
-                    quantization=include_quantization_variants,
-                    truncate=include_truncate_variants,
-                    rescore=include_rescore_variants,
-                    other=include_other_variants,
-                ),
-            )
-        ]
-        model_names = _record_display_model_names(filtered_records, include_variant_details=include_any_variants)
-        for record, model_name in zip(filtered_records, model_names, strict=True):
-            task_scores.append(
-                TaskScore(
-                    model_name=model_name,
-                    benchmark=record.benchmark,
-                    dataset_id=record.dataset_id,
-                    dataset_name=record.dataset_name,
-                    split_name=record.split_name,
-                    task_name=record.task_name,
-                    task_key=record.task_key,
-                    score=record.score,
-                    language=record.language,
-                    languages=tuple(record.languages),
-                    active_parameters=record.active_parameters,
-                    total_parameters=record.total_parameters,
-                    max_seq_length=record.max_seq_length,
-                    dtype=record.dtype,
-                    attn_implementation=record.attn_implementation,
-                    prompt_summary=record.prompt_summary,
-                    trust_remote_code=record.trust_remote_code,
+        with timed_operation("viewer.leaderboard.phase", operation="filter_variant_records") as timing:
+            filtered_records = [
+                record
+                for record in records
+                if include_variant_row(
                     embedding_variant_name=record.embedding_variant_name,
-                    embedding_dim=record.embedding_dim,
                     quantization=record.quantization,
-                    source_model_name=record.model_name,
+                    flags=VariantDisplayFlags(
+                        quantization=include_quantization_variants,
+                        truncate=include_truncate_variants,
+                        rescore=include_rescore_variants,
+                        other=include_other_variants,
+                    ),
                 )
-            )
+            ]
+            timing["record_count"] = len(records)
+            timing["filtered_record_count"] = len(filtered_records)
+        with timed_operation("viewer.leaderboard.phase", operation="display_model_names") as timing:
+            model_names = _record_display_model_names(filtered_records, include_variant_details=include_any_variants)
+            timing["record_count"] = len(filtered_records)
+        with timed_operation("viewer.leaderboard.phase", operation="build_task_scores") as timing:
+            for record, model_name in zip(filtered_records, model_names, strict=True):
+                task_scores.append(
+                    TaskScore(
+                        model_name=model_name,
+                        benchmark=record.benchmark,
+                        dataset_id=record.dataset_id,
+                        dataset_name=record.dataset_name,
+                        split_name=record.split_name,
+                        task_name=record.task_name,
+                        task_key=record.task_key,
+                        score=record.score,
+                        language=record.language,
+                        languages=tuple(record.languages),
+                        active_parameters=record.active_parameters,
+                        total_parameters=record.total_parameters,
+                        max_seq_length=record.max_seq_length,
+                        dtype=record.dtype,
+                        attn_implementation=record.attn_implementation,
+                        prompt_summary=record.prompt_summary,
+                        trust_remote_code=record.trust_remote_code,
+                        embedding_variant_name=record.embedding_variant_name,
+                        embedding_dim=record.embedding_dim,
+                        quantization=record.quantization,
+                        source_model_name=record.model_name,
+                    )
+                )
+            timing["task_score_count"] = len(task_scores)
         return task_scores
 
 
