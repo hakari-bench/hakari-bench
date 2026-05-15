@@ -169,11 +169,14 @@ migrations can append rows here.
 
 ### `result_extensions`
 
-`result_extensions` preserves unknown top-level fields from source task JSON.
-This keeps additive JSON changes from being silently discarded before the field
-is promoted to a canonical column or table. Known top-level result sections such
-as `model`, `target`, `evaluation`, `metrics`, `config`, `environment`,
-`experiment_manifest`, `embedding_evaluations`, and `artifacts` are excluded.
+`result_extensions` preserves unknown top-level fields from source task JSON
+when database generation is run with `--include-result-extensions`. The default
+viewer database build leaves this table empty to avoid re-reading every result
+JSON during deploys. Extension discovery keeps additive JSON changes from being
+silently discarded before the field is promoted to a canonical column or table.
+Known top-level result sections such as `model`, `target`, `evaluation`,
+`metrics`, `config`, `environment`, `experiment_manifest`,
+`embedding_evaluations`, and `artifacts` are excluded.
 
 | column | type | meaning |
 | --- | --- | --- |

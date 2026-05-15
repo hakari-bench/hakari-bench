@@ -136,6 +136,11 @@ def main() -> None:
         action="store_true",
         help="Load optional top-ranking artifacts into retrieval_rankings. Disabled by default for faster viewer builds.",
     )
+    parser.add_argument(
+        "--include-result-extensions",
+        action="store_true",
+        help="Discover unknown top-level result JSON fields. Disabled by default for faster viewer builds.",
+    )
     args = parser.parse_args()
 
     benchmark_configs = load_benchmark_configs(args.viewer_config_dir)
@@ -161,6 +166,7 @@ def main() -> None:
         ranking_rows=ranking_rows,
         standings=standings,
         borda_rows=borda_rows,
+        include_result_extensions=args.include_result_extensions,
     )
     if args.parquet_output_dir is not None:
         export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
@@ -884,6 +890,7 @@ def write_duckdb(
     borda_rows: list[dict[str, Any]],
     batch_id: str | None = None,
     loaded_at_utc: str | None = None,
+    include_result_extensions: bool = False,
 ) -> None:
     db_path.parent.mkdir(parents=True, exist_ok=True)
     normalized_metric_rows = [
@@ -924,6 +931,7 @@ def write_duckdb(
             source_rows=source_rows,
             batch_id=resolved_batch_id,
             loaded_at_utc=loaded_at,
+            include_result_extensions=include_result_extensions,
         )
         _create_ingestion_state_tables(
             con,
@@ -1364,6 +1372,7 @@ def _create_schema_evolution_tables(
     source_rows: Sequence[dict[str, Any]],
     batch_id: str,
     loaded_at_utc: str,
+    include_result_extensions: bool = False,
 ) -> None:
     con.execute(
         """
@@ -1411,8 +1420,9 @@ def _create_schema_evolution_tables(
         )
         """
     )
-    extension_rows = _result_extension_rows(source_rows=source_rows, batch_id=batch_id, loaded_at_utc=loaded_at_utc)
-    if extension_rows:
+    if include_result_extensions and (
+        extension_rows := _result_extension_rows(source_rows=source_rows, batch_id=batch_id, loaded_at_utc=loaded_at_utc)
+    ):
         _insert_duckdb_rows(
             con,
             "result_extensions",

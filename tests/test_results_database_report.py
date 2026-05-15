@@ -1069,27 +1069,38 @@ def test_write_duckdb_records_schema_metadata_and_result_extensions(tmp_path: Pa
     standings, borda_rows = report.compute_standings([row])
     db_path = tmp_path / "results.duckdb"
 
-    report.write_duckdb(
-        db_path,
-        runs=[{"model_dir": "model", "model_name": "example/model"}],
-        rows=[row],
-        metric_rows=[
-            {
-                "model_dir": "model",
-                "model_name": "example/model",
-                "benchmark": "NanoJMTEB-v2",
-                "dataset_id": "hakari-bench/NanoJMTEB-v2",
-                "task_name": "ja_cwir",
-                "metric_name": "ja_cwir_ndcg@10",
-                "metric_value": 0.42,
-                "result_path": str(result_path),
-            }
-        ],
-        standings=standings,
-        borda_rows=borda_rows,
-        batch_id="schema-test",
-        loaded_at_utc="2026-05-15T00:00:00+00:00",
-    )
+    def write_database(*, include_result_extensions: bool) -> None:
+        report.write_duckdb(
+            db_path,
+            runs=[{"model_dir": "model", "model_name": "example/model"}],
+            rows=[row],
+            metric_rows=[
+                {
+                    "model_dir": "model",
+                    "model_name": "example/model",
+                    "benchmark": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "task_name": "ja_cwir",
+                    "metric_name": "ja_cwir_ndcg@10",
+                    "metric_value": 0.42,
+                    "result_path": str(result_path),
+                }
+            ],
+            standings=standings,
+            borda_rows=borda_rows,
+            batch_id="schema-test",
+            loaded_at_utc="2026-05-15T00:00:00+00:00",
+            include_result_extensions=include_result_extensions,
+        )
+
+    write_database(include_result_extensions=False)
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute("SELECT count(*) FROM result_extensions").fetchone() == (0,)
+    finally:
+        con.close()
+
+    write_database(include_result_extensions=True)
 
     con = duckdb.connect(str(db_path))
     try:
