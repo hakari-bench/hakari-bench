@@ -9,7 +9,7 @@ import duckdb
 import pytest
 
 from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, _view_group, create_app
-from hakari_bench.viewer.config import load_viewer_config
+from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, _clear_task_score_cache, compute_leaderboard_rows
 from hakari_bench.viewer.model_display import model_cell_views
 from hakari_bench.viewer.store import (
@@ -141,6 +141,93 @@ def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> No
     assert _view_group("NanoMLDR") == "Domain-specific"
     assert _view_group("NanoLongEmbed") == "Domain-specific"
     assert _view_group("NanoBIRCO") == "Domain-specific"
+
+
+def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            """
+            CREATE TABLE viewer_leaderboard_rows (
+                view_name VARCHAR,
+                score_target VARCHAR,
+                include_quantization_variants BOOLEAN,
+                include_truncate_variants BOOLEAN,
+                include_rescore_variants BOOLEAN,
+                include_other_variants BOOLEAN,
+                expected_tasks INTEGER,
+                borda_rank DOUBLE,
+                mean_rank DOUBLE,
+                model_name VARCHAR,
+                borda_score DOUBLE,
+                mean_score DOUBLE,
+                macro_mean DOUBLE,
+                micro_mean DOUBLE,
+                task_count INTEGER,
+                active_parameters BIGINT,
+                total_parameters BIGINT,
+                max_seq_length INTEGER,
+                dtype VARCHAR,
+                attn_implementation VARCHAR,
+                prompt_summary VARCHAR,
+                trust_remote_code BOOLEAN,
+                embedding_variant_name VARCHAR,
+                embedding_dim INTEGER,
+                quantization VARCHAR,
+                source_model_name VARCHAR,
+                base_score_delta_percent DOUBLE
+            )
+            """
+        )
+        con.execute(
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                "Overall",
+                "all",
+                True,
+                False,
+                False,
+                False,
+                3,
+                1.0,
+                1.0,
+                "model/a (768 dims, int8)",
+                99.0,
+                98.0,
+                98.0,
+                97.0,
+                3,
+                10,
+                12,
+                8192,
+                "bf16",
+                "flash_attention_2",
+                "model default",
+                True,
+                "int8",
+                768,
+                "int8",
+                "model/a",
+                -1.0,
+            ],
+        )
+    finally:
+        con.close()
+    config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
+    )
+
+    result = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard(
+        "Overall",
+        include_quantization_variants=True,
+    )
+
+    assert result.expected_tasks == 3
+    assert result.rows[0].model_name == "model/a (768 dims, int8)"
+    assert result.rows[0].borda_score == 99.0
+    assert result.rows[0].embedding_variant_name == "int8"
 
 
 def test_viewer_config_rejects_unknown_group_by(tmp_path: Path) -> None:
