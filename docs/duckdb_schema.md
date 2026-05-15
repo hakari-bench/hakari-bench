@@ -130,7 +130,7 @@ Main `benchmarks.yaml` fields:
 | `matches` | Optional string patterns matched against `{dataset_id}/{dataset_name}` when building DuckDB. Defaults to `[name]`. If multiple benchmarks match, the longest pattern wins. |
 | `include_in_overall` | Descriptive metadata. Actual overall composition is defined by `overall.yaml`. |
 | `excluded_tasks` | Task names or task keys excluded from ranking. Matched against `task_name` and `task_key`. |
-| `score_groups` | Additional metric columns for a benchmark view. These do not change ranking. |
+| `score_groups` | Benchmark-local scoring units and optional metric columns. The selected group controls benchmark-view `Mean Score`, Borda, and rank; when `task_scores=1`, the same group also controls the displayed metric columns. |
 
 `score_groups[].group_by` and `overall.yaml` `group_by` can use these values:
 
@@ -1348,8 +1348,12 @@ overall `model_agg` with `macro_mean` and `micro_mean`.
 
 ### 5. Score Group Columns
 
-Benchmark views can show additional score group columns that do not affect
-ranking. For example, MNanoBEIR `lang_mean` groups by `dataset_name`.
+Benchmark views can use score groups as their scoring units. For example,
+MNanoBEIR `task_mean` first averages all language rows for each task name, while
+`lang_mean` first averages all task rows for each dataset/language name. The
+selected group changes benchmark-view `Mean Score`, Borda, and rank. When
+`task_scores=1` is active, the same group also determines the extra metric
+columns shown in the table.
 
 For UI rendering, long format is usually easier than SQL pivoting. Reuse
 `complete_rows` from the benchmark leaderboard query:
@@ -1479,16 +1483,17 @@ population unless the UI makes that behavior explicit.
    names and excluded tasks.
 2. Query `task_results` with benchmark, `score IS NOT NULL`, variant, and
    excluded-task filters.
-3. For benchmark views, use raw rows. For grouped overall views, aggregate by
-   the configured `group_by` key.
+3. For benchmark views with a selected `score_group`, aggregate complete-model
+   raw rows by the selected `group_by` key. For grouped overall views, aggregate
+   by the configured `group_by` key.
 4. Build the expected task set and keep only complete models.
 5. Rank each task by score descending and compute per-task Borda scores.
 6. Aggregate per model into `borda_score`, `mean_score`, `task_count`, and
    metadata columns.
 7. For overall views, return both `macro_mean` and `micro_mean`, and use
    `macro_mean` as `mean_score`.
-8. Only compute and render benchmark metric columns when `task_scores=1` is
-   active. Use the selected score group when present; otherwise use task-level
+8. Only render benchmark metric columns when `task_scores=1` is active. Use the
+   already-selected scoring group rows when present; otherwise use task-level
    values. Apply `task_filter` to the displayed metric columns only.
 9. Default sort should be `borda_rank ASC`. Metric-column sorts should place
    missing values after present values.

@@ -143,6 +143,16 @@ def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> No
     assert _view_group("NanoBIRCO") == "Domain-specific"
 
 
+def test_language_specific_view_group_includes_official_language_mteb_families() -> None:
+    assert _view_group("NanoMTEB-Dutch") == "Language-specific"
+    assert _view_group("NanoJMTEB-v2") == "Language-specific"
+    assert _view_group("NanoFaMTEB-v2") == "Language-specific"
+    assert _view_group("NanoRuMTEB") == "Language-specific"
+    assert _view_group("NanoVNMTEB") == "Language-specific"
+    assert _view_group("NanoCMTEB") == "Language-specific"
+    assert _view_group("NanoMIRACL") == "Domain-specific"
+
+
 def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     con = duckdb.connect(str(db_path))
@@ -1724,11 +1734,9 @@ def test_individual_leaderboard_adds_metric_columns_from_score_group(tmp_path: P
             ("model/a", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoArguAna", "arguana", "ja-arguana", 0.80, 10, 12, 8192),
             ("model/a", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoFEVER", "fever", "ja-fever", 0.60, 10, 12, 8192),
             ("model/a", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoArguAna", "arguana", "en-arguana", 0.70, 10, 12, 8192),
-            ("model/a", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoFEVER", "fever", "en-fever", 0.50, 10, 12, 8192),
             ("model/b", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoArguAna", "arguana", "ja-arguana", 0.50, 20, 24, 4096),
             ("model/b", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoFEVER", "fever", "ja-fever", 0.40, 20, 24, 4096),
             ("model/b", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoArguAna", "arguana", "en-arguana", 0.60, 20, 24, 4096),
-            ("model/b", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoFEVER", "fever", "en-fever", 0.30, 20, 24, 4096),
         ],
     )
     config_dir = tmp_path / "config"
@@ -1764,9 +1772,11 @@ benchmarks:
 
     assert hidden_result.metric_columns == []
     assert task_result.metric_columns == ["arguana", "fever"]
+    assert task_result.rows[0].mean_score == 67.5
     assert task_result.rows[0].metric_values["arguana"] == 75.0
     assert lang_result.metric_columns == ["NanoBEIR-en", "NanoBEIR-ja"]
     lang_by_model = {row.model_name: row for row in lang_result.rows}
+    assert lang_by_model["model/a"].mean_score == 70.0
     assert lang_by_model["model/a"].metric_values["NanoBEIR-ja"] == 70.0
 
     from fastapi.testclient import TestClient

@@ -232,6 +232,10 @@ class LeaderboardService:
                     rows = _aggregate_overall_scores(rows, overall)
                     metric_score_group = _overall_metric_score_group(overall)
                     phase_timing["task_score_count"] = len(rows)
+            elif selected_score_group is not None:
+                with timed_operation("viewer.leaderboard.phase", operation="aggregate_score_group", view=view_name) as phase_timing:
+                    rows = _aggregate_benchmark_score_group_scores(rows, selected_score_group)
+                    phase_timing["task_score_count"] = len(rows)
             if show_task_scores and metric_score_group is None:
                 metric_score_group = ScoreGroupConfig(name="task_scores", label="Task Scores", group_by="task_key")
             with timed_operation("viewer.leaderboard.phase", operation="metric_columns", view=view_name) as phase_timing:
@@ -706,6 +710,52 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
                 split_name="",
                 task_name=aggregate_key,
                 task_key=f"{benchmark}::{aggregate_key}",
+                score=_mean(row.score for row in aggregate_rows),
+                language=first.language,
+                languages=tuple(sorted({language for row in aggregate_rows for language in row.languages})),
+                active_parameters=first.active_parameters,
+                total_parameters=first.total_parameters,
+                max_seq_length=first.max_seq_length,
+                dtype=first.dtype,
+                attn_implementation=first.attn_implementation,
+                prompt_summary=first.prompt_summary,
+                trust_remote_code=first.trust_remote_code,
+                embedding_variant_name=first.embedding_variant_name,
+                embedding_dim=first.embedding_dim,
+                quantization=first.quantization,
+                source_model_name=first.source_model_name,
+            )
+        )
+    return aggregated
+
+
+def _aggregate_benchmark_score_group_scores(rows: list[TaskScore], score_group: ScoreGroupConfig) -> list[TaskScore]:
+    expected_raw_tasks: dict[str, set[str]] = defaultdict(set)
+    raw_tasks_by_model_benchmark: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for row in rows:
+        expected_raw_tasks[row.benchmark].add(row.task_key)
+        raw_tasks_by_model_benchmark[(row.model_name, row.benchmark)].add(row.task_key)
+
+    aggregate_inputs: dict[tuple[str, str, str], list[TaskScore]] = defaultdict(list)
+    for row in rows:
+        model_benchmark = (row.model_name, row.benchmark)
+        if raw_tasks_by_model_benchmark[model_benchmark] != expected_raw_tasks[row.benchmark]:
+            continue
+        aggregate_key = _score_group_key(row, score_group.group_by)
+        aggregate_inputs[(row.model_name, row.benchmark, aggregate_key)].append(row)
+
+    aggregated: list[TaskScore] = []
+    for (model_name, benchmark, aggregate_key), aggregate_rows in aggregate_inputs.items():
+        first = aggregate_rows[0]
+        aggregated.append(
+            TaskScore(
+                model_name=model_name,
+                benchmark=benchmark,
+                dataset_id=aggregate_key if score_group.group_by == "dataset_id" else first.dataset_id,
+                dataset_name=aggregate_key if score_group.group_by == "dataset_name" else first.dataset_name,
+                split_name=aggregate_key if score_group.group_by == "split_name" else first.split_name,
+                task_name=aggregate_key if score_group.group_by == "task_name" else first.task_name,
+                task_key=aggregate_key if score_group.group_by == "task_key" else f"{benchmark}::{score_group.group_by}::{aggregate_key}",
                 score=_mean(row.score for row in aggregate_rows),
                 language=first.language,
                 languages=tuple(sorted({language for row in aggregate_rows for language in row.languages})),
