@@ -76,7 +76,12 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--results-dir", type=Path, default=Path("output/results"))
     parser.add_argument("--duckdb-path", type=Path, default=Path("output/results/hakari_bench.duckdb"))
-    parser.add_argument("--html-output", type=Path, required=True)
+    parser.add_argument(
+        "--html-output",
+        type=Path,
+        default=None,
+        help="Optional static HTML report path. DuckDB generation does not require this.",
+    )
     parser.add_argument(
         "--viewer-config-dir",
         type=Path,
@@ -97,8 +102,12 @@ def main() -> None:
         args.results_dir,
         benchmark_configs=benchmark_configs,
     )
-    base_rows = [row for row in rows if row.embedding_variant_name is None]
-    standings, borda_rows = compute_standings(base_rows, target_benchmarks=target_benchmarks)
+    base_rows: list[TaskResultRow] = []
+    standings: dict[str, list[dict[str, Any]]] = {}
+    borda_rows: list[dict[str, Any]] = []
+    if args.html_output is not None:
+        base_rows = [row for row in rows if row.embedding_variant_name is None]
+        standings, borda_rows = compute_standings(base_rows, target_benchmarks=target_benchmarks)
     write_duckdb(
         args.duckdb_path,
         runs=runs,
@@ -112,14 +121,15 @@ def main() -> None:
     )
     if args.parquet_output_dir is not None:
         export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
-    write_html(
-        args.html_output,
-        duckdb_path=args.duckdb_path,
-        rows=base_rows,
-        runs=runs,
-        standings=standings,
-        target_benchmarks=target_benchmarks,
-    )
+    if args.html_output is not None:
+        write_html(
+            args.html_output,
+            duckdb_path=args.duckdb_path,
+            rows=base_rows,
+            runs=runs,
+            standings=standings,
+            target_benchmarks=target_benchmarks,
+        )
 
 
 def load_results(
@@ -1025,29 +1035,30 @@ def write_duckdb(
             )
             """
         )
-        con.executemany(
-            "INSERT INTO model_scores VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-                (
-                    row.get("view"),
-                    row.get("model"),
-                    row.get("task_count"),
-                    row.get("mean_score"),
-                    row.get("score_rank"),
-                    row.get("borda_score"),
-                    row.get("borda_rank"),
-                    row.get("active_parameters"),
-                    row.get("total_parameters"),
-                    row.get("max_seq_length"),
-                    row.get("dtype"),
-                    row.get("attn_implementation"),
-                    row.get("torch_version"),
-                    row.get("transformers_version"),
-                    row.get("sentence_transformers_version"),
-                )
-                for row in score_rows
-            ],
-        )
+        if score_rows:
+            con.executemany(
+                "INSERT INTO model_scores VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [
+                    (
+                        row.get("view"),
+                        row.get("model"),
+                        row.get("task_count"),
+                        row.get("mean_score"),
+                        row.get("score_rank"),
+                        row.get("borda_score"),
+                        row.get("borda_rank"),
+                        row.get("active_parameters"),
+                        row.get("total_parameters"),
+                        row.get("max_seq_length"),
+                        row.get("dtype"),
+                        row.get("attn_implementation"),
+                        row.get("torch_version"),
+                        row.get("transformers_version"),
+                        row.get("sentence_transformers_version"),
+                    )
+                    for row in score_rows
+                ],
+            )
         con.execute(
             """
             CREATE TABLE borda_task_scores (
@@ -1056,22 +1067,23 @@ def write_duckdb(
             )
             """
         )
-        con.executemany(
-            "INSERT INTO borda_task_scores VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-                (
-                    row.get("view_name"),
-                    row.get("model_name"),
-                    row.get("benchmark"),
-                    row.get("task_key"),
-                    row.get("rank"),
-                    row.get("model_count"),
-                    row.get("borda_score"),
-                    row.get("score"),
-                )
-                for row in borda_rows
-            ],
-        )
+        if borda_rows:
+            con.executemany(
+                "INSERT INTO borda_task_scores VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                [
+                    (
+                        row.get("view_name"),
+                        row.get("model_name"),
+                        row.get("benchmark"),
+                        row.get("task_key"),
+                        row.get("rank"),
+                        row.get("model_count"),
+                        row.get("borda_score"),
+                        row.get("score"),
+                    )
+                    for row in borda_rows
+                ],
+            )
     finally:
         con.close()
 

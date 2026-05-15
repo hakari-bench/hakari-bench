@@ -4,6 +4,7 @@ import json
 import math
 import hashlib
 from pathlib import Path
+import sys
 
 import duckdb
 import pytest
@@ -140,6 +141,46 @@ def test_load_results_uses_yaml_benchmark_matches(tmp_path: Path) -> None:
 
     assert len(rows) == 1
     assert rows[0].benchmark == "CustomBench"
+
+
+def test_main_builds_duckdb_without_static_html_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    results_dir = tmp_path / "results"
+    task_path = results_dir / "model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    task_path.parent.mkdir(parents=True)
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {"id": "example/model"},
+                "target": {
+                    "dataset_name": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "split_name": "ja_cwir",
+                    "task_name": "ja_cwir",
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.42},
+                "metrics": {"ja_cwir_ndcg@10": 0.42},
+            }
+        ),
+        encoding="utf-8",
+    )
+    db_path = tmp_path / "hakari_bench.duckdb"
+    html_path = tmp_path / "report.html"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "build_results_database_and_report.py",
+            "--results-dir",
+            str(results_dir),
+            "--duckdb-path",
+            str(db_path),
+        ],
+    )
+
+    report.main()
+
+    assert db_path.exists()
+    assert not html_path.exists()
 
 
 def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
