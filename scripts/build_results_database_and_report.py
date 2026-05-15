@@ -89,6 +89,9 @@ def _insert_duckdb_rows(
     *,
     chunk_size: int = 50_000,
 ) -> None:
+    # Register Arrow chunks and let DuckDB ingest them in-process; Python
+    # executemany is a major bottleneck for the hundreds of thousands of rows
+    # emitted by full leaderboard builds.
     for chunk in _chunks(rows, chunk_size):
         arrow_table = pa.table(
             {column: [row[index] for row in chunk] for index, column in enumerate(columns)}
@@ -106,6 +109,8 @@ def _read_json(path: Path) -> Any:
     try:
         return orjson.loads(payload)
     except orjson.JSONDecodeError:
+        # Some legacy result JSON contains non-standard NaN/Infinity values.
+        # Keep the fast path strict, but preserve compatibility for old runs.
         return json.loads(payload.decode("utf-8"))
 
 
@@ -150,6 +155,9 @@ def main() -> None:
 
     benchmark_configs = load_benchmark_configs(args.viewer_config_dir)
     target_benchmarks = target_benchmark_names(benchmark_configs)
+    # For deploy builds with no secondary artifacts requested, unchanged input
+    # can return immediately after hash validation; rewriting the same DB would
+    # dominate the incremental path.
     if (
         args.incremental
         and args.html_output is None
@@ -219,6 +227,9 @@ def load_results(
     result_paths = sorted(results_dir.glob("*/*/*.json"))
     rebuild_runs_from_rows = False
     if incremental_db_path is not None and not include_retrieval_rankings:
+        # Incremental reuse is keyed by source path and payload hash. Added or
+        # removed paths fall back to the full parser so stale rows cannot leak
+        # into the regenerated warehouse.
         current_hashes = _current_source_hashes(results_dir)
         previous_hashes = _read_previous_source_hashes(incremental_db_path)
         if current_hashes and set(current_hashes) == set(previous_hashes) and _incremental_cache_schema_compatible(
@@ -240,6 +251,9 @@ def load_results(
                 include_retrieval_rankings=False,
             )
             if cached_rows is not None:
+                # Keep canonical rows for unchanged files and parse only the
+                # changed JSON. Run summaries are rebuilt from the merged rows
+                # because cached run aggregates no longer match after changes.
                 rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = cached_rows
                 result_paths = [Path(path) for path in sorted(changed_paths)]
                 rebuild_runs_from_rows = True
@@ -420,6 +434,9 @@ def _load_results_from_incremental_cache(
     db_path: Path,
     include_retrieval_rankings: bool,
 ) -> LoadResultsPayload | None:
+    # Ranking artifacts can be much larger than the summary rows and may be
+    # requested with different flags, so the cached fast path handles only the
+    # default viewer warehouse.
     if include_retrieval_rankings or not db_path.exists():
         return None
     current_hashes = _current_source_hashes(results_dir)
@@ -438,6 +455,8 @@ def _load_cached_warehouse_rows(
     result_paths: set[str] | None,
     include_retrieval_rankings: bool,
 ) -> LoadResultsPayload | None:
+    # result_paths=None means a fully unchanged build; otherwise only unchanged
+    # source rows are loaded and changed files are parsed by load_results().
     con = duckdb.connect(str(db_path), read_only=True)
     try:
         required_tables = ("meta_database", "runs", "task_results", "metrics_long", "task_diagnostics", "dataset_metadata")
@@ -795,6 +814,9 @@ def _runs_from_task_results(accumulators: dict[str, dict[str, Any]]) -> list[dic
 
 
 def _runs_from_task_result_rows(rows: Sequence[TaskResult]) -> list[dict[str, Any]]:
+    # Partial incremental loads merge cached task rows with changed task rows,
+    # so run aggregates must be derived from the merged canonical rows rather
+    # than copied from the previous database.
     accumulators: dict[str, dict[str, Any]] = {}
     for row in rows:
         if row.embedding_variant_name is not None:
@@ -1742,6 +1764,8 @@ def _create_schema_evolution_tables(
     if include_result_extensions and (
         extension_rows := _result_extension_rows(source_rows=source_rows, batch_id=batch_id, loaded_at_utc=loaded_at_utc)
     ):
+        # Extension discovery re-reads every source JSON, so it stays opt-in for
+        # offline schema audits instead of running during normal viewer deploys.
         _insert_duckdb_rows(
             con,
             "result_extensions",
