@@ -771,7 +771,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
     assert "model/a" in response.text
     assert "bg-cyan-50" in response.text
-    assert "768 dims" in response.text
+    assert "768d" in response.text
     assert "bg-amber-50" in response.text
     assert "uint8" in response.text
     assert "binary_rescore" not in response.text

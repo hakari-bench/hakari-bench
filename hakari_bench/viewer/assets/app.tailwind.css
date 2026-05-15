@@ -41,9 +41,17 @@
     overflow-wrap: anywhere;
   }
 
+  .tooltip-delay::after {
+    transition-delay: 1s;
+  }
+
   .tooltip-trigger:hover::after,
   .tooltip-trigger:focus::after {
     opacity: 1;
+  }
+
+  .tooltip-delay:not(:hover):not(:focus)::after {
+    transition-delay: 0s;
   }
 
   .leaderboard-loading-toast {
