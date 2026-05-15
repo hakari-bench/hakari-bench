@@ -6,10 +6,11 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable, Literal
 
+import duckdb
 from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
-from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository
+from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository, _table_exists
 from hakari_bench.viewer.observability import log_event, timed_operation
 from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
 from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
@@ -127,9 +128,10 @@ SORT_COLUMNS = {
 
 
 class LeaderboardService:
-    def __init__(self, *, duckdb_path: Path, config: ViewerConfig) -> None:
+    def __init__(self, *, duckdb_path: Path, config: ViewerConfig, use_precomputed: bool = True) -> None:
         self.config = config
         self.duckdb_path = duckdb_path
+        self.use_precomputed = use_precomputed
         self.task_results_repository = TaskResultsRepository(duckdb_path)
 
     def get_leaderboard(
@@ -162,6 +164,50 @@ class LeaderboardService:
             request_timing["benchmark_count"] = len(benchmarks)
             score_groups = [] if is_overall else _score_groups_for_view(self.config, view_name)
             selected_score_group = _select_score_group(score_groups, score_group_name)
+            include_flags = VariantDisplayFlags(
+                quantization=include_quantization_variants,
+                truncate=include_truncate_variants,
+                rescore=include_rescore_variants,
+                other=include_other_variants,
+            )
+            if self.use_precomputed and not language_filters and not show_task_scores and not task_filter.strip():
+                precomputed = _load_precomputed_leaderboard_rows(
+                    duckdb_path=self.duckdb_path,
+                    view_name=view_name,
+                    score_target=score_target,
+                    variant_flags=include_flags,
+                )
+                if precomputed is not None:
+                    rows, expected_tasks, available_languages = precomputed
+                    sorted_rows = sort_rows(rows, sort=sort, direction=direction)
+                    request_timing["task_score_count"] = None
+                    request_timing["leaderboard_row_count"] = len(sorted_rows)
+                    request_timing["precomputed"] = True
+                    return LeaderboardResult(
+                        view_name=view_name,
+                        view_label=self.config.label_for_view(view_name),
+                        is_overall=is_overall,
+                        score_target=score_target,
+                        expected_tasks=expected_tasks,
+                        rows=sorted_rows,
+                        available_views=self.config.view_names,
+                        available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
+                        include_quantization_variants=include_quantization_variants,
+                        include_truncate_variants=include_truncate_variants,
+                        include_rescore_variants=include_rescore_variants,
+                        include_other_variants=include_other_variants,
+                        show_task_scores=False,
+                        task_filter="",
+                        score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
+                        selected_score_group=(
+                            ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
+                            if selected_score_group is not None
+                            else None
+                        ),
+                        metric_columns=[],
+                        available_languages=available_languages,
+                        selected_languages=(),
+                    )
             with timed_operation("viewer.leaderboard.phase", operation="load_task_scores", view=view_name) as phase_timing:
                 rows = self._load_task_scores(
                     benchmarks,
@@ -185,6 +231,10 @@ class LeaderboardService:
                 with timed_operation("viewer.leaderboard.phase", operation="aggregate_overall", view=view_name) as phase_timing:
                     rows = _aggregate_overall_scores(rows, overall)
                     metric_score_group = _overall_metric_score_group(overall)
+                    phase_timing["task_score_count"] = len(rows)
+            elif selected_score_group is not None:
+                with timed_operation("viewer.leaderboard.phase", operation="aggregate_score_group", view=view_name) as phase_timing:
+                    rows = _aggregate_benchmark_score_group_scores(rows, selected_score_group)
                     phase_timing["task_score_count"] = len(rows)
             if show_task_scores and metric_score_group is None:
                 metric_score_group = ScoreGroupConfig(name="task_scores", label="Task Scores", group_by="task_key")
@@ -325,6 +375,122 @@ def _cached_task_scores(
 
 def _clear_task_score_cache() -> None:
     _cached_task_scores.cache_clear()
+
+
+def _load_precomputed_leaderboard_rows(
+    *,
+    duckdb_path: Path,
+    view_name: str,
+    score_target: ScoreTarget,
+    variant_flags: VariantDisplayFlags,
+) -> tuple[list[LeaderboardRow], int, list[LanguageOption]] | None:
+    if not duckdb_path.exists():
+        return None
+    con = duckdb.connect(str(duckdb_path), read_only=True)
+    try:
+        if not _table_exists(con, "viewer_leaderboard_rows"):
+            return None
+        rows = con.execute(
+            """
+            SELECT
+                expected_tasks,
+                borda_rank,
+                mean_rank,
+                model_name,
+                borda_score,
+                mean_score,
+                macro_mean,
+                micro_mean,
+                task_count,
+                active_parameters,
+                total_parameters,
+                max_seq_length,
+                dtype,
+                attn_implementation,
+                prompt_summary,
+                trust_remote_code,
+                embedding_variant_name,
+                embedding_dim,
+                quantization,
+                source_model_name,
+                base_score_delta_percent
+            FROM viewer_leaderboard_rows
+            WHERE view_name = ?
+              AND score_target = ?
+              AND include_quantization_variants = ?
+              AND include_truncate_variants = ?
+              AND include_rescore_variants = ?
+              AND include_other_variants = ?
+            """,
+            [
+                view_name,
+                score_target,
+                variant_flags.quantization,
+                variant_flags.truncate,
+                variant_flags.rescore,
+                variant_flags.other,
+            ],
+        ).fetchall()
+        language_options: list[LanguageOption] = []
+        if _table_exists(con, "viewer_leaderboard_language_options"):
+            language_options = [
+                LanguageOption(code=str(row[0]), label=str(row[1]), task_count=int(row[2]))
+                for row in con.execute(
+                    """
+                    SELECT code, label, task_count
+                    FROM viewer_leaderboard_language_options
+                    WHERE view_name = ?
+                      AND score_target = ?
+                      AND include_quantization_variants = ?
+                      AND include_truncate_variants = ?
+                      AND include_rescore_variants = ?
+                      AND include_other_variants = ?
+                    ORDER BY lower(label), code
+                    """,
+                    [
+                        view_name,
+                        score_target,
+                        variant_flags.quantization,
+                        variant_flags.truncate,
+                        variant_flags.rescore,
+                        variant_flags.other,
+                    ],
+                ).fetchall()
+            ]
+    finally:
+        con.close()
+    if not rows:
+        return None
+    expected_tasks = int(rows[0][0])
+    return (
+        [
+            LeaderboardRow(
+                borda_rank=float(row[1]),
+                mean_rank=float(row[2]),
+                model_name=str(row[3]),
+                borda_score=float(row[4]),
+                mean_score=float(row[5]),
+                macro_mean=float(row[6]) if row[6] is not None else None,
+                micro_mean=float(row[7]) if row[7] is not None else None,
+                task_count=int(row[8]),
+                active_parameters=int(row[9]) if row[9] is not None else None,
+                total_parameters=int(row[10]) if row[10] is not None else None,
+                max_seq_length=int(row[11]) if row[11] is not None else None,
+                dtype=str(row[12]) if row[12] is not None else None,
+                attn_implementation=str(row[13]) if row[13] is not None else None,
+                prompt_summary=str(row[14]) if row[14] is not None else None,
+                trust_remote_code=bool(row[15]) if row[15] is not None else None,
+                embedding_variant_name=str(row[16]) if row[16] is not None else None,
+                embedding_dim=int(row[17]) if row[17] is not None else None,
+                quantization=str(row[18]) if row[18] is not None else None,
+                source_model_name=str(row[19]) if row[19] is not None else None,
+                base_score_delta_percent=float(row[20]) if row[20] is not None else None,
+            )
+            for row in rows
+        ],
+        expected_tasks,
+        language_options,
+    )
 
 
 def _duckdb_cache_identity(duckdb_path: Path) -> tuple[str, int, int]:
@@ -544,6 +710,52 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
                 split_name="",
                 task_name=aggregate_key,
                 task_key=f"{benchmark}::{aggregate_key}",
+                score=_mean(row.score for row in aggregate_rows),
+                language=first.language,
+                languages=tuple(sorted({language for row in aggregate_rows for language in row.languages})),
+                active_parameters=first.active_parameters,
+                total_parameters=first.total_parameters,
+                max_seq_length=first.max_seq_length,
+                dtype=first.dtype,
+                attn_implementation=first.attn_implementation,
+                prompt_summary=first.prompt_summary,
+                trust_remote_code=first.trust_remote_code,
+                embedding_variant_name=first.embedding_variant_name,
+                embedding_dim=first.embedding_dim,
+                quantization=first.quantization,
+                source_model_name=first.source_model_name,
+            )
+        )
+    return aggregated
+
+
+def _aggregate_benchmark_score_group_scores(rows: list[TaskScore], score_group: ScoreGroupConfig) -> list[TaskScore]:
+    expected_raw_tasks: dict[str, set[str]] = defaultdict(set)
+    raw_tasks_by_model_benchmark: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for row in rows:
+        expected_raw_tasks[row.benchmark].add(row.task_key)
+        raw_tasks_by_model_benchmark[(row.model_name, row.benchmark)].add(row.task_key)
+
+    aggregate_inputs: dict[tuple[str, str, str], list[TaskScore]] = defaultdict(list)
+    for row in rows:
+        model_benchmark = (row.model_name, row.benchmark)
+        if raw_tasks_by_model_benchmark[model_benchmark] != expected_raw_tasks[row.benchmark]:
+            continue
+        aggregate_key = _score_group_key(row, score_group.group_by)
+        aggregate_inputs[(row.model_name, row.benchmark, aggregate_key)].append(row)
+
+    aggregated: list[TaskScore] = []
+    for (model_name, benchmark, aggregate_key), aggregate_rows in aggregate_inputs.items():
+        first = aggregate_rows[0]
+        aggregated.append(
+            TaskScore(
+                model_name=model_name,
+                benchmark=benchmark,
+                dataset_id=aggregate_key if score_group.group_by == "dataset_id" else first.dataset_id,
+                dataset_name=aggregate_key if score_group.group_by == "dataset_name" else first.dataset_name,
+                split_name=aggregate_key if score_group.group_by == "split_name" else first.split_name,
+                task_name=aggregate_key if score_group.group_by == "task_name" else first.task_name,
+                task_key=aggregate_key if score_group.group_by == "task_key" else f"{benchmark}::{score_group.group_by}::{aggregate_key}",
                 score=_mean(row.score for row in aggregate_rows),
                 language=first.language,
                 languages=tuple(sorted({language for row in aggregate_rows for language in row.languages})),

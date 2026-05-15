@@ -9,7 +9,7 @@ import duckdb
 import pytest
 
 from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, _view_group, create_app
-from hakari_bench.viewer.config import load_viewer_config
+from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, _clear_task_score_cache, compute_leaderboard_rows
 from hakari_bench.viewer.model_display import model_cell_views
 from hakari_bench.viewer.store import (
@@ -141,6 +141,125 @@ def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> No
     assert _view_group("NanoMLDR") == "Domain-specific"
     assert _view_group("NanoLongEmbed") == "Domain-specific"
     assert _view_group("NanoBIRCO") == "Domain-specific"
+
+
+def test_language_specific_view_group_includes_official_language_mteb_families() -> None:
+    assert _view_group("NanoMTEB-Dutch") == "Language-specific"
+    assert _view_group("NanoJMTEB-v2") == "Language-specific"
+    assert _view_group("NanoFaMTEB-v2") == "Language-specific"
+    assert _view_group("NanoRuMTEB") == "Language-specific"
+    assert _view_group("NanoVNMTEB") == "Language-specific"
+    assert _view_group("NanoCMTEB") == "Language-specific"
+    assert _view_group("NanoMIRACL") == "Domain-specific"
+
+
+def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            """
+            CREATE TABLE viewer_leaderboard_rows (
+                view_name VARCHAR,
+                score_target VARCHAR,
+                include_quantization_variants BOOLEAN,
+                include_truncate_variants BOOLEAN,
+                include_rescore_variants BOOLEAN,
+                include_other_variants BOOLEAN,
+                expected_tasks INTEGER,
+                borda_rank DOUBLE,
+                mean_rank DOUBLE,
+                model_name VARCHAR,
+                borda_score DOUBLE,
+                mean_score DOUBLE,
+                macro_mean DOUBLE,
+                micro_mean DOUBLE,
+                task_count INTEGER,
+                active_parameters BIGINT,
+                total_parameters BIGINT,
+                max_seq_length INTEGER,
+                dtype VARCHAR,
+                attn_implementation VARCHAR,
+                prompt_summary VARCHAR,
+                trust_remote_code BOOLEAN,
+                embedding_variant_name VARCHAR,
+                embedding_dim INTEGER,
+                quantization VARCHAR,
+                source_model_name VARCHAR,
+                base_score_delta_percent DOUBLE
+            )
+            """
+        )
+        con.execute(
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                "Overall",
+                "all",
+                True,
+                False,
+                False,
+                False,
+                3,
+                1.0,
+                1.0,
+                "model/a (768 dims, int8)",
+                99.0,
+                98.0,
+                98.0,
+                97.0,
+                3,
+                10,
+                12,
+                8192,
+                "bf16",
+                "flash_attention_2",
+                "model default",
+                True,
+                "int8",
+                768,
+                "int8",
+                "model/a",
+                -1.0,
+            ],
+        )
+        con.execute(
+            """
+            CREATE TABLE viewer_leaderboard_language_options (
+                view_name VARCHAR,
+                score_target VARCHAR,
+                include_quantization_variants BOOLEAN,
+                include_truncate_variants BOOLEAN,
+                include_rescore_variants BOOLEAN,
+                include_other_variants BOOLEAN,
+                code VARCHAR,
+                label VARCHAR,
+                task_count INTEGER
+            )
+            """
+        )
+        con.execute(
+            "INSERT INTO viewer_leaderboard_language_options VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            ["Overall", "all", True, False, False, False, "ja", "Japanese", 2],
+        )
+    finally:
+        con.close()
+    config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
+    )
+
+    result = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard(
+        "Overall",
+        include_quantization_variants=True,
+    )
+
+    assert result.expected_tasks == 3
+    assert result.rows[0].model_name == "model/a (768 dims, int8)"
+    assert result.rows[0].borda_score == 99.0
+    assert result.rows[0].embedding_variant_name == "int8"
+    assert [(option.code, option.label, option.task_count) for option in result.available_languages] == [
+        ("ja", "Japanese", 2)
+    ]
 
 
 def test_viewer_config_rejects_unknown_group_by(tmp_path: Path) -> None:
@@ -1615,11 +1734,9 @@ def test_individual_leaderboard_adds_metric_columns_from_score_group(tmp_path: P
             ("model/a", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoArguAna", "arguana", "ja-arguana", 0.80, 10, 12, 8192),
             ("model/a", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoFEVER", "fever", "ja-fever", 0.60, 10, 12, 8192),
             ("model/a", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoArguAna", "arguana", "en-arguana", 0.70, 10, 12, 8192),
-            ("model/a", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoFEVER", "fever", "en-fever", 0.50, 10, 12, 8192),
             ("model/b", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoArguAna", "arguana", "ja-arguana", 0.50, 20, 24, 4096),
             ("model/b", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoFEVER", "fever", "ja-fever", 0.40, 20, 24, 4096),
             ("model/b", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoArguAna", "arguana", "en-arguana", 0.60, 20, 24, 4096),
-            ("model/b", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoFEVER", "fever", "en-fever", 0.30, 20, 24, 4096),
         ],
     )
     config_dir = tmp_path / "config"
@@ -1655,9 +1772,11 @@ benchmarks:
 
     assert hidden_result.metric_columns == []
     assert task_result.metric_columns == ["arguana", "fever"]
+    assert task_result.rows[0].mean_score == 67.5
     assert task_result.rows[0].metric_values["arguana"] == 75.0
     assert lang_result.metric_columns == ["NanoBEIR-en", "NanoBEIR-ja"]
     lang_by_model = {row.model_name: row for row in lang_result.rows}
+    assert lang_by_model["model/a"].mean_score == 70.0
     assert lang_by_model["model/a"].metric_values["NanoBEIR-ja"] == 70.0
 
     from fastapi.testclient import TestClient

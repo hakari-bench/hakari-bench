@@ -8,7 +8,7 @@ from collections import defaultdict
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from itertools import islice
+from itertools import islice, product
 from pathlib import Path
 from typing import Any
 
@@ -17,7 +17,8 @@ import orjson
 import pyarrow as pa
 
 from hakari_bench.datasets import DatasetRegistry
-from hakari_bench.viewer.config import BenchmarkConfig, load_viewer_config
+from hakari_bench.viewer.config import BenchmarkConfig, ViewerConfig, load_viewer_config
+from hakari_bench.viewer.leaderboard import LeaderboardService
 from hakari_bench.viewer.task_names import (
     canonical_metric_name,
     canonical_split_name,
@@ -46,7 +47,7 @@ def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list
 
 TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
-WAREHOUSE_SCHEMA_VERSION = "2"
+WAREHOUSE_SCHEMA_VERSION = "3"
 WAREHOUSE_COMPATIBILITY_LEVEL = "v1-compatible"
 WAREHOUSE_TABLES = (
     "meta_database",
@@ -68,6 +69,8 @@ WAREHOUSE_TABLES = (
     "dataset_metadata",
     "viewer_task_results",
     "viewer_filter_values",
+    "viewer_leaderboard_rows",
+    "viewer_leaderboard_language_options",
     "model_scores",
     "borda_task_scores",
 )
@@ -183,7 +186,8 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    benchmark_configs = load_benchmark_configs(args.viewer_config_dir)
+    viewer_config = load_viewer_config(args.viewer_config_dir)
+    benchmark_configs = viewer_config.benchmarks
     target_benchmarks = target_benchmark_names(benchmark_configs)
     results_dirs = args.results_dir or [Path("output/results")]
     # For deploy builds with no secondary artifacts requested, unchanged input
@@ -222,6 +226,11 @@ def main() -> None:
         standings=standings,
         borda_rows=borda_rows,
         include_result_extensions=args.include_result_extensions,
+    )
+    build_viewer_leaderboard_mart(
+        args.duckdb_path,
+        viewer_config=viewer_config,
+        view_names=[overall.name for overall in viewer_config.overalls],
     )
     if args.parquet_output_dir is not None:
         export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
@@ -629,7 +638,11 @@ def _incremental_cache_schema_compatible(db_path: Path) -> bool:
         return False
     con = duckdb.connect(str(db_path), read_only=True)
     try:
-        if not _duckdb_table_exists(con, "meta_database"):
+        if (
+            not _duckdb_table_exists(con, "meta_database")
+            or not _duckdb_table_exists(con, "viewer_leaderboard_rows")
+            or not _duckdb_table_exists(con, "viewer_leaderboard_language_options")
+        ):
             return False
         return con.execute("SELECT schema_version FROM meta_database").fetchone() == (WAREHOUSE_SCHEMA_VERSION,)
     finally:
@@ -1715,6 +1728,8 @@ def write_duckdb(
         _create_canonical_dimension_tables(con)
         _create_viewer_task_results_table(con)
         _create_viewer_filter_values_table(con)
+        _create_empty_viewer_leaderboard_rows_table(con)
+        _create_empty_viewer_leaderboard_language_options_table(con)
         score_rows = [row for view_rows in standings.values() for row in view_rows]
         con.execute(
             """
@@ -2452,6 +2467,188 @@ def _create_viewer_filter_values_table(con: duckdb.DuckDBPyConnection) -> None:
         ORDER BY filter_name, sort_key
         """
     )
+
+
+VIEWER_LEADERBOARD_ROW_COLUMNS = (
+    "view_name",
+    "score_target",
+    "include_quantization_variants",
+    "include_truncate_variants",
+    "include_rescore_variants",
+    "include_other_variants",
+    "expected_tasks",
+    "borda_rank",
+    "mean_rank",
+    "model_name",
+    "borda_score",
+    "mean_score",
+    "macro_mean",
+    "micro_mean",
+    "task_count",
+    "active_parameters",
+    "total_parameters",
+    "max_seq_length",
+    "dtype",
+    "attn_implementation",
+    "prompt_summary",
+    "trust_remote_code",
+    "embedding_variant_name",
+    "embedding_dim",
+    "quantization",
+    "source_model_name",
+    "base_score_delta_percent",
+)
+
+
+VIEWER_LEADERBOARD_LANGUAGE_COLUMNS = (
+    "view_name",
+    "score_target",
+    "include_quantization_variants",
+    "include_truncate_variants",
+    "include_rescore_variants",
+    "include_other_variants",
+    "code",
+    "label",
+    "task_count",
+)
+
+
+def _create_empty_viewer_leaderboard_rows_table(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE viewer_leaderboard_rows (
+            view_name VARCHAR,
+            score_target VARCHAR,
+            include_quantization_variants BOOLEAN,
+            include_truncate_variants BOOLEAN,
+            include_rescore_variants BOOLEAN,
+            include_other_variants BOOLEAN,
+            expected_tasks INTEGER,
+            borda_rank DOUBLE,
+            mean_rank DOUBLE,
+            model_name VARCHAR,
+            borda_score DOUBLE,
+            mean_score DOUBLE,
+            macro_mean DOUBLE,
+            micro_mean DOUBLE,
+            task_count INTEGER,
+            active_parameters BIGINT,
+            total_parameters BIGINT,
+            max_seq_length INTEGER,
+            dtype VARCHAR,
+            attn_implementation VARCHAR,
+            prompt_summary VARCHAR,
+            trust_remote_code BOOLEAN,
+            embedding_variant_name VARCHAR,
+            embedding_dim INTEGER,
+            quantization VARCHAR,
+            source_model_name VARCHAR,
+            base_score_delta_percent DOUBLE
+        )
+        """
+    )
+
+
+def _create_empty_viewer_leaderboard_language_options_table(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE viewer_leaderboard_language_options (
+            view_name VARCHAR,
+            score_target VARCHAR,
+            include_quantization_variants BOOLEAN,
+            include_truncate_variants BOOLEAN,
+            include_rescore_variants BOOLEAN,
+            include_other_variants BOOLEAN,
+            code VARCHAR,
+            label VARCHAR,
+            task_count INTEGER
+        )
+        """
+    )
+
+
+def build_viewer_leaderboard_mart(
+    db_path: Path,
+    *,
+    viewer_config: ViewerConfig,
+    view_names: Sequence[str] | None = None,
+) -> None:
+    display_flag_sets = list(product((False, True), repeat=4))
+    service = LeaderboardService(duckdb_path=db_path, config=viewer_config, use_precomputed=False)
+    mart_rows: list[tuple[Any, ...]] = []
+    language_rows: list[tuple[Any, ...]] = []
+    for view_name in view_names or viewer_config.view_names:
+        for score_target in ("all", "reranking"):
+            for quantization, truncate, rescore, other in display_flag_sets:
+                result = service.get_leaderboard(
+                    view_name,
+                    score_target=score_target,
+                    include_quantization_variants=quantization,
+                    include_truncate_variants=truncate,
+                    include_rescore_variants=rescore,
+                    include_other_variants=other,
+                )
+                language_rows.extend(
+                    (
+                        view_name,
+                        score_target,
+                        quantization,
+                        truncate,
+                        rescore,
+                        other,
+                        option.code,
+                        option.label,
+                        option.task_count,
+                    )
+                    for option in result.available_languages
+                )
+                mart_rows.extend(
+                    (
+                        view_name,
+                        score_target,
+                        quantization,
+                        truncate,
+                        rescore,
+                        other,
+                        result.expected_tasks,
+                        row.borda_rank,
+                        row.mean_rank,
+                        row.model_name,
+                        row.borda_score,
+                        row.mean_score,
+                        row.macro_mean,
+                        row.micro_mean,
+                        row.task_count,
+                        row.active_parameters,
+                        row.total_parameters,
+                        row.max_seq_length,
+                        row.dtype,
+                        row.attn_implementation,
+                        row.prompt_summary,
+                        row.trust_remote_code,
+                        row.embedding_variant_name,
+                        row.embedding_dim,
+                        row.quantization,
+                        row.source_model_name,
+                        row.base_score_delta_percent,
+                    )
+                    for row in result.rows
+                )
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute("DROP TABLE IF EXISTS viewer_leaderboard_language_options")
+        con.execute("DROP TABLE IF EXISTS viewer_leaderboard_rows")
+        _create_empty_viewer_leaderboard_rows_table(con)
+        _create_empty_viewer_leaderboard_language_options_table(con)
+        _insert_duckdb_rows(con, "viewer_leaderboard_rows", VIEWER_LEADERBOARD_ROW_COLUMNS, mart_rows)
+        _insert_duckdb_rows(
+            con,
+            "viewer_leaderboard_language_options",
+            VIEWER_LEADERBOARD_LANGUAGE_COLUMNS,
+            language_rows,
+        )
+    finally:
+        con.close()
 
 
 def export_duckdb_tables_to_parquet(db_path: Path, output_dir: Path) -> None:

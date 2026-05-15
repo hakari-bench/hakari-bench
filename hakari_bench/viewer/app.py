@@ -533,9 +533,16 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
 
 
 def _view_group(view_name: str) -> str:
+    language_specific_views = {
+        "NanoCMTEB",
+        "NanoFaMTEB-v2",
+        "NanoJMTEB-v2",
+        "NanoRuMTEB",
+        "NanoVNMTEB",
+    }
     if view_name.startswith("Overall"):
         return "Overall"
-    if view_name.startswith("NanoMTEB-") or view_name == "NanoMIRACL":
+    if view_name.startswith("NanoMTEB-") or view_name in language_specific_views:
         return "Language-specific"
     if view_name in {"NanoMMTEB-v2", "MNanoBEIR", "NanoRTEB"}:
         return "Core benchmarks"

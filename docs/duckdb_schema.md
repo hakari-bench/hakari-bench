@@ -11,8 +11,11 @@ builds also materialize `meta_database`, `schema_change_log`, and
 which represents each leaderboard score target as rows such as `all` and
 `reranking`, `fact_metric_score` for detailed metric values, and
 `viewer_task_results`, a viewer-optimized table with the metadata join already
-applied, and `viewer_filter_values`, a precomputed filter-value mart; the HTMX
-leaderboard uses `viewer_task_results` when present and falls back to
+applied, `viewer_filter_values`, a precomputed filter-value mart, and
+`viewer_leaderboard_rows`, a precomputed leaderboard standings mart for common
+no-filter display modes, plus `viewer_leaderboard_language_options` for the
+matching language filter choices; the HTMX leaderboard reads these mart tables
+when present and falls back to computing from `viewer_task_results` or
 `task_results` for older DuckDB files. `runs` contains run-level metadata,
 `metrics_long` contains detailed task metrics, `retrieval_rankings` contains
 per-query top-100 retrieved document ids, `task_diagnostics` contains
@@ -20,9 +23,8 @@ analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
 exposes YAML task metadata for language, category, citation, and text-stat
 analysis, and `model_scores` /
 `borda_task_scores` are precomputed tables used by the static HTML report. The
-current HTMX viewer computes the leaderboard from `task_results` on each
-request and reads `task_diagnostics` / `dataset_metadata` for paper-facing
-analysis panels. It does not read `model_scores`.
+current HTMX viewer reads `task_diagnostics` / `dataset_metadata` for
+paper-facing analysis panels. It does not read `model_scores`.
 
 ## Generation
 
@@ -109,8 +111,10 @@ snapshots for the canonical tables: `meta_database`, `schema_change_log`,
 `ingestion_batches`, `source_load_state`, `result_extensions`, `runs`,
 `dim_model`, `dim_task`, `dim_variant`, `dim_metric`, `task_results`,
 `fact_task_score`, `fact_metric_score`, `metrics_long`, `retrieval_rankings`,
-`task_diagnostics`, `dataset_metadata`, `viewer_filter_values`, `model_scores`, and
-`borda_task_scores`. These files are intended for notebooks,
+`task_diagnostics`, `dataset_metadata`, `viewer_task_results`,
+`viewer_filter_values`, `viewer_leaderboard_rows`,
+`viewer_leaderboard_language_options`, `model_scores`, and `borda_task_scores`.
+These files are intended for notebooks,
 ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
 not need the mutable DuckDB database file.
 
@@ -144,7 +148,7 @@ Main `benchmarks.yaml` fields:
 | `matches` | Optional string patterns matched against `{dataset_id}/{dataset_name}` when building DuckDB. Defaults to `[name]`. If multiple benchmarks match, the longest pattern wins. |
 | `include_in_overall` | Descriptive metadata. Actual overall composition is defined by `overall.yaml`. |
 | `excluded_tasks` | Task names or task keys excluded from ranking. Matched against `task_name` and `task_key`. |
-| `score_groups` | Additional metric columns for a benchmark view. These do not change ranking. |
+| `score_groups` | Benchmark-local scoring units and optional metric columns. The selected group controls benchmark-view `Mean Score`, Borda, and rank; when `task_scores=1`, the same group also controls the displayed metric columns. |
 
 `score_groups[].group_by` and `overall.yaml` `group_by` can use these values:
 
@@ -845,6 +849,43 @@ Because `viewer_task_results` is already physically ordered, the viewer skips
 the query-time `ORDER BY` when reading it. Legacy `task_results` reads keep the
 explicit order clause for deterministic fallback behavior.
 
+`viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
+complete leaderboard rows for common no-filter display modes. The default build
+materializes overall views, where display-variant toggles are most expensive;
+other views fall back to the normal task-score computation unless explicitly
+materialized by a custom build. It is keyed by `view_name`, `score_target`, and
+the four display flags
+`include_quantization_variants`, `include_truncate_variants`,
+`include_rescore_variants`, and `include_other_variants`. The viewer uses this
+mart when language filters, task-score columns, and task text filters are not
+active. Those interactive cases still fall back to the normal
+`LeaderboardService` computation from task-score rows.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `view_name` | `VARCHAR` | Viewer tab or overall view name. |
+| `score_target` | `VARCHAR` | Leaderboard target, such as `all` or `reranking`. |
+| `include_quantization_variants` | `BOOLEAN` | Whether quantization variants were included in this materialized view. |
+| `include_truncate_variants` | `BOOLEAN` | Whether truncation variants were included. |
+| `include_rescore_variants` | `BOOLEAN` | Whether rescore variants were included. |
+| `include_other_variants` | `BOOLEAN` | Whether non-categorized variants were included. |
+| `expected_tasks` | `INTEGER` | Number of expected complete tasks for the materialized view. |
+| `borda_rank`, `mean_rank` | `DOUBLE` | Precomputed display ranks. |
+| `model_name` | `VARCHAR` | Display model label, including variant details when needed. |
+| `borda_score`, `mean_score`, `macro_mean`, `micro_mean` | `DOUBLE` | Precomputed leaderboard scores on the 0 to 100 display scale. |
+| `task_count` | `INTEGER` | Number of tasks for the complete row. |
+| `active_parameters`, `total_parameters`, `max_seq_length` | `BIGINT` / `INTEGER` | Model size and sequence length metadata. |
+| `dtype`, `attn_implementation`, `prompt_summary`, `trust_remote_code` | mixed | Runtime and prompt metadata used by the details modal. |
+| `embedding_variant_name`, `embedding_dim`, `quantization`, `source_model_name` | mixed | Variant metadata and source model identity. |
+| `base_score_delta_percent` | `DOUBLE` | Precomputed relative delta against the source model's base row. |
+
+`viewer_leaderboard_language_options` uses the same key columns as
+`viewer_leaderboard_rows` and stores the language filter choices that should be
+shown beside that materialized leaderboard. The remaining columns are `code`,
+`label`, and `task_count`. Keeping these options in a companion table lets the
+fast precomputed leaderboard path preserve the same filter UI without scanning
+and aggregating all task-score rows on every display-toggle request.
+
 `viewer_filter_values` is generated from `viewer_task_results` and stores
 precomputed filter values for `target`, `benchmark`, `model`, and `variant`.
 It is intended for future viewer endpoints that need filter lists without
@@ -1325,8 +1366,12 @@ overall `model_agg` with `macro_mean` and `micro_mean`.
 
 ### 5. Score Group Columns
 
-Benchmark views can show additional score group columns that do not affect
-ranking. For example, MNanoBEIR `lang_mean` groups by `dataset_name`.
+Benchmark views can use score groups as their scoring units. For example,
+MNanoBEIR `task_mean` first averages all language rows for each task name, while
+`lang_mean` first averages all task rows for each dataset/language name. The
+selected group changes benchmark-view `Mean Score`, Borda, and rank. When
+`task_scores=1` is active, the same group also determines the extra metric
+columns shown in the table.
 
 For UI rendering, long format is usually easier than SQL pivoting. Reuse
 `complete_rows` from the benchmark leaderboard query:
@@ -1456,16 +1501,17 @@ population unless the UI makes that behavior explicit.
    names and excluded tasks.
 2. Query `task_results` with benchmark, `score IS NOT NULL`, variant, and
    excluded-task filters.
-3. For benchmark views, use raw rows. For grouped overall views, aggregate by
-   the configured `group_by` key.
+3. For benchmark views with a selected `score_group`, aggregate complete-model
+   raw rows by the selected `group_by` key. For grouped overall views, aggregate
+   by the configured `group_by` key.
 4. Build the expected task set and keep only complete models.
 5. Rank each task by score descending and compute per-task Borda scores.
 6. Aggregate per model into `borda_score`, `mean_score`, `task_count`, and
    metadata columns.
 7. For overall views, return both `macro_mean` and `micro_mean`, and use
    `macro_mean` as `mean_score`.
-8. Only compute and render benchmark metric columns when `task_scores=1` is
-   active. Use the selected score group when present; otherwise use task-level
+8. Only render benchmark metric columns when `task_scores=1` is active. Use the
+   already-selected scoring group rows when present; otherwise use task-level
    values. Apply `task_filter` to the displayed metric columns only.
 9. Default sort should be `borda_rank ASC`. Metric-column sorts should place
    missing values after present values.
