@@ -42,9 +42,14 @@ def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list
 
 TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
+WAREHOUSE_SCHEMA_VERSION = "2"
+WAREHOUSE_COMPATIBILITY_LEVEL = "v1-compatible"
 WAREHOUSE_TABLES = (
+    "meta_database",
+    "schema_change_log",
     "ingestion_batches",
     "source_load_state",
+    "result_extensions",
     "runs",
     "dim_model",
     "dim_task",
@@ -856,6 +861,12 @@ def write_duckdb(
     try:
         for table in WAREHOUSE_TABLES:
             con.execute(f"DROP TABLE IF EXISTS {table}")
+        _create_schema_evolution_tables(
+            con,
+            source_rows=source_rows,
+            batch_id=resolved_batch_id,
+            loaded_at_utc=loaded_at,
+        )
         _create_ingestion_state_tables(
             con,
             batch_id=resolved_batch_id,
@@ -1105,6 +1116,116 @@ def _source_batch_id(source_rows: Sequence[dict[str, Any]], loaded_at_utc: str) 
     )
     digest = hashlib.sha256(f"{loaded_at_utc}\n{payload}".encode("utf-8")).hexdigest()[:16]
     return f"batch-{digest}"
+
+
+def _create_schema_evolution_tables(
+    con: duckdb.DuckDBPyConnection,
+    *,
+    source_rows: Sequence[dict[str, Any]],
+    batch_id: str,
+    loaded_at_utc: str,
+) -> None:
+    con.execute(
+        """
+        CREATE TABLE meta_database (
+            schema_version VARCHAR,
+            compatibility_level VARCHAR,
+            built_at_utc VARCHAR,
+            source_result_count INTEGER
+        )
+        """
+    )
+    con.execute(
+        "INSERT INTO meta_database VALUES (?, ?, ?, ?)",
+        [WAREHOUSE_SCHEMA_VERSION, WAREHOUSE_COMPATIBILITY_LEVEL, loaded_at_utc, len(source_rows)],
+    )
+    con.execute(
+        """
+        CREATE TABLE schema_change_log (
+            schema_version VARCHAR,
+            migration_name VARCHAR,
+            applied_at_utc VARCHAR,
+            parser_version VARCHAR,
+            compatibility_level VARCHAR
+        )
+        """
+    )
+    con.execute(
+        "INSERT INTO schema_change_log VALUES (?, ?, ?, ?, ?)",
+        [
+            WAREHOUSE_SCHEMA_VERSION,
+            "create_current_warehouse_schema",
+            loaded_at_utc,
+            WAREHOUSE_SCHEMA_VERSION,
+            WAREHOUSE_COMPATIBILITY_LEVEL,
+        ],
+    )
+    con.execute(
+        """
+        CREATE TABLE result_extensions (
+            result_path VARCHAR,
+            field_path VARCHAR,
+            value_json VARCHAR,
+            discovered_batch_id VARCHAR,
+            discovered_at_utc VARCHAR
+        )
+        """
+    )
+    extension_rows = _result_extension_rows(source_rows=source_rows, batch_id=batch_id, loaded_at_utc=loaded_at_utc)
+    if extension_rows:
+        con.executemany(
+            "INSERT INTO result_extensions VALUES (?, ?, ?, ?, ?)",
+            extension_rows,
+        )
+
+
+KNOWN_RESULT_TOP_LEVEL_KEYS = frozenset(
+    {
+        "artifacts",
+        "config",
+        "embedding_evaluations",
+        "environment",
+        "evaluation",
+        "experiment_manifest",
+        "generated_at_utc",
+        "metrics",
+        "model",
+        "rankings",
+        "rerank_metrics",
+        "target",
+    }
+)
+
+
+def _result_extension_rows(
+    *,
+    source_rows: Sequence[dict[str, Any]],
+    batch_id: str,
+    loaded_at_utc: str,
+) -> list[tuple[str, str, str, str, str]]:
+    extension_rows: list[tuple[str, str, str, str, str]] = []
+    for source_row in source_rows:
+        result_path = source_row["result_path"]
+        path = Path(result_path)
+        if not path.exists() or not path.is_file():
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(payload, dict):
+            continue
+        for key in sorted(set(payload) - KNOWN_RESULT_TOP_LEVEL_KEYS):
+            extension_rows.append(
+                (
+                    result_path,
+                    f"$.{key}",
+                    json.dumps(payload[key], sort_keys=True, separators=(",", ":")),
+                    batch_id,
+                    loaded_at_utc,
+                )
+            )
+    return extension_rows
 
 
 def _read_previous_source_hashes(db_path: Path) -> dict[str, str | None]:

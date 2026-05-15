@@ -948,6 +948,77 @@ def test_write_duckdb_records_source_load_state_and_changed_count(tmp_path: Path
         con.close()
 
 
+def test_write_duckdb_records_schema_metadata_and_result_extensions(tmp_path: Path) -> None:
+    result_path = tmp_path / "model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    result_path.parent.mkdir(parents=True)
+    result_path.write_text(
+        json.dumps(
+            {
+                "model": {"id": "example/model"},
+                "target": {"dataset_id": "hakari-bench/NanoJMTEB-v2"},
+                "evaluation": {"aggregate_metric_value": 0.42},
+                "future_payload": {"kept": True},
+            }
+        ),
+        encoding="utf-8",
+    )
+    row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
+        dataset_name="NanoJMTEB-v2",
+        split_name="ja_cwir",
+        task_name="ja_cwir",
+        task_key="NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
+        score=0.42,
+        aggregate_metric="ndcg@10",
+        result_path=str(result_path),
+    )
+    standings, borda_rows = report.compute_standings([row])
+    db_path = tmp_path / "results.duckdb"
+
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=[row],
+        metric_rows=[
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_ndcg@10",
+                "metric_value": 0.42,
+                "result_path": str(result_path),
+            }
+        ],
+        standings=standings,
+        borda_rows=borda_rows,
+        batch_id="schema-test",
+        loaded_at_utc="2026-05-15T00:00:00+00:00",
+    )
+
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute("SELECT schema_version, compatibility_level FROM meta_database").fetchone() == (
+            report.WAREHOUSE_SCHEMA_VERSION,
+            "v1-compatible",
+        )
+        assert con.execute("SELECT schema_version, migration_name FROM schema_change_log").fetchone() == (
+            report.WAREHOUSE_SCHEMA_VERSION,
+            "create_current_warehouse_schema",
+        )
+        assert con.execute(
+            "SELECT result_path, field_path, value_json, discovered_batch_id FROM result_extensions"
+        ).fetchall() == [
+            (str(result_path), "$.future_payload", '{"kept":true}', "schema-test"),
+        ]
+    finally:
+        con.close()
+
+
 def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path) -> None:
     row = report.TaskResult(
         model_dir="model",
@@ -1017,10 +1088,13 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
         "dim_variant.parquet",
         "fact_task_score.parquet",
         "ingestion_batches.parquet",
+        "meta_database.parquet",
         "metrics_long.parquet",
         "model_scores.parquet",
+        "result_extensions.parquet",
         "retrieval_rankings.parquet",
         "runs.parquet",
+        "schema_change_log.parquet",
         "source_load_state.parquet",
         "task_diagnostics.parquet",
         "task_results.parquet",

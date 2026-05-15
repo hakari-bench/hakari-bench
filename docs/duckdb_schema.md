@@ -4,15 +4,16 @@ This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
 The canonical source table for benchmark results is `task_results`. New DuckDB
-builds also materialize `ingestion_batches` and `source_load_state` for
-idempotent source tracking, `dim_model`, `dim_task`, and `dim_variant` as
-canonical dimensions, `fact_task_score`, which represents each leaderboard
-score target as rows such as `all` and `reranking`, and `viewer_task_results`,
-a viewer-optimized table with the metadata join already applied; the HTMX
-leaderboard uses `viewer_task_results` when present and falls back to
-`task_results` for older DuckDB files. `runs` contains run-level metadata,
-`metrics_long` contains detailed task metrics, `retrieval_rankings` contains
-per-query top-100 retrieved document ids, `task_diagnostics` contains
+builds also materialize `meta_database`, `schema_change_log`, and
+`result_extensions` for schema evolution, `ingestion_batches` and
+`source_load_state` for idempotent source tracking, `dim_model`, `dim_task`,
+and `dim_variant` as canonical dimensions, `fact_task_score`, which represents
+each leaderboard score target as rows such as `all` and `reranking`, and
+`viewer_task_results`, a viewer-optimized table with the metadata join already
+applied; the HTMX leaderboard uses `viewer_task_results` when present and
+falls back to `task_results` for older DuckDB files. `runs` contains run-level
+metadata, `metrics_long` contains detailed task metrics, `retrieval_rankings`
+contains per-query top-100 retrieved document ids, `task_diagnostics` contains
 analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
 exposes YAML task metadata for language, category, citation, and text-stat
 analysis, and `model_scores` /
@@ -65,10 +66,11 @@ that fingerprint into DuckDB for SQL-based run comparison. Older JSON files
 leave this column `NULL`.
 
 When `--parquet-output-dir` is provided, the generator also writes Parquet
-snapshots for the canonical tables: `ingestion_batches`, `source_load_state`,
-`runs`, `dim_model`, `dim_task`, `dim_variant`, `task_results`,
-`fact_task_score`, `metrics_long`, `retrieval_rankings`, `task_diagnostics`,
-`dataset_metadata`, `model_scores`, and `borda_task_scores`. These files are intended for notebooks,
+snapshots for the canonical tables: `meta_database`, `schema_change_log`,
+`ingestion_batches`, `source_load_state`, `result_extensions`, `runs`,
+`dim_model`, `dim_task`, `dim_variant`, `task_results`, `fact_task_score`,
+`metrics_long`, `retrieval_rankings`, `task_diagnostics`, `dataset_metadata`,
+`model_scores`, and `borda_task_scores`. These files are intended for notebooks,
 ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
 not need the mutable DuckDB database file.
 
@@ -135,6 +137,48 @@ Analysis panels are scoped by the same YAML view selection as the leaderboard.
 The diagnostics panels are descriptive and do not alter leaderboard ranking.
 
 ## Table Overview
+
+### `meta_database`
+
+`meta_database` records the current warehouse schema contract. Consumers should
+check this table before relying on newer canonical tables.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `schema_version` | `VARCHAR` | Current warehouse schema version. |
+| `compatibility_level` | `VARCHAR` | Compatibility contract exposed by this DB. Current builds are `v1-compatible`. |
+| `built_at_utc` | `VARCHAR` | Build timestamp. |
+| `source_result_count` | `INTEGER` | Number of source result files represented in this DB. |
+
+### `schema_change_log`
+
+`schema_change_log` records schema migrations applied to the generated DB. The
+current full writer emits one row for the current schema; future incremental
+migrations can append rows here.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `schema_version` | `VARCHAR` | Schema version after the migration. |
+| `migration_name` | `VARCHAR` | Migration or build-step name. |
+| `applied_at_utc` | `VARCHAR` | Migration timestamp. |
+| `parser_version` | `VARCHAR` | Parser/build logic version used for the migration. |
+| `compatibility_level` | `VARCHAR` | Compatibility contract after the migration. |
+
+### `result_extensions`
+
+`result_extensions` preserves unknown top-level fields from source task JSON.
+This keeps additive JSON changes from being silently discarded before the field
+is promoted to a canonical column or table. Known top-level result sections such
+as `model`, `target`, `evaluation`, `metrics`, `config`, `environment`,
+`experiment_manifest`, `embedding_evaluations`, and `artifacts` are excluded.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `result_path` | `VARCHAR` | Source task JSON path. |
+| `field_path` | `VARCHAR` | JSONPath-like field path, currently for top-level fields such as `$.future_payload`. |
+| `value_json` | `VARCHAR` | Compact JSON representation of the unknown value. |
+| `discovered_batch_id` | `VARCHAR` | Batch id that discovered the extension field. |
+| `discovered_at_utc` | `VARCHAR` | Discovery timestamp. |
 
 ### `ingestion_batches`
 
