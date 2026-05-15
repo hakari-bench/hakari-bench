@@ -15,6 +15,7 @@ dependencies = [
     "peft>=0.19.1",
     "protobuf>=6.33.2",
     "pydantic>=2.13.3",
+    "pyarrow>=24.0.0",
     "pystemmer>=3.0.0",
     "pyyaml>=6.0.3",
     "scipy>=1.17.1",

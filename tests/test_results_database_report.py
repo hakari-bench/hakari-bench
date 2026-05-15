@@ -41,6 +41,29 @@ def test_nanocoir_is_a_ranked_benchmark() -> None:
     assert report.benchmark_name("hakari-bench/NanoCoIR", "NanoCoIR") == "NanoCoIR"
 
 
+def test_insert_duckdb_rows_loads_rows_in_chunks() -> None:
+    con = duckdb.connect()
+    try:
+        con.execute("CREATE TABLE sample (name VARCHAR, score DOUBLE)")
+
+        report._insert_duckdb_rows(con, "sample", ("name", "score"), iter(()), chunk_size=1)
+        report._insert_duckdb_rows(
+            con,
+            "sample",
+            ("name", "score"),
+            (("a", 0.1), ("b", 0.2), ("c", 0.3)),
+            chunk_size=2,
+        )
+
+        assert con.execute("SELECT name, score FROM sample ORDER BY name").fetchall() == [
+            ("a", 0.1),
+            ("b", 0.2),
+            ("c", 0.3),
+        ]
+    finally:
+        con.close()
+
+
 def test_nanomteb_chinese_is_a_ranked_benchmark() -> None:
     assert "NanoCMTEB" in report.TARGET_BENCHMARKS
     assert report.benchmark_name("hakari-bench/NanoCMTEB", "NanoCMTEB") == "NanoCMTEB"

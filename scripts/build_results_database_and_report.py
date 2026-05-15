@@ -5,12 +5,14 @@ import hashlib
 import json
 import math
 from collections import defaultdict
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from datetime import datetime, timezone
+from itertools import islice
 from pathlib import Path
 from typing import Any
 
 import duckdb
+import pyarrow as pa
 
 from hakari_bench.datasets import DatasetRegistry
 from hakari_bench.viewer.config import BenchmarkConfig, load_viewer_config
@@ -70,6 +72,32 @@ WAREHOUSE_TABLES = (
 
 
 TaskResult = TaskResultRow
+
+
+def _chunks(iterable: Iterable[Sequence[Any]], size: int) -> Iterable[list[Sequence[Any]]]:
+    iterator = iter(iterable)
+    while chunk := list(islice(iterator, size)):
+        yield chunk
+
+
+def _insert_duckdb_rows(
+    con: duckdb.DuckDBPyConnection,
+    table_name: str,
+    columns: Sequence[str],
+    rows: Iterable[Sequence[Any]],
+    *,
+    chunk_size: int = 50_000,
+) -> None:
+    for chunk in _chunks(rows, chunk_size):
+        arrow_table = pa.table(
+            {column: [row[index] for row in chunk] for index, column in enumerate(columns)}
+        )
+        con.register("_hakari_insert_rows", arrow_table)
+        try:
+            column_sql = ", ".join(columns)
+            con.execute(f"INSERT INTO {table_name} ({column_sql}) SELECT {column_sql} FROM _hakari_insert_rows")
+        finally:
+            con.unregister("_hakari_insert_rows")
 
 
 def main() -> None:
@@ -907,9 +935,30 @@ def write_duckdb(
             )
             """
         )
-        con.executemany(
-            "INSERT INTO runs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [
+        _insert_duckdb_rows(
+            con,
+            "runs",
+            (
+                "model_dir",
+                "model_name",
+                "generated_at_utc",
+                "started_at_utc",
+                "finished_at_utc",
+                "target_count",
+                "split_count",
+                "cache_hit_count",
+                "evaluated_count",
+                "aggregate_metric_mean",
+                "active_parameters",
+                "total_parameters",
+                "max_seq_length",
+                "dtype",
+                "attn_implementation",
+                "torch_version",
+                "transformers_version",
+                "sentence_transformers_version",
+            ),
+            (
                 (
                     item.get("model_dir"),
                     item.get("model_name"),
@@ -931,7 +980,7 @@ def write_duckdb(
                     item.get("sentence_transformers_version"),
                 )
                 for item in runs
-            ],
+            ),
         )
         con.execute(
             """
@@ -954,9 +1003,52 @@ def write_duckdb(
             )
             """
         )
-        con.executemany(
-            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [row.duckdb_values() for row in rows],
+        _insert_duckdb_rows(
+            con,
+            "task_results",
+            (
+                "model_dir",
+                "model_name",
+                "model_revision",
+                "model_revision_requested",
+                "benchmark",
+                "dataset_id",
+                "dataset_revision",
+                "dataset_revision_requested",
+                "dataset_name",
+                "split_name",
+                "task_name",
+                "task_key",
+                "score",
+                "score_100",
+                "aggregate_metric",
+                "result_path",
+                "experiment_fingerprint",
+                "active_parameters",
+                "total_parameters",
+                "max_seq_length",
+                "dtype",
+                "embedding_variant_name",
+                "embedding_dim",
+                "quantization",
+                "attn_implementation",
+                "query_prompt",
+                "document_prompt",
+                "query_prompt_name",
+                "document_prompt_name",
+                "query_encode_task",
+                "document_encode_task",
+                "trust_remote_code",
+                "torch_version",
+                "transformers_version",
+                "sentence_transformers_version",
+                "started_at_utc",
+                "finished_at_utc",
+                "evaluated_at_utc",
+                "duration_seconds_including_dataset_load",
+                "wall_seconds",
+            ),
+            (row.duckdb_values() for row in rows),
         )
         con.execute(
             """
@@ -966,9 +1058,20 @@ def write_duckdb(
             )
             """
         )
-        con.executemany(
-            "INSERT INTO metrics_long VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [row.duckdb_values() for row in normalized_metric_rows],
+        _insert_duckdb_rows(
+            con,
+            "metrics_long",
+            (
+                "model_dir",
+                "model_name",
+                "benchmark",
+                "dataset_id",
+                "task_name",
+                "metric_name",
+                "metric_value",
+                "result_path",
+            ),
+            (row.duckdb_values() for row in normalized_metric_rows),
         )
         _create_metric_dimension_and_fact_tables(con)
         con.execute(
@@ -984,9 +1087,31 @@ def write_duckdb(
             """
         )
         if normalized_ranking_rows:
-            con.executemany(
-                "INSERT INTO retrieval_rankings VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [row.duckdb_values() for row in normalized_ranking_rows],
+            _insert_duckdb_rows(
+                con,
+                "retrieval_rankings",
+                (
+                    "model_dir",
+                    "model_name",
+                    "benchmark",
+                    "dataset_id",
+                    "dataset_revision",
+                    "dataset_name",
+                    "split_name",
+                    "task_name",
+                    "task_key",
+                    "result_path",
+                    "ranking_path",
+                    "ranking_name",
+                    "ranking_kind",
+                    "embedding_variant_name",
+                    "distance",
+                    "score_name",
+                    "query_id",
+                    "rank",
+                    "corpus_id",
+                ),
+                (row.duckdb_values() for row in normalized_ranking_rows),
             )
         con.execute(
             """
@@ -1007,9 +1132,41 @@ def write_duckdb(
             """
         )
         if normalized_diagnostic_rows:
-            con.executemany(
-                "INSERT INTO task_diagnostics VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [row.duckdb_values() for row in normalized_diagnostic_rows],
+            _insert_duckdb_rows(
+                con,
+                "task_diagnostics",
+                (
+                    "model_dir",
+                    "model_name",
+                    "benchmark",
+                    "dataset_id",
+                    "task_name",
+                    "task_key",
+                    "result_path",
+                    "base_score",
+                    "rerank_score",
+                    "rerank_lift",
+                    "rerank_status",
+                    "rerank_top_k",
+                    "candidate_source",
+                    "candidate_ranking",
+                    "bm25_source",
+                    "query_coverage",
+                    "relevant_coverage",
+                    "covered_query_count",
+                    "query_with_relevance_count",
+                    "covered_relevant_count",
+                    "relevant_count",
+                    "dataset_load_seconds",
+                    "query_embedding_seconds",
+                    "corpus_embedding_seconds",
+                    "score_and_topk_seconds",
+                    "metric_compute_seconds",
+                    "pure_compute_seconds",
+                    "wall_seconds",
+                    "duration_seconds_including_dataset_load",
+                ),
+                (row.duckdb_values() for row in normalized_diagnostic_rows),
             )
         _create_fact_task_score_table(con)
         con.execute(
@@ -1024,9 +1181,29 @@ def write_duckdb(
             """
         )
         if normalized_dataset_metadata_rows:
-            con.executemany(
-                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [row.duckdb_values() for row in normalized_dataset_metadata_rows],
+            _insert_duckdb_rows(
+                con,
+                "dataset_metadata",
+                (
+                    "benchmark",
+                    "dataset_id",
+                    "dataset_name",
+                    "split_name",
+                    "task_name",
+                    "task_key",
+                    "language",
+                    "languages",
+                    "category",
+                    "short_description",
+                    "citation_count",
+                    "reference_count",
+                    "has_bibtex",
+                    "query_count",
+                    "document_count",
+                    "query_mean_chars",
+                    "document_mean_chars",
+                ),
+                (row.duckdb_values() for row in normalized_dataset_metadata_rows),
             )
         _create_canonical_dimension_tables(con)
         _create_viewer_task_results_table(con)
@@ -1044,9 +1221,27 @@ def write_duckdb(
             """
         )
         if score_rows:
-            con.executemany(
-                "INSERT INTO model_scores VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [
+            _insert_duckdb_rows(
+                con,
+                "model_scores",
+                (
+                    "view_name",
+                    "model_name",
+                    "task_count",
+                    "mean_score",
+                    "score_rank",
+                    "borda_score",
+                    "borda_rank",
+                    "active_parameters",
+                    "total_parameters",
+                    "max_seq_length",
+                    "dtype",
+                    "attn_implementation",
+                    "torch_version",
+                    "transformers_version",
+                    "sentence_transformers_version",
+                ),
+                (
                     (
                         row.get("view"),
                         row.get("model"),
@@ -1065,7 +1260,7 @@ def write_duckdb(
                         row.get("sentence_transformers_version"),
                     )
                     for row in score_rows
-                ],
+                ),
             )
         con.execute(
             """
@@ -1076,9 +1271,20 @@ def write_duckdb(
             """
         )
         if borda_rows:
-            con.executemany(
-                "INSERT INTO borda_task_scores VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                [
+            _insert_duckdb_rows(
+                con,
+                "borda_task_scores",
+                (
+                    "view_name",
+                    "model_name",
+                    "benchmark",
+                    "task_key",
+                    "rank",
+                    "model_count",
+                    "borda_score",
+                    "score",
+                ),
+                (
                     (
                         row.get("view_name"),
                         row.get("model_name"),
@@ -1090,7 +1296,7 @@ def write_duckdb(
                         row.get("score"),
                     )
                     for row in borda_rows
-                ],
+                ),
             )
     finally:
         con.close()
@@ -1198,8 +1404,10 @@ def _create_schema_evolution_tables(
     )
     extension_rows = _result_extension_rows(source_rows=source_rows, batch_id=batch_id, loaded_at_utc=loaded_at_utc)
     if extension_rows:
-        con.executemany(
-            "INSERT INTO result_extensions VALUES (?, ?, ?, ?, ?)",
+        _insert_duckdb_rows(
+            con,
+            "result_extensions",
+            ("result_path", "field_path", "value_json", "discovered_batch_id", "discovered_at_utc"),
             extension_rows,
         )
 
@@ -1319,9 +1527,11 @@ def _create_ingestion_state_tables(
         """
     )
     if source_rows:
-        con.executemany(
-            "INSERT INTO source_load_state VALUES (?, ?, ?, ?, ?)",
-            [
+        _insert_duckdb_rows(
+            con,
+            "source_load_state",
+            ("result_path", "payload_sha256", "canonical_key_hash", "last_successful_batch_id", "loaded_at_utc"),
+            (
                 (
                     row["result_path"],
                     row["payload_sha256"],
@@ -1330,7 +1540,7 @@ def _create_ingestion_state_tables(
                     row["loaded_at_utc"],
                 )
                 for row in source_rows
-            ],
+            ),
         )
 
 
