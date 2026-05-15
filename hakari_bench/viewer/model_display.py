@@ -103,7 +103,7 @@ def _source_key(*, row: LeaderboardRow, full_model_name: str) -> str:
 def _dimension_label(row: LeaderboardRow) -> str | None:
     if row.embedding_dim is None or _truncate_dim(row) is not None:
         return None
-    return f"{row.embedding_dim:,}d"
+    return f"{row.embedding_dim}d"
 
 
 def _variant_label(row: LeaderboardRow, *, original_dim: int | None) -> str | None:
@@ -112,7 +112,7 @@ def _variant_label(row: LeaderboardRow, *, original_dim: int | None) -> str | No
         return None
     truncate_dim = _truncate_dim(row)
     if truncate_dim is not None:
-        return f"{original_dim:,}->{truncate_dim:,}d" if original_dim is not None else f"{truncate_dim:,}d"
+        return f"{truncate_dim}d <- {original_dim}" if original_dim is not None else f"{truncate_dim}d"
     if row.quantization is not None and variant_name.casefold() == row.quantization.casefold():
         return None
     return variant_name
@@ -123,10 +123,10 @@ def _variant_tooltip(row: LeaderboardRow, *, original_dim: int | None) -> str | 
     if truncate_dim is None:
         return None
     if original_dim is None:
-        return f"This result was evaluated after truncating embeddings to {truncate_dim:,} dimensions."
+        return f"This result was evaluated after truncating embeddings to {truncate_dim} dimensions."
     return (
-        f"Original embedding dimension is {original_dim:,}. "
-        f"This result was evaluated after truncating embeddings to {truncate_dim:,} dimensions."
+        f"Original embedding dimension is {original_dim}. "
+        f"This result was evaluated after truncating embeddings to {truncate_dim} dimensions."
     )
 
 

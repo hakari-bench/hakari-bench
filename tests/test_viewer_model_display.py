@@ -38,22 +38,22 @@ def test_render_model_name_cell_uses_compact_truncate_dimension_badge_with_toolt
     base = LeaderboardRow(
         borda_rank=1,
         mean_rank=1,
-        model_name="model/a (384 dims)",
+        model_name="model/a (1024 dims)",
         borda_score=100,
         mean_score=90,
         task_count=1,
-        embedding_dim=384,
+        embedding_dim=1024,
         source_model_name="model/a",
     )
     truncated = LeaderboardRow(
         borda_rank=2,
         mean_rank=2,
-        model_name="model/a (256 dims)",
+        model_name="model/a (768 dims)",
         borda_score=90,
         mean_score=80,
         task_count=1,
-        embedding_variant_name="truncate_dim_256",
-        embedding_dim=256,
+        embedding_variant_name="truncate_dim_768",
+        embedding_dim=768,
         source_model_name="model/a",
     )
     model_view = model_cell_views([base, truncated])[truncated.model_name]
@@ -61,13 +61,13 @@ def test_render_model_name_cell_uses_compact_truncate_dimension_badge_with_toolt
     html = render_model_name_cell(truncated, model_view)
 
     assert "border-violet-200 bg-violet-50" in html
-    assert ">384-&gt;256d</span>" in html
-    assert ">256d</span>" not in html
-    assert ">truncate_dim_256</span>" not in html
+    assert ">768d &lt;- 1024</span>" in html
+    assert ">768d</span>" not in html
+    assert ">truncate_dim_768</span>" not in html
     assert 'class="tooltip-trigger tooltip-delay inline-flex' in html
     assert (
-        'data-tooltip="Original embedding dimension is 384. '
-        'This result was evaluated after truncating embeddings to 256 dimensions."'
+        'data-tooltip="Original embedding dimension is 1024. '
+        'This result was evaluated after truncating embeddings to 768 dimensions."'
     ) in html
 
 

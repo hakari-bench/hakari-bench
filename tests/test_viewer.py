@@ -233,6 +233,11 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert "window.__hakariApplyHashQueryState" in response.text
     assert "window.__hakariSyncHashQueryStateToParent" in response.text
     assert "window.__hakariSetLeaderboardPending" in response.text
+    assert "window.__hakariShowTooltip" in response.text
+    assert "window.__hakariHideTooltip" in response.text
+    assert "window.__hakariPositionTooltip" in response.text
+    assert "setTimeout(() =>" in response.text
+    assert ", 1000);" in response.text
     assert "const queryString = mergedStateQueryString();" in response.text
     assert 'window.parent.postMessage({ queryString: "", hash: hashValue }, "https://huggingface.co")' in response.text
     assert 'panel.setAttribute("hx-get", "/leaderboard?" + queryString);' in response.text
@@ -246,6 +251,8 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert 'role="status"' in response.text
     assert 'aria-live="polite"' in response.text
     assert "Loading leaderboard..." in response.text
+    assert 'id="hakari-global-tooltip"' in response.text
+    assert 'role="tooltip"' in response.text
     assert 'hx-indicator="#leaderboard-loading-toast"' in response.text
     assert 'hx-sync="#leaderboard-panel:replace"' in response.text
     assert "https://cdn.tailwindcss.com" not in response.text
@@ -288,6 +295,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".leaderboard-loading-toast.htmx-request" in css_response.text
     assert "hakari-leaderboard-spin" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
+    assert ".global-tooltip" in css_response.text
+    assert "z-index:1000" in css_response.text
 
     htmx_response = client.get("/assets/htmx.min.js")
     assert htmx_response.status_code == 200

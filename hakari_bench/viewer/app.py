@@ -264,6 +264,7 @@ def render_page(
       <div class="border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">Loading leaderboard...</div>
     </section>
     {render_leaderboard_loading_toast()}
+    {render_global_tooltip()}
     {render_hash_query_state_script()}
   </main>
 </body>
@@ -285,6 +286,13 @@ def render_leaderboard_loading_toast() -> str:
          role="status" aria-live="polite" aria-atomic="true">
       Loading leaderboard...
     </div>
+    """
+
+
+def render_global_tooltip() -> str:
+    return """
+    <div id="hakari-global-tooltip" class="global-tooltip fixed border border-zinc-300 bg-white px-2 py-1 text-xs font-medium text-zinc-800 shadow-sm"
+         role="tooltip" hidden></div>
     """
 
 
@@ -343,6 +351,72 @@ def render_hash_query_state_script() -> str:
           control.removeAttribute("aria-busy");
         }
       };
+
+      let tooltipTimer = null;
+      let tooltipTrigger = null;
+
+      function tooltipElement() {
+        return document.getElementById("hakari-global-tooltip");
+      }
+
+      window.__hakariPositionTooltip = (trigger) => {
+        const tooltip = tooltipElement();
+        if (!trigger || !tooltip || tooltip.hidden) return;
+        const margin = 8;
+        const gap = 8;
+        const rect = trigger.getBoundingClientRect();
+        const tooltipWidth = tooltip.offsetWidth;
+        const tooltipHeight = tooltip.offsetHeight;
+        const maxLeft = Math.max(margin, window.innerWidth - tooltipWidth - margin);
+        let left = Math.min(Math.max(rect.left, margin), maxLeft);
+        let top = rect.bottom + gap;
+        if (top + tooltipHeight > window.innerHeight - margin) {
+          top = Math.max(margin, rect.top - tooltipHeight - gap);
+        }
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+      };
+
+      window.__hakariShowTooltip = (trigger) => {
+        const tooltip = tooltipElement();
+        const text = trigger && trigger.dataset ? trigger.dataset.tooltip : "";
+        if (!tooltip || !text) return;
+        window.__hakariHideTooltip();
+        tooltipTrigger = trigger;
+        tooltipTimer = setTimeout(() => {
+          tooltip.textContent = text;
+          tooltip.hidden = false;
+          tooltip.dataset.visible = "true";
+          window.__hakariPositionTooltip(trigger);
+        }, 1000);
+      };
+
+      window.__hakariHideTooltip = () => {
+        if (tooltipTimer) clearTimeout(tooltipTimer);
+        tooltipTimer = null;
+        tooltipTrigger = null;
+        const tooltip = tooltipElement();
+        if (!tooltip) return;
+        tooltip.hidden = true;
+        delete tooltip.dataset.visible;
+        tooltip.textContent = "";
+      };
+
+      document.addEventListener("mouseover", (event) => {
+        const trigger = event.target && event.target.closest ? event.target.closest("[data-tooltip]") : null;
+        if (trigger) window.__hakariShowTooltip(trigger);
+      });
+      document.addEventListener("mouseout", (event) => {
+        if (!tooltipTrigger || tooltipTrigger.contains(event.relatedTarget)) return;
+        window.__hakariHideTooltip();
+      });
+      document.addEventListener("focusin", (event) => {
+        const trigger = event.target && event.target.closest ? event.target.closest("[data-tooltip]") : null;
+        if (trigger) window.__hakariShowTooltip(trigger);
+      });
+      document.addEventListener("focusout", window.__hakariHideTooltip);
+      document.addEventListener("scroll", window.__hakariHideTooltip, true);
+      window.addEventListener("resize", window.__hakariHideTooltip);
 
       window.__hakariApplyHashQueryState();
       document.addEventListener("DOMContentLoaded", window.__hakariSyncHashQueryStateToParent, { once: true });
