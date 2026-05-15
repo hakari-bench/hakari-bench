@@ -31,9 +31,28 @@ Build the DuckDB database from benchmark JSON output:
 ```bash
 uv run python scripts/build_results_database_and_report.py \
   --results-dir output/results \
+  --duckdb-path output/results/hakari_bench.duckdb
+```
+
+Use `--incremental` for repeated local or deploy builds against an existing
+DuckDB file. The builder compares source JSON hashes from `source_load_state`
+with the current files. If nothing changed and no secondary outputs are
+requested, it exits without rewriting the database. If only some source files
+changed, it reuses unchanged canonical rows from the existing DuckDB database
+and parses only the changed JSON files before rewriting the canonical database.
+If source paths were added or removed, or the existing database is missing or
+uses a different schema version, it falls back to a full rebuild.
+
+Optional outputs and heavier offline-analysis tables are opt-in:
+
+```bash
+uv run python scripts/build_results_database_and_report.py \
+  --results-dir output/results \
   --duckdb-path output/results/hakari_bench.duckdb \
   --html-output output/results/report.html \
-  --parquet-output-dir output/results/parquet
+  --parquet-output-dir output/results/parquet \
+  --include-retrieval-rankings \
+  --include-result-extensions
 ```
 
 The input files are:
