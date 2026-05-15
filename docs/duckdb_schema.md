@@ -4,13 +4,14 @@ This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
 The canonical source table for benchmark results is `task_results`. New DuckDB
-builds also materialize `fact_task_score`, which represents each leaderboard
-score target as rows such as `all` and `reranking`, and `viewer_task_results`,
-a viewer-optimized table with the metadata join already applied; the HTMX
-leaderboard uses `viewer_task_results` when present and falls back to
-`task_results` for older DuckDB files. `runs` contains run-level metadata,
-`metrics_long` contains detailed task metrics, `retrieval_rankings` contains
-per-query top-100 retrieved document ids, `task_diagnostics` contains
+builds also materialize `dim_model`, `dim_task`, and `dim_variant` as
+canonical dimensions, `fact_task_score`, which represents each leaderboard
+score target as rows such as `all` and `reranking`, and
+`viewer_task_results`, a viewer-optimized table with the metadata join already
+applied; the HTMX leaderboard uses `viewer_task_results` when present and
+falls back to `task_results` for older DuckDB files. `runs` contains run-level
+metadata, `metrics_long` contains detailed task metrics, `retrieval_rankings`
+contains per-query top-100 retrieved document ids, `task_diagnostics` contains
 analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
 exposes YAML task metadata for language, category, citation, and text-stat
 analysis, and `model_scores` /
@@ -63,9 +64,10 @@ that fingerprint into DuckDB for SQL-based run comparison. Older JSON files
 leave this column `NULL`.
 
 When `--parquet-output-dir` is provided, the generator also writes Parquet
-snapshots for the canonical tables: `runs`, `task_results`,
-`fact_task_score`, `metrics_long`, `retrieval_rankings`, `task_diagnostics`,
-`dataset_metadata`, `model_scores`, and `borda_task_scores`. These files are intended for notebooks,
+snapshots for the canonical tables: `runs`, `dim_model`, `dim_task`,
+`dim_variant`, `task_results`, `fact_task_score`, `metrics_long`,
+`retrieval_rankings`, `task_diagnostics`, `dataset_metadata`, `model_scores`,
+and `borda_task_scores`. These files are intended for notebooks,
 ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
 not need the mutable DuckDB database file.
 
@@ -181,6 +183,75 @@ one model, one benchmark task, and one embedding variant. Base results use
 | `evaluated_at_utc` | `VARCHAR` | Evaluation completion time. Older JSON may only have this timestamp. |
 | `duration_seconds_including_dataset_load` | `DOUBLE` | Task duration including dataset loading. |
 | `wall_seconds` | `DOUBLE` | Task evaluation wall time in seconds. |
+
+### `dim_model`
+
+`dim_model` contains one deterministic model identity row for each distinct
+`model_dir`, `model_name`, and model revision tuple observed in
+`task_results`. The integer `model_id` is assigned by sorted natural key so
+rebuilding the same inputs produces stable ids.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `model_id` | `BIGINT` | Deterministic model dimension id. |
+| `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
+| `model_name` | `VARCHAR` | Model name from result JSON. |
+| `model_revision` | `VARCHAR` | Resolved model revision, when available. |
+| `model_revision_requested` | `VARCHAR` | Requested model revision, when available. |
+| `active_parameters` | `BIGINT` | Active parameter count. |
+| `total_parameters` | `BIGINT` | Total parameter count. |
+| `max_seq_length` | `INTEGER` | Model maximum sequence length. |
+| `dtype` | `VARCHAR` | Evaluation dtype. |
+| `attn_implementation` | `VARCHAR` | Attention implementation. |
+| `torch_version` | `VARCHAR` | Torch version. |
+| `transformers_version` | `VARCHAR` | Transformers version. |
+| `sentence_transformers_version` | `VARCHAR` | Sentence Transformers version. |
+
+### `dim_task`
+
+`dim_task` contains one deterministic task identity row for each distinct
+`benchmark`, `dataset_id`, and `task_key` tuple observed in `task_results`.
+Task identity is separated from mutable display metadata such as language,
+category, citations, and dataset statistics.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `task_id` | `BIGINT` | Deterministic task dimension id. |
+| `benchmark` | `VARCHAR` | Viewer benchmark group. |
+| `dataset_id` | `VARCHAR` | Dataset id. |
+| `dataset_revision` | `VARCHAR` | Resolved dataset revision, when available. |
+| `dataset_revision_requested` | `VARCHAR` | Requested dataset revision, when available. |
+| `dataset_name` | `VARCHAR` | Dataset name from result JSON. |
+| `split_name` | `VARCHAR` | Split name normalized to an empty string when absent. |
+| `task_name` | `VARCHAR` | Canonical task name. |
+| `task_key` | `VARCHAR` | Canonical ranking task identity. |
+| `language` | `VARCHAR` | Primary task language from metadata. |
+| `languages` | `VARCHAR[]` | Task languages from metadata. |
+| `category` | `VARCHAR` | Task category from metadata. |
+| `short_description` | `VARCHAR` | Short task description from metadata. |
+| `citation_count` | `INTEGER` | Number of citation records. |
+| `reference_count` | `INTEGER` | Number of references. |
+| `has_bibtex` | `BOOLEAN` | Whether metadata has BibTeX. |
+| `query_count` | `INTEGER` | Number of sampled or configured queries. |
+| `document_count` | `INTEGER` | Number of sampled or configured documents. |
+| `query_mean_chars` | `DOUBLE` | Mean query text length. |
+| `document_mean_chars` | `DOUBLE` | Mean document text length. |
+
+### `dim_variant`
+
+`dim_variant` contains one deterministic embedding variant row for each
+distinct `embedding_variant_name`, `embedding_dim`, and `quantization` tuple
+observed in `task_results`. The `variant_key` includes all three values so base
+rows with different embedding dimensions do not collide.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `variant_id` | `BIGINT` | Deterministic variant dimension id. |
+| `variant_key` | `VARCHAR` | Natural key in `{name}:{dim}:{quantization}` form, using `base` and `none` for missing values. |
+| `embedding_variant_name` | `VARCHAR` | Derived embedding variant name. Base rows use `NULL`. |
+| `embedding_dim` | `INTEGER` | Embedding dimension for the row. |
+| `quantization` | `VARCHAR` | Quantization precision. |
+| `is_base` | `BOOLEAN` | Whether this variant represents a base embedding result. |
 
 ### `fact_task_score`
 

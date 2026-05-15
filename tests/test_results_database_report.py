@@ -9,7 +9,13 @@ import pytest
 from pydantic import ValidationError
 
 from hakari_bench.viewer.config import BenchmarkConfig
-from hakari_bench.warehouse_schema import MetricLongRow, RetrievalRankingRow, TaskDiagnosticRow, TaskResultRow
+from hakari_bench.warehouse_schema import (
+    DatasetMetadataRow,
+    MetricLongRow,
+    RetrievalRankingRow,
+    TaskDiagnosticRow,
+    TaskResultRow,
+)
 from scripts import build_results_database_and_report as report
 
 
@@ -772,6 +778,113 @@ def test_write_duckdb_materializes_task_score_targets(tmp_path: Path) -> None:
         con.close()
 
 
+def test_write_duckdb_materializes_canonical_dimensions(tmp_path: Path) -> None:
+    base_row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
+        dataset_name="NanoJMTEB-v2",
+        split_name="ja_cwir",
+        task_name="ja_cwir",
+        task_key="NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
+        score=0.42,
+        aggregate_metric="ndcg@10",
+        result_path="result.json",
+        active_parameters=3,
+        total_parameters=5,
+        max_seq_length=8192,
+        dtype="bf16",
+        embedding_dim=768,
+    )
+    variant_row = base_row.model_copy(
+        update={
+            "score": 0.40,
+            "embedding_variant_name": "truncate_dim_512_quantize_uint8_docs",
+            "embedding_dim": 512,
+            "quantization": "uint8",
+        }
+    )
+    metadata_row = DatasetMetadataRow(
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
+        dataset_name="NanoJMTEB-v2",
+        split_name="ja_cwir",
+        task_name="ja_cwir",
+        task_key="NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
+        language="ja",
+        languages=["ja"],
+        category="natural_language",
+        query_count=200,
+        document_count=500,
+    )
+    standings, borda_rows = report.compute_standings([base_row])
+    db_path = tmp_path / "results.duckdb"
+
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=[base_row, variant_row],
+        metric_rows=[
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_ndcg@10",
+                "metric_value": 0.42,
+                "result_path": "result.json",
+            }
+        ],
+        dataset_metadata_rows=[metadata_row],
+        standings=standings,
+        borda_rows=borda_rows,
+    )
+
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute(
+            "SELECT model_id, model_dir, model_name, active_parameters, total_parameters FROM dim_model"
+        ).fetchall() == [(1, "model", "example/model", 3, 5)]
+        assert con.execute(
+            """
+            SELECT task_id, benchmark, dataset_id, task_key, language, category, query_count, document_count
+            FROM dim_task
+            """
+        ).fetchall() == [
+            (
+                1,
+                "NanoJMTEB-v2",
+                "hakari-bench/NanoJMTEB-v2",
+                "NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
+                "ja",
+                "natural_language",
+                200,
+                500,
+            )
+        ]
+        assert con.execute(
+            """
+            SELECT variant_id, variant_key, embedding_variant_name, embedding_dim, quantization, is_base
+            FROM dim_variant
+            ORDER BY variant_id
+            """
+        ).fetchall() == [
+            (1, "base:768:none", None, 768, None, True),
+            (
+                2,
+                "truncate_dim_512_quantize_uint8_docs:512:uint8",
+                "truncate_dim_512_quantize_uint8_docs",
+                512,
+                "uint8",
+                False,
+            ),
+        ]
+    finally:
+        con.close()
+
+
 def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path) -> None:
     row = report.TaskResult(
         model_dir="model",
@@ -836,6 +949,9 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
     assert sorted(path.name for path in parquet_dir.glob("*.parquet")) == [
         "borda_task_scores.parquet",
         "dataset_metadata.parquet",
+        "dim_model.parquet",
+        "dim_task.parquet",
+        "dim_variant.parquet",
         "fact_task_score.parquet",
         "metrics_long.parquet",
         "model_scores.parquet",

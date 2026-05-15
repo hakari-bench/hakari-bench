@@ -43,6 +43,9 @@ TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
 WAREHOUSE_TABLES = (
     "runs",
+    "dim_model",
+    "dim_task",
+    "dim_variant",
     "task_results",
     "fact_task_score",
     "metrics_long",
@@ -967,6 +970,7 @@ def write_duckdb(
                 "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [row.duckdb_values() for row in normalized_dataset_metadata_rows],
             )
+        _create_canonical_dimension_tables(con)
         _create_viewer_task_results_table(con)
         score_rows = [row for view_rows in standings.values() for row in view_rows]
         con.execute(
@@ -1029,6 +1033,127 @@ def write_duckdb(
         )
     finally:
         con.close()
+
+
+def _create_canonical_dimension_tables(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE dim_model AS
+        WITH model_values AS (
+            SELECT
+                model_dir,
+                model_name,
+                model_revision,
+                model_revision_requested,
+                max(active_parameters) AS active_parameters,
+                max(total_parameters) AS total_parameters,
+                max(max_seq_length) AS max_seq_length,
+                max(dtype) AS dtype,
+                max(attn_implementation) AS attn_implementation,
+                max(torch_version) AS torch_version,
+                max(transformers_version) AS transformers_version,
+                max(sentence_transformers_version) AS sentence_transformers_version
+            FROM task_results
+            GROUP BY
+                model_dir,
+                model_name,
+                model_revision,
+                model_revision_requested
+        )
+        SELECT
+            row_number() OVER (
+                ORDER BY
+                    model_name,
+                    model_dir,
+                    COALESCE(model_revision, ''),
+                    COALESCE(model_revision_requested, '')
+            ) AS model_id,
+            *
+        FROM model_values
+        ORDER BY model_id
+        """
+    )
+    con.execute(
+        """
+        CREATE TABLE dim_task AS
+        WITH task_values AS (
+            SELECT
+                tr.benchmark,
+                tr.dataset_id,
+                max(tr.dataset_revision) AS dataset_revision,
+                max(tr.dataset_revision_requested) AS dataset_revision_requested,
+                max(tr.dataset_name) AS dataset_name,
+                max(COALESCE(tr.split_name, '')) AS split_name,
+                max(tr.task_name) AS task_name,
+                tr.task_key,
+                max(dm.language) AS language,
+                any_value(dm.languages) AS languages,
+                max(dm.category) AS category,
+                max(dm.short_description) AS short_description,
+                max(dm.citation_count) AS citation_count,
+                max(dm.reference_count) AS reference_count,
+                bool_or(COALESCE(dm.has_bibtex, false)) AS has_bibtex,
+                max(dm.query_count) AS query_count,
+                max(dm.document_count) AS document_count,
+                max(dm.query_mean_chars) AS query_mean_chars,
+                max(dm.document_mean_chars) AS document_mean_chars
+            FROM task_results AS tr
+            LEFT JOIN dataset_metadata AS dm
+              ON dm.benchmark = tr.benchmark
+             AND dm.dataset_id = tr.dataset_id
+             AND dm.task_key = tr.task_key
+            GROUP BY
+                tr.benchmark,
+                tr.dataset_id,
+                tr.task_key
+        )
+        SELECT
+            row_number() OVER (
+                ORDER BY benchmark, dataset_id, task_key
+            ) AS task_id,
+            *
+        FROM task_values
+        ORDER BY task_id
+        """
+    )
+    con.execute(
+        """
+        CREATE TABLE dim_variant AS
+        WITH variant_values AS (
+            SELECT
+                embedding_variant_name,
+                embedding_dim,
+                quantization,
+                embedding_variant_name IS NULL AS is_base
+            FROM task_results
+            GROUP BY
+                embedding_variant_name,
+                embedding_dim,
+                quantization
+        )
+        SELECT
+            row_number() OVER (
+                ORDER BY
+                    embedding_variant_name IS NOT NULL,
+                    COALESCE(embedding_variant_name, 'base'),
+                    COALESCE(embedding_dim, -1),
+                    COALESCE(quantization, '')
+            ) AS variant_id,
+            concat(
+                COALESCE(embedding_variant_name, 'base'),
+                ':',
+                COALESCE(CAST(embedding_dim AS VARCHAR), 'unknown'),
+                ':',
+                COALESCE(quantization, 'none')
+            ) AS variant_key,
+            embedding_variant_name,
+            embedding_dim,
+            quantization,
+            is_base
+        FROM variant_values
+        ORDER BY variant_id
+        """
+    )
 
 
 def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
