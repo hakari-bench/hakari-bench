@@ -8,7 +8,7 @@ from typing import Any, Iterable, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
-from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository
 from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
 from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
@@ -244,7 +244,7 @@ class LeaderboardService:
             or include_rescore_variants
             or include_other_variants
         )
-        records = self.task_results_repository.fetch_task_results(
+        records = self.task_results_repository.fetch_task_result_rows(
             benchmarks=benchmarks,
             score_target=score_target,
             include_embedding_variants=include_any_variants,
@@ -574,7 +574,7 @@ def _overall_metric_score_group(overall: OverallConfig) -> ScoreGroupConfig | No
     return ScoreGroupConfig(name="grouped_tasks", label="Grouped Tasks", group_by="task_key")
 
 
-def _record_display_model_names(records: list[TaskResultRecord], *, include_variant_details: bool) -> list[str]:
+def _record_display_model_names(records: list[TaskResultRow], *, include_variant_details: bool) -> list[str]:
     if not include_variant_details:
         return [record.model_name for record in records]
 

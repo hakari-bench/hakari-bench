@@ -477,9 +477,13 @@ row leave this column blank.
 ## Current Viewer Data Access Layer
 
 `hakari_bench/viewer/data.py` contains `TaskResultsRepository`, which
-reads DuckDB rows into the Pydantic DTO `TaskResultRecord`. `LeaderboardService`
-converts that DTO into the leaderboard-domain `TaskScore`, then performs
-ranking, overall aggregation, score grouping, and sorting in Python.
+can read DuckDB rows into either the Pydantic DTO `TaskResultRecord` or the
+lightweight dataclass `TaskResultRow`. `fetch_task_results()` keeps the
+validated DTO contract for compatibility-sensitive callers and tests, while
+`LeaderboardService` uses `fetch_task_result_rows()` on the UI hot path to
+avoid Pydantic validation for every leaderboard row. The service converts those
+rows into the leaderboard-domain `TaskScore`, then performs ranking, overall
+aggregation, score grouping, and sorting in Python.
 
 This boundary keeps SQL and DB-schema compatibility in the data layer while
 keeping Borda and complete-model semantics in `LeaderboardService`.

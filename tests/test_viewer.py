@@ -446,6 +446,36 @@ def test_leaderboard_service_logs_request_and_phase_timing(
     )
 
 
+def test_leaderboard_service_does_not_validate_pydantic_records_on_hot_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from hakari_bench.viewer.data import TaskResultRecord
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.80, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    def fail_model_validate(*args: object, **kwargs: object) -> None:
+        msg = "Pydantic validation should not run on the leaderboard hot path"
+        raise AssertionError(msg)
+
+    monkeypatch.setattr(TaskResultRecord, "model_validate", fail_model_validate)
+
+    result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard("BenchA")
+
+    assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
+
+
 def test_leaderboard_endpoint_logs_request_and_render_timing(
     tmp_path: Path,
     caplog: pytest.LogCaptureFixture,

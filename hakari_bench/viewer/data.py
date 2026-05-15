@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, TypeVar
 
 import duckdb
 from pydantic import BaseModel, ConfigDict, Field
@@ -61,6 +63,55 @@ class TaskResultRecord(BaseModel):
         return "model default"
 
 
+@dataclass(frozen=True, slots=True)
+class TaskResultRow:
+    """Lightweight viewer row for leaderboard hot paths."""
+
+    model_name: str
+    benchmark: str
+    dataset_id: str
+    dataset_name: str
+    split_name: str
+    task_name: str
+    task_key: str
+    score: float
+    language: str | None = None
+    languages: tuple[str, ...] = ()
+    active_parameters: int | None = None
+    total_parameters: int | None = None
+    max_seq_length: int | None = None
+    dtype: str | None = None
+    attn_implementation: str | None = None
+    query_prompt: str | None = None
+    document_prompt: str | None = None
+    query_prompt_name: str | None = None
+    document_prompt_name: str | None = None
+    query_encode_task: str | None = None
+    document_encode_task: str | None = None
+    trust_remote_code: bool | None = None
+    embedding_variant_name: str | None = None
+    embedding_dim: int | None = None
+    quantization: str | None = None
+
+    @property
+    def prompt_summary(self) -> str:
+        has_explicit_prompt = bool(self.query_prompt or self.document_prompt)
+        has_prompt_name = bool(self.query_prompt_name or self.document_prompt_name)
+        has_encode_task = bool(self.query_encode_task or self.document_encode_task)
+        if has_explicit_prompt:
+            return "explicit prefixes"
+        if has_prompt_name and has_encode_task:
+            return "prompt names + encode tasks"
+        if has_prompt_name:
+            return "prompt names"
+        if has_encode_task:
+            return "encode tasks"
+        return "model default"
+
+
+TTaskResultItem = TypeVar("TTaskResultItem", TaskResultRecord, TaskResultRow)
+
+
 class TaskResultsRepository:
     def __init__(self, duckdb_path: Path) -> None:
         self.duckdb_path = duckdb_path
@@ -83,6 +134,42 @@ class TaskResultsRepository:
         selected as NULL when absent.
         """
 
+        return self._fetch_task_result_items(
+            benchmarks=benchmarks,
+            score_target=score_target,
+            include_embedding_variants=include_embedding_variants,
+            variant_display_flags=variant_display_flags,
+            item_factory=_task_result_record,
+            transform_operation="fetch_task_results.records",
+        )
+
+    def fetch_task_result_rows(
+        self,
+        *,
+        benchmarks: list[str],
+        score_target: str = "all",
+        include_embedding_variants: bool,
+        variant_display_flags: VariantDisplayFlags | None = None,
+    ) -> list[TaskResultRow]:
+        return self._fetch_task_result_items(
+            benchmarks=benchmarks,
+            score_target=score_target,
+            include_embedding_variants=include_embedding_variants,
+            variant_display_flags=variant_display_flags,
+            item_factory=_task_result_row,
+            transform_operation="fetch_task_result_rows.records",
+        )
+
+    def _fetch_task_result_items(
+        self,
+        *,
+        benchmarks: list[str],
+        score_target: str,
+        include_embedding_variants: bool,
+        variant_display_flags: VariantDisplayFlags | None,
+        item_factory: Callable[[list[str], tuple[Any, ...]], TTaskResultItem],
+        transform_operation: str,
+    ) -> list[TTaskResultItem]:
         if not self.duckdb_path.exists() or not benchmarks:
             return []
         with timed_operation("viewer.duckdb.connection", operation="fetch_task_results"):
@@ -182,10 +269,10 @@ class TaskResultsRepository:
                 timing["row_count"] = len(rows)
             with timed_operation(
                 "viewer.transform",
-                operation="fetch_task_results.records",
+                operation=transform_operation,
                 row_count=len(rows),
             ) as timing:
-                records = _dedupe_task_result_records(_task_result_record(field_names, row) for row in rows)
+                records = _dedupe_task_result_records(item_factory(field_names, row) for row in rows)
                 timing["deduped_row_count"] = len(records)
                 return records
         finally:
@@ -193,7 +280,7 @@ class TaskResultsRepository:
                 con.close()
 
 
-def _task_result_record(field_names: list[str], row: tuple[Any, ...]) -> TaskResultRecord:
+def _task_result_payload(field_names: list[str], row: tuple[Any, ...]) -> dict[str, Any]:
     payload = dict(zip(field_names, row, strict=True))
     benchmark = str(payload["benchmark"])
     raw_task_name = str(payload["task_name"])
@@ -201,11 +288,47 @@ def _task_result_record(field_names: list[str], row: tuple[Any, ...]) -> TaskRes
     payload["split_name"] = canonical_split_name(benchmark, payload.get("split_name"))
     payload["task_name"] = task_name
     payload["languages"] = _normalized_languages(payload.get("languages"), payload.get("language"))
+    return payload
+
+
+def _task_result_record(field_names: list[str], row: tuple[Any, ...]) -> TaskResultRecord:
+    payload = _task_result_payload(field_names, row)
     return TaskResultRecord.model_validate(payload)
 
 
-def _dedupe_task_result_records(records: Iterable[TaskResultRecord]) -> list[TaskResultRecord]:
-    deduped: dict[tuple[str, str, str, str | None, int | None, str | None], TaskResultRecord] = {}
+def _task_result_row(field_names: list[str], row: tuple[Any, ...]) -> TaskResultRow:
+    payload = _task_result_payload(field_names, row)
+    return TaskResultRow(
+        model_name=str(payload["model_name"]),
+        benchmark=str(payload["benchmark"]),
+        dataset_id=str(payload["dataset_id"]),
+        dataset_name=str(payload["dataset_name"]),
+        split_name=str(payload["split_name"]),
+        task_name=str(payload["task_name"]),
+        task_key=str(payload["task_key"]),
+        score=float(payload["score"]),
+        language=payload["language"] if isinstance(payload["language"], str) else None,
+        languages=tuple(payload["languages"]),
+        active_parameters=_int_payload_value(payload.get("active_parameters")),
+        total_parameters=_int_payload_value(payload.get("total_parameters")),
+        max_seq_length=_int_payload_value(payload.get("max_seq_length")),
+        dtype=payload["dtype"] if isinstance(payload["dtype"], str) else None,
+        attn_implementation=payload["attn_implementation"] if isinstance(payload["attn_implementation"], str) else None,
+        query_prompt=payload["query_prompt"] if isinstance(payload["query_prompt"], str) else None,
+        document_prompt=payload["document_prompt"] if isinstance(payload["document_prompt"], str) else None,
+        query_prompt_name=payload["query_prompt_name"] if isinstance(payload["query_prompt_name"], str) else None,
+        document_prompt_name=payload["document_prompt_name"] if isinstance(payload["document_prompt_name"], str) else None,
+        query_encode_task=payload["query_encode_task"] if isinstance(payload["query_encode_task"], str) else None,
+        document_encode_task=payload["document_encode_task"] if isinstance(payload["document_encode_task"], str) else None,
+        trust_remote_code=payload["trust_remote_code"] if isinstance(payload["trust_remote_code"], bool) else None,
+        embedding_variant_name=payload["embedding_variant_name"] if isinstance(payload["embedding_variant_name"], str) else None,
+        embedding_dim=_int_payload_value(payload.get("embedding_dim")),
+        quantization=payload["quantization"] if isinstance(payload["quantization"], str) else None,
+    )
+
+
+def _dedupe_task_result_records(records: Iterable[TTaskResultItem]) -> list[TTaskResultItem]:
+    deduped: dict[tuple[str, str, str, str | None, int | None, str | None], TTaskResultItem] = {}
     for record in records:
         key = (
             record.model_name,
@@ -219,6 +342,10 @@ def _dedupe_task_result_records(records: Iterable[TaskResultRecord]) -> list[Tas
         if current is None:
             deduped[key] = record
     return list(deduped.values())
+
+
+def _int_payload_value(value: Any) -> int | None:
+    return int(value) if isinstance(value, int) else None
 
 
 def _metadata_join(metadata_columns: set[str]) -> str:

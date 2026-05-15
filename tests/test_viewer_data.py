@@ -83,6 +83,29 @@ def test_task_results_repository_reads_legacy_schema_without_variant_columns(tmp
     assert records[0].quantization is None
 
 
+def test_task_results_repository_can_return_lightweight_rows_for_hot_path(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192),
+        ],
+        include_embedding_variant_columns=False,
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", None, "a1", "a1", "ja", ["ja"])],
+    )
+
+    rows = TaskResultsRepository(db_path).fetch_task_result_rows(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+    )
+
+    assert rows[0].model_name == "model/a"
+    assert rows[0].task_key == "a1"
+    assert rows[0].languages == ("ja",)
+    assert rows[0].prompt_summary == "model default"
+    assert not isinstance(rows[0], TaskResultRecord)
+
+
 def test_task_results_repository_can_fetch_embedding_variant_rows_when_requested(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
