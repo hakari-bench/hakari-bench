@@ -246,6 +246,7 @@ def render_page(
   <link rel="stylesheet" href="/assets/app.css">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <script src="/assets/htmx.min.js"></script>
+  <script src="/assets/viewer.js" defer></script>
 </head>
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
@@ -265,7 +266,6 @@ def render_page(
     </section>
     {render_leaderboard_loading_toast()}
     {render_global_tooltip()}
-    {render_hash_query_state_script()}
   </main>
 </body>
 </html>"""
@@ -293,140 +293,6 @@ def render_global_tooltip() -> str:
     return """
     <div id="hakari-global-tooltip" class="global-tooltip fixed border border-zinc-300 bg-white px-2 py-1 text-xs font-medium text-zinc-800 shadow-sm"
          role="tooltip" hidden></div>
-    """
-
-
-def render_hash_query_state_script() -> str:
-    return """
-    <script>
-    (() => {
-      function paramsFrom(value) {
-        const raw = (value || "").replace(/^[#?]/, "");
-        return raw ? new URLSearchParams(raw) : new URLSearchParams();
-      }
-
-      function mergedStateQueryString() {
-        const params = new URLSearchParams(window.location.search);
-        paramsFrom(window.location.hash).forEach((value, key) => {
-          if (!params.has(key)) params.append(key, value);
-        });
-        return params.toString();
-      }
-
-      window.__hakariApplyHashQueryState = () => {
-        const hashParams = paramsFrom(window.location.hash);
-        if (Array.from(hashParams.keys()).length === 0) return;
-        const queryString = mergedStateQueryString();
-        if (!queryString) return;
-        const panel = document.getElementById("leaderboard-panel");
-        if (panel) panel.setAttribute("hx-get", "/leaderboard?" + queryString);
-      };
-
-      window.__hakariSyncHashQueryStateToParent = () => {
-        const queryString = mergedStateQueryString();
-        const hashValue = queryString ? "#" + queryString : "";
-        if (window.parent && window.parent !== window) {
-          try {
-            window.parent.postMessage({ queryString: "", hash: hashValue }, "https://huggingface.co");
-          } catch (_error) {
-            // Parent URL synchronization is best-effort for non-HF embeds.
-          }
-        }
-      };
-
-      function leaderboardControlFrom(event) {
-        const source = event.detail && event.detail.elt;
-        if (!source || !source.closest) return null;
-        return source.closest("[data-leaderboard-control='true']");
-      }
-
-      window.__hakariSetLeaderboardPending = (event, pending) => {
-        const control = leaderboardControlFrom(event);
-        if (!control) return;
-        if (pending) {
-          control.dataset.leaderboardPending = "true";
-          control.setAttribute("aria-busy", "true");
-        } else {
-          delete control.dataset.leaderboardPending;
-          control.removeAttribute("aria-busy");
-        }
-      };
-
-      let tooltipTimer = null;
-      let tooltipTrigger = null;
-
-      function tooltipElement() {
-        return document.getElementById("hakari-global-tooltip");
-      }
-
-      window.__hakariPositionTooltip = (trigger) => {
-        const tooltip = tooltipElement();
-        if (!trigger || !tooltip || tooltip.hidden) return;
-        const margin = 8;
-        const gap = 8;
-        const rect = trigger.getBoundingClientRect();
-        const tooltipWidth = tooltip.offsetWidth;
-        const tooltipHeight = tooltip.offsetHeight;
-        const maxLeft = Math.max(margin, window.innerWidth - tooltipWidth - margin);
-        let left = Math.min(Math.max(rect.left, margin), maxLeft);
-        let top = rect.bottom + gap;
-        if (top + tooltipHeight > window.innerHeight - margin) {
-          top = Math.max(margin, rect.top - tooltipHeight - gap);
-        }
-        tooltip.style.left = `${left}px`;
-        tooltip.style.top = `${top}px`;
-      };
-
-      window.__hakariShowTooltip = (trigger) => {
-        const tooltip = tooltipElement();
-        const text = trigger && trigger.dataset ? trigger.dataset.tooltip : "";
-        if (!tooltip || !text) return;
-        window.__hakariHideTooltip();
-        tooltipTrigger = trigger;
-        tooltipTimer = setTimeout(() => {
-          tooltip.textContent = text;
-          tooltip.hidden = false;
-          tooltip.dataset.visible = "true";
-          window.__hakariPositionTooltip(trigger);
-        }, 1000);
-      };
-
-      window.__hakariHideTooltip = () => {
-        if (tooltipTimer) clearTimeout(tooltipTimer);
-        tooltipTimer = null;
-        tooltipTrigger = null;
-        const tooltip = tooltipElement();
-        if (!tooltip) return;
-        tooltip.hidden = true;
-        delete tooltip.dataset.visible;
-        tooltip.textContent = "";
-      };
-
-      document.addEventListener("mouseover", (event) => {
-        const trigger = event.target && event.target.closest ? event.target.closest("[data-tooltip]") : null;
-        if (trigger) window.__hakariShowTooltip(trigger);
-      });
-      document.addEventListener("mouseout", (event) => {
-        if (!tooltipTrigger || tooltipTrigger.contains(event.relatedTarget)) return;
-        window.__hakariHideTooltip();
-      });
-      document.addEventListener("focusin", (event) => {
-        const trigger = event.target && event.target.closest ? event.target.closest("[data-tooltip]") : null;
-        if (trigger) window.__hakariShowTooltip(trigger);
-      });
-      document.addEventListener("focusout", window.__hakariHideTooltip);
-      document.addEventListener("scroll", window.__hakariHideTooltip, true);
-      window.addEventListener("resize", window.__hakariHideTooltip);
-
-      window.__hakariApplyHashQueryState();
-      document.addEventListener("DOMContentLoaded", window.__hakariSyncHashQueryStateToParent, { once: true });
-      document.addEventListener("htmx:beforeRequest", (event) => window.__hakariSetLeaderboardPending(event, true));
-      document.addEventListener("htmx:afterRequest", (event) => window.__hakariSetLeaderboardPending(event, false));
-      document.addEventListener("htmx:sendAbort", (event) => window.__hakariSetLeaderboardPending(event, false));
-      document.addEventListener("htmx:pushedIntoHistory", window.__hakariSyncHashQueryStateToParent);
-      document.addEventListener("htmx:replacedInHistory", window.__hakariSyncHashQueryStateToParent);
-    })();
-    </script>
     """
 
 

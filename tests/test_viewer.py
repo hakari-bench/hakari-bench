@@ -230,22 +230,9 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert '<link rel="stylesheet" href="/assets/app.css">' in response.text
     assert '<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">' in response.text
     assert '<script src="/assets/htmx.min.js"></script>' in response.text
-    assert "window.__hakariApplyHashQueryState" in response.text
-    assert "window.__hakariSyncHashQueryStateToParent" in response.text
-    assert "window.__hakariSetLeaderboardPending" in response.text
-    assert "window.__hakariShowTooltip" in response.text
-    assert "window.__hakariHideTooltip" in response.text
-    assert "window.__hakariPositionTooltip" in response.text
-    assert "setTimeout(() =>" in response.text
-    assert ", 1000);" in response.text
-    assert "const queryString = mergedStateQueryString();" in response.text
-    assert 'window.parent.postMessage({ queryString: "", hash: hashValue }, "https://huggingface.co")' in response.text
-    assert 'panel.setAttribute("hx-get", "/leaderboard?" + queryString);' in response.text
-    assert 'document.addEventListener("htmx:beforeRequest"' in response.text
-    assert 'document.addEventListener("htmx:afterRequest"' in response.text
-    assert 'document.addEventListener("htmx:sendAbort"' in response.text
-    assert 'document.addEventListener("htmx:pushedIntoHistory"' in response.text
-    assert 'document.addEventListener("htmx:replacedInHistory"' in response.text
+    assert '<script src="/assets/viewer.js" defer></script>' in response.text
+    assert "<script>" not in response.text
+    assert "window.__hakariApplyHashQueryState" not in response.text
     assert 'id="leaderboard-loading-toast"' in response.text
     assert "leaderboard-loading-toast fixed bottom-4 right-4" in response.text
     assert 'role="status"' in response.text
@@ -301,6 +288,28 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     htmx_response = client.get("/assets/htmx.min.js")
     assert htmx_response.status_code == 200
     assert "htmx" in htmx_response.text
+
+    viewer_js_response = client.get("/assets/viewer.js")
+    assert viewer_js_response.status_code == 200
+    assert "javascript" in viewer_js_response.headers["content-type"]
+    assert "window.__hakariApplyHashQueryState" in viewer_js_response.text
+    assert "window.__hakariSyncHashQueryStateToParent" in viewer_js_response.text
+    assert "window.__hakariSetLeaderboardPending" in viewer_js_response.text
+    assert "window.__hakariShowTooltip" in viewer_js_response.text
+    assert "window.__hakariHideTooltip" in viewer_js_response.text
+    assert "window.__hakariPositionTooltip" in viewer_js_response.text
+    assert "window.__hakariBindModelDetails" in viewer_js_response.text
+    assert "setTimeout(() =>" in viewer_js_response.text
+    assert ", 1000);" in viewer_js_response.text
+    assert "const queryString = mergedStateQueryString();" in viewer_js_response.text
+    assert 'window.parent.postMessage({ queryString: "", hash: hashValue }, "https://huggingface.co")' in viewer_js_response.text
+    assert 'panel.setAttribute("hx-get", "/leaderboard?" + queryString);' in viewer_js_response.text
+    assert 'document.addEventListener("htmx:beforeRequest"' in viewer_js_response.text
+    assert 'document.addEventListener("htmx:afterRequest"' in viewer_js_response.text
+    assert 'document.addEventListener("htmx:sendAbort"' in viewer_js_response.text
+    assert 'document.addEventListener("htmx:pushedIntoHistory"' in viewer_js_response.text
+    assert 'document.addEventListener("htmx:replacedInHistory"' in viewer_js_response.text
+    assert 'document.addEventListener("htmx:afterSwap"' in viewer_js_response.text
 
     legacy_favicon_response = client.get("/favicon.svg")
     assert legacy_favicon_response.status_code == 200
@@ -791,8 +800,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Dims" in response.text
     assert "Quantization" in response.text
     assert "delay:700ms" not in response.text
-    assert "htmx:afterSwap" in response.text
-    assert "window.__hakariRestoreModelFilterFocus" in response.text
+    assert "<script>" not in response.text
+    assert "htmx:afterSwap" not in response.text
+    assert "window.__hakariRestoreModelFilterFocus" not in response.text
     assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
 
@@ -1082,7 +1092,8 @@ def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) 
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1")
+    client = TestClient(app)
+    response = client.get("/leaderboard?view=BenchA&quantization=1")
 
     assert response.status_code == 200
     assert "jinaai/jina-embeddings-v5-text-nano (768 dims, binary, binary)" not in response.text
@@ -1096,9 +1107,13 @@ def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) 
     assert "&quot;attention&quot;:&quot;flash_attention_2&quot;" in response.text
     assert "&quot;trust_remote_code&quot;:true" in response.text
     assert "Model Details" in response.text
-    assert "JSON.parse" in response.text
-    assert 'modal.addEventListener("click"' in response.text
-    assert "if (event.target === modal) modal.close();" in response.text
+    assert "<script>" not in response.text
+
+    viewer_js_response = client.get("/assets/viewer.js")
+    assert "JSON.parse" in viewer_js_response.text
+    assert "window.__hakariBindModelDetails" in viewer_js_response.text
+    assert 'event.target.id === "model-detail-modal"' in viewer_js_response.text
+    assert "modal.close();" in viewer_js_response.text
 
 
 def test_model_cell_views_shorten_names_unless_short_name_collides() -> None:

@@ -101,7 +101,8 @@ The Space uses:
 - `.dockerignore`
 - `README.md` Space metadata with `sdk: docker`
 - `hakari_bench/viewer/space.py`
-- `hakari_bench/viewer/assets/` for local CSS, HTMX, and favicon assets
+- `hakari_bench/viewer/assets/` for local CSS, viewer JavaScript, HTMX, and
+  favicon assets
 
 The Docker image installs only viewer runtime dependencies and starts:
 
@@ -226,10 +227,11 @@ PY
 Check the public endpoints:
 
 ```bash
-curl -L -sS https://hakari-bench-leaderboard.hf.space/ | rg "HAKARI-bench leaderboard|/assets/app.css|/assets/favicon.svg|/assets/htmx.min.js"
+curl -L -sS https://hakari-bench-leaderboard.hf.space/ | rg "HAKARI-bench leaderboard|/assets/app.css|/assets/viewer.js|/assets/favicon.svg|/assets/htmx.min.js"
 curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=Overall' | rg "Core benchmarks|NanoMMTEB-v2|Language pages"
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/favicon.svg -o /tmp/hakari_favicon.svg
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/app.css -o /tmp/hakari_app.css
+curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/viewer.js -o /tmp/hakari_viewer.js
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/htmx.min.js -o /tmp/hakari_htmx.min.js
 ```
 

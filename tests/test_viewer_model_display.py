@@ -95,8 +95,6 @@ def test_render_model_detail_modal_supports_backdrop_close_and_focus_restore() -
     html = render_model_detail_modal()
 
     assert 'id="model-detail-modal"' in html
-    assert "event.target === modal" in html
-    assert "modal.close()" in html
-    assert "window.__hakariRestoreModelFilterFocus" in html
-    assert '["HF trust", "trust_remote_code"]' in html
-    assert '["Base delta", "base_score_delta_percent"]' in html
+    assert 'id="model-detail-title"' in html
+    assert 'id="model-detail-fields"' in html
+    assert "<script>" not in html
