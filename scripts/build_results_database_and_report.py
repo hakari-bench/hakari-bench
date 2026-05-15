@@ -94,6 +94,11 @@ def main() -> None:
         default=None,
         help="Optional directory for Parquet snapshots of the canonical DuckDB tables.",
     )
+    parser.add_argument(
+        "--include-retrieval-rankings",
+        action="store_true",
+        help="Load optional top-ranking artifacts into retrieval_rankings. Disabled by default for faster viewer builds.",
+    )
     args = parser.parse_args()
 
     benchmark_configs = load_benchmark_configs(args.viewer_config_dir)
@@ -101,6 +106,7 @@ def main() -> None:
     rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = load_results(
         args.results_dir,
         benchmark_configs=benchmark_configs,
+        include_retrieval_rankings=args.include_retrieval_rankings,
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
@@ -136,6 +142,7 @@ def load_results(
     results_dir: Path,
     *,
     benchmark_configs: Sequence[BenchmarkConfig] | None = None,
+    include_retrieval_rankings: bool = False,
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -297,7 +304,8 @@ def load_results(
                         result_path=str(result_path),
                     )
                 )
-        ranking_rows.extend(_retrieval_ranking_rows(common=common, task_payload=task_payload, result_path=result_path))
+        if include_retrieval_rankings:
+            ranking_rows.extend(_retrieval_ranking_rows(common=common, task_payload=task_payload, result_path=result_path))
 
     return (
         _dedupe_task_results(rows),

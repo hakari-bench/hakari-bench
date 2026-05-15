@@ -466,10 +466,13 @@ primary leaderboard score in `fact_task_score`.
 ### `retrieval_rankings`
 
 `retrieval_rankings` is a normalized view of optional top-100 ranking artifact
-JSON. It is populated only for task results that were produced with
-`--save-top-rankings`. It is intended for offline metric recomputation,
-rank-fusion experiments, hybrid search simulations, and reranker candidate
-analysis. It is not used for leaderboard ranking.
+JSON. It is populated only when database generation is run with
+`--include-retrieval-rankings` and matching task results were produced with
+`--save-top-rankings`. The default viewer database build leaves this table empty
+to avoid expanding large per-query ranking artifacts during leaderboard deploys.
+It is intended for offline metric recomputation, rank-fusion experiments, hybrid
+search simulations, and reranker candidate analysis. It is not used for
+leaderboard ranking.
 
 | column | type | meaning |
 | --- | --- | --- |

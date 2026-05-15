@@ -278,8 +278,14 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
-    rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = report.load_results(tmp_path)
+    default_rows, _, _, _, _, default_ranking_rows = report.load_results(tmp_path)
+    rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = report.load_results(
+        tmp_path,
+        include_retrieval_rankings=True,
+    )
 
+    assert len(default_rows) == 1
+    assert default_ranking_rows == []
     assert len(rows) == 1
     assert rows[0].benchmark == "NanoJMTEB-v2"
     assert rows[0].dataset_id == "hakari-bench/NanoJMTEB-v2"
