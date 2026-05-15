@@ -550,6 +550,9 @@ task_key)`, and orders rows by `(benchmark, dataset_id, task_name, model_name,
 embedding_variant_name)`. This avoids repeated metadata joins and keeps
 DuckDB's zonemaps useful for benchmark and variant filtering while preserving
 compatibility with older databases that do not have the table.
+Because `viewer_task_results` is already physically ordered, the viewer skips
+the query-time `ORDER BY` when reading it. Legacy `task_results` reads keep the
+explicit order clause for deterministic fallback behavior.
 
 Conceptually, it runs this query:
 

@@ -6,7 +6,7 @@ from pathlib import Path
 import duckdb
 import pytest
 
-from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository, _task_results_order_by
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
@@ -456,6 +456,11 @@ def test_task_results_repository_prefers_materialized_viewer_task_results(tmp_pa
     assert [(record.task_key, record.language, record.languages) for record in records] == [
         ("task-ja", "viewer-ja", ["viewer-ja"])
     ]
+
+
+def test_materialized_viewer_task_results_do_not_add_query_time_order_by() -> None:
+    assert _task_results_order_by("viewer_task_results", {"embedding_variant_name"}) == ""
+    assert _task_results_order_by("task_results", {"embedding_variant_name"}).startswith("ORDER BY")
 
 
 def _write_task_results(

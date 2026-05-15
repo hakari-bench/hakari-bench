@@ -220,11 +220,7 @@ class TaskResultsRepository:
                 variant_filter = "AND tr.embedding_variant_name IS NULL"
             elif "embedding_variant_name" in columns and variant_display_flags is not None:
                 variant_filter = _variant_filter_sql(columns, variant_display_flags)
-            variant_order = (
-                ", tr.embedding_variant_name IS NOT NULL, tr.embedding_variant_name"
-                if "embedding_variant_name" in columns
-                else ""
-            )
+            order_by = _task_results_order_by(source_table, columns)
             placeholders = ", ".join("?" for _ in benchmarks)
             query = f"""
                 SELECT
@@ -260,7 +256,7 @@ class TaskResultsRepository:
                   AND {score_expr} IS NOT NULL
                   {variant_filter}
                   {target_filter}
-                ORDER BY tr.benchmark, tr.dataset_id, tr.task_name, tr.model_name{variant_order}
+                {order_by}
             """
             with timed_operation(
                 "viewer.duckdb.query",
@@ -375,6 +371,17 @@ def _diagnostic_join(diagnostic_columns: set[str]) -> str:
     if "dataset_id" in diagnostic_columns:
         conditions.append("td.dataset_id = tr.dataset_id")
     return f"JOIN task_diagnostics AS td ON {' AND '.join(conditions)}"
+
+
+def _task_results_order_by(source_table: str, columns: set[str]) -> str:
+    if source_table == "viewer_task_results":
+        return ""
+    variant_order = (
+        ", tr.embedding_variant_name IS NOT NULL, tr.embedding_variant_name"
+        if "embedding_variant_name" in columns
+        else ""
+    )
+    return f"ORDER BY tr.benchmark, tr.dataset_id, tr.task_name, tr.model_name{variant_order}"
 
 
 def _variant_filter_sql(columns: set[str], flags: VariantDisplayFlags) -> str:
