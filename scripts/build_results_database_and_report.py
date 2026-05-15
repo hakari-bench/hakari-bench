@@ -210,26 +210,44 @@ def load_results(
     list[DatasetMetadataRow],
     list[RetrievalRankingRow],
 ]:
-    if incremental_db_path is not None and (
-        cached_results := _load_results_from_incremental_cache(
-            results_dir,
-            db_path=incremental_db_path,
-            include_retrieval_rankings=include_retrieval_rankings,
-        )
-    ) is not None:
-        return cached_results
-
     rows: list[TaskResult] = []
     run_accumulators: dict[str, dict[str, Any]] = {}
     metric_rows: list[MetricLongRow] = []
     diagnostic_rows: list[TaskDiagnosticRow] = []
     dataset_metadata_rows: list[DatasetMetadataRow] = []
     ranking_rows: list[RetrievalRankingRow] = []
+    result_paths = sorted(results_dir.glob("*/*/*.json"))
+    rebuild_runs_from_rows = False
+    if incremental_db_path is not None and not include_retrieval_rankings:
+        current_hashes = _current_source_hashes(results_dir)
+        previous_hashes = _read_previous_source_hashes(incremental_db_path)
+        if current_hashes and set(current_hashes) == set(previous_hashes) and _incremental_cache_schema_compatible(
+            incremental_db_path
+        ):
+            changed_paths = {path for path, payload_hash in current_hashes.items() if previous_hashes[path] != payload_hash}
+            if not changed_paths and (
+                cached_results := _load_results_from_incremental_cache(
+                    results_dir,
+                    db_path=incremental_db_path,
+                    include_retrieval_rankings=include_retrieval_rankings,
+                )
+            ) is not None:
+                return cached_results
+            unchanged_paths = set(current_hashes) - changed_paths
+            cached_rows = _load_cached_warehouse_rows(
+                incremental_db_path,
+                result_paths=unchanged_paths,
+                include_retrieval_rankings=False,
+            )
+            if cached_rows is not None:
+                rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = cached_rows
+                result_paths = [Path(path) for path in sorted(changed_paths)]
+                rebuild_runs_from_rows = True
     registry = DatasetRegistry.load_builtin()
     benchmark_configs = list(benchmark_configs or load_benchmark_configs())
     target_benchmarks = set(target_benchmark_names(benchmark_configs))
 
-    for result_path in sorted(results_dir.glob("*/*/*.json")):
+    for result_path in result_paths:
         task_payload = _read_json(result_path)
         target = task_payload.get("target", {})
         if not isinstance(target, dict):
@@ -375,9 +393,10 @@ def load_results(
         if include_retrieval_rankings:
             ranking_rows.extend(_retrieval_ranking_rows(common=common, task_payload=task_payload, result_path=result_path))
 
+    deduped_rows = _dedupe_task_results(rows)
     return (
-        _dedupe_task_results(rows),
-        _runs_from_task_results(run_accumulators),
+        deduped_rows,
+        _runs_from_task_result_rows(deduped_rows) if rebuild_runs_from_rows else _runs_from_task_results(run_accumulators),
         _dedupe_metric_rows(metric_rows),
         _dedupe_task_diagnostic_rows(diagnostic_rows),
         _dedupe_dataset_metadata_rows(dataset_metadata_rows),
@@ -406,7 +425,19 @@ def _load_results_from_incremental_cache(
     current_hashes = _current_source_hashes(results_dir)
     if not _incremental_cache_current(current_hashes, db_path):
         return None
+    return _load_cached_warehouse_rows(
+        db_path,
+        result_paths=None,
+        include_retrieval_rankings=include_retrieval_rankings,
+    )
 
+
+def _load_cached_warehouse_rows(
+    db_path: Path,
+    *,
+    result_paths: set[str] | None,
+    include_retrieval_rankings: bool,
+) -> LoadResultsPayload | None:
     con = duckdb.connect(str(db_path), read_only=True)
     try:
         required_tables = ("meta_database", "runs", "task_results", "metrics_long", "task_diagnostics", "dataset_metadata")
@@ -414,7 +445,7 @@ def _load_results_from_incremental_cache(
             return None
         if con.execute("SELECT schema_version FROM meta_database").fetchone() != (WAREHOUSE_SCHEMA_VERSION,):
             return None
-        rows = _fetch_task_result_rows(con)
+        rows = _filter_rows_by_result_path(_fetch_task_result_rows(con), result_paths)
         runs = _fetch_dict_rows(con, "runs")
         metric_rows = _fetch_model_rows(
             con,
@@ -422,6 +453,7 @@ def _load_results_from_incremental_cache(
             MetricLongRow,
             ("model_dir", "model_name", "benchmark", "dataset_id", "task_name", "metric_name", "metric_value", "result_path"),
         )
+        metric_rows = _filter_rows_by_result_path(metric_rows, result_paths)
         diagnostic_rows = _fetch_model_rows(
             con,
             "task_diagnostics",
@@ -458,6 +490,7 @@ def _load_results_from_incremental_cache(
                 "duration_seconds_including_dataset_load",
             ),
         )
+        diagnostic_rows = _filter_rows_by_result_path(diagnostic_rows, result_paths)
         dataset_metadata_rows = _fetch_model_rows(
             con,
             "dataset_metadata",
@@ -482,9 +515,46 @@ def _load_results_from_incremental_cache(
                 "document_mean_chars",
             ),
         )
-        return rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, []
+        ranking_rows: list[RetrievalRankingRow] = []
+        if include_retrieval_rankings and _duckdb_table_exists(con, "retrieval_rankings"):
+            ranking_rows = _filter_rows_by_result_path(
+                _fetch_model_rows(
+                    con,
+                    "retrieval_rankings",
+                    RetrievalRankingRow,
+                    (
+                        "model_dir",
+                        "model_name",
+                        "benchmark",
+                        "dataset_id",
+                        "dataset_revision",
+                        "dataset_name",
+                        "split_name",
+                        "task_name",
+                        "task_key",
+                        "result_path",
+                        "ranking_path",
+                        "ranking_name",
+                        "ranking_kind",
+                        "embedding_variant_name",
+                        "distance",
+                        "score_name",
+                        "query_id",
+                        "rank",
+                        "corpus_id",
+                    ),
+                ),
+                result_paths,
+            )
+        return rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows
     finally:
         con.close()
+
+
+def _filter_rows_by_result_path(rows: list[Any], result_paths: set[str] | None) -> list[Any]:
+    if result_paths is None:
+        return rows
+    return [row for row in rows if row.result_path in result_paths]
 
 
 def _current_source_hashes(results_dir: Path) -> dict[str, str | None]:
@@ -496,6 +566,12 @@ def _incremental_cache_current(current_hashes: dict[str, str | None], db_path: P
         return False
     previous_hashes = _read_previous_source_hashes(db_path)
     if current_hashes != previous_hashes:
+        return False
+    return _incremental_cache_schema_compatible(db_path)
+
+
+def _incremental_cache_schema_compatible(db_path: Path) -> bool:
+    if not db_path.exists():
         return False
     con = duckdb.connect(str(db_path), read_only=True)
     try:
@@ -716,6 +792,42 @@ def _runs_from_task_results(accumulators: dict[str, dict[str, Any]]) -> list[dic
             }
         )
     return runs
+
+
+def _runs_from_task_result_rows(rows: Sequence[TaskResult]) -> list[dict[str, Any]]:
+    accumulators: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        if row.embedding_variant_name is not None:
+            continue
+        accumulator = accumulators.setdefault(
+            row.model_dir,
+            {
+                "model_dir": row.model_dir,
+                "model_name": row.model_name,
+                "generated_at_utc": None,
+                "started_at_values": [],
+                "finished_at_values": [],
+                "targets": set(),
+                "split_count": 0,
+                "cache_hit_values": [],
+                "scores": [],
+                "active_parameters": row.active_parameters,
+                "total_parameters": row.total_parameters,
+                "max_seq_length": row.max_seq_length,
+                "dtype": row.dtype,
+                "attn_implementation": row.attn_implementation,
+                "torch_version": row.torch_version,
+                "transformers_version": row.transformers_version,
+                "sentence_transformers_version": row.sentence_transformers_version,
+            },
+        )
+        accumulator["model_name"] = row.model_name
+        _append_string(accumulator["started_at_values"], row.started_at_utc)
+        _append_string(accumulator["finished_at_values"], row.finished_at_utc)
+        accumulator["targets"].add(row.dataset_id)
+        accumulator["split_count"] += 1
+        accumulator["scores"].append(row.score)
+    return _runs_from_task_results(accumulators)
 
 
 def _append_string(values: list[str], value: Any) -> None:

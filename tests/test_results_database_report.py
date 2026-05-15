@@ -331,6 +331,81 @@ def test_main_incremental_noops_when_sources_are_unchanged(
     report.main()
 
 
+def test_load_results_incremental_parses_only_changed_sources(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    results_dir = tmp_path / "results"
+    first_path = results_dir / "model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    second_path = results_dir / "model" / "hakari-bench__NanoJMTEB-v2" / "ja_nfcorpus.json"
+    first_path.parent.mkdir(parents=True)
+    for task_path, score in ((first_path, 0.42), (second_path, 0.24)):
+        task_path.write_text(
+            json.dumps(
+                {
+                    "model": {"id": "example/model"},
+                    "target": {
+                        "dataset_name": "NanoJMTEB-v2",
+                        "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                        "split_name": task_path.stem,
+                        "task_name": task_path.stem,
+                    },
+                    "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": score},
+                    "metrics": {f"{task_path.stem}_ndcg@10": score},
+                }
+            ),
+            encoding="utf-8",
+        )
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = report.load_results(results_dir)
+    db_path = tmp_path / "hakari_bench.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=runs,
+        rows=rows,
+        metric_rows=metric_rows,
+        diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
+        ranking_rows=ranking_rows,
+        standings={},
+        borda_rows=[],
+    )
+    second_path.write_text(
+        json.dumps(
+            {
+                "model": {"id": "example/model"},
+                "target": {
+                    "dataset_name": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "split_name": "ja_nfcorpus",
+                    "task_name": "ja_nfcorpus",
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.9},
+                "metrics": {"ja_nfcorpus_ndcg@10": 0.9},
+            }
+        ),
+        encoding="utf-8",
+    )
+    original_read_json = report._read_json
+
+    def read_changed_only(path: Path) -> object:
+        if path == first_path:
+            pytest.fail("unchanged source should be reused from the incremental DuckDB cache")
+        return original_read_json(path)
+
+    monkeypatch.setattr(report, "_read_json", read_changed_only)
+
+    cached_rows, cached_runs, cached_metric_rows, _, _, _ = report.load_results(
+        results_dir,
+        incremental_db_path=db_path,
+    )
+
+    scores_by_task = {row.task_name: row.score for row in cached_rows}
+    metric_scores_by_task = {row.task_name: row.metric_value for row in cached_metric_rows}
+    assert scores_by_task == {"ja_cwir": 0.42, "ja_nfcorpus": 0.9}
+    assert metric_scores_by_task == {"ja_cwir": 0.42, "ja_nfcorpus": 0.9}
+    assert cached_runs[0]["aggregate_metric_mean"] == pytest.approx(0.66)
+
+
 def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     model_dir = tmp_path / "model"
     task_path = model_dir / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
