@@ -495,6 +495,11 @@ choices:
 - Read only benchmarks requested by the selected view.
 - Read only base rows when variants are not requested; reranking also reads
   base rows because diagnostics are not variant-specific.
+- When variants are requested, push the selected display categories into SQL.
+  Base rows are always read, but quantization-only, truncate-only, rescore-only,
+  and other-variant views avoid fetching unrelated variant rows before Python
+  ranking. Cross variants such as truncate plus quantization are fetched only
+  when both required display flags are enabled.
 - Select missing variant/runtime columns as `NULL` for old DuckDB files.
 - Surface runtime metadata such as dtype, attention implementation, prompt
   mode, and `trust_remote_code` in model details metadata; dtype, attention,

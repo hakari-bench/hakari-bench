@@ -248,6 +248,12 @@ class LeaderboardService:
             benchmarks=benchmarks,
             score_target=score_target,
             include_embedding_variants=include_any_variants,
+            variant_display_flags=VariantDisplayFlags(
+                quantization=include_quantization_variants,
+                truncate=include_truncate_variants,
+                rescore=include_rescore_variants,
+                other=include_other_variants,
+            ),
         )
         with timed_operation("viewer.leaderboard.phase", operation="filter_variant_records") as timing:
             filtered_records = [

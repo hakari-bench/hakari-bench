@@ -7,6 +7,7 @@ import duckdb
 import pytest
 
 from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
 def test_task_results_repository_returns_pydantic_records_and_base_rows_by_default(tmp_path: Path) -> None:
@@ -117,6 +118,131 @@ def test_task_results_repository_can_fetch_embedding_variant_rows_when_requested
         (None, None),
         ("quantize_uint8_docs", "uint8"),
     ]
+
+
+def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.80,
+                10,
+                12,
+                8192,
+                "quantize_uint8_docs",
+                768,
+                "uint8",
+            ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.83,
+                10,
+                12,
+                8192,
+                "truncate_dim_384",
+                384,
+                None,
+            ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.82,
+                10,
+                12,
+                8192,
+                "truncate_dim_256_quantize_int8_docs",
+                256,
+                "int8",
+            ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.81,
+                10,
+                12,
+                8192,
+                "binary_rescore",
+                768,
+                "binary",
+            ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.75,
+                10,
+                12,
+                8192,
+                "custom_variant",
+                2048,
+                None,
+            ),
+        ],
+        include_embedding_variant_columns=True,
+    )
+
+    quantization_records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=True,
+        variant_display_flags=VariantDisplayFlags(quantization=True),
+    )
+    cross_variant_records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=True,
+        variant_display_flags=VariantDisplayFlags(quantization=True, truncate=True),
+    )
+    rescore_records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=True,
+        variant_display_flags=VariantDisplayFlags(rescore=True),
+    )
+    other_records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=True,
+        variant_display_flags=VariantDisplayFlags(other=True),
+    )
+
+    assert [(record.embedding_variant_name, record.quantization) for record in quantization_records] == [
+        (None, None),
+        ("quantize_uint8_docs", "uint8"),
+    ]
+    assert [(record.embedding_variant_name, record.quantization) for record in cross_variant_records] == [
+        (None, None),
+        ("quantize_uint8_docs", "uint8"),
+        ("truncate_dim_256_quantize_int8_docs", "int8"),
+        ("truncate_dim_384", None),
+    ]
+    assert [record.embedding_variant_name for record in rescore_records] == [None, "binary_rescore"]
+    assert [record.embedding_variant_name for record in other_records] == [None, "custom_variant"]
 
 
 def test_task_results_repository_logs_duckdb_query_and_record_transform_timing(

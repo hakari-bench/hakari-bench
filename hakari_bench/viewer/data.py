@@ -11,6 +11,7 @@ from hakari_bench.viewer.task_names import (
     canonical_split_name,
     canonical_task_name,
 )
+from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
 class TaskResultRecord(BaseModel):
@@ -70,6 +71,7 @@ class TaskResultsRepository:
         benchmarks: list[str],
         score_target: str = "all",
         include_embedding_variants: bool,
+        variant_display_flags: VariantDisplayFlags | None = None,
     ) -> list[TaskResultRecord]:
         """Fetch leaderboard source rows from the canonical `task_results` table.
 
@@ -122,6 +124,8 @@ class TaskResultsRepository:
             variant_filter = ""
             if "embedding_variant_name" in columns and (score_target == "reranking" or not include_embedding_variants):
                 variant_filter = "AND tr.embedding_variant_name IS NULL"
+            elif "embedding_variant_name" in columns and variant_display_flags is not None:
+                variant_filter = _variant_filter_sql(columns, variant_display_flags)
             variant_order = (
                 ", tr.embedding_variant_name IS NOT NULL, tr.embedding_variant_name"
                 if "embedding_variant_name" in columns
@@ -170,6 +174,7 @@ class TaskResultsRepository:
                 benchmark_count=len(benchmarks),
                 include_embedding_variants=include_embedding_variants,
                 score_target=score_target,
+                variant_flags=_variant_flags_label(variant_display_flags),
             ) as timing:
                 cursor = con.execute(query, benchmarks)
                 field_names = [str(description[0]) for description in cursor.description]
@@ -236,6 +241,63 @@ def _diagnostic_join(diagnostic_columns: set[str]) -> str:
     if "dataset_id" in diagnostic_columns:
         conditions.append("td.dataset_id = tr.dataset_id")
     return f"JOIN task_diagnostics AS td ON {' AND '.join(conditions)}"
+
+
+def _variant_filter_sql(columns: set[str], flags: VariantDisplayFlags) -> str:
+    if not flags.any_enabled:
+        return "AND tr.embedding_variant_name IS NULL"
+    if flags == VariantDisplayFlags(quantization=True, truncate=True, rescore=True, other=True):
+        return ""
+
+    name = "lower(tr.embedding_variant_name)"
+    quantization_category = f"({_column_or_null(columns, 'quantization')} IS NOT NULL OR {name} LIKE '%quantize%')"
+    truncate_category = f"({name} LIKE '%truncate%')"
+    rescore_category = f"({name} LIKE '%rescore%')"
+    non_rescore = f"NOT {rescore_category}"
+    clauses = ["tr.embedding_variant_name IS NULL"]
+    if flags.rescore:
+        clauses.append(rescore_category)
+    quantize_or_truncate_clause = _quantize_or_truncate_variant_filter(
+        flags=flags,
+        quantization_category=quantization_category,
+        truncate_category=truncate_category,
+    )
+    if quantize_or_truncate_clause:
+        clauses.append(f"({non_rescore} AND {quantize_or_truncate_clause})")
+    if flags.other:
+        clauses.append(f"({non_rescore} AND NOT {quantization_category} AND NOT {truncate_category})")
+    return "AND (" + " OR ".join(clauses) + ")"
+
+
+def _quantize_or_truncate_variant_filter(
+    *,
+    flags: VariantDisplayFlags,
+    quantization_category: str,
+    truncate_category: str,
+) -> str:
+    if flags.quantization and flags.truncate:
+        return f"({quantization_category} OR {truncate_category})"
+    if flags.quantization:
+        return f"({quantization_category} AND NOT {truncate_category})"
+    if flags.truncate:
+        return f"({truncate_category} AND NOT {quantization_category})"
+    return ""
+
+
+def _variant_flags_label(flags: VariantDisplayFlags | None) -> str:
+    if flags is None:
+        return "legacy"
+    enabled = [
+        name
+        for name, is_enabled in (
+            ("quantization", flags.quantization),
+            ("truncate", flags.truncate),
+            ("rescore", flags.rescore),
+            ("other", flags.other),
+        )
+        if is_enabled
+    ]
+    return ",".join(enabled) if enabled else "base"
 
 
 def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:
