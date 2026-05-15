@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import math
+import hashlib
 from pathlib import Path
 
 import duckdb
@@ -885,6 +886,68 @@ def test_write_duckdb_materializes_canonical_dimensions(tmp_path: Path) -> None:
         con.close()
 
 
+def test_write_duckdb_records_source_load_state_and_changed_count(tmp_path: Path) -> None:
+    result_path = tmp_path / "model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    result_path.parent.mkdir(parents=True)
+    result_path.write_text('{"score": 0.42}', encoding="utf-8")
+    row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
+        dataset_name="NanoJMTEB-v2",
+        split_name="ja_cwir",
+        task_name="ja_cwir",
+        task_key="NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
+        score=0.42,
+        aggregate_metric="ndcg@10",
+        result_path=str(result_path),
+    )
+    standings, borda_rows = report.compute_standings([row])
+    db_path = tmp_path / "results.duckdb"
+
+    def write_once() -> None:
+        report.write_duckdb(
+            db_path,
+            runs=[{"model_dir": "model", "model_name": "example/model"}],
+            rows=[row],
+            metric_rows=[
+                {
+                    "model_dir": "model",
+                    "model_name": "example/model",
+                    "benchmark": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "task_name": "ja_cwir",
+                    "metric_name": "ja_cwir_ndcg@10",
+                    "metric_value": 0.42,
+                    "result_path": str(result_path),
+                }
+            ],
+            standings=standings,
+            borda_rows=borda_rows,
+            batch_id="test-batch",
+            loaded_at_utc="2026-05-15T00:00:00+00:00",
+        )
+
+    write_once()
+    expected_hash = hashlib.sha256(result_path.read_bytes()).hexdigest()
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute(
+            "SELECT result_path, payload_sha256, last_successful_batch_id FROM source_load_state"
+        ).fetchall() == [(str(result_path), expected_hash, "test-batch")]
+        assert con.execute("SELECT source_count, changed_count FROM ingestion_batches").fetchone() == (1, 1)
+    finally:
+        con.close()
+
+    write_once()
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute("SELECT source_count, changed_count FROM ingestion_batches").fetchone() == (1, 0)
+    finally:
+        con.close()
+
+
 def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path) -> None:
     row = report.TaskResult(
         model_dir="model",
@@ -953,10 +1016,12 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
         "dim_task.parquet",
         "dim_variant.parquet",
         "fact_task_score.parquet",
+        "ingestion_batches.parquet",
         "metrics_long.parquet",
         "model_scores.parquet",
         "retrieval_rankings.parquet",
         "runs.parquet",
+        "source_load_state.parquet",
         "task_diagnostics.parquet",
         "task_results.parquet",
         "viewer_task_results.parquet",

@@ -4,14 +4,15 @@ This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
 The canonical source table for benchmark results is `task_results`. New DuckDB
-builds also materialize `dim_model`, `dim_task`, and `dim_variant` as
+builds also materialize `ingestion_batches` and `source_load_state` for
+idempotent source tracking, `dim_model`, `dim_task`, and `dim_variant` as
 canonical dimensions, `fact_task_score`, which represents each leaderboard
-score target as rows such as `all` and `reranking`, and
-`viewer_task_results`, a viewer-optimized table with the metadata join already
-applied; the HTMX leaderboard uses `viewer_task_results` when present and
-falls back to `task_results` for older DuckDB files. `runs` contains run-level
-metadata, `metrics_long` contains detailed task metrics, `retrieval_rankings`
-contains per-query top-100 retrieved document ids, `task_diagnostics` contains
+score target as rows such as `all` and `reranking`, and `viewer_task_results`,
+a viewer-optimized table with the metadata join already applied; the HTMX
+leaderboard uses `viewer_task_results` when present and falls back to
+`task_results` for older DuckDB files. `runs` contains run-level metadata,
+`metrics_long` contains detailed task metrics, `retrieval_rankings` contains
+per-query top-100 retrieved document ids, `task_diagnostics` contains
 analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
 exposes YAML task metadata for language, category, citation, and text-stat
 analysis, and `model_scores` /
@@ -64,10 +65,10 @@ that fingerprint into DuckDB for SQL-based run comparison. Older JSON files
 leave this column `NULL`.
 
 When `--parquet-output-dir` is provided, the generator also writes Parquet
-snapshots for the canonical tables: `runs`, `dim_model`, `dim_task`,
-`dim_variant`, `task_results`, `fact_task_score`, `metrics_long`,
-`retrieval_rankings`, `task_diagnostics`, `dataset_metadata`, `model_scores`,
-and `borda_task_scores`. These files are intended for notebooks,
+snapshots for the canonical tables: `ingestion_batches`, `source_load_state`,
+`runs`, `dim_model`, `dim_task`, `dim_variant`, `task_results`,
+`fact_task_score`, `metrics_long`, `retrieval_rankings`, `task_diagnostics`,
+`dataset_metadata`, `model_scores`, and `borda_task_scores`. These files are intended for notebooks,
 ad hoc DuckDB SQL with `read_parquet`, and external analysis workflows that do
 not need the mutable DuckDB database file.
 
@@ -134,6 +135,39 @@ Analysis panels are scoped by the same YAML view selection as the leaderboard.
 The diagnostics panels are descriptive and do not alter leaderboard ranking.
 
 ## Table Overview
+
+### `ingestion_batches`
+
+`ingestion_batches` records the source-tracking state for the latest DuckDB
+build. The current writer still rebuilds the physical DuckDB file, but it
+compares incoming source hashes with the previous `source_load_state` before
+rewriting tables. Re-running the same inputs against the same database records
+`changed_count = 0`, which is the detection layer needed for later
+delete/insert incremental updates.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `batch_id` | `VARCHAR` | Build or ingestion batch id. When not provided, the writer derives one from source hashes and the load timestamp. |
+| `started_at_utc` | `VARCHAR` | Batch start timestamp. |
+| `finished_at_utc` | `VARCHAR` | Batch finish timestamp. |
+| `status` | `VARCHAR` | Batch status. Current successful builds write `success`. |
+| `source_count` | `INTEGER` | Number of distinct task JSON result paths represented in the build. |
+| `changed_count` | `INTEGER` | Number of source paths whose payload hash differs from the previous database state. |
+
+### `source_load_state`
+
+`source_load_state` stores the latest known hash for each task JSON result
+path. It intentionally tracks source files rather than model/task scores so
+the loader can distinguish unchanged files from changed reruns before touching
+canonical facts.
+
+| column | type | meaning |
+| --- | --- | --- |
+| `result_path` | `VARCHAR` | Source task JSON path. |
+| `payload_sha256` | `VARCHAR` | SHA-256 hash of the result JSON file when the file is available locally, otherwise `NULL`. |
+| `canonical_key_hash` | `VARCHAR` | Stable hash of the source identity used for future incremental bookkeeping. |
+| `last_successful_batch_id` | `VARCHAR` | Batch id that last loaded this source. |
+| `loaded_at_utc` | `VARCHAR` | Load timestamp for this source state row. |
 
 ### `task_results`
 

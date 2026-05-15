@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 from collections import defaultdict
@@ -42,6 +43,8 @@ def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list
 TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
 WAREHOUSE_TABLES = (
+    "ingestion_batches",
+    "source_load_state",
     "runs",
     "dim_model",
     "dim_task",
@@ -816,6 +819,8 @@ def write_duckdb(
     dataset_metadata_rows: Sequence[DatasetMetadataRow | dict[str, Any]] = (),
     standings: dict[str, list[dict[str, Any]]],
     borda_rows: list[dict[str, Any]],
+    batch_id: str | None = None,
+    loaded_at_utc: str | None = None,
 ) -> None:
     db_path.parent.mkdir(parents=True, exist_ok=True)
     normalized_metric_rows = [
@@ -834,10 +839,30 @@ def write_duckdb(
         row if isinstance(row, DatasetMetadataRow) else DatasetMetadataRow.model_validate(row)
         for row in dataset_metadata_rows
     ]
+    loaded_at = loaded_at_utc or datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    source_rows = _source_load_state_rows(
+        rows=rows,
+        metric_rows=normalized_metric_rows,
+        diagnostic_rows=normalized_diagnostic_rows,
+        ranking_rows=normalized_ranking_rows,
+        batch_id=batch_id,
+        loaded_at_utc=loaded_at,
+    )
+    resolved_batch_id = batch_id or _source_batch_id(source_rows, loaded_at)
+    source_rows = [row | {"last_successful_batch_id": resolved_batch_id} for row in source_rows]
+    previous_source_hashes = _read_previous_source_hashes(db_path)
+    changed_count = sum(1 for row in source_rows if previous_source_hashes.get(row["result_path"]) != row["payload_sha256"])
     con = duckdb.connect(str(db_path))
     try:
         for table in WAREHOUSE_TABLES:
             con.execute(f"DROP TABLE IF EXISTS {table}")
+        _create_ingestion_state_tables(
+            con,
+            batch_id=resolved_batch_id,
+            loaded_at_utc=loaded_at,
+            source_rows=source_rows,
+            changed_count=changed_count,
+        )
         con.execute(
             """
             CREATE TABLE runs (
@@ -1033,6 +1058,134 @@ def write_duckdb(
         )
     finally:
         con.close()
+
+
+def _source_load_state_rows(
+    *,
+    rows: Sequence[TaskResult],
+    metric_rows: Sequence[MetricLongRow],
+    diagnostic_rows: Sequence[TaskDiagnosticRow],
+    ranking_rows: Sequence[RetrievalRankingRow],
+    batch_id: str | None,
+    loaded_at_utc: str,
+) -> list[dict[str, Any]]:
+    result_paths = {
+        row.result_path
+        for row in [*rows, *metric_rows, *diagnostic_rows, *ranking_rows]
+        if row.result_path
+    }
+    source_rows: list[dict[str, Any]] = []
+    for result_path in sorted(result_paths):
+        payload_sha256 = _payload_sha256(result_path)
+        canonical_key_hash = hashlib.sha256(result_path.encode("utf-8")).hexdigest()
+        source_rows.append(
+            {
+                "result_path": result_path,
+                "payload_sha256": payload_sha256,
+                "canonical_key_hash": canonical_key_hash,
+                "last_successful_batch_id": batch_id,
+                "loaded_at_utc": loaded_at_utc,
+            }
+        )
+    return source_rows
+
+
+def _payload_sha256(result_path: str) -> str | None:
+    path = Path(result_path)
+    if not path.exists() or not path.is_file():
+        return None
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _source_batch_id(source_rows: Sequence[dict[str, Any]], loaded_at_utc: str) -> str:
+    payload = json.dumps(
+        [(row["result_path"], row["payload_sha256"]) for row in source_rows],
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    digest = hashlib.sha256(f"{loaded_at_utc}\n{payload}".encode("utf-8")).hexdigest()[:16]
+    return f"batch-{digest}"
+
+
+def _read_previous_source_hashes(db_path: Path) -> dict[str, str | None]:
+    if not db_path.exists():
+        return {}
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        if not _duckdb_table_exists(con, "source_load_state"):
+            return {}
+        return {
+            str(result_path): payload_sha256
+            for result_path, payload_sha256 in con.execute(
+                "SELECT result_path, payload_sha256 FROM source_load_state"
+            ).fetchall()
+        }
+    finally:
+        con.close()
+
+
+def _duckdb_table_exists(con: duckdb.DuckDBPyConnection, table_name: str) -> bool:
+    return bool(
+        con.execute(
+            """
+            SELECT count(*)
+            FROM information_schema.tables
+            WHERE table_name = ?
+            """,
+            [table_name],
+        ).fetchone()[0]
+    )
+
+
+def _create_ingestion_state_tables(
+    con: duckdb.DuckDBPyConnection,
+    *,
+    batch_id: str,
+    loaded_at_utc: str,
+    source_rows: Sequence[dict[str, Any]],
+    changed_count: int,
+) -> None:
+    con.execute(
+        """
+        CREATE TABLE ingestion_batches (
+            batch_id VARCHAR,
+            started_at_utc VARCHAR,
+            finished_at_utc VARCHAR,
+            status VARCHAR,
+            source_count INTEGER,
+            changed_count INTEGER
+        )
+        """
+    )
+    con.execute(
+        "INSERT INTO ingestion_batches VALUES (?, ?, ?, ?, ?, ?)",
+        [batch_id, loaded_at_utc, loaded_at_utc, "success", len(source_rows), changed_count],
+    )
+    con.execute(
+        """
+        CREATE TABLE source_load_state (
+            result_path VARCHAR,
+            payload_sha256 VARCHAR,
+            canonical_key_hash VARCHAR,
+            last_successful_batch_id VARCHAR,
+            loaded_at_utc VARCHAR
+        )
+        """
+    )
+    if source_rows:
+        con.executemany(
+            "INSERT INTO source_load_state VALUES (?, ?, ?, ?, ?)",
+            [
+                (
+                    row["result_path"],
+                    row["payload_sha256"],
+                    row["canonical_key_hash"],
+                    row["last_successful_batch_id"],
+                    row["loaded_at_utc"],
+                )
+                for row in source_rows
+            ],
+        )
 
 
 def _create_canonical_dimension_tables(con: duckdb.DuckDBPyConnection) -> None:
