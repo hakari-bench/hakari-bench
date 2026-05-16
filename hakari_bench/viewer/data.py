@@ -16,8 +16,28 @@ from hakari_bench.viewer.task_names import (
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
+CURRENT_DUCKDB_SCHEMA_VERSION = "4"
+REQUIRED_VIEWER_TABLES = ("meta_database", "viewer_task_results")
+REQUIRED_VIEWER_TASK_RESULT_COLUMNS = {
+    "model_name",
+    "benchmark",
+    "dataset_id",
+    "dataset_name",
+    "split_name",
+    "task_name",
+    "task_key",
+    "score_target",
+    "score",
+    "language",
+    "languages",
+    "active_parameters",
+    "total_parameters",
+    "max_seq_length",
+}
+
+
 class TaskResultRecord(BaseModel):
-    """Typed DTO for the DuckDB `task_results` rows used by the viewer."""
+    """Typed DTO for DuckDB `viewer_task_results` rows used by the viewer."""
 
     model_config = ConfigDict(frozen=True, strict=True, extra="forbid")
 
@@ -124,14 +144,12 @@ class TaskResultsRepository:
         include_embedding_variants: bool,
         variant_display_flags: VariantDisplayFlags | None = None,
     ) -> list[TaskResultRecord]:
-        """Fetch leaderboard source rows from the canonical `task_results` table.
+        """Fetch leaderboard source rows from `viewer_task_results`.
 
         The viewer ranks task-level aggregate scores, so this query intentionally
         reads only the columns needed to build `TaskScore` objects. It filters out
         NULL scores because they cannot participate in ranking, and it fetches
         only base embedding rows unless the caller explicitly needs variant rows.
-        Older DuckDB files may not have variant columns, so those fields are
-        selected as NULL when absent.
         """
 
         return self._fetch_task_result_items(
@@ -176,37 +194,20 @@ class TaskResultsRepository:
             con = duckdb.connect(str(self.duckdb_path), read_only=True)
         try:
             with timed_operation("viewer.duckdb.schema", operation="fetch_task_results"):
-                source_table = "viewer_task_results" if _table_exists(con, "viewer_task_results") else "task_results"
-                columns = _table_columns(con, source_table)
-                metadata_columns = (
-                    set()
-                    if source_table == "viewer_task_results"
-                    else _table_columns(con, "dataset_metadata")
-                    if _table_exists(con, "dataset_metadata")
-                    else set()
-                )
-                diagnostic_columns = _table_columns(con, "task_diagnostics") if _table_exists(con, "task_diagnostics") else set()
-            metadata_join = _metadata_join(metadata_columns)
-            diagnostic_join = ""
+                _validate_current_schema(con)
+                columns = _table_columns(con, "viewer_task_results")
+                missing_columns = REQUIRED_VIEWER_TASK_RESULT_COLUMNS - columns
+                if missing_columns:
+                    raise RuntimeError(
+                        "DuckDB viewer_task_results is missing required columns: "
+                        + ", ".join(sorted(missing_columns))
+                    )
             score_expr = "tr.score"
-            target_filter = ""
+            target_filter = "AND tr.score_target = ?"
             query_params: list[Any] = list(benchmarks)
-            if "score_target" in columns:
-                target_filter = "AND tr.score_target = ?"
-                query_params.append(score_target)
-            elif score_target == "reranking" and {"model_name", "benchmark", "task_key", "rerank_score"}.issubset(diagnostic_columns):
-                diagnostic_join = _diagnostic_join(diagnostic_columns)
-                score_expr = "td.rerank_score"
-                target_filter = """
-                  AND td.rerank_score IS NOT NULL
-                  AND (td.rerank_status IS NULL OR td.rerank_status = 'available')
-                  AND (td.candidate_ranking IS NULL OR td.candidate_ranking = 'bm25')
-                  AND (td.rerank_top_k IS NULL OR td.rerank_top_k = 100)
-                """
-            elif score_target == "reranking":
-                return []
-            language_expr = "tr.language" if "language" in columns else "dm.language" if "language" in metadata_columns else "NULL"
-            languages_expr = "tr.languages" if "languages" in columns else "dm.languages" if "languages" in metadata_columns else "NULL"
+            query_params.append(score_target)
+            language_expr = "tr.language"
+            languages_expr = "tr.languages"
             variant_name_expr = _column_or_null(columns, "embedding_variant_name")
             embedding_dim_expr = _column_or_null(columns, "embedding_dim")
             quantization_expr = _column_or_null(columns, "quantization")
@@ -224,7 +225,6 @@ class TaskResultsRepository:
                 variant_filter = "AND tr.embedding_variant_name IS NULL"
             elif "embedding_variant_name" in columns and variant_display_flags is not None:
                 variant_filter = _variant_filter_sql(columns, variant_display_flags)
-            order_by = _task_results_order_by(source_table, columns)
             placeholders = ", ".join("?" for _ in benchmarks)
             query = f"""
                 SELECT
@@ -253,14 +253,11 @@ class TaskResultsRepository:
                     {variant_name_expr} AS embedding_variant_name,
                     {embedding_dim_expr} AS embedding_dim,
                     {quantization_expr} AS quantization
-                FROM {source_table} AS tr
-                {metadata_join}
-                {diagnostic_join}
+                FROM viewer_task_results AS tr
                 WHERE tr.benchmark IN ({placeholders})
                   AND {score_expr} IS NOT NULL
                   {variant_filter}
                   {target_filter}
-                {order_by}
             """
             with timed_operation(
                 "viewer.duckdb.query",
@@ -355,39 +352,6 @@ def _int_payload_value(value: Any) -> int | None:
     return int(value) if isinstance(value, int) else None
 
 
-def _metadata_join(metadata_columns: set[str]) -> str:
-    if not metadata_columns:
-        return ""
-    conditions = ["dm.task_key = tr.task_key"]
-    if "benchmark" in metadata_columns:
-        conditions.insert(0, "dm.benchmark = tr.benchmark")
-    if "dataset_id" in metadata_columns:
-        conditions.append("dm.dataset_id = tr.dataset_id")
-    return f"LEFT JOIN dataset_metadata AS dm ON {' AND '.join(conditions)}"
-
-
-def _diagnostic_join(diagnostic_columns: set[str]) -> str:
-    conditions = [
-        "td.model_name = tr.model_name",
-        "td.benchmark = tr.benchmark",
-        "td.task_key = tr.task_key",
-    ]
-    if "dataset_id" in diagnostic_columns:
-        conditions.append("td.dataset_id = tr.dataset_id")
-    return f"JOIN task_diagnostics AS td ON {' AND '.join(conditions)}"
-
-
-def _task_results_order_by(source_table: str, columns: set[str]) -> str:
-    if source_table == "viewer_task_results":
-        return ""
-    variant_order = (
-        ", tr.embedding_variant_name IS NOT NULL, tr.embedding_variant_name"
-        if "embedding_variant_name" in columns
-        else ""
-    )
-    return f"ORDER BY tr.benchmark, tr.dataset_id, tr.task_name, tr.model_name{variant_order}"
-
-
 def _variant_filter_sql(columns: set[str], flags: VariantDisplayFlags) -> str:
     if not flags.any_enabled:
         return "AND tr.embedding_variant_name IS NULL"
@@ -431,7 +395,7 @@ def _quantize_or_truncate_variant_filter(
 
 def _variant_flags_label(flags: VariantDisplayFlags | None) -> str:
     if flags is None:
-        return "legacy"
+        return "default"
     enabled = [
         name
         for name, is_enabled in (
@@ -456,6 +420,22 @@ def _table_exists(con: duckdb.DuckDBPyConnection, table: str) -> bool:
     )
     count = row.fetchone()
     return bool(count[0]) if count is not None else False
+
+
+def _validate_current_schema(con: duckdb.DuckDBPyConnection) -> None:
+    missing_tables = [table for table in REQUIRED_VIEWER_TABLES if not _table_exists(con, table)]
+    if missing_tables:
+        raise RuntimeError(
+            "DuckDB file uses an unsupported schema; missing required current-schema tables: "
+            + ", ".join(missing_tables)
+        )
+    row = con.execute("SELECT schema_version FROM meta_database LIMIT 1").fetchone()
+    schema_version = str(row[0]) if row is not None and row[0] is not None else ""
+    if schema_version != CURRENT_DUCKDB_SCHEMA_VERSION:
+        raise RuntimeError(
+            f"DuckDB schema version {schema_version or '<missing>'} is unsupported; "
+            f"rebuild the database with schema version {CURRENT_DUCKDB_SCHEMA_VERSION}."
+        )
 
 
 def _column_or_null(columns: set[str], column: str) -> str:

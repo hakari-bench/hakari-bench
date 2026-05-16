@@ -6,10 +6,11 @@ import json
 import math
 from collections import defaultdict
 from collections.abc import Iterable, Sequence
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from itertools import islice, product
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import duckdb
 import orjson
@@ -36,6 +37,7 @@ from hakari_bench.warehouse_schema import (
 
 DEFAULT_VIEWER_CONFIG_DIR = Path("config/viewer")
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
+DuplicateResultPolicy = Literal["first-wins", "last-wins"]
 
 
 def load_benchmark_configs(config_dir: Path = DEFAULT_VIEWER_CONFIG_DIR) -> list[BenchmarkConfig]:
@@ -49,7 +51,7 @@ def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list
 TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
 WAREHOUSE_SCHEMA_VERSION = "4"
-WAREHOUSE_COMPATIBILITY_LEVEL = "v1-compatible"
+WAREHOUSE_COMPATIBILITY_LEVEL = "current"
 WAREHOUSE_TABLES = (
     "meta_database",
     "schema_change_log",
@@ -74,6 +76,136 @@ WAREHOUSE_TABLES = (
     "viewer_leaderboard_language_options",
     "model_scores",
     "borda_task_scores",
+)
+TASK_RESULT_COLUMNS = (
+    "model_dir",
+    "model_name",
+    "model_revision",
+    "model_revision_requested",
+    "benchmark",
+    "dataset_id",
+    "dataset_revision",
+    "dataset_revision_requested",
+    "dataset_name",
+    "split_name",
+    "task_name",
+    "task_key",
+    "score",
+    "score_100",
+    "aggregate_metric",
+    "result_path",
+    "experiment_fingerprint",
+    "active_parameters",
+    "total_parameters",
+    "max_seq_length",
+    "dtype",
+    "embedding_variant_name",
+    "embedding_dim",
+    "quantization",
+    "attn_implementation",
+    "query_prompt",
+    "document_prompt",
+    "query_prompt_name",
+    "document_prompt_name",
+    "query_encode_task",
+    "document_encode_task",
+    "trust_remote_code",
+    "torch_version",
+    "transformers_version",
+    "sentence_transformers_version",
+    "started_at_utc",
+    "finished_at_utc",
+    "evaluated_at_utc",
+    "duration_seconds_including_dataset_load",
+    "wall_seconds",
+)
+METRIC_LONG_COLUMNS = (
+    "model_dir",
+    "model_name",
+    "benchmark",
+    "dataset_id",
+    "task_name",
+    "metric_name",
+    "metric_value",
+    "result_path",
+)
+TASK_DIAGNOSTIC_COLUMNS = (
+    "model_dir",
+    "model_name",
+    "benchmark",
+    "dataset_id",
+    "task_name",
+    "task_key",
+    "result_path",
+    "base_score",
+    "rerank_score",
+    "rerank_lift",
+    "rerank_status",
+    "rerank_top_k",
+    "candidate_source",
+    "candidate_ranking",
+    "bm25_source",
+    "query_coverage",
+    "relevant_coverage",
+    "covered_query_count",
+    "query_with_relevance_count",
+    "covered_relevant_count",
+    "relevant_count",
+    "dataset_load_seconds",
+    "query_embedding_seconds",
+    "corpus_embedding_seconds",
+    "score_and_topk_seconds",
+    "metric_compute_seconds",
+    "pure_compute_seconds",
+    "wall_seconds",
+    "duration_seconds_including_dataset_load",
+)
+DATASET_METADATA_COLUMNS = (
+    "benchmark",
+    "dataset_id",
+    "dataset_name",
+    "split_name",
+    "task_name",
+    "task_key",
+    "language",
+    "languages",
+    "category",
+    "short_description",
+    "citation_count",
+    "reference_count",
+    "has_bibtex",
+    "query_count",
+    "document_count",
+    "query_mean_chars",
+    "document_mean_chars",
+)
+RETRIEVAL_RANKING_COLUMNS = (
+    "model_dir",
+    "model_name",
+    "benchmark",
+    "dataset_id",
+    "dataset_revision",
+    "dataset_name",
+    "split_name",
+    "task_name",
+    "task_key",
+    "result_path",
+    "ranking_path",
+    "ranking_name",
+    "ranking_kind",
+    "embedding_variant_name",
+    "distance",
+    "score_name",
+    "query_id",
+    "rank",
+    "corpus_id",
+)
+SOURCE_LOAD_STATE_COLUMNS = (
+    "result_path",
+    "payload_sha256",
+    "canonical_key_hash",
+    "last_successful_batch_id",
+    "loaded_at_utc",
 )
 
 
@@ -119,9 +251,50 @@ def _read_json(path: Path) -> Any:
         return json.loads(payload.decode("utf-8"))
 
 
+@dataclass(frozen=True)
+class SelectedResultJson:
+    result_path: Path
+    results_dir: Path
+    source_priority: int
+    payload: dict[str, Any]
+    benchmark: str
+    model_dir: str
+    model_name: str
+    dataset_id: str
+    task_name: str
+    task_key: str
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--results-dir", type=Path, default=Path("output/results"))
+    parser.add_argument(
+        "--results-dir",
+        type=Path,
+        action="append",
+        default=None,
+        help=(
+            "Benchmark result directory. May be supplied multiple times; when duplicate task JSON exists, "
+            "earlier directories take priority."
+        ),
+    )
+    parser.add_argument(
+        "--overwrite-result-duplicates",
+        action="store_true",
+        help=(
+            "When repeated --results-dir roots contain duplicate logical model-task results, "
+            "let later directories overwrite earlier directories."
+        ),
+    )
+    parser.add_argument(
+        "--append-results-dir",
+        type=Path,
+        action="append",
+        default=None,
+        help=(
+            "Append new benchmark result JSON from this directory into an existing DuckDB without scanning "
+            "the original result roots. May be supplied multiple times."
+        ),
+    )
     parser.add_argument("--duckdb-path", type=Path, default=Path("output/results/hakari_bench.duckdb"))
     parser.add_argument(
         "--html-output",
@@ -162,33 +335,76 @@ def main() -> None:
         action="store_true",
         help="Reuse unchanged canonical rows from the existing DuckDB database when possible.",
     )
+    parser.add_argument(
+        "--exclude-model-name",
+        action="append",
+        default=None,
+        help="Model name to exclude from the generated DuckDB. May be supplied multiple times.",
+    )
     args = parser.parse_args()
 
     viewer_config = load_viewer_config(args.viewer_config_dir)
     benchmark_configs = viewer_config.benchmarks
     target_benchmarks = target_benchmark_names(benchmark_configs)
+    if args.append_results_dir:
+        if args.results_dir is not None:
+            parser.error("--append-results-dir cannot be combined with --results-dir")
+        if args.overwrite_result_duplicates:
+            parser.error("--append-results-dir cannot be combined with --overwrite-result-duplicates")
+        if args.html_output is not None:
+            parser.error("--append-results-dir does not support --html-output")
+        if args.include_result_extensions:
+            parser.error("--append-results-dir does not support --include-result-extensions")
+        rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = load_results(
+            args.append_results_dir,
+            benchmark_configs=benchmark_configs,
+            include_retrieval_rankings=args.include_retrieval_rankings,
+            model_cards_path=args.model_cards_path,
+            exclude_model_names=set(args.exclude_model_name or []),
+        )
+        append_duckdb_results(
+            args.duckdb_path,
+            rows=rows,
+            metric_rows=metric_rows,
+            diagnostic_rows=diagnostic_rows,
+            dataset_metadata_rows=dataset_metadata_rows,
+            ranking_rows=ranking_rows,
+        )
+        build_viewer_leaderboard_mart(
+            args.duckdb_path,
+            viewer_config=viewer_config,
+            view_names=[overall.name for overall in viewer_config.overalls],
+        )
+        if args.parquet_output_dir is not None:
+            export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
+        return
+    results_dirs = args.results_dir or [Path("output/results")]
+    duplicate_result_policy: DuplicateResultPolicy = "last-wins" if args.overwrite_result_duplicates else "first-wins"
     # For deploy builds with no secondary artifacts requested, unchanged input
     # can return immediately after hash validation; rewriting the same DB would
     # dominate the incremental path.
     if (
         args.incremental
+        and not args.overwrite_result_duplicates
         and args.html_output is None
         and args.parquet_output_dir is None
         and not args.include_retrieval_rankings
         and not args.include_result_extensions
         and _incremental_cache_current(
-            _current_source_hashes(args.results_dir),
+            _current_source_hashes(results_dirs),
             args.duckdb_path,
             model_cards_path=args.model_cards_path,
         )
     ):
         return
     rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = load_results(
-        args.results_dir,
+        results_dirs,
         benchmark_configs=benchmark_configs,
         include_retrieval_rankings=args.include_retrieval_rankings,
-        incremental_db_path=args.duckdb_path if args.incremental else None,
+        incremental_db_path=args.duckdb_path if args.incremental and not args.overwrite_result_duplicates else None,
         model_cards_path=args.model_cards_path,
+        exclude_model_names=set(args.exclude_model_name or []),
+        duplicate_result_policy=duplicate_result_policy,
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
@@ -228,12 +444,14 @@ def main() -> None:
 
 
 def load_results(
-    results_dir: Path,
+    results_dir: Path | Sequence[Path],
     *,
     benchmark_configs: Sequence[BenchmarkConfig] | None = None,
     include_retrieval_rankings: bool = False,
     incremental_db_path: Path | None = None,
     model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
+    exclude_model_names: set[str] | None = None,
+    duplicate_result_policy: DuplicateResultPolicy = "first-wins",
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -248,22 +466,35 @@ def load_results(
     diagnostic_rows: list[TaskDiagnosticRow] = []
     dataset_metadata_rows: list[DatasetMetadataRow] = []
     ranking_rows: list[RetrievalRankingRow] = []
-    result_paths = sorted(results_dir.glob("*/*/*.json"))
+    selected_result_path_filter: set[str] | None = None
     rebuild_runs_from_rows = False
+    if duplicate_result_policy == "last-wins":
+        # The incremental cache is keyed by source paths and payload hashes, not
+        # by duplicate resolution policy. Rebuild so a policy change cannot keep
+        # stale first-wins rows.
+        incremental_db_path = None
     if incremental_db_path is not None and not include_retrieval_rankings:
-        # Incremental reuse is keyed by source path and payload hash. Added or
-        # removed paths fall back to the full parser so stale rows cannot leak
-        # into the regenerated warehouse.
+        # Incremental reuse is keyed by source path and payload hash. Removed
+        # paths fall back to the full parser so stale rows cannot leak into the
+        # regenerated warehouse. Added paths can be parsed alongside changed
+        # paths while unchanged rows are loaded from the previous DuckDB.
         current_hashes = _current_source_hashes(results_dir)
         previous_hashes = _read_previous_source_hashes(incremental_db_path)
+        current_paths = set(current_hashes)
+        previous_paths = set(previous_hashes)
         if (
             current_hashes
-            and set(current_hashes) == set(previous_hashes)
+            and previous_paths.issubset(current_paths)
             and _incremental_cache_schema_compatible(incremental_db_path)
             and _model_cards_cache_current(incremental_db_path, model_cards_path=model_cards_path)
         ):
-            changed_paths = {path for path, payload_hash in current_hashes.items() if previous_hashes[path] != payload_hash}
-            if not changed_paths and (
+            changed_paths = {
+                path
+                for path in previous_paths
+                if current_hashes.get(path) != previous_hashes[path]
+            }
+            added_paths = current_paths - previous_paths
+            if not changed_paths and not added_paths and (
                 cached_results := _load_results_from_incremental_cache(
                     results_dir,
                     db_path=incremental_db_path,
@@ -272,7 +503,7 @@ def load_results(
                 )
             ) is not None:
                 return cached_results
-            unchanged_paths = set(current_hashes) - changed_paths
+            unchanged_paths = previous_paths - changed_paths
             cached_rows = _load_cached_warehouse_rows(
                 incremental_db_path,
                 result_paths=unchanged_paths,
@@ -283,34 +514,31 @@ def load_results(
                 # changed JSON. Run summaries are rebuilt from the merged rows
                 # because cached run aggregates no longer match after changes.
                 rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = cached_rows
-                result_paths = [Path(path) for path in sorted(changed_paths)]
+                selected_result_path_filter = changed_paths | added_paths
                 rebuild_runs_from_rows = True
     registry = DatasetRegistry.load_builtin()
     benchmark_configs = list(benchmark_configs or load_benchmark_configs())
     target_benchmarks = set(target_benchmark_names(benchmark_configs))
     model_cards = load_model_cards(model_cards_path)
+    exclude_model_names = exclude_model_names or set()
 
-    for result_path in result_paths:
-        task_payload = _read_json(result_path)
-        target = task_payload.get("target", {})
-        if not isinstance(target, dict):
-            continue
-        benchmark = benchmark_name(
-            target.get("dataset_id"),
-            target.get("dataset_name"),
-            benchmark_configs=benchmark_configs,
-        )
-        if benchmark not in target_benchmarks:
-            continue
-        evaluation = task_payload.get("evaluation", {})
-        if not isinstance(evaluation, dict):
-            continue
+    for selected_result in _selected_result_jsons(
+        results_dir,
+        benchmark_configs=benchmark_configs,
+        target_benchmarks=target_benchmarks,
+        exclude_model_names=exclude_model_names,
+        result_paths=selected_result_path_filter,
+        duplicate_result_policy=duplicate_result_policy,
+    ):
+        result_path = selected_result.result_path
+        task_payload = selected_result.payload
+        target = task_payload["target"]
+        benchmark = selected_result.benchmark
+        evaluation = task_payload["evaluation"]
         config = task_payload.get("config", {})
         if not isinstance(config, dict):
             config = {}
-        score = evaluation.get("aggregate_metric_value")
-        if not isinstance(score, int | float):
-            continue
+        score = evaluation["aggregate_metric_value"]
         model = task_payload.get("model", {})
         if isinstance(model, dict):
             model = _with_model_card_metadata(model, model_cards=model_cards)
@@ -318,21 +546,20 @@ def load_results(
         package_versions = environment.get("package_versions", {}) if isinstance(environment, dict) else {}
         experiment_manifest = task_payload.get("experiment_manifest", {})
         experiment_manifest = experiment_manifest if isinstance(experiment_manifest, dict) else {}
-        model_dir = result_path.relative_to(results_dir).parts[0]
-        model_name = _model_name_from_payload(model, model_dir=model_dir)
+        model_dir = selected_result.model_dir
+        model_name = selected_result.model_name
         model_source = model.get("source", {}) if isinstance(model, dict) else {}
         model_revision = _model_revision_value(model_source, key="revision")
         model_revision_requested = _model_revision_value(model_source, key="revision_requested")
-        dataset_id = str(target.get("dataset_id") or "")
+        dataset_id = selected_result.dataset_id
         dataset_revision = _dataset_revision_value(target.get("dataset_revision"), key="resolved")
         dataset_revision_requested = _dataset_revision_value(target.get("dataset_revision"), key="requested")
-        raw_task_name = str(target.get("task_name") or target.get("split_name") or "")
-        task_name = canonical_task_name(benchmark, raw_task_name)
+        task_name = selected_result.task_name
         split_name = canonical_split_name(
             benchmark,
             str(target["split_name"]) if target.get("split_name") is not None else None,
         )
-        task_key = canonical_task_key(benchmark=benchmark, dataset_id=dataset_id, task_name=task_name)
+        task_key = selected_result.task_key
         _accumulate_run(
             run_accumulators,
             model_dir=model_dir,
@@ -460,7 +687,7 @@ LoadResultsPayload = tuple[
 
 
 def _load_results_from_incremental_cache(
-    results_dir: Path,
+    results_dir: Path | Sequence[Path],
     *,
     db_path: Path,
     include_retrieval_rankings: bool,
@@ -608,8 +835,15 @@ def _filter_rows_by_result_path(rows: list[Any], result_paths: set[str] | None) 
     return [row for row in rows if row.result_path in result_paths]
 
 
-def _current_source_hashes(results_dir: Path) -> dict[str, str | None]:
-    return {str(path): _payload_sha256(str(path)) for path in sorted(results_dir.glob("*/*/*.json"))}
+def _current_source_hashes(results_dir: Path | Sequence[Path]) -> dict[str, str | None]:
+    return {str(path): _payload_sha256(str(path)) for path in _result_json_paths(results_dir)}
+
+
+def _result_json_paths(results_dir: Path | Sequence[Path]) -> list[Path]:
+    paths: list[Path] = []
+    for source_dir in _results_dirs(results_dir):
+        paths.extend(sorted(source_dir.glob("*/*/*.json")))
+    return sorted(paths)
 
 
 def _incremental_cache_current(
@@ -705,7 +939,11 @@ def _fetch_task_result_rows(con: duckdb.DuckDBPyConnection) -> list[TaskResult]:
 def _fetch_model_rows(
     con: duckdb.DuckDBPyConnection,
     table_name: str,
-    model_class: type[TaskResult] | type[MetricLongRow] | type[TaskDiagnosticRow] | type[DatasetMetadataRow],
+    model_class: type[TaskResult]
+    | type[MetricLongRow]
+    | type[TaskDiagnosticRow]
+    | type[DatasetMetadataRow]
+    | type[RetrievalRankingRow],
     columns: Sequence[str],
 ) -> Any:
     column_sql = ", ".join(columns)
@@ -716,6 +954,127 @@ def _fetch_dict_rows(con: duckdb.DuckDBPyConnection, table_name: str) -> list[di
     result = con.execute(f"SELECT * FROM {table_name}")
     columns = [description[0] for description in result.description]
     return [dict(zip(columns, row, strict=True)) for row in result.fetchall()]
+
+
+def _selected_result_jsons(
+    results_dir: Path | Sequence[Path],
+    *,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    target_benchmarks: set[str],
+    exclude_model_names: set[str],
+    result_paths: set[str] | None = None,
+    duplicate_result_policy: DuplicateResultPolicy = "first-wins",
+) -> list[SelectedResultJson]:
+    selected_by_task: dict[tuple[str, str, str, str], SelectedResultJson] = {}
+    for source_priority, source_dir in enumerate(_results_dirs(results_dir)):
+        for result_path in sorted(source_dir.glob("*/*/*.json")):
+            if result_paths is not None and str(result_path) not in result_paths:
+                continue
+            selected = _selected_result_json(
+                result_path,
+                results_dir=source_dir,
+                source_priority=source_priority,
+                benchmark_configs=benchmark_configs,
+                target_benchmarks=target_benchmarks,
+                exclude_model_names=exclude_model_names,
+            )
+            if selected is None:
+                continue
+            key = (
+                selected.model_name,
+                selected.benchmark,
+                selected.dataset_id,
+                selected.task_key,
+            )
+            current = selected_by_task.get(key)
+            if current is None or _prefer_selected_result_json(
+                selected,
+                current,
+                duplicate_result_policy=duplicate_result_policy,
+            ):
+                selected_by_task[key] = selected
+    return sorted(
+        selected_by_task.values(),
+        key=lambda selected: (
+            selected.model_name,
+            selected.benchmark,
+            selected.dataset_id,
+            selected.task_name,
+            str(selected.result_path),
+        ),
+    )
+
+
+def _results_dirs(results_dir: Path | Sequence[Path]) -> list[Path]:
+    if isinstance(results_dir, Path):
+        return [results_dir]
+    return list(results_dir)
+
+
+def _selected_result_json(
+    result_path: Path,
+    *,
+    results_dir: Path,
+    source_priority: int,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    target_benchmarks: set[str],
+    exclude_model_names: set[str],
+) -> SelectedResultJson | None:
+    task_payload = _read_json(result_path)
+    target = task_payload.get("target", {})
+    if not isinstance(target, dict):
+        return None
+    benchmark = benchmark_name(
+        target.get("dataset_id"),
+        target.get("dataset_name"),
+        benchmark_configs=benchmark_configs,
+    )
+    if benchmark not in target_benchmarks:
+        return None
+    evaluation = task_payload.get("evaluation", {})
+    if not isinstance(evaluation, dict):
+        return None
+    score = evaluation.get("aggregate_metric_value")
+    if not isinstance(score, int | float):
+        return None
+    model_dir = result_path.relative_to(results_dir).parts[0]
+    model = task_payload.get("model", {})
+    model_name = _model_name_from_payload(model, model_dir=model_dir)
+    if model_name in exclude_model_names:
+        return None
+    dataset_id = str(target.get("dataset_id") or "")
+    raw_task_name = str(target.get("task_name") or target.get("split_name") or "")
+    task_name = canonical_task_name(benchmark, raw_task_name)
+    task_key = canonical_task_key(benchmark=benchmark, dataset_id=dataset_id, task_name=task_name)
+    return SelectedResultJson(
+        result_path=result_path,
+        results_dir=results_dir,
+        source_priority=source_priority,
+        payload=task_payload,
+        benchmark=benchmark,
+        model_dir=model_dir,
+        model_name=model_name,
+        dataset_id=dataset_id,
+        task_name=task_name,
+        task_key=task_key,
+    )
+
+
+def _prefer_selected_result_json(
+    candidate: SelectedResultJson,
+    current: SelectedResultJson,
+    *,
+    duplicate_result_policy: DuplicateResultPolicy,
+) -> bool:
+    if candidate.source_priority != current.source_priority:
+        if duplicate_result_policy == "last-wins":
+            return candidate.source_priority > current.source_priority
+        return candidate.source_priority < current.source_priority
+    return _selected_result_path_stem_matches_task(candidate) and not _selected_result_path_stem_matches_task(current)
+
+
+def _selected_result_path_stem_matches_task(selected: SelectedResultJson) -> bool:
+    return selected.result_path.stem == selected.task_name
 
 
 def _model_name_from_payload(model: Any, *, model_dir: str) -> str:
@@ -835,7 +1194,7 @@ def _accumulate_run(
     score: float,
 ) -> None:
     accumulator = accumulators.setdefault(
-        model_dir,
+        model_name,
         {
             "model_dir": model_dir,
             "model_name": model_name,
@@ -871,8 +1230,8 @@ def _accumulate_run(
 
 def _runs_from_task_results(accumulators: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     runs: list[dict[str, Any]] = []
-    for model_dir in sorted(accumulators):
-        item = accumulators[model_dir]
+    for model_key in sorted(accumulators):
+        item = accumulators[model_key]
         cache_hit_values = item["cache_hit_values"]
         cache_hit_count = sum(1 for value in cache_hit_values if value) if cache_hit_values else None
         evaluated_count = sum(1 for value in cache_hit_values if not value) if cache_hit_values else None
@@ -911,7 +1270,7 @@ def _runs_from_task_result_rows(rows: Sequence[TaskResult]) -> list[dict[str, An
         if row.embedding_variant_name is not None:
             continue
         accumulator = accumulators.setdefault(
-            row.model_dir,
+            row.model_name,
             {
                 "model_dir": row.model_dir,
                 "model_name": row.model_name,
@@ -972,10 +1331,9 @@ def benchmark_name(
 
 
 def _dedupe_task_results(rows: list[TaskResult]) -> list[TaskResult]:
-    deduped: dict[tuple[str, str, str, str, str, str | None, int | None, str | None], TaskResult] = {}
+    deduped: dict[tuple[str, str, str, str, str | None, int | None, str | None], TaskResult] = {}
     for row in rows:
         key = (
-            row.model_dir,
             row.model_name,
             row.benchmark,
             row.dataset_id,
@@ -1002,7 +1360,6 @@ def _dedupe_metric_rows(rows: list[MetricLongRow]) -> list[MetricLongRow]:
     deduped: dict[tuple[Any, ...], MetricLongRow] = {}
     for row in rows:
         key = (
-            row.model_dir,
             row.model_name,
             row.benchmark,
             row.dataset_id,
@@ -1024,9 +1381,9 @@ def _metric_result_path_stem_matches_task(row: MetricLongRow) -> bool:
 
 
 def _dedupe_task_diagnostic_rows(rows: list[TaskDiagnosticRow]) -> list[TaskDiagnosticRow]:
-    deduped: dict[tuple[str, str, str, str, str, str], TaskDiagnosticRow] = {}
+    deduped: dict[tuple[str, str, str, str], TaskDiagnosticRow] = {}
     for row in rows:
-        key = (row.model_dir, row.model_name, row.benchmark, row.dataset_id, row.task_key, row.result_path)
+        key = (row.model_name, row.benchmark, row.dataset_id, row.task_key)
         current = deduped.get(key)
         if current is None or _diagnostic_result_path_stem_matches_task(row):
             deduped[key] = row
@@ -1755,6 +2112,228 @@ def write_duckdb(
         con.close()
 
 
+def append_duckdb_results(
+    db_path: Path,
+    *,
+    rows: Sequence[TaskResult],
+    metric_rows: Sequence[MetricLongRow | dict[str, Any]],
+    ranking_rows: Sequence[RetrievalRankingRow | dict[str, Any]] = (),
+    diagnostic_rows: Sequence[TaskDiagnosticRow | dict[str, Any]] = (),
+    dataset_metadata_rows: Sequence[DatasetMetadataRow | dict[str, Any]] = (),
+    batch_id: str | None = None,
+    loaded_at_utc: str | None = None,
+) -> None:
+    if not db_path.exists():
+        raise FileNotFoundError(f"Cannot append results because DuckDB does not exist: {db_path}")
+    normalized_metric_rows = [
+        row if isinstance(row, MetricLongRow) else MetricLongRow.model_validate(row)
+        for row in metric_rows
+    ]
+    normalized_ranking_rows = [
+        row if isinstance(row, RetrievalRankingRow) else RetrievalRankingRow.model_validate(row)
+        for row in ranking_rows
+    ]
+    normalized_diagnostic_rows = [
+        row if isinstance(row, TaskDiagnosticRow) else TaskDiagnosticRow.model_validate(row)
+        for row in diagnostic_rows
+    ]
+    normalized_dataset_metadata_rows = [
+        row if isinstance(row, DatasetMetadataRow) else DatasetMetadataRow.model_validate(row)
+        for row in dataset_metadata_rows
+    ]
+    if not rows and not normalized_metric_rows and not normalized_diagnostic_rows and not normalized_ranking_rows:
+        return
+    loaded_at = loaded_at_utc or datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    source_rows = _source_load_state_rows(
+        rows=rows,
+        metric_rows=normalized_metric_rows,
+        diagnostic_rows=normalized_diagnostic_rows,
+        ranking_rows=normalized_ranking_rows,
+        batch_id=batch_id,
+        loaded_at_utc=loaded_at,
+    )
+    resolved_batch_id = batch_id or _source_batch_id(source_rows, loaded_at)
+    source_rows = [row | {"last_successful_batch_id": resolved_batch_id} for row in source_rows]
+    con = duckdb.connect(str(db_path))
+    try:
+        _validate_appendable_duckdb(con)
+        _ensure_append_rows_are_new(con, rows=rows, source_rows=source_rows)
+        if rows:
+            _insert_duckdb_rows(con, "task_results", TASK_RESULT_COLUMNS, (row.duckdb_values() for row in rows))
+        if normalized_metric_rows:
+            _insert_duckdb_rows(
+                con,
+                "metrics_long",
+                METRIC_LONG_COLUMNS,
+                (row.duckdb_values() for row in normalized_metric_rows),
+            )
+        if normalized_ranking_rows:
+            _insert_duckdb_rows(
+                con,
+                "retrieval_rankings",
+                RETRIEVAL_RANKING_COLUMNS,
+                (row.duckdb_values() for row in normalized_ranking_rows),
+            )
+        if normalized_diagnostic_rows:
+            _insert_duckdb_rows(
+                con,
+                "task_diagnostics",
+                TASK_DIAGNOSTIC_COLUMNS,
+                (row.duckdb_values() for row in normalized_diagnostic_rows),
+            )
+        for metadata_row in normalized_dataset_metadata_rows:
+            con.execute("DELETE FROM dataset_metadata WHERE task_key = ?", [metadata_row.task_key])
+        if normalized_dataset_metadata_rows:
+            _insert_duckdb_rows(
+                con,
+                "dataset_metadata",
+                DATASET_METADATA_COLUMNS,
+                (row.duckdb_values() for row in normalized_dataset_metadata_rows),
+            )
+        if source_rows:
+            _insert_duckdb_rows(
+                con,
+                "source_load_state",
+                SOURCE_LOAD_STATE_COLUMNS,
+                (
+                    (
+                        row["result_path"],
+                        row["payload_sha256"],
+                        row["canonical_key_hash"],
+                        row["last_successful_batch_id"],
+                        row["loaded_at_utc"],
+                    )
+                    for row in source_rows
+                ),
+            )
+        source_count_row = con.execute("SELECT count(*) FROM source_load_state").fetchone()
+        source_count = int(source_count_row[0]) if source_count_row is not None else 0
+        con.execute(
+            "INSERT INTO ingestion_batches VALUES (?, ?, ?, ?, ?, ?)",
+            [resolved_batch_id, loaded_at, loaded_at, "success", source_count, len(source_rows)],
+        )
+        con.execute(
+            "UPDATE meta_database SET built_at_utc = ?, source_result_count = ?",
+            [loaded_at, source_count],
+        )
+        _rebuild_duckdb_cached_tables(con)
+    finally:
+        con.close()
+
+
+def _validate_appendable_duckdb(con: duckdb.DuckDBPyConnection) -> None:
+    required_tables = (
+        "meta_database",
+        "ingestion_batches",
+        "source_load_state",
+        "runs",
+        "task_results",
+        "metrics_long",
+        "retrieval_rankings",
+        "task_diagnostics",
+        "dataset_metadata",
+    )
+    missing_tables = [table for table in required_tables if not _duckdb_table_exists(con, table)]
+    if missing_tables:
+        raise ValueError(f"Cannot append results because DuckDB is missing tables: {', '.join(missing_tables)}")
+    if con.execute("SELECT schema_version FROM meta_database").fetchone() != (WAREHOUSE_SCHEMA_VERSION,):
+        raise ValueError("Cannot append results because DuckDB schema version is incompatible")
+
+
+def _ensure_append_rows_are_new(
+    con: duckdb.DuckDBPyConnection,
+    *,
+    rows: Sequence[TaskResult],
+    source_rows: Sequence[dict[str, Any]],
+) -> None:
+    duplicate_paths = [
+        row["result_path"]
+        for row in source_rows
+        if con.execute("SELECT 1 FROM source_load_state WHERE result_path = ?", [row["result_path"]]).fetchone()
+    ]
+    if duplicate_paths:
+        raise ValueError(f"Cannot append duplicate result paths: {', '.join(sorted(duplicate_paths))}")
+    duplicate_tasks = []
+    for row in rows:
+        if row.embedding_variant_name is not None:
+            continue
+        if con.execute(
+            """
+            SELECT 1
+            FROM task_results
+            WHERE model_name = ?
+              AND benchmark = ?
+              AND dataset_id = ?
+              AND task_key = ?
+              AND embedding_variant_name IS NULL
+            """,
+            [row.model_name, row.benchmark, row.dataset_id, row.task_key],
+        ).fetchone():
+            duplicate_tasks.append(f"{row.model_name}::{row.task_key}")
+    if duplicate_tasks:
+        raise ValueError(f"Cannot append duplicate model-task results: {', '.join(sorted(duplicate_tasks))}")
+
+
+def _rebuild_duckdb_cached_tables(con: duckdb.DuckDBPyConnection) -> None:
+    for table in (
+        "viewer_leaderboard_language_options",
+        "viewer_leaderboard_rows",
+        "viewer_filter_values",
+        "viewer_task_results",
+        "fact_task_score",
+        "fact_metric_score",
+        "dim_metric",
+        "dim_variant",
+        "dim_task",
+        "dim_model",
+        "runs",
+    ):
+        con.execute(f"DROP TABLE IF EXISTS {table}")
+    _create_runs_table_from_task_results(con)
+    _create_metric_dimension_and_fact_tables(con)
+    _create_fact_task_score_table(con)
+    _create_canonical_dimension_tables(con)
+    _create_viewer_task_results_table(con)
+    _create_viewer_filter_values_table(con)
+    _create_empty_viewer_leaderboard_rows_table(con)
+    _create_empty_viewer_leaderboard_language_options_table(con)
+    if _duckdb_table_exists(con, "model_scores"):
+        con.execute("DELETE FROM model_scores")
+    if _duckdb_table_exists(con, "borda_task_scores"):
+        con.execute("DELETE FROM borda_task_scores")
+
+
+def _create_runs_table_from_task_results(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE runs AS
+        SELECT
+            min(model_dir) AS model_dir,
+            model_name,
+            NULL::VARCHAR AS generated_at_utc,
+            min(started_at_utc) AS started_at_utc,
+            max(finished_at_utc) AS finished_at_utc,
+            count(DISTINCT dataset_id)::INTEGER AS target_count,
+            count(*)::INTEGER AS split_count,
+            NULL::INTEGER AS cache_hit_count,
+            count(*)::INTEGER AS evaluated_count,
+            avg(score) AS aggregate_metric_mean,
+            max(active_parameters) AS active_parameters,
+            max(total_parameters) AS total_parameters,
+            max(max_seq_length) AS max_seq_length,
+            max(dtype) AS dtype,
+            max(attn_implementation) AS attn_implementation,
+            max(torch_version) AS torch_version,
+            max(transformers_version) AS transformers_version,
+            max(sentence_transformers_version) AS sentence_transformers_version
+        FROM task_results
+        WHERE embedding_variant_name IS NULL
+        GROUP BY model_name
+        ORDER BY model_name
+        """
+    )
+
+
 def _source_load_state_rows(
     *,
     rows: Sequence[TaskResult],
@@ -1965,16 +2544,15 @@ def _read_previous_source_hashes(db_path: Path) -> dict[str, str | None]:
 
 
 def _duckdb_table_exists(con: duckdb.DuckDBPyConnection, table_name: str) -> bool:
-    return bool(
-        con.execute(
-            """
-            SELECT count(*)
-            FROM information_schema.tables
-            WHERE table_name = ?
-            """,
-            [table_name],
-        ).fetchone()[0]
-    )
+    row = con.execute(
+        """
+        SELECT count(*)
+        FROM information_schema.tables
+        WHERE table_name = ?
+        """,
+        [table_name],
+    ).fetchone()
+    return bool(row is not None and row[0])
 
 
 def _create_ingestion_state_tables(

@@ -10,6 +10,7 @@ import pytest
 
 from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, _view_group, create_app
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
+from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, _clear_task_score_cache, compute_leaderboard_rows
 from hakari_bench.viewer.model_display import model_cell_views
 from hakari_bench.viewer.store import (
@@ -694,9 +695,14 @@ def test_leaderboard_service_cache_invalidates_when_duckdb_file_changes(
     first = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard("BenchA")
     con = duckdb.connect(str(db_path))
     try:
-        con.execute(
-            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        row = _viewer_task_result_row(
             ("model/c", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.70, 30, 36, 2048),
+            language=None,
+            languages=[],
+        )
+        con.execute(
+            "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            row,
         )
     finally:
         con.close()
@@ -2038,31 +2044,9 @@ def _write_task_results(
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
-        variant_columns = (
-            [
-                "embedding_variant_name VARCHAR",
-                "embedding_dim INTEGER",
-                "quantization VARCHAR",
-            ]
-            if include_embedding_variant_columns
-            else []
-        )
-        runtime_columns = (
-            [
-                "dtype VARCHAR",
-                "attn_implementation VARCHAR",
-                "query_prompt VARCHAR",
-                "document_prompt VARCHAR",
-                "query_prompt_name VARCHAR",
-                "document_prompt_name VARCHAR",
-                "query_encode_task VARCHAR",
-                "document_encode_task VARCHAR",
-                "trust_remote_code BOOLEAN",
-            ]
-            if include_runtime_option_columns
-            else []
-        )
-        columns = [
+        con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
+        con.execute("INSERT INTO meta_database VALUES (?)", [CURRENT_DUCKDB_SCHEMA_VERSION])
+        columns = (
             "model_name VARCHAR",
             "benchmark VARCHAR",
             "dataset_id VARCHAR",
@@ -2070,66 +2054,170 @@ def _write_task_results(
             "split_name VARCHAR",
             "task_name VARCHAR",
             "task_key VARCHAR",
+            "score_target VARCHAR",
             "score DOUBLE",
+            "language VARCHAR",
+            "languages VARCHAR[]",
             "active_parameters BIGINT",
             "total_parameters BIGINT",
             "max_seq_length INTEGER",
-            *runtime_columns,
-            *variant_columns,
-        ]
+            "dtype VARCHAR",
+            "attn_implementation VARCHAR",
+            "query_prompt VARCHAR",
+            "document_prompt VARCHAR",
+            "query_prompt_name VARCHAR",
+            "document_prompt_name VARCHAR",
+            "query_encode_task VARCHAR",
+            "document_encode_task VARCHAR",
+            "trust_remote_code BOOLEAN",
+            "embedding_variant_name VARCHAR",
+            "embedding_dim INTEGER",
+            "quantization VARCHAR",
+        )
         con.execute(
             f"""
-            CREATE TABLE task_results (
+            CREATE TABLE viewer_task_results (
                 {", ".join(columns)}
             )
             """
         )
-        placeholders = ", ".join("?" for _ in rows[0])
-        con.executemany(f"INSERT INTO task_results VALUES ({placeholders})", rows)
-        if dataset_metadata_rows is not None:
-            con.execute(
-                """
-                CREATE TABLE dataset_metadata (
-                    benchmark VARCHAR,
-                    dataset_id VARCHAR,
-                    dataset_name VARCHAR,
-                    split_name VARCHAR,
-                    task_name VARCHAR,
-                    task_key VARCHAR,
-                    language VARCHAR,
-                    languages VARCHAR[]
-                )
-                """
+        metadata_by_task = _metadata_by_task(dataset_metadata_rows or [])
+        normalized_rows = [
+            _viewer_task_result_row(
+                row,
+                language=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, []))[0],
+                languages=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, []))[1],
             )
-            con.executemany(
-                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                dataset_metadata_rows,
-            )
-        if task_diagnostics_rows is not None:
-            con.execute(
-                """
-                CREATE TABLE task_diagnostics (
-                    model_name VARCHAR,
-                    benchmark VARCHAR,
-                    dataset_id VARCHAR,
-                    task_name VARCHAR,
-                    task_key VARCHAR,
-                    base_score DOUBLE,
-                    rerank_score DOUBLE,
-                    rerank_lift DOUBLE,
-                    rerank_status VARCHAR,
-                    rerank_top_k INTEGER,
-                    candidate_source VARCHAR,
-                    candidate_ranking VARCHAR,
-                    bm25_source VARCHAR,
-                    query_coverage DOUBLE,
-                    relevant_coverage DOUBLE
-                )
-                """
-            )
-            con.executemany(
-                "INSERT INTO task_diagnostics VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                task_diagnostics_rows,
-            )
+            for row in rows
+        ]
+        normalized_rows.extend(_reranking_viewer_rows(normalized_rows, task_diagnostics_rows or []))
+        placeholders = ", ".join("?" for _ in columns)
+        if normalized_rows:
+            con.executemany(f"INSERT INTO viewer_task_results VALUES ({placeholders})", normalized_rows)
+        assert include_embedding_variant_columns or all(len(row) in {11, 20} for row in rows)
+        assert include_runtime_option_columns or all(len(row) in {11, 14} for row in rows)
     finally:
         con.close()
+
+
+def _metadata_by_task(rows: list[tuple]) -> dict[tuple[str, str, str, str, str], tuple[str | None, list[str]]]:
+    metadata = {}
+    for row in rows:
+        benchmark, dataset_id, _dataset_name, split_name, task_name, task_key, language, languages = row
+        metadata[(benchmark, dataset_id, split_name, task_name, task_key)] = (language, languages)
+    return metadata
+
+
+def _viewer_task_result_row(row: tuple, *, language: str | None, languages: list[str]) -> tuple:
+    base = row[:11]
+    remaining = row[11:]
+    dtype = None
+    attn_implementation = None
+    query_prompt = None
+    document_prompt = None
+    query_prompt_name = None
+    document_prompt_name = None
+    query_encode_task = None
+    document_encode_task = None
+    trust_remote_code = None
+    embedding_variant_name = None
+    embedding_dim = None
+    quantization = None
+    if len(remaining) == 3:
+        embedding_variant_name, embedding_dim, quantization = remaining
+    elif len(remaining) == 9:
+        (
+            dtype,
+            attn_implementation,
+            query_prompt,
+            document_prompt,
+            query_prompt_name,
+            document_prompt_name,
+            query_encode_task,
+            document_encode_task,
+            trust_remote_code,
+        ) = remaining
+    elif len(remaining) == 12:
+        (
+            dtype,
+            attn_implementation,
+            query_prompt,
+            document_prompt,
+            query_prompt_name,
+            document_prompt_name,
+            query_encode_task,
+            document_encode_task,
+            trust_remote_code,
+            embedding_variant_name,
+            embedding_dim,
+            quantization,
+        ) = remaining
+    elif len(remaining) == 0:
+        pass
+    else:
+        raise AssertionError(f"Unexpected row shape: {row!r}")
+    return (
+        *base[:7],
+        "all",
+        base[7],
+        language,
+        languages,
+        *base[8:11],
+        dtype,
+        attn_implementation,
+        query_prompt,
+        document_prompt,
+        query_prompt_name,
+        document_prompt_name,
+        query_encode_task,
+        document_encode_task,
+        trust_remote_code,
+        embedding_variant_name,
+        embedding_dim,
+        quantization,
+    )
+
+
+def _reranking_viewer_rows(base_rows: list[tuple], diagnostic_rows: list[tuple]) -> list[tuple]:
+    base_by_task = {
+        (row[0], row[1], row[2], row[5], row[6]): row
+        for row in base_rows
+        if row[7] == "all" and row[23] is None
+    }
+    reranking_rows = []
+    for diagnostic in diagnostic_rows:
+        (
+            model_name,
+            benchmark,
+            dataset_id,
+            task_name,
+            task_key,
+            _base_score,
+            rerank_score,
+            _rerank_lift,
+            rerank_status,
+            rerank_top_k,
+            _candidate_source,
+            candidate_ranking,
+            _bm25_source,
+            _query_coverage,
+            _relevant_coverage,
+        ) = diagnostic
+        base_row = base_by_task.get((model_name, benchmark, dataset_id, task_name, task_key))
+        if (
+            base_row is None
+            or rerank_score is None
+            or rerank_status != "available"
+            or rerank_top_k != 100
+            or candidate_ranking != "bm25"
+        ):
+            continue
+        reranking_rows.append(
+            (
+                *base_row[:7],
+                "reranking",
+                rerank_score,
+                *base_row[9:],
+            )
+        )
+    return reranking_rows

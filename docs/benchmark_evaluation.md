@@ -21,7 +21,9 @@ coverage checks should be maintained in this document.
    requested benchmark set.
 6. Keep an ignored progress checklist under `tmp/` for long benchmark waves.
 7. After benchmarking, rebuild DuckDB/HTML viewer artifacts when the user asks
-   for comparisons, leaderboards, or viewer updates.
+   for comparisons, leaderboards, or viewer updates. If results are split
+   across multiple result roots, pass repeated `--results-dir` options in
+   priority order; earlier directories win duplicate model-task JSON conflicts.
 8. Audit result coverage before treating a leaderboard as final.
 
 ## Model Research Checklist
