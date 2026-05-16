@@ -1924,11 +1924,23 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 200
+    assert "Task string length" in response.text
+    assert "Task length" not in response.text
+    assert 'data-tooltip="Filters tasks by average query and document string length in characters.' in response.text
+    assert "Tasks missing length metadata are excluded when a bound is set." in response.text
+    assert "border-cyan-700 bg-cyan-50" in response.text
     assert 'name="query_len_max" value="1000"' in response.text
     assert 'name="doc_len_max" value="2000"' in response.text
     assert ">short</span>" in response.text
     assert ">long</span>" not in response.text
     assert response.text.index("model/a") < response.text.index("model/b")
+
+    ranking_response = TestClient(app).get("/leaderboard?view=BenchA&filters=1&query_len_max=1000&doc_len_max=2000")
+
+    assert ranking_response.status_code == 200
+    assert ranking_response.text.index("model/a") < ranking_response.text.index("model/b")
+    assert "90.0" in ranking_response.text
+    assert "52.5" not in ranking_response.text
 
 
 def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
