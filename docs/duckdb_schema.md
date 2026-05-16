@@ -62,6 +62,8 @@ Multiple result roots can be merged by repeating `--results-dir`. Directory
 order is the conflict-resolution policy: when two roots contain the same
 logical `model_name`, benchmark, and task JSON, the first directory on the
 command line wins. Later directories only fill missing model-task results.
+Pass `--overwrite-result-duplicates` to invert that conflict policy so later
+directories replace duplicate logical model-task rows from earlier directories.
 Models can be omitted from the warehouse with repeated `--exclude-model-name`
 options; this filters rows by the JSON `model.id` / DuckDB `model_name` value.
 For local training outputs, set `model.id` to the intended unique experiment
@@ -72,6 +74,7 @@ not as part of the logical model identity.
 uv run python scripts/build_results_database_and_report.py \
   --results-dir output/results \
   --results-dir output/results_combined_20260510_1340 \
+  --overwrite-result-duplicates \
   --exclude-model-name hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR \
   --duckdb-path output/results/hakari_bench.duckdb \
   --html-output output/results/report.html

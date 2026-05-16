@@ -604,6 +604,84 @@ def test_load_results_reversing_multiple_results_dirs_changes_duplicate_winner(t
     assert rows[0].result_path == str(second_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json")
 
 
+def test_load_results_can_let_later_results_dirs_overwrite_duplicate_tasks(tmp_path: Path) -> None:
+    base_dir = tmp_path / "base"
+    override_dir = tmp_path / "override"
+    _write_minimal_task_result(
+        base_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.80,
+    )
+    _write_minimal_task_result(
+        override_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.20,
+    )
+
+    rows, runs, metric_rows, diagnostic_rows, *_ = report.load_results(
+        [base_dir, override_dir],
+        duplicate_result_policy="last-wins",
+    )
+
+    assert [(row.model_dir, row.score) for row in rows] == [("model_A", 0.20)]
+    assert rows[0].result_path == str(override_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json")
+    assert [(row.model_dir, row.metric_value) for row in metric_rows] == [("model_A", 0.20)]
+    assert [(row.model_dir, row.base_score) for row in diagnostic_rows] == [("model_A", 0.20)]
+    assert [(run["model_dir"], run["aggregate_metric_mean"]) for run in runs] == [("model_A", 0.20)]
+
+
+def test_main_can_overwrite_duplicate_results_from_later_results_dirs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    base_dir = tmp_path / "base"
+    override_dir = tmp_path / "override"
+    _write_minimal_task_result(
+        base_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.80,
+    )
+    _write_minimal_task_result(
+        override_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.20,
+    )
+    db_path = tmp_path / "hakari_bench.duckdb"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "build_results_database_and_report.py",
+            "--results-dir",
+            str(base_dir),
+            "--results-dir",
+            str(override_dir),
+            "--overwrite-result-duplicates",
+            "--duckdb-path",
+            str(db_path),
+        ],
+    )
+
+    report.main()
+
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        assert con.execute("SELECT model_name, score, result_path FROM task_results").fetchall() == [
+            (
+                "example/model_A",
+                0.20,
+                str(override_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"),
+            )
+        ]
+        assert con.execute("SELECT source_result_count FROM meta_database").fetchone() == (1,)
+    finally:
+        con.close()
+
+
 def test_load_results_deduplicates_multiple_results_dirs_by_model_name_not_model_dir(tmp_path: Path) -> None:
     preferred_dir = tmp_path / "preferred"
     fallback_dir = tmp_path / "fallback"
