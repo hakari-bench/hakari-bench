@@ -16,6 +16,7 @@ import orjson
 import pyarrow as pa
 
 from hakari_bench.datasets import DatasetRegistry
+from hakari_bench.model_cards import load_model_cards, model_card_yaml_paths
 from hakari_bench.viewer.config import BenchmarkConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.leaderboard import LeaderboardService
 from hakari_bench.viewer.task_names import (
@@ -34,6 +35,7 @@ from hakari_bench.warehouse_schema import (
 
 
 DEFAULT_VIEWER_CONFIG_DIR = Path("config/viewer")
+DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 
 
 def load_benchmark_configs(config_dir: Path = DEFAULT_VIEWER_CONFIG_DIR) -> list[BenchmarkConfig]:
@@ -46,20 +48,8 @@ def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list
 
 TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
-WAREHOUSE_SCHEMA_VERSION = "3"
+WAREHOUSE_SCHEMA_VERSION = "4"
 WAREHOUSE_COMPATIBILITY_LEVEL = "v1-compatible"
-MODEL_PARAMETER_BACKFILLS = {
-    "jinaai/jina-embeddings-v3": {
-        # The original May 2026 result JSON was produced before custom
-        # parametrized embeddings exposed get_input_embeddings() correctly.
-        # The HF config/safetensors at revision ab036b023d30 have
-        # vocab_size=250002 and hidden_size=1024, so input embeddings contain
-        # 256,002,048 parameters.
-        "total_parameters": 572_310_396,
-        "embedding_parameters": 256_002_048,
-        "active_parameters": 316_308_348,
-    }
-}
 WAREHOUSE_TABLES = (
     "meta_database",
     "schema_change_log",
@@ -146,6 +136,12 @@ def main() -> None:
         help="Directory containing viewer benchmark and overall YAML configuration.",
     )
     parser.add_argument(
+        "--model-cards-path",
+        type=Path,
+        default=DEFAULT_MODEL_CARDS_PATH,
+        help="Static model metadata YAML file or directory used to backfill missing result JSON metadata.",
+    )
+    parser.add_argument(
         "--parquet-output-dir",
         type=Path,
         default=None,
@@ -180,7 +176,11 @@ def main() -> None:
         and args.parquet_output_dir is None
         and not args.include_retrieval_rankings
         and not args.include_result_extensions
-        and _incremental_cache_current(_current_source_hashes(args.results_dir), args.duckdb_path)
+        and _incremental_cache_current(
+            _current_source_hashes(args.results_dir),
+            args.duckdb_path,
+            model_cards_path=args.model_cards_path,
+        )
     ):
         return
     rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = load_results(
@@ -188,6 +188,7 @@ def main() -> None:
         benchmark_configs=benchmark_configs,
         include_retrieval_rankings=args.include_retrieval_rankings,
         incremental_db_path=args.duckdb_path if args.incremental else None,
+        model_cards_path=args.model_cards_path,
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
@@ -206,6 +207,7 @@ def main() -> None:
         standings=standings,
         borda_rows=borda_rows,
         include_result_extensions=args.include_result_extensions,
+        model_cards_path=args.model_cards_path,
     )
     build_viewer_leaderboard_mart(
         args.duckdb_path,
@@ -231,6 +233,7 @@ def load_results(
     benchmark_configs: Sequence[BenchmarkConfig] | None = None,
     include_retrieval_rankings: bool = False,
     incremental_db_path: Path | None = None,
+    model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -253,8 +256,11 @@ def load_results(
         # into the regenerated warehouse.
         current_hashes = _current_source_hashes(results_dir)
         previous_hashes = _read_previous_source_hashes(incremental_db_path)
-        if current_hashes and set(current_hashes) == set(previous_hashes) and _incremental_cache_schema_compatible(
-            incremental_db_path
+        if (
+            current_hashes
+            and set(current_hashes) == set(previous_hashes)
+            and _incremental_cache_schema_compatible(incremental_db_path)
+            and _model_cards_cache_current(incremental_db_path, model_cards_path=model_cards_path)
         ):
             changed_paths = {path for path, payload_hash in current_hashes.items() if previous_hashes[path] != payload_hash}
             if not changed_paths and (
@@ -262,6 +268,7 @@ def load_results(
                     results_dir,
                     db_path=incremental_db_path,
                     include_retrieval_rankings=include_retrieval_rankings,
+                    model_cards_path=model_cards_path,
                 )
             ) is not None:
                 return cached_results
@@ -281,6 +288,7 @@ def load_results(
     registry = DatasetRegistry.load_builtin()
     benchmark_configs = list(benchmark_configs or load_benchmark_configs())
     target_benchmarks = set(target_benchmark_names(benchmark_configs))
+    model_cards = load_model_cards(model_cards_path)
 
     for result_path in result_paths:
         task_payload = _read_json(result_path)
@@ -305,7 +313,7 @@ def load_results(
             continue
         model = task_payload.get("model", {})
         if isinstance(model, dict):
-            model = _with_model_parameter_backfills(model)
+            model = _with_model_card_metadata(model, model_cards=model_cards)
         environment = task_payload.get("environment", {})
         package_versions = environment.get("package_versions", {}) if isinstance(environment, dict) else {}
         experiment_manifest = task_payload.get("experiment_manifest", {})
@@ -456,6 +464,7 @@ def _load_results_from_incremental_cache(
     *,
     db_path: Path,
     include_retrieval_rankings: bool,
+    model_cards_path: Path | None,
 ) -> LoadResultsPayload | None:
     # Ranking artifacts can be much larger than the summary rows and may be
     # requested with different flags, so the cached fast path handles only the
@@ -463,7 +472,7 @@ def _load_results_from_incremental_cache(
     if include_retrieval_rankings or not db_path.exists():
         return None
     current_hashes = _current_source_hashes(results_dir)
-    if not _incremental_cache_current(current_hashes, db_path):
+    if not _incremental_cache_current(current_hashes, db_path, model_cards_path=model_cards_path):
         return None
     return _load_cached_warehouse_rows(
         db_path,
@@ -603,13 +612,21 @@ def _current_source_hashes(results_dir: Path) -> dict[str, str | None]:
     return {str(path): _payload_sha256(str(path)) for path in sorted(results_dir.glob("*/*/*.json"))}
 
 
-def _incremental_cache_current(current_hashes: dict[str, str | None], db_path: Path) -> bool:
+def _incremental_cache_current(
+    current_hashes: dict[str, str | None],
+    db_path: Path,
+    *,
+    model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
+) -> bool:
     if not current_hashes or not db_path.exists():
         return False
     previous_hashes = _read_previous_source_hashes(db_path)
     if current_hashes != previous_hashes:
         return False
-    return _incremental_cache_schema_compatible(db_path)
+    return _incremental_cache_schema_compatible(db_path) and _model_cards_cache_current(
+        db_path,
+        model_cards_path=model_cards_path,
+    )
 
 
 def _incremental_cache_schema_compatible(db_path: Path) -> bool:
@@ -624,6 +641,18 @@ def _incremental_cache_schema_compatible(db_path: Path) -> bool:
         ):
             return False
         return con.execute("SELECT schema_version FROM meta_database").fetchone() == (WAREHOUSE_SCHEMA_VERSION,)
+    finally:
+        con.close()
+
+
+def _model_cards_cache_current(db_path: Path, *, model_cards_path: Path | None) -> bool:
+    model_cards_state = _model_cards_state(model_cards_path)
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        if not _duckdb_table_exists(con, "meta_database"):
+            return False
+        row = con.execute("SELECT model_cards_path, model_cards_sha256 FROM meta_database").fetchone()
+        return row == model_cards_state
     finally:
         con.close()
 
@@ -760,22 +789,36 @@ def _top_rankings_artifact(task_payload: dict[str, Any]) -> dict[str, Any] | Non
     return artifact
 
 
-def _with_model_parameter_backfills(model: dict[str, Any]) -> dict[str, Any]:
+def _with_model_card_metadata(model: dict[str, Any], *, model_cards: dict[str, dict[str, Any]]) -> dict[str, Any]:
     model_id = model.get("id")
     source = model.get("source")
     source_name = source.get("name") if isinstance(source, dict) else None
-    backfill = MODEL_PARAMETER_BACKFILLS.get(str(model_id or source_name or ""))
-    if backfill is None:
+    card = model_cards.get(str(model_id or source_name or ""))
+    if card is None:
+        return model
+    parameters = card.get("parameters")
+    if not isinstance(parameters, dict):
         return model
     total_parameters = _int_or_none(model.get("total_parameters"))
-    if total_parameters != backfill["total_parameters"] or _int_or_none(model.get("active_parameters")) is not None:
+    card_total_parameters = _int_or_none(parameters.get("total"))
+    if total_parameters != card_total_parameters:
+        return model
+    active_parameters = _int_or_none(model.get("active_parameters"))
+    card_active_parameters = _int_or_none(parameters.get("active"))
+    if (
+        active_parameters is not None
+        and card_active_parameters is not None
+        and active_parameters != card_active_parameters
+    ):
         return model
     updated = dict(model)
-    updated["active_parameters"] = backfill["active_parameters"]
+    input_embedding_parameters = _int_or_none(parameters.get("input_embedding"))
+    if active_parameters is None and card_active_parameters is not None:
+        updated["active_parameters"] = card_active_parameters
     if _int_or_none(updated.get("embedding_parameters")) is None:
-        updated["embedding_parameters"] = backfill["embedding_parameters"]
-    if _int_or_none(updated.get("transformer_parameters")) is None:
-        updated["transformer_parameters"] = backfill["active_parameters"]
+        updated["embedding_parameters"] = input_embedding_parameters
+    if _int_or_none(updated.get("transformer_parameters")) is None and card_active_parameters is not None:
+        updated["transformer_parameters"] = card_active_parameters
     return updated
 
 
@@ -1278,6 +1321,7 @@ def write_duckdb(
     batch_id: str | None = None,
     loaded_at_utc: str | None = None,
     include_result_extensions: bool = False,
+    model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
 ) -> None:
     db_path.parent.mkdir(parents=True, exist_ok=True)
     normalized_metric_rows = [
@@ -1307,6 +1351,7 @@ def write_duckdb(
     )
     resolved_batch_id = batch_id or _source_batch_id(source_rows, loaded_at)
     source_rows = [row | {"last_successful_batch_id": resolved_batch_id} for row in source_rows]
+    model_cards_source_path, model_cards_sha256 = _model_cards_state(model_cards_path)
     previous_source_hashes = _read_previous_source_hashes(db_path)
     changed_count = sum(1 for row in source_rows if previous_source_hashes.get(row["result_path"]) != row["payload_sha256"])
     con = duckdb.connect(str(db_path))
@@ -1319,6 +1364,8 @@ def write_duckdb(
             batch_id=resolved_batch_id,
             loaded_at_utc=loaded_at,
             include_result_extensions=include_result_extensions,
+            model_cards_path=model_cards_source_path,
+            model_cards_sha256=model_cards_sha256,
         )
         _create_ingestion_state_tables(
             con,
@@ -1745,6 +1792,24 @@ def _payload_sha256(result_path: str) -> str | None:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _model_cards_state(model_cards_path: Path | None) -> tuple[str | None, str | None]:
+    if model_cards_path is None or not model_cards_path.exists():
+        return None, None
+    if model_cards_path.is_file():
+        return str(model_cards_path), hashlib.sha256(model_cards_path.read_bytes()).hexdigest()
+    if not model_cards_path.is_dir():
+        return None, None
+    manifest = [
+        (
+            str(path.relative_to(model_cards_path)),
+            hashlib.sha256(path.read_bytes()).hexdigest(),
+        )
+        for path in model_card_yaml_paths(model_cards_path)
+    ]
+    payload = json.dumps(manifest, sort_keys=True, separators=(",", ":"))
+    return str(model_cards_path), hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def _source_batch_id(source_rows: Sequence[dict[str, Any]], loaded_at_utc: str) -> str:
     payload = json.dumps(
         [(row["result_path"], row["payload_sha256"]) for row in source_rows],
@@ -1762,6 +1827,8 @@ def _create_schema_evolution_tables(
     batch_id: str,
     loaded_at_utc: str,
     include_result_extensions: bool = False,
+    model_cards_path: str | None = None,
+    model_cards_sha256: str | None = None,
 ) -> None:
     con.execute(
         """
@@ -1769,13 +1836,22 @@ def _create_schema_evolution_tables(
             schema_version VARCHAR,
             compatibility_level VARCHAR,
             built_at_utc VARCHAR,
-            source_result_count INTEGER
+            source_result_count INTEGER,
+            model_cards_path VARCHAR,
+            model_cards_sha256 VARCHAR
         )
         """
     )
     con.execute(
-        "INSERT INTO meta_database VALUES (?, ?, ?, ?)",
-        [WAREHOUSE_SCHEMA_VERSION, WAREHOUSE_COMPATIBILITY_LEVEL, loaded_at_utc, len(source_rows)],
+        "INSERT INTO meta_database VALUES (?, ?, ?, ?, ?, ?)",
+        [
+            WAREHOUSE_SCHEMA_VERSION,
+            WAREHOUSE_COMPATIBILITY_LEVEL,
+            loaded_at_utc,
+            len(source_rows),
+            model_cards_path,
+            model_cards_sha256,
+        ],
     )
     con.execute(
         """

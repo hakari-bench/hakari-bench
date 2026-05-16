@@ -57,6 +57,7 @@ exclude = ["tests*"]
 "hakari_bench.viewer" = ["assets/*"]
 "config.datasets" = ["*.yaml"]
 "config.dataset_collections" = ["*.yaml"]
+"config.model_cards" = ["*.yaml"]
 "config.viewer" = ["*.yaml"]
 
 [tool.uv]

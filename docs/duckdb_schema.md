@@ -38,12 +38,14 @@ uv run python scripts/build_results_database_and_report.py \
 
 Use `--incremental` for repeated local or deploy builds against an existing
 DuckDB file. The builder compares source JSON hashes from `source_load_state`
-with the current files. If nothing changed and no secondary outputs are
-requested, it exits without rewriting the database. If only some source files
-changed, it reuses unchanged canonical rows from the existing DuckDB database
-and parses only the changed JSON files before rewriting the canonical database.
-If source paths were added or removed, or the existing database is missing or
-uses a different schema version, it falls back to a full rebuild.
+with the current files and compares the model-card YAML manifest hash recorded
+in `meta_database`. If nothing changed and no secondary outputs are requested,
+it exits without rewriting the database. If only some source files changed, it
+reuses unchanged canonical rows from the existing DuckDB database and parses
+only the changed JSON files before rewriting the canonical database. If source
+paths were added or removed, any model-card YAML changed, or the existing
+database is missing or uses a different schema version, it falls back to a full
+rebuild.
 
 Optional outputs and heavier offline-analysis tables are opt-in:
 
@@ -61,6 +63,14 @@ The input files are:
 
 - `output/results/{model_dir}/{huggingface_dataset_name}/{split_or_task}.json`:
   task-level benchmark results.
+- `config/model_cards/*.yaml`: static HAKARI model metadata used to backfill
+  missing model fields such as active parameters. Store one model card per file,
+  using filenames such as `BAAI__bge-m3.yaml` for model id `BAAI/bge-m3`.
+  Result JSON remains the primary source; model-card parameters are applied only
+  when the model id matches, the total parameter count matches, and the result
+  JSON is missing the derived value. `--model-cards-path` may also point at a
+  legacy aggregate YAML file with a top-level `models` list. See
+  `docs/model_cards.md` for the generation workflow.
 - `output/results/{model_dir}/{huggingface_dataset_name}/rankings/{split_or_task}.top100.json`:
   optional per-query top-100 ranking artifacts written only when evaluation is
   run with `--save-top-rankings` and referenced by task JSON
@@ -175,6 +185,8 @@ check this table before relying on newer canonical tables.
 | `compatibility_level` | `VARCHAR` | Compatibility contract exposed by this DB. Current builds are `v1-compatible`. |
 | `built_at_utc` | `VARCHAR` | Build timestamp. |
 | `source_result_count` | `INTEGER` | Number of source result files represented in this DB. |
+| `model_cards_path` | `VARCHAR` | Static model-card YAML file or directory path used for this build, or `NULL` when disabled or missing. |
+| `model_cards_sha256` | `VARCHAR` | SHA-256 hash of the model-card file, or a stable manifest hash for a model-card directory. Incremental builds require this to match before cached rows can be reused. |
 
 ### `schema_change_log`
 

@@ -557,6 +557,8 @@ def _embedding_parameter_count(model: Any) -> int | None:
     embedding = _input_embeddings(model)
     weight = getattr(embedding, "weight", None) if embedding is not None else None
     if weight is None:
+        weight = _static_embedding_weight(model)
+    if weight is None:
         return None
     if hasattr(weight, "numel"):
         return int(weight.numel())
@@ -605,6 +607,12 @@ def _input_embedding_sources(model: Any) -> list[Any]:
         if source is not None
     )
     return sources
+
+
+def _static_embedding_weight(model: Any) -> Any | None:
+    first_module = _first_sentence_transformer_module(model)
+    embedding = getattr(first_module, "embedding", None) if first_module is not None else None
+    return getattr(embedding, "weight", None) if embedding is not None else None
 
 
 def _first_sentence_transformer_module(model: Any) -> Any | None:

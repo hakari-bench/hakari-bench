@@ -282,6 +282,17 @@ def test_collect_model_metadata_counts_active_parameters_from_st_model_attribute
     assert metadata["active_parameters"] == 18
 
 
+def test_collect_model_metadata_counts_static_embedding_table_as_input_embeddings() -> None:
+    model = _FakeStaticSentenceTransformerLike()
+    args = _metadata_args()
+
+    metadata = collect_model_metadata(model, args)
+
+    assert metadata["total_parameters"] == 20
+    assert metadata["embedding_parameters"] == 20
+    assert metadata["active_parameters"] == 0
+
+
 def test_collect_model_metadata_records_late_interaction_metadata() -> None:
     model = _FakeLateInteractionModel()
     args = _metadata_args()
@@ -324,6 +335,23 @@ class _FakeSentenceTransformerLike(torch.nn.Module):
         module = self._modules[str(index)]
         assert isinstance(module, torch.nn.Module)
         return module
+
+
+class _FakeStaticSentenceTransformerLike(torch.nn.Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.add_module("0", _FakeStaticEmbeddingModule())
+
+    def __getitem__(self, index: int) -> torch.nn.Module:
+        module = self._modules[str(index)]
+        assert isinstance(module, torch.nn.Module)
+        return module
+
+
+class _FakeStaticEmbeddingModule(torch.nn.Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.embedding = torch.nn.Embedding(5, 4)
 
 
 class _FakeLateInteractionModel(torch.nn.Module):

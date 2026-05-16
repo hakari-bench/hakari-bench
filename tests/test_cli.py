@@ -174,6 +174,68 @@ def test_parse_args_accepts_save_top_rankings_flag() -> None:
     assert args.save_top_rankings is True
 
 
+def test_parse_args_from_model_card_sets_model_target_and_truncate_variants(tmp_path) -> None:
+    model_card = tmp_path / "BAAI__bge-m3.yaml"
+    model_card.write_text(
+        """
+id: BAAI/bge-m3
+source:
+  type: huggingface
+  name: BAAI/bge-m3
+  revision_requested: main
+method: dense
+embedding:
+  truncate_dims:
+    - 768
+runtime:
+  trust_remote_code: true
+  max_seq_length: 8192
+target:
+  datasets:
+    - hakari-bench/NanoBEIR-en
+  splits:
+    - arguana
+""".strip(),
+        encoding="utf-8",
+    )
+
+    args = parse_args(["evaluate", "from-model-card", "--model-card", str(model_card), "--batch-size", "8"])
+
+    assert args.model_type == "dense"
+    assert args.model == "BAAI/bge-m3"
+    assert args.model_id == "BAAI/bge-m3"
+    assert args.model_revision == "main"
+    assert args.trust_remote_code is True
+    assert args.model_max_seq_length == 8192
+    assert args.dataset == ["hakari-bench/NanoBEIR-en"]
+    assert args.split == ["arguana"]
+    assert args.batch_size == 8
+    assert args.embedding_variants[:1] == [_pipeline_variant("truncate_dim_768", _truncate_step(768))]
+
+
+def test_parse_args_from_model_card_keeps_explicit_runtime_override(tmp_path) -> None:
+    model_card = tmp_path / "BAAI__bge-m3.yaml"
+    model_card.write_text(
+        """
+id: BAAI/bge-m3
+source:
+  type: huggingface
+  name: BAAI/bge-m3
+method: dense
+runtime:
+  dtype: bf16
+target:
+  datasets:
+    - hakari-bench/NanoBEIR-en
+""".strip(),
+        encoding="utf-8",
+    )
+
+    args = parse_args(["evaluate", "from-model-card", "--model-card", str(model_card), "--dtype", "fp16"])
+
+    assert args.dtype == "fp16"
+
+
 def test_parse_args_accepts_dense_encode_devices() -> None:
     args = parse_args(
         [
@@ -1307,11 +1369,17 @@ def test_run_evaluate_returns_run_summary_payload(monkeypatch, tmp_path) -> None
         )
 
     monkeypatch.setattr("hakari_bench.cli.run_or_load_task", fake_run_or_load_task)
+    written_cards = []
+    monkeypatch.setattr(
+        "hakari_bench.cli.write_evaluation_model_card",
+        lambda *, args, model_metadata: written_cards.append((args.model_id, model_metadata["id"])),
+    )
 
     summary = run_evaluate(args)
 
     assert summary["totals"]["evaluated_count"] == 1
     assert summary["totals"]["aggregate_metric_mean"] == 1.0
+    assert written_cards == [("hotchpotch/model", "hotchpotch/model")]
 
 
 def test_run_build_bm25_returns_candidate_summary(monkeypatch, tmp_path) -> None:
