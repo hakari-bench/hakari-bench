@@ -38,13 +38,17 @@ uv run python scripts/build_results_database_and_report.py \
 
 Use `--incremental` for repeated local or deploy builds against an existing
 DuckDB file. The builder compares source JSON hashes from `source_load_state`
-with the current files. If nothing changed and no secondary outputs are
-requested, it exits without rewriting the database. If only some source files
-changed or new source files were added, it reuses unchanged canonical rows from
-the existing DuckDB database and parses only the changed or added JSON files
-before rewriting the canonical database. If source paths were removed, or the
-existing database is missing or uses a different schema version, it falls back
-to a full rebuild so stale rows cannot leak into the regenerated warehouse.
+with the current files and compares the model-card YAML manifest hash recorded
+in `meta_database`. If nothing changed and no secondary outputs are requested,
+with the current files and compares the model-card YAML manifest hash recorded
+in `meta_database`. If nothing changed and no secondary outputs are requested,
+it exits without rewriting the database. If only some source files changed or
+new source files were added, it reuses unchanged canonical rows from the
+existing DuckDB database and parses only the changed or added JSON files before
+rewriting the canonical database. If source paths were removed, any model-card
+YAML changed, or the existing database is missing or uses a different schema
+version, it falls back to a full rebuild so stale rows cannot leak into the
+regenerated warehouse.
 
 Optional outputs and heavier offline-analysis tables are opt-in:
 
@@ -97,6 +101,14 @@ The input files are:
 
 - `output/results/{model_dir}/{huggingface_dataset_name}/{split_or_task}.json`:
   task-level benchmark results.
+- `config/model_cards/*.yaml`: static HAKARI model metadata used to backfill
+  missing model fields such as active parameters. Store one model card per file,
+  using filenames such as `BAAI__bge-m3.yaml` for model id `BAAI/bge-m3`.
+  Result JSON remains the primary source; model-card parameters are applied only
+  when the model id matches, the total parameter count matches, and the result
+  JSON is missing the derived value. `--model-cards-path` may also point at a
+  legacy aggregate YAML file with a top-level `models` list. See
+  `docs/model_cards.md` for the generation workflow.
 - `output/results/{model_dir}/{huggingface_dataset_name}/rankings/{split_or_task}.top100.json`:
   optional per-query top-100 ranking artifacts written only when evaluation is
   run with `--save-top-rankings` and referenced by task JSON
@@ -213,6 +225,8 @@ check this table before relying on newer canonical tables.
 | `compatibility_level` | `VARCHAR` | Compatibility contract exposed by this DB. Current builds are `current`. |
 | `built_at_utc` | `VARCHAR` | Build timestamp. |
 | `source_result_count` | `INTEGER` | Number of source result files represented in this DB. |
+| `model_cards_path` | `VARCHAR` | Static model-card YAML file or directory path used for this build, or `NULL` when disabled or missing. |
+| `model_cards_sha256` | `VARCHAR` | SHA-256 hash of the model-card file, or a stable manifest hash for a model-card directory. Incremental builds require this to match before cached rows can be reused. |
 
 ### `schema_change_log`
 
@@ -852,13 +866,18 @@ new DuckDB file is downloaded or otherwise modified. The cache emits
 DB build scripts create `viewer_task_results` as a physical table after
 `dataset_metadata` and `fact_task_score` are written. It selects only the
 columns required by `TaskResultsRepository`, includes `score_target`, joins
-`dataset_metadata` by `(benchmark, dataset_id, task_key)`, and orders rows by
+`dataset_metadata` by `(benchmark, dataset_id, task_key)`, includes
+`query_mean_chars` and `document_mean_chars` for task text-length filters, and
+orders rows by
 `(benchmark, score_target, dataset_id, task_name, model_name,
 embedding_variant_name)`. This avoids repeated metadata joins and lets the
 viewer switch `Target: All` / `Target: Reranking` without joining diagnostics
 on the hot path.
 Because `viewer_task_results` is already physically ordered, the viewer skips
 the query-time `ORDER BY` when reading it.
+If an older database has these length columns only in `dataset_metadata`, the
+repository falls back to a metadata join so `query_len_min`, `query_len_max`,
+`doc_len_min`, and `doc_len_max` viewer filters still work.
 
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. The default build
@@ -940,7 +959,9 @@ SELECT
   trust_remote_code,
   embedding_variant_name,
   embedding_dim,
-  quantization
+  quantization,
+  query_mean_chars,
+  document_mean_chars
 FROM viewer_task_results
 WHERE benchmark IN ('MNanoBEIR', 'NanoRTEB')
   AND score IS NOT NULL

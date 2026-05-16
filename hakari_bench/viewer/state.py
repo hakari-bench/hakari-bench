@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 
 from hakari_bench.viewer.config import ViewerConfig
 from hakari_bench.viewer.leaderboard import LeaderboardResult, SORT_COLUMNS
@@ -22,6 +23,14 @@ class FilterState:
     dtype_filters: tuple[str, ...] = ()
     attn_filters: tuple[str, ...] = ()
     prompt_filters: tuple[str, ...] = ()
+    query_len_min: str = ""
+    query_len_max: str = ""
+    doc_len_min: str = ""
+    doc_len_max: str = ""
+
+    @property
+    def has_task_length_filters(self) -> bool:
+        return bool(self.query_len_min or self.query_len_max or self.doc_len_min or self.doc_len_max)
 
 
 def normalize_query_state(
@@ -47,6 +56,10 @@ def normalize_query_state(
     model_filter: str,
     task_scores: bool = False,
     task_filter: str = "",
+    query_len_min: str = "",
+    query_len_max: str = "",
+    doc_len_min: str = "",
+    doc_len_max: str = "",
 ) -> QueryState:
     if view not in viewer_config.view_names:
         view = viewer_config.overall.name
@@ -80,15 +93,28 @@ def normalize_query_state(
     if display_flags.other:
         query["other_variant"] = "1"
     language_filters = _normalized_query_values(lang_filter)
+    query_len_min = _normalized_numeric_bound(query_len_min)
+    query_len_max = _normalized_numeric_bound(query_len_max)
+    doc_len_min = _normalized_numeric_bound(doc_len_min)
+    doc_len_max = _normalized_numeric_bound(doc_len_max)
+    has_task_length_filters = bool(query_len_min or query_len_max or doc_len_min or doc_len_max)
     if language_filters:
         query["lang_filter"] = language_filters
-    if filters:
+    if filters or has_task_length_filters:
         query["filters"] = "1"
         query["dim_filter"] = _normalized_query_values(dim_filter)
         query["quant_filter"] = _normalized_query_values(quant_filter)
         query["dtype_filter"] = _normalized_query_values(dtype_filter)
         query["attn_filter"] = _normalized_query_values(attn_filter)
         query["prompt_filter"] = _normalized_query_values(prompt_filter)
+        if query_len_min:
+            query["query_len_min"] = query_len_min
+        if query_len_max:
+            query["query_len_max"] = query_len_max
+        if doc_len_min:
+            query["doc_len_min"] = doc_len_min
+        if doc_len_max:
+            query["doc_len_max"] = doc_len_max
     model_filter = model_filter.strip()
     if model_filter:
         query["model_filter"] = model_filter
@@ -108,6 +134,10 @@ def filter_state_from_query(query: QueryState) -> FilterState:
         dtype_filters=tuple(query_values(query.get("dtype_filter"))),
         attn_filters=tuple(query_values(query.get("attn_filter"))),
         prompt_filters=tuple(query_values(query.get("prompt_filter"))),
+        query_len_min=str(query.get("query_len_min", "")),
+        query_len_max=str(query.get("query_len_max", "")),
+        doc_len_min=str(query.get("doc_len_min", "")),
+        doc_len_max=str(query.get("doc_len_max", "")),
     )
 
 
@@ -140,18 +170,26 @@ def state_payload(
         query_payload["task_filter"] = filter_state.task_filter
     if filter_state.language_filters:
         query_payload["lang_filter"] = list(filter_state.language_filters)
-    if filter_state.filters_active:
+    if filter_state.filters_active or filter_state.has_task_length_filters:
         query_payload["filters"] = "1"
         query_payload["dim_filter"] = list(filter_state.dim_filters)
         query_payload["quant_filter"] = list(filter_state.quant_filters)
         query_payload["dtype_filter"] = list(filter_state.dtype_filters)
         query_payload["attn_filter"] = list(filter_state.attn_filters)
         query_payload["prompt_filter"] = list(filter_state.prompt_filters)
+        if filter_state.query_len_min:
+            query_payload["query_len_min"] = filter_state.query_len_min
+        if filter_state.query_len_max:
+            query_payload["query_len_max"] = filter_state.query_len_max
+        if filter_state.doc_len_min:
+            query_payload["doc_len_min"] = filter_state.doc_len_min
+        if filter_state.doc_len_max:
+            query_payload["doc_len_max"] = filter_state.doc_len_max
     return query_payload
 
 
 def active_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
-    if not filter_state.filters_active:
+    if not filter_state.filters_active and not filter_state.has_task_length_filters:
         return [("lang_filter", value) for value in filter_state.language_filters]
     fields = [("lang_filter", value) for value in filter_state.language_filters]
     fields.append(("filters", "1"))
@@ -160,7 +198,17 @@ def active_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, st
     fields.extend(("dtype_filter", value) for value in filter_state.dtype_filters)
     fields.extend(("attn_filter", value) for value in filter_state.attn_filters)
     fields.extend(("prompt_filter", value) for value in filter_state.prompt_filters)
+    fields.extend(_task_length_hidden_fields(filter_state))
     return fields
+
+
+def task_length_bounds(filter_state: FilterState) -> dict[str, float | None]:
+    return {
+        "query_min_chars": numeric_filter_bound(filter_state.query_len_min),
+        "query_max_chars": numeric_filter_bound(filter_state.query_len_max),
+        "document_min_chars": numeric_filter_bound(filter_state.doc_len_min),
+        "document_max_chars": numeric_filter_bound(filter_state.doc_len_max),
+    }
 
 
 def query_values(value: QueryValue | None) -> list[str]:
@@ -185,3 +233,36 @@ def _normalized_query_values(values: list[str] | None) -> list[str]:
     if values is None:
         return []
     return [value for value in values if value]
+
+
+def numeric_filter_bound(value: str) -> float | None:
+    normalized = _normalized_numeric_bound(value)
+    return float(normalized) if normalized else None
+
+
+def _normalized_numeric_bound(value: str) -> str:
+    value = value.strip()
+    if not value:
+        return ""
+    try:
+        number = float(value)
+    except ValueError:
+        return ""
+    if not math.isfinite(number) or number < 0:
+        return ""
+    if number.is_integer():
+        return str(int(number))
+    return value
+
+
+def _task_length_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
+    fields = []
+    if filter_state.query_len_min:
+        fields.append(("query_len_min", filter_state.query_len_min))
+    if filter_state.query_len_max:
+        fields.append(("query_len_max", filter_state.query_len_max))
+    if filter_state.doc_len_min:
+        fields.append(("doc_len_min", filter_state.doc_len_min))
+    if filter_state.doc_len_max:
+        fields.append(("doc_len_max", filter_state.doc_len_max))
+    return fields

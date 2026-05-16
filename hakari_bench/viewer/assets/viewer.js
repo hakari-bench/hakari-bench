@@ -165,7 +165,7 @@
     });
 
     document.addEventListener("submit", (event) => {
-      if (!event.target || event.target.id !== "display-controls") return;
+      if (!event.target || event.target.id !== "filter-controls") return;
       const activeId = document.activeElement && document.activeElement.id;
       window.__hakariRestoreModelFilterFocus = activeId === "model-filter-input";
       window.__hakariRestoreTaskFilterFocus = activeId === "task-filter-input";

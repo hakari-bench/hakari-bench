@@ -42,6 +42,8 @@ class TaskScore:
     embedding_dim: int | None = None
     quantization: str | None = None
     source_model_name: str | None = None
+    query_mean_chars: float | None = None
+    document_mean_chars: float | None = None
 
 
 class LeaderboardRow(BaseModel):
@@ -149,6 +151,10 @@ class LeaderboardService:
         language_filters: tuple[str, ...] = (),
         show_task_scores: bool = False,
         task_filter: str = "",
+        query_min_chars: float | None = None,
+        query_max_chars: float | None = None,
+        document_min_chars: float | None = None,
+        document_max_chars: float | None = None,
     ) -> LeaderboardResult:
         with timed_operation(
             "viewer.leaderboard.request",
@@ -170,7 +176,19 @@ class LeaderboardService:
                 rescore=include_rescore_variants,
                 other=include_other_variants,
             )
-            if self.use_precomputed and not language_filters and not show_task_scores and not task_filter.strip():
+            has_length_filters = _has_task_length_filters(
+                query_min_chars=query_min_chars,
+                query_max_chars=query_max_chars,
+                document_min_chars=document_min_chars,
+                document_max_chars=document_max_chars,
+            )
+            if (
+                self.use_precomputed
+                and not language_filters
+                and not show_task_scores
+                and not task_filter.strip()
+                and not has_length_filters
+            ):
                 precomputed = _load_precomputed_leaderboard_rows(
                     duckdb_path=self.duckdb_path,
                     view_name=view_name,
@@ -219,6 +237,16 @@ class LeaderboardService:
                 )
                 phase_timing["task_score_count"] = len(rows)
             rows = _exclude_configured_tasks(rows, self.config)
+            if has_length_filters:
+                with timed_operation("viewer.leaderboard.phase", operation="filter_task_lengths", view=view_name) as phase_timing:
+                    rows = _filter_rows_by_task_lengths(
+                        rows,
+                        query_min_chars=query_min_chars,
+                        query_max_chars=query_max_chars,
+                        document_min_chars=document_min_chars,
+                        document_max_chars=document_max_chars,
+                    )
+                    phase_timing["task_score_count"] = len(rows)
             available_languages = _language_options(rows)
             selected_languages = _selected_languages(language_filters, available_languages)
             if selected_languages:
@@ -549,6 +577,8 @@ def _task_scores_from_records(
                     embedding_dim=record.embedding_dim,
                     quantization=record.quantization,
                     source_model_name=record.model_name,
+                    query_mean_chars=record.query_mean_chars,
+                    document_mean_chars=record.document_mean_chars,
                 )
             )
         timing["task_score_count"] = len(task_scores)
@@ -724,6 +754,8 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
                 embedding_dim=first.embedding_dim,
                 quantization=first.quantization,
                 source_model_name=first.source_model_name,
+                query_mean_chars=_mean_optional(row.query_mean_chars for row in aggregate_rows),
+                document_mean_chars=_mean_optional(row.document_mean_chars for row in aggregate_rows),
             )
         )
     return aggregated
@@ -770,6 +802,8 @@ def _aggregate_benchmark_score_group_scores(rows: list[TaskScore], score_group: 
                 embedding_dim=first.embedding_dim,
                 quantization=first.quantization,
                 source_model_name=first.source_model_name,
+                query_mean_chars=_mean_optional(row.query_mean_chars for row in aggregate_rows),
+                document_mean_chars=_mean_optional(row.document_mean_chars for row in aggregate_rows),
             )
         )
     return aggregated
@@ -852,6 +886,42 @@ def _selected_languages(language_filters: tuple[str, ...], options: list[Languag
 def _filter_rows_by_languages(rows: list[TaskScore], selected_languages: tuple[str, ...]) -> list[TaskScore]:
     selected = set(selected_languages)
     return [row for row in rows if selected.intersection(row.languages)]
+
+
+def _has_task_length_filters(
+    *,
+    query_min_chars: float | None,
+    query_max_chars: float | None,
+    document_min_chars: float | None,
+    document_max_chars: float | None,
+) -> bool:
+    return any(value is not None for value in (query_min_chars, query_max_chars, document_min_chars, document_max_chars))
+
+
+def _filter_rows_by_task_lengths(
+    rows: list[TaskScore],
+    *,
+    query_min_chars: float | None,
+    query_max_chars: float | None,
+    document_min_chars: float | None,
+    document_max_chars: float | None,
+) -> list[TaskScore]:
+    return [
+        row
+        for row in rows
+        if _length_value_matches(row.query_mean_chars, minimum=query_min_chars, maximum=query_max_chars)
+        and _length_value_matches(row.document_mean_chars, minimum=document_min_chars, maximum=document_max_chars)
+    ]
+
+
+def _length_value_matches(value: float | None, *, minimum: float | None, maximum: float | None) -> bool:
+    if minimum is None and maximum is None:
+        return True
+    if value is None:
+        return False
+    if minimum is not None and value < minimum:
+        return False
+    return maximum is None or value <= maximum
 
 
 def _language_label(language: str) -> str:
@@ -997,3 +1067,10 @@ def _score_group_key(row: TaskScore, group_by: str) -> str:
 def _mean(values: Iterable[float]) -> float:
     vals = list(values)
     return sum(vals) / len(vals) if vals else 0.0
+
+
+def _mean_optional(values: Iterable[float | None]) -> float | None:
+    present_values = [value for value in values if value is not None]
+    if not present_values:
+        return None
+    return sum(present_values) / len(present_values)

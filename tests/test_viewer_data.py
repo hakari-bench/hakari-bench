@@ -6,7 +6,7 @@ from pathlib import Path
 import duckdb
 import pytest
 
-from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION, TaskResultRecord, TaskResultsRepository
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
@@ -67,7 +67,7 @@ def test_task_results_repository_rejects_missing_current_viewer_task_results(tmp
     con = duckdb.connect(str(db_path))
     try:
         con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
-        con.execute("INSERT INTO meta_database VALUES ('3')")
+        con.execute("INSERT INTO meta_database VALUES (?)", [CURRENT_DUCKDB_SCHEMA_VERSION])
         con.execute("CREATE TABLE task_results (model_name VARCHAR, benchmark VARCHAR, task_key VARCHAR, score DOUBLE)")
     finally:
         con.close()
@@ -427,12 +427,82 @@ def test_task_results_repository_reads_materialized_viewer_task_results(tmp_path
     ]
 
 
+def test_task_results_repository_reads_task_text_length_metadata(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_viewer_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "task-ja", 0.90, 10, 12, 8192),
+        ],
+        rows_override_text_lengths=[(512.5, 1536.0)],
+    )
+
+    records = TaskResultsRepository(db_path).fetch_task_result_rows(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+    )
+
+    assert records[0].query_mean_chars == pytest.approx(512.5)
+    assert records[0].document_mean_chars == pytest.approx(1536.0)
+
+
+def test_task_results_repository_falls_back_to_dataset_metadata_for_text_lengths(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
+        con.execute("INSERT INTO meta_database VALUES (?)", [CURRENT_DUCKDB_SCHEMA_VERSION])
+        columns = (
+            "model_name VARCHAR",
+            "benchmark VARCHAR",
+            "dataset_id VARCHAR",
+            "dataset_name VARCHAR",
+            "split_name VARCHAR",
+            "task_name VARCHAR",
+            "task_key VARCHAR",
+            "score_target VARCHAR",
+            "score DOUBLE",
+            "language VARCHAR",
+            "languages VARCHAR[]",
+            "active_parameters BIGINT",
+            "total_parameters BIGINT",
+            "max_seq_length INTEGER",
+        )
+        con.execute(f"CREATE TABLE viewer_task_results ({', '.join(columns)})")
+        con.execute(
+            f"INSERT INTO viewer_task_results VALUES ({', '.join('?' for _ in columns)})",
+            ("model/a", "BenchA", "bench/a", "BenchA", "", "a1", "task-ja", "all", 0.90, "ja", ["ja"], 10, 12, 8192),
+        )
+        con.execute(
+            """
+            CREATE TABLE dataset_metadata (
+                benchmark VARCHAR,
+                dataset_id VARCHAR,
+                task_key VARCHAR,
+                query_mean_chars DOUBLE,
+                document_mean_chars DOUBLE
+            )
+            """
+        )
+        con.execute("INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?)", ("BenchA", "bench/a", "task-ja", 640.0, 2048.0))
+    finally:
+        con.close()
+
+    records = TaskResultsRepository(db_path).fetch_task_result_rows(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+    )
+
+    assert records[0].query_mean_chars == pytest.approx(640.0)
+    assert records[0].document_mean_chars == pytest.approx(2048.0)
+
+
 def test_task_results_repository_reads_score_target_from_materialized_viewer_table(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     con = duckdb.connect(str(db_path))
     try:
         con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
-        con.execute("INSERT INTO meta_database VALUES ('3')")
+        con.execute("INSERT INTO meta_database VALUES (?)", [CURRENT_DUCKDB_SCHEMA_VERSION])
         con.execute(
             """
             CREATE TABLE viewer_task_results (
@@ -543,7 +613,8 @@ def _write_viewer_task_results(
     rows: list[tuple],
     *,
     rows_override_languages: list[tuple[str, list[str]]] | None = None,
-    schema_version: str = "3",
+    rows_override_text_lengths: list[tuple[float | None, float | None]] | None = None,
+    schema_version: str = CURRENT_DUCKDB_SCHEMA_VERSION,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
@@ -576,6 +647,8 @@ def _write_viewer_task_results(
             "embedding_variant_name VARCHAR",
             "embedding_dim INTEGER",
             "quantization VARCHAR",
+            "query_mean_chars DOUBLE",
+            "document_mean_chars DOUBLE",
         )
         con.execute(f"CREATE TABLE viewer_task_results ({', '.join(columns)})")
         normalized_rows = []
@@ -585,14 +658,34 @@ def _write_viewer_task_results(
                 if rows_override_languages is not None
                 else (None, [])
             )
-            normalized_rows.append(_viewer_task_result_row(row, language=language, languages=languages))
+            query_mean_chars, document_mean_chars = (
+                rows_override_text_lengths[index]
+                if rows_override_text_lengths is not None
+                else (None, None)
+            )
+            normalized_rows.append(
+                _viewer_task_result_row(
+                    row,
+                    language=language,
+                    languages=languages,
+                    query_mean_chars=query_mean_chars,
+                    document_mean_chars=document_mean_chars,
+                )
+            )
         placeholders = ", ".join("?" for _ in columns)
         con.executemany(f"INSERT INTO viewer_task_results VALUES ({placeholders})", normalized_rows)
     finally:
         con.close()
 
 
-def _viewer_task_result_row(row: tuple, *, language: str | None, languages: list[str]) -> tuple:
+def _viewer_task_result_row(
+    row: tuple,
+    *,
+    language: str | None,
+    languages: list[str],
+    query_mean_chars: float | None = None,
+    document_mean_chars: float | None = None,
+) -> tuple:
     base = row[:11]
     remaining = row[11:]
     dtype = None
@@ -644,4 +737,6 @@ def _viewer_task_result_row(row: tuple, *, language: str | None, languages: list
         embedding_variant_name,
         embedding_dim,
         quantization,
+        query_mean_chars,
+        document_mean_chars,
     )

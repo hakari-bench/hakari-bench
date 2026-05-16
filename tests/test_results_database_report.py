@@ -890,6 +890,216 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert ranking_rows[0].corpus_id == "d1"
 
 
+def test_load_results_backfills_missing_parameters_from_model_card_yaml(tmp_path: Path) -> None:
+    task_path = tmp_path / "jinaai__jina-embeddings-v3" / "hakari-bench__NanoBEIR-en" / "arguana.json"
+    task_path.parent.mkdir(parents=True)
+    model_cards_path = tmp_path / "model_cards.yaml"
+    model_cards_path.write_text(
+        """
+models:
+  - id: jinaai/jina-embeddings-v3
+    source:
+      type: huggingface
+      name: jinaai/jina-embeddings-v3
+      revision: ab036b023d30
+    parameters:
+      total: 572310396
+      input_embedding: 256002048
+      active: 316308348
+""".strip(),
+        encoding="utf-8",
+    )
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {
+                    "id": "jinaai/jina-embeddings-v3",
+                    "source": {
+                        "type": "huggingface",
+                        "name": "jinaai/jina-embeddings-v3",
+                        "revision": "ab036b023d30",
+                    },
+                    "total_parameters": 572310396,
+                    "embedding_parameters": None,
+                    "active_parameters": None,
+                },
+                "environment": {"package_versions": {}},
+                "target": {
+                    "dataset_name": "NanoBEIR-en",
+                    "dataset_id": "hakari-bench/NanoBEIR-en",
+                    "split_name": "arguana",
+                    "task_name": "arguana",
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.42},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    rows, runs, _, _, _, _ = report.load_results(tmp_path, model_cards_path=model_cards_path)
+
+    assert rows[0].active_parameters == 316308348
+    assert runs[0]["active_parameters"] == 316308348
+
+
+def test_load_model_cards_reads_one_file_per_model_from_directory(tmp_path: Path) -> None:
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "BAAI__bge-m3.yaml").write_text(
+        """
+id: BAAI/bge-m3
+source:
+  type: huggingface
+  name: BAAI/bge-m3
+parameters:
+  total: 568000000
+  input_embedding: 250000000
+  active: 318000000
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "jinaai__jina-embeddings-v3.yaml").write_text(
+        """
+id: jinaai/jina-embeddings-v3
+parameters:
+  total: 572310396
+  input_embedding: 256002048
+  active: 316308348
+""".strip(),
+        encoding="utf-8",
+    )
+
+    model_cards = report.load_model_cards(model_cards_dir)
+
+    assert sorted(model_cards) == ["BAAI/bge-m3", "jinaai/jina-embeddings-v3"]
+    assert model_cards["BAAI/bge-m3"]["parameters"]["active"] == 318000000
+
+
+def test_model_cards_directory_state_changes_when_card_is_added(tmp_path: Path) -> None:
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "first.yaml").write_text(
+        """
+id: example/first
+parameters:
+  total: 10
+  active: 4
+""".strip(),
+        encoding="utf-8",
+    )
+    initial_state = report._model_cards_state(model_cards_dir)
+    (model_cards_dir / "second.yaml").write_text(
+        """
+id: example/second
+parameters:
+  total: 20
+  active: 8
+""".strip(),
+        encoding="utf-8",
+    )
+
+    assert report._model_cards_state(model_cards_dir) != initial_state
+
+
+def test_load_results_incremental_reparses_when_model_card_yaml_changes(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    task_path = results_dir / "model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    task_path.parent.mkdir(parents=True)
+    model_cards_path = tmp_path / "model_cards.yaml"
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {
+                    "id": "example/model",
+                    "total_parameters": 10,
+                    "active_parameters": None,
+                },
+                "target": {
+                    "dataset_name": "NanoJMTEB-v2",
+                    "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                    "split_name": "ja_cwir",
+                    "task_name": "ja_cwir",
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.42},
+            }
+        ),
+        encoding="utf-8",
+    )
+    model_cards_path.write_text(
+        """
+models:
+  - id: example/model
+    parameters:
+      total: 10
+      input_embedding: 6
+      active: 4
+""".strip(),
+        encoding="utf-8",
+    )
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = report.load_results(
+        results_dir,
+        model_cards_path=model_cards_path,
+    )
+    db_path = tmp_path / "hakari_bench.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=runs,
+        rows=rows,
+        metric_rows=metric_rows,
+        diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
+        ranking_rows=ranking_rows,
+        standings={},
+        borda_rows=[],
+        model_cards_path=model_cards_path,
+    )
+    model_cards_path.write_text(
+        """
+models:
+  - id: example/model
+    parameters:
+      total: 10
+      input_embedding: 5
+      active: 5
+""".strip(),
+        encoding="utf-8",
+    )
+
+    updated_rows, updated_runs, _, _, _, _ = report.load_results(
+        results_dir,
+        incremental_db_path=db_path,
+        model_cards_path=model_cards_path,
+    )
+
+    assert updated_rows[0].active_parameters == 5
+    assert updated_runs[0]["active_parameters"] == 5
+
+
+def test_model_card_metadata_fills_missing_parameter_fields_without_overwriting() -> None:
+    model = {
+        "id": "example/model",
+        "total_parameters": 10,
+        "active_parameters": 4,
+        "embedding_parameters": None,
+        "transformer_parameters": None,
+    }
+    model_cards = {
+        "example/model": {
+            "parameters": {
+                "total": 10,
+                "input_embedding": 6,
+                "active": 4,
+            },
+        },
+    }
+
+    updated = report._with_model_card_metadata(model, model_cards=model_cards)
+
+    assert updated["active_parameters"] == 4
+    assert updated["embedding_parameters"] == 6
+    assert updated["transformer_parameters"] == 4
+
+
 def _write_minimal_task_result(path: Path, *, model_id: str, task_name: str, score: float) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(

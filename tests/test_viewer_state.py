@@ -128,6 +128,43 @@ def test_task_filter_enables_task_score_columns() -> None:
     assert query["task_filter"] == "fever"
 
 
+def test_task_length_filters_are_normalized_into_filter_state() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="BenchA",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        query_len_min="-1",
+        query_len_max=" 1000 ",
+        doc_len_min="bad",
+        doc_len_max="2000.5",
+    )
+
+    assert query["filters"] == "1"
+    assert query["query_len_max"] == "1000"
+    assert query["doc_len_max"] == "2000.5"
+    assert "query_len_min" not in query
+    assert "doc_len_min" not in query
+    assert filter_state_from_query(query) == FilterState(
+        filters_active=True,
+        query_len_max="1000",
+        doc_len_max="2000.5",
+    )
+
+
 def test_filter_state_from_query_accepts_scalar_or_list_query_values() -> None:
     state = filter_state_from_query(
         {

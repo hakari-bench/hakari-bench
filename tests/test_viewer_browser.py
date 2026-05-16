@@ -13,6 +13,7 @@ import pytest
 import uvicorn
 
 from hakari_bench.viewer.app import create_app
+from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore
 
 
@@ -65,7 +66,7 @@ def _write_browser_task_results(db_path: Path) -> None:
     con = duckdb.connect(str(db_path))
     try:
         con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
-        con.execute("INSERT INTO meta_database VALUES ('3')")
+        con.execute("INSERT INTO meta_database VALUES (?)", [CURRENT_DUCKDB_SCHEMA_VERSION])
         con.execute(
             """
             CREATE TABLE viewer_task_results (

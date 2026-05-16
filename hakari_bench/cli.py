@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -24,6 +25,7 @@ from hakari_bench.embedding_variants import (
     parse_embedding_variants,
 )
 from hakari_bench.evaluation import LoadedIrDataset, load_ir_dataset, start_encode_pool, stop_encode_pool
+from hakari_bench.model_cards import load_model_cards, write_evaluation_model_card
 from hakari_bench.models import (
     ModelLoadConfig,
     collect_model_metadata,
@@ -88,6 +90,27 @@ def build_parser() -> argparse.ArgumentParser:
     _add_candidate_args(bm25)
     _add_output_args(bm25, results_default="output/results")
     _add_bm25_args(bm25, include_source=True)
+
+    from_model_card = evaluate_methods.add_parser(
+        "from-model-card",
+        help="Evaluate a model using static HAKARI model-card metadata.",
+    )
+    from_model_card.add_argument(
+        "--model-card",
+        type=Path,
+        required=True,
+        help="Path to a single model-card YAML file.",
+    )
+    _add_params_arg(from_model_card)
+    _add_evaluate_runtime_args(from_model_card)
+    _add_sparse_args(from_model_card)
+    _add_embedding_variant_args(from_model_card)
+    _add_dataset_args(from_model_card, action="evaluate")
+    _add_prompt_args(from_model_card)
+    _add_candidate_args(from_model_card)
+    _add_reranker_args(from_model_card)
+    _add_late_interaction_args(from_model_card)
+    _add_output_args(from_model_card, results_default="output/results")
 
     build_candidates = subparsers.add_parser(
         "build-candidates",
@@ -316,10 +339,14 @@ def _add_bm25_args(parser: argparse.ArgumentParser, *, include_source: bool = Fa
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = build_parser()
-    args = parser.parse_args(argv)
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
+    provided_options = _provided_options(raw_argv)
+    args = parser.parse_args(raw_argv)
     if args.command == "evaluate":
         try:
             _apply_evaluate_params_json(args)
+            if args.model_type == "from-model-card":
+                _apply_model_card_args(args, provided_options=provided_options)
         except ValueError as exc:
             parser.error(str(exc))
         _apply_model_identity(args)
@@ -469,6 +496,75 @@ def _bridge_new_bm25_args(args: argparse.Namespace) -> None:
         None,
     )
     args.bm25_stemmer_algorithm = getattr(args, "bm25_stemmer_language", "english")
+
+
+def _apply_model_card_args(args: argparse.Namespace, *, provided_options: set[str]) -> None:
+    model_card_path = getattr(args, "model_card", None)
+    if model_card_path is None:
+        raise ValueError("--model-card is required.")
+    cards = load_model_cards(Path(model_card_path))
+    if len(cards) != 1:
+        raise ValueError("--model-card must point to exactly one model card.")
+    card = next(iter(cards.values()))
+    method = card.get("method")
+    if method not in {"dense", "sparse", "reranker", "late-interaction"}:
+        raise ValueError("model card method must be one of dense, sparse, reranker, or late-interaction.")
+    args.model_type = str(method)
+    model_id = _string_param(card.get("id"), "model_card.id")
+    source = card.get("source")
+    source_name = source.get("name") if isinstance(source, dict) else None
+    args.model = str(source_name or model_id)
+    args.model_alias = model_id
+    args.model_revision = _model_card_revision(source)
+    runtime = card.get("runtime")
+    if isinstance(runtime, dict):
+        _apply_model_card_runtime(args, runtime, provided_options=provided_options)
+    target = card.get("target")
+    if isinstance(target, dict):
+        if args.dataset is None and target.get("datasets") is not None:
+            args.dataset = _string_list_param(target["datasets"], "model_card.target.datasets")
+        if not args.collection and target.get("collections") is not None:
+            args.collection = _string_list_param(target["collections"], "model_card.target.collections")
+        if not args.split and target.get("splits") is not None:
+            args.split = _string_list_param(target["splits"], "model_card.target.splits")
+        if getattr(args, "dataset_revision", None) is None and target.get("dataset_revision") is not None:
+            args.dataset_revision = _optional_string_param(target["dataset_revision"], "model_card.target.dataset_revision")
+    embedding = card.get("embedding")
+    if isinstance(embedding, dict) and not args.embedding_variant_values and not args.embedding_variant_grid_values:
+        truncate_dims = embedding.get("truncate_dims")
+        if isinstance(truncate_dims, list):
+            args.embedding_variant_values = [f"truncate:{_optional_positive_int_param(dim, 'model_card.embedding.truncate_dims')}" for dim in truncate_dims]
+
+
+def _model_card_revision(source: Any) -> str | None:
+    if not isinstance(source, dict):
+        return None
+    requested = source.get("revision_requested")
+    if requested is not None:
+        return str(requested)
+    revision = source.get("revision")
+    return str(revision) if revision is not None else None
+
+
+def _provided_options(argv: list[str]) -> set[str]:
+    return {item.split("=", 1)[0] for item in argv if item.startswith("--")}
+
+
+def _apply_model_card_runtime(args: argparse.Namespace, runtime: dict[str, Any], *, provided_options: set[str]) -> None:
+    if runtime.get("dtype") is not None and "--dtype" not in provided_options:
+        args.dtype = _optional_string_param(runtime["dtype"], "model_card.runtime.dtype")
+    if runtime.get("attn_implementation") is not None and "--attn-implementation" not in provided_options:
+        args.attn_implementation = _optional_string_param(
+            runtime["attn_implementation"],
+            "model_card.runtime.attn_implementation",
+        )
+    if runtime.get("trust_remote_code") is not None and "--trust-remote-code" not in provided_options:
+        args.trust_remote_code = _bool_param(runtime["trust_remote_code"], "model_card.runtime.trust_remote_code")
+    if runtime.get("max_seq_length") is not None and "--model-max-seq-length" not in provided_options:
+        args.model_max_seq_length = _optional_positive_int_param(
+            runtime["max_seq_length"],
+            "model_card.runtime.max_seq_length",
+        )
 
 
 def _validate_bm25_source_args(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
@@ -993,6 +1089,8 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         run_finished_at_utc=run_finished_at.isoformat(),
         run_wall_seconds=float(time.perf_counter() - run_start),
     )
+    if args.model_type != "bm25":
+        write_evaluation_model_card(args=args, model_metadata=run_summary_payload["model"])
     print(
         json.dumps(
             {
