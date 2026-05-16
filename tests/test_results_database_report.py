@@ -405,6 +405,148 @@ def test_load_results_incremental_parses_only_changed_sources(
     assert cached_runs[0]["aggregate_metric_mean"] == pytest.approx(0.66)
 
 
+def test_load_results_incremental_parses_only_added_sources(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    base_dir = tmp_path / "base"
+    added_dir = tmp_path / "added"
+    existing_path = base_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    added_path = added_dir / "model_B" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    _write_minimal_task_result(
+        existing_path,
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.42,
+    )
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = report.load_results(base_dir)
+    db_path = tmp_path / "hakari_bench.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=runs,
+        rows=rows,
+        metric_rows=metric_rows,
+        diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
+        ranking_rows=ranking_rows,
+        standings={},
+        borda_rows=[],
+    )
+    _write_minimal_task_result(
+        added_path,
+        model_id="example/model_B",
+        task_name="ja_cwir",
+        score=0.84,
+    )
+    original_read_json = report._read_json
+
+    def read_added_only(path: Path) -> object:
+        if path == existing_path:
+            pytest.fail("unchanged existing source should be reused from the incremental DuckDB cache")
+        return original_read_json(path)
+
+    monkeypatch.setattr(report, "_read_json", read_added_only)
+
+    cached_rows, cached_runs, cached_metric_rows, cached_diagnostic_rows, _, _ = report.load_results(
+        [added_dir, base_dir],
+        incremental_db_path=db_path,
+    )
+
+    assert [(row.model_name, row.score) for row in cached_rows] == [
+        ("example/model_A", 0.42),
+        ("example/model_B", 0.84),
+    ]
+    assert [(row.model_name, row.metric_value) for row in cached_metric_rows] == [
+        ("example/model_A", 0.42),
+        ("example/model_B", 0.84),
+    ]
+    assert [(row.model_name, row.base_score) for row in cached_diagnostic_rows] == [
+        ("example/model_A", 0.42),
+        ("example/model_B", 0.84),
+    ]
+    assert [(run["model_name"], run["aggregate_metric_mean"]) for run in cached_runs] == [
+        ("example/model_A", 0.42),
+        ("example/model_B", 0.84),
+    ]
+
+
+def test_main_appends_results_dir_to_existing_duckdb_without_reading_existing_json(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    base_dir = tmp_path / "base"
+    added_dir = tmp_path / "added"
+    existing_path = base_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    added_path = added_dir / "model_B" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    _write_minimal_task_result(
+        existing_path,
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.42,
+    )
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = report.load_results(base_dir)
+    db_path = tmp_path / "hakari_bench.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=runs,
+        rows=rows,
+        metric_rows=metric_rows,
+        diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
+        ranking_rows=ranking_rows,
+        standings={},
+        borda_rows=[],
+    )
+    _write_minimal_task_result(
+        added_path,
+        model_id="example/model_B",
+        task_name="ja_cwir",
+        score=0.84,
+    )
+    original_read_json = report._read_json
+
+    def read_added_only(path: Path) -> object:
+        if path == existing_path:
+            pytest.fail("append mode should not read existing result JSON")
+        return original_read_json(path)
+
+    monkeypatch.setattr(report, "_read_json", read_added_only)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "build_results_database_and_report.py",
+            "--append-results-dir",
+            str(added_dir),
+            "--duckdb-path",
+            str(db_path),
+        ],
+    )
+
+    report.main()
+
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        assert con.execute(
+            "SELECT model_name, score FROM task_results ORDER BY model_name"
+        ).fetchall() == [
+            ("example/model_A", 0.42),
+            ("example/model_B", 0.84),
+        ]
+        assert con.execute("SELECT count(*) FROM source_load_state").fetchone() == (2,)
+        assert con.execute(
+            "SELECT source_count, changed_count FROM ingestion_batches ORDER BY finished_at_utc"
+        ).fetchall()[-1] == (2, 1)
+        assert con.execute(
+            "SELECT model_name, score FROM viewer_task_results ORDER BY model_name"
+        ).fetchall() == [
+            ("example/model_A", 0.42),
+            ("example/model_B", 0.84),
+        ]
+    finally:
+        con.close()
+
+
 def test_load_results_merges_multiple_results_dirs_by_argument_order(tmp_path: Path) -> None:
     preferred_dir = tmp_path / "preferred"
     fallback_dir = tmp_path / "fallback"
@@ -460,6 +602,47 @@ def test_load_results_reversing_multiple_results_dirs_changes_duplicate_winner(t
 
     assert [(row.model_dir, row.score) for row in rows] == [("model_A", 0.20)]
     assert rows[0].result_path == str(second_dir / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json")
+
+
+def test_load_results_deduplicates_multiple_results_dirs_by_model_name_not_model_dir(tmp_path: Path) -> None:
+    preferred_dir = tmp_path / "preferred"
+    fallback_dir = tmp_path / "fallback"
+    _write_minimal_task_result(
+        preferred_dir / "foobar_exp128__foobar__final" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="foobar_exp128",
+        task_name="ja_cwir",
+        score=0.80,
+    )
+    _write_minimal_task_result(
+        fallback_dir / "tmp__other_training_path" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json",
+        model_id="foobar_exp128",
+        task_name="ja_cwir",
+        score=0.20,
+    )
+    _write_minimal_task_result(
+        fallback_dir / "tmp__other_training_path" / "hakari-bench__NanoJMTEB-v2" / "ja_nfcorpus.json",
+        model_id="foobar_exp128",
+        task_name="ja_nfcorpus",
+        score=0.60,
+    )
+
+    rows, runs, metric_rows, diagnostic_rows, *_ = report.load_results([preferred_dir, fallback_dir])
+
+    assert [(row.task_name, row.model_dir, row.model_name, row.score) for row in rows] == [
+        ("ja_cwir", "foobar_exp128__foobar__final", "foobar_exp128", 0.80),
+        ("ja_nfcorpus", "tmp__other_training_path", "foobar_exp128", 0.60),
+    ]
+    assert [(row.task_name, row.model_name, row.metric_value) for row in metric_rows] == [
+        ("ja_cwir", "foobar_exp128", 0.80),
+        ("ja_nfcorpus", "foobar_exp128", 0.60),
+    ]
+    assert [(row.task_name, row.model_name, row.base_score) for row in diagnostic_rows] == [
+        ("ja_cwir", "foobar_exp128", 0.80),
+        ("ja_nfcorpus", "foobar_exp128", 0.60),
+    ]
+    assert [(run["model_name"], run["split_count"], run["aggregate_metric_mean"]) for run in runs] == [
+        ("foobar_exp128", 2, pytest.approx(0.70)),
+    ]
 
 
 def test_load_results_can_filter_model_names(tmp_path: Path) -> None:
@@ -630,7 +813,7 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
 
 
 def _write_minimal_task_result(path: Path, *, model_id: str, task_name: str, score: float) -> None:
-    path.parent.mkdir(parents=True)
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(
             {

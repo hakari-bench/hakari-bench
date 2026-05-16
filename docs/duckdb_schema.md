@@ -40,10 +40,11 @@ Use `--incremental` for repeated local or deploy builds against an existing
 DuckDB file. The builder compares source JSON hashes from `source_load_state`
 with the current files. If nothing changed and no secondary outputs are
 requested, it exits without rewriting the database. If only some source files
-changed, it reuses unchanged canonical rows from the existing DuckDB database
-and parses only the changed JSON files before rewriting the canonical database.
-If source paths were added or removed, or the existing database is missing or
-uses a different schema version, it falls back to a full rebuild.
+changed or new source files were added, it reuses unchanged canonical rows from
+the existing DuckDB database and parses only the changed or added JSON files
+before rewriting the canonical database. If source paths were removed, or the
+existing database is missing or uses a different schema version, it falls back
+to a full rebuild so stale rows cannot leak into the regenerated warehouse.
 
 Optional outputs and heavier offline-analysis tables are opt-in:
 
@@ -59,10 +60,13 @@ uv run python scripts/build_results_database_and_report.py \
 
 Multiple result roots can be merged by repeating `--results-dir`. Directory
 order is the conflict-resolution policy: when two roots contain the same
-logical model, benchmark, and task JSON, the first directory on the command line
-wins. Later directories only fill missing model-task results.
+logical `model_name`, benchmark, and task JSON, the first directory on the
+command line wins. Later directories only fill missing model-task results.
 Models can be omitted from the warehouse with repeated `--exclude-model-name`
 options; this filters rows by the JSON `model.id` / DuckDB `model_name` value.
+For local training outputs, set `model.id` to the intended unique experiment
+identifier, such as `foobar_exp128`; `model_dir` is treated as a storage path,
+not as part of the logical model identity.
 
 ```bash
 uv run python scripts/build_results_database_and_report.py \
@@ -71,6 +75,19 @@ uv run python scripts/build_results_database_and_report.py \
   --exclude-model-name hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR \
   --duckdb-path output/results/hakari_bench.duckdb \
   --html-output output/results/report.html
+```
+
+For a strictly append-only update where new model-task JSON is stored in a
+separate result root and the existing DuckDB should be reused directly, use
+`--append-results-dir`. This mode reads only the append directory, inserts the
+new canonical rows into the existing DuckDB, updates `source_load_state`, and
+rebuilds SQL-derived viewer marts. It rejects duplicate result paths and
+duplicate logical `(model_name, benchmark, dataset_id, task_key)` base rows.
+
+```bash
+uv run python scripts/build_results_database_and_report.py \
+  --append-results-dir output/new_model_results \
+  --duckdb-path output/results/hakari_bench.duckdb
 ```
 
 The input files are:
@@ -86,8 +103,8 @@ The input files are:
 `target.dataset_name` using `config/viewer/benchmarks.yaml`, then writes only
 configured benchmark rows into `task_results`. When multiple result roots are
 provided, it first selects one source JSON per logical
-`(model_dir, model_name, benchmark, dataset_id, task_key)` using the
-command-line directory order. The base embedding result is stored as a row where
+`(model_name, benchmark, dataset_id, task_key)` using the command-line
+directory order. The base embedding result is stored as a row where
 `embedding_variant_name IS NULL`. Derived embedding results from
 `evaluation.embedding_evaluations` are stored as additional variant rows.
 NanoMTEB family datasets are stored as distinct benchmark groups, separate from

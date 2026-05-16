@@ -410,7 +410,9 @@ uv run python scripts/build_results_database_and_report.py \
 
 To merge historical or separate result roots, repeat `--results-dir` in
 priority order. If the same model-task JSON exists in more than one root, the
-first directory wins and later directories fill only missing results.
+first directory wins and later directories fill only missing results. The
+logical model identity is `model.id` from each result JSON, exposed as
+`model_name`; `model_dir` is only the storage path under the results root.
 Use repeated `--exclude-model-name` options to omit known-bad or superseded
 model ids from the generated warehouse without deleting their JSON files.
 
@@ -421,6 +423,17 @@ uv run python scripts/build_results_database_and_report.py \
   --exclude-model-name hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR \
   --duckdb-path output/results/hakari_bench.duckdb \
   --html-output output/results/report.html
+```
+
+To add a separate result root for new model-task JSON to an existing DuckDB
+without scanning the original result roots, use `--append-results-dir`. This is
+append-only: duplicate result paths or duplicate logical model-task rows are
+rejected.
+
+```bash
+uv run python scripts/build_results_database_and_report.py \
+  --append-results-dir output/new_model_results \
+  --duckdb-path output/results/hakari_bench.duckdb
 ```
 
 By default, it binds to `127.0.0.1:8000` and keeps
