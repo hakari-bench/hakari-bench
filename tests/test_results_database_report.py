@@ -1586,7 +1586,7 @@ def test_write_duckdb_records_schema_metadata_and_result_extensions(tmp_path: Pa
     try:
         assert con.execute("SELECT schema_version, compatibility_level FROM meta_database").fetchone() == (
             report.WAREHOUSE_SCHEMA_VERSION,
-            "v1-compatible",
+            "current",
         )
         assert con.execute("SELECT schema_version, migration_name FROM schema_change_log").fetchone() == (
             report.WAREHOUSE_SCHEMA_VERSION,
