@@ -58,9 +58,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main() -> None:
-    logging.basicConfig(format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level=logging.INFO)
-    args = parse_args()
+def apply_smoke_train_overrides(args: argparse.Namespace) -> argparse.Namespace:
     if args.smoke_train:
         args.train_samples = min(args.train_samples, 8)
         args.eval_samples = min(args.eval_samples, 8)
@@ -68,8 +66,14 @@ def main() -> None:
         args.eval_steps = 2
         args.save_steps = 2
         args.num_train_epochs = 1
-        args.rerank_top_k = min(args.rerank_top_k, 10)
         args.eval_query_limit = args.eval_query_limit or 3
+    return args
+
+
+def main() -> None:
+    logging.basicConfig(format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level=logging.INFO)
+    args = parse_args()
+    apply_smoke_train_overrides(args)
 
     model_name_only = args.model.split("/")[-1]
     model = CrossEncoder(
