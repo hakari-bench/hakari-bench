@@ -48,7 +48,7 @@ def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list
 TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
 WAREHOUSE_SCHEMA_VERSION = "3"
-WAREHOUSE_COMPATIBILITY_LEVEL = "v1-compatible"
+WAREHOUSE_COMPATIBILITY_LEVEL = "current"
 WAREHOUSE_TABLES = (
     "meta_database",
     "schema_change_log",

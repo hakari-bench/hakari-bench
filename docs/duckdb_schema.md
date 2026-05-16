@@ -14,9 +14,9 @@ which represents each leaderboard score target as rows such as `all` and
 applied, `viewer_filter_values`, a precomputed filter-value mart, and
 `viewer_leaderboard_rows`, a precomputed leaderboard standings mart for common
 no-filter display modes, plus `viewer_leaderboard_language_options` for the
-matching language filter choices; the HTMX leaderboard reads these mart tables
-when present and falls back to computing from `viewer_task_results` or
-`task_results` for older DuckDB files. `runs` contains run-level metadata,
+matching language filter choices. The HTMX leaderboard requires the current
+schema and reads these mart tables or computes from `viewer_task_results`.
+`runs` contains run-level metadata,
 `metrics_long` contains detailed task metrics, `retrieval_rankings` contains
 per-query top-100 retrieved document ids, `task_diagnostics` contains
 analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
@@ -188,7 +188,7 @@ The web viewer exposes four user-facing query surfaces over the DuckDB file:
 | UI surface | source tables | semantics |
 | --- | --- | --- |
 | Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
-| Leaderboard | `task_results`, optionally joined to `dataset_metadata` and `task_diagnostics` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector defaults to `All`, which uses `task_results.score` for full-corpus retrieval. `Reranking` joins `task_diagnostics` and uses available BM25 top-100 `rerank_score` values. Base rows are used unless the user explicitly enables variant categories; reranking currently ranks base rows because `task_diagnostics` has no embedding-variant identity. |
+| Leaderboard | `viewer_task_results` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `viewer_task_results.score_target`; `All` uses full-corpus retrieval scores and `Reranking` uses materialized BM25 top-100 rerank scores. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
 | Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for quantization-first comparisons; rescore and `truncate_dim` variants are hidden unless explicitly enabled in the panel. |
 | Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
 | Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
@@ -207,7 +207,7 @@ check this table before relying on newer canonical tables.
 | column | type | meaning |
 | --- | --- | --- |
 | `schema_version` | `VARCHAR` | Current warehouse schema version. |
-| `compatibility_level` | `VARCHAR` | Compatibility contract exposed by this DB. Current builds are `v1-compatible`. |
+| `compatibility_level` | `VARCHAR` | Compatibility contract exposed by this DB. Current builds are `current`. |
 | `built_at_utc` | `VARCHAR` | Build timestamp. |
 | `source_result_count` | `INTEGER` | Number of source result files represented in this DB. |
 
@@ -791,43 +791,36 @@ avoid Pydantic validation for every leaderboard row. The service converts those
 rows into the leaderboard-domain `TaskScore`, then performs ranking, overall
 aggregation, score grouping, and sorting in Python.
 
-This boundary keeps SQL and DB-schema compatibility in the data layer while
+This boundary keeps SQL and the DuckDB schema contract in the data layer while
 keeping Borda and complete-model semantics in `LeaderboardService`.
 `TaskResultRecord` is a row contract DTO and does not contain ranking logic.
 
 `TaskResultsRepository.fetch_task_results()` is responsible for these SQL
 choices:
 
-- When `viewer_task_results.score_target` is available, filter it by the
-  selected target and read `viewer_task_results.score` directly. New DuckDB
-  builds materialize both `all` and available `reranking` rows through
-  `fact_task_score`.
-- For older DuckDB files without `score_target`, read `task_results.score` for
-  the default `Target: All` leaderboard source.
-- For older DuckDB files without `score_target`, join `task_diagnostics` and
-  read `rerank_score` for `Target: Reranking`; rows without available BM25
-  top-100 rerank scores are excluded.
+- Require `meta_database.schema_version` to match the current schema version
+  before querying leaderboard rows.
+- Filter `viewer_task_results.score_target` by the selected target and read
+  `viewer_task_results.score` directly. Current DuckDB builds materialize both
+  `all` and available `reranking` rows through `fact_task_score`.
 - Exclude `score IS NULL` rows because they cannot participate in ranking.
 - Read only benchmarks requested by the selected view.
 - Read only base rows when variants are not requested; reranking also reads
-  base rows because diagnostics are not variant-specific.
+  base rows.
 - When variants are requested, push the selected display categories into SQL.
   Base rows are always read, but quantization-only, truncate-only, rescore-only,
   and other-variant views avoid fetching unrelated variant rows before Python
   ranking. Cross variants such as truncate plus quantization are fetched only
   when both required display flags are enabled.
-- Select missing variant/runtime columns as `NULL` for old DuckDB files.
 - Surface runtime metadata such as dtype, attention implementation, prompt
   mode, and `trust_remote_code` in model details metadata; dtype, attention,
   and prompt remain available as facet filters.
-- Join `dataset_metadata` when present to attach `language` and `languages`
-  to task rows. The HTMX viewer uses `lang_filter` query parameters as
+- Read materialized `language` and `languages` from `viewer_task_results`.
+  The HTMX viewer uses `lang_filter` query parameters as
   task-level ranking filters: Borda, mean scores, expected task counts, and
   completeness are recomputed only over tasks whose `languages` contains at
   least one selected language. If no `lang_filter` is set, all tasks in the
-  selected view are ranked. When `benchmark` and `dataset_id` are available,
-  the metadata join includes them in addition to `task_key` to avoid row
-  multiplication from task-key reuse across datasets.
+  selected view are ranked.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 
@@ -860,11 +853,9 @@ columns required by `TaskResultsRepository`, includes `score_target`, joins
 `(benchmark, score_target, dataset_id, task_name, model_name,
 embedding_variant_name)`. This avoids repeated metadata joins and lets the
 viewer switch `Target: All` / `Target: Reranking` without joining diagnostics
-on the hot path, while preserving compatibility with older databases that do
-not have `score_target`.
+on the hot path.
 Because `viewer_task_results` is already physically ordered, the viewer skips
-the query-time `ORDER BY` when reading it. Legacy `task_results` reads keep the
-explicit order clause for deterministic fallback behavior.
+the query-time `ORDER BY` when reading it.
 
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. The default build
@@ -947,15 +938,12 @@ SELECT
   embedding_variant_name,
   embedding_dim,
   quantization
-FROM task_results
+FROM viewer_task_results
 WHERE benchmark IN ('MNanoBEIR', 'NanoRTEB')
   AND score IS NOT NULL
+  AND score_target = 'all'
   AND embedding_variant_name IS NULL;
 ```
-
-For older databases without `embedding_variant_name`, `embedding_dim`,
-`quantization`, prompt, attention, dtype, or remote-code columns, the viewer
-treats those fields as `NULL`.
 
 ## SQL Recipes
 

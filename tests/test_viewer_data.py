@@ -6,13 +6,13 @@ from pathlib import Path
 import duckdb
 import pytest
 
-from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository, _task_results_order_by
+from hakari_bench.viewer.data import TaskResultRecord, TaskResultsRepository
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
 def test_task_results_repository_returns_pydantic_records_and_base_rows_by_default(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
-    _write_task_results(
+    _write_viewer_task_results(
         db_path,
         [
             ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
@@ -35,7 +35,6 @@ def test_task_results_repository_returns_pydantic_records_and_base_rows_by_defau
             ("model/b", "BenchA", "bench/a", "BenchA", "split", "a1", "a1", None, 20, 24, 4096, None, 512, None),
             ("model/c", "BenchB", "bench/b", "BenchB", "split", "b1", "b1", 0.70, 30, 36, 2048, None, 256, None),
         ],
-        include_embedding_variant_columns=True,
     )
 
     records = TaskResultsRepository(db_path).fetch_task_results(
@@ -63,35 +62,48 @@ def test_task_results_repository_returns_pydantic_records_and_base_rows_by_defau
     ]
 
 
-def test_task_results_repository_reads_legacy_schema_without_variant_columns(tmp_path: Path) -> None:
+def test_task_results_repository_rejects_missing_current_viewer_task_results(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
-    _write_task_results(
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
+        con.execute("INSERT INTO meta_database VALUES ('3')")
+        con.execute("CREATE TABLE task_results (model_name VARCHAR, benchmark VARCHAR, task_key VARCHAR, score DOUBLE)")
+    finally:
+        con.close()
+
+    with pytest.raises(RuntimeError, match="viewer_task_results"):
+        TaskResultsRepository(db_path).fetch_task_results(
+            benchmarks=["BenchA"],
+            include_embedding_variants=False,
+        )
+
+
+def test_task_results_repository_rejects_old_schema_version(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_viewer_task_results(
         db_path,
         [
             ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192),
         ],
-        include_embedding_variant_columns=False,
+        schema_version="2",
     )
 
-    records = TaskResultsRepository(db_path).fetch_task_results(
-        benchmarks=["BenchA"],
-        include_embedding_variants=False,
-    )
-
-    assert records[0].embedding_variant_name is None
-    assert records[0].embedding_dim is None
-    assert records[0].quantization is None
+    with pytest.raises(RuntimeError, match="schema version"):
+        TaskResultsRepository(db_path).fetch_task_results(
+            benchmarks=["BenchA"],
+            include_embedding_variants=False,
+        )
 
 
 def test_task_results_repository_can_return_lightweight_rows_for_hot_path(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
-    _write_task_results(
+    _write_viewer_task_results(
         db_path,
         [
             ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192),
         ],
-        include_embedding_variant_columns=False,
-        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", None, "a1", "a1", "ja", ["ja"])],
+        rows_override_languages=[("ja", ["ja"])],
     )
 
     rows = TaskResultsRepository(db_path).fetch_task_result_rows(
@@ -108,7 +120,7 @@ def test_task_results_repository_can_return_lightweight_rows_for_hot_path(tmp_pa
 
 def test_task_results_repository_can_fetch_embedding_variant_rows_when_requested(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
-    _write_task_results(
+    _write_viewer_task_results(
         db_path,
         [
             ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
@@ -129,7 +141,6 @@ def test_task_results_repository_can_fetch_embedding_variant_rows_when_requested
                 "uint8",
             ),
         ],
-        include_embedding_variant_columns=True,
     )
 
     records = TaskResultsRepository(db_path).fetch_task_results(
@@ -145,7 +156,7 @@ def test_task_results_repository_can_fetch_embedding_variant_rows_when_requested
 
 def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
-    _write_task_results(
+    _write_viewer_task_results(
         db_path,
         [
             ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
@@ -230,7 +241,6 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
                 None,
             ),
         ],
-        include_embedding_variant_columns=True,
     )
 
     quantization_records = TaskResultsRepository(db_path).fetch_task_results(
@@ -261,8 +271,8 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
     assert [(record.embedding_variant_name, record.quantization) for record in cross_variant_records] == [
         (None, None),
         ("quantize_uint8_docs", "uint8"),
-        ("truncate_dim_256_quantize_int8_docs", "int8"),
         ("truncate_dim_384", None),
+        ("truncate_dim_256_quantize_int8_docs", "int8"),
     ]
     assert [record.embedding_variant_name for record in rescore_records] == [None, "binary_rescore"]
     assert [record.embedding_variant_name for record in other_records] == [None, "custom_variant"]
@@ -273,12 +283,11 @@ def test_task_results_repository_logs_duckdb_query_and_record_transform_timing(
     caplog: pytest.LogCaptureFixture,
 ) -> None:
     db_path = tmp_path / "results.duckdb"
-    _write_task_results(
+    _write_viewer_task_results(
         db_path,
         [
             ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
         ],
-        include_embedding_variant_columns=True,
     )
 
     with caplog.at_level(logging.INFO, logger="hakari_bench.viewer"):
@@ -305,7 +314,7 @@ def test_task_results_repository_logs_duckdb_query_and_record_transform_timing(
 
 def test_task_results_repository_reads_runtime_option_columns_when_present(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
-    _write_task_results(
+    _write_viewer_task_results(
         db_path,
         [
             (
@@ -353,8 +362,6 @@ def test_task_results_repository_reads_runtime_option_columns_when_present(tmp_p
                 True,
             ),
         ],
-        include_embedding_variant_columns=False,
-        include_runtime_option_columns=True,
     )
 
     records = TaskResultsRepository(db_path).fetch_task_results(
@@ -377,16 +384,15 @@ def test_task_results_repository_reads_runtime_option_columns_when_present(tmp_p
 
 def test_task_results_repository_reads_dataset_languages_when_present(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
-    _write_task_results(
+    _write_viewer_task_results(
         db_path,
         [
             ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "task-ja", 0.90, 10, 12, 8192),
             ("model/a", "BenchA", "bench/a", "BenchA", None, "a2", "task-multi", 0.80, 10, 12, 8192),
         ],
-        include_embedding_variant_columns=False,
-        dataset_metadata_rows=[
-            ("BenchA", "bench/a", "BenchA", None, "a1", "task-ja", "ja", ["ja"]),
-            ("BenchA", "bench/a", "BenchA", None, "a2", "task-multi", "multilingual", ["en", "ja"]),
+        rows_override_languages=[
+            ("ja", ["ja"]),
+            ("multilingual", ["en", "ja"]),
         ],
     )
 
@@ -401,52 +407,15 @@ def test_task_results_repository_reads_dataset_languages_when_present(tmp_path: 
     ]
 
 
-def test_task_results_repository_prefers_materialized_viewer_task_results(tmp_path: Path) -> None:
+def test_task_results_repository_reads_materialized_viewer_task_results(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
-    _write_task_results(
+    _write_viewer_task_results(
         db_path,
         [
             ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "task-ja", 0.90, 10, 12, 8192),
         ],
-        include_embedding_variant_columns=False,
-        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", None, "a1", "task-ja", "metadata-ja", ["metadata-ja"])],
+        rows_override_languages=[("viewer-ja", ["viewer-ja"])],
     )
-    con = duckdb.connect(str(db_path))
-    try:
-        con.execute(
-            """
-            CREATE TABLE viewer_task_results AS
-            SELECT
-                model_name,
-                benchmark,
-                dataset_id,
-                dataset_name,
-                COALESCE(split_name, '') AS split_name,
-                task_name,
-                task_key,
-                score,
-                'viewer-ja' AS language,
-                ['viewer-ja']::VARCHAR[] AS languages,
-                active_parameters,
-                total_parameters,
-                max_seq_length,
-                NULL AS dtype,
-                NULL AS attn_implementation,
-                NULL AS query_prompt,
-                NULL AS document_prompt,
-                NULL AS query_prompt_name,
-                NULL AS document_prompt_name,
-                NULL AS query_encode_task,
-                NULL AS document_encode_task,
-                NULL AS trust_remote_code,
-                NULL AS embedding_variant_name,
-                NULL AS embedding_dim,
-                NULL AS quantization
-            FROM task_results
-            """
-        )
-    finally:
-        con.close()
 
     records = TaskResultsRepository(db_path).fetch_task_results(
         benchmarks=["BenchA"],
@@ -462,6 +431,8 @@ def test_task_results_repository_reads_score_target_from_materialized_viewer_tab
     db_path = tmp_path / "results.duckdb"
     con = duckdb.connect(str(db_path))
     try:
+        con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
+        con.execute("INSERT INTO meta_database VALUES ('3')")
         con.execute(
             """
             CREATE TABLE viewer_task_results (
@@ -567,46 +538,18 @@ def test_task_results_repository_reads_score_target_from_materialized_viewer_tab
     assert [(record.task_key, record.score) for record in records] == [("task-a1", 0.92)]
 
 
-def test_materialized_viewer_task_results_do_not_add_query_time_order_by() -> None:
-    assert _task_results_order_by("viewer_task_results", {"embedding_variant_name"}) == ""
-    assert _task_results_order_by("task_results", {"embedding_variant_name"}).startswith("ORDER BY")
-
-
-def _write_task_results(
+def _write_viewer_task_results(
     db_path: Path,
     rows: list[tuple],
     *,
-    include_embedding_variant_columns: bool,
-    include_runtime_option_columns: bool = False,
-    dataset_metadata_rows: list[tuple] | None = None,
+    rows_override_languages: list[tuple[str, list[str]]] | None = None,
+    schema_version: str = "3",
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
-        variant_columns = (
-            [
-                "embedding_variant_name VARCHAR",
-                "embedding_dim INTEGER",
-                "quantization VARCHAR",
-            ]
-            if include_embedding_variant_columns
-            else []
-        )
-        runtime_columns = (
-            [
-                "dtype VARCHAR",
-                "attn_implementation VARCHAR",
-                "query_prompt VARCHAR",
-                "document_prompt VARCHAR",
-                "query_prompt_name VARCHAR",
-                "document_prompt_name VARCHAR",
-                "query_encode_task VARCHAR",
-                "document_encode_task VARCHAR",
-                "trust_remote_code BOOLEAN",
-            ]
-            if include_runtime_option_columns
-            else []
-        )
-        columns = [
+        con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
+        con.execute("INSERT INTO meta_database VALUES (?)", [schema_version])
+        columns = (
             "model_name VARCHAR",
             "benchmark VARCHAR",
             "dataset_id VARCHAR",
@@ -614,34 +557,91 @@ def _write_task_results(
             "split_name VARCHAR",
             "task_name VARCHAR",
             "task_key VARCHAR",
+            "score_target VARCHAR",
             "score DOUBLE",
+            "language VARCHAR",
+            "languages VARCHAR[]",
             "active_parameters BIGINT",
             "total_parameters BIGINT",
             "max_seq_length INTEGER",
-            *runtime_columns,
-            *variant_columns,
-        ]
-        con.execute(f"CREATE TABLE task_results ({', '.join(columns)})")
-        placeholders = ", ".join("?" for _ in rows[0])
-        con.executemany(f"INSERT INTO task_results VALUES ({placeholders})", rows)
-        if dataset_metadata_rows is not None:
-            con.execute(
-                """
-                CREATE TABLE dataset_metadata (
-                    benchmark VARCHAR,
-                    dataset_id VARCHAR,
-                    dataset_name VARCHAR,
-                    split_name VARCHAR,
-                    task_name VARCHAR,
-                    task_key VARCHAR,
-                    language VARCHAR,
-                    languages VARCHAR[]
-                )
-                """
+            "dtype VARCHAR",
+            "attn_implementation VARCHAR",
+            "query_prompt VARCHAR",
+            "document_prompt VARCHAR",
+            "query_prompt_name VARCHAR",
+            "document_prompt_name VARCHAR",
+            "query_encode_task VARCHAR",
+            "document_encode_task VARCHAR",
+            "trust_remote_code BOOLEAN",
+            "embedding_variant_name VARCHAR",
+            "embedding_dim INTEGER",
+            "quantization VARCHAR",
+        )
+        con.execute(f"CREATE TABLE viewer_task_results ({', '.join(columns)})")
+        normalized_rows = []
+        for index, row in enumerate(rows):
+            language, languages = (
+                rows_override_languages[index]
+                if rows_override_languages is not None
+                else (None, [])
             )
-            con.executemany(
-                "INSERT INTO dataset_metadata VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                dataset_metadata_rows,
-            )
+            normalized_rows.append(_viewer_task_result_row(row, language=language, languages=languages))
+        placeholders = ", ".join("?" for _ in columns)
+        con.executemany(f"INSERT INTO viewer_task_results VALUES ({placeholders})", normalized_rows)
     finally:
         con.close()
+
+
+def _viewer_task_result_row(row: tuple, *, language: str | None, languages: list[str]) -> tuple:
+    base = row[:11]
+    remaining = row[11:]
+    dtype = None
+    attn_implementation = None
+    query_prompt = None
+    document_prompt = None
+    query_prompt_name = None
+    document_prompt_name = None
+    query_encode_task = None
+    document_encode_task = None
+    trust_remote_code = None
+    embedding_variant_name = None
+    embedding_dim = None
+    quantization = None
+    if len(remaining) == 3:
+        embedding_variant_name, embedding_dim, quantization = remaining
+    elif len(remaining) == 9:
+        (
+            dtype,
+            attn_implementation,
+            query_prompt,
+            document_prompt,
+            query_prompt_name,
+            document_prompt_name,
+            query_encode_task,
+            document_encode_task,
+            trust_remote_code,
+        ) = remaining
+    elif len(remaining) == 0:
+        pass
+    else:
+        raise AssertionError(f"Unexpected row shape: {row!r}")
+    return (
+        *base[:7],
+        "all",
+        base[7],
+        language,
+        languages,
+        *base[8:11],
+        dtype,
+        attn_implementation,
+        query_prompt,
+        document_prompt,
+        query_prompt_name,
+        document_prompt_name,
+        query_encode_task,
+        document_encode_task,
+        trust_remote_code,
+        embedding_variant_name,
+        embedding_dim,
+        quantization,
+    )

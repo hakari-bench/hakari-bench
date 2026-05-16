@@ -64,9 +64,11 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
 def _write_browser_task_results(db_path: Path) -> None:
     con = duckdb.connect(str(db_path))
     try:
+        con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
+        con.execute("INSERT INTO meta_database VALUES ('3')")
         con.execute(
             """
-            CREATE TABLE task_results (
+            CREATE TABLE viewer_task_results (
                 model_name VARCHAR,
                 benchmark VARCHAR,
                 dataset_id VARCHAR,
@@ -74,10 +76,22 @@ def _write_browser_task_results(db_path: Path) -> None:
                 split_name VARCHAR,
                 task_name VARCHAR,
                 task_key VARCHAR,
+                score_target VARCHAR,
                 score DOUBLE,
+                language VARCHAR,
+                languages VARCHAR[],
                 active_parameters BIGINT,
                 total_parameters BIGINT,
                 max_seq_length INTEGER,
+                dtype VARCHAR,
+                attn_implementation VARCHAR,
+                query_prompt VARCHAR,
+                document_prompt VARCHAR,
+                query_prompt_name VARCHAR,
+                document_prompt_name VARCHAR,
+                query_encode_task VARCHAR,
+                document_encode_task VARCHAR,
+                trust_remote_code BOOLEAN,
                 embedding_variant_name VARCHAR,
                 embedding_dim INTEGER,
                 quantization VARCHAR
@@ -85,30 +99,57 @@ def _write_browser_task_results(db_path: Path) -> None:
             """
         )
         con.executemany(
-            "INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-                ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192, None, 384, None),
-                (
-                    "model/a",
-                    "BenchA",
-                    "bench/a",
-                    "BenchA",
-                    "a1",
-                    "a1",
-                    "a1",
-                    0.82,
-                    10,
-                    12,
-                    8192,
-                    "truncate_dim_256",
-                    256,
-                    None,
+                _viewer_task_result_row(
+                    ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192, None, 384, None)
                 ),
-                ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.75, 20, 24, 4096, None, 512, None),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "a1",
+                        "a1",
+                        "a1",
+                        0.82,
+                        10,
+                        12,
+                        8192,
+                        "truncate_dim_256",
+                        256,
+                        None,
+                    )
+                ),
+                _viewer_task_result_row(
+                    ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.75, 20, 24, 4096, None, 512, None)
+                ),
             ],
         )
     finally:
         con.close()
+
+
+def _viewer_task_result_row(row: tuple) -> tuple:
+    return (
+        *row[:7],
+        "all",
+        row[7],
+        None,
+        [],
+        *row[8:11],
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        *row[11:],
+    )
 
 
 @contextmanager
