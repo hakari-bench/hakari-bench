@@ -1061,26 +1061,37 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
         "w-24 border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
+    active_classes = "border-cyan-700 bg-cyan-50" if filter_state.has_task_length_filters else "border-zinc-200 bg-zinc-50"
+    tooltip = (
+        "Filters tasks by average query and document string length in characters. "
+        "Tasks missing length metadata are excluded when a bound is set."
+    )
     return f"""
-    <fieldset class="flex flex-wrap items-center gap-2 border border-zinc-200 bg-zinc-50 px-2 py-1.5">
-      <legend class="px-1 text-xs font-semibold uppercase text-zinc-500">Task length</legend>
+    <fieldset class="flex flex-wrap items-center gap-2 border {active_classes} px-2 py-1.5">
+      <legend class="inline-flex items-center gap-1 px-1 text-xs font-semibold uppercase text-zinc-500">
+        <span>Task string length</span>
+        <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
+              data-tooltip="{escape(tooltip, quote=True)}"
+              data-tooltip-placement="left"
+              aria-label="{escape(tooltip, quote=True)}">?</span>
+      </legend>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Query >=</span>
+        <span class="text-xs font-medium text-zinc-700">Query string >=</span>
         <input type="number" min="0" step="any" name="query_len_min" value="{escape(filter_state.query_len_min)}"
                class="{input_class}">
       </label>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Query <=</span>
+        <span class="text-xs font-medium text-zinc-700">Query string <=</span>
         <input type="number" min="0" step="any" name="query_len_max" value="{escape(filter_state.query_len_max)}"
                class="{input_class}">
       </label>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Doc >=</span>
+        <span class="text-xs font-medium text-zinc-700">Doc string >=</span>
         <input type="number" min="0" step="any" name="doc_len_min" value="{escape(filter_state.doc_len_min)}"
                class="{input_class}">
       </label>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Doc <=</span>
+        <span class="text-xs font-medium text-zinc-700">Doc string <=</span>
         <input type="number" min="0" step="any" name="doc_len_max" value="{escape(filter_state.doc_len_max)}"
                class="{input_class}">
       </label>
