@@ -538,6 +538,42 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert ranking_rows[0].corpus_id == "d1"
 
 
+def test_load_results_backfills_known_missing_jina_v3_active_parameters(tmp_path: Path) -> None:
+    task_path = tmp_path / "jinaai__jina-embeddings-v3" / "hakari-bench__NanoBEIR-en" / "arguana.json"
+    task_path.parent.mkdir(parents=True)
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {
+                    "id": "jinaai/jina-embeddings-v3",
+                    "source": {
+                        "type": "huggingface",
+                        "name": "jinaai/jina-embeddings-v3",
+                        "revision": "ab036b023d30",
+                    },
+                    "total_parameters": 572310396,
+                    "embedding_parameters": None,
+                    "active_parameters": None,
+                },
+                "environment": {"package_versions": {}},
+                "target": {
+                    "dataset_name": "NanoBEIR-en",
+                    "dataset_id": "hakari-bench/NanoBEIR-en",
+                    "split_name": "arguana",
+                    "task_name": "arguana",
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.42},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    rows, runs, _, _, _, _ = report.load_results(tmp_path)
+
+    assert rows[0].active_parameters == 316308348
+    assert runs[0]["active_parameters"] == 316308348
+
+
 def test_task_result_row_schema_rejects_unknown_fields() -> None:
     with pytest.raises(ValidationError, match="unexpected"):
         TaskResultRow.model_validate(

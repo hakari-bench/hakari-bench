@@ -48,6 +48,18 @@ TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
 WAREHOUSE_SCHEMA_VERSION = "3"
 WAREHOUSE_COMPATIBILITY_LEVEL = "v1-compatible"
+MODEL_PARAMETER_BACKFILLS = {
+    "jinaai/jina-embeddings-v3": {
+        # The original May 2026 result JSON was produced before custom
+        # parametrized embeddings exposed get_input_embeddings() correctly.
+        # The HF config/safetensors at revision ab036b023d30 have
+        # vocab_size=250002 and hidden_size=1024, so input embeddings contain
+        # 256,002,048 parameters.
+        "total_parameters": 572_310_396,
+        "embedding_parameters": 256_002_048,
+        "active_parameters": 316_308_348,
+    }
+}
 WAREHOUSE_TABLES = (
     "meta_database",
     "schema_change_log",
@@ -292,6 +304,8 @@ def load_results(
         if not isinstance(score, int | float):
             continue
         model = task_payload.get("model", {})
+        if isinstance(model, dict):
+            model = _with_model_parameter_backfills(model)
         environment = task_payload.get("environment", {})
         package_versions = environment.get("package_versions", {}) if isinstance(environment, dict) else {}
         experiment_manifest = task_payload.get("experiment_manifest", {})
@@ -744,6 +758,25 @@ def _top_rankings_artifact(task_payload: dict[str, Any]) -> dict[str, Any] | Non
     if not isinstance(path, str) or not path:
         return None
     return artifact
+
+
+def _with_model_parameter_backfills(model: dict[str, Any]) -> dict[str, Any]:
+    model_id = model.get("id")
+    source = model.get("source")
+    source_name = source.get("name") if isinstance(source, dict) else None
+    backfill = MODEL_PARAMETER_BACKFILLS.get(str(model_id or source_name or ""))
+    if backfill is None:
+        return model
+    total_parameters = _int_or_none(model.get("total_parameters"))
+    if total_parameters != backfill["total_parameters"] or _int_or_none(model.get("active_parameters")) is not None:
+        return model
+    updated = dict(model)
+    updated["active_parameters"] = backfill["active_parameters"]
+    if _int_or_none(updated.get("embedding_parameters")) is None:
+        updated["embedding_parameters"] = backfill["embedding_parameters"]
+    if _int_or_none(updated.get("transformer_parameters")) is None:
+        updated["transformer_parameters"] = backfill["active_parameters"]
+    return updated
 
 
 def _accumulate_run(
