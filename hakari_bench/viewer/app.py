@@ -61,9 +61,13 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
     app.add_middleware(GZipMiddleware, minimum_size=1024)
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
-    @app.get("/favicon.svg")
+    @app.get("/favicon.png")
     def favicon() -> FileResponse:
-        return FileResponse(ASSETS_DIR / "favicon.svg", media_type="image/svg+xml")
+        return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
+
+    @app.get("/favicon.ico")
+    def favicon_ico() -> FileResponse:
+        return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
 
     @app.get("/", response_class=HTMLResponse)
     def index(
@@ -267,7 +271,7 @@ def render_page(
   <title>HAKARI-bench leaderboard</title>
   <link rel="canonical" href="/">
   <link rel="stylesheet" href="/assets/app.css">
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
   <script src="/assets/htmx.min.js"></script>
   <script src="/assets/viewer.js" defer></script>
 </head>

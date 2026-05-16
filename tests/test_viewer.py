@@ -350,7 +350,7 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert "Benchmark coverage" in response.text
     assert "Models" in response.text
     assert '<link rel="stylesheet" href="/assets/app.css">' in response.text
-    assert '<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">' in response.text
+    assert '<link rel="icon" type="image/png" href="/assets/favicon.png">' in response.text
     assert '<script src="/assets/htmx.min.js"></script>' in response.text
     assert '<script src="/assets/viewer.js" defer></script>' in response.text
     assert "<script>" not in response.text
@@ -389,12 +389,11 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
     client = TestClient(app)
 
-    response = client.get("/assets/favicon.svg")
+    response = client.get("/assets/favicon.png")
 
     assert response.status_code == 200
-    assert response.headers["content-type"].startswith("image/svg+xml")
-    assert '<title id="title">HAKARI favicon</title>' in response.text
-    assert 'mask id="scale-cutout"' in response.text
+    assert response.headers["content-type"].startswith("image/png")
+    assert response.content.startswith(b"\x89PNG\r\n\x1a\n")
 
     css_response = client.get("/assets/app.css")
     assert css_response.status_code == 200
@@ -433,9 +432,15 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert 'document.addEventListener("htmx:replacedInHistory"' in viewer_js_response.text
     assert 'document.addEventListener("htmx:afterSwap"' in viewer_js_response.text
 
-    legacy_favicon_response = client.get("/favicon.svg")
+    legacy_favicon_response = client.get("/favicon.png")
     assert legacy_favicon_response.status_code == 200
-    assert '<title id="title">HAKARI favicon</title>' in legacy_favicon_response.text
+    assert legacy_favicon_response.headers["content-type"].startswith("image/png")
+    assert legacy_favicon_response.content.startswith(b"\x89PNG\r\n\x1a\n")
+
+    browser_default_favicon_response = client.get("/favicon.ico")
+    assert browser_default_favicon_response.status_code == 200
+    assert browser_default_favicon_response.headers["content-type"].startswith("image/png")
+    assert browser_default_favicon_response.content == response.content
 
 
 def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_path: Path) -> None:
