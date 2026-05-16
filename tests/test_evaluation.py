@@ -327,8 +327,8 @@ class FakeCudaSentenceTransformersSparseModel(FakeSentenceTransformersSparseMode
 
 
 class FakeReranker:
-    def predict(self, pairs: list[tuple[str, str]], **kwargs: object) -> list[float]:
-        return [1.0 if pair in {("cat query", "cat doc"), ("dog query", "dog doc")} else 0.0 for pair in pairs]
+    def predict(self, pairs: list[list[str]], **kwargs: object) -> list[float]:
+        return [1.0 if tuple(pair) in {("cat query", "cat doc"), ("dog query", "dog doc")} else 0.0 for pair in pairs]
 
 
 class FakeLateInteractionModel:
@@ -373,9 +373,29 @@ class FakeRankReranker:
 
 
 class FakeCallableReranker:
-    def __call__(self, pairs: list[tuple[str, str]], **kwargs: object) -> list[float]:
+    def __call__(self, pairs: list[list[str]], **kwargs: object) -> list[float]:
         del kwargs
-        return [1.0 if pair in {("cat query", "cat doc"), ("dog query", "dog doc")} else 0.0 for pair in pairs]
+        return [1.0 if tuple(pair) in {("cat query", "cat doc"), ("dog query", "dog doc")} else 0.0 for pair in pairs]
+
+
+class FakeTiePredictReranker:
+    def predict(self, pairs: list[list[str]], **kwargs: object) -> list[float]:
+        del kwargs
+        return [0.0 for _pair in pairs]
+
+
+class FakePredictAndRankReranker:
+    def __init__(self) -> None:
+        self.predict_calls: list[dict[str, object]] = []
+        self.rank_calls: list[dict[str, object]] = []
+
+    def predict(self, pairs: list[list[str]], **kwargs: object) -> list[float]:
+        self.predict_calls.append({"pairs": pairs, **kwargs})
+        return [1.0 if tuple(pair) in {("cat query", "cat doc"), ("dog query", "dog doc")} else 0.0 for pair in pairs]
+
+    def rank(self, query: str, documents: list[str], **kwargs: object) -> list[dict[str, object]]:
+        self.rank_calls.append({"query": query, "documents": documents, **kwargs})
+        return [{"corpus_id": index, "score": 0.0} for index, _document in enumerate(documents)]
 
 
 def test_evaluate_dense_task_uses_default_prompt_config_when_not_overridden() -> None:
@@ -1518,6 +1538,41 @@ def test_evaluate_reranker_task_supports_rank_api() -> None:
     )
 
     assert result.metrics["ToyData_test_reranker_ndcg@10"] == pytest.approx(1.0)
+
+
+def test_evaluate_reranker_task_batches_predict_pairs_before_rank_api() -> None:
+    model = FakePredictAndRankReranker()
+
+    result = evaluate_reranker_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        rerank_top_n=2,
+    )
+
+    assert result.metrics["ToyData_test_reranker_ndcg@10"] == pytest.approx(1.0)
+    assert len(model.predict_calls) == 1
+    assert model.predict_calls[0]["pairs"] == [
+        ["cat query", "other doc"],
+        ["cat query", "cat doc"],
+        ["dog query", "dog doc"],
+        ["dog query", "cat doc"],
+    ]
+    assert model.predict_calls[0]["batch_size"] == 2
+    assert model.rank_calls == []
+
+
+def test_evaluate_reranker_task_preserves_candidate_order_for_predict_ties() -> None:
+    result = evaluate_reranker_task(
+        model=FakeTiePredictReranker(),
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        rerank_top_n=2,
+    )
+
+    assert result.top_rankings[0]["rankings"] == {"q1": ["d3", "d1"], "q2": ["d2", "d1"]}
 
 
 def test_evaluate_reranker_task_supports_callable_api() -> None:

@@ -327,19 +327,29 @@ def evaluate_reranker_task(
         raise ValueError("Reranker evaluation requires a candidate subset such as bm25.")
 
     score_start = time.perf_counter()
-    rankings: dict[str, list[str]] = {}
-    for query_id, query_text in dataset.queries.items():
-        candidate_ids = [doc_id for doc_id in dataset.candidates.get(query_id, []) if doc_id in dataset.corpus]
-        candidate_ids = candidate_ids[:rerank_top_n]
-        rankings[query_id] = _rank_with_reranker_model(
+    if _can_score_reranker_pairs(model):
+        rankings = _rank_all_with_reranker_model(
             model,
-            query=query_text,
-            candidate_ids=candidate_ids,
-            documents=[dataset.corpus[doc_id] for doc_id in candidate_ids],
+            dataset=dataset,
             batch_size=batch_size,
             show_progress=show_progress,
+            rerank_top_n=rerank_top_n,
             score_kwargs=score_kwargs or {},
         )
+    else:
+        rankings = {}
+        for query_id, query_text in dataset.queries.items():
+            candidate_ids = [doc_id for doc_id in dataset.candidates.get(query_id, []) if doc_id in dataset.corpus]
+            candidate_ids = candidate_ids[:rerank_top_n]
+            rankings[query_id] = _rank_with_reranker_model(
+                model,
+                query=query_text,
+                candidate_ids=candidate_ids,
+                documents=[dataset.corpus[doc_id] for doc_id in candidate_ids],
+                batch_size=batch_size,
+                show_progress=show_progress,
+                score_kwargs=score_kwargs or {},
+            )
     score_seconds = time.perf_counter() - score_start
 
     metric_start = time.perf_counter()
@@ -957,6 +967,47 @@ def _embedding_conversion_payload(*, text_count: int, batch_size: int, seconds: 
     }
 
 
+def _can_score_reranker_pairs(model: Any) -> bool:
+    return callable(getattr(model, "predict", None)) or callable(model)
+
+
+def _rank_all_with_reranker_model(
+    model: Any,
+    *,
+    dataset: LoadedIrDataset,
+    batch_size: int,
+    show_progress: bool,
+    rerank_top_n: int,
+    score_kwargs: dict[str, Any] | None = None,
+) -> dict[str, list[str]]:
+    if dataset.candidates is None:
+        return {}
+    pairs: list[list[str]] = []
+    query_candidate_ids: dict[str, list[str]] = {}
+    for query_id, query_text in dataset.queries.items():
+        candidate_ids = [doc_id for doc_id in dataset.candidates.get(query_id, []) if doc_id in dataset.corpus]
+        candidate_ids = candidate_ids[:rerank_top_n]
+        query_candidate_ids[query_id] = candidate_ids
+        pairs.extend([query_text, dataset.corpus[doc_id]] for doc_id in candidate_ids)
+    scores = _predict_scores(
+        model,
+        pairs=pairs,
+        batch_size=batch_size,
+        show_progress=show_progress,
+        score_kwargs=score_kwargs,
+    )
+    if len(scores) != len(pairs):
+        raise ValueError(f"Reranker returned {len(scores)} scores for {len(pairs)} query-document pairs.")
+    rankings: dict[str, list[str]] = {}
+    score_offset = 0
+    for query_id, candidate_ids in query_candidate_ids.items():
+        query_scores = scores[score_offset : score_offset + len(candidate_ids)]
+        score_offset += len(candidate_ids)
+        ranked = sorted(zip(candidate_ids, query_scores, strict=True), key=lambda item: -float(item[1]))
+        rankings[query_id] = [doc_id for doc_id, _score in ranked]
+    return rankings
+
+
 def _rank_with_reranker_model(
     model: Any,
     *,
@@ -987,7 +1038,7 @@ def _rank_with_reranker_model(
         if parsed:
             return parsed
 
-    pairs = [(query, document) for document in documents]
+    pairs = [[query, document] for document in documents]
     scores = _predict_scores(
         model,
         pairs=pairs,
@@ -995,7 +1046,7 @@ def _rank_with_reranker_model(
         show_progress=show_progress,
         score_kwargs=score_kwargs,
     )
-    ranked = sorted(zip(candidate_ids, scores, strict=True), key=lambda item: (-float(item[1]), item[0]))
+    ranked = sorted(zip(candidate_ids, scores, strict=True), key=lambda item: -float(item[1]))
     return [doc_id for doc_id, _score in ranked]
 
 
@@ -1039,7 +1090,7 @@ def _candidate_id_from_rank_corpus_id(raw_corpus_id: Any, *, candidate_ids: list
 def _predict_scores(
     model: Any,
     *,
-    pairs: list[tuple[str, str]],
+    pairs: list[list[str]],
     batch_size: int,
     show_progress: bool,
     score_kwargs: dict[str, Any] | None = None,
