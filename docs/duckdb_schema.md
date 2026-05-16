@@ -866,13 +866,18 @@ new DuckDB file is downloaded or otherwise modified. The cache emits
 DB build scripts create `viewer_task_results` as a physical table after
 `dataset_metadata` and `fact_task_score` are written. It selects only the
 columns required by `TaskResultsRepository`, includes `score_target`, joins
-`dataset_metadata` by `(benchmark, dataset_id, task_key)`, and orders rows by
+`dataset_metadata` by `(benchmark, dataset_id, task_key)`, includes
+`query_mean_chars` and `document_mean_chars` for task text-length filters, and
+orders rows by
 `(benchmark, score_target, dataset_id, task_name, model_name,
 embedding_variant_name)`. This avoids repeated metadata joins and lets the
 viewer switch `Target: All` / `Target: Reranking` without joining diagnostics
 on the hot path.
 Because `viewer_task_results` is already physically ordered, the viewer skips
 the query-time `ORDER BY` when reading it.
+If an older database has these length columns only in `dataset_metadata`, the
+repository falls back to a metadata join so `query_len_min`, `query_len_max`,
+`doc_len_min`, and `doc_len_max` viewer filters still work.
 
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. The default build
@@ -954,7 +959,9 @@ SELECT
   trust_remote_code,
   embedding_variant_name,
   embedding_dim,
-  quantization
+  quantization,
+  query_mean_chars,
+  document_mean_chars
 FROM viewer_task_results
 WHERE benchmark IN ('MNanoBEIR', 'NanoRTEB')
   AND score IS NOT NULL

@@ -8,7 +8,7 @@ from pathlib import Path
 import duckdb
 import pytest
 
-from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, _view_group, create_app
+from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, _view_group, create_app, render_table_head
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, _clear_task_score_cache, compute_leaderboard_rows
@@ -706,7 +706,7 @@ def test_leaderboard_service_cache_invalidates_when_duckdb_file_changes(
             languages=[],
         )
         con.execute(
-            "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             row,
         )
     finally:
@@ -1134,7 +1134,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=model%2Fb")
 
     assert response.status_code == 200
-    assert "Display:" in response.text
+    assert "Display:" not in response.text
+    assert "Columns:" in response.text
+    assert "Include variants:" in response.text
     assert "Other variants" in response.text
     assert "Filters:" in response.text
     assert '<div class="mt-3 flex flex-wrap items-start gap-3">' in response.text
@@ -1144,7 +1146,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "sm:grid-cols-3" in response.text
     assert response.text.count(">All</button>") == 5
     assert response.text.count(">None</button>") == 5
-    assert 'id="display-controls"' in response.text
+    assert 'id="column-controls"' in response.text
+    assert 'id="variant-controls"' in response.text
+    assert 'id="filter-controls"' in response.text
     assert 'id="facet-filters"' in response.text
     assert 'from:input[type=' not in response.text
     assert 'hx-trigger="change, submit"' in response.text
@@ -1174,6 +1178,11 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "window.__hakariRestoreModelFilterFocus" not in response.text
     assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
+
+    base_head = render_table_head(result=base_result, sort="borda_rank", direction="asc")
+    quantization_head = render_table_head(result=quantization_result, sort="borda_rank", direction="asc")
+    assert ">Quantization</span>" not in base_head
+    assert ">Quantization</span>" in quantization_head
 
     short_filter_response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=mo")
 
@@ -1850,6 +1859,78 @@ def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path:
     assert "metric%3Aarguana" in response.text
 
 
+def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = [
+        ("model/a", "BenchA", "bench/a", "BenchA", "short", "short", "BenchA::short", 0.90, 10, 12, 8192),
+        ("model/b", "BenchA", "bench/a", "BenchA", "short", "short", "BenchA::short", 0.70, 10, 12, 8192),
+        ("model/a", "BenchA", "bench/a", "BenchA", "longq", "longq", "BenchA::longq", 0.20, 10, 12, 8192),
+        ("model/b", "BenchA", "bench/a", "BenchA", "longq", "longq", "BenchA::longq", 0.95, 10, 12, 8192),
+        ("model/a", "BenchA", "bench/a", "BenchA", "longd", "longd", "BenchA::longd", 0.30, 10, 12, 8192),
+        ("model/b", "BenchA", "bench/a", "BenchA", "longd", "longd", "BenchA::longd", 0.85, 10, 12, 8192),
+    ]
+    _write_task_results(
+        db_path,
+        rows,
+        dataset_metadata_rows=[
+            ("BenchA", "bench/a", "BenchA", "short", "short", "BenchA::short", "en", ["en"], 500.0, 1500.0),
+            ("BenchA", "bench/a", "BenchA", "longq", "longq", "BenchA::longq", "en", ["en"], 1200.0, 1500.0),
+            ("BenchA", "bench/a", "BenchA", "longd", "longd", "BenchA::longd", "en", ["en"], 500.0, 2500.0),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard(
+        "BenchA",
+        query_max_chars=1000,
+        document_max_chars=2000,
+        show_task_scores=True,
+    )
+
+    assert result.expected_tasks == 1
+    assert result.metric_columns == ["short"]
+    assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
+    assert result.rows[0].mean_score == pytest.approx(90.0)
+
+
+def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "short", "short", "BenchA::short", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "short", "short", "BenchA::short", 0.70, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "long", "long", "BenchA::long", 0.10, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "long", "long", "BenchA::long", 0.95, 10, 12, 8192),
+        ],
+        dataset_metadata_rows=[
+            ("BenchA", "bench/a", "BenchA", "short", "short", "BenchA::short", "en", ["en"], 500.0, 1500.0),
+            ("BenchA", "bench/a", "BenchA", "long", "long", "BenchA::long", "en", ["en"], 1200.0, 2500.0),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get(
+        "/leaderboard?view=BenchA&task_scores=1&filters=1&query_len_max=1000&doc_len_max=2000"
+    )
+
+    assert response.status_code == 200
+    assert 'name="query_len_max" value="1000"' in response.text
+    assert 'name="doc_len_max" value="2000"' in response.text
+    assert ">short</span>" in response.text
+    assert ">long</span>" not in response.text
+    assert response.text.index("model/a") < response.text.index("model/b")
+
+
 def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
     assert _metric_column_label("NanoAILAStatutes") == "AILAStatutes"
     assert _metric_column_label("NanoBEIR-ja") == "BEIR-ja"
@@ -2078,6 +2159,8 @@ def _write_task_results(
             "embedding_variant_name VARCHAR",
             "embedding_dim INTEGER",
             "quantization VARCHAR",
+            "query_mean_chars DOUBLE",
+            "document_mean_chars DOUBLE",
         )
         con.execute(
             f"""
@@ -2090,8 +2173,10 @@ def _write_task_results(
         normalized_rows = [
             _viewer_task_result_row(
                 row,
-                language=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, []))[0],
-                languages=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, []))[1],
+                language=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], None, None))[0],
+                languages=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], None, None))[1],
+                query_mean_chars=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], None, None))[2],
+                document_mean_chars=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], None, None))[3],
             )
             for row in rows
         ]
@@ -2105,15 +2190,29 @@ def _write_task_results(
         con.close()
 
 
-def _metadata_by_task(rows: list[tuple]) -> dict[tuple[str, str, str, str, str], tuple[str | None, list[str]]]:
+def _metadata_by_task(rows: list[tuple]) -> dict[tuple[str, str, str, str, str], tuple[str | None, list[str], float | None, float | None]]:
     metadata = {}
     for row in rows:
-        benchmark, dataset_id, _dataset_name, split_name, task_name, task_key, language, languages = row
-        metadata[(benchmark, dataset_id, split_name, task_name, task_key)] = (language, languages)
+        benchmark, dataset_id, _dataset_name, split_name, task_name, task_key, language, languages, *lengths = row
+        query_mean_chars = lengths[0] if len(lengths) >= 1 else None
+        document_mean_chars = lengths[1] if len(lengths) >= 2 else None
+        metadata[(benchmark, dataset_id, split_name, task_name, task_key)] = (
+            language,
+            languages,
+            query_mean_chars,
+            document_mean_chars,
+        )
     return metadata
 
 
-def _viewer_task_result_row(row: tuple, *, language: str | None, languages: list[str]) -> tuple:
+def _viewer_task_result_row(
+    row: tuple,
+    *,
+    language: str | None,
+    languages: list[str],
+    query_mean_chars: float | None = None,
+    document_mean_chars: float | None = None,
+) -> tuple:
     base = row[:11]
     remaining = row[11:]
     dtype = None
@@ -2180,6 +2279,8 @@ def _viewer_task_result_row(row: tuple, *, language: str | None, languages: list
         embedding_variant_name,
         embedding_dim,
         quantization,
+        query_mean_chars,
+        document_mean_chars,
     )
 
 

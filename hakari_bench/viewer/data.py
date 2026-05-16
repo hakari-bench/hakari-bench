@@ -66,6 +66,8 @@ class TaskResultRecord(BaseModel):
     embedding_variant_name: str | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
+    query_mean_chars: float | None = None
+    document_mean_chars: float | None = None
 
     @property
     def prompt_summary(self) -> str:
@@ -112,6 +114,8 @@ class TaskResultRow:
     embedding_variant_name: str | None = None
     embedding_dim: int | None = None
     quantization: str | None = None
+    query_mean_chars: float | None = None
+    document_mean_chars: float | None = None
 
     @property
     def prompt_summary(self) -> str:
@@ -202,6 +206,7 @@ class TaskResultsRepository:
                         "DuckDB viewer_task_results is missing required columns: "
                         + ", ".join(sorted(missing_columns))
                     )
+                metadata_columns = _table_columns(con, "dataset_metadata") if _table_exists(con, "dataset_metadata") else set()
             score_expr = "tr.score"
             target_filter = "AND tr.score_target = ?"
             query_params: list[Any] = list(benchmarks)
@@ -220,6 +225,10 @@ class TaskResultsRepository:
             query_encode_task_expr = _column_or_null(columns, "query_encode_task")
             document_encode_task_expr = _column_or_null(columns, "document_encode_task")
             trust_remote_code_expr = _column_or_null(columns, "trust_remote_code")
+            query_mean_chars_expr, document_mean_chars_expr, metadata_join = _task_text_length_sql(
+                viewer_columns=columns,
+                metadata_columns=metadata_columns,
+            )
             variant_filter = ""
             if "embedding_variant_name" in columns and (score_target == "reranking" or not include_embedding_variants):
                 variant_filter = "AND tr.embedding_variant_name IS NULL"
@@ -252,8 +261,11 @@ class TaskResultsRepository:
                     {trust_remote_code_expr} AS trust_remote_code,
                     {variant_name_expr} AS embedding_variant_name,
                     {embedding_dim_expr} AS embedding_dim,
-                    {quantization_expr} AS quantization
+                    {quantization_expr} AS quantization,
+                    {query_mean_chars_expr} AS query_mean_chars,
+                    {document_mean_chars_expr} AS document_mean_chars
                 FROM viewer_task_results AS tr
+                {metadata_join}
                 WHERE tr.benchmark IN ({placeholders})
                   AND {score_expr} IS NOT NULL
                   {variant_filter}
@@ -328,6 +340,8 @@ def _task_result_row(field_names: list[str], row: tuple[Any, ...]) -> TaskResult
         embedding_variant_name=payload["embedding_variant_name"] if isinstance(payload["embedding_variant_name"], str) else None,
         embedding_dim=_int_payload_value(payload.get("embedding_dim")),
         quantization=payload["quantization"] if isinstance(payload["quantization"], str) else None,
+        query_mean_chars=_float_payload_value(payload.get("query_mean_chars")),
+        document_mean_chars=_float_payload_value(payload.get("document_mean_chars")),
     )
 
 
@@ -350,6 +364,27 @@ def _dedupe_task_result_records(records: Iterable[TTaskResultItem]) -> list[TTas
 
 def _int_payload_value(value: Any) -> int | None:
     return int(value) if isinstance(value, int) else None
+
+
+def _float_payload_value(value: Any) -> float | None:
+    return float(value) if isinstance(value, int | float) else None
+
+
+def _task_text_length_sql(*, viewer_columns: set[str], metadata_columns: set[str]) -> tuple[str, str, str]:
+    if {"query_mean_chars", "document_mean_chars"}.issubset(viewer_columns):
+        return "tr.query_mean_chars", "tr.document_mean_chars", ""
+    if {"query_mean_chars", "document_mean_chars", "benchmark", "dataset_id", "task_key"}.issubset(metadata_columns):
+        return (
+            "dm.query_mean_chars",
+            "dm.document_mean_chars",
+            """
+                LEFT JOIN dataset_metadata AS dm
+                  ON dm.benchmark = tr.benchmark
+                 AND dm.dataset_id = tr.dataset_id
+                 AND dm.task_key = tr.task_key
+            """,
+        )
+    return "NULL", "NULL", ""
 
 
 def _variant_filter_sql(columns: set[str], flags: VariantDisplayFlags) -> str:

@@ -2922,7 +2922,9 @@ def _create_viewer_task_results_table(con: duckdb.DuckDBPyConnection) -> None:
             fts.trust_remote_code,
             fts.embedding_variant_name,
             fts.embedding_dim,
-            fts.quantization
+            fts.quantization,
+            dm.query_mean_chars,
+            dm.document_mean_chars
         FROM fact_task_score AS fts
         LEFT JOIN dataset_metadata AS dm
           ON dm.benchmark = fts.benchmark

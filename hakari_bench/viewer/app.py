@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from html import escape
 from pathlib import Path
-from typing import cast
+from typing import TypedDict, cast
 from urllib.parse import urlencode
 
 from pydantic import BaseModel, ConfigDict
@@ -34,6 +34,7 @@ from hakari_bench.viewer.state import (
     optional_query_string,
     query_string,
     state_payload,
+    task_length_bounds,
 )
 from hakari_bench.viewer.store import LocalDuckDbStore
 from hakari_bench.viewer.variant_display import (
@@ -41,6 +42,13 @@ from hakari_bench.viewer.variant_display import (
 )
 
 ASSETS_DIR = Path(__file__).with_name("assets")
+
+
+class _TaskLengthFilterKwargs(TypedDict):
+    query_len_min: str
+    query_len_max: str
+    doc_len_min: str
+    doc_len_max: str
 
 
 class ViewerAppConfig(BaseModel):
@@ -91,6 +99,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         lang_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
+        query_len_min: str = Query(default=""),
+        query_len_max: str = Query(default=""),
+        doc_len_min: str = Query(default=""),
+        doc_len_max: str = Query(default=""),
     ) -> str:
         with timed_operation("viewer.http.request", route="index") as request_timing:
             store.ensure_current()
@@ -116,6 +128,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 lang_filter=lang_filter,
                 model_filter=model_filter,
                 task_filter=task_filter,
+                query_len_min=query_len_min,
+                query_len_max=query_len_max,
+                doc_len_min=doc_len_min,
+                doc_len_max=doc_len_max,
             )
             summary = ViewerAnalyticsRepository(store.path).fetch_summary()
             with timed_operation("viewer.render", operation="render_page"):
@@ -150,6 +166,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         lang_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
+        query_len_min: str = Query(default=""),
+        query_len_max: str = Query(default=""),
+        doc_len_min: str = Query(default=""),
+        doc_len_max: str = Query(default=""),
     ) -> HTMLResponse:
         with timed_operation("viewer.http.request", route="leaderboard") as request_timing:
             store.ensure_current()
@@ -175,6 +195,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 lang_filter=lang_filter,
                 model_filter=model_filter,
                 task_filter=task_filter,
+                query_len_min=query_len_min,
+                query_len_max=query_len_max,
+                doc_len_min=doc_len_min,
+                doc_len_max=doc_len_max,
             )
             view = query_string(state_query["view"])
             sort = query_string(state_query["sort"])
@@ -183,6 +207,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             group = optional_query_string(state_query.get("group"))
             display_flags = variant_display_flags_from_query(state_query)
             filter_state = filter_state_from_query(state_query)
+            length_bounds = task_length_bounds(filter_state)
             service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
             result = service.get_leaderboard(
                 view,
@@ -197,6 +222,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 language_filters=filter_state.language_filters,
                 show_task_scores=state_query.get("task_scores") == "1",
                 task_filter=filter_state.task_filter,
+                query_min_chars=length_bounds["query_min_chars"],
+                query_max_chars=length_bounds["query_max_chars"],
+                document_min_chars=length_bounds["document_min_chars"],
+                document_max_chars=length_bounds["document_max_chars"],
             )
             with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
                 content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
@@ -654,7 +683,17 @@ def _filter_state_with_languages(filter_state: FilterState, language_filters: tu
         dtype_filters=filter_state.dtype_filters,
         attn_filters=filter_state.attn_filters,
         prompt_filters=filter_state.prompt_filters,
+        **_task_length_filter_kwargs(filter_state),
     )
+
+
+def _task_length_filter_kwargs(filter_state: FilterState) -> _TaskLengthFilterKwargs:
+    return {
+        "query_len_min": filter_state.query_len_min,
+        "query_len_max": filter_state.query_len_max,
+        "doc_len_min": filter_state.doc_len_min,
+        "doc_len_max": filter_state.doc_len_max,
+    }
 
 
 def render_controls(
@@ -681,23 +720,17 @@ def render_controls(
         state_fields.append(("target", result.score_target))
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
-    display_hidden_html = _hidden_inputs(state_fields + active_filter_hidden_fields(filter_state))
+    sticky_filter_fields = active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
+    variant_hidden_fields = _active_variant_hidden_fields(result)
+    task_score_hidden_fields = [("task_scores", "1")] if result.show_task_scores else []
+    column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
+    variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
     filter_hidden_fields = [
         *state_fields,
         ("filters", "1"),
-        ("model_filter", filter_state.model_filter),
-        ("task_filter", filter_state.task_filter),
+        *variant_hidden_fields,
+        *task_score_hidden_fields,
     ]
-    if result.include_quantization_variants:
-        filter_hidden_fields.append(("quantization", "1"))
-    if result.include_truncate_variants:
-        filter_hidden_fields.append(("truncate", "1"))
-    if result.include_rescore_variants:
-        filter_hidden_fields.append(("rescore", "1"))
-    if result.include_other_variants:
-        filter_hidden_fields.append(("other_variant", "1"))
-    if result.show_task_scores:
-        filter_hidden_fields.append(("task_scores", "1"))
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
     dim_options = filter_context.dim_options
     quant_options = filter_context.quant_options
@@ -724,6 +757,7 @@ def render_controls(
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     dim_none_query = state_payload(
@@ -740,6 +774,7 @@ def render_controls(
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     quant_all_query = state_payload(
@@ -756,6 +791,7 @@ def render_controls(
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     quant_none_query = state_payload(
@@ -772,6 +808,7 @@ def render_controls(
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     dtype_all_query = state_payload(
@@ -788,6 +825,7 @@ def render_controls(
             dtype_filters=tuple(value for value, _ in dtype_options),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     dtype_none_query = state_payload(
@@ -804,6 +842,7 @@ def render_controls(
             dtype_filters=(FILTER_NONE_VALUE,),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     attn_all_query = state_payload(
@@ -820,6 +859,7 @@ def render_controls(
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(value for value, _ in attn_options),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     attn_none_query = state_payload(
@@ -836,6 +876,7 @@ def render_controls(
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=(FILTER_NONE_VALUE,),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     prompt_all_query = state_payload(
@@ -852,6 +893,7 @@ def render_controls(
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(value for value, _ in prompt_options),
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     prompt_none_query = state_payload(
@@ -868,6 +910,7 @@ def render_controls(
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=(FILTER_NONE_VALUE,),
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     language_all_query = state_payload(
@@ -883,6 +926,7 @@ def render_controls(
             dtype_filters=filter_state.dtype_filters,
             attn_filters=filter_state.attn_filters,
             prompt_filters=filter_state.prompt_filters,
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     language_none_query = state_payload(
@@ -898,6 +942,7 @@ def render_controls(
             dtype_filters=filter_state.dtype_filters,
             attn_filters=filter_state.attn_filters,
             prompt_filters=filter_state.prompt_filters,
+            **_task_length_filter_kwargs(filter_state),
         ),
     )
     language_filter_html = (
@@ -915,12 +960,23 @@ def render_controls(
     )
     return f"""
     <div class="mb-4 text-sm text-zinc-700">
-      <form id="display-controls" class="flex flex-wrap items-center gap-x-5 gap-y-2"
+      <form id="column-controls" class="flex flex-wrap items-center gap-x-5 gap-y-2"
             hx-get="/leaderboard" hx-push-url="true"
             {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
-        {display_hidden_html}
-        <span class="font-medium text-zinc-800">Display:</span>
+        {column_hidden_html}
+        <span class="font-medium text-zinc-800">Columns:</span>
+        <label class="inline-flex items-center gap-2">
+          <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
+          <span>Task score columns</span>
+        </label>
+      </form>
+      <form id="variant-controls" class="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2"
+            hx-get="/leaderboard" hx-push-url="true"
+            {_leaderboard_control_hx_attrs()}
+            hx-trigger="change, submit">
+        {variant_hidden_html}
+        <span class="font-medium text-zinc-800">Include variants:</span>
         <label class="inline-flex items-center gap-2">
           <input type="checkbox" name="quantization" value="1" class="h-4 w-4 accent-cyan-700"{quantization_checked}>
           <span>Quantization</span>
@@ -937,10 +993,14 @@ def render_controls(
           <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
           <span>Other variants</span>
         </label>
-        <label class="inline-flex items-center gap-2">
-          <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
-          <span>Task score columns</span>
-        </label>
+      </form>
+      <div class="mt-3 flex flex-wrap items-start gap-3">
+        <p class="pt-1 font-medium text-zinc-800">Filters:</p>
+        <form id="filter-controls" class="flex flex-wrap items-start gap-3"
+              hx-get="/leaderboard" hx-push-url="true"
+              {_leaderboard_control_hx_attrs()}
+              hx-trigger="change, submit">
+          {filter_hidden_html}
         <label class="flex min-w-64 items-center gap-2">
           <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model name</span>
           <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
@@ -956,26 +1016,75 @@ def render_controls(
         <button type="submit" class="border border-zinc-300 bg-zinc-50 px-3 py-1 text-sm font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
           Apply
         </button>
-      </form>
-      <div class="mt-3 flex flex-wrap items-start gap-3">
-        <p class="pt-1 font-medium text-zinc-800">Filters:</p>
-        <form id="facet-filters" class="flex flex-wrap items-start gap-3"
-              hx-get="/leaderboard" hx-push-url="true"
-              {_leaderboard_control_hx_attrs()}
-              hx-trigger="change">
-          {filter_hidden_html}
-          {language_filter_html}
-          {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
-          {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
-          <div class="flex flex-wrap items-start gap-3 border-l border-zinc-200 pl-3">
-            <p class="pt-1 font-medium text-zinc-800">Runtime</p>
-            {_render_filter_details(name="dtype_filter", summary="Dtype", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
-            {_render_filter_details(name="attn_filter", summary="Attention", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
-            {_render_filter_details(name="prompt_filter", summary="Prompt", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
+          <div id="facet-filters" class="flex flex-wrap items-start gap-3">
+            {_render_task_length_filter_inputs(filter_state)}
+            {language_filter_html}
+            {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
+            {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
+            <div class="flex flex-wrap items-start gap-3 border-l border-zinc-200 pl-3">
+              <p class="pt-1 font-medium text-zinc-800">Runtime</p>
+              {_render_filter_details(name="dtype_filter", summary="Dtype", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
+              {_render_filter_details(name="attn_filter", summary="Attention", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
+              {_render_filter_details(name="prompt_filter", summary="Prompt", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
+            </div>
           </div>
         </form>
       </div>
     </div>
+    """
+
+
+def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:
+    fields = []
+    if result.include_quantization_variants:
+        fields.append(("quantization", "1"))
+    if result.include_truncate_variants:
+        fields.append(("truncate", "1"))
+    if result.include_rescore_variants:
+        fields.append(("rescore", "1"))
+    if result.include_other_variants:
+        fields.append(("other_variant", "1"))
+    return fields
+
+
+def _text_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
+    fields = []
+    if filter_state.model_filter:
+        fields.append(("model_filter", filter_state.model_filter))
+    if filter_state.task_filter:
+        fields.append(("task_filter", filter_state.task_filter))
+    return fields
+
+
+def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
+    input_class = (
+        "w-24 border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none "
+        "focus:border-cyan-700"
+    )
+    return f"""
+    <fieldset class="flex flex-wrap items-center gap-2 border border-zinc-200 bg-zinc-50 px-2 py-1.5">
+      <legend class="px-1 text-xs font-semibold uppercase text-zinc-500">Task length</legend>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Query >=</span>
+        <input type="number" min="0" step="any" name="query_len_min" value="{escape(filter_state.query_len_min)}"
+               class="{input_class}">
+      </label>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Query <=</span>
+        <input type="number" min="0" step="any" name="query_len_max" value="{escape(filter_state.query_len_max)}"
+               class="{input_class}">
+      </label>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Doc >=</span>
+        <input type="number" min="0" step="any" name="doc_len_min" value="{escape(filter_state.doc_len_min)}"
+               class="{input_class}">
+      </label>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Doc <=</span>
+        <input type="number" min="0" step="any" name="doc_len_max" value="{escape(filter_state.doc_len_max)}"
+               class="{input_class}">
+      </label>
+    </fieldset>
     """
 
 
@@ -1033,9 +1142,10 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
             ("total_parameters", "Total Params", "asc", "right", False),
             ("max_seq_length", "Max Len", "desc", "right", False),
             ("embedding_dim", "Dims", "desc", "right", False),
-            ("quantization", "Quantization", "asc", "left", False),
         ]
     )
+    if result.include_quantization_variants:
+        columns.append(("quantization", "Quantization", "asc", "left", False))
     if _show_base_delta_column(result):
         columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False))
     heads = []
@@ -1100,7 +1210,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_params(row.total_parameters)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
               <td class="px-3 py-2 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
-              <td class="px-3 py-2 text-left">{escape(row.quantization or "")}</td>
+              {_render_quantization_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
             </tr>"""
         )
@@ -1341,6 +1451,12 @@ def _render_base_delta_cell(*, result: LeaderboardResult, row: LeaderboardRow) -
     if not _show_base_delta_column(result):
         return ""
     return f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_percent_delta(row.base_score_delta_percent)}</td>"""
+
+
+def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if not result.include_quantization_variants:
+        return ""
+    return f"""<td class="px-3 py-2 text-left">{escape(row.quantization or "")}</td>"""
 
 
 def _show_base_delta_column(result: LeaderboardResult) -> bool:
