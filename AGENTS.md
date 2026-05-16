@@ -143,6 +143,8 @@ output/results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
   `--results-dir` options for merging multiple result roots. Treat the argument
   order as the merge priority: the first directory wins for duplicate
   `model_name`/task JSON, and later directories only fill missing results.
+  Use `--overwrite-result-duplicates` when later directories should replace
+  duplicate logical model-task rows from earlier directories.
   `model_name` comes from result JSON `model.id`; do not use `model_dir` as
   part of the logical model identity.
 - Use `--append-results-dir` when adding a separate root containing only new

@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from itertools import islice, product
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import duckdb
 import orjson
@@ -35,6 +35,7 @@ from hakari_bench.warehouse_schema import (
 
 
 DEFAULT_VIEWER_CONFIG_DIR = Path("config/viewer")
+DuplicateResultPolicy = Literal["first-wins", "last-wins"]
 
 
 def load_benchmark_configs(config_dir: Path = DEFAULT_VIEWER_CONFIG_DIR) -> list[BenchmarkConfig]:
@@ -275,6 +276,14 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--overwrite-result-duplicates",
+        action="store_true",
+        help=(
+            "When repeated --results-dir roots contain duplicate logical model-task results, "
+            "let later directories overwrite earlier directories."
+        ),
+    )
+    parser.add_argument(
         "--append-results-dir",
         type=Path,
         action="append",
@@ -332,6 +341,8 @@ def main() -> None:
     if args.append_results_dir:
         if args.results_dir is not None:
             parser.error("--append-results-dir cannot be combined with --results-dir")
+        if args.overwrite_result_duplicates:
+            parser.error("--append-results-dir cannot be combined with --overwrite-result-duplicates")
         if args.html_output is not None:
             parser.error("--append-results-dir does not support --html-output")
         if args.include_result_extensions:
@@ -359,11 +370,13 @@ def main() -> None:
             export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
         return
     results_dirs = args.results_dir or [Path("output/results")]
+    duplicate_result_policy: DuplicateResultPolicy = "last-wins" if args.overwrite_result_duplicates else "first-wins"
     # For deploy builds with no secondary artifacts requested, unchanged input
     # can return immediately after hash validation; rewriting the same DB would
     # dominate the incremental path.
     if (
         args.incremental
+        and not args.overwrite_result_duplicates
         and args.html_output is None
         and args.parquet_output_dir is None
         and not args.include_retrieval_rankings
@@ -375,8 +388,9 @@ def main() -> None:
         results_dirs,
         benchmark_configs=benchmark_configs,
         include_retrieval_rankings=args.include_retrieval_rankings,
-        incremental_db_path=args.duckdb_path if args.incremental else None,
+        incremental_db_path=args.duckdb_path if args.incremental and not args.overwrite_result_duplicates else None,
         exclude_model_names=set(args.exclude_model_name or []),
+        duplicate_result_policy=duplicate_result_policy,
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
@@ -421,6 +435,7 @@ def load_results(
     include_retrieval_rankings: bool = False,
     incremental_db_path: Path | None = None,
     exclude_model_names: set[str] | None = None,
+    duplicate_result_policy: DuplicateResultPolicy = "first-wins",
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -437,6 +452,11 @@ def load_results(
     ranking_rows: list[RetrievalRankingRow] = []
     selected_result_path_filter: set[str] | None = None
     rebuild_runs_from_rows = False
+    if duplicate_result_policy == "last-wins":
+        # The incremental cache is keyed by source paths and payload hashes, not
+        # by duplicate resolution policy. Rebuild so a policy change cannot keep
+        # stale first-wins rows.
+        incremental_db_path = None
     if incremental_db_path is not None and not include_retrieval_rankings:
         # Incremental reuse is keyed by source path and payload hash. Removed
         # paths fall back to the full parser so stale rows cannot leak into the
@@ -487,6 +507,7 @@ def load_results(
         target_benchmarks=target_benchmarks,
         exclude_model_names=exclude_model_names,
         result_paths=selected_result_path_filter,
+        duplicate_result_policy=duplicate_result_policy,
     ):
         result_path = selected_result.result_path
         task_payload = selected_result.payload
@@ -898,6 +919,7 @@ def _selected_result_jsons(
     target_benchmarks: set[str],
     exclude_model_names: set[str],
     result_paths: set[str] | None = None,
+    duplicate_result_policy: DuplicateResultPolicy = "first-wins",
 ) -> list[SelectedResultJson]:
     selected_by_task: dict[tuple[str, str, str, str], SelectedResultJson] = {}
     for source_priority, source_dir in enumerate(_results_dirs(results_dir)):
@@ -921,7 +943,11 @@ def _selected_result_jsons(
                 selected.task_key,
             )
             current = selected_by_task.get(key)
-            if current is None or _prefer_selected_result_json(selected, current):
+            if current is None or _prefer_selected_result_json(
+                selected,
+                current,
+                duplicate_result_policy=duplicate_result_policy,
+            ):
                 selected_by_task[key] = selected
     return sorted(
         selected_by_task.values(),
@@ -990,8 +1016,15 @@ def _selected_result_json(
     )
 
 
-def _prefer_selected_result_json(candidate: SelectedResultJson, current: SelectedResultJson) -> bool:
+def _prefer_selected_result_json(
+    candidate: SelectedResultJson,
+    current: SelectedResultJson,
+    *,
+    duplicate_result_policy: DuplicateResultPolicy,
+) -> bool:
     if candidate.source_priority != current.source_priority:
+        if duplicate_result_policy == "last-wins":
+            return candidate.source_priority > current.source_priority
         return candidate.source_priority < current.source_priority
     return _selected_result_path_stem_matches_task(candidate) and not _selected_result_path_stem_matches_task(current)
 

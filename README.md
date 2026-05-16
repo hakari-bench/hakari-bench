@@ -415,11 +415,14 @@ logical model identity is `model.id` from each result JSON, exposed as
 `model_name`; `model_dir` is only the storage path under the results root.
 Use repeated `--exclude-model-name` options to omit known-bad or superseded
 model ids from the generated warehouse without deleting their JSON files.
+Use `--overwrite-result-duplicates` when later result roots should replace
+duplicate logical model-task rows from earlier roots.
 
 ```bash
 uv run python scripts/build_results_database_and_report.py \
   --results-dir output/results \
   --results-dir output/results_combined_20260510_1340 \
+  --overwrite-result-duplicates \
   --exclude-model-name hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR \
   --duckdb-path output/results/hakari_bench.duckdb \
   --html-output output/results/report.html
