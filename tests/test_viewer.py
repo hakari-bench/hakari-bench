@@ -2130,6 +2130,17 @@ def test_task_z_score_heatmap_css_defines_light_and_dark_buckets() -> None:
             assert css_source.count(selector) == 2
 
 
+def test_task_z_score_heatmap_css_uses_intuitive_positive_negative_colors() -> None:
+    css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
+
+    assert re.search(r'\.task-z-pos-025\s*{\s*background-color: theme\("colors\.emerald\.50"\);', css_source)
+    assert re.search(r'\.task-z-pos-200\s*{\s*background-color: theme\("colors\.emerald\.700"\);', css_source)
+    assert re.search(r'\.task-z-neg-025\s*{\s*background-color: theme\("colors\.rose\.50"\);', css_source)
+    assert re.search(r'\.task-z-neg-200\s*{\s*background-color: theme\("colors\.rose\.700"\);', css_source)
+    assert re.search(r'\.task-z-pos-025\s*{\s*background-color: theme\("colors\.emerald\.950"\);', css_source)
+    assert re.search(r'\.task-z-pos-200\s*{\s*background-color: theme\("colors\.emerald\.300"\);', css_source)
+
+
 def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     rows = [

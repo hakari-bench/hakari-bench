@@ -97,42 +97,42 @@
   }
 
   .task-z-pos-025 {
-    background-color: theme("colors.cyan.50");
-    color: theme("colors.cyan.800");
+    background-color: theme("colors.emerald.50");
+    color: theme("colors.emerald.800");
   }
 
   .task-z-pos-050 {
-    background-color: theme("colors.cyan.100");
-    color: theme("colors.cyan.900");
+    background-color: theme("colors.emerald.100");
+    color: theme("colors.emerald.900");
   }
 
   .task-z-pos-075 {
-    background-color: theme("colors.cyan.200");
-    color: theme("colors.cyan.950");
+    background-color: theme("colors.emerald.200");
+    color: theme("colors.emerald.950");
   }
 
   .task-z-pos-100 {
-    background-color: theme("colors.cyan.300");
-    color: theme("colors.cyan.950");
+    background-color: theme("colors.emerald.300");
+    color: theme("colors.emerald.950");
   }
 
   .task-z-pos-125 {
-    background-color: theme("colors.cyan.400");
-    color: theme("colors.cyan.950");
+    background-color: theme("colors.emerald.400");
+    color: theme("colors.emerald.950");
   }
 
   .task-z-pos-150 {
-    background-color: theme("colors.cyan.500");
-    color: theme("colors.cyan.950");
+    background-color: theme("colors.emerald.500");
+    color: theme("colors.emerald.950");
   }
 
   .task-z-pos-175 {
-    background-color: theme("colors.cyan.600");
+    background-color: theme("colors.emerald.600");
     color: theme("colors.white");
   }
 
   .task-z-pos-200 {
-    background-color: theme("colors.cyan.700");
+    background-color: theme("colors.emerald.700");
     color: theme("colors.white");
   }
 
@@ -306,43 +306,43 @@
     }
 
     .task-z-pos-025 {
-      background-color: theme("colors.cyan.950");
-      color: theme("colors.cyan.200");
+      background-color: theme("colors.emerald.950");
+      color: theme("colors.emerald.200");
     }
 
     .task-z-pos-050 {
-      background-color: theme("colors.cyan.900");
-      color: theme("colors.cyan.100");
+      background-color: theme("colors.emerald.900");
+      color: theme("colors.emerald.100");
     }
 
     .task-z-pos-075 {
-      background-color: theme("colors.cyan.800");
-      color: theme("colors.cyan.50");
+      background-color: theme("colors.emerald.800");
+      color: theme("colors.emerald.50");
     }
 
     .task-z-pos-100 {
-      background-color: theme("colors.cyan.700");
+      background-color: theme("colors.emerald.700");
       color: theme("colors.white");
     }
 
     .task-z-pos-125 {
-      background-color: theme("colors.cyan.600");
+      background-color: theme("colors.emerald.600");
       color: theme("colors.white");
     }
 
     .task-z-pos-150 {
-      background-color: theme("colors.cyan.500");
-      color: theme("colors.cyan.950");
+      background-color: theme("colors.emerald.500");
+      color: theme("colors.emerald.950");
     }
 
     .task-z-pos-175 {
-      background-color: theme("colors.cyan.400");
-      color: theme("colors.cyan.950");
+      background-color: theme("colors.emerald.400");
+      color: theme("colors.emerald.950");
     }
 
     .task-z-pos-200 {
-      background-color: theme("colors.cyan.300");
-      color: theme("colors.cyan.950");
+      background-color: theme("colors.emerald.300");
+      color: theme("colors.emerald.950");
     }
 
     .task-z-neg-025 {
