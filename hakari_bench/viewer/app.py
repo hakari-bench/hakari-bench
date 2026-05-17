@@ -44,14 +44,22 @@ from hakari_bench.viewer.variant_display import (
 ASSETS_DIR = Path(__file__).with_name("assets")
 Z_SCORE_BUCKET_CLASSES = (
     "task-z-neutral",
-    "task-z-pos-05",
-    "task-z-pos-10",
-    "task-z-pos-15",
-    "task-z-pos-20",
-    "task-z-neg-05",
-    "task-z-neg-10",
-    "task-z-neg-15",
-    "task-z-neg-20",
+    "task-z-pos-025",
+    "task-z-pos-050",
+    "task-z-pos-075",
+    "task-z-pos-100",
+    "task-z-pos-125",
+    "task-z-pos-150",
+    "task-z-pos-175",
+    "task-z-pos-200",
+    "task-z-neg-025",
+    "task-z-neg-050",
+    "task-z-neg-075",
+    "task-z-neg-100",
+    "task-z-neg-125",
+    "task-z-neg-150",
+    "task-z-neg-175",
+    "task-z-neg-200",
 )
 
 
@@ -1588,7 +1596,7 @@ def _rounded_z_score(value: float | None) -> float | None:
     if value is None:
         return None
     sign = -1.0 if value < 0 else 1.0
-    rounded = sign * (int(abs(value) * 2.0 + 0.5) / 2.0)
+    rounded = sign * (int(abs(value) * 4.0 + 0.5) / 4.0)
     return max(-2.0, min(2.0, rounded))
 
 
@@ -1602,8 +1610,8 @@ def _z_score_bucket_class(value: float) -> str:
     if value == 0.0:
         return "task-z-neutral"
     prefix = "pos" if value > 0.0 else "neg"
-    bucket = int(abs(value) * 10)
-    bucket_class = f"task-z-{prefix}-{bucket:02d}"
+    bucket = int(abs(value) * 100)
+    bucket_class = f"task-z-{prefix}-{bucket:03d}"
     return bucket_class if bucket_class in Z_SCORE_BUCKET_CLASSES else "task-z-neutral"
 
 

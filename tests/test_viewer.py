@@ -8,7 +8,15 @@ from pathlib import Path
 import duckdb
 import pytest
 
-from hakari_bench.viewer.app import _fmt_max_len, _metric_column_label, _view_group, create_app, render_table_head
+from hakari_bench.viewer.app import (
+    _fmt_max_len,
+    _metric_column_label,
+    _rounded_z_score,
+    _view_group,
+    _z_score_bucket_class,
+    create_app,
+    render_table_head,
+)
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, _clear_task_score_cache, compute_leaderboard_rows
@@ -2086,13 +2094,39 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert response.status_code == 200
     assert "Task std display" in response.text
     assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
-    assert "task-z-score task-z-pos-10" in response.text
-    assert "task-z-score task-z-pos-05" in response.text
-    assert "task-z-score task-z-neg-10" in response.text
+    assert "task-z-score task-z-pos-100" in response.text
+    assert "task-z-score task-z-pos-025" in response.text
+    assert "task-z-score task-z-neg-100" in response.text
     assert '<span class="task-z-score-value">90.00</span>' in response.text
     assert '<span class="task-z-score-value">82.70</span>' in response.text
     assert '<span class="task-z-score-delta">+1.00σ</span>' in response.text
     assert '<span class="task-z-score-delta">+0.27σ</span>' in response.text
+
+
+def test_task_z_score_heatmap_uses_quarter_sigma_buckets() -> None:
+    assert _rounded_z_score(0.12) == 0.0
+    assert _rounded_z_score(0.13) == 0.25
+    assert _rounded_z_score(0.27) == 0.25
+    assert _rounded_z_score(0.38) == 0.5
+    assert _rounded_z_score(1.62) == 1.5
+    assert _rounded_z_score(1.63) == 1.75
+    assert _rounded_z_score(2.9) == 2.0
+    assert _rounded_z_score(-0.38) == -0.5
+
+    assert _z_score_bucket_class(0.0) == "task-z-neutral"
+    assert _z_score_bucket_class(0.25) == "task-z-pos-025"
+    assert _z_score_bucket_class(1.75) == "task-z-pos-175"
+    assert _z_score_bucket_class(-0.25) == "task-z-neg-025"
+    assert _z_score_bucket_class(-2.0) == "task-z-neg-200"
+
+
+def test_task_z_score_heatmap_css_defines_light_and_dark_buckets() -> None:
+    css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
+
+    for direction in ("pos", "neg"):
+        for bucket in ("025", "050", "075", "100", "125", "150", "175", "200"):
+            selector = f".task-z-{direction}-{bucket}"
+            assert css_source.count(selector) == 2
 
 
 def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: Path) -> None:
