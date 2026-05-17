@@ -1859,6 +1859,86 @@ def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path:
     assert "metric%3Aarguana" in response.text
 
 
+def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "NanoArguAna", "arguana", "bench::arguana", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "NanoFEVER", "fever", "bench::fever", 0.50, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "NanoArguAna", "arguana", "bench::arguana", 0.70, 20, 24, 4096),
+            ("model/b", "BenchA", "bench/a", "BenchA", "NanoFEVER", "fever", "bench::fever", 0.50, 20, 24, 4096),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "NanoArguAna",
+                "arguana",
+                "bench::arguana",
+                0.75,
+                10,
+                12,
+                8192,
+                "truncate_dim_256",
+                256,
+                None,
+            ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "NanoFEVER",
+                "fever",
+                "bench::fever",
+                0.50,
+                10,
+                12,
+                8192,
+                "truncate_dim_256",
+                256,
+                None,
+            ),
+        ],
+        include_embedding_variant_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard(
+        "BenchA",
+        include_truncate_variants=True,
+        show_task_z_scores=True,
+    )
+    rows_by_name = {row.model_name: row for row in result.rows}
+
+    assert result.show_task_scores is True
+    assert result.show_task_z_scores is True
+    assert rows_by_name["model/a"].metric_values["arguana"] == 90.0
+    assert rows_by_name["model/a"].metric_z_values["arguana"] == pytest.approx(1.0)
+    assert rows_by_name["model/b"].metric_z_values["arguana"] == pytest.approx(-1.0)
+    variant_row = next(row for row in result.rows if row.embedding_variant_name == "truncate_dim_256")
+    assert variant_row.metric_z_values["arguana"] == pytest.approx(-0.5)
+    assert "fever" not in variant_row.metric_z_values
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&truncate=1&task_z_scores=1")
+
+    assert response.status_code == 200
+    assert "Task std dev columns" in response.text
+    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert "task-z-score task-z-pos-10" in response.text
+    assert "task-z-score task-z-neg-05" in response.text
+    assert ">+1.0</span>" in response.text
+    assert ">-0.5</span>" in response.text
+
+
 def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     rows = [

@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 from functools import lru_cache
+import math
 from pathlib import Path
 from typing import Any, Iterable, Literal
 
@@ -70,6 +71,8 @@ class LeaderboardRow(BaseModel):
     source_model_name: str | None = None
     base_score_delta_percent: float | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
+    metric_z_values: dict[str, float] = Field(default_factory=dict)
+    metric_sort_values: dict[str, float] = Field(default_factory=dict)
 
 
 class ScoreGroup(BaseModel):
@@ -103,6 +106,7 @@ class LeaderboardResult(BaseModel):
     include_rescore_variants: bool = False
     include_other_variants: bool = False
     show_task_scores: bool = False
+    show_task_z_scores: bool = False
     task_filter: str = ""
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
@@ -150,6 +154,7 @@ class LeaderboardService:
         include_other_variants: bool = False,
         language_filters: tuple[str, ...] = (),
         show_task_scores: bool = False,
+        show_task_z_scores: bool = False,
         task_filter: str = "",
         query_min_chars: float | None = None,
         query_max_chars: float | None = None,
@@ -164,6 +169,7 @@ class LeaderboardService:
             score_target=score_target,
             show_task_scores=show_task_scores,
         ) as request_timing:
+            show_task_scores = show_task_scores or show_task_z_scores
             overall = self.config.overall_for_view(view_name)
             benchmarks = self.config.benchmarks_for_view(view_name)
             is_overall = overall is not None
@@ -186,6 +192,7 @@ class LeaderboardService:
                 self.use_precomputed
                 and not language_filters
                 and not show_task_scores
+                and not show_task_z_scores
                 and not task_filter.strip()
                 and not has_length_filters
             ):
@@ -215,6 +222,7 @@ class LeaderboardService:
                         include_rescore_variants=include_rescore_variants,
                         include_other_variants=include_other_variants,
                         show_task_scores=False,
+                        show_task_z_scores=False,
                         task_filter="",
                         score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
                         selected_score_group=(
@@ -276,6 +284,7 @@ class LeaderboardService:
                     is_overall=is_overall,
                     score_group=metric_score_group,
                     metric_columns=metric_columns,
+                    show_task_z_scores=show_task_z_scores,
                 )
                 sorted_rows = sort_rows(leaderboard_rows, sort=sort, direction=direction)
                 phase_timing["leaderboard_row_count"] = len(sorted_rows)
@@ -295,6 +304,7 @@ class LeaderboardService:
                 include_rescore_variants=include_rescore_variants,
                 include_other_variants=include_other_variants,
                 show_task_scores=show_task_scores,
+                show_task_z_scores=show_task_z_scores,
                 task_filter=task_filter.strip(),
                 score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
                 selected_score_group=(
@@ -591,6 +601,7 @@ def compute_leaderboard_rows(
     is_overall: bool,
     score_group: ScoreGroupConfig | None = None,
     metric_columns: list[str] | None = None,
+    show_task_z_scores: bool = False,
 ) -> list[LeaderboardRow]:
     expected_tasks = {row.task_key for row in rows}
     if not expected_tasks:
@@ -607,6 +618,12 @@ def compute_leaderboard_rows(
     }
     complete_rows = [row for row in rows if row.model_name in complete_models]
     borda_scores = _borda_scores(complete_rows)
+    metric_columns = metric_columns or []
+    z_values_by_model = (
+        _metric_z_values_by_model(complete_rows, score_group=score_group, metric_columns=metric_columns)
+        if show_task_z_scores and metric_columns
+        else {}
+    )
 
     leaderboard_rows: list[LeaderboardRow] = []
     for model_name in sorted(complete_models):
@@ -619,7 +636,8 @@ def compute_leaderboard_rows(
         ]
         macro_mean = _mean(benchmark_means)
         mean_score = macro_mean if is_overall else micro_mean
-        metric_values = _metric_values(model_rows, score_group=score_group, metric_columns=metric_columns or [])
+        metric_values = _metric_values(model_rows, score_group=score_group, metric_columns=metric_columns)
+        metric_z_values = z_values_by_model.get(model_name, {})
         leaderboard_rows.append(
             LeaderboardRow(
                 borda_rank=0.0,
@@ -642,6 +660,8 @@ def compute_leaderboard_rows(
                 quantization=first.quantization,
                 source_model_name=first.source_model_name,
                 metric_values=metric_values,
+                metric_z_values=metric_z_values,
+                metric_sort_values=metric_z_values if show_task_z_scores else metric_values,
             )
         )
 
@@ -656,13 +676,17 @@ def compute_leaderboard_rows(
 
 def sort_rows(rows: list[LeaderboardRow], *, sort: str, direction: SortDirection) -> list[LeaderboardRow]:
     metric_key = sort.removeprefix("metric:") if sort.startswith("metric:") else None
-    if metric_key is not None and not any(metric_key in row.metric_values for row in rows):
+    if metric_key is not None and not any(metric_key in row.metric_sort_values or metric_key in row.metric_values for row in rows):
         metric_key = None
     sort_key = sort if sort in SORT_COLUMNS else "borda_rank"
     reverse = direction == "desc" and (metric_key is not None or sort in SORT_COLUMNS)
 
     def key(row: LeaderboardRow) -> tuple[int, Any, float, str]:
-        value = row.metric_values.get(metric_key) if metric_key is not None else getattr(row, sort_key)
+        value = (
+            row.metric_sort_values.get(metric_key, row.metric_values.get(metric_key))
+            if metric_key is not None
+            else getattr(row, sort_key)
+        )
         missing = value is None
         normalized = str(value).lower() if isinstance(value, str) else value
         return (1 if missing else 0, normalized, row.borda_rank, row.model_name.lower())
@@ -1048,6 +1072,57 @@ def _metric_values(
     for row in rows:
         values_by_column[_score_group_key(row, score_group.group_by)].append(row.score * 100.0)
     return {column: _mean(values_by_column[column]) for column in metric_columns if values_by_column[column]}
+
+
+def _metric_z_values_by_model(
+    rows: list[TaskScore],
+    *,
+    score_group: ScoreGroupConfig | None,
+    metric_columns: list[str],
+) -> dict[str, dict[str, float]]:
+    if score_group is None:
+        return {}
+    model_column_values = _mean_metric_values_by_model(rows, score_group=score_group)
+    base_model_column_values = _mean_metric_values_by_model(
+        [row for row in rows if row.embedding_variant_name is None],
+        score_group=score_group,
+    )
+    stats_by_column: dict[str, tuple[float, float]] = {}
+    for column in metric_columns:
+        values = [columns[column] for columns in base_model_column_values.values() if column in columns]
+        stddev = _population_stddev(values)
+        if stddev is not None and stddev > 0.0:
+            stats_by_column[column] = (_mean(values), stddev)
+    return {
+        model_name: {
+            column: (value - mean) / stddev
+            for column, value in columns.items()
+            if column in stats_by_column
+            for mean, stddev in [stats_by_column[column]]
+        }
+        for model_name, columns in model_column_values.items()
+    }
+
+
+def _mean_metric_values_by_model(
+    rows: list[TaskScore],
+    *,
+    score_group: ScoreGroupConfig,
+) -> dict[str, dict[str, float]]:
+    values_by_model_column: dict[tuple[str, str], list[float]] = defaultdict(list)
+    for row in rows:
+        values_by_model_column[(row.model_name, _score_group_key(row, score_group.group_by))].append(row.score)
+    values_by_model: dict[str, dict[str, float]] = defaultdict(dict)
+    for (model_name, column), values in values_by_model_column.items():
+        values_by_model[model_name][column] = _mean(values)
+    return values_by_model
+
+
+def _population_stddev(values: list[float]) -> float | None:
+    if len(values) < 2:
+        return None
+    mean = _mean(values)
+    return math.sqrt(sum((value - mean) ** 2 for value in values) / len(values))
 
 
 def _score_group_key(row: TaskScore, group_by: str) -> str:

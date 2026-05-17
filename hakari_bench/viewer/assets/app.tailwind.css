@@ -69,6 +69,58 @@
     width: 0.55rem;
   }
 
+  .task-z-score {
+    display: inline-flex;
+    min-width: 3.25rem;
+    justify-content: flex-end;
+    padding: 0.125rem 0.25rem;
+  }
+
+  .task-z-neutral {
+    background-color: transparent;
+    color: inherit;
+  }
+
+  .task-z-pos-05 {
+    background-color: theme("colors.cyan.50");
+    color: theme("colors.cyan.800");
+  }
+
+  .task-z-pos-10 {
+    background-color: theme("colors.cyan.100");
+    color: theme("colors.cyan.900");
+  }
+
+  .task-z-pos-15 {
+    background-color: theme("colors.cyan.200");
+    color: theme("colors.cyan.950");
+  }
+
+  .task-z-pos-20 {
+    background-color: theme("colors.cyan.300");
+    color: theme("colors.cyan.950");
+  }
+
+  .task-z-neg-05 {
+    background-color: theme("colors.rose.50");
+    color: theme("colors.rose.800");
+  }
+
+  .task-z-neg-10 {
+    background-color: theme("colors.rose.100");
+    color: theme("colors.rose.900");
+  }
+
+  .task-z-neg-15 {
+    background-color: theme("colors.rose.200");
+    color: theme("colors.rose.950");
+  }
+
+  .task-z-neg-20 {
+    background-color: theme("colors.rose.300");
+    color: theme("colors.rose.950");
+  }
+
   @keyframes hakari-leaderboard-spin {
     to {
       transform: rotate(360deg);
@@ -196,6 +248,46 @@
       border-color: theme("colors.zinc.700");
       background-color: theme("colors.zinc.950");
       color: theme("colors.zinc.100");
+    }
+
+    .task-z-pos-05 {
+      background-color: theme("colors.cyan.950");
+      color: theme("colors.cyan.200");
+    }
+
+    .task-z-pos-10 {
+      background-color: theme("colors.cyan.900");
+      color: theme("colors.cyan.100");
+    }
+
+    .task-z-pos-15 {
+      background-color: theme("colors.cyan.800");
+      color: theme("colors.cyan.50");
+    }
+
+    .task-z-pos-20 {
+      background-color: theme("colors.cyan.700");
+      color: theme("colors.white");
+    }
+
+    .task-z-neg-05 {
+      background-color: theme("colors.rose.950");
+      color: theme("colors.rose.200");
+    }
+
+    .task-z-neg-10 {
+      background-color: theme("colors.rose.900");
+      color: theme("colors.rose.100");
+    }
+
+    .task-z-neg-15 {
+      background-color: theme("colors.rose.800");
+      color: theme("colors.rose.50");
+    }
+
+    .task-z-neg-20 {
+      background-color: theme("colors.rose.700");
+      color: theme("colors.white");
     }
   }
 }

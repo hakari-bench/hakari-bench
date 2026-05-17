@@ -797,6 +797,15 @@ the base row for the same source model and renders the relative percentage
 change, such as `-24.5%` or `+1.2%`. Base rows and rows without a matching base
 row leave this column blank.
 
+When `Task std dev columns` is enabled, the viewer renders task metric columns
+as z-scores instead of raw 0-100 task scores. For each displayed task column,
+the mean and standard deviation are computed from base rows only, where
+`embedding_variant_name IS NULL`; displayed variant rows are then compared
+against those base-row statistics for the same task. The rendered value is
+rounded to 0.5 standard-deviation increments and color-bucketed from `-2.0` to
+`+2.0`. A task with zero base-row standard deviation leaves the z-score cell
+blank because there is no meaningful distance from the task distribution.
+
 ## Current Viewer Data Access Layer
 
 `hakari_bench/viewer/data.py` contains `TaskResultsRepository`, which

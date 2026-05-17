@@ -25,7 +25,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
     _write_browser_task_results(db_path)
     config_dir = tmp_path / "config"
     config_dir.mkdir()
-    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: NanoRTEB\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
 
@@ -58,6 +58,18 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 page.locator(".model-detail-trigger").first.click()
                 page.locator("#model-detail-modal[open]").wait_for(timeout=5_000)
                 assert page.locator("#model-detail-title").inner_text() == "model/a"
+
+                page.locator("#model-detail-modal").evaluate("(modal) => modal.close()")
+                page.get_by_role("button", name="AR 1").click()
+                page.wait_for_function("!document.querySelector('#leaderboard-loading-toast.htmx-request')", timeout=15_000)
+                ar_button = page.get_by_role("button", name="AR 1")
+                assert "border-cyan-700" in (ar_button.get_attribute("class") or "")
+
+                page.get_by_role("button", name="NanoRTEB").click()
+                page.wait_for_function("!document.querySelector('#leaderboard-loading-toast.htmx-request')", timeout=15_000)
+                nano_rteb_button = page.get_by_role("button", name="NanoRTEB")
+                assert page.locator("h2.text-lg").first.inner_text() == "NanoRTEB"
+                assert "border-cyan-700" in (nano_rteb_button.get_attribute("class") or "")
             finally:
                 browser.close()
 
@@ -103,7 +115,7 @@ def _write_browser_task_results(db_path: Path) -> None:
             "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 _viewer_task_result_row(
-                    ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192, None, 384, None)
+                    ("model/a", "BenchA", "bench/a", "BenchA", "en", "a1", "a1", 0.90, 10, 12, 8192, None, 384, None)
                 ),
                 _viewer_task_result_row(
                     (
@@ -111,7 +123,7 @@ def _write_browser_task_results(db_path: Path) -> None:
                         "BenchA",
                         "bench/a",
                         "BenchA",
-                        "a1",
+                        "en",
                         "a1",
                         "a1",
                         0.82,
@@ -124,7 +136,37 @@ def _write_browser_task_results(db_path: Path) -> None:
                     )
                 ),
                 _viewer_task_result_row(
-                    ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.75, 20, 24, 4096, None, 512, None)
+                    ("model/b", "BenchA", "bench/a", "BenchA", "ar", "a2", "a2", 0.75, 20, 24, 4096, None, 512, None)
+                ),
+                _viewer_task_result_row(
+                    ("model/b", "BenchA", "bench/a", "BenchA", "en", "a1", "a1", 0.73, 20, 24, 4096, None, 512, None)
+                ),
+                _viewer_task_result_row(
+                    ("model/a", "BenchA", "bench/a", "BenchA", "ar", "a2", "a2", 0.70, 10, 12, 8192, None, 384, None)
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "ar",
+                        "a2",
+                        "a2",
+                        0.62,
+                        10,
+                        12,
+                        8192,
+                        "truncate_dim_256",
+                        256,
+                        None,
+                    )
+                ),
+                _viewer_task_result_row(
+                    ("model/a", "NanoRTEB", "bench/rteb", "NanoRTEB", "en", "r1", "r1", 0.65, 10, 12, 8192, None, 384, None)
+                ),
+                _viewer_task_result_row(
+                    ("model/b", "NanoRTEB", "bench/rteb", "NanoRTEB", "en", "r1", "r1", 0.55, 20, 24, 4096, None, 512, None)
                 ),
             ],
         )
@@ -134,11 +176,14 @@ def _write_browser_task_results(db_path: Path) -> None:
 
 def _viewer_task_result_row(row: tuple) -> tuple:
     return (
-        *row[:7],
+        *row[:4],
+        None,
+        row[5],
+        row[6],
         "all",
         row[7],
-        None,
-        [],
+        row[4],
+        [row[4]],
         *row[8:11],
         None,
         None,

@@ -42,6 +42,17 @@ from hakari_bench.viewer.variant_display import (
 )
 
 ASSETS_DIR = Path(__file__).with_name("assets")
+Z_SCORE_BUCKET_CLASSES = (
+    "task-z-neutral",
+    "task-z-pos-05",
+    "task-z-pos-10",
+    "task-z-pos-15",
+    "task-z-pos-20",
+    "task-z-neg-05",
+    "task-z-neg-10",
+    "task-z-neg-15",
+    "task-z-neg-20",
+)
 
 
 class _TaskLengthFilterKwargs(TypedDict):
@@ -90,6 +101,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
         task_scores: bool = Query(default=False),
+        task_z_scores: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -119,6 +131,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 rescore=rescore,
                 other_variant=other_variant,
                 task_scores=task_scores,
+                task_z_scores=task_z_scores,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
@@ -157,6 +170,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
         task_scores: bool = Query(default=False),
+        task_z_scores: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -186,6 +200,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 rescore=rescore,
                 other_variant=other_variant,
                 task_scores=task_scores,
+                task_z_scores=task_z_scores,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
@@ -221,6 +236,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 include_other_variants=display_flags.other,
                 language_filters=filter_state.language_filters,
                 show_task_scores=state_query.get("task_scores") == "1",
+                show_task_z_scores=state_query.get("task_z_scores") == "1",
                 task_filter=filter_state.task_filter,
                 query_min_chars=length_bounds["query_min_chars"],
                 query_max_chars=length_bounds["query_max_chars"],
@@ -711,6 +727,7 @@ def render_controls(
     rescore_checked = " checked" if result.include_rescore_variants else ""
     other_variant_checked = " checked" if result.include_other_variants else ""
     task_scores_checked = " checked" if result.show_task_scores else ""
+    task_z_scores_checked = " checked" if result.show_task_z_scores else ""
     state_fields = [
         ("view", result.view_name),
         ("sort", sort),
@@ -722,7 +739,11 @@ def render_controls(
         state_fields.append(("group", result.selected_score_group.name))
     sticky_filter_fields = active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
     variant_hidden_fields = _active_variant_hidden_fields(result)
-    task_score_hidden_fields = [("task_scores", "1")] if result.show_task_scores else []
+    task_score_hidden_fields = []
+    if result.show_task_scores:
+        task_score_hidden_fields.append(("task_scores", "1"))
+    if result.show_task_z_scores:
+        task_score_hidden_fields.append(("task_z_scores", "1"))
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
     variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
     filter_hidden_fields = [
@@ -969,6 +990,10 @@ def render_controls(
         <label class="inline-flex items-center gap-2">
           <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
           <span>Task score columns</span>
+        </label>
+        <label class="inline-flex items-center gap-2">
+          <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
+          <span>Task std dev columns</span>
         </label>
       </form>
       <form id="variant-controls" class="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2"
@@ -1451,10 +1476,27 @@ def _empty_analysis_panel(*, title: str, body: str) -> str:
 
 
 def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if result.show_task_z_scores:
+        return "".join(_render_metric_z_cell(row.metric_z_values.get(column)) for column in result.metric_columns)
     values = row.metric_values
     return "".join(
         f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
         for column in result.metric_columns
+    )
+
+
+def _render_metric_z_cell(value: float | None) -> str:
+    rounded = _rounded_z_score(value)
+    if rounded is None:
+        label = ""
+        bucket_class = "task-z-neutral"
+    else:
+        label = _fmt_z_score(rounded)
+        bucket_class = _z_score_bucket_class(rounded)
+    return (
+        '<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums">'
+        f'<span class="task-z-score {bucket_class}">{escape(label)}</span>'
+        "</td>"
     )
 
 
@@ -1533,6 +1575,29 @@ def _fmt_rank(value: float) -> str:
 
 def _fmt_score(value: float | None) -> str:
     return "" if value is None else f"{value:.2f}"
+
+
+def _rounded_z_score(value: float | None) -> float | None:
+    if value is None:
+        return None
+    sign = -1.0 if value < 0 else 1.0
+    rounded = sign * (int(abs(value) * 2.0 + 0.5) / 2.0)
+    return max(-2.0, min(2.0, rounded))
+
+
+def _fmt_z_score(value: float) -> str:
+    if value == 0.0:
+        return "0.0"
+    return f"{value:+.1f}"
+
+
+def _z_score_bucket_class(value: float) -> str:
+    if value == 0.0:
+        return "task-z-neutral"
+    prefix = "pos" if value > 0.0 else "neg"
+    bucket = int(abs(value) * 10)
+    bucket_class = f"task-z-{prefix}-{bucket:02d}"
+    return bucket_class if bucket_class in Z_SCORE_BUCKET_CLASSES else "task-z-neutral"
 
 
 def _fmt_params(value: int | None) -> str:

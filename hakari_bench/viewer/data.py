@@ -17,6 +17,7 @@ from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
 CURRENT_DUCKDB_SCHEMA_VERSION = "4"
+COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {"3", CURRENT_DUCKDB_SCHEMA_VERSION}
 REQUIRED_VIEWER_TABLES = ("meta_database", "viewer_task_results")
 REQUIRED_VIEWER_TASK_RESULT_COLUMNS = {
     "model_name",
@@ -466,7 +467,7 @@ def _validate_current_schema(con: duckdb.DuckDBPyConnection) -> None:
         )
     row = con.execute("SELECT schema_version FROM meta_database LIMIT 1").fetchone()
     schema_version = str(row[0]) if row is not None and row[0] is not None else ""
-    if schema_version != CURRENT_DUCKDB_SCHEMA_VERSION:
+    if schema_version not in COMPATIBLE_DUCKDB_SCHEMA_VERSIONS:
         raise RuntimeError(
             f"DuckDB schema version {schema_version or '<missing>'} is unsupported; "
             f"rebuild the database with schema version {CURRENT_DUCKDB_SCHEMA_VERSION}."
