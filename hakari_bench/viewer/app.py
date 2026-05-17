@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from functools import lru_cache
+import hashlib
 from html import escape
 from pathlib import Path
 from typing import TypedDict, cast
@@ -316,6 +318,10 @@ def render_page(
     initial_query: QueryState | None = None,
 ) -> str:
     query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
+    css_url = _asset_url("app.css")
+    favicon_url = _asset_url("favicon.png")
+    htmx_url = _asset_url("htmx.min.js")
+    viewer_js_url = _asset_url("viewer.js")
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -323,10 +329,10 @@ def render_page(
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HAKARI-bench leaderboard</title>
   <link rel="canonical" href="/">
-  <link rel="stylesheet" href="/assets/app.css">
-  <link rel="icon" type="image/png" href="/assets/favicon.png">
-  <script src="/assets/htmx.min.js"></script>
-  <script src="/assets/viewer.js" defer></script>
+  <link rel="stylesheet" href="{css_url}">
+  <link rel="icon" type="image/png" href="{favicon_url}">
+  <script src="{htmx_url}"></script>
+  <script src="{viewer_js_url}" defer></script>
 </head>
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
@@ -349,6 +355,12 @@ def render_page(
   </main>
 </body>
 </html>"""
+
+
+@lru_cache(maxsize=None)
+def _asset_url(filename: str) -> str:
+    digest = hashlib.sha256((ASSETS_DIR / filename).read_bytes()).hexdigest()[:12]
+    return f"/assets/{filename}?v={digest}"
 
 
 def _leaderboard_request_hx_attrs() -> str:

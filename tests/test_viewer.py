@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 import time
 from pathlib import Path
 
@@ -370,10 +371,10 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert str(db_path) not in response.text
     assert "Benchmark coverage" in response.text
     assert "Models" in response.text
-    assert '<link rel="stylesheet" href="/assets/app.css">' in response.text
-    assert '<link rel="icon" type="image/png" href="/assets/favicon.png">' in response.text
-    assert '<script src="/assets/htmx.min.js"></script>' in response.text
-    assert '<script src="/assets/viewer.js" defer></script>' in response.text
+    assert re.search(r'<link rel="stylesheet" href="/assets/app\.css\?v=[0-9a-f]{12}">', response.text)
+    assert re.search(r'<link rel="icon" type="image/png" href="/assets/favicon\.png\?v=[0-9a-f]{12}">', response.text)
+    assert re.search(r'<script src="/assets/htmx\.min\.js\?v=[0-9a-f]{12}"></script>', response.text)
+    assert re.search(r'<script src="/assets/viewer\.js\?v=[0-9a-f]{12}" defer></script>', response.text)
     assert "<script>" not in response.text
     assert "window.__hakariApplyHashQueryState" not in response.text
     assert 'id="leaderboard-loading-toast"' in response.text
