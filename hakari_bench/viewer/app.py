@@ -993,7 +993,7 @@ def render_controls(
         </label>
         <label class="inline-flex items-center gap-2">
           <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
-          <span>Task std dev columns</span>
+          <span>Task std display</span>
         </label>
       </form>
       <form id="variant-controls" class="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2"
@@ -1477,7 +1477,10 @@ def _empty_analysis_panel(*, title: str, body: str) -> str:
 
 def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
     if result.show_task_z_scores:
-        return "".join(_render_metric_z_cell(row.metric_z_values.get(column)) for column in result.metric_columns)
+        return "".join(
+            _render_metric_z_cell(score=row.metric_values.get(column), z_score=row.metric_z_values.get(column))
+            for column in result.metric_columns
+        )
     values = row.metric_values
     return "".join(
         f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
@@ -1485,17 +1488,21 @@ def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> s
     )
 
 
-def _render_metric_z_cell(value: float | None) -> str:
-    rounded = _rounded_z_score(value)
+def _render_metric_z_cell(*, score: float | None, z_score: float | None) -> str:
+    rounded = _rounded_z_score(z_score)
     if rounded is None:
-        label = ""
+        z_label = ""
         bucket_class = "task-z-neutral"
     else:
-        label = _fmt_z_score(rounded)
+        assert z_score is not None
+        z_label = f"{_fmt_z_score(z_score)}σ"
         bucket_class = _z_score_bucket_class(rounded)
     return (
         '<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums">'
-        f'<span class="task-z-score {bucket_class}">{escape(label)}</span>'
+        f'<span class="task-z-score {bucket_class}">'
+        f'<span class="task-z-score-value">{escape(_fmt_score(score))}</span>'
+        f'<span class="task-z-score-delta">{escape(z_label)}</span>'
+        "</span>"
         "</td>"
     )
 
@@ -1586,9 +1593,9 @@ def _rounded_z_score(value: float | None) -> float | None:
 
 
 def _fmt_z_score(value: float) -> str:
-    if value == 0.0:
-        return "0.0"
-    return f"{value:+.1f}"
+    if abs(value) < 0.005:
+        return "0.00"
+    return f"{value:+.2f}"
 
 
 def _z_score_bucket_class(value: float) -> str:

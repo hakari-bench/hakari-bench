@@ -133,6 +133,10 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
     mnanobeir = config.benchmark_for_view("MNanoBEIR")
     assert mnanobeir is not None
     assert [group.name for group in mnanobeir.resolved_score_groups] == ["task_mean", "lang_mean"]
+    assert mnanobeir.language_filter_mode == "primary_language"
+    nano_miracl = config.benchmark_for_view("NanoMIRACL")
+    assert nano_miracl is not None
+    assert nano_miracl.language_filter_mode == "primary_language"
 
 
 def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> None:
@@ -151,6 +155,9 @@ def test_language_specific_view_group_includes_official_language_mteb_families()
     assert _view_group("NanoRuMTEB") == "Language-specific"
     assert _view_group("NanoVNMTEB") == "Language-specific"
     assert _view_group("NanoCMTEB") == "Language-specific"
+    assert _view_group("NanoIndicQA") == "Domain-specific"
+    assert _view_group("NanoMuPLeR") == "Domain-specific"
+    assert _view_group("NanoChemTEB") == "Domain-specific"
     assert _view_group("NanoMIRACL") == "Domain-specific"
 
 
@@ -238,9 +245,13 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
             )
             """
         )
-        con.execute(
+        con.executemany(
             "INSERT INTO viewer_leaderboard_language_options VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            ["Overall", "all", True, False, False, False, "ja", "Japanese", 2],
+            [
+                ["Overall", "all", True, False, False, False, "ar", "AR", 3],
+                ["Overall", "all", True, False, False, False, "en", "EN", 8],
+                ["Overall", "all", True, False, False, False, "ja", "Japanese", 3],
+            ],
         )
     finally:
         con.close()
@@ -259,7 +270,9 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
     assert result.rows[0].borda_score == 99.0
     assert result.rows[0].embedding_variant_name == "int8"
     assert [(option.code, option.label, option.task_count) for option in result.available_languages] == [
-        ("ja", "Japanese", 2)
+        ("en", "EN", 8),
+        ("ar", "AR", 3),
+        ("ja", "Japanese", 3),
     ]
 
 
@@ -1819,6 +1832,146 @@ benchmarks:
     assert 'hx-push-url="/?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja' in response.text
 
 
+def test_mnanobeir_language_pages_use_dataset_primary_language(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = []
+    metadata_rows = []
+    for dataset_name, primary_language, languages, score in [
+        ("NanoBEIR-en", "en", ["en"], 0.10),
+        ("NanoBEIR-de", "multilingual", ["de", "en"], 0.90),
+        ("NanoBEIR-ja", "ja", ["ja"], 0.50),
+    ]:
+        for task_name in ["arguana", "fever"]:
+            task_key = f"{dataset_name}::{task_name}"
+            rows.append(
+                (
+                    "model/a",
+                    "MNanoBEIR",
+                    dataset_name,
+                    dataset_name,
+                    task_name,
+                    task_name,
+                    task_key,
+                    score,
+                    10,
+                    12,
+                    8192,
+                )
+            )
+            metadata_rows.append(
+                (
+                    "MNanoBEIR",
+                    dataset_name,
+                    dataset_name,
+                    task_name,
+                    task_name,
+                    task_key,
+                    primary_language,
+                    languages,
+                )
+            )
+    _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: MNanoBEIR
+    language_filter_mode: primary_language
+    score_groups:
+      - name: task_mean
+        label: Task Mean
+        group_by: task_name
+      - name: lang_mean
+        label: Lang Mean
+        group_by: dataset_name
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n",
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("MNanoBEIR")
+    en_result = service.get_leaderboard("MNanoBEIR", language_filters=("en",))
+
+    assert [(option.code, option.task_count) for option in result.available_languages] == [
+        ("de", 2),
+        ("en", 2),
+        ("ja", 2),
+    ]
+    assert en_result.selected_languages == ("en",)
+    assert en_result.expected_tasks == 2
+    assert en_result.rows[0].mean_score == 10.0
+
+
+def test_split_language_pages_use_primary_split_language(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = []
+    metadata_rows = []
+    for split_name, primary_language, languages, score in [
+        ("en", "en", ["en"], 0.10),
+        ("yo", "multilingual", ["en", "sw", "yo"], 0.90),
+    ]:
+        task_key = f"NanoMIRACL::{split_name}"
+        rows.append(
+            (
+                "model/a",
+                "NanoMIRACL",
+                "hakari-bench/NanoMIRACL",
+                "NanoMIRACL",
+                split_name,
+                split_name,
+                task_key,
+                score,
+                10,
+                12,
+                8192,
+            )
+        )
+        metadata_rows.append(
+            (
+                "NanoMIRACL",
+                "hakari-bench/NanoMIRACL",
+                "NanoMIRACL",
+                split_name,
+                split_name,
+                task_key,
+                primary_language,
+                languages,
+            )
+        )
+    _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: NanoMIRACL
+    language_filter_mode: primary_language
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMIRACL\n",
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("NanoMIRACL")
+    yo_result = service.get_leaderboard("NanoMIRACL", language_filters=("yo",))
+
+    assert [(option.code, option.task_count) for option in result.available_languages] == [
+        ("en", 1),
+        ("yo", 1),
+    ]
+    assert yo_result.selected_languages == ("yo",)
+    assert yo_result.expected_tasks == 1
+    assert yo_result.rows[0].mean_score == 90.0
+
+
 def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
@@ -1878,7 +2031,7 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
                 "NanoArguAna",
                 "arguana",
                 "bench::arguana",
-                0.75,
+                0.827,
                 10,
                 12,
                 8192,
@@ -1924,19 +2077,22 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert rows_by_name["model/a"].metric_z_values["arguana"] == pytest.approx(1.0)
     assert rows_by_name["model/b"].metric_z_values["arguana"] == pytest.approx(-1.0)
     variant_row = next(row for row in result.rows if row.embedding_variant_name == "truncate_dim_256")
-    assert variant_row.metric_z_values["arguana"] == pytest.approx(-0.5)
+    assert variant_row.metric_z_values["arguana"] == pytest.approx(0.27)
     assert "fever" not in variant_row.metric_z_values
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
     response = TestClient(app).get("/leaderboard?view=BenchA&truncate=1&task_z_scores=1")
 
     assert response.status_code == 200
-    assert "Task std dev columns" in response.text
+    assert "Task std display" in response.text
     assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "task-z-score task-z-pos-10" in response.text
-    assert "task-z-score task-z-neg-05" in response.text
-    assert ">+1.0</span>" in response.text
-    assert ">-0.5</span>" in response.text
+    assert "task-z-score task-z-pos-05" in response.text
+    assert "task-z-score task-z-neg-10" in response.text
+    assert '<span class="task-z-score-value">90.00</span>' in response.text
+    assert '<span class="task-z-score-value">82.70</span>' in response.text
+    assert '<span class="task-z-score-delta">+1.00σ</span>' in response.text
+    assert '<span class="task-z-score-delta">+0.27σ</span>' in response.text
 
 
 def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: Path) -> None:

@@ -71,9 +71,24 @@
 
   .task-z-score {
     display: inline-flex;
-    min-width: 3.25rem;
-    justify-content: flex-end;
-    padding: 0.125rem 0.25rem;
+    min-width: 3.65rem;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    border-radius: 0.25rem;
+    line-height: 1;
+    padding: 0.2rem 0.3rem;
+  }
+
+  .task-z-score-value {
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .task-z-score-delta {
+    margin-top: 0.125rem;
+    font-size: 0.625rem;
+    font-weight: 500;
   }
 
   .task-z-neutral {

@@ -10,7 +10,7 @@ from typing import Any, Iterable, Literal
 import duckdb
 from pydantic import BaseModel, ConfigDict, Field
 
-from hakari_bench.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
+from hakari_bench.viewer.config import LanguageFilterMode, OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository, _table_exists
 from hakari_bench.viewer.observability import log_event, timed_operation
 from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
@@ -182,6 +182,7 @@ class LeaderboardService:
                 rescore=include_rescore_variants,
                 other=include_other_variants,
             )
+            language_filter_mode = _language_filter_mode_for_view(self.config, view_name)
             has_length_filters = _has_task_length_filters(
                 query_min_chars=query_min_chars,
                 query_max_chars=query_max_chars,
@@ -195,6 +196,7 @@ class LeaderboardService:
                 and not show_task_z_scores
                 and not task_filter.strip()
                 and not has_length_filters
+                and language_filter_mode == "languages"
             ):
                 precomputed = _load_precomputed_leaderboard_rows(
                     duckdb_path=self.duckdb_path,
@@ -255,11 +257,11 @@ class LeaderboardService:
                         document_max_chars=document_max_chars,
                     )
                     phase_timing["task_score_count"] = len(rows)
-            available_languages = _language_options(rows)
+            available_languages = _language_options(rows, mode=language_filter_mode)
             selected_languages = _selected_languages(language_filters, available_languages)
             if selected_languages:
                 with timed_operation("viewer.leaderboard.phase", operation="filter_languages", view=view_name) as phase_timing:
-                    rows = _filter_rows_by_languages(rows, selected_languages)
+                    rows = _filter_rows_by_languages(rows, selected_languages, mode=language_filter_mode)
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["language_count"] = len(selected_languages)
             metric_score_group = selected_score_group
@@ -483,7 +485,7 @@ def _load_precomputed_leaderboard_rows(
                       AND include_truncate_variants = ?
                       AND include_rescore_variants = ?
                       AND include_other_variants = ?
-                    ORDER BY lower(label), code
+                    ORDER BY task_count DESC, lower(label), code
                     """,
                     [
                         view_name,
@@ -884,10 +886,10 @@ def _exclude_configured_tasks(rows: list[TaskScore], config: ViewerConfig) -> li
     ]
 
 
-def _language_options(rows: list[TaskScore]) -> list[LanguageOption]:
+def _language_options(rows: list[TaskScore], *, mode: LanguageFilterMode = "languages") -> list[LanguageOption]:
     task_keys_by_language: dict[str, set[str]] = defaultdict(set)
     for row in rows:
-        for language in row.languages:
+        for language in _language_codes_for_row(row, mode=mode):
             task_keys_by_language[language].add(row.task_key)
     return [
         LanguageOption(code=language, label=_language_label(language), task_count=len(task_keys))
@@ -907,9 +909,45 @@ def _selected_languages(language_filters: tuple[str, ...], options: list[Languag
     return tuple(selected)
 
 
-def _filter_rows_by_languages(rows: list[TaskScore], selected_languages: tuple[str, ...]) -> list[TaskScore]:
+def _filter_rows_by_languages(
+    rows: list[TaskScore],
+    selected_languages: tuple[str, ...],
+    *,
+    mode: LanguageFilterMode = "languages",
+) -> list[TaskScore]:
     selected = set(selected_languages)
-    return [row for row in rows if selected.intersection(row.languages)]
+    return [row for row in rows if selected.intersection(_language_codes_for_row(row, mode=mode))]
+
+
+def _language_codes_for_row(row: TaskScore, *, mode: LanguageFilterMode) -> tuple[str, ...]:
+    if mode == "primary_language":
+        language = _primary_language_for_row(row)
+        return (language,) if language else ()
+    return row.languages
+
+
+def _primary_language_for_row(row: TaskScore) -> str | None:
+    if row.language and row.language != "multilingual":
+        return row.language
+    dataset_language = _dataset_name_language_suffix(row.dataset_name)
+    if dataset_language:
+        return dataset_language
+    split_language = _language_code_from_text(row.split_name)
+    if split_language:
+        return split_language
+    return row.languages[0] if row.languages else None
+
+
+def _dataset_name_language_suffix(dataset_name: str) -> str | None:
+    if "-" not in dataset_name:
+        return None
+    suffix = dataset_name.rsplit("-", 1)[-1].strip().lower()
+    return suffix if 2 <= len(suffix) <= 3 and suffix.isalpha() else None
+
+
+def _language_code_from_text(value: str) -> str | None:
+    code = value.strip().lower()
+    return code if 2 <= len(code) <= 3 and code.isalpha() else None
 
 
 def _has_task_length_filters(
@@ -955,6 +993,11 @@ def _language_label(language: str) -> str:
 def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGroupConfig]:
     benchmark = config.benchmark_for_view(view_name)
     return benchmark.resolved_score_groups if benchmark is not None else []
+
+
+def _language_filter_mode_for_view(config: ViewerConfig, view_name: str) -> LanguageFilterMode:
+    benchmark = config.benchmark_for_view(view_name)
+    return benchmark.language_filter_mode if benchmark is not None else "languages"
 
 
 def _overall_metric_score_group(overall: OverallConfig) -> ScoreGroupConfig | None:

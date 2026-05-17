@@ -847,6 +847,19 @@ choices:
   completeness are recomputed only over tasks whose `languages` contains at
   least one selected language. If no `lang_filter` is set, all tasks in the
   selected view are ranked.
+- Benchmarks may override that filter source with
+  `language_filter_mode: primary_language`. MNanoBEIR and NanoMIRACL use this
+  mode because they are organized around explicit dataset/language axes and
+  several multilingual rows include secondary detected languages such as
+  English; their Language pages therefore use the primary language, such as
+  `NanoBEIR-ja` -> `ja` or the NanoMIRACL split code, rather than expanding
+  every code in `languages`.
+- Viewer benchmark groups keep broader multilingual/domain suites under
+  Domain-specific unless they are an official language-specific NanoMTEB family
+  such as `NanoJMTEB-v2`, `NanoFaMTEB-v2`, `NanoRuMTEB`, `NanoVNMTEB`, or
+  `NanoCMTEB`. `NanoMLDR`, `NanoIndicQA`, `NanoMuPLeR`, `NanoChemTEB`, and
+  NanoMIRACL remain Domain-specific by viewer policy even when they expose
+  language pages.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 
@@ -1410,6 +1423,12 @@ MNanoBEIR `task_mean` first averages all language rows for each task name, while
 selected group changes benchmark-view `Mean Score`, Borda, and rank. When
 `task_scores=1` is active, the same group also determines the extra metric
 columns shown in the table.
+
+MNanoBEIR and NanoMIRACL Language pages use
+`language_filter_mode: primary_language` rather than the full `languages` array.
+This keeps language filters aligned with their dataset/language axis and avoids
+over-counting secondary language tags that appear inside multilingual source
+rows.
 
 For UI rendering, long format is usually easier than SQL pivoting. Reuse
 `complete_rows` from the benchmark leaderboard query:
