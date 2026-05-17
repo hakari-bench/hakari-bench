@@ -12,6 +12,7 @@ import pytest
 from hakari_bench.viewer.app import (
     _fmt_max_len,
     _metric_column_label,
+    _metric_column_labels,
     _rounded_z_score,
     _view_group,
     _z_score_bucket_class,
@@ -2232,6 +2233,109 @@ def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
     assert _metric_column_label("arguana") == "arguana"
     assert _metric_column_label("NanoBIRCO::NanoBIRCO") == "NanoBIRCO::NanoBIRCO"
     assert _metric_column_label("NanoMMTEB::NanoArguAna") == "NanoMMTEB::NanoArguAna"
+    assert _metric_column_label("MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana") == "NanoBEIR-ar::arguana"
+
+
+def test_metric_column_labels_keep_full_name_when_short_labels_collide() -> None:
+    columns = [
+        "BenchA::hakari-bench/NanoBEIR-ar::arguana",
+        "BenchB::other-owner/NanoBEIR-ar::arguana",
+        "BenchA::hakari-bench/NanoBEIR-ja::arguana",
+    ]
+
+    assert _metric_column_labels(columns) == {
+        "BenchA::hakari-bench/NanoBEIR-ar::arguana": "BenchA::hakari-bench/NanoBEIR-ar::arguana",
+        "BenchB::other-owner/NanoBEIR-ar::arguana": "BenchB::other-owner/NanoBEIR-ar::arguana",
+        "BenchA::hakari-bench/NanoBEIR-ja::arguana": "NanoBEIR-ja::arguana",
+    }
+
+
+def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ar",
+                "NanoBEIR-ar",
+                "ar",
+                "arguana",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana",
+                0.80,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ja",
+                "NanoBEIR-ja",
+                "ja",
+                "arguana",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ja::arguana",
+                0.70,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/b",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ar",
+                "NanoBEIR-ar",
+                "ar",
+                "arguana",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana",
+                0.60,
+                20,
+                24,
+                4096,
+            ),
+            (
+                "model/b",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ja",
+                "NanoBEIR-ja",
+                "ja",
+                "arguana",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ja::arguana",
+                0.50,
+                20,
+                24,
+                4096,
+            ),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: MNanoBEIR
+    score_groups:
+      - name: task_key
+        label: Task Key
+        group_by: task_key
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n", encoding="utf-8")
+
+    from fastapi.testclient import TestClient
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=MNanoBEIR&group=task_key&task_scores=1")
+
+    assert response.status_code == 200
+    assert ">NanoBEIR-ar::arguana</span>" in response.text
+    assert ">NanoBEIR-ja::arguana</span>" in response.text
+    assert (
+        'data-metric-column-full-name="MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana"'
+        in response.text
+    )
 
 
 def test_max_len_is_formatted_with_grouping_separator() -> None:

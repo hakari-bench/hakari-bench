@@ -797,6 +797,13 @@ the base row for the same source model and renders the relative percentage
 change, such as `-24.5%` or `+1.2%`. Base rows and rows without a matching base
 row leave this column blank.
 
+Task metric column headers keep their full metric key for sorting and query
+state, but shorten long dataset task keys for display. For example,
+`MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana` renders as
+`NanoBEIR-ar::arguana` when that short label is unique. If two full keys shorten
+to the same label, those conflicting headers render their full key. The full key
+is also exposed on the header label with `data-metric-column-full-name`.
+
 When `Task std display` is enabled, the viewer renders task metric columns with
 the raw 0-100 task score plus its z-score distance from the task distribution.
 For each displayed task column, the mean and standard deviation are computed

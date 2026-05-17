@@ -1172,40 +1172,41 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
 
 def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
     filter_state = filter_state or FilterState()
+    metric_labels = _metric_column_labels(result.metric_columns)
     columns = [
-        ("borda_rank", "Borda", "asc", "right", False),
-        ("mean_rank", "Mean", "asc", "right", False),
-        ("model_name", "Model Name", "asc", "left", False),
-        ("borda_score", "Borda Score", "desc", "right", False),
+        ("borda_rank", "Borda", "asc", "right", False, ""),
+        ("mean_rank", "Mean", "asc", "right", False, ""),
+        ("model_name", "Model Name", "asc", "left", False, ""),
+        ("borda_score", "Borda Score", "desc", "right", False, ""),
     ]
     if result.is_overall:
         columns.extend(
             [
-                ("macro_mean", "Macro Mean", "desc", "right", False),
-                ("micro_mean", "Micro Mean", "desc", "right", False),
+                ("macro_mean", "Macro Mean", "desc", "right", False, ""),
+                ("micro_mean", "Micro Mean", "desc", "right", False, ""),
             ]
         )
     else:
-        columns.append(("mean_score", "Mean Score", "desc", "right", False))
+        columns.append(("mean_score", "Mean Score", "desc", "right", False, ""))
     columns.extend(
-        (f"metric:{column}", _metric_column_label(column), "desc", "right", True)
+        (f"metric:{column}", metric_labels[column], "desc", "right", True, column)
         for column in result.metric_columns
     )
     columns.extend(
         [
-            ("task_count", "Tasks", "desc", "right", False),
-            ("active_parameters", "Active Params", "asc", "right", False),
-            ("total_parameters", "Total Params", "asc", "right", False),
-            ("max_seq_length", "Max Len", "desc", "right", False),
-            ("embedding_dim", "Dims", "desc", "right", False),
+            ("task_count", "Tasks", "desc", "right", False, ""),
+            ("active_parameters", "Active Params", "asc", "right", False, ""),
+            ("total_parameters", "Total Params", "asc", "right", False, ""),
+            ("max_seq_length", "Max Len", "desc", "right", False, ""),
+            ("embedding_dim", "Dims", "desc", "right", False, ""),
         ]
     )
     if result.include_quantization_variants:
-        columns.append(("quantization", "Quantization", "asc", "left", False))
+        columns.append(("quantization", "Quantization", "asc", "left", False, ""))
     if _show_base_delta_column(result):
-        columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False))
+        columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False, ""))
     heads = []
-    for key, label, default_direction, align, is_metric in columns:
+    for key, label, default_direction, align, is_metric, full_metric_name in columns:
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
         indicator = " ▲" if sort == key and direction == "asc" else " ▼" if sort == key else ""
         query_payload = state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
@@ -1215,12 +1216,15 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
         th_spacing = "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 normal-case" if is_metric else "px-3 uppercase"
         sticky = _sticky_head_class(key)
         label_class = "min-w-0 leading-tight [overflow-wrap:anywhere]" if is_metric else ""
+        label_attrs = (
+            f' data-metric-column-full-name="{escape(full_metric_name, quote=True)}"' if is_metric else ""
+        )
         heads.append(
             f"""<th scope="col" class="bg-zinc-100 py-2 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
                  <button type="button" class="inline-flex w-full {justify} hover:text-cyan-700"
                          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                          {_leaderboard_control_hx_attrs()}>
-                   <span class="{label_class}">{escape(label)}</span><span class="shrink-0 text-zinc-400">{indicator}</span>
+                   <span class="{label_class}"{label_attrs}>{escape(label)}</span><span class="shrink-0 text-zinc-400">{indicator}</span>
                  </button>
                </th>"""
         )
@@ -1662,9 +1666,25 @@ def _fmt_number(value: float | None) -> str:
 
 
 def _metric_column_label(column: str) -> str:
-    if "::" in column:
+    parts = column.split("::")
+    if len(parts) >= 3:
+        dataset = parts[-2].rsplit("/", 1)[-1]
+        task = parts[-1]
+        return f"{dataset}::{task}"
+    if len(parts) == 2:
         return column
     return column.removeprefix("Nano")
+
+
+def _metric_column_labels(columns: list[str]) -> dict[str, str]:
+    labels_by_column = {column: _metric_column_label(column) for column in columns}
+    counts: dict[str, int] = {}
+    for label in labels_by_column.values():
+        counts[label] = counts.get(label, 0) + 1
+    return {
+        column: column if counts[label] > 1 else label
+        for column, label in labels_by_column.items()
+    }
 
 
 def _page_url(query: QueryState) -> str:
