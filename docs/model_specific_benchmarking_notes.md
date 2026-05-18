@@ -401,6 +401,7 @@ Compatibility notes:
 Applies to:
 
 - `ibm-granite/granite-embedding-311m-multilingual-r2`
+- `ibm-granite/granite-embedding-97m-multilingual-r2`
 - `ibm-granite/granite-embedding-278m-multilingual`
 - `ibm-granite/granite-embedding-107m-multilingual`
 
@@ -415,6 +416,9 @@ Truncation notes:
   output.
 - Use `--embedding-variant truncate:512,384,256,128` for that R2 checkpoint when
   measuring dimensional trade-offs.
+- `ibm-granite/granite-embedding-97m-multilingual-r2` has a 384-dimensional
+  base output and does not document Matryoshka dimensions. Do not add truncation
+  variants unless a newer model card documents them.
 - Do not assume Matryoshka support for the older 278M and 107M multilingual
   checkpoints.
 
