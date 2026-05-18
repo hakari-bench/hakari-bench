@@ -17,6 +17,7 @@ from hakari_bench.viewer.app import (
     _view_group,
     _z_score_bucket_class,
     create_app,
+    render_table_body,
     render_table_head,
 )
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
@@ -1259,6 +1260,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Rescore" in response.text
     assert 'id="model-filter-input"' in response.text
     assert 'name="model_filter"' in response.text
+    assert "Recalculate Borda, Mean" in response.text
+    assert "With a Task name filter, Borda is computed from per-task ranks over the filtered tasks." in response.text
     assert "Apply" in response.text
     assert 'value="model/b"' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
@@ -1691,6 +1694,82 @@ def test_model_filter_matches_any_whitespace_separated_token_case_insensitively(
     assert "Qwen/Qwen3-Embedding" in response.text
     assert "other/model" in response.text
     assert response.text.count('data-filter-hidden="true"') == 1
+
+    ranked_response = TestClient(app).get("/leaderboard?view=BenchA&model_filter=GeMmA%20qwen&rank_filtered=1")
+
+    assert ranked_response.status_code == 200
+    assert 'name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700" checked' in ranked_response.text
+    assert "google/gemma-embed" in ranked_response.text
+    assert "Qwen/Qwen3-Embedding" in ranked_response.text
+    assert "other/model" not in ranked_response.text
+    assert 'data-filter-hidden="true"' not in ranked_response.text
+
+
+def test_task_filter_recomputes_ranking_population_without_task_columns(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "en", "marco", "marco", 0.20, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "en", "fever", "fever", 0.95, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "en", "marco", "marco", 0.80, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "en", "fever", "fever", 0.30, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    full_result = service.get_leaderboard("BenchA")
+    filtered_result = service.get_leaderboard("BenchA", task_filter="marco")
+    ranked_filtered_result = service.get_leaderboard("BenchA", task_filter="marco", rank_filtered=True)
+
+    assert [row.model_name for row in full_result.rows] == ["model/a", "model/b"]
+    assert [row.model_name for row in filtered_result.rows] == ["model/a", "model/b"]
+    assert filtered_result.expected_tasks == 2
+    assert filtered_result.metric_columns == []
+    assert [row.model_name for row in ranked_filtered_result.rows] == ["model/b", "model/a"]
+    assert ranked_filtered_result.expected_tasks == 1
+    assert ranked_filtered_result.rank_filtered is True
+    assert [(row.model_name, row.task_count, row.mean_score, row.borda_score) for row in ranked_filtered_result.rows] == [
+        ("model/b", 1, pytest.approx(80.0), pytest.approx(100.0)),
+        ("model/a", 1, pytest.approx(20.0), pytest.approx(0.0)),
+    ]
+    assert ranked_filtered_result.metric_columns == ["marco"]
+
+
+def test_overall_task_filter_renders_single_task_mean_column(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "en", "marco", "BenchA::marco", 0.20, 10, 12, 8192),
+            ("model/a", "BenchB", "bench/b", "BenchB", "en", "marco", "BenchB::marco", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "en", "marco", "BenchA::marco", 0.80, 10, 12, 8192),
+            ("model/b", "BenchB", "bench/b", "BenchB", "en", "marco", "BenchB::marco", 0.30, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: BenchB\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n  - BenchB\n", encoding="utf-8")
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    result = service.get_leaderboard("Overall", task_filter="marco", rank_filtered=True)
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+    body = render_table_body(result=result)
+
+    assert result.is_overall is True
+    assert [(row.model_name, row.mean_score, row.macro_mean, row.micro_mean) for row in result.rows] == [
+        ("model/a", pytest.approx(55.0), pytest.approx(55.0), pytest.approx(55.0)),
+        ("model/b", pytest.approx(55.0), pytest.approx(55.0), pytest.approx(55.0)),
+    ]
+    assert "Macro Mean" not in head
+    assert "Micro Mean" not in head
+    assert "Mean Score" in head
+    assert body.count(">55.00</td>") >= 2
 
 
 def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:

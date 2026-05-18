@@ -73,6 +73,7 @@ Z_SCORE_BUCKET_CLASSES = (
 
 
 class _TaskLengthFilterKwargs(TypedDict):
+    rank_filtered: bool
     query_len_min: str
     query_len_max: str
     doc_len_min: str
@@ -136,6 +137,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         lang_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
+        rank_filtered: bool = Query(default=False),
         query_len_min: str = Query(default=""),
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
@@ -166,6 +168,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 lang_filter=lang_filter,
                 model_filter=model_filter,
                 task_filter=task_filter,
+                rank_filtered=rank_filtered,
                 query_len_min=query_len_min,
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
@@ -207,6 +210,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         lang_filter: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
+        rank_filtered: bool = Query(default=False),
         query_len_min: str = Query(default=""),
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
@@ -237,6 +241,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 lang_filter=lang_filter,
                 model_filter=model_filter,
                 task_filter=task_filter,
+                rank_filtered=rank_filtered,
                 query_len_min=query_len_min,
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
@@ -264,6 +269,8 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 language_filters=filter_state.language_filters,
                 show_task_scores=state_query.get("task_scores") == "1",
                 show_task_z_scores=state_query.get("task_z_scores") == "1",
+                rank_filtered=filter_state.rank_filtered,
+                model_filter=filter_state.model_filter,
                 task_filter=filter_state.task_filter,
                 query_min_chars=length_bounds["query_min_chars"],
                 query_max_chars=length_bounds["query_max_chars"],
@@ -767,6 +774,7 @@ def _filter_state_with_languages(filter_state: FilterState, language_filters: tu
 
 def _task_length_filter_kwargs(filter_state: FilterState) -> _TaskLengthFilterKwargs:
     return {
+        "rank_filtered": filter_state.rank_filtered,
         "query_len_min": filter_state.query_len_min,
         "query_len_max": filter_state.query_len_max,
         "doc_len_min": filter_state.doc_len_min,
@@ -790,6 +798,7 @@ def render_controls(
     other_variant_checked = " checked" if result.include_other_variants else ""
     task_scores_checked = " checked" if result.show_task_scores else ""
     task_z_scores_checked = " checked" if result.show_task_z_scores else ""
+    rank_filtered_checked = " checked" if filter_state.rank_filtered else ""
     state_fields = [
         ("view", result.view_name),
         ("sort", sort),
@@ -1104,6 +1113,14 @@ def render_controls(
                  class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
                  autocomplete="off">
         </label>
+        <label class="inline-flex items-center gap-2 pt-1">
+          <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
+          <span class="whitespace-nowrap font-medium text-zinc-800">Recalculate Borda, Mean</span>
+          <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
+                data-tooltip="When enabled, Model name and Task name filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks."
+                data-tooltip-placement="left"
+                aria-label="When enabled, Model name and Task name filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks.">?</span>
+        </label>
         <button type="submit" class="border border-zinc-300 bg-zinc-50 px-3 py-1 text-sm font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
           Apply
         </button>
@@ -1144,6 +1161,8 @@ def _text_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str
         fields.append(("model_filter", filter_state.model_filter))
     if filter_state.task_filter:
         fields.append(("task_filter", filter_state.task_filter))
+    if filter_state.rank_filtered:
+        fields.append(("rank_filtered", "1"))
     return fields
 
 
@@ -1225,7 +1244,7 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
         ("model_name", "Model Name", "asc", "left", False, ""),
         ("borda_score", "Borda Score", "desc", "right", False, ""),
     ]
-    if result.is_overall:
+    if result.is_overall and not (result.rank_filtered and result.task_filter):
         columns.extend(
             [
                 ("macro_mean", "Macro Mean", "desc", "right", False, ""),
@@ -1554,7 +1573,7 @@ def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> s
 
 
 def _render_mean_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
-    if result.is_overall:
+    if result.is_overall and not (result.rank_filtered and result.task_filter):
         if result.show_task_z_scores:
             return (
                 _render_score_z_cell(score=row.macro_mean, z_score=row.macro_mean_z, cell_class="px-3 py-2 text-right tabular-nums")

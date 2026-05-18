@@ -785,10 +785,14 @@ does not render per-task or per-score-group metric columns by default. When
 `task_scores=1` is present, the leaderboard computes columns for the current
 selection: the selected score group for benchmark views, configured grouped
 tasks for grouped overall views, or task-level columns when no score group is
-available. `task_filter` filters only those task score columns, not the ranked
-model population. It uses the same matching behavior as the model-name filter:
-case-insensitive whitespace-separated tokens of at least three characters, with
-OR semantics.
+available. By default, `model_filter` only hides rendered model rows and
+`task_filter` only narrows displayed task score columns. When
+`rank_filtered=1` is present, `model_filter` and `task_filter` narrow the ranked
+population before Borda, mean scores, task counts, and task score columns are
+computed. With a ranking task filter, the viewer ranks the matching task rows
+directly; overall views render a single task-level `Mean Score` column instead
+of separate macro and micro overall means. Both filters use case-insensitive
+whitespace-separated tokens of at least three characters, with OR semantics.
 
 When variants are displayed, the leaderboard keeps a unique internal row label
 by appending `embedding_dim`, `quantization`, and sometimes
@@ -1597,8 +1601,12 @@ population unless the UI makes that behavior explicit.
    metadata columns.
 7. For overall views, return both `macro_mean` and `micro_mean`, and use
    `macro_mean` as `mean_score`.
-8. Only render benchmark metric columns when `task_scores=1` is active. Use the
+8. If `rank_filtered=1`, apply model and task filters before the completeness
+   rule and ranking. With a task filter, use direct task-level means for overall
+   views instead of grouped macro/micro means.
+9. Only render benchmark metric columns when `task_scores=1` is active. Use the
    already-selected scoring group rows when present; otherwise use task-level
-   values. Apply `task_filter` to the displayed metric columns only.
-9. Default sort should be `borda_rank ASC`. Metric-column sorts should place
+   values. When `rank_filtered` is not active, apply `task_filter` to the
+   displayed metric columns only.
+10. Default sort should be `borda_rank ASC`. Metric-column sorts should place
    missing values after present values.
