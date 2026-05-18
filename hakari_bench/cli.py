@@ -243,6 +243,11 @@ def _add_embedding_variant_args(parser: argparse.ArgumentParser) -> None:
 def _add_dataset_args(parser: argparse.ArgumentParser, *, action: str) -> None:
     verb = "evaluate" if action == "evaluate" else "build from"
     parser.add_argument(
+        "--all",
+        action="store_true",
+        help=f"{verb.capitalize()} all built-in datasets. Existing outputs are still skipped unless --overwrite is set.",
+    )
+    parser.add_argument(
         "--dataset",
         action="append",
         default=None,
@@ -426,8 +431,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error("--late-interaction-exact-doc-batch-size must be positive.")
         if args.late_interaction_exact_query_batch_size <= 0:
             parser.error("--late-interaction-exact-query-batch-size must be positive.")
+    if args.command == "evaluate":
+        _validate_all_target_args(args, parser)
     if args.command == "evaluate" and args.dataset is None and not args.collection:
-        args.dataset = ["hakari-bench/NanoBEIR-en"]
+        args.dataset = [] if args.all else ["hakari-bench/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:
         args.dataset = []
     if args.command == "evaluate" and args.model_type == "bm25":
@@ -442,8 +449,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         _bridge_new_bm25_args(args)
         args.output_dir = args.candidates_dir
         args.override = args.overwrite
+        _validate_all_target_args(args, parser)
     if args.command == "build-candidates" and args.dataset is None and not args.collection:
-        args.dataset = ["hakari-bench/NanoBEIR-en"]
+        args.dataset = [] if args.all else ["hakari-bench/NanoBEIR-en"]
     elif args.command == "build-candidates" and args.dataset is None:
         args.dataset = []
     return args
@@ -459,6 +467,7 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
     args.model = getattr(args, "model", None)
     args.model_alias = getattr(args, "model_alias", None)
     args.model_revision = getattr(args, "model_revision", None)
+    args.all = getattr(args, "all", False)
     args.dtype = getattr(args, "dtype", "bf16")
     args.trust_remote_code = getattr(args, "trust_remote_code", False)
     args.truncate_dim = getattr(args, "truncate_dim", None)
@@ -488,6 +497,7 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
 
 
 def _bridge_new_bm25_args(args: argparse.Namespace) -> None:
+    args.all = getattr(args, "all", False)
     args.top_k = getattr(args, "bm25_top_k", 100)
     args.bm25_source = getattr(args, "bm25_source", "dataset")
     args.bm25_tokenizer_name = getattr(args, "bm25_wordseg_language", None) or getattr(
@@ -521,12 +531,13 @@ def _apply_model_card_args(args: argparse.Namespace, *, provided_options: set[st
         _apply_model_card_runtime(args, runtime, provided_options=provided_options)
     target = card.get("target")
     if isinstance(target, dict):
-        if args.dataset is None and target.get("datasets") is not None:
-            args.dataset = _string_list_param(target["datasets"], "model_card.target.datasets")
-        if not args.collection and target.get("collections") is not None:
-            args.collection = _string_list_param(target["collections"], "model_card.target.collections")
-        if not args.split and target.get("splits") is not None:
-            args.split = _string_list_param(target["splits"], "model_card.target.splits")
+        if not args.all:
+            if args.dataset is None and target.get("datasets") is not None:
+                args.dataset = _string_list_param(target["datasets"], "model_card.target.datasets")
+            if not args.collection and target.get("collections") is not None:
+                args.collection = _string_list_param(target["collections"], "model_card.target.collections")
+            if not args.split and target.get("splits") is not None:
+                args.split = _string_list_param(target["splits"], "model_card.target.splits")
         if getattr(args, "dataset_revision", None) is None and target.get("dataset_revision") is not None:
             args.dataset_revision = _optional_string_param(target["dataset_revision"], "model_card.target.dataset_revision")
     embedding = card.get("embedding")
@@ -695,7 +706,9 @@ def _apply_model_params(args: argparse.Namespace, value: dict[str, Any]) -> None
 
 
 def _apply_target_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
-    _reject_unknown_keys(value, allowed={"datasets", "collections", "splits", "dataset_revision"}, path="params.target")
+    _reject_unknown_keys(value, allowed={"all", "datasets", "collections", "splits", "dataset_revision"}, path="params.target")
+    if "all" in value:
+        args.all = _bool_param(value["all"], "params.target.all")
     if "datasets" in value:
         args.dataset = _string_list_param(value["datasets"], "params.target.datasets")
     if "collections" in value:
@@ -990,13 +1003,31 @@ def _parse_json_object_arg(value: str | None, *, option_name: str) -> dict[str, 
     return parsed
 
 
+def _validate_all_target_args(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
+    if not getattr(args, "all", False):
+        return
+    if getattr(args, "dataset", None):
+        parser.error("--all cannot be combined with --dataset.")
+    if getattr(args, "collection", None):
+        parser.error("--all cannot be combined with --collection.")
+    if getattr(args, "split", None):
+        parser.error("--all cannot be combined with --split.")
+
+
+def _dataset_values_for_args(args: argparse.Namespace, registry: DatasetRegistry) -> list[str]:
+    if getattr(args, "all", False):
+        return registry.dataset_names()
+    return args.dataset
+
+
 def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     run_started_at = datetime.now(timezone.utc)
     run_start = time.perf_counter()
     registry = DatasetRegistry.load_builtin()
+    dataset_values = _dataset_values_for_args(args, registry)
     tasks = resolve_eval_tasks(
         registry=registry,
-        dataset_values=args.dataset,
+        dataset_values=dataset_values,
         collection_values=args.collection,
         split_values=args.split,
     )
@@ -1051,10 +1082,13 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
 
     results: list[TaskRunResult] = []
     encode_pool = None
+    reranker_pool = None
     try:
         if model is not None and args.model_type == "dense" and args.encode_devices and pending_tasks:
             encode_pool = start_encode_pool(model, args.encode_devices)
             args.encode_pool = encode_pool
+        if model is not None and args.model_type == "reranker" and pending_tasks:
+            reranker_pool = _start_reranker_score_pool(model, args)
         for task in tasks:
             if model is None and result_path_for_task(output_dir=output_dir, model_id=args.model_id, task=task).exists():
                 results.append(_load_cached_task(args=args, task=task))
@@ -1075,6 +1109,9 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         if encode_pool is not None:
             stop_encode_pool(model, encode_pool)
             args.encode_pool = None
+        if reranker_pool is not None:
+            _stop_reranker_score_pool(model, reranker_pool)
+            args.reranker_runtime_score_kwargs = None
 
     if not pending_tasks and results and isinstance(results[0].payload.get("model"), dict):
         model_metadata = results[0].payload["model"]
@@ -1106,11 +1143,37 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     return run_summary_payload
 
 
+def _start_reranker_score_pool(model: Any, args: argparse.Namespace) -> Any | None:
+    score_kwargs = dict(getattr(args, "reranker_score_kwargs", {}) or {})
+    args.reranker_runtime_score_kwargs = score_kwargs
+    devices = score_kwargs.get("device")
+    if not isinstance(devices, list) or not devices:
+        return None
+
+    start_pool = getattr(model, "start_multi_process_pool", None)
+    if not callable(start_pool):
+        return None
+
+    pool = start_pool(target_devices=[str(device) for device in devices])
+    runtime_score_kwargs = dict(score_kwargs)
+    runtime_score_kwargs.pop("device", None)
+    runtime_score_kwargs["pool"] = pool
+    args.reranker_runtime_score_kwargs = runtime_score_kwargs
+    return pool
+
+
+def _stop_reranker_score_pool(model: Any, pool: Any) -> None:
+    stop_pool = getattr(model, "stop_multi_process_pool", None)
+    if callable(stop_pool):
+        stop_pool(pool)
+
+
 def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
     registry = DatasetRegistry.load_builtin()
+    dataset_values = _dataset_values_for_args(args, registry)
     tasks = resolve_eval_tasks(
         registry=registry,
-        dataset_values=args.dataset,
+        dataset_values=dataset_values,
         collection_values=args.collection,
         split_values=args.split,
     )
@@ -1199,6 +1262,7 @@ def _load_dataset_for_args(args: argparse.Namespace, task: EvalTask) -> LoadedIr
         task,
         candidate_subset_name=candidate_subset_name,
         revision=getattr(args, "dataset_revision", None),
+        restrict_corpus_to_candidates=model_type == "reranker",
     )
 
 

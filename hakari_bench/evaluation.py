@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import inspect
+import os
 import time
 from dataclasses import dataclass, field
-from collections.abc import Sequence
+from collections.abc import Iterator, Mapping, Sequence
 from typing import Any, Literal, cast
 
 import numpy as np
@@ -31,10 +32,49 @@ TOP_RANKING_ARTIFACT_DEPTH = 100
 @dataclass(frozen=True)
 class LoadedIrDataset:
     queries: dict[str, str]
-    corpus: dict[str, str]
+    corpus: Mapping[str, str]
     qrels: dict[str, set[str]]
     candidates: dict[str, list[str]] | None
     evaluator_name: str
+
+
+class _LazyCorpusById(Mapping[str, str]):
+    def __init__(self, dataset: Any, ids: set[str]) -> None:
+        self._dataset = dataset
+        self._max_text_chars = _reranker_document_max_chars()
+        ids_only = dataset.select_columns(["_id"]) if hasattr(dataset, "select_columns") else dataset
+        self._index_by_id: dict[str, int] = {}
+        for index, row in enumerate(ids_only):
+            row_id = str(row["_id"])
+            if row_id in ids:
+                self._index_by_id[row_id] = index
+
+    def __getitem__(self, key: str) -> str:
+        index = self._index_by_id[key]
+        return self._text_at(index)
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self._index_by_id)
+
+    def __len__(self) -> int:
+        return len(self._index_by_id)
+
+    def _text_at(self, index: int) -> str:
+        text = str(self._dataset[int(index)]["text"])
+        if self._max_text_chars is not None and len(text) > self._max_text_chars:
+            return text[: self._max_text_chars]
+        return text
+
+
+def _reranker_document_max_chars() -> int | None:
+    raw = os.environ.get("HAKARI_RERANKER_DOCUMENT_MAX_CHARS")
+    if raw is None or not raw.strip():
+        return None
+    try:
+        value = int(raw)
+    except ValueError:
+        return None
+    return value if value > 0 else None
 
 
 @dataclass(frozen=True)
@@ -54,14 +94,24 @@ def load_ir_dataset(
     *,
     candidate_subset_name: str | None = None,
     revision: str | None = None,
+    restrict_corpus_to_candidates: bool = False,
 ) -> LoadedIrDataset:
     from datasets import load_dataset
 
-    corpus_dataset = load_dataset(task.dataset_id, task.dataset.corpus_config, split=task.split_name, revision=revision)
     queries_dataset = load_dataset(task.dataset_id, task.dataset.queries_config, split=task.split_name, revision=revision)
     qrels_dataset = load_dataset(task.dataset_id, task.dataset.qrels_config, split=task.split_name, revision=revision)
+    candidates = _load_candidates(task, candidate_subset_name=candidate_subset_name, revision=revision)
 
-    corpus = {str(row["_id"]): str(row["text"]) for row in corpus_dataset if str(row.get("text", ""))}
+    candidate_corpus_ids: set[str] | None = None
+    if restrict_corpus_to_candidates and candidates is not None:
+        candidate_corpus_ids = {corpus_id for corpus_ids in candidates.values() for corpus_id in corpus_ids}
+
+    corpus_dataset = load_dataset(task.dataset_id, task.dataset.corpus_config, split=task.split_name, revision=revision)
+
+    if candidate_corpus_ids is not None:
+        corpus: Mapping[str, str] = _LazyCorpusById(corpus_dataset, candidate_corpus_ids)
+    else:
+        corpus = {str(row["_id"]): str(row["text"]) for row in corpus_dataset if str(row.get("text", ""))}
     queries = {str(row["_id"]): str(row["text"]) for row in queries_dataset if str(row.get("text", ""))}
 
     qrels: dict[str, set[str]] = {}
@@ -74,7 +124,6 @@ def load_ir_dataset(
         else:
             qrels[query_id].add(str(corpus_ids))
 
-    candidates = _load_candidates(task, candidate_subset_name=candidate_subset_name, revision=revision)
     return LoadedIrDataset(
         queries=queries,
         corpus=corpus,
@@ -982,27 +1031,25 @@ def _rank_all_with_reranker_model(
 ) -> dict[str, list[str]]:
     if dataset.candidates is None:
         return {}
-    pairs: list[list[str]] = []
-    query_candidate_ids: dict[str, list[str]] = {}
+    rankings: dict[str, list[str]] = {}
     for query_id, query_text in dataset.queries.items():
         candidate_ids = [doc_id for doc_id in dataset.candidates.get(query_id, []) if doc_id in dataset.corpus]
         candidate_ids = candidate_ids[:rerank_top_n]
-        query_candidate_ids[query_id] = candidate_ids
-        pairs.extend([query_text, dataset.corpus[doc_id]] for doc_id in candidate_ids)
-    scores = _predict_scores(
-        model,
-        pairs=pairs,
-        batch_size=batch_size,
-        show_progress=show_progress,
-        score_kwargs=score_kwargs,
-    )
-    if len(scores) != len(pairs):
-        raise ValueError(f"Reranker returned {len(scores)} scores for {len(pairs)} query-document pairs.")
-    rankings: dict[str, list[str]] = {}
-    score_offset = 0
-    for query_id, candidate_ids in query_candidate_ids.items():
-        query_scores = scores[score_offset : score_offset + len(candidate_ids)]
-        score_offset += len(candidate_ids)
+        query_scores: list[float] = []
+        pair_chunk_size = min(max(batch_size, 1), 32)
+        for offset in range(0, len(candidate_ids), pair_chunk_size):
+            candidate_chunk = candidate_ids[offset : offset + pair_chunk_size]
+            pairs = [[query_text, dataset.corpus[doc_id]] for doc_id in candidate_chunk]
+            chunk_scores = _predict_scores(
+                model,
+                pairs=pairs,
+                batch_size=batch_size,
+                show_progress=show_progress,
+                score_kwargs=score_kwargs,
+            )
+            if len(chunk_scores) != len(pairs):
+                raise ValueError(f"Reranker returned {len(chunk_scores)} scores for {len(pairs)} query-document pairs.")
+            query_scores.extend(float(score) for score in chunk_scores)
         ranked = sorted(zip(candidate_ids, query_scores, strict=True), key=lambda item: -float(item[1]))
         rankings[query_id] = [doc_id for doc_id, _score in ranked]
     return rankings

@@ -26,6 +26,76 @@ coverage checks should be maintained in this document.
    priority order; earlier directories win duplicate model-task JSON conflicts.
 8. Audit result coverage before treating a leaderboard as final.
 
+## Target Selection
+
+Use `--all` when the requested run should cover every built-in dataset from
+`config/datasets/`. Existing per-task result JSON files are skipped unless
+`--overwrite` is set, so `--all` can be used to fill missing benchmark coverage:
+
+```bash
+uv run hakari-bench evaluate reranker \
+  --model MODEL_NAME \
+  --all \
+  --candidate-ranking bm25
+```
+
+Use `--dataset` or `--collection` only for intentionally narrower runs. `--all`
+is mutually exclusive with `--dataset`, `--collection`, and `--split`.
+
+Common examples:
+
+```bash
+# Fill missing dense results for every built-in dataset. Existing task JSON is
+# reused automatically; only missing tasks are evaluated.
+uv run --group tf4-fa2 hakari-bench evaluate dense \
+  --model BAAI/bge-m3 \
+  --all \
+  --dtype bf16 \
+  --device cuda:0
+```
+
+```bash
+# Fill missing reranker results for every built-in dataset using the dataset BM25
+# candidate subset. This is the preferred default for CrossEncoder rerankers.
+uv run --group tf4-fa2 hakari-bench evaluate reranker \
+  --model BAAI/bge-reranker-v2-m3 \
+  --all \
+  --candidate-ranking bm25 \
+  --rerank-top-k 100 \
+  --batch-size 128 \
+  --dtype bf16 \
+  --device cuda:0
+```
+
+```bash
+# Pin a physical GPU for a single process. Inside the process the visible GPU is
+# still addressed as cuda:0.
+CUDA_VISIBLE_DEVICES=1 uv run --group tf4-fa2 hakari-bench evaluate reranker \
+  --model hotchpotch/japanese-reranker-xsmall-v2 \
+  --all \
+  --candidate-ranking bm25 \
+  --rerank-top-k 100 \
+  --batch-size 256 \
+  --dtype bf16 \
+  --device cuda:0 \
+  --flash-attn2
+```
+
+```bash
+# Equivalent structured target selection for scripts or job manifests.
+uv run --group tf4-fa2 hakari-bench evaluate reranker \
+  --params-json '{
+    "model": {"source": "BAAI/bge-reranker-v2-m3"},
+    "target": {"all": true},
+    "runtime": {"dtype": "bf16", "device": "cuda:0", "batch_size": 128},
+    "reranker": {"candidate_ranking": "bm25", "rerank_top_k": 100}
+  }'
+```
+
+Use `--overwrite` only when intentionally correcting or replacing prior results.
+Without `--overwrite`, `--all` is safe for resuming interrupted runs and filling
+newly added benchmarks.
+
 ## Model Research Checklist
 
 For every model:
