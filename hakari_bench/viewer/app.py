@@ -1218,7 +1218,7 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
 
 def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
     filter_state = filter_state or FilterState()
-    metric_labels = _metric_column_labels(result.metric_columns)
+    metric_labels = _metric_column_labels(result.metric_columns, overrides=result.metric_column_labels)
     columns = [
         ("borda_rank", "Borda", "asc", "right", False, ""),
         ("mean_rank", "Mean", "asc", "right", False, ""),
@@ -1739,8 +1739,9 @@ def _metric_column_label(column: str) -> str:
     return column.removeprefix("Nano")
 
 
-def _metric_column_labels(columns: list[str]) -> dict[str, str]:
-    labels_by_column = {column: _metric_column_label(column) for column in columns}
+def _metric_column_labels(columns: list[str], *, overrides: dict[str, str] | None = None) -> dict[str, str]:
+    overrides = overrides or {}
+    labels_by_column = {column: overrides.get(column) or _metric_column_label(column) for column in columns}
     counts: dict[str, int] = {}
     for label in labels_by_column.values():
         counts[label] = counts.get(label, 0) + 1

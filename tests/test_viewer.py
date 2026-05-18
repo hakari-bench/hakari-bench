@@ -157,6 +157,22 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
     nano_miracl = config.benchmark_for_view("NanoMIRACL")
     assert nano_miracl is not None
     assert nano_miracl.language_filter_mode == "primary_language"
+    nanomteb_misc = config.benchmark_for_view("NanoMTEB-Misc")
+    assert nanomteb_misc is not None
+    assert nanomteb_misc.task_labels == {
+        "2022_fa": "NeuCLIR2022-fa",
+        "2022_ru": "NeuCLIR2022-ru",
+        "2022_zh": "NeuCLIR2022-zh",
+        "cite_ru": "RuSciBench-cite-ru",
+        "cocite_ru": "RuSciBench-cocite-ru",
+        "en": "EuroPIRQ-en",
+        "fi": "EuroPIRQ-fi",
+        "pt": "EuroPIRQ-pt",
+        "wmt19_de_fr": "CLSD-WMT19-de-fr",
+        "wmt19_fr_de": "CLSD-WMT19-fr-de",
+        "wmt21_de_fr": "CLSD-WMT21-de-fr",
+        "wmt21_fr_de": "CLSD-WMT21-fr-de",
+    }
 
 
 def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> None:
@@ -2479,6 +2495,51 @@ def test_metric_column_labels_keep_full_name_when_short_labels_collide() -> None
         "BenchB::other-owner/NanoBEIR-ar::arguana": "BenchB::other-owner/NanoBEIR-ar::arguana",
         "BenchA::hakari-bench/NanoBEIR-ja::arguana": "NanoBEIR-ja::arguana",
     }
+
+
+def test_task_score_column_headers_use_viewer_task_label_overrides(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "NanoMTEB-Misc", "hakari-bench/NanoMTEB-Misc", "NanoMTEB-Misc", "en", "en", "misc-en", 0.80, 10, 12, 8192),
+            ("model/a", "NanoMTEB-Misc", "hakari-bench/NanoMTEB-Misc", "NanoMTEB-Misc", "fi", "fi", "misc-fi", 0.70, 10, 12, 8192),
+            ("model/b", "NanoMTEB-Misc", "hakari-bench/NanoMTEB-Misc", "NanoMTEB-Misc", "en", "en", "misc-en", 0.60, 20, 24, 4096),
+            ("model/b", "NanoMTEB-Misc", "hakari-bench/NanoMTEB-Misc", "NanoMTEB-Misc", "fi", "fi", "misc-fi", 0.50, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: NanoMTEB-Misc
+    task_labels:
+      en: EuroPIRQ-en
+      fi: EuroPIRQ-fi
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMTEB-Misc\n",
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("NanoMTEB-Misc", show_task_scores=True)
+
+    assert result.metric_columns == ["en", "fi"]
+    assert result.metric_column_labels == {"en": "EuroPIRQ-en", "fi": "EuroPIRQ-fi"}
+
+    from fastapi.testclient import TestClient
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=NanoMTEB-Misc&task_scores=1")
+
+    assert response.status_code == 200
+    assert ">EuroPIRQ-en</span>" in response.text
+    assert ">EuroPIRQ-fi</span>" in response.text
+    assert 'data-metric-column-full-name="en"' in response.text
 
 
 def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(tmp_path: Path) -> None:

@@ -181,6 +181,7 @@ Main `benchmarks.yaml` fields:
 | `include_in_overall` | Descriptive metadata. Actual overall composition is defined by `overall.yaml`. |
 | `excluded_tasks` | Task names or task keys excluded from ranking. Matched against `task_name` and `task_key`. |
 | `score_groups` | Benchmark-local scoring units and optional metric columns. The selected group controls benchmark-view `Mean Score`, Borda, and rank; when `task_scores=1`, the same group also controls the displayed metric columns. |
+| `task_labels` | Optional display-only labels for task metric columns, keyed by task name, split name, task key, or the computed metric column key. Use this for compact source splits whose raw task names are ambiguous, such as `NanoMTEB-Misc` `en` -> `EuroPIRQ-en`. |
 
 `score_groups[].group_by` and `overall.yaml` `group_by` can use these values:
 
@@ -809,6 +810,9 @@ state, but shorten long dataset task keys for display. For example,
 `NanoBEIR-ar::arguana` when that short label is unique. If two full keys shorten
 to the same label, those conflicting headers render their full key. The full key
 is also exposed on the header label with `data-metric-column-full-name`.
+Benchmark-level `task_labels` from `config/viewer/benchmarks.yaml` override only
+the visible header text; sorting, task filters, and metric values continue to
+use the underlying metric key.
 
 When `Task std display` is enabled, the viewer renders task metric columns with
 the raw 0-100 task score plus its z-score distance from the task distribution.
