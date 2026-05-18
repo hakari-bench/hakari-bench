@@ -2,7 +2,7 @@ id: Lajavaness/bilingual-embedding-base
 source:
   type: huggingface
   name: Lajavaness/bilingual-embedding-base
-  revision: 0bfc54bb2aa2
+  revision: 0bfc54bb2aa2666dd84715289c7ef58a95eb4d8d
 method: dense
 parameters:
   total: 278043648
@@ -15,6 +15,7 @@ runtime:
   max_seq_length: 512
   dtype: bf16
   trust_remote_code: true
+  remote_code_approved: true
   backend_library: sentence-transformers
   similarity_fn_name: cosine
 target:

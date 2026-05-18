@@ -53,6 +53,7 @@ def build_model_card_from_loaded_model(
     flash_attn2: bool = False,
     device: str | None = None,
     trust_remote_code: bool = False,
+    remote_code_approved: bool = False,
     model_max_seq_length: int | None = None,
     target: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -83,7 +84,13 @@ def build_model_card_from_loaded_model(
         flash_attn2=flash_attn2,
     )
     metadata = collect_model_metadata(loaded_model, args)
-    return model_card_from_metadata(metadata, truncate_dims=truncate_dims, overrides=overrides, target=target)
+    return model_card_from_metadata(
+        metadata,
+        truncate_dims=truncate_dims,
+        overrides=overrides,
+        target=target,
+        remote_code_approved=remote_code_approved,
+    )
 
 
 def model_card_from_metadata(
@@ -92,6 +99,7 @@ def model_card_from_metadata(
     truncate_dims: list[int] | None,
     overrides: ModelCardOverrides,
     target: dict[str, Any] | None = None,
+    remote_code_approved: bool = False,
 ) -> dict[str, Any]:
     model_id = str(metadata.get("id") or metadata.get("model_id") or "")
     if not model_id:
@@ -110,6 +118,7 @@ def model_card_from_metadata(
         "max_seq_length": _override_or_metadata(overrides.max_seq_length, metadata.get("max_seq_length")),
         "dtype": _clean_scalar(metadata.get("dtype")),
         "trust_remote_code": _clean_scalar(metadata.get("trust_remote_code")),
+        "remote_code_approved": True if remote_code_approved and metadata.get("trust_remote_code") is True else None,
         "attn_implementation": _clean_scalar(metadata.get("attn_implementation")),
         "backend_library": _clean_scalar(metadata.get("backend_library")),
         "similarity_fn_name": _clean_scalar(metadata.get("similarity_fn_name")),
@@ -413,6 +422,12 @@ def _merge_existing_card_fields(generated_card: dict[str, Any], existing_card: d
     if existing_card is None:
         return generated_card
     merged = dict(generated_card)
+    existing_runtime = existing_card.get("runtime")
+    generated_runtime = merged.get("runtime")
+    if isinstance(existing_runtime, dict) and isinstance(generated_runtime, dict):
+        for key in ("remote_code_approved",):
+            if key in existing_runtime and key not in generated_runtime:
+                generated_runtime[key] = existing_runtime[key]
     for key, value in existing_card.items():
         if key not in merged:
             merged[key] = value

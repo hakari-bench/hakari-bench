@@ -16,9 +16,6 @@ except Exception:  # pragma: no cover
     HfApi = None
 
 
-MODEL_REVISION_SHA_LENGTH = 12
-
-
 @dataclass(frozen=True)
 class ModelLoadConfig:
     model_name_or_path: str
@@ -87,7 +84,7 @@ def resolve_model_revision(model_id: str, requested_revision: str | None = None)
     if sha is None:
         payload["error"] = "Model revision SHA was not returned by Hugging Face Hub."
     else:
-        payload["resolved"] = str(sha)[:MODEL_REVISION_SHA_LENGTH]
+        payload["resolved"] = str(sha)
     return payload
 
 

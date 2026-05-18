@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 from datetime import datetime, timezone
@@ -519,6 +520,7 @@ def _apply_model_card_args(args: argparse.Namespace, *, provided_options: set[st
     runtime = card.get("runtime")
     if isinstance(runtime, dict):
         _apply_model_card_runtime(args, runtime, provided_options=provided_options)
+    _validate_model_card_remote_code(card=card, source=source, runtime=runtime)
     target = card.get("target")
     if isinstance(target, dict):
         if args.dataset is None and target.get("datasets") is not None:
@@ -564,6 +566,27 @@ def _apply_model_card_runtime(args: argparse.Namespace, runtime: dict[str, Any],
         args.model_max_seq_length = _optional_positive_int_param(
             runtime["max_seq_length"],
             "model_card.runtime.max_seq_length",
+        )
+
+
+_FULL_HF_REVISION_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+
+
+def _validate_model_card_remote_code(*, card: dict[str, Any], source: Any, runtime: Any) -> None:
+    if not isinstance(runtime, dict) or runtime.get("trust_remote_code") is not True:
+        return
+    if runtime.get("remote_code_approved") is not True:
+        model_id = card.get("id", "<unknown>")
+        raise ValueError(
+            f"model card {model_id!r} sets runtime.trust_remote_code=true; "
+            "set runtime.remote_code_approved=true after reviewing the pinned Hugging Face code."
+        )
+    revision = _model_card_revision(source)
+    if revision is None or _FULL_HF_REVISION_SHA_RE.fullmatch(revision) is None:
+        model_id = card.get("id", "<unknown>")
+        raise ValueError(
+            f"model card {model_id!r} sets runtime.trust_remote_code=true; "
+            "source.revision must be a full 40-character Hugging Face revision SHA."
         )
 
 

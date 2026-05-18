@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 from pathlib import Path
 
 from hakari_bench.model_cards import (
@@ -11,6 +12,9 @@ from hakari_bench.model_cards import (
     parse_truncate_dims,
     write_model_card,
 )
+
+
+_FULL_HF_REVISION_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
 def main() -> None:
@@ -55,6 +59,11 @@ def main() -> None:
     parser.add_argument("--flash-attn2", action="store_true")
     parser.add_argument("--device", default=None)
     parser.add_argument("--trust-remote-code", action="store_true")
+    parser.add_argument(
+        "--remote-code-approved",
+        action="store_true",
+        help="Mark trust_remote_code model cards as reviewed. Requires --trust-remote-code and a full --model-revision SHA.",
+    )
     parser.add_argument("--model-max-seq-length", type=int, default=None)
     parser.add_argument("--display-name", default=None)
     parser.add_argument("--source-name", default=None)
@@ -93,6 +102,12 @@ def main() -> None:
 
     if args.model is None:
         parser.error("--model is required unless --from-results is used.")
+    if args.remote_code_approved and not args.trust_remote_code:
+        parser.error("--remote-code-approved requires --trust-remote-code.")
+    if args.trust_remote_code and args.remote_code_approved and (
+        args.model_revision is None or _FULL_HF_REVISION_SHA_RE.fullmatch(args.model_revision) is None
+    ):
+        parser.error("--remote-code-approved requires --model-revision to be the full reviewed Hugging Face revision SHA.")
     model_id = args.model_id or args.model
     try:
         truncate_dims = parse_truncate_dims(args.truncate_dims, model_type=args.model_type)
@@ -109,6 +124,7 @@ def main() -> None:
         flash_attn2=args.flash_attn2,
         device=args.device,
         trust_remote_code=args.trust_remote_code,
+        remote_code_approved=args.remote_code_approved,
         model_max_seq_length=args.model_max_seq_length,
         target={
             "datasets": args.dataset or [],

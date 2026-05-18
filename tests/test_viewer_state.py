@@ -128,6 +128,32 @@ def test_task_filter_enables_task_score_columns() -> None:
     assert query["task_filter"] == "fever"
 
 
+def test_task_z_scores_enable_task_score_columns() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="BenchA",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        task_z_scores=True,
+    )
+
+    assert query["task_scores"] == "1"
+    assert query["task_z_scores"] == "1"
+
+
 def test_task_length_filters_are_normalized_into_filter_state() -> None:
     query = normalize_query_state(
         viewer_config=_viewer_config(),
@@ -196,6 +222,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         available_views=["Overall", "BenchA"],
         available_view_labels={"Overall": "Overall", "BenchA": "Bench A"},
         include_quantization_variants=True,
+        show_task_z_scores=True,
         include_rescore_variants=True,
         score_groups=[],
         metric_columns=[],
@@ -218,8 +245,10 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         "view": "BenchA",
         "sort": "mean_score",
         "direction": "desc",
+        "task_scores": "1",
         "quantization": "1",
         "rescore": "1",
+        "task_z_scores": "1",
         "model_filter": "jina",
         "task_filter": "fever",
         "filters": "1",

@@ -1,6 +1,6 @@
-FROM python:3.12-slim
+FROM python:3.12-slim@sha256:bf73779de6dbd030f3d189eeeb246286965832761ace318c1518300f76c0840d
 
-COPY --from=ghcr.io/astral-sh/uv:0.9.18 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.9.18@sha256:1f2af0857cdeac11a70fd1cea66c5b06bcdac804ea4147690816468f5bf9cea2 /uv /uvx /bin/
 
 WORKDIR /app
 
@@ -26,6 +26,12 @@ RUN uv venv /opt/venv \
         "pyyaml>=6.0.3" \
         "uvicorn[standard]>=0.46.0"
 
+RUN useradd --create-home --shell /usr/sbin/nologin hakari \
+    && mkdir -p /data/viewer \
+    && chown -R hakari:hakari /app /data/viewer /opt/venv
+
 EXPOSE 7860
+
+USER hakari
 
 CMD ["sh", "-c", "uvicorn hakari_bench.viewer.space:create_space_app --factory --host 0.0.0.0 --port ${PORT:-7860}"]

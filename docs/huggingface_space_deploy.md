@@ -110,6 +110,23 @@ The Docker image installs only viewer runtime dependencies and starts:
 uvicorn hakari_bench.viewer.space:create_space_app --factory --host 0.0.0.0 --port ${PORT:-7860}
 ```
 
+The Space Dockerfile pins the Python and `uv` image references by digest and
+runs the FastAPI process as the non-root `hakari` user. If those base images are
+intentionally updated, refresh the digest pins in `Dockerfile`, rebuild locally,
+and keep this deployment note in sync.
+
+The viewer also adds response security headers at runtime, including a
+Content-Security-Policy. The default `frame-ancestors` allows Hugging Face
+embedding hosts:
+
+```text
+https://huggingface.co https://*.huggingface.co
+```
+
+If Hugging Face introduces another parent origin or a private deployment needs a
+different embedding origin, set `HAKARI_BENCH_VIEWER_FRAME_ANCESTORS` to a
+space-separated list of allowed origins.
+
 The viewer does not depend on CDN-hosted browser assets. Regenerate the local
 Tailwind CSS before deploying when viewer templates or styles change:
 
@@ -185,6 +202,7 @@ The same viewer can be pointed at a different source locally or in a Space with:
 - `HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID`
 - `HAKARI_BENCH_VIEWER_HF_DATASET_PATH`
 - `HAKARI_BENCH_VIEWER_HF_DATASET_REVISION`
+- `HAKARI_BENCH_VIEWER_FRAME_ANCESTORS`
 
 ## URL State in Embedded Spaces
 

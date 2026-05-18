@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from functools import lru_cache
+import hashlib
 from html import escape
+import os
 from pathlib import Path
 from typing import TypedDict, cast
 from urllib.parse import urlencode
@@ -42,6 +45,31 @@ from hakari_bench.viewer.variant_display import (
 )
 
 ASSETS_DIR = Path(__file__).with_name("assets")
+DEFAULT_FRAME_ANCESTORS = "https://huggingface.co https://*.huggingface.co"
+SECURITY_HEADERS = {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+}
+Z_SCORE_BUCKET_CLASSES = (
+    "task-z-neutral",
+    "task-z-pos-025",
+    "task-z-pos-050",
+    "task-z-pos-075",
+    "task-z-pos-100",
+    "task-z-pos-125",
+    "task-z-pos-150",
+    "task-z-pos-175",
+    "task-z-pos-200",
+    "task-z-neg-025",
+    "task-z-neg-050",
+    "task-z-neg-075",
+    "task-z-neg-100",
+    "task-z-neg-125",
+    "task-z-neg-150",
+    "task-z-neg-175",
+    "task-z-neg-200",
+)
 
 
 class _TaskLengthFilterKwargs(TypedDict):
@@ -69,6 +97,14 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
     app.add_middleware(GZipMiddleware, minimum_size=1024)
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
+    @app.middleware("http")
+    async def security_headers(request, call_next):  # type: ignore[no-untyped-def]
+        response = await call_next(request)
+        for header, value in SECURITY_HEADERS.items():
+            response.headers.setdefault(header, value)
+        response.headers.setdefault("Content-Security-Policy", _content_security_policy())
+        return response
+
     @app.get("/favicon.png")
     def favicon() -> FileResponse:
         return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
@@ -90,6 +126,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
         task_scores: bool = Query(default=False),
+        task_z_scores: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -119,6 +156,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 rescore=rescore,
                 other_variant=other_variant,
                 task_scores=task_scores,
+                task_z_scores=task_z_scores,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
@@ -157,6 +195,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
         task_scores: bool = Query(default=False),
+        task_z_scores: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -186,6 +225,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 rescore=rescore,
                 other_variant=other_variant,
                 task_scores=task_scores,
+                task_z_scores=task_z_scores,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
@@ -221,6 +261,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 include_other_variants=display_flags.other,
                 language_filters=filter_state.language_filters,
                 show_task_scores=state_query.get("task_scores") == "1",
+                show_task_z_scores=state_query.get("task_z_scores") == "1",
                 task_filter=filter_state.task_filter,
                 query_min_chars=length_bounds["query_min_chars"],
                 query_max_chars=length_bounds["query_max_chars"],
@@ -284,6 +325,29 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
     return app
 
 
+def _content_security_policy() -> str:
+    frame_ancestors = _frame_ancestors()
+    return "; ".join(
+        [
+            "default-src 'self'",
+            "script-src 'self'",
+            "style-src 'self'",
+            "img-src 'self' data:",
+            "connect-src 'self'",
+            "base-uri 'none'",
+            f"frame-ancestors {frame_ancestors}",
+        ]
+    )
+
+
+def _frame_ancestors() -> str:
+    value = os.environ.get("HAKARI_BENCH_VIEWER_FRAME_ANCESTORS", DEFAULT_FRAME_ANCESTORS)
+    tokens = value.split()
+    if any("\r" in token or "\n" in token for token in tokens):
+        return DEFAULT_FRAME_ANCESTORS
+    return " ".join(tokens) or DEFAULT_FRAME_ANCESTORS
+
+
 def render_page(
     *,
     viewer_config: ViewerConfig,
@@ -292,6 +356,10 @@ def render_page(
     initial_query: QueryState | None = None,
 ) -> str:
     query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
+    css_url = _asset_url("app.css")
+    favicon_url = _asset_url("favicon.png")
+    htmx_url = _asset_url("htmx.min.js")
+    viewer_js_url = _asset_url("viewer.js")
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -299,10 +367,11 @@ def render_page(
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HAKARI-bench leaderboard</title>
   <link rel="canonical" href="/">
-  <link rel="stylesheet" href="/assets/app.css">
-  <link rel="icon" type="image/png" href="/assets/favicon.png">
-  <script src="/assets/htmx.min.js"></script>
-  <script src="/assets/viewer.js" defer></script>
+  <link rel="stylesheet" href="{css_url}">
+  <link rel="icon" type="image/png" href="{favicon_url}">
+  <meta name="htmx-config" content='{{"allowEval":false,"allowScriptTags":false,"includeIndicatorStyles":false}}'>
+  <script src="{htmx_url}"></script>
+  <script src="{viewer_js_url}" defer></script>
 </head>
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
@@ -325,6 +394,12 @@ def render_page(
   </main>
 </body>
 </html>"""
+
+
+@lru_cache(maxsize=None)
+def _asset_url(filename: str) -> str:
+    digest = hashlib.sha256((ASSETS_DIR / filename).read_bytes()).hexdigest()[:12]
+    return f"/assets/{filename}?v={digest}"
 
 
 def _leaderboard_request_hx_attrs() -> str:
@@ -711,6 +786,7 @@ def render_controls(
     rescore_checked = " checked" if result.include_rescore_variants else ""
     other_variant_checked = " checked" if result.include_other_variants else ""
     task_scores_checked = " checked" if result.show_task_scores else ""
+    task_z_scores_checked = " checked" if result.show_task_z_scores else ""
     state_fields = [
         ("view", result.view_name),
         ("sort", sort),
@@ -722,7 +798,11 @@ def render_controls(
         state_fields.append(("group", result.selected_score_group.name))
     sticky_filter_fields = active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
     variant_hidden_fields = _active_variant_hidden_fields(result)
-    task_score_hidden_fields = [("task_scores", "1")] if result.show_task_scores else []
+    task_score_hidden_fields = []
+    if result.show_task_scores:
+        task_score_hidden_fields.append(("task_scores", "1"))
+    if result.show_task_z_scores:
+        task_score_hidden_fields.append(("task_z_scores", "1"))
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
     variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
     filter_hidden_fields = [
@@ -970,6 +1050,11 @@ def render_controls(
           <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
           <span>Task score columns</span>
         </label>
+        <span class="font-medium text-zinc-800">Display:</span>
+        <label class="inline-flex items-center gap-2">
+          <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
+          <span>STD</span>
+        </label>
       </form>
       <form id="variant-controls" class="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2"
             hx-get="/leaderboard" hx-push-url="true"
@@ -1127,40 +1212,41 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
 
 def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
     filter_state = filter_state or FilterState()
+    metric_labels = _metric_column_labels(result.metric_columns)
     columns = [
-        ("borda_rank", "Borda", "asc", "right", False),
-        ("mean_rank", "Mean", "asc", "right", False),
-        ("model_name", "Model Name", "asc", "left", False),
-        ("borda_score", "Borda Score", "desc", "right", False),
+        ("borda_rank", "Borda", "asc", "right", False, ""),
+        ("mean_rank", "Mean", "asc", "right", False, ""),
+        ("model_name", "Model Name", "asc", "left", False, ""),
+        ("borda_score", "Borda Score", "desc", "right", False, ""),
     ]
     if result.is_overall:
         columns.extend(
             [
-                ("macro_mean", "Macro Mean", "desc", "right", False),
-                ("micro_mean", "Micro Mean", "desc", "right", False),
+                ("macro_mean", "Macro Mean", "desc", "right", False, ""),
+                ("micro_mean", "Micro Mean", "desc", "right", False, ""),
             ]
         )
     else:
-        columns.append(("mean_score", "Mean Score", "desc", "right", False))
+        columns.append(("mean_score", "Mean Score", "desc", "right", False, ""))
     columns.extend(
-        (f"metric:{column}", _metric_column_label(column), "desc", "right", True)
+        (f"metric:{column}", metric_labels[column], "desc", "right", True, column)
         for column in result.metric_columns
     )
     columns.extend(
         [
-            ("task_count", "Tasks", "desc", "right", False),
-            ("active_parameters", "Active Params", "asc", "right", False),
-            ("total_parameters", "Total Params", "asc", "right", False),
-            ("max_seq_length", "Max Len", "desc", "right", False),
-            ("embedding_dim", "Dims", "desc", "right", False),
+            ("task_count", "Tasks", "desc", "right", False, ""),
+            ("active_parameters", "Active Params", "asc", "right", False, ""),
+            ("total_parameters", "Total Params", "asc", "right", False, ""),
+            ("max_seq_length", "Max Len", "desc", "right", False, ""),
+            ("embedding_dim", "Dims", "desc", "right", False, ""),
         ]
     )
     if result.include_quantization_variants:
-        columns.append(("quantization", "Quantization", "asc", "left", False))
+        columns.append(("quantization", "Quantization", "asc", "left", False, ""))
     if _show_base_delta_column(result):
-        columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False))
+        columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False, ""))
     heads = []
-    for key, label, default_direction, align, is_metric in columns:
+    for key, label, default_direction, align, is_metric, full_metric_name in columns:
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
         indicator = " ▲" if sort == key and direction == "asc" else " ▼" if sort == key else ""
         query_payload = state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
@@ -1170,12 +1256,15 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
         th_spacing = "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 normal-case" if is_metric else "px-3 uppercase"
         sticky = _sticky_head_class(key)
         label_class = "min-w-0 leading-tight [overflow-wrap:anywhere]" if is_metric else ""
+        label_attrs = (
+            f' data-metric-column-full-name="{escape(full_metric_name, quote=True)}"' if is_metric else ""
+        )
         heads.append(
             f"""<th scope="col" class="bg-zinc-100 py-2 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
                  <button type="button" class="inline-flex w-full {justify} hover:text-cyan-700"
                          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                          {_leaderboard_control_hx_attrs()}>
-                   <span class="{label_class}">{escape(label)}</span><span class="shrink-0 text-zinc-400">{indicator}</span>
+                   <span class="{label_class}"{label_attrs}>{escape(label)}</span><span class="shrink-0 text-zinc-400">{indicator}</span>
                  </button>
                </th>"""
         )
@@ -1202,12 +1291,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         hidden = not filter_context.is_visible(row)
         row_class = "border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
-        mean_cells = (
-            f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.macro_mean)}</td>
-                <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
-            if result.is_overall
-            else f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score)}</td>"""
-        )
+        mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
               <td class="sticky left-0 z-10 bg-inherit px-3 py-2 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
@@ -1451,10 +1535,56 @@ def _empty_analysis_panel(*, title: str, body: str) -> str:
 
 
 def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if result.show_task_z_scores:
+        return "".join(
+            _render_metric_z_cell(score=row.metric_values.get(column), z_score=row.metric_z_values.get(column))
+            for column in result.metric_columns
+        )
     values = row.metric_values
     return "".join(
         f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
         for column in result.metric_columns
+    )
+
+
+def _render_mean_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if result.is_overall:
+        if result.show_task_z_scores:
+            return (
+                _render_score_z_cell(score=row.macro_mean, z_score=row.macro_mean_z, cell_class="px-3 py-2 text-right tabular-nums")
+                + _render_score_z_cell(score=row.micro_mean, z_score=row.micro_mean_z, cell_class="px-3 py-2 text-right tabular-nums")
+            )
+        return f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.macro_mean)}</td>
+                <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
+    if result.show_task_z_scores:
+        return _render_score_z_cell(score=row.mean_score, z_score=row.mean_score_z, cell_class="px-3 py-2 text-right tabular-nums")
+    return f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score)}</td>"""
+
+
+def _render_metric_z_cell(*, score: float | None, z_score: float | None) -> str:
+    return _render_score_z_cell(
+        score=score,
+        z_score=z_score,
+        cell_class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums",
+    )
+
+
+def _render_score_z_cell(*, score: float | None, z_score: float | None, cell_class: str) -> str:
+    rounded = _rounded_z_score(z_score)
+    if rounded is None:
+        z_label = ""
+        bucket_class = "task-z-neutral"
+    else:
+        assert z_score is not None
+        z_label = f"{_fmt_z_score(z_score)}σ"
+        bucket_class = _z_score_bucket_class(rounded)
+    return (
+        f'<td class="{cell_class}">'
+        f'<span class="task-z-score {bucket_class}">'
+        f'<span class="task-z-score-value">{escape(_fmt_score(score))}</span>'
+        f'<span class="task-z-score-delta">{escape(z_label)}</span>'
+        "</span>"
+        "</td>"
     )
 
 
@@ -1535,6 +1665,29 @@ def _fmt_score(value: float | None) -> str:
     return "" if value is None else f"{value:.2f}"
 
 
+def _rounded_z_score(value: float | None) -> float | None:
+    if value is None:
+        return None
+    sign = -1.0 if value < 0 else 1.0
+    rounded = sign * (int(abs(value) * 4.0 + 0.5) / 4.0)
+    return max(-2.0, min(2.0, rounded))
+
+
+def _fmt_z_score(value: float) -> str:
+    if abs(value) < 0.005:
+        return "0.00"
+    return f"{value:+.2f}"
+
+
+def _z_score_bucket_class(value: float) -> str:
+    if value == 0.0:
+        return "task-z-neutral"
+    prefix = "pos" if value > 0.0 else "neg"
+    bucket = int(abs(value) * 100)
+    bucket_class = f"task-z-{prefix}-{bucket:03d}"
+    return bucket_class if bucket_class in Z_SCORE_BUCKET_CLASSES else "task-z-neutral"
+
+
 def _fmt_params(value: int | None) -> str:
     if value is None:
         return ""
@@ -1570,9 +1723,25 @@ def _fmt_number(value: float | None) -> str:
 
 
 def _metric_column_label(column: str) -> str:
-    if "::" in column:
+    parts = column.split("::")
+    if len(parts) >= 3:
+        dataset = parts[-2].rsplit("/", 1)[-1]
+        task = parts[-1]
+        return f"{dataset}::{task}"
+    if len(parts) == 2:
         return column
     return column.removeprefix("Nano")
+
+
+def _metric_column_labels(columns: list[str]) -> dict[str, str]:
+    labels_by_column = {column: _metric_column_label(column) for column in columns}
+    counts: dict[str, int] = {}
+    for label in labels_by_column.values():
+        counts[label] = counts.get(label, 0) + 1
+    return {
+        column: column if counts[label] > 1 else label
+        for column, label in labels_by_column.items()
+    }
 
 
 def _page_url(query: QueryState) -> str:

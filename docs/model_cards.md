@@ -40,6 +40,27 @@ The `from-model-card` evaluator reads `method`, `source`, `runtime`,
 options such as batch size, device, prompt options, candidate ranking, and output
 directory can still be supplied on the command line.
 
+If a card sets `runtime.trust_remote_code: true`, the card must also include
+`runtime.remote_code_approved: true` and `source.revision` must be the full
+40-character Hugging Face commit SHA that was reviewed. Short revisions,
+branches, and tags are intentionally rejected for model-card execution because
+`trust_remote_code` allows arbitrary Python code from the model repository to
+run during loading.
+
+When generating a reviewed remote-code card, pass both flags and pin the full
+revision:
+
+```bash
+uv run python scripts/generate_model_cards.py \
+  --model jinaai/jina-embeddings-v3 \
+  --model-type dense \
+  --truncate-dims 32 64 128 256 512 768 \
+  --trust-remote-code \
+  --remote-code-approved \
+  --model-revision ab036b023d30b4d1138c4c3bfa9f0c445ab455d6 \
+  --output-dir config/model_cards
+```
+
 Every non-BM25 evaluation also writes a reusable model card next to the result
 tree:
 

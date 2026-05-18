@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 ScoreGroupKey = Literal["task_key", "dataset_name", "dataset_id", "split_name", "benchmark", "task_name"]
+LanguageFilterMode = Literal["languages", "primary_language"]
 
 
 class ScoreGroupConfig(BaseModel):
@@ -31,6 +32,7 @@ class BenchmarkConfig(BaseModel):
     include_in_overall: bool = True
     excluded_tasks: list[str] = Field(default_factory=list)
     score_groups: list[ScoreGroupConfig] = Field(default_factory=list)
+    language_filter_mode: LanguageFilterMode = "languages"
 
     @property
     def display_label(self) -> str:

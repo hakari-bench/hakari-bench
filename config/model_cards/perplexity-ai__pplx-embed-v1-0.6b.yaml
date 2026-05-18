@@ -2,7 +2,7 @@ id: perplexity-ai/pplx-embed-v1-0.6b
 source:
   type: huggingface
   name: perplexity-ai/pplx-embed-v1-0.6b
-  revision: fc544480a6be
+  revision: fc544480a6be6395bcfe59d4dcf10c0a4e65b236
 method: dense
 parameters:
   total: 596049920
@@ -15,6 +15,7 @@ runtime:
   max_seq_length: 32768
   dtype: bf16
   trust_remote_code: true
+  remote_code_approved: true
   attn_implementation: flash_attention_2
   backend_library: sentence-transformers
   similarity_fn_name: cosine

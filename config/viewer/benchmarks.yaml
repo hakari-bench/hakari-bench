@@ -10,6 +10,10 @@ benchmarks:
     matches:
       - NanoBEIR
     include_in_overall: true
+    # MNanoBEIR is a task x language benchmark. Some dataset rows include
+    # secondary languages such as English in `languages`, so Language pages use
+    # the dataset primary language instead of expanding every detected language.
+    language_filter_mode: primary_language
     score_groups:
       - name: task_mean
         label: Task Mean
@@ -142,4 +146,8 @@ benchmarks:
     include_in_overall: false
   - name: NanoMIRACL
     label: NanoMIRACL
+    # NanoMIRACL is organized by language split. Some splits can contain
+    # secondary detected languages in `languages`, so Language pages should use
+    # the split primary language and keep minor primary languages such as Yoruba.
+    language_filter_mode: primary_language
     include_in_overall: false

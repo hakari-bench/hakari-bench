@@ -182,13 +182,14 @@ id: BAAI/bge-m3
 source:
   type: huggingface
   name: BAAI/bge-m3
-  revision_requested: main
+  revision: 5617a9f61b028005a4858fdac845db406aefb181
 method: dense
 embedding:
   truncate_dims:
     - 768
 runtime:
   trust_remote_code: true
+  remote_code_approved: true
   max_seq_length: 8192
 target:
   datasets:
@@ -204,7 +205,7 @@ target:
     assert args.model_type == "dense"
     assert args.model == "BAAI/bge-m3"
     assert args.model_id == "BAAI/bge-m3"
-    assert args.model_revision == "main"
+    assert args.model_revision == "5617a9f61b028005a4858fdac845db406aefb181"
     assert args.trust_remote_code is True
     assert args.model_max_seq_length == 8192
     assert args.dataset == ["hakari-bench/NanoBEIR-en"]
@@ -212,6 +213,62 @@ target:
     assert args.batch_size == 8
     assert args.embedding_variants[:1] == [_pipeline_variant("truncate_dim_768", _truncate_step(768))]
 
+
+def test_parse_args_from_model_card_rejects_unapproved_remote_code(tmp_path, capsys) -> None:
+    model_card = tmp_path / "remote-code.yaml"
+    model_card.write_text(
+        """
+id: BAAI/bge-m3
+source:
+  type: huggingface
+  name: BAAI/bge-m3
+  revision: 5617a9f61b028005a4858fdac845db406aefb181
+method: dense
+runtime:
+  trust_remote_code: true
+target:
+  datasets:
+    - hakari-bench/NanoBEIR-en
+""".strip(),
+        encoding="utf-8",
+    )
+
+    try:
+        parse_args(["evaluate", "from-model-card", "--model-card", str(model_card)])
+    except SystemExit as exc:
+        assert exc.code == 2
+        assert "remote_code_approved" in capsys.readouterr().err
+    else:
+        raise AssertionError("unapproved trust_remote_code model card was accepted")
+
+
+def test_parse_args_from_model_card_rejects_remote_code_without_full_revision(tmp_path, capsys) -> None:
+    model_card = tmp_path / "remote-code.yaml"
+    model_card.write_text(
+        """
+id: BAAI/bge-m3
+source:
+  type: huggingface
+  name: BAAI/bge-m3
+  revision: 5617a9f61b02
+method: dense
+runtime:
+  trust_remote_code: true
+  remote_code_approved: true
+target:
+  datasets:
+    - hakari-bench/NanoBEIR-en
+""".strip(),
+        encoding="utf-8",
+    )
+
+    try:
+        parse_args(["evaluate", "from-model-card", "--model-card", str(model_card)])
+    except SystemExit as exc:
+        assert exc.code == 2
+        assert "full 40-character Hugging Face revision SHA" in capsys.readouterr().err
+    else:
+        raise AssertionError("unpinned trust_remote_code model card was accepted")
 
 def test_parse_args_from_model_card_keeps_explicit_runtime_override(tmp_path) -> None:
     model_card = tmp_path / "BAAI__bge-m3.yaml"

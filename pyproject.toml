@@ -24,6 +24,7 @@ dependencies = [
     "torch>=2.9,<2.10",
     "transformers>=4.57,<6",
     "orjson>=3.11.5",
+    "urllib3>=2.7.0",
 ]
 
 [build-system]
@@ -62,6 +63,7 @@ exclude = ["tests*"]
 
 [tool.uv]
 package = true
+exclude-newer = "1 week"
 conflicts = [
     [
         { group = "pylate" },

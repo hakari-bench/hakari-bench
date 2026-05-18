@@ -3,13 +3,14 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 from functools import lru_cache
+import math
 from pathlib import Path
 from typing import Any, Iterable, Literal
 
 import duckdb
 from pydantic import BaseModel, ConfigDict, Field
 
-from hakari_bench.viewer.config import OverallConfig, ScoreGroupConfig, ViewerConfig
+from hakari_bench.viewer.config import LanguageFilterMode, OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository, _table_exists
 from hakari_bench.viewer.observability import log_event, timed_operation
 from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
@@ -54,8 +55,11 @@ class LeaderboardRow(BaseModel):
     model_name: str
     borda_score: float
     mean_score: float
+    mean_score_z: float | None = None
     macro_mean: float | None = None
+    macro_mean_z: float | None = None
     micro_mean: float | None = None
+    micro_mean_z: float | None = None
     task_count: int
     active_parameters: int | None = None
     total_parameters: int | None = None
@@ -70,6 +74,8 @@ class LeaderboardRow(BaseModel):
     source_model_name: str | None = None
     base_score_delta_percent: float | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
+    metric_z_values: dict[str, float] = Field(default_factory=dict)
+    metric_sort_values: dict[str, float] = Field(default_factory=dict)
 
 
 class ScoreGroup(BaseModel):
@@ -103,6 +109,7 @@ class LeaderboardResult(BaseModel):
     include_rescore_variants: bool = False
     include_other_variants: bool = False
     show_task_scores: bool = False
+    show_task_z_scores: bool = False
     task_filter: str = ""
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
@@ -150,6 +157,7 @@ class LeaderboardService:
         include_other_variants: bool = False,
         language_filters: tuple[str, ...] = (),
         show_task_scores: bool = False,
+        show_task_z_scores: bool = False,
         task_filter: str = "",
         query_min_chars: float | None = None,
         query_max_chars: float | None = None,
@@ -164,6 +172,7 @@ class LeaderboardService:
             score_target=score_target,
             show_task_scores=show_task_scores,
         ) as request_timing:
+            show_task_scores = show_task_scores or show_task_z_scores
             overall = self.config.overall_for_view(view_name)
             benchmarks = self.config.benchmarks_for_view(view_name)
             is_overall = overall is not None
@@ -176,6 +185,7 @@ class LeaderboardService:
                 rescore=include_rescore_variants,
                 other=include_other_variants,
             )
+            language_filter_mode = _language_filter_mode_for_view(self.config, view_name)
             has_length_filters = _has_task_length_filters(
                 query_min_chars=query_min_chars,
                 query_max_chars=query_max_chars,
@@ -186,8 +196,10 @@ class LeaderboardService:
                 self.use_precomputed
                 and not language_filters
                 and not show_task_scores
+                and not show_task_z_scores
                 and not task_filter.strip()
                 and not has_length_filters
+                and language_filter_mode == "languages"
             ):
                 precomputed = _load_precomputed_leaderboard_rows(
                     duckdb_path=self.duckdb_path,
@@ -215,6 +227,7 @@ class LeaderboardService:
                         include_rescore_variants=include_rescore_variants,
                         include_other_variants=include_other_variants,
                         show_task_scores=False,
+                        show_task_z_scores=False,
                         task_filter="",
                         score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
                         selected_score_group=(
@@ -247,11 +260,11 @@ class LeaderboardService:
                         document_max_chars=document_max_chars,
                     )
                     phase_timing["task_score_count"] = len(rows)
-            available_languages = _language_options(rows)
+            available_languages = _language_options(rows, mode=language_filter_mode)
             selected_languages = _selected_languages(language_filters, available_languages)
             if selected_languages:
                 with timed_operation("viewer.leaderboard.phase", operation="filter_languages", view=view_name) as phase_timing:
-                    rows = _filter_rows_by_languages(rows, selected_languages)
+                    rows = _filter_rows_by_languages(rows, selected_languages, mode=language_filter_mode)
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["language_count"] = len(selected_languages)
             metric_score_group = selected_score_group
@@ -276,6 +289,7 @@ class LeaderboardService:
                     is_overall=is_overall,
                     score_group=metric_score_group,
                     metric_columns=metric_columns,
+                    show_task_z_scores=show_task_z_scores,
                 )
                 sorted_rows = sort_rows(leaderboard_rows, sort=sort, direction=direction)
                 phase_timing["leaderboard_row_count"] = len(sorted_rows)
@@ -295,6 +309,7 @@ class LeaderboardService:
                 include_rescore_variants=include_rescore_variants,
                 include_other_variants=include_other_variants,
                 show_task_scores=show_task_scores,
+                show_task_z_scores=show_task_z_scores,
                 task_filter=task_filter.strip(),
                 score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
                 selected_score_group=(
@@ -473,7 +488,7 @@ def _load_precomputed_leaderboard_rows(
                       AND include_truncate_variants = ?
                       AND include_rescore_variants = ?
                       AND include_other_variants = ?
-                    ORDER BY lower(label), code
+                    ORDER BY task_count DESC, lower(label), code
                     """,
                     [
                         view_name,
@@ -591,6 +606,7 @@ def compute_leaderboard_rows(
     is_overall: bool,
     score_group: ScoreGroupConfig | None = None,
     metric_columns: list[str] | None = None,
+    show_task_z_scores: bool = False,
 ) -> list[LeaderboardRow]:
     expected_tasks = {row.task_key for row in rows}
     if not expected_tasks:
@@ -607,6 +623,13 @@ def compute_leaderboard_rows(
     }
     complete_rows = [row for row in rows if row.model_name in complete_models]
     borda_scores = _borda_scores(complete_rows)
+    metric_columns = metric_columns or []
+    z_values_by_model = (
+        _metric_z_values_by_model(complete_rows, score_group=score_group, metric_columns=metric_columns)
+        if show_task_z_scores and metric_columns
+        else {}
+    )
+    aggregate_z_values_by_model = _aggregate_z_values_by_model(complete_rows, is_overall=is_overall) if show_task_z_scores else {}
 
     leaderboard_rows: list[LeaderboardRow] = []
     for model_name in sorted(complete_models):
@@ -619,7 +642,9 @@ def compute_leaderboard_rows(
         ]
         macro_mean = _mean(benchmark_means)
         mean_score = macro_mean if is_overall else micro_mean
-        metric_values = _metric_values(model_rows, score_group=score_group, metric_columns=metric_columns or [])
+        metric_values = _metric_values(model_rows, score_group=score_group, metric_columns=metric_columns)
+        metric_z_values = z_values_by_model.get(model_name, {})
+        aggregate_z_values = aggregate_z_values_by_model.get(model_name, {})
         leaderboard_rows.append(
             LeaderboardRow(
                 borda_rank=0.0,
@@ -627,8 +652,11 @@ def compute_leaderboard_rows(
                 model_name=model_name,
                 borda_score=_mean(borda_scores[model_name]),
                 mean_score=mean_score,
+                mean_score_z=aggregate_z_values.get("mean_score"),
                 macro_mean=macro_mean if is_overall else None,
+                macro_mean_z=aggregate_z_values.get("macro_mean") if is_overall else None,
                 micro_mean=micro_mean if is_overall else None,
+                micro_mean_z=aggregate_z_values.get("micro_mean") if is_overall else None,
                 task_count=len({row.task_key for row in model_rows}),
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
@@ -642,6 +670,8 @@ def compute_leaderboard_rows(
                 quantization=first.quantization,
                 source_model_name=first.source_model_name,
                 metric_values=metric_values,
+                metric_z_values=metric_z_values,
+                metric_sort_values=metric_z_values if show_task_z_scores else metric_values,
             )
         )
 
@@ -656,13 +686,17 @@ def compute_leaderboard_rows(
 
 def sort_rows(rows: list[LeaderboardRow], *, sort: str, direction: SortDirection) -> list[LeaderboardRow]:
     metric_key = sort.removeprefix("metric:") if sort.startswith("metric:") else None
-    if metric_key is not None and not any(metric_key in row.metric_values for row in rows):
+    if metric_key is not None and not any(metric_key in row.metric_sort_values or metric_key in row.metric_values for row in rows):
         metric_key = None
     sort_key = sort if sort in SORT_COLUMNS else "borda_rank"
     reverse = direction == "desc" and (metric_key is not None or sort in SORT_COLUMNS)
 
     def key(row: LeaderboardRow) -> tuple[int, Any, float, str]:
-        value = row.metric_values.get(metric_key) if metric_key is not None else getattr(row, sort_key)
+        value = (
+            row.metric_sort_values.get(metric_key, row.metric_values.get(metric_key))
+            if metric_key is not None
+            else getattr(row, sort_key)
+        )
         missing = value is None
         normalized = str(value).lower() if isinstance(value, str) else value
         return (1 if missing else 0, normalized, row.borda_rank, row.model_name.lower())
@@ -860,10 +894,10 @@ def _exclude_configured_tasks(rows: list[TaskScore], config: ViewerConfig) -> li
     ]
 
 
-def _language_options(rows: list[TaskScore]) -> list[LanguageOption]:
+def _language_options(rows: list[TaskScore], *, mode: LanguageFilterMode = "languages") -> list[LanguageOption]:
     task_keys_by_language: dict[str, set[str]] = defaultdict(set)
     for row in rows:
-        for language in row.languages:
+        for language in _language_codes_for_row(row, mode=mode):
             task_keys_by_language[language].add(row.task_key)
     return [
         LanguageOption(code=language, label=_language_label(language), task_count=len(task_keys))
@@ -883,9 +917,45 @@ def _selected_languages(language_filters: tuple[str, ...], options: list[Languag
     return tuple(selected)
 
 
-def _filter_rows_by_languages(rows: list[TaskScore], selected_languages: tuple[str, ...]) -> list[TaskScore]:
+def _filter_rows_by_languages(
+    rows: list[TaskScore],
+    selected_languages: tuple[str, ...],
+    *,
+    mode: LanguageFilterMode = "languages",
+) -> list[TaskScore]:
     selected = set(selected_languages)
-    return [row for row in rows if selected.intersection(row.languages)]
+    return [row for row in rows if selected.intersection(_language_codes_for_row(row, mode=mode))]
+
+
+def _language_codes_for_row(row: TaskScore, *, mode: LanguageFilterMode) -> tuple[str, ...]:
+    if mode == "primary_language":
+        language = _primary_language_for_row(row)
+        return (language,) if language else ()
+    return row.languages
+
+
+def _primary_language_for_row(row: TaskScore) -> str | None:
+    if row.language and row.language != "multilingual":
+        return row.language
+    dataset_language = _dataset_name_language_suffix(row.dataset_name)
+    if dataset_language:
+        return dataset_language
+    split_language = _language_code_from_text(row.split_name)
+    if split_language:
+        return split_language
+    return row.languages[0] if row.languages else None
+
+
+def _dataset_name_language_suffix(dataset_name: str) -> str | None:
+    if "-" not in dataset_name:
+        return None
+    suffix = dataset_name.rsplit("-", 1)[-1].strip().lower()
+    return suffix if 2 <= len(suffix) <= 3 and suffix.isalpha() else None
+
+
+def _language_code_from_text(value: str) -> str | None:
+    code = value.strip().lower()
+    return code if 2 <= len(code) <= 3 and code.isalpha() else None
 
 
 def _has_task_length_filters(
@@ -931,6 +1001,11 @@ def _language_label(language: str) -> str:
 def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGroupConfig]:
     benchmark = config.benchmark_for_view(view_name)
     return benchmark.resolved_score_groups if benchmark is not None else []
+
+
+def _language_filter_mode_for_view(config: ViewerConfig, view_name: str) -> LanguageFilterMode:
+    benchmark = config.benchmark_for_view(view_name)
+    return benchmark.language_filter_mode if benchmark is not None else "languages"
 
 
 def _overall_metric_score_group(overall: OverallConfig) -> ScoreGroupConfig | None:
@@ -1048,6 +1123,104 @@ def _metric_values(
     for row in rows:
         values_by_column[_score_group_key(row, score_group.group_by)].append(row.score * 100.0)
     return {column: _mean(values_by_column[column]) for column in metric_columns if values_by_column[column]}
+
+
+def _metric_z_values_by_model(
+    rows: list[TaskScore],
+    *,
+    score_group: ScoreGroupConfig | None,
+    metric_columns: list[str],
+) -> dict[str, dict[str, float]]:
+    if score_group is None:
+        return {}
+    model_column_values = _mean_metric_values_by_model(rows, score_group=score_group)
+    base_model_column_values = _mean_metric_values_by_model(
+        [row for row in rows if row.embedding_variant_name is None],
+        score_group=score_group,
+    )
+    stats_by_column: dict[str, tuple[float, float]] = {}
+    for column in metric_columns:
+        values = [columns[column] for columns in base_model_column_values.values() if column in columns]
+        stddev = _population_stddev(values)
+        if stddev is not None and stddev > 0.0:
+            stats_by_column[column] = (_mean(values), stddev)
+    return {
+        model_name: {
+            column: (value - mean) / stddev
+            for column, value in columns.items()
+            if column in stats_by_column
+            for mean, stddev in [stats_by_column[column]]
+        }
+        for model_name, columns in model_column_values.items()
+    }
+
+
+def _aggregate_z_values_by_model(rows: list[TaskScore], *, is_overall: bool) -> dict[str, dict[str, float]]:
+    aggregate_values = _aggregate_values_by_model(rows, is_overall=is_overall)
+    base_aggregate_values = _aggregate_values_by_model(
+        [row for row in rows if row.embedding_variant_name is None],
+        is_overall=is_overall,
+    )
+    stats_by_column: dict[str, tuple[float, float]] = {}
+    for column in ("mean_score", "macro_mean", "micro_mean"):
+        values = [columns[column] for columns in base_aggregate_values.values() if column in columns]
+        stddev = _population_stddev(values)
+        if stddev is not None and stddev > 0.0:
+            stats_by_column[column] = (_mean(values), stddev)
+    return {
+        model_name: {
+            column: (value - mean) / stddev
+            for column, value in columns.items()
+            if column in stats_by_column
+            for mean, stddev in [stats_by_column[column]]
+        }
+        for model_name, columns in aggregate_values.items()
+    }
+
+
+def _aggregate_values_by_model(rows: list[TaskScore], *, is_overall: bool) -> dict[str, dict[str, float]]:
+    values_by_model: dict[str, dict[str, float]] = {}
+    for model_name, model_rows in _group_by_model(rows).items():
+        micro_mean = _mean(row.score * 100.0 for row in model_rows)
+        benchmark_means = [
+            _mean(row.score * 100.0 for row in benchmark_rows)
+            for benchmark_rows in _group_by_benchmark(model_rows).values()
+        ]
+        macro_mean = _mean(benchmark_means)
+        mean_score = macro_mean if is_overall else micro_mean
+        values_by_model[model_name] = {"mean_score": mean_score}
+        if is_overall:
+            values_by_model[model_name]["macro_mean"] = macro_mean
+            values_by_model[model_name]["micro_mean"] = micro_mean
+    return values_by_model
+
+
+def _group_by_model(rows: list[TaskScore]) -> dict[str, list[TaskScore]]:
+    grouped: dict[str, list[TaskScore]] = defaultdict(list)
+    for row in rows:
+        grouped[row.model_name].append(row)
+    return grouped
+
+
+def _mean_metric_values_by_model(
+    rows: list[TaskScore],
+    *,
+    score_group: ScoreGroupConfig,
+) -> dict[str, dict[str, float]]:
+    values_by_model_column: dict[tuple[str, str], list[float]] = defaultdict(list)
+    for row in rows:
+        values_by_model_column[(row.model_name, _score_group_key(row, score_group.group_by))].append(row.score)
+    values_by_model: dict[str, dict[str, float]] = defaultdict(dict)
+    for (model_name, column), values in values_by_model_column.items():
+        values_by_model[model_name][column] = _mean(values)
+    return values_by_model
+
+
+def _population_stddev(values: list[float]) -> float | None:
+    if len(values) < 2:
+        return None
+    mean = _mean(values)
+    return math.sqrt(sum((value - mean) ** 2 for value in values) / len(values))
 
 
 def _score_group_key(row: TaskScore, group_by: str) -> str:

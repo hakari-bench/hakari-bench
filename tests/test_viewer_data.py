@@ -96,6 +96,27 @@ def test_task_results_repository_rejects_old_schema_version(tmp_path: Path) -> N
         )
 
 
+def test_task_results_repository_accepts_schema_three_without_text_length_columns(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_viewer_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192),
+        ],
+        schema_version="3",
+        include_text_length_columns=False,
+    )
+
+    rows = TaskResultsRepository(db_path).fetch_task_result_rows(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+    )
+
+    assert [(row.model_name, row.query_mean_chars, row.document_mean_chars) for row in rows] == [
+        ("model/a", None, None)
+    ]
+
+
 def test_task_results_repository_can_return_lightweight_rows_for_hot_path(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_viewer_task_results(
@@ -615,12 +636,13 @@ def _write_viewer_task_results(
     rows_override_languages: list[tuple[str, list[str]]] | None = None,
     rows_override_text_lengths: list[tuple[float | None, float | None]] | None = None,
     schema_version: str = CURRENT_DUCKDB_SCHEMA_VERSION,
+    include_text_length_columns: bool = True,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
         con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
         con.execute("INSERT INTO meta_database VALUES (?)", [schema_version])
-        columns = (
+        columns = [
             "model_name VARCHAR",
             "benchmark VARCHAR",
             "dataset_id VARCHAR",
@@ -647,9 +669,14 @@ def _write_viewer_task_results(
             "embedding_variant_name VARCHAR",
             "embedding_dim INTEGER",
             "quantization VARCHAR",
-            "query_mean_chars DOUBLE",
-            "document_mean_chars DOUBLE",
-        )
+        ]
+        if include_text_length_columns:
+            columns.extend(
+                [
+                    "query_mean_chars DOUBLE",
+                    "document_mean_chars DOUBLE",
+                ]
+            )
         con.execute(f"CREATE TABLE viewer_task_results ({', '.join(columns)})")
         normalized_rows = []
         for index, row in enumerate(rows):
@@ -663,15 +690,16 @@ def _write_viewer_task_results(
                 if rows_override_text_lengths is not None
                 else (None, None)
             )
-            normalized_rows.append(
-                _viewer_task_result_row(
-                    row,
-                    language=language,
-                    languages=languages,
-                    query_mean_chars=query_mean_chars,
-                    document_mean_chars=document_mean_chars,
-                )
+            normalized_row = _viewer_task_result_row(
+                row,
+                language=language,
+                languages=languages,
+                query_mean_chars=query_mean_chars,
+                document_mean_chars=document_mean_chars,
             )
+            if not include_text_length_columns:
+                normalized_row = normalized_row[:-2]
+            normalized_rows.append(normalized_row)
         placeholders = ", ".join("?" for _ in columns)
         con.executemany(f"INSERT INTO viewer_task_results VALUES ({placeholders})", normalized_rows)
     finally:

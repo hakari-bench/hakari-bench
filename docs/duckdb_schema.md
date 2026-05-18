@@ -797,6 +797,23 @@ the base row for the same source model and renders the relative percentage
 change, such as `-24.5%` or `+1.2%`. Base rows and rows without a matching base
 row leave this column blank.
 
+Task metric column headers keep their full metric key for sorting and query
+state, but shorten long dataset task keys for display. For example,
+`MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana` renders as
+`NanoBEIR-ar::arguana` when that short label is unique. If two full keys shorten
+to the same label, those conflicting headers render their full key. The full key
+is also exposed on the header label with `data-metric-column-full-name`.
+
+When `Task std display` is enabled, the viewer renders task metric columns with
+the raw 0-100 task score plus its z-score distance from the task distribution.
+For each displayed task column, the mean and standard deviation are computed
+from base rows only, where `embedding_variant_name IS NULL`; displayed variant
+rows are then compared against those base-row statistics for the same task. The
+z-score label is rendered to two decimals, while the heatmap color is rounded to
+0.25 standard-deviation increments and bucketed from `-2.0` to `+2.0`. A task
+with zero base-row standard deviation leaves the z-score cell blank because
+there is no meaningful distance from the task distribution.
+
 ## Current Viewer Data Access Layer
 
 `hakari_bench/viewer/data.py` contains `TaskResultsRepository`, which
@@ -838,6 +855,19 @@ choices:
   completeness are recomputed only over tasks whose `languages` contains at
   least one selected language. If no `lang_filter` is set, all tasks in the
   selected view are ranked.
+- Benchmarks may override that filter source with
+  `language_filter_mode: primary_language`. MNanoBEIR and NanoMIRACL use this
+  mode because they are organized around explicit dataset/language axes and
+  several multilingual rows include secondary detected languages such as
+  English; their Language pages therefore use the primary language, such as
+  `NanoBEIR-ja` -> `ja` or the NanoMIRACL split code, rather than expanding
+  every code in `languages`.
+- Viewer benchmark groups keep broader multilingual/domain suites under
+  Domain-specific unless they are an official language-specific NanoMTEB family
+  such as `NanoJMTEB-v2`, `NanoFaMTEB-v2`, `NanoRuMTEB`, `NanoVNMTEB`, or
+  `NanoCMTEB`. `NanoMLDR`, `NanoIndicQA`, `NanoMuPLeR`, `NanoChemTEB`, and
+  NanoMIRACL remain Domain-specific by viewer policy even when they expose
+  language pages.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 
@@ -1401,6 +1431,12 @@ MNanoBEIR `task_mean` first averages all language rows for each task name, while
 selected group changes benchmark-view `Mean Score`, Borda, and rank. When
 `task_scores=1` is active, the same group also determines the extra metric
 columns shown in the table.
+
+MNanoBEIR and NanoMIRACL Language pages use
+`language_filter_mode: primary_language` rather than the full `languages` array.
+This keeps language filters aligned with their dataset/language axis and avoids
+over-counting secondary language tags that appear inside multilingual source
+rows.
 
 For UI rendering, long format is usually easier than SQL pivoting. Reuse
 `complete_rows` from the benchmark leaderboard query:
