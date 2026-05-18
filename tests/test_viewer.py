@@ -466,6 +466,43 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert browser_default_favicon_response.content == response.content
 
 
+def test_viewer_responses_include_security_headers(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    monkeypatch.setenv(
+        "HAKARI_BENCH_VIEWER_FRAME_ANCESTORS",
+        "https://huggingface.co https://*.huggingface.co https://example.com",
+    )
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    client = TestClient(app)
+
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert response.headers["x-content-type-options"] == "nosniff"
+    assert response.headers["referrer-policy"] == "strict-origin-when-cross-origin"
+    assert "camera=()" in response.headers["permissions-policy"]
+    assert "microphone=()" in response.headers["permissions-policy"]
+    assert "geolocation=()" in response.headers["permissions-policy"]
+    assert "default-src 'self'" in response.headers["content-security-policy"]
+    assert "script-src 'self'" in response.headers["content-security-policy"]
+    assert "img-src 'self' data:" in response.headers["content-security-policy"]
+    assert (
+        "frame-ancestors https://huggingface.co https://*.huggingface.co https://example.com"
+        in response.headers["content-security-policy"]
+    )
+    assert "x-frame-options" not in response.headers
+
+    asset_response = client.get("/assets/app.css")
+    assert asset_response.status_code == 200
+    assert asset_response.headers["content-security-policy"] == response.headers["content-security-policy"]
+
+
 def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 

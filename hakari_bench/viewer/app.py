@@ -3,6 +3,7 @@ from __future__ import annotations
 from functools import lru_cache
 import hashlib
 from html import escape
+import os
 from pathlib import Path
 from typing import TypedDict, cast
 from urllib.parse import urlencode
@@ -44,6 +45,12 @@ from hakari_bench.viewer.variant_display import (
 )
 
 ASSETS_DIR = Path(__file__).with_name("assets")
+DEFAULT_FRAME_ANCESTORS = "https://huggingface.co https://*.huggingface.co"
+SECURITY_HEADERS = {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+}
 Z_SCORE_BUCKET_CLASSES = (
     "task-z-neutral",
     "task-z-pos-025",
@@ -89,6 +96,14 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
     app = FastAPI(title="HAKARI-bench leaderboard")
     app.add_middleware(GZipMiddleware, minimum_size=1024)
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
+
+    @app.middleware("http")
+    async def security_headers(request, call_next):  # type: ignore[no-untyped-def]
+        response = await call_next(request)
+        for header, value in SECURITY_HEADERS.items():
+            response.headers.setdefault(header, value)
+        response.headers.setdefault("Content-Security-Policy", _content_security_policy())
+        return response
 
     @app.get("/favicon.png")
     def favicon() -> FileResponse:
@@ -308,6 +323,29 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             return HTMLResponse(content=content)
 
     return app
+
+
+def _content_security_policy() -> str:
+    frame_ancestors = _frame_ancestors()
+    return "; ".join(
+        [
+            "default-src 'self'",
+            "script-src 'self'",
+            "style-src 'self' 'unsafe-inline'",
+            "img-src 'self' data:",
+            "connect-src 'self'",
+            "base-uri 'none'",
+            f"frame-ancestors {frame_ancestors}",
+        ]
+    )
+
+
+def _frame_ancestors() -> str:
+    value = os.environ.get("HAKARI_BENCH_VIEWER_FRAME_ANCESTORS", DEFAULT_FRAME_ANCESTORS)
+    tokens = value.split()
+    if any("\r" in token or "\n" in token for token in tokens):
+        return DEFAULT_FRAME_ANCESTORS
+    return " ".join(tokens) or DEFAULT_FRAME_ANCESTORS
 
 
 def render_page(
