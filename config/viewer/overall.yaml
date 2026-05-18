@@ -1,6 +1,6 @@
 overalls:
-  - name: Overall
-    label: Overall
+  - name: All
+    label: All
     benchmarks:
       - NanoMMTEB-v2
       - NanoRTEB
@@ -22,8 +22,46 @@ overalls:
       - NanoCMTEB
       - NanoIndicQA
       - NanoMuPLeR
-  - name: OverallGrouped
-    label: Overall Grouped
+      - NanoMTEB-v2
+      - NanoMTEB-Dutch
+      - NanoMTEB-French
+      - NanoMTEB-German
+      - NanoJMTEB-v2
+      - NanoMTEB-Korean
+      - NanoFaMTEB-v2
+      - NanoMTEB-Polish
+      - NanoRuMTEB
+      - NanoMTEB-Scandinavian
+      - NanoMTEB-Spanish
+      - NanoMTEB-Thai
+      - NanoVNMTEB
+      - NanoMTEB-Misc
+      - NanoMIRACL
+  - name: Core
+    label: Core
+    benchmarks:
+      - NanoMMTEB-v2
+      - NanoRTEB
+      - MNanoBEIR
+      - NanoBIRCO
+      - NanoMLDR
+      - NanoLongEmbed
+      - NanoDAPFAM
+      - NanoCoIR
+      - NanoIFIR
+      - NanoLaw
+      - NanoMedical
+      - NanoRARb
+      - NanoBRIGHT
+      - NanoCodeRAG
+      - NanoChemTEB
+      - NanoR2MED
+      - NanoBuiltBench
+      - NanoCMTEB
+      - NanoIndicQA
+      - NanoMuPLeR
+  - name: Group
+    label: Group
     benchmarks:
       - name: MNanoBEIR
         group_by: task_name

@@ -128,7 +128,7 @@ def test_task_filter_enables_task_score_columns() -> None:
     assert query["task_filter"] == "fever"
 
 
-def test_task_z_scores_enable_task_score_columns() -> None:
+def test_task_z_scores_do_not_force_task_score_columns() -> None:
     query = normalize_query_state(
         viewer_config=_viewer_config(),
         view="BenchA",
@@ -150,7 +150,7 @@ def test_task_z_scores_enable_task_score_columns() -> None:
         task_z_scores=True,
     )
 
-    assert query["task_scores"] == "1"
+    assert "task_scores" not in query
     assert query["task_z_scores"] == "1"
 
 
@@ -245,7 +245,6 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         "view": "BenchA",
         "sort": "mean_score",
         "direction": "desc",
-        "task_scores": "1",
         "quantization": "1",
         "rescore": "1",
         "task_z_scores": "1",

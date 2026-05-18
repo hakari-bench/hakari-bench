@@ -210,9 +210,9 @@ Hugging Face propagates the parent Space page query string and hash to the
 embedded `*.hf.space` application on initial load. The viewer supports both URL
 forms:
 
-- Query strings such as `?view=Overall&target=reranking` are handled by the
+- Query strings such as `?view=All&target=reranking` are handled by the
   server as before.
-- Hash parameters such as `#view=Overall&target=reranking` are merged into the
+- Hash parameters such as `#view=All&target=reranking` are merged into the
   first HTMX leaderboard request before it loads, which keeps deep links working
   inside embedded Space URLs.
 
@@ -246,7 +246,7 @@ Check the public endpoints:
 
 ```bash
 curl -L -sS https://hakari-bench-leaderboard.hf.space/ | rg "HAKARI-bench leaderboard|/assets/app.css|/assets/viewer.js|/assets/favicon.png|/assets/htmx.min.js"
-curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=Overall' | rg "Core benchmarks|NanoMMTEB-v2|Language pages"
+curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=All' | rg "Core benchmarks|NanoMMTEB-v2|Language pages"
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/favicon.png -o /tmp/hakari_favicon.png
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/app.css -o /tmp/hakari_app.css
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/viewer.js -o /tmp/hakari_viewer.js

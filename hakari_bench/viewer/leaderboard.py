@@ -114,6 +114,7 @@ class LeaderboardResult(BaseModel):
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
     metric_columns: list[str]
+    metric_column_labels: dict[str, str] = Field(default_factory=dict)
     available_languages: list[LanguageOption] = Field(default_factory=list)
     selected_languages: tuple[str, ...] = ()
 
@@ -172,7 +173,6 @@ class LeaderboardService:
             score_target=score_target,
             show_task_scores=show_task_scores,
         ) as request_timing:
-            show_task_scores = show_task_scores or show_task_z_scores
             overall = self.config.overall_for_view(view_name)
             benchmarks = self.config.benchmarks_for_view(view_name)
             is_overall = overall is not None
@@ -282,6 +282,12 @@ class LeaderboardService:
             with timed_operation("viewer.leaderboard.phase", operation="metric_columns", view=view_name) as phase_timing:
                 metric_columns = _metric_columns(rows, metric_score_group) if show_task_scores and metric_score_group is not None else []
                 metric_columns = _filter_metric_columns(rows, metric_score_group, metric_columns, task_filter)
+                metric_column_labels = _metric_column_label_overrides(
+                    rows=rows,
+                    score_group=metric_score_group,
+                    metric_columns=metric_columns,
+                    config=self.config,
+                )
                 phase_timing["metric_column_count"] = len(metric_columns)
             with timed_operation("viewer.leaderboard.phase", operation="compute_rows", view=view_name) as phase_timing:
                 leaderboard_rows = compute_leaderboard_rows(
@@ -318,6 +324,7 @@ class LeaderboardService:
                     else None
                 ),
                 metric_columns=metric_columns,
+                metric_column_labels=metric_column_labels,
                 available_languages=available_languages,
                 selected_languages=selected_languages,
             )
@@ -1109,6 +1116,35 @@ def _filter_metric_columns(
         for column in columns
         if any(text_matches_filter_terms(label, terms) for label in labels_by_column.get(column, {column}))
     ]
+
+
+def _metric_column_label_overrides(
+    *,
+    rows: list[TaskScore],
+    score_group: ScoreGroupConfig | None,
+    metric_columns: list[str],
+    config: ViewerConfig,
+) -> dict[str, str]:
+    if score_group is None or not metric_columns:
+        return {}
+    metric_column_set = set(metric_columns)
+    labels_by_column: dict[str, set[str]] = defaultdict(set)
+    for row in rows:
+        column = _score_group_key(row, score_group.group_by)
+        if column not in metric_column_set:
+            continue
+        benchmark_config = config.benchmark_for_view(row.benchmark)
+        if benchmark_config is None or not benchmark_config.task_labels:
+            continue
+        label = (
+            benchmark_config.task_labels.get(column)
+            or benchmark_config.task_labels.get(row.task_name)
+            or benchmark_config.task_labels.get(row.split_name)
+            or benchmark_config.task_labels.get(row.task_key)
+        )
+        if label:
+            labels_by_column[column].add(label)
+    return {column: next(iter(labels)) for column, labels in labels_by_column.items() if len(labels) == 1}
 
 
 def _metric_values(

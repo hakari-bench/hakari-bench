@@ -143,6 +143,19 @@ benchmarks:
     include_in_overall: false
   - name: NanoMTEB-Misc
     label: NanoMTEB-Misc
+    task_labels:
+      2022_fa: NeuCLIR2022-fa
+      2022_ru: NeuCLIR2022-ru
+      2022_zh: NeuCLIR2022-zh
+      cite_ru: RuSciBench-cite-ru
+      cocite_ru: RuSciBench-cocite-ru
+      en: EuroPIRQ-en
+      fi: EuroPIRQ-fi
+      pt: EuroPIRQ-pt
+      wmt19_de_fr: CLSD-WMT19-de-fr
+      wmt19_fr_de: CLSD-WMT19-fr-de
+      wmt21_de_fr: CLSD-WMT21-de-fr
+      wmt21_fr_de: CLSD-WMT21-fr-de
     include_in_overall: false
   - name: NanoMIRACL
     label: NanoMIRACL

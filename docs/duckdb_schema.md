@@ -181,6 +181,7 @@ Main `benchmarks.yaml` fields:
 | `include_in_overall` | Descriptive metadata. Actual overall composition is defined by `overall.yaml`. |
 | `excluded_tasks` | Task names or task keys excluded from ranking. Matched against `task_name` and `task_key`. |
 | `score_groups` | Benchmark-local scoring units and optional metric columns. The selected group controls benchmark-view `Mean Score`, Borda, and rank; when `task_scores=1`, the same group also controls the displayed metric columns. |
+| `task_labels` | Optional display-only labels for task metric columns, keyed by task name, split name, task key, or the computed metric column key. Use this for compact source splits whose raw task names are ambiguous, such as `NanoMTEB-Misc` `en` -> `EuroPIRQ-en`. |
 
 `score_groups[].group_by` and `overall.yaml` `group_by` can use these values:
 
@@ -209,8 +210,9 @@ The web viewer exposes four user-facing query surfaces over the DuckDB file:
 | Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
 
 Analysis panels are scoped by the same YAML view selection as the leaderboard.
-`Overall` views expand to their configured benchmark components before querying.
-The diagnostics panels are descriptive and do not alter leaderboard ranking.
+Configured overall views (`All`, `Core`, and `Group`) expand to their configured
+benchmark components before querying. The diagnostics panels are descriptive and
+do not alter leaderboard ranking.
 
 ## Table Overview
 
@@ -653,7 +655,7 @@ the viewer uses competition rank (`1, 2, 2, 4`) for leaderboard ranks.
 
 | column | type | meaning |
 | --- | --- | --- |
-| `view_name` | `VARCHAR` | `Overall` or benchmark view name. |
+| `view_name` | `VARCHAR` | Configured overall view name, such as `All`, `Core`, or `Group`, or a benchmark view name. |
 | `model_name` | `VARCHAR` | Model name. |
 | `task_count` | `INTEGER` | Number of tasks used for ranking. |
 | `mean_score` | `DOUBLE` | Mean score on a 0 to 100 scale. |
@@ -676,7 +678,7 @@ HTML report. The current HTMX viewer does not use it.
 
 | column | type | meaning |
 | --- | --- | --- |
-| `view_name` | `VARCHAR` | `Overall` or benchmark view name. |
+| `view_name` | `VARCHAR` | Configured overall view name, such as `All`, `Core`, or `Group`, or a benchmark view name. |
 | `model_name` | `VARCHAR` | Model name. |
 | `benchmark` | `VARCHAR` | Benchmark group. |
 | `task_key` | `VARCHAR` | Task identity. |
@@ -719,7 +721,7 @@ Only models that have every expected task in the selected view are ranked.
 3. Build the expected task set from the remaining rows.
 4. Keep only models whose task-key set exactly matches the expected task set.
 
-For grouped overall views such as `OverallGrouped`, the viewer first checks raw
+For grouped overall views such as `Group`, the viewer first checks raw
 task completeness within each model/benchmark pair, then aggregates rows by the
 configured group key, and finally applies the complete model rule again to the
 aggregated task set.
@@ -731,13 +733,18 @@ benchmark.
 
 For overall views:
 
+- `All`: all configured benchmark views using raw task rows.
+- `Core`: the curated core/domain set that was previously exposed as `Overall`.
+- `Group`: all configured benchmark views aggregated by each component's
+  `group_by` setting before ranking.
 - `micro_mean`: mean over all included tasks with equal task weight.
 - `macro_mean`: mean of benchmark-level means with equal benchmark weight.
 - `mean_score`: `macro_mean` for overall views, task mean for benchmark views.
 
-`Overall` normally uses raw `task_key` values. `OverallGrouped` uses the
-`group_by` settings from `overall.yaml` to average tasks into benchmark-local
-units before computing Borda and means.
+`All` and `Core` use raw `task_key` values. `Group` uses the `group_by` settings
+from `overall.yaml` to average tasks into benchmark-local units before
+computing Borda and means. For task x language collections such as `MNanoBEIR`,
+`Group` uses the underlying task name (`task_name`) as the grouped unit.
 
 Grouped overall views also expose the aggregated benchmark-local units as
 metric columns. These columns use the aggregated `task_key` values, such as
@@ -803,6 +810,9 @@ state, but shorten long dataset task keys for display. For example,
 `NanoBEIR-ar::arguana` when that short label is unique. If two full keys shorten
 to the same label, those conflicting headers render their full key. The full key
 is also exposed on the header label with `data-metric-column-full-name`.
+Benchmark-level `task_labels` from `config/viewer/benchmarks.yaml` override only
+the visible header text; sorting, task filters, and metric values continue to
+use the underlying metric key.
 
 When `Task std display` is enabled, the viewer renders task metric columns with
 the raw 0-100 task score plus its z-score distance from the task distribution.
@@ -1196,9 +1206,10 @@ SELECT
   false AS include_other_variants
 ```
 
-### 3. Overall View Leaderboard
+### 3. Raw Overall View Leaderboard
 
-For an `Overall` view that uses raw tasks, put the overall benchmarks into
+For an overall view that uses raw tasks, such as `All` or `Core`, put the
+overall benchmarks into
 `selected_benchmarks` and replace `model_agg` with this version:
 
 ```sql
@@ -1254,11 +1265,11 @@ model_agg AS (
 The final result should return both `macro_mean` and `micro_mean`. `mean_rank`
 for overall views ranks `mean_score`, which is `macro_mean`.
 
-### 4. OverallGrouped Leaderboard
+### 4. Group Leaderboard
 
-`OverallGrouped` first averages raw tasks into benchmark-local groups, then
-computes Borda, means, and per-group metric columns. Generate
-`overall_components` from `config/viewer/overall.yaml`.
+`Group` first averages raw tasks into benchmark-local groups, then computes
+Borda, means, and per-group metric columns. Generate `overall_components` from
+`config/viewer/overall.yaml`.
 
 ```sql
 WITH
