@@ -259,6 +259,10 @@ class DatasetRegistry:
     def add_collection(self, collection: DatasetCollectionSpec) -> None:
         self._collections_by_key[_normalize_key(collection.name)] = collection
 
+    def dataset_names(self) -> list[str]:
+        datasets = {dataset.dataset_id: dataset for dataset in self._datasets_by_key.values()}
+        return [dataset.name for dataset in sorted(datasets.values(), key=lambda item: item.name.lower())]
+
     def get_dataset(self, value: str) -> NanoDatasetSpec:
         dataset = self._datasets_by_key.get(_normalize_key(value))
         if dataset is not None:

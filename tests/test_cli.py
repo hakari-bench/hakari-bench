@@ -710,6 +710,31 @@ def test_parse_args_accepts_prompt_and_reranker_options() -> None:
     assert args.rerank_top_k == 50
 
 
+def test_start_reranker_score_pool_reuses_device_list_as_pool() -> None:
+    from hakari_bench.cli import _start_reranker_score_pool
+
+    class FakeCrossEncoder:
+        def __init__(self) -> None:
+            self.started_devices: list[str] | None = None
+
+        def start_multi_process_pool(self, target_devices: list[str]) -> dict[str, object]:
+            self.started_devices = target_devices
+            return {"processes": ["pool"]}
+
+    args = argparse.Namespace(reranker_score_kwargs={"device": ["cuda:0", "cuda:1"], "chunk_size": 4096})
+    model = FakeCrossEncoder()
+
+    pool = _start_reranker_score_pool(model, args)
+
+    assert pool == {"processes": ["pool"]}
+    assert model.started_devices == ["cuda:0", "cuda:1"]
+    assert args.reranker_runtime_score_kwargs == {
+        "pool": {"processes": ["pool"]},
+        "chunk_size": 4096,
+    }
+    assert args.reranker_score_kwargs == {"device": ["cuda:0", "cuda:1"], "chunk_size": 4096}
+
+
 def test_parse_args_rejects_cross_encoder_kwargs_for_dense_model() -> None:
     try:
         parse_args(
@@ -1337,20 +1362,53 @@ def test_parse_args_does_not_mix_default_dataset_into_collection() -> None:
     assert args.collection == ["MNanoBEIR"]
 
 
+def test_parse_args_accepts_all_dataset_target() -> None:
+    args = parse_args(["evaluate", "reranker", "--model", "hotchpotch/reranker", "--all"])
+
+    assert args.all is True
+    assert args.dataset == []
+    assert args.collection == []
+
+
+def test_parse_args_accepts_all_dataset_target_from_params_json() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "reranker",
+            "--params-json",
+            json.dumps({"model": {"source": "hotchpotch/reranker"}, "target": {"all": True}}),
+        ]
+    )
+
+    assert args.all is True
+    assert args.dataset == []
+    assert args.collection == []
+
+
+def test_parse_args_rejects_all_mixed_with_dataset() -> None:
+    try:
+        parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--all", "--dataset", "NanoBEIR-en"])
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected --all to be mutually exclusive with --dataset.")
+
+
 def test_load_dataset_for_args_uses_candidate_subset_for_candidate_aware_models(monkeypatch) -> None:
     from hakari_bench.cli import _load_dataset_for_args
 
-    calls: list[tuple[str, str | None]] = []
+    calls: list[tuple[str, str | None, bool]] = []
 
     def fake_load_ir_dataset(
         task: EvalTask,
         *,
         candidate_subset_name: str | None = None,
         revision: str | None = None,
+        restrict_corpus_to_candidates: bool = False,
     ) -> object:
         _ = task
         assert revision == "abc123"
-        calls.append((current_model_type, candidate_subset_name))
+        calls.append((current_model_type, candidate_subset_name, restrict_corpus_to_candidates))
         return object()
 
     monkeypatch.setattr("hakari_bench.cli.load_ir_dataset", fake_load_ir_dataset)
@@ -1374,11 +1432,11 @@ def test_load_dataset_for_args_uses_candidate_subset_for_candidate_aware_models(
         )
 
     assert calls == [
-        ("dense", "bm25"),
-        ("sparse", "bm25"),
-        ("late-interaction", "bm25"),
-        ("bm25", "bm25"),
-        ("reranker", "bm25"),
+        ("dense", "bm25", False),
+        ("sparse", "bm25", False),
+        ("late-interaction", "bm25", False),
+        ("bm25", "bm25", False),
+        ("reranker", "bm25", True),
     ]
 
 
@@ -1437,6 +1495,88 @@ def test_run_evaluate_returns_run_summary_payload(monkeypatch, tmp_path) -> None
     assert summary["totals"]["evaluated_count"] == 1
     assert summary["totals"]["aggregate_metric_mean"] == 1.0
     assert written_cards == [("hotchpotch/model", "hotchpotch/model")]
+
+
+def test_run_evaluate_all_expands_to_builtin_dataset_names_and_keeps_cache_skip(monkeypatch, tmp_path) -> None:
+    from hakari_bench.cli import run_evaluate
+    from hakari_bench.results import result_path_for_task
+
+    datasets = [
+        NanoDatasetSpec(name="ToyA", dataset_id="toy/a", splits=["test"]),
+        NanoDatasetSpec(name="ToyB", dataset_id="toy/b", splits=["test"]),
+    ]
+    tasks = [EvalTask(dataset=dataset, split_name="test", task_name="test") for dataset in datasets]
+    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--all", "--results-dir", str(tmp_path)])
+    cached_path = result_path_for_task(output_dir=tmp_path, model_id=args.model_id, task=tasks[0])
+    cached_path.parent.mkdir(parents=True)
+    cached_path.write_text(
+        json.dumps(
+            {
+                "model": {"id": "hotchpotch/model"},
+                "target": {"dataset_revision": {"resolved": "toy-sha"}},
+                "config": {"batch_size": 32, "primary_metric": "ndcg@10"},
+                "evaluation": {"aggregate_metric_value": 1.0, "timing": {}},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    class FakeRegistry:
+        def dataset_names(self) -> list[str]:
+            return ["ToyA", "ToyB"]
+
+    resolved_dataset_values: list[list[str]] = []
+
+    def fake_resolve_eval_tasks(**kwargs) -> list[EvalTask]:
+        resolved_dataset_values.append(kwargs["dataset_values"])
+        return tasks
+
+    monkeypatch.setattr("hakari_bench.cli.DatasetRegistry.load_builtin", lambda: FakeRegistry())
+    monkeypatch.setattr("hakari_bench.cli.resolve_eval_tasks", fake_resolve_eval_tasks)
+    monkeypatch.setattr("hakari_bench.cli.collect_runtime_environment", lambda: {"package_versions": {}})
+    monkeypatch.setattr("hakari_bench.cli.load_model", lambda _: object())
+    monkeypatch.setattr(
+        "hakari_bench.cli.collect_model_metadata",
+        lambda _model, parsed_args: {
+            "method": parsed_args.model_type,
+            "id": parsed_args.model_id,
+            "source": parsed_args.model_source,
+        },
+    )
+
+    ran_tasks: list[str] = []
+
+    def fake_run_or_load_task(**kwargs) -> TaskRunResult:
+        output_path = result_path_for_task(output_dir=tmp_path, model_id=args.model_id, task=kwargs["task"])
+        if output_path.exists():
+            return TaskRunResult(
+                task=kwargs["task"],
+                cache_hit=True,
+                output_path=output_path,
+                payload=json.loads(output_path.read_text(encoding="utf-8")),
+            )
+        ran_tasks.append(kwargs["task"].dataset_name)
+        return TaskRunResult(
+            task=kwargs["task"],
+            cache_hit=False,
+            output_path=output_path,
+            payload={
+                "model": {"id": "hotchpotch/model"},
+                "target": {"dataset_revision": {"resolved": "toy-sha"}},
+                "config": {"batch_size": 32, "primary_metric": "ndcg@10"},
+                "evaluation": {"aggregate_metric_value": 0.5, "timing": {}},
+            },
+        )
+
+    monkeypatch.setattr("hakari_bench.cli.run_or_load_task", fake_run_or_load_task)
+    monkeypatch.setattr("hakari_bench.cli.write_evaluation_model_card", lambda **_: None)
+
+    summary = run_evaluate(args)
+
+    assert resolved_dataset_values == [["ToyA", "ToyB"]]
+    assert ran_tasks == ["ToyB"]
+    assert summary["totals"]["evaluated_count"] == 1
+    assert summary["totals"]["cache_hit_count"] == 1
 
 
 def test_run_build_bm25_returns_candidate_summary(monkeypatch, tmp_path) -> None:
