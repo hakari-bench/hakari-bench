@@ -2744,6 +2744,66 @@ def test_local_duckdb_store_downloads_hf_dataset_source(
     assert calls == [source]
 
 
+def test_local_duckdb_store_skips_hf_source_check_within_ttl(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    downloaded = tmp_path / "hf-cache.duckdb"
+    downloaded.write_bytes(b"hf")
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    calls: list[HuggingFaceDuckDbSource] = []
+    now = 1000.0
+
+    def fake_download(source: HuggingFaceDuckDbSource) -> Path:
+        calls.append(source)
+        return downloaded
+
+    def fake_monotonic() -> float:
+        return now
+
+    monkeypatch.setattr("hakari_bench.viewer.store._download_hf_duckdb", fake_download)
+    monkeypatch.setattr("hakari_bench.viewer.store.monotonic", fake_monotonic)
+    source = HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database")
+    store = LocalDuckDbStore(DuckDbLocation(local_path=local, hf_source=source))
+
+    assert store.ensure_current() is True
+    assert store.ensure_current() is False
+    assert calls == [source]
+    assert local.read_bytes() == b"hf"
+
+
+def test_local_duckdb_store_refreshes_hf_source_after_ttl(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    downloaded = tmp_path / "hf-cache.duckdb"
+    downloaded.write_bytes(b"hf-old")
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    calls: list[HuggingFaceDuckDbSource] = []
+    now = 1000.0
+
+    def fake_download(source: HuggingFaceDuckDbSource) -> Path:
+        calls.append(source)
+        return downloaded
+
+    def fake_monotonic() -> float:
+        return now
+
+    monkeypatch.setattr("hakari_bench.viewer.store._download_hf_duckdb", fake_download)
+    monkeypatch.setattr("hakari_bench.viewer.store.monotonic", fake_monotonic)
+    source = HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database")
+    store = LocalDuckDbStore(DuckDbLocation(local_path=local, hf_source=source))
+
+    assert store.ensure_current() is True
+
+    now += 601.0
+    time.sleep(0.01)
+    downloaded.write_bytes(b"hf-new")
+    os.utime(downloaded, None)
+
+    assert store.ensure_current() is True
+    assert calls == [source, source]
+    assert local.read_bytes() == b"hf-new"
+
+
 def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 

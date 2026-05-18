@@ -162,6 +162,11 @@ when one is available. Use `--source-results-dir` to point at another results
 directory containing `hakari_bench.duckdb`, or `--source-duckdb-path` for an
 explicit database path.
 
+When the source is a Hugging Face dataset, the viewer checks/downloads it at
+startup and then caches that source check for 10 minutes per process. During the
+TTL window, page loads read the local DuckDB copy directly and skip
+`hf_hub_download()`.
+
 ## Viewer Configuration
 
 Leaderboard views are defined in YAML, not in DuckDB.
