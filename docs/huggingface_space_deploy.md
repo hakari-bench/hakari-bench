@@ -194,6 +194,11 @@ HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID=hakari-bench/leaderboard_database
 HAKARI_BENCH_VIEWER_HF_DATASET_PATH=duckdb/hakari_bench.duckdb
 ```
 
+When the viewer uses the Hugging Face dataset source, it checks/downloads the
+DuckDB source at startup and then caches the source check for 10 minutes per
+running process. Requests served within that window use the already-local
+`/data/viewer/hakari_bench.duckdb` file and do not call `hf_hub_download()`.
+
 The same viewer can be pointed at a different source locally or in a Space with:
 
 - `HAKARI_BENCH_VIEWER_DUCKDB_PATH`

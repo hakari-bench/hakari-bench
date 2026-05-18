@@ -4,10 +4,12 @@ import os
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
+from time import monotonic
 
 
 DEFAULT_DUCKDB_NAME = "hakari_bench.duckdb"
 DEFAULT_HF_DUCKDB_PATH = "duckdb/hakari_bench.duckdb"
+DEFAULT_HF_SOURCE_CHECK_TTL_SECONDS = 600.0
 
 
 @dataclass(frozen=True)
@@ -29,13 +31,17 @@ class LocalDuckDbStore:
 
     def __init__(self, location: DuckDbLocation) -> None:
         self.location = location
+        self._last_hf_source_check_at: float | None = None
 
     @property
     def path(self) -> Path:
         return self.location.local_path
 
     def ensure_current(self) -> bool:
+        if self._hf_source_check_is_fresh():
+            return False
         source = self._source_path()
+        self._mark_hf_source_checked()
         destination = self.location.local_path
         if source is None or not source.exists():
             return False
@@ -51,6 +57,19 @@ class LocalDuckDbStore:
         if self.location.hf_source is not None:
             return _download_hf_duckdb(self.location.hf_source)
         return self.location.source_path
+
+    def _hf_source_check_is_fresh(self) -> bool:
+        if self.location.hf_source is None:
+            return False
+        if not self.location.local_path.exists():
+            return False
+        if self._last_hf_source_check_at is None:
+            return False
+        return monotonic() - self._last_hf_source_check_at < DEFAULT_HF_SOURCE_CHECK_TTL_SECONDS
+
+    def _mark_hf_source_checked(self) -> None:
+        if self.location.hf_source is not None:
+            self._last_hf_source_check_at = monotonic()
 
 
 def resolve_duckdb_location(
