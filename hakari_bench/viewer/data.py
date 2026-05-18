@@ -9,6 +9,12 @@ import duckdb
 from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.observability import timed_operation
+from hakari_bench.viewer.sql import (
+    column_or_null,
+    qualified_column,
+    table_columns,
+    table_exists,
+)
 from hakari_bench.viewer.task_names import (
     canonical_split_name,
     canonical_task_name,
@@ -19,6 +25,12 @@ from hakari_bench.viewer.variant_display import VariantDisplayFlags
 CURRENT_DUCKDB_SCHEMA_VERSION = "4"
 COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {"3", CURRENT_DUCKDB_SCHEMA_VERSION}
 REQUIRED_VIEWER_TABLES = ("meta_database", "viewer_task_results")
+VIEWER_QUERY_TABLES = {
+    *REQUIRED_VIEWER_TABLES,
+    "dataset_metadata",
+    "viewer_leaderboard_rows",
+    "viewer_leaderboard_language_options",
+}
 REQUIRED_VIEWER_TASK_RESULT_COLUMNS = {
     "model_name",
     "benchmark",
@@ -208,12 +220,12 @@ class TaskResultsRepository:
                         + ", ".join(sorted(missing_columns))
                     )
                 metadata_columns = _table_columns(con, "dataset_metadata") if _table_exists(con, "dataset_metadata") else set()
-            score_expr = "tr.score"
+            score_expr = qualified_column("tr", "score", allowed_columns=columns)
             target_filter = "AND tr.score_target = ?"
             query_params: list[Any] = list(benchmarks)
             query_params.append(score_target)
-            language_expr = "tr.language"
-            languages_expr = "tr.languages"
+            language_expr = qualified_column("tr", "language", allowed_columns=columns)
+            languages_expr = qualified_column("tr", "languages", allowed_columns=columns)
             variant_name_expr = _column_or_null(columns, "embedding_variant_name")
             embedding_dim_expr = _column_or_null(columns, "embedding_dim")
             quantization_expr = _column_or_null(columns, "quantization")
@@ -236,6 +248,7 @@ class TaskResultsRepository:
             elif "embedding_variant_name" in columns and variant_display_flags is not None:
                 variant_filter = _variant_filter_sql(columns, variant_display_flags)
             placeholders = ", ".join("?" for _ in benchmarks)
+            # Dynamic identifiers in viewer SQL are produced only by allowlisted helpers in viewer.sql.
             query = f"""
                 SELECT
                     tr.model_name,
@@ -271,7 +284,7 @@ class TaskResultsRepository:
                   AND {score_expr} IS NOT NULL
                   {variant_filter}
                   {target_filter}
-            """
+            """  # nosec B608
             with timed_operation(
                 "viewer.duckdb.query",
                 operation="fetch_task_results",
@@ -373,11 +386,15 @@ def _float_payload_value(value: Any) -> float | None:
 
 def _task_text_length_sql(*, viewer_columns: set[str], metadata_columns: set[str]) -> tuple[str, str, str]:
     if {"query_mean_chars", "document_mean_chars"}.issubset(viewer_columns):
-        return "tr.query_mean_chars", "tr.document_mean_chars", ""
+        return (
+            qualified_column("tr", "query_mean_chars", allowed_columns=viewer_columns),
+            qualified_column("tr", "document_mean_chars", allowed_columns=viewer_columns),
+            "",
+        )
     if {"query_mean_chars", "document_mean_chars", "benchmark", "dataset_id", "task_key"}.issubset(metadata_columns):
         return (
-            "dm.query_mean_chars",
-            "dm.document_mean_chars",
+            qualified_column("dm", "query_mean_chars", allowed_columns=metadata_columns),
+            qualified_column("dm", "document_mean_chars", allowed_columns=metadata_columns),
             """
                 LEFT JOIN dataset_metadata AS dm
                   ON dm.benchmark = tr.benchmark
@@ -394,7 +411,7 @@ def _variant_filter_sql(columns: set[str], flags: VariantDisplayFlags) -> str:
     if flags == VariantDisplayFlags(quantization=True, truncate=True, rescore=True, other=True):
         return ""
 
-    name = "lower(tr.embedding_variant_name)"
+    name = f"lower({qualified_column('tr', 'embedding_variant_name', allowed_columns=columns)})"
     quantization_category = f"({_column_or_null(columns, 'quantization')} IS NOT NULL OR {name} LIKE '%quantize%')"
     truncate_category = f"({name} LIKE '%truncate%')"
     rescore_category = f"({name} LIKE '%rescore%')"
@@ -446,16 +463,11 @@ def _variant_flags_label(flags: VariantDisplayFlags | None) -> str:
 
 
 def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:
-    return {str(row[0]) for row in con.execute(f"DESCRIBE {table}").fetchall()}
+    return table_columns(con, table, allowed_tables=VIEWER_QUERY_TABLES)
 
 
 def _table_exists(con: duckdb.DuckDBPyConnection, table: str) -> bool:
-    row = con.execute(
-        "SELECT count(*) FROM information_schema.tables WHERE table_name = ?",
-        [table],
-    )
-    count = row.fetchone()
-    return bool(count[0]) if count is not None else False
+    return table_exists(con, table, allowed_tables=VIEWER_QUERY_TABLES)
 
 
 def _validate_current_schema(con: duckdb.DuckDBPyConnection) -> None:
@@ -475,7 +487,7 @@ def _validate_current_schema(con: duckdb.DuckDBPyConnection) -> None:
 
 
 def _column_or_null(columns: set[str], column: str) -> str:
-    return f"tr.{column}" if column in columns else "NULL"
+    return column_or_null(columns, column, alias="tr")
 
 
 def _normalized_languages(value: Any, language: Any) -> list[str]:

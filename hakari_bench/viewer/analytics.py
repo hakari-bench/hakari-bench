@@ -7,6 +7,15 @@ from typing import Any
 import duckdb
 
 from hakari_bench.viewer.observability import timed_operation
+from hakari_bench.viewer.sql import (
+    coalesce_existing_columns,
+    column_or_null,
+    table_columns,
+    table_exists,
+)
+
+
+ANALYTICS_QUERY_TABLES = {"task_results", "dataset_metadata", "task_diagnostics"}
 
 
 @dataclass(frozen=True)
@@ -79,16 +88,18 @@ class ViewerAnalyticsRepository:
             latest = None
             if finished_expr != "NULL":
                 with timed_operation("viewer.duckdb.query", operation="fetch_summary.latest") as timing:
-                    latest_row = con.execute(f"SELECT max({finished_expr}) FROM task_results").fetchone()
+                    # Dynamic identifiers in viewer SQL are produced only by allowlisted helpers in viewer.sql.
+                    latest_row = con.execute(f"SELECT max({finished_expr}) FROM task_results").fetchone()  # nosec B608
                     timing["row_count"] = 1 if latest_row is not None else 0
                 latest = _first_value(latest_row)
+            variant_column_expr = column_or_null(task_columns, "embedding_variant_name")
             base_count_expr = (
-                "count(*) FILTER (WHERE embedding_variant_name IS NULL)"
+                f"count(*) FILTER (WHERE {variant_column_expr} IS NULL)"
                 if "embedding_variant_name" in task_columns
                 else "count(*)"
             )
             variant_count_expr = (
-                "count(*) FILTER (WHERE embedding_variant_name IS NOT NULL)"
+                f"count(*) FILTER (WHERE {variant_column_expr} IS NOT NULL)"
                 if "embedding_variant_name" in task_columns
                 else "0"
             )
@@ -102,7 +113,7 @@ class ViewerAnalyticsRepository:
                         {base_count_expr},
                         {variant_count_expr}
                     FROM task_results
-                    """
+                    """  # nosec B608
                 ).fetchone()
                 timing["row_count"] = 1 if task_counts_row is not None else 0
             task_counts = task_counts_row or (0, 0, 0, 0, 0)
@@ -160,11 +171,12 @@ class ViewerAnalyticsRepository:
             required = {"model_name", "benchmark", "task_key", "score", "embedding_variant_name"}
             if not required.issubset(columns):
                 return []
-            embedding_dim_expr = "tr.embedding_dim" if "embedding_dim" in columns else "NULL"
-            quantization_expr = "tr.quantization" if "quantization" in columns else "NULL"
-            where, params = _benchmark_where_clause("tr.benchmark", benchmarks)
+            embedding_dim_expr = column_or_null(columns, "embedding_dim", alias="tr")
+            quantization_expr = column_or_null(columns, "quantization", alias="tr")
+            where, params = _benchmark_where_clause("tr", "benchmark", columns, benchmarks)
             rescore_filter = "" if include_rescore else "AND lower(tr.embedding_variant_name) NOT LIKE '%rescore%'"
             truncate_filter = "" if include_truncate else "AND lower(tr.embedding_variant_name) NOT LIKE '%truncate%'"
+            # Dynamic identifiers in viewer SQL are produced only by allowlisted helpers in viewer.sql.
             query = f"""
                 WITH base AS (
                     SELECT model_name, benchmark, task_key, score AS base_score
@@ -190,7 +202,7 @@ class ViewerAnalyticsRepository:
                   AND {where}
                 GROUP BY 1, 2, 3, 4
                 ORDER BY tr.model_name, tr.embedding_variant_name, embedding_dim, quantization
-            """
+            """  # nosec B608
             with timed_operation(
                 "viewer.duckdb.query",
                 operation="fetch_variant_analysis",
@@ -228,7 +240,8 @@ class ViewerAnalyticsRepository:
             required = {"benchmark", "task_key"}
             if not required.issubset(columns):
                 return []
-            where, params = _benchmark_where_clause("benchmark", benchmarks)
+            where, params = _benchmark_where_clause(None, "benchmark", columns, benchmarks)
+            # Dynamic identifiers in viewer SQL are produced only by allowlisted helpers in viewer.sql.
             query = f"""
                 SELECT
                     benchmark,
@@ -244,7 +257,7 @@ class ViewerAnalyticsRepository:
                 WHERE {where}
                 GROUP BY benchmark
                 ORDER BY benchmark
-            """
+            """  # nosec B608
             with timed_operation(
                 "viewer.duckdb.query",
                 operation="fetch_rerank_diagnostics",
@@ -282,12 +295,12 @@ class ViewerAnalyticsRepository:
             task_columns = _table_columns(con, "task_results")
             if "benchmark" not in metadata_columns or "task_key" not in metadata_columns:
                 return []
-            language_expr = "language" if "language" in metadata_columns else "NULL"
-            category_expr = "category" if "category" in metadata_columns else "NULL"
-            query_count_expr = "query_count" if "query_count" in metadata_columns else "NULL"
-            document_count_expr = "document_count" if "document_count" in metadata_columns else "NULL"
-            query_chars_expr = "query_mean_chars" if "query_mean_chars" in metadata_columns else "NULL"
-            document_chars_expr = "document_mean_chars" if "document_mean_chars" in metadata_columns else "NULL"
+            language_expr = column_or_null(metadata_columns, "language", alias="dm")
+            category_expr = column_or_null(metadata_columns, "category", alias="dm")
+            query_count_expr = column_or_null(metadata_columns, "query_count", alias="dm")
+            document_count_expr = column_or_null(metadata_columns, "document_count", alias="dm")
+            query_chars_expr = column_or_null(metadata_columns, "query_mean_chars", alias="dm")
+            document_chars_expr = column_or_null(metadata_columns, "document_mean_chars", alias="dm")
             saturation_join = ""
             saturation_select = "0 AS base_rows, 0 AS saturated_rows, NULL AS saturation_percent"
             if {"benchmark", "task_key", "score", "embedding_variant_name"}.issubset(task_columns):
@@ -306,7 +319,8 @@ class ViewerAnalyticsRepository:
                     coalesce(max(sat.saturated_rows), 0) AS saturated_rows,
                     100.0 * coalesce(max(sat.saturated_rows), 0) / nullif(coalesce(max(sat.base_rows), 0), 0) AS saturation_percent
                 """
-            where, params = _benchmark_where_clause("dm.benchmark", benchmarks)
+            where, params = _benchmark_where_clause("dm", "benchmark", metadata_columns, benchmarks)
+            # Dynamic identifiers in viewer SQL are produced only by allowlisted helpers in viewer.sql.
             query = f"""
                 SELECT
                     dm.benchmark,
@@ -323,7 +337,7 @@ class ViewerAnalyticsRepository:
                 WHERE {where}
                 GROUP BY dm.benchmark
                 ORDER BY dm.benchmark
-            """
+            """  # nosec B608
             with timed_operation(
                 "viewer.duckdb.query",
                 operation="fetch_dataset_diagnostics",
@@ -353,33 +367,25 @@ class ViewerAnalyticsRepository:
 
 
 def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:
-    return {str(row[0]) for row in con.execute(f"DESCRIBE {table}").fetchall()}
+    return table_columns(con, table, allowed_tables=ANALYTICS_QUERY_TABLES)
 
 
 def _table_exists(con: duckdb.DuckDBPyConnection, table: str) -> bool:
-    row = con.execute(
-        "SELECT count(*) FROM information_schema.tables WHERE table_name = ?",
-        [table],
-    ).fetchone()
-    return bool(row[0]) if row is not None else False
+    return table_exists(con, table, allowed_tables=ANALYTICS_QUERY_TABLES)
 
 
 def _first_value(row: tuple[Any, ...] | None) -> Any:
     return row[0] if row is not None else None
 
 
-def _benchmark_where_clause(column: str, benchmarks: list[str]) -> tuple[str, list[str]]:
+def _benchmark_where_clause(alias: str | None, column: str, columns: set[str], benchmarks: list[str]) -> tuple[str, list[str]]:
     placeholders = ", ".join("?" for _ in benchmarks)
-    return f"{column} IN ({placeholders})", benchmarks
+    column_expr = column_or_null(columns, column, alias=alias)
+    return f"{column_expr} IN ({placeholders})", benchmarks
 
 
 def _coalesce_existing_columns(columns: set[str], candidates: list[str]) -> str:
-    existing = [column for column in candidates if column in columns]
-    if not existing:
-        return "NULL"
-    if len(existing) == 1:
-        return existing[0]
-    return f"coalesce({', '.join(existing)})"
+    return coalesce_existing_columns(columns, candidates)
 
 
 def _float_or_none(value: Any) -> float | None:
