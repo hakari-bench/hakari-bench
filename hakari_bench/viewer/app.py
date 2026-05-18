@@ -1050,9 +1050,10 @@ def render_controls(
           <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
           <span>Task score columns</span>
         </label>
+        <span class="font-medium text-zinc-800">Display:</span>
         <label class="inline-flex items-center gap-2">
           <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
-          <span>Task std display</span>
+          <span>STD</span>
         </label>
       </form>
       <form id="variant-controls" class="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2"
@@ -1290,12 +1291,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         hidden = not filter_context.is_visible(row)
         row_class = "border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
-        mean_cells = (
-            f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.macro_mean)}</td>
-                <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
-            if result.is_overall
-            else f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score)}</td>"""
-        )
+        mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
               <td class="sticky left-0 z-10 bg-inherit px-3 py-2 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
@@ -1551,7 +1547,29 @@ def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> s
     )
 
 
+def _render_mean_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if result.is_overall:
+        if result.show_task_z_scores:
+            return (
+                _render_score_z_cell(score=row.macro_mean, z_score=row.macro_mean_z, cell_class="px-3 py-2 text-right tabular-nums")
+                + _render_score_z_cell(score=row.micro_mean, z_score=row.micro_mean_z, cell_class="px-3 py-2 text-right tabular-nums")
+            )
+        return f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.macro_mean)}</td>
+                <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
+    if result.show_task_z_scores:
+        return _render_score_z_cell(score=row.mean_score, z_score=row.mean_score_z, cell_class="px-3 py-2 text-right tabular-nums")
+    return f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score)}</td>"""
+
+
 def _render_metric_z_cell(*, score: float | None, z_score: float | None) -> str:
+    return _render_score_z_cell(
+        score=score,
+        z_score=z_score,
+        cell_class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums",
+    )
+
+
+def _render_score_z_cell(*, score: float | None, z_score: float | None, cell_class: str) -> str:
     rounded = _rounded_z_score(z_score)
     if rounded is None:
         z_label = ""
@@ -1561,7 +1579,7 @@ def _render_metric_z_cell(*, score: float | None, z_score: float | None) -> str:
         z_label = f"{_fmt_z_score(z_score)}σ"
         bucket_class = _z_score_bucket_class(rounded)
     return (
-        '<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums">'
+        f'<td class="{cell_class}">'
         f'<span class="task-z-score {bucket_class}">'
         f'<span class="task-z-score-value">{escape(_fmt_score(score))}</span>'
         f'<span class="task-z-score-delta">{escape(z_label)}</span>'

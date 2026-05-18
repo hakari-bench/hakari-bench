@@ -1200,8 +1200,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=model%2Fb")
 
     assert response.status_code == 200
-    assert "Display:" not in response.text
     assert "Columns:" in response.text
+    assert "Display:" in response.text
+    assert "<span>STD</span>" in response.text
     assert "Include variants:" in response.text
     assert "Other variants" in response.text
     assert "Filters:" in response.text
@@ -2126,10 +2127,13 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
 
     assert result.show_task_scores is True
     assert result.show_task_z_scores is True
+    assert rows_by_name["model/a"].mean_score_z == pytest.approx(1.0)
+    assert rows_by_name["model/b"].mean_score_z == pytest.approx(-1.0)
     assert rows_by_name["model/a"].metric_values["arguana"] == 90.0
     assert rows_by_name["model/a"].metric_z_values["arguana"] == pytest.approx(1.0)
     assert rows_by_name["model/b"].metric_z_values["arguana"] == pytest.approx(-1.0)
     variant_row = next(row for row in result.rows if row.embedding_variant_name == "truncate_dim_256")
+    assert variant_row.mean_score_z == pytest.approx(0.27)
     assert variant_row.metric_z_values["arguana"] == pytest.approx(0.27)
     assert "fever" not in variant_row.metric_z_values
 
@@ -2137,7 +2141,9 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     response = TestClient(app).get("/leaderboard?view=BenchA&truncate=1&task_z_scores=1")
 
     assert response.status_code == 200
-    assert "Task std display" in response.text
+    assert "Display:" in response.text
+    assert "<span>STD</span>" in response.text
+    assert "Task std display" not in response.text
     assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "task-z-score task-z-pos-100" in response.text
     assert "task-z-score task-z-pos-025" in response.text
@@ -2146,6 +2152,112 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert '<span class="task-z-score-value">82.70</span>' in response.text
     assert '<span class="task-z-score-delta">+1.00σ</span>' in response.text
     assert '<span class="task-z-score-delta">+0.27σ</span>' in response.text
+
+
+def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "a2", 0.90, 10, 12, 8192),
+            ("model/a", "BenchB", "bench/b", "BenchB", "b1", "b1", "b1", 0.50, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 20, 24, 4096),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a2", "a2", "a2", 0.70, 20, 24, 4096),
+            ("model/b", "BenchB", "bench/b", "BenchB", "b1", "b1", "b1", 0.50, 20, 24, 4096),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.85,
+                10,
+                12,
+                8192,
+                "truncate_dim_256",
+                256,
+                None,
+            ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a2",
+                "a2",
+                "a2",
+                0.85,
+                10,
+                12,
+                8192,
+                "truncate_dim_256",
+                256,
+                None,
+            ),
+            (
+                "model/a",
+                "BenchB",
+                "bench/b",
+                "BenchB",
+                "b1",
+                "b1",
+                "b1",
+                0.50,
+                10,
+                12,
+                8192,
+                "truncate_dim_256",
+                256,
+                None,
+            ),
+        ],
+        include_embedding_variant_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: BenchB\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n  - BenchB\n",
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard(
+        "Overall",
+        include_truncate_variants=True,
+        show_task_z_scores=True,
+    )
+    rows_by_name = {row.model_name: row for row in result.rows}
+
+    assert rows_by_name["model/a"].macro_mean == pytest.approx(70.0)
+    assert rows_by_name["model/a"].micro_mean == pytest.approx(76.6666666667)
+    assert rows_by_name["model/a"].macro_mean_z == pytest.approx(1.0)
+    assert rows_by_name["model/a"].micro_mean_z == pytest.approx(1.0)
+    assert rows_by_name["model/b"].macro_mean_z == pytest.approx(-1.0)
+    assert rows_by_name["model/b"].micro_mean_z == pytest.approx(-1.0)
+    variant_row = next(row for row in result.rows if row.embedding_variant_name == "truncate_dim_256")
+    assert variant_row.macro_mean == pytest.approx(67.5)
+    assert variant_row.micro_mean == pytest.approx(73.3333333333)
+    assert variant_row.macro_mean_z == pytest.approx(0.5)
+    assert variant_row.micro_mean_z == pytest.approx(0.5)
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=Overall&truncate=1&task_z_scores=1")
+
+    assert response.status_code == 200
+    assert "Macro Mean" in response.text
+    assert "Micro Mean" in response.text
+    assert '<span class="task-z-score-value">70.00</span>' in response.text
+    assert '<span class="task-z-score-value">76.67</span>' in response.text
+    assert '<span class="task-z-score-value">67.50</span>' in response.text
+    assert '<span class="task-z-score-value">73.33</span>' in response.text
+    assert '<span class="task-z-score-delta">+1.00σ</span>' in response.text
+    assert '<span class="task-z-score-delta">+0.50σ</span>' in response.text
 
 
 def test_task_z_score_heatmap_uses_quarter_sigma_buckets() -> None:

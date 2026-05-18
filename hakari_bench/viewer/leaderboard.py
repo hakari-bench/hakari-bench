@@ -55,8 +55,11 @@ class LeaderboardRow(BaseModel):
     model_name: str
     borda_score: float
     mean_score: float
+    mean_score_z: float | None = None
     macro_mean: float | None = None
+    macro_mean_z: float | None = None
     micro_mean: float | None = None
+    micro_mean_z: float | None = None
     task_count: int
     active_parameters: int | None = None
     total_parameters: int | None = None
@@ -626,6 +629,7 @@ def compute_leaderboard_rows(
         if show_task_z_scores and metric_columns
         else {}
     )
+    aggregate_z_values_by_model = _aggregate_z_values_by_model(complete_rows, is_overall=is_overall) if show_task_z_scores else {}
 
     leaderboard_rows: list[LeaderboardRow] = []
     for model_name in sorted(complete_models):
@@ -640,6 +644,7 @@ def compute_leaderboard_rows(
         mean_score = macro_mean if is_overall else micro_mean
         metric_values = _metric_values(model_rows, score_group=score_group, metric_columns=metric_columns)
         metric_z_values = z_values_by_model.get(model_name, {})
+        aggregate_z_values = aggregate_z_values_by_model.get(model_name, {})
         leaderboard_rows.append(
             LeaderboardRow(
                 borda_rank=0.0,
@@ -647,8 +652,11 @@ def compute_leaderboard_rows(
                 model_name=model_name,
                 borda_score=_mean(borda_scores[model_name]),
                 mean_score=mean_score,
+                mean_score_z=aggregate_z_values.get("mean_score"),
                 macro_mean=macro_mean if is_overall else None,
+                macro_mean_z=aggregate_z_values.get("macro_mean") if is_overall else None,
                 micro_mean=micro_mean if is_overall else None,
+                micro_mean_z=aggregate_z_values.get("micro_mean") if is_overall else None,
                 task_count=len({row.task_key for row in model_rows}),
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
@@ -1145,6 +1153,53 @@ def _metric_z_values_by_model(
         }
         for model_name, columns in model_column_values.items()
     }
+
+
+def _aggregate_z_values_by_model(rows: list[TaskScore], *, is_overall: bool) -> dict[str, dict[str, float]]:
+    aggregate_values = _aggregate_values_by_model(rows, is_overall=is_overall)
+    base_aggregate_values = _aggregate_values_by_model(
+        [row for row in rows if row.embedding_variant_name is None],
+        is_overall=is_overall,
+    )
+    stats_by_column: dict[str, tuple[float, float]] = {}
+    for column in ("mean_score", "macro_mean", "micro_mean"):
+        values = [columns[column] for columns in base_aggregate_values.values() if column in columns]
+        stddev = _population_stddev(values)
+        if stddev is not None and stddev > 0.0:
+            stats_by_column[column] = (_mean(values), stddev)
+    return {
+        model_name: {
+            column: (value - mean) / stddev
+            for column, value in columns.items()
+            if column in stats_by_column
+            for mean, stddev in [stats_by_column[column]]
+        }
+        for model_name, columns in aggregate_values.items()
+    }
+
+
+def _aggregate_values_by_model(rows: list[TaskScore], *, is_overall: bool) -> dict[str, dict[str, float]]:
+    values_by_model: dict[str, dict[str, float]] = {}
+    for model_name, model_rows in _group_by_model(rows).items():
+        micro_mean = _mean(row.score * 100.0 for row in model_rows)
+        benchmark_means = [
+            _mean(row.score * 100.0 for row in benchmark_rows)
+            for benchmark_rows in _group_by_benchmark(model_rows).values()
+        ]
+        macro_mean = _mean(benchmark_means)
+        mean_score = macro_mean if is_overall else micro_mean
+        values_by_model[model_name] = {"mean_score": mean_score}
+        if is_overall:
+            values_by_model[model_name]["macro_mean"] = macro_mean
+            values_by_model[model_name]["micro_mean"] = micro_mean
+    return values_by_model
+
+
+def _group_by_model(rows: list[TaskScore]) -> dict[str, list[TaskScore]]:
+    grouped: dict[str, list[TaskScore]] = defaultdict(list)
+    for row in rows:
+        grouped[row.model_name].append(row)
+    return grouped
 
 
 def _mean_metric_values_by_model(
