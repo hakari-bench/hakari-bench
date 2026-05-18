@@ -32,7 +32,7 @@ from hakari_bench.viewer.store import (
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
-def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> None:
+def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
     config = load_viewer_config()
     language_nanomteb_benchmarks = [
         "NanoMTEB-Dutch",
@@ -49,7 +49,7 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoVNMTEB",
         "NanoMTEB-Misc",
     ]
-    expected_overall_benchmarks = [
+    core_benchmarks = [
         "NanoMMTEB-v2",
         "NanoRTEB",
         "MNanoBEIR",
@@ -71,9 +71,15 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         "NanoIndicQA",
         "NanoMuPLeR",
     ]
+    all_benchmarks = [benchmark.name for benchmark in config.benchmarks]
 
-    assert config.overall.benchmark_names == expected_overall_benchmarks
-    grouped_overall = config.overall_for_view("OverallGrouped")
+    assert config.overall.name == "All"
+    assert config.overall.label == "All"
+    assert config.overall.benchmark_names == all_benchmarks
+    core_overall = config.overall_for_view("Core")
+    assert core_overall is not None
+    assert core_overall.benchmark_names == core_benchmarks
+    grouped_overall = config.overall_for_view("Group")
     assert grouped_overall is not None
     assert [component.name for component in grouped_overall.benchmark_components] == [
         "MNanoBEIR",
@@ -125,16 +131,20 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
         *["benchmark"] * len(language_nanomteb_benchmarks),
         "benchmark",
     ]
-    assert config.view_names[: len(expected_overall_benchmarks) + 2] == [
-        "Overall",
-        "OverallGrouped",
-        *expected_overall_benchmarks,
+    assert config.view_names[: len(all_benchmarks) + 3] == [
+        "All",
+        "Core",
+        "Group",
+        *all_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
     assert "NanoBIRCO" in config.view_names
     assert "NanoDAPFAM" in config.view_names
     assert all(benchmark in config.view_names for benchmark in language_nanomteb_benchmarks)
-    assert all(benchmark not in config.overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
+    assert all(benchmark in config.overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
+    assert all(benchmark not in core_overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
+    assert "NanoMIRACL" in config.overall.benchmark_names
+    assert "NanoMIRACL" not in core_overall.benchmark_names
     assert "NanoCMTEB" in config.view_names
     assert "NanoCMTEB" in config.overall.benchmark_names
     nano_law = config.benchmark_for_view("NanoLaw")
@@ -150,6 +160,9 @@ def test_viewer_config_uses_curated_overall_benchmarks_in_display_order() -> Non
 
 
 def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> None:
+    assert _view_group("All") == "Overall"
+    assert _view_group("Core") == "Overall"
+    assert _view_group("Group") == "Overall"
     assert _view_group("NanoMMTEB-v2") == "Core benchmarks"
     assert _view_group("MNanoBEIR") == "Core benchmarks"
     assert _view_group("NanoRTEB") == "Core benchmarks"
@@ -551,7 +564,10 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'data-leaderboard-control="true"' in response.text
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
-    assert 'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_rank&amp;direction=asc&amp;group=task&amp;target=reranking"' in response.text
+    assert (
+        'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_rank&amp;direction=asc'
+        '&amp;group=task&amp;task_z_scores=1&amp;target=reranking"'
+    ) in response.text
     assert "Language-specific" in response.text
     assert "Domain-specific" in response.text
     assert "sticky left-0" in response.text
@@ -2722,12 +2738,13 @@ benchmarks:
     )
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/?view=MNanoBEIR&group=lang_mean&sort=metric:NanoBEIR-ja&direction=desc")
+    response = TestClient(app).get("/?view=MNanoBEIR&group=lang_mean&sort=metric:NanoBEIR-ja&direction=desc&task_z_scores=0")
 
     assert response.status_code == 200
     assert '<link rel="canonical" href="/">' in response.text
     assert (
-        'hx-get="/leaderboard?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja&amp;direction=desc&amp;group=lang_mean"'
+        'hx-get="/leaderboard?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja&amp;direction=desc'
+        '&amp;group=lang_mean&amp;task_z_scores=0"'
         in response.text
     )
 

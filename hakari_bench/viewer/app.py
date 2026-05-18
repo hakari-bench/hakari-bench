@@ -171,6 +171,8 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 doc_len_min=doc_len_min,
                 doc_len_max=doc_len_max,
             )
+            if not task_z_scores:
+                initial_query["task_z_scores"] = "0"
             summary = ViewerAnalyticsRepository(store.path).fetch_summary()
             with timed_operation("viewer.render", operation="render_page"):
                 content = render_page(
@@ -641,6 +643,7 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
 
 
 def _view_group(view_name: str) -> str:
+    overall_views = {"All", "Core", "Group"}
     language_specific_views = {
         "NanoCMTEB",
         "NanoFaMTEB-v2",
@@ -648,7 +651,7 @@ def _view_group(view_name: str) -> str:
         "NanoRuMTEB",
         "NanoVNMTEB",
     }
-    if view_name.startswith("Overall"):
+    if view_name in overall_views or view_name.startswith("Overall"):
         return "Overall"
     if view_name.startswith("NanoMTEB-") or view_name in language_specific_views:
         return "Language-specific"
