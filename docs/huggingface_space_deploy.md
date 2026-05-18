@@ -110,6 +110,11 @@ The Docker image installs only viewer runtime dependencies and starts:
 uvicorn hakari_bench.viewer.space:create_space_app --factory --host 0.0.0.0 --port ${PORT:-7860}
 ```
 
+The Space Dockerfile pins the Python and `uv` image references by digest and
+runs the FastAPI process as the non-root `hakari` user. If those base images are
+intentionally updated, refresh the digest pins in `Dockerfile`, rebuild locally,
+and keep this deployment note in sync.
+
 The viewer does not depend on CDN-hosted browser assets. Regenerate the local
 Tailwind CSS before deploying when viewer templates or styles change:
 
