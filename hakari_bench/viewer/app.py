@@ -126,7 +126,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
         task_scores: bool = Query(default=False),
-        task_z_scores: bool = Query(default=False),
+        task_z_scores: bool = Query(default=True),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -195,7 +195,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
         task_scores: bool = Query(default=False),
-        task_z_scores: bool = Query(default=False),
+        task_z_scores: bool = Query(default=True),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -803,6 +803,8 @@ def render_controls(
         task_score_hidden_fields.append(("task_scores", "1"))
     if result.show_task_z_scores:
         task_score_hidden_fields.append(("task_z_scores", "1"))
+    else:
+        task_score_hidden_fields.append(("task_z_scores", "0"))
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
     variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
     filter_hidden_fields = [
@@ -1048,10 +1050,11 @@ def render_controls(
         <span class="font-medium text-zinc-800">Columns:</span>
         <label class="inline-flex items-center gap-2">
           <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
-          <span>Task score columns</span>
+          <span>Tasks</span>
         </label>
         <span class="font-medium text-zinc-800">Display:</span>
         <label class="inline-flex items-center gap-2">
+          <input type="hidden" name="task_z_scores" value="0">
           <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
           <span>STD</span>
         </label>

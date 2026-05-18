@@ -172,7 +172,6 @@ class LeaderboardService:
             score_target=score_target,
             show_task_scores=show_task_scores,
         ) as request_timing:
-            show_task_scores = show_task_scores or show_task_z_scores
             overall = self.config.overall_for_view(view_name)
             benchmarks = self.config.benchmarks_for_view(view_name)
             is_overall = overall is not None

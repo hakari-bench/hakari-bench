@@ -83,7 +83,7 @@ def normalize_query_state(
         query["target"] = target
     if group:
         query["group"] = group
-    if task_scores or task_z_scores or task_filter:
+    if task_scores or task_filter:
         query["task_scores"] = "1"
     if task_z_scores:
         query["task_z_scores"] = "1"
@@ -157,10 +157,12 @@ def state_payload(
         query_payload["target"] = result.score_target
     if result.selected_score_group is not None:
         query_payload["group"] = result.selected_score_group.name
-    if result.show_task_scores or result.show_task_z_scores:
+    if result.show_task_scores:
         query_payload["task_scores"] = "1"
     if result.show_task_z_scores:
         query_payload["task_z_scores"] = "1"
+    else:
+        query_payload["task_z_scores"] = "0"
     if result.include_quantization_variants:
         query_payload["quantization"] = "1"
     if result.include_truncate_variants:

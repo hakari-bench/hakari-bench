@@ -969,7 +969,10 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "Languages (13)" in response.text
     assert "max-h-72" in response.text
     assert 'name="lang_filter" value="ja" class="h-4 w-4 accent-cyan-700" checked' in response.text
-    assert 'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task&amp;lang_filter=en"' in response.text
+    assert (
+        'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task'
+        '&amp;task_z_scores=1&amp;lang_filter=en"'
+    ) in response.text
     assert 'data-language-page="ja"' in response.text
     assert 'data-shown-count="2"' in response.text
     assert "2 shown / 2 complete models / 1 tasks" in response.text
@@ -1876,7 +1879,8 @@ benchmarks:
     assert response.status_code == 200
     assert "Task Mean" in response.text
     assert "Lang Mean" in response.text
-    assert "Task score columns" in response.text
+    assert ">Tasks</span>" in response.text
+    assert "Task score columns" not in response.text
     assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "Mean Score" in response.text
     assert ">BEIR-ja</span>" in response.text
@@ -2118,9 +2122,24 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    mean_only_result = service.get_leaderboard(
+        "BenchA",
+        include_truncate_variants=True,
+        show_task_z_scores=True,
+    )
+    mean_only_rows_by_name = {row.model_name: row for row in mean_only_result.rows}
+
+    assert mean_only_result.show_task_scores is False
+    assert mean_only_result.show_task_z_scores is True
+    assert mean_only_result.metric_columns == []
+    assert mean_only_rows_by_name["model/a"].mean_score_z == pytest.approx(1.0)
+    assert mean_only_rows_by_name["model/b"].mean_score_z == pytest.approx(-1.0)
+    assert mean_only_rows_by_name["model/a"].metric_z_values == {}
+
     result = service.get_leaderboard(
         "BenchA",
         include_truncate_variants=True,
+        show_task_scores=True,
         show_task_z_scores=True,
     )
     rows_by_name = {row.model_name: row for row in result.rows}
@@ -2146,12 +2165,16 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert "Task std display" not in response.text
     assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "task-z-score task-z-pos-100" in response.text
-    assert "task-z-score task-z-pos-025" in response.text
     assert "task-z-score task-z-neg-100" in response.text
-    assert '<span class="task-z-score-value">90.00</span>' in response.text
-    assert '<span class="task-z-score-value">82.70</span>' in response.text
     assert '<span class="task-z-score-delta">+1.00σ</span>' in response.text
-    assert '<span class="task-z-score-delta">+0.27σ</span>' in response.text
+    assert "metric%3Aarguana" not in response.text
+
+    task_column_response = TestClient(app).get("/leaderboard?view=BenchA&truncate=1&task_scores=1&task_z_scores=1")
+    assert task_column_response.status_code == 200
+    assert "task-z-score task-z-pos-025" in task_column_response.text
+    assert '<span class="task-z-score-value">90.00</span>' in task_column_response.text
+    assert '<span class="task-z-score-value">82.70</span>' in task_column_response.text
+    assert '<span class="task-z-score-delta">+0.27σ</span>' in task_column_response.text
 
 
 def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) -> None:
@@ -2258,6 +2281,43 @@ def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) ->
     assert '<span class="task-z-score-value">73.33</span>' in response.text
     assert '<span class="task-z-score-delta">+1.00σ</span>' in response.text
     assert '<span class="task-z-score-delta">+0.50σ</span>' in response.text
+
+
+def test_std_display_is_default_and_can_be_disabled_without_task_columns(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "a2", 0.50, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 20, 24, 4096),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a2", "a2", "a2", 0.50, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    client = TestClient(app)
+
+    default_response = client.get("/leaderboard?view=BenchA")
+
+    assert default_response.status_code == 200
+    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700">' in default_response.text
+    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in default_response.text
+    assert '<input type="hidden" name="task_z_scores" value="0">' in default_response.text
+    assert '<span class="task-z-score-delta">+1.00σ</span>' in default_response.text
+    assert "metric%3Aa1" not in default_response.text
+
+    disabled_response = client.get("/leaderboard?view=BenchA&task_z_scores=0")
+
+    assert disabled_response.status_code == 200
+    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' not in disabled_response.text
+    assert "task-z-score" not in disabled_response.text
+    assert "task_z_scores=0" in disabled_response.text
 
 
 def test_task_z_score_heatmap_uses_quarter_sigma_buckets() -> None:
