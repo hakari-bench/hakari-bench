@@ -182,7 +182,7 @@ def test_load_model_passes_model_revision_to_huggingface_loaders(monkeypatch: py
     assert calls[0]["revision"] == "abc123"
 
 
-def test_resolve_model_revision_uses_short_huggingface_sha(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_resolve_model_revision_uses_full_huggingface_sha(monkeypatch: pytest.MonkeyPatch) -> None:
     class FakeInfo:
         sha = "0123456789abcdef0123456789abcdef01234567"
 
@@ -197,7 +197,7 @@ def test_resolve_model_revision_uses_short_huggingface_sha(monkeypatch: pytest.M
 
     assert resolve_model_revision("hotchpotch/model", requested_revision="main") == {
         "requested": "main",
-        "resolved": "0123456789ab",
+        "resolved": "0123456789abcdef0123456789abcdef01234567",
         "source": "huggingface_hub",
     }
 
@@ -244,7 +244,7 @@ def test_collect_model_metadata_records_model_revision(monkeypatch: pytest.Monke
         "hakari_bench.models.resolve_model_revision",
         lambda model_id, requested_revision=None: {
             "requested": requested_revision,
-            "resolved": "0123456789ab",
+            "resolved": "0123456789abcdef0123456789abcdef01234567",
             "source": "huggingface_hub",
         },
     )
@@ -255,7 +255,7 @@ def test_collect_model_metadata_records_model_revision(monkeypatch: pytest.Monke
         "type": "huggingface",
         "name": "hotchpotch/model",
         "revision_requested": "main",
-        "revision": "0123456789ab",
+        "revision": "0123456789abcdef0123456789abcdef01234567",
     }
 
 

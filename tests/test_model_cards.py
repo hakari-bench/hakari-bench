@@ -197,6 +197,7 @@ def test_build_model_card_loads_model_and_requires_truncate_dims(monkeypatch: py
             "total_parameters": 10,
             "embedding_parameters": 4,
             "active_parameters": 6,
+            "trust_remote_code": args.trust_remote_code,
         }
 
     monkeypatch.setattr(model_cards, "load_model", fake_load_model)
@@ -210,11 +211,40 @@ def test_build_model_card_loads_model_and_requires_truncate_dims(monkeypatch: py
         dtype="bf16",
         device="cpu",
         trust_remote_code=True,
+        remote_code_approved=True,
     )
 
     assert calls
     assert card["id"] == "BAAI/bge-m3"
     assert card["embedding"]["truncate_dims"] == [768]
+    assert card["runtime"]["remote_code_approved"] is True
+
+
+def test_collect_model_cards_from_results_preserves_remote_code_approval(tmp_path: Path) -> None:
+    result_path = tmp_path / "model" / "dataset" / "task.json"
+    _write_result(
+        result_path,
+        model={
+            "id": "jinaai/jina-embeddings-v3",
+            "method": "dense",
+            "source": {
+                "type": "huggingface",
+                "name": "jinaai/jina-embeddings-v3",
+                "revision": "ab036b023d30b4d1138c4c3bfa9f0c445ab455d6",
+            },
+            "trust_remote_code": True,
+        },
+    )
+    existing_cards = {
+        "jinaai/jina-embeddings-v3": {
+            "id": "jinaai/jina-embeddings-v3",
+            "runtime": {"remote_code_approved": True},
+        }
+    }
+
+    cards = model_cards.collect_model_cards_from_results(tmp_path, existing_cards=existing_cards)
+
+    assert cards["jinaai/jina-embeddings-v3"]["runtime"]["remote_code_approved"] is True
 
 
 def _write_result(

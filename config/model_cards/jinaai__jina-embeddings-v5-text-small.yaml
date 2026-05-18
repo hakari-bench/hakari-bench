@@ -2,7 +2,7 @@ id: jinaai/jina-embeddings-v5-text-small
 source:
   type: huggingface
   name: jinaai/jina-embeddings-v5-text-small
-  revision: dd76d535f544
+  revision: dd76d535f5447ca3897a9c893fb1e612ead98192
 method: dense
 parameters:
   total: 676790272
@@ -21,6 +21,7 @@ runtime:
   max_seq_length: 32768
   dtype: bf16
   trust_remote_code: true
+  remote_code_approved: true
   attn_implementation: flash_attention_2
   backend_library: sentence-transformers
   similarity_fn_name: cosine
