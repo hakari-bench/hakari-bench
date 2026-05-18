@@ -72,6 +72,21 @@ def _quantized_variant(
     return _pipeline_variant(name, _normalize_step(), _quantized_step(precision, rescore=rescore, device=device))
 
 
+def _cuda_test_device_is_usable() -> bool:
+    if not torch.cuda.is_available():
+        return False
+    try:
+        torch.empty((1,), dtype=torch.float32, device="cuda")
+        torch.cuda.synchronize()
+    except RuntimeError:
+        torch.cuda.empty_cache()
+        return False
+    return True
+
+
+CUDA_TEST_DEVICE_IS_USABLE = _cuda_test_device_is_usable()
+
+
 def _toy_task() -> EvalTask:
     spec = NanoDatasetSpec(
         name="ToyData",
@@ -861,7 +876,7 @@ def test_candidate_subset_rank_by_similarity_supports_torch_sparse_csr() -> None
     assert rankings == {"q1": ["d1", "d3"], "q2": ["d2", "d1"]}
 
 
-@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not available")
+@pytest.mark.skipif(not CUDA_TEST_DEVICE_IS_USABLE, reason="CUDA is not available or cannot allocate a test tensor")
 def test_cuda_dense_rank_by_similarity_keeps_scoring_on_cuda(monkeypatch) -> None:
     def fail_to_numpy(embeddings):
         raise AssertionError(f"Unexpected NumPy conversion for {type(embeddings).__name__}")
@@ -1189,7 +1204,7 @@ def test_evaluate_dense_task_score_device_cpu_uses_numpy_late_interaction_embedd
     assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
 
 
-@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not available")
+@pytest.mark.skipif(not CUDA_TEST_DEVICE_IS_USABLE, reason="CUDA is not available or cannot allocate a test tensor")
 def test_cuda_quantized_search_keeps_values_on_cuda() -> None:
     query_embeddings = torch.tensor([[1.0, 0.0]], dtype=torch.float32, device="cuda")
     corpus_embeddings = torch.tensor([[1.0, 0.0], [0.0, 1.0]], dtype=torch.float32, device="cuda")
