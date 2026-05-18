@@ -33,6 +33,7 @@ class TaskScore:
     active_parameters: int | None
     total_parameters: int | None
     max_seq_length: int | None
+    model_type: str | None = None
     language: str | None = None
     languages: tuple[str, ...] = ()
     dtype: str | None = None
@@ -53,6 +54,7 @@ class LeaderboardRow(BaseModel):
     borda_rank: float
     mean_rank: float
     model_name: str
+    model_type: str | None = None
     borda_score: float
     mean_score: float
     mean_score_z: float | None = None
@@ -579,6 +581,7 @@ def _task_scores_from_records(
             task_scores.append(
                 TaskScore(
                     model_name=model_name,
+                    model_type=record.model_type,
                     benchmark=record.benchmark,
                     dataset_id=record.dataset_id,
                     dataset_name=record.dataset_name,
@@ -657,6 +660,7 @@ def compute_leaderboard_rows(
                 borda_rank=0.0,
                 mean_rank=0.0,
                 model_name=model_name,
+                model_type=first.model_type,
                 borda_score=_mean(borda_scores[model_name]),
                 mean_score=mean_score,
                 mean_score_z=aggregate_z_values.get("mean_score"),
@@ -775,6 +779,7 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
         aggregated.append(
             TaskScore(
                 model_name=model_name,
+                model_type=first.model_type,
                 benchmark=benchmark,
                 dataset_id=benchmark,
                 dataset_name=benchmark,
@@ -823,6 +828,7 @@ def _aggregate_benchmark_score_group_scores(rows: list[TaskScore], score_group: 
         aggregated.append(
             TaskScore(
                 model_name=model_name,
+                model_type=first.model_type,
                 benchmark=benchmark,
                 dataset_id=aggregate_key if score_group.group_by == "dataset_id" else first.dataset_id,
                 dataset_name=aggregate_key if score_group.group_by == "dataset_name" else first.dataset_name,

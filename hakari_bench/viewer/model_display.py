@@ -17,6 +17,8 @@ class ModelCellView(BaseModel):
     display_name: str
     full_model_name: str
     ranking_model_name: str
+    model_type_label: str
+    model_type_badge_label: str | None = None
     dimension_label: str | None = None
     dimension_tooltip: str | None = None
     variant_label: str | None = None
@@ -39,6 +41,8 @@ def model_cell_views(rows: list[LeaderboardRow]) -> dict[str, ModelCellView]:
             ),
             full_model_name=full_model_name,
             ranking_model_name=row.model_name,
+            model_type_label=model_type_view["label"] or "",
+            model_type_badge_label=model_type_view["badge_label"],
             dimension_label=_dimension_label(row),
             dimension_tooltip=None,
             variant_label=_variant_label(row, original_dim=original_dims.get(_source_key(row=row, full_model_name=full_model_name))),
@@ -47,6 +51,7 @@ def model_cell_views(rows: list[LeaderboardRow]) -> dict[str, ModelCellView]:
         )
         for row in rows
         for full_model_name in [base_names[row.model_name]]
+        for model_type_view in [_model_type_view(row=row, full_model_name=full_model_name)]
     }
 
 
@@ -138,9 +143,56 @@ def _truncate_dim(row: LeaderboardRow) -> int | None:
     return None
 
 
+def _model_type_view(*, row: LeaderboardRow, full_model_name: str) -> dict[str, str | None]:
+    model_type = _normalized_model_type(row=row, full_model_name=full_model_name)
+    labels = {
+        "dense": "Dense",
+        "reranker": "Cross-encoder reranker",
+        "sparse": "Sparse",
+        "late-interaction": "Late interaction",
+        "bm25": "BM25",
+    }
+    badge_labels = {
+        "reranker": "reranker",
+        "sparse": "sparse",
+        "late-interaction": "late interaction",
+    }
+    return {
+        "key": model_type,
+        "label": labels.get(model_type, model_type),
+        "badge_label": badge_labels.get(model_type),
+    }
+
+
+def _normalized_model_type(*, row: LeaderboardRow, full_model_name: str) -> str:
+    explicit_model_type = getattr(row, "model_type", None)
+    if isinstance(explicit_model_type, str):
+        normalized = explicit_model_type.strip().casefold().replace("_", "-")
+        if normalized in {"dense", "sparse", "reranker", "late-interaction", "bm25"}:
+            return normalized
+        if normalized in {"cross-encoder", "crossencoder", "cross-encoder-reranker"}:
+            return "reranker"
+        if normalized in {"late-interaction-retriever", "colbert"}:
+            return "late-interaction"
+
+    name = full_model_name.casefold()
+    if name == "bm25" or name.endswith("/bm25"):
+        return "bm25"
+    if name.startswith("cross-encoder/") or "reranker" in name:
+        return "reranker"
+    if "splade" in name or "sparse" in name:
+        return "sparse"
+    if "colbert" in name or "late-interaction" in name:
+        return "late-interaction"
+    return "dense"
+
+
 def _model_metadata(*, row: LeaderboardRow, full_model_name: str) -> dict[str, Any]:
+    model_type_view = _model_type_view(row=row, full_model_name=full_model_name)
     return {
         "model_name": full_model_name,
+        "model_type": model_type_view["label"],
+        "model_type_key": model_type_view["key"],
         "ranking_model_name": row.model_name,
         "embedding_variant_name": row.embedding_variant_name,
         "embedding_dim": row.embedding_dim,
@@ -159,6 +211,13 @@ def _model_metadata(*, row: LeaderboardRow, full_model_name: str) -> dict[str, A
 def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> str:
     metadata_json = json.dumps(model_view.metadata, ensure_ascii=False, separators=(",", ":"))
     badges = []
+    if model_view.model_type_badge_label is not None:
+        badges.append(
+            _render_badge(
+                label=model_view.model_type_badge_label,
+                classes="border-zinc-300 bg-zinc-100 text-zinc-700",
+            )
+        )
     if model_view.dimension_label is not None:
         badges.append(
             _render_badge(

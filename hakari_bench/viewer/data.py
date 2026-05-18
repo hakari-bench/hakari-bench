@@ -62,6 +62,7 @@ class TaskResultRecord(BaseModel):
     task_name: str
     task_key: str
     score: float
+    model_type: str | None = None
     language: str | None = None
     languages: list[str] = Field(default_factory=list)
     active_parameters: int | None = None
@@ -110,6 +111,7 @@ class TaskResultRow:
     task_name: str
     task_key: str
     score: float
+    model_type: str | None = None
     language: str | None = None
     languages: tuple[str, ...] = ()
     active_parameters: int | None = None
@@ -227,6 +229,7 @@ class TaskResultsRepository:
             language_expr = qualified_column("tr", "language", allowed_columns=columns)
             languages_expr = qualified_column("tr", "languages", allowed_columns=columns)
             variant_name_expr = _column_or_null(columns, "embedding_variant_name")
+            model_type_expr = _column_or_null(columns, "model_type")
             embedding_dim_expr = _column_or_null(columns, "embedding_dim")
             quantization_expr = _column_or_null(columns, "quantization")
             dtype_expr = _column_or_null(columns, "dtype")
@@ -252,6 +255,7 @@ class TaskResultsRepository:
             query = f"""
                 SELECT
                     tr.model_name,
+                    {model_type_expr} AS model_type,
                     tr.benchmark,
                     tr.dataset_id,
                     tr.dataset_name,
@@ -330,6 +334,7 @@ def _task_result_row(field_names: list[str], row: tuple[Any, ...]) -> TaskResult
     payload = _task_result_payload(field_names, row)
     return TaskResultRow(
         model_name=str(payload["model_name"]),
+        model_type=payload["model_type"] if isinstance(payload.get("model_type"), str) else None,
         benchmark=str(payload["benchmark"]),
         dataset_id=str(payload["dataset_id"]),
         dataset_name=str(payload["dataset_name"]),

@@ -799,9 +799,15 @@ variant labels such as `binary_rescore` as badges instead of duplicating them in
 the visible model text. Full-dimension rows render compact dimension badges such
 as `384d`. Truncation variants render the truncated dimension first, followed by
 the source dimension, such as `256d <- 384`, and expose the truncation details in
-a tooltip. Runtime fields such as dtype, attention implementation, prompt mode,
-and `trust_remote_code` are carried in a `data-model-metadata` JSON attribute on
-the model-name button and displayed in the model details modal.
+a tooltip. If a DuckDB build provides an optional `model_type` column, the
+viewer uses it for model-type display; older databases fall back to conservative
+model-name inference for `dense`, `sparse`, `reranker`, `late-interaction`, and
+`bm25`. Non-default neural model types such as sparse encoders and cross-encoder
+rerankers render a compact badge before dimension badges, while dense and BM25
+rows stay unbadged in the table. Runtime fields such as model type, dtype,
+attention implementation, prompt mode, and `trust_remote_code` are carried in a
+`data-model-metadata` JSON attribute on the model-name button and displayed in
+the model details modal.
 
 When quantization or truncation variants are displayed, the viewer appends a
 `Δ vs Base` column. It compares each variant row's displayed mean score against

@@ -71,6 +71,73 @@ def test_render_model_name_cell_uses_compact_truncate_dimension_badge_with_toolt
     ) in html
 
 
+def test_render_model_name_cell_shows_non_dense_model_type_before_dimensions() -> None:
+    row = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name="opensearch-project/opensearch-neural-sparse-encoding-v2-distill (1024 dims)",
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+        model_type="sparse",
+        embedding_dim=1024,
+    )
+    model_view = model_cell_views([row])[row.model_name]
+
+    html = render_model_name_cell(row, model_view)
+
+    assert model_view.metadata["model_type"] == "Sparse"
+    assert ">sparse</span>" in html
+    assert html.index(">sparse</span>") < html.index(">1024d</span>")
+
+
+def test_render_model_name_cell_infers_reranker_type_without_dimension_badge() -> None:
+    row = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name="cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+    )
+    model_view = model_cell_views([row])[row.model_name]
+
+    html = render_model_name_cell(row, model_view)
+
+    assert model_view.metadata["model_type"] == "Cross-encoder reranker"
+    assert ">reranker</span>" in html
+
+
+def test_render_model_name_cell_hides_table_type_badge_for_dense_and_bm25() -> None:
+    dense = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name="BAAI/bge-m3 (1024 dims)",
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+        model_type="dense",
+        embedding_dim=1024,
+    )
+    bm25 = LeaderboardRow(
+        borda_rank=2,
+        mean_rank=2,
+        model_name="bm25",
+        borda_score=90,
+        mean_score=80,
+        task_count=1,
+    )
+    model_views = model_cell_views([dense, bm25])
+
+    dense_html = render_model_name_cell(dense, model_views[dense.model_name])
+    bm25_html = render_model_name_cell(bm25, model_views[bm25.model_name])
+
+    assert model_views[dense.model_name].metadata["model_type"] == "Dense"
+    assert model_views[bm25.model_name].metadata["model_type"] == "BM25"
+    assert ">dense</span>" not in dense_html
+    assert ">bm25</span>" not in bm25_html
+
+
 def test_render_model_name_cell_falls_back_for_truncate_badge_without_original_dimension() -> None:
     row = LeaderboardRow(
         borda_rank=1,

@@ -110,6 +110,7 @@
   };
 
   const modelDetailFields = [
+    ["Model type", "model_type"],
     ["Ranking label", "ranking_model_name"],
     ["Variant", "embedding_variant_name"],
     ["Dimensions", "embedding_dim"],
