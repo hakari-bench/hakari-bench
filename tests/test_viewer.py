@@ -374,6 +374,10 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert "Models" in response.text
     assert re.search(r'<link rel="stylesheet" href="/assets/app\.css\?v=[0-9a-f]{12}">', response.text)
     assert re.search(r'<link rel="icon" type="image/png" href="/assets/favicon\.png\?v=[0-9a-f]{12}">', response.text)
+    assert (
+        '<meta name="htmx-config" content=\'{"allowEval":false,"allowScriptTags":false,'
+        '"includeIndicatorStyles":false}\'>'
+    ) in response.text
     assert re.search(r'<script src="/assets/htmx\.min\.js\?v=[0-9a-f]{12}"></script>', response.text)
     assert re.search(r'<script src="/assets/viewer\.js\?v=[0-9a-f]{12}" defer></script>', response.text)
     assert "<script>" not in response.text
@@ -491,6 +495,8 @@ def test_viewer_responses_include_security_headers(tmp_path: Path, monkeypatch: 
     assert "geolocation=()" in response.headers["permissions-policy"]
     assert "default-src 'self'" in response.headers["content-security-policy"]
     assert "script-src 'self'" in response.headers["content-security-policy"]
+    assert "style-src 'self'" in response.headers["content-security-policy"]
+    assert "'unsafe-inline'" not in response.headers["content-security-policy"]
     assert "img-src 'self' data:" in response.headers["content-security-policy"]
     assert (
         "frame-ancestors https://huggingface.co https://*.huggingface.co https://example.com"

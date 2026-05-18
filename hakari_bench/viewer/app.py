@@ -331,7 +331,7 @@ def _content_security_policy() -> str:
         [
             "default-src 'self'",
             "script-src 'self'",
-            "style-src 'self' 'unsafe-inline'",
+            "style-src 'self'",
             "img-src 'self' data:",
             "connect-src 'self'",
             "base-uri 'none'",
@@ -369,6 +369,7 @@ def render_page(
   <link rel="canonical" href="/">
   <link rel="stylesheet" href="{css_url}">
   <link rel="icon" type="image/png" href="{favicon_url}">
+  <meta name="htmx-config" content='{{"allowEval":false,"allowScriptTags":false,"includeIndicatorStyles":false}}'>
   <script src="{htmx_url}"></script>
   <script src="{viewer_js_url}" defer></script>
 </head>
