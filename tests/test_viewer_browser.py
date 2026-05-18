@@ -37,13 +37,13 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 page.goto(f"{base_url}/#view=Overall&truncate=1", wait_until="domcontentloaded")
                 page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
 
-                assert page.evaluate("Boolean(window.__hakariApplyHashQueryState && window.__hakariBindModelDetails)")
+                assert page.evaluate("() => Boolean(window.__hakariApplyHashQueryState && window.__hakariBindModelDetails)")
                 assert page.locator("main script:not([src])").count() == 0
                 page.get_by_text("256d <- 384").wait_for(timeout=15_000)
 
                 tooltip_trigger = page.locator("[data-tooltip]").first
                 tooltip_trigger.hover()
-                page.wait_for_function("!document.getElementById('hakari-global-tooltip').hidden", timeout=3_000)
+                page.locator("#hakari-global-tooltip:not([hidden])").wait_for(timeout=3_000)
                 tooltip_state = page.locator("#hakari-global-tooltip").evaluate(
                     """(el) => ({
                         hidden: el.hidden,
@@ -61,12 +61,12 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
 
                 page.locator("#model-detail-modal").evaluate("(modal) => modal.close()")
                 page.get_by_role("button", name="AR 1").click()
-                page.wait_for_function("!document.querySelector('#leaderboard-loading-toast.htmx-request')", timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
                 ar_button = page.get_by_role("button", name="AR 1")
                 assert "border-cyan-700" in (ar_button.get_attribute("class") or "")
 
                 page.get_by_role("button", name="NanoRTEB").click()
-                page.wait_for_function("!document.querySelector('#leaderboard-loading-toast.htmx-request')", timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
                 nano_rteb_button = page.get_by_role("button", name="NanoRTEB")
                 assert page.locator("h2.text-lg").first.inner_text() == "NanoRTEB"
                 assert "border-cyan-700" in (nano_rteb_button.get_attribute("class") or "")
