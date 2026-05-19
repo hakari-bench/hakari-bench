@@ -48,7 +48,22 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 )
                 assert compact_table_state["paddingTop"] <= 4
                 assert compact_table_state["paddingBottom"] <= 4
-                assert page.locator(".task-z-score").first.evaluate("(el) => getComputedStyle(el).borderRadius") == "0px"
+                task_std_style = page.locator(".task-z-score").first.evaluate(
+                    """(el) => ({
+                        borderRadius: getComputedStyle(el).borderRadius,
+                        boxSizing: getComputedStyle(el).boxSizing,
+                        paddingLeft: parseFloat(getComputedStyle(el).paddingLeft),
+                        paddingRight: parseFloat(getComputedStyle(el).paddingRight),
+                        paddingTop: parseFloat(getComputedStyle(el).paddingTop),
+                        width: parseFloat(getComputedStyle(el).width),
+                    })"""
+                )
+                assert task_std_style["borderRadius"] == "0px"
+                assert task_std_style["boxSizing"] == "border-box"
+                assert task_std_style["paddingLeft"] > 0
+                assert task_std_style["paddingRight"] > 0
+                assert task_std_style["paddingTop"] > 0
+                assert task_std_style["width"] == pytest.approx(58.4, abs=0.1)
 
                 tooltip_trigger = page.locator("[data-tooltip]").first
                 tooltip_trigger.hover()
