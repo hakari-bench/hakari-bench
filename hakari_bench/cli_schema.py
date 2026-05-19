@@ -22,6 +22,7 @@ class ModelParams(ParamsModel):
 
 
 class TargetParams(ParamsModel):
+    all: bool | None = None
     datasets: list[str] | None = None
     collections: list[str] | None = None
     splits: list[str] | None = None

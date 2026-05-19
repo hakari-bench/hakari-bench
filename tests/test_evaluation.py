@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
+import types
 from pathlib import Path
 
 import numpy as np
@@ -17,6 +19,7 @@ from hakari_bench.evaluation import (
     evaluate_dense_task,
     evaluate_late_interaction_task,
     evaluate_reranker_task,
+    load_ir_dataset,
 )
 from hakari_bench.results import TaskRunResult, build_run_summary_payload, result_path_for_task, run_or_load_task, safe_path_part
 
@@ -69,6 +72,21 @@ def _quantized_variant(
     return _pipeline_variant(name, _normalize_step(), _quantized_step(precision, rescore=rescore, device=device))
 
 
+def _cuda_test_device_is_usable() -> bool:
+    if not torch.cuda.is_available():
+        return False
+    try:
+        torch.empty((1,), dtype=torch.float32, device="cuda")
+        torch.cuda.synchronize()
+    except RuntimeError:
+        torch.cuda.empty_cache()
+        return False
+    return True
+
+
+CUDA_TEST_DEVICE_IS_USABLE = _cuda_test_device_is_usable()
+
+
 def _toy_task() -> EvalTask:
     spec = NanoDatasetSpec(
         name="ToyData",
@@ -100,6 +118,44 @@ def _toy_dataset_without_candidates() -> LoadedIrDataset:
         candidates=None,
         evaluator_name=dataset.evaluator_name,
     )
+
+
+def test_load_ir_dataset_can_restrict_corpus_to_candidate_documents(monkeypatch: pytest.MonkeyPatch) -> None:
+    task = _toy_task()
+    calls: list[tuple[str, str]] = []
+
+    def fake_load_dataset(dataset_id: str, config_name: str, *, split: str, revision: str | None = None) -> list[dict[str, object]]:
+        assert dataset_id == "toy/data"
+        assert split == "test"
+        assert revision == "abc123"
+        calls.append((config_name, split))
+        if config_name == "bm25":
+            return [{"query-id": "q1", "corpus-ids": ["d1", "d3"]}]
+        if config_name == "corpus":
+            return [
+                {"_id": "d1", "text": "candidate doc"},
+                {"_id": "d2", "text": "non candidate doc"},
+                {"_id": "d3", "text": "candidate doc 2"},
+            ]
+        if config_name == "queries":
+            return [{"_id": "q1", "text": "query"}]
+        if config_name == "qrels":
+            return [{"query-id": "q1", "corpus-id": "d2"}]
+        raise AssertionError(config_name)
+
+    monkeypatch.setitem(sys.modules, "datasets", types.SimpleNamespace(load_dataset=fake_load_dataset))
+
+    dataset = load_ir_dataset(
+        task,
+        candidate_subset_name="bm25",
+        revision="abc123",
+        restrict_corpus_to_candidates=True,
+    )
+
+    assert dataset.corpus == {"d1": "candidate doc", "d3": "candidate doc 2"}
+    assert dataset.qrels == {"q1": {"d2"}}
+    assert dataset.candidates == {"q1": ["d1", "d3"]}
+    assert calls == [("queries", "test"), ("qrels", "test"), ("bm25", "test"), ("corpus", "test")]
 
 
 class FakeDenseModel:
@@ -820,7 +876,7 @@ def test_candidate_subset_rank_by_similarity_supports_torch_sparse_csr() -> None
     assert rankings == {"q1": ["d1", "d3"], "q2": ["d2", "d1"]}
 
 
-@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not available")
+@pytest.mark.skipif(not CUDA_TEST_DEVICE_IS_USABLE, reason="CUDA is not available or cannot allocate a test tensor")
 def test_cuda_dense_rank_by_similarity_keeps_scoring_on_cuda(monkeypatch) -> None:
     def fail_to_numpy(embeddings):
         raise AssertionError(f"Unexpected NumPy conversion for {type(embeddings).__name__}")
@@ -1148,7 +1204,7 @@ def test_evaluate_dense_task_score_device_cpu_uses_numpy_late_interaction_embedd
     assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
 
 
-@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is not available")
+@pytest.mark.skipif(not CUDA_TEST_DEVICE_IS_USABLE, reason="CUDA is not available or cannot allocate a test tensor")
 def test_cuda_quantized_search_keeps_values_on_cuda() -> None:
     query_embeddings = torch.tensor([[1.0, 0.0]], dtype=torch.float32, device="cuda")
     corpus_embeddings = torch.tensor([[1.0, 0.0], [0.0, 1.0]], dtype=torch.float32, device="cuda")
@@ -1540,7 +1596,7 @@ def test_evaluate_reranker_task_supports_rank_api() -> None:
     assert result.metrics["ToyData_test_reranker_ndcg@10"] == pytest.approx(1.0)
 
 
-def test_evaluate_reranker_task_batches_predict_pairs_before_rank_api() -> None:
+def test_evaluate_reranker_task_scores_predict_pairs_per_query_before_rank_api() -> None:
     model = FakePredictAndRankReranker()
 
     result = evaluate_reranker_task(
@@ -1552,14 +1608,17 @@ def test_evaluate_reranker_task_batches_predict_pairs_before_rank_api() -> None:
     )
 
     assert result.metrics["ToyData_test_reranker_ndcg@10"] == pytest.approx(1.0)
-    assert len(model.predict_calls) == 1
+    assert len(model.predict_calls) == 2
     assert model.predict_calls[0]["pairs"] == [
         ["cat query", "other doc"],
         ["cat query", "cat doc"],
+    ]
+    assert model.predict_calls[1]["pairs"] == [
         ["dog query", "dog doc"],
         ["dog query", "cat doc"],
     ]
     assert model.predict_calls[0]["batch_size"] == 2
+    assert model.predict_calls[1]["batch_size"] == 2
     assert model.rank_calls == []
 
 

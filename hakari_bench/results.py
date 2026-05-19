@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import time
 from dataclasses import dataclass
@@ -167,7 +168,11 @@ def run_or_load_task(
             show_progress=args.show_progress,
             rerank_top_n=args.rerank_top_n,
             aggregate_metric=args.aggregate_metric,
-            score_kwargs=getattr(args, "reranker_score_kwargs", {}),
+            score_kwargs=getattr(
+                args,
+                "reranker_runtime_score_kwargs",
+                getattr(args, "reranker_score_kwargs", {}),
+            ),
         )
     elif args.model_type == "late-interaction":
         late_interaction_payload = _late_interaction_config_from_args(args)
@@ -259,6 +264,9 @@ def run_or_load_task(
             "reranker_inference_kwargs": getattr(args, "reranker_score_kwargs", {})
             if args.model_type == "reranker"
             else {},
+            "reranker_document_max_chars": os.environ.get("HAKARI_RERANKER_DOCUMENT_MAX_CHARS")
+            if args.model_type == "reranker"
+            else None,
             "dataset_revision": getattr(args, "dataset_revision", None),
             "candidate_ranking": args.candidate_subset_name
             if args.model_type in {"dense", "sparse", "late-interaction", "bm25", "reranker"}
