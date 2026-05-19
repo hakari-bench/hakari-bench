@@ -300,83 +300,83 @@
   }
 
   .task-z-pos-025 {
-    background-color: theme("colors.emerald.50");
-    color: theme("colors.emerald.800");
+    background-color: #f4f1df;
+    color: #5a6335;
   }
 
   .task-z-pos-050 {
-    background-color: theme("colors.emerald.100");
-    color: theme("colors.emerald.900");
+    background-color: #e8e5c4;
+    color: #4f5b2e;
   }
 
   .task-z-pos-075 {
-    background-color: theme("colors.emerald.200");
-    color: theme("colors.emerald.950");
+    background-color: #d7d49f;
+    color: #3f4a24;
   }
 
   .task-z-pos-100 {
-    background-color: theme("colors.emerald.300");
-    color: theme("colors.emerald.950");
+    background-color: #c5c27c;
+    color: #30391b;
   }
 
   .task-z-pos-125 {
-    background-color: theme("colors.emerald.400");
-    color: theme("colors.emerald.950");
+    background-color: #aaa85f;
+    color: #252d16;
   }
 
   .task-z-pos-150 {
-    background-color: theme("colors.emerald.500");
-    color: theme("colors.emerald.950");
+    background-color: #8c8f46;
+    color: #fffaf0;
   }
 
   .task-z-pos-175 {
-    background-color: theme("colors.emerald.600");
-    color: theme("colors.white");
+    background-color: #707735;
+    color: #fffaf0;
   }
 
   .task-z-pos-200 {
-    background-color: theme("colors.emerald.700");
-    color: theme("colors.white");
+    background-color: #566126;
+    color: #fffaf0;
   }
 
   .task-z-neg-025 {
-    background-color: theme("colors.rose.50");
-    color: theme("colors.rose.800");
+    background-color: #f7ebe4;
+    color: #87513e;
   }
 
   .task-z-neg-050 {
-    background-color: theme("colors.rose.100");
-    color: theme("colors.rose.900");
+    background-color: #efd8cb;
+    color: #7a4234;
   }
 
   .task-z-neg-075 {
-    background-color: theme("colors.rose.200");
-    color: theme("colors.rose.950");
+    background-color: #e5c0ae;
+    color: #6e342c;
   }
 
   .task-z-neg-100 {
-    background-color: theme("colors.rose.300");
-    color: theme("colors.rose.950");
+    background-color: #d99f88;
+    color: #55251f;
   }
 
   .task-z-neg-125 {
-    background-color: theme("colors.rose.400");
-    color: theme("colors.rose.950");
+    background-color: #c97c63;
+    color: #3a1714;
   }
 
   .task-z-neg-150 {
-    background-color: theme("colors.rose.500");
-    color: theme("colors.white");
+    background-color: #ad5d4d;
+    color: #fffaf0;
   }
 
   .task-z-neg-175 {
-    background-color: theme("colors.rose.600");
-    color: theme("colors.white");
+    background-color: #924436;
+    color: #fffaf0;
   }
 
   .task-z-neg-200 {
-    background-color: theme("colors.rose.700");
-    color: theme("colors.white");
+    background-color: #733126;
+    color: #fffaf0;
   }
 
   @keyframes hakari-leaderboard-spin {
