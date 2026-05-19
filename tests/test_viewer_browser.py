@@ -58,7 +58,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                         width: parseFloat(getComputedStyle(el).width),
                     })"""
                 )
-                assert task_std_style["borderRadius"] == "0px"
+                assert task_std_style["borderRadius"] == "2px"
                 assert task_std_style["boxSizing"] == "border-box"
                 assert task_std_style["paddingLeft"] > 0
                 assert task_std_style["paddingRight"] > 0

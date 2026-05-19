@@ -278,7 +278,7 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    border-radius: 0;
+    border-radius: 0.125rem;
     line-height: 1;
     padding: 0.1rem 0.25rem;
   }
@@ -489,13 +489,13 @@
     }
 
     .task-z-neg-175 {
-      background-color: theme("colors.rose.400");
-      color: theme("colors.rose.950");
+      background-color: theme("colors.rose.600");
+      color: theme("colors.white");
     }
 
     .task-z-neg-200 {
-      background-color: theme("colors.rose.300");
-      color: theme("colors.rose.950");
+      background-color: theme("colors.rose.700");
+      color: theme("colors.white");
     }
   }
 }
