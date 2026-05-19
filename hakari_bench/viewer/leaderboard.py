@@ -417,7 +417,10 @@ def _load_task_scores_uncached(
         include_embedding_variants=include_any_variants,
         variant_display_flags=variant_flags,
     )
-    return tuple(_task_scores_from_records(records, include_any_variants=include_any_variants, variant_flags=variant_flags))
+    task_scores = _task_scores_from_records(records, include_any_variants=include_any_variants, variant_flags=variant_flags)
+    if score_target == "all":
+        task_scores = _exclude_reranker_task_scores(task_scores)
+    return tuple(task_scores)
 
 
 @lru_cache(maxsize=64)
@@ -534,6 +537,8 @@ def _load_precomputed_leaderboard_rows(
             ]
     finally:
         con.close()
+    if score_target == "all":
+        rows = [row for row in rows if not _is_reranker_model(model_name=str(row[3]), model_type=None)]
     if not rows:
         return None
     expected_tasks = int(rows[0][0])
@@ -631,6 +636,19 @@ def _task_scores_from_records(
             )
         timing["task_score_count"] = len(task_scores)
     return task_scores
+
+
+def _exclude_reranker_task_scores(rows: list[TaskScore]) -> list[TaskScore]:
+    return [row for row in rows if not _is_reranker_model(model_name=row.source_model_name or row.model_name, model_type=row.model_type)]
+
+
+def _is_reranker_model(*, model_name: str, model_type: str | None) -> bool:
+    if model_type is not None:
+        normalized_type = model_type.strip().casefold().replace("_", "-")
+        if normalized_type in {"reranker", "cross-encoder", "crossencoder", "cross-encoder-reranker"}:
+            return True
+    normalized_name = model_name.casefold()
+    return normalized_name.startswith("cross-encoder/") or "reranker" in normalized_name
 
 
 def compute_leaderboard_rows(

@@ -61,6 +61,7 @@
 
   let tooltipTimer = null;
   let tooltipTrigger = null;
+  let tooltipPinned = false;
 
   function tooltipElement() {
     return document.getElementById("hakari-global-tooltip");
@@ -84,11 +85,25 @@
     tooltip.style.top = `${top}px`;
   };
 
+  function showTooltipNow(trigger) {
+    const tooltip = tooltipElement();
+    const text = trigger && trigger.dataset ? trigger.dataset.tooltip : "";
+    if (!tooltip || !text) return;
+    window.__hakariHideTooltip();
+    tooltipPinned = true;
+    tooltipTrigger = trigger;
+    tooltip.textContent = text;
+    tooltip.hidden = false;
+    tooltip.dataset.visible = "true";
+    window.__hakariPositionTooltip(trigger);
+  }
+
   window.__hakariShowTooltip = (trigger) => {
     const tooltip = tooltipElement();
     const text = trigger && trigger.dataset ? trigger.dataset.tooltip : "";
     if (!tooltip || !text) return;
     window.__hakariHideTooltip();
+    tooltipPinned = false;
     tooltipTrigger = trigger;
     tooltipTimer = setTimeout(() => {
       tooltip.textContent = text;
@@ -101,6 +116,7 @@
   window.__hakariHideTooltip = () => {
     if (tooltipTimer) clearTimeout(tooltipTimer);
     tooltipTimer = null;
+    tooltipPinned = false;
     tooltipTrigger = null;
     const tooltip = tooltipElement();
     if (!tooltip) return;
@@ -197,14 +213,37 @@
   });
   document.addEventListener("mouseout", (event) => {
     if (!tooltipTrigger || tooltipTrigger.contains(event.relatedTarget)) return;
+    if (tooltipPinned) return;
     window.__hakariHideTooltip();
   });
   document.addEventListener("focusin", (event) => {
     const trigger = closestElement(event.target, "[data-tooltip]");
     if (trigger) window.__hakariShowTooltip(trigger);
   });
-  document.addEventListener("focusout", window.__hakariHideTooltip);
-  document.addEventListener("scroll", window.__hakariHideTooltip, true);
+  document.addEventListener(
+    "click",
+    (event) => {
+      const trigger = closestElement(event.target, "[data-tooltip]");
+      if (!trigger) return;
+      event.preventDefault();
+      event.stopPropagation();
+      showTooltipNow(trigger);
+    },
+    true,
+  );
+  document.addEventListener("click", (event) => {
+    if (tooltipPinned && !closestElement(event.target, "[data-tooltip]")) window.__hakariHideTooltip();
+  });
+  document.addEventListener("focusout", () => {
+    if (!tooltipPinned) window.__hakariHideTooltip();
+  });
+  document.addEventListener(
+    "scroll",
+    () => {
+      if (!tooltipPinned) window.__hakariHideTooltip();
+    },
+    true,
+  );
   window.addEventListener("resize", window.__hakariHideTooltip);
 
   window.__hakariApplyHashQueryState();

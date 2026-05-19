@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import logging
 import os
 import re
@@ -271,6 +272,38 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
             ],
         )
         con.execute(
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                "Overall",
+                "all",
+                True,
+                False,
+                False,
+                False,
+                3,
+                2.0,
+                2.0,
+                "cross-encoder/example-reranker",
+                88.0,
+                87.0,
+                87.0,
+                86.0,
+                3,
+                10,
+                12,
+                8192,
+                "bf16",
+                None,
+                "model default",
+                False,
+                None,
+                None,
+                None,
+                "cross-encoder/example-reranker",
+                None,
+            ],
+        )
+        con.execute(
             """
             CREATE TABLE viewer_leaderboard_language_options (
                 view_name VARCHAR,
@@ -306,6 +339,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
     )
 
     assert result.expected_tasks == 3
+    assert [row.model_name for row in result.rows] == ["model/a (768 dims, int8)"]
     assert result.rows[0].model_name == "model/a (768 dims, int8)"
     assert result.rows[0].borda_score == 99.0
     assert result.rows[0].embedding_variant_name == "int8"
@@ -393,6 +427,9 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert response.status_code == 200
     assert "<title>HAKARI-bench leaderboard</title>" in response.text
     assert "HAKARI-bench leaderboard" in response.text
+    assert '<h1 class="flex items-center gap-2 text-2xl font-semibold">' in response.text
+    assert '<img src="/assets/favicon.png?' in response.text
+    assert 'alt="" aria-hidden="true" class="h-8 w-8 shrink-0">' in response.text
     assert '<p class="text-sm font-medium text-cyan-700">HAKARI-bench leaderboard</p>' not in response.text
     assert (
         "🚧 WIP: This leaderboard is currently under active implementation, "
@@ -632,6 +669,36 @@ def test_leaderboard_target_reranking_uses_bm25_top100_rerank_scores(tmp_path: P
     assert response.status_code == 200
     assert "target=reranking" in response.text
     assert response.text.index("model/b") < response.text.index("model/a")
+
+
+def test_leaderboard_target_all_excludes_reranker_models(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.80, 10, 12, 8192),
+            ("cross-encoder/example-reranker", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.70, 10, 12, 8192),
+            ("cross-encoder/example-reranker", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.60, 10, 12, 8192),
+        ],
+        task_diagnostics_rows=[
+            ("cross-encoder/example-reranker", "BenchA", "bench/a", "a1", "BenchA::a1", 0.70, 0.95, 0.25, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
+            ("cross-encoder/example-reranker", "BenchA", "bench/a", "a2", "BenchA::a2", 0.60, 0.85, 0.25, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
+        ],
+    )
+    config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
+    )
+    service = LeaderboardService(duckdb_path=db_path, config=config)
+
+    all_result = service.get_leaderboard("BenchA")
+    rerank_result = service.get_leaderboard("BenchA", score_target="reranking")
+
+    assert [row.model_name for row in all_result.rows] == ["model/a"]
+    assert all_result.expected_tasks == 2
+    assert [row.model_name for row in rerank_result.rows] == ["cross-encoder/example-reranker"]
+    assert rerank_result.rows[0].mean_score == pytest.approx(90.0)
 
 
 def test_leaderboard_service_logs_request_and_phase_timing(
@@ -2906,6 +2973,132 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     assert "Macro Mean" in response.text
     assert "model/a" in response.text
     assert 'hx-get="/leaderboard?' in response.text
+    assert 'href="/leaderboard.csv?view=Overall' in response.text
+    assert "[download csv]" in response.text
+
+
+def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "org/model-a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "split",
+                "arguana",
+                "arguana",
+                0.90,
+                10,
+                12,
+                1024,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                "query",
+                None,
+                None,
+                None,
+                True,
+                None,
+                1024,
+                None,
+            ),
+            (
+                "org/model-a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "split",
+                "arguana",
+                "arguana",
+                0.82,
+                10,
+                12,
+                1024,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                "query",
+                None,
+                None,
+                None,
+                True,
+                "truncate_dim_512",
+                512,
+                None,
+            ),
+            (
+                "org/hidden-model",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "split",
+                "arguana",
+                "arguana",
+                0.70,
+                20,
+                24,
+                2048,
+                "fp32",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                False,
+                None,
+                768,
+                "int8",
+            ),
+        ],
+        include_embedding_variant_columns=True,
+        include_runtime_option_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get(
+        "/leaderboard.csv?view=BenchA&truncate=1&task_scores=1&task_z_scores=1&model_filter=model-a"
+    )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/csv")
+    assert 'filename="hakari_bench_BenchA_all.csv"' in response.headers["content-disposition"]
+    rows = list(csv.DictReader(response.text.splitlines()))
+
+    assert len(rows) == 2
+    assert "arguana" in rows[0]
+    assert "arguana σ" not in rows[0]
+    assert "hidden-model" not in response.text
+    assert rows[0]["Model Name"] == "model-a"
+    assert rows[0]["Full Model Name"] == "org/model-a"
+    assert rows[0]["Ranking Model Name"] == "org/model-a (1024 dims)"
+    assert rows[0]["Embedding Dims"] == "1024"
+    assert rows[0]["Original Embedding Dims"] == "1024"
+    assert rows[0]["Truncated Embedding Dims"] == ""
+    assert rows[0]["DType"] == "bf16"
+    assert rows[0]["Attention Implementation"] == "flash_attention_2"
+    assert rows[0]["Prompt"] == "prompt names"
+    assert rows[0]["Trust Remote Code"] == "true"
+
+    truncated = next(row for row in rows if row["Truncated Embedding Dims"] == "512")
+    assert truncated["Model Name"] == "model-a"
+    assert truncated["Ranking Model Name"] == "org/model-a (512 dims)"
+    assert truncated["Embedding Dims"] == "512"
+    assert truncated["Original Embedding Dims"] == "1024"
+    assert truncated["Embedding Variant"] == "truncate_dim_512"
 
 
 def test_viewer_page_uses_query_state_and_canonical_url(tmp_path: Path) -> None:

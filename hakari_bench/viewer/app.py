@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import csv
 from functools import lru_cache
 import hashlib
 from html import escape
+from io import StringIO
+import math
 import os
 from pathlib import Path
 from typing import TypedDict, cast
@@ -90,7 +93,7 @@ class ViewerAppConfig(BaseModel):
 def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewer")):
     from fastapi import FastAPI, Query
     from fastapi.middleware.gzip import GZipMiddleware
-    from fastapi.responses import FileResponse, HTMLResponse
+    from fastapi.responses import FileResponse, HTMLResponse, Response
     from fastapi.staticfiles import StaticFiles
 
     viewer_config = load_viewer_config(config_dir)
@@ -187,6 +190,39 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             request_timing["view"] = initial_query["view"]
             return content
 
+    def build_leaderboard_result(state_query: QueryState) -> tuple[LeaderboardResult, str, str, FilterState]:
+        view = query_string(state_query["view"])
+        sort = query_string(state_query["sort"])
+        direction = query_string(state_query["direction"])
+        target = query_string(state_query.get("target", "all"))
+        group = optional_query_string(state_query.get("group"))
+        display_flags = variant_display_flags_from_query(state_query)
+        filter_state = filter_state_from_query(state_query)
+        length_bounds = task_length_bounds(filter_state)
+        service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
+        result = service.get_leaderboard(
+            view,
+            sort=sort,
+            direction=cast(SortDirection, direction),
+            score_target=cast(ScoreTarget, target),
+            score_group_name=group,
+            include_quantization_variants=display_flags.quantization,
+            include_truncate_variants=display_flags.truncate,
+            include_rescore_variants=display_flags.rescore,
+            include_other_variants=display_flags.other,
+            language_filters=filter_state.language_filters,
+            show_task_scores=state_query.get("task_scores") == "1",
+            show_task_z_scores=state_query.get("task_z_scores") == "1",
+            rank_filtered=filter_state.rank_filtered,
+            model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            query_min_chars=length_bounds["query_min_chars"],
+            query_max_chars=length_bounds["query_max_chars"],
+            document_min_chars=length_bounds["document_min_chars"],
+            document_max_chars=length_bounds["document_max_chars"],
+        )
+        return result, sort, direction, filter_state
+
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
         view: str = Query(default=viewer_config.overall.name),
@@ -247,42 +283,85 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 doc_len_min=doc_len_min,
                 doc_len_max=doc_len_max,
             )
-            view = query_string(state_query["view"])
-            sort = query_string(state_query["sort"])
-            direction = query_string(state_query["direction"])
-            target = query_string(state_query.get("target", "all"))
-            group = optional_query_string(state_query.get("group"))
-            display_flags = variant_display_flags_from_query(state_query)
-            filter_state = filter_state_from_query(state_query)
-            length_bounds = task_length_bounds(filter_state)
-            service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
-            result = service.get_leaderboard(
-                view,
-                sort=sort,
-                direction=cast(SortDirection, direction),
-                score_target=cast(ScoreTarget, target),
-                score_group_name=group,
-                include_quantization_variants=display_flags.quantization,
-                include_truncate_variants=display_flags.truncate,
-                include_rescore_variants=display_flags.rescore,
-                include_other_variants=display_flags.other,
-                language_filters=filter_state.language_filters,
-                show_task_scores=state_query.get("task_scores") == "1",
-                show_task_z_scores=state_query.get("task_z_scores") == "1",
-                rank_filtered=filter_state.rank_filtered,
-                model_filter=filter_state.model_filter,
-                task_filter=filter_state.task_filter,
-                query_min_chars=length_bounds["query_min_chars"],
-                query_max_chars=length_bounds["query_max_chars"],
-                document_min_chars=length_bounds["document_min_chars"],
-                document_max_chars=length_bounds["document_max_chars"],
-            )
+            result, sort, direction, filter_state = build_leaderboard_result(state_query)
             with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
                 content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
                 render_timing["leaderboard_row_count"] = len(result.rows)
-            request_timing["view"] = view
+            request_timing["view"] = result.view_name
             request_timing["leaderboard_row_count"] = len(result.rows)
             return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}"})
+
+    @app.get("/leaderboard.csv")
+    def leaderboard_csv(
+        view: str = Query(default=viewer_config.overall.name),
+        sort: str = Query(default="borda_rank"),
+        direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        target: str = Query(default="all", pattern="^(all|reranking)$"),
+        group: str | None = Query(default=None),
+        variants: bool = Query(default=False),
+        quantization: bool = Query(default=False),
+        truncate: bool = Query(default=False),
+        rescore: bool = Query(default=False),
+        other_variant: bool = Query(default=False),
+        task_scores: bool = Query(default=False),
+        task_z_scores: bool = Query(default=True),
+        filters: bool = Query(default=False),
+        dim_filter: list[str] | None = Query(default=None),
+        quant_filter: list[str] | None = Query(default=None),
+        dtype_filter: list[str] | None = Query(default=None),
+        attn_filter: list[str] | None = Query(default=None),
+        prompt_filter: list[str] | None = Query(default=None),
+        lang_filter: list[str] | None = Query(default=None),
+        model_filter: str = Query(default=""),
+        task_filter: str = Query(default=""),
+        rank_filtered: bool = Query(default=False),
+        query_len_min: str = Query(default=""),
+        query_len_max: str = Query(default=""),
+        doc_len_min: str = Query(default=""),
+        doc_len_max: str = Query(default=""),
+    ) -> Response:
+        with timed_operation("viewer.http.request", route="leaderboard_csv") as request_timing:
+            store.ensure_current()
+            state_query = normalize_query_state(
+                viewer_config=viewer_config,
+                view=view,
+                sort=sort,
+                direction=direction,
+                target=target,
+                group=group,
+                variants=variants,
+                quantization=quantization,
+                truncate=truncate,
+                rescore=rescore,
+                other_variant=other_variant,
+                task_scores=task_scores,
+                task_z_scores=task_z_scores,
+                filters=filters,
+                dim_filter=dim_filter,
+                quant_filter=quant_filter,
+                dtype_filter=dtype_filter,
+                attn_filter=attn_filter,
+                prompt_filter=prompt_filter,
+                lang_filter=lang_filter,
+                model_filter=model_filter,
+                task_filter=task_filter,
+                rank_filtered=rank_filtered,
+                query_len_min=query_len_min,
+                query_len_max=query_len_max,
+                doc_len_min=doc_len_min,
+                doc_len_max=doc_len_max,
+            )
+            result, sort, direction, filter_state = build_leaderboard_result(state_query)
+            with timed_operation("viewer.render", operation="render_leaderboard_csv", view=result.view_name) as render_timing:
+                content = render_leaderboard_csv(result=result, filter_state=filter_state)
+                render_timing["leaderboard_row_count"] = len(result.rows)
+            request_timing["view"] = result.view_name
+            filename = _csv_filename(view=result.view_name, target=result.score_target)
+            return Response(
+                content=content,
+                media_type="text/csv; charset=utf-8",
+                headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+            )
 
     @app.get("/analysis", response_class=HTMLResponse)
     def analysis(
@@ -385,7 +464,10 @@ def render_page(
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
     <header class="mb-5 border-b border-zinc-200 pb-4">
-      <h1 class="text-2xl font-semibold">HAKARI-bench leaderboard</h1>
+      <h1 class="flex items-center gap-2 text-2xl font-semibold">
+        <img src="{favicon_url}" alt="" aria-hidden="true" class="h-8 w-8 shrink-0">
+        <span>HAKARI-bench leaderboard</span>
+      </h1>
       <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
       <p class="mt-2 max-w-4xl text-sm text-zinc-600">Compare multilingual retrieval models, inspect compression variants, and audit reranking and Nano subset diagnostics from the DuckDB result warehouse.</p>
     </header>
@@ -510,6 +592,7 @@ def render_leaderboard(
     filter_state = filter_state or FilterState()
     filter_context = row_filter_context(result.rows, filter_state)
     shown_count = visible_row_count(result.rows, filter_context)
+    csv_query = urlencode(state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state), doseq=True)
     return f"""
 <div>
   {render_analysis_shell(view=result.view_name)}
@@ -520,7 +603,10 @@ def render_leaderboard(
   <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
     <div>
       <h2 class="text-lg font-semibold">{escape(result.view_label)}</h2>
-      <p class="mt-1 text-sm text-zinc-600" data-shown-count="{shown_count}">{shown_count} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks</p>
+      <p class="mt-1 text-sm text-zinc-600" data-shown-count="{shown_count}">
+        {shown_count} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks
+        <a class="ml-2 text-zinc-800 underline-offset-2 hover:underline" href="{_csv_url(csv_query)}">[download csv]</a>
+      </p>
     </div>
   </div>
   <div class="overflow-x-auto border border-zinc-200 bg-white">
@@ -611,7 +697,10 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
         ("all", "All"),
         ("reranking", "Reranking"),
     ]
-    tooltip = "All shows full-corpus retrieval nDCG@10. Reranking shows BM25 top-100 reranking nDCG@10 when available."
+    tooltip = (
+        "All shows full-corpus retrieval nDCG@10 and excludes cross-encoder reranker runs. "
+        "Reranking shows BM25 top-100 reranking nDCG@10 when available."
+    )
     buttons = []
     for target, label in target_options:
         active = result.score_target == target
@@ -639,7 +728,7 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
             <div>
               <p class="mb-1 inline-flex items-center gap-1 text-xs font-semibold uppercase text-zinc-500">
                 <span>Target</span>
-                <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
+                <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 cursor-pointer items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
                       data-tooltip="{escape(tooltip, quote=True)}"
                       data-tooltip-placement="left"
                       aria-label="{escape(tooltip, quote=True)}">?</span>
@@ -1116,7 +1205,7 @@ def render_controls(
         <label class="inline-flex items-center gap-2 pt-1">
           <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
           <span class="whitespace-nowrap font-medium text-zinc-800">Recalculate Borda, Mean</span>
-          <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
+          <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 cursor-pointer items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
                 data-tooltip="When enabled, Model name and Task name filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks."
                 data-tooltip-placement="left"
                 aria-label="When enabled, Model name and Task name filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks.">?</span>
@@ -1180,7 +1269,7 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
     <fieldset class="flex flex-wrap items-center gap-2 border {active_classes} px-2 py-1.5">
       <legend class="inline-flex items-center gap-1 px-1 text-xs font-semibold uppercase text-zinc-500">
         <span>Task string length</span>
-        <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
+        <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 cursor-pointer items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
               data-tooltip="{escape(tooltip, quote=True)}"
               data-tooltip-placement="left"
               aria-label="{escape(tooltip, quote=True)}">?</span>
@@ -1278,14 +1367,14 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
         query = urlencode(query_payload, doseq=True)
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
-        th_spacing = "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 normal-case" if is_metric else "px-3 uppercase"
+        th_spacing = "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 normal-case" if is_metric else "px-2 uppercase"
         sticky = _sticky_head_class(key)
         label_class = "min-w-0 leading-tight [overflow-wrap:anywhere]" if is_metric else ""
         label_attrs = (
             f' data-metric-column-full-name="{escape(full_metric_name, quote=True)}"' if is_metric else ""
         )
         heads.append(
-            f"""<th scope="col" class="bg-zinc-100 py-2 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
+            f"""<th scope="col" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
                  <button type="button" class="inline-flex w-full {justify} hover:text-cyan-700"
                          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                          {_leaderboard_control_hx_attrs()}>
@@ -1319,22 +1408,185 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
-              <td class="sticky left-0 z-10 bg-inherit px-3 py-2 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
-              <td class="sticky left-16 z-10 bg-inherit px-3 py-2 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
+              <td class="sticky left-0 z-10 bg-inherit px-2 py-1 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
+              <td class="sticky left-16 z-10 bg-inherit px-2 py-1 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
               {render_model_name_cell(row, model_views[row.model_name])}
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
+              <td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
               {_render_metric_cells(result=result, row=row)}
-              <td class="px-3 py-2 text-right tabular-nums">{row.task_count}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_params(row.active_parameters)}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_params(row.total_parameters)}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
+              <td class="px-2 py-1 text-right tabular-nums">{row.task_count}</td>
+              <td class="px-2 py-1 text-right tabular-nums">{_fmt_params(row.active_parameters)}</td>
+              <td class="px-2 py-1 text-right tabular-nums">{_fmt_params(row.total_parameters)}</td>
+              <td class="px-2 py-1 text-right tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
+              <td class="px-2 py-1 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
               {_render_quantization_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
+
+
+def render_leaderboard_csv(*, result: LeaderboardResult, filter_state: FilterState | None = None) -> str:
+    filter_context = row_filter_context(result.rows, filter_state or FilterState())
+    visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
+    model_views = model_cell_views(result.rows)
+    metric_labels = _metric_column_labels(result.metric_columns, overrides=result.metric_column_labels)
+    metric_headers = _csv_metric_headers(result=result, metric_labels=metric_labels)
+    output = StringIO()
+    writer = csv.writer(output, lineterminator="\n")
+    headers = _csv_headers(result=result, metric_headers=metric_headers)
+    writer.writerow(headers)
+    for row in visible_rows:
+        model_view = model_views[row.model_name]
+        record = _csv_record_for_row(result=result, row=row, model_view=model_view, metric_headers=metric_headers)
+        writer.writerow([_csv_cell(record.get(header)) for header in headers])
+    return output.getvalue()
+
+
+def _csv_headers(*, result: LeaderboardResult, metric_headers: dict[str, str]) -> list[str]:
+    headers = [
+        "Borda Rank",
+        "Mean Rank",
+        "Model Name",
+        "Borda Score",
+    ]
+    if result.is_overall and not (result.rank_filtered and result.task_filter):
+        headers.extend(["Macro Mean", "Micro Mean"])
+    else:
+        headers.append("Mean Score")
+    headers.extend(metric_headers[column] for column in result.metric_columns)
+    headers.extend(
+        [
+            "Task Count",
+            "Full Model Name",
+            "Ranking Model Name",
+            "Source Model Name",
+            "Model Type",
+            "Model Type Key",
+            "Active Params",
+            "Total Params",
+            "Max Sequence Length",
+            "Embedding Dims",
+            "Original Embedding Dims",
+            "Truncated Embedding Dims",
+            "Quantization",
+            "Embedding Variant",
+            "Base Score Delta Percent",
+            "DType",
+            "Attention Implementation",
+            "Prompt",
+            "Trust Remote Code",
+        ]
+    )
+    return headers
+
+
+def _csv_metric_headers(*, result: LeaderboardResult, metric_labels: dict[str, str]) -> dict[str, str]:
+    existing = {
+        "Borda Rank",
+        "Mean Rank",
+        "Model Name",
+        "Borda Score",
+        "Macro Mean",
+        "Micro Mean",
+        "Mean Score",
+        "Task Count",
+        "Full Model Name",
+        "Ranking Model Name",
+        "Source Model Name",
+        "Model Type",
+        "Model Type Key",
+        "Active Params",
+        "Total Params",
+        "Max Sequence Length",
+        "Embedding Dims",
+        "Original Embedding Dims",
+        "Truncated Embedding Dims",
+        "Quantization",
+        "Embedding Variant",
+        "Base Score Delta Percent",
+        "DType",
+        "Attention Implementation",
+        "Prompt",
+        "Trust Remote Code",
+    }
+    headers: dict[str, str] = {}
+    for column in result.metric_columns:
+        header = metric_labels[column]
+        if header not in existing:
+            headers[column] = header
+            existing.add(header)
+            continue
+        index = 2
+        while f"{header} ({index})" in existing:
+            index += 1
+        headers[column] = f"{header} ({index})"
+        existing.add(headers[column])
+    return headers
+
+
+def _csv_filename(*, view: str, target: str) -> str:
+    slug = "".join(char if char.isalnum() or char in {"-", "_"} else "_" for char in view).strip("_") or "leaderboard"
+    target_slug = "".join(char if char.isalnum() or char in {"-", "_"} else "_" for char in target).strip("_") or "all"
+    return f"hakari_bench_{slug}_{target_slug}.csv"
+
+
+def _csv_record_for_row(
+    *,
+    result: LeaderboardResult,
+    row: LeaderboardRow,
+    model_view: object,
+    metric_headers: dict[str, str],
+) -> dict[str, object | None]:
+    metadata = getattr(model_view, "metadata")
+    record: dict[str, object | None] = {
+        "Borda Rank": row.borda_rank,
+        "Mean Rank": row.mean_rank,
+        "Model Name": getattr(model_view, "display_name"),
+        "Borda Score": row.borda_score,
+        "Task Count": row.task_count,
+        "Full Model Name": metadata.get("model_name"),
+        "Ranking Model Name": metadata.get("ranking_model_name"),
+        "Source Model Name": metadata.get("source_model_name"),
+        "Model Type": metadata.get("model_type"),
+        "Model Type Key": metadata.get("model_type_key"),
+        "Active Params": metadata.get("active_parameters"),
+        "Total Params": metadata.get("total_parameters"),
+        "Max Sequence Length": metadata.get("max_seq_length"),
+        "Embedding Dims": metadata.get("embedding_dim"),
+        "Original Embedding Dims": metadata.get("original_embedding_dim"),
+        "Truncated Embedding Dims": metadata.get("truncated_embedding_dim"),
+        "Quantization": metadata.get("quantization"),
+        "Embedding Variant": metadata.get("embedding_variant_name"),
+        "Base Score Delta Percent": metadata.get("base_score_delta_percent"),
+        "DType": metadata.get("dtype"),
+        "Attention Implementation": metadata.get("attention"),
+        "Prompt": metadata.get("prompt"),
+        "Trust Remote Code": metadata.get("trust_remote_code"),
+    }
+    if result.is_overall and not (result.rank_filtered and result.task_filter):
+        record["Macro Mean"] = row.macro_mean
+        record["Micro Mean"] = row.micro_mean
+    else:
+        record["Mean Score"] = row.mean_score
+    for column in result.metric_columns:
+        record[metric_headers[column]] = row.metric_values.get(column)
+    return record
+
+
+def _csv_cell(value: object | None) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            return ""
+        return f"{value:.6f}".rstrip("0").rstrip(".")
+    text = str(value)
+    if text.startswith(("=", "+", "-", "@")):
+        return "'" + text
+    return text
 
 
 def render_variant_panel(
@@ -1567,7 +1819,7 @@ def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> s
         )
     values = row.metric_values
     return "".join(
-        f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
+        f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
         for column in result.metric_columns
     )
 
@@ -1576,21 +1828,21 @@ def _render_mean_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str
     if result.is_overall and not (result.rank_filtered and result.task_filter):
         if result.show_task_z_scores:
             return (
-                _render_score_z_cell(score=row.macro_mean, z_score=row.macro_mean_z, cell_class="px-3 py-2 text-right tabular-nums")
-                + _render_score_z_cell(score=row.micro_mean, z_score=row.micro_mean_z, cell_class="px-3 py-2 text-right tabular-nums")
+                _render_score_z_cell(score=row.macro_mean, z_score=row.macro_mean_z, cell_class="px-2 py-1 text-right tabular-nums")
+                + _render_score_z_cell(score=row.micro_mean, z_score=row.micro_mean_z, cell_class="px-2 py-1 text-right tabular-nums")
             )
-        return f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.macro_mean)}</td>
-                <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
+        return f"""<td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.macro_mean)}</td>
+                <td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
     if result.show_task_z_scores:
-        return _render_score_z_cell(score=row.mean_score, z_score=row.mean_score_z, cell_class="px-3 py-2 text-right tabular-nums")
-    return f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score)}</td>"""
+        return _render_score_z_cell(score=row.mean_score, z_score=row.mean_score_z, cell_class="px-2 py-1 text-right tabular-nums")
+    return f"""<td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.mean_score)}</td>"""
 
 
 def _render_metric_z_cell(*, score: float | None, z_score: float | None) -> str:
     return _render_score_z_cell(
         score=score,
         z_score=z_score,
-        cell_class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1.5 py-2 text-right tabular-nums",
+        cell_class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-right tabular-nums",
     )
 
 
@@ -1616,13 +1868,13 @@ def _render_score_z_cell(*, score: float | None, z_score: float | None, cell_cla
 def _render_base_delta_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
     if not _show_base_delta_column(result):
         return ""
-    return f"""<td class="px-3 py-2 text-right tabular-nums">{_fmt_percent_delta(row.base_score_delta_percent)}</td>"""
+    return f"""<td class="px-2 py-1 text-right tabular-nums">{_fmt_percent_delta(row.base_score_delta_percent)}</td>"""
 
 
 def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
     if not result.include_quantization_variants:
         return ""
-    return f"""<td class="px-3 py-2 text-left">{escape(row.quantization or "")}</td>"""
+    return f"""<td class="px-2 py-1 text-left">{escape(row.quantization or "")}</td>"""
 
 
 def _show_base_delta_column(result: LeaderboardResult) -> bool:
@@ -1776,3 +2028,7 @@ def _page_url(query: QueryState) -> str:
 
 def _leaderboard_url(query: str) -> str:
     return escape(f"/leaderboard?{query}", quote=True)
+
+
+def _csv_url(query: str) -> str:
+    return escape(f"/leaderboard.csv?{query}", quote=True)

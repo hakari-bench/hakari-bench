@@ -34,12 +34,21 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
             browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
             try:
                 page = browser.new_page(viewport={"width": 1280, "height": 800})
-                page.goto(f"{base_url}/#view=Overall&truncate=1", wait_until="domcontentloaded")
+                page.goto(f"{base_url}/#view=Overall&truncate=1&task_z_scores=1", wait_until="domcontentloaded")
                 page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
 
                 assert page.evaluate("() => Boolean(window.__hakariApplyHashQueryState && window.__hakariBindModelDetails)")
                 assert page.locator("main script:not([src])").count() == 0
                 page.get_by_text("256d <- 384").wait_for(timeout=15_000)
+                compact_table_state = page.locator("tbody tr:not([hidden]) td").first.evaluate(
+                    """(el) => ({
+                        paddingTop: parseFloat(getComputedStyle(el).paddingTop),
+                        paddingBottom: parseFloat(getComputedStyle(el).paddingBottom),
+                    })"""
+                )
+                assert compact_table_state["paddingTop"] <= 4
+                assert compact_table_state["paddingBottom"] <= 4
+                assert page.locator(".task-z-score").first.evaluate("(el) => getComputedStyle(el).borderRadius") == "0px"
 
                 tooltip_trigger = page.locator("[data-tooltip]").first
                 tooltip_trigger.hover()
@@ -54,6 +63,15 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert tooltip_state["hidden"] is False
                 assert tooltip_state["text"]
                 assert tooltip_state["zIndex"] == "1000"
+                assert tooltip_trigger.evaluate("(el) => getComputedStyle(el).cursor") == "pointer"
+                page.locator("#hakari-global-tooltip").evaluate("(el) => { el.hidden = true; delete el.dataset.visible; }")
+
+                rank_filtered_checkbox = page.locator("#filter-controls input[name='rank_filtered']")
+                rank_filtered_tooltip = page.locator("#filter-controls [data-tooltip]").first
+                assert rank_filtered_checkbox.is_checked() is False
+                rank_filtered_tooltip.click()
+                page.locator("#hakari-global-tooltip:not([hidden])").wait_for(timeout=1_000)
+                assert rank_filtered_checkbox.is_checked() is False
 
                 page.locator(".model-detail-trigger").first.click()
                 page.locator("#model-detail-modal[open]").wait_for(timeout=5_000)
