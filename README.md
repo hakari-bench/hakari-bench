@@ -290,9 +290,12 @@ The full-corpus result remains the main aggregate. Reranking results are stored
 separately under `rerank_metrics`, `evaluation.rerank_aggregate_metric_value`,
 and `evaluation.reranking_evaluations`. Candidate coverage against qrels is
 stored in the reranking evaluation so BM25 candidate recall can be separated
-from reranker quality. The CLI prints a JSON summary with `primary_metric_mean`
-and task counts after the run. If BM25 candidates are unavailable, the
-full-corpus evaluation still succeeds and reranking is recorded as skipped.
+from reranker quality. For top-100 reranking diagnostics, published Nano
+datasets should have 100% query coverage and 100% relevant coverage unless a
+dataset README explicitly documents why that is impossible. The CLI prints a
+JSON summary with `primary_metric_mean` and task counts after the run. If BM25
+candidates are unavailable, the full-corpus evaluation still succeeds and
+reranking is recorded as skipped.
 
 CrossEncoder-style reranker models can be evaluated directly with
 `evaluate reranker`. They score only the BM25 candidate subset and support
@@ -346,6 +349,23 @@ uv run hakari-bench build-candidates bm25 \
 
 `build-candidates bm25` also accepts `--params-json` with `target`, `output`,
 and `bm25` sections.
+
+MNanoBEIR dataset BM25 subsets can be rebuilt locally from the existing
+published corpus, queries, and qrels with forced-positive insertion:
+
+```bash
+uv run python scripts/rebuild_mnanobeir_bm25.py \
+  --output-dir output/nano_datasets_mnanobeir_bm25_rebuilt \
+  --overwrite
+```
+
+The rebuild script writes upload-ready local dataset repo layouts and regenerates
+each dataset README. The generated BM25 table includes query and relevant
+coverage columns, and the default run fails if any rebuilt split is not 100%
+covered at top-100. The script defaults to `--tokenizer auto`, matching the
+normal local BM25 policy: it detects query language and uses `wordseg` for
+supported languages such as `ja`, `ko`, `th`, and `vi`. Install the `wordseg`
+extra before rebuilding multilingual BM25 subsets.
 
 Local BM25 scoring uses `bm25s` with the standard Okapi-style Robertson method.
 Available tokenizers for `--bm25-source computed` and `build-candidates bm25`

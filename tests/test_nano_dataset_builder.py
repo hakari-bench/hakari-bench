@@ -142,6 +142,42 @@ def test_build_nano_dataset_from_rows_can_preserve_duplicate_texts(tmp_path: Pat
     assert metadata["source_corpus_order_policy"] == "round-robin test policy"
 
 
+def test_build_nano_dataset_from_rows_records_bm25_candidate_coverage(tmp_path: Path) -> None:
+    output_dir = tmp_path / "NanoCoverage"
+
+    build_nano_dataset_from_rows(
+        output_dir=output_dir,
+        dataset_name="NanoCoverage",
+        dataset_id="hakari-bench/NanoCoverage",
+        split_name="NanoToy",
+        corpus_rows=[
+            {"_id": "d-pos", "text": "rare positive"},
+            {"_id": "d-neg", "text": "query token"},
+        ],
+        query_rows=[{"_id": "q1", "query": "query token"}],
+        qrels_rows=[{"query-id": "q1", "corpus-id": "d-pos", "score": 1}],
+        query_limit=10,
+        doc_limit=10,
+        bm25_config=BM25Config(tokenizer="whitespace", top_k=1),
+    )
+
+    metadata = json.loads((output_dir / "metadata" / "NanoToy.json").read_text(encoding="utf-8"))
+    assert metadata["bm25"]["candidate_coverage"] == {
+        "top_k": 1,
+        "query_count": 1,
+        "query_with_relevance_count": 1,
+        "covered_query_count": 1,
+        "query_coverage": 1.0,
+        "relevant_count": 1,
+        "covered_relevant_count": 1,
+        "relevant_coverage": 1.0,
+    }
+
+    readme = (output_dir / "README.md").read_text(encoding="utf-8")
+    assert "| Nano split | Tokenizer | Forced BM25 positives | Query cov | Relevant cov | BM25 nDCG@10 |" in readme
+    assert "| NanoToy | whitespace | 1 | 100.00% | 100.00% |" in readme
+
+
 def test_build_nano_dataset_from_local_source_supports_nested_mteb_layout(tmp_path: Path) -> None:
     source_dir = tmp_path / "source"
     _write_parquet(

@@ -15,6 +15,7 @@ from datasets import Dataset, load_dataset
 
 from hakari_bench.bm25 import BM25Config, bm25_config_payload, rank_bm25_candidates, rankings_to_candidate_rows
 from hakari_bench.metrics import compute_ir_metrics
+from hakari_bench.scoring import candidate_coverage_for_qrels
 
 
 DEFAULT_QUERY_LIMIT = 200
@@ -430,6 +431,11 @@ def build_nano_dataset_from_rows(
         qrels=qrels_map,
         top_k=resolved_bm25.top_k,
     )
+    candidate_coverage = candidate_coverage_for_qrels(
+        qrels=qrels_map,
+        candidates=rankings,
+        top_k=resolved_bm25.top_k,
+    )
     bm25_rows = rankings_to_candidate_rows(rankings)
     metrics = compute_ir_metrics(
         rankings=rankings,
@@ -459,6 +465,7 @@ def build_nano_dataset_from_rows(
         "bm25": {
             "config": bm25_config_payload(resolved_bm25),
             "ndcg_at_10": bm25_ndcg_at_10,
+            "candidate_coverage": candidate_coverage,
             **forcing_metadata,
         },
     }
@@ -812,9 +819,19 @@ def _bm25_score_rows(output_dir: Path, splits: list[str]) -> str:
         if isinstance(tokenizer_name, str) and tokenizer_name:
             tokenizer = f"{tokenizer}:{tokenizer_name}"
         forced = int(bm25.get("forced_doc_count") or 0)
+        coverage = bm25.get("candidate_coverage")
+        coverage = coverage if isinstance(coverage, dict) else {}
+        query_coverage = _format_percent_or_unknown(coverage.get("query_coverage"))
+        relevant_coverage = _format_percent_or_unknown(coverage.get("relevant_coverage"))
         ndcg = float(bm25.get("ndcg_at_10") or 0.0)
-        rows.append(f"| {split} | {tokenizer} | {forced} | {ndcg:.4f} |")
+        rows.append(f"| {split} | {tokenizer} | {forced} | {query_coverage} | {relevant_coverage} | {ndcg:.4f} |")
     return "\n".join(rows)
+
+
+def _format_percent_or_unknown(value: Any) -> str:
+    if isinstance(value, int | float):
+        return f"{float(value) * 100.0:.2f}%"
+    return "unknown"
 
 
 def _read_optional_parquet(path: Path) -> list[dict[str, Any]]:

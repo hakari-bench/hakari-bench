@@ -136,11 +136,32 @@ corpus-ids: list[string]
    replacing a tail non-positive candidate.
 6. Record `forced_queries`, `forced_doc_count`, and
    `missing_positive_doc_count_after_forcing` in `metadata/<split>.json`.
+7. Record `candidate_coverage` in `metadata/<split>.json` and surface query and
+   relevant coverage in the generated README BM25 table.
 
 `missing_positive_doc_count_after_forcing` should normally be `0`. If it is not
 zero, the split has more positives than the BM25 candidate cap can cover, or the
 candidate list is too short. Fix this by changing query selection, increasing
 `--top-k`, or explicitly documenting a qrels capping policy.
+
+For datasets used by top-100 reranking diagnostics, `candidate_coverage` should
+show both `query_coverage` and `relevant_coverage` as `1.0`.
+
+To rebuild MNanoBEIR BM25 subsets without changing the existing corpus, queries,
+or qrels, use:
+
+```bash
+uv run python scripts/rebuild_mnanobeir_bm25.py \
+  --output-dir output/nano_datasets_mnanobeir_bm25_rebuilt \
+  --overwrite
+```
+
+The script snapshots the published `hakari-bench/NanoBEIR-*` dataset layouts,
+regenerates `bm25/*.parquet`, updates split metadata, rewrites dataset READMEs,
+and fails by default if any rebuilt split is not 100% covered at top-k. It uses
+`--tokenizer auto` by default, so multilingual rebuilds should be run in an
+environment prepared with `uv sync --extra wordseg`; otherwise languages that
+auto-select `wordseg` will fail with an actionable missing-dependency error.
 
 Supported tokenizers are the existing HAKARI BM25 tokenizers:
 
@@ -241,8 +262,8 @@ requirements: `language`, `category`, `short_description`, and `description`.
 
 Use [`NanoREADME.template.md`](NanoREADME.template.md) as the canonical dataset
 README template. The converter writes `README.md` from this template and fills
-the generated split paths, split statistics, split mapping, and BM25 `nDCG@10`
-table from the parquet files and `metadata/<split>.json`.
+the generated split paths, split statistics, split mapping, BM25 coverage, and
+BM25 `nDCG@10` table from the parquet files and `metadata/<split>.json`.
 
 The template includes a fill checklist for maintainers. That checklist is only
 for editing the template and must not remain in a published dataset README. The
@@ -256,6 +277,7 @@ when needed:
 - source split policy
 - skipped task list and reasons
 - tokenizer policy if it differs by split
+- BM25 query/relevant coverage if the dataset is used for reranking diagnostics
 - license and upstream attribution wording
 - any source schema differences from the standard Nano layout
 
@@ -287,6 +309,8 @@ Before upload, verify:
 - every BM25 row has unique candidate ids
 - `missing_positive_doc_count_after_forcing` is `0`, or the exception is
   documented in metadata and README
+- BM25 `candidate_coverage.query_coverage` and
+  `candidate_coverage.relevant_coverage` are `1.0` for top-k reranking datasets
 - the generated HAKARI dataset YAML points to the intended final dataset id
 
 ## Upload Shape

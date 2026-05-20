@@ -126,6 +126,10 @@ uv run --group all ty check
 - `wordseg` support is optional. Keep language-specific dependencies behind the
   `wordseg` extra and lazy-load them only when the tokenizer is selected.
   Current wordseg languages are `ja`, `zh`, `th`, `ko`, and `vi`.
+- Nano dataset BM25 candidate subsets used for top-100 reranking diagnostics
+  should force qrels positives into the final top-k candidate list and record
+  `candidate_coverage`. Query and relevant coverage should be 100% unless the
+  dataset README and metadata explicitly document why that is impossible.
 - Persist the resolved BM25 source, backend, algorithm, tokenizer, and candidate
   subset metadata in result JSON under `config.bm25` and `model.bm25`.
 

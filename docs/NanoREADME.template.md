@@ -49,9 +49,7 @@ This dataset uses four Hugging Face Datasets configs:
 - `qrels`: positive relevance labels with `query-id` and `corpus-id`
 - `bm25`: BM25 candidate lists with `query-id` and `corpus-ids`
 
-Each config has the same Nano split names. If the actual generated dataset uses
-a different schema, config name, path layout, or field name, revise this section
-before publishing the README.
+Each config has the same Nano split names.
 
 The `qrels` config is positive-only. Source rows with `score <= 0` are treated
 as non-relevant or hard-negative annotations and are not included in `qrels`.
@@ -62,11 +60,9 @@ one query's negative pool does not dominate the corpus.
 
 ## Split Statistics
 
-Length statistics are computed with `len(str(text))` over the generated
-`queries` and `corpus` tables. `std` is the population standard deviation over
-the generated rows. If the generated dataset uses a different text field, nested
-layout, or preprocessed display field, revise this section before publishing
-the README.
+Length statistics are computed with `len(str(text))` over the `queries` and
+`corpus` tables. `std` is the population standard deviation over the rows in
+each split.
 
 | Nano split | Queries | Corpus | Qrels | Query avg | Query std | Query median | Query p25 | Query p75 | Doc avg | Doc std | Doc median | Doc p25 | Doc p75 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -74,8 +70,7 @@ the README.
 
 ## Construction Steps
 
-This dataset was built as follows. If the actual generation procedure differs,
-revise this section before publishing the README.
+This dataset is constructed as follows.
 
 1. Use {{SOURCE_BENCHMARK_NAME}} as the upstream benchmark or dataset family.
 2. Load source datasets from {{SOURCE_DATASET_LOCATION}}.
@@ -89,8 +84,7 @@ revise this section before publishing the README.
    available for selected queries, use their documents as hard-negative corpus
    candidates before generic fill documents.
 8. Include all qrels-positive documents for the selected queries.
-9. Fill the corpus from {{CORPUS_FILL_POLICY}} up to {{MAX_CORPUS_DOCUMENTS}}
-   documents.
+9. Use {{CORPUS_FILL_POLICY}}.
 10. Remove exact duplicate query text and document text within each split. If a
    removed document duplicate was referenced by qrels,
    {{QRELS_DUPLICATE_POLICY}}.
@@ -148,8 +142,8 @@ slots from source corpus order.
 
 {{BM25_SCORE_NOTES}}
 
-| Nano split | Tokenizer | Forced BM25 positives | BM25 nDCG@10 |
-|---|---|---:|---:|
+| Nano split | Tokenizer | Forced BM25 positives | Query cov | Relevant cov | BM25 nDCG@10 |
+|---|---|---:|---:|---:|---:|
 {{BM25_SCORE_ROWS}}
 
 ## Skipped Tasks
@@ -197,6 +191,8 @@ Before publishing, replace every `{{...}}` placeholder and verify:
   otherwise removed entirely
 - [ ] split counts match generated parquet files
 - [ ] tokenizer names match the actual BM25 generation output
+- [ ] BM25 query/relevant coverage columns are 100% when the candidate subset is
+  intended for top-k reranking diagnostics
 - [ ] missing BM25 positives are documented as forced into the candidate list,
   or the section is revised if a different policy was used
 - [ ] skipped tasks are either listed with reasons or explicitly marked as none
