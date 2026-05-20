@@ -1254,6 +1254,14 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         include_quantization_variants=True,
         include_truncate_variants=True,
     )
+    ranked_facet_result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+        rank_filtered=True,
+        dim_filters=("384",),
+        quant_filters=("__none__",),
+    )
     rescore_result = service.get_leaderboard("BenchA", include_rescore_variants=True)
     other_variant_result = service.get_leaderboard("BenchA", include_other_variants=True)
 
@@ -1282,6 +1290,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     ]
     assert all_variant_result.rows[3].embedding_dim == 256
     assert all_variant_result.rows[3].quantization == "int8"
+    assert [row.model_name for row in ranked_facet_result.rows] == ["model/a (384 dims)"]
+    assert ranked_facet_result.expected_tasks == 1
+    assert ranked_facet_result.rank_filtered is True
     delta_by_model = {row.model_name: row.base_score_delta_percent for row in quantization_result.rows}
     assert delta_by_model == {
         "model/a (768 dims)": None,
@@ -1378,6 +1389,17 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "dim_filter=1025%2B" in facet_response.text
     assert "quant_filter=uint8" in facet_response.text
     assert 'data-filter-hidden="true"' in facet_response.text
+
+    ranked_facet_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&quantization=1&truncate=1"
+        "&filters=1&dim_filter=384&quant_filter=__none__&rank_filtered=1"
+    )
+
+    assert ranked_facet_response.status_code == 200
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (384 dims)&quot;" in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (256 dims, int8)&quot;" not in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" not in ranked_facet_response.text
+    assert 'data-filter-hidden="true"' not in ranked_facet_response.text
 
     explicit_truncate_off_response = TestClient(app).get(
         "/leaderboard?view=BenchA&filters=1&dim_filter=384&quant_filter=__none__"
@@ -1658,6 +1680,18 @@ def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) 
     assert "&quot;trust_remote_code&quot;:true" in response.text
     assert "Model Details" in response.text
     assert "<script>" not in response.text
+
+    ranked_facet_response = client.get(
+        "/leaderboard?view=BenchA&quantization=1&filters=1&rank_filtered=1"
+        "&dim_filter=768&quant_filter=__none__"
+        "&dtype_filter=bf16&attn_filter=flash_attention_2&prompt_filter=model_default"
+    )
+
+    assert ranked_facet_response.status_code == 200
+    assert "&quot;ranking_model_name&quot;:&quot;jinaai/jina-embeddings-v5-text-nano (768 dims)&quot;" in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;jinaai/jina-embeddings-v5-text-nano (768 dims, binary)&quot;" not in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;Qwen/jina-embeddings-v5-text-nano (768 dims)&quot;" not in ranked_facet_response.text
+    assert 'data-filter-hidden="true"' not in ranked_facet_response.text
 
     viewer_js_response = client.get("/assets/viewer.js")
     assert "JSON.parse" in viewer_js_response.text

@@ -165,6 +165,11 @@ class LeaderboardService:
         rank_filtered: bool = False,
         model_filter: str = "",
         task_filter: str = "",
+        dim_filters: tuple[str, ...] = (),
+        quant_filters: tuple[str, ...] = (),
+        dtype_filters: tuple[str, ...] = (),
+        attn_filters: tuple[str, ...] = (),
+        prompt_filters: tuple[str, ...] = (),
         query_min_chars: float | None = None,
         query_max_chars: float | None = None,
         document_min_chars: float | None = None,
@@ -182,6 +187,18 @@ class LeaderboardService:
             task_filter_terms = active_filter_terms(task_filter)
             ranking_model_filter_terms = model_filter_terms if rank_filtered else ()
             ranking_task_filter_terms = task_filter_terms if rank_filtered else ()
+            ranking_dim_filters = dim_filters if rank_filtered else ()
+            ranking_quant_filters = quant_filters if rank_filtered else ()
+            ranking_dtype_filters = dtype_filters if rank_filtered else ()
+            ranking_attn_filters = attn_filters if rank_filtered else ()
+            ranking_prompt_filters = prompt_filters if rank_filtered else ()
+            has_rank_facet_filters = _has_facet_filters(
+                dim_filters=ranking_dim_filters,
+                quant_filters=ranking_quant_filters,
+                dtype_filters=ranking_dtype_filters,
+                attn_filters=ranking_attn_filters,
+                prompt_filters=ranking_prompt_filters,
+            )
             overall = self.config.overall_for_view(view_name)
             benchmarks = self.config.benchmarks_for_view(view_name)
             is_overall = overall is not None
@@ -207,6 +224,7 @@ class LeaderboardService:
                 and not show_task_scores
                 and not show_task_z_scores
                 and not ranking_model_filter_terms
+                and not has_rank_facet_filters
                 and not task_filter.strip()
                 and not has_length_filters
                 and language_filter_mode == "languages"
@@ -273,6 +291,17 @@ class LeaderboardService:
                         query_max_chars=query_max_chars,
                         document_min_chars=document_min_chars,
                         document_max_chars=document_max_chars,
+                    )
+                    phase_timing["task_score_count"] = len(rows)
+            if has_rank_facet_filters:
+                with timed_operation("viewer.leaderboard.phase", operation="filter_facets", view=view_name) as phase_timing:
+                    rows = _filter_rows_by_facets(
+                        rows,
+                        dim_filters=ranking_dim_filters,
+                        quant_filters=ranking_quant_filters,
+                        dtype_filters=ranking_dtype_filters,
+                        attn_filters=ranking_attn_filters,
+                        prompt_filters=ranking_prompt_filters,
                     )
                     phase_timing["task_score_count"] = len(rows)
             available_languages = _language_options(rows, mode=language_filter_mode)
@@ -992,6 +1021,68 @@ def _filter_rows_by_task_terms(rows: list[TaskScore], terms: tuple[str, ...]) ->
     if not terms:
         return rows
     return [row for row in rows if _task_row_matches_filter_terms(row, terms)]
+
+
+def _has_facet_filters(
+    *,
+    dim_filters: tuple[str, ...],
+    quant_filters: tuple[str, ...],
+    dtype_filters: tuple[str, ...],
+    attn_filters: tuple[str, ...],
+    prompt_filters: tuple[str, ...],
+) -> bool:
+    return any((dim_filters, quant_filters, dtype_filters, attn_filters, prompt_filters))
+
+
+def _filter_rows_by_facets(
+    rows: list[TaskScore],
+    *,
+    dim_filters: tuple[str, ...],
+    quant_filters: tuple[str, ...],
+    dtype_filters: tuple[str, ...],
+    attn_filters: tuple[str, ...],
+    prompt_filters: tuple[str, ...],
+) -> list[TaskScore]:
+    selected_dims = set(dim_filters)
+    selected_quants = set(quant_filters)
+    selected_dtypes = set(dtype_filters)
+    selected_attn = set(attn_filters)
+    selected_prompts = set(prompt_filters)
+    return [
+        row
+        for row in rows
+        if (not selected_dims or _dim_bucket(row.embedding_dim) in selected_dims)
+        and (not selected_quants or _quant_bucket(row.quantization) in selected_quants)
+        and (not selected_dtypes or _dtype_bucket(row.dtype) in selected_dtypes)
+        and (not selected_attn or _attn_bucket(row.attn_implementation) in selected_attn)
+        and (not selected_prompts or _prompt_bucket(row.prompt_summary) in selected_prompts)
+    ]
+
+
+def _dim_bucket(value: int | None) -> str:
+    if value is None:
+        return "__unknown__"
+    if value >= 1025:
+        return "1025+"
+    return str(value)
+
+
+def _quant_bucket(value: str | None) -> str:
+    return value or "__none__"
+
+
+def _dtype_bucket(value: str | None) -> str:
+    return value or "__unknown__"
+
+
+def _attn_bucket(value: str | None) -> str:
+    return value or "__unknown__"
+
+
+def _prompt_bucket(value: str | None) -> str:
+    if value is None:
+        return "model_default"
+    return value.replace(" + ", "_").replace(" ", "_")
 
 
 def _task_row_matches_filter_terms(row: TaskScore, terms: tuple[str, ...]) -> bool:

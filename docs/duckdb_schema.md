@@ -785,14 +785,16 @@ does not render per-task or per-score-group metric columns by default. When
 `task_scores=1` is present, the leaderboard computes columns for the current
 selection: the selected score group for benchmark views, configured grouped
 tasks for grouped overall views, or task-level columns when no score group is
-available. By default, `model_filter` only hides rendered model rows and
-`task_filter` only narrows displayed task score columns. When
-`rank_filtered=1` is present, `model_filter` and `task_filter` narrow the ranked
-population before Borda, mean scores, task counts, and task score columns are
-computed. With a ranking task filter, the viewer ranks the matching task rows
-directly; overall views render a single task-level `Mean Score` column instead
-of separate macro and micro overall means. Both filters use case-insensitive
-whitespace-separated tokens of at least three characters, with OR semantics.
+available. By default, `model_filter` only hides rendered model rows,
+`task_filter` only narrows displayed task score columns, and facet filters such
+as dimensions, quantization, dtype, attention implementation, and prompt mode
+only hide rendered model rows. When `rank_filtered=1` is present, those active
+filters narrow the ranked population before Borda, mean scores, task counts, and
+task score columns are computed. With a ranking task filter, the viewer ranks
+the matching task rows directly; overall views render a single task-level `Mean
+Score` column instead of separate macro and micro overall means. Model and task
+text filters use case-insensitive whitespace-separated tokens of at least three
+characters, with OR semantics.
 
 When variants are displayed, the leaderboard keeps a unique internal row label
 by appending `embedding_dim`, `quantization`, and sometimes
@@ -1583,8 +1585,9 @@ ORDER BY attention_filter_value, dtype_filter_value;
 ```
 
 The current viewer applies facet filters as display filters after the ranking
-population has been selected. They should not silently change the ranking
-population unless the UI makes that behavior explicit.
+population has been selected. When `rank_filtered=1` is enabled, the selected
+facet filters are promoted into ranking-population filters before completeness,
+Borda, and mean calculations.
 
 ## Minimal Viewer Checklist
 
@@ -1601,9 +1604,9 @@ population unless the UI makes that behavior explicit.
    metadata columns.
 7. For overall views, return both `macro_mean` and `micro_mean`, and use
    `macro_mean` as `mean_score`.
-8. If `rank_filtered=1`, apply model and task filters before the completeness
-   rule and ranking. With a task filter, use direct task-level means for overall
-   views instead of grouped macro/micro means.
+8. If `rank_filtered=1`, apply model, task, and active facet filters before the
+   completeness rule and ranking. With a task filter, use direct task-level
+   means for overall views instead of grouped macro/micro means.
 9. Only render benchmark metric columns when `task_scores=1` is active. Use the
    already-selected scoring group rows when present; otherwise use task-level
    values. When `rank_filtered` is not active, apply `task_filter` to the
