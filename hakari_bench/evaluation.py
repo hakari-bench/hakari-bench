@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import inspect
 import os
+import sys
 import time
 from dataclasses import dataclass, field
 from collections.abc import Iterator, Mapping, Sequence
@@ -296,6 +297,14 @@ def evaluate_dense_task(
     variant_score_seconds = 0.0
     variant_metric_seconds = 0.0
     for variant in embedding_variants or []:
+        noop_truncate_dim = _noop_truncate_variant_dim(
+            variant=variant,
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+        )
+        if noop_truncate_dim is not None:
+            _warn_skipped_noop_truncate_variant(variant_name=str(variant["name"]), dim=noop_truncate_dim)
+            continue
         variant_query_embeddings, variant_corpus_embeddings = _apply_embedding_variant_pair(
             query_embeddings=query_embeddings,
             corpus_embeddings=corpus_embeddings,
@@ -598,6 +607,14 @@ def evaluate_late_interaction_task(
     variant_metric_seconds = 0.0
     for variant in embedding_variants or []:
         variant_name = str(variant["name"])
+        noop_truncate_dim = _noop_truncate_variant_dim(
+            variant=variant,
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+        )
+        if noop_truncate_dim is not None:
+            _warn_skipped_noop_truncate_variant(variant_name=variant_name, dim=noop_truncate_dim)
+            continue
         variant_query_embeddings, variant_corpus_embeddings = _apply_embedding_variant_pair(
             query_embeddings=query_embeddings,
             corpus_embeddings=corpus_embeddings,
@@ -1507,6 +1524,48 @@ def _apply_embedding_variant_pair(
         query_embeddings=query_embeddings,
         corpus_embeddings=corpus_embeddings,
         steps=steps,
+    )
+
+
+def _noop_truncate_variant_dim(
+    *,
+    variant: dict[str, Any],
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+) -> int | None:
+    transform = variant.get("transform", {})
+    if transform.get("type") != "pipeline":
+        return None
+    steps = transform.get("steps")
+    if not isinstance(steps, list) or not steps:
+        return None
+
+    query_dim = _embedding_dimension(query_embeddings)
+    corpus_dim = _embedding_dimension(corpus_embeddings)
+    if query_dim is None or corpus_dim is None or query_dim != corpus_dim:
+        return None
+
+    truncate_dims: list[int] = []
+    for step in steps:
+        if step.get("type") != "truncate":
+            continue
+        parameters = step.get("parameters")
+        if not isinstance(parameters, dict):
+            return None
+        dim = parameters.get("dim")
+        if not isinstance(dim, int):
+            return None
+        truncate_dims.append(dim)
+    if truncate_dims and all(dim == query_dim for dim in truncate_dims):
+        return query_dim
+    return None
+
+
+def _warn_skipped_noop_truncate_variant(*, variant_name: str, dim: int) -> None:
+    print(
+        f"warning: skipping embedding variant {variant_name}: "
+        f"truncate dimension {dim} matches the base embedding dimension, so it would duplicate the original result.",
+        file=sys.stderr,
     )
 
 

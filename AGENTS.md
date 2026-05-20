@@ -58,6 +58,9 @@ under `config/datasets/`, and dataset collection definitions live under
   used. When dense truncation dims are supplied with
   `--embedding-variant truncate:DIMS`, the CLI also expands them into standalone
   truncation plus truncation x quantized/rescore variants.
+- If a requested dense truncate dimension matches the encoded base embedding
+  dimension, evaluation warns and skips that no-op truncate variant because it
+  duplicates the original full-dimension result.
 - After benchmark runs, audit result coverage before reporting or rebuilding
   leaderboard comparisons. Confirm base task completeness and verify that every
   intended variant category exists for each model.

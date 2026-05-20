@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 import math
 from pathlib import Path
+import re
 from typing import Any, Iterable, Literal
 
 import duckdb
@@ -628,6 +629,7 @@ def _task_scores_from_records(
                 flags=variant_flags,
             )
         ]
+        filtered_records = _drop_noop_truncate_duplicate_records(filtered_records)
         timing["record_count"] = len(records)
         timing["filtered_record_count"] = len(filtered_records)
     with timed_operation("viewer.leaderboard.phase", operation="display_model_names") as timing:
@@ -669,6 +671,55 @@ def _task_scores_from_records(
 
 def _exclude_reranker_task_scores(rows: list[TaskScore]) -> list[TaskScore]:
     return [row for row in rows if not _is_reranker_model(model_name=row.source_model_name or row.model_name, model_type=row.model_type)]
+
+
+def _drop_noop_truncate_duplicate_records(records: list[TaskResultRow]) -> list[TaskResultRow]:
+    original_keys = {
+        _noop_truncate_duplicate_key(record)
+        for record in records
+        if _truncate_dim_from_variant_name(record.embedding_variant_name) is None
+    }
+    if not original_keys:
+        return records
+    return [
+        record
+        for record in records
+        if not (
+            _noop_truncate_dim(record) is not None
+            and _noop_truncate_duplicate_key(record) in original_keys
+        )
+    ]
+
+
+def _noop_truncate_duplicate_key(record: TaskResultRow) -> tuple[Any, ...]:
+    return (
+        record.model_name,
+        record.model_type,
+        record.benchmark,
+        record.dataset_id,
+        record.split_name,
+        record.task_key,
+        record.dtype,
+        record.attn_implementation,
+        record.prompt_summary,
+        record.trust_remote_code,
+        record.embedding_dim,
+        record.quantization,
+    )
+
+
+def _noop_truncate_dim(record: TaskResultRow) -> int | None:
+    truncate_dim = _truncate_dim_from_variant_name(record.embedding_variant_name)
+    if truncate_dim is None or record.embedding_dim is None or truncate_dim != record.embedding_dim:
+        return None
+    return truncate_dim
+
+
+def _truncate_dim_from_variant_name(variant_name: str | None) -> int | None:
+    match = re.search(r"(?:^|_)truncate_dim_(\d+)(?:_|$)", variant_name or "")
+    if match is None:
+        return None
+    return int(match.group(1))
 
 
 def _is_reranker_model(*, model_name: str, model_type: str | None) -> bool:

@@ -779,6 +779,10 @@ Rows that are both quantized and truncated are displayed only when both the
 Quantization and Truncate dims flags are enabled. Facet filter query parameters
 such as `dim_filter` and `quant_filter` do not infer or re-enable display
 flags; the display flags come only from the explicit display controls.
+If old results contain a no-op truncation variant whose `truncate_dim_N` matches
+the measured `embedding_dim`, and an equivalent non-truncate row exists for the
+same model, task, runtime metadata, dimension, and quantization, the leaderboard
+drops the no-op truncate row and prefers the original/full-dimension row.
 
 Task score columns are also controlled by an explicit display flag. The viewer
 does not render per-task or per-score-group metric columns by default. When

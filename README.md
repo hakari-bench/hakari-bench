@@ -246,6 +246,10 @@ uv run hakari-bench evaluate dense \
   --embedding-variant truncate:512,256
 ```
 
+If a requested truncation dimension is the same as the encoded base embedding
+dimension, HAKARI-Bench warns and skips that no-op truncate variant because it
+would duplicate the original full-dimension result.
+
 ### Truncated Dimensions With Quantization
 
 When evaluating dimensions, specifying the truncation dimensions is enough. The

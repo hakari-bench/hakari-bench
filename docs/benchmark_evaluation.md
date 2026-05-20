@@ -148,6 +148,10 @@ This is the most important coverage rule:
 > The CLI will automatically add standalone truncation, full-dim quantized and
 > rescored variants, and truncation x quantized/rescore variants for those dims.
 
+If a requested truncation dimension matches the encoded base embedding
+dimension, evaluation emits a warning and skips that no-op truncate variant
+because it would duplicate the original full-dimension result.
+
 Use `--no-default-embedding-variants` only when the run intentionally needs base
 results without automatic dense quantized/rescore variants.
 
@@ -204,6 +208,8 @@ uv run hakari-bench evaluate dense \
 The benchmark implementation applies derived embedding variants after a single
 base encoding pass. Cross variants add transform/scoring work, not additional
 model encoding.
+No-op truncation variants whose requested dimension equals the base embedding
+dimension are skipped with a warning.
 
 ## Sparse Evaluation
 
@@ -364,7 +370,9 @@ Before reporting a leaderboard or diagnosing model differences, audit coverage:
    x quantized search, and truncation x rescore when those comparisons were
    intended.
 3. Compare variant task counts against the model's base task count. Any variant
-   with fewer rows needs investigation before it is used in a ranking.
+   with fewer rows needs investigation before it is used in a ranking. If the
+   missing variant is a truncate dimension equal to the base embedding dimension,
+   it should have been skipped as a no-op.
 4. Inspect missing `(benchmark, task_key)` pairs for incomplete variants.
 5. Confirm output JSON `config.embedding_variants` contains the intended
    variants. A dense truncation run should include standalone truncation,
