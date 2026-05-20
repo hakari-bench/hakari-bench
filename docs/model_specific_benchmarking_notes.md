@@ -3,6 +3,11 @@
 When measuring specific models, follow the notes in this document. These notes
 override generic benchmarking defaults when they are more specific, because some
 models require exact prompts or runtime choices for comparable retrieval scores.
+Start from the model author's officially recommended attention implementation
+when it is documented. If this document records a different verified runtime,
+use the verified note and preserve the attention implementation in result
+metadata so slow default-attention runs are not mistaken for intentional
+baselines.
 
 ## NanoMIRACL/en Runtime Matrix
 

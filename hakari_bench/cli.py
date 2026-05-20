@@ -41,6 +41,13 @@ from hakari_bench.results import (
     safe_path_part,
 )
 
+MISSING_ATTENTION_IMPLEMENTATION_WARNING = (
+    "warning: no attention implementation was specified. Pass --attn-implementation "
+    "(for example, sdpa or flash_attention_2) or --flash-attn2 when appropriate. "
+    "Benchmark inference can be long, and the model's officially recommended attention "
+    "implementation can be substantially faster."
+)
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="HAKARI-Bench runner")
@@ -1061,6 +1068,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         if args.override or not result_path_for_task(output_dir=output_dir, model_id=args.model_id, task=task).exists()
     ]
     environment = collect_runtime_environment()
+    _warn_if_missing_attention_implementation(args)
 
     model: Any | None = None
     if args.model_type == "bm25":
@@ -1164,6 +1172,14 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         )
     )
     return run_summary_payload
+
+
+def _warn_if_missing_attention_implementation(args: argparse.Namespace) -> None:
+    if args.model_type == "bm25":
+        return
+    if args.flash_attn2 or args.attn_implementation is not None:
+        return
+    print(MISSING_ATTENTION_IMPLEMENTATION_WARNING, file=sys.stderr)
 
 
 def _start_reranker_score_pool(model: Any, args: argparse.Namespace) -> Any | None:
