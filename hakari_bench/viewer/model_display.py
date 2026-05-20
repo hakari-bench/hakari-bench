@@ -10,6 +10,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.leaderboard import LeaderboardRow
 
+MODEL_NAME_DISPLAY_MAX_CHARS = 40
+
 
 class ModelCellView(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -17,8 +19,12 @@ class ModelCellView(BaseModel):
     display_name: str
     full_model_name: str
     ranking_model_name: str
+    model_type_label: str
+    model_type_badge_label: str | None = None
     dimension_label: str | None = None
     dimension_tooltip: str | None = None
+    original_embedding_dim: int | None = None
+    truncated_embedding_dim: int | None = None
     variant_label: str | None = None
     variant_tooltip: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
@@ -39,14 +45,26 @@ def model_cell_views(rows: list[LeaderboardRow]) -> dict[str, ModelCellView]:
             ),
             full_model_name=full_model_name,
             ranking_model_name=row.model_name,
+            model_type_label=model_type_view["label"] or "",
+            model_type_badge_label=model_type_view["badge_label"],
             dimension_label=_dimension_label(row),
             dimension_tooltip=None,
-            variant_label=_variant_label(row, original_dim=original_dims.get(_source_key(row=row, full_model_name=full_model_name))),
-            variant_tooltip=_variant_tooltip(row, original_dim=original_dims.get(_source_key(row=row, full_model_name=full_model_name))),
-            metadata=_model_metadata(row=row, full_model_name=full_model_name),
+            original_embedding_dim=_original_dim_for_view(row=row, original_dim=original_dim),
+            truncated_embedding_dim=truncate_dim,
+            variant_label=_variant_label(row, original_dim=original_dim),
+            variant_tooltip=_variant_tooltip(row, original_dim=original_dim),
+            metadata=_model_metadata(
+                row=row,
+                full_model_name=full_model_name,
+                original_embedding_dim=_original_dim_for_view(row=row, original_dim=original_dim),
+                truncated_embedding_dim=truncate_dim,
+            ),
         )
         for row in rows
         for full_model_name in [base_names[row.model_name]]
+        for original_dim in [original_dims.get(_source_key(row=row, full_model_name=full_model_name))]
+        for truncate_dim in [_truncate_dim(row)]
+        for model_type_view in [_model_type_view(row=row, full_model_name=full_model_name)]
     }
 
 
@@ -96,6 +114,12 @@ def _original_embedding_dims(*, rows: list[LeaderboardRow], base_names: dict[str
     return original_dims
 
 
+def _original_dim_for_view(*, row: LeaderboardRow, original_dim: int | None) -> int | None:
+    if _truncate_dim(row) is not None:
+        return original_dim
+    return original_dim or row.embedding_dim
+
+
 def _source_key(*, row: LeaderboardRow, full_model_name: str) -> str:
     return row.source_model_name or full_model_name
 
@@ -138,12 +162,68 @@ def _truncate_dim(row: LeaderboardRow) -> int | None:
     return None
 
 
-def _model_metadata(*, row: LeaderboardRow, full_model_name: str) -> dict[str, Any]:
+def _model_type_view(*, row: LeaderboardRow, full_model_name: str) -> dict[str, str | None]:
+    model_type = _normalized_model_type(row=row, full_model_name=full_model_name)
+    labels = {
+        "dense": "Dense",
+        "reranker": "Cross-encoder reranker",
+        "sparse": "Sparse",
+        "late-interaction": "Late interaction",
+        "bm25": "BM25",
+    }
+    badge_labels = {
+        "reranker": "reranker",
+        "sparse": "sparse",
+        "late-interaction": "late interaction",
+    }
+    return {
+        "key": model_type,
+        "label": labels.get(model_type, model_type),
+        "badge_label": badge_labels.get(model_type),
+    }
+
+
+def _normalized_model_type(*, row: LeaderboardRow, full_model_name: str) -> str:
+    explicit_model_type = getattr(row, "model_type", None)
+    if isinstance(explicit_model_type, str):
+        normalized = explicit_model_type.strip().casefold().replace("_", "-")
+        if normalized in {"dense", "sparse", "reranker", "late-interaction", "bm25"}:
+            return normalized
+        if normalized in {"cross-encoder", "crossencoder", "cross-encoder-reranker"}:
+            return "reranker"
+        if normalized in {"late-interaction-retriever", "colbert"}:
+            return "late-interaction"
+
+    name = full_model_name.casefold()
+    if name == "bm25" or name.endswith("/bm25"):
+        return "bm25"
+    if name.startswith("cross-encoder/") or "reranker" in name:
+        return "reranker"
+    if "splade" in name or "sparse" in name:
+        return "sparse"
+    if "colbert" in name or "late-interaction" in name:
+        return "late-interaction"
+    return "dense"
+
+
+def _model_metadata(
+    *,
+    row: LeaderboardRow,
+    full_model_name: str,
+    original_embedding_dim: int | None,
+    truncated_embedding_dim: int | None,
+) -> dict[str, Any]:
+    model_type_view = _model_type_view(row=row, full_model_name=full_model_name)
     return {
         "model_name": full_model_name,
+        "model_type": model_type_view["label"],
+        "model_type_key": model_type_view["key"],
         "ranking_model_name": row.model_name,
+        "source_model_name": row.source_model_name,
         "embedding_variant_name": row.embedding_variant_name,
         "embedding_dim": row.embedding_dim,
+        "original_embedding_dim": original_embedding_dim,
+        "truncated_embedding_dim": truncated_embedding_dim,
         "quantization": row.quantization,
         "base_score_delta_percent": row.base_score_delta_percent,
         "active_parameters": row.active_parameters,
@@ -158,13 +238,33 @@ def _model_metadata(*, row: LeaderboardRow, full_model_name: str) -> dict[str, A
 
 def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> str:
     metadata_json = json.dumps(model_view.metadata, ensure_ascii=False, separators=(",", ":"))
+    display_name = _truncate_model_name_for_table(model_view.display_name)
+    name_attrs = ""
+    if display_name != model_view.display_name:
+        escaped_full_display_name = escape(model_view.display_name, quote=True)
+        name_attrs = f' title="{escaped_full_display_name}" aria-label="{escaped_full_display_name}"'
     badges = []
+    if model_view.model_type_badge_label is not None:
+        badges.append(
+            _render_badge(
+                label=model_view.model_type_badge_label,
+                classes="border-zinc-300 bg-zinc-100 text-zinc-700",
+            )
+        )
     if model_view.dimension_label is not None:
         badges.append(
             _render_badge(
                 label=model_view.dimension_label,
-                classes="border-cyan-200 bg-cyan-50 text-cyan-800",
+                classes="dimension-badge border-cyan-200 bg-cyan-50 text-cyan-800",
                 tooltip=model_view.dimension_tooltip,
+            )
+        )
+    if model_view.variant_label and model_view.truncated_embedding_dim is not None:
+        badges.append(
+            _render_badge(
+                label=model_view.variant_label,
+                classes="dimension-badge truncate-dim-badge border-cyan-200 bg-cyan-50 text-cyan-800",
+                tooltip=model_view.variant_tooltip,
             )
         )
     if row.quantization:
@@ -174,25 +274,33 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> st
                 classes="border-amber-200 bg-amber-50 text-amber-800",
             )
         )
-    if model_view.variant_label:
+    if model_view.variant_label and model_view.truncated_embedding_dim is None:
         badges.append(
             _render_badge(
                 label=model_view.variant_label,
-                classes="border-violet-200 bg-violet-50 text-violet-800",
+                classes="truncate-dim-badge border-violet-200 bg-violet-50 text-violet-800",
                 tooltip=model_view.variant_tooltip,
             )
         )
-    badge_html = f"""<span class="ml-2 inline-flex flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
-    return f"""<td class="sticky left-32 z-10 whitespace-nowrap bg-inherit px-3 py-2 font-medium">
-      <button type="button" class="model-detail-trigger text-left font-medium text-cyan-800 underline-offset-2 hover:underline"
-              data-model-metadata="{escape(metadata_json)}">{escape(model_view.display_name)}</button>{badge_html}
+    badge_html = f"""<span class="inline-flex shrink-0 flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
+    return f"""<td class="sticky left-32 z-10 w-[36rem] min-w-72 max-w-[36rem] overflow-hidden bg-inherit px-2 py-1">
+      <div class="flex min-w-0 items-center gap-2 overflow-hidden whitespace-nowrap">
+        <button type="button" class="model-detail-trigger block min-w-0 truncate text-left font-medium underline-offset-2 hover:underline"
+                data-model-metadata="{escape(metadata_json)}"{name_attrs}>{escape(display_name)}</button>{badge_html}
+      </div>
     </td>"""
+
+
+def _truncate_model_name_for_table(model_name: str) -> str:
+    if len(model_name) <= MODEL_NAME_DISPLAY_MAX_CHARS:
+        return model_name
+    return f"{model_name[:MODEL_NAME_DISPLAY_MAX_CHARS]}..."
 
 
 def _render_badge(*, label: str, classes: str, tooltip: str | None = None) -> str:
     escaped_tooltip = escape(tooltip, quote=True) if tooltip else ""
     tooltip_attrs = f' tabindex="0" data-tooltip="{escaped_tooltip}" aria-label="{escaped_tooltip}"' if tooltip else ""
-    tooltip_class = "tooltip-trigger tooltip-delay " if tooltip else ""
+    tooltip_class = "tooltip-trigger tooltip-delay cursor-pointer " if tooltip else ""
     return (
         f"""<span class="{tooltip_class}inline-flex items-center border px-1.5 py-0.5 text-xs font-medium {classes}"{tooltip_attrs}>"""
         f"{escape(label)}</span>"

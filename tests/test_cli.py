@@ -3,7 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 
-from hakari_bench.cli import build_parser, parse_args
+from hakari_bench.cli import MISSING_ATTENTION_IMPLEMENTATION_WARNING, build_parser, parse_args
+from hakari_bench.cli import _warn_if_missing_attention_implementation
 from hakari_bench.datasets import EvalTask, NanoDatasetSpec
 from hakari_bench.results import TaskRunResult
 
@@ -107,6 +108,40 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.results_dir == "output/results"
     assert args.save_top_rankings is False
     assert args.embedding_variants == _default_dense_quantized_variants()
+
+
+def test_warns_when_model_evaluation_has_no_attention_implementation(capsys) -> None:
+    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model"])
+
+    _warn_if_missing_attention_implementation(args)
+
+    assert capsys.readouterr().err.strip() == MISSING_ATTENTION_IMPLEMENTATION_WARNING
+
+
+def test_does_not_warn_when_attention_implementation_is_explicit(capsys) -> None:
+    args = parse_args(
+        ["evaluate", "dense", "--model", "hotchpotch/model", "--attn-implementation", "sdpa"]
+    )
+
+    _warn_if_missing_attention_implementation(args)
+
+    assert capsys.readouterr().err == ""
+
+
+def test_does_not_warn_when_flash_attention_shortcut_is_explicit(capsys) -> None:
+    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--flash-attn2"])
+
+    _warn_if_missing_attention_implementation(args)
+
+    assert capsys.readouterr().err == ""
+
+
+def test_does_not_warn_for_bm25_evaluation(capsys) -> None:
+    args = parse_args(["evaluate", "bm25"])
+
+    _warn_if_missing_attention_implementation(args)
+
+    assert capsys.readouterr().err == ""
 
 
 def test_parse_args_normalizes_local_model_alias() -> None:

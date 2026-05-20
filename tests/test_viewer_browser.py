@@ -34,12 +34,74 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
             browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
             try:
                 page = browser.new_page(viewport={"width": 1280, "height": 800})
-                page.goto(f"{base_url}/#view=Overall&truncate=1", wait_until="domcontentloaded")
+                page.goto(f"{base_url}/#view=Overall&quantization=1&truncate=1&task_z_scores=1", wait_until="domcontentloaded")
                 page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
 
                 assert page.evaluate("() => Boolean(window.__hakariApplyHashQueryState && window.__hakariBindModelDetails)")
                 assert page.locator("main script:not([src])").count() == 0
                 page.get_by_text("256d <- 384").wait_for(timeout=15_000)
+                compact_table_state = page.locator("tbody tr:not([hidden]) td").first.evaluate(
+                    """(el) => ({
+                        paddingTop: parseFloat(getComputedStyle(el).paddingTop),
+                        paddingBottom: parseFloat(getComputedStyle(el).paddingBottom),
+                    })"""
+                )
+                assert compact_table_state["paddingTop"] <= 4
+                assert compact_table_state["paddingBottom"] <= 4
+                task_std_style = page.locator(".task-z-score").first.evaluate(
+                    """(el) => ({
+                        borderRadius: getComputedStyle(el).borderRadius,
+                        borderStyle: getComputedStyle(el).borderStyle,
+                        borderWidth: parseFloat(getComputedStyle(el).borderWidth),
+                        boxSizing: getComputedStyle(el).boxSizing,
+                        borderColor: getComputedStyle(el).borderColor,
+                        deltaFontSize: parseFloat(getComputedStyle(el.querySelector(".task-z-score-delta")).fontSize),
+                        deltaFontWeight: getComputedStyle(el.querySelector(".task-z-score-delta")).fontWeight,
+                        paddingLeft: parseFloat(getComputedStyle(el).paddingLeft),
+                        paddingRight: parseFloat(getComputedStyle(el).paddingRight),
+                        paddingTop: parseFloat(getComputedStyle(el).paddingTop),
+                        valueFontSize: parseFloat(getComputedStyle(el.querySelector(".task-z-score-value")).fontSize),
+                        valueFontWeight: getComputedStyle(el.querySelector(".task-z-score-value")).fontWeight,
+                        width: parseFloat(getComputedStyle(el).width),
+                    })"""
+                )
+                assert task_std_style["borderRadius"] == "0px"
+                assert task_std_style["borderStyle"] == "solid"
+                assert task_std_style["borderWidth"] == pytest.approx(1.0, abs=0.1)
+                assert task_std_style["borderColor"] == "rgba(29, 27, 24, 0.14)"
+                assert task_std_style["boxSizing"] == "border-box"
+                assert task_std_style["valueFontSize"] == pytest.approx(13.0, abs=0.1)
+                assert task_std_style["deltaFontSize"] == pytest.approx(9.0, abs=0.1)
+                assert task_std_style["valueFontWeight"] == "400"
+                assert task_std_style["deltaFontWeight"] == "400"
+                assert task_std_style["paddingLeft"] > 0
+                assert task_std_style["paddingRight"] > 0
+                assert task_std_style["paddingTop"] > 0
+                assert task_std_style["width"] == pytest.approx(60.0, abs=0.1)
+
+                long_model_row = page.locator("tbody tr", has_text="ft-mmB-L4-bs8192-v1-20260301-QAT-unir-v9").first
+                long_model_row.wait_for(timeout=15_000)
+                long_model_layout = long_model_row.evaluate(
+                    """(row) => {
+                        const cells = row.querySelectorAll("td");
+                        const modelCell = cells[2].getBoundingClientRect();
+                        const modelButton = cells[2].querySelector(".model-detail-trigger").getBoundingClientRect();
+                        const bordaScoreCell = cells[3].getBoundingClientRect();
+                        return {
+                            modelCellRight: modelCell.right,
+                            modelButtonRight: modelButton.right,
+                            bordaScoreLeft: bordaScoreCell.left,
+                            modelCellContentOverflowX: getComputedStyle(cells[2].firstElementChild).overflowX,
+                            modelButtonOverflowX: getComputedStyle(cells[2].querySelector(".model-detail-trigger")).overflowX,
+                            modelButtonTextOverflow: getComputedStyle(cells[2].querySelector(".model-detail-trigger")).textOverflow,
+                        };
+                    }"""
+                )
+                assert long_model_layout["modelCellRight"] <= long_model_layout["bordaScoreLeft"] + 0.5
+                assert long_model_layout["modelButtonRight"] <= long_model_layout["bordaScoreLeft"] + 0.5
+                assert long_model_layout["modelCellContentOverflowX"] == "hidden"
+                assert long_model_layout["modelButtonOverflowX"] == "hidden"
+                assert long_model_layout["modelButtonTextOverflow"] == "ellipsis"
 
                 tooltip_trigger = page.locator("[data-tooltip]").first
                 tooltip_trigger.hover()
@@ -54,6 +116,15 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert tooltip_state["hidden"] is False
                 assert tooltip_state["text"]
                 assert tooltip_state["zIndex"] == "1000"
+                assert tooltip_trigger.evaluate("(el) => getComputedStyle(el).cursor") == "pointer"
+                page.locator("#hakari-global-tooltip").evaluate("(el) => { el.hidden = true; delete el.dataset.visible; }")
+
+                rank_filtered_checkbox = page.locator("#filter-controls input[name='rank_filtered']")
+                rank_filtered_tooltip = page.locator("#filter-controls [data-tooltip]").first
+                assert rank_filtered_checkbox.is_checked() is False
+                rank_filtered_tooltip.click()
+                page.locator("#hakari-global-tooltip:not([hidden])").wait_for(timeout=1_000)
+                assert rank_filtered_checkbox.is_checked() is False
 
                 page.locator(".model-detail-trigger").first.click()
                 page.locator("#model-detail-modal[open]").wait_for(timeout=5_000)
@@ -140,6 +211,78 @@ def _write_browser_task_results(db_path: Path) -> None:
                 ),
                 _viewer_task_result_row(
                     ("model/b", "BenchA", "bench/a", "BenchA", "en", "a1", "a1", 0.73, 20, 24, 4096, None, 512, None)
+                ),
+                _viewer_task_result_row(
+                    (
+                        "org/ft-mmB-L4-bs8192-v1-20260301-QAT-unir-v9-extremely-long-model-name",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "en",
+                        "a1",
+                        "a1",
+                        0.72,
+                        30,
+                        36,
+                        4096,
+                        None,
+                        384,
+                        None,
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "org/ft-mmB-L4-bs8192-v1-20260301-QAT-unir-v9-extremely-long-model-name",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "ar",
+                        "a2",
+                        "a2",
+                        0.69,
+                        30,
+                        36,
+                        4096,
+                        None,
+                        384,
+                        None,
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "org/ft-mmB-L4-bs8192-v1-20260301-QAT-unir-v9-extremely-long-model-name",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "en",
+                        "a1",
+                        "a1",
+                        0.68,
+                        30,
+                        36,
+                        4096,
+                        None,
+                        384,
+                        "int8",
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "org/ft-mmB-L4-bs8192-v1-20260301-QAT-unir-v9-extremely-long-model-name",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "ar",
+                        "a2",
+                        "a2",
+                        0.66,
+                        30,
+                        36,
+                        4096,
+                        None,
+                        384,
+                        "int8",
+                    )
                 ),
                 _viewer_task_result_row(
                     ("model/a", "BenchA", "bench/a", "BenchA", "ar", "a2", "a2", 0.70, 10, 12, 8192, None, 384, None)

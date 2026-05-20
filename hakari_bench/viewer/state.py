@@ -16,6 +16,7 @@ QueryState = dict[str, QueryValue]
 class FilterState:
     model_filter: str = ""
     task_filter: str = ""
+    rank_filtered: bool = False
     language_filters: tuple[str, ...] = ()
     filters_active: bool = False
     dim_filters: tuple[str, ...] = ()
@@ -54,6 +55,7 @@ def normalize_query_state(
     prompt_filter: list[str] | None,
     lang_filter: list[str] | None = None,
     model_filter: str,
+    rank_filtered: bool = False,
     task_scores: bool = False,
     task_z_scores: bool = False,
     task_filter: str = "",
@@ -123,6 +125,8 @@ def normalize_query_state(
         query["model_filter"] = model_filter
     if task_filter:
         query["task_filter"] = task_filter
+    if rank_filtered:
+        query["rank_filtered"] = "1"
     return query
 
 
@@ -130,6 +134,7 @@ def filter_state_from_query(query: QueryState) -> FilterState:
     return FilterState(
         model_filter=str(query.get("model_filter", "")),
         task_filter=str(query.get("task_filter", "")),
+        rank_filtered=query.get("rank_filtered") == "1",
         language_filters=tuple(query_values(query.get("lang_filter"))),
         filters_active=query.get("filters") == "1",
         dim_filters=tuple(query_values(query.get("dim_filter"))),
@@ -175,6 +180,8 @@ def state_payload(
         query_payload["model_filter"] = filter_state.model_filter
     if filter_state.task_filter:
         query_payload["task_filter"] = filter_state.task_filter
+    if filter_state.rank_filtered:
+        query_payload["rank_filtered"] = "1"
     if filter_state.language_filters:
         query_payload["lang_filter"] = list(filter_state.language_filters)
     if filter_state.filters_active or filter_state.has_task_length_filters:

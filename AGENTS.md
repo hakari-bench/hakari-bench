@@ -49,11 +49,18 @@ under `config/datasets/`, and dataset collection definitions live under
   `docs/benchmark_evaluation.md` and follow it as the source of truth for
   commands, prompt/runtime choices, embedding variant policy, and result
   coverage audits.
+- Prefer the attention implementation officially recommended by the evaluated
+  model. Use explicit `--attn-implementation sdpa`, `--flash-attn2`, or
+  `--attn-implementation flash_attention_2` when appropriate; leaving attention
+  unspecified can make long benchmark runs substantially slower for some models.
 - Dense evaluation automatically includes full-dimension `int8,binary` and
   `rescore:int8,binary` variants unless `--no-default-embedding-variants` is
   used. When dense truncation dims are supplied with
   `--embedding-variant truncate:DIMS`, the CLI also expands them into standalone
   truncation plus truncation x quantized/rescore variants.
+- If a requested dense truncate dimension matches the encoded base embedding
+  dimension, evaluation warns and skips that no-op truncate variant because it
+  duplicates the original full-dimension result.
 - After benchmark runs, audit result coverage before reporting or rebuilding
   leaderboard comparisons. Confirm base task completeness and verify that every
   intended variant category exists for each model.
@@ -97,6 +104,9 @@ uv run --group all ty check
   `--model-max-seq-length`, `--truncate-dim`,
   `--sparse-query-max-active-dims`, and `--sparse-document-max-active-dims`
   explicit CLI options.
+- If no attention implementation is specified for model evaluation, the CLI
+  warns and delegates to the Transformers/model default. Treat that as a prompt
+  to confirm the model's official recommendation before launching long runs.
 - Do not shorten model max sequence length for benchmark runs just to avoid
   slow execution or memory pressure. Use the model's default/configured maximum
   length unless the user explicitly requests a different value. If memory errors

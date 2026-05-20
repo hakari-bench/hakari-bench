@@ -779,16 +779,26 @@ Rows that are both quantized and truncated are displayed only when both the
 Quantization and Truncate dims flags are enabled. Facet filter query parameters
 such as `dim_filter` and `quant_filter` do not infer or re-enable display
 flags; the display flags come only from the explicit display controls.
+If old results contain a no-op truncation variant whose `truncate_dim_N` matches
+the measured `embedding_dim`, and an equivalent non-truncate row exists for the
+same model, task, runtime metadata, dimension, and quantization, the leaderboard
+drops the no-op truncate row and prefers the original/full-dimension row.
 
 Task score columns are also controlled by an explicit display flag. The viewer
 does not render per-task or per-score-group metric columns by default. When
 `task_scores=1` is present, the leaderboard computes columns for the current
 selection: the selected score group for benchmark views, configured grouped
 tasks for grouped overall views, or task-level columns when no score group is
-available. `task_filter` filters only those task score columns, not the ranked
-model population. It uses the same matching behavior as the model-name filter:
-case-insensitive whitespace-separated tokens of at least three characters, with
-OR semantics.
+available. By default, `model_filter` only hides rendered model rows,
+`task_filter` only narrows displayed task score columns, and facet filters such
+as dimensions, quantization, dtype, attention implementation, and prompt mode
+only hide rendered model rows. When `rank_filtered=1` is present, those active
+filters narrow the ranked population before Borda, mean scores, task counts, and
+task score columns are computed. With a ranking task filter, the viewer ranks
+the matching task rows directly; overall views render a single task-level `Mean
+Score` column instead of separate macro and micro overall means. Model and task
+text filters use case-insensitive whitespace-separated tokens of at least three
+characters, with OR semantics.
 
 When variants are displayed, the leaderboard keeps a unique internal row label
 by appending `embedding_dim`, `quantization`, and sometimes
@@ -799,9 +809,15 @@ variant labels such as `binary_rescore` as badges instead of duplicating them in
 the visible model text. Full-dimension rows render compact dimension badges such
 as `384d`. Truncation variants render the truncated dimension first, followed by
 the source dimension, such as `256d <- 384`, and expose the truncation details in
-a tooltip. Runtime fields such as dtype, attention implementation, prompt mode,
-and `trust_remote_code` are carried in a `data-model-metadata` JSON attribute on
-the model-name button and displayed in the model details modal.
+a tooltip. If a DuckDB build provides an optional `model_type` column, the
+viewer uses it for model-type display; older databases fall back to conservative
+model-name inference for `dense`, `sparse`, `reranker`, `late-interaction`, and
+`bm25`. Non-default neural model types such as sparse encoders and cross-encoder
+rerankers render a compact badge before dimension badges, while dense and BM25
+rows stay unbadged in the table. Runtime fields such as model type, dtype,
+attention implementation, prompt mode, and `trust_remote_code` are carried in a
+`data-model-metadata` JSON attribute on the model-name button and displayed in
+the model details modal.
 
 When quantization or truncation variants are displayed, the viewer appends a
 `Δ vs Base` column. It compares each variant row's displayed mean score against
@@ -1573,8 +1589,9 @@ ORDER BY attention_filter_value, dtype_filter_value;
 ```
 
 The current viewer applies facet filters as display filters after the ranking
-population has been selected. They should not silently change the ranking
-population unless the UI makes that behavior explicit.
+population has been selected. When `rank_filtered=1` is enabled, the selected
+facet filters are promoted into ranking-population filters before completeness,
+Borda, and mean calculations.
 
 ## Minimal Viewer Checklist
 
@@ -1591,8 +1608,12 @@ population unless the UI makes that behavior explicit.
    metadata columns.
 7. For overall views, return both `macro_mean` and `micro_mean`, and use
    `macro_mean` as `mean_score`.
-8. Only render benchmark metric columns when `task_scores=1` is active. Use the
+8. If `rank_filtered=1`, apply model, task, and active facet filters before the
+   completeness rule and ranking. With a task filter, use direct task-level
+   means for overall views instead of grouped macro/micro means.
+9. Only render benchmark metric columns when `task_scores=1` is active. Use the
    already-selected scoring group rows when present; otherwise use task-level
-   values. Apply `task_filter` to the displayed metric columns only.
-9. Default sort should be `borda_rank ASC`. Metric-column sorts should place
+   values. When `rank_filtered` is not active, apply `task_filter` to the
+   displayed metric columns only.
+10. Default sort should be `borda_rank ASC`. Metric-column sorts should place
    missing values after present values.

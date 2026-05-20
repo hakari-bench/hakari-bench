@@ -48,6 +48,12 @@ uv run hakari-bench evaluate dense \
 The default model dtype is `bf16`; pass `--dtype fp32` or `--dtype fp16` only
 when a run needs an explicit override.
 
+For model evaluations, prefer the attention implementation officially
+recommended by the model author, such as `--attn-implementation sdpa` or
+`--flash-attn2` / `--attn-implementation flash_attention_2` when supported.
+Leaving attention unspecified delegates to the Transformers/model default and
+can make long benchmark runs substantially slower for some models.
+
 Results are written under:
 
 ```text
@@ -239,6 +245,10 @@ uv run hakari-bench evaluate dense \
   --dataset NanoMTEB \
   --embedding-variant truncate:512,256
 ```
+
+If a requested truncation dimension is the same as the encoded base embedding
+dimension, HAKARI-Bench warns and skips that no-op truncate variant because it
+would duplicate the original full-dimension result.
 
 ### Truncated Dimensions With Quantization
 

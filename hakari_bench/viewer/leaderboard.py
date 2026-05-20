@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 import math
 from pathlib import Path
+import re
 from typing import Any, Iterable, Literal
 
 import duckdb
@@ -33,6 +34,7 @@ class TaskScore:
     active_parameters: int | None
     total_parameters: int | None
     max_seq_length: int | None
+    model_type: str | None = None
     language: str | None = None
     languages: tuple[str, ...] = ()
     dtype: str | None = None
@@ -53,6 +55,7 @@ class LeaderboardRow(BaseModel):
     borda_rank: float
     mean_rank: float
     model_name: str
+    model_type: str | None = None
     borda_score: float
     mean_score: float
     mean_score_z: float | None = None
@@ -110,6 +113,7 @@ class LeaderboardResult(BaseModel):
     include_other_variants: bool = False
     show_task_scores: bool = False
     show_task_z_scores: bool = False
+    rank_filtered: bool = False
     task_filter: str = ""
     score_groups: list[ScoreGroup]
     selected_score_group: ScoreGroup | None = None
@@ -159,7 +163,14 @@ class LeaderboardService:
         language_filters: tuple[str, ...] = (),
         show_task_scores: bool = False,
         show_task_z_scores: bool = False,
+        rank_filtered: bool = False,
+        model_filter: str = "",
         task_filter: str = "",
+        dim_filters: tuple[str, ...] = (),
+        quant_filters: tuple[str, ...] = (),
+        dtype_filters: tuple[str, ...] = (),
+        attn_filters: tuple[str, ...] = (),
+        prompt_filters: tuple[str, ...] = (),
         query_min_chars: float | None = None,
         query_max_chars: float | None = None,
         document_min_chars: float | None = None,
@@ -173,6 +184,22 @@ class LeaderboardService:
             score_target=score_target,
             show_task_scores=show_task_scores,
         ) as request_timing:
+            model_filter_terms = active_filter_terms(model_filter)
+            task_filter_terms = active_filter_terms(task_filter)
+            ranking_model_filter_terms = model_filter_terms if rank_filtered else ()
+            ranking_task_filter_terms = task_filter_terms if rank_filtered else ()
+            ranking_dim_filters = dim_filters if rank_filtered else ()
+            ranking_quant_filters = quant_filters if rank_filtered else ()
+            ranking_dtype_filters = dtype_filters if rank_filtered else ()
+            ranking_attn_filters = attn_filters if rank_filtered else ()
+            ranking_prompt_filters = prompt_filters if rank_filtered else ()
+            has_rank_facet_filters = _has_facet_filters(
+                dim_filters=ranking_dim_filters,
+                quant_filters=ranking_quant_filters,
+                dtype_filters=ranking_dtype_filters,
+                attn_filters=ranking_attn_filters,
+                prompt_filters=ranking_prompt_filters,
+            )
             overall = self.config.overall_for_view(view_name)
             benchmarks = self.config.benchmarks_for_view(view_name)
             is_overall = overall is not None
@@ -197,6 +224,8 @@ class LeaderboardService:
                 and not language_filters
                 and not show_task_scores
                 and not show_task_z_scores
+                and not ranking_model_filter_terms
+                and not has_rank_facet_filters
                 and not task_filter.strip()
                 and not has_length_filters
                 and language_filter_mode == "languages"
@@ -250,6 +279,11 @@ class LeaderboardService:
                 )
                 phase_timing["task_score_count"] = len(rows)
             rows = _exclude_configured_tasks(rows, self.config)
+            if ranking_model_filter_terms:
+                with timed_operation("viewer.leaderboard.phase", operation="filter_models", view=view_name) as phase_timing:
+                    rows = _filter_rows_by_model_terms(rows, ranking_model_filter_terms)
+                    phase_timing["task_score_count"] = len(rows)
+                    phase_timing["term_count"] = len(ranking_model_filter_terms)
             if has_length_filters:
                 with timed_operation("viewer.leaderboard.phase", operation="filter_task_lengths", view=view_name) as phase_timing:
                     rows = _filter_rows_by_task_lengths(
@@ -260,6 +294,17 @@ class LeaderboardService:
                         document_max_chars=document_max_chars,
                     )
                     phase_timing["task_score_count"] = len(rows)
+            if has_rank_facet_filters:
+                with timed_operation("viewer.leaderboard.phase", operation="filter_facets", view=view_name) as phase_timing:
+                    rows = _filter_rows_by_facets(
+                        rows,
+                        dim_filters=ranking_dim_filters,
+                        quant_filters=ranking_quant_filters,
+                        dtype_filters=ranking_dtype_filters,
+                        attn_filters=ranking_attn_filters,
+                        prompt_filters=ranking_prompt_filters,
+                    )
+                    phase_timing["task_score_count"] = len(rows)
             available_languages = _language_options(rows, mode=language_filter_mode)
             selected_languages = _selected_languages(language_filters, available_languages)
             if selected_languages:
@@ -267,8 +312,14 @@ class LeaderboardService:
                     rows = _filter_rows_by_languages(rows, selected_languages, mode=language_filter_mode)
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["language_count"] = len(selected_languages)
+            if ranking_task_filter_terms:
+                with timed_operation("viewer.leaderboard.phase", operation="filter_tasks", view=view_name) as phase_timing:
+                    rows = _filter_rows_by_task_terms(rows, ranking_task_filter_terms)
+                    phase_timing["task_score_count"] = len(rows)
+                    phase_timing["term_count"] = len(ranking_task_filter_terms)
             metric_score_group = selected_score_group
-            if overall is not None:
+            should_show_task_scores = show_task_scores or bool(ranking_task_filter_terms)
+            if overall is not None and not ranking_task_filter_terms:
                 with timed_operation("viewer.leaderboard.phase", operation="aggregate_overall", view=view_name) as phase_timing:
                     rows = _aggregate_overall_scores(rows, overall)
                     metric_score_group = _overall_metric_score_group(overall)
@@ -277,11 +328,12 @@ class LeaderboardService:
                 with timed_operation("viewer.leaderboard.phase", operation="aggregate_score_group", view=view_name) as phase_timing:
                     rows = _aggregate_benchmark_score_group_scores(rows, selected_score_group)
                     phase_timing["task_score_count"] = len(rows)
-            if show_task_scores and metric_score_group is None:
+            if should_show_task_scores and metric_score_group is None:
                 metric_score_group = ScoreGroupConfig(name="task_scores", label="Task Scores", group_by="task_key")
             with timed_operation("viewer.leaderboard.phase", operation="metric_columns", view=view_name) as phase_timing:
-                metric_columns = _metric_columns(rows, metric_score_group) if show_task_scores and metric_score_group is not None else []
-                metric_columns = _filter_metric_columns(rows, metric_score_group, metric_columns, task_filter)
+                metric_columns = _metric_columns(rows, metric_score_group) if should_show_task_scores and metric_score_group is not None else []
+                if not ranking_task_filter_terms:
+                    metric_columns = _filter_metric_columns(rows, metric_score_group, metric_columns, task_filter)
                 metric_column_labels = _metric_column_label_overrides(
                     rows=rows,
                     score_group=metric_score_group,
@@ -296,8 +348,10 @@ class LeaderboardService:
                     score_group=metric_score_group,
                     metric_columns=metric_columns,
                     show_task_z_scores=show_task_z_scores,
+                    use_task_mean_for_overall=bool(ranking_task_filter_terms),
                 )
-                sorted_rows = sort_rows(leaderboard_rows, sort=sort, direction=direction)
+                sort_key = "mean_score" if ranking_task_filter_terms and sort in {"macro_mean", "micro_mean"} else sort
+                sorted_rows = sort_rows(leaderboard_rows, sort=sort_key, direction=direction)
                 phase_timing["leaderboard_row_count"] = len(sorted_rows)
             request_timing["task_score_count"] = len(rows)
             request_timing["leaderboard_row_count"] = len(sorted_rows)
@@ -314,8 +368,9 @@ class LeaderboardService:
                 include_truncate_variants=include_truncate_variants,
                 include_rescore_variants=include_rescore_variants,
                 include_other_variants=include_other_variants,
-                show_task_scores=show_task_scores,
+                show_task_scores=should_show_task_scores,
                 show_task_z_scores=show_task_z_scores,
+                rank_filtered=rank_filtered,
                 task_filter=task_filter.strip(),
                 score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
                 selected_score_group=(
@@ -392,7 +447,10 @@ def _load_task_scores_uncached(
         include_embedding_variants=include_any_variants,
         variant_display_flags=variant_flags,
     )
-    return tuple(_task_scores_from_records(records, include_any_variants=include_any_variants, variant_flags=variant_flags))
+    task_scores = _task_scores_from_records(records, include_any_variants=include_any_variants, variant_flags=variant_flags)
+    if score_target == "all":
+        task_scores = _exclude_reranker_task_scores(task_scores)
+    return tuple(task_scores)
 
 
 @lru_cache(maxsize=64)
@@ -509,6 +567,8 @@ def _load_precomputed_leaderboard_rows(
             ]
     finally:
         con.close()
+    if score_target == "all":
+        rows = [row for row in rows if not _is_reranker_model(model_name=str(row[3]), model_type=None)]
     if not rows:
         return None
     expected_tasks = int(rows[0][0])
@@ -569,6 +629,7 @@ def _task_scores_from_records(
                 flags=variant_flags,
             )
         ]
+        filtered_records = _drop_noop_truncate_duplicate_records(filtered_records)
         timing["record_count"] = len(records)
         timing["filtered_record_count"] = len(filtered_records)
     with timed_operation("viewer.leaderboard.phase", operation="display_model_names") as timing:
@@ -579,6 +640,7 @@ def _task_scores_from_records(
             task_scores.append(
                 TaskScore(
                     model_name=model_name,
+                    model_type=record.model_type,
                     benchmark=record.benchmark,
                     dataset_id=record.dataset_id,
                     dataset_name=record.dataset_name,
@@ -607,6 +669,68 @@ def _task_scores_from_records(
     return task_scores
 
 
+def _exclude_reranker_task_scores(rows: list[TaskScore]) -> list[TaskScore]:
+    return [row for row in rows if not _is_reranker_model(model_name=row.source_model_name or row.model_name, model_type=row.model_type)]
+
+
+def _drop_noop_truncate_duplicate_records(records: list[TaskResultRow]) -> list[TaskResultRow]:
+    original_keys = {
+        _noop_truncate_duplicate_key(record)
+        for record in records
+        if _truncate_dim_from_variant_name(record.embedding_variant_name) is None
+    }
+    if not original_keys:
+        return records
+    return [
+        record
+        for record in records
+        if not (
+            _noop_truncate_dim(record) is not None
+            and _noop_truncate_duplicate_key(record) in original_keys
+        )
+    ]
+
+
+def _noop_truncate_duplicate_key(record: TaskResultRow) -> tuple[Any, ...]:
+    return (
+        record.model_name,
+        record.model_type,
+        record.benchmark,
+        record.dataset_id,
+        record.split_name,
+        record.task_key,
+        record.dtype,
+        record.attn_implementation,
+        record.prompt_summary,
+        record.trust_remote_code,
+        record.embedding_dim,
+        record.quantization,
+    )
+
+
+def _noop_truncate_dim(record: TaskResultRow) -> int | None:
+    truncate_dim = _truncate_dim_from_variant_name(record.embedding_variant_name)
+    if truncate_dim is None or record.embedding_dim is None or truncate_dim != record.embedding_dim:
+        return None
+    return truncate_dim
+
+
+def _truncate_dim_from_variant_name(variant_name: str | None) -> int | None:
+    match = re.search(r"(?:^|_)truncate_dim_(\d+)(?:_|$)", variant_name or "")
+    if match is None:
+        return None
+    return int(match.group(1))
+
+
+def _is_reranker_model(*, model_name: str, model_type: str | None) -> bool:
+    if model_type is not None:
+        normalized_type = model_type.strip().casefold().replace("_", "-")
+        if normalized_type in {"reranker", "cross-encoder", "crossencoder", "cross-encoder-reranker"}:
+            return True
+    normalized_name = model_name.casefold()
+    return normalized_name.startswith("cross-encoder/") or "reranker" in normalized_name
+
+
 def compute_leaderboard_rows(
     rows: list[TaskScore],
     *,
@@ -614,6 +738,7 @@ def compute_leaderboard_rows(
     score_group: ScoreGroupConfig | None = None,
     metric_columns: list[str] | None = None,
     show_task_z_scores: bool = False,
+    use_task_mean_for_overall: bool = False,
 ) -> list[LeaderboardRow]:
     expected_tasks = {row.task_key for row in rows}
     if not expected_tasks:
@@ -648,7 +773,7 @@ def compute_leaderboard_rows(
             for benchmark_rows in _group_by_benchmark(model_rows).values()
         ]
         macro_mean = _mean(benchmark_means)
-        mean_score = macro_mean if is_overall else micro_mean
+        mean_score = micro_mean if use_task_mean_for_overall else macro_mean if is_overall else micro_mean
         metric_values = _metric_values(model_rows, score_group=score_group, metric_columns=metric_columns)
         metric_z_values = z_values_by_model.get(model_name, {})
         aggregate_z_values = aggregate_z_values_by_model.get(model_name, {})
@@ -657,6 +782,7 @@ def compute_leaderboard_rows(
                 borda_rank=0.0,
                 mean_rank=0.0,
                 model_name=model_name,
+                model_type=first.model_type,
                 borda_score=_mean(borda_scores[model_name]),
                 mean_score=mean_score,
                 mean_score_z=aggregate_z_values.get("mean_score"),
@@ -775,6 +901,7 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
         aggregated.append(
             TaskScore(
                 model_name=model_name,
+                model_type=first.model_type,
                 benchmark=benchmark,
                 dataset_id=benchmark,
                 dataset_name=benchmark,
@@ -823,6 +950,7 @@ def _aggregate_benchmark_score_group_scores(rows: list[TaskScore], score_group: 
         aggregated.append(
             TaskScore(
                 model_name=model_name,
+                model_type=first.model_type,
                 benchmark=benchmark,
                 dataset_id=aggregate_key if score_group.group_by == "dataset_id" else first.dataset_id,
                 dataset_name=aggregate_key if score_group.group_by == "dataset_name" else first.dataset_name,
@@ -932,6 +1060,94 @@ def _filter_rows_by_languages(
 ) -> list[TaskScore]:
     selected = set(selected_languages)
     return [row for row in rows if selected.intersection(_language_codes_for_row(row, mode=mode))]
+
+
+def _filter_rows_by_model_terms(rows: list[TaskScore], terms: tuple[str, ...]) -> list[TaskScore]:
+    if not terms:
+        return rows
+    return [row for row in rows if text_matches_filter_terms(row.model_name, terms)]
+
+
+def _filter_rows_by_task_terms(rows: list[TaskScore], terms: tuple[str, ...]) -> list[TaskScore]:
+    if not terms:
+        return rows
+    return [row for row in rows if _task_row_matches_filter_terms(row, terms)]
+
+
+def _has_facet_filters(
+    *,
+    dim_filters: tuple[str, ...],
+    quant_filters: tuple[str, ...],
+    dtype_filters: tuple[str, ...],
+    attn_filters: tuple[str, ...],
+    prompt_filters: tuple[str, ...],
+) -> bool:
+    return any((dim_filters, quant_filters, dtype_filters, attn_filters, prompt_filters))
+
+
+def _filter_rows_by_facets(
+    rows: list[TaskScore],
+    *,
+    dim_filters: tuple[str, ...],
+    quant_filters: tuple[str, ...],
+    dtype_filters: tuple[str, ...],
+    attn_filters: tuple[str, ...],
+    prompt_filters: tuple[str, ...],
+) -> list[TaskScore]:
+    selected_dims = set(dim_filters)
+    selected_quants = set(quant_filters)
+    selected_dtypes = set(dtype_filters)
+    selected_attn = set(attn_filters)
+    selected_prompts = set(prompt_filters)
+    return [
+        row
+        for row in rows
+        if (not selected_dims or _dim_bucket(row.embedding_dim) in selected_dims)
+        and (not selected_quants or _quant_bucket(row.quantization) in selected_quants)
+        and (not selected_dtypes or _dtype_bucket(row.dtype) in selected_dtypes)
+        and (not selected_attn or _attn_bucket(row.attn_implementation) in selected_attn)
+        and (not selected_prompts or _prompt_bucket(row.prompt_summary) in selected_prompts)
+    ]
+
+
+def _dim_bucket(value: int | None) -> str:
+    if value is None:
+        return "__unknown__"
+    if value >= 1025:
+        return "1025+"
+    return str(value)
+
+
+def _quant_bucket(value: str | None) -> str:
+    return value or "__none__"
+
+
+def _dtype_bucket(value: str | None) -> str:
+    return value or "__unknown__"
+
+
+def _attn_bucket(value: str | None) -> str:
+    return value or "__unknown__"
+
+
+def _prompt_bucket(value: str | None) -> str:
+    if value is None:
+        return "model_default"
+    return value.replace(" + ", "_").replace(" ", "_")
+
+
+def _task_row_matches_filter_terms(row: TaskScore, terms: tuple[str, ...]) -> bool:
+    return any(
+        text_matches_filter_terms(label, terms)
+        for label in (
+            row.task_name,
+            row.task_key,
+            row.dataset_name,
+            row.dataset_id,
+            row.split_name,
+            row.benchmark,
+        )
+    )
 
 
 def _language_codes_for_row(row: TaskScore, *, mode: LanguageFilterMode) -> tuple[str, ...]:

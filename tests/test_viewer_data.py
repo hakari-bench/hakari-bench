@@ -448,6 +448,25 @@ def test_task_results_repository_reads_materialized_viewer_task_results(tmp_path
     ]
 
 
+def test_task_results_repository_reads_optional_model_type_column(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_viewer_task_results(
+        db_path,
+        [
+            ("model/sparse", "BenchA", "bench/a", "BenchA", None, "a1", "task-ja", 0.90, 10, 12, 8192),
+        ],
+        include_model_type_column=True,
+        row_model_types=["sparse"],
+    )
+
+    records = TaskResultsRepository(db_path).fetch_task_result_rows(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+    )
+
+    assert [(record.model_name, record.model_type) for record in records] == [("model/sparse", "sparse")]
+
+
 def test_task_results_repository_reads_task_text_length_metadata(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_viewer_task_results(
@@ -637,6 +656,8 @@ def _write_viewer_task_results(
     rows_override_text_lengths: list[tuple[float | None, float | None]] | None = None,
     schema_version: str = CURRENT_DUCKDB_SCHEMA_VERSION,
     include_text_length_columns: bool = True,
+    include_model_type_column: bool = False,
+    row_model_types: list[str | None] | None = None,
 ) -> None:
     con = duckdb.connect(str(db_path))
     try:
@@ -670,6 +691,8 @@ def _write_viewer_task_results(
             "embedding_dim INTEGER",
             "quantization VARCHAR",
         ]
+        if include_model_type_column:
+            columns.insert(1, "model_type VARCHAR")
         if include_text_length_columns:
             columns.extend(
                 [
@@ -699,6 +722,9 @@ def _write_viewer_task_results(
             )
             if not include_text_length_columns:
                 normalized_row = normalized_row[:-2]
+            if include_model_type_column:
+                model_type = row_model_types[index] if row_model_types is not None else None
+                normalized_row = (normalized_row[0], model_type, *normalized_row[1:])
             normalized_rows.append(normalized_row)
         placeholders = ", ".join("?" for _ in columns)
         con.executemany(f"INSERT INTO viewer_task_results VALUES ({placeholders})", normalized_rows)

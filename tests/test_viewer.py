@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import logging
 import os
 import re
@@ -17,6 +18,7 @@ from hakari_bench.viewer.app import (
     _view_group,
     _z_score_bucket_class,
     create_app,
+    render_table_body,
     render_table_head,
 )
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
@@ -270,6 +272,38 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
             ],
         )
         con.execute(
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                "Overall",
+                "all",
+                True,
+                False,
+                False,
+                False,
+                3,
+                2.0,
+                2.0,
+                "cross-encoder/example-reranker",
+                88.0,
+                87.0,
+                87.0,
+                86.0,
+                3,
+                10,
+                12,
+                8192,
+                "bf16",
+                None,
+                "model default",
+                False,
+                None,
+                None,
+                None,
+                "cross-encoder/example-reranker",
+                None,
+            ],
+        )
+        con.execute(
             """
             CREATE TABLE viewer_leaderboard_language_options (
                 view_name VARCHAR,
@@ -305,6 +339,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
     )
 
     assert result.expected_tasks == 3
+    assert [row.model_name for row in result.rows] == ["model/a (768 dims, int8)"]
     assert result.rows[0].model_name == "model/a (768 dims, int8)"
     assert result.rows[0].borda_score == 99.0
     assert result.rows[0].embedding_variant_name == "int8"
@@ -392,6 +427,9 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert response.status_code == 200
     assert "<title>HAKARI-bench leaderboard</title>" in response.text
     assert "HAKARI-bench leaderboard" in response.text
+    assert '<h1 class="flex items-center gap-2 text-2xl font-semibold">' in response.text
+    assert '<img src="/assets/favicon.png?' in response.text
+    assert 'alt="" aria-hidden="true" class="h-8 w-8 shrink-0">' in response.text
     assert '<p class="text-sm font-medium text-cyan-700">HAKARI-bench leaderboard</p>' not in response.text
     assert (
         "🚧 WIP: This leaderboard is currently under active implementation, "
@@ -631,6 +669,36 @@ def test_leaderboard_target_reranking_uses_bm25_top100_rerank_scores(tmp_path: P
     assert response.status_code == 200
     assert "target=reranking" in response.text
     assert response.text.index("model/b") < response.text.index("model/a")
+
+
+def test_leaderboard_target_all_excludes_reranker_models(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.80, 10, 12, 8192),
+            ("cross-encoder/example-reranker", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.70, 10, 12, 8192),
+            ("cross-encoder/example-reranker", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.60, 10, 12, 8192),
+        ],
+        task_diagnostics_rows=[
+            ("cross-encoder/example-reranker", "BenchA", "bench/a", "a1", "BenchA::a1", 0.70, 0.95, 0.25, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
+            ("cross-encoder/example-reranker", "BenchA", "bench/a", "a2", "BenchA::a2", 0.60, 0.85, 0.25, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
+        ],
+    )
+    config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
+    )
+    service = LeaderboardService(duckdb_path=db_path, config=config)
+
+    all_result = service.get_leaderboard("BenchA")
+    rerank_result = service.get_leaderboard("BenchA", score_target="reranking")
+
+    assert [row.model_name for row in all_result.rows] == ["model/a"]
+    assert all_result.expected_tasks == 2
+    assert [row.model_name for row in rerank_result.rows] == ["cross-encoder/example-reranker"]
+    assert rerank_result.rows[0].mean_score == pytest.approx(90.0)
 
 
 def test_leaderboard_service_logs_request_and_phase_timing(
@@ -1186,6 +1254,14 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         include_quantization_variants=True,
         include_truncate_variants=True,
     )
+    ranked_facet_result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+        rank_filtered=True,
+        dim_filters=("384",),
+        quant_filters=("__none__",),
+    )
     rescore_result = service.get_leaderboard("BenchA", include_rescore_variants=True)
     other_variant_result = service.get_leaderboard("BenchA", include_other_variants=True)
 
@@ -1214,6 +1290,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     ]
     assert all_variant_result.rows[3].embedding_dim == 256
     assert all_variant_result.rows[3].quantization == "int8"
+    assert [row.model_name for row in ranked_facet_result.rows] == ["model/a (384 dims)"]
+    assert ranked_facet_result.expected_tasks == 1
+    assert ranked_facet_result.rank_filtered is True
     delta_by_model = {row.model_name: row.base_score_delta_percent for row in quantization_result.rows}
     assert delta_by_model == {
         "model/a (768 dims)": None,
@@ -1259,6 +1338,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Rescore" in response.text
     assert 'id="model-filter-input"' in response.text
     assert 'name="model_filter"' in response.text
+    assert "Recalculate Borda, Mean" in response.text
+    assert "With a Task name filter, Borda is computed from per-task ranks over the filtered tasks." in response.text
     assert "Apply" in response.text
     assert 'value="model/b"' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
@@ -1309,6 +1390,17 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "quant_filter=uint8" in facet_response.text
     assert 'data-filter-hidden="true"' in facet_response.text
 
+    ranked_facet_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&quantization=1&truncate=1"
+        "&filters=1&dim_filter=384&quant_filter=__none__&rank_filtered=1"
+    )
+
+    assert ranked_facet_response.status_code == 200
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (384 dims)&quot;" in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (256 dims, int8)&quot;" not in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" not in ranked_facet_response.text
+    assert 'data-filter-hidden="true"' not in ranked_facet_response.text
+
     explicit_truncate_off_response = TestClient(app).get(
         "/leaderboard?view=BenchA&filters=1&dim_filter=384&quant_filter=__none__"
     )
@@ -1334,6 +1426,73 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'name="rescore" value="1" class="h-4 w-4 accent-cyan-700" checked' in rescore_response.text
     assert "binary_rescore" in rescore_response.text
     assert "Δ vs Base" not in rescore_response.text
+
+
+def test_viewer_dedupes_noop_truncate_variants_in_favor_of_original_rows(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192, None, 384, None),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.90,
+                10,
+                12,
+                8192,
+                "truncate_dim_384",
+                384,
+                None,
+            ),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192, "int8", 384, "int8"),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.80,
+                10,
+                12,
+                8192,
+                "truncate_dim_384_quantize_int8_docs",
+                384,
+                "int8",
+            ),
+        ],
+        include_embedding_variant_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+    )
+
+    assert [row.model_name for row in result.rows] == ["model/a (384 dims)", "model/a (384 dims, int8)"]
+    assert {row.embedding_variant_name for row in result.rows} == {None, "int8"}
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&truncate=1")
+
+    assert response.status_code == 200
+    assert "384d &lt;- 384" not in response.text
+    assert "truncate_dim_384" not in response.text
 
 
 def test_base_score_delta_percent_can_be_positive() -> None:
@@ -1589,6 +1748,18 @@ def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) 
     assert "Model Details" in response.text
     assert "<script>" not in response.text
 
+    ranked_facet_response = client.get(
+        "/leaderboard?view=BenchA&quantization=1&filters=1&rank_filtered=1"
+        "&dim_filter=768&quant_filter=__none__"
+        "&dtype_filter=bf16&attn_filter=flash_attention_2&prompt_filter=model_default"
+    )
+
+    assert ranked_facet_response.status_code == 200
+    assert "&quot;ranking_model_name&quot;:&quot;jinaai/jina-embeddings-v5-text-nano (768 dims)&quot;" in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;jinaai/jina-embeddings-v5-text-nano (768 dims, binary)&quot;" not in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;Qwen/jina-embeddings-v5-text-nano (768 dims)&quot;" not in ranked_facet_response.text
+    assert 'data-filter-hidden="true"' not in ranked_facet_response.text
+
     viewer_js_response = client.get("/assets/viewer.js")
     assert "JSON.parse" in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
@@ -1691,6 +1862,82 @@ def test_model_filter_matches_any_whitespace_separated_token_case_insensitively(
     assert "Qwen/Qwen3-Embedding" in response.text
     assert "other/model" in response.text
     assert response.text.count('data-filter-hidden="true"') == 1
+
+    ranked_response = TestClient(app).get("/leaderboard?view=BenchA&model_filter=GeMmA%20qwen&rank_filtered=1")
+
+    assert ranked_response.status_code == 200
+    assert 'name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700" checked' in ranked_response.text
+    assert "google/gemma-embed" in ranked_response.text
+    assert "Qwen/Qwen3-Embedding" in ranked_response.text
+    assert "other/model" not in ranked_response.text
+    assert 'data-filter-hidden="true"' not in ranked_response.text
+
+
+def test_task_filter_recomputes_ranking_population_without_task_columns(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "en", "marco", "marco", 0.20, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "en", "fever", "fever", 0.95, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "en", "marco", "marco", 0.80, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "en", "fever", "fever", 0.30, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    full_result = service.get_leaderboard("BenchA")
+    filtered_result = service.get_leaderboard("BenchA", task_filter="marco")
+    ranked_filtered_result = service.get_leaderboard("BenchA", task_filter="marco", rank_filtered=True)
+
+    assert [row.model_name for row in full_result.rows] == ["model/a", "model/b"]
+    assert [row.model_name for row in filtered_result.rows] == ["model/a", "model/b"]
+    assert filtered_result.expected_tasks == 2
+    assert filtered_result.metric_columns == []
+    assert [row.model_name for row in ranked_filtered_result.rows] == ["model/b", "model/a"]
+    assert ranked_filtered_result.expected_tasks == 1
+    assert ranked_filtered_result.rank_filtered is True
+    assert [(row.model_name, row.task_count, row.mean_score, row.borda_score) for row in ranked_filtered_result.rows] == [
+        ("model/b", 1, pytest.approx(80.0), pytest.approx(100.0)),
+        ("model/a", 1, pytest.approx(20.0), pytest.approx(0.0)),
+    ]
+    assert ranked_filtered_result.metric_columns == ["marco"]
+
+
+def test_overall_task_filter_renders_single_task_mean_column(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "en", "marco", "BenchA::marco", 0.20, 10, 12, 8192),
+            ("model/a", "BenchB", "bench/b", "BenchB", "en", "marco", "BenchB::marco", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "en", "marco", "BenchA::marco", 0.80, 10, 12, 8192),
+            ("model/b", "BenchB", "bench/b", "BenchB", "en", "marco", "BenchB::marco", 0.30, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: BenchB\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n  - BenchB\n", encoding="utf-8")
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    result = service.get_leaderboard("Overall", task_filter="marco", rank_filtered=True)
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+    body = render_table_body(result=result)
+
+    assert result.is_overall is True
+    assert [(row.model_name, row.mean_score, row.macro_mean, row.micro_mean) for row in result.rows] == [
+        ("model/a", pytest.approx(55.0), pytest.approx(55.0), pytest.approx(55.0)),
+        ("model/b", pytest.approx(55.0), pytest.approx(55.0), pytest.approx(55.0)),
+    ]
+    assert "Macro Mean" not in head
+    assert "Micro Mean" not in head
+    assert "Mean Score" in head
+    assert body.count(">55.00</td>") >= 2
 
 
 def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
@@ -2381,12 +2628,22 @@ def test_task_z_score_heatmap_css_defines_light_and_dark_buckets() -> None:
 def test_task_z_score_heatmap_css_uses_intuitive_positive_negative_colors() -> None:
     css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
 
-    assert re.search(r'\.task-z-pos-025\s*{\s*background-color: theme\("colors\.emerald\.50"\);', css_source)
-    assert re.search(r'\.task-z-pos-200\s*{\s*background-color: theme\("colors\.emerald\.700"\);', css_source)
-    assert re.search(r'\.task-z-neg-025\s*{\s*background-color: theme\("colors\.rose\.50"\);', css_source)
-    assert re.search(r'\.task-z-neg-200\s*{\s*background-color: theme\("colors\.rose\.700"\);', css_source)
+    assert re.search(r"\.task-z-score\s*{[^}]*border: 1px solid rgb\(29 27 24 / 0\.14\);", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score\s*{[^}]*border-radius: 0;", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score-value\s*{[^}]*font-size: 0\.8125rem;", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score-delta\s*{[^}]*font-size: 0\.5625rem;", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score-value\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score-delta\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score\s*{[^}]*border-color: rgb\(240 238 232 / 0\.22\);", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-pos-025\s*{\s*background-color: #f4f1df;", css_source)
+    assert re.search(r"\.task-z-pos-200\s*{\s*background-color: #566126;", css_source)
+    assert re.search(r"\.task-z-neg-025\s*{\s*background-color: #f7ebe4;", css_source)
+    assert re.search(r"\.task-z-neg-200\s*{\s*background-color: #733126;", css_source)
     assert re.search(r'\.task-z-pos-025\s*{\s*background-color: theme\("colors\.emerald\.950"\);', css_source)
     assert re.search(r'\.task-z-pos-200\s*{\s*background-color: theme\("colors\.emerald\.300"\);', css_source)
+    assert re.search(r'\.task-z-neg-150\s*{\s*background-color: theme\("colors\.rose\.500"\);', css_source)
+    assert re.search(r'\.task-z-neg-175\s*{\s*background-color: theme\("colors\.rose\.600"\);', css_source)
+    assert re.search(r'\.task-z-neg-200\s*{\s*background-color: theme\("colors\.rose\.700"\);', css_source)
 
 
 def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: Path) -> None:
@@ -2827,6 +3084,132 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     assert "Macro Mean" in response.text
     assert "model/a" in response.text
     assert 'hx-get="/leaderboard?' in response.text
+    assert 'href="/leaderboard.csv?view=Overall' in response.text
+    assert "[download csv]" in response.text
+
+
+def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "org/model-a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "split",
+                "arguana",
+                "arguana",
+                0.90,
+                10,
+                12,
+                1024,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                "query",
+                None,
+                None,
+                None,
+                True,
+                None,
+                1024,
+                None,
+            ),
+            (
+                "org/model-a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "split",
+                "arguana",
+                "arguana",
+                0.82,
+                10,
+                12,
+                1024,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                "query",
+                None,
+                None,
+                None,
+                True,
+                "truncate_dim_512",
+                512,
+                None,
+            ),
+            (
+                "org/hidden-model",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "split",
+                "arguana",
+                "arguana",
+                0.70,
+                20,
+                24,
+                2048,
+                "fp32",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                False,
+                None,
+                768,
+                "int8",
+            ),
+        ],
+        include_embedding_variant_columns=True,
+        include_runtime_option_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get(
+        "/leaderboard.csv?view=BenchA&truncate=1&task_scores=1&task_z_scores=1&model_filter=model-a"
+    )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/csv")
+    assert 'filename="hakari_bench_BenchA_all.csv"' in response.headers["content-disposition"]
+    rows = list(csv.DictReader(response.text.splitlines()))
+
+    assert len(rows) == 2
+    assert "arguana" in rows[0]
+    assert "arguana σ" not in rows[0]
+    assert "hidden-model" not in response.text
+    assert rows[0]["Model Name"] == "model-a"
+    assert rows[0]["Full Model Name"] == "org/model-a"
+    assert rows[0]["Ranking Model Name"] == "org/model-a (1024 dims)"
+    assert rows[0]["Embedding Dims"] == "1024"
+    assert rows[0]["Original Embedding Dims"] == "1024"
+    assert rows[0]["Truncated Embedding Dims"] == ""
+    assert rows[0]["DType"] == "bf16"
+    assert rows[0]["Attention Implementation"] == "flash_attention_2"
+    assert rows[0]["Prompt"] == "prompt names"
+    assert rows[0]["Trust Remote Code"] == "true"
+
+    truncated = next(row for row in rows if row["Truncated Embedding Dims"] == "512")
+    assert truncated["Model Name"] == "model-a"
+    assert truncated["Ranking Model Name"] == "org/model-a (512 dims)"
+    assert truncated["Embedding Dims"] == "512"
+    assert truncated["Original Embedding Dims"] == "1024"
+    assert truncated["Embedding Variant"] == "truncate_dim_512"
 
 
 def test_viewer_page_uses_query_state_and_canonical_url(tmp_path: Path) -> None:

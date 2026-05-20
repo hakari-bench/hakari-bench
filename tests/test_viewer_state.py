@@ -54,6 +54,7 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         attn_filter=[],
         prompt_filter=None,
         model_filter="  jina  ",
+        rank_filtered=True,
         task_scores=True,
         task_filter="  arguana  fever  ",
     )
@@ -72,6 +73,7 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         "prompt_filter": [],
         "model_filter": "jina",
         "task_filter": "arguana  fever",
+        "rank_filtered": "1",
     }
 
 
@@ -235,6 +237,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         filter_state=FilterState(
             model_filter="jina",
             task_filter="fever",
+            rank_filtered=True,
             filters_active=True,
             dim_filters=("768",),
             quant_filters=("binary",),
@@ -250,6 +253,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         "task_z_scores": "1",
         "model_filter": "jina",
         "task_filter": "fever",
+        "rank_filtered": "1",
         "filters": "1",
         "dim_filter": ["768"],
         "quant_filter": ["binary"],

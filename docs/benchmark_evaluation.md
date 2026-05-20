@@ -16,15 +16,18 @@ coverage checks should be maintained in this document.
    [`docs/model_specific_benchmarking_notes.md`](model_specific_benchmarking_notes.md)
    before choosing prompts, attention implementation, dtype, or compatibility
    fallbacks.
-4. Decide the full embedding-variant plan before starting any large run.
-5. Run a small validation command when options are uncertain, then scale to the
+4. Prefer the attention implementation officially recommended by the model
+   author. If no explicit attention implementation is passed, the CLI will warn
+   because long benchmark inference can be much slower for some models.
+5. Decide the full embedding-variant plan before starting any large run.
+6. Run a small validation command when options are uncertain, then scale to the
    requested benchmark set.
-6. Keep an ignored progress checklist under `tmp/` for long benchmark waves.
-7. After benchmarking, rebuild DuckDB/HTML viewer artifacts when the user asks
+7. Keep an ignored progress checklist under `tmp/` for long benchmark waves.
+8. After benchmarking, rebuild DuckDB/HTML viewer artifacts when the user asks
    for comparisons, leaderboards, or viewer updates. If results are split
    across multiple result roots, pass repeated `--results-dir` options in
    priority order; earlier directories win duplicate model-task JSON conflicts.
-8. Audit result coverage before treating a leaderboard as final.
+9. Audit result coverage before treating a leaderboard as final.
 
 ## Target Selection
 
@@ -145,6 +148,10 @@ This is the most important coverage rule:
 > The CLI will automatically add standalone truncation, full-dim quantized and
 > rescored variants, and truncation x quantized/rescore variants for those dims.
 
+If a requested truncation dimension matches the encoded base embedding
+dimension, evaluation emits a warning and skips that no-op truncate variant
+because it would duplicate the original full-dimension result.
+
 Use `--no-default-embedding-variants` only when the run intentionally needs base
 results without automatic dense quantized/rescore variants.
 
@@ -201,6 +208,8 @@ uv run hakari-bench evaluate dense \
 The benchmark implementation applies derived embedding variants after a single
 base encoding pass. Cross variants add transform/scoring work, not additional
 model encoding.
+No-op truncation variants whose requested dimension equals the base embedding
+dimension are skipped with a warning.
 
 ## Sparse Evaluation
 
@@ -267,6 +276,11 @@ from `build-candidates bm25` when generating candidate subsets.
 
 ## Attention And Runtime Choices
 
+- Prefer the attention implementation officially recommended by the model author
+  or model card. Use `--attn-implementation sdpa`, `--flash-attn2`, or
+  `--attn-implementation flash_attention_2` explicitly when that is the intended
+  runtime. Unspecified attention falls back to the Transformers/model default and
+  may be substantially slower during long benchmark runs.
 - Do not assume Flash Attention 2 works with every model or every Transformers
   major version.
 - Compare practical options before large runs:
@@ -356,7 +370,9 @@ Before reporting a leaderboard or diagnosing model differences, audit coverage:
    x quantized search, and truncation x rescore when those comparisons were
    intended.
 3. Compare variant task counts against the model's base task count. Any variant
-   with fewer rows needs investigation before it is used in a ranking.
+   with fewer rows needs investigation before it is used in a ranking. If the
+   missing variant is a truncate dimension equal to the base embedding dimension,
+   it should have been skipped as a no-op.
 4. Inspect missing `(benchmark, task_key)` pairs for incomplete variants.
 5. Confirm output JSON `config.embedding_variants` contains the intended
    variants. A dense truncation run should include standalone truncation,
