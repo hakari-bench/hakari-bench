@@ -10,6 +10,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.leaderboard import LeaderboardRow
 
+MODEL_NAME_DISPLAY_MAX_CHARS = 40
+
 
 class ModelCellView(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -236,6 +238,11 @@ def _model_metadata(
 
 def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> str:
     metadata_json = json.dumps(model_view.metadata, ensure_ascii=False, separators=(",", ":"))
+    display_name = _truncate_model_name_for_table(model_view.display_name)
+    name_attrs = ""
+    if display_name != model_view.display_name:
+        escaped_full_display_name = escape(model_view.display_name, quote=True)
+        name_attrs = f' title="{escaped_full_display_name}" aria-label="{escaped_full_display_name}"'
     badges = []
     if model_view.model_type_badge_label is not None:
         badges.append(
@@ -278,8 +285,14 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> st
     badge_html = f"""<span class="ml-2 inline-flex flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
     return f"""<td class="sticky left-32 z-10 whitespace-nowrap bg-inherit px-2 py-1 font-medium">
       <button type="button" class="model-detail-trigger text-left font-medium underline-offset-2 hover:underline"
-              data-model-metadata="{escape(metadata_json)}">{escape(model_view.display_name)}</button>{badge_html}
+              data-model-metadata="{escape(metadata_json)}"{name_attrs}>{escape(display_name)}</button>{badge_html}
     </td>"""
+
+
+def _truncate_model_name_for_table(model_name: str) -> str:
+    if len(model_name) <= MODEL_NAME_DISPLAY_MAX_CHARS:
+        return model_name
+    return f"{model_name[:MODEL_NAME_DISPLAY_MAX_CHARS]}..."
 
 
 def _render_badge(*, label: str, classes: str, tooltip: str | None = None) -> str:

@@ -36,6 +36,28 @@ def test_render_model_name_cell_uses_metadata_json_and_compact_badges() -> None:
     assert ">binary_rescore</span>" in html
 
 
+def test_render_model_name_cell_truncates_long_visible_model_name() -> None:
+    long_name = "Model NAME " + ("A" * 45)
+    row = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name=long_name,
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+    )
+    model_view = model_cell_views([row])[row.model_name]
+
+    html = render_model_name_cell(row, model_view)
+
+    visible_name = f"{long_name[:40]}..."
+    assert f">{visible_name}</button>" in html
+    assert f'title="{long_name}"' in html
+    assert f'aria-label="{long_name}"' in html
+    assert model_view.display_name == long_name
+    assert model_view.metadata["model_name"] == long_name
+
+
 def test_render_model_name_cell_uses_compact_truncate_dimension_badge_with_tooltip() -> None:
     base = LeaderboardRow(
         borda_rank=1,
