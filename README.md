@@ -48,6 +48,12 @@ uv run hakari-bench evaluate dense \
 The default model dtype is `bf16`; pass `--dtype fp32` or `--dtype fp16` only
 when a run needs an explicit override.
 
+For model evaluations, prefer the attention implementation officially
+recommended by the model author, such as `--attn-implementation sdpa` or
+`--flash-attn2` / `--attn-implementation flash_attention_2` when supported.
+Leaving attention unspecified delegates to the Transformers/model default and
+can make long benchmark runs substantially slower for some models.
+
 Results are written under:
 
 ```text

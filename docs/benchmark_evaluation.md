@@ -16,15 +16,18 @@ coverage checks should be maintained in this document.
    [`docs/model_specific_benchmarking_notes.md`](model_specific_benchmarking_notes.md)
    before choosing prompts, attention implementation, dtype, or compatibility
    fallbacks.
-4. Decide the full embedding-variant plan before starting any large run.
-5. Run a small validation command when options are uncertain, then scale to the
+4. Prefer the attention implementation officially recommended by the model
+   author. If no explicit attention implementation is passed, the CLI will warn
+   because long benchmark inference can be much slower for some models.
+5. Decide the full embedding-variant plan before starting any large run.
+6. Run a small validation command when options are uncertain, then scale to the
    requested benchmark set.
-6. Keep an ignored progress checklist under `tmp/` for long benchmark waves.
-7. After benchmarking, rebuild DuckDB/HTML viewer artifacts when the user asks
+7. Keep an ignored progress checklist under `tmp/` for long benchmark waves.
+8. After benchmarking, rebuild DuckDB/HTML viewer artifacts when the user asks
    for comparisons, leaderboards, or viewer updates. If results are split
    across multiple result roots, pass repeated `--results-dir` options in
    priority order; earlier directories win duplicate model-task JSON conflicts.
-8. Audit result coverage before treating a leaderboard as final.
+9. Audit result coverage before treating a leaderboard as final.
 
 ## Target Selection
 
@@ -267,6 +270,11 @@ from `build-candidates bm25` when generating candidate subsets.
 
 ## Attention And Runtime Choices
 
+- Prefer the attention implementation officially recommended by the model author
+  or model card. Use `--attn-implementation sdpa`, `--flash-attn2`, or
+  `--attn-implementation flash_attention_2` explicitly when that is the intended
+  runtime. Unspecified attention falls back to the Transformers/model default and
+  may be substantially slower during long benchmark runs.
 - Do not assume Flash Attention 2 works with every model or every Transformers
   major version.
 - Compare practical options before large runs:
