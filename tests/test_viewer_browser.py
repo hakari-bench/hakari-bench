@@ -51,15 +51,23 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 task_std_style = page.locator(".task-z-score").first.evaluate(
                     """(el) => ({
                         borderRadius: getComputedStyle(el).borderRadius,
+                        borderStyle: getComputedStyle(el).borderStyle,
+                        borderWidth: parseFloat(getComputedStyle(el).borderWidth),
                         boxSizing: getComputedStyle(el).boxSizing,
+                        deltaFontWeight: getComputedStyle(el.querySelector(".task-z-score-delta")).fontWeight,
                         paddingLeft: parseFloat(getComputedStyle(el).paddingLeft),
                         paddingRight: parseFloat(getComputedStyle(el).paddingRight),
                         paddingTop: parseFloat(getComputedStyle(el).paddingTop),
+                        valueFontWeight: getComputedStyle(el.querySelector(".task-z-score-value")).fontWeight,
                         width: parseFloat(getComputedStyle(el).width),
                     })"""
                 )
-                assert task_std_style["borderRadius"] == "2px"
+                assert task_std_style["borderRadius"] == "0px"
+                assert task_std_style["borderStyle"] == "solid"
+                assert task_std_style["borderWidth"] == pytest.approx(1.0, abs=0.1)
                 assert task_std_style["boxSizing"] == "border-box"
+                assert task_std_style["valueFontWeight"] == "400"
+                assert task_std_style["deltaFontWeight"] == "400"
                 assert task_std_style["paddingLeft"] > 0
                 assert task_std_style["paddingRight"] > 0
                 assert task_std_style["paddingTop"] > 0

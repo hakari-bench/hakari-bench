@@ -278,20 +278,21 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    border-radius: 0.125rem;
+    border: 1px solid currentColor;
+    border-radius: 0;
     line-height: 1;
-    padding: 0.1rem 0.25rem;
+    padding: 0.1rem 0.3rem;
   }
 
   .task-z-score-value {
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 400;
   }
 
   .task-z-score-delta {
     margin-top: 0;
     font-size: 0.625rem;
-    font-weight: 500;
+    font-weight: 400;
   }
 
   .task-z-neutral {
