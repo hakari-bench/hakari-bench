@@ -1254,6 +1254,14 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         include_quantization_variants=True,
         include_truncate_variants=True,
     )
+    ranked_facet_result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+        rank_filtered=True,
+        dim_filters=("384",),
+        quant_filters=("__none__",),
+    )
     rescore_result = service.get_leaderboard("BenchA", include_rescore_variants=True)
     other_variant_result = service.get_leaderboard("BenchA", include_other_variants=True)
 
@@ -1282,6 +1290,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     ]
     assert all_variant_result.rows[3].embedding_dim == 256
     assert all_variant_result.rows[3].quantization == "int8"
+    assert [row.model_name for row in ranked_facet_result.rows] == ["model/a (384 dims)"]
+    assert ranked_facet_result.expected_tasks == 1
+    assert ranked_facet_result.rank_filtered is True
     delta_by_model = {row.model_name: row.base_score_delta_percent for row in quantization_result.rows}
     assert delta_by_model == {
         "model/a (768 dims)": None,
@@ -1379,6 +1390,17 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "quant_filter=uint8" in facet_response.text
     assert 'data-filter-hidden="true"' in facet_response.text
 
+    ranked_facet_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&quantization=1&truncate=1"
+        "&filters=1&dim_filter=384&quant_filter=__none__&rank_filtered=1"
+    )
+
+    assert ranked_facet_response.status_code == 200
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (384 dims)&quot;" in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (256 dims, int8)&quot;" not in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" not in ranked_facet_response.text
+    assert 'data-filter-hidden="true"' not in ranked_facet_response.text
+
     explicit_truncate_off_response = TestClient(app).get(
         "/leaderboard?view=BenchA&filters=1&dim_filter=384&quant_filter=__none__"
     )
@@ -1404,6 +1426,73 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'name="rescore" value="1" class="h-4 w-4 accent-cyan-700" checked' in rescore_response.text
     assert "binary_rescore" in rescore_response.text
     assert "Δ vs Base" not in rescore_response.text
+
+
+def test_viewer_dedupes_noop_truncate_variants_in_favor_of_original_rows(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192, None, 384, None),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.90,
+                10,
+                12,
+                8192,
+                "truncate_dim_384",
+                384,
+                None,
+            ),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192, "int8", 384, "int8"),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.80,
+                10,
+                12,
+                8192,
+                "truncate_dim_384_quantize_int8_docs",
+                384,
+                "int8",
+            ),
+        ],
+        include_embedding_variant_columns=True,
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+    )
+
+    assert [row.model_name for row in result.rows] == ["model/a (384 dims)", "model/a (384 dims, int8)"]
+    assert {row.embedding_variant_name for row in result.rows} == {None, "int8"}
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&truncate=1")
+
+    assert response.status_code == 200
+    assert "384d &lt;- 384" not in response.text
+    assert "truncate_dim_384" not in response.text
 
 
 def test_base_score_delta_percent_can_be_positive() -> None:
@@ -1658,6 +1747,18 @@ def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) 
     assert "&quot;trust_remote_code&quot;:true" in response.text
     assert "Model Details" in response.text
     assert "<script>" not in response.text
+
+    ranked_facet_response = client.get(
+        "/leaderboard?view=BenchA&quantization=1&filters=1&rank_filtered=1"
+        "&dim_filter=768&quant_filter=__none__"
+        "&dtype_filter=bf16&attn_filter=flash_attention_2&prompt_filter=model_default"
+    )
+
+    assert ranked_facet_response.status_code == 200
+    assert "&quot;ranking_model_name&quot;:&quot;jinaai/jina-embeddings-v5-text-nano (768 dims)&quot;" in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;jinaai/jina-embeddings-v5-text-nano (768 dims, binary)&quot;" not in ranked_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;Qwen/jina-embeddings-v5-text-nano (768 dims)&quot;" not in ranked_facet_response.text
+    assert 'data-filter-hidden="true"' not in ranked_facet_response.text
 
     viewer_js_response = client.get("/assets/viewer.js")
     assert "JSON.parse" in viewer_js_response.text

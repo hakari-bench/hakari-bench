@@ -604,6 +604,26 @@ def test_evaluate_dense_task_scores_embedding_variants_without_extra_encoding() 
     assert "ToyData_test_dot_truncate_dim_1_ndcg@10" in result.embedding_evaluations[1]["metrics"]
 
 
+def test_evaluate_dense_task_warns_and_skips_noop_truncate_variants(capsys) -> None:
+    result = evaluate_dense_task(
+        model=FakeDenseModel(),
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        embedding_variants=[_pipeline_variant("truncate_dim_2", _truncate_step(2))],
+    )
+
+    assert [item["name"] for item in result.embedding_evaluations] == ["base"]
+    captured = capsys.readouterr()
+    assert "warning: skipping embedding variant truncate_dim_2" in captured.err
+    assert "truncate dimension 2 matches the base embedding dimension" in captured.err
+
+
 def test_evaluate_dense_task_records_query_and_docs_conversion_speed() -> None:
     result = evaluate_dense_task(
         model=FakeDenseModel(),

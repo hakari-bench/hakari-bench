@@ -216,6 +216,11 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             rank_filtered=filter_state.rank_filtered,
             model_filter=filter_state.model_filter,
             task_filter=filter_state.task_filter,
+            dim_filters=filter_state.dim_filters if filter_state.filters_active else (),
+            quant_filters=filter_state.quant_filters if filter_state.filters_active else (),
+            dtype_filters=filter_state.dtype_filters if filter_state.filters_active else (),
+            attn_filters=filter_state.attn_filters if filter_state.filters_active else (),
+            prompt_filters=filter_state.prompt_filters if filter_state.filters_active else (),
             query_min_chars=length_bounds["query_min_chars"],
             query_max_chars=length_bounds["query_max_chars"],
             document_min_chars=length_bounds["document_min_chars"],
@@ -1206,9 +1211,9 @@ def render_controls(
           <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
           <span class="whitespace-nowrap font-medium text-zinc-800">Recalculate Borda, Mean</span>
           <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 cursor-pointer items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
-                data-tooltip="When enabled, Model name and Task name filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks."
+                data-tooltip="When enabled, Model name, Task name, and active facet filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks."
                 data-tooltip-placement="left"
-                aria-label="When enabled, Model name and Task name filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks.">?</span>
+                aria-label="When enabled, Model name, Task name, and active facet filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks.">?</span>
         </label>
         <button type="submit" class="border border-zinc-300 bg-zinc-50 px-3 py-1 text-sm font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
           Apply
