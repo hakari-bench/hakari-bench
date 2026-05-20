@@ -275,10 +275,12 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> st
                 tooltip=model_view.variant_tooltip,
             )
         )
-    badge_html = f"""<span class="ml-2 inline-flex flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
-    return f"""<td class="sticky left-32 z-10 whitespace-nowrap bg-inherit px-2 py-1 font-medium">
-      <button type="button" class="model-detail-trigger text-left font-medium underline-offset-2 hover:underline"
-              data-model-metadata="{escape(metadata_json)}">{escape(model_view.display_name)}</button>{badge_html}
+    badge_html = f"""<span class="inline-flex shrink-0 flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
+    return f"""<td class="sticky left-32 z-10 w-[36rem] min-w-72 max-w-[36rem] overflow-hidden bg-inherit px-2 py-1">
+      <div class="flex min-w-0 items-center gap-2 overflow-hidden whitespace-nowrap">
+        <button type="button" class="model-detail-trigger block min-w-0 truncate text-left font-medium underline-offset-2 hover:underline"
+                data-model-metadata="{escape(metadata_json)}">{escape(model_view.display_name)}</button>{badge_html}
+      </div>
     </td>"""
 
 

@@ -28,7 +28,9 @@ def test_render_model_name_cell_uses_metadata_json_and_compact_badges() -> None:
     assert "jina-embeddings-v5-text-nano" in html
     assert "remote code" not in html
     assert "data-model-metadata=" in html
-    assert "model-detail-trigger text-left font-medium underline-offset-2" in html
+    assert 'w-[36rem] min-w-72 max-w-[36rem] overflow-hidden' in html
+    assert 'class="flex min-w-0 items-center gap-2 overflow-hidden whitespace-nowrap"' in html
+    assert "model-detail-trigger block min-w-0 truncate text-left font-medium underline-offset-2" in html
     assert "model-detail-trigger text-left font-medium text-" not in html
     assert "&quot;trust_remote_code&quot;:true" in html
     assert ">768d</span>" in html

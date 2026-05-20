@@ -1391,7 +1391,7 @@ def _sticky_head_class(key: str) -> str:
     if key == "mean_rank":
         return "sticky left-16 z-20 min-w-16"
     if key == "model_name":
-        return "sticky left-32 z-20 min-w-72"
+        return "sticky left-32 z-20 w-[36rem] min-w-72 max-w-[36rem]"
     return ""
 
 
