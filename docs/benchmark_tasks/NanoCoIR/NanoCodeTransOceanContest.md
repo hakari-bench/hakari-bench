@@ -7,9 +7,12 @@
 
 ## Overview
 
-`NanoCodeTransOceanContest` evaluates similar-code retrieval across programming
-languages for competitive-programming style tasks. Queries are Python programs,
-and positives are semantically equivalent C++ programs.
+CoIR adapts CodeTransOcean contest examples from code translation into
+cross-language code retrieval. The query side contains Python programs for
+algorithmic tasks, while the target side contains semantically equivalent C++
+solutions. This task asks a retriever to recognize program equivalence across
+syntax, standard-library idioms, and implementation choices, not just shared
+problem titles or comments.
 
 ## Details
 
@@ -51,16 +54,13 @@ similar.
 
 ## Example Data
 
-Line breaks are shown as `<br>`. The character counts are the full query and
-document lengths before truncation.
-
-| IDs | Chars query / doc | BM25 rank | Query | Positive document |
-| --- | ---: | ---: | --- | --- |
-| `q161` -> `c195` | 3121 / 5205 | 3 | def validate(diagram):<br><br>    <br>    <br>    rawlines = diagram.splitlines()<br>    lines = []<br>    for line in rawlines:<br>        if line != '':<br>            lines.append(line)<br>            <br>    <br>            <br>    if len(lines) == 0:<br>        print('diagram has no non-empty lines!')<br>        return None<br>        <br>    width = len(lines[0])<br>    cols = (width - 1) // 3 ... [truncated] | ASCII art diagram converter<br>#include <array><br>#include <bitset><br>#include <iostream><br><br>using namespace std;<br><br>struct FieldDetails {string_view Name; int NumBits;};<br><br><br><br>template <const char *T> consteval auto ParseDiagram()<br>{<br>    constexpr string_view rawArt(T);<br>    constexpr auto firstBar = rawArt.find("\|");<br>    constexpr auto lastBar = rawArt.find_last_of ... [truncated] |
-| `q307` -> `c274` | 1268 / 2708 | 4 | from primesieve import primes<br>import math<br><br>def primepowers(k, upper_bound):<br>    ub = int(math.pow(upper_bound, 1/k) + .5)<br>    res = [(1,)]<br><br>    for p in primes(ub):<br>        a = [p**k]<br>        u = upper_bound // a[-1]<br>        while u >= p:<br>            a.append(a[-1]*p)<br>            u //= p<br>        res.append(tuple(a))<br><br>    return res<br><br>def kpowerful(k, upper_b ... [truncated] | Powerful numbers<br>#include <algorithm><br>#include <cmath><br>#include <cstdint><br>#include <iostream><br>#include <numeric><br>#include <vector><br><br>bool is_square_free(uint64_t n) {<br>    static constexpr uint64_t primes[] {<br>        2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,<br>        43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97<br>    };<br>    for (auto p : primes) { ... [truncated] |
-| `q181` -> `c216` | 1505 / 1305 | 95 | from operator import itemgetter<br><br>DEBUG = False<br><br>def spermutations(n):<br>    sign = 1<br>    p = [[i, 0 if i == 0 else -1]<br>         for i in range(n)]<br><br>    if DEBUG: print '<br>    yield tuple(pp[0] for pp in p), sign<br><br>    while any(pp[1] for pp in p):<br>        i1, (n1, d1) = max(((i, pp) for i, pp in enumerate(p) if pp[1]),<br>                           key ... [truncated] | Permutations by swapping<br>#include <iostream><br>#include <vector><br><br>using namespace std;<br><br>vector<int> UpTo(int n, int offset = 0)<br>{<br>	vector<int> retval(n);<br>	for (int ii = 0; ii < n; ++ii)<br>		retval[ii] = ii + offset;<br>	return retval;<br>}<br><br>struct JohnsonTrotterState_<br>{<br>	vector<int> values_;<br>	vector<int> positions_;<br>	vector<bool> directions_;<br>	int sign_; ... [truncated] |
-| `q462` -> `c326` | 323 / 617 | 4 | import urllib.request<br>urllib.request.urlretrieve("http://wiki.puzzlers.org/pub/wordlists/unixdict.txt", "unixdict.txt")<br><br>dictionary = open("unixdict.txt","r")<br><br>wordList = dictionary.read().split('\n')<br><br>dictionary.close()<br><br>for word in wordList:<br>    if len(word)>5 and word[:3].lower()==word[-3:].lower():<br>        print(word) | Find words whose first and last three letters are equal<br>#include <cstdlib><br>#include <fstream><br>#include <iostream><br><br>int main(int argc, char** argv) {<br>    const char* filename(argc < 2 ? "unixdict.txt" : argv[1]);<br>    std::ifstream in(filename);<br>    if (!in) {<br>        std::cerr << "Cannot open file '" << filename << "'.\n";<br>        return EXIT_FAILURE;<br>    } ... [truncated] |
-| `q291` -> `c258` | 1876 / 2695 | 3 | from __future__ import print_function<br><br>class Node(object):<br>	def __init__(self):<br>		self.edges = {}<br>		self.link = None<br>		self.len = 0<br><br>class Eertree(object):<br>	def __init__(self):<br>		self.nodes = []<br>		self.rto = Node()<br>		self.rte = Node()<br>		self.rto.link = self.rte.link = self.rto;<br>		self.rto.len = -1<br>		self.rte.len = 0<br>		self.S = [0]<br>		self.maxSufT ... [truncated] | Eertree<br>#include <iostream><br>#include <functional><br>#include <map><br>#include <vector><br><br>struct Node {<br>    int length;<br>    std::map<char, int> edges;<br>    int suffix;<br><br>    Node(int l) : length(l), suffix(0) {<br>    }<br><br>    Node(int l, const std::map<char, int>& m, int s) : length(l), edges(m), suffix(s) {<br>    }<br>};<br><br>constexpr int evenRoot = 0; ... [truncated] |
+| Query | Positive document |
+| --- | --- |
+| import mpmath as mp with mp.workdps(72): def integer_term(n): p = 532 * n * n + 126 * n + 9 return (p * 2**5 * mp.factorial(6 * n)) / (3 * mp.factorial(n)**6) def exponent_term(n): return -(mp.mpf("6.0") * n + 3) def nthterm( ... [truncated 225 chars](904 chars) | Almkvist-Giullera formula for pi #include <boost/multiprecision/cpp_dec_float.hpp> #include <boost/multiprecision/gmp.hpp> #include <iomanip> #include <iostream> namespace mp = boost::multiprecision; using big_int = mp::mpz_i ... [truncated 225 chars](1331 chars) |
+| a1 = [0, 1403580, -810728] m1 = 2**32 - 209 a2 = [527612, 0, -1370589] m2 = 2**32 - 22853 d = m1 + 1 class MRG32k3a(): def __init__(self, seed_state=123): self.seed(seed_state) def seed(self, seed_state): assert 0 <seed_state ... [truncated 225 chars](1166 chars) | Pseudo-random numbers_Combined recursive generator MRG32k3a #include <array> #include <iostream> int64_t mod(int64_t x, int64_t y) { int64_t m = x % y; if (m < 0) { if (y < 0) { return m - y; } else { return m + y; } } return ... [truncated 225 chars](1793 chars) |
+| def water_collected(tower): N = len(tower) highest_left = [0] + [max(tower[:n]) for n in range(1,N)] highest_right = [max(tower[n:N]) for n in range(1,N)] + [0] water_level = [max(min(highest_left[n], highest_right[n]) - towe ... [truncated 225 chars](770 chars) | Water collected between towers #include <iostream> #include <vector> #include <algorithm> enum { EMPTY, WALL, WATER }; auto fill(const std::vector<int> b) { auto water = 0; const auto rows = *std::max_element(std::begin(b), s ... [truncated 225 chars](1488 chars) |
+| from fractions import Fraction def harmonic_series(): n, h = Fraction(1), Fraction(1) while True: yield h h += 1 / (n + 1) n += 1 if __name__ == '__main__': from itertools import islice for n, d in (h.as_integer_ratio() for h ... [truncated 225 chars](328 chars) | Harmonic series #include <iomanip> #include <iostream> #include <boost/rational.hpp> #include <boost/multiprecision/gmp.hpp> using integer = boost::multiprecision::mpz_int; using rational = boost::rational<integer>; class har ... [truncated 225 chars](1031 chars) |
+| "Generate a short Superpermutation of n characters A... as a string using various algorithms." from __future__ import print_function, division from itertools import permutations from math import factorial import string import ... [truncated 225 chars](3528 chars) | Superpermutation minimisation #include <array> #include <iostream> #include <vector> constexpr int MAX = 12; static std::vector<char> sp; static std::array<int, MAX> count; static int pos = 0; int factSum(int n) { int s = 0; ... [truncated 225 chars](1027 chars) |
 
 ## Dataset Information
 

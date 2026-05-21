@@ -7,12 +7,14 @@
 
 ## Overview
 
-MIRACL is a multilingual information retrieval benchmark over Wikipedia
-passages, where natural-language questions retrieve answer-bearing passages in
-the same language. `NanoMIRACL / en` is the English task: English questions
-search English Wikipedia passages. The task measures passage retrieval for
-short factual information needs about people, places, organizations, history,
-religion, entertainment, politics, science, and definitions.
+MIRACL's English split is a monolingual ad hoc retrieval task over English
+Wikipedia passages, designed around natural questions and human passage
+judgments rather than answer extraction from a fixed article. The Nano task
+keeps the same passage-retrieval framing with one labeled positive per query.
+Observed questions are short `When`, `What`, `How`, `Who`, and `Where`
+information needs, so the model must retrieve the passage that contains the
+requested fact across broad encyclopedia topics such as people, places,
+organizations, politics, science, and definitions.
 
 ## Details
 
@@ -125,11 +127,11 @@ enough for relevance.
 
 | Query | Positive document |
 | --- | --- |
-| What happened to Silicone Knights? (34 chars) | Silicon Knights On May 30, 2012, Epic Games defeated Silicon Knights' lawsuit, and won its counter-suit for $4.45 million on grounds of copyright infringement, misappropriation of trade secrets, and breach of contract, an injury award that was later doubled due to prejudgment interest, attorneys' fees and costs. Consistent with Epic's counterclaims, the presiding judge, James C. Dever III, stated that Silicon Knights had "deliberately and repeatedly copied thousands of lines of Epic Games' copyrighted code, and then attempted to conceal its wrongdoing by removing Epic Games' copyright notices and by disguising Epic Games' copyrighted code as Silicon Knights' own." Evidence against Silicon Knights was overwhelm... [truncated from 869 chars] (869 chars) |
-| How much of Brazil's population is black? (41 chars) | Racism in Brazil Today, there are more than 75 million people of African descent living in Brazil, which currently gives it the second largest black population in the world. However, despite its large black population it was also the last country in the western hemisphere to abolish slavery, in 1888. Brazil proudly refers to itself as a "Racial Democracy," originally coined by Brazilian sociologist Gilberto Freyre in his work "Casa-Grande & Senzala" (The Masters and the Slaves), published in 1933. Additionally, racism has been made illegal under Brazil's anti-discrimination laws, which were passed in the 1950s after an African-American dancer was barred from a hotel. Nonetheless, race has been the subject of mu... [truncated from 777 chars] (777 chars) |
-| When was Ukrainization policy first implemented in the Ukraine? (63 chars) | Ukrainization The All-Ukrainian Sovnarkom's decree "On implementation of the Ukrainization of the educational and cultural institutions" (July 27, 1923) is considered to be the onset of the Ukrainization program. The (August 1) decree that followed shortly "On implementation of the equal rights of the languages and facilitation of the Ukrainian language" mandated the implementation of Ukrainian language to all levels of state institutions. Initially, the program was met with resistance by some Ukrainian Communists, largely because non-Ukrainians prevailed numerically in the party at the time. The resistance was finally overcome in 1925 through changes in the party leadership under the pressure of Ukrainian repr... [truncated from 1449 chars] (1449 chars) |
-| When was the Commonwealth of Independent States formed? (55 chars) | Commonwealth of Independent States Following the events of August failed coup, the republics had declared their independence fearing another coup. A week after the Ukrainian independence referendum was held, which kept the chances of the Soviet Union staying together low, the Commonwealth of Independent States was founded in it place on 8 December 1991 by the Byelorussian SSR, the Russian SFSR, and the Ukrainian SSR, when the leaders of the three republics, met in the Belovezhskaya Pushcha Natural Reserve, about north of Brest in Belarus and signed the "Agreement Establishing the Commonwealth of Independent States", known as the "Creation Agreement" (). (661 chars) |
-| What is the fastest growing religion in USA? (44 chars) | Growth of religion The American Religious Identification Survey gives Wicca an average annual growth of 143% for the period 1990 to 2001 (from 8,000 to 134,000 - "U.S. data" / similar for Canada & Australia). According to The Statesman Anne Elizabeth Wynn claims "The two most recent American Religious Identification Surveys declare Wicca, one form of paganism, as the fastest growing spiritual identification in America". Mary Jones claims Wicca is one of the fastest-growing religions in the United States as well. Wicca, which is largely a "Pagan" religion primarily attracts followers of nature-based religions in, as an example, the Southeast Valley region of the Phoenix, Arizona metropolitan area. (705 chars) |
+| How many people visit the Eiffel Tower each year? (49 chars) | Tourism in Paris The Eiffel Tower is acknowledged as the universal symbol of Paris and France. It was originally designed by Émile Nouguier and Maurice Koechlin. In March 1885 Gustave Eiffel, known primarily as a successful i ... [truncated 225 chars](751 chars) |
+| How long is the Omo River? (26 chars) | Omo River Its course is generally to the south, however with a major bend to the west at about 7° N 37° 30' E to about 36° E where it turns south until 5° 30' N where it makes a large S- bend then resumes its southerly course ... [truncated 225 chars](366 chars) |
+| Where did Sun Yat-sen study medicine? (37 chars) | Sun Yat Sen Memorial House Whilst studying at the Hong Kong College of Medicine for Chinese, the young Dr. Sun constantly travelled between Hong Kong and Macau to criticise the corruption of the Qing regime and agitated for r ... [truncated 225 chars](536 chars) |
+| What is the population of Lagos? (32 chars) | Lagos Colony Lagos Colony was a British colonial possession centred on the port of Lagos in what is now southern Nigeria. Lagos was annexed on 6 August 1861 under the threat of force by Commander Beddingfield of HMS Prometheu ... [truncated 225 chars](1091 chars) |
+| When did Marxism develop? (25 chars) | Sophia N. Antonopoulou Sophia Antonopoulou developed this critique of Marx and Marxism in her book "The Marxist Theory of Development and its Convergence with the Bourgeois Theoretical Paradigm" (Papazissis, Athens, 1991) (in ... [truncated 225 chars](872 chars) |
 
 ## Dataset Information
 

@@ -7,11 +7,14 @@
 
 ## Overview
 
-`cqadupstack_stats` is a Polish duplicate-question retrieval task from the
-statistics split of CQADupStack. Queries are short statistics and data-analysis
-questions, and documents are longer candidate posts. The retriever must connect
-equivalent problems across terminology, formulas, R workflows, and statistical
-modeling assumptions.
+The CQADupStack source benchmark treats Stack Exchange duplicate links as
+retrieval relevance, and this Polish statistics split applies that setup to
+translated Cross Validated-style questions. Queries are short statistical
+problems, while documents are longer candidate posts that may use different
+notation or modeling language. The observed examples cover ANOVA interactions,
+logistic regression sample size, correlated random variables, learning-to-rank
+conversion, and Gaussian densities, making this a duplicate-retrieval task over
+statistical assumptions rather than a simple keyword match.
 
 ## Details
 
@@ -55,11 +58,11 @@ notation, or software context.
 
 | Query | Positive document |
 | --- | --- |
-| Istotna interakcja ANOVA, ale nieistotne porównania parami (58 chars) | Jak mogę uzyskać znaczącą ogólną analizę ANOVA, ale bez znaczących różnic w parach z procedurą Tukeya? Wystąpiłem z R i ANOVA i uzyskałem znaczące różnice. Jednak sprawdzając, które pary znacząco się różniły za pomocą procedury Tukeya, nie uzyskałem żadnej z n... [truncated from 2194 chars] (2194 chars) |
-| Próbki logistyczne i numery przypadków (38 chars) | Waga próbki, regresja logistyczna i analiza chi-kwadrat Mam parę pytań. Wykonuję regresję logistyczną. ale moja próbka jest mała (n=129). A w DV najmniejsza liczba przypadków to 27 (1'). Właściwie mam nadzieję, że użyję 12 predyktorów. Jednak znam też zasadę k... [truncated from 635 chars] (635 chars) |
-| Jak wygenerować nienormalnie skorelowany rozkład dwuwymiarowy (61 chars) | Jakie są techniki próbkowania dwóch skorelowanych zmiennych losowych? Jakie są techniki próbkowania dwóch skorelowanych zmiennych losowych: * jeśli ich rozkłady prawdopodobieństwa są sparametryzowane (np. logarytmicznie normalny) * jeśli mają rozkłady nieparam... [truncated from 770 chars] (770 chars) |
-| Jaki jest najlepszy sposób zamiany uczenia się na ranking na uczenie się w parach? (82 chars) | Problem z porządkowaniem rang i/lub klasyfikacją Mam około 10 zmiennych dotyczących produktów. Muszę uszeregować produkty według jakości. Teraz jakość jest bardzo subiektywna, więc wszystkie 300 produktów zostało ocenione przez ekspertów dziedzinowych. Teraz m... [truncated from 669 chars] (669 chars) |
-| Interpretowanie prawdopodobieństw Gaussa większych niż 1 (56 chars) | Normalna funkcja gęstości prawdopodobieństwa i zamieszanie dotyczące sposobu uzyskania odpowiedzi Jestem zdezorientowany tym, jak PDF rozkładu normalnego jest w stanie obliczyć gęstość dla pojedynczej zmiennej. Rozumiem, że prawdopodobieństwo CDF dokładnej cią... [truncated from 812 chars] (812 chars) |
+| Szacunki wariancji z próbki iid (31 chars) | Intuicyjne wyjaśnienie dzielenia przez (n-1) przy obliczaniu sd? Zapytano mnie dzisiaj na zajęciach, dlaczego przy obliczaniu sd dzieli się sumę błędu kwadratowego przez $(n-1)$ zamiast przez $n$. Powiedziałem, że nie będę od ... [truncated 225 chars](394 chars) |
+| Jak najlepiej wyświetlić graficznie błąd typu II (beta), moc i wielkość próbki? (79 chars) | Rzeczywiste w oparciu o funkcję zasilania! Problem: Jaki jest rzeczywisty przykład funkcji potęgowej? Próbowałem o tym myśleć, ale mi się nie udało. Czy ktoś wie? (162 chars) |
+| Reprezentowanie macierzy odległości w płaszczyźnie (50 chars) | Jaka jest różnica między analizą głównych składowych a skalowaniem wielowymiarowym? Czym różnią się PCA i klasyczne MDS? Co powiesz na MDS w porównaniu z niemetrycznym MDS? Czy jest czas, kiedy wolisz jedno od drugiego? Czym ... [truncated 225 chars](250 chars) |
+| Pomoc w interpretacji dopasowania modelu liniowego R (52 chars) | Interpretacja wyjścia R lm() strony pomocy w R zakładają, że wiem, co oznaczają te liczby. Ja nie :) Staram się naprawdę intuicyjnie zrozumieć każdą liczbę tutaj. Po prostu opublikuję wyniki i skomentuję to, czego się dowiedz ... [truncated 225 chars](2192 chars) |
+| Jak radzić sobie z brakującymi wartościami dla PCA? (51 chars) | Zastąpienie wartości NA do analizy PCA Użyłem funkcji `prcomp()` do przeprowadzenia analizy PCA w R. Jednak w tej funkcji jest błąd, który powoduje, że parametr `na.action` nie działa. Poprosiłem o pomoc w sprawie stackoverfl ... [truncated 225 chars](1484 chars) |
 
 ## Dataset Information
 

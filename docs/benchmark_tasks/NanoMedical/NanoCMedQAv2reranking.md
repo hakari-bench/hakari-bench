@@ -7,13 +7,14 @@
 
 ## Overview
 
-`NanoCMedQAv2reranking` is a Chinese medical answer-selection task derived from
-CMedQAv2. Queries are user-submitted medical consultation questions, often with
-symptoms, pregnancy context, test results, medication history, or treatment
-concerns. Documents are short answer candidates written in online-consultation
-style. The task tests whether a retriever or reranker can select medically
-appropriate Chinese answers from many plausible, lexically overlapping
-candidate replies.
+CMedQAv2 was introduced for Chinese medical question-answer selection, using
+online consultation questions and candidate answers from community medical QA.
+This NanoMedical reranking-style split keeps that answer-selection objective:
+patient questions with symptoms, pregnancy context, test results, medication
+history, or treatment concerns must retrieve medically appropriate short answer
+candidates. The difficulty is not broad document search but distinguishing
+plausible Chinese consultation replies that share symptoms or body parts while
+giving different advice.
 
 ## Details
 
@@ -104,11 +105,11 @@ queries or answers.
 
 | Query | Positive document |
 | --- | --- |
-| 主要症状:慢支发病时间:30年前化验检查结果:无多次用药效果不佳 (32 chars) | "德国""顿克""治疗气管炎哮喘肺气肿肺心病过敏性鼻炎只需一次注射即可达到半年至两年不喘过敏性鼻炎1-2年不发不3-5次注射即可永远消失无任何毒副作用。人生最大的痛苦就是不能正常的呼吸我院呼吸内科是使用德国""顿克""治疗哮喘鼻炎多年的医院经多年来的反复验证证实德国顿克是气管炎哮喘肺气肿肺心病即过敏性鼻炎的救命药。一年只需1-2次肌肉注射即可不咳不喘鼻炎不发病免去了服药喷药给胃肠造成的严重副作用出现了激素脸多花钱不治病的烦恼。德国""顿克""的药理作用主要是：抗过敏消炎增强患者本身的免疫机能使众多上气不接" (256 chars) |
-| 我左边腰疼，腰以下坐骨神经痛，到脚踝以上。请问专家该如何治疗为好？ (33 chars) | 考虑是腰间盘突出压迫神经造成的，最好及时拍片检查，明确后及时针灸按摩，同时建议最好牵引，可以改善的。 (50 chars) |
-| 我父亲肺癌中晚期，并患有糖尿病Ⅱ型，目前正在做穿刺活检，医生看了CT，说已经不能做手术了，只能吃中药了。一个半月前，常常胸口疼，进医院检查时，痰有血丝目前，只是刚确诊，穿刺报告还没出来饮食方面需要注意什么？应该多吃什么？不能吃什么？还有其他更好的治疗方法吗？ (129 chars) | 可以适当增加酸甜食物的摄入，有助于缓解胃口不适。多吃一些维生素含量高的新鲜蔬菜和水果，可有效增加抵抗力。中医治疗肿瘤方面，主要是去邪扶正，扶正固本，对身体免疫力起调节作用，但是疗效有限。但是你可以尝试一下，有的人效果还是很好的。建议你到医院制定综合科学的治疗方案。不要贻误诊治，积极配合治疗 (145 chars) |
-| 是不是有阴道炎？？下体有点痒，有淡灰色液体，有点异味。黏黏的 (30 chars) | 考虑感染了阴道炎，建议你做白带常规检查来确定阴道炎类型，再对症治疗。平时保持外阴清洁干燥。切忌搔抓，热水洗烫和使用肥皂内裤忌酒及辛辣或过敏食物。 (72 chars) |
-| 请问我怀孕七个月了痔疮特别疼痛我用清凉油涂了一下就好多了这样对胎儿有影响吗？请问我怀孕七个月了痔疮特别疼痛我用清凉油涂了两次就好了这样对胎儿有影响吗？ (75 chars) | 痔疮特别疼痛，平时不要吃辣的，上火的，油腻的，不要久蹲厕所。现在在孕期也没有办法，等宝宝生了以后做个小手术就行了。 (57 chars) |
+| 全部症状：近一个月发现，胸闷，气短、咳嗽、低烧治疗情况 (27 chars) | 这样的情况表明癌肿已经侵犯到胸膜，可以说是后期的表现 (26 chars) |
+| 全部症状：月经来的天数跟原来的一样，就只是量少了，如果是子宫内膜有异常的话该怎么办发病时间及原因：治疗情况 (53 chars) | 月经量少的原因很多，月经量少一般可能与内分泌失调、妇科炎症等有关，除了可能是黄体机能不足外，甲状腺、泌乳激素功能异常，或是曾做过人工流产手术或是子宫内膜粘连也都是可能的因素之一。子宫内膜有异常的话，要去医院检查，根据情况在医生指导下用药 (118 chars) |
+| 主要诊断:右颞叶脑挫裂伤其他诊断:外伤性蛛网膜下腔出血左侧颞骨骨折我想问能不能评上十级伤残主要诊断:右颞叶脑挫裂伤其他诊断:外伤性蛛网膜下腔出血左侧颞骨骨折我想问能不能评上十级伤残？交通事故 (95 chars) | 有可能是由于骨折引起肿胀引起的疼痛这样的话需要应用消肿的药物和止痛的药物一般经过2周的时间就会没事的希望好好的保养不要活动 (61 chars) |
+| 我宝宝误喝了一爵臣牌清洗剂有事吗用去医院洗胃吗 (23 chars) | 你的情况要考虑这个如果量比较多的话还是要到医院进行洗胃治疗的。 (31 chars) |
+| 我母亲半月前出现过几次突然眼前发黑、头很晕、无力，开始血压很高，到医院诊断是脑动脉缺血，医生解释说是脑梗塞前期，我想请问一下怎么治疗？能否治好？在饮食方面具体吃那些东西？药物方面该用什么药？在医院住过一周我想请问一下怎么治疗？能否治好？在饮食方面具体吃那些东西？药物方面该用什么药？ (141 chars) | 你头晕或眩晕是脑供血不足引起的，可能有脑血管痉挛，由于紧张压力等因素造成的，需要放松训练，、最好采用中医中药治疗，中药方剂有效，结合针灸理疗效果好，特别是头针治疗有特效 (84 chars) |
 
 ## Dataset Information
 

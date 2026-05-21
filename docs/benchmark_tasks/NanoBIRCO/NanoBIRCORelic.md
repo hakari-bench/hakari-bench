@@ -7,12 +7,13 @@
 
 ## Overview
 
-BIRCO is an information retrieval benchmark for complex user objectives rather
-than simple semantic similarity. `NanoBIRCORelic` is the RELIC literary evidence
-retrieval task: each query is a passage of literary analysis with one or more
-masked quotations, and the system must retrieve the literary passage that best
-supports or completes the analysis. The task tests discourse-level literary
-reasoning and quotation recovery.
+BIRCO includes RELIC as literary evidence retrieval: the query is a scholarly
+analysis passage where a quotation has been replaced by a mask, and the target
+is the original literary sentence or passage that completes the argument. This
+Nano task is single-positive and uses long criticism-style queries against
+classic literature passages. A retriever has to infer the missing quotation
+from interpretive context about authors such as Lawrence, Orwell, Dreiser,
+Dickens, and Austen, not merely match named works.
 
 ## Details
 
@@ -105,11 +106,11 @@ model must identify the passage that actually supports the analysis.
 
 | Query | Positive document |
 | --- | --- |
-| In her young adult life she will strive for a place in that activity, in civilization: At adolescence the cloud of self-responsibility gathered upon her . . . she must go somewhere, become something". Ursula has to live in this new way: [masked sentence(s)] That is what it means to enter "The Widening Circle," as the chapter which contains the above passage is entitled. She must live in a world of practical reality as her mother and Lydia never had to do. She recoils from the mob, the average Self, as she recoiled from her father, and from reality. Yet she is nakedly exposed to it. (588 chars) | This strange sense of cruelty and ugliness always imminent, ready to seize hold upon her this feeling of the grudging power of the mob lying in wait for her, who was the exception, formed one of the deepest influences of her life. Wherever she was, at school, among friends, in the street, in the train, she instinctively abated herself, made herself smaller, feigned to be less than she was, for fear that her undiscovered self should be seen, pounced upon, attacked by brutish resentment of the commonplace, the average Self. (528 chars) |
-| These scenes of terror and slaughter were not what they had looked forward to on that night when old Major first stirred them to rebellion. Clover's only expression is to begin to sing `[masked sentence(s)]`. (790 chars) | At last, feeling this to be in some way a substitute for the words she was unable to find, she began to sing 'Beasts of England'. (295 chars) |
-| The narrator introduces a family that sets up its shabby, traveling religious act on a street corner in busy Kansas City. The only son reacts to public curiosity: `[masked sentence(s)]`. (1230 chars) | The boy moved restlessly from one foot to the other, keeping his eyes down, and for the most part only half singing. (598 chars) |
-| Dickens offers scathing praise for the Protestant Association's organizational efforts: `[masked sentence(s)]`. The analysis connects mystery, popular credulity, and narrative success. (1207 chars) | To surround anything, however monstrous or ridiculous, with an air of mystery, is to invest it with a secret charm. (867 chars) |
-| In Martin Chuzzlewit, the narrator becomes explicit about Pecksniff as a parodic father figure: `[masked sentence(s)]`. (1181 chars) | It is customary with fathers in stage-plays, after giving their daughters to the men of their hearts, to congratulate themselves. (461 chars) |
+| Euripides' god, in contrast, is conceived agnostically; he is described in the Hercules as "Jove, whoe'er/ That Jove may be". In all, Moby Dick is strikingly similar to Dionysus, the daemon bull-god of Euripides' Bacchae. Thi ... [truncated 225 chars](650 chars) | thou clear spirit of clear fire, whom on these seas I as Persian once did worship, till in the sacramental act so burned by thee, that to this hour I bear the scar; I now know thee, thou clear spirit, and I now know that thy ... [truncated 225 chars](252 chars) |
+| Let us look at the way. Lawrence begins The Rainbow, which was originally to have been the first part of a long novel of which Women in Love was Part II. The Rainbow is about the Brangwen family and about three generations of ... [truncated 225 chars](829 chars) | But heaven and earth was teeming around them, and how should this cease? They felt the rush of the sap in spring, they knew the wave which cannot halt, but every year throws forward the seed to begetting, and, falling back, l ... [truncated 225 chars](794 chars) |
+| the latter follows the former in the use of means that drug the masses. The "Semi-Demi Finals of the Women's Heavyweight Wrestling Championship" do not differ greatly from the fascist rallies and parades of the 1930s. In both ... [truncated 225 chars](1164 chars) | Round they went, a circular procession of dancers, each with hands on the hips of the dancer preceding, round and round, shouting in unison, stamping to the rhythm of the music with their feet, beating it, beating it out with ... [truncated 225 chars](342 chars) |
+| the monster is likewise doomed to an existence of loneliness and homelessness. Sublimity, supposedly transcendent in value, is in fact a destruction of the common values and pleasures of human existence. Mary Shelley signals ... [truncated 225 chars](1122 chars) | Delighted and surprised, I embraced her, but as I imprinted the first kiss on her lips, they became livid with the hue of death; her features appeared to change, and I thought that I held the corpse of my dead mother in my ar ... [truncated 225 chars](323 chars) |
+| She can be his inspiration; her intuitive capacity, often superior to man's, can give him timely warning, and her feeling, always directed towards the personal, can show him ways which his own less personally accented feeling ... [truncated 225 chars](1000 chars) | But on other moonlight nights, when the sadness and the silence have touched me in a different way-have affected me with something as like a sorrowful sense of peace, as any emotion that had pain for its foundations could-I h ... [truncated 225 chars](433 chars) |
 
 ## Dataset Information
 

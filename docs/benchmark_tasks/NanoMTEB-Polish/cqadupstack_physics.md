@@ -7,11 +7,14 @@
 
 ## Overview
 
-`cqadupstack_physics` is a Polish duplicate-question retrieval task from the
-Physics split of CQADupStack. Queries are conceptual or calculation-oriented
-physics questions, and documents are candidate community QA posts. The task
-requires matching equivalent physical ideas even when one post uses intuitive
-wording and another uses more formal terminology or equations.
+CQADupStack uses duplicate links in community QA as relevance judgments; the
+Polish Physics split brings that retrieval objective to translated physics
+forum posts. Queries are short conceptual or calculation-oriented physics
+questions, and relevant documents are equivalent posts that may express the same
+phenomenon with different formality or equations. The observed clusters cover
+cosmology, gravity, superconductivity, inertial frames, and heat transfer, with
+large duplicate groups in some cases, so retrieval requires matching physical
+meaning across varied explanations.
 
 ## Details
 
@@ -56,11 +59,11 @@ same answerable physics problem.
 
 | Query | Positive document |
 | --- | --- |
-| O obserwatorium Hubble'a i odległych galaktykach (48 chars) | Czy Einstein się mylił, mówiąc, że nic nie może poruszać się szybciej niż prędkość światła? Jeśli wszechświat stale rozszerza się szybciej niż prędkość światła, jak Einstein może mieć rację? (190 chars) |
-| Potencjał i natężenie pola grawitacyjnego w osi okrągłej płyty (62 chars) | Grawitacja na płaskim obiekcie Zastanawiałem się, jak zachowywałaby się grawitacja na obiektach o różnych kształtach. 1. Gdyby Ziemia została ściśnięta w cienki dysk, jakie byłoby przyspieszenie grawitacyjne w środku płaskiej powierzchni? Czy byłby naprawdę ni... [truncated from 556 chars] (556 chars) |
-| Przyczyny nadprzewodnictwa (intuicyjne) (39 chars) | Nadprzewodnictwo Jakie jest prawidłowe wyjaśnienie, dlaczego nadprzewodnictwo występuje w metalach, gdy są one schładzane do temperatury poniżej $T_c$? Mój podręcznik ma następujące wyjaśnienie: > _Nadprzewodnictwo jest zjawiskiem wykazywanym przez niektóre me... [truncated from 2207 chars] (2207 chars) |
-| Inercyjne układy odniesienia (28 chars) | Co to jest „rama nieinercyjna”? W niektórych pytaniach lub odpowiedziach PSE, takich jak tutaj (i komentarzach poniżej) pojawia się pojęcie " _ramka przyspieszająca_ " lub (mniej lub bardziej równoważnie) " _ramka nieinercjalna_ ". Jaka jest definicja tego poj... [truncated from 1163 chars] (1163 chars) |
-| Woda coolso obiekt przez absorpcję ciepła (41 chars) | Dlaczego dmuchanie na kogoś, kto jest mokry, jest zimniejsze niż na kogoś, kto jest suchy? Tytuł mówi wszystko. Gdy stoję na wietrze i jestem mokry, czuję się znacznie zimniej niż gdy jestem suchy. Dzieje się tak bez względu na to, jak ciepła lub zimna jest wo... [truncated from 276 chars] (276 chars) |
+| Jak równanie Schroedingera jest równaniem falowym? (50 chars) | związek między równaniem Schrodingera a równaniem falowym Zawsze byłem zdezorientowany związkiem między równaniem Schrödingera a równaniem falowym. $$ i\hbar \frac{\partial \psi}{\partial t} = - \frac{\hbar^2}{2m} \nabla^2+ U ... [truncated 225 chars](1059 chars) |
+| Pomiary technologii aktywnej redukcji szumów (44 chars) | Maksymalne opóźnienie efektywnej aktywnej redukcji szumów? Aktywna redukcja szumów redukuje niechciany dźwięk, wysyłając odwróconą fazę oryginalnej fazy: ![Aktywna redukcja szumów](http://i.stack.imgur.com/0jSp8.png) (Źródło: ... [truncated 225 chars](913 chars) |
+| Czy ciągłe modele matematyczne dyskretnych zjawisk fizycznych są bałaganiarskie z powodu rozłączenia między „ciągłym” i „nieciągłym”? (133 chars) | Jaki jest „dyskretny” odpowiednik mechaniki „ciągłej”? Gdybym chciał zbadać podejście matematyki dyskretnej do mechaniki kontinuum, do jakich podręczników powinienem się zajrzeć? Przypuszczam, że gotową odpowiedzią na to pyta ... [truncated 225 chars](536 chars) |
+| Grawitacja z energii (20 chars) | Czy energia niemasowa generuje pole grawitacyjne? Na bardzo podstawowym poziomie wiem, że grawitacja nie jest generowana przez masę, ale raczej przez tensor naprężenia-energii i kiedy często macham rękami, wydaje się, że ozna ... [truncated 225 chars](1451 chars) |
+| Dlaczego (relatywistyczna) masa obiektu wzrasta, gdy jego prędkość zbliża się do prędkości światła? (99 chars) | Relatywistyczny pęd i masa Czy istnieje w ogóle relatywistyczna masa czy po prostu relatywistyczny pęd? Jaki jest powód, aby preferować jeden nad drugim? Jaki jest problem ze stwierdzeniem, że gorący gaz będzie miał większą m ... [truncated 225 chars](241 chars) |
 
 ## Dataset Information
 

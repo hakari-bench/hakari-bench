@@ -7,11 +7,14 @@
 
 ## Overview
 
-`fever_vn` is the Vietnamese FEVER retrieval task from VN-MTEB. Queries are
-translated factual claims, and documents are translated Wikipedia evidence
-passages. The task tests whether a retriever can find evidence pages or
-passages that support or refute a claim before any final fact-verification
-decision is made.
+FEVER casts fact verification as retrieving Wikipedia evidence for claims that
+may be supported, refuted, or unverifiable; VN-MTEB translates the retrieval
+portion into Vietnamese. In this Nano split, translated factual claims search
+translated Wikipedia evidence passages before any final verification label is
+applied. The observed claims involve historical succession, film casting,
+screenwriting, person attributes, and music release dates, so the retriever must
+find entity pages containing enough context to support or refute the translated
+claim.
 
 ## Details
 
@@ -77,11 +80,11 @@ entity but fail to prove the target relation.
 
 | Query | Positive document |
 | --- | --- |
-| Henry III của Pháp qua đời mà không có người kế vị. (51 chars) | Henry III của Pháp Henry III (19 tháng 9 năm 1551 - ngày 2 tháng 8 năm 1589; sinh Alexandre Édouard de France, Henryk Walezy, Henrikas Valua) là một vị vua thuộc nhà Valois đã được bầu làm quốc vương của Khối thịnh vượng chung Ba Lan-Litva từ năm 1573 đến năm 1575 và trị vì với tư cách là Vua Pháp từ năm 1574 cho đến khi ông qua ... [truncated from 2616 chars] (2616 chars) |
-| Amy Adams đóng vai chính trong phim "Trouble with the Curve". (61 chars) | Khó khăn với đường cong Trouble with the Curve là một bộ phim thể thao kịch tính năm 2012 do Robert Lorenz đạo diễn và có sự tham gia của Clint Eastwood , Amy Adams , Justin Timberlake , Matthew Lillard và John Goodman . Phim xoay quanh một nhà trinh sát bóng chày già nua mà người con gái cùng đi với ông trong chuyến du lịch tri ... [truncated from 931 chars] (931 chars) |
-| Warren Beatty là một người viết kịch bản của "Heaven Can Wait". (63 chars) | Warren Beatty Henry Warren Beatty ( sinh ngày 30 tháng 3 năm 1937), còn được biết đến với tên gọi Warren Beatty, là một diễn viên và đạo diễn phim người Mỹ. Ông đã từng được đề cử cho Giải Oscar mười bốn lần - bốn lần cho Nam diễn viên chính xuất sắc nhất, bốn lần cho Phim hay nhất, hai lần cho Đạo diễn xuất sắc nhất, ba lần cho ... [truncated from 1268 chars] (1268 chars) |
-| Paul von Hindenburg là một người đàn ông. (41 chars) | Paul von Hindenburg Paul Ludwig Hans Anton von Beneckendorff und von Hindenburg, được biết đến với tên gọi Paul von Hindenburg ( / ˈpaʊl fɔn ˈhɪndn̩bʊɐ̯k /; 2 tháng 10 năm 1847 - ngày 2 tháng 8 năm 1934), là một sĩ quan quân đội Đức, nhà chính trị và người làm nhà nước đã kiểm soát phần lớn chính sách của Đức trong nửa sau của T ... [truncated from 2676 chars] (2676 chars) |
-| Move (bài hát của Little Mix) được phát hành vào tháng 10 năm 2013. (67 chars) | Move (bài hát của Little Mix) "Move " là một bài hát của nhóm nhạc nữ Anh Little Mix . Nó được phát hành như đĩa đơn chính từ album phòng thu thứ hai của họ , Salute ( 2013 ) . Bài hát được đồng sáng tác bởi nhóm với Maegan Cottone và Nathan Duvall , và do người sau sản xuất. Đây là một ca khúc R&B, khác biệt so với những giai đ ... [truncated from 671 chars] (671 chars) |
+| Watchmen là một bộ phim được đặt trong bối cảnh lịch sử thay thế vào năm 1985. (78 chars) | Watchmen (phim) Watchmen là một bộ phim siêu anh hùng Mỹ năm 2009 do Zack Snyder đạo diễn, dựa trên loạt truyện tranh cùng tên của DC Comics ra mắt năm 1986-87 của Alan Moore và Dave Gibbons. Phim có sự tham gia của dàn diễn ... [truncated 225 chars](2181 chars) |
+| Jenny McCarthy là một người mẫu. (32 chars) | Jenny McCarthy Jennifer Ann McCarthy ( sinh ngày 1 tháng 11 năm 1972), được biết đến với tên Jenny McCarthy và Jenny Wahlberg, là một nữ diễn viên, người mẫu, người dẫn chương trình truyền hình, tác giả kịch bản điện ảnh và n ... [truncated 225 chars](1368 chars) |
+| James Brolin đã từng đóng vai trong những vở kịch hài tình huống. (65 chars) | James Brolin James Brolin ( - LSB- broʊlᵻn - RSB- sinh ngày 18 tháng Bảy năm 1940 ) là một diễn viên , nhà sản xuất và đạo diễn người Mỹ, được biết đến với những vai diễn phim và truyền hình , bao gồm sitcom cũng như opera xà ... [truncated 225 chars](494 chars) |
+| Joseph Merrick đã là chủ đề của hàng ngàn những dòng tweet hận thù. (67 chars) | Joseph Merrick Joseph Carey Merrick (5 tháng 8 năm 1862 - ngày 11 tháng 4 năm 1890, thường bị nhầm tên là John Merrick) là một người đàn ông Anh với những dị tật rất nặng nề đã từng được trưng bày tại một chương trình biểu di ... [truncated 225 chars](1396 chars) |
+| Chris Mullin chơi bóng rổ cho một đội bóng chuyên nghiệp. (57 chars) | Indiana Pacers Indiana Pacers là một đội bóng rổ chuyên nghiệp của Mỹ có trụ sở tại Indianapolis. Indiana Pacers thi đấu tại giải Nhà nghề Hoa Kỳ (NBA) trong hội nghị miền Đông, giải Trung Bộ. Đội được thành lập vào năm 1967 ... [truncated 225 chars](871 chars) |
 
 ## Dataset Information
 

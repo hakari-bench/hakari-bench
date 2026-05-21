@@ -7,11 +7,13 @@
 
 ## Overview
 
-`cqadupstack_gis` is a Polish duplicate-question retrieval task from the GIS
-split of CQADupStack. Queries are geospatial software and data-processing
-questions, and documents are candidate GIS Stack Exchange posts. The task tests
-whether a retriever can connect equivalent questions across ArcGIS, ArcPy,
-rasters, DEMs, shapefiles, map styling, and model-builder workflows.
+CQADupStack frames this task family as duplicate-question retrieval in community
+QA, and the Polish GIS split localizes that objective to geospatial software
+questions. A short translated GIS title must retrieve a duplicate or equivalent
+Stack Exchange post from longer Polish candidate threads. The observed data is
+centered on ArcGIS, ArcPy, rasters, DEMs, shapefiles, styling, and
+model-builder workflows, so the task requires matching the same geospatial
+problem across tool names, data formats, and processing terminology.
 
 ## Details
 
@@ -56,11 +58,11 @@ layer names, and wording.
 
 | Query | Positive document |
 | --- | --- |
-| Czy narzędzie Oblicz wartość (tylko model) działa poprawnie w narzędziach uruchamianych w trybie wsadowym? (106 chars) | Dlaczego kroki są niesprawne podczas uruchamiania modelu w partii? Mam problem z używaniem modelu ArcMap w trybie wsadowym. Celem mojego modelu jest uzyskanie wyniku macierzy kosztów OD z wybranej sieci oraz zbioru źródeł i miejsc docelowych. Moim celem jest m... [truncated from 1807 chars] (1807 chars) |
-| Jak znaleźć obszar Cyfrowego Modelu Elewacji nad/pod płaszczyzną odniesienia? (77 chars) | O uzyskiwaniu obszaru z DEM poniżej 5000 i poniżej 3000 m n.p.m.? Chcę uzyskać obszar z DEM, który jest poniżej 5000 i 3000. Właściwie potrzebuję tych dwóch obszarów do mojego modelu regresji, aby obliczyć wyładowanie. W takim razie, jak mogę się dowiedzieć, u... [truncated from 537 chars] (537 chars) |
-| Arcpy i arcobject (17 chars) | Uzyskiwanie dostępu do dodatkowych ArcObjects z Pythona (czyli bez ArcPy)? Chciałbym mieć możliwość napisania skryptu niektórych rzeczy, które nie są ujawniane przez `arcgisscripting` lub ArcPy. Jak uzyskać dostęp do ArcObjects z Pythona? Obecnie pracuję z Arc... [truncated from 353 chars] (353 chars) |
-| Gdzie przechowywać (gotowe) style? (34 chars) | Przekaż właściwości plikowi kształtu do wykorzystania przez inną osobę Mam dane z geologii skalnej. Chcę sklasyfikować dane, aby wyświetlały się z tymi samymi właściwościami, co na stronie dostawcy. Czy istnieje sposób, aby przypisać właściwość do warstwy (w t... [truncated from 421 chars] (421 chars) |
-| Jak zamienić dane w częściach rastra A na równoważne dane w rastrze B? (70 chars) | Częściowo aktualizujesz raster (DEM)? Jak zaktualizować plik DEM .img w ArcView 9.3? Mam DEM, który wymaga aktualizacji tylko w przypadku kilku części. Obszar do zaktualizowania został wyprodukowany w oddzielnym DEM z interpolacją spline z barierami. Sam obsza... [truncated from 562 chars] (562 chars) |
+| Jak zmienić proporcje mapy bez zmiany skali? (44 chars) | Jak zmienić rozmiar elementu mapy w edytorze wydruku QGIS bez zmiany skali? Czy można zablokować skalę w kompozytorze wydruku QGIS 2.0.1? Za każdym razem, gdy zmieniam rozmiar mapy, skala jest dostosowywana. To sprawia, że ​​ ... [truncated 225 chars](286 chars) |
+| Jak używać SRTM Global DEM do obliczania nachylenia? (52 chars) | jaki jest odpowiedni układ współrzędnych rzutowanych do WGS84? > **Możliwe duplikowanie:** > Obliczanie globalnego DEM na nachylenie Chcę obliczyć nachylenie z mojego globalnego DEM? DEM ma odwzorowanie WGS84 (stopnie). Aby p ... [truncated 225 chars](520 chars) |
+| Skopiuj odpytywane atrybuty pliku kształtu do nowego pliku kształtu (67 chars) | Tworzenie rekordów w wyjściowym pliku kształtu za pomocą Pythona Mam listę (wyjście z poprzedniej pętli) zawierającą atrybuty z wejściowego pliku kształtu. To, z czym utknąłem, to wprowadzanie tych atrybutów do nowego pliku k ... [truncated 225 chars](1933 chars) |
+| Konwertowanie pliku CSV do pliku kształtu (41 chars) | Jak mogę przekonwertować plik csv danych WKT na plik kształtu za pomocą programu ogr2ogr? To pytanie dotyczy plików Shape na tekst. Mam plik csv, z jedną kolumną, gdzie wszystkie wiersze odpowiadają WKT POLYGON(): WKT POLYGON ... [truncated 225 chars](579 chars) |
+| Skrypty Pythona, które działają w ArcMap, a te, które działają na zewnątrz? (75 chars) | "EOFError: EOF podczas czytania linii" Używanie raw_input() w ArcMaps Python Console Piszę skrypt Pythona, aby zautomatyzować przetwarzanie niektórych danych ArcMaps. Dostaję się zawieszony na raw_input(). Aby uzyskać dane we ... [truncated 225 chars](739 chars) |
 
 ## Dataset Information
 

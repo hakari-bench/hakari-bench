@@ -7,9 +7,12 @@
 
 ## Overview
 
-`NanoCodeTransOceanDL` evaluates similar-code retrieval across deep-learning
-frameworks. Queries and positives implement the same machine-learning operation
-in different libraries such as MXNet, PyTorch, TensorFlow, and Paddle.
+CoIR uses CodeTransOcean-DL to frame deep-learning code translation as
+cross-framework retrieval. A code fragment written for one library must retrieve
+the equivalent implementation in another framework such as MXNet, PyTorch,
+TensorFlow, or Paddle. The task emphasizes semantic alignment of tensor
+operations, model components, plotting helpers, and training utilities despite
+different APIs and boilerplate.
 
 ## Details
 
@@ -53,16 +56,13 @@ include negatives that use similar APIs for a different operation.
 
 ## Example Data
 
-Line breaks are shown as `<br>`. The character counts are the full query and
-document lengths before truncation.
-
-| IDs | Chars query / doc | BM25 rank | Query | Positive document |
-| --- | ---: | ---: | --- | --- |
-| `676` -> `c676` | 814 / 883 | 2 | %matplotlib inline<br>import math<br>from mxnet import np, npx<br>from d2l import mxnet as d2l<br>npx.set_np()<br>def adagrad_2d(x1, x2, s1, s2):<br>    eps = 1e-6<br>    g1, g2 = 0.2 * x1, 4 * x2<br>    s1 += g1 ** 2<br>    s2 += g2 ** 2<br>    x1 -= eta / math.sqrt(s1 + eps) * g1<br>    x2 -= eta / math.sqrt(s2 + eps) * g2 ... [truncated] | %matplotlib inline<br>import math<br>import torch<br>from d2l import torch as d2l<br>def adagrad_2d(x1, x2, s1, s2):<br>    eps = 1e-6<br>    g1, g2 = 0.2 * x1, 4 * x2<br>    s1 += g1 ** 2<br>    s2 += g2 ** 2<br>    x1 -= eta / math.sqrt(s1 + eps) * g1<br>    x2 -= eta / math.sqrt(s2 + eps) * g2<br>    return x1, x2, s1, s2<br>def f_2d(x1, x2): ... [truncated] |
-| `642` -> `c642` | 427 / 485 | 2 | %matplotlib inline<br>import numpy as np<br>import tensorflow as tf<br>from d2l import tensorflow as d2l<br>def f(x):<br>    return x ** 2<br>def f_grad(x):<br>    return 2 * x<br>def show_trace(results, f):<br>    n = max(abs(min(results)), abs(max(results)))<br>    f_line = tf.range(-n, n, 0.01)<br>    d2l.set_figsize()<br>    d2l.plot([f_line, results], [[f(x) for x in f_line], [f(x) for x ... [truncated] | %matplotlib inline<br>import warnings<br>from d2l import paddle as d2l<br>warnings.filterwarnings("ignore")<br>import numpy as np<br>import paddle<br>def f(x):<br>    return x ** 2<br>def f_grad(x):<br>    return 2 * x<br>def show_trace(results, f):<br>    n = max(abs(min(results)), abs(max(results)))<br>    f_line = paddle.arange(-n, n, 0.01, dtype='float32')<br>    d2l.set_figsize()<br>    d2l.plo ... [truncated] |
-| `637` -> `c637` | 1960 / 1999 | 2 | import tensorflow as tf<br>from d2l import tensorflow as d2l<br>class MultiHeadAttention(tf.keras.layers.Layer):<br>    def __init__(self, key_size, query_size, value_size, num_hiddens, num_heads, dropout, bias=False, **kwargs):<br>        super().__init__(**kwargs)<br>        self.num_heads = num_heads<br>        self.attention = d2l.DotProductAttention(dropout)<br>        self ... [truncated] | import warnings<br>from d2l import paddle as d2l<br>warnings.filterwarnings("ignore")<br>import math<br>import paddle<br>from paddle import nn<br>class MultiHeadAttention(nn.Layer):<br>    def __init__(self, key_size, query_size, value_size, num_hiddens, num_heads, dropout, bias=False, **kwargs):<br>        super(MultiHeadAttention, self).__init__(**kwargs)<br>        self.num_heads = ... [truncated] |
-| `659` -> `c659` | 3316 / 3000 | 3 | %matplotlib inline<br>import warnings<br>from d2l import paddle as d2l<br>warnings.filterwarnings("ignore")<br>import numpy as np<br>import paddle<br>from paddle import nn<br>timer = d2l.Timer()<br>A = paddle.zeros((256, 256))<br>B = paddle.randn((256, 256))<br>C = paddle.randn((256, 256))<br>timer.start()<br>for i in range(256):<br>    for j in range(256):<br>        A[i, j] = paddle.dot(B[i, :], C ... [truncated] | %matplotlib inline<br>from mxnet import autograd, gluon, init, np, npx<br>from mxnet.gluon import nn<br>from d2l import mxnet as d2l<br>npx.set_np()<br>timer = d2l.Timer()<br>A = np.zeros((256, 256))<br>B = np.random.normal(0, 1, (256, 256))<br>C = np.random.normal(0, 1, (256, 256))<br>timer.start()<br>for i in range(256):<br>    for j in range(256):<br>        A[i, j] = np.dot(B[i, :], C[:, j ... [truncated] |
-| `661` -> `c661` | 1005 / 814 | 3 | %matplotlib inline<br>import warnings<br>from d2l import paddle as d2l<br>warnings.filterwarnings("ignore")<br>import math<br>import paddle<br>def adagrad_2d(x1, x2, s1, s2):<br>    eps = 1e-6<br>    g1, g2 = 0.2 * x1, 4 * x2<br>    s1 += g1 ** 2<br>    s2 += g2 ** 2<br>    x1 -= eta / math.sqrt(s1 + eps) * g1<br>    x2 -= eta / math.sqrt(s2 + eps) * g2<br>    return x1, x2, s1, s2<br>def f_2d(x1, x ... [truncated] | %matplotlib inline<br>import math<br>from mxnet import np, npx<br>from d2l import mxnet as d2l<br>npx.set_np()<br>def adagrad_2d(x1, x2, s1, s2):<br>    eps = 1e-6<br>    g1, g2 = 0.2 * x1, 4 * x2<br>    s1 += g1 ** 2<br>    s2 += g2 ** 2<br>    x1 -= eta / math.sqrt(s1 + eps) * g1<br>    x2 -= eta / math.sqrt(s2 + eps) * g2<br>    return x1, x2, s1, s2 ... [truncated] |
+| Query | Positive document |
+| --- | --- |
+| %matplotlib inline import math from mxnet import np, npx from d2l import mxnet as d2l npx.set_np() d2l.set_figsize() gammas = [0.95, 0.9, 0.8, 0.7] for gamma in gammas: x = np.arange(40).asnumpy() d2l.plt.plot(x, (1-gamma) * ... [truncated 225 chars](746 chars) | import math import torch from d2l import torch as d2l d2l.set_figsize() gammas = [0.95, 0.9, 0.8, 0.7] for gamma in gammas: x = torch.arange(40).detach().numpy() d2l.plt.plot(x, (1-gamma) * gamma ** x, label=f'gamma = {gamma: ... [truncated 225 chars](805 chars) |
+| %matplotlib inline import numpy as np import tensorflow as tf from d2l import tensorflow as d2l timer = d2l.Timer() A = tf.Variable(tf.zeros((256, 256))) B = tf.Variable(tf.random.normal([256, 256], 0, 1)) C = tf.Variable(tf. ... [truncated 225 chars](3525 chars) | %matplotlib inline import warnings from d2l import paddle as d2l warnings.filterwarnings("ignore") import numpy as np import paddle from paddle import nn timer = d2l.Timer() A = paddle.zeros((256, 256)) B = paddle.randn((256, ... [truncated 225 chars](3316 chars) |
+| import numpy as np import tensorflow as tf from d2l import tensorflow as d2l num_hiddens, num_heads = 100, 5 attention = d2l.MultiHeadAttention(num_hiddens, num_hiddens, num_hiddens, num_hiddens, num_heads, 0.5) batch_size, n ... [truncated 225 chars](1474 chars) | import math import warnings from d2l import paddle as d2l warnings.filterwarnings("ignore") import paddle from paddle import nn num_hiddens, num_heads = 100, 5 attention = d2l.MultiHeadAttention(num_hiddens, num_hiddens, num_ ... [truncated 225 chars](1593 chars) |
+| %matplotlib inline import warnings from d2l import paddle as d2l warnings.filterwarnings("ignore") import math import paddle from paddle import nn from paddle.optimizer import lr as lr_scheduler def net_fn(): model = nn.Seque ... [truncated 225 chars](4018 chars) | %matplotlib inline import math import torch from torch import nn from torch.optim import lr_scheduler from d2l import torch as d2l def net_fn(): model = nn.Sequential( nn.Conv2d(1, 6, kernel_size=5, padding=2), nn.ReLU(), nn. ... [truncated 225 chars](3912 chars) |
+| import math import warnings import pandas as pd from d2l import paddle as d2l warnings.filterwarnings("ignore") import paddle from paddle import nn class PositionWiseFFN(nn.Layer): def __init__(self, ffn_num_input, ffn_num_hi ... [truncated 225 chars](8099 chars) | import math import pandas as pd from mxnet import autograd, np, npx from mxnet.gluon import nn from d2l import mxnet as d2l npx.set_np() class PositionWiseFFN(nn.Block): def __init__(self, ffn_num_hiddens, ffn_num_outputs, ** ... [truncated 225 chars](7132 chars) |
 
 ## Dataset Information
 

@@ -7,10 +7,14 @@
 
 ## Overview
 
-`sci_fact_vn` is the Vietnamese SciFact retrieval task from VN-MTEB. Queries are
-translated scientific claims, and documents are translated scientific paper
-abstracts. The task tests whether a retriever can find abstracts containing
-evidence that supports or refutes a scientific claim.
+VN-MTEB translates SciFact's scientific claim-verification retrieval problem
+into Vietnamese. The source SciFact paper defines claims that must be supported
+or refuted by scientific abstracts with rationale evidence; this Nano task uses
+the retrieval part, with translated scientific claims as queries and translated
+abstracts as documents. The sampled claims concern molecular mechanisms,
+histone demethylase recruitment, KRAS-mutant tumors, and biomedical
+associations, so retrieval must preserve scientific directionality and evidence
+semantics across translation.
 
 ## Details
 
@@ -75,11 +79,11 @@ measurements, and experimental context.
 
 | Query | Positive document |
 | --- | --- |
-| aPKCz gây tăng sinh khối u bằng cách ảnh hưởng đến chuyển hóa glutamine. (72 chars) | Điều khiển sự tái lập trình trao đổi chất do căng thẳng dinh dưỡng gây ra bởi PKCζ trong sự hình thành khối u Các tế bào ung thư có nhu cầu năng lượng và tổng hợp cao và được biết đến là thích nghi chuyển hóa của chúng để có thể sống sót và tiếp tục phát triển trong điều kiện căng thẳng dinh dưỡng. Chúng tôi cho thấy thiếu PKCζ ... [truncated from 1044 chars] (1044 chars) |
-| Sự tập hợp của histone demethylase và sự suy giảm tạm thời trong methyl hóa histone là cần thiết cho sự kích thích phiên mã phụ thuộc vào ligand bởi các thụ thể nhân. (166 chars) | Các cơ chế phụ thuộc vào protein histone methyl hóa áp đặt sự phụ thuộc của ligand cho hoạt động gen bởi các thụ thể hạt nhân Các thụ thể hạt nhân trải qua sự thay đổi cấu hình phụ thuộc vào chất nền mà cần thiết cho sự trao đổi giữa các yếu tố ức chế và kích thích, nhưng liệu có một yêu cầu thực sự đối với những mốc lịch sử di ... [truncated from 1291 chars] (1291 chars) |
-| Kết hợp phosphatidylinositide 3-kinase và MEK 1/2 ức chế là hiệu quả trong điều trị khối u đột biến KRAS. (105 chars) | Sử dụng hiệu quả các chất ức chế PI3K và MEK để điều trị ung thư phổi chuột mang đột biến K-Ras G12D và PIK3CA H1047R Những đột biến bẩm sinh kích hoạt phosphoinositide 3-kinase (PI3K) đã được xác định ở tiểu đơn vị xúc tác p110-alpha (mã hóa bởi PIK3CA). Chúng thường xảy ra ở hai vùng nóng: vùng xoắn ốc (E545K và E542K) và vùng ... [truncated from 1656 chars] (1656 chars) |
-| Biểu hiện ALDH1 liên quan đến tiên lượng kém trong ung thư vú. (62 chars) | ALDH1 là một chỉ số của tế bào gốc vú bình thường và ác tính và là một yếu tố dự đoán kết quả lâm sàng kém. Ứng dụng sinh học tế bào gốc vào nghiên cứu ung thư vú đã bị hạn chế bởi thiếu các phương pháp đơn giản để xác định và cô lập các tế bào gốc bình thường và ác tính. Bằng cách sử dụng hệ thống thí nghiệm trong ống nghiệm và ... [truncated from 1109 chars] (1109 chars) |
-| Nhiều protein trong tế bào của con người có thể được sửa đổi hậu dịch mã tại các dư lượng lysine thông qua acetylation. (119 chars) | Protein Lysine Acetylated/Deacetylated Enzymes và các bệnh lý chuyển hóa Acetylation của lysine là một sự biến đổi sau dịch mã, một hiện tượng di truyền, được gọi là chuyển nhóm acetyl từ acetyl CoA đến nhóm e- amino của protein đích, điều chỉnh bởi acetyltransferases (histone/ lysine (K) acetyltransferases, HATs/KATs) và deacet ... [truncated from 1099 chars] (1099 chars) |
+| Mức độ nghiêm trọng của bệnh tim liên quan đến amyloidosis có thể được mô tả bằng mức độ xuyên thành của sự tăng cường gadolinium muộn trong MRI. (145 chars) | Giá trị tiên lượng của quá trình tăng cường muộn gadolinium của cộng hưởng từ tim mạch trong bệnh tim amyloidosis BỐN MẠT LÝ NHIỆM: Dự đoán và điều trị 2 loại bệnh Amyloidosis tim chính, chuỗi nhẹ của immunoglobulin (AL) và A ... [truncated 225 chars](2127 chars) |
+| Sildenafil cải thiện chức năng cương dương ở những người đàn ông bị rối loạn cương dương do sử dụng thuốc chống trầm cảm SSRI. (126 chars) | Điều trị rối loạn chức năng tình dục liên quan đến thuốc chống trầm cảm với sildenafil: một thử nghiệm có đối chứng. Bất lực là tác dụng phụ phổ biến của thuốc chống trầm cảm thường gây nên tình trạng không tuân thủ điều trị. ... [truncated 225 chars](2203 chars) |
+| Căng thẳng ethanol làm giảm biểu hiện của IBP trong vi khuẩn. (61 chars) | Sự điều chỉnh và chuyển mạch trao hóa trong quá trình tiến hóa trong phòng thí nghiệm của độ dung nạp cồn ở E. coli Hiểu được cơ sở di truyền của sự thích nghi là một vấn đề trung tâm trong sinh học. Tuy nhiên, việc chỉ ra cá ... [truncated 225 chars](1545 chars) |
+| Sự giao tiếp giữa tế bào dendritic (DCs) và tế bào bạch cầu lympho bản chất (ILCs) đóng vai trò quan trọng trong điều hòa cân bằng nội môi đường ruột. (150 chars) | Yếu tố phiên mã T-bet điều tiết viêm ruột được trung gian bởi tế bào lympho bẩm sinh thụ thể interleukin-7+ Chuột thiếu yếu tố phiên mã T-bet trong hệ miễn dịch bẩm sinh phát triển viêm đại tràng phụ thuộc vào vi khuẩn đường ... [truncated 225 chars](1347 chars) |
+| Các tế bào đang trải qua hạn chế methionine có thể kích hoạt miRNAs. (68 chars) | microRNAs: Một biện pháp bảo vệ chống lại sự hỗn loạn? Dữ liệu gần đây cho thấy rằng microRNAs (miRNAs) đóng vai trò quan trọng trong các phản ứng căng thẳng ngoài vai trò được công nhận hơn của chúng trong quá trình phát tri ... [truncated 225 chars](554 chars) |
 
 ## Dataset Information
 

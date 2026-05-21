@@ -7,10 +7,14 @@
 
 ## Overview
 
-`snl` is a Norwegian lexicon article retrieval task derived from Store norske
-leksikon (SNL) article data. Queries are short article headlines or titles, and
-documents are long article or ingress text. The retriever must find the matching
-lexicon article.
+SNL Retrieval is the Scandinavian benchmark's retrieval adaptation of Store
+norske leksikon article data, where headlines or headwords are paired with long
+Norwegian encyclopedia entries and ingresses. No standalone SNL retrieval paper
+was confirmed, so the task is best read from the dataset card and sampled data:
+very short title-like queries such as person names or terms must retrieve the
+matching long lexicon article. Entity normalization and exact headword matching
+matter, but the long documents also require handling expansive encyclopedic
+context.
 
 ## Details
 
@@ -62,11 +66,11 @@ with the same surname, category, or concept family to reduce pure title matching
 
 | Query | Positive document |
 | --- | --- |
-| dobbeltbrytning (`274`, 15 chars, BM25 rank 1) | Fenomenet ble oppdaget i 1669 av dansken Rasmus Bartholin, som undersøkte islandsk kalsitt, såkalt dobbeltspat. Skrift som sees gjennom et slikt gjennomsiktig kalsittstykke, vil fremtre dobbelt. Når lyset treffer overflaten til kalsitten splittes strålene i to. De to har ulik hastighet og er polarisert vinkelrett på hverandre (se polarisert lys). Dette kan utnyttes i polarisasjonsfiltre (se nicolprisme). Den ene lysstrålen kalles den ordinære, denne følger brytningslovene. Den andre strålen er den ekstraordinære, og denne følger ikke brytningslovene ... [truncated from 1119 chars] (`275`, 1119 chars) |
-| Eric Clapton (`22`, 12 chars, BM25 rank 1) | Clapton satset på en solokarriere fra 1970, og etter en periode med alvorlige narkotikaproblemer har han vunnet stadig større popularitet over store deler av verden. Han har samarbeidet med en lang rekke musikere, ikke minst innen blues, som er den musikkformen som ligger hans hjerte nærmest.I 1970 og 1971 ledet han rockebandet Derek And The Dominos, som fikk stor suksess med albumet Layla And Other Assorted Love Songs (1970) og singlen Layla ... [truncated from 1735 chars] (`23`, 1735 chars) |
-| Andrea Camilleri (`288`, 16 chars, BM25 rank 2) | Camilleri debuterte først i 1978, men slo for alvor igjennom i 1994 med kriminalromanen La forma dell’acqua (norsk oversettelse Slik vann tar form, 2003). De i alt 27 romanene og flere kortfortellingene om den samvittighetsfulle politimannen Salvo Montalbano ble en stor suksess i Italia og i utlandet, og er også blitt en internasjonalt kjent tv-serie ... [truncated from 1313 chars] (`289`, 1313 chars) |
-| creek-konføderasjonen (`314`, 21 chars, BM25 rank 1) | Konføderasjonen omfattet etter hvert mange folkegrupper, og spilte en sentral rolle i den sørøstlige delen av Nord-Amerika, strategisk plassert mellom konkurrerende franskmenn, spaniere og engelskmenn. Den kunne mobilisere et sted mellom 3000 og 6000 krigere.Etter som den nye amerikanske nasjonen ekspanderte på 1800-tallet, ble creek-indianerne og deres allierte stadig mer presset ... (`315`, 733 chars) |
-| conference (`88`, 10 chars, BM25 rank 32) | I linjefarten er konferansens oppgave vesentlig å fastsette fraktrater, seilingsmønster, anløpstidspunkt og felles konnossementer. Ordet brukes også om organisasjoner som fremmer rederiinteressenes syn i sjørettsspørsmål og annet.Konferanser som fastsetter fraktrater og hvilke havner rederiene skal anløpe bryter delvis tanken om fri konkurranse og har vært omstridt. Bruken av slike konferanser har blitt mindre, og bygger på unntak fra gjeldende konkurranselovgiving. Les mer i Store norske leksikon linjekonferanse skipsfart rederi (`89`, 535 chars) |
+| Kasimir Edschmid (16 chars) | Biografi Kasimir Edschmid studerte romansk filologi i blant annet München og Paris og fikk tidlig et stort litterært kontaktnett. Under første verdenskrig arbeidet han som litteraturanmelder. Han var en av grunnleggerne av ku ... [truncated 225 chars](2627 chars) |
+| Hermann Bondi (13 chars) | Biografi Bondi dro fra Wien til Cambridge i 1937 i håp om å studere med Arthur Eddington. Da andre verdenskrig brøt ut ble han internert, først på Isle of Man, senere i Canada. I denne perioden ble han kjent med Thomas Gold, ... [truncated 225 chars](1611 chars) |
+| bønn (kristendom) (35 chars) | Kristenhetens viktigste bønn er Fadervår. Den brukes i alle kristne gudstjenester, og svært mange av verdens kristne ber den daglig. Bønnen kan inneholde mange ulike elementer. Bønnen kan være lovprisning og takk til Gud, Jes ... [truncated 225 chars](1823 chars) |
+| Centrum-Demokraterne (20 chars) | Centrum-Demokraterne deltok i «Firkløver»-regjeringen i 1982–1988 og i koalisjonsregjeringen i 1993–1996. Partiet falt ut av Folketinget ved valget i 2001 og fikk bare 1,8 prosent av stemmene. For valgresultater, se for øvrig ... [truncated 225 chars](498 chars) |
+| Joey Baron (10 chars) | Imidlertid blir han særlig forbundet med modernister som Bill Frisell og John Zorn. Baron har deltatt på en lang rekke album, og har også utgitt flere under eget navn. Utvalgte utgivelser som bandleder Raised Pleasure Dot (19 ... [truncated 225 chars](470 chars) |
 
 ## Dataset Information
 

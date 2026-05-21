@@ -7,11 +7,13 @@
 
 ## Overview
 
-`cqadupstack_gis_vn` is the Vietnamese GIS subforum split of CQADupStack from
-VN-MTEB. Queries are translated GIS StackExchange question titles, and documents
-are translated archived GIS question threads. The task focuses on duplicate
-question retrieval for geospatial software, maps, QGIS, ArcGIS, OpenLayers, and
-GeoServer topics.
+CQADupStack evaluates retrieval of manually flagged duplicate community
+questions; VN-MTEB brings the GIS subforum into Vietnamese via translation and
+quality filtering. A short GIS title must retrieve the translated archived
+thread that asks the same geospatial problem. The sampled examples include QGIS
+C++ plugin debugging, splitting lines at vertices, JavaScript mapping library
+comparisons, ArcGIS field-numbering scripts, and OpenLayers/WFS CORS issues, so
+the model must align equivalent GIS workflows across tool names and code terms.
 
 ## Details
 
@@ -72,11 +74,11 @@ configuration snippets when they are central to the retrieval intent.
 
 | Query | Positive document |
 | --- | --- |
-| Cách gỡ lỗi một plugin C++ của QGIS với Visual Studio 2008 (58 chars) | Cách gỡ lỗi Quantum GIS PlugIn Visual Studio DLL? Tôi phát triển một lớp plugin Quantum GIS sử dụng Microsoft Visual studio và đặt nó trong thư mục của tôi các plugin tùy chỉnh ứng dụng gis lượng tử của tôi. Tôi bây giờ có ý định gỡ lỗi DLL bằng Microsoft Stud ... [truncated from 508 chars] (508 chars) |
-| Cách chia đường thẳng tại đỉnh góc trong QGIS 2.2? (50 chars) | Cách đơn giản để chia tất cả các đường thẳng trong lớp tại các đỉnh bằng QGIS? Tôi muốn tự động chia các đường thẳng trong một lớp QGIS tại các đỉnh của chúng (như thế này). Tôi đã tìm kiếm trên Google và tìm thấy bài viết này, nó khá phù hợp nhưng quy trình s ... [truncated from 595 chars] (595 chars) |
-| Các thư viện bản đồ JavaScript so sánh như thế nào? (51 chars) | Công nghệ nào để sử dụng cho bản đồ web tương tác? > **Có thể trùng lặp:** > So sánh các thư viện bản đồ JavaScript? Tôi cần xây dựng một bản đồ web tương tác tùy chỉnh của quốc gia tôi với tất cả các vùng (Peru). Công cụ hoặc công nghệ nào sẽ là cách tốt nhất ... [truncated from 783 chars] (783 chars) |
-| Kịch bản để điền vào trường trong ArcGIS 10 với những con số liên tiếp (nơi số bắt đầu được quyết định bởi tôi) (111 chars) | Làm thế nào để thêm các giá trị tự động vào trường thuộc tính? Tôi có một mảnh đất, các lớp tòa nhà, không có bất kỳ bảng thuộc tính thông tin, và tôi muốn thay thế các giá trị "NULL" với số từ 1 đến 2000, trong trường "ID lô", hoặc "ID tòa nhà" cảm ơn. (254 chars) |
-| XMLHttpRequest không thể tải http://localhost: /geoserver/wfs. Nguyên gốc http://localhost không được cho phép bởi Access-Control-Allow-Origin (142 chars) | openlayer wfs vấn đề > **Có thể trùng lặp:** > Vấn đề với OpenLayers và WFS - các vấn đề proxy.cgi Hi bạn bè tôi có một vấn đề với trang web openlayer đơn giản. Tôi có hai lớp, lớp đầu tiên là lớp wms và hoạt động hoàn hảo trên hệ thống thông tin địa lý lượng ... [truncated from 1746 chars] (1746 chars) |
+| Tải nhiều tập tin shapefile vào PostGIS (39 chars) | lô hàng tải shp vào postgis > **Có thể trùng lặp:** > Tải khối nhiều tập tin hình dạng vào PostGIS Liệu có khả năng tải khối tập tin shp vào postgis. Hiện tại tôi đang thử nghiệm với postgis, qgis và geoserver (như một máy ch ... [truncated 225 chars](515 chars) |
+| Có công cụ nào có thể lấy lại hệ tọa độ được dùng để tạo ra một shapefile khi file prj bị thiếu không? (102 chars) | Xác định hệ tọa độ của Shapefile khi chưa biết? Tôi có một Shapefile nhưng hệ tọa độ của nó là Unknown, và không có tệp *.prj. Làm thế nào tôi có thể xác định được bây giờ? Có công cụ nào có thể giúp đỡ không? (210 chars) |
+| .tif và .tfw sang GeoTIFF (25 chars) | tfw tif to GeoTiff Làm thế nào để kết hợp một tệp .tif với một tệp .tfw để tạo GeoTiff? Có rất nhiều câu trả lời cho tôi sử dụng gdal, nhưng tôi không có ý tưởng. Vì vậy có ai có thể cung cấp một ví dụ từng bước về cách thực ... [truncated 225 chars](246 chars) |
+| Chuyển đổi tệp CSV sang shapefile (33 chars) | Làm thế nào để tôi chuyển đổi một tệp csv của dữ liệu WKT sang một tệp hình dạng sử dụng ogr2ogr? Câu hỏi này liên quan đến Shapefiles to Text. Tôi có một tệp csv, với một cột, tất cả các hàng tương ứng với WKT POLYGON(): WKT ... [truncated 225 chars](619 chars) |
+| Làm thế nào để tạo các điểm tính năng với tọa độ chính xác? (59 chars) | QGIS thêm điểm sử dụng độ thập phân Khi giấy phép được bán, chúng tôi cần thêm vị trí sử dụng lat/long. Chúng tôi đang làm việc trong ArcView nhưng muốn chuyển sang QGIS- Mọi thứ tôi có thể tìm thấy dường như chỉ liên quan đế ... [truncated 225 chars](539 chars) |
 
 ## Dataset Information
 

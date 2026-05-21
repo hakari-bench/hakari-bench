@@ -7,13 +7,13 @@
 
 ## Overview
 
-MIRACL is a multilingual information retrieval benchmark over Wikipedia
-passages, where natural-language questions retrieve answer-bearing passages in
-the same language. `NanoMIRACL / fi` is the Finnish task: Finnish questions
-search Finnish Wikipedia passages. The task tests whether a retriever can map
-short Finnish fact and definition questions to the passage that contains the
-supporting evidence, across topics such as science, history, places, philosophy,
-films, food, and religion.
+MIRACL reuses Finnish from the TyDi/Mr. TyDi lineage as monolingual retrieval:
+Finnish questions are answered by Finnish Wikipedia passages with
+native-language judgments. In the Nano split, every query has one labeled
+positive passage. The inspected queries are compact Finnish fact questions with
+starts such as `Milloin`, `Mikä`, `Kuka`, `Onko`, `Mitä`, and `Missä`, so the
+task focuses on exact same-language evidence retrieval for science, history,
+places, philosophy, films, food, religion, and definitions.
 
 ## Details
 
@@ -121,11 +121,11 @@ learns to rank evidence over topic overlap.
 
 | Query | Positive document |
 | --- | --- |
-| Mikä fosforesenssi on? (22 chars) | Fosforesenssi Fosforesenssi (myos fosforenssi) on ilmiö, jossa fosforoiva aine absorboi sähkömagneettista säteilyä ja emittoi eli säteilee sitten viiveellä pienempienergistä säteilyä. Fosforoiva aine voidaan altistaa esimerkiksi näkyvälle valolle ja siirrettäessä pimeään se hehkuu valoa. (288 chars) |
-| Mitä hydrologia tutkii? (23 chars) | Hydrologia Hydrologia voidaan jakaa kolmeen alueeseen sen mukaan, mitä vesikehän osaa tarkastellaan. Hydrometeorologia tutkii ilmakehän vettä, pintavesihydrologia ilmakehän ja maanpinnan välissä olevan veden alkuperää ja esiintymistä ja geohydrologia maanalaisia vesiä. Hydrometeorologia käsittelee erityisesti ilmakehän veden alkuperää, esiintymistä ja määrää sekä sen vaihtelua. Pintavesihydrologia voidaan jakaa edelleen kryologiaan, joka tutkii lunta ja jäätä, potamologiaan, joka tutkii virtaavia vesiä, ja limnologiaan, joka tutkii järviä. Limnologian lasketaan käsittävän usein myös virtaavien vesien ja murtovesien tutkimisen. Geohydrologia tutkimuskohteisiin kuuluvat sekä vedellä kyllästyneen kerroksen että sen yläpuolelta maanpintaan ulottuvan kerr... [truncated from 823 chars] (823 chars) |
-| Missä Matias Corvinus syntyi? (29 chars) | Matias Corvinus Matias Corvinus (, s. 24. helmikuuta 1443 – k. 6. huhtikuuta 1490) oli Unkarin kuningas eli Matias I vuosina 1458–1490. Matias oli mainetta saavuttaneen sotapäällikkö János Hunyadin poika ja nousi Unkarin ensimmäiseksi unkarilaissyntyiseksi kuninkaaksi sitten Árpádien hallitsijasuvun sammumisen. Hallitsijana Matias saavutti suuren jälkimaineen puolustaen maataan ulkopuolisia uhkia vastaan ja rajoittaen perinteisesti valtaa pidelleiden paronien ja magnaattien valtaa. Hänen kaudellaan toteutettiin myös monia hallinnollisia ja taloudellisia uudistuksia, minkä lisäksi Budasta muodostui merkittävä taiteiden ja oppineisuuden keskus. Matiaksen jälkimaineeseen on toisaalta vaikuttanut hänen kuolemaansa seurannut Unkarin alennustila, joka teki... [truncated from 802 chars] (802 chars) |
-| Mitä on stoalaisuus? (20 chars) | Kahleissa vai vapaana Stoalaiset samastivat maailmanjärjen ja luonnonlain ja katsoivat, että ihmisen on sopeutettava toimintansa tämän mukaisesti. Ihmisen tulee hallita tunteitaan, jotta voi toteuttaa hyvettä. Onni ei stoalaiselle ole itseisarvo vaan seuraus hyveestä. Elämän tarkoituksena ei ole onni vaan mielenrauha. Viisaalle mikään ei ole pahaksi: mitä ei voi välttää, se on kestettävä niin kuin olisi itse tahtonut sen, mikä tapahtui. Myöhemmin stoalaisuus läheni uskonnollisia näkemyksiä. Seneca painotti, että ihmisen tuli kaikessa alistua jumalan tahtoon. Albert Schweitzerin mukaan Senecan, Epiktetoksen ja Marcus Aureliuksen ajattelussa stoalaisuus kehittyy yleisen ihmisrakkauden etiikaksi. Schweitzer vertaa stoalaisuutta tässä suhteessa aikaisemp... [truncated from 1171 chars] (1171 chars) |
-| Mitä sakaristo tarkoittaa? (26 chars) | Sakasti Sakasti eli sakaristo (latinan sanasta "sacer" ’pyhä’) on kirkkorakennuksessa oleva huone, jossa papit ja muu jumalanpalveluksen henkilöstö valmistautuu palvelukseensa. Sakastissa säilytetään pappien messuvaatteita ja ehtoollistarvikkeita. (247 chars) |
+| Mistä nimitys markka tulee? (27 chars) | Suomen markka Markka otettiin käyttöön vuonna 1860, mutta sen kurssi oli sidottu ruplan arvoon: yksi markka vastasi ruplaa, jota sitäkin Venäjällä epäiltiin liian suureksi yksiköksi. Rahan nimi valittiin kilpailulla. Markan j ... [truncated 225 chars](634 chars) |
+| Minkälaisia arimaa-pelin nappulat ovat? (39 chars) | Arimaa (peli) Arimaata pelataan shakkilaudan kaltaisella 8×8 ruudun laudalla, jonka neljä ruutua, c3, f3, c6 ja f6 ovat "ansaruutuja". Kummallakin pelaajalla, kullalla ja hopealla, on kuusitoista nappulaa. Vahvimmasta heikoim ... [truncated 225 chars](476 chars) |
+| Onko Uranuksella kuita? (23 chars) | Uranus Uranuksella on 27 tunnettua kuuta. Kaksi suurinta kuuta, Titanian ja Oberonin, löysi Herschel 13. maaliskuuta 1787. William Lassell löysi Arielin ja Umbrielin vuonna 1851. William Herschelin poika John nimesi vuotta my ... [truncated 225 chars](908 chars) |
+| Onko Unelmien talli -kirjasarjan kirjoissa yhteinen juoni? (58 chars) | Unelmien talli Unelmien talli on kirjailija Tiina Lehtinevan luoma kirjasarja. Siihen kuuluu viisi osaa: "Unelmien painajainen" (Aikamedia, 2005), "Unelmien laukka" (Aikamedia, 2007), "Unelmien tahdon" (Aikamedia, 2008), "Une ... [truncated 225 chars](561 chars) |
+| Missä Angleseyn saari sijaitsee? (32 chars) | Anglesey Anglesey () on Irlanninmeren saari Walesin luoteisrannikolla. Anglesey on Walesin ja Englannin suurin saari ja sen pinta-ala on 676 km². Hallinnollisesti Anglesey muodostaa Isle of Angleseyn (kymriksi "Ynys Môn") kre ... [truncated 225 chars](348 chars) |
 
 ## Dataset Information
 

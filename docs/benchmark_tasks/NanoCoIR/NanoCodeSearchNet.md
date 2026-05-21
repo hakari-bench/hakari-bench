@@ -7,8 +7,12 @@
 
 ## Overview
 
-`NanoCodeSearchNet` evaluates code-to-text retrieval. Queries are code snippets,
-and positives are the matching natural-language summaries or documentation.
+CoIR reverses the usual CodeSearchNet search direction: source code from
+open-source GitHub functions becomes the query, and the retriever must find the
+matching docstring or natural-language summary. The task probes whether code
+structure, identifiers, and API usage can be mapped back to concise
+documentation across languages such as Java, JavaScript, and Go, where the
+positive text may omit much of the implementation detail.
 
 ## Details
 
@@ -49,16 +53,13 @@ names.
 
 ## Example Data
 
-Line breaks are shown as `<br>`. The character counts are the full query and
-document lengths before truncation.
-
-| IDs | Chars query / doc | BM25 rank | Query | Positive document |
-| --- | ---: | ---: | --- | --- |
-| `CodeSearchNet-javascript::q61935` -> `CodeSearchNet-javascript::c61750` | 521 / 54 | 2 | function FormGroup(props) {<br>  const { children, className, grouped, inline, unstackable, widths } = props<br><br>  const classes = cx(<br>    useKeyOnly(grouped, 'grouped'),<br>    useKeyOnly(inline, 'inline'),<br>    useKeyOnly(unstackable, 'unstackable'),<br>    useWidthProp(widths, null, true),<br>    'fields',<br>    className,<br>  )<br>  const rest = getUnhandledProps(FormGroup, pr ... [truncated] | A set of fields can appear grouped together.<br>@see Form |
-| `CodeSearchNet-go::q174644` -> `CodeSearchNet-go::c174474` | 178 / 134 | 20 | func (us *UniqueStringsValue) Set(s string) error {<br>	us.Values = make(map[string]struct{})<br>	for _, v := range strings.Split(s, ",") {<br>		us.Values[v] = struct{}{}<br>	}<br>	return nil<br>} | // Set parses a command line set of strings, separated by comma.<br>// Implements "flag.Value" interface.<br>// The values are set in order. |
-| `CodeSearchNet-java::q170108` -> `CodeSearchNet-java::c170048` | 346 / 634 | 7 | @CheckReturnValue<br>    @SchedulerSupport(SchedulerSupport.NONE)<br>    public final Observable<T> sorted(Comparator<? super T> sortFunction) {<br>        ObjectHelper.requireNonNull(sortFunction, "sortFunction is null");<br>        return toList().toObservable().map(Functions.listSorter(sortFunction)).flatMapIterable(Functions.<List<T>>identity());<br>    } | Returns an Observable that emits the events emitted by source ObservableSource, in a<br>sorted order based on a specified comparison function.<br><br><p>Note that calling {@code sorted} with long, non-terminating or infinite sources<br>might cause {@link OutOfMemoryError}<br><br><dl><br><dt><b>Scheduler:</b></dt><br><dd>{@code sorted} does not operate by default on a particular {@l ... [truncated] |
-| `CodeSearchNet-java::q170115` -> `CodeSearchNet-java::c170055` | 341 / 347 | 1 | @CheckReturnValue<br>    @NonNull<br>    @SchedulerSupport(SchedulerSupport.NONE)<br>    public static <T> Maybe<T> fromCompletable(CompletableSource completableSource) {<br>        ObjectHelper.requireNonNull(completableSource, "completableSource is null");<br>        return RxJavaPlugins.onAssembly(new MaybeFromCompletable<T>(completableSource));<br>    } | Wraps a CompletableSource into a Maybe.<br><br><dl><br><dt><b>Scheduler:</b></dt><br><dd>{@code fromCompletable} does not operate by default on a particular {@link Scheduler}.</dd><br></dl><br>@param <T> the target type<br>@param completableSource the CompletableSource to convert from<br>@return the new Maybe instance<br>@throws NullPointerException if completable is null |
-| `CodeSearchNet-go::q174622` -> `CodeSearchNet-go::c174452` | 131 / 32 | 1 | func (p *peer) Resume() {<br>	p.mu.Lock()<br>	defer p.mu.Unlock()<br>	p.paused = false<br>	p.msgAppReader.resume()<br>	p.msgAppV2Reader.resume()<br>} | // Resume resumes a paused peer. |
+| Query | Positive document |
+| --- | --- |
+| def _get_field(self, field_name, default=None): """ Fetches a field from extras, and returns it. This is some Airflow magic. The grpc hook type adds custom UI elements to the hook page, which allow admins to specify scopes, c ... [truncated 225 chars](532 chars) | Fetches a field from extras, and returns it. This is some Airflow magic. The grpc hook type adds custom UI elements to the hook page, which allow admins to specify scopes, credential pem files, etc. They get formatted as show ... [truncated 225 chars](257 chars) |
+| func (in *inflights) freeTo(to uint64) { if in.count == 0 \|\| to < in.buffer[in.start] { // out of the left side of the window return } idx := in.start var i int for i = 0; i < in.count; i++ { if to < in.buffer[idx] { // found ... [truncated 225 chars](595 chars) | // freeTo frees the inflights smaller or equal to the given `to` flight. (72 chars) |
+| func NewCertPool(CAFiles []string) (*x509.CertPool, error) { certPool := x509.NewCertPool() for _, CAFile := range CAFiles { pemByte, err := ioutil.ReadFile(CAFile) if err != nil { return nil, err } for { var block *pem.Block ... [truncated 225 chars](473 chars) | // NewCertPool creates x509 certPool with provided CA files. (60 chars) |
+| def build_for(packages) metadata = packages.first.metadata name = metadata[:name] # Attempt to load the version manifest data from the packages metadata manifest = if version_manifest = metadata[:version_manifest] Manifest.fr ... [truncated 225 chars](1985 chars) | The build object that corresponds to this package. @param [Array<Package>] packages the packages to create the build from @return [Artifactory::Resource::Build] (167 chars) |
+| function isArrayBufferView(val) { var result; if ((typeof ArrayBuffer !== 'undefined') && (ArrayBuffer.isView)) { result = ArrayBuffer.isView(val); } else { result = (val) && (val.buffer) && (val.buffer instanceof ArrayBuffer ... [truncated 225 chars](264 chars) | Determine if a value is a view on an ArrayBuffer @param {Object} val The value to test @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false (165 chars) |
 
 ## Dataset Information
 

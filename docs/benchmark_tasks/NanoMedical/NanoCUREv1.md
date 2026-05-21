@@ -7,14 +7,15 @@
 
 ## Overview
 
-`NanoCUREv1` is an English clinical passage-retrieval task derived from CURE,
-a benchmark for point-of-care retrieval by healthcare professionals. Queries are
-short clinical questions, many phrased as direct practitioner questions about
-diagnosis, treatment choice, contraindications, anatomy, orthodontic movement,
-sleep apnea, and surgical technique. Documents are biomedical passage snippets
-with article titles prepended. The task tests whether a retriever can find
-evidence-bearing medical passages rather than merely retrieve topically related
-biomedical articles.
+CURE was designed as clinical retrieval for healthcare providers at the point of
+care, with expert-written queries across multiple medical domains and
+evidence-bearing passages as targets. This NanoMedical split keeps that
+provider-facing passage retrieval setting and is strongly multi-positive: many
+clinical questions have numerous relevant passages. The observed queries ask
+about diagnosis, treatment choice, contraindications, anatomy, orthodontic
+movement, sleep apnea, and surgical technique, so the model must rank passages
+that actually answer a practitioner question rather than merely share a medical
+topic.
 
 ## Details
 
@@ -123,11 +124,11 @@ positive passages.
 
 | Query | Positive document |
 | --- | --- |
-| Which are the main transverse compensations of the maxillomandibular placement for prediction of final occlusion? (113 chars) | Computer-Assisted Orthognathic Surgery for Patients with Cleft Lip/Palate: From Traditional Planning to Three-Dimensional Surgical Simulation / Step 3: During 3D simulation the MMC was moved and rotated by the surgical team until the best position in terms of skeletal harmony, symmetry, facial proportion, teeth exposure in relation to the upper lip, and surgical feasibility was achieved. Midline correction was the utmost concern, followed by facial symmetry. Therefore our simulation sequence started with roll and midline adjustment in the frontal, followed by pitch correction in the lateral and yaw correction in the basal view... [truncated from 1,211 chars] (1,211 chars) |
-| How to diagnose OSAS? (21 chars) | Receiver operating characteristics of impulse oscillometry parameters for predicting obstructive sleep apnea in preobese and obese snorers / The aim of this study was to develop a diagnostic tool, not requiring polysomnography, for identifying OSAS in snoring patients whose risk of OSAS is not too high. We have therefore undertaken a large prospective study to determine the optimal operating characteristics for the use of IOS as a screening tool for detecting OSAS in preobese and obese snoring patients. (506 chars) |
-| Is clear aligner suitable to treat extrusion? (45 chars) | The effect of space arrangement between anterior teeth on their retraction with clear aligners in first premolar extraction treatment: a finite element study / These analyses indicate that spaces between the anterior dentition during anterior retraction are beneficial for decreasing the tendency for extrusion of the anterior dentition and require provision of anchorage. Appropriate spaces can be designed to lest the lingual tipping and extrusion effect of the anterior teeth while simultaneously reducing the maximum stresses on PDLs. (536 chars) |
-| What is obstructive sleep apnea (OSAS)? (39 chars) | Obstructive sleep apnea in adults / The Obstructive Sleep Apnea and Hypopnea Syndrome (OSAS) is a disease that brings important negative impacts to people's lives. Its prevalence has increased worldwide 1 , 2 , 3 as obesity and life expectancy have multiplied. It affects about one in four men and one in ten women. (313 chars) |
-| Is there any maneuver or technique that can reduce the rate of tooth injury in orthognathic surgery? (100 chars) | First-Hand Experience and Result with New Robot-Assisted Laser LeFort-I Osteotomy in Orthognathic Surgery: A Case Report / A visible green laser is aligned parallel to the cutting beam of the Er:YAG laser to allow the surgeon to monitor and simulate the osteotomy path before cutting. (282 chars) |
+| Which are the factors that should be taken in consideration when deciding the location of IMF screws placement? (111 chars) | The Use of MMF Screws: Surgical Technique, Indications, Contraindications, and Common Problems in Review of the Literature The anatomical site for the placement of MMF screws is chosen with respect to a given fracture locatio ... [truncated 225 chars](362 chars) |
+| Which are the disadvantages of 3D printed splints in orthognathic surgery? (74 chars) | Comparison between Additive and Subtractive CAD-CAM Technique to Produce Orthognathic Surgical Splints: A Personalized Approach The findings of the present investigation would suggest that surgical splints are more accurate w ... [truncated 225 chars](470 chars) |
+| Which are the advantages of endoscopic approach to treat massive arterial epistaxis? (84 chars) | Success Rate of Endoscopic Sphenopalatine Artery Ligation for the Management of Refractory Posterior Epistaxis Patients in a Tertiary Care Hospital: A Descriptive Cross-sectional Study The findings of the study conclude that ... [truncated 225 chars](613 chars) |
+| What are the typical temporomandibular joint symptoms that can appear in a patient undergoing maxillomandibular advancement? (124 chars) | Temporomandibular chronic dislocation: The long-standing condition Clinically the condition is characterised by the inability to close the mouth after wide opening, and change in occlusion with open bite and/or lateral mandib ... [truncated 225 chars](356 chars) |
+| What are the primary compounds used in tooth whitening products? (64 chars) | Effectiveness of sodium bicarbonate combined with hydrogen peroxide and CPP-ACPF in whitening and microhardness of enamel Most patients undergoing fixed orthodontic therapy suffer from color alterations on their teeth a few d ... [truncated 225 chars](1439 chars) |
 
 ## Dataset Information
 

@@ -7,9 +7,12 @@
 
 ## Overview
 
-`NanoApps` evaluates retrieval from programming challenge statements to Python
-solutions. Queries are long APPS-style competitive-programming problem
-descriptions, and documents are candidate solution programs.
+CoIR adapts APPS from a coding-challenge generation benchmark into a
+text-to-code retrieval task: the full problem statement, including constraints
+and examples, must retrieve a Python solution program. The task is therefore
+about recognizing algorithmic intent from competitive-programming prose rather
+than matching API names, and the long APPS prompts make distractors with similar
+input/output formats especially plausible.
 
 ## Details
 
@@ -56,16 +59,13 @@ use specification details, not just topic words.
 
 ## Example Data
 
-Line breaks are shown as `<br>`. The character counts are the full query and
-document lengths before truncation.
-
-| IDs | Chars query / doc | BM25 rank | Query | Positive document |
-| --- | ---: | ---: | --- | --- |
-| `q5130` -> `d5130` | 1556 / 116 | 100 | Ivan is collecting coins. There are only $N$ different collectible coins, Ivan has $K$ of them. He will be celebrating his birthday soon, so all his $M$ freinds decided to gift him coins. They all agreed to three terms: Everyone must gift as many coins as others. All coins given to Ivan must be different. Not less than $L$ coins from gifts altogether, must ... [truncated] | n, m, k, l = map(int, input().split())<br>cnt = (k + l + m - 1) // m<br>if cnt * m > n:<br>    print(-1)<br>else:<br>    print(cnt) |
-| `q5068` -> `d5068` | 1998 / 256 | 100 | Nauuo is a girl who loves writing comments.<br><br>One day, she posted a comment on Codeforces, wondering whether she would get upvotes or downvotes.<br><br>It's known that there were $x$ persons who would upvote, $y$ persons who would downvote, and there were also another $z$ persons who would vote, but you don't know whether they would upvote or downvote. Note that ea ... [truncated] | x, y, z = map(int, input().split())<br>if z == 0:<br>    if x == y:<br>        print('0')<br>    elif x > y:<br>        print('+')<br>    else:<br>        print('-')<br>else:<br>    if x > y + z:<br>        print('+')<br>    elif x + z < y:<br>        print('-')<br>    else:<br>        print('?') |
-| `q5104` -> `d5104` | 1929 / 220 | 100 | JATC and his friend Giraffe are currently in their room, solving some problems. Giraffe has written on the board an array $a_1$, $a_2$, ..., $a_n$ of integers, such that $1 \le a_1 < a_2 < \ldots < a_n \le 10^3$, and then went to the bathroom.<br><br>JATC decided to prank his friend by erasing some consecutive elements in the array. Since he doesn't want for the p ... [truncated] | n = int(input())<br>a = [0] + list(map(int, input().split())) + [1001]<br>mx = 1<br>p = 1<br>for i in range(1, n + 2):<br>    if a[i] == a[i - 1] + 1:<br>        p += 1<br>        mx = max(p, mx)<br>    else:<br>        p = 1<br>print(max(0, mx - 2)) |
-| `q5003` -> `d5003` | 761 / 121 | 100 | Apart from having lots of holidays throughout the year, residents of Berland also have whole lucky years. Year is considered lucky if it has no more than 1 non-zero digit in its number. So years 100, 40000, 5 are lucky and 12, 3001 and 12345 are not.<br><br>You are given current year in Berland. Your task is to find how long will residents of Berland wait till the ... [truncated] | def main():<br>    s = input()<br>    n = len(s)<br>    t = int(str(int(s[0]) + 1) + '0' * (n - 1))<br><br>    print(t - int(s))<br><br>main() |
-| `q5112` -> `d5112` | 705 / 1149 | 100 | You are given two integers n and k. Find k-th smallest divisor of n, or report that it doesn't exist.<br><br>Divisor of n is any such natural number, that n can be divided by it without remainder.<br><br><br>-----Input-----<br><br>The first line contains two integers n and k (1 <= n <= 10^15, 1 <= k <= 10^9).<br><br><br>-----Output-----<br><br>If n has less than k divisors, output -1.<br><br>Otherwise, ... [truncated] | import sys<br>import math<br><br>def factorization(n):<br>    res = []<br>    limit = math.ceil(math.sqrt(n))<br>    p = 2<br>    cnt = 0<br><br>    while n % p == 0:<br>        cnt += 1<br>        n //= p<br><br>    if cnt > 0:<br>        res.append((p, cnt))<br><br>    cnt = 0<br>    for p in range(3, limit + 1, 2):<br>        if n % p == 0:<br>            while n % p == 0:<br>                cnt += 1 ... [truncated] |
+| Query | Positive document |
+| --- | --- |
+| On the way to Rio de Janeiro Ostap kills time playing with a grasshopper he took with him in a special box. Ostap builds a line of length n such that some cells of this line are empty and some contain obstacles. Then, he plac ... [truncated 225 chars](2427 chars) | from math import * from sys import * from queue import * from decimal import * n,k=(int(z) for z in input().split()) s=input() i=0 while i<len(s) and s[i] not in ["G","T"]: i+=1 i+=k while i<len(s) and s[i] not in ["G","T","# ... [truncated 225 chars](300 chars) |
+| The All-Berland National Olympiad in Informatics has just ended! Now Vladimir wants to upload the contest from the Olympiad as a gym to a popular Codehorses website. Unfortunately, the archive with Olympiad's data is a mess. ... [truncated 225 chars](2762 chars) | n = int(input()) t = [1] + [0] * n b, a = d = [], [] h, s = [], [] for i in range(n): f, k = input().split() d[int(k)].append(f) m = len(a) for i in a: if i.isdigit() and i[0] != '0': j = int(i) if 0 < j <= m: t[j] = 1 elif m ... [truncated 225 chars](1311 chars) |
+| You are fighting with Zmei Gorynich — a ferocious monster from Slavic myths, a huge dragon-like reptile with multiple heads! $m$ Initially Zmei Gorynich has $x$ heads. You can deal $n$ types of blows. If you deal a blow of th ... [truncated 225 chars](2047 chars) | for _ in range(int(input())): n, x = list(map(int, input().split())) A = [] for _1 in range(n): d, h = list(map(int, input().split())) A.append([d, h]) A.sort(reverse=True) if A[0][0] >= x: print(1) else: x -= A[0][0] mz = 0 ... [truncated 225 chars](434 chars) |
+| Salem gave you $n$ sticks with integer positive lengths $a_1, a_2, \ldots, a_n$. For every stick, you can change its length to any other positive integer length (that is, either shrink or stretch it). The cost of changing the ... [truncated 225 chars](1556 chars) | n = int(input()) a = list(map(int,input().split())) t = 0 mn = 1000000000 for i in range(1,100): cur = 0 for j in range(n): cur += max(0,abs(i-a[j])-1) if cur < mn: mn = cur t = i print(t,mn) (227 chars) |
+| Polycarp is crazy about round numbers. He especially likes the numbers divisible by 10^{k}. In the given number of n Polycarp wants to remove the least number of digits to get a number that is divisible by 10^{k}. For example ... [truncated 225 chars](1533 chars) | s = input().split() k = int(s[1]) s = s[0] if s.count('0') < k: if s.count('0') > 0: print(len(s) - 1) else: print(len(s)) return have = 0 its = 0 for i in range(len(s) - 1, -1, -1): its += 1 if s[i] == '0': have += 1 if have ... [truncated 225 chars](320 chars) |
 
 ## Dataset Information
 

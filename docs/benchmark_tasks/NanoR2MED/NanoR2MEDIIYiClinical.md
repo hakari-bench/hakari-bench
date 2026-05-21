@@ -7,11 +7,14 @@
 
 ## Overview
 
-`NanoR2MEDIIYiClinical` is an English clinical case retrieval task from R2MED.
-Queries are translated, de-identified patient records from the IIYi online
-consultation platform, and documents are other clinical cases. The task asks a
-retriever to find cases with the same or diagnostically useful condition from
-long structured clinical presentations.
+R2MED's IIYi-Clinical split is clinical case retrieval built from de-identified
+patient records crawled from the IIYi online consultation platform and
+translated into English. The objective is to retrieve cases sharing the same
+diagnostic label or clinically useful similarity, not textbook evidence. In the
+Nano task, both queries and documents are long structured case records with
+chief complaint, present illness, past history, physical exam, auxiliary exam,
+and treatment sections, so retrieval hinges on comparing full clinical
+presentations.
 
 ## Details
 
@@ -87,11 +90,11 @@ evaluation cases or positives.
 
 | Query | Positive document |
 | --- | --- |
-| [Chief Complaint]: A 28-year-old pregnant woman presents for evaluation. [Current Medical History]: Pulse 112/min; respiratory rate 32/min; blood pressure 162/112mmHg. Normal development, medium nutrition, mental status confused, fearful ex... [truncated from 2,601 chars] (2,601 chars) | [Case Presentation] Chief Complaint Female, 29 years old, office worker 36+1 weeks amenorrhea, headache with lower abdominal pain for 1 day Present Illness Pregnant woman, G1P0. The patient has a history of regular menstru... [truncated from 4,273 chars] (4,341 chars) |
-| [Chief Complaint]: A 70-year-old male patient. Chief Reason: Intermittent dizziness and left upper limb numbness and weakness for 3 days. [Present Illness]: The patient presented with intermittent dizziness without any obvious cause, no ver... [truncated from 1,471 chars] (1,471 chars) | [Case Presentation] Chief Complaint A 70-year-old male patient with a history of hypertension for many years. Intermittent dizziness and left upper limb paresthesia and weakness for 3 days. Present History The patient presented with intermittent dizziness... [truncated from 2,366 chars] (2,399 chars) |
-| [Chief Complaint]: Male, 63 years old, farmer Admitted due to speech impairment and right-sided limb weakness for 3 hours. [Current Medical History]: Three hours before admission, the patient presented with speech impairment without any obv... [truncated from 2,595 chars] (2,595 chars) | [Case Presentation] Chief Complaint Patient, male, 64 years old. Retired cadre. Right limb weakness and speech impairment for 10 days, worsened in the past 1 day. Present History The patient presented with sudden onset of right... [truncated from 4,015 chars] (4,058 chars) |
-| [Chief Complaint]: Increased vaginal discharge for 5 days, external genital itching for 1 day [Present Illness]: The patient is usually in good health, with minimal discharge. 5 days ago, the discharge increased, presenting as curd-li... [truncated from 992 chars] (997 chars) | [Case Presentation] Chief Complaint External itching, increased vaginal discharge, curd-like with vulvar burning pain for three days. Present Illness The patient developed external itching, increased vaginal discharge, curd-like vaginal discharge with burning pain three days ago... [truncated from 1,273 chars] (1,298 chars) |
-| [Chief Complaint]: Abdominal pain for 3 days after abortion 7 days ago [Present Illness]: The patient is generally healthy and has no other discomforts. Seven days ago, she underwent a painless abortion due to an unintended pregnancy... [truncated from 1,069 chars] (1,069 chars) | [Case Presentation] Chief Complaint Persistent lower abdominal pain and discomfort for 1 week Present Illness Menstrual history: Regular, 3/30 days, last menstrual period on 2016-11-3. The patient has experienced lower abdominal pain... [truncated from 1,545 chars] (1,570 chars) |
+| [Chief Complaint]: A 28-year-old pregnant woman presents for evaluation. [Current Medical History]: Pulse 112/min; respiratory rate 32/min; blood pressure 162/112mmHg. Normal development, medium nutrition, mental status confu ... [truncated 225 chars](2601 chars) | [Case Presentation] Chief Complaint Female, 29 years old, office worker 36+1 weeks amenorrhea, headache with lower abdominal pain for 1 day Present Illness Pregnant woman, G1P0. The patient has a history of regular menstruati ... [truncated 225 chars](4341 chars) |
+| [Chief Complaint]: A 70-year-old male patient. Chief Reason: Intermittent dizziness and left upper limb numbness and weakness for 3 days. [Present Illness]: The patient presented with intermittent dizziness without any obviou ... [truncated 225 chars](1471 chars) | [Case Presentation] Chief Complaint Male, 69 years old, farmer Chief complaint: Dizziness, numbness and weakness in the right limb for 10 hours, admitted to the hospital. Current Medical History The patient presented with diz ... [truncated 225 chars](3582 chars) |
+| [Chief Complaint]: Male, 63 years old, farmer Admitted due to speech impairment and right-sided limb weakness for 3 hours. [Current Medical History]: Three hours before admission, the patient presented with speech impairment ... [truncated 225 chars](2595 chars) | [Case Presentation] Chief Complaint Male, 75 years old, farmer Right limb movement restriction for 1 hour Present History The patient reports that 1 hour before admission, he suddenly developed symptoms of right limb movement ... [truncated 225 chars](4142 chars) |
+| [Chief Complaint]: Increased vaginal discharge for 5 days, external genital itching for 1 day [Present Illness]: The patient is usually in good health, with ** minimal discharge. 5 days ago, the ** discharge increased, presen ... [truncated 225 chars](997 chars) | [Case Presentation] Chief Complaint Increased vaginal discharge with external genital pruritus for 3 days Present History The patient is usually in good health, with normal secretions. Three days ago, she developed increased ... [truncated 225 chars](1166 chars) |
+| [Chief Complaint]: Abdominal pain for 3 days after abortion 7 days ago [Present Illness]: The patient is generally healthy and has no other discomforts. Seven days ago, she underwent a painless abortion due to an unintended p ... [truncated 225 chars](1069 chars) | [Case Presentation] Chief Complaint Female, 33, unemployed Lower abdominal pain for half a month Present History The patient is a married middle-aged female, G1P0, with a history of one induced abortion. She reports that her ... [truncated 225 chars](3552 chars) |
 
 ## Dataset Information
 

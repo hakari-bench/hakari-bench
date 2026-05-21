@@ -7,11 +7,13 @@
 
 ## Overview
 
-`pugg` is a Polish information retrieval task from the PUGG dataset. Queries are
-short Polish factoid questions, and documents are Polish Wikipedia-style
-passages. The model must retrieve the passage that contains the answer, often
-for encyclopedic questions about people, places, definitions, borders, and
-popular culture.
+The PUGG paper builds Polish KBQA, machine-reading, and information-retrieval
+data from natural Polish questions and Wikipedia-derived passages. This Nano
+split is the IR view: each short Polish factoid question has one positive
+passage containing the answer. The sampled questions involve definitions,
+fictional characters, family relations in fiction, Polish borders, sports, and
+popular culture, so the benchmark probes compact Polish encyclopedic retrieval
+rather than translated English QA alone.
 
 ## Details
 
@@ -56,11 +58,11 @@ matching the observed PUGG style.
 
 | Query | Positive document |
 | --- | --- |
-| co to jest rozdzielnopłciowość? (31 chars) | Rozdzielnopłciowość, gonochoryzm – zjawisko występowania w obrębie jednego gatunku osobników dwóch odmiennych płci: samca i samicy. Rozdzielnopłciowość występuje także u niektórych roślin telomowych, najczęściej u roślin nagonasiennych, rzadziej okrytonasienny... [truncated from 537 chars] (537 chars) |
-| kim był kajko i kokosz? (23 chars) | Kajko i Kokosz – seria komiksów autorstwa Janusza Christy, która stała się jego najpopularniejszym dziełem. Bohaterami komiksu są tytułowi Kajko i Kokosz, dwaj słowiańscy wojowie, mieszkający w grodzie kasztelana Mirmiła. Ich głównymi wrogami są Zbójcerze pod... [truncated from 829 chars] (829 chars) |
-| jak miała na imię mama siostrzeńców kaczora donalda? (52 chars) | Kacza rodzina i Kwaczakowie – fikcyjne rodziny z uniwersum Kaczora Donalda, zamieszkujące Kaczogród. Według Dona Rosy są krewnymi Kaczora Donalda ze strony ojca. Matką jest Hortensja z klanu McKwaczów, siostra Sknerusa. == Ze strony ojca == === Według Dona Ros... [truncated from 809 chars] (809 chars) |
-| z którymi krajami graniczy polska? (34 chars) | Granice Polski – pod względem powierzchni (312 679 km²) Polska zajmuje 9. miejsce wśród 48 państw Europy. Graniczy z 7 krajami: Niemcami na zachodzie, Słowacją i Czechami na południu, Rosją i Litwą na północy, Białorusią i Ukrainą na wschodzie. Na północy gran... [truncated from 642 chars] (642 chars) |
-| jaki dystans pokonał sprinter? (30 chars) | Usain St. Leo Bolt (ur. 21 sierpnia 1986 w Sherwood Content, Trelawny) – jamajski lekkoatleta, sprinter, ośmiokrotny mistrz olimpijski z Pekinu, Londynu oraz Rio de Janeiro, jedenastokrotny mistrz, dwukrotny wicemistrz oraz brązowy medalista mistrzostw świata.... [truncated from 818 chars] (818 chars) |
+| kto napisał balladyne? (22 chars) | Balladyna – dramat romantyczny w pięciu aktach, napisany przez Juliusza Słowackiego w Genewie w 1834 roku, a wydany w Paryżu w roku 1839. == Opis dramatu == Dramat miał być prawdopodobnie jedną z sześciu części planowanego pr ... [truncated 225 chars](867 chars) |
+| co obiecano polakom w akcie 5 listopada? (40 chars) | 5 listopada 1916 w wyniku konferencji w Pszczynie władze niemieckie i austro-węgierskie wydały proklamację, z podpisami swych generalnych gubernatorów von Beselera i Kuka, zawierającą obietnicę powstania Królestwa Polskiego, ... [truncated 225 chars](964 chars) |
+| jakie pouczenia wynikają z biblijnej opowieści o stworzeniu świata? (67 chars) | Stworzenie świata – pojęcie biblijne wyjaśniające naturę i sposób powstania wszechświata. W ujęciu judeo-chrześcijańskim zarówno niebo (materialne i duchowe), jak i ziemia i wszystko co istnieje jest dziełem Boga-Stwórcy. Wsz ... [truncated 225 chars](931 chars) |
+| z kim zareczyl sie tadeusz? (27 chars) | Tadeusz Soplica ("pan Tadeusz") – postać literacka, tytułowy bohater poematu epickiego "Pan Tadeusz" (1834) Adama Mickiewicza; syn Jacka Soplicy, bratanek Sędziego, dziedzic Soplicowa. Młody, przystojny, zakochany w Zosi, wpl ... [truncated 225 chars](867 chars) |
+| ile procent ludzi ma blond włosy? (33 chars) | Blond – kolor włosów, występujący u niektórych ssaków, wywołany przez niewielką ilość barwnika – melaniny. Zazwyczaj przez kolor ten rozumie się odcienie od jasnego brązu poprzez żółty aż do niemalże białego. Ocenia się, że w ... [truncated 225 chars](857 chars) |
 
 ## Dataset Information
 

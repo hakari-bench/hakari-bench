@@ -7,10 +7,14 @@
 
 ## Overview
 
-`nq` is a Polish retrieval task derived from Natural Questions hard-negative
-retrieval. Queries are short fact-seeking questions, and documents are Wikipedia
-style answer passages. The task measures whether a model can retrieve the page
-or passage that contains the answer to a naturally phrased information need.
+Natural Questions was introduced as real Google-search questions paired with
+Wikipedia evidence, and this Polish hard-negative task should be read as a
+localized open-domain QA retrieval version of that setup. Short Polish
+fact-seeking questions retrieve Wikipedia-style answer passages from a 10,000
+document pool. The observed questions ask about the Great Wall, Arctic research
+stations, films, Roman education, and U.S. succession, so the model must map
+natural Polish information needs to the passage that contains the factual
+answer, sometimes with multiple valid positives.
 
 ## Details
 
@@ -56,11 +60,11 @@ answering the question.
 
 | Query | Positive document |
 | --- | --- |
-| ile kilometrów Wielkiego Muru Chińskiego? (41 chars) | Wielki Mur Chiński Wielki Mur rozciąga się od Dandong na wschodzie do jeziora Lop na zachodzie, wzdłuż łuku, który z grubsza wyznacza południową krawędź Mongolii Wewnętrznej. Kompleksowe badania archeologiczne, przy użyciu zaawansowanych technologii, wykazały,... [truncated from 718 chars] (718 chars) |
-| pierwsza arktyczna stacja badawcza w Indiach założona w 2008 roku jak się nazywa (80 chars) | Stacja Himadri Stacja Himadri to pierwsza arktyczna stacja badawcza w Indiach[1] zlokalizowana na Spitsbergenie na Svalbardzie w Norwegii. Znajduje się w bazie International Arctic Research, Ny-Ålesund. Został zainaugurowany 1 lipca 2008 roku przez Ministra Na... [truncated from 434 chars] (434 chars) |
-| czy wychodzi drugi film o biegaczu po labiryncie? (49 chars) | Więzień labiryntu (serial filmowy) Pierwszy film, The Maze Runner, został wydany 19 września 2014 roku i odniósł komercyjny sukces, przynosząc na całym świecie ponad 348 milionów dolarów. Drugi film, Więzień labiryntu: Próby gorączki, został wydany 18 września... [truncated from 458 chars] (458 chars) |
-| rzymska nazwa edukacji w zakresie sztuk wyzwolonych jest znana jako (67 chars) | Liberalna edukacja artystyczna Zakorzenione w podstawowym programie nauczania – enkuklios paideia, czyli „edukacji w kole” – późnoklasycystycznej i hellenistycznej Grecji, „sztuki wyzwolone” lub „liberalne zajęcia” (łac. liberalia studia) były tak zwane w eduk... [truncated from 871 chars] (871 chars) |
-| kto jest trzeci w dowództwie stanów zjednoczonych? (50 chars) | Prezydencka linia sukcesji w Stanach Zjednoczonych Sukcesja następuje według kolejności wiceprezydenta, przewodniczącego Izby Reprezentantów, prezydenta pro tempore Senatu, a następnie szefów federalnych departamentów wykonawczych, którzy tworzą Gabinet Stanów... [truncated from 619 chars] (619 chars) |
+| którzy byli sędziami tańca na lodzie 2014 (41 chars) | Taniec na lodzie Phillip Schofield i Christine Bleakley powrócili do współobecności. Dean, Torvill i Karen Barber powrócili, by mentorować celebrytów. Robin Cousins, Jason Gardiner, Barber i Ashley Roberts powrócili z odpowie ... [truncated 225 chars](483 chars) |
+| kiedy wyjdzie sezon 5 rubinu? (29 chars) | Lista odcinków RWBY RWBY to trwająca amerykańska seria internetowa w stylu anime, stworzona przez Rooster Teeth Productions. Premiera odbyła się 18 lipca 2013 r. Na stronie internetowej Rooster Teeth, a odcinki zostały późnie ... [truncated 225 chars](479 chars) |
+| kiedy w alton towers zamknięto koryto z bali? (45 chars) | Korytarz (wieże Alton) The Flume był log Flume w Alton Towers w Staffordshire. Został otwarty w 1981 roku i został odnowiony w 2004 roku, co zbiegło się z jego sponsorowaniem przez Imperial Leather. Przejażdżka była rynną z b ... [truncated 225 chars](460 chars) |
+| który grał profesora protona w teorii Wielkiego Wybuchu (55 chars) | Boba Newharta Newhart później zajął się aktorstwem, występując jako psycholog z Chicago, dr Robert Hartley w The Bob Newhart Show w latach 70., a następnie jako karczmarz z Vermont Dick Loudon w serialu Newhart z lat 80. XX w ... [truncated 225 chars](839 chars) |
+| ile parków narodowych jest w indiach (36 chars) | Lista parków narodowych Indii Dalsze ustawodawstwo federalne wzmacniające ochronę dzikiej przyrody zostało wprowadzone w latach 80-tych. W lipcu 2017 r. istniały 103 parki narodowe o powierzchni 40 500 km2 (15 600 mil kwadrat ... [truncated 225 chars](285 chars) |
 
 ## Dataset Information
 

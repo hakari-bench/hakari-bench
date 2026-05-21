@@ -7,10 +7,13 @@
 
 ## Overview
 
-`nano_nq` is the Vietnamese NanoNQ retrieval task from VN-MTEB. Queries are
-translated Natural Questions-style real search questions, and documents are
-translated Wikipedia passages. The task tests whether a retriever can find a
-passage containing the factual evidence needed to answer a short user question.
+Natural Questions was built from real Google search questions and Wikipedia
+evidence; VN-MTEB translates this open-domain retrieval setting into
+Vietnamese. In `nano_nq`, short translated user questions retrieve translated
+Wikipedia-style passages, usually with one or a few positives. The observed
+questions ask about entertainment, geography, song meanings, TV characters, and
+other factual topics, so the model must map natural Vietnamese question wording
+to the passage containing the answer evidence.
 
 ## Details
 
@@ -77,11 +80,11 @@ a different attribute.
 
 | Query | Positive document |
 | --- | --- |
-| Tên của nhà hàng trong phim Seinfeld là gì? (43 chars) | Monk's Café Jerry Seinfeld và nhà văn Larry David, người đã tạo ra Seinfeld, đặt tên quán cà phê là Monk's vì có một áp phích của nghệ sĩ piano jazz vĩ đại Thelonious Monk ở văn phòng mà họ viết, và họ chỉ cần một cái tên.[2] Trong tập thử nghiệm gốc "The Seinfeld Chronicles", quán ăn được biết đến với tên gọi Pete's và có một n ... [truncated from 557 chars] (557 chars) |
-| ai la cha của Dylan trong Bates Motel (37 chars) | Danh sách nhân vật trong phim Bates Motel Dylan Massett (do Max Thieriot thủ vai) [3] là con trai xa lạ của Norma và là anh cùng cha khác mẹ với Norman. Sau khi lớn lên hầu như tự lực cánh sinh, anh rất khôn ngoan, mạnh mẽ và độc lập. Anh thực sự quan tâm đến Norman, nhưng có mối quan hệ khó khăn với Norma. Anh tin rằng Norma tì ... [truncated from 2150 chars] (2150 chars) |
-| Bài hát Ticket to Ride nói về điều gì? (38 chars) | vé đi xe lửa Trong khi lời bài hát mô tả một cô gái "đi ra khỏi cuộc sống của người kể chuyện",[20] nguồn cảm hứng cho cụm từ tên bài hát chưa rõ,[6] cũng như ý nghĩa của bài hát.[21] McCartney nói rằng tiêu đề đề cập đến "vé tàu đường sắt Anh đến thị trấn Ryde trên đảo Wight",[11] và Lennon nói rằng nó mô tả các thẻ chỉ một hóa ... [truncated from 682 chars] (682 chars) |
-| Wake Forest nằm ở đâu trong Bắc Carolina (40 chars) | Wake Forest, Bắc Carolina Wake Forest là một thị trấn ở quận Franklin và Wake ở bang Bắc Carolina của Hoa Kỳ; nằm gần như hoàn toàn trong Quận Wake, nó nằm ngay phía bắc thủ phủ bang Raleigh. Dân số là 30.117 người tại cuộc điều tra dân số năm 2010,[5] tăng từ 12.588 người tại cuộc điều tra dân số năm 2000. Cục Điều tra Dân số H ... [truncated from 704 chars] (704 chars) |
+| ai la cha của Dylan trong Bates Motel (37 chars) | Danh sách nhân vật trong phim Bates Motel Dylan Massett (do Max Thieriot thủ vai) [3] là con trai xa lạ của Norma và là anh cùng cha khác mẹ với Norman. Sau khi lớn lên hầu như tự lực cánh sinh, anh rất khôn ngoan, mạnh mẽ và ... [truncated 225 chars](2150 chars) |
+| mùa 5 của Ruby ra khi nào (25 chars) | Danh sách tập RWBY RWBY là một loạt phim hoạt hình trực tuyến Mỹ được sản xuất bởi Rooster Teeth Productions. Phim ra mắt vào ngày 18 tháng 7 năm 2013 trên trang web Rooster Teeth, và sau đó các tập phim được tải lên YouTube ... [truncated 225 chars](486 chars) |
+| câu nói blue moon xuất phát từ đâu (34 chars) | Trăng xanh Một giả thuyết đã được đưa ra rằng thuật ngữ "trăng xanh" cho "tháng nhuận" xuất hiện từ dân gian, trong đó "xanh" thay thế cho belewe không còn được hiểu nghĩa là "bất trung". Ý nghĩa gốc của nó sẽ là "Trăng phản ... [truncated 225 chars](476 chars) |
 | danh sách sách viết bởi abul kalam azad (39 chars) | Abul Kalam Azad Maulana Azad được cho là một trong những nhà văn tiếng Urdu vĩ đại nhất của thế kỷ 20. Ông đã viết nhiều sách bao gồm cả Ấn Độ giành được tự do, Ghubar-e-Khatir, Tazkirah, Tarjumanul Quran, v.v. (211 chars) |
+| sông nào liên quan đến thành phố rome (37 chars) | Tiber Sông Tiber (/ ˈtaɪbər /, tiếng Latin Tiberis,[1] tiếng Ý Tevere, phát âm tiếng Ý: [ˈteːvere] ) [2] là con sông dài thứ ba ở Ý, bắt nguồn từ dãy núi Apennine ở Emilia-Romagna và chảy 406 km (252 dặm) qua Tuscany, Umbria ... [truncated 225 chars](513 chars) |
 
 ## Dataset Information
 

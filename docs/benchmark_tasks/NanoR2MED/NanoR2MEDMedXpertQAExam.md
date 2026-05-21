@@ -7,12 +7,14 @@
 
 ## Overview
 
-`NanoR2MEDMedXpertQAExam` is an English clinical evidence retrieval task from
-R2MED. Queries are complex exam-style medical questions derived from
-MedXpertQA and reformulated as open-ended examination-recommendation problems.
-Documents are Wikipedia-derived medical passages. The task evaluates whether a
-retriever can infer the appropriate diagnostic test or examination from a
-patient vignette and retrieve evidence about that examination.
+R2MED's MedXpertQA-Exam task covers examination recommendation: complex
+MedXpertQA patient vignettes are reformulated as open-ended questions, and the
+corpus comes from Wikipedia-style medical passages sampled from MedCorp. In the
+Nano split, queries include comorbidities, vital signs, medication history, and
+exam findings, while relevant passages describe diagnostic tests, clinical
+instruments, imaging, laboratory findings, or disease entities. Retrieval
+therefore requires inferring the appropriate examination from the vignette
+before matching evidence text.
 
 ## Details
 
@@ -85,11 +87,11 @@ seed generation with Nano evaluation queries or positives.
 
 | Query | Positive document |
 | --- | --- |
-| A 27-year-old male presents with anxiety and ongoing moodiness, citing stress at home and work. His medical history includes chronic gastritis previously treated for Helicobacter pylori, chronic pyelonephritis with kidney stones, and stag... [truncated from 703 chars] (703 chars) | 9-item depression scale The PHQ-9 (DEP-9 in some sources), a tool specific to depression, scores each of the 9 DSM-IV related criteria based on the mood module from the original PRIME-MD... [truncated from 818 chars] (818 chars) |
-| A 65-year-old woman presents with an 8-month history of progressive difficulty swallowing food and retrosternal chest discomfort. She describes a sensation of "food getting stuck" in her throat and occasionally hears a "gurgling sound"... [truncated from 954 chars] (954 chars) | Procedure Clinical status and relevant medical history are reviewed prior to the studies. Patient consent is required. Barium swallow A barium swallow study is also known as a barium esophagram and needs little if any preparations... [truncated from 787 chars] (787 chars) |
-| A 27-year-old primigravida at 33 weeks gestation visits her primary care physician with concerns about generalized swelling in her ankles and legs. Her medical history is significant for diabetes and obesity. Her vital signs show... [truncated from 489 chars] (489 chars) | More recently developed technology detects human serum albumin (HSA) through the use of liquid crystals (LCs). The presence of HSA molecules disrupts the LCs supported on the AHSA-decorated slides thereby producing bright optical signals... [truncated from 912 chars] (912 chars) |
-| A 43-year-old female daycare teacher seeks medical attention for one month of fatigue and lightheadedness. She has diabetes managed with metformin and reports increasingly heavy menstrual periods over the past year. She also notes increased... [truncated from 673 chars] (675 chars) | Ultrasound is routinely used in urology to determine the amount of fluid retained in a patient's bladder. In a pelvic sonogram, images include the uterus and ovaries or urinary bladder in females... [truncated from 991 chars] (991 chars) |
-| A 14-year-old girl with no notable medical history reports having intermittent mild pain in her upper right abdomen for the past 2 months. Her father notes that her appetite has been diminished but that her abdominal discomfort does not see... [truncated from 2,317 chars] (2,334 chars) | Serum and urine copper Serum copper is low, which may seem paradoxical given that Wilson's disease is a disease of copper excess. However, 95% of plasma copper is carried by ceruloplasmin which is often low... [truncated from 956 chars] (956 chars) |
+| A 27-year-old male presents with anxiety and ongoing moodiness, citing stress at home and work. His medical history includes chronic gastritis previously treated for *Helicobacter pylori*, chronic pyelonephritis with kidney s ... [truncated 225 chars](703 chars) | Applications The National Institute for Health and Clinical Excellence endorsed the PHQ-9 for measuring depression severity and responsiveness to treatment in adults in a primary care setting. The Behavioral Risk Factor Surve ... [truncated 225 chars](865 chars) |
+| A 65-year-old woman presents with an 8-month history of progressive difficulty swallowing food and retrosternal chest discomfort. She describes a sensation of “food getting stuck” in her throat and occasionally hears a “gurgl ... [truncated 225 chars](954 chars) | Procedure Clinical status and relevant medical history are reviewed prior to the studies. Patient consent is required. Barium swallow A barium swallow study is also known as a barium esophagram and needs little if any prepara ... [truncated 225 chars](787 chars) |
+| A 27-year-old primigravida at 33 weeks gestation visits her primary care physician with concerns about generalized swelling in her ankles and legs. Her medical history is significant for diabetes and obesity. Her vital signs ... [truncated 225 chars](489 chars) | Immune factors may also play a role. Diagnosis Testing for pre-eclampsia is recommended throughout pregnancy via measuring a woman's blood pressure. Diagnostic criteria Pre-eclampsia is diagnosed when a pregnant woman develop ... [truncated 225 chars](902 chars) |
+| A 43-year-old female daycare teacher seeks medical attention for one month of fatigue and lightheadedness. She has diabetes managed with metformin and reports increasingly heavy menstrual periods over the past year. She also ... [truncated 225 chars](675 chars) | Diagnosis The presence of a uterine fibroid versus an adnexal tumor is made. Fibroids can be mistaken for ovarian neoplasms. An uncommon tumor which may be mistaken for a fibroid is Sarcoma botryoides. It is more common in ch ... [truncated 225 chars](890 chars) |
+| A 14-year-old girl with no notable medical history reports having intermittent mild pain in her upper right abdomen for the past 2 months. Her father notes that her appetite has been diminished but that her abdominal discomfo ... [truncated 225 chars](2334 chars) | Hereditary hemochromatosis usually presents with a family history of cirrhosis, skin hyperpigmentation, diabetes mellitus, pseudogout, or cardiomyopathy, all due to signs of iron overload. Wilson's disease is an autosomal rec ... [truncated 225 chars](929 chars) |
 
 ## Dataset Information
 

@@ -7,11 +7,14 @@
 
 ## Overview
 
-`NanoCodeRAGProgrammingSolutions` is a CodeRAG-Bench retrieval task over compact
-programming solutions. Queries are natural-language Python programming prompts,
-and documents are short Python solution snippets. The retriever must find the
-implementation that solves the requested operation, often with little shared
-surface text between the prompt and the code.
+CodeRAG-Bench uses programming-solution documents, including HumanEval- and
+MBPP-style canonical problems, as direct retrieval support for code generation.
+This Nano split keeps the prompt-to-solution view: a short natural-language
+Python programming request must retrieve the compact function that implements
+it. The sampled positives are short snippets for list manipulation, tuple
+sorting, monotonic-array checks, divisor sums, and similar operations, so the
+retriever must map intent to executable code even when the prompt and code
+share little surface wording.
 
 ## Details
 

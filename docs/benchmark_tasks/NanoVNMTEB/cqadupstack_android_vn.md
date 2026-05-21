@@ -7,10 +7,13 @@
 
 ## Overview
 
-`cqadupstack_android_vn` is the Vietnamese Android subforum split of
-CQADupStack from VN-MTEB. Queries are translated Android StackExchange question
-titles, and documents are translated archived question threads. The task asks a
-retriever to find duplicate Android questions.
+CQADupStack's Android split is duplicate-question retrieval over archived
+StackExchange threads, and VN-MTEB translates it into Vietnamese. Short
+translated Android titles must retrieve earlier duplicate Android questions
+from longer translated posts. The observed data includes broken screens, HTC
+Flyer ROMs, locked tablets, Google Play downloads, camera issues, adb, APK, ROM,
+tablet, and SD-card terminology. Large duplicate clusters make the task a test
+of grouping equivalent device and OS problems, not simply matching one thread.
 
 ## Details
 
@@ -74,11 +77,11 @@ is well suited to multi-positive contrastive training.
 
 | Query | Positive document |
 | --- | --- |
-| Màn hình bị hỏng khi chế độ gỡ lỗi bị vô hiệu hóa. Làm thế nào tôi có thể kích hoạt lại adb? (92 chars) | Cách thực hiện sao lưu toàn bộ Nandroid thông qua PC Cách thực hiện một bản sao lưu nandroid toàn bộ trên máy tính sử dụng adb hoặc bất cứ phần mềm nào chuyên làm điều đó. (172 chars) |
-| Danh sách ROM cho HTC Flyer (27 chars) | Cần rom và recovery tùy chỉnh Xin chào tôi có một bảng phát triển chim ruồi với tất cả các bộ vi xử lý Allwinner A20 và mô hình Wing-K70. Tôi cần phục hồi và ROM tùy chỉnh cho điều này có thể bất cứ ai giúp đỡ xin vui lòng? (224 chars) |
-| Cần mở khóa máy tính bảng Coby; thẻ nhớ microSD không định dạng (63 chars) | Cách sửa chữa điện thoại Android hỏng Tôi có một chiếc Karbonn A7 Star bị hỏng. Màn hình cảm ứng bị vỡ và màn hình hiển thị không hoạt động, nhưng mọi thứ khác trên điện thoại đều hoạt động tốt. Tôi muốn sử dụng nó để tải xuống nhưng bị kẹt ở màn hình khóa mẫu ... [truncated from 396 chars] (396 chars) |
-| Làm thế nào để tôi có thể tải các ứng dụng từ Google Play vào máy tính bảng của mình bằng kết nối Internet trên máy tính của tôi? (129 chars) | Tôi có thể tải ứng dụng Android về máy tính và sau đó chuyển sang điện thoại của tôi không? > **Có thể trùng lặp:** > Làm thế nào để tải về tệp APK trên PC từ Market? Tôi tò mò không biết liệu tôi có thể tải các ứng dụng Android vào máy tính của mình rồi chuyể ... [truncated from 344 chars] (344 chars) |
-| Làm sao để thay đổi mặc định lưu camera? (40 chars) | Cách xác định vị trí máy ảnh lưu ảnh của tôi là gì? Tôi có một chiếc điện thoại Samsung S5830 với hệ điều hành Android. Khi tôi xem: * Task Manager -> Tóm tắt Nó xuất hiện rằng thẻ sim nhỏ của tôi đang được lấp đầy dữ liệu trong khi thẻ SD bên ngoài lớn của tô ... [truncated from 444 chars] (444 chars) |
+| Ghi chú Markdown với Dropbox đồng bộ (36 chars) | syncing markup/lời chú thích trên dropbox? Xin chào tôi muốn có chức năng sau: * Đặt một tập tin vào Dropbox (html, wordformat) - mà tôi chỉnh sửa từ máy tính của tôi * ứng dụng Android để truy cập tập tin đó (ngắn đường trên ... [truncated 225 chars](449 chars) |
+| Tin nhắn SMS được lưu trữ ở đâu trên hệ thống file? (51 chars) | Android đường dẫn tin nhắn SMS Tôi không thể tìm đường dẫn đến các tệp cơ sở dữ liệu tin nhắn SMS trên hệ điều hành android. Đường dẫn chính xác cho các tệp cơ sở dữ liệu tin nhắn SMS là gì? Tôi đã thử những giá trị này và ch ... [truncated 225 chars](368 chars) |
+| Dòng video từ PC đến Android? (29 chars) | Cách phát trực tuyến các video do tôi sở hữu đến một thiết bị Android? > **Có thể trùng lặp:** > Có một ứng dụng truyền tải đa phương tiện DLNA cho Android không? > Truyền tải video từ PC đến Android? Tôi đã từng là người dùn ... [truncated 225 chars](551 chars) |
+| Làm thế nào để xóa các ứng dụng được cài sẵn trên HTC Desire? (61 chars) | Tôi có thể gỡ cài đặt những ứng dụng bị khóa bởi nhà sản xuất điện thoại như thế nào? Tôi đang dùng Samsung I9000 và có một vài ứng dụng rất phiền phức mà nhà sản xuất đã cài sẵn như một cửa hàng nhạc, trình duyệt web tùy chỉ ... [truncated 225 chars](530 chars) |
+| Tại sao thiết bị S3 của tôi phát ra âm thanh khi đặt thẻ từ trên mặt sau? (73 chars) | Tại sao điện thoại Galaxy S3 của tôi phát ra âm thanh khi tôi đặt nó xuống? Đôi khi, khi tôi đặt chiếc Samsung Galaxy S3 xuống khá chắc chắn, nó tạo ra một âm thanh giống như ở giữa "BONG" và "CLANK". Khi nó xảy ra tôi có thể ... [truncated 225 chars](489 chars) |
 
 ## Dataset Information
 

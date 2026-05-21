@@ -7,12 +7,13 @@
 
 ## Overview
 
-`NanoR2MEDPMCTreatment` is an English clinical evidence retrieval task from
-R2MED. Queries are treatment-planning case summaries derived from real-world
-clinical QA material, and documents are PubMed Central article passages. The
-task tests whether a retriever can infer the treatment or management issue from
-a long case summary and retrieve a scientific passage that supports the
-treatment reasoning.
+R2MED's PMC-Treatment task targets treatment-planning evidence retrieval: case
+summaries from MedRBench_Treat must retrieve PubMed Central passages associated
+with treatment or management decisions. The Nano queries are long structured
+clinical summaries with demographics, history, tests, diagnosis, management,
+and outcome, while positives are shorter PMC discussion or treatment-context
+paragraphs. A retriever must infer the management question latent in the case
+and rank scientific evidence that supports that treatment reasoning.
 
 ## Details
 
@@ -87,11 +88,11 @@ evaluation queries or positives.
 
 | Query | Positive document |
 | --- | --- |
-| Case Summary: - Patient Demographics: 43-year-old male - Chief Complaint: Unexplained edema of the eyelids and lower limbs - History of Present Illness: Progressive edema without hematuria. Proteinuria measured at 4446.7 mg/g... [truncated from 2,045 chars] (2,067 chars) | In terms of immunotherapy, the efficacy of corticosteroids, subcutaneous IFN-gamma injections, and intravenous immunoglobulin is limited. However, combination therapy with cyclophosphamide and steroids has shown promising results in some patients... [truncated from 994 chars] (994 chars) |
-| Case Summary: - Patient Demographics: 43-year-old male - Chief Complaint: Long-standing therapy-resistant hypertension refractory to maximal medical therapy with symptoms including agitation, headaches, chest pain, sweating, and epistaxis... [truncated from 1,402 chars] (1,404 chars) | While the observed 24 hours systolic ambulatory BD reduction at 6-months follow-up in contemporary trials such as SPYRAL ON MED is generally considered to be modest (-1.9 mmHg)... [truncated from 664 chars] (664 chars) |
-| Case Summary: - Patient Demographics: 2-day-old male neonate - Chief Complaint: Central cyanosis and poor breastfeeding following birth - History of Present Illness: - Neonate presented with central cyanosis and poor feeding sho... [truncated from 2,103 chars] (2,145 chars) | Helen B. Taussig and Richard J. Bing were the first to describe a rare cyanotic congenital heart defect known as the Taussig-Bing anomaly (TBA) in 1949... [truncated from 2,503 chars] (2,503 chars) |
-| Case Summary: - Patient Demographics: - Case 1: 87-year-old woman - Case 2: 84-year-old man - Chief Complaint: - Case 1: Persistent chest and back pain after initial treatment for a symptomatic penetrating aortic ulcer... [truncated from 1,675 chars] (1,709 chars) | Adequate proximal seal zones are essential for durable endovascular aortic repair. Although the definition of an adequate proximal seal zone can vary depending on the underlying aortic pathology, compromised proximal seal zones during TEVAR... [truncated from 660 chars] (660 chars) |
-| Case Summary: - Patient Demographics: 43-year-old male - Chief Complaint: Redness, pain, and decreased vision in the left eye following lime exposure - History of Present Illness: - Presented with symptoms 1 day after lime exposure... [truncated from 1,937 chars] (1,950 chars) | The surgical approach for severe ocular surface burns aims to reconstruct ocular surface function, address eyelid deformities, correct limbal stem cell deficiency, and alleviate conjunctival sac constriction, preparing the eye for future vision restoration surgeries... [truncated from 634 chars] (634 chars) |
+| Case Summary: - **Patient Demographics:** 43-year-old male - **Chief Complaint:** Unexplained edema of the eyelids and lower limbs - **History of Present Illness:** Progressive edema without hematuria. Proteinuria measured at ... [truncated 225 chars](2067 chars) | Daratumumab is an antibody against CD38 used for plasma cell depletion in relapsed or refractory multiple myeloma (MM). It mediates depletion of plasma cells, which overexpress CD38, through a wide range of mechanisms includi ... [truncated 225 chars](952 chars) |
+| Case Summary: - Patient Demographics: 43-year-old male - Chief Complaint: Long-standing therapy-resistant hypertension refractory to maximal medical therapy with symptoms including agitation, headaches, chest pain, sweating, ... [truncated 225 chars](1404 chars) | While the observed 24 hours systolic ambulatory BD reduction at 6-months follow-up in contemporary trials such as SPYRAL ON MED is generally considered to be modest (−1.9 mmHg),6 it seems that the observed treatment effect in ... [truncated 225 chars](664 chars) |
+| Case Summary: - **Patient Demographics:** 2-day-old male neonate - **Chief Complaint:** Central cyanosis and poor breastfeeding following birth - **History of Present Illness:** - Neonate presented with central cyanosis and p ... [truncated 225 chars](2145 chars) | Helen B. Taussig and Richard J. Bing were the first to describe a rare cyanotic congenital heart defect known as the Taussig-Bing anomaly (TBA) in 1949, that includes a non-restrictive subpulmonary ventricular septal defect ( ... [truncated 225 chars](2503 chars) |
+| Case Summary: - Patient Demographics: - Case 1: 87-year-old woman - Case 2: 84-year-old man - Chief Complaint: - Case 1: Persistent chest and back pain after initial treatment for a symptomatic penetrating aortic ulcer. - Cas ... [truncated 225 chars](1709 chars) | Adequate proximal seal zones are essential for durable endovascular aortic repair. Although the definition of an adequate proximal seal zone can vary depending on the underlying aortic pathology, compromised proximal seal zon ... [truncated 225 chars](660 chars) |
+| Case Summary: - Patient Demographics: 43-year-old male - Chief Complaint: Redness, pain, and decreased vision in the left eye following lime exposure - History of Present Illness: - Presented with symptoms 1 day after lime ex ... [truncated 225 chars](1950 chars) | The surgical approach for severe ocular surface burns aims to reconstruct ocular surface function, address eyelid deformities, correct limbal stem cell deficiency, and alleviate conjunctival sac constriction, preparing the ey ... [truncated 225 chars](634 chars) |
 
 ## Dataset Information
 

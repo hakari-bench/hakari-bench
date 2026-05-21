@@ -7,10 +7,14 @@
 
 ## Overview
 
-`ecom` is an e-commerce product retrieval task from the Multi-CPR / C-MTEB
-family. Queries are very short product-search strings, and documents are
-product-title-like passages in mostly Chinese with some Japanese and English
-tokens.
+Multi-CPR includes e-commerce as a real Alibaba product-search domain where
+short queries and short product passages make lexical matching unusually
+competitive. This NanoCMTEB task keeps that product-retrieval setting:
+brief Chinese or mixed-script search strings retrieve product-title-like
+documents containing brands, model numbers, transliterations, Japanese or
+English tokens, and category terms. The observed examples include timers,
+vermouth, plaques, hair treatment products, and gas stoves, so relevance is
+often a tight product-title match rather than explanatory passage matching.
 
 ## Details
 
@@ -66,11 +70,11 @@ lexical overlap.
 
 | Query | Positive document |
 | --- | --- |
-| 做作业定时器小青蛙 (`200057`, 9 chars, BM25 rank 100) | 写作业计时器流沙漏闹钟时间管理儿童学生学习做题电子钟静音磁吸 (`59079`, 30 chars) |
-| 干味美思 (`200103`, 4 chars, BM25 rank 100) | 意大利进口 味美思白威末酒葡萄酒Stock Vermouth Bianco清仓包邮 (`110933`, 41 chars) |
-| 银行合作牌匾 (`200032`, 6 chars, BM25 rank 40) | 三等功牌匾定制金箔奖牌定做荣誉加盟特约经代理销商木质授权定做 (`31462`, 30 chars) |
-| 约肤深层滋润免蒸发膜 (`200006`, 10 chars, BM25 rank 100) | 约肤免蒸发膜修护干枯倒膜改善毛躁头发护理水疗顺滑护发素女柔顺 (`6892`, 30 chars) |
-| 华帝 不锈钢 聚能灶 (`200129`, 11 chars, BM25 rank 100) | 华帝JZT-BH910B燃气灶聚能鸳鸯灶家用大火力天然液化煤气炉具910b (`127364`, 37 chars) |
+| 奥尔良味香肠调理 (8 chars) | 畅之味香肠调料五组合香肠调料台湾风味黑胡椒香辣蒜香新奥尔良 (29 chars) |
+| 吉莫特洗鼻器 (6 chars) | 新品吉莫特洗鼻专用洗鼻盐 医生推荐儿童成人洗鼻瑜伽洗鼻盐60包 (31 chars) |
+| 约肤深层滋润免蒸发膜 (10 chars) | 约肤免蒸发膜修护干枯倒膜改善毛躁头发护理水疗顺滑护发素女柔顺 (30 chars) |
+| 童装韩版睡衣 (6 chars) | 女童睡衣法兰绒秋冬季儿童珊瑚绒加厚保暖女孩家居服中大童装套装 (30 chars) |
+| 尼康z62 (5 chars) | Nikon/尼康z6ii z7ii二代z6z7全画幅微单机身Z62Z72 2代24-70套机 (46 chars) |
 
 ## Dataset Information
 

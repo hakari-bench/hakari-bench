@@ -7,11 +7,14 @@
 
 ## Overview
 
-`hotpot_qa_vn` is the Vietnamese HotpotQA retrieval task from VN-MTEB. Queries
-are translated multi-hop questions, and documents are translated Wikipedia-style
-passages. The task tests whether a retriever can find the supporting pages
-needed for bridge or comparison reasoning, not merely a single passage that
-contains the answer string.
+HotpotQA was designed for explainable multi-hop question answering over
+Wikipedia, with supporting facts for bridge and comparison questions. VN-MTEB
+translates that retrieval view into Vietnamese. This Nano split keeps exactly
+two positives per query, so a translated question must retrieve both supporting
+passages needed for the reasoning chain. The sampled questions connect albums,
+island kingdoms, athletes' relatives, draft years, and golf records, making
+coverage of both linked entities more important than finding a single answer
+string.
 
 ## Details
 
@@ -77,11 +80,11 @@ share one entity but do not complete the second hop.
 
 | Query | Positive document |
 | --- | --- |
-| Ai là tác giả của bài hát được lấy cảm hứng từ những chữ trên bia mộ và là ca khúc đầu tiên trong album Back to Mono? (117 chars) | Biết Ngài là Yêu Ngài "Biết Hắn Là Yêu Hắn" là một bài hát được viết bởi Phil Spector, lấy cảm hứng từ những lời trên bia mộ của cha ông "Biết Ông Là Yêu Ông", và nó đã được thu âm lần đầu tiên bởi nhóm nhạc duy nhất mà ông từng tham gia - The Teddy Bears. Ca khúc này đứng ở vị trí số 1 trong bảng xếp hạng Billboard Hot 100 tron ... [truncated from 821 chars] (821 chars) |
-| Tên của quần đảo do Aonghus Mór lãnh đạo và có tổng diện tích trên 8300 km2 là gì? (82 chars) | Aonghus Mór Aonghus Mór mac Domhnaill (chết c. 1293) là một nhân vật nổi bật trong các vương quốc của quần đảo và Scotland thế kỷ thứ mười ba. Ông là con trai của Domhnall mac Raghnaill, tên gọi của Clann Domhnaill, một nhánh của Clann Somhairle. Aonghus Mór dường như đã kế vị cha mình vào giữa thế kỷ thứ mười ba. Vào thời điểm ... [truncated from 848 chars] (848 chars) |
-| Năm nào thì anh trai của cầu thủ được đội Washington Redskins chọn ở lượt thứ nhất trong giải tuyển quân này mới được tuyển? (124 chars) | Ba-lê Rodney "Boss" Bailey (sinh ngày 14 tháng 10 năm 1979) là một cựu cầu thủ bóng đá Mỹ từng thi đấu ở vị trí hậu vệ trong giải bóng đá quốc gia NFL. Anh được tuyển chọn bởi đội Detroit Lions trong vòng hai của cuộc tuyển chọn dự thảo NFL năm 2003. Anh từng chơi cho đội bóng đại học Georgia. Anh trai của anh, Champ Bailey, cũn ... [truncated from 389 chars] (389 chars) |
-| Người giữ kỷ lục giải vô địch PGA Argentina đã thắng được bao nhiêu giải đấu trên toàn thế giới? (96 chars) | Giải vô địch PGA Argentina Giải vô địch PGA Argentina là một giải đấu golf được tổ chức ở Argentina từ năm 1920. Nó thường được sự ủng hộ của những người chơi golf hàng đầu của Argentina và trong danh sách các nhà vô địch bao gồm Eduardo Romero (8 lần), José Jurado (7 lần), Vicente Fernández (5 lần), José Cóceres (lần lượt) và Á ... [truncated from 489 chars] (489 chars) |
-| Từ tháng 3 năm 631 đến tháng 4 năm 631, Farrukhzad Khosrau V là vua của một vương quốc kế tục vương quốc nào? (109 chars) | Farrukhzad Khosrow V Farrukhzad Khosrau V là vua của Đế quốc Sasanian trong một thời gian ngắn từ tháng 3 năm 631 đến tháng 4 năm 631. Ông là con trai của Khosrau II. (167 chars) |
+| Đội bóng rổ nam đại học VCU Rams 2011-12, dẫn dắt bởi huấn luyện viên trưởng năm thứ ba Shaka Smart, đại diện cho trường Đại học Virginia Commonwealth được thành lập vào năm nào? (178 chars) | Đội bóng rổ nam VCU Rams mùa 2011–12 Đội bóng rổ nam đại học VCU Rams 2011-12 đại diện cho trường Đại học Virginia Commonwealth trong giải bóng rổ NCAA Division I mùa giải 2011-12. Đây là mùa thứ 44 đội bóng rổ nam của trường ... [truncated 225 chars](856 chars) |
+| Con chó mà tổ tiên gồm cả Gordon và Irish Setters là giống chó gì: Manchester Terrier hay Scotch Collie? (104 chars) | Chó Manchester Terrier Chó Manchester Terrier là một giống chó thuộc họ chó săn có lông trơn. (94 chars) |
+| Bộ phim nào được viết kịch bản và đạo diễn bởi Joby Harold với nhạc nền của Samuel Sim? (87 chars) | Samuel Sim Samuel Sim là một nhạc sĩ phim và truyền hình. Anh nhận được sự công nhận đầu tiên với điểm số đoạt giải cho bộ phim truyền hình "Dunkirk" của BBC. Từ đó, anh đã viết âm nhạc cho nhiều bộ phim và chương trình truyề ... [truncated 225 chars](554 chars) |
+| Năm nào thì anh trai của cầu thủ được đội Washington Redskins chọn ở lượt thứ nhất trong giải tuyển quân này mới được tuyển? (124 chars) | Ba-lê Rodney "Boss" Bailey (sinh ngày 14 tháng 10 năm 1979) là một cựu cầu thủ bóng đá Mỹ từng thi đấu ở vị trí hậu vệ trong giải bóng đá quốc gia NFL. Anh được tuyển chọn bởi đội Detroit Lions trong vòng hai của cuộc tuyển c ... [truncated 225 chars](389 chars) |
+| Kịch bản gia có tác phẩm "Evolution" đã cùng viết một bộ phim mà Nicolas Cage và Téa Leoni đóng vai chính là ai? (112 chars) | David Weissman David Weissman là một biên kịch và đạo diễn. Các bộ phim của ông bao gồm "The Family Man" (năm 2000), "Evolution" (năm 2001) và ""When in Rome"" (năm 2010). (172 chars) |
 
 ## Dataset Information
 

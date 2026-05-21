@@ -7,12 +7,13 @@
 
 ## Overview
 
-`NanoCodeRAGLibraryDocumentationSolutions` is a CodeRAG-Bench retrieval task over
-Python library documentation. Queries are API names or short API descriptions,
-and documents are the corresponding documentation entries, often from TensorFlow
-or other Python library references. The task tests whether a retriever can map a
-programming information need to the exact reference page that contains
-signatures, aliases, arguments, examples, and migration notes.
+CodeRAG-Bench studies whether retrieval can support code generation, and its
+library-documentation source is built from official Python library references
+collected through devdocs.io. This Nano task uses API names or short reference
+descriptions as queries and retrieves documentation entries, often TensorFlow
+pages. The observed records include signatures, aliases, arguments, examples,
+and migration notes, so the task asks whether a retriever can find the exact
+reference page that would ground API-aware generation.
 
 ## Details
 
@@ -92,11 +93,11 @@ positive documentation entries.
 
 | Query | Positive document |
 | --- | --- |
-| tf.autodiff.ForwardAccumulator Computes Jacobian-vector products ("JVP"s) using forward-mode autodiff. (102 chars) | tf.autodiff.ForwardAccumulator( primals, tangents ) Compare to tf.GradientTape which computes vector-Jacobian products ("VJP"s) using reverse-mode autodiff (backprop). Reverse mode is more attractive when computing gradients of a scalar-valued function with respect to many inputs (e.g. a neural network with many parameters and a scalar loss). Forward mode works best on functions with many outputs and few inputs. Since it does not hold on to intermediate activations, it is much more memory efficient than backprop where it is applicable. Consider a simple... [truncated from 5945 chars] (6,087 chars) |
-| tf.compat.v1.data.experimental.RandomDataset A Dataset of pseudorandom values. Inherits From: Dataset, Dataset (110 chars) | tf.compat.v1.data.experimental.RandomDataset( seed=None ) Attributes element_spec The type specification of an element of this dataset. dataset = tf.data.Dataset.from_tensor_slices([1, 2, 3]) dataset.element_spec TensorSpec(shape=(), dtype=tf.int32, name=None) output_classes Returns the class of each component of an element of this dataset. (deprecated) Warning: THIS FUNCTION IS DEPRECATED. It will be removed in a future version. Instructions for updating: Use tf.compat.v1.data.get_output_classes(dataset). output_shapes Returns the shape of each componen... [truncated from 53087 chars] (55,309 chars) |
-| tf.compat.v1.confusion_matrix Computes the confusion matrix from predictions and labels. View aliases Compat aliases for migration (132 chars) | See Migration guide for more details. tf.compat.v1.math.confusion_matrix tf.compat.v1.confusion_matrix( labels, predictions, num_classes=None, dtype=tf.dtypes.int32, name=None, weights=None ) The matrix columns represent the prediction labels and the rows represent the real labels. The confusion matrix is always a 2-D array of shape [n, n], where n is the number of valid labels for a given classification task. Both prediction and labels must be 1-D arrays of the same shape in order for this function to work. If num_classes is None, then num_classes will... [truncated from 1846 chars] (1,943 chars) |
-| tf.compat.v1.batch_to_space_nd BatchToSpace for N-D tensors of type T. View aliases Compat aliases for migration (114 chars) | See Migration guide for more details. tf.compat.v1.manip.batch_to_space_nd tf.compat.v1.batch_to_space_nd( input, block_shape, crops, name=None ) This operation reshapes the "batch" dimension 0 into M + 1 dimensions of shape block_shape + [batch], interleaves these blocks back into the grid defined by the spatial dimensions [1, ..., M], to obtain a result with the same rank as the input. The spatial dimensions of this intermediate result are then optionally cropped according to crops to produce the output. This is the reverse of SpaceToBatch. See below f... [truncated from 3478 chars] (3,558 chars) |
-| tf.compat.v1.distribute.OneDeviceStrategy A distribution strategy for running on a single device. Inherits From: Strategy (121 chars) | tf.compat.v1.distribute.OneDeviceStrategy( device ) Using this strategy will place any variables created in its scope on the specified device. Input distributed through this strategy will be prefetched to the specified device. Moreover, any functions called via strategy.run will also be placed on the specified device as well. Typical usage of this strategy could be testing your code with the tf.distribute.Strategy API before switching to other strategies which actually distribute to multiple devices/machines. For example: tf.enable_eager_execution() stra... [truncated from 30198 chars] (30,793 chars) |
+| tf.autodiff.ForwardAccumulator Computes Jacobian-vector products ("JVP"s) using forward-mode autodiff. (102 chars) | tf.autodiff.ForwardAccumulator( primals, tangents ) Compare to tf.GradientTape which computes vector-Jacobian products ("VJP"s) using reverse-mode autodiff (backprop). Reverse mode is more attractive when computing gradients ... [truncated 225 chars](6087 chars) |
+| tf.compat.v1.data.experimental.RandomDataset A Dataset of pseudorandom values. Inherits From: Dataset, Dataset (110 chars) | tf.compat.v1.data.experimental.RandomDataset( seed=None ) Attributes element_spec The type specification of an element of this dataset. dataset = tf.data.Dataset.from_tensor_slices([1, 2, 3]) dataset.element_spec TensorSpec(s ... [truncated 225 chars](55309 chars) |
+| tf.compat.v1.confusion_matrix Computes the confusion matrix from predictions and labels. View aliases Compat aliases for migration (132 chars) | See Migration guide for more details. tf.compat.v1.math.confusion_matrix tf.compat.v1.confusion_matrix( labels, predictions, num_classes=None, dtype=tf.dtypes.int32, name=None, weights=None ) The matrix columns represent the ... [truncated 225 chars](1943 chars) |
+| tf.compat.v1.batch_to_space_nd BatchToSpace for N-D tensors of type T. View aliases Compat aliases for migration (114 chars) | See Migration guide for more details. tf.compat.v1.manip.batch_to_space_nd tf.compat.v1.batch_to_space_nd( input, block_shape, crops, name=None ) This operation reshapes the "batch" dimension 0 into M + 1 dimensions of shape ... [truncated 225 chars](3558 chars) |
+| tf.compat.v1.distribute.OneDeviceStrategy A distribution strategy for running on a single device. Inherits From: Strategy (121 chars) | tf.compat.v1.distribute.OneDeviceStrategy( device ) Using this strategy will place any variables created in its scope on the specified device. Input distributed through this strategy will be prefetched to the specified device ... [truncated 225 chars](30793 chars) |
 
 ## Dataset Information
 

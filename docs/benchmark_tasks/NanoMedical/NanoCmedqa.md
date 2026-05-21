@@ -7,13 +7,14 @@
 
 ## Overview
 
-`NanoCmedqa` is a Chinese medical consultation retrieval task based on CMedQA
-and represented in NanoMedical as a compact retrieval split. Queries are
-patient-style Chinese medical questions, and documents are candidate consultation
-answers. Compared with the CMedQAv2 reranking split, this task is closer to the
-out-of-domain cMedQA retrieval setting discussed in DuReader-retrieval: a model
-must retrieve useful answers from a larger candidate pool, with short,
-informal, and sometimes noisy medical text.
+DuReader-retrieval uses cMedQA as an out-of-domain Chinese medical QA retrieval
+test, where patient-style consultation questions must find useful answer text
+outside the original web-search domain. This NanoMedical split follows that
+larger-pool retrieval framing rather than the tighter CMedQAv2 reranking setup.
+The observed queries are colloquial patient histories about menstruation,
+pregnancy checks, pediatric fever, gynecological symptoms, fractures, semen
+analysis, and emotional episodes; documents are short consultation answers that
+must be ranked by medical relevance despite informal wording.
 
 ## Details
 
@@ -107,11 +108,11 @@ similar but unhelpful replies. Do not seed generation with Nano evaluation text.
 
 | Query | Positive document |
 | --- | --- |
-| 我的龟头炎不疼也不痒，什么原因引起的？我龟头上有些小水泡，不痛不痒两天了，不过就是有些肿胀，现在还会有些红红的东西，用过抗霉菌性的药物和广谱抗生素，但是也没有效果的，现在好苦恼，我到底该怎么治疗才好呢。请问下是应为什么引起我这样的病吗 (117 chars) | 不能有病乱投医，依你所说应该是没有找到正规大医院进行就诊。所以那些医生也众说纷纭。光靠你的描述根本无法判断病因，有的显现出的症状相同，但是引发病因却不同。所以建议，找一个正规的大医院，专科医生那里去就诊，不但要通过望诊，还要进行化验，然后才能定下是什么病因。 (129 chars) |
-| 我的大姨妈已经推迟两天了，也在喝红糖水，没效果。而且前几天白带特别多，经常腹痛。会不会是怀孕啊 (47 chars) | 主要需要考虑三个方面的原因，首先是妊娠，其次是月经不调。再则月经推迟不超过7天是正常现象，建议你去医院查血HCG，进一步确诊是否怀孕，如果推迟已超过7天，那就是月经不调，可以查激素六项确诊月经不调的原因，在对症治疗 (107 chars) |
-| 歇斯底里的哭闹摔东西情绪易激动烦闷有时候还伴有无法发出声音月经前后也有在心情不好以后紧接着就犯应该吃什么药我们家长应该怎么做帮助孩子早日恢复健康（ (73 chars) | 首先到正规医院确诊是不是癔症是的话可以根据情况用些抗焦虑药情绪稳定剂或抗抑郁药物另外重要的还有心理治疗 (51 chars) |
+| 我于五天前感觉会阴部位轻微疼痛，照镜子发现是会阴边沿有米粒大小红肿。就自行涂抹马应龙痔疮膏，口服消痣胶囊，每天酒精局部消毒，顿时感觉一阵刺痛。会阴口已经有一粒花生米大小的红肿，并且已经破溃。但是白天不擦洗时并无明显不适。患处总不见好，是不是痔疮，为什么长在会阴处？我该怎么办？ (138 chars) | 根据你的情况一般的还是有用炎症的刺激造成的建议你要注意休息避免劳累及上火同时饮食清淡为主及时的进行手术的治疗 (54 chars) |
+| 右臀部疼痛，疼痛的大概位置坐下的部位也能感觉到疼痛，右臀部腰也能感觉到疼痛。大腿的后外侧也能感觉到疼，小腿肚子也感觉到疼。以上症状在坐下的时候感觉厉害，站起来的瞬间疼痛加剧，站起来后疼痛减轻，不影响走路。坐着时低头有时也会引起臀部的疼痛，洗澡后感觉疼痛减轻。我这是什么病？应该怎么治疗？谢谢大夫了， (149 chars) | 因不能面诊。建议你到医院做腰椎核磁共振。骨盆拍片。血液生化全套。血常规。血沉。类风湿因子。抗O。血清尿酸等检查确诊后再治疗。 (62 chars) |
+| 痔疮（外痔、内痔、）会不会引起低烧？ (18 chars) | 痔疮是人体直肠末端粘膜下和肛管皮肤下静脉丛发生扩张和屈曲所形成的柔软静脉团，多见于经常站立者和久坐者。痔疮的治疗首先要保持大便通畅，进食易消化、少含渣滓的食物。饮食应粗细搭配，少饮浓茶、咖啡、酒类及少进辛辣食物，以减少对肛管的刺激。便后要温水坐浴，局部应用痔疮栓或痔疮膏。根据病情的不同，可以采取注射治疗、冷冻治疗及物理治疗。严重者可手术治疗，包括结扎法、胶圈套扎法、痔切除等。痔疮（外痔、内痔）不会引起低烧的症状出现的 (210 chars) |
 | 宫颈环扎后腹部有时会有像针扎一样是什么原因之前有过两次自然流产，现在怀孕了十二周去做宫颈环扎术，到二十周腹部有时会有像针扎一样是怎么回事？ (69 chars) | 你这情况建议及时去医院检查，排除局部感染可能，同时注意卧床休息，避免劳累、惊吓及性生活，多吃高蛋白食物。 (52 chars) |
-| 小孩全身发热，晚上睡觉不安稳，早上起来上嘴唇有小水泡是不是手足口病 (33 chars) | 宝宝发热，嘴唇有小水泡，初步判断为病毒感染，但不能确定是否为手足口病所引起。手足口病除了口腔内有疱疹之外，还有手足臀部的疱疹，并可以通过病原学检查加以明确，建议暂时口服小儿豉翘退热颗粒或者感冒解毒颗粒进行抗病毒治疗，同时用小儿开喉剑喷剂喷口腔，有比较好的效果。希望能够帮助你。 (138 chars) |
+| 帆状胎盘是什么原因引起的 (12 chars) | 其是指脐带附着于胎膜，血管经胎膜作扇形分布进入胎盘，此胎盘对母体本身无影响，主要是对胎儿的影响比较大，容易造成胎儿的死亡率。 (62 chars) |
 
 ## Dataset Information
 

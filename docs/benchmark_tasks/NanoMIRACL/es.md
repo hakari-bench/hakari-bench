@@ -7,12 +7,13 @@
 
 ## Overview
 
-MIRACL is a multilingual information retrieval benchmark over Wikipedia
-passages, where natural-language questions retrieve answer-bearing passages in
-the same language. `NanoMIRACL / es` is the Spanish task: Spanish questions
-search Spanish Wikipedia passages. The task tests passage retrieval for
-Spanish-language information needs about history, geography, religion, music,
-politics, organizations, science, media, and definitions.
+The MIRACL paper positions Spanish as same-language ad hoc retrieval over
+Spanish Wikipedia, with native relevance assessment rather than translated
+English labels. This Nano split compresses that task to short Spanish questions
+and single positive passages. The visible questions use natural interrogative
+forms such as `¿Qué`, `¿Cuál`, `¿Cómo`, `¿Por`, and `¿Quién`, so retrieval
+depends on resolving the requested historical, geographic, religious, political,
+scientific, or definitional fact in Spanish passage text.
 
 ## Details
 
@@ -126,11 +127,11 @@ topic overlap alone is not sufficient relevance.
 
 | Query | Positive document |
 | --- | --- |
-| ¿Quién pintó la primera representación de Jesús? (48 chars) | Representación de Jesús de Nazaret Se cree que la imagen más antigua referente a Jesús es un grafito realizado entre los siglos I y III hallado en una pared cerca del Monte Palatino en Roma. Aparentemente fue dibujado por un soldado romano como burla a un soldado cristiano, o por un estudiante del "Paedagogium" como sorna hacia otro estudiante cristiano. Dice en griego "" ("Alexámenos adora a [su] dios") y muestra un hombre rezándole un personaje crucificado con cabeza de asno. La cabeza del asno parece ser un prejuicio romano hacia los judíos, así que la imagen es antisemita y anticristiana. La mayoría de los estudiosos concuerdan en que la inscripción es una representación irónica contra los cristianos. Algunos estudiosos creen que el dibujo se ref... [truncated from 902 chars] (902 chars) |
-| ¿Cómo se lee la letra "и" en el alfabeto cirílico? (50 chars) | И И, и (cursiva: "И", "и") en una letra presente en la mayoría de los alfabetos cirílicos tanto modernos como arcaicos. Representa típicamente /i/ (en protoeslavo, eslavo eclesiástico, ruso, búlgaro, serbio, y macedonio), o /ɪ/ (en ucraniano, la misma suena como una "e" cerrada, mientras que en el lado ruso, suena como una "i" así como en algunas posiciones en el moderno eslavo eclesiástico y ruso). (402 chars) |
-| ¿Quiénes fueron las estrellas de la música popular paraguaya en los años 80? (76 chars) | Música de Paraguay Durante la época virreinal, la música introducida por los misioneros jesuitas tuvo alguna difusión. En el siglo XX los máximos representantes de la música paraguaya fueron Agustín Pío Barrios, José Asunción Flores y Juan Carlos Moreno González. Flores se formó en el extranjero y reprodujo, en la forma vocal guaraní, la música indígena, basándose en la técnica europea. Moreno por su parte compuso obras inspiradas en temas populares en forma clásico romántica. Agustín Barrios "Mangoré" destacó por composiciones en guitarra clásica, y es denominado "el Paganini de la guitarra de la selva paraguaya". (622 chars) |
-| ¿Qué tipos de vinos hay en el nordeste de Brasil? (49 chars) | Vale dos Vinhedos Establecida en 2002, es la primera indicación de procedencia vinícola reconocida en Brasil y como tal está reglamentada por un consejo regulador. Produce vinos de calidad y vinos espumosos, que deben ser elaborados a base de variedades cultivadas y transformadas en la región. Entre otras, se cultivan Cabernet Sauvignon, Chardonnay, Tannat y Merlot. (368 chars) |
-| ¿Quiénes son los dioses del Olimpo? (35 chars) | Olimpo Para la mitología griega, el Olimpo era el hogar de los dioses olímpicos, los principales dioses del panteón griego, presididos por Zeus. Los antiguos griegos creían que en las cumbres del monte había construidas mansiones de cristal en las que moraban los dioses. El Olimpo quedó destruido después de la guerra de los Dioses, y la mitología dice que cuando se destruyó dejó dos rastros divinos en forma de hombre y mujer, los cuales deberán juntarse para dar a luz al hijo hombre que dé vida otra vez al Olimpo. El número e identidad de los dioses que habitaban ese Olimpo (el llamado «Concilio de los dioses) parece ser de doce, siendo este un posible listado original: La tradición fue agregando algunos que fueron reemplazando a otros para que el n... [truncated from 1106 chars] (1106 chars) |
+| ¿Cuál fue la primera universidad para mujeres en Japón? (55 chars) | Universidad Femenina de Japón Fundada el 20 de abril de 1901 por Jinzō Naruse, fue la primera institución de educación superior para mujeres establecida en Japón. Su fundador, Naruse, hizo hincapié en la necesidad de brindar ... [truncated 225 chars](1010 chars) |
+| ¿Cómo llaman los judíos al Pentateuco? (38 chars) | Pentateuco Se corresponde con los que en la tradición hebrea forman la "Torá" —La Ley—, núcleo de la religión judía. Los cinco libros que lo componen son:Está contenido a su vez en el "Tanaj", el cual es considerado sagrado p ... [truncated 225 chars](678 chars) |
+| ¿Cómo se pronuncia Massachusetts? (33 chars) | Massachusetts Massachusetts (/mæsəˈtʃusɪts/ en inglés), oficialmente Mancomunidad de Massachusetts (en inglés "Commonwealth of Massachusetts"), es uno de los cincuenta estados que, junto con Washington D. C., forman los Estad ... [truncated 225 chars](289 chars) |
+| ¿Cuáles son las ciudades más turísticas de Grecia? (50 chars) | Turismo en Grecia El Turismo en Grecia ha sido un elemento clave de la actividad económica en el país, y es uno de los sectores más importantes del país. Grecia ha sido un destino turístico importante y atractivo en Europa de ... [truncated 225 chars](829 chars) |
+| ¿De qué falleció Bertram Fletcher Robinson? (43 chars) | Bertram Fletcher Robinson En 2011, el escritor, Paul Spiring, encontró documentos que demostraban un pago de Doyle a Robinson de más de quinientas libras por la idea. Previamente, Doyle ya le habría pagado a Robinson cincuent ... [truncated 225 chars](525 chars) |
 
 ## Dataset Information
 

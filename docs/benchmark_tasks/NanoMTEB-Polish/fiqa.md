@@ -7,11 +7,14 @@
 
 ## Overview
 
-`fiqa` is a Polish retrieval task derived from FiQA financial question answering.
-Queries are natural-language finance questions, and documents are answer-style
-financial discussion passages. The model must retrieve relevant opinionated or
-explanatory answers about investments, taxes, mortgages, options, employment,
-and personal finance decisions.
+FiQA 2018 defines an opinion-oriented financial question-answering retrieval
+task in which systems rank relevant documents for natural-language finance
+questions. This Polish split is the translated/localized retrieval version:
+short personal-finance or investing questions retrieve answer-style discussion
+passages. The observed positives cover contractor incorporation, option
+assignment, put-call parity, house-price affordability, and mortgage-adviser
+incentives, so relevance often depends on explanatory financial reasoning and
+opinion context rather than a single factual answer.
 
 ## Details
 
@@ -61,11 +64,11 @@ not seed generation from evaluation queries or positive passages.
 
 | Query | Positive document |
 | --- | --- |
-| Dlaczego duzi klienci chcą, aby wykonawca został włączony przed oddaniem im pracy? (82 chars) | Uważają, że zmniejsza to ryzyko, że Revenue Canada uzna, że ​​jesteś pracownikiem i zmusi ich do zapłacenia całej sterty podatków, EI, CPP itd., które należałoby zapłacić, gdybyś był zatrudniony jako pracownik. Przypominam sobie, że pracodawca jest obwiniany z... [truncated from 1162 chars] (1162 chars) |
-| Co się stanie, gdy rozkładówka kalendarza zostanie przypisana do konta bez depozytu zabezpieczającego? (102 chars) | „Myślę, że wielu brokerów umieściłoby ograniczenie sugerowane w @homer150mw lub coś bardziej restrykcyjnego, więc to pierwsza linia odpowiedzi. Jeśli zostałeś przydzielony do swojej krótkiej opcji, wtedy (myślę) T+ Obowiązują dla Ciebie 3 zasady rozliczenia Za... [truncated from 2295 chars] (2295 chars) |
-| Parytet Put-Call – jaka jest różnica między tymi dwiema reprezentacjami? (72 chars) | „Cóż, pierwszy z nich jest oparty na wzorze „Pert” dla wartości bieżącej składanej w sposób ciągły, podczas gdy drugi jest wariantem złożonym okresowo. Zazwyczaj modele złożone w sposób ciągły reprezentują ideał; jako okres składania pieniądz wyceniany w czasi... [truncated from 1532 chars] (1532 chars) |
-| Dlaczego ceny domów nie mogą być niezgodne z pensjami (53 chars) | Oto inny sposób myślenia. Załóżmy, że jest rok 2011 i mamy 25-letnie małżeństwo, które zarabia łącznie 50 000 dolarów netto rocznie. Odpowiedni pierwszy dom w ich okolicy to 300 000 dolarów, sześciokrotność rocznej pensji netto. Zakładając, że mogliby oszczędz... [truncated from 1449 chars] (1449 chars) |
-| Czy doradcy finansowi uzyskują lepsze oferty na kredyty hipoteczne? (67 chars) | Tak, może dla siebie, ale dla Ciebie to zależy od wielu rzeczy. Ale nie wszyscy doradcy to szumowiny, ale zaakceptuj fakt, że jesteś ich dojną krową i jesteś przy ich dochodach. Niektórzy doradcy są wierni swoim zawodom i doradzają w sposób etyczny, starając s... [truncated from 790 chars] (790 chars) |
+| Podatek od akcji lub ETF (24 chars) | „Jeśli sprzedajesz akcje bez wypłat, Twój zysk podlega opodatkowaniu zgodnie z § 1001. Ale nie wszystkie zrealizowane zyski zostaną uznane za podlegające opodatkowaniu. A niektóre zyski, które prawdopodobnie nie zostaną zreal ... [truncated 225 chars](2122 chars) |
+| Jaki kurs wymiany stosuje El Al przy przeliczaniu kwoty płatności końcowej na szekle? (85 chars) | „Stawka za „czeki i przelewy” jest ustalana przez każdy bank wielokrotnie w ciągu dnia w oparciu o rynek. Jest to przeciwieństwo stawki za „gotówkę/banknoty”, również ustalaną przez każdy bank, a „„stawka reprezentatywna”” (ש ... [truncated 225 chars](691 chars) |
+| Ile brokerzy płacą za wymianę za transakcję? (44 chars) | Nie ma jednej odpowiedzi na to pytanie, ale są pewne ogólniki. Większość giełd rozróżnia pasywną i agresywną stronę handlu. Uczestnik pasywny to zlecenie, które znajdowało się na rynku w momencie transakcji. Jest to zlecenie, ... [truncated 225 chars](1211 chars) |
+| Czy dochód freelancera uzyskany przez obywatela USA mieszkającego za granicą podlega stanowemu podatkowi dochodowemu? (117 chars) | Brak podatków stanowych, ale Włochy mają również korzystny traktat z rządem federalnym Stanów Zjednoczonych. Zastanów się nad obniżeniem podatków federalnych do 5% ;) to gruba lektura, http://www.irs.gov/businesses/internatio ... [truncated 225 chars](629 chars) |
+| Ile wynosi inflacja? (20 chars) | Istnieje coś takiego jak indeks cen konsumpcyjnych (CPI). Istnieje koszyk towarów, po który ludzie, którzy prowadzą indeks, w zasadzie robią zakupy. Jest o wiele bardziej szczegółowy ze względu na dokładność, ale najważniejsz ... [truncated 225 chars](614 chars) |
 
 ## Dataset Information
 
