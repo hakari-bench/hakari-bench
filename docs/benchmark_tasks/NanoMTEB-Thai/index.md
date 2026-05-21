@@ -1,10 +1,5 @@
 # NanoMTEB-Thai
 
-> [!NOTE]
-> This page was prepared by manual review of source papers, dataset cards,
-> repository metadata, and sampled benchmark data. It may contain mistakes;
-> please treat it as a reference aid rather than a definitive source.
-
 ## Overview
 
 NanoMTEB-Thai is a compact Thai retrieval group aligned with MTEB-style task

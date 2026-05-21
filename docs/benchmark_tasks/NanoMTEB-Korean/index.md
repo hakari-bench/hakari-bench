@@ -1,10 +1,5 @@
 # NanoMTEB-Korean
 
-> [!NOTE]
-> This page was prepared by manual review of source papers, dataset cards,
-> repository metadata, and sampled benchmark data. It may contain mistakes;
-> please treat it as a reference aid rather than a definitive source.
-
 ## Overview
 
 NanoMTEB-Korean is the compact Korean retrieval group for MTEB-style evaluation.

@@ -1,10 +1,5 @@
 # NanoCoIR
 
-> [!NOTE]
-> This page was prepared by manual review of source papers, dataset cards,
-> repository metadata, and sampled benchmark data. It may contain mistakes;
-> please treat it as a reference aid rather than a definitive source.
-
 ## Overview
 
 NanoCoIR is the Nano task group for CoIR, a code information retrieval benchmark.
