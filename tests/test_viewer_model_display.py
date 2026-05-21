@@ -28,17 +28,18 @@ def test_render_model_name_cell_uses_metadata_json_and_compact_badges() -> None:
     assert "jina-embeddings-v5-text-nano" in html
     assert "remote code" not in html
     assert "data-model-metadata=" in html
-    assert 'w-[36rem] min-w-72 max-w-[36rem] overflow-hidden' in html
-    assert 'class="flex min-w-0 items-center gap-2 overflow-hidden whitespace-nowrap"' in html
-    assert "model-detail-trigger block min-w-0 truncate text-left font-medium underline-offset-2" in html
-    assert "model-detail-trigger text-left font-medium text-" not in html
+    assert 'sticky left-0 z-10 w-[36rem] min-w-72 max-w-[36rem]' in html
+    assert 'class="flex min-w-0 flex-wrap items-center gap-1"' in html
+    assert "model-detail-trigger min-w-0 [overflow-wrap:anywhere] text-left text-[0.8125rem] leading-tight font-medium underline-offset-2" in html
+    assert " min-w-0 truncate " not in html
+    assert "whitespace-nowrap" not in html
     assert "&quot;trust_remote_code&quot;:true" in html
     assert ">768d</span>" in html
     assert ">binary</span>" in html
     assert ">binary_rescore</span>" in html
 
 
-def test_render_model_name_cell_truncates_long_visible_model_name() -> None:
+def test_render_model_name_cell_allows_long_visible_model_name_to_wrap() -> None:
     long_name = "Model NAME " + ("A" * 45)
     row = LeaderboardRow(
         borda_rank=1,
@@ -52,10 +53,11 @@ def test_render_model_name_cell_truncates_long_visible_model_name() -> None:
 
     html = render_model_name_cell(row, model_view)
 
-    visible_name = f"{long_name[:40]}..."
-    assert f">{visible_name}</button>" in html
+    assert f">{long_name}</button>" in html
     assert f'title="{long_name}"' in html
-    assert f'aria-label="{long_name}"' in html
+    assert "aria-label=" not in html
+    assert " min-w-0 truncate " not in html
+    assert "[overflow-wrap:anywhere]" in html
     assert model_view.display_name == long_name
     assert model_view.metadata["model_name"] == long_name
 

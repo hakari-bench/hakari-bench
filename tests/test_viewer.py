@@ -1941,6 +1941,37 @@ def test_overall_task_filter_renders_single_task_mean_column(tmp_path: Path) -> 
     assert body.count(">55.00</td>") >= 2
 
 
+def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("org/model-a", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.90, 10, 12, 8192),
+            ("org/model-b", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.80, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA")
+
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+    body = render_table_body(result=result)
+
+    assert head.index("Model Name") < head.index("Borda")
+    assert body.index("model-a") < body.index(">1</td>")
+    assert 'data-column-key="model_name"' in head
+    assert (
+        'data-column-key="model_name" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
+        'text-left px-2 uppercase sticky left-0'
+    ) in head
+    assert '<td class="sticky left-0 z-10 w-[36rem]' in body
+    assert '<td class="sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums" style="left: 36rem;">' in body
+    assert '<td class="sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums" style="left: 40rem;">' in body
+
+
 def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 

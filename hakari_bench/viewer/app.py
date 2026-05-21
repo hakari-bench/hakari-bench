@@ -1436,9 +1436,9 @@ def render_table_head(
     filter_state = filter_state or FilterState()
     metric_labels = _metric_column_labels(result.metric_columns, overrides=result.metric_column_labels)
     columns = [
+        ("model_name", "Model Name", "asc", "left", False, ""),
         ("borda_rank", "Borda", "asc", "right", False, ""),
         ("mean_rank", "Mean", "asc", "right", False, ""),
-        ("model_name", "Model Name", "asc", "left", False, ""),
         ("borda_score", "Borda Score", "desc", "right", False, ""),
     ]
     if result.is_overall and not (result.rank_filtered and result.task_filter):
@@ -1496,7 +1496,7 @@ def render_table_head(
                    </button>{doc_trigger}
                  </span>"""
         heads.append(
-            f"""<th scope="col" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
+            f"""<th scope="col" data-column-key="{escape(key, quote=True)}" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
                  {header_content}
                </th>"""
         )
@@ -1504,12 +1504,12 @@ def render_table_head(
 
 
 def _sticky_head_class(key: str) -> str:
-    if key == "borda_rank":
-        return "sticky left-0 z-20 min-w-16"
-    if key == "mean_rank":
-        return "sticky left-16 z-20 min-w-16"
     if key == "model_name":
-        return "sticky left-32 z-20 w-[36rem] min-w-72 max-w-[36rem]"
+        return "sticky left-0 z-20 w-[36rem] min-w-72 max-w-[36rem]"
+    if key == "borda_rank":
+        return "sticky z-20 min-w-16 [left:36rem]"
+    if key == "mean_rank":
+        return "sticky z-20 min-w-16 [left:40rem]"
     return ""
 
 
@@ -1526,9 +1526,9 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
-              <td class="sticky left-0 z-10 bg-inherit px-2 py-1 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
-              <td class="sticky left-16 z-10 bg-inherit px-2 py-1 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
               {render_model_name_cell(row, model_views[row.model_name])}
+              <td class="sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums" style="left: 36rem;">{_fmt_rank(row.borda_rank)}</td>
+              <td class="sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums" style="left: 40rem;">{_fmt_rank(row.mean_rank)}</td>
               <td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
               {_render_metric_cells(result=result, row=row)}

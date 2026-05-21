@@ -89,24 +89,38 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 long_model_layout = long_model_row.evaluate(
                     """(row) => {
                         const cells = row.querySelectorAll("td");
-                        const modelCell = cells[2].getBoundingClientRect();
-                        const modelButton = cells[2].querySelector(".model-detail-trigger").getBoundingClientRect();
+                        const modelCell = cells[0].getBoundingClientRect();
+                        const modelButton = cells[0].querySelector(".model-detail-trigger").getBoundingClientRect();
+                        const bordaRankCell = cells[1].getBoundingClientRect();
+                        const meanRankCell = cells[2].getBoundingClientRect();
                         const bordaScoreCell = cells[3].getBoundingClientRect();
+                        const modelButtonStyle = getComputedStyle(cells[0].querySelector(".model-detail-trigger"));
                         return {
+                            modelCellLeft: modelCell.left,
                             modelCellRight: modelCell.right,
                             modelButtonRight: modelButton.right,
+                            bordaRankLeft: bordaRankCell.left,
+                            meanRankLeft: meanRankCell.left,
                             bordaScoreLeft: bordaScoreCell.left,
-                            modelCellContentOverflowX: getComputedStyle(cells[2].firstElementChild).overflowX,
-                            modelButtonOverflowX: getComputedStyle(cells[2].querySelector(".model-detail-trigger")).overflowX,
-                            modelButtonTextOverflow: getComputedStyle(cells[2].querySelector(".model-detail-trigger")).textOverflow,
+                            modelCellContentFlexWrap: getComputedStyle(cells[0].firstElementChild).flexWrap,
+                            modelButtonFontSize: parseFloat(modelButtonStyle.fontSize),
+                            modelButtonLineHeight: parseFloat(modelButtonStyle.lineHeight),
+                            modelButtonOverflowWrap: modelButtonStyle.overflowWrap,
+                            modelButtonWhiteSpace: modelButtonStyle.whiteSpace,
+                            modelButtonTextOverflow: modelButtonStyle.textOverflow,
                         };
                     }"""
                 )
-                assert long_model_layout["modelCellRight"] <= long_model_layout["bordaScoreLeft"] + 0.5
-                assert long_model_layout["modelButtonRight"] <= long_model_layout["bordaScoreLeft"] + 0.5
-                assert long_model_layout["modelCellContentOverflowX"] == "hidden"
-                assert long_model_layout["modelButtonOverflowX"] == "hidden"
-                assert long_model_layout["modelButtonTextOverflow"] == "ellipsis"
+                assert 0 <= long_model_layout["modelCellLeft"] <= 32
+                assert long_model_layout["modelCellRight"] <= long_model_layout["bordaRankLeft"] + 0.5
+                assert long_model_layout["bordaRankLeft"] < long_model_layout["meanRankLeft"] < long_model_layout["bordaScoreLeft"]
+                assert long_model_layout["modelButtonRight"] <= long_model_layout["bordaRankLeft"] + 0.5
+                assert long_model_layout["modelCellContentFlexWrap"] == "wrap"
+                assert long_model_layout["modelButtonFontSize"] == pytest.approx(13.0, abs=0.1)
+                assert long_model_layout["modelButtonLineHeight"] == pytest.approx(16.25, abs=0.25)
+                assert long_model_layout["modelButtonOverflowWrap"] == "anywhere"
+                assert long_model_layout["modelButtonWhiteSpace"] == "normal"
+                assert long_model_layout["modelButtonTextOverflow"] == "clip"
 
                 tooltip_trigger = page.locator("[data-tooltip]").first
                 tooltip_trigger.hover()
