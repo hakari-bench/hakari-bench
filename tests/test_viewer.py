@@ -8,6 +8,7 @@ import time
 from pathlib import Path
 
 import duckdb
+from fastapi.testclient import TestClient
 import pytest
 
 from hakari_bench.viewer.app import (
@@ -2454,6 +2455,46 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert '<span class="task-z-score-value">90.00</span>' in task_column_response.text
     assert '<span class="task-z-score-value">82.70</span>' in task_column_response.text
     assert '<span class="task-z-score-delta">+0.27σ</span>' in task_column_response.text
+
+
+def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "arguana", "arguana", "arguana", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "arguana", "arguana", "arguana", 0.80, 10, 12, 8192),
+            ("model/c", "BenchA", "bench/a", "BenchA", "arguana", "arguana", "arguana", 0.80, 10, 12, 8192),
+            ("model/d", "BenchA", "bench/a", "BenchA", "arguana", "arguana", "arguana", 0.70, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA", show_task_scores=True, show_task_ranks=True)
+    rows_by_name = {row.model_name: row for row in result.rows}
+
+    assert result.show_task_scores is True
+    assert result.show_task_ranks is True
+    assert rows_by_name["model/a"].metric_rank_values["arguana"] == 1
+    assert rows_by_name["model/b"].metric_rank_values["arguana"] == 2.5
+    assert rows_by_name["model/c"].metric_rank_values["arguana"] == 2.5
+    assert rows_by_name["model/d"].metric_rank_values["arguana"] == 4
+
+    response = TestClient(create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)).get(
+        "/leaderboard?view=BenchA&task_ranks=1"
+    )
+
+    assert response.status_code == 200
+    assert "<span>Task Rank</span>" in response.text
+    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="task_scores" value="1"' in response.text
+    assert ">1</td>" in response.text
+    assert ">2.5</td>" in response.text
 
 
 def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) -> None:

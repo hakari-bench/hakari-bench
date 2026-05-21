@@ -151,6 +151,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         other_variant: bool = Query(default=False),
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=True),
+        task_ranks: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -182,6 +183,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 other_variant=other_variant,
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
+                task_ranks=task_ranks,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
@@ -234,6 +236,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             language_filters=filter_state.language_filters,
             show_task_scores=state_query.get("task_scores") == "1",
             show_task_z_scores=state_query.get("task_z_scores") == "1",
+            show_task_ranks=state_query.get("task_ranks") == "1",
             rank_filtered=filter_state.rank_filtered,
             model_filter=filter_state.model_filter,
             task_filter=filter_state.task_filter,
@@ -263,6 +266,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         other_variant: bool = Query(default=False),
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=True),
+        task_ranks: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -294,6 +298,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 other_variant=other_variant,
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
+                task_ranks=task_ranks,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
@@ -331,6 +336,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         other_variant: bool = Query(default=False),
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=True),
+        task_ranks: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -362,6 +368,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 other_variant=other_variant,
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
+                task_ranks=task_ranks,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
@@ -975,6 +982,7 @@ def render_controls(
     other_variant_checked = " checked" if result.include_other_variants else ""
     task_scores_checked = " checked" if result.show_task_scores else ""
     task_z_scores_checked = " checked" if result.show_task_z_scores else ""
+    task_ranks_checked = " checked" if result.show_task_ranks else ""
     rank_filtered_checked = " checked" if filter_state.rank_filtered else ""
     state_fields = [
         ("view", result.view_name),
@@ -994,6 +1002,8 @@ def render_controls(
         task_score_hidden_fields.append(("task_z_scores", "1"))
     else:
         task_score_hidden_fields.append(("task_z_scores", "0"))
+    if result.show_task_ranks:
+        task_score_hidden_fields.append(("task_ranks", "1"))
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
     variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
     filter_hidden_fields = [
@@ -1247,6 +1257,11 @@ def render_controls(
           <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
           <span>STD</span>
         </label>
+        <label class="inline-flex items-center gap-2">
+          <input type="hidden" name="task_ranks" value="0">
+          <input type="checkbox" name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700"{task_ranks_checked}>
+          <span>Task Rank</span>
+        </label>
       </form>
       <form id="variant-controls" class="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2"
             hx-get="/leaderboard" hx-push-url="true"
@@ -1432,7 +1447,7 @@ def render_table_head(
     else:
         columns.append(("mean_score", "Mean Score", "desc", "right", False, ""))
     columns.extend(
-        (f"metric:{column}", metric_labels[column], "desc", "right", True, column)
+        (f"metric:{column}", metric_labels[column], "asc" if result.show_task_ranks else "desc", "right", True, column)
         for column in result.metric_columns
     )
     columns.extend(
@@ -1911,6 +1926,12 @@ def _empty_analysis_panel(*, title: str, body: str) -> str:
 
 
 def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if result.show_task_ranks:
+        values = row.metric_rank_values
+        return "".join(
+            f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-right tabular-nums">{_fmt_optional_rank(values.get(column))}</td>"""
+            for column in result.metric_columns
+        )
     if result.show_task_z_scores:
         return "".join(
             _render_metric_z_cell(score=row.metric_values.get(column), z_score=row.metric_z_values.get(column))
@@ -2035,6 +2056,10 @@ def _next_direction(*, key: str, sort: str, direction: str, default_direction: s
 
 def _fmt_rank(value: float) -> str:
     return str(int(value)) if float(value).is_integer() else f"{value:.1f}"
+
+
+def _fmt_optional_rank(value: float | None) -> str:
+    return "" if value is None else _fmt_rank(value)
 
 
 def _fmt_score(value: float | None) -> str:

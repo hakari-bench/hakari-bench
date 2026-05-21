@@ -78,6 +78,7 @@ class LeaderboardRow(BaseModel):
     base_score_delta_percent: float | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
     metric_z_values: dict[str, float] = Field(default_factory=dict)
+    metric_rank_values: dict[str, float] = Field(default_factory=dict)
     metric_sort_values: dict[str, float] = Field(default_factory=dict)
 
 
@@ -113,6 +114,7 @@ class LeaderboardResult(BaseModel):
     include_other_variants: bool = False
     show_task_scores: bool = False
     show_task_z_scores: bool = False
+    show_task_ranks: bool = False
     rank_filtered: bool = False
     task_filter: str = ""
     score_groups: list[ScoreGroup]
@@ -163,6 +165,7 @@ class LeaderboardService:
         language_filters: tuple[str, ...] = (),
         show_task_scores: bool = False,
         show_task_z_scores: bool = False,
+        show_task_ranks: bool = False,
         rank_filtered: bool = False,
         model_filter: str = "",
         task_filter: str = "",
@@ -224,6 +227,7 @@ class LeaderboardService:
                 and not language_filters
                 and not show_task_scores
                 and not show_task_z_scores
+                and not show_task_ranks
                 and not ranking_model_filter_terms
                 and not has_rank_facet_filters
                 and not task_filter.strip()
@@ -257,6 +261,7 @@ class LeaderboardService:
                         include_other_variants=include_other_variants,
                         show_task_scores=False,
                         show_task_z_scores=False,
+                        show_task_ranks=False,
                         task_filter="",
                         score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
                         selected_score_group=(
@@ -318,7 +323,7 @@ class LeaderboardService:
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["term_count"] = len(ranking_task_filter_terms)
             metric_score_group = selected_score_group
-            should_show_task_scores = show_task_scores or bool(ranking_task_filter_terms)
+            should_show_task_scores = show_task_scores or show_task_ranks or bool(ranking_task_filter_terms)
             if overall is not None and not ranking_task_filter_terms:
                 with timed_operation("viewer.leaderboard.phase", operation="aggregate_overall", view=view_name) as phase_timing:
                     rows = _aggregate_overall_scores(rows, overall)
@@ -348,6 +353,7 @@ class LeaderboardService:
                     score_group=metric_score_group,
                     metric_columns=metric_columns,
                     show_task_z_scores=show_task_z_scores,
+                    show_task_ranks=show_task_ranks,
                     use_task_mean_for_overall=bool(ranking_task_filter_terms),
                 )
                 sort_key = "mean_score" if ranking_task_filter_terms and sort in {"macro_mean", "micro_mean"} else sort
@@ -370,6 +376,7 @@ class LeaderboardService:
                 include_other_variants=include_other_variants,
                 show_task_scores=should_show_task_scores,
                 show_task_z_scores=show_task_z_scores,
+                show_task_ranks=show_task_ranks,
                 rank_filtered=rank_filtered,
                 task_filter=task_filter.strip(),
                 score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
@@ -738,6 +745,7 @@ def compute_leaderboard_rows(
     score_group: ScoreGroupConfig | None = None,
     metric_columns: list[str] | None = None,
     show_task_z_scores: bool = False,
+    show_task_ranks: bool = False,
     use_task_mean_for_overall: bool = False,
 ) -> list[LeaderboardRow]:
     expected_tasks = {row.task_key for row in rows}
@@ -762,6 +770,11 @@ def compute_leaderboard_rows(
         else {}
     )
     aggregate_z_values_by_model = _aggregate_z_values_by_model(complete_rows, is_overall=is_overall) if show_task_z_scores else {}
+    metric_rank_values_by_model = (
+        _metric_rank_values_by_model(complete_rows, score_group=score_group, metric_columns=metric_columns)
+        if show_task_ranks and metric_columns
+        else {}
+    )
 
     leaderboard_rows: list[LeaderboardRow] = []
     for model_name in sorted(complete_models):
@@ -776,6 +789,7 @@ def compute_leaderboard_rows(
         mean_score = micro_mean if use_task_mean_for_overall else macro_mean if is_overall else micro_mean
         metric_values = _metric_values(model_rows, score_group=score_group, metric_columns=metric_columns)
         metric_z_values = z_values_by_model.get(model_name, {})
+        metric_rank_values = metric_rank_values_by_model.get(model_name, {})
         aggregate_z_values = aggregate_z_values_by_model.get(model_name, {})
         leaderboard_rows.append(
             LeaderboardRow(
@@ -804,7 +818,8 @@ def compute_leaderboard_rows(
                 source_model_name=first.source_model_name,
                 metric_values=metric_values,
                 metric_z_values=metric_z_values,
-                metric_sort_values=metric_z_values if show_task_z_scores else metric_values,
+                metric_rank_values=metric_rank_values,
+                metric_sort_values=metric_rank_values if show_task_ranks else metric_z_values if show_task_z_scores else metric_values,
             )
         )
 
@@ -864,6 +879,21 @@ def _rank_desc(items: Iterable[tuple[str, float]]) -> dict[str, float]:
         rank = float(index + 1)
         for model_name, _ in sorted_items[index:end]:
             ranks[model_name] = rank
+        index = end
+    return ranks
+
+
+def _average_rank_desc(items: Iterable[tuple[str, float]]) -> dict[str, float]:
+    sorted_items = sorted(items, key=lambda item: (-item[1], item[0]))
+    ranks: dict[str, float] = {}
+    index = 0
+    while index < len(sorted_items):
+        end = index + 1
+        while end < len(sorted_items) and sorted_items[end][1] == sorted_items[index][1]:
+            end += 1
+        rank = (index + 1 + end) / 2
+        for model_name, _ in sorted_items[index:end]:
+            ranks[model_name] = float(rank)
         index = end
     return ranks
 
@@ -1405,6 +1435,29 @@ def _metric_z_values_by_model(
         }
         for model_name, columns in model_column_values.items()
     }
+
+
+def _metric_rank_values_by_model(
+    rows: list[TaskScore],
+    *,
+    score_group: ScoreGroupConfig | None,
+    metric_columns: list[str],
+) -> dict[str, dict[str, float]]:
+    if score_group is None:
+        return {}
+    metric_values_by_model = _mean_metric_values_by_model(rows, score_group=score_group)
+    ranks_by_column: dict[str, dict[str, float]] = {}
+    for column in metric_columns:
+        ranks_by_column[column] = _average_rank_desc(
+            (model_name, values[column])
+            for model_name, values in metric_values_by_model.items()
+            if column in values
+        )
+    ranks_by_model: dict[str, dict[str, float]] = defaultdict(dict)
+    for column, ranks in ranks_by_column.items():
+        for model_name, rank in ranks.items():
+            ranks_by_model[model_name][column] = rank
+    return ranks_by_model
 
 
 def _aggregate_z_values_by_model(rows: list[TaskScore], *, is_overall: bool) -> dict[str, dict[str, float]]:
