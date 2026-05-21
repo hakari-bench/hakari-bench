@@ -1,10 +1,5 @@
 # NanoR2MED
 
-> [!NOTE]
-> This page was prepared by manual review of source papers, dataset cards,
-> repository metadata, and sampled benchmark data. It may contain mistakes;
-> please treat it as a reference aid rather than a definitive source.
-
 ## Overview
 
 NanoR2MED is the Nano task group for R2MED, a reasoning-driven medical retrieval

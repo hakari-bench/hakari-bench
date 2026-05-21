@@ -1,10 +1,5 @@
 # NanoMTEB-Thai
 
-> [!NOTE]
-> This page was prepared by manual review of source papers, dataset cards,
-> repository metadata, and sampled benchmark data. It may contain mistakes;
-> please treat it as a reference aid rather than a definitive source.
-
 ## Overview
 
 NanoMTEB-Thai is a compact Thai retrieval group aligned with MTEB-style task
@@ -14,6 +9,14 @@ Thai MKQA answer-label retrieval, Thai long-document retrieval, WebFAQ
 question-answer retrieval, and Thai XQuAD context retrieval. The group is
 therefore a mixture of same-language Thai retrieval, Thai-English alignment,
 short answer-string retrieval, and long-document retrieval.
+
+The tasks stress different failure modes for Thai retrievers. Belebele tests
+whether passage relevance survives Thai-English direction changes, MKQA asks
+for short answer labels that may not repeat the question, MIRACL and Mr. TyDi
+use Thai Wikipedia evidence, and MultiLongDocRetrieval requires finding a full
+long document from a localized question. The group is useful because Thai
+segmentation and script handling interact with answer granularity and document
+length rather than appearing as an isolated language issue.
 
 ## Details
 

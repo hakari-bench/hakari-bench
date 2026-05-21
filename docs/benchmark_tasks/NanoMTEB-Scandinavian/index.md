@@ -1,10 +1,5 @@
 # NanoMTEB-Scandinavian
 
-> [!NOTE]
-> This page was prepared by manual review of source papers, dataset cards,
-> repository metadata, and sampled benchmark data. It may contain mistakes;
-> please treat it as a reference aid rather than a definitive source.
-
 ## Overview
 
 NanoMTEB-Scandinavian is a compact retrieval group for Scandinavian-language
@@ -15,6 +10,13 @@ social question answering. The group is small in task count, but it is not
 single-domain: it deliberately mixes highly lexical title/evidence retrieval
 with short-answer and conversational answer retrieval where lexical overlap is
 weak.
+
+The group follows the Scandinavian Embedding Benchmark pattern of adapting
+several non-retrieval resources into retrieval tasks. Claims, questions,
+headlines, titles, summaries, and social posts become queries, while evidence
+snippets, answer strings, encyclopedia articles, news articles, FAQ answers, or
+reply tweets become relevant documents. Danish, Norwegian, and Swedish language
+handling is therefore tested together with very different notions of relevance.
 
 ## Details
 

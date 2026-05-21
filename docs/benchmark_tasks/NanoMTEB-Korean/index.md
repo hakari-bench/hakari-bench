@@ -1,10 +1,5 @@
 # NanoMTEB-Korean
 
-> [!NOTE]
-> This page was prepared by manual review of source papers, dataset cards,
-> repository metadata, and sampled benchmark data. It may contain mistakes;
-> please treat it as a reference aid rather than a definitive source.
-
 ## Overview
 
 NanoMTEB-Korean is the compact Korean retrieval group for MTEB-style evaluation.
@@ -13,6 +8,14 @@ StrategyQA-style implicit-reasoning evidence retrieval, Korean legal article
 retrieval, Korean MIRACL Wikipedia retrieval, and Korean SQuAD/KorQuAD-style
 context retrieval. The group tests Korean retrieval across public reports,
 Wikipedia, statutes, and multi-hop evidence.
+
+Its value is in the contrast between direct evidence retrieval and hidden
+reasoning or domain lookup. AutoRAG and SQuADKor often reward finding an
+answer-bearing chunk, Ko-StrategyQA may require evidence for an implicit
+reasoning step, LawIRKo requires matching formal statute text, and MIRACL keeps
+the monolingual Wikipedia passage setting. The group is therefore a compact
+check of Korean morphology, legal wording, evidence granularity, and
+multi-positive retrieval.
 
 ## Details
 

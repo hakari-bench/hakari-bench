@@ -144,10 +144,14 @@ Use this structure unless a task needs a clearly better variant:
    > please treat it as a reference aid rather than a definitive source.
    ```
 
-3. `## Overview`: a short description of the task itself, not of the Markdown
-   file or Nano packaging. For example, describe MIRACL first, then the `ja`
-   retrieval task as Japanese short queries retrieving Japanese Wikipedia
-   passages.
+3. `## Overview`: a paper-centered summary of what the benchmark task is. Start
+   from the source paper when one exists: what retrieval problem the paper
+   introduced, how the source data is framed, and what the concrete task asks a
+   model to retrieve. If no source paper is available, summarize the benchmark
+   task itself from the dataset card, official project page, and sampled data.
+   The Overview should be task-specific prose, not a reusable sentence pattern
+   such as "`{Task}` evaluates ... Queries are ...". Mention Nano packaging only
+   when it changes how the source task is interpreted.
 4. `## Details`: longer interpretive prose about the original task/data,
    source-paper findings, observed Nano data tendencies, BM25 difficulty, and
    why the benchmark differs from adjacent benchmarks.
@@ -161,20 +165,33 @@ Use this structure unless a task needs a clearly better variant:
 
 ## Example Policy
 
-Show five query-positive examples when possible. Select them from qrels rows with
-matching query and corpus records. Use deterministic random sampling so
-regenerated pages are stable.
+Show five query-positive examples when possible. Select five queries by
+deterministic random sampling, not by taking the head of the query table. For
+each sampled query, use a positive qrel with matching query and corpus records.
+Use the repository script so regenerated pages stay stable:
 
-Use a Markdown table by default. The visible table should focus on the actual
-query and positive document text. Query/doc IDs may be omitted unless they help
-audit the sample or the task specifically needs them. Show the full character
-count for each query and positive document, either inline such as `(123 chars)`
-or in a compact adjacent column.
+```bash
+uv run python scripts/extract_benchmark_task_examples.py hakari-bench/NanoMMTEB-v2 argu_ana
+```
+
+For bulk refreshes, replace only the `## Example Data` sections with:
+
+```bash
+uv run python scripts/extract_benchmark_task_examples.py --update-docs docs/benchmark_tasks
+```
+
+Use a Markdown table with exactly two columns by default: `Query` and
+`Positive document`. The visible table should focus on the actual query and
+positive document text. Omit query/doc IDs, BM25 ranks, and extra count columns
+unless a task specifically needs them. Append full character counts inline.
+Truncate long content to the configured visible character limit and show the
+full pre-truncation length with the compact marker
+`[truncated 225 chars](1258 chars)`.
 
 ```markdown
 | Query | Positive document |
 | --- | --- |
-| What is ...? (12 chars) | The answer-bearing passage ... (180 chars) |
+| What is ...? (12 chars) | The answer-bearing passage ... [truncated 225 chars](1800 chars) |
 ```
 
 For extremely long-context, legal, patent, medical, code, or documentation tasks,
@@ -455,10 +472,14 @@ Use this template for new pages:
 
 ## Overview
 
-{About 500 English characters summarizing the task itself. Explain the source
-benchmark first, then the concrete task/split: what the queries are, what the
-documents are, what must be retrieved, and why this retrieval problem matters.
-Do not summarize the Markdown file or Nano packaging.}
+{About 500 English characters summarizing what this benchmark task is. When a
+paper exists, ground the overview in the paper: what problem the paper introduced,
+how the data was constructed or adapted, what the query and document sides
+represent, and what retrieval behavior is being tested. When no paper exists,
+summarize the task from the dataset card, official page, repository metadata, and
+sampled data. Avoid a fill-in-the-blank pattern such as "`{Task}` evaluates ...
+Queries are ..."; the paragraph should contain details that would not fit most
+other tasks in the same group.}
 
 ## Details
 
@@ -499,8 +520,10 @@ seeds.}
 
 ## Example Data
 
-{Five deterministic random query-positive examples. Use table format by default,
-include full character counts, and visibly truncate long content.}
+{Five deterministic random query-positive examples. Generate with
+`scripts/extract_benchmark_task_examples.py`. Use a two-column Markdown table,
+include full character counts inline, and visibly truncate long content with
+`[truncated 225 chars](N chars)`.}
 
 ## Dataset Information
 
