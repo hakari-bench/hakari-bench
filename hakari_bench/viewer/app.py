@@ -1558,7 +1558,7 @@ def render_table_head(
         text_align = "text-right" if align == "right" else "text-left"
         th_spacing = "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 normal-case" if is_metric else "px-2 uppercase"
         sticky = _sticky_head_class(key)
-        label_class = "min-w-0 leading-tight [overflow-wrap:anywhere]" if is_metric else ""
+        label_class = "min-w-0 text-left leading-tight [overflow-wrap:anywhere]" if is_metric else "text-left"
         label_attrs = (
             f' data-metric-column-full-name="{escape(full_metric_name, quote=True)}"' if is_metric else ""
         )
@@ -1570,7 +1570,7 @@ def render_table_head(
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview") if doc is not None else ""
         header_content = f"""
                  <span class="doc-label-group inline-flex w-full items-center gap-0.5" data-doc-label-group="metric">
-                   <button type="button" class="inline-flex min-w-0 flex-1 {justify} hover:text-cyan-700"
+                   <button type="button" class="inline-flex w-full min-w-0 flex-1 {justify} text-left hover:text-cyan-700"
                            hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                            {_leaderboard_control_hx_attrs()}>
                      <span class="{label_class}"{label_attrs}>{escape(label)}</span><span class="shrink-0 text-zinc-400">{indicator}</span>

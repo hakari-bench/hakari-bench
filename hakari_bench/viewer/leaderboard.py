@@ -458,6 +458,12 @@ def _load_task_scores_uncached(
     task_scores = _task_scores_from_records(records, include_any_variants=include_any_variants, variant_flags=variant_flags)
     if score_target == "all":
         task_scores = _exclude_reranker_task_scores(task_scores)
+    elif score_target == "reranking":
+        task_scores = _append_bm25_reranking_baseline(
+            task_scores,
+            duckdb_path=duckdb_path,
+            benchmarks=benchmarks,
+        )
     return tuple(task_scores)
 
 
@@ -577,6 +583,8 @@ def _load_precomputed_leaderboard_rows(
         con.close()
     if score_target == "all":
         rows = [row for row in rows if not _is_reranker_model(model_name=str(row[3]), model_type=None)]
+    elif score_target == "reranking" and not _precomputed_rows_include_bm25(rows):
+        return None
     if not rows:
         return None
     expected_tasks = int(rows[0][0])
@@ -618,6 +626,57 @@ def _duckdb_cache_identity(duckdb_path: Path) -> tuple[str, int, int]:
     except FileNotFoundError:
         return str(resolved_path), 0, 0
     return str(resolved_path), stat_result.st_mtime_ns, stat_result.st_size
+
+
+def _append_bm25_reranking_baseline(
+    task_scores: list[TaskScore],
+    *,
+    duckdb_path: Path,
+    benchmarks: tuple[str, ...],
+) -> list[TaskScore]:
+    bm25_records = TaskResultsRepository(duckdb_path).fetch_task_result_rows(
+        benchmarks=list(benchmarks),
+        score_target="all",
+        include_embedding_variants=False,
+        variant_display_flags=VariantDisplayFlags(),
+    )
+    bm25_scores = _task_scores_from_records(
+        bm25_records,
+        include_any_variants=False,
+        variant_flags=VariantDisplayFlags(),
+    )
+    return _append_missing_bm25_task_scores(task_scores, bm25_scores)
+
+
+def _append_missing_bm25_task_scores(task_scores: list[TaskScore], candidate_scores: list[TaskScore]) -> list[TaskScore]:
+    existing_keys = {_task_score_identity(row) for row in task_scores}
+    rows = list(task_scores)
+    for row in candidate_scores:
+        if not _is_bm25_model(model_name=row.source_model_name or row.model_name, model_type=row.model_type):
+            continue
+        key = _task_score_identity(row)
+        if key in existing_keys:
+            continue
+        rows.append(row)
+        existing_keys.add(key)
+    return rows
+
+
+def _task_score_identity(row: TaskScore) -> tuple[str, str, str, str, str, str, str | None, str | None]:
+    return (
+        row.source_model_name or row.model_name,
+        row.benchmark,
+        row.dataset_id,
+        row.split_name,
+        row.task_name,
+        row.task_key,
+        row.embedding_variant_name,
+        row.quantization,
+    )
+
+
+def _precomputed_rows_include_bm25(rows: list[tuple[Any, ...]]) -> bool:
+    return any(_is_bm25_model(model_name=str(row[19] or row[3]), model_type=None) for row in rows)
 
 
 def _task_scores_from_records(
@@ -737,6 +796,13 @@ def _is_reranker_model(*, model_name: str, model_type: str | None) -> bool:
             return True
     normalized_name = model_name.casefold()
     return normalized_name.startswith("cross-encoder/") or "reranker" in normalized_name
+
+
+def _is_bm25_model(*, model_name: str, model_type: str | None) -> bool:
+    if model_type is not None and model_type.strip().casefold().replace("_", "-") == "bm25":
+        return True
+    normalized_name = model_name.strip().casefold()
+    return normalized_name == "bm25" or normalized_name.startswith("bm25/") or normalized_name.endswith("/bm25")
 
 
 def compute_leaderboard_rows(

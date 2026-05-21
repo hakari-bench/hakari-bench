@@ -135,6 +135,11 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                         const meanHeaderStyle = getComputedStyle(headers[2]);
                         const bordaHeader = headers[1].getBoundingClientRect();
                         const meanHeader = headers[2].getBoundingClientRect();
+                        const headerLabelLeft = (index) => headers[index].querySelector("button span:first-child").getBoundingClientRect().left;
+                        const bodyContentLeft = (index) => {
+                            const cellStyle = getComputedStyle(cells[index]);
+                            return cells[index].getBoundingClientRect().left + parseFloat(cellStyle.paddingLeft);
+                        };
                         return {
                             modelCellLeft: modelCell.left,
                             modelCellRight: modelCell.right,
@@ -148,6 +153,15 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                             bordaScoreLeft: bordaScoreCell.left,
                             bordaHeaderText: headers[1].innerText,
                             meanHeaderText: headers[2].innerText,
+                            bordaScoreHeaderLabelLeft: headerLabelLeft(3),
+                            bordaScoreBodyContentLeft: bodyContentLeft(3),
+                            macroMeanHeaderLabelLeft: headerLabelLeft(4),
+                            macroMeanBodyContentLeft: bodyContentLeft(4),
+                            microMeanHeaderLabelLeft: headerLabelLeft(5),
+                            microMeanBodyContentLeft: bodyContentLeft(5),
+                            bordaScoreHeaderButtonTextAlign: getComputedStyle(headers[3].querySelector("button")).textAlign,
+                            macroMeanHeaderButtonTextAlign: getComputedStyle(headers[4].querySelector("button")).textAlign,
+                            microMeanHeaderButtonTextAlign: getComputedStyle(headers[5].querySelector("button")).textAlign,
                             modelHeaderPosition: modelHeaderStyle.position,
                             bordaHeaderPosition: bordaHeaderStyle.position,
                             meanHeaderPosition: meanHeaderStyle.position,
@@ -186,6 +200,18 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert long_model_layout["badgePaddingLeft"] <= 4.0
                 assert long_model_layout["badgePaddingTop"] == pytest.approx(0.0, abs=0.1)
                 assert long_model_layout["bordaRankTextAlign"] == "left"
+                assert long_model_layout["bordaScoreHeaderButtonTextAlign"] == "left"
+                assert long_model_layout["macroMeanHeaderButtonTextAlign"] == "left"
+                assert long_model_layout["microMeanHeaderButtonTextAlign"] == "left"
+                assert long_model_layout["bordaScoreHeaderLabelLeft"] == pytest.approx(
+                    long_model_layout["bordaScoreBodyContentLeft"], abs=0.5
+                )
+                assert long_model_layout["macroMeanHeaderLabelLeft"] == pytest.approx(
+                    long_model_layout["macroMeanBodyContentLeft"], abs=0.5
+                )
+                assert long_model_layout["microMeanHeaderLabelLeft"] == pytest.approx(
+                    long_model_layout["microMeanBodyContentLeft"], abs=0.5
+                )
                 assert long_model_layout["modelHeaderPosition"] == "sticky"
                 assert long_model_layout["bordaHeaderPosition"] == "static"
                 assert long_model_layout["meanHeaderPosition"] == "static"

@@ -209,7 +209,7 @@ The web viewer exposes four user-facing query surfaces over the DuckDB file:
 | UI surface | source tables | semantics |
 | --- | --- | --- |
 | Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
-| Leaderboard | `viewer_task_results` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `viewer_task_results.score_target`; `All` uses full-corpus retrieval scores and `Reranking` uses materialized BM25 top-100 rerank scores. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
+| Leaderboard | `viewer_task_results` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `viewer_task_results.score_target`; `All` uses full-corpus retrieval scores and `Reranking` uses materialized BM25 top-100 rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
 | Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for quantization-first comparisons; rescore and `truncate_dim` variants are hidden unless explicitly enabled in the panel. |
 | Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
 | Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
@@ -442,7 +442,9 @@ target. `score_target = 'all'` rows are copied from `task_results.score`.
 `score_target = 'reranking'` rows are copied from `task_diagnostics.rerank_score`
 when the diagnostic row is available for BM25 top-100 reranking. Reranking rows
 are currently base-only because diagnostics do not yet carry embedding-variant
-identity.
+identity. The viewer also adds the BM25 `score_target = 'all'` rows as the
+candidate-order baseline in `Reranking` displays, unless the DuckDB build has
+already materialized BM25 rows for `score_target = 'reranking'`.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -874,6 +876,10 @@ choices:
 - Filter `viewer_task_results.score_target` by the selected target and read
   `viewer_task_results.score` directly. Current DuckDB builds materialize both
   `all` and available `reranking` rows through `fact_task_score`.
+- For `score_target = 'reranking'`, append BM25 `score_target = 'all'` task
+  rows as the candidate-order baseline before completeness filtering and Borda
+  ranking. This keeps BM25 comparable to rerankers at `nDCG@10` without treating
+  BM25 as a cross-encoder reranker.
 - Exclude `score IS NULL` rows because they cannot participate in ranking.
 - Read only benchmarks requested by the selected view.
 - Read only base rows when variants are not requested; reranking also reads
@@ -959,6 +965,10 @@ mart when language filters, task-score columns, task text filters, and
 component-level overall grouping are not active. Those interactive and grouped
 cases still fall back to the normal
 `LeaderboardService` computation from task-score rows.
+For `score_target = 'reranking'`, the viewer uses this mart only when the
+materialized rows already include a BM25 baseline row. Older DuckDB builds that
+lack that row fall back to dynamic task-score computation so Borda and mean ranks
+are recalculated with BM25 in the reranking population.
 
 | column | type | meaning |
 | --- | --- | --- |

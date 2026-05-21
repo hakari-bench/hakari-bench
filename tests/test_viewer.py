@@ -305,6 +305,102 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
             ],
         )
         con.execute(
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                "Overall",
+                "all",
+                True,
+                False,
+                False,
+                False,
+                3,
+                3.0,
+                3.0,
+                "bm25",
+                44.0,
+                43.0,
+                43.0,
+                42.0,
+                3,
+                0,
+                0,
+                None,
+                None,
+                None,
+                "model default",
+                False,
+                None,
+                None,
+                None,
+                "bm25",
+                None,
+            ],
+        )
+        con.execute(
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                "Overall",
+                "reranking",
+                True,
+                False,
+                False,
+                False,
+                3,
+                1.0,
+                1.0,
+                "model/reranker-output",
+                90.0,
+                89.0,
+                89.0,
+                88.0,
+                3,
+                10,
+                12,
+                8192,
+                "bf16",
+                None,
+                "model default",
+                False,
+                None,
+                None,
+                None,
+                "model/reranker-output",
+                None,
+            ],
+        )
+        con.execute(
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                "Overall",
+                "reranking",
+                True,
+                False,
+                False,
+                False,
+                3,
+                2.0,
+                2.0,
+                "bm25",
+                44.0,
+                43.0,
+                43.0,
+                42.0,
+                3,
+                0,
+                0,
+                None,
+                None,
+                None,
+                "model default",
+                False,
+                None,
+                None,
+                None,
+                "bm25",
+                None,
+            ],
+        )
+        con.execute(
             """
             CREATE TABLE viewer_leaderboard_language_options (
                 view_name VARCHAR,
@@ -334,16 +430,24 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
     )
 
-    result = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard(
+    service = LeaderboardService(duckdb_path=db_path, config=config)
+    result = service.get_leaderboard(
         "Overall",
+        include_quantization_variants=True,
+    )
+    reranking_result = service.get_leaderboard(
+        "Overall",
+        score_target="reranking",
         include_quantization_variants=True,
     )
 
     assert result.expected_tasks == 3
-    assert [row.model_name for row in result.rows] == ["model/a (768 dims, int8)"]
+    assert [row.model_name for row in result.rows] == ["model/a (768 dims, int8)", "bm25"]
     assert result.rows[0].model_name == "model/a (768 dims, int8)"
     assert result.rows[0].borda_score == 99.0
     assert result.rows[0].embedding_variant_name == "int8"
+    assert [row.model_name for row in reranking_result.rows] == ["model/reranker-output", "bm25"]
+    assert reranking_result.rows[1].mean_score == 43.0
     assert [(option.code, option.label, option.task_count) for option in result.available_languages] == [
         ("en", "EN", 8),
         ("ar", "AR", 3),
@@ -651,8 +755,10 @@ def test_leaderboard_target_reranking_uses_bm25_top100_rerank_scores(tmp_path: P
         [
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
             ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.80, 10, 12, 8192),
+            ("bm25", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.60, 0, 0, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.40, 10, 12, 8192),
             ("model/b", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.30, 10, 12, 8192),
+            ("bm25", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.10, 0, 0, None),
         ],
         task_diagnostics_rows=[
             ("model/a", "BenchA", "bench/a", "a1", "BenchA::a1", 0.90, 0.20, -0.70, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
@@ -671,10 +777,11 @@ def test_leaderboard_target_reranking_uses_bm25_top100_rerank_scores(tmp_path: P
     all_result = service.get_leaderboard("BenchA")
     rerank_result = service.get_leaderboard("BenchA", score_target="reranking")
 
-    assert [row.model_name for row in all_result.rows] == ["model/a", "model/b"]
+    assert [row.model_name for row in all_result.rows] == ["model/a", "model/b", "bm25"]
     assert all_result.rows[0].mean_score == pytest.approx(65.0)
-    assert [row.model_name for row in rerank_result.rows] == ["model/b", "model/a"]
+    assert [row.model_name for row in rerank_result.rows] == ["model/b", "bm25", "model/a"]
     assert rerank_result.rows[0].mean_score == pytest.approx(90.0)
+    assert rerank_result.rows[1].mean_score == pytest.approx(35.0)
     assert rerank_result.score_target == "reranking"
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
@@ -682,7 +789,7 @@ def test_leaderboard_target_reranking_uses_bm25_top100_rerank_scores(tmp_path: P
 
     assert response.status_code == 200
     assert "target=reranking" in response.text
-    assert response.text.index("model/b") < response.text.index("model/a")
+    assert response.text.index("model/b") < response.text.index("bm25") < response.text.index("model/a")
 
 
 def test_leaderboard_target_all_excludes_reranker_models(tmp_path: Path) -> None:
