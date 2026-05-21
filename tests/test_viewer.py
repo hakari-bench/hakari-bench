@@ -725,6 +725,9 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'class="border px-3 py-1.5 text-sm' not in response.text
     assert response.text.index("Target") < response.text.index("Overall")
     assert 'data-testid="primary-benchmark-column"' in response.text
+    assert '<div class="grid gap-3">' in response.text
+    assert "lg:grid-cols-2" not in response.text
+    assert "xl:grid-cols-3" not in response.text
     primary_column = response.text.split('data-testid="primary-benchmark-column"', 1)[1].split('data-testid="secondary-benchmark-column"', 1)[0]
     assert "Target" in primary_column
     assert "Overall" in primary_column

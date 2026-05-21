@@ -866,7 +866,7 @@ def render_tabs(
         {_section_title(icon="layers", text="Benchmark groups", class_name="text-sm font-semibold")}
         <p class="text-xs text-zinc-500">Views are grouped to keep multilingual and domain-specific suites scannable.</p>
       </div>
-      <div class="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">{''.join(groups)}</div>
+      <div class="grid gap-3">{''.join(groups)}</div>
     </nav>
     """
 
