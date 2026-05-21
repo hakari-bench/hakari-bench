@@ -13,6 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.config import LanguageFilterMode, OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository, _table_exists
+from hakari_bench.viewer.model_types import is_bm25_model, is_reranker_model, model_type_filter_key
 from hakari_bench.viewer.observability import log_event, timed_operation
 from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
 from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
@@ -104,6 +105,8 @@ class LeaderboardResult(BaseModel):
     view_label: str
     is_overall: bool
     score_target: ScoreTarget = "all"
+    selected_score_metric: str = "ndcg@10"
+    available_score_metrics: list[str] = Field(default_factory=lambda: ["ndcg@10"])
     expected_tasks: int
     rows: list[LeaderboardRow]
     available_views: list[str]
@@ -157,6 +160,7 @@ class LeaderboardService:
         sort: str = "borda_rank",
         direction: SortDirection = "asc",
         score_target: ScoreTarget = "all",
+        score_metric: str = "ndcg@10",
         score_group_name: str | None = None,
         include_quantization_variants: bool = False,
         include_truncate_variants: bool = False,
@@ -171,6 +175,7 @@ class LeaderboardService:
         task_filter: str = "",
         dim_filters: tuple[str, ...] = (),
         quant_filters: tuple[str, ...] = (),
+        model_type_filters: tuple[str, ...] = (),
         dtype_filters: tuple[str, ...] = (),
         attn_filters: tuple[str, ...] = (),
         prompt_filters: tuple[str, ...] = (),
@@ -193,17 +198,21 @@ class LeaderboardService:
             ranking_task_filter_terms = task_filter_terms if rank_filtered else ()
             ranking_dim_filters = dim_filters if rank_filtered else ()
             ranking_quant_filters = quant_filters if rank_filtered else ()
+            ranking_model_type_filters = model_type_filters if rank_filtered else ()
             ranking_dtype_filters = dtype_filters if rank_filtered else ()
             ranking_attn_filters = attn_filters if rank_filtered else ()
             ranking_prompt_filters = prompt_filters if rank_filtered else ()
             has_rank_facet_filters = _has_facet_filters(
                 dim_filters=ranking_dim_filters,
                 quant_filters=ranking_quant_filters,
+                model_type_filters=ranking_model_type_filters,
                 dtype_filters=ranking_dtype_filters,
                 attn_filters=ranking_attn_filters,
                 prompt_filters=ranking_prompt_filters,
             )
             overall = self.config.overall_for_view(view_name)
+            available_score_metrics = self.task_results_repository.fetch_score_metric_options()
+            selected_score_metric = _normalize_score_metric(score_metric, available_score_metrics)
             benchmarks = self.config.benchmarks_for_view(view_name)
             is_overall = overall is not None
             request_timing["benchmark_count"] = len(benchmarks)
@@ -232,6 +241,7 @@ class LeaderboardService:
                 and not has_rank_facet_filters
                 and not task_filter.strip()
                 and not has_length_filters
+                and selected_score_metric == "ndcg@10"
                 and language_filter_mode == "languages"
                 and (overall is None or not _overall_uses_grouped_components(overall))
             ):
@@ -252,6 +262,8 @@ class LeaderboardService:
                         view_label=self.config.label_for_view(view_name),
                         is_overall=is_overall,
                         score_target=score_target,
+                        selected_score_metric=selected_score_metric,
+                        available_score_metrics=available_score_metrics,
                         expected_tasks=expected_tasks,
                         rows=sorted_rows,
                         available_views=self.config.view_names,
@@ -278,6 +290,7 @@ class LeaderboardService:
                 rows = self._load_task_scores(
                     benchmarks,
                     score_target=score_target,
+                    score_metric=selected_score_metric,
                     include_quantization_variants=include_quantization_variants,
                     include_truncate_variants=include_truncate_variants,
                     include_rescore_variants=include_rescore_variants,
@@ -285,6 +298,8 @@ class LeaderboardService:
                 )
                 phase_timing["task_score_count"] = len(rows)
             rows = _exclude_configured_tasks(rows, self.config)
+            if _score_metric_cutoff(selected_score_metric) == 100:
+                rows = _exclude_bm25_task_scores(rows)
             if ranking_model_filter_terms:
                 with timed_operation("viewer.leaderboard.phase", operation="filter_models", view=view_name) as phase_timing:
                     rows = _filter_rows_by_model_terms(rows, ranking_model_filter_terms)
@@ -306,6 +321,7 @@ class LeaderboardService:
                         rows,
                         dim_filters=ranking_dim_filters,
                         quant_filters=ranking_quant_filters,
+                        model_type_filters=ranking_model_type_filters,
                         dtype_filters=ranking_dtype_filters,
                         attn_filters=ranking_attn_filters,
                         prompt_filters=ranking_prompt_filters,
@@ -367,6 +383,8 @@ class LeaderboardService:
                 view_label=self.config.label_for_view(view_name),
                 is_overall=is_overall,
                 score_target=score_target,
+                selected_score_metric=selected_score_metric,
+                available_score_metrics=available_score_metrics,
                 expected_tasks=len({row.task_key for row in rows}),
                 rows=sorted_rows,
                 available_views=self.config.view_names,
@@ -397,6 +415,7 @@ class LeaderboardService:
         benchmarks: list[str],
         *,
         score_target: ScoreTarget,
+        score_metric: str,
         include_quantization_variants: bool,
         include_truncate_variants: bool,
         include_rescore_variants: bool,
@@ -423,6 +442,7 @@ class LeaderboardService:
                 duckdb_size,
                 tuple(benchmarks),
                 score_target,
+                score_metric,
                 include_any_variants,
                 variant_flags.quantization,
                 variant_flags.truncate,
@@ -446,12 +466,14 @@ def _load_task_scores_uncached(
     duckdb_path: Path,
     benchmarks: tuple[str, ...],
     score_target: ScoreTarget,
+    score_metric: str,
     include_any_variants: bool,
     variant_flags: VariantDisplayFlags,
 ) -> tuple[TaskScore, ...]:
     records = TaskResultsRepository(duckdb_path).fetch_task_result_rows(
         benchmarks=list(benchmarks),
         score_target=score_target,
+        score_metric=score_metric,
         include_embedding_variants=include_any_variants,
         variant_display_flags=variant_flags,
     )
@@ -459,11 +481,13 @@ def _load_task_scores_uncached(
     if score_target == "all":
         task_scores = _exclude_reranker_task_scores(task_scores)
     elif score_target == "reranking":
-        task_scores = _append_bm25_reranking_baseline(
-            task_scores,
-            duckdb_path=duckdb_path,
-            benchmarks=benchmarks,
-        )
+        if _score_metric_cutoff(score_metric) != 100:
+            task_scores = _append_bm25_reranking_baseline(
+                task_scores,
+                duckdb_path=duckdb_path,
+                benchmarks=benchmarks,
+                score_metric=score_metric,
+            )
     return tuple(task_scores)
 
 
@@ -474,6 +498,7 @@ def _cached_task_scores(
     duckdb_size: int,
     benchmarks: tuple[str, ...],
     score_target: ScoreTarget,
+    score_metric: str,
     include_any_variants: bool,
     include_quantization_variants: bool,
     include_truncate_variants: bool,
@@ -485,6 +510,7 @@ def _cached_task_scores(
         duckdb_path=Path(duckdb_path),
         benchmarks=benchmarks,
         score_target=score_target,
+        score_metric=score_metric,
         include_any_variants=include_any_variants,
         variant_flags=VariantDisplayFlags(
             quantization=include_quantization_variants,
@@ -633,10 +659,14 @@ def _append_bm25_reranking_baseline(
     *,
     duckdb_path: Path,
     benchmarks: tuple[str, ...],
+    score_metric: str = "ndcg@10",
 ) -> list[TaskScore]:
+    if not task_scores:
+        return task_scores
     bm25_records = TaskResultsRepository(duckdb_path).fetch_task_result_rows(
         benchmarks=list(benchmarks),
         score_target="all",
+        score_metric=score_metric,
         include_embedding_variants=False,
         variant_display_flags=VariantDisplayFlags(),
     )
@@ -790,19 +820,31 @@ def _truncate_dim_from_variant_name(variant_name: str | None) -> int | None:
 
 
 def _is_reranker_model(*, model_name: str, model_type: str | None) -> bool:
-    if model_type is not None:
-        normalized_type = model_type.strip().casefold().replace("_", "-")
-        if normalized_type in {"reranker", "cross-encoder", "crossencoder", "cross-encoder-reranker"}:
-            return True
-    normalized_name = model_name.casefold()
-    return normalized_name.startswith("cross-encoder/") or "reranker" in normalized_name
+    return is_reranker_model(model_name=model_name, model_type=model_type)
 
 
 def _is_bm25_model(*, model_name: str, model_type: str | None) -> bool:
-    if model_type is not None and model_type.strip().casefold().replace("_", "-") == "bm25":
-        return True
-    normalized_name = model_name.strip().casefold()
-    return normalized_name == "bm25" or normalized_name.startswith("bm25/") or normalized_name.endswith("/bm25")
+    return is_bm25_model(model_name=model_name, model_type=model_type)
+
+
+def _exclude_bm25_task_scores(rows: list[TaskScore]) -> list[TaskScore]:
+    return [
+        row
+        for row in rows
+        if not _is_bm25_model(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
+    ]
+
+
+def _normalize_score_metric(score_metric: str, available_metrics: list[str]) -> str:
+    metric = score_metric.strip().casefold()
+    return metric if metric in set(available_metrics) else "ndcg@10"
+
+
+def _score_metric_cutoff(score_metric: str) -> int | None:
+    _, separator, cutoff = score_metric.partition("@")
+    if not separator or not cutoff.isdigit():
+        return None
+    return int(cutoff)
 
 
 def compute_leaderboard_rows(
@@ -1175,11 +1217,12 @@ def _has_facet_filters(
     *,
     dim_filters: tuple[str, ...],
     quant_filters: tuple[str, ...],
+    model_type_filters: tuple[str, ...],
     dtype_filters: tuple[str, ...],
     attn_filters: tuple[str, ...],
     prompt_filters: tuple[str, ...],
 ) -> bool:
-    return any((dim_filters, quant_filters, dtype_filters, attn_filters, prompt_filters))
+    return any((dim_filters, quant_filters, model_type_filters, dtype_filters, attn_filters, prompt_filters))
 
 
 def _filter_rows_by_facets(
@@ -1187,12 +1230,14 @@ def _filter_rows_by_facets(
     *,
     dim_filters: tuple[str, ...],
     quant_filters: tuple[str, ...],
+    model_type_filters: tuple[str, ...],
     dtype_filters: tuple[str, ...],
     attn_filters: tuple[str, ...],
     prompt_filters: tuple[str, ...],
 ) -> list[TaskScore]:
     selected_dims = set(dim_filters)
     selected_quants = set(quant_filters)
+    selected_model_types = set(model_type_filters)
     selected_dtypes = set(dtype_filters)
     selected_attn = set(attn_filters)
     selected_prompts = set(prompt_filters)
@@ -1201,6 +1246,11 @@ def _filter_rows_by_facets(
         for row in rows
         if (not selected_dims or _dim_bucket(row.embedding_dim) in selected_dims)
         and (not selected_quants or _quant_bucket(row.quantization) in selected_quants)
+        and (
+            not selected_model_types
+            or model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
+            in selected_model_types
+        )
         and (not selected_dtypes or _dtype_bucket(row.dtype) in selected_dtypes)
         and (not selected_attn or _attn_bucket(row.attn_implementation) in selected_attn)
         and (not selected_prompts or _prompt_bucket(row.prompt_summary) in selected_prompts)

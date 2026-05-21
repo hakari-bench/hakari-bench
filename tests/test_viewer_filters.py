@@ -50,6 +50,26 @@ def test_visible_row_count_uses_same_context_as_row_visibility() -> None:
     assert visible_row_count(rows, context) == 1
 
 
+def test_model_type_filter_groups_bm25_with_sparse_models() -> None:
+    rows = [
+        _row("model/dense", embedding_dim=768, quantization=None, dtype=None, attn=None, prompt=None),
+        _row("org/sparse-encoder", embedding_dim=30000, quantization=None, dtype=None, attn=None, prompt=None),
+        _row("bm25", embedding_dim=None, quantization=None, dtype=None, attn=None, prompt=None),
+        _row("cross-encoder/ms-marco", embedding_dim=None, quantization=None, dtype=None, attn=None, prompt=None),
+    ]
+    context = row_filter_context(
+        rows,
+        FilterState(filters_active=True, model_type_filters=("sparse",)),
+    )
+
+    assert context.model_type_options == [
+        ("dense", "Dense"),
+        ("sparse", "Sparse / BM25"),
+        ("reranker", "Reranker"),
+    ]
+    assert [row.model_name for row in rows if context.is_visible(row)] == ["org/sparse-encoder", "bm25"]
+
+
 def test_short_model_filter_terms_do_not_hide_rows() -> None:
     context = row_filter_context(_rows(), FilterState(model_filter="ji"))
 
@@ -72,6 +92,7 @@ def test_filter_context_can_order_selected_values_for_query_payloads() -> None:
         dtype_options=[],
         attn_options=[],
         prompt_options=[],
+        model_type_options=[],
         selected_dims={"768", "384"},
         selected_quants={"binary"},
     )

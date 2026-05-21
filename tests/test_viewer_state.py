@@ -50,6 +50,7 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         filters=True,
         dim_filter=["384", ""],
         quant_filter=["int8"],
+        model_type_filter=["sparse", "reranker"],
         dtype_filter=["bf16"],
         attn_filter=[],
         prompt_filter=None,
@@ -68,6 +69,7 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         "filters": "1",
         "dim_filter": ["384"],
         "quant_filter": ["int8"],
+        "model_type_filter": ["sparse", "reranker"],
         "dtype_filter": ["bf16"],
         "attn_filter": [],
         "prompt_filter": [],
@@ -227,6 +229,7 @@ def test_filter_state_from_query_accepts_scalar_or_list_query_values() -> None:
             "task_filter": "arguana",
             "dim_filter": "768",
             "quant_filter": ["int8", "binary"],
+            "model_type_filter": "sparse",
             "dtype_filter": [],
         }
     )
@@ -237,6 +240,7 @@ def test_filter_state_from_query_accepts_scalar_or_list_query_values() -> None:
         filters_active=True,
         dim_filters=("768",),
         quant_filters=("int8", "binary"),
+        model_type_filters=("sparse",),
     )
 
 
@@ -268,6 +272,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
             filters_active=True,
             dim_filters=("768",),
             quant_filters=("binary",),
+            model_type_filters=("sparse",),
         ),
     )
 
@@ -285,6 +290,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         "filters": "1",
         "dim_filter": ["768"],
         "quant_filter": ["binary"],
+        "model_type_filter": ["sparse"],
         "dtype_filter": [],
         "attn_filter": [],
         "prompt_filter": [],

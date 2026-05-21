@@ -22,12 +22,15 @@ from hakari_bench.viewer.task_names import (
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
-CURRENT_DUCKDB_SCHEMA_VERSION = "4"
-COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {"3", CURRENT_DUCKDB_SCHEMA_VERSION}
+CURRENT_DUCKDB_SCHEMA_VERSION = "5"
+COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {"3", "4", CURRENT_DUCKDB_SCHEMA_VERSION}
 REQUIRED_VIEWER_TABLES = ("meta_database", "viewer_task_results")
 VIEWER_QUERY_TABLES = {
     *REQUIRED_VIEWER_TABLES,
     "dataset_metadata",
+    "dim_metric",
+    "fact_metric_score",
+    "fact_task_score",
     "viewer_leaderboard_rows",
     "viewer_leaderboard_language_options",
 }
@@ -185,9 +188,18 @@ class TaskResultsRepository:
         *,
         benchmarks: list[str],
         score_target: str = "all",
+        score_metric: str = "ndcg@10",
         include_embedding_variants: bool,
         variant_display_flags: VariantDisplayFlags | None = None,
     ) -> list[TaskResultRow]:
+        if score_metric != "ndcg@10":
+            return self._fetch_metric_task_result_items(
+                benchmarks=benchmarks,
+                score_target=score_target,
+                score_metric=score_metric,
+                item_factory=_task_result_row,
+                transform_operation="fetch_task_result_rows.metric_records",
+            )
         return self._fetch_task_result_items(
             benchmarks=benchmarks,
             score_target=score_target,
@@ -196,6 +208,184 @@ class TaskResultsRepository:
             item_factory=_task_result_row,
             transform_operation="fetch_task_result_rows.records",
         )
+
+    def fetch_score_metric_options(self) -> list[str]:
+        if not self.duckdb_path.exists():
+            return ["ndcg@10"]
+        con = duckdb.connect(str(self.duckdb_path), read_only=True)
+        try:
+            if not all(_table_exists(con, table) for table in REQUIRED_VIEWER_TABLES):
+                return ["ndcg@10"]
+            _validate_current_schema(con)
+            if not _table_exists(con, "dim_metric"):
+                return ["ndcg@10"]
+            rows = con.execute(
+                """
+                SELECT DISTINCT metric_family, cutoff
+                FROM dim_metric
+                WHERE metric_family IS NOT NULL
+                  AND cutoff IS NOT NULL
+                """
+            ).fetchall()
+        finally:
+            con.close()
+        metrics = {f"{str(family).lower()}@{int(cutoff)}" for family, cutoff in rows}
+        metrics.add("ndcg@10")
+        return sorted(metrics, key=_score_metric_sort_key)
+
+    def _fetch_metric_task_result_items(
+        self,
+        *,
+        benchmarks: list[str],
+        score_target: str,
+        score_metric: str,
+        item_factory: Callable[[list[str], tuple[Any, ...]], TTaskResultItem],
+        transform_operation: str,
+    ) -> list[TTaskResultItem]:
+        if not self.duckdb_path.exists() or not benchmarks:
+            return []
+        metric_family, cutoff = _parse_score_metric(score_metric)
+        if metric_family is None or cutoff is None:
+            return []
+        with timed_operation("viewer.duckdb.connection", operation="fetch_metric_task_results"):
+            con = duckdb.connect(str(self.duckdb_path), read_only=True)
+        try:
+            with timed_operation("viewer.duckdb.schema", operation="fetch_metric_task_results"):
+                _validate_current_schema(con)
+                if not all(_table_exists(con, table) for table in ("dim_metric", "fact_metric_score", "fact_task_score")):
+                    return []
+                columns = _table_columns(con, "fact_task_score")
+                metadata_columns = _table_columns(con, "dataset_metadata") if _table_exists(con, "dataset_metadata") else set()
+            variant_name_expr = _column_or_null(columns, "embedding_variant_name")
+            model_type_expr = _column_or_null(columns, "model_type")
+            embedding_dim_expr = _column_or_null(columns, "embedding_dim")
+            quantization_expr = _column_or_null(columns, "quantization")
+            dtype_expr = _column_or_null(columns, "dtype")
+            attn_expr = _column_or_null(columns, "attn_implementation")
+            query_prompt_expr = _column_or_null(columns, "query_prompt")
+            document_prompt_expr = _column_or_null(columns, "document_prompt")
+            query_prompt_name_expr = _column_or_null(columns, "query_prompt_name")
+            document_prompt_name_expr = _column_or_null(columns, "document_prompt_name")
+            query_encode_task_expr = _column_or_null(columns, "query_encode_task")
+            document_encode_task_expr = _column_or_null(columns, "document_encode_task")
+            trust_remote_code_expr = _column_or_null(columns, "trust_remote_code")
+            query_mean_chars_expr, document_mean_chars_expr, metadata_join = _task_text_length_sql(
+                viewer_columns=columns,
+                metadata_columns=metadata_columns,
+            )
+            language_expr = (
+                qualified_column("tr", "language", allowed_columns=columns)
+                if "language" in columns
+                else qualified_column("dm", "language", allowed_columns=metadata_columns)
+                if "language" in metadata_columns
+                else "NULL"
+            )
+            languages_expr = (
+                qualified_column("tr", "languages", allowed_columns=columns)
+                if "languages" in columns
+                else qualified_column("dm", "languages", allowed_columns=metadata_columns)
+                if "languages" in metadata_columns
+                else "[]::VARCHAR[]"
+            )
+            placeholders = ", ".join("?" for _ in benchmarks)
+            rerank_metric_marker = "_bm25_top100_rerank_"
+            rerank_metric_filter = (
+                f"""
+                  AND (
+                    contains(lower(dm.metric_name), '{rerank_metric_marker}')
+                    OR NOT EXISTS (
+                        SELECT 1
+                        FROM fact_metric_score AS ms2
+                        JOIN dim_metric AS dm2
+                          ON dm2.metric_id = ms2.metric_id
+                        WHERE ms2.model_name = tr.model_name
+                          AND ms2.benchmark = tr.benchmark
+                          AND ms2.dataset_id = tr.dataset_id
+                          AND ms2.task_name = tr.task_name
+                          AND ms2.result_path = tr.result_path
+                          AND dm2.metric_family = ?
+                          AND dm2.cutoff = ?
+                          AND contains(lower(dm2.metric_name), '{rerank_metric_marker}')
+                    )
+                  )
+                """
+                if score_target == "reranking"
+                else f"AND NOT contains(lower(dm.metric_name), '{rerank_metric_marker}')"
+            )
+            query = f"""
+                SELECT
+                    tr.model_name,
+                    {model_type_expr} AS model_type,
+                    tr.benchmark,
+                    tr.dataset_id,
+                    tr.dataset_name,
+                    COALESCE(tr.split_name, '') AS split_name,
+                    tr.task_name,
+                    tr.task_key,
+                    ms.metric_value AS score,
+                    {language_expr} AS language,
+                    {languages_expr} AS languages,
+                    tr.active_parameters,
+                    tr.total_parameters,
+                    tr.max_seq_length,
+                    {dtype_expr} AS dtype,
+                    {attn_expr} AS attn_implementation,
+                    {query_prompt_expr} AS query_prompt,
+                    {document_prompt_expr} AS document_prompt,
+                    {query_prompt_name_expr} AS query_prompt_name,
+                    {document_prompt_name_expr} AS document_prompt_name,
+                    {query_encode_task_expr} AS query_encode_task,
+                    {document_encode_task_expr} AS document_encode_task,
+                    {trust_remote_code_expr} AS trust_remote_code,
+                    {variant_name_expr} AS embedding_variant_name,
+                    {embedding_dim_expr} AS embedding_dim,
+                    {quantization_expr} AS quantization,
+                    {query_mean_chars_expr} AS query_mean_chars,
+                    {document_mean_chars_expr} AS document_mean_chars
+                FROM fact_task_score AS tr
+                JOIN fact_metric_score AS ms
+                  ON ms.model_name = tr.model_name
+                 AND ms.benchmark = tr.benchmark
+                 AND ms.dataset_id = tr.dataset_id
+                 AND ms.task_name = tr.task_name
+                 AND ms.result_path = tr.result_path
+                JOIN dim_metric AS dm
+                  ON dm.metric_id = ms.metric_id
+                {metadata_join}
+                WHERE tr.benchmark IN ({placeholders})
+                  AND tr.score_target = ?
+                  AND ms.metric_value IS NOT NULL
+                  AND dm.metric_family = ?
+                  AND dm.cutoff = ?
+                  AND {variant_name_expr} IS NULL
+                  {rerank_metric_filter}
+                ORDER BY tr.model_name, tr.benchmark, tr.dataset_id, tr.task_key
+            """  # nosec B608
+            query_params: list[Any] = [*benchmarks, score_target, metric_family, cutoff]
+            if score_target == "reranking":
+                query_params.extend([metric_family, cutoff])
+            with timed_operation(
+                "viewer.duckdb.query",
+                operation="fetch_metric_task_results",
+                benchmark_count=len(benchmarks),
+                score_target=score_target,
+                score_metric=score_metric,
+            ) as timing:
+                cursor = con.execute(query, query_params)
+                field_names = [str(description[0]) for description in cursor.description]
+                rows = cursor.fetchall()
+                timing["row_count"] = len(rows)
+            with timed_operation(
+                "viewer.transform",
+                operation=transform_operation,
+                row_count=len(rows),
+            ) as timing:
+                records = _dedupe_task_result_records(item_factory(field_names, row) for row in rows)
+                timing["deduped_row_count"] = len(records)
+                return records
+        finally:
+            with timed_operation("viewer.duckdb.connection_close", operation="fetch_metric_task_results"):
+                con.close()
 
     def _fetch_task_result_items(
         self,
@@ -465,6 +655,26 @@ def _variant_flags_label(flags: VariantDisplayFlags | None) -> str:
         if is_enabled
     ]
     return ",".join(enabled) if enabled else "base"
+
+
+def _parse_score_metric(score_metric: str) -> tuple[str | None, int | None]:
+    family, separator, cutoff = score_metric.strip().casefold().partition("@")
+    if not separator or not family or not cutoff.isdigit():
+        return None, None
+    return family, int(cutoff)
+
+
+def _score_metric_sort_key(score_metric: str) -> tuple[int, str, int]:
+    family, cutoff = _parse_score_metric(score_metric)
+    family_order = {
+        "ndcg": 0,
+        "map": 1,
+        "mrr": 2,
+        "accuracy": 3,
+        "precision": 4,
+        "recall": 5,
+    }
+    return (family_order.get(family or "", 99), family or score_metric, cutoff or 0)
 
 
 def _table_columns(con: duckdb.DuckDBPyConnection, table: str) -> set[str]:

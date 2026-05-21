@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from hakari_bench.viewer.leaderboard import LeaderboardRow
+from hakari_bench.viewer.model_types import MODEL_TYPE_FILTER_LABELS, MODEL_TYPE_FILTER_ORDER, model_type_filter_key
 from hakari_bench.viewer.state import FilterState
 from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
 
@@ -18,11 +19,13 @@ class FilterContext:
     dtype_options: list[FilterOption] = field(default_factory=list)
     attn_options: list[FilterOption] = field(default_factory=list)
     prompt_options: list[FilterOption] = field(default_factory=list)
+    model_type_options: list[FilterOption] = field(default_factory=list)
     selected_dims: set[str] = field(default_factory=set)
     selected_quants: set[str] = field(default_factory=set)
     selected_dtypes: set[str] = field(default_factory=set)
     selected_attn: set[str] = field(default_factory=set)
     selected_prompts: set[str] = field(default_factory=set)
+    selected_model_types: set[str] = field(default_factory=set)
     model_filter_terms: tuple[str, ...] = ()
 
     def is_visible(self, row: LeaderboardRow) -> bool:
@@ -33,6 +36,7 @@ class FilterContext:
             or dtype_bucket(row.dtype) not in self.selected_dtypes
             or attn_bucket(row.attn_implementation) not in self.selected_attn
             or prompt_bucket(row.prompt_summary) not in self.selected_prompts
+            or model_type_bucket(row.model_name, row.model_type) not in self.selected_model_types
         )
 
     def ordered_selected_dims(self) -> list[str]:
@@ -50,6 +54,9 @@ class FilterContext:
     def ordered_selected_prompts(self) -> list[str]:
         return ordered_selected_values(self.prompt_options, self.selected_prompts)
 
+    def ordered_selected_model_types(self) -> list[str]:
+        return ordered_selected_values(self.model_type_options, self.selected_model_types)
+
 
 def row_filter_context(rows: list[LeaderboardRow], filter_state: FilterState) -> FilterContext:
     dim_options = dim_filter_options(rows)
@@ -57,12 +64,14 @@ def row_filter_context(rows: list[LeaderboardRow], filter_state: FilterState) ->
     dtype_options = dtype_filter_options(rows)
     attn_options = attn_filter_options(rows)
     prompt_options = prompt_filter_options(rows)
+    model_type_options = model_type_filter_options(rows)
     return FilterContext(
         dim_options=dim_options,
         quant_options=quant_options,
         dtype_options=dtype_options,
         attn_options=attn_options,
         prompt_options=prompt_options,
+        model_type_options=model_type_options,
         selected_dims=selected_filter_values(
             options=dim_options,
             selected=filter_state.dim_filters,
@@ -86,6 +95,11 @@ def row_filter_context(rows: list[LeaderboardRow], filter_state: FilterState) ->
         selected_prompts=selected_filter_values(
             options=prompt_options,
             selected=filter_state.prompt_filters,
+            filters_active=filter_state.filters_active,
+        ),
+        selected_model_types=selected_filter_values(
+            options=model_type_options,
+            selected=filter_state.model_type_filters,
             filters_active=filter_state.filters_active,
         ),
         model_filter_terms=active_model_filter_terms(filter_state.model_filter),
@@ -146,6 +160,15 @@ def prompt_filter_options(rows: list[LeaderboardRow]) -> list[FilterOption]:
         ((bucket, prompt_bucket_label(bucket)) for bucket in buckets),
         key=lambda item: prompt_bucket_sort_key(item[0]),
     )
+
+
+def model_type_filter_options(rows: list[LeaderboardRow]) -> list[FilterOption]:
+    buckets = {model_type_bucket(row.model_name, row.model_type) for row in rows}
+    return [
+        (bucket, MODEL_TYPE_FILTER_LABELS[bucket])
+        for bucket in MODEL_TYPE_FILTER_ORDER
+        if bucket in buckets
+    ]
 
 
 def selected_filter_values(
@@ -245,6 +268,10 @@ def prompt_bucket(value: str | None) -> str:
     if value is None:
         return "model_default"
     return value.replace(" + ", "_").replace(" ", "_")
+
+
+def model_type_bucket(model_name: str, model_type: str | None) -> str:
+    return model_type_filter_key(model_name=model_name, model_type=model_type)
 
 
 def prompt_bucket_label(bucket: str) -> str:

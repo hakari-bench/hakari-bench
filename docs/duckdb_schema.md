@@ -3,6 +3,11 @@
 This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
+The current warehouse schema version is `5`. Version `5` keeps the same table
+shape as version `4` but rebuilds `metrics_long` / `fact_metric_score` so the
+best-distance BM25 top-100 reranking metrics are available to the viewer metric
+selector.
+
 The canonical source table for benchmark results is `task_results`. New DuckDB
 builds also materialize `meta_database`, `schema_change_log`, and
 `result_extensions` for schema evolution, `ingestion_batches` and
@@ -17,7 +22,8 @@ no-filter display modes, plus `viewer_leaderboard_language_options` for the
 matching language filter choices. The HTMX leaderboard requires the current
 schema and reads these mart tables or computes from `viewer_task_results`.
 `runs` contains run-level metadata,
-`metrics_long` contains detailed task metrics, `retrieval_rankings` contains
+`metrics_long` contains detailed task metrics from full-corpus evaluation and
+the best-distance BM25 top-100 reranking evaluation, `retrieval_rankings` contains
 per-query top-100 retrieved document ids, `task_diagnostics` contains
 analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
 exposes YAML task metadata for language, category, citation, and text-stat
@@ -209,7 +215,7 @@ The web viewer exposes four user-facing query surfaces over the DuckDB file:
 | UI surface | source tables | semantics |
 | --- | --- | --- |
 | Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
-| Leaderboard | `viewer_task_results` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `viewer_task_results.score_target`; `All` uses full-corpus retrieval scores and `Reranking` uses materialized BM25 top-100 rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
+| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores and `Reranking` uses materialized BM25 top-100 rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. The `Metric` selector uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other metrics such as `accuracy@1`, `MRR@10`, or `MAP@100`. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
 | Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for quantization-first comparisons; rescore and `truncate_dim` variants are hidden unless explicitly enabled in the panel. |
 | Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
 | Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
@@ -424,7 +430,9 @@ rows with different embedding dimensions do not collide.
 `dim_metric` contains one deterministic row for each metric name in
 `metrics_long`. The writer parses common IR metric names into a metric family
 and cutoff, so new cutoffs such as `recall@100` can be stored without adding
-columns.
+columns. Reranking metric names keep their original `_bm25_top100_rerank_`
+marker so the viewer can distinguish them from full-corpus metrics with the
+same family and cutoff.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -519,8 +527,12 @@ completeness displays.
 ### `metrics_long`
 
 `metrics_long` is a long-format representation of each task JSON `metrics`
-dictionary. It is intended for detailed metric inspection. The current viewer
-does not use it for ranking.
+dictionary plus the best-distance metrics from
+`evaluation.reranking_evaluations[*].distance_evaluations`. The builder writes
+only the reranking distance whose `score_name` matches `best_score_name`, so a
+single result contributes at most one reranking value for each metric family and
+cutoff. The viewer uses the normalized `fact_metric_score` table derived from
+this source when the user selects a non-default metric.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -537,7 +549,11 @@ does not use it for ranking.
 
 `fact_metric_score` is the normalized metric-value fact table derived from
 `metrics_long` and `dim_metric`. It keeps detailed metrics separate from the
-primary leaderboard score in `fact_task_score`.
+primary leaderboard score in `fact_task_score`. For `Target: All`, the viewer
+uses metric names that do not contain `_bm25_top100_rerank_`. For
+`Target: Reranking`, the viewer prefers metric names that contain
+`_bm25_top100_rerank_` and falls back to same-result-path metrics only for older
+DuckDB builds that do not yet materialize reranking metric rows.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -799,10 +815,12 @@ selection: the selected score group for benchmark views, configured grouped
 tasks for grouped overall views, or task-level columns when no score group is
 available. By default, `model_filter` only hides rendered model rows,
 `task_filter` only narrows displayed task score columns, and facet filters such
-as dimensions, quantization, dtype, attention implementation, and prompt mode
-only hide rendered model rows. When `rank_filtered=1` is present, those active
-filters narrow the ranked population before Borda, mean scores, task counts, and
-task score columns are computed. With a ranking task filter, the viewer ranks
+as model type, dimensions, quantization, dtype, attention implementation, and
+prompt mode only hide rendered model rows. Model type filters use `dense`,
+`sparse`, `late-interaction`, and `reranker`; BM25 is grouped under `sparse`.
+When `rank_filtered=1` is present, those active filters narrow the ranked
+population before Borda, mean scores, task counts, and task score columns are
+computed. With a ranking task filter, the viewer ranks
 the matching task rows directly; overall views render a single task-level `Mean
 Score` column instead of separate macro and micro overall means. Model and task
 text filters use case-insensitive whitespace-separated tokens of at least three
@@ -820,9 +838,11 @@ the source dimension, such as `256d <- 384`, and expose the truncation details i
 a tooltip. If a DuckDB build provides an optional `model_type` column, the
 viewer uses it for model-type display; older databases fall back to conservative
 model-name inference for `dense`, `sparse`, `reranker`, `late-interaction`, and
-`bm25`. Non-default neural model types such as sparse encoders and cross-encoder
-rerankers render a compact badge before dimension badges, while dense and BM25
-rows stay unbadged in the table. Runtime fields such as model type, dtype,
+`bm25`. Non-default neural model types such as sparse encoders, late-interaction
+retrievers, and cross-encoder rerankers render a compact badge. Dense and BM25
+rows stay unbadged in the table. Sparse models can have very large sparse
+vocabulary dimensions, so the table intentionally suppresses sparse `XXXd`
+dimension badges. Runtime fields such as model type, dtype,
 attention implementation, prompt mode, and `trust_remote_code` are carried in a
 `data-model-metadata` JSON attribute on the model-name button and displayed in
 the model details modal.
@@ -871,15 +891,24 @@ keeping Borda and complete-model semantics in `LeaderboardService`.
 `TaskResultsRepository.fetch_task_results()` is responsible for these SQL
 choices:
 
-- Require `meta_database.schema_version` to match the current schema version
-  before querying leaderboard rows.
+- Require `meta_database.schema_version` to be one of the viewer-compatible
+  schema versions before querying leaderboard rows.
 - Filter `viewer_task_results.score_target` by the selected target and read
   `viewer_task_results.score` directly. Current DuckDB builds materialize both
   `all` and available `reranking` rows through `fact_task_score`.
+- For the default metric selector value, `nDCG@10`, use
+  `viewer_task_results.score`. For other metric selector values, join
+  `fact_task_score` with `fact_metric_score` and `dim_metric` by model, task,
+  result path, metric family, and cutoff. Full-corpus targets exclude metric
+  names containing `_bm25_top100_rerank_`; reranking targets prefer that marker
+  and fall back only for older DuckDB builds.
 - For `score_target = 'reranking'`, append BM25 `score_target = 'all'` task
   rows as the candidate-order baseline before completeness filtering and Borda
-  ranking. This keeps BM25 comparable to rerankers at `nDCG@10` without treating
-  BM25 as a cross-encoder reranker.
+  ranking. This keeps BM25 comparable to rerankers without treating BM25 as a
+  cross-encoder reranker.
+- Omit BM25 only for `@100` metrics because the BM25 candidate subset can carry
+  relevant documents at the tail by construction, making BM25 `@100` values
+  misleading for leaderboard comparison.
 - Exclude `score IS NULL` rows because they cannot participate in ranking.
 - Read only benchmarks requested by the selected view.
 - Read only base rows when variants are not requested; reranking also reads

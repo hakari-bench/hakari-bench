@@ -31,6 +31,7 @@ from hakari_bench.viewer.leaderboard import (
     SortDirection,
 )
 from hakari_bench.viewer.model_display import model_cell_views, render_model_detail_modal, render_model_name_cell
+from hakari_bench.viewer.model_types import model_type_filter_key
 from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.state import (
     FilterState,
@@ -188,6 +189,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking)$"),
+        metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
         quantization: bool = Query(default=False),
@@ -200,6 +202,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
         prompt_filter: list[str] | None = Query(default=None),
@@ -220,6 +223,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 sort=sort,
                 direction=direction,
                 target=target,
+                metric=metric,
                 group=group,
                 variants=variants,
                 quantization=quantization,
@@ -232,6 +236,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
                 prompt_filter=prompt_filter,
@@ -263,6 +268,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         sort = query_string(state_query["sort"])
         direction = query_string(state_query["direction"])
         target = query_string(state_query.get("target", "all"))
+        score_metric = query_string(state_query.get("metric", "ndcg@10"))
         group = optional_query_string(state_query.get("group"))
         display_flags = variant_display_flags_from_query(state_query)
         filter_state = filter_state_from_query(state_query)
@@ -273,6 +279,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             sort=sort,
             direction=cast(SortDirection, direction),
             score_target=cast(ScoreTarget, target),
+            score_metric=score_metric,
             score_group_name=group,
             include_quantization_variants=display_flags.quantization,
             include_truncate_variants=display_flags.truncate,
@@ -287,6 +294,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             task_filter=filter_state.task_filter,
             dim_filters=filter_state.dim_filters if filter_state.filters_active else (),
             quant_filters=filter_state.quant_filters if filter_state.filters_active else (),
+            model_type_filters=filter_state.model_type_filters if filter_state.filters_active else (),
             dtype_filters=filter_state.dtype_filters if filter_state.filters_active else (),
             attn_filters=filter_state.attn_filters if filter_state.filters_active else (),
             prompt_filters=filter_state.prompt_filters if filter_state.filters_active else (),
@@ -303,6 +311,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking)$"),
+        metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
         quantization: bool = Query(default=False),
@@ -315,6 +324,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
         prompt_filter: list[str] | None = Query(default=None),
@@ -335,6 +345,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 sort=sort,
                 direction=direction,
                 target=target,
+                metric=metric,
                 group=group,
                 variants=variants,
                 quantization=quantization,
@@ -347,6 +358,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
                 prompt_filter=prompt_filter,
@@ -373,6 +385,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking)$"),
+        metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
         quantization: bool = Query(default=False),
@@ -385,6 +398,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
         prompt_filter: list[str] | None = Query(default=None),
@@ -405,6 +419,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 sort=sort,
                 direction=direction,
                 target=target,
+                metric=metric,
                 group=group,
                 variants=variants,
                 quantization=quantization,
@@ -417,6 +432,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
                 prompt_filter=prompt_filter,
@@ -823,6 +839,7 @@ def render_tabs(
         )
     primary_sections = [
         _render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state),
+        _render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state),
         _render_benchmark_group(label="Overall", buttons=grouped_buttons.pop("Overall")),
         _render_benchmark_group(label="Core benchmarks", buttons=grouped_buttons.pop("Core benchmarks")),
     ]
@@ -871,8 +888,8 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
         ("reranking", "Reranking"),
     ]
     tooltip = (
-        "All shows full-corpus retrieval nDCG@10 and excludes cross-encoder reranker runs. "
-        "Reranking shows BM25 top-100 reranking nDCG@10 when available."
+        "All shows full-corpus retrieval scores and excludes cross-encoder reranker runs. "
+        "Reranking shows BM25 top-100 reranking scores when available. BM25 is omitted only for @100 metrics because the candidate subset can contain relevant documents at the tail."
     )
     buttons = []
     for target, label in target_options:
@@ -906,6 +923,53 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
               <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
             </div>
             """
+
+
+def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState) -> str:
+    if len(result.available_score_metrics) <= 1:
+        return ""
+    buttons = []
+    for metric in result.available_score_metrics:
+        active = metric == result.selected_score_metric
+        classes = (
+            "border-cyan-700 bg-cyan-50 text-cyan-900"
+            if active
+            else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
+        )
+        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_direction = "asc" if sort.startswith("metric:") else direction
+        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        if metric == "ndcg@10":
+            query_payload.pop("metric", None)
+        else:
+            query_payload["metric"] = metric
+        query = urlencode(query_payload, doseq=True)
+        buttons.append(
+            f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] {classes}"
+                  hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                  {_leaderboard_control_hx_attrs()}>
+                  {escape(_score_metric_label(metric))}
+                </button>"""
+        )
+    return f"""
+            <div>
+              <p class="mb-1 text-xs font-semibold uppercase text-zinc-500">Metric</p>
+              <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
+            </div>
+            """
+
+
+def _score_metric_label(metric: str) -> str:
+    family, separator, cutoff = metric.partition("@")
+    labels = {
+        "ndcg": "nDCG",
+        "map": "MAP",
+        "mrr": "MRR",
+        "accuracy": "Acc",
+        "precision": "Precision",
+        "recall": "Recall",
+    }
+    return f"{labels.get(family, family.upper())}@{cutoff}" if separator else metric
 
 
 def _view_group(view_name: str) -> str:
@@ -1032,6 +1096,7 @@ def _filter_state_with_languages(filter_state: FilterState, language_filters: tu
         filters_active=filter_state.filters_active,
         dim_filters=filter_state.dim_filters,
         quant_filters=filter_state.quant_filters,
+        model_type_filters=filter_state.model_type_filters,
         dtype_filters=filter_state.dtype_filters,
         attn_filters=filter_state.attn_filters,
         prompt_filters=filter_state.prompt_filters,
@@ -1074,6 +1139,8 @@ def render_controls(
     ]
     if result.score_target != "all":
         state_fields.append(("target", result.score_target))
+    if result.selected_score_metric != "ndcg@10":
+        state_fields.append(("metric", result.selected_score_metric))
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
     sticky_filter_fields = active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
@@ -1101,12 +1168,14 @@ def render_controls(
     dtype_options = filter_context.dtype_options
     attn_options = filter_context.attn_options
     prompt_options = filter_context.prompt_options
+    model_type_options = filter_context.model_type_options
     language_options = [(option.code, f"{option.label} ({option.task_count})") for option in result.available_languages]
     selected_dims = filter_context.selected_dims
     selected_quants = filter_context.selected_quants
     selected_dtypes = filter_context.selected_dtypes
     selected_attn = filter_context.selected_attn
     selected_prompts = filter_context.selected_prompts
+    selected_model_types = filter_context.selected_model_types
     dim_all_query = state_payload(
         result=result,
         sort=sort,
@@ -1118,6 +1187,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(value for value, _ in dim_options),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
@@ -1135,6 +1205,7 @@ def render_controls(
             filters_active=True,
             dim_filters=(FILTER_NONE_VALUE,),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
@@ -1152,6 +1223,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(value for value, _ in quant_options),
+            model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
@@ -1169,6 +1241,43 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=(FILTER_NONE_VALUE,),
+            model_type_filters=tuple(filter_context.ordered_selected_model_types()),
+            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
+            attn_filters=tuple(filter_context.ordered_selected_attn()),
+            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
+            **_task_length_filter_kwargs(filter_state),
+        ),
+    )
+    model_type_all_query = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
+            filters_active=True,
+            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            quant_filters=tuple(filter_context.ordered_selected_quants()),
+            model_type_filters=tuple(value for value, _ in model_type_options),
+            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
+            attn_filters=tuple(filter_context.ordered_selected_attn()),
+            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
+            **_task_length_filter_kwargs(filter_state),
+        ),
+    )
+    model_type_none_query = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=FilterState(
+            model_filter=filter_state.model_filter,
+            task_filter=filter_state.task_filter,
+            language_filters=filter_state.language_filters,
+            filters_active=True,
+            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            quant_filters=tuple(filter_context.ordered_selected_quants()),
+            model_type_filters=(FILTER_NONE_VALUE,),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
@@ -1186,6 +1295,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(value for value, _ in dtype_options),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
@@ -1203,6 +1313,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=(FILTER_NONE_VALUE,),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
@@ -1220,6 +1331,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(value for value, _ in attn_options),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
@@ -1237,6 +1349,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=(FILTER_NONE_VALUE,),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
@@ -1254,6 +1367,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(value for value, _ in prompt_options),
@@ -1271,6 +1385,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=(FILTER_NONE_VALUE,),
@@ -1287,6 +1402,7 @@ def render_controls(
             filters_active=filter_state.filters_active,
             dim_filters=filter_state.dim_filters,
             quant_filters=filter_state.quant_filters,
+            model_type_filters=filter_state.model_type_filters,
             dtype_filters=filter_state.dtype_filters,
             attn_filters=filter_state.attn_filters,
             prompt_filters=filter_state.prompt_filters,
@@ -1303,6 +1419,7 @@ def render_controls(
             filters_active=filter_state.filters_active,
             dim_filters=filter_state.dim_filters,
             quant_filters=filter_state.quant_filters,
+            model_type_filters=filter_state.model_type_filters,
             dtype_filters=filter_state.dtype_filters,
             attn_filters=filter_state.attn_filters,
             prompt_filters=filter_state.prompt_filters,
@@ -1400,6 +1517,7 @@ def render_controls(
           <div id="facet-filters" class="flex flex-wrap items-start gap-3">
             {_render_task_length_filter_inputs(filter_state)}
             {language_filter_html}
+            {_render_filter_details(name="model_type_filter", summary="Model type", icon="cpu", options=model_type_options, selected_values=selected_model_types, all_query=model_type_all_query, none_query=model_type_none_query)}
             {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
             {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
             <div class="flex flex-wrap items-start gap-3 border-l border-zinc-200 pl-3">
@@ -1617,7 +1735,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.active_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.total_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
-              <td class="px-2 py-1 text-left tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_row_embedding_dim(row)}</td>
               {_render_quantization_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
             </tr>"""
@@ -2196,6 +2314,12 @@ def _fmt_max_len(value: int | None) -> str:
 
 def _fmt_embedding_dim(value: int | None) -> str:
     return "" if value is None else f"{value:,}"
+
+
+def _fmt_row_embedding_dim(row: LeaderboardRow) -> str:
+    if model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) == "sparse":
+        return ""
+    return _fmt_embedding_dim(row.embedding_dim)
 
 
 def _fmt_percent_delta(value: float | None) -> str:

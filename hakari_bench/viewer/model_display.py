@@ -9,6 +9,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.leaderboard import LeaderboardRow
+from hakari_bench.viewer.model_types import normalized_model_type
 
 class ModelCellView(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -44,7 +45,7 @@ def model_cell_views(rows: list[LeaderboardRow]) -> dict[str, ModelCellView]:
             ranking_model_name=row.model_name,
             model_type_label=model_type_view["label"] or "",
             model_type_badge_label=model_type_view["badge_label"],
-            dimension_label=_dimension_label(row),
+            dimension_label=_dimension_label(row, model_type_key=model_type_view["key"]),
             dimension_tooltip=None,
             original_embedding_dim=_original_dim_for_view(row=row, original_dim=original_dim),
             truncated_embedding_dim=truncate_dim,
@@ -121,8 +122,8 @@ def _source_key(*, row: LeaderboardRow, full_model_name: str) -> str:
     return row.source_model_name or full_model_name
 
 
-def _dimension_label(row: LeaderboardRow) -> str | None:
-    if row.embedding_dim is None or _truncate_dim(row) is not None:
+def _dimension_label(row: LeaderboardRow, *, model_type_key: str | None) -> str | None:
+    if model_type_key in {"sparse", "bm25"} or row.embedding_dim is None or _truncate_dim(row) is not None:
         return None
     return f"{row.embedding_dim}d"
 
@@ -181,26 +182,7 @@ def _model_type_view(*, row: LeaderboardRow, full_model_name: str) -> dict[str, 
 
 
 def _normalized_model_type(*, row: LeaderboardRow, full_model_name: str) -> str:
-    explicit_model_type = getattr(row, "model_type", None)
-    if isinstance(explicit_model_type, str):
-        normalized = explicit_model_type.strip().casefold().replace("_", "-")
-        if normalized in {"dense", "sparse", "reranker", "late-interaction", "bm25"}:
-            return normalized
-        if normalized in {"cross-encoder", "crossencoder", "cross-encoder-reranker"}:
-            return "reranker"
-        if normalized in {"late-interaction-retriever", "colbert"}:
-            return "late-interaction"
-
-    name = full_model_name.casefold()
-    if name == "bm25" or name.endswith("/bm25"):
-        return "bm25"
-    if name.startswith("cross-encoder/") or "reranker" in name:
-        return "reranker"
-    if "splade" in name or "sparse" in name:
-        return "sparse"
-    if "colbert" in name or "late-interaction" in name:
-        return "late-interaction"
-    return "dense"
+    return normalized_model_type(model_name=full_model_name, model_type=getattr(row, "model_type", None))
 
 
 def _model_metadata(

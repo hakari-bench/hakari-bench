@@ -24,7 +24,14 @@ from hakari_bench.viewer.app import (
 )
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
-from hakari_bench.viewer.leaderboard import LeaderboardService, TaskScore, _clear_task_score_cache, compute_leaderboard_rows
+from hakari_bench.viewer.leaderboard import (
+    LeaderboardResult,
+    LeaderboardRow,
+    LeaderboardService,
+    TaskScore,
+    _clear_task_score_cache,
+    compute_leaderboard_rows,
+)
 from hakari_bench.viewer.model_display import model_cell_views
 from hakari_bench.viewer.store import (
     DuckDbLocation,
@@ -728,8 +735,8 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "data-tooltip-placement=\"left\"" in response.text
     assert 'data-icon="circle-help"' in response.text
     assert 'data-icon="question-mark"' not in response.text
-    assert "full-corpus retrieval nDCG@10" in response.text
-    assert "BM25 top-100 reranking nDCG@10" in response.text
+    assert "full-corpus retrieval scores" in response.text
+    assert "BM25 top-100 reranking scores" in response.text
     assert 'data-leaderboard-control="true"' in response.text
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
@@ -917,6 +924,7 @@ def test_leaderboard_service_reuses_task_score_cache_across_instances(
         *,
         benchmarks: list[str],
         score_target: str = "all",
+        score_metric: str = "ndcg@10",
         include_embedding_variants: bool,
         variant_display_flags: VariantDisplayFlags | None = None,
     ):
@@ -924,9 +932,10 @@ def test_leaderboard_service_reuses_task_score_cache_across_instances(
         fetch_count += 1
         return original_fetch(
             self,
-            benchmarks=benchmarks,
-            score_target=score_target,
-            include_embedding_variants=include_embedding_variants,
+                benchmarks=benchmarks,
+                score_target=score_target,
+                score_metric=score_metric,
+                include_embedding_variants=include_embedding_variants,
             variant_display_flags=variant_display_flags,
         )
 
@@ -969,6 +978,7 @@ def test_leaderboard_service_cache_invalidates_when_duckdb_file_changes(
         *,
         benchmarks: list[str],
         score_target: str = "all",
+        score_metric: str = "ndcg@10",
         include_embedding_variants: bool,
         variant_display_flags: VariantDisplayFlags | None = None,
     ):
@@ -976,9 +986,10 @@ def test_leaderboard_service_cache_invalidates_when_duckdb_file_changes(
         fetch_count += 1
         return original_fetch(
             self,
-            benchmarks=benchmarks,
-            score_target=score_target,
-            include_embedding_variants=include_embedding_variants,
+                benchmarks=benchmarks,
+                score_target=score_target,
+                score_metric=score_metric,
+                include_embedding_variants=include_embedding_variants,
             variant_display_flags=variant_display_flags,
         )
 
@@ -1450,11 +1461,13 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-icon="ruler"' in response.text
     assert 'data-filter-detail="quant_filter"' in response.text
     assert 'data-filter-icon="binary"' in response.text
+    assert 'data-filter-detail="model_type_filter"' in response.text
+    assert 'data-filter-icon="cpu"' in response.text
     assert 'summary class="cursor-pointer px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800"' in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
-    assert response.text.count(">All</button>") == 5
-    assert response.text.count(">None</button>") == 5
+    assert response.text.count(">All</button>") == 6
+    assert response.text.count(">None</button>") == 6
     assert 'id="column-controls"' in response.text
     assert 'id="variant-controls"' in response.text
     assert 'id="filter-controls"' in response.text
@@ -2102,6 +2115,36 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
         'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
         'text-left px-2 uppercase leaderboard-col-rank'
     ) in head
+
+
+def test_leaderboard_table_hides_sparse_dimension_values() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/sparse-encoder",
+                model_type="sparse",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                embedding_dim=30000,
+            )
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    body = render_table_body(result=result)
+
+    assert "30,000" not in body
+    assert ">sparse</span>" in body
     assert '<tr class="leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50">' in body
     assert '<td class="leaderboard-col-model sticky z-10' in body
     assert '<td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">' in body
@@ -2900,6 +2943,97 @@ def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: 
     assert result.rows[0].mean_score == pytest.approx(90.0)
 
 
+def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = [
+        ("model/a", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.90, 10, 12, 8192),
+        ("model/b", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.80, 20, 24, 8192),
+    ]
+    _write_task_results(db_path, rows)
+    _write_metric_tables(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@1", 0.10, "a.json"),
+            ("model/b", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@1", 0.95, "b.json"),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard(
+        "BenchA",
+        score_metric="accuracy@1",
+    )
+
+    assert result.selected_score_metric == "accuracy@1"
+    assert result.available_score_metrics == ["ndcg@10", "accuracy@1"]
+    assert [row.model_name for row in result.rows] == ["model/b", "model/a"]
+    assert result.rows[0].mean_score == pytest.approx(95.0)
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&metric=accuracy@1")
+
+    assert response.status_code == 200
+    assert "Metric" in response.text
+    assert "Acc@1" in response.text
+    assert "nDCG@10" in response.text
+
+
+def test_leaderboard_service_excludes_bm25_only_for_cutoff_100_metrics(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = [
+        ("bm25", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.50, 0, 0, 0),
+        ("model/a", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.60, 10, 12, 8192),
+    ]
+    _write_task_results(db_path, rows)
+    _write_metric_tables(
+        db_path,
+        [
+            ("bm25", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_bm25_dataset_subset_map@100", 0.99, "bm25.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_map@100", 0.10, "a.json"),
+            ("bm25", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_bm25_dataset_subset_accuracy@1", 0.20, "bm25.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@1", 0.90, "a.json"),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    cutoff_100 = service.get_leaderboard("BenchA", score_metric="map@100")
+    cutoff_1 = service.get_leaderboard("BenchA", score_metric="accuracy@1")
+
+    assert [row.model_name for row in cutoff_100.rows] == ["model/a"]
+    assert [row.model_name for row in cutoff_1.rows] == ["model/a", "bm25"]
+
+
+def test_leaderboard_service_recalculates_ranking_with_model_type_filter(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/dense", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.95, 10, 12, 8192),
+            ("bm25", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.80, 0, 0, 0),
+            ("org/sparse-encoder", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.70, 20, 24, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        model_type_filters=("sparse",),
+    )
+
+    assert [row.model_name for row in result.rows] == ["bm25", "org/sparse-encoder"]
+
+
 def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
@@ -3556,6 +3690,127 @@ def _metadata_by_task(rows: list[tuple]) -> dict[tuple[str, str, str, str, str],
             document_mean_chars,
         )
     return metadata
+
+
+def _write_metric_tables(db_path: Path, rows: list[tuple], *, score_target: str = "all") -> None:
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            """
+            CREATE TABLE dim_metric (
+                metric_id BIGINT,
+                metric_name VARCHAR,
+                metric_family VARCHAR,
+                cutoff INTEGER
+            )
+            """
+        )
+        metric_names = sorted({row[6] for row in rows})
+        for metric_id, metric_name in enumerate(metric_names, start=1):
+            family, cutoff = metric_name.rsplit("@", 1)
+            con.execute(
+                "INSERT INTO dim_metric VALUES (?, ?, ?, ?)",
+                [metric_id, metric_name, family.rsplit("_", 1)[-1], int(cutoff)],
+            )
+        con.execute(
+            """
+            CREATE TABLE fact_metric_score (
+                metric_id BIGINT,
+                model_dir VARCHAR,
+                model_name VARCHAR,
+                benchmark VARCHAR,
+                dataset_id VARCHAR,
+                task_name VARCHAR,
+                metric_value DOUBLE,
+                result_path VARCHAR
+            )
+            """
+        )
+        con.execute(
+            """
+            CREATE TABLE fact_task_score (
+                model_dir VARCHAR,
+                model_name VARCHAR,
+                benchmark VARCHAR,
+                dataset_id VARCHAR,
+                dataset_name VARCHAR,
+                split_name VARCHAR,
+                task_name VARCHAR,
+                task_key VARCHAR,
+                score_target VARCHAR,
+                score DOUBLE,
+                active_parameters BIGINT,
+                total_parameters BIGINT,
+                max_seq_length INTEGER,
+                dtype VARCHAR,
+                attn_implementation VARCHAR,
+                query_prompt VARCHAR,
+                document_prompt VARCHAR,
+                query_prompt_name VARCHAR,
+                document_prompt_name VARCHAR,
+                query_encode_task VARCHAR,
+                document_encode_task VARCHAR,
+                trust_remote_code BOOLEAN,
+                embedding_variant_name VARCHAR,
+                embedding_dim INTEGER,
+                quantization VARCHAR,
+                result_path VARCHAR
+            )
+            """
+        )
+        metric_id_by_name = {name: index for index, name in enumerate(metric_names, start=1)}
+        inserted_task_scores: set[tuple[str, str, str, str, str]] = set()
+        for model_name, benchmark, dataset_id, dataset_name, task_name, task_key, metric_name, metric_value, result_path in rows:
+            con.execute(
+                "INSERT INTO fact_metric_score VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                [
+                    metric_id_by_name[metric_name],
+                    model_name.replace("/", "__"),
+                    model_name,
+                    benchmark,
+                    dataset_id,
+                    task_name,
+                    metric_value,
+                    result_path,
+                ],
+            )
+            task_key_tuple = (model_name, benchmark, dataset_id, task_name, result_path)
+            if task_key_tuple in inserted_task_scores:
+                continue
+            inserted_task_scores.add(task_key_tuple)
+            con.execute(
+                "INSERT INTO fact_task_score VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [
+                    model_name.replace("/", "__"),
+                    model_name,
+                    benchmark,
+                    dataset_id,
+                    dataset_name,
+                    "",
+                    task_name,
+                    task_key,
+                    score_target,
+                    0.0,
+                    10,
+                    12,
+                    8192,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    result_path,
+                ],
+            )
+    finally:
+        con.close()
 
 
 def _viewer_task_result_row(

@@ -102,7 +102,7 @@ def test_render_model_name_cell_uses_compact_truncate_dimension_badge_with_toolt
     ) in html
 
 
-def test_render_model_name_cell_shows_non_dense_model_type_before_dimensions() -> None:
+def test_render_model_name_cell_shows_sparse_type_without_dimension_badge() -> None:
     row = LeaderboardRow(
         borda_rank=1,
         mean_rank=1,
@@ -119,7 +119,7 @@ def test_render_model_name_cell_shows_non_dense_model_type_before_dimensions() -
 
     assert model_view.metadata["model_type"] == "Sparse"
     assert ">sparse</span>" in html
-    assert html.index(">sparse</span>") < html.index(">1024d</span>")
+    assert ">1024d</span>" not in html
 
 
 def test_render_model_name_cell_orders_dimension_badges_before_quantization() -> None:
@@ -223,6 +223,26 @@ def test_render_model_name_cell_hides_table_type_badge_for_dense_and_bm25() -> N
     assert model_views[bm25.model_name].metadata["model_type"] == "BM25"
     assert ">dense</span>" not in dense_html
     assert ">bm25</span>" not in bm25_html
+
+
+def test_model_cell_views_hide_sparse_dimension_badges() -> None:
+    row = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name="org/sparse-encoder",
+        model_type="sparse",
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+        embedding_dim=30000,
+    )
+
+    model_view = model_cell_views([row])[row.model_name]
+    html = render_model_name_cell(row, model_view)
+
+    assert model_view.model_type_badge_label == "sparse"
+    assert model_view.dimension_label is None
+    assert ">30000d</span>" not in html
 
 
 def test_render_model_name_cell_falls_back_for_truncate_badge_without_original_dimension() -> None:

@@ -139,6 +139,68 @@ def test_task_results_repository_can_return_lightweight_rows_for_hot_path(tmp_pa
     assert not isinstance(rows[0], TaskResultRecord)
 
 
+def test_task_results_repository_can_fetch_non_default_metric_scores(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_viewer_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.80, 20, 24, 8192),
+        ],
+    )
+    _write_metric_tables(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@1", 0.20, "a.json"),
+            ("model/b", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@1", 0.95, "b.json"),
+        ],
+    )
+
+    rows = TaskResultsRepository(db_path).fetch_task_result_rows(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+        score_metric="accuracy@1",
+    )
+
+    assert [(row.model_name, row.score) for row in rows] == [("model/a", 0.20), ("model/b", 0.95)]
+
+
+def test_task_results_repository_uses_rerank_metrics_for_reranking_target(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_viewer_task_results(
+        db_path,
+        [
+            ("cross-encoder/reranker", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192),
+        ],
+    )
+    _write_metric_tables(
+        db_path,
+        [
+            ("cross-encoder/reranker", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@1", 0.20, "r.json"),
+            (
+                "cross-encoder/reranker",
+                "BenchA",
+                "bench/a",
+                "a1",
+                "a1",
+                "BenchA_a1_cosine_bm25_top100_rerank_accuracy@1",
+                0.85,
+                "r.json",
+            ),
+        ],
+        score_target="reranking",
+    )
+
+    rows = TaskResultsRepository(db_path).fetch_task_result_rows(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+        score_target="reranking",
+        score_metric="accuracy@1",
+    )
+
+    assert [(row.model_name, row.score) for row in rows] == [("cross-encoder/reranker", 0.85)]
+
+
 def test_task_results_repository_can_fetch_embedding_variant_rows_when_requested(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_viewer_task_results(
@@ -728,6 +790,123 @@ def _write_viewer_task_results(
             normalized_rows.append(normalized_row)
         placeholders = ", ".join("?" for _ in columns)
         con.executemany(f"INSERT INTO viewer_task_results VALUES ({placeholders})", normalized_rows)
+    finally:
+        con.close()
+
+
+def _write_metric_tables(db_path: Path, rows: list[tuple], *, score_target: str = "all") -> None:
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            """
+            CREATE TABLE dim_metric (
+                metric_id BIGINT,
+                metric_name VARCHAR,
+                metric_family VARCHAR,
+                cutoff INTEGER
+            )
+            """
+        )
+        metric_names = sorted({row[5] for row in rows})
+        for metric_id, metric_name in enumerate(metric_names, start=1):
+            family, cutoff = metric_name.rsplit("@", 1)
+            family = family.rsplit("_", 1)[-1]
+            con.execute(
+                "INSERT INTO dim_metric VALUES (?, ?, ?, ?)",
+                [metric_id, metric_name, family, int(cutoff)],
+            )
+        con.execute(
+            """
+            CREATE TABLE fact_metric_score (
+                metric_id BIGINT,
+                model_dir VARCHAR,
+                model_name VARCHAR,
+                benchmark VARCHAR,
+                dataset_id VARCHAR,
+                task_name VARCHAR,
+                metric_value DOUBLE,
+                result_path VARCHAR
+            )
+            """
+        )
+        con.execute(
+            """
+            CREATE TABLE fact_task_score (
+                model_dir VARCHAR,
+                model_name VARCHAR,
+                benchmark VARCHAR,
+                dataset_id VARCHAR,
+                dataset_name VARCHAR,
+                split_name VARCHAR,
+                task_name VARCHAR,
+                task_key VARCHAR,
+                score_target VARCHAR,
+                score DOUBLE,
+                active_parameters BIGINT,
+                total_parameters BIGINT,
+                max_seq_length INTEGER,
+                dtype VARCHAR,
+                attn_implementation VARCHAR,
+                query_prompt VARCHAR,
+                document_prompt VARCHAR,
+                query_prompt_name VARCHAR,
+                document_prompt_name VARCHAR,
+                query_encode_task VARCHAR,
+                document_encode_task VARCHAR,
+                trust_remote_code BOOLEAN,
+                embedding_variant_name VARCHAR,
+                embedding_dim INTEGER,
+                quantization VARCHAR,
+                result_path VARCHAR
+            )
+            """
+        )
+        metric_id_by_name = {name: index for index, name in enumerate(metric_names, start=1)}
+        for model_name, benchmark, dataset_id, task_name, task_key, metric_name, metric_value, result_path in rows:
+            con.execute(
+                "INSERT INTO fact_metric_score VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                [
+                    metric_id_by_name[metric_name],
+                    model_name.replace("/", "__"),
+                    model_name,
+                    benchmark,
+                    dataset_id,
+                    task_name,
+                    metric_value,
+                    result_path,
+                ],
+            )
+            con.execute(
+                "INSERT INTO fact_task_score VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [
+                    model_name.replace("/", "__"),
+                    model_name,
+                    benchmark,
+                    dataset_id,
+                    benchmark,
+                    "",
+                    task_name,
+                    task_key,
+                    score_target,
+                    0.0,
+                    10,
+                    12,
+                    8192,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    result_path,
+                ],
+            )
     finally:
         con.close()
 

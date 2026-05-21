@@ -21,6 +21,7 @@ class FilterState:
     filters_active: bool = False
     dim_filters: tuple[str, ...] = ()
     quant_filters: tuple[str, ...] = ()
+    model_type_filters: tuple[str, ...] = ()
     dtype_filters: tuple[str, ...] = ()
     attn_filters: tuple[str, ...] = ()
     prompt_filters: tuple[str, ...] = ()
@@ -53,6 +54,7 @@ def normalize_query_state(
     dtype_filter: list[str] | None,
     attn_filter: list[str] | None,
     prompt_filter: list[str] | None,
+    model_type_filter: list[str] | None = None,
     lang_filter: list[str] | None = None,
     model_filter: str,
     rank_filtered: bool = False,
@@ -64,6 +66,7 @@ def normalize_query_state(
     query_len_max: str = "",
     doc_len_min: str = "",
     doc_len_max: str = "",
+    metric: str = "ndcg@10",
 ) -> QueryState:
     if view not in viewer_config.view_names:
         view = viewer_config.overall.name
@@ -84,6 +87,8 @@ def normalize_query_state(
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
     if target != "all":
         query["target"] = target
+    if metric and metric != "ndcg@10":
+        query["metric"] = metric.strip().casefold()
     if group:
         query["group"] = group
     if task_scores or task_filter or task_ranks:
@@ -112,6 +117,7 @@ def normalize_query_state(
         query["filters"] = "1"
         query["dim_filter"] = _normalized_query_values(dim_filter)
         query["quant_filter"] = _normalized_query_values(quant_filter)
+        query["model_type_filter"] = _normalized_model_type_filter_values(model_type_filter)
         query["dtype_filter"] = _normalized_query_values(dtype_filter)
         query["attn_filter"] = _normalized_query_values(attn_filter)
         query["prompt_filter"] = _normalized_query_values(prompt_filter)
@@ -142,6 +148,7 @@ def filter_state_from_query(query: QueryState) -> FilterState:
         filters_active=query.get("filters") == "1",
         dim_filters=tuple(query_values(query.get("dim_filter"))),
         quant_filters=tuple(query_values(query.get("quant_filter"))),
+        model_type_filters=tuple(query_values(query.get("model_type_filter"))),
         dtype_filters=tuple(query_values(query.get("dtype_filter"))),
         attn_filters=tuple(query_values(query.get("attn_filter"))),
         prompt_filters=tuple(query_values(query.get("prompt_filter"))),
@@ -163,6 +170,8 @@ def state_payload(
     query_payload: QueryState = {"view": result.view_name, "sort": sort, "direction": direction}
     if result.score_target != "all":
         query_payload["target"] = result.score_target
+    if result.selected_score_metric != "ndcg@10":
+        query_payload["metric"] = result.selected_score_metric
     if result.selected_score_group is not None:
         query_payload["group"] = result.selected_score_group.name
     if result.show_task_scores:
@@ -193,6 +202,7 @@ def state_payload(
         query_payload["filters"] = "1"
         query_payload["dim_filter"] = list(filter_state.dim_filters)
         query_payload["quant_filter"] = list(filter_state.quant_filters)
+        query_payload["model_type_filter"] = list(filter_state.model_type_filters)
         query_payload["dtype_filter"] = list(filter_state.dtype_filters)
         query_payload["attn_filter"] = list(filter_state.attn_filters)
         query_payload["prompt_filter"] = list(filter_state.prompt_filters)
@@ -214,6 +224,7 @@ def active_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, st
     fields.append(("filters", "1"))
     fields.extend(("dim_filter", value) for value in filter_state.dim_filters)
     fields.extend(("quant_filter", value) for value in filter_state.quant_filters)
+    fields.extend(("model_type_filter", value) for value in filter_state.model_type_filters)
     fields.extend(("dtype_filter", value) for value in filter_state.dtype_filters)
     fields.extend(("attn_filter", value) for value in filter_state.attn_filters)
     fields.extend(("prompt_filter", value) for value in filter_state.prompt_filters)
@@ -252,6 +263,11 @@ def _normalized_query_values(values: list[str] | None) -> list[str]:
     if values is None:
         return []
     return [value for value in values if value]
+
+
+def _normalized_model_type_filter_values(values: list[str] | None) -> list[str]:
+    allowed = {"dense", "sparse", "late-interaction", "reranker"}
+    return [value for value in _normalized_query_values(values) if value in allowed]
 
 
 def numeric_filter_bound(value: str) -> float | None:

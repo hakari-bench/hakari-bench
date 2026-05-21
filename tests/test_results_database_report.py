@@ -273,6 +273,64 @@ def test_load_results_reuses_unchanged_incremental_duckdb_rows(
     assert cached_ranking_rows == []
 
 
+def test_load_results_adds_best_rerank_metrics_to_long_metric_rows(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / "en.json"
+    task_path.parent.mkdir(parents=True)
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {"id": "example/model"},
+                "target": {
+                    "dataset_name": "NanoMIRACL",
+                    "dataset_id": "hakari-bench/NanoMIRACL",
+                    "split_name": "en",
+                    "task_name": "en",
+                },
+                "evaluation": {
+                    "aggregate_metric": "ndcg@10",
+                    "aggregate_metric_value": 0.42,
+                    "reranking_evaluations": [
+                        {
+                            "name": "bm25_top_100",
+                            "best_score_name": "cosine",
+                            "distance_evaluations": [
+                                {
+                                    "score_name": "dot",
+                                    "metrics": {
+                                        "NanoMIRACL_en_dot_bm25_top100_rerank_accuracy@1": 0.10,
+                                    },
+                                },
+                                {
+                                    "score_name": "cosine",
+                                    "metrics": {
+                                        "NanoMIRACL_en_cosine_bm25_top100_rerank_accuracy@1": 0.80,
+                                        "NanoMIRACL_en_cosine_bm25_top100_rerank_ndcg@10": 0.70,
+                                    },
+                                },
+                            ],
+                        }
+                    ],
+                },
+                "metrics": {"NanoMIRACL_en_cosine_ndcg@10": 0.42},
+                "rerank_metrics": {
+                    "NanoMIRACL_en_dot_bm25_top100_rerank_accuracy@1": 0.10,
+                    "NanoMIRACL_en_cosine_bm25_top100_rerank_accuracy@1": 0.80,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    _, _, metric_rows, _, _, _ = report.load_results(results_dir)
+
+    metric_values = {row.metric_name: row.metric_value for row in metric_rows}
+    assert metric_values["NanoMIRACL_en_cosine_ndcg@10"] == 0.42
+    assert metric_values["NanoMIRACL_en_cosine_bm25_top100_rerank_accuracy@1"] == 0.80
+    assert metric_values["NanoMIRACL_en_cosine_bm25_top100_rerank_ndcg@10"] == 0.70
+    assert "NanoMIRACL_en_dot_bm25_top100_rerank_accuracy@1" not in metric_values
+
+
 def test_main_incremental_noops_when_sources_are_unchanged(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

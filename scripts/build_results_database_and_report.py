@@ -50,7 +50,7 @@ def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list
 
 TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
-WAREHOUSE_SCHEMA_VERSION = "4"
+WAREHOUSE_SCHEMA_VERSION = "5"
 WAREHOUSE_COMPATIBILITY_LEVEL = "current"
 WAREHOUSE_TABLES = (
     "meta_database",
@@ -649,6 +649,20 @@ def load_results(
                 )
             )
         for metric_name, metric_value in task_payload.get("metrics", {}).items():
+            if isinstance(metric_value, int | float):
+                metric_rows.append(
+                    MetricLongRow(
+                        model_dir=model_dir,
+                        model_name=model_name,
+                        benchmark=benchmark,
+                        dataset_id=dataset_id,
+                        task_name=task_name,
+                        metric_name=canonical_metric_name(benchmark, metric_name),
+                        metric_value=float(metric_value),
+                        result_path=str(result_path),
+                    )
+                )
+        for metric_name, metric_value in _best_rerank_metrics(evaluation).items():
             if isinstance(metric_value, int | float):
                 metric_rows.append(
                     MetricLongRow(
@@ -1354,6 +1368,25 @@ def _prefer_task_result(candidate: TaskResult, current: TaskResult) -> bool:
 
 def _result_path_stem_matches_task(row: TaskResult) -> bool:
     return Path(row.result_path).stem == row.task_name
+
+
+def _best_rerank_metrics(evaluation: dict[str, Any]) -> dict[str, Any]:
+    reranking_evaluations = evaluation.get("reranking_evaluations")
+    if not isinstance(reranking_evaluations, list):
+        return {}
+    for reranking_evaluation in reranking_evaluations:
+        if not isinstance(reranking_evaluation, dict):
+            continue
+        best_score_name = reranking_evaluation.get("best_score_name")
+        distance_evaluations = reranking_evaluation.get("distance_evaluations")
+        if not isinstance(best_score_name, str) or not isinstance(distance_evaluations, list):
+            continue
+        for distance_evaluation in distance_evaluations:
+            if not isinstance(distance_evaluation, dict) or distance_evaluation.get("score_name") != best_score_name:
+                continue
+            metrics = distance_evaluation.get("metrics")
+            return metrics if isinstance(metrics, dict) else {}
+    return {}
 
 
 def _dedupe_metric_rows(rows: list[MetricLongRow]) -> list[MetricLongRow]:
