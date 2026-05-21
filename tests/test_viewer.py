@@ -1454,6 +1454,10 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Include variants:" in response.text
     assert 'data-icon="git-branch"' in response.text
     assert "Other variants" in response.text
+    assert "Model type:" in response.text
+    assert 'id="model-type-controls"' in response.text
+    assert response.text.index("Include variants:") < response.text.index("Model type:") < response.text.index("Filters:")
+    assert 'name="model_type_filter" value="__none_selected__"' in response.text
     assert "Filters:" in response.text
     assert 'data-icon="filter"' in response.text
     assert '<div class="mt-3 flex flex-wrap items-start gap-3">' in response.text
@@ -1461,13 +1465,12 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-icon="ruler"' in response.text
     assert 'data-filter-detail="quant_filter"' in response.text
     assert 'data-filter-icon="binary"' in response.text
-    assert 'data-filter-detail="model_type_filter"' in response.text
-    assert 'data-filter-icon="cpu"' in response.text
+    assert 'data-filter-detail="model_type_filter"' not in response.text
     assert 'summary class="cursor-pointer px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800"' in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
-    assert response.text.count(">All</button>") == 6
-    assert response.text.count(">None</button>") == 6
+    assert response.text.count(">All</button>") == 5
+    assert response.text.count(">None</button>") == 5
     assert 'id="column-controls"' in response.text
     assert 'id="variant-controls"' in response.text
     assert 'id="filter-controls"' in response.text

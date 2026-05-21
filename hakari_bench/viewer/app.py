@@ -1156,11 +1156,23 @@ def render_controls(
         task_score_hidden_fields.append(("task_ranks", "1"))
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
     variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
+    model_type_hidden_html = _hidden_inputs(
+        [
+            *state_fields,
+            ("filters", "1"),
+            *variant_hidden_fields,
+            *task_score_hidden_fields,
+            *_filter_hidden_fields_except_model_type(filter_state),
+            *_text_filter_hidden_fields(filter_state),
+            ("model_type_filter", FILTER_NONE_VALUE),
+        ]
+    )
     filter_hidden_fields = [
         *state_fields,
         ("filters", "1"),
         *variant_hidden_fields,
         *task_score_hidden_fields,
+        *_active_model_type_hidden_fields(filter_state),
     ]
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
     dim_options = filter_context.dim_options
@@ -1242,42 +1254,6 @@ def render_controls(
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=(FILTER_NONE_VALUE,),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
-            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
-            attn_filters=tuple(filter_context.ordered_selected_attn()),
-            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
-            **_task_length_filter_kwargs(filter_state),
-        ),
-    )
-    model_type_all_query = state_payload(
-        result=result,
-        sort=sort,
-        direction=direction,
-        filter_state=FilterState(
-            model_filter=filter_state.model_filter,
-            task_filter=filter_state.task_filter,
-            language_filters=filter_state.language_filters,
-            filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
-            quant_filters=tuple(filter_context.ordered_selected_quants()),
-            model_type_filters=tuple(value for value, _ in model_type_options),
-            dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
-            attn_filters=tuple(filter_context.ordered_selected_attn()),
-            prompt_filters=tuple(filter_context.ordered_selected_prompts()),
-            **_task_length_filter_kwargs(filter_state),
-        ),
-    )
-    model_type_none_query = state_payload(
-        result=result,
-        sort=sort,
-        direction=direction,
-        filter_state=FilterState(
-            model_filter=filter_state.model_filter,
-            task_filter=filter_state.task_filter,
-            language_filters=filter_state.language_filters,
-            filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
-            quant_filters=tuple(filter_context.ordered_selected_quants()),
-            model_type_filters=(FILTER_NONE_VALUE,),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
             prompt_filters=tuple(filter_context.ordered_selected_prompts()),
@@ -1487,6 +1463,11 @@ def render_controls(
           <span>Other variants</span>
         </label>
       </form>
+      {_render_model_type_controls(
+          hidden_html=model_type_hidden_html,
+          options=model_type_options,
+          selected_values=selected_model_types,
+      )}
       <div class="mt-3 flex flex-wrap items-start gap-3">
         <p class="pt-1">{_control_label(icon="filter", text="Filters:")}</p>
         <form id="filter-controls" class="flex flex-wrap items-start gap-3"
@@ -1517,7 +1498,6 @@ def render_controls(
           <div id="facet-filters" class="flex flex-wrap items-start gap-3">
             {_render_task_length_filter_inputs(filter_state)}
             {language_filter_html}
-            {_render_filter_details(name="model_type_filter", summary="Model type", icon="cpu", options=model_type_options, selected_values=selected_model_types, all_query=model_type_all_query, none_query=model_type_none_query)}
             {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
             {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
             <div class="flex flex-wrap items-start gap-3 border-l border-zinc-200 pl-3">
@@ -1546,6 +1526,20 @@ def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, 
     return fields
 
 
+def _active_model_type_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
+    if not filter_state.filters_active and not filter_state.model_type_filters:
+        return []
+    return [("model_type_filter", value) for value in filter_state.model_type_filters]
+
+
+def _filter_hidden_fields_except_model_type(filter_state: FilterState) -> list[tuple[str, str]]:
+    return [
+        (name, value)
+        for name, value in active_filter_hidden_fields(filter_state)
+        if name != "model_type_filter"
+    ]
+
+
 def _text_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
     fields = []
     if filter_state.model_filter:
@@ -1555,6 +1549,35 @@ def _text_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str
     if filter_state.rank_filtered:
         fields.append(("rank_filtered", "1"))
     return fields
+
+
+def _render_model_type_controls(
+    *,
+    hidden_html: str,
+    options: list[tuple[str, str]],
+    selected_values: set[str],
+) -> str:
+    if not options:
+        return ""
+    checkboxes = []
+    for value, label in options:
+        checked = " checked" if value in selected_values else ""
+        checkboxes.append(
+            f"""<label class="inline-flex items-center gap-1.5">
+              <input type="checkbox" name="model_type_filter" value="{escape(value)}" class="h-4 w-4 accent-cyan-700"{checked}>
+              <span>{escape(label)}</span>
+            </label>"""
+        )
+    return f"""
+      <form id="model-type-controls" class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2"
+            hx-get="/leaderboard" hx-push-url="true"
+            {_leaderboard_control_hx_attrs()}
+            hx-trigger="change, submit">
+        {hidden_html}
+        {_control_label(icon="cpu", text="Model type:")}
+        {''.join(checkboxes)}
+      </form>
+    """
 
 
 def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
