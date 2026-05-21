@@ -224,14 +224,6 @@
     width: var(--hakari-rank-col-width);
   }
 
-  .leaderboard-col-borda {
-    left: var(--hakari-model-col-width);
-  }
-
-  .leaderboard-col-mean {
-    left: calc(var(--hakari-model-col-width) + var(--hakari-rank-col-width));
-  }
-
   .benchmark-doc h1 {
     font-size: 1.5rem;
     font-weight: 600;

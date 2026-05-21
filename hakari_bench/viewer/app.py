@@ -1478,6 +1478,7 @@ def render_table_head(
         columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False, ""))
     heads = []
     for key, label, default_direction, align, is_metric, full_metric_name in columns:
+        align = "left"
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
         indicator = " ▲" if sort == key and direction == "asc" else " ▼" if sort == key else ""
         query_payload = state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
@@ -1516,9 +1517,9 @@ def _sticky_head_class(key: str) -> str:
     if key == "model_name":
         return "leaderboard-col-model sticky z-20"
     if key == "borda_rank":
-        return "leaderboard-col-rank leaderboard-col-borda sticky z-20"
+        return "leaderboard-col-rank"
     if key == "mean_rank":
-        return "leaderboard-col-rank leaderboard-col-mean sticky z-20"
+        return "leaderboard-col-rank"
     return ""
 
 
@@ -1536,16 +1537,16 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
               {render_model_name_cell(row, model_views[row.model_name])}
-              <td class="leaderboard-col-rank leaderboard-col-borda sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
-              <td class="leaderboard-col-rank leaderboard-col-mean sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
-              <td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
+              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{_fmt_rank(row.borda_rank)}</td>
+              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{_fmt_rank(row.mean_rank)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
               {_render_metric_cells(result=result, row=row)}
-              <td class="px-2 py-1 text-right tabular-nums">{row.task_count}</td>
-              <td class="px-2 py-1 text-right tabular-nums">{_fmt_params(row.active_parameters)}</td>
-              <td class="px-2 py-1 text-right tabular-nums">{_fmt_params(row.total_parameters)}</td>
-              <td class="px-2 py-1 text-right tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
-              <td class="px-2 py-1 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{row.task_count}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.active_parameters)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.total_parameters)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
               {_render_quantization_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
             </tr>"""
@@ -1942,7 +1943,7 @@ def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> s
     if result.show_task_ranks:
         values = row.metric_rank_values
         return "".join(
-            f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-right tabular-nums">{_fmt_optional_rank(values.get(column))}</td>"""
+            f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums">{_fmt_optional_rank(values.get(column))}</td>"""
             for column in result.metric_columns
         )
     if result.show_task_z_scores:
@@ -1952,7 +1953,7 @@ def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> s
         )
     values = row.metric_values
     return "".join(
-        f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
+        f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums">{_fmt_score(values.get(column))}</td>"""
         for column in result.metric_columns
     )
 
@@ -1961,21 +1962,21 @@ def _render_mean_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str
     if result.is_overall and not (result.rank_filtered and result.task_filter):
         if result.show_task_z_scores:
             return (
-                _render_score_z_cell(score=row.macro_mean, z_score=row.macro_mean_z, cell_class="px-2 py-1 text-right tabular-nums")
-                + _render_score_z_cell(score=row.micro_mean, z_score=row.micro_mean_z, cell_class="px-2 py-1 text-right tabular-nums")
+                _render_score_z_cell(score=row.macro_mean, z_score=row.macro_mean_z, cell_class="px-2 py-1 text-left tabular-nums")
+                + _render_score_z_cell(score=row.micro_mean, z_score=row.micro_mean_z, cell_class="px-2 py-1 text-left tabular-nums")
             )
-        return f"""<td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.macro_mean)}</td>
-                <td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
+        return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.macro_mean)}</td>
+                <td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
     if result.show_task_z_scores:
-        return _render_score_z_cell(score=row.mean_score, z_score=row.mean_score_z, cell_class="px-2 py-1 text-right tabular-nums")
-    return f"""<td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.mean_score)}</td>"""
+        return _render_score_z_cell(score=row.mean_score, z_score=row.mean_score_z, cell_class="px-2 py-1 text-left tabular-nums")
+    return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.mean_score)}</td>"""
 
 
 def _render_metric_z_cell(*, score: float | None, z_score: float | None) -> str:
     return _render_score_z_cell(
         score=score,
         z_score=z_score,
-        cell_class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-right tabular-nums",
+        cell_class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums",
     )
 
 
@@ -2001,7 +2002,7 @@ def _render_score_z_cell(*, score: float | None, z_score: float | None, cell_cla
 def _render_base_delta_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
     if not _show_base_delta_column(result):
         return ""
-    return f"""<td class="px-2 py-1 text-right tabular-nums">{_fmt_percent_delta(row.base_score_delta_percent)}</td>"""
+    return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_percent_delta(row.base_score_delta_percent)}</td>"""
 
 
 def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
