@@ -55,23 +55,11 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
         "NanoMMTEB-v2",
         "NanoRTEB",
         "MNanoBEIR",
-        "NanoBIRCO",
-        "NanoMLDR",
+        "NanoMIRACL",
         "NanoLongEmbed",
-        "NanoDAPFAM",
-        "NanoCoIR",
-        "NanoIFIR",
-        "NanoLaw",
-        "NanoMedical",
-        "NanoRARb",
         "NanoBRIGHT",
-        "NanoCodeRAG",
-        "NanoChemTEB",
-        "NanoR2MED",
-        "NanoBuiltBench",
-        "NanoCMTEB",
-        "NanoIndicQA",
-        "NanoMuPLeR",
+        "NanoBIRCO",
+        "NanoCoIR",
     ]
     all_benchmarks = [benchmark.name for benchmark in config.benchmarks]
 
@@ -146,7 +134,7 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
     assert all(benchmark in config.overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
     assert all(benchmark not in core_overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
     assert "NanoMIRACL" in config.overall.benchmark_names
-    assert "NanoMIRACL" not in core_overall.benchmark_names
+    assert "NanoMIRACL" in core_overall.benchmark_names
     assert "NanoCMTEB" in config.view_names
     assert "NanoCMTEB" in config.overall.benchmark_names
     nano_law = config.benchmark_for_view("NanoLaw")
@@ -184,9 +172,13 @@ def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> No
     assert _view_group("NanoMMTEB-v2") == "Core benchmarks"
     assert _view_group("MNanoBEIR") == "Core benchmarks"
     assert _view_group("NanoRTEB") == "Core benchmarks"
+    assert _view_group("NanoMIRACL") == "Core benchmarks"
+    assert _view_group("NanoLongEmbed") == "Core benchmarks"
+    assert _view_group("NanoBRIGHT") == "Core benchmarks"
+    assert _view_group("NanoBIRCO") == "Core benchmarks"
+    assert _view_group("NanoCoIR") == "Core benchmarks"
     assert _view_group("NanoMLDR") == "Domain-specific"
-    assert _view_group("NanoLongEmbed") == "Domain-specific"
-    assert _view_group("NanoBIRCO") == "Domain-specific"
+    assert _view_group("NanoDAPFAM") == "Domain-specific"
 
 
 def test_language_specific_view_group_includes_official_language_mteb_families() -> None:
@@ -199,7 +191,6 @@ def test_language_specific_view_group_includes_official_language_mteb_families()
     assert _view_group("NanoIndicQA") == "Domain-specific"
     assert _view_group("NanoMuPLeR") == "Domain-specific"
     assert _view_group("NanoChemTEB") == "Domain-specific"
-    assert _view_group("NanoMIRACL") == "Domain-specific"
 
 
 def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Path) -> None:
