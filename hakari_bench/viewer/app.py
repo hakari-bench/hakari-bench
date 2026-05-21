@@ -850,7 +850,16 @@ def _view_group(view_name: str) -> str:
         return "Overall"
     if view_name.startswith("NanoMTEB-") or view_name in language_specific_views:
         return "Language-specific"
-    if view_name in {"NanoMMTEB-v2", "MNanoBEIR", "NanoRTEB"}:
+    if view_name in {
+        "NanoMMTEB-v2",
+        "NanoRTEB",
+        "MNanoBEIR",
+        "NanoMIRACL",
+        "NanoLongEmbed",
+        "NanoBRIGHT",
+        "NanoBIRCO",
+        "NanoCoIR",
+    }:
         return "Core benchmarks"
     return "Domain-specific"
 
