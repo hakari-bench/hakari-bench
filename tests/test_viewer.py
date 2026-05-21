@@ -1456,7 +1456,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Other variants" in response.text
     assert "Model type:" in response.text
     assert 'id="model-type-controls"' in response.text
-    assert response.text.index("Filters:") < response.text.index("Model type:") < response.text.index("Model name")
+    assert response.text.index("Filters:") < response.text.index("Model type:") < response.text.index('id="model-filter-input"')
     assert 'name="model_type_filter" value="__none_selected__"' in response.text
     assert "Filters:" in response.text
     assert 'data-icon="filter"' in response.text
@@ -1482,8 +1482,14 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Rescore" in response.text
     assert 'id="model-filter-input"' in response.text
     assert 'name="model_filter"' in response.text
+    assert ">Model</span>" in response.text
+    assert ">Model name</span>" not in response.text
+    assert "Filter by model name. Separate multiple names with spaces. Partial matches are supported." in response.text
+    assert ">Task</span>" in response.text
+    assert ">Task name</span>" not in response.text
+    assert "Filter by task name. Separate multiple names with spaces. Partial matches are supported." in response.text
     assert "Recalculate Borda, Mean" in response.text
-    assert "With a Task name filter, Borda is computed from per-task ranks over the filtered tasks." in response.text
+    assert "With a Task filter, Borda is computed from per-task ranks over the filtered tasks." in response.text
     assert "Apply" in response.text
     assert 'value="model/b"' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text

@@ -1463,13 +1463,15 @@ def render_controls(
             selected_values=selected_model_types,
         )}
         <label class="flex min-w-64 items-center gap-2">
-          <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model name</span>
+          <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model</span>
+          {_render_help_tooltip("Filter by model name. Separate multiple names with spaces. Partial matches are supported.")}
           <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
                  class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                  autocomplete="off">
         </label>
         <label class="flex min-w-64 items-center gap-2">
-          <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Task name</span>
+          <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Task</span>
+          {_render_help_tooltip("Filter by task name. Separate multiple names with spaces. Partial matches are supported.")}
           <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
                  class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                  autocomplete="off">
@@ -1477,7 +1479,7 @@ def render_controls(
         <label class="inline-flex items-center gap-2 pt-1">
           <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
           <span class="whitespace-nowrap font-medium text-zinc-800">Recalculate Borda, Mean</span>
-          {_render_help_tooltip("When enabled, Model name, Task name, and active facet filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks.")}
+          {_render_help_tooltip("When enabled, Model, Task, and active facet filters narrow the ranking population before Borda and Mean are recomputed. With a Task filter, Borda is computed from per-task ranks over the filtered tasks.")}
         </label>
         <button type="submit" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-[0.8125rem] font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
           Apply
