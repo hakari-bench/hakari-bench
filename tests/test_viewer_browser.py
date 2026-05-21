@@ -44,6 +44,18 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
 
                 assert page.evaluate("() => Boolean(window.__hakariApplyHashQueryState && window.__hakariBindModelDetails)")
                 assert page.locator("main script:not([src])").count() == 0
+                section_icon_state = page.locator("h2 svg[data-icon='layers']").first.evaluate(
+                    """(el) => ({
+                        width: parseFloat(getComputedStyle(el).width),
+                        height: parseFloat(getComputedStyle(el).height),
+                        color: getComputedStyle(el).color,
+                    })"""
+                )
+                assert section_icon_state["width"] == pytest.approx(14.0, abs=0.1)
+                assert section_icon_state["height"] == pytest.approx(14.0, abs=0.1)
+                assert section_icon_state["color"] != "rgb(0, 0, 0)"
+                assert page.locator("button", has_text="Variant impact").locator("svg[data-icon='git-compare-arrows']").count() == 1
+                assert page.locator("summary", has_text="Languages").locator("svg[data-icon='languages']").count() == 1
                 page.get_by_text("256d <- 384").wait_for(timeout=15_000)
                 compact_table_state = page.locator("tbody tr:not([hidden]) td").first.evaluate(
                     """(el) => ({

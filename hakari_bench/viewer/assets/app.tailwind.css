@@ -217,6 +217,13 @@
     width: 0.75rem;
   }
 
+  .section-heading-icon,
+  .control-heading-icon,
+  .filter-detail-icon,
+  .action-icon {
+    color: var(--hakari-accent);
+  }
+
   .leaderboard-row:hover > td {
     background-color: var(--hakari-row-hover);
   }
