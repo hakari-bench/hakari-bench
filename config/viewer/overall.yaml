@@ -40,13 +40,13 @@ overalls:
   - name: Core
     label: Core
     benchmarks:
+      - MNanoBEIR
       - NanoMMTEB-v2
       - NanoRTEB
-      - MNanoBEIR
       - NanoMIRACL
-      - NanoLongEmbed
+      - NanoMLDR
       - NanoBRIGHT
-      - NanoBIRCO
+      - NanoLaw
       - NanoCoIR
   - name: Group
     label: Group
