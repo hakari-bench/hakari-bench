@@ -14,10 +14,9 @@ set is:
 3. `NanoRTEB`
 4. `NanoMLDR`
 5. `NanoBRIGHT`
-6. `NanoLaw`
-7. `NanoCoIR`
+6. `NanoCoIR`
 
-This document records why these seven Nano sets were selected. The decision was
+This document records why these six Nano sets were selected. The decision was
 made by combining external adoption signals, source benchmark quality, task and
 language diversity, overlap analysis, lexical baseline difficulty, and actual
 dense-model score dispersion from the evaluated DuckDB warehouse. The goal was
@@ -41,8 +40,7 @@ dominate the Core aggregate.
 | 3 | `NanoRTEB` | Practical retrieval domains | Adds English RTEB-style applied retrieval tasks with strong model separation. |
 | 4 | `NanoMLDR` | Multilingual long-document retrieval | Strong external adoption through BGE-M3/MLDR and excellent dense score dispersion across all languages. |
 | 5 | `NanoBRIGHT` | Reasoning-heavy retrieval stress test | Hard tasks with high model separation and strong dataset usage signals. |
-| 6 | `NanoLaw` | Legal-domain retrieval | A multilingual, multi-source legal retrieval group whose tasks are registered in MTEB and better supported than `NanoBIRCO` as a Core domain representative. |
-| 7 | `NanoCoIR` | Code retrieval | Preserves a code-search dimension that is not captured by legal, long-document, or general IR tasks. |
+| 6 | `NanoCoIR` | Code retrieval | Preserves a code-search dimension that is not captured by general, long-document, or reasoning-heavy retrieval tasks. |
 
 ## Pruned or Not Promoted Sets
 
@@ -53,8 +51,9 @@ the `All` view.
 | Nano set | Decision | Reason |
 | --- | --- | --- |
 | `NanoMIRACL` | Removed from Core after review | MIRACL remains a canonical multilingual benchmark, but the analyzed dense results showed substantial saturation and low model separation. Its role is better served by the `All` and benchmark-specific views than by the compact Core score. |
+| `NanoLaw` | Removed from Core after review | Legal retrieval remains important, but many NanoLaw tasks duplicate similar source tasks already covered by `NanoRTEB` or `NanoMMTEB-v2`. After overlap removal, its effective contribution is only four tasks, so it is cleaner as a domain-specific view. |
 | `NanoLongEmbed` | Removed from the earlier Core proposal | Dense dispersion was good, but the set contains synthetic long-context probes such as passkey/needle-style tasks and has weaker external adoption than `NanoMLDR`. `NanoMLDR` gives a cleaner multilingual long-document retrieval signal. |
-| `NanoBIRCO` | Replaced by `NanoLaw` | `NanoBIRCO` is valuable as a complex-objective stress test, but it is small, English-only, and has weaker paper and dataset adoption signals. `NanoLaw` provides a better Core domain slot. |
+| `NanoBIRCO` | Not promoted | `NanoBIRCO` is valuable as a complex-objective stress test, but it is small, English-only, and overlaps in role with the broader `NanoBRIGHT` reasoning-heavy stress slot. |
 | `NanoDAPFAM` | Not promoted | Patent retrieval is distinctive, but dense model dispersion was very low and many tasks were floor-like. Better suited to a domain appendix. |
 | `NanoMedical` | Not promoted | Useful medical benchmark, but after overlap removal it is less discriminative than `NanoBRIGHT`, `NanoMLDR`, or `NanoRTEB`. |
 | `NanoR2MED` | Not promoted | Hard medical reasoning stress test with good dispersion, but newer and less established. Better as an optional stress suite. |
@@ -76,8 +75,8 @@ The Core set was chosen using five criteria.
 2. Task diversity
 
    The final set covers classical multilingual IR, broad MTEB/MMTEB retrieval,
-   RTEB-style applied retrieval, multilingual long-document retrieval, hard
-   reasoning retrieval, legal retrieval, and code retrieval.
+   RTEB-style applied retrieval, multilingual long-document retrieval,
+   reasoning-heavy retrieval, and code retrieval.
 
 3. Language diversity
 
@@ -125,7 +124,6 @@ Definitions:
 | `NanoRTEB` | 14 | 0.5954 | 0.0960 | 0.2203 | 0 | 0 | 0 | 11 |
 | `NanoMLDR` | 13 | 0.5399 | 0.0844 | 0.1918 | 0 | 0 | 0 | 13 |
 | `NanoBRIGHT` | 20 | 0.3289 | 0.1021 | 0.2436 | 0 | 2 | 0 | 14 |
-| `NanoLaw` after Core overlap exclusions | 4 | 0.5634 | 0.0686 | 0.1516 | 0 | 0 | 0 | 4 |
 | `NanoCoIR` | 10 | 0.7872 | 0.0938 | 0.2115 | 3 | 0 | 0 | 4 |
 
 The analyzed result database still stored the current `NanoMMTEB-v2` family
@@ -141,16 +139,17 @@ This table explains several choices:
 - `NanoMIRACL` was removed from Core because its recognition as a multilingual
   benchmark did not offset the low dense-model dispersion observed in this
   result warehouse.
-- `NanoLaw` was selected over `NanoBIRCO` after comparing domain coverage,
-  MTEB registration, citations, and effective Core overlap.
+- `NanoLaw` was removed from Core because a large part of the set duplicates
+  legal tasks already represented by `NanoRTEB` or `NanoMMTEB-v2`.
 
 ## Evidence from Pruned Alternatives
 
 | Nano set | Effective tasks | avg_mean | avg_std | p90-p10 | ceiling | floor | low-var | healthy | Interpretation |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | `NanoMIRACL` | 18 | 0.7880 | 0.0280 | 0.0597 | 1 | 0 | 12 | 1 | Canonical multilingual benchmark, but too saturated and low-variance for the compact Core score. |
+| `NanoLaw` after overlap exclusions | 4 | 0.5634 | 0.0686 | 0.1516 | 0 | 0 | 0 | 4 | Good legal-domain signal, but too much overlap with selected Core sources and too few effective tasks for a Core slot. |
 | `NanoLongEmbed` | 6 | 0.6265 | 0.0911 | 0.2049 | 0 | 0 | 0 | 3 | Good dispersion, but weaker external signal and more synthetic long-context overlap than `NanoMLDR`. |
-| `NanoBIRCO` | 5 | 0.2890 | 0.0618 | 0.1182 | 0 | 1 | 1 | 3 | Valuable hard benchmark, but smaller, English-only, and weaker external signal than `NanoLaw`. |
+| `NanoBIRCO` | 5 | 0.2890 | 0.0618 | 0.1182 | 0 | 1 | 1 | 3 | Valuable hard benchmark, but smaller and less externally established than `NanoBRIGHT` for the Core stress slot. |
 | `NanoDAPFAM` | 18 | 0.2870 | 0.0322 | 0.0754 | 0 | 6 | 8 | 0 | Too low-variance for Core, despite being domain-distinct. |
 | `NanoMedical` after overlap exclusions | 7 | 0.5323 | 0.0509 | 0.1059 | 0 | 0 | 0 | 4 | Reasonable optional domain set, but not stronger than selected Core candidates. |
 | `NanoR2MED` | 8 | 0.2626 | 0.0944 | 0.2264 | 0 | 2 | 0 | 5 | Hard and discriminative, but newer and less established. |
@@ -172,9 +171,9 @@ Newer papers are expected to have fewer citations.
 | MIRACL | Crossref 37 citations, OpenAlex 35 citations | Moderate citation signal, but a canonical multilingual retrieval benchmark. |
 | BGE-M3 / MLDR | Crossref 419 citations, OpenAlex 384 citations, Hugging Face paper page with 444 citing models | Strong reason to promote `NanoMLDR` into Core. |
 | BRIGHT | OpenAlex 3 citations, but `xlangai/BRIGHT` had 71 HF likes and 17,528 downloads | New benchmark with strong dataset usage and high empirical discrimination. |
-| LegalBench | OpenAlex 131 citations | Strong legal benchmark signal within `NanoLaw`. |
-| LegalBench plus other NanoLaw source papers | Approximately 208 OpenAlex citations across the inspected legal source papers | `NanoLaw` is not one paper, but its component tasks are better supported than a single weakly cited group. |
-| BIRCO | OpenAlex 1 citation | Valuable and difficult, but less established than `NanoLaw` for a Core domain slot. |
+| LegalBench | OpenAlex 131 citations | Strong legal benchmark signal, but not enough by itself to justify a Core slot when many NanoLaw tasks overlap with selected Core sources. |
+| LegalBench plus other NanoLaw source papers | Approximately 208 OpenAlex citations across the inspected legal source papers | `NanoLaw` is externally meaningful, but its cleaner role is a domain-specific legal view rather than an additional Core component. |
+| BIRCO | OpenAlex 1 citation | Valuable and difficult, but less established than `NanoBRIGHT` for the Core stress slot. |
 | CoIR | ACL 2025-era source with low early citations | Kept because code retrieval is a distinct capability axis and citations are expected to lag for recent work. |
 
 ## MTEB Registration Check
@@ -208,15 +207,17 @@ All `NanoBIRCO` tasks also map to MTEB retrieval tasks:
 | `NanoBIRCORelic` | `BIRCO-Relic` |
 | `NanoBIRCOWTB` | `BIRCO-WTB` |
 
-The MTEB check therefore did not disqualify `NanoBIRCO`. The deciding factor
-was that `NanoLaw` gives the Core set a clearer, externally supported legal
-domain dimension, whereas `NanoBIRCO` is better kept as a specialized hard
-complex-objective group in `All` and `Group`.
+The MTEB check did not disqualify either `NanoLaw` or `NanoBIRCO`. The deciding
+factor was overlap and Core role clarity: `NanoLaw` contributes useful legal
+coverage but duplicates several tasks already represented by selected Core
+groups, while `NanoBIRCO` is better kept as a specialized hard
+complex-objective group because `NanoBRIGHT` already fills the broader Core
+stress-test role.
 
-## NanoLaw versus NanoBIRCO
+## NanoLaw and NanoBIRCO
 
-The final replacement of `NanoBIRCO` with `NanoLaw` was the most important
-late-stage decision.
+`NanoLaw` and `NanoBIRCO` were both considered for Core and then left out for
+different reasons.
 
 | Property | `NanoLaw` | `NanoBIRCO` |
 | --- | ---: | ---: |
@@ -231,17 +232,19 @@ late-stage decision.
 | Effective Core tasks after overlap removal | 4 | 5 |
 | Dense healthy tasks | 4 of 4 effective tasks | 3 of 5 tasks |
 
-`NanoBIRCO` is lexically much harder and remains useful for diagnostics. However,
-Core should not only be hard. It should also be legible to leaderboard users and
-defensible as a representative sample of important retrieval use cases.
-`NanoLaw` is stronger on that axis because it bundles multiple legal retrieval
-families across jurisdictions, languages, and source papers.
+`NanoLaw` is stronger as a legal-domain benchmark, and its source papers are
+better established. However, four of its eight tasks overlap with `NanoRTEB` or
+`NanoMMTEB-v2`, leaving only four effective non-duplicate tasks in Core-style
+aggregation. `NanoBIRCO` is lexically harder and mostly non-overlapping, but it
+is small and its complex-objective role is covered more broadly by
+`NanoBRIGHT`. Both remain useful diagnostic views outside Core.
 
 ## Dataset Scale and Lexical Baselines
 
-The Core set mixes easy, hard, and lexical-overlap-resistant tasks. Some Core
-components have strong BM25 baselines because the source task is lexical by
-nature. Others are deliberately hard for BM25.
+The Core set mixes easy, hard, and lexical-overlap-resistant tasks. Some
+selected components have strong BM25 baselines because the source task is
+lexical by nature. Others are deliberately hard for BM25. `NanoLaw` and
+`NanoBIRCO` are shown here as pruned comparison points.
 
 | Nano set | Subtasks | Queries | Split-local documents | Positive qrels | Query-weighted BM25 nDCG@10 | Query-weighted BM25 hit@10 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -251,11 +254,11 @@ nature. Others are deliberately hard for BM25.
 | `NanoCoIR` | 10 | 1,850 | 76,295 | 1,850 | 0.5965 | 0.6962 |
 | `NanoBIRCO` | 5 | 408 | 18,789 | 2,909 | 0.1822 | 0.3750 |
 
-These baselines also explain why Core keeps both domain and reasoning stress
-sets. `NanoBRIGHT` provides hard reasoning-heavy retrieval where BM25 is weak.
-`NanoLaw` provides legal-domain retrieval where lexical signals can be strong
-but not sufficient. `NanoCoIR` keeps a code retrieval axis whose failure modes
-are different again.
+These baselines also explain why Core keeps `NanoBRIGHT`: it provides hard
+reasoning-heavy retrieval where BM25 is weak, at a larger scale than
+`NanoBIRCO`. `NanoLaw` remains important, but its legal-domain signal is partly
+covered by overlapping selected Core sources. `NanoCoIR` keeps a code retrieval
+axis whose failure modes are different again.
 
 ## Aggregation and Overlap Policy
 
@@ -274,14 +277,17 @@ are excluded by the viewer configuration when appropriate:
 - `NanoLegalBenchCorporateLobbying`
 - `NanoLegalSummarization`
 
-The remaining effective `NanoLaw` contribution is still useful:
+The remaining effective `NanoLaw` contribution is still useful, but small enough
+to keep outside the compact Core score:
 
 - `NanoGerDaLIRSmall`
 - `NanoLeCaRDv2`
 - `NanoLegalBenchConsumerContractsQA`
 - `NanoLegalQuAD`
 
-Those four effective tasks were all healthy in the dense dispersion analysis.
+Those four effective tasks were all healthy in the dense dispersion analysis,
+which supports keeping `NanoLaw` as a domain-specific view even though it is no
+longer part of Core.
 
 ## Limitations
 
