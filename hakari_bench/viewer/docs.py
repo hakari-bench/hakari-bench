@@ -125,7 +125,7 @@ def render_markdown_page(*, doc: BenchmarkDoc, css_version: str) -> str:
 def render_docs_index_page(*, docs: list[BenchmarkDoc], css_version: str) -> str:
     items = "\n".join(
         f"""<li class="border border-zinc-200 bg-white px-4 py-3">
-          <a class="font-semibold text-cyan-700 underline-offset-2 hover:underline" href="{escape(doc.url, quote=True)}">{escape(doc.title)}</a>
+          <a class="font-semibold text-cyan-700 underline underline-offset-2" href="{escape(doc.url, quote=True)}">{escape(doc.title)}</a>
           <p class="mt-1 text-sm leading-snug text-zinc-700">{escape(doc.description)}</p>
         </li>"""
         for doc in docs
@@ -272,13 +272,13 @@ def _render_doc_breadcrumb(url: str) -> str:
     if not parts:
         return ""
     crumbs = [
-        '<a href="/docs/benchmark-tasks">Benchmark documentation</a>',
+        '<a class="underline underline-offset-2" href="/docs/benchmark-tasks">Benchmark documentation</a>',
     ]
     if len(parts) == 1:
         crumbs.append(f'<span aria-current="page">{escape(parts[0])}</span>')
     else:
         group = parts[0]
-        crumbs.append(f'<a href="/docs/benchmark-tasks/{quote(group, safe="")}">{escape(group)}</a>')
+        crumbs.append(f'<a class="underline underline-offset-2" href="/docs/benchmark-tasks/{quote(group, safe="")}">{escape(group)}</a>')
         crumbs.append(f'<span aria-current="page">{escape(parts[-1])}</span>')
     separator = '<span class="px-1 text-zinc-400" aria-hidden="true">&gt;</span>'
     return f"""<nav class="doc-breadcrumb mb-3 text-sm text-zinc-600" aria-label="Breadcrumb">

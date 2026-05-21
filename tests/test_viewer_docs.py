@@ -217,7 +217,7 @@ def test_docs_index_endpoint_lists_benchmark_docs(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "Benchmark documentation" in response.text
-    assert 'href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
+    assert 'class="font-semibold text-cyan-700 underline underline-offset-2" href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
     assert "MIRACL overview." in response.text
 
 
@@ -261,11 +261,11 @@ def test_docs_pages_render_breadcrumb_navigation(tmp_path: Path) -> None:
 
     assert group_response.status_code == 200
     assert 'class="doc-breadcrumb' in group_response.text
-    assert '<a href="/docs/benchmark-tasks">Benchmark documentation</a>' in group_response.text
+    assert '<a class="underline underline-offset-2" href="/docs/benchmark-tasks">Benchmark documentation</a>' in group_response.text
     assert '<span aria-current="page">NanoCodeRAG</span>' in group_response.text
     assert task_response.status_code == 200
-    assert '<a href="/docs/benchmark-tasks">Benchmark documentation</a>' in task_response.text
-    assert '<a href="/docs/benchmark-tasks/NanoCodeRAG">NanoCodeRAG</a>' in task_response.text
+    assert '<a class="underline underline-offset-2" href="/docs/benchmark-tasks">Benchmark documentation</a>' in task_response.text
+    assert '<a class="underline underline-offset-2" href="/docs/benchmark-tasks/NanoCodeRAG">NanoCodeRAG</a>' in task_response.text
     assert '<span aria-current="page">NanoCodeRAGOnlineTutorials</span>' in task_response.text
 
 
