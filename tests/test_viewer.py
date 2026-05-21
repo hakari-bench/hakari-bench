@@ -605,6 +605,8 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Reranking" in response.text
     assert "data-tooltip=" in response.text
     assert "data-tooltip-placement=\"left\"" in response.text
+    assert 'data-icon="circle-help"' in response.text
+    assert 'data-icon="question-mark"' not in response.text
     assert "full-corpus retrieval nDCG@10" in response.text
     assert "BM25 top-100 reranking nDCG@10" in response.text
     assert 'data-leaderboard-control="true"' in response.text
@@ -1969,6 +1971,7 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
         'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
         'text-left px-2 uppercase leaderboard-col-rank'
     ) in head
+    assert '<tr class="leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50">' in body
     assert '<td class="leaderboard-col-model sticky z-10' in body
     assert '<td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">' in body
     assert "leaderboard-col-borda sticky" not in body
@@ -3161,7 +3164,9 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     assert "model/a" in response.text
     assert 'hx-get="/leaderboard?' in response.text
     assert 'href="/leaderboard.csv?view=Overall' in response.text
-    assert "[download csv]" in response.text
+    assert "Download CSV" in response.text
+    assert 'data-icon="file-spreadsheet"' in response.text
+    assert 'aria-label="Download visible leaderboard as CSV"' in response.text
 
 
 def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Path) -> None:

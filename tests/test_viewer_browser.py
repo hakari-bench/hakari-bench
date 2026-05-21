@@ -217,8 +217,16 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert compact_layout["bordaAfterScrollLeft"] < compact_layout["bordaRankLeft"] - 100
                 assert compact_layout["bordaHeaderAfterScrollLeft"] < compact_layout["bordaHeaderLeft"] - 100
 
-                tooltip_trigger = page.locator("[data-tooltip]").first
-                tooltip_trigger.hover()
+                hover_before = long_model_row.locator("td").first.evaluate("(el) => getComputedStyle(el).backgroundColor")
+                long_model_row.hover()
+                hover_after = long_model_row.locator("td").first.evaluate("(el) => getComputedStyle(el).backgroundColor")
+                hover_state = {"before": hover_before, "after": hover_after}
+                assert hover_state["after"] != hover_state["before"]
+
+                rank_filtered_checkbox = page.locator("#filter-controls input[name='rank_filtered']")
+                tooltip_trigger = page.locator("#filter-controls [data-tooltip]").first
+                assert rank_filtered_checkbox.is_checked() is False
+                tooltip_trigger.click()
                 page.locator("#hakari-global-tooltip:not([hidden])").wait_for(timeout=3_000)
                 tooltip_state = page.locator("#hakari-global-tooltip").evaluate(
                     """(el) => ({
@@ -231,24 +239,20 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert tooltip_state["text"]
                 assert tooltip_state["zIndex"] == "1000"
                 assert tooltip_trigger.evaluate("(el) => getComputedStyle(el).cursor") == "pointer"
-                help_tooltip_style = page.locator(".tooltip-trigger", has_text="?").first.evaluate(
+                assert rank_filtered_checkbox.is_checked() is False
+                help_tooltip_style = page.locator(".tooltip-trigger svg[data-icon='circle-help']").first.evaluate(
                     """(el) => ({
-                        borderRadius: getComputedStyle(el).borderRadius,
+                        parentBorderRadius: getComputedStyle(el.parentElement).borderRadius,
                         height: parseFloat(getComputedStyle(el).height),
                         width: parseFloat(getComputedStyle(el).width),
+                        stroke: getComputedStyle(el).stroke,
                     })"""
                 )
-                assert help_tooltip_style["borderRadius"] == "9999px"
-                assert help_tooltip_style["height"] == pytest.approx(14.0, abs=0.1)
-                assert help_tooltip_style["width"] == pytest.approx(14.0, abs=0.1)
+                assert help_tooltip_style["parentBorderRadius"] == "9999px"
+                assert help_tooltip_style["height"] == pytest.approx(12.0, abs=0.1)
+                assert help_tooltip_style["width"] == pytest.approx(12.0, abs=0.1)
+                assert help_tooltip_style["stroke"] != "none"
                 page.locator("#hakari-global-tooltip").evaluate("(el) => { el.hidden = true; delete el.dataset.visible; }")
-
-                rank_filtered_checkbox = page.locator("#filter-controls input[name='rank_filtered']")
-                rank_filtered_tooltip = page.locator("#filter-controls [data-tooltip]").first
-                assert rank_filtered_checkbox.is_checked() is False
-                rank_filtered_tooltip.click()
-                page.locator("#hakari-global-tooltip:not([hidden])").wait_for(timeout=1_000)
-                assert rank_filtered_checkbox.is_checked() is False
 
                 doc_trigger = page.locator(".doc-summary-trigger").first
                 doc_trigger_style = doc_trigger.evaluate(
@@ -256,11 +260,13 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                         borderRadius: getComputedStyle(el).borderRadius,
                         height: parseFloat(getComputedStyle(el).height),
                         width: parseFloat(getComputedStyle(el).width),
+                        iconCount: el.querySelectorAll("svg[data-icon='circle-help']").length,
                     })"""
                 )
                 assert doc_trigger_style["borderRadius"] == "9999px"
                 assert doc_trigger_style["height"] == pytest.approx(14.0, abs=0.1)
                 assert doc_trigger_style["width"] == pytest.approx(14.0, abs=0.1)
+                assert doc_trigger_style["iconCount"] == 1
                 doc_trigger.click()
                 page.locator("#doc-summary-modal[open]").wait_for(timeout=5_000)
                 assert page.locator("#doc-summary-title").inner_text() == "BenchA"

@@ -75,6 +75,22 @@ Z_SCORE_BUCKET_CLASSES = (
     "task-z-neg-200",
 )
 
+_ICON_PATHS = {
+    "circle-help": (
+        '<circle cx="12" cy="12" r="10"/>'
+        '<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>'
+        '<path d="M12 17h.01"/>'
+    ),
+    "file-spreadsheet": (
+        '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>'
+        '<path d="M14 2v4a2 2 0 0 0 2 2h4"/>'
+        '<path d="M8 13h2"/>'
+        '<path d="M14 13h2"/>'
+        '<path d="M8 17h2"/>'
+        '<path d="M14 17h2"/>'
+    ),
+}
+
 
 class _TaskLengthFilterKwargs(TypedDict):
     rank_filtered: bool
@@ -560,6 +576,15 @@ def render_global_tooltip() -> str:
     """
 
 
+def _icon_svg(name: str, *, class_name: str = "hakari-icon") -> str:
+    path = _ICON_PATHS[name]
+    return (
+        f"""<svg class="{class_name}" data-icon="{escape(name, quote=True)}" aria-hidden="true" """
+        """viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" """
+        f"""stroke-linecap="round" stroke-linejoin="round">{path}</svg>"""
+    )
+
+
 def render_doc_summary_modal() -> str:
     return """
 <dialog id="doc-summary-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
@@ -586,7 +611,7 @@ def _render_doc_summary_trigger(*, doc: BenchmarkDoc, label: str) -> str:
                   data-doc-title="{escape(doc.title, quote=True)}"
                   data-doc-description="{escape(doc.description, quote=True)}"
                   data-doc-url="{escape(doc.url, quote=True)}"
-                  aria-label="{escape(label, quote=True)}">?</button>"""
+                  aria-label="{escape(label, quote=True)}">{_icon_svg("circle-help")}</button>"""
 
 
 def _render_help_tooltip(tooltip: str) -> str:
@@ -594,7 +619,7 @@ def _render_help_tooltip(tooltip: str) -> str:
                     class="tooltip-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600 hover:border-cyan-600 hover:text-cyan-700"
                     data-tooltip="{escape(tooltip, quote=True)}"
                     data-tooltip-placement="left"
-                    aria-label="{escape(tooltip, quote=True)}">?</span>"""
+                    aria-label="{escape(tooltip, quote=True)}">{_icon_svg("circle-help")}</span>"""
 
 
 def render_summary_cards(summary: ViewerSummary) -> str:
@@ -685,7 +710,11 @@ def render_leaderboard(
       <h2 class="text-lg font-semibold">{escape(result.view_label)}</h2>
       <p class="mt-1 text-sm text-zinc-600" data-shown-count="{shown_count}">
         {shown_count} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks
-        <a class="ml-2 text-zinc-800 underline-offset-2 hover:underline" href="{_csv_url(csv_query)}">[download csv]</a>
+        <a class="ml-2 inline-flex items-center gap-1 border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-800 underline-offset-2 hover:border-cyan-600 hover:text-cyan-700"
+           href="{_csv_url(csv_query)}" aria-label="Download visible leaderboard as CSV">
+          {_icon_svg("file-spreadsheet", class_name="hakari-icon h-3.5 w-3.5")}
+          <span>Download CSV</span>
+        </a>
       </p>
     </div>
   </div>
@@ -1531,7 +1560,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
     model_views = model_cell_views(result.rows)
     for row in result.rows:
         hidden = not filter_context.is_visible(row)
-        row_class = "border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
+        row_class = "leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(

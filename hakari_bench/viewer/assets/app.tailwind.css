@@ -23,6 +23,7 @@
     --hakari-danger: #b24a57;
     --hakari-danger-soft: #f3d7da;
     --hakari-purple-soft: #e8e0ef;
+    --hakari-row-hover: #ece4d2;
     --hakari-font:
       "SFMono-Regular", "Cascadia Code", "Roboto Mono", "Noto Sans Mono",
       "Yu Gothic UI", "Meiryo", ui-monospace, monospace;
@@ -73,6 +74,7 @@
       --hakari-danger: #ff7d8a;
       --hakari-danger-soft: #41272d;
       --hakari-purple-soft: #332b3c;
+      --hakari-row-hover: #38393d;
     }
 
     body::before {
@@ -202,6 +204,21 @@
   .model-detail-trigger,
   .model-detail-trigger:hover {
     color: var(--hakari-text);
+  }
+
+  .hakari-icon {
+    height: 0.875rem;
+    width: 0.875rem;
+  }
+
+  .tooltip-trigger .hakari-icon,
+  .doc-summary-trigger .hakari-icon {
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+
+  .leaderboard-row:hover > td {
+    background-color: var(--hakari-row-hover);
   }
 
   .leaderboard-table-scroll {
