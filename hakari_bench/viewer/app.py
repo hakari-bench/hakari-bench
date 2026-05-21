@@ -713,11 +713,11 @@ def render_analysis_shell(*, view: str) -> str:
           <p class="text-sm text-zinc-600">Use these panels for paper-facing variant, reranking, and Nano subset audits.</p>
         </div>
         <div class="flex flex-wrap gap-2">
-          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
                   hx-get="/analysis?{escape(variant_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("git-compare-arrows", class_name="hakari-icon action-icon shrink-0")}<span>Variant impact</span></button>
-          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
                   hx-get="/analysis?{escape(rerank_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("arrow-down-up", class_name="hakari-icon action-icon shrink-0")}<span>Reranking diagnostics</span></button>
-          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
                   hx-get="/analysis?{escape(dataset_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("database", class_name="hakari-icon action-icon shrink-0")}<span>Dataset diagnostics</span></button>
         </div>
       </div>
@@ -803,7 +803,7 @@ def render_tabs(
         doc = benchmark_docs.group_doc(view_name) if benchmark_docs is not None else None
         if doc is None:
             grouped_buttons[_view_group(view_name)].append(
-                f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
+                f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] {classes}"
                       hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                       {_leaderboard_control_hx_attrs()}>
                       {escape(view_label)}
@@ -812,8 +812,8 @@ def render_tabs(
             continue
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{view_label} overview")
         grouped_buttons[_view_group(view_name)].append(
-            f"""<span class="doc-label-group inline-flex items-center border text-sm {classes}" data-doc-label-group="benchmark">
-                  <button type="button" class="py-1.5 pl-3 pr-0 text-left"
+            f"""<span class="doc-label-group inline-flex items-center border text-[0.8125rem] {classes}" data-doc-label-group="benchmark">
+                  <button type="button" class="py-1 pl-2 pr-0 text-left"
                     hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                     {_leaderboard_control_hx_attrs()}>
                     {escape(view_label)}
@@ -891,7 +891,7 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
             query_payload["target"] = target
         query = urlencode(query_payload, doseq=True)
         buttons.append(
-            f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
+            f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                   {_leaderboard_control_hx_attrs()}>
                   {escape(label)}
@@ -981,7 +981,7 @@ def render_language_pages(
         )
         more = f"""
           <details class="relative">
-            <summary class="cursor-pointer border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">More</summary>
+            <summary class="cursor-pointer border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">More</summary>
             <div class="absolute z-10 mt-1 grid max-h-72 min-w-[28rem] grid-cols-3 gap-1 overflow-auto border border-zinc-300 bg-white p-2 shadow-sm sm:grid-cols-5">
               {more_buttons}
             </div>
@@ -989,7 +989,7 @@ def render_language_pages(
         """
     return f"""
       <nav class="mb-4 flex flex-wrap items-start gap-2" aria-label="Language pages">
-        {_control_label(icon="languages", text="Language pages", extra_class="pt-1.5 text-sm")}
+        {_control_label(icon="languages", text="Language pages", extra_class="pt-1 text-[0.8125rem]")}
         {''.join(buttons)}
         {more}
       </nav>
@@ -1020,7 +1020,7 @@ def _language_page_button(
     )
     query = urlencode(query_payload, doseq=True)
     data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
-    return f"""<button type="button"{data_attr} class="border px-3 py-1.5 text-sm {classes}"
+    return f"""<button type="button"{data_attr} class="border px-2 py-1 text-[0.8125rem] {classes}"
               hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
               {_leaderboard_control_hx_attrs()}>{escape(label)}</button>"""
 
@@ -1325,7 +1325,7 @@ def render_controls(
         else ""
     )
     return f"""
-    <div class="mb-4 text-sm text-zinc-700">
+    <div class="mb-4 text-[0.8125rem] text-zinc-700">
       <form id="column-controls" class="flex flex-wrap items-center gap-x-5 gap-y-2"
             hx-get="/leaderboard" hx-push-url="true"
             {_leaderboard_control_hx_attrs()}
@@ -1381,13 +1381,13 @@ def render_controls(
         <label class="flex min-w-64 items-center gap-2">
           <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model name</span>
           <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
-                 class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
+                 class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                  autocomplete="off">
         </label>
         <label class="flex min-w-64 items-center gap-2">
           <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Task name</span>
           <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
-                 class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none focus:border-cyan-700"
+                 class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                  autocomplete="off">
         </label>
         <label class="inline-flex items-center gap-2 pt-1">
@@ -1395,7 +1395,7 @@ def render_controls(
           <span class="whitespace-nowrap font-medium text-zinc-800">Recalculate Borda, Mean</span>
           {_render_help_tooltip("When enabled, Model name, Task name, and active facet filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks.")}
         </label>
-        <button type="submit" class="border border-zinc-300 bg-zinc-50 px-3 py-1 text-sm font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
+        <button type="submit" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-[0.8125rem] font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
           Apply
         </button>
           <div id="facet-filters" class="flex flex-wrap items-start gap-3">
@@ -1442,7 +1442,7 @@ def _text_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str
 
 def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
     input_class = (
-        "w-24 border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none "
+        "w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     active_classes = "border-cyan-700 bg-cyan-50" if filter_state.has_task_length_filters else "border-zinc-200 bg-zinc-50"
@@ -1451,7 +1451,7 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
         "Tasks missing length metadata are excluded when a bound is set."
     )
     return f"""
-    <fieldset class="flex flex-wrap items-center gap-2 border {active_classes} px-2 py-1.5">
+    <fieldset class="flex flex-wrap items-center gap-2 border {active_classes} px-1.5 py-1">
       <legend class="inline-flex items-center gap-1 px-1 text-xs font-semibold uppercase text-zinc-500">
         <span>Task string length</span>
         {_render_help_tooltip(tooltip)}
@@ -1497,7 +1497,7 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
         query = urlencode(query_payload, doseq=True)
         page_url = _page_url(query_payload)
         buttons.append(
-            f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
+            f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{page_url}"
                   {_leaderboard_control_hx_attrs()}>
                   {escape(score_group.label)}
@@ -1888,7 +1888,7 @@ def _variant_analysis_toggle(
         else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-600 hover:text-cyan-700"
     )
     return f"""
-    <button type="button" class="border px-3 py-1.5 text-sm {toggle_classes}"
+    <button type="button" class="border px-2 py-1 text-[0.8125rem] {toggle_classes}"
             hx-get="/analysis?{escape(toggle_query, quote=True)}"
             hx-target="#analysis-panel" hx-swap="innerHTML">{escape(toggle_label)}</button>
     """
@@ -2102,7 +2102,7 @@ def _render_filter_details(
     for value, label in options:
         checked = " checked" if value in selected_values else ""
         checkboxes.append(
-            f"""<label class="flex min-w-0 items-center gap-2 whitespace-nowrap px-2 py-1">
+            f"""<label class="flex min-w-0 items-center gap-2 whitespace-nowrap px-1.5 py-0.5">
               <input type="checkbox" name="{escape(name)}" value="{escape(value)}" class="h-4 w-4 accent-cyan-700"{checked}>
               <span>{escape(label)}</span>
             </label>"""
@@ -2113,7 +2113,7 @@ def _render_filter_details(
     none_page_url = _page_url(none_query)
     return f"""
       <details class="filter-detail border border-zinc-300 bg-white" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}">
-        <summary class="cursor-pointer px-2 py-1 font-medium text-zinc-800">
+        <summary class="cursor-pointer px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800">
           <span class="inline-flex items-center gap-1.5">
             {_icon_svg(icon, class_name="hakari-icon filter-detail-icon shrink-0")}
             <span>{escape(summary)}</span>

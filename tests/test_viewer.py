@@ -602,6 +602,8 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert response.status_code == 200
     assert "Benchmark groups" in response.text
     assert 'data-icon="layers"' in response.text
+    assert 'class="border px-2 py-1 text-[0.8125rem] border-cyan-700 bg-cyan-50 text-cyan-900"' in response.text
+    assert 'class="border px-3 py-1.5 text-sm' not in response.text
     assert response.text.index("Target") < response.text.index("Overall")
     assert 'data-testid="primary-benchmark-column"' in response.text
     primary_column = response.text.split('data-testid="primary-benchmark-column"', 1)[1].split('data-testid="secondary-benchmark-column"', 1)[0]
@@ -1333,6 +1335,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-icon="ruler"' in response.text
     assert 'data-filter-detail="quant_filter"' in response.text
     assert 'data-filter-icon="binary"' in response.text
+    assert 'summary class="cursor-pointer px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800"' in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
     assert response.text.count(">All</button>") == 5
