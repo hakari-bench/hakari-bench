@@ -1456,7 +1456,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Other variants" in response.text
     assert "Model type:" in response.text
     assert 'id="model-type-controls"' in response.text
-    assert response.text.index("Include variants:") < response.text.index("Model type:") < response.text.index("Filters:")
+    assert response.text.index("Filters:") < response.text.index("Model type:") < response.text.index("Model name")
     assert 'name="model_type_filter" value="__none_selected__"' in response.text
     assert "Filters:" in response.text
     assert 'data-icon="filter"' in response.text
