@@ -53,6 +53,18 @@ def default_dense_quantized_embedding_variants() -> list[dict[str, Any]]:
     return parse_embedding_variants(["int8,binary", "rescore:int8,binary"])
 
 
+def default_sparse_truncation_embedding_variants() -> list[dict[str, Any]]:
+    return parse_embedding_variants(
+        None,
+        [
+            [
+                "sparse-query-max-active-dims:8,16,24,32",
+                "sparse-document-max-active-dims:64,128,256,512",
+            ]
+        ],
+    )
+
+
 def dense_embedding_variants(
     values: list[str] | None,
     cross_values: list[list[str]] | None = None,
@@ -71,6 +83,18 @@ def dense_embedding_variants(
         *_default_truncate_quantized_embedding_variants(truncate_dims),
     ]
     return _dedupe_variants([*variants, *auto_variants])
+
+
+def sparse_embedding_variants(
+    values: list[str] | None,
+    cross_values: list[list[str]] | None = None,
+    *,
+    include_defaults: bool = True,
+) -> list[dict[str, Any]]:
+    variants = parse_embedding_variants(values, cross_values)
+    if not include_defaults:
+        return variants
+    return _dedupe_variants([*variants, *default_sparse_truncation_embedding_variants()])
 
 
 def _default_truncate_embedding_variants(dims: list[int]) -> list[dict[str, Any]]:
