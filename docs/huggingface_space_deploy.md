@@ -103,6 +103,8 @@ The Space uses:
 - `hakari_bench/viewer/space.py`
 - `hakari_bench/viewer/assets/` for local CSS, viewer JavaScript, HTMX, and
   favicon assets
+- `docs/benchmark_tasks/` for benchmark group and task documentation rendered
+  by the viewer
 
 The Docker image installs only viewer runtime dependencies and starts:
 

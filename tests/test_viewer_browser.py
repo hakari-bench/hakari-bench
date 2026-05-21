@@ -27,7 +27,12 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: NanoRTEB\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
-    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    bench_docs_dir = docs_dir / "BenchA"
+    bench_docs_dir.mkdir(parents=True)
+    (bench_docs_dir / "index.md").write_text("# BenchA\n\n## Overview\n\nBenchA overview for browser tests.\n", encoding="utf-8")
+    (bench_docs_dir / "a1.md").write_text("# BenchA / a1\n\n## Overview\n\nTask a1 overview for browser tests.\n", encoding="utf-8")
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir, docs_dir=docs_dir)
 
     with _serve_app(app) as base_url:
         with playwright_sync.sync_playwright() as playwright:
@@ -117,6 +122,16 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert tooltip_state["text"]
                 assert tooltip_state["zIndex"] == "1000"
                 assert tooltip_trigger.evaluate("(el) => getComputedStyle(el).cursor") == "pointer"
+                help_tooltip_style = page.locator(".tooltip-trigger", has_text="?").first.evaluate(
+                    """(el) => ({
+                        borderRadius: getComputedStyle(el).borderRadius,
+                        height: parseFloat(getComputedStyle(el).height),
+                        width: parseFloat(getComputedStyle(el).width),
+                    })"""
+                )
+                assert help_tooltip_style["borderRadius"] == "9999px"
+                assert help_tooltip_style["height"] == pytest.approx(14.0, abs=0.1)
+                assert help_tooltip_style["width"] == pytest.approx(14.0, abs=0.1)
                 page.locator("#hakari-global-tooltip").evaluate("(el) => { el.hidden = true; delete el.dataset.visible; }")
 
                 rank_filtered_checkbox = page.locator("#filter-controls input[name='rank_filtered']")
@@ -125,6 +140,25 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 rank_filtered_tooltip.click()
                 page.locator("#hakari-global-tooltip:not([hidden])").wait_for(timeout=1_000)
                 assert rank_filtered_checkbox.is_checked() is False
+
+                doc_trigger = page.locator(".doc-summary-trigger").first
+                doc_trigger_style = doc_trigger.evaluate(
+                    """(el) => ({
+                        borderRadius: getComputedStyle(el).borderRadius,
+                        height: parseFloat(getComputedStyle(el).height),
+                        width: parseFloat(getComputedStyle(el).width),
+                    })"""
+                )
+                assert doc_trigger_style["borderRadius"] == "9999px"
+                assert doc_trigger_style["height"] == pytest.approx(14.0, abs=0.1)
+                assert doc_trigger_style["width"] == pytest.approx(14.0, abs=0.1)
+                doc_trigger.click()
+                page.locator("#doc-summary-modal[open]").wait_for(timeout=5_000)
+                assert page.locator("#doc-summary-title").inner_text() == "BenchA"
+                assert "BenchA overview" in page.locator("#doc-summary-description").inner_text()
+                assert page.locator("#doc-summary-link").get_attribute("target") == "_blank"
+                assert page.locator("#doc-summary-link").inner_text() == "Read the BenchA overview"
+                page.locator("#doc-summary-modal").evaluate("(modal) => modal.close()")
 
                 page.locator(".model-detail-trigger").first.click()
                 page.locator("#model-detail-modal[open]").wait_for(timeout=5_000)
@@ -140,7 +174,9 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
                 nano_rteb_button = page.get_by_role("button", name="NanoRTEB")
                 assert page.locator("h2.text-lg").first.inner_text() == "NanoRTEB"
-                assert "border-cyan-700" in (nano_rteb_button.get_attribute("class") or "")
+                nano_rteb_label = nano_rteb_button.locator("xpath=ancestor::*[@data-doc-label-group='benchmark']").first
+                active_classes = nano_rteb_label.get_attribute("class") if nano_rteb_label.count() else nano_rteb_button.get_attribute("class")
+                assert "border-cyan-700" in (active_classes or "")
             finally:
                 browser.close()
 

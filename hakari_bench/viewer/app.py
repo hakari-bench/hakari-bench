@@ -15,6 +15,7 @@ from pydantic import BaseModel, ConfigDict
 
 from hakari_bench.viewer.analytics import ViewerAnalyticsRepository, ViewerSummary
 from hakari_bench.viewer.config import ViewerConfig, load_viewer_config
+from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, render_markdown_page
 from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
     FilterContext,
@@ -90,13 +91,14 @@ class ViewerAppConfig(BaseModel):
     config_dir: Path = Path("config/viewer")
 
 
-def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewer")):
+def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewer"), docs_dir: Path = Path("docs/benchmark_tasks")):
     from fastapi import FastAPI, Query
     from fastapi.middleware.gzip import GZipMiddleware
     from fastapi.responses import FileResponse, HTMLResponse, Response
     from fastapi.staticfiles import StaticFiles
 
     viewer_config = load_viewer_config(config_dir)
+    benchmark_docs = BenchmarkDocs(docs_dir)
     app = FastAPI(title="HAKARI-bench leaderboard")
     app.add_middleware(GZipMiddleware, minimum_size=1024)
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
@@ -116,6 +118,24 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
     @app.get("/favicon.ico")
     def favicon_ico() -> FileResponse:
         return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
+
+    @app.get("/docs/benchmark-tasks/{benchmark}", response_class=HTMLResponse)
+    def benchmark_doc(benchmark: str) -> HTMLResponse:
+        from fastapi import HTTPException
+
+        doc = benchmark_docs.route_doc(benchmark=benchmark)
+        if doc is None:
+            raise HTTPException(status_code=404, detail="Benchmark documentation not found.")
+        return HTMLResponse(render_markdown_page(doc=doc, css_version=_asset_version("app.css")))
+
+    @app.get("/docs/benchmark-tasks/{benchmark}/{task}", response_class=HTMLResponse)
+    def benchmark_task_doc(benchmark: str, task: str) -> HTMLResponse:
+        from fastapi import HTTPException
+
+        doc = benchmark_docs.route_doc(benchmark=benchmark, task=task)
+        if doc is None:
+            raise HTTPException(status_code=404, detail="Benchmark task documentation not found.")
+        return HTMLResponse(render_markdown_page(doc=doc, css_version=_asset_version("app.css")))
 
     @app.get("/", response_class=HTMLResponse)
     def index(
@@ -186,6 +206,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
                     duckdb_path=store.path,
                     summary=summary,
                     initial_query=initial_query,
+                    benchmark_docs=benchmark_docs,
                 )
             request_timing["view"] = initial_query["view"]
             return content
@@ -290,7 +311,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
             )
             result, sort, direction, filter_state = build_leaderboard_result(state_query)
             with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
-                content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state)
+                content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)
                 render_timing["leaderboard_row_count"] = len(result.rows)
             request_timing["view"] = result.view_name
             request_timing["leaderboard_row_count"] = len(result.rows)
@@ -447,6 +468,7 @@ def render_page(
     duckdb_path: Path,
     summary: ViewerSummary | None = None,
     initial_query: QueryState | None = None,
+    benchmark_docs: BenchmarkDocs | None = None,
 ) -> str:
     query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
     css_url = _asset_url("app.css")
@@ -494,8 +516,12 @@ def render_page(
 
 @lru_cache(maxsize=None)
 def _asset_url(filename: str) -> str:
-    digest = hashlib.sha256((ASSETS_DIR / filename).read_bytes()).hexdigest()[:12]
-    return f"/assets/{filename}?v={digest}"
+    return f"/assets/{filename}?v={_asset_version(filename)}"
+
+
+@lru_cache(maxsize=None)
+def _asset_version(filename: str) -> str:
+    return hashlib.sha256((ASSETS_DIR / filename).read_bytes()).hexdigest()[:12]
 
 
 def _leaderboard_request_hx_attrs() -> str:
@@ -521,6 +547,43 @@ def render_global_tooltip() -> str:
     <div id="hakari-global-tooltip" class="global-tooltip fixed border border-zinc-300 bg-white px-2 py-1 text-xs font-medium text-zinc-800 shadow-sm"
          role="tooltip" hidden></div>
     """
+
+
+def render_doc_summary_modal() -> str:
+    return """
+<dialog id="doc-summary-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
+  <form method="dialog">
+    <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
+      <h3 class="text-base font-semibold">Benchmark Documentation</h3>
+      <button type="submit" class="border border-zinc-300 px-2 py-1 text-sm text-zinc-700 hover:border-cyan-600 hover:text-cyan-700">Close</button>
+    </div>
+  </form>
+  <div class="px-4 py-3">
+    <p id="doc-summary-title" class="break-all font-mono text-sm font-semibold text-zinc-900"></p>
+    <p id="doc-summary-description" class="mt-3 whitespace-pre-wrap text-sm leading-tight text-zinc-700"></p>
+    <p class="mt-3 text-sm">
+      <a id="doc-summary-link" class="text-cyan-700 underline-offset-2 hover:underline" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
+    </p>
+  </div>
+</dialog>
+"""
+
+
+def _render_doc_summary_trigger(*, doc: BenchmarkDoc, label: str) -> str:
+    return f"""<button type="button"
+                  class="doc-summary-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600 hover:border-cyan-600 hover:text-cyan-700"
+                  data-doc-title="{escape(doc.title, quote=True)}"
+                  data-doc-description="{escape(doc.description, quote=True)}"
+                  data-doc-url="{escape(doc.url, quote=True)}"
+                  aria-label="{escape(label, quote=True)}">?</button>"""
+
+
+def _render_help_tooltip(tooltip: str) -> str:
+    return f"""<span tabindex="0"
+                    class="tooltip-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600 hover:border-cyan-600 hover:text-cyan-700"
+                    data-tooltip="{escape(tooltip, quote=True)}"
+                    data-tooltip-placement="left"
+                    aria-label="{escape(tooltip, quote=True)}">?</span>"""
 
 
 def render_summary_cards(summary: ViewerSummary) -> str:
@@ -593,6 +656,7 @@ def render_leaderboard(
     sort: str,
     direction: str,
     filter_state: FilterState | None = None,
+    benchmark_docs: BenchmarkDocs | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
     filter_context = row_filter_context(result.rows, filter_state)
@@ -601,7 +665,7 @@ def render_leaderboard(
     return f"""
 <div>
   {render_analysis_shell(view=result.view_name)}
-  {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+  {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
   {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
   {render_score_groups(result=result, sort=sort, direction=direction, filter_state=filter_state)}
@@ -616,16 +680,24 @@ def render_leaderboard(
   </div>
   <div class="overflow-x-auto border border-zinc-200 bg-white">
     <table class="min-w-full border-collapse text-sm">
-      {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+      {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
       {render_table_body(result=result, filter_context=filter_context)}
     </table>
   </div>
   {render_model_detail_modal()}
+  {render_doc_summary_modal()}
 </div>
 """
 
 
-def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
+def render_tabs(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState | None = None,
+    benchmark_docs: BenchmarkDocs | None = None,
+) -> str:
     filter_state = filter_state or FilterState()
     grouped_buttons: dict[str, list[str]] = {
         "Overall": [],
@@ -646,12 +718,26 @@ def render_tabs(*, result: LeaderboardResult, sort: str, direction: str, filter_
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         query_payload["view"] = view_name
         query = urlencode(query_payload, doseq=True)
+        doc = benchmark_docs.group_doc(view_name) if benchmark_docs is not None else None
+        if doc is None:
+            grouped_buttons[_view_group(view_name)].append(
+                f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
+                      hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                      {_leaderboard_control_hx_attrs()}>
+                      {escape(view_label)}
+                    </button>"""
+            )
+            continue
+        doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{view_label} overview")
         grouped_buttons[_view_group(view_name)].append(
-            f"""<button type="button" class="border px-3 py-1.5 text-sm {classes}"
-                  hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                  {_leaderboard_control_hx_attrs()}>
-                  {escape(view_label)}
-                </button>"""
+            f"""<span class="doc-label-group inline-flex items-center border text-sm {classes}" data-doc-label-group="benchmark">
+                  <button type="button" class="py-1.5 pl-3 pr-0 text-left"
+                    hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                    {_leaderboard_control_hx_attrs()}>
+                    {escape(view_label)}
+                  </button>
+                  <span class="inline-flex items-center pl-0.5 pr-2">{doc_trigger}</span>
+                </span>"""
         )
     primary_sections = [
         _render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state),
@@ -733,10 +819,7 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
             <div>
               <p class="mb-1 inline-flex items-center gap-1 text-xs font-semibold uppercase text-zinc-500">
                 <span>Target</span>
-                <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 cursor-pointer items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
-                      data-tooltip="{escape(tooltip, quote=True)}"
-                      data-tooltip-placement="left"
-                      aria-label="{escape(tooltip, quote=True)}">?</span>
+                {_render_help_tooltip(tooltip)}
               </p>
               <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
             </div>
@@ -1210,10 +1293,7 @@ def render_controls(
         <label class="inline-flex items-center gap-2 pt-1">
           <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
           <span class="whitespace-nowrap font-medium text-zinc-800">Recalculate Borda, Mean</span>
-          <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 cursor-pointer items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
-                data-tooltip="When enabled, Model name, Task name, and active facet filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks."
-                data-tooltip-placement="left"
-                aria-label="When enabled, Model name, Task name, and active facet filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks.">?</span>
+          {_render_help_tooltip("When enabled, Model name, Task name, and active facet filters narrow the ranking population before Borda and Mean are recomputed. With a Task name filter, Borda is computed from per-task ranks over the filtered tasks.")}
         </label>
         <button type="submit" class="border border-zinc-300 bg-zinc-50 px-3 py-1 text-sm font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
           Apply
@@ -1274,10 +1354,7 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
     <fieldset class="flex flex-wrap items-center gap-2 border {active_classes} px-2 py-1.5">
       <legend class="inline-flex items-center gap-1 px-1 text-xs font-semibold uppercase text-zinc-500">
         <span>Task string length</span>
-        <span tabindex="0" class="tooltip-trigger inline-flex h-4 w-4 cursor-pointer items-center justify-center border border-zinc-300 text-[10px] leading-none text-zinc-600"
-              data-tooltip="{escape(tooltip, quote=True)}"
-              data-tooltip-placement="left"
-              aria-label="{escape(tooltip, quote=True)}">?</span>
+        {_render_help_tooltip(tooltip)}
       </legend>
       <label class="inline-flex items-center gap-1">
         <span class="text-xs font-medium text-zinc-700">Query string >=</span>
@@ -1329,7 +1406,14 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Score groups">{''.join(buttons)}</nav>"""
 
 
-def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState | None = None) -> str:
+def render_table_head(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState | None = None,
+    benchmark_docs: BenchmarkDocs | None = None,
+) -> str:
     filter_state = filter_state or FilterState()
     metric_labels = _metric_column_labels(result.metric_columns, overrides=result.metric_column_labels)
     columns = [
@@ -1378,13 +1462,23 @@ def render_table_head(*, result: LeaderboardResult, sort: str, direction: str, f
         label_attrs = (
             f' data-metric-column-full-name="{escape(full_metric_name, quote=True)}"' if is_metric else ""
         )
+        doc = (
+            benchmark_docs.task_doc(view_name=result.view_name, metric_column=full_metric_name)
+            if benchmark_docs is not None and is_metric
+            else None
+        )
+        doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview") if doc is not None else ""
+        header_content = f"""
+                 <span class="doc-label-group inline-flex w-full items-center gap-0.5" data-doc-label-group="metric">
+                   <button type="button" class="inline-flex min-w-0 flex-1 {justify} hover:text-cyan-700"
+                           hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                           {_leaderboard_control_hx_attrs()}>
+                     <span class="{label_class}"{label_attrs}>{escape(label)}</span><span class="shrink-0 text-zinc-400">{indicator}</span>
+                   </button>{doc_trigger}
+                 </span>"""
         heads.append(
             f"""<th scope="col" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
-                 <button type="button" class="inline-flex w-full {justify} hover:text-cyan-700"
-                         hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                         {_leaderboard_control_hx_attrs()}>
-                   <span class="{label_class}"{label_attrs}>{escape(label)}</span><span class="shrink-0 text-zinc-400">{indicator}</span>
-                 </button>
+                 {header_content}
                </th>"""
         )
     return f"<thead><tr>{''.join(heads)}</tr></thead>"

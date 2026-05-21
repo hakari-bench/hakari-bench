@@ -15,6 +15,7 @@ ENV PATH="/opt/venv/bin:${PATH}" \
 COPY pyproject.toml uv.lock README.md ./
 COPY hakari_bench ./hakari_bench
 COPY config ./config
+COPY docs/benchmark_tasks ./docs/benchmark_tasks
 
 RUN uv venv /opt/venv \
     && uv pip install --python /opt/venv/bin/python --no-deps -e . \
