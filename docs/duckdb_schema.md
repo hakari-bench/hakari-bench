@@ -740,10 +740,10 @@ For overall views:
 
 - `All`: all configured benchmark views using raw task rows.
 - `Core`: a compact curated set covering broad multilingual retrieval,
-  multilingual BEIR, English RTEB domains, MIRACL, long-context retrieval,
-  reasoning-heavy retrieval, complex objectives, and code retrieval
-  (`NanoMMTEB-v2`, `NanoRTEB`, `MNanoBEIR`, `NanoMIRACL`, `NanoLongEmbed`,
-  `NanoBRIGHT`, `NanoBIRCO`, and `NanoCoIR`).
+  multilingual BEIR, English RTEB domains, MIRACL, multilingual long-document
+  retrieval, reasoning-heavy retrieval, legal retrieval, and code retrieval
+  (`MNanoBEIR`, `NanoMMTEB-v2`, `NanoRTEB`, `NanoMIRACL`, `NanoMLDR`,
+  `NanoBRIGHT`, `NanoLaw`, and `NanoCoIR`).
 - `Group`: all configured benchmark views aggregated by each component's
   `group_by` setting before ranking.
 - `micro_mean`: mean over all included tasks with equal task weight.
@@ -901,8 +901,8 @@ choices:
   Core benchmarks. Other broader multilingual/domain suites remain
   Domain-specific unless they are an official language-specific NanoMTEB family
   such as `NanoJMTEB-v2`, `NanoFaMTEB-v2`, `NanoRuMTEB`, `NanoVNMTEB`, or
-  `NanoCMTEB`. `NanoMLDR`, `NanoIndicQA`, `NanoMuPLeR`, and `NanoChemTEB`
-  remain Domain-specific by viewer policy even when they expose language pages.
+  `NanoCMTEB`. `NanoIndicQA`, `NanoMuPLeR`, and `NanoChemTEB` remain
+  Domain-specific by viewer policy even when they expose language pages.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 
