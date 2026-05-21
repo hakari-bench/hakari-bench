@@ -9,4 +9,8 @@ tmp/
 tests/
 skills/
 docs/
+!docs/
+docs/*
+!docs/benchmark_tasks/
+!docs/benchmark_tasks/**
 scripts/

@@ -153,6 +153,23 @@
     window.__hakariModelDetailsBound = true;
 
     document.addEventListener("click", (event) => {
+      const trigger = closestElement(event.target, ".doc-summary-trigger");
+      if (!trigger) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const modal = document.getElementById("doc-summary-modal");
+      const title = document.getElementById("doc-summary-title");
+      const description = document.getElementById("doc-summary-description");
+      const link = document.getElementById("doc-summary-link");
+      if (!modal || !title || !description || !link) return;
+      title.textContent = trigger.dataset.docTitle || "";
+      description.textContent = trigger.dataset.docDescription || "";
+      link.href = trigger.dataset.docUrl || "#";
+      link.textContent = `Read the ${trigger.dataset.docTitle || "benchmark"} overview`;
+      if (typeof modal.showModal === "function") modal.showModal();
+    });
+
+    document.addEventListener("click", (event) => {
       const trigger = closestElement(event.target, ".model-detail-trigger");
       if (!trigger) return;
       const modal = document.getElementById("model-detail-modal");
@@ -178,6 +195,11 @@
 
     document.addEventListener("click", (event) => {
       const modal = event.target && event.target.id === "model-detail-modal" ? event.target : null;
+      if (modal) modal.close();
+    });
+
+    document.addEventListener("click", (event) => {
+      const modal = event.target && event.target.id === "doc-summary-modal" ? event.target : null;
       if (modal) modal.close();
     });
 
