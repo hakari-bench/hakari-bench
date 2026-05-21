@@ -50,11 +50,11 @@ multi-positive training rewards broad coverage.
 
 | Query | Positive document |
 | --- | --- |
-| È utile fare i compiti a casa? (30 chars) | Prima di tutto, ci sono tre argomenti a favore del perché i compiti a casa sono eccellenti e dovrebbero continuare nelle scuole moderne. 1. I compiti aiutano gli studenti che imparano facendo ... [truncated from 4034 chars] (4034 chars) |
-| È giusto che i farmaci da prescrizione siano pubblicizzati direttamente ai consumatori? (87 chars) | Molti annunci pubblicitari non includono informazioni sufficienti su quanto bene funzionano i farmaci. Ad esempio, Lunesta viene pubblicizzato da una falena che vola attraverso una finestra della camera da letto ... [truncated from 1972 chars] (1972 chars) |
-| Quali vaccini sono necessari per i bambini? (43 chars) | Non è ancora un caso completo... Solo alcuni punti che ho messo insieme... I governi non dovrebbero avere il diritto di intervenire nelle decisioni sanitarie che i genitori prendono per i loro figli ... [truncated from 5135 chars] (5135 chars) |
-| I test standardizzati migliorano l'istruzione? (46 chars) | Risolto: Il SAT, l'ACT e altri test standardizzati forniscono maggiori informazioni sulla preparazione di uno studente delle superiori per l'istruzione in college e università di élite ... [truncated from 4640 chars] (4640 chars) |
-| L'eutanasia o il suicidio assistito dovrebbero essere legali? (61 chars) | Nella tua risposta, citate il Giuramento di Ippocrate come motivo per cui il suicidio assistito dai medici dovrebbe rimanere illegale e affermate che tutta la medicina in questo paese ... [truncated from 7434 chars] (7434 chars) |
+| È utile fare i compiti a casa? (30 chars) | Prima di tutto, ci sono tre argomenti a favore del perché i compiti a casa sono eccellenti e dovrebbero continuare nelle scuole moderne. 1. I compiti aiutano gli studenti che imparano facendo. È generalmente accettato che ci ... [truncated 225 chars](4034 chars) |
+| È giusto che i farmaci da prescrizione siano pubblicizzati direttamente ai consumatori? (87 chars) | Molti annunci pubblicitari non includono informazioni sufficienti su quanto bene funzionano i farmaci. Ad esempio, Lunesta viene pubblicizzato da una falena che vola attraverso una finestra della camera da letto, sopra una pe ... [truncated 225 chars](1972 chars) |
+| Quali vaccini sono necessari per i bambini? (43 chars) | Non è ancora un caso completo... Solo alcuni punti che ho messo insieme... I governi non dovrebbero avere il diritto di intervenire nelle decisioni sanitarie che i genitori prendono per i loro figli. Secondo un sondaggio del ... [truncated 225 chars](5135 chars) |
+| L'aborto dovrebbe essere legale? (32 chars) | L'aborto dovrebbe essere legale poiché la personalità giuridica inizia dopo che il feto diventa vitale o dopo la nascita, non al momento del concepimento. Secondo la Corte Suprema degli Stati Uniti, una persona inizia a conta ... [truncated 225 chars](353 chars) |
+| I test standardizzati migliorano l'istruzione? (46 chars) | Risolto: Il SAT, l'ACT e altri test standardizzati forniscono maggiori informazioni sulla preparazione di uno studente delle superiori per l'istruzione in college e università di élite rispetto al voto di diploma (GPA) e quin ... [truncated 225 chars](4640 chars) |
 
 ## Dataset Information
 

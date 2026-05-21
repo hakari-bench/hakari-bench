@@ -83,11 +83,11 @@ generation seeds.
 
 | Query | Positive document |
 | --- | --- |
-| Pinsel (6 chars) | Unbekannt loew-Cornell Schaumstoff Pinsel 20/pkg-2-inch Breite, andere, Mehrfarbig (82 chars) |
-| Bilder, Poster, Kunstdrucke & Skulpturen (40 chars) | Luckies of London Weltkarte zum Rubbeln, Poster Delux Edition – Ideales Geschenk für Reiseliebhaber – Rubbeln Sie sich Ihren Weg um die Welt (140 chars) |
-| Stifte (6 chars) | Derwent Coloursoft Glatte leuchtende Farbstifte in Metalldose, 24 Stifte (72 chars) |
-| Teppiche, Dämm- & Schutzmatten (30 chars) | Ottomanson Teppich, Hundert Dollar (100 US-Dollar), rutschfest, 55,9 x 134,3 cm, Mehrfarbig Rutschfeste Unterseite; maschinenwaschbar, flach trocknen; Größe: 22 x 53;-Serie werden mit Nylon Konstruktion Flor, Boden und schmutzabweisend, einfach zu saugen tiefflor (263 chars) |
-| Spielzeug (9 chars) | The Beadsmith Bead Design Brett zum Aufreihen von Perlen, mit Grauer Beflockung und Deckel, 23 x 33 cm (102 chars) |
+| Minen, Patronen & Tintenlöscher (31 chars) | Noodler's Tinte - 90 ml - Schwarz (33 chars) |
+| Handwerkzeuge (13 chars) | AFA Tooling - (4 Pcs) Radio Removal Tool, OEM: 1C0-051-530 - Wird nicht brechen oder biegen (91 chars) |
+| Stick- & Nähgarn (16 chars) | Clover Stickwerkzeug clover needlecraft this old art of embroidery using a fine hook on a fine cloth tightly stretched in a frame called tambour is reborn with kantan couture bead embroidery tool. basic techniques with this t ... [truncated 225 chars](321 chars) |
+| Töpferei (8 chars) | Makin's Clay Tonpistole, Mehrfarbig (35 chars) |
+| Tafeln (6 chars) | Sculpey S2 Original-Polymer Clay 1,75 Pounds/Pkg (48 chars) |
 
 ## Dataset Information
 

@@ -59,11 +59,11 @@ snippets answer the same product question.
 
 | Query | Positive document |
 | --- | --- |
-| la sonda mide temperatura y humedad o solo la temperatura? (`Q108`, 58 chars, BM25 rank 5) | Sí. Este termómetro adicionalmente mide la humedad. (`C287`, 51 chars) |
-| ¿son dos unidades cómo se muestra en la foto o solo es una unidad? (`Q48`, 66 chars, BM25 rank 99) | Sí. Un cliente ha dicho que vienen 2 cristales en el paquete. (`C1690`, 61 chars) |
-| ¿sirve para conservar los puros? (`Q159`, 32 chars, BM25 rank 88) | Sí. Un cliente ha dicho que protege los cigarrillos y los mantiene con la humedad correcta. (`C1356`, 91 chars) |
-| ¿es plata de verdad o se pone feo? (`Q62`, 34 chars, BM25 rank 2) | Sí. Toda la parte metálica es de plata esterlina. (`C477`, 49 chars) |
-| el mango es de acero inoxidable bueno , de 18/8 ? (`Q26`, 49 chars, BM25 rank 100) | No. Un cliente ha dicho que son de plástico. (`C169`, 44 chars) |
+| el pack de 3 cintas, ¿es una de cada tamaño o las 3 del mismo tamaño? (69 chars) | El paquete contiene 3 piezas de 120 cm de largo. (48 chars) |
+| que son tallas grandes o justas? (32 chars) | Son de talla ajustada moldeando la curvatura del cuerpo. (56 chars) |
+| és el modelo acústico o electro acústico? (41 chars) | Este producto es una guitarra electroacústica. (46 chars) |
+| como se que tamaño pedir,? (26 chars) | Un cliente ha dicho que recomienda medir el diámetro de la muñeca como referencia. (82 chars) |
+| si compro un pack vendran 12 unidades? (38 chars) | Sí. El paquete incluye 12 unidades. (35 chars) |
 
 ## Dataset Information
 

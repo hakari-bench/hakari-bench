@@ -47,11 +47,11 @@ surface terms without answering it.
 
 | Query | Positive document |
 | --- | --- |
-| Quale sistema sanitario fornisce a tutti i cittadini e residenti un accesso uguale ai servizi sanitari? (103 chars) | L'assistenza sanitaria universale, nota anche come copertura sanitaria universale, si riferisce a un sistema sanitario che garantisce assistenza sanitaria e protezione finanziaria a tutti i cittadini di un paese specifico. (222 chars) |
-| Cosa è giusto in ambito sanitario? (34 chars) | Il diritto umano alla salute significa che tutti hanno il diritto al più alto livello di salute fisica e mentale raggiungibile, che include l'accesso a tutti i servizi medici, igiene, cibo sufficiente, alloggi dignitosi, condizioni di lavoro sane e un ambiente pulito. (268 chars) |
-| Meteo a Oran (12 chars) | Meteo a Oran ad ottobre 2017. Aspettati temperature massime diurne di 25°C all'ombra con una media di 7 ore di sole al giorno ad Oran in ottobre ... [truncated from 461 chars] (461 chars) |
-| Per quanto tempo è necessario conservare i documenti finanziari? (64 chars) | Cronologia dei registri finanziari; Tipo di registro, per quanto tempo conservare e perché: Imposte, Dichiarazioni dei redditi, Assegni annullati/ricevute ... [truncated from 337 chars] (337 chars) |
-| Come funzionano le spese condominiali? (38 chars) | Le spese condominiali possono aumentare significativamente il costo complessivo di possedere una proprietà e possono anche crescere nel tempo. Ecco cosa cercare. Le associazioni di proprietari di case possono essere un vantaggio, ma devi bilanciare i costi e i benefici. (270 chars) |
+| Cos'è la sindrome da ruminazione? (33 chars) | Sindrome da Ruminazione. La sindrome da ruminazione, nota anche come mericismo, è un tipo di disturbo alimentare non altrimenti specificato che provoca la rigurgitazione del cibo. Sebbene non sia identificata come un disturbo ... [truncated 225 chars](326 chars) |
+| Chi ha cantato "Ecco che vado di nuovo"? (40 chars) | Per altri significati, vedi Here I Go Again (disambiguazione). Here I Go Again è una canzone del gruppo rock britannico Whitesnake. Pubblicata originariamente nell'album del 1982 Saints & Sinners, la canzone è stata registrat ... [truncated 225 chars](346 chars) |
+| Chi interpreta Cameron Boyce in "Liv e Maddie"? (47 chars) | Preparatevi a sbellicarvi dalle risate, ragazzi. In un'anteprima esclusiva dell'episodio del 19 aprile di 'Liv & Maddie' intitolato 'Prom-A-Rooney.' Ovviamente. Nel divertentissimo clip, vediamo Cameron Boyce, il protagonista ... [truncated 225 chars](355 chars) |
+| Dove si trovano la maggior parte dei grandi deserti della Terra? (64 chars) | Gli altri deserti della Terra si trovano al di fuori delle aree polari. Il più grande è il deserto del Sahara, un deserto subtropicale nell'Africa settentrionale. (162 chars) |
+| Che significa "copper" per un poliziotto? (41 chars) | Secondo le attuali scoperte, sembra che "copper" (un poliziotto, letteralmente 'colui che arresta') preceda "cop" (usato sia come verbo per arrestare, sia come sostantivo per indicare un poliziotto). È possibile che le spille ... [truncated 225 chars](371 chars) |
 
 ## Dataset Information
 

@@ -52,9 +52,11 @@ correct entity active at the requested time, and add nearby-date distractors.
 
 | Query | Positive document |
 | --- | --- |
-| Question: Who was the head of Romania in Sep, 1938? Facts: Ion G. Duca is the head of the government of Romania from Nov, 1933 to Dec, 1933 ... [truncated from 4822 chars] (`TR2-q-163`, BM25 rank 100) | Miron Cristea (`TR2-d-168`, 13 chars) |
-| Question: Who was the head coach of the team HNK Rijeka in Jul, 2022? Facts: Goran Tomic is the head coach ... [truncated from 378 chars] (`TR2-q-28`, BM25 rank 100) | Fausto Budicin (`TR2-d-28`, 14 chars) |
-| Question: Which team did Glynn Snodin play for in Apr, 1988? Facts: Glynn Snodin plays for Barnsley F.C. ... [truncated from 672 chars] (`TR2-q-6`, BM25 rank 6) | Leeds United F.C. (`TR2-d-5`, 17 chars) |
+| Question: Which position did Patricia de Lille hold in Sep, 2015? Facts: Patricia de Lille holds the position of Member of Provincial Parliament of Western Cape from Sep, 2010 to May, 2011. Patricia de Lille holds the positio ... [truncated 225 chars](398 chars) | mayor of Cape Town (18 chars) |
+| Question: Which position did Lord Douglas Gordon-Hallyburton hold in Oct, 1833? Facts: Lord Douglas Gordon-Hallyburton holds the position of Member of the 13th Parliament of the United Kingdom from Jul, 1837 to Jun, 1841. Lor ... [truncated 225 chars](632 chars) | Member of the 11th Parliament of the United Kingdom (51 chars) |
+| Question: Who was the head of Russia in Jul, 1999? Facts: Mikhail Kasyanov is the head of the government of Russia from May, 2000 to Feb, 2004. Viktor Khristenko is the head of the government of Russia from Feb, 2004 to Mar, ... [truncated 225 chars](1190 chars) | Sergei Stepashin (16 chars) |
+| Question: Which team did Glynn Snodin play for in Jan, 1992? Facts: Glynn Snodin plays for Heart of Midlothian F.C. from Jan, 1992 to Jan, 1993. Glynn Snodin plays for Oldham Athletic A.F.C. from Jan, 1991 to Jan, 1991. Glynn ... [truncated 225 chars](672 chars) | Leeds United F.C. (17 chars) |
+| Question: Who was the head of Romania in May, 1935? Facts: Take Ionescu is the head of the government of Romania from Dec, 1921 to Jan, 1922. Nicolae Rădescu is the head of the government of Romania from Dec, 1944 to Feb, 194 ... [truncated 225 chars](4822 chars) | Gheorghe Tătărescu (18 chars) |
 
 ## Dataset Information
 

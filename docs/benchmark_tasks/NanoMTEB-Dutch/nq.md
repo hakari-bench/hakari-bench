@@ -82,11 +82,11 @@ negatives should share the entity or topic but not answer the asked relation.
 
 | Query | Positive document |
 | --- | --- |
-| wie heeft alle dieren ter wereld een naam gegeven (49 chars) | De Mens Geef Namen Aan Al De Dieren De muziek van ... teksten zijn geïnspireerd op het Bijbelse boek Genesis, verzen 2:19-20, waarin Adam de dieren... [truncated from 708 chars] (708 chars) |
-| Wie is verantwoordelijk voor het introduceren van het principe van uniformitarianisme? (86 chars) | Uniformitarianisme ... Abraham Gottlob Werner ... James Hutton ... [truncated from 552 chars] (552 chars) |
-| wanneer komt het nieuwe seizoen van lost in space uit (53 chars) | Lost in Space (televisieserie, 2018) De serie werd op 13 april 2018 uitgebracht op Netflix... [truncated from 296 chars] (296 chars) |
-| hoeveel seizoenen van from dusk till dawn zijn er (49 chars) | From Dusk till Dawn: The Series Op 26 oktober 2015 werd het verlengd voor een derde seizoen... [truncated from 317 chars] (317 chars) |
-| naar welke universiteit gaan alle personages in gossip girl (59 chars) | Gossip Girl Het derde seizoen concentreert zich op Blair, Dan en Vanessa die naar de New York University gaan... [truncated from 617 chars] (617 chars) |
+| Wanneer is Chinees Nieuwjaar en welk jaar is het (48 chars) | Chinees Nieuwjaar Chinees Nieuwjaar,[a][2] ook wel bekend als het Lentefeest in modern China,[b] is een belangrijk Chinees festival dat wordt gevierd bij de overgang van de traditionele lunisolaire Chinese kalender. Het is ee ... [truncated 225 chars](620 chars) |
+| wat is het verschil tussen ron en mon (37 chars) | Octaangetal Een ander type octaangetal, Motor Octaangetal (MON) genaamd, wordt bepaald bij een motorsnelheid van 900 tpm in plaats van de 600 tpm voor RON.[1] Bij MON-tests wordt een vergelijkbare testmotor gebruikt als bij R ... [truncated 225 chars](682 chars) |
+| aan wie behoorde puerto rico voordat het tot de VS behoorde (59 chars) | Puerto Rico Oorspronkelijk bewoond door de inheemse Taíno-bevolking, werd het eiland in 1493 tijdens zijn tweede reis door Christoffel Columbus voor Spanje geclaimd. Later onderging het invasiepogingen van de Fransen, Nederla ... [truncated 225 chars](1017 chars) |
+| Wie neemt de beslissingen over wat er geproduceerd wordt in een markteconomie? (78 chars) | Markteconomie Een markteconomie is een economisch systeem waarin beslissingen over investeringen, productie en distributie gebaseerd zijn op het samenspel van vraag en aanbod,[1] wat de prijzen van goederen en diensten bepaal ... [truncated 225 chars](649 chars) |
+| wie is de man die vanuit de ruimte sprong (41 chars) | Felix Baumgartner Felix Baumgartner (Duits: [ˈfeːlɪks ˈbaʊ̯mˌɡaɐ̯tnɐ]; geboren 20 april 1969) is een Oostenrijkse parachutist, waaghals en BASE-jumper.[1] Hij staat vooral bekend om zijn sprong naar de aarde vanaf een heliumb ... [truncated 225 chars](994 chars) |
 
 ## Dataset Information
 

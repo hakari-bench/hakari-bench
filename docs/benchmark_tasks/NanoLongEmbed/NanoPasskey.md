@@ -64,15 +64,13 @@ identifier, and each positive should contain exactly the requested association.
 
 ## Example Data
 
-Examples below are deterministic query-positive samples from the Nano split.
-
 | Query | Positive document |
 | --- | --- |
-| what is the passkey for Cooper McCann? (`ctx256_query9`, 38 chars, BM25 rank 1) | The grass is green. The sky is blue. Cooper McCann's pass key is 6718. Remember it. 6718 is the pass key for Cooper McCann. The sun is yellow. Here we go. There and back again. ... (`ctx256_doc9`, 874 chars) |
-| what is the passkey for Avery Hicks? (`ctx256_query68`, 36 chars, BM25 rank 1) | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. Avery Hicks's pass key is 4559. Remember it. 4559 is the pass key for Avery Hicks. ... (`ctx256_doc68`, 870 chars) |
-| what is the passkey for Marlon Parra? (`ctx256_query57`, 37 chars, BM25 rank 2) | Marlon Parra's pass key is 8181. Remember it. 8181 is the pass key for Marlon Parra. The grass is green. The sky is blue. The sun is yellow. ... (`ctx256_doc57`, 874 chars) |
-| what is the passkey for Zyaire Sweeney? (`ctx256_query73`, 39 chars, BM25 rank 1) | The grass is green. The sky is blue. The sun is yellow. Here we go. Zyaire Sweeney's pass key is 5230. Remember it. 5230 is the pass key for Zyaire Sweeney. ... (`ctx256_doc73`, 876 chars) |
-| what is the passkey for Kairo Gordon? (`ctx512_query79`, 37 chars, BM25 rank 2) | The grass is green. The sky is blue. The sun is yellow. Here we go. Kairo Gordon's pass key is 41661. Remember it. 41661 is the pass key for Kairo Gordon. ... [truncated from 1784 chars] (`ctx512_doc79`) |
+| what is the passkey for Ronan Day? (34 chars) | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. Ronan Da ... [truncated 225 chars](1778 chars) |
+| what is the passkey for Flora Wu? (33 chars) | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun ... [truncated 225 chars](3598 chars) |
+| what is the passkey for Summer Walton? (38 chars) | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun ... [truncated 225 chars](3608 chars) |
+| what is the passkey for Cassidy Wolf? (37 chars) | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun ... [truncated 225 chars](1784 chars) |
+| what is the passkey for Archer Peralta? (39 chars) | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun ... [truncated 225 chars](878 chars) |
 
 ## Dataset Information
 

@@ -53,9 +53,11 @@ from adjacent events. Include distractors from the same entity timeline.
 
 | Query | Positive document |
 | --- | --- |
-| Who was the head of Romania before Mihai Razvan Ungureanu? (`TR3-q-163`, 58 chars, BM25 rank 100) | Emil Boc (`TR3-d-150`, 8 chars) |
-| Which employer did Alois Musil work for before University of Vienna? (`TR3-q-28`, 68 chars, BM25 rank 100) | Saints Cyril and Methodius Faculty of Theology of Palacky University, Olomouc (`TR3-d-36`, 77 chars) |
-| Which employer did Eduard Winkelmann work for before Tallinn Cathedral School? (`TR3-q-6`, 78 chars, BM25 rank 100) | Monumenta Germaniae Historica (`TR3-d-12`, 29 chars) |
+| Who was the chair of Technical University of Munich before Wolfgang A. Herrmann? (80 chars) | Otto Meitinger (14 chars) |
+| Who was the head of Romania before Alexandru G. Golescu? (56 chars) | Dimitrie Ghica (14 chars) |
+| Which position did Lord Douglas Gordon-Hallyburton hold before Member of the 13th Parliament of the United Kingdom? (115 chars) | Member of the 12th Parliament of the United Kingdom (51 chars) |
+| Which employer did Eduard Winkelmann work for after Imperial University of Dorpat? (82 chars) | University of Bern (18 chars) |
+| Who was the head of Romania after Adrian Năstase? (49 chars) | Călin Popescu-Tăriceanu (23 chars) |
 
 ## Dataset Information
 

@@ -75,11 +75,11 @@ alone.
 
 | Query | Positive document |
 | --- | --- |
-| Wie kann ich meine Mathekenntnisse verbessern? (46 chars) | Wie kann ich meine Mathematikkenntnisse verbessern? (51 chars) |
-| Wie werde ich Schuldgefühle los? (32 chars) | Wie kann man am besten mit Schuldgefühlen umgehen? (50 chars) |
-| Wie kann ich Depressionen bewältigen, ohne psychologische Unterstützung in Anspruch zu nehmen? (94 chars) | Hat jemand die Depression allein überwunden, ohne fremde Hilfe? (63 chars) |
-| Wie wird der IS finanziert und wie operiert er? (47 chars) | Wie finanziert sich der IS? (27 chars) |
-| Wie finde ich heraus, welche beruflichen Interessen ich habe? (61 chars) | Wie finde ich heraus, welche beruflichen Interessen ich habe? (61 chars) |
+| Ist es in Ordnung, über seine eigenen Witze zu lachen? (54 chars) | Ist es merkwürdig, über meine eigenen Witze zu lachen? (54 chars) |
+| Welche ist die beste Lüge, die du je erzählt hast? (50 chars) | Welche ist die beste Lüge, die du je erzählt hast? (50 chars) |
+| Warum schlägt Quora mir häufig Antworten vor, die Donald Trump kritisieren? (75 chars) | Warum gibt es auf Quora nur voreingenommene Antworten zu Fragen über Donald Trump? (82 chars) |
+| Wie werde ich körperlich fit? (29 chars) | Wie kann ich körperlich fit werden? (35 chars) |
+| Wie funktioniert ein Quanten-Satellit? (38 chars) | Wie funktioniert ein Quanten-Satellit und welche Hauptanwendungen hätte er? (75 chars) |
 
 ## Dataset Information
 

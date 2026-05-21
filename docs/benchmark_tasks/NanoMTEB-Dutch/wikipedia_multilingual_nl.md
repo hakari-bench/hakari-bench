@@ -74,11 +74,11 @@ answer the requested relation.
 
 | Query | Positive document |
 | --- | --- |
-| Welke mortieren gebruikt de Nederlandse landmacht? (50 chars) | De landmacht heeft naast de PzH2000NL, ook nog mortieren van 60, 81 en 120 mm in gebruik... [truncated from 436 chars] (436 chars) |
-| Waarom genoten de moetazilieten in de 19e eeuw sympathie van westerse geleerden? (80 chars) | Vanaf de 19e eeuw heeft het wel weer de aandacht getrokken van soennitische theologen... [truncated from 520 chars] (520 chars) |
-| Wat was de federale staatsschuld van België eind oktober 2014? (62 chars) | In België bedroeg de federale staatsschuld eind oktober 2014 380 miljard euro... [truncated from 375 chars] (375 chars) |
-| Welke overeenkomst werd in 1985 in Wenen ondertekend door de Sovjet-Unie en het IAEA? (85 chars) | 21 - In Wenen tekenen de Sovjet-Unie en het IAEA een overeenkomst... [truncated from 250 chars] (250 chars) |
-| Welke typen locomotieven heeft Lineas in zijn vloot? (52 chars) | Lineas beschikt over meerdere typen locomotieven, zowel elektrisch als diesel... [truncated from 433 chars] (433 chars) |
+| Wat is een "mandiel" en wie dragen het? (39 chars) | De druzenvrouwen dragen een "mandiel" (transparante losse witte sluier) vooral in het bijzijn van religieuze personen. Zij worden in alle aspecten als gelijkwaardig aan de mannen beschouwd. Het is hen mogelijk deel te hebben ... [truncated 225 chars](254 chars) |
+| Wat zijn de voorwaarden voor het uitvoeren van een t-toets bij twee steekproeven? (81 chars) | In het geval van twee steekproeven dienen beide steekproeven uit een normale verdeling te komen. De twee steekproeven moeten óf onafhankelijk van elkaar zijn, óf zogenaamd gepaard zijn. In het geval van twee onafhankelijke st ... [truncated 225 chars](385 chars) |
+| Welke methoden worden genoemd voor pijnbestrijding bij pancreatitis? (68 chars) | Pijnbestrijding via orale inname van pijnstillers, de (tijdelijke) verbranding -door alcohol- van de zenuwen rond het pancreas, een geïmplanteerde morfinepomp. (159 chars) |
+| Wie was Bongo in Apenheul? (26 chars) | Bongo, lange tijd het boegbeeld van Apenheul en stamvader van veel gorilla's in Europese dierentuinen. (102 chars) |
+| Wanneer vond de laatste uitzending van de draadomroep in Delft plaats? (70 chars) | 31 - Laatste uitzending van de draadomroep in Delft, het laatste district waar dit systeem nog operationeel was. (112 chars) |
 
 ## Dataset Information
 

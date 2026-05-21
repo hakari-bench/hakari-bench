@@ -76,11 +76,11 @@ different method or contribution.
 
 | Query | Positive document |
 | --- | --- |
-| Een overzicht van energiesystemen met meerdere bronnen (54 chars) | Zelfvoorzienende sensornetwerken aangedreven door omgevingsenergie... [truncated from 1484 chars] (1484 chars) |
-| Manipulatie van de levering van blokken en transacties in Bitcoin (65 chars) | Dubbele uitgaven bij snelle betalingen in bitcoin... [truncated from 1788 chars] (1788 chars) |
-| Gekoppeld Substraat Geïntegreerde Golfgeleiderfilters met Verbeterde Stopbandprestaties (87 chars) | Meerlaagse substraat geïntegreerde golfgeleider (MSIW) elliptisch filter... [truncated from 516 chars] (516 chars) |
-| Tien eenvoudige regels voor het ontwikkelen van bruikbare software in de computationele biologie (96 chars) | Sociale codering in GitHub: transparantie en samenwerking in een open software-repository... [truncated from 1108 chars] (1108 chars) |
-| Autonome onderwater grijping met behulp van multi-view laser reconstructie (74 chars) | Helder onderwaterzicht... [truncated from 994 chars] (994 chars) |
+| Een geïntegreerd raamwerk voor het delven van logbestanden voor systeembeheer. (78 chars) | Machine learning in geautomatiseerde tekstcategorisering De geautomatiseerde categorisering (of classificatie) van teksten in vooraf gedefinieerde categorieën heeft de afgelopen 10 jaar een explosieve groei doorgemaakt, te da ... [truncated 225 chars](1249 chars) |
+| Onderwerp-Relevantiekaart: Visualisatie voor Verbetering van het Begrip van Zoekresultaten (90 chars) | Ontwerpen voor explorerend zoeken op touchscreen-apparaten Explorerend zoeken confronteert gebruikers met uitdagingen bij het uitdrukken van zoekintenties, aangezien huidige zoekinterfaces het onderzoeken van resultatenlijste ... [truncated 225 chars](1428 chars) |
+| Algoritmische Brokjes in Contentlevering (40 chars) | Consistente Hashing en Willekeurige Bomen: Gedistribueerde Cachingprotocollen voor het Verminderen van Hotspots op het World Wide Web We beschrijven een familie van cachingprotocollen voor gedistribueerde netwerken die kunnen ... [truncated 225 chars](1474 chars) |
+| De Enactieve Benadering van Architectonische Ervaring: Een Neurofysiologisch Perspectief op Embodiment, Motivatie en Affordances (128 chars) | Affectieve uitkomsten van virtual reality exposuretherapie voor angst en specifieke fobieën: een meta-analyse. Virtual reality exposuretherapie (VRET) is een steeds vaker toegepaste behandeling voor angst en specifieke fobieë ... [truncated 225 chars](862 chars) |
+| PD-regeling met online zwaartekrachtcompensatie voor robots met elastische gewrichten: Theorie en experimenten (110 chars) | Een op passief gedrag gebaseerde Cartesische impedantieregeling voor robots met flexibele gewrichten - deel I: koppelterugkoppeling en zwaartekrachtcompensatie In dit artikel wordt een nieuwe aanpak gepresenteerd voor het pro ... [truncated 225 chars](912 chars) |
 
 ## Dataset Information
 

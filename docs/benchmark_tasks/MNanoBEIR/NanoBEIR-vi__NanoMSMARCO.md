@@ -43,8 +43,11 @@ hard negatives that do not answer the question.
 
 | Query | Positive document |
 | --- | --- |
-| modulus có nghĩa là gì (22 chars) | Toán tử mod trong các ngôn ngữ lập trình đơn giản là phần dư. Ví dụ, 17 mod 3 = 2 vì 17 / 3 = 5 dư 2 ... [truncated from 483 chars] (483 chars) |
-| có những loại động vật nào ở sở thú Franklin Park (49 chars) | Sở thú Franklin Park chính thức mở cửa cho công chúng vào ngày 4 tháng 10 năm 1912. Theo kế hoạch của Arthur A. Shurtleff, sở thú mới ... [truncated from 292 chars] (292 chars) |
+| hội chứng suy nghĩ lặp lại là gì (32 chars) | Hội chứng nhai lại. Hội chứng nhai lại, còn được gọi là Merycism, là một loại rối loạn ăn uống không được xác định cụ thể nào khác, gây ra việc trào ngược thức ăn. Mặc dù nó không được xác định là một rối loạn ăn uống cụ thể ... [truncated 225 chars](296 chars) |
+| ai đã hát bài here i go again (29 chars) | Đối với các mục đích khác, xem Here I Go Again (phân định). Here I Go Again là một bài hát của ban nhạc rock người Anh Whitesnake. Ban đầu được phát hành trong album năm 1982 của họ, Saints & Sinners, bài hát đã được thu âm l ... [truncated 225 chars](355 chars) |
+| ai là người mà cameron boyce đóng trong liv và maddie (53 chars) | Chuẩn bị cho những tiếng cười nghiêng ngả, các bạn ơi. Trong một đoạn clip độc quyền của tập phim ngày 19 tháng 4 của Liv & Maddie có tên “Prom-A-Rooney.” Rõ ràng rồi. Trong đoạn clip hài hước này, chúng ta thấy ngôi sao Jess ... [truncated 225 chars](349 chars) |
+| các sa mạc lớn của trái đất chủ yếu xảy ra ở đâu (48 chars) | Phần còn lại của các sa mạc trên Trái Đất nằm ngoài các khu vực cực. Sa mạc lớn nhất là Sa mạc Sahara, một sa mạc cận nhiệt đới ở Bắc Phi. (138 chars) |
+| nghĩa của từ "copper" trong tiếng lóng chỉ cảnh sát (51 chars) | Dựa trên những phát hiện hiện tại, có vẻ như từ "copper" (một cảnh sát, nghĩa đen là 'người bắt giữ') có trước từ "cop" (có thể được sử dụng bằng lời và có nghĩa là bắt giữ hoặc khi là danh từ có nghĩa là một cảnh sát). Có th ... [truncated 225 chars](408 chars) |
 
 ## Dataset Information
 

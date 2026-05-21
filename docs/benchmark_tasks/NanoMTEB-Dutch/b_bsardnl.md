@@ -86,11 +86,11 @@ article-level legal grounding.
 
 | Query | Positive document |
 | --- | --- |
-| Hoe kan een studentenhuurcontract in onderling overleg worden beeindigd in Brussel? (83 chars) | Art. 253. - Toepassingsgebied § 1. Dit hoofdstuk is van toepassing op de studenten- woninghuurovereenkomst, voor zover de partijen instemmen met de toepassing ... [truncated from 1449 chars] (1449 chars) |
-| Heb ik recht op juridische bijstand, moet ik dan gerechtskosten betalen? (72 chars) | Art. 508/1. Voor de toepassing van dit boek wordt verstaan onder : 1° juridische eerstelijnsbijstand : de juridische bijstand die verleend ... [truncated from 894 chars] (894 chars) |
-| Kan mijn verhuurder de huurovereenkomst beeindigen om de woning die ik in Brussel bewoon te verkopen? (101 chars) | Art. 238. - Huurovereenkomsten van korte duur In afwijking van artikel 237, § 1, kan een huurovereenkomst schriftelijk worden ... [truncated from 2116 chars] (2116 chars) |
-| Kan de eigenaar de huur indexeren in Brussel? (45 chars) | Art. 224. - Indexatie en herziening van de lasten § 1. Indien zulks niet uitdrukkelijk is uitgesloten en op voorwaarde ... [truncated from 889 chars] (889 chars) |
-| Ik heb een procedure in een ander gerechtelijk arrondissement, wat moet ik doen? (80 chars) | Art. 666. Wanneer vermoed wordt dat het actief van een faillissement ontoereikend zal zijn om de eerste vereffeningskosten te dekken, beveelt ... [truncated from 449 chars] (449 chars) |
+| Ik huur het hele jaar door een caravan op een camping. Welke regels zijn van toepassing op mijn huurcontract in Brussel? (120 chars) | Art. 234. - Beginselen Dit hoofdstuk is van toepassing op huurovereenkomsten betreffende een woning die de huurder, met uitdrukkelijke of stilzwijgende toestemming van de verhuurder, vanaf de ingenottreding tot zijn hoofdverb ... [truncated 225 chars](1287 chars) |
+| Ik heb een testament gemaakt. Kan ik het wijzigen? (50 chars) | Art. 969. Een testament kan eigenhandig, of bij openbare akte of in de vorm van het internationaal testament, gemaakt worden. (125 chars) |
+| Moet ik de gerechtskosten betalen als ik een beslissing van een sociale zekerheidsinstelling betwist? (101 chars) | Art. 1017. Tenzij bijzondere wetten anders bepalen, verwijst ieder eindvonnis, zelfs ambtshalve, de in het ongelijk gestelde partij in de kosten, onverminderd de overeenkomst tussen partijen, die het eventueel bekrachtigt. Ni ... [truncated 225 chars](1690 chars) |
+| Kan ik in Brussel de nodige reparaties zelf uitvoeren als mijn verhuurder deze niet doet? (89 chars) | Art. 223. - Herstellingen en onderhoud § 1. De huurder is gehouden tot de huurherstellingen, met uitzondering van die veroorzaakt door ouderdom of overmacht, en van de geringe herstellingen tot onderhoud. De huurherstellingen ... [truncated 225 chars](632 chars) |
+| Hoe lees en begrijp ik mijn waterfactuur in Wallonië? (53 chars) | Art. R270bis8. Overlegging van de factuur De jaarlijkse regularisatiefactuur vermeldt hoe dan ook : - de naam en het adres van de bestemmeling; - de plaats van levering; - een historiek van het verbruik, met een histogram van ... [truncated 225 chars](1242 chars) |
 
 ## Dataset Information
 

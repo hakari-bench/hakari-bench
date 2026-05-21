@@ -61,11 +61,11 @@ seeds.
 
 | Query | Positive document |
 | --- | --- |
-| Quel était le plus long métrage de l’année 1995 ? (`Q1350`, 49 chars, BM25 rank 100) | Toy Story (`D1302`, 9 chars) |
-| Quel film a été réalisé par Peter Jackson et est sorti en 2001 ? (`Q1367`, 64 chars, BM25 rank 100) | Le Seigneur des anneaux : La Communauté de l'anneau (`D324`, 51 chars) |
-| Quel est le plus long film de la série Matrix ? (`Q1587`, 47 chars, BM25 rank 2) | Matrix Reloaded (`D181`, 15 chars) |
-| Qui fut le réalisateur le plus âgé à remporter l’Oscar du meilleur directeur ? (`Q1685`, 78 chars, BM25 rank 100) | Clint Eastwood (`D1178`, 14 chars) |
-| Qui de Keith Richards et de Mick Jagger est plus âgé ? (`Q2227`, 54 chars, BM25 rank 1) | Mick Jagger (`D84`, 11 chars) |
+| Quel film du début des année 1970 est-il celui pour lequel Bruce Lee est le plus connu ? (88 chars) | Opération Dragon (16 chars) |
+| Quel acteur a joué Hans Solo et Indiana Jones ? (47 chars) | Harrison Ford (13 chars) |
+| Quel est le nom du tout premier film du réalisateur Kevin Smith ? (65 chars) | Clerks : Les Employés modèles (29 chars) |
+| Quel film de Star Trek a le moins rapporté ? (44 chars) | Star Trek : Nemesis (19 chars) |
+| Dans quel film de Major League ne figurait pas Charlie Sheen ? (62 chars) | Les Indians 3 (13 chars) |
 
 ## Dataset Information
 

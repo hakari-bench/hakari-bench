@@ -52,16 +52,13 @@ differing in population, intervention, outcome, or evidence type.
 
 ## Example Data
 
-Line breaks are shown as `<br>`. The character counts are the full query and
-document lengths before truncation.
-
-| IDs | Chars query / doc | BM25 rank | Query | Positive document |
-| --- | ---: | ---: | --- | --- |
-| `20` -> `3cicg45e` | 98 / 827 | 16 | are patients taking Angiotensin-converting enzyme inhibitors (ACE) at increased risk for COVID-19? | Effective Use of Angiotensin II in Coronavirus Disease 19-Associated Mixed Shock State: A Case Report<br><br>The rapid spread of Coronavirus Disease 2019 has sparked a search for effective therapies. The discovery that the virus binds the angiotensin-converting enzyme 2 receptor has led to investigation of the renin-angiotensin system for possible therapeutic targets ... [truncated] |
-| `22` -> `avqq659f` | 59 / 1630 | 79 | are cardiac complications likely in patients with COVID-19? | Association between Cardiovascular Burden and Requirement of Intensive Care among Patients with Mild COVID-19<br><br>Background: Information regarding the impact of cardiovascular disease on disease progression among patients with mild coronavirus disease 2019 is limited. Methods: This study evaluated the association of underlying CVD with disease progression in patients with mild COVID-19 ... [truncated] |
-| `30` -> `efk2jj50` | 49 / 1956 | 84 | is remdesivir an effective treatment for COVID-19 | The First 75 Days of Novel Coronavirus (SARS-CoV-2) Outbreak: Recent Advances, Prevention, and Treatment<br><br>The recent severe acute respiratory syndrome coronavirus 2 outbreak has engulfed an unprepared world amidst a festive season. The zoonotic SARS-CoV-2, believed to have originated from infected bats, is the seventh member of enveloped RNA coronavirus ... [truncated] |
-| `5` -> `b0a0s2fs` | 77 / 1304 | 36 | what drugs have been active against SARS-CoV or SARS-CoV-2 in animal studies? | Feasibility of Known RNA Polymerase Inhibitors as Anti-SARS-CoV-2 Drugs<br><br>Coronaviruses are positive-stranded RNA viruses that infect humans and animals. Infection by CoVs such as HCoV-229E, -NL63, -OC43 and -HKU1 leads to the common cold. However, CoVs such as SARS-CoV, MERS-CoV, and SARS-CoV-2 lead to severe ... [truncated] |
-| `36` -> `2x4y403o` | 54 / 1098 | 66 | What is the protein structure of the SARS-CoV-2 spike? | Recombinant SARS-CoV-2 spike S1-Fc fusion protein induced high levels of neutralizing responses in nonhuman primates<br><br>Abstract The COVID-19 outbreak has become a global pandemic responsible for over 2,000,000 confirmed cases and over 126,000 deaths worldwide. In this study, we examined the immunogenicity of CHO-expressed recombinant SARS-CoV-2 S1-Fc ... [truncated] |
+| Query | Positive document |
+| --- | --- |
+| what evidence is there for dexamethasone as a treatment for COVID-19? (69 chars) | The Combination of Tocilizumab and Methylprednisolone Along With Initial Lung Recruitment Strategy in Coronavirus Disease 2019 Patients Requiring Mechanical Ventilation: A Series of 21 Consecutive Cases OBJECTIVE: To describe ... [truncated 225 chars](1757 chars) |
+| how long does coronavirus remain stable on surfaces? (53 chars) | Body fluids may contribute to human-to-human transmission of severe acute respiratory syndrome coronavirus 2: evidence and practical experience BACKGROUND: In December 2019, an unbelievable outbreak of pneumonia associated wi ... [truncated 225 chars](1172 chars) |
+| has social distancing had an impact on slowing the spread of COVID-19? (70 chars) | Increased Detection coupled with Social Distancing and Health Capacity Planning Reduce the Burden of COVID-19 Cases and Fatalities: A Proof of Concept Study using a Stochastic Computational Simulation Model Objective: In abse ... [truncated 225 chars](1576 chars) |
+| are there serological tests that detect antibodies to coronavirus? (66 chars) | A Guide to COVID‐19: a global pandemic caused by the novel coronavirus SARS‐CoV‐2 The emergence of the SARS‐CoV‐2 strain of the human coronavirus has thrown the world into the midst of a new pandemic. In the human body, the v ... [truncated 225 chars](1084 chars) |
+| which biomarkers predict the severe clinical course of 2019-nCOV infection? (75 chars) | Clinical course and outcome of 107 patients infected with the novel coronavirus, SARS-CoV-2, discharged from two hospitals in Wuhan, China BACKGROUND: In December 2019, coronavirus disease 2019 (COVID-19) outbreak was reporte ... [truncated 225 chars](1932 chars) |
 
 ## Dataset Information
 

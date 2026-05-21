@@ -46,8 +46,11 @@ Hard negatives should discuss the same topic but not answer the specific aspect.
 
 | Query | Positive document |
 | --- | --- |
-| Giá trị của một bằng cấp đại học là gì? (39 chars) | Trong khi đối thủ của tôi lãng phí thời gian quý báu để tranh cãi rằng chi phí đại học là một trong những thứ đắt đỏ nhất mà con người sẽ "mua", tôi chỉ muốn chỉ ra rằng trong số n ... [truncated from 4178 chars] (4,178 chars) |
-| Học sinh có nên mặc đồng phục không? (36 chars) | Đồng phục có những lợi ích thực tiễn khi học sinh ở ngoài tòa nhà trường học. Việc dễ dàng nhận diện với một tổ chức cụ thể có thể khiến học sinh nhận thức hơn về hành vi của họ kh ... [truncated from 511 chars] (511 chars) |
+| Bài tập về nhà có lợi không? (28 chars) | Đầu tiên, có ba lý do tại sao bài tập về nhà là tuyệt vời và nên tiếp tục trong các trường học hiện đại. 1. Bài tập về nhà hỗ trợ những người học thực hành. Người ta thường chấp nhận rằng có ba loại người học: những người học ... [truncated 225 chars](3948 chars) |
+| Có nên quảng cáo thuốc theo toa trực tiếp đến người tiêu dùng không? (68 chars) | Nhiều quảng cáo không cung cấp đủ thông tin về hiệu quả của thuốc. Ví dụ, Lunesta được quảng cáo bằng hình ảnh một con bướm bay qua cửa sổ phòng ngủ, trên một người đang ngủ say. Thực tế, Lunesta giúp bệnh nhân ngủ nhanh hơn ... [truncated 225 chars](1324 chars) |
+| Có cần yêu cầu tiêm vắc xin nào cho trẻ em không? (49 chars) | Chưa phải là một trường hợp đầy đủ... Chỉ là một số điểm nhỏ mà tôi đã tổng hợp... Chính phủ không nên có quyền can thiệp vào các quyết định về sức khỏe mà cha mẹ đưa ra cho con cái của họ. 31% cha mẹ tin rằng họ nên có quyền ... [truncated 225 chars](3913 chars) |
+| Phá thai có nên hợp pháp không? (31 chars) | Nạo phá thai nên hợp pháp vì nhân cách bắt đầu khi thai nhi trở nên khả thi hoặc sau khi sinh, chứ không phải tại thời điểm thụ thai. Theo Tòa án Tối cao Hoa Kỳ, một người được tính tuổi khi họ ra khỏi bụng mẹ và hít thở oxy, ... [truncated 225 chars](284 chars) |
+| Các bài kiểm tra chuẩn hóa có cải thiện giáo dục không? (55 chars) | Đã giải quyết: SAT, ACT và các bài kiểm tra tiêu chuẩn khác cung cấp nhiều thông tin hơn về sự chuẩn bị của học sinh trung học cho giáo dục tại các trường cao đẳng và đại học elite hơn là GPA trung học, và do đó nên đóng vai ... [truncated 225 chars](4046 chars) |
 
 ## Dataset Information
 

@@ -50,11 +50,11 @@ terms but answer a different decision or jurisdictional issue.
 
 | Query | Positive document |
 | --- | --- |
-| Perché i grandi clienti preferiscono che l'appaltatore sia costituito in società prima di affidargli lavori? (108 chars) | Credono che riduca il rischio che Revenue Canada ti consideri un dipendente e li costringa a pagare una montagna di tasse, contributi EI, CPP e altro che avrebbero dovuto pagare ... [truncated from 1251 chars] (1251 chars) |
-| Qual è la differenza tra un collar strutturato e un collar semplice nel settore finanziario? (92 chars) | Iniziamo con una definizione: un Collar è una strategia di protezione per una posizione nell'azione sottostante, creata acquistando un'opzione put e vendendo un'opzione call ... [truncated from 422 chars] (422 chars) |
-| Quali sono i metodi per fissare i prezzi di una piccola impresa? (64 chars) | Non ho alcuna esperienza in questo campo, ma ecco la mia comprensione accademica del pricing aziendale. Il valore MINIMO che un venditore accetterebbe è il valore di liquidazione ... [truncated from 2149 chars] (2149 chars) |
-| Il coobbligato è deceduto (25 chars) | Firmare come garante non è la stessa cosa che essere proprietario. Se la tua anziana signora non ha effettuato alcun pagamento sul prestito, non è intestataria del veicolo ... [truncated from 1053 chars] (1053 chars) |
-| Quali sono le conseguenze fiscali nel cambiare residenza fiscale? (65 chars) | La situazione dipende anche da dove lavori. Se trasferisci la tua residenza e il tuo lavoro, la data in cui stabilisci la residenza nello stato nuovo è la data chiave ... [truncated from 2932 chars] (2932 chars) |
+| Quali tipi di rendimenti sta indicando Vanguard? (48 chars) | Dalla pagina di Vanguard - Questo sembrava il più semplice da trovare, poiché i dati S&P sono facilmente reperibili. Utilizzo MoneyChimp per verificare - che conferma che la pagina di Vanguard offre il CAGR, non la media arit ... [truncated 225 chars](463 chars) |
+| Quali sono le implicazioni fiscali del lavoro autonomo? (55 chars) | Se hai reddito negli Stati Uniti, dovrai pagare le tasse sul reddito negli Stati Uniti, a meno che non ci sia un accordo tra il tuo paese e gli Stati Uniti che stabilisce diversamente. (184 chars) |
+| Cosa si intende per volume alto o basso? (40 chars) | Il volume giornaliero viene solitamente confrontato con il volume medio giornaliero degli ultimi 50 giorni per un'azione. Un volume elevato è generalmente considerato pari a 2 o più volte il volume medio giornaliero degli ult ... [truncated 225 chars](757 chars) |
+| Utilizzare i punti accumulati con la carta di credito per pagare le spese aziendali detraibili (94 chars) | Per semplicità, iniziamo considerando solo il cashback. In generale, il cashback dalle carte di credito per uso personale non è tassabile, mentre per uso aziendale lo è (più o meno, spiegherò dopo). La ragione è che la maggio ... [truncated 225 chars](3942 chars) |
+| Come dovrei fare la dichiarazione dei redditi come lavoratore autonomo? (71 chars) | Per scopi fiscali, dovrai dichiarare sia come dipendente (moduli T4 e ritenute fiscali automatiche) sia come imprenditore. Mi sono trovato nella stessa situazione l'anno scorso. "Dipendente e lavoratore autonomo" è una pubbli ... [truncated 225 chars](808 chars) |
 
 ## Dataset Information
 

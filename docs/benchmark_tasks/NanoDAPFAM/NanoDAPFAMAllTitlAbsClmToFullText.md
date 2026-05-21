@@ -70,40 +70,13 @@ problems.
 
 ## Example Data
 
-Patent texts are long, so examples show truncated actual query-positive pairs
-from the Nano split.
-
-### Sample 1
-
-| Field | Value |
+| Query | Positive document |
 | --- | --- |
-| Query ID | `039-389-332-520-998` |
-| Positive Doc ID | `002-484-200-919-107` |
-| BM25 rank | 4 |
-
-**Query** (22,724 chars)
-
-> method and device for monitoring status of mechanical equipment and abnormality diagnosing device an abnormality diagnosis system for diagnosing a presence or absence of an abnormality of a bearing unit for a railway vehicle axle, comprises a sensing/processing portion for outputting a signal generated from the bearing unit as an electric signal ... [truncated from 22724 chars]
-
-**Positive document** (62,288 chars)
-
-> operation machine monitoring diagnosis device provided is an operation machine monitoring diagnosis device wherein, even if there is a strong similarity between input signals during normal operation and those during abnormal operation, misjudgment is prevented, thereby permitting diagnosis to be conducted appropriately ... [truncated from 62288 chars]
-
-### Sample 2
-
-| Field | Value |
-| --- | --- |
-| Query ID | `077-064-650-050-592` |
-| Positive Doc ID | `047-709-439-827-519` |
-| BM25 rank | 1 |
-
-**Query** (6,098 chars)
-
-> system for soil and water remediation methods of decreasing the amount of one or more contaminants in contaminated soil comprise introducing polymer-coated nanoparticles into the contaminated soil, optionally with other reagents ... [truncated from 6098 chars]
-
-**Positive document** (155,516 chars)
-
-> in situ recovery from a tar sands formation a method for treating a tar sands formation (32) in situ includes providing heat from one or more heat sources (30) to a portion of the tar sands formation ... [truncated from 155516 chars]
+| snow removal equipment with automatic walking function the invention relates to snow removal equipment with an automatic walking function. the snow removal equipment comprises a walking module, a working module and a control ... [truncated 225 chars](6075 chars) | multifunctional device for clearing snow an apparatus and method for clearing an accumulation of matter from a surface that includes a blade configured to collect matter upon movement of the apparatus and means to shift the c ... [truncated 225 chars](59310 chars) |
+| modular intelligent transportation system a modular intelligent transportation system, comprising an environmentally protected enclosure, a system communications bus, a processor module, communicating with said bus, having a ... [truncated 225 chars](7061 chars) | impact media sharing an example operation includes one or more of associating a transport with an impact in proximity to one or more other transports, transmitting, by a device in proximity to the impact, media related to the ... [truncated 225 chars](110067 chars) |
+| synthetic hollow microspheres this invention relates to a method of forming a synthetic hollow microsphere comprising the steps of preparing an agglomerate precursor, said agglomerate precursor including a primary component a ... [truncated 225 chars](8392 chars) | process for preparing metal-coated hollow microspheres a process for preparing a metal-coated hollow microsphere comprising the combination of steps of: (a) vigorously admixing a major quantity of hollow cenospheres/microsphe ... [truncated 225 chars](19034 chars) |
+| low weight carpet and carpet tile and methods of manufacture low weight and non-square carpet tile suitable for use in mass transit vehicles, particularly passenger aircraft. the carpet tile preferably weighs less than about ... [truncated 225 chars](3799 chars) | anti-static mats and carpets a novel carpet material or mat which is characterized by an extraordinary ability to quickly and comfortably discharge any build-up of a static electricity charge on a person who has built up such ... [truncated 225 chars](17195 chars) |
+| steering system with lane keeping integration a system for steering a vehicle including: an actuator disposed in a vehicle to apply torque to a steerable wheel; a driver input device receptive to driver commands for directing ... [truncated 225 chars](5360 chars) | steer torque manager for an advanced driver assistance system of a road vehicle a steer torque manager for an advanced driver assistance system of a road vehicle and a method therefor. a driver-in-the-loop functionality deter ... [truncated 225 chars](44337 chars) |
 
 ## Dataset Information
 

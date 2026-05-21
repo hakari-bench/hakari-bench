@@ -51,11 +51,11 @@ entities.
 
 | Query | Positive document |
 | --- | --- |
-| La raccolta di racconti del 1994 di Alice Munro è disponibile (61 chars) | Alice Ann Munro (nata Laidlaw; 10 luglio 1931) è una scrittrice canadese. Il lavoro di Munro è stato descritto come avere rivoluzionato la struttura del racconto breve ... [truncated from 535 chars] (535 chars) |
-| Le potenze dell'Asse nella Seconda Guerra Mondiale (50 chars) | L'occupazione alleata dell'Austria è durata dal 1945 al 1955. (61 chars) |
-| Chi era Thomas Jefferson? (25 chars) | Thomas Jefferson (13 aprile 1743 - 4 luglio 1826) fu un Padre Fondatore degli Stati Uniti, il principale autore della Dichiarazione di Indipendenza (1776) e il terzo Presidente degli Stati Uniti ... [truncated from 432 chars] (432 chars) |
-| Opere di Charles Rennie Mackintosh (34 chars) | 78 Derngate è una casa georgiana di Grado II* situata nel Quartiere Culturale di Northampton, Inghilterra, costruita originariamente nel 1815. È conosciuta per il suo interno ... [truncated from 530 chars] (530 chars) |
-| Chi è il pilota di Formula 1 con il maggior numero di gare? (59 chars) | Il Gran Premio di Spagna 2008, ufficialmente il Gran Premio de España Telefónica, è stata una gara di Formula 1 disputatasi il 27 aprile 2008 sul Circuito di Catalogna a Barcellona ... [truncated from 386 chars] (386 chars) |
+| Fitzgerald Auto Mall a Chambersburg, Pennsylvania (49 chars) | Fitzgerald Auto Malls è un'azienda a conduzione familiare che opera nel settore dell'auto e che è stata fondata nel 1966, con la sua prima sede aperta a Bethesda, nel Maryland. Nel 2014, Fitzgerald Auto Malls si è classificat ... [truncated 225 chars](507 chars) |
+| La raccolta di racconti del 1994 di Alice Munro è disponibile (61 chars) | Alice Ann Munro (nata Laidlaw; 10 luglio 1931) è una scrittrice canadese. Il lavoro di Munro è stato descritto come avere rivoluzionato la struttura del racconto breve, soprattutto per la sua tendenza a muoversi avanti e indi ... [truncated 225 chars](535 chars) |
+| Architettura gallo-romana a Parigi (34 chars) | L'arte a Parigi è un articolo sulla cultura e la storia dell'arte nella capitale francese. Da secoli, Parigi attira artisti da tutto il mondo, che giungono in città per formarsi e trovare ispirazione nelle sue risorse artisti ... [truncated 225 chars](299 chars) |
+| Repubbliche della ex Jugoslavia (31 chars) | La Costituzione jugoslava del 1974 fu la quarta e ultima costituzione della Repubblica Socialista Federale di Jugoslavia. È entrata in vigore il 21 febbraio. Con i suoi 406 articoli originali, la Costituzione del 1974 era una ... [truncated 225 chars](488 chars) |
+| Film girati a Venezia (21 chars) | Un po' d'amore è un film romantico-comico in Technicolor e Panavision del 1979, diretto da George Roy Hill e con Laurence Olivier, Thelonious Bernard e Diane Lane al suo esordio cinematografico. La sceneggiatura è stata scrit ... [truncated 225 chars](380 chars) |
 
 ## Dataset Information
 

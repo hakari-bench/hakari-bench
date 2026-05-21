@@ -48,11 +48,11 @@ negatives that share entities or wording but ask a different question.
 
 | Query | Positive document |
 | --- | --- |
-| Quais são alguns exemplos de invenções desenvolvidas na Roma Antiga? (68 chars) | Quais foram as invenções da Roma Antiga? (40 chars) |
-| Como posso obter uma licença de piloto comercial? (49 chars) | Como obtenho e mantenho uma licença de piloto? (46 chars) |
-| Quais são alguns exemplos de invenções desenvolvidas na Roma Antiga? (68 chars) | Quais são algumas invenções feitas na Roma Antiga? (50 chars) |
-| Qual é o seu animal de estimação favorito? Por quê? (51 chars) | Qual é o seu animal de estimação preferido? (43 chars) |
-| Como posso melhorar minhas habilidades em matemática? (53 chars) | Como posso melhorar em matemática? (34 chars) |
+| É normal rir das próprias piadas? (33 chars) | É estranho rir das minhas próprias piadas? (42 chars) |
+| Qual é a maior mentira que você já contou? (42 chars) | Qual é a maior mentira que você já contou? (42 chars) |
+| Por que o Quora frequentemente sugere respostas no meu feed que criticam Donald Trump? (86 chars) | Por que o Quora parece ter apenas respostas tendenciosas e subjetivas sobre perguntas relacionadas a Donald Trump? (114 chars) |
+| Como posso ficar mais forte fisicamente? (40 chars) | Como posso ficar mais forte fisicamente? (40 chars) |
+| Como funciona um satélite quântico? (35 chars) | Como funciona um satélite quântico e quais seriam suas principais aplicações? (77 chars) |
 
 ## Dataset Information
 

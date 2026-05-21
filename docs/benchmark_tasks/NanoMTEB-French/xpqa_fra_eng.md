@@ -56,11 +56,11 @@ Use multiple positive snippets when several answers satisfy the same question.
 
 | Query | Positive document |
 | --- | --- |
-| is it compatible with fingerprint readers? (`Q30`, 42 chars, BM25 rank 96) | Non. Un client dit que malheureusement une fois installée, le lecteur d'empreintes digitales ne fonctionne pas. (`C1314`, 111 chars) |
-| what and the full length of the tie (`Q15`, 35 chars, BM25 rank 100) | La cravate mesure 63 inch en taille XL. (`C1319`, 39 chars) |
-| hello, can you put toothpaste, or do you absolutely need foam. thank you for your answer cordially (`Q7`, 98 chars, BM25 rank 97) | Un client dit qu'il faut utiliser le dentifrice mousse et que le dentifrice classique n'est pas utilisable avec cette brosse à dent électrique. (`C1081`, 143 chars) |
-| does this battery work well with toshiba satellite a350 20s? (`Q61`, 60 chars, BM25 rank 2) | Non. Un client dit que cela ne fonctionne qu'avec les Satellite L505D. (`C397`, 70 chars) |
-| hello can we wash it? (`Q57`, 21 chars, BM25 rank 100) | Oui, on peut laver le produit à la main. (`C612`, 40 chars) |
+| what is the width of a module? (30 chars) | La largeur d'un module est de 4,21 inch. (40 chars) |
+| for the color do you have white ones as in the photo? (53 chars) | Non. La couleur disponible est violet et gris. (46 chars) |
+| hello, does this spray make hair greasy? thank you. (51 chars) | Oui. Un client dit que cela rend ses cheveux un peu huileux. (60 chars) |
+| hello, no instructions without the box, does anyone know where we can find it? (78 chars) | Oui. Un client dit que vous pouvez télécharger le manuel et guide d'utilisation rapide sur la page Amazon. (106 chars) |
+| is this razor compatible with protector 3 blades? thank you. (60 chars) | Non. Un client dit qu'il n'est pas possible d'ajouter les lames d'autres fabricants. (84 chars) |
 
 ## Dataset Information
 

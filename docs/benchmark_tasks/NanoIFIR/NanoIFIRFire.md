@@ -63,95 +63,13 @@ material facts.
 
 ## Example Data
 
-### Sample 1
-
-| Field | Value |
+| Query | Positive document |
 | --- | --- |
-| Query ID | `0003_v1` |
-| Positive Doc ID | `0414` |
-| BM25 rank | 18 |
-| Query chars | 3374 |
-| Document chars | 20041 |
-
-**Query**
-
-> The legal case involves appeals against the judgment of the High Court of Bombay at Goa, dated 29th February, 2000, where both parties to the dispute filed appeals challenging the judgment. The case revolves around M/s. Shyama Charana Agarwala & Sons ... [truncated from 3374 chars]
-
-**Positive document**
-
-> 254; AIR 1987 SC 2316; 1988 (1) SCR 180; 1987 (4) SCC 497; 1987 (4) JT 25 ... [Arbitration Act, 1940]: ss. 20, 30, & 33-Arbitrator. Sole judge of quality and quantity of evidence ... [truncated from 20041 chars]
-
-### Sample 2
-
-| Field | Value |
-| --- | --- |
-| Query ID | `0072_v1` |
-| Positive Doc ID | `0222` |
-| BM25 rank | 99 |
-| Query chars | 4757 |
-| Document chars | 15260 |
-
-**Query**
-
-> The legal case at hand involves a petition filed in public interest seeking structural reforms within the Indian judicial system, particularly at the highest echelons. The case delves into the historical recommendations made by the Law Commission of India regarding the grant of special leave to appeal ... [truncated from 4757 chars]
-
-**Positive document**
-
-> 248; 1991 (1) Suppl.SCR 251; 1991 (4) SCC 584; 1991 (6) JT 8; 1991 (2) SCALE 675 ... Bhopal Gas Disaster-Court assisted settlement arrived at between Union Carbide Corporation and Union of India ... [truncated from 15260 chars]
-
-### Sample 3
-
-| Field | Value |
-| --- | --- |
-| Query ID | `0092_v1` |
-| Positive Doc ID | `1887` |
-| BM25 rank | 100 |
-| Query chars | 2793 |
-| Document chars | 23089 |
-
-**Query**
-
-> The legal case involves an appeal against the Delhi High Court's judgment dismissing the appellants' challenge to the acquisition of their land under the Land Acquisition Act, 1894. The land in question was originally owned by Rai Sahib Kedar Nath ... [truncated from 2793 chars]
-
-**Positive document**
-
-> 1983 SC 1015; 1983 (3) SCR 674; 1983 (4) SCC 575 ... Andhra Pradesh Catering Establishments (Fixation and Display of Prices of Foodstuffs) Order, 1978-Validity of ... [truncated from 23089 chars]
-
-### Sample 4
-
-| Field | Value |
-| --- | --- |
-| Query ID | `0104_v1` |
-| Positive Doc ID | `1750` |
-| BM25 rank | 54 |
-| Query chars | 3789 |
-| Document chars | 20196 |
-
-**Query**
-
-> The legal case involves a dacoity incident that took place in a village in Uttar Pradesh in 1973, resulting in the death of one of the victims. The appellant, State of U.P., challenged the High Court's decision to set aside the conviction ... [truncated from 3789 chars]
-
-**Positive document**
-
-> SCR 418 (10 December 1952) ... Criminal Procedure Code, 1898, ss. 342, 417-Appeal against acquittal- Interference-Guiding principle-Criminal trial ... [truncated from 20196 chars]
-
-### Sample 5
-
-| Field | Value |
-| --- | --- |
-| Query ID | `0147_v1` |
-| Positive Doc ID | `1763` |
-| BM25 rank | 22 |
-| Query chars | 3246 |
-| Document chars | 24827 |
-
-**Query**
-
-> The legal case involves appeals against the judgment and order passed by the High Court of Judicature for Rajasthan at Jodhpur in a criminal matter. The incident took place at Bathra Telecom & Restaurant in Rajasthan, where Daud Khan and Javed Beg allegedly shot Nand Singh ... [truncated from 3246 chars]
-
-**Positive document**
-
-> (17 October 1950) ... Criminal trial--Murder--Injuries caused by lethal weapons-Duty of prosecution --Importance of expert evidence--Duty to prove whole case ... [truncated from 24827 chars]
+| The legal case at hand involves an appeal challenging the order of the Calcutta High Court that upheld the conviction and life imprisonment sentence of the appellant under Section 302 of the Indian Penal Code, 1860. The prose ... [truncated 225 chars](2854 chars) | 416; 1985 (2) SCR 621; 1985 (1) SCC 552; 1985 (1) SCALE 108 (18 January 1985) CHANDRACHUD, Y.V. ((CJ) CHANDRACHUD, Y.V. ((CJ) SEN, AMARENDRA NATH (J) CITATION: 1985 AIR 416 1985 SCR (2) 621 1985 SCC (1) 552 1985 SCALE (1)108 ... [truncated 225 chars](27331 chars) |
+| The legal case in question involves an appeal filed by the State of Rajasthan against the acquittal of the accused-respondent by the High Court of Rajasthan in a case of sexual assault under Section 376 of the Indian Penal Co ... [truncated 225 chars](3018 chars) | (5) SCC 518; 1995 (6) JT 437; 1995 (4) SCALE 752 (11 August 1995) AHMADI A.M. (CJ) AHMADI A.M. (CJ) SEN, S.C. (J) CITATION: 1995 AIR 2472 1995 SCC (5) [518 JT 1995] (6) 437 1995 SCALE (4)752 Ahmadi, CJI Special leave granted. ... [truncated 225 chars](12815 chars) |
+| The legal case involves an appeal against the judgment of acquittal recorded by a Trial Court in a case where the appellants were charged with offences under Section 307 and 307 read with Section 109 of the Indian Penal Code. ... [truncated 225 chars](3651 chars) | 1988 (2) Suppl.SCR 391; 1988 (4) SCC 302; 1988 (3) JT 544; 1988 (2) SCALE 632 (12 August 1988) VENKATACHALLIAH, M.N. (J) VENKATACHALLIAH, M.N. (J) SEN, A.P. (J) CITATION: 1988 AIR 2154 1988 SCR Supl. (2) 391 1988 SCC (4) [302 ... [truncated 225 chars](33988 chars) |
+| The legal case revolves around an appellant who was appointed as a Clerk in the State Bank of India in 1962 and subsequently promoted to the post of Branch Manager in 1977. However, in 1980, he was suspended from service and ... [truncated 225 chars](4134 chars) | ANR [1967] INSC 62; AIR 1967 SC 1494; 1967 (3) SCR 163 (13 March 1967) 13/03/1967 MITTER, G.K. MITTER, G.K. SHELAT, J.M. CITATION: 1967 AIR 1494 1967 SCR (3) 163 CITATOR INFO : RF [1969 SC 724] (23, [24) RF 1969 ] SC1320 (33) ... [truncated 225 chars](48739 chars) |
+| The case of Ispat Industries Ltd. involved an appeal against the decision of the Customs, Excise and Gold (Control) Appellate Tribunal regarding the valuation of imported iron ore pellets for the purpose of customs duty under ... [truncated 225 chars](3495 chars) | 194; AIR 1989 SC 2054; 1989 (3) SCR 367; 1989 (4) SCC 21; 1989 Suppl.JT 239; 1989 (2) SCALE 190 (17 May 1989) PATHAK, R.S. (CJ) PATHAK, R.S. (CJ) RANGNATHAN, S. MUKHARJI, SABYASACHI (J) NATRAJAN, S. (J) VENKATACHALLIAH, M.N. ... [truncated 225 chars](24232 chars) |
 
 ## Dataset Information
 

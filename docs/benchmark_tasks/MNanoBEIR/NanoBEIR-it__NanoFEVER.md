@@ -49,11 +49,11 @@ nearby entities.
 
 | Query | Positive document |
 | --- | --- |
-| Cesare è un'opera originale di Orson Welles. (44 chars) | Caesar è il titolo dell'innovativa versione del 1937 di Orson Welles della "Giulio Cesare" di William Shakespeare, una produzione in abiti moderni su un palcoscenico spoglio ... [truncated from 492 chars] (492 chars) |
-| Il Decimo Dottore coinvolge Wilfred Mott per aiutarlo durante The End of Time. (78 chars) | Il Decimo Dottore è un'incarnazione del Dottore, il protagonista della serie televisiva di fantascienza della BBC Doctor Who, interpretato da David Tennant in tre stagioni e nove speciali ... [truncated from 1548 chars] (1548 chars) |
-| Camp Flog Gnaw è un evento. (27 chars) | Camp Flog Gnaw è un festival annuale creato e organizzato da Tyler, The Creator e Odd Future. Si tiene una volta all'anno e offre vari giochi da fiera, artisti famosi ... [truncated from 246 chars] (246 chars) |
-| Petyr Baelish è soprannominato Ditoletto. (41 chars) | Petyr Baelish, soprannominato Ditoletto, è un personaggio immaginario creato dallo scrittore americano George R. R. Martin. È un personaggio non protagonista ma di grande rilievo ... [truncated from 682 chars] (682 chars) |
-| Zac Efron è cittadino. (22 chars) | Zachary David Alexander Efron (nato l'18 ottobre 1987) è un attore e cantante statunitense. Ha iniziato a recitare professionalmente all'inizio degli anni 2000 ... [truncated from 581 chars] (581 chars) |
+| Keith Godchaux conosceva i Grateful Dead. (41 chars) | I Grateful Dead sono stati una band rock americana formata nel 1965 a Palo Alto, California. Con una formazione variabile da quintetto a settetto, la band è nota per il suo stile unico ed eclettico, che fondeva elementi di ro ... [truncated 225 chars](3080 chars) |
+| Taarak Mehta Ka Ooltah Chashmah è una sitcom. (45 chars) | Taarak Mehta Ka Ooltah Chashmah (In inglese: La Differente Prospettiva di Taarak Mehta) è la sitcom più longeva dell'India, prodotta da Neela Tele Films Private Limited. La serie è andata in onda il 28 luglio 2008. Va in onda ... [truncated 225 chars](583 chars) |
+| Aerei segreti e tecnologicamente avanzati sono stati prodotti a Burbank, in California. (87 chars) | Burbank è una città nella contea di Los Angeles, nella California meridionale, Stati Uniti, a 12 miglia a nord-ovest del centro di Los Angeles. Secondo il censimento del 2010, la popolazione era di 103.340 abitanti. Promossa ... [truncated 225 chars](1410 chars) |
+| Nero è una persona. (19 chars) | La dinastia giulio-claudia si riferisce ai primi cinque imperatori romani — Augusto, Tiberio, Caligola, Claudio e Nerone — o alla famiglia a cui appartenevano. Governarono l'Impero Romano dalla sua formazione sotto Augusto ne ... [truncated 225 chars](2095 chars) |
+| Scream 2 è un film esclusivamente tedesco. (42 chars) | Scream 2 è un film slasher americano del 1997 diretto da Wes Craven e scritto da Kevin Williamson. Vede la partecipazione di David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar, Jamie Kennedy, Laurie Metcalf, ... [truncated 225 chars](2802 chars) |
 
 ## Dataset Information
 

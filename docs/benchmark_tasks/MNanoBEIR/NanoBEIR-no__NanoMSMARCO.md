@@ -48,11 +48,11 @@ match surface terms without answering it.
 
 | Query | Positive document |
 | --- | --- |
-| Hvilket helsevesen gir alle borgere og innbyggere lik tilgang til helsetjenester? (81 chars) | Universal helsetjeneste, også kjent som universal dekning eller universal helsetjenestedekning, er en betegnelse som beskriver et helsetjenestesystem som gir helsetjenester og økonomisk beskyttelse til alle borgere i et bestemt land. (233 chars) |
-| Hva er bra i helsetjenestene? (29 chars) | Menneskerettigheten til helse betyr at alle har rett til den høyeste mulige standarden for fysisk og psykisk helse. Dette inkluderer tilgang til alle medisinske tjenester, sanitære forhold, tilstrekkelig mat, tilstrekkelig bolig, sunt arbeidsmiljø og et rent miljø. (265 chars) |
-| Hva er været i Oran? (20 chars) | Vær i Oran i oktober 2017. Forvent maks 25°C på dagtid i skyggen med i gjennomsnitt 7 timer med solskinn per dag i Oran i oktober. Sjekk lengre værstatistikk for Oran i oktober før du bokker din neste ferie til Algerie i 2017. 1. Væroversikt for Oran. 2. Månedlig vær for Oran. 3. 5-dagers værprognos ... [truncated from 406 chars] (406 chars) |
-| Hvor lenge skal jeg bevare regnskap? (36 chars) | Tidslinje for økonomiske opplysninger; Type opplysning Tid for oppbevaring, og hvorfor: Skatter Skattemeldinger Annullerte kvitteringer/bevis (underhold, gaver til veldedighetsorganisasjoner, rente på boliglån og innbetalinger til pensjonsordninger) Opplysninger om skattefradrag som er tatt ut. Tid ... [truncated from 335 chars] (335 chars) |
-| Hvordan fungerer fellesskapsavgifter? (37 chars) | Eierforeningens avgifter kan legge betydelig til den totale kostnaden for å eie eiendom, og de kan også øke over tid. Her er hva du bør se etter. Eierforeninger kan være en fordel, men du må veie fordeler og ulemper. (216 chars) |
+| Hva er ruminasjonssyndrom? (26 chars) | Ruminasjonssyndrom, også kalt merykisme, er en type spiseforstyrrelse som ikke er spesifisert ellers og som fører til oppkast av mat. Selv om det ikke er identifisert som en spesifikk spiseforstyrrelse i DSM-IV, har det blitt ... [truncated 225 chars](281 chars) |
+| Hvem sang "Here I Go Again"? (28 chars) | For andre bruk, se Here I Go Again (forklaring). Here I Go Again er en sang av det britiske rockebandet Whitesnake. Sangen ble opprinnelig utgitt på albumet Saints & Sinners fra 1982, og ble spilt inn på nytt for albumet Whit ... [truncated 225 chars](306 chars) |
+| Hvem spiller Cameron Boyce i TV-serien Liv og Maddie? (53 chars) | Bli klar for mye latter, dere. I en eksklusiv forhåndsvisning av episoden den 19. april av 'Liv & Maddie' kalt 'Prom-A-Rooney.' Selvsagt. I den morsomme klippet ser vi Jessie-stjernen Cameron Boyce hoppe over til en annen Dis ... [truncated 225 chars](312 chars) |
+| Hvor finner vi flest av jordens store ørkener? (46 chars) | De resterende ørkener på jorden ligger utenfor polområdene. Den største er Saharaørkenen, en subtropisk ørken i Nord-Afrika. (124 chars) |
+| Hva betyr "bølle"? (18 chars) | Ut fra nåværende funn ser det ut til at kopper (en politimann, bokstavelig 'en som arresterer') er eldre enn cop (brukt verbalt og betyr å arrestere eller som substantiv for en politimann). Det kan godt være at de koppermerke ... [truncated 225 chars](358 chars) |
 
 ## Dataset Information
 

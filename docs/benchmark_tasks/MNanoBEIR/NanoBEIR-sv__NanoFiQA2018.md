@@ -44,9 +44,11 @@ Hard negatives should use the same finance terms but answer a different need.
 
 | Query | Positive document |
 | --- | --- |
-| Hur kan alla dessa länder ha så mycket skuld? Varför och från vem har de lånat pengarna? (88 chars) | Här är en överblick över vem som äger amerikansk statsskuld från Wikipedia. Den visar att ungefär en tredjedel av den amerikanska statsskulden ägs av utländska aktörer, ungefär hälften ägs av Federal Re ... [truncated from 819 chars] (820 chars) |
-| Är det en bra investering för en utlänning att köpa en lägenhet i Kina? (71 chars) | Jag tror att ett större problem skulle vara skyddet av dina egendomsrättigheter. Kina har inte visat mycket respekt för sina egna medborgares egendomsrättigheter - de flyttar människor från småbruk för att bygga höghus - så jag är inte säke ... [truncated from 450 chars] (450 chars) |
-| Kan jag som VD fakturera mitt eget företag? (43 chars) | Ja, det går ju bra. Det betyder ju att ditt företag kommer att göra mindre vinst, vilket sparar 20% i bolagsskatt. Din personliga inkomst kommer att vara högre, vilket innebär att du troligen kommer att betala mer än 20% i inkomstskatt och ... [truncated from 260 chars] (260 chars) |
+| Vilken typ av avkastning anger Vanguard? (40 chars) | På Vanguard-sidan - Detta verkade vara det enklaste eftersom S&P-data är lätt att hitta. Jag använder MoneyChimp för att bekräfta att Vanguards sida erbjuder CAGR, inte aritmetiskt medelvärde. Vanguard anger att 'för amerikan ... [truncated 225 chars](405 chars) |
+| Skattekonsekvenser vid frilansarbete (36 chars) | Om du har inkomst i USA, måste du betala amerikansk inkomstskatt på den, om det inte finns ett avtal mellan ditt land och USA som säger annat. (142 chars) |
+| Vad betraktas som hög eller låg volym? (38 chars) | Den dagliga volymen jämförs vanligtvis med den genomsnittliga dagliga volymen över de senaste 50 dagarna för en aktie. Hög volym anses vanligtvis vara 2 eller fler gånger den genomsnittliga dagliga volymen över de senaste 50 ... [truncated 225 chars](720 chars) |
+| Använda kreditkortspoäng för att betala skatteavdragsbara företagsutgifter (74 chars) | För enkelhetens skull, låt oss börja med att bara överväga cashback. Generellt sett är cashback från kreditkort för privat bruk inte skattepliktigt, men för företagsbruk är det skattepliktigt (sådär, jag kommer att förklara s ... [truncated 225 chars](3667 chars) |
+| Hur ska jag skicka in min deklaration som kontraktör? (53 chars) | För skattemål måste du deklarera som anställd (T4-kvitton och skatt dras automatiskt), men också som företagare. Jag hade samma situation själv förra året. Publikationen "Anställd och självständigt arbetande" från Skatteverke ... [truncated 225 chars](691 chars) |
 
 ## Dataset Information
 

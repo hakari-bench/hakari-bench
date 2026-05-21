@@ -47,11 +47,11 @@ negatives should share topic words but ask for different information.
 
 | Query | Positive document |
 | --- | --- |
+| Er det greit å le av egne vitser? (33 chars) | Er det rart å le av mine egne vitser? (37 chars) |
+| Hva er den mest geniale løgn du noen gang har fortalt? (54 chars) | Hva er den mest gjennomtenkte løgnen du noen gang har fortalt? (62 chars) |
 | Hvorfor fremmer Quora ofte svar i min feed som kritiserer Donald Trump? (71 chars) | Hvorfor virker det som om Quora bare har subjektive og partiske svar på spørsmål om Donald Trump? (97 chars) |
-| Hva er det å være student ved en topp teknisk høyskole? (55 chars) | Hva er det å være en student eller alumnus fra Indian Institutes of Technology (IIT)? (85 chars) |
-| Hva var PepsiCo Inc's utstedelsespris? Hva ville 100 aksjene vært verdt i dag? (78 chars) | Hva var utstedelsesprisen på Mastercard Inc's aksjer? Hva ville 100 aksjer vært verdt i dag? (92 chars) |
-| Hvordan blir jeg kvitt skyldfølelsen? (37 chars) | Hva er den beste måten å komme over skyldfølelse på? (52 chars) |
-| Hva er en Scrum Master? (23 chars) | Hva er rollen og ansvaret til en Scrum Master? (46 chars) |
+| Hvordan kan jeg bli sterkere fysisk? (36 chars) | Hvordan blir jeg fysisk sterk? (30 chars) |
+| Hvordan fungerer en kvantum-satellitt? (38 chars) | Hvordan fungerer en Quantum-satellitt, og hva er noen av dens hovedbruk? (72 chars) |
 
 ## Dataset Information
 

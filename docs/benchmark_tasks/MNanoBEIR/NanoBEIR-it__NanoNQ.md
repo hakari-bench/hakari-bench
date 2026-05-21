@@ -47,11 +47,11 @@ paragraphs. Hard negatives should contain related entities but not the answer.
 
 | Query | Positive document |
 | --- | --- |
-| L'incubo prima di Natale è stato originariamente un film Disney? (64 chars) | Il film "Nightmare Before Christmas" ha avuto origine da una poesia scritta da Tim Burton nel 1982, mentre lavorava come animatore presso la Walt Disney Feature Animation ... [truncated from 706 chars] (706 chars) |
-| Chi ha posato la prima pietra del College Islamia di Peshawar? (62 chars) | Haji Sahib di Turangzai, il più famoso leader religioso Pukhtun dell'epoca, fu invitato dal Nawab Sir Sahibzada Abdul Qayyum a posare la prima pietra ... [truncated from 1291 chars] (1291 chars) |
-| Il kripton-85 decade emettendo una particella beta. Il prodotto di questo decadimento è (87 chars) | Ha un'emivita di 10,756 anni e un'energia di decadimento massima di 687 keV. Decade in rubidio-85 stabile e non radioattivo ... [truncated from 618 chars] (618 chars) |
-| Chi era la massima autorità nella Chiesa cristiana primitiva? (61 chars) | Il Catechismo della Chiesa Cattolica, citando il documento Lumen gentium del Concilio Vaticano II, afferma: "Il papa, vescovo di Roma e successore di Pietro ... [truncated from 534 chars] (534 chars) |
-| Chi conquistarono gli Assiri nel 722 a.C.? (42 chars) | Nel 722 a.C., circa dieci o venti anni dopo le prime deportazioni, la città principale del Regno Settentrionale di Israele, Samaria, fu infine conquistata da Sargon II dopo un assedio di tre anni iniziato da Shalmaneser V. (222 chars) |
+| Dove si terrà la Final Four quest'anno? (39 chars) | L'80ª edizione del Torneo di Pallacanestro Maschile della Divisione I della NCAA 2018 è stato un torneo a eliminazione diretta con 68 squadre per determinare il campione nazionale di pallacanestro della Divisione I della NCAA ... [truncated 225 chars](367 chars) |
+| L'incubo prima di Natale è stato originariamente un film Disney? (64 chars) | Il film "Nightmare Before Christmas" ha avuto origine da una poesia scritta da Tim Burton nel 1982, mentre lavorava come animatore presso la Walt Disney Feature Animation. Grazie al successo di "Vincent" nello stesso anno, la ... [truncated 225 chars](706 chars) |
+| Perché l'Angelo del Nord si trova lì? (37 chars) | Secondo Gormley, il significato dell'angelo era triplice: innanzitutto, per indicare che sotto il sito della sua costruzione, i minatori di carbone avevano lavorato per due secoli; in secondo luogo, per comprendere la transiz ... [truncated 225 chars](370 chars) |
+| Dove era originariamente stabilito il compromesso dei tre quinti nella Costituzione degli Stati Uniti? (102 chars) | Il Compromesso dei Tre Quinti è contenuto nell'Articolo 1, Sezione 2, Clausola 3 della Costituzione degli Stati Uniti, che recita: (130 chars) |
+| Chi canta "Somebody's Watching Me" con Michael Jackson? (55 chars) | "Somebody's Watching Me" è un brano del cantante americano Rockwell, tratto dal suo album di debutto omonimo Somebody's Watching Me (1984). È stato pubblicato come primo singolo di Rockwell e singolo di lancio dell'album il 1 ... [truncated 225 chars](384 chars) |
 
 ## Dataset Information
 

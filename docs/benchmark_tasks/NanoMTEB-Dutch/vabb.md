@@ -77,11 +77,11 @@ Include hard negatives from similar disciplines or author groups.
 
 | Query | Positive document |
 | --- | --- |
-| Eerherstel voor seksuele delinquenten: voltooid verleden tijd? (62 chars) | Eind december 2008 leverde de senaatsfractie van CD&V een wetsvoorstel af dat het herstel in eer en rechten wil hervormen... [truncated from 654 chars] (654 chars) |
-| Daar bij Groot Cueteghem: een rurale nederzetting uit de vroege en volle middeleeuwen te Hove (93 chars) | Debruyne S., Annaert R., Clerbaut T., Haneca K. & Lentacker A. 2015... [truncated from 295 chars] (295 chars) |
-| De groei naar militant, militair jihadisme (42 chars) | Ons steunend op de recente literatuur en op gesprekken met mensen uit de nabijheid van jongeren die vertrokken zijn... [truncated from 1202 chars] (1202 chars) |
-| Vlaanderen en Nederland: palaverplanologie in de Lage Landen (60 chars) | Een Nederlander en een Vlaming palaveren ieder vanuit hun bubbel over de ruimtelijke planning... [truncated from 1173 chars] (1173 chars) |
-| Een kritische blik op psychopathie en seksueel geweld (53 chars) | Psychopathie wordt beschouwd als een persoonlijkheidsstructuur bestaande uit interpersoonlijke, affectieve en gedragsmatige kenmerken... [truncated from 2002 chars] (2002 chars) |
+| De polsstokwerking van de beginselen van behoorlijk bestuur: export en reflexwerking? (85 chars) | Deze bijdrage omvat een analyse van de toepassing van de beginselen van behoorlijk bestuur op het privaatrechtelijk handelen van de overheid, bekeken vanuit het perspectief van publicisten. (189 chars) |
+| Het leedprincipe, het strafbegrip en de schuld zonder straf. De fixatie op leedtoevoegende straffen in het strafrecht (117 chars) | Volgens velen kenmerkt het strafrecht zich door het feit dat het leidt tot het opleggen van een straf. Vanuit dit oogpunt wordt het strafrecht te snel en te gemakkelijk gereduceerd tot straffen, en dus tot wat het Hof van Cas ... [truncated 225 chars](1499 chars) |
+| Bamacodex 4 Sociaalrecht 2009-10 (32 chars) | De Bamacodex 4 "Sociaalrecht" biedt een selectie aan, met zorg uitgevoerd, van de belangrijkste en geupdated wetten en besluiten in de domeinen van het arbeidsrecht en het socialezekerheidsrecht. Onder elk gewijzigd wetsvoors ... [truncated 225 chars](270 chars) |
+| Raoul Servais. De Tovenaar van Oostende (39 chars) | Context Raoul Servais, revolutionaire animatiecineast. Engagement, contestatie en erkenning Schrijven over de filmkunst van Raoul Servais is geen gemakkelijke taak. In het hierna volgende interview wordt Servais' visie treffe ... [truncated 225 chars](7551 chars) |
+| Museumstrijd. Reacties van de conservatoren (43 chars) | Naar aanleiding van onderzoek naar het beleid van erfgoedmusea in Vlaanderen aan de UGent, werden in dit artikel reacties van de conservatoren verzameld. (153 chars) |
 
 ## Dataset Information
 

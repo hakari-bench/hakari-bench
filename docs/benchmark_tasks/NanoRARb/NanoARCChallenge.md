@@ -60,9 +60,11 @@ biological reasoning grounded in the question.
 
 | Query | Positive document |
 | --- | --- |
-| Scientists present the results of their investigations to others for review because (`ARC-Challenge-q-163`, 83 chars, BM25 rank 100) | data often supports more than one explanation. (`ARC-Challenge-d-645`, 46 chars) |
-| Tiny organisms called plankton live in oceans. Some plankton can take energy from the Sun and turn it into food. How are plankton most useful to the animals that live in the ocean? (`ARC-Challenge-q-28`, 180 chars, BM25 rank 3) | Plankton release oxygen. (`ARC-Challenge-d-114`, 24 chars) |
-| A type of small mammal from the mountain regions of the western United States makes its home out of piles of rock. During summer months, the mammal places grasses and seeds in protected places in the rock piles. Which of the following is the most likely reason for this behavior? (`ARC-Challenge-q-6`, 279 chars, BM25 rank 100) | to store food that will be eaten over the winter months (`ARC-Challenge-d-26`, 55 chars) |
+| Some students are performing hardness tests on several substances. X scratches Y. Y scratches Z. Z scratches W. Which of these statements best describes substance W's hardness? (176 chars) | W is the softest of the four substances tested. (47 chars) |
+| Hurricanes form over equatorial areas. This is because (54 chars) | solar heating is greatest near the equator. (43 chars) |
+| The best description of the troposphere is the layer of the atmosphere with the (79 chars) | greatest density. (17 chars) |
+| Copper is an element that is used in electrical wires. What is the smallest unit of copper that still maintains the characteristics of copper? (142 chars) | the atom (8 chars) |
+| If you throw each one of these things away, which will decay fastest? (69 chars) | An apple core (13 chars) |
 
 ## Dataset Information
 

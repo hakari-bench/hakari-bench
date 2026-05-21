@@ -59,11 +59,11 @@ natural employee wording.
 
 | Query | Positive document |
 | --- | --- |
-| Si je tombe malade, l'ancienneté sur cette période est-elle comptabilisée ? (`75`, 75 chars, BM25 rank 8) | Article 12 : Ancienneté Modification Avenant n° 7 du 05/07/1991 On entend par ancienneté le temps passé dans l’entreprise ... [truncated from 1615 chars] (`article-12`) |
-| Comment faire pour poser un jour sans solde ? (`16`, 45 chars, BM25 rank 1) | Article 30 : Congé sans solde Un congé sans solde peut être accordé par l’employeur, sur la demande de l’intéressé. ... (`article-30`, 847 chars) |
-| Que veut-dire IC ? (`2`, 18 chars, BM25 rank 8) | Article 2 : Définition des ETAM, des CE et des IC Modification Avenant n° 7 du 5/07/1991 ... [truncated from 1982 chars] (`article-2`) |
-| Mon employeur souhaite me faire travailler le dimanche. Une majoration est-elle prévue ? (`96`, 88 chars, BM25 rank 1) | Article 35 : Travail exceptionnel de nuit, du dimanche et des jours feriés Modification Avenant du 28 avril 2004 ... [truncated from 2801 chars] (`article-35`) |
-| Ma famille peut-elle venir avec moi pendant un déplacement à l'étranger ? (`37`, 73 chars, BM25 rank 1) | Article 70 : Voyages et transports A. – Définition des frais de voyage Les frais de voyage comprennent dans les limites fixées par l’ordre de mission ... [truncated from 5804 chars] (`article-70`) |
+| Puis-je justifier d'une indemnité de licenciement si cela fait-il plus de 2 ans que je suis dans cette entreprise ? (115 chars) | Article 18 : Indemnité de licenciement – Conditions d’attribution Modification Avenant n° 7 du 5/07/1991 Il est attribué à tout salarié licencié justifiant d’au moins 2 années d’ancienneté une indemnité de licenciement distin ... [truncated 225 chars](690 chars) |
+| Mon entreprise a déposé un brevet sur mon invention. A quoi ai-je droit ? (73 chars) | Article 75 : Invention des salariés dans le cadre des activités professionnelles Dispositions générales : Les règles relatives aux inventions des salariés sont fixées par la loi n° 78-742 du 13 juillet 1978 modifiant et compl ... [truncated 225 chars](3628 chars) |
+| Quelle est la période de prise de congés ? (42 chars) | Article 25 : Période de congés Les droits à congé s’acquièrent du 1er juin de l’année précédente au 31 mai de l’année en cours. La période de prise de ces congés, dans tous les cas, est de treize mois au maximum. Aucun report ... [truncated 225 chars](753 chars) |
+| J'ai le droit de faire combien d'heures supplémentaires sans avoir l'accord de l'inspecteur du travail ? (104 chars) | Article 33 : Heures supplémentaires [En vigueur] ETAM hors CE : A. – Rémunération des heures supplémentaires : Les heures supplémentaires de travail contrôlées, effectuées par le personnel ETAM, sont payées avec les majoratio ... [truncated 225 chars](465 chars) |
+| Y a-t-il un examen médical obligatoire au retour d'un déplacement à l'étranger ? (80 chars) | Article 73 : Contrôle médical En cas de séjour prolongé à l’étranger, le salarié est tenu, à la demande de l’employeur avant son départ et dans le mois qui suit son retour à son domicile, de subir, lui et éventuellement les m ... [truncated 225 chars](513 chars) |
 
 ## Dataset Information
 

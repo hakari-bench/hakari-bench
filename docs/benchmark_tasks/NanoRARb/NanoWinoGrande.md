@@ -57,9 +57,11 @@ similar name/noun.
 
 | Query | Positive document |
 | --- | --- |
-| Sentence: Monica gives Jessica a book about posture, because _ has been trying to get better at ballet dancing.. (`wino-q-163`, 112 chars, BM25 rank 3) | Jessica (`wino-d-39`, 7 chars) |
-| Sentence: Since Craig threw aluminum cans in the trash and Benjamin recycled, _ was environmentally irresponsible.. (`wino-q-28`, 115 chars, BM25 rank 3) | Craig (`wino-d-37`, 5 chars) |
-| Sentence: The home that my parents had when I was in school was a lot nicer than my house now because the _ was sophisticated.. (`wino-q-6`, 127 chars, BM25 rank 7) | home (`wino-d-8`, 4 chars) |
+| Sentence: Mary wanted to get another piercing in her ear, but the _ was much too tiny.. (87 chars) | ear (3 chars) |
+| Sentence: She counted her calories for her diet and found she needed more so she ate a brownie instead of an apple since the _ has fewer.. (138 chars) | apple (5 chars) |
+| Sentence: The game of chess was easy to play for Angela but not Rebecca because _ had a analytical mind.. (105 chars) | Angela (6 chars) |
+| Sentence: Joe immediately went to bakery before the bank because the _ had a limited supply of what he wanted.. (111 chars) | bakery (6 chars) |
+| Sentence: William liked to be outside more than Kyle so _ spent time arguing for getting a pool.. (97 chars) | William (7 chars) |
 
 ## Dataset Information
 

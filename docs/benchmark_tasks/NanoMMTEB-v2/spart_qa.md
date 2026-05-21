@@ -54,11 +54,11 @@ violating the queried spatial relation.
 
 | Query | Positive document |
 | --- | --- |
-| We have three blocks, A, B and C. Blocks B and C are above A. Block A contains one medium black square and a medium blue square. Below the medium blue square there is the medium black square. Block B contains one medium yellow square and a medium blue square.... [truncated from 429 chars] (429 chars) | medium blue square (18 chars) |
-| There are three blocks, A, B and C. Block A is above C. Block C is above B. Block A has a big black square and one big yellow triangle. The big black square is to the left of the big yellow triangle. Block B contains a medium yellow square. And block C contain... [truncated from 611 chars] (611 chars) | medium blue triangle (20 chars) |
-| There are three blocks. We call them A, B and C. There are two medium yellow squares in block A. This block also contains one medium black square. This object is below medium yellow square number two. Below medium yellow square number two and the medium black... [truncated from 593 chars] (593 chars) | the medium yellow square that is in block B (43 chars) |
-| We have two blocks, A and B. Block A is to the left of B. Block A has a medium yellow square. Block B contains two medium blue squares and two other medium black squares. Medium blue square number one is below medium black square number two and medium blue squ... [truncated from 571 chars] (571 chars) | medium black square number two (30 chars) |
-| There are three blocks. We call them A, B and C. Block B is to the left of A and block A is to the left of C. Block A contains a medium blue square. Block B has two medium yellow squares. Medium yellow square number one is below medium yellow square number two... [truncated from 650 chars] (650 chars) | the medium blue square (22 chars) |
+| There are three blocks. Lets call them A, B and C. Block A is below B and block B is below C. Block A has one small yellow circle. Block B has a big black square and a big blue square. To the left of and above a medium blue c ... [truncated 225 chars](797 chars) | both of them (12 chars) |
+| We have three blocks, A, B and C. Blocks B and C are above A. Block A contains one medium black square and a medium blue square. Below the medium blue square there is the medium black square. Block B contains one medium yello ... [truncated 225 chars](484 chars) | both of them (12 chars) |
+| We have three blocks, A, B and C. Block B is below block C and it is to the left of block A. Block A has a small black triangle. Block B has a medium black triangle, one big blue circle and one small blue triangle. The big bl ... [truncated 225 chars](669 chars) | both of them (12 chars) |
+| We have three blocks. We call them A, B and C. Block B is below and C is above A. Block A contains one big black square. Block B has one small blue square and one big yellow triangle. It also has a medium blue square. This sh ... [truncated 225 chars](761 chars) | the yellow thing that is touching the right edge of a block (59 chars) |
+| There are three blocks, A, B and C. Block A is below C. Block C is to the right of B. Block A has a medium blue square. Block B contains a medium black square. Block C contains two medium yellow squares. There is also one med ... [truncated 225 chars](565 chars) | none of them (12 chars) |
 
 ## Dataset Information
 

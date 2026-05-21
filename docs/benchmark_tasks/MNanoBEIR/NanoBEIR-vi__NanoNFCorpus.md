@@ -43,8 +43,11 @@ multiple positives for shared conditions or outcomes.
 
 | Query | Positive document |
 | --- | --- |
-| tế bào ung thư vú (17 chars) | Chúng tôi đã khảo sát một cách triển vọng việc tiêu thụ trái cây và rau quả liên quan đến chức năng nhận thức và sự suy giảm nhận thức ở phụ nữ lớn tuổi. Các tham gia viên đã được ... [truncated from 1526 chars] (1,526 chars) |
-| Mối liên hệ giữa mụn trứng cá và ung thư (40 chars) | CÂU HỎI NGHIÊN CỨU Liệu việc tiêu thụ thực phẩm từ sữa tăng lên có liên quan đến chất lượng tinh trùng thấp hơn không? TÓM TẮT CÂU TRẢ LỜI ... [truncated from 3263 chars] (3,263 chars) |
+| Lợi ích sức khỏe của các loại hạt (33 chars) | Mục tiêu Nghiên cứu mối quan hệ giữa việc tiêu thụ anh đào và nguy cơ tái phát cơn gout ở những người mắc bệnh gout. Phương pháp Chúng tôi đã tiến hành một nghiên cứu trường hợp chéo để xem xét mối liên hệ của một tập hợp các ... [truncated 225 chars](1732 chars) |
+| đạo đức y tế (12 chars) | BỐI CẢNH: Một trong những vấn đề chính trong việc kiểm soát cholesterol huyết thanh thông qua can thiệp chế độ ăn uống dường như là cần cải thiện sự tuân thủ của bệnh nhân. MỤC TIÊU: Khám phá nhiều câu hỏi liên quan đến các r ... [truncated 225 chars](1913 chars) |
+| đậu fava (8 chars) | Trong 20 năm qua, sự quan tâm ngày càng tăng đối với sinh hóa, dinh dưỡng và dược lý của L-arginine đã dẫn đến nhiều nghiên cứu sâu rộng để khám phá vai trò dinh dưỡng và điều trị của nó trong việc điều trị và ngăn ngừa các r ... [truncated 225 chars](1275 chars) |
+| Thực sự có gì trong món gà viên? (32 chars) | MỤC ĐÍCH: Để xác định thành phần của thịt gà viên từ 2 chuỗi thực phẩm quốc gia. NỀN TẢNG: Thịt gà viên đã trở thành một thành phần chính trong chế độ ăn uống của người Mỹ. Chúng tôi đã tìm cách xác định thành phần hiện tại c ... [truncated 225 chars](765 chars) |
+| chất béo bão hòa (16 chars) | Sự quan tâm đã tăng lên về khả năng rằng chế độ ăn uống của mẹ trong thời kỳ mang thai có thể ảnh hưởng đến sự phát triển của các rối loạn dị ứng ở trẻ em. Nghiên cứu tiềm năng hiện tại đã xem xét mối liên hệ giữa việc mẹ tiê ... [truncated 225 chars](1968 chars) |
 
 ## Dataset Information
 

@@ -58,11 +58,11 @@ brief and question-like rather than becoming passage retrieval.
 
 | Query | Positive document |
 | --- | --- |
-| Czy świat byłby lepszym miejscem bez pieniędzy? (47 chars) | Czy świat byłby lepszy bez pieniędzy? (37 chars) |
-| Jak znaleźć kierunek i nadać cel swojemu życiu? (47 chars) | W jaki sposób możesz znaleźć kierunek i cel w życiu? (52 chars) |
-| Jak radzisz sobie z nieprzyjemnymi ludźmi? (42 chars) | Jak radzić sobie z nieprzyjemnymi ludźmi? (41 chars) |
-| Jakie są dobre notebooki dla programistów? (42 chars) | Jaki jest najlepszy notatnik dla programistów? (46 chars) |
-| Jak zrobić zrzut ekranu w Snapchacie? (37 chars) | Jak uzyskać zrzut ekranu na Snapchacie? (39 chars) |
+| Jak dostać się na Harvard? (26 chars) | Jak dostać się na Uniwersytet Harvarda? (39 chars) |
+| Czym jest 10-20 przypadkowych rzeczy o sobie? (45 chars) | Jakie są 10 przypadkowych faktów o Tobie? (41 chars) |
+| Co powinienem zrobić w swoim CV, aby uzyskać wywiady z zakresu analityki danych? (80 chars) | Co powinienem poprawić w swoim CV, aby uzyskać wywiady z zakresu analityki danych? (82 chars) |
+| Jak sobie radzisz, gdy czujesz się wyczerpany emocjonalnie? (59 chars) | Jak przezwyciężyć uczucie wyczerpania emocjonalnego? (52 chars) |
+| Czy iPhone naprawdę jest wart swojej ceny? (42 chars) | Czy iPhone jest tego wart? (26 chars) |
 
 ## Dataset Information
 

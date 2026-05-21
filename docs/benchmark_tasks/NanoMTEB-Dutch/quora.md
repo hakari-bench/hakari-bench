@@ -78,11 +78,11 @@ questions for training discrimination.
 
 | Query | Positive document |
 | --- | --- |
-| Wat zijn de beste gratis en legale websites om muziek te downloaden? (68 chars) | Wat is een goede gratis website om mp3-songs te downloaden? (59 chars) |
-| Hoe behandel je schotwonden? (28 chars) | EHBO'ers en Paramedici: Hoe behandelt men een schotwond? (56 chars) |
-| Wat zijn enkele van de beste GMAT-instituten in Delhi/NCR? (58 chars) | Wat zijn de beste GMAT-instituten in NCR? (41 chars) |
-| Hoe kan ik Modi ontmoeten? (26 chars) | Hoe ontmoet je premier Narendra Modi? (37 chars) |
-| Hoe moet je beginnen met programmeren leren? (44 chars) | Hoe begin ik met gepassioneerd programmeren vanaf "nul"? (56 chars) |
+| Wat zijn de beste drama tv-series? (34 chars) | Wat zijn de beste drama-tv-series? (34 chars) |
+| Beschouw je wiskunde als kunst of als wetenschap? (49 chars) | Is wiskunde een kunst of een wetenschap? (40 chars) |
+| Wat is volgens jou het beste klassieke muziekstuk aller tijden? (63 chars) | Wat is het beste klassieke muziekstuk aller tijden? (51 chars) |
+| Wat zijn enkele van de beste GMAT-instituten in Delhi/NCR? (58 chars) | Wat is het beste coachingsinstituut voor de GMAT in de regio Delhi NCR? (71 chars) |
+| Wat zijn de grootste sterktes van het Indiase leger? (52 chars) | Wat zijn de grootste sterke punten van het Indiase leger? (57 chars) |
 
 ## Dataset Information
 

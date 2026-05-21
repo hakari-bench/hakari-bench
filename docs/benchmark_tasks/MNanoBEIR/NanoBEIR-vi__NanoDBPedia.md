@@ -44,8 +44,11 @@ entity type, place, or name fragments.
 
 | Query | Positive document |
 | --- | --- |
-| các nhà soạn nhạc cổ điển Bắc Âu còn sống (41 chars) | Jon Mostad (sinh ngày 21 tháng 4 năm 1942) là một nhạc sĩ đến từ Fredrikstad, Na Uy. Ông nhận học bổng nghệ sĩ ba năm của nhà nước Na Uy từ năm 1982 đến năm 1984. (162 chars) |
-| Các thành viên ban nhạc Jefferson Airplane. (43 chars) | Jefferson Airplane là album phòng thu thứ tám và cuối cùng của ban nhạc rock San Francisco Jefferson Airplane, được phát hành trên Epic Records vào năm 1989. Cả album và tour tái h ... [truncated from 287 chars] (287 chars) |
+| fitzgerald auto mall chambersburg pa (36 chars) | Fitzgerald Auto Malls là một đại lý ô tô thuộc sở hữu và điều hành bởi gia đình, được thành lập vào năm 1966, với địa điểm đầu tiên mở cửa tại Bethesda, Maryland. Tính đến năm 2014, Fitzgerald Auto Malls đứng thứ 59 trong dan ... [truncated 225 chars](457 chars) |
+| Tập truyện ngắn năm 1994 của Alice Munro là Mở (46 chars) | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, tên thật là Laidlaw /ˈleɪdlɔː/; sinh ngày 10 tháng 7 năm 1931) là một tác giả người Canada. Tác phẩm của Munro được mô tả là đã cách mạng hóa cấu trúc của truyện ngắn, đặc biệt là trong x ... [truncated 225 chars](553 chars) |
+| kiến trúc Gallo-Roman ở Paris (29 chars) | Nghệ thuật ở Paris là một bài viết về văn hóa và lịch sử nghệ thuật ở Paris, thủ đô của Pháp. Trong nhiều thế kỷ, Paris đã thu hút các nghệ sĩ từ khắp nơi trên thế giới, đến thành phố để học hỏi và tìm kiếm cảm hứng từ các ng ... [truncated 225 chars](344 chars) |
+| các nước cộng hòa của Nam Tư cũ (31 chars) | Hiến pháp Nam Tư năm 1974 là hiến pháp thứ tư và cuối cùng của Cộng hòa Liên bang Xã hội chủ nghĩa Nam Tư. Nó có hiệu lực vào ngày 21 tháng 2. Với 406 điều khoản gốc, hiến pháp năm 1974 là một trong những hiến pháp dài nhất t ... [truncated 225 chars](420 chars) |
+| phim quay ở Venice (18 chars) | A Little Romance là một bộ phim hài lãng mạn Technicolor và Panavision của Mỹ ra mắt năm 1979, được đạo diễn bởi George Roy Hill và có sự tham gia của Laurence Olivier, Thelonious Bernard, và Diane Lane trong vai diễn điện ản ... [truncated 225 chars](403 chars) |
 
 ## Dataset Information
 

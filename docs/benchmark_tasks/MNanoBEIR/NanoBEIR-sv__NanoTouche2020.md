@@ -46,9 +46,11 @@ Hard negatives should share the topic but not answer the specific aspect.
 
 | Query | Positive document |
 | --- | --- |
-| Är en högskoleutbildning värd det? (34 chars) | Medan min motståndare spenderar värdefull tid på att tvivla på att kostnaden för college är en av de mest dyra sakerna människor någonsin kommer att "köpa," skulle jag bara vilja påpeka att av de personer som har en collegeutbildning har de ... [truncated from 7761 chars] (7,772 chars) |
-| Bör elever ha skoluniformer? (28 chars) | Enhetliga kläder har praktiska fördelar när eleverna är utanför skolbyggnaden. Att lätt kunna identifieras med en viss skola kan göra eleverna mer medvetna om sitt beteende när de reser till och från skolan, vilket får dem att bete sig mer ... [truncated from 523 chars] (523 chars) |
-| Bör man bli vegetarier? (23 chars) | Varför? Efter mycket forskning blir det överraskande enkelt. Jag citerar inte källor eftersom jag inte känner för att leta upp alla dem - dock känner jag mig säker på att mina åsikter är väl ... [truncated from 7157 chars] (7,157 chars) |
+| Är läxor bra? (13 chars) | Först och främst finns det tre argument för varför läxor är utmärkta och bör fortsätta i moderna skolor. 1. Läxor hjälper gör-lärarna. Det är allmänt accepterat att det finns tre typer av lärande: de som lär sig genom att hör ... [truncated 225 chars](3658 chars) |
+| Bör receptbelagda läkemedel annonseras direkt till konsumenter? (63 chars) | Många annonser innehåller inte tillräckligt med information om hur väl läkemedel fungerar. Till exempel annonseras Lunesta av en fjäril som flyger in genom ett sovrumsfönster, över en person som sover lugnt. Faktum är att Lun ... [truncated 225 chars](1768 chars) |
+| Skall barn behöva några vacciner? (33 chars) | Det är inte ett fullständigt fall ännu... bara några små punkter jag samlat ihop... Regeringar bör inte ha rätt att ingripa i de hälsoval som föräldrar gör för sina barn. Enligt en undersökning från 2010 genomförd av Universi ... [truncated 225 chars](4244 chars) |
+| Bör abort vara lagligt? (23 chars) | Abort ska vara lagligt eftersom personlighet börjar när fostret är livskraftigt eller efter födseln, inte vid befruktningen. Enligt USA:s högsta domstol får en person sin ålder när de är utanför moderns livmoder och andas syr ... [truncated 225 chars](286 chars) |
+| Förbättrar standardiserade prov utbildningen? (45 chars) | Löst: SAT, ACT och andra standardiserade tester ger mer insikt i en gymnasieelevers beredskap för utbildning på elituniversitet och högskolor än gymnasiebetyget och bör därför spela en större roll i antagningsprocessen. För a ... [truncated 225 chars](4148 chars) |
 
 ## Dataset Information
 

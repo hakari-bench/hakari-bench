@@ -82,95 +82,13 @@ questions or positive documents as seeds.
 
 ## Example Data
 
-### Sample 1
-
-| Field | Value |
+| Query | Positive document |
 | --- | --- |
-| Query ID | `query_18` |
-| Positive Doc ID | `doc_299` |
-| BM25 positive rank | 2 |
-| Query chars | 60 |
-| Positive document chars | 150541 |
-
-**Query**
-
-> How does Filby eventually die according to the time machine?
-
-**Positive document**
-
-> `<html> <head><title>Time Machine, The Script at IMSDb.</title> <meta name="description" content="Time Machine, The script at the Internet Movie Script Database."> <meta name="keywords" content="Time Machine, The script, Time Machine, The movie script, Time Machine, The film script">` ... [truncated from 150541 chars]
-
-### Sample 2
-
-| Field | Value |
-| --- | --- |
-| Query ID | `query_53` |
-| Positive Doc ID | `doc_154` |
-| BM25 positive rank | 1 |
-| Query chars | 64 |
-| Positive document chars | 426693 |
-
-**Query**
-
-> What remarks does Tacitus offer regarding the death of Agricola?
-
-**Positive document**
-
-> Project Gutenberg's Germania and Agricola, by Caius Cornelius Tacitus This eBook is for the use of anyone anywhere in the United States and most other parts of the world at no cost and with almost no restrictions whatsoever. Title: Germania and Agricola Author: Caius Cornelius Tacitus ... [truncated from 426693 chars]
-
-### Sample 3
-
-| Field | Value |
-| --- | --- |
-| Query ID | `query_39` |
-| Positive Doc ID | `doc_310` |
-| BM25 positive rank | 16 |
-| Query chars | 27 |
-| Positive document chars | 137748 |
-
-**Query**
-
-> Who killed Peter's parents?
-
-**Positive document**
-
-> `<html> <head><title>Fright Night Script at IMSDb.</title> <meta name="description" content="Fright Night script at the Internet Movie Script Database."> <meta name="keywords" content="Fright Night script, Fright Night movie script, Fright Night film script">` ... [truncated from 137748 chars]
-
-### Sample 4
-
-| Field | Value |
-| --- | --- |
-| Query ID | `query_144` |
-| Positive Doc ID | `doc_186` |
-| BM25 positive rank | 1 |
-| Query chars | 39 |
-| Positive document chars | 550947 |
-
-**Query**
-
-> How does George Darrow travel to Frace?
-
-**Positive document**
-
-> The Project Gutenberg EBook of The Reef, by Edith Wharton Title: The Reef Author: Edith Wharton. BOOK I I "Unexpected obstacle. Please don't come till thirtieth. Anna." All the way from Charing Cross to Dover the train had hammered the words of the telegram into George Darrow's ears ... [truncated from 550947 chars]
-
-### Sample 5
-
-| Field | Value |
-| --- | --- |
-| Query ID | `query_88` |
-| Positive Doc ID | `doc_248` |
-| BM25 positive rank | 1 |
-| Query chars | 40 |
-| Positive document chars | 130649 |
-
-**Query**
-
-> What song does Lou sing with Motley Lou?
-
-**Positive document**
-
-> `<html> <head><title>Hot Tub Time Machine Script at IMSDb.</title> <meta name="description" content="Hot Tub Time Machine script at the Internet Movie Script Database."> <meta name="keywords" content="Hot Tub Time Machine script, Hot Tub Time Machine movie script, Hot Tub Time Machine film script">` ... [truncated from 130649 chars]
+| Why hasn't Irena killed herself before? (39 chars) | ï»¿The Project Gutenberg EBook of When We Dead Awaken, by Henrik Ibsen This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever. You may copy it, give it away or re-use it under the t ... [truncated 225 chars](131749 chars) |
+| What does the bomber leave behind that reveals his identity? (60 chars) | <html> <head><title>Source Code Script at IMSDb.</title> <meta name="description" content="Source Code script at the Internet Movie Script Database."> <meta name="keywords" content="Source Code script, Source Code movie scrip ... [truncated 225 chars](219018 chars) |
+| Whose hand does Grayes reluctantly take in marriage? (52 chars) | ï»¿The Project Gutenberg EBook of Desperate Remedies, by Thomas Hardy This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever. You may copy it, give it away or re-use it under the te ... [truncated 225 chars](817284 chars) |
+| Who did Plato not deter from writing according to Cicero in speaking to Romans? (79 chars) | ï»¿The Project Gutenberg EBook of Cicero's Brutus or History of Famous Orators; also His Orator, or Accomplished Speaker., by Cicero This eBook is for the use of anyone anywhere at no cost and with almost no restrictions what ... [truncated 225 chars](481075 chars) |
+| What did Mrs. Lovett reveal to Todd? (36 chars) | <html> <head><title>Sweeney Todd: The Demon Barber of Fleet Street Script at IMSDb.</title> <meta name="description" content="Sweeney Todd: The Demon Barber of Fleet Street script at the Internet Movie Script Database."> <met ... [truncated 225 chars](252633 chars) |
 
 ## Dataset Information
 

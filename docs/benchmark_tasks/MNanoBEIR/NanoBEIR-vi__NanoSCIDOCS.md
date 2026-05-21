@@ -44,8 +44,11 @@ negatives that describe different contributions.
 
 | Query | Positive document |
 | --- | --- |
-| Tái lập chỉ mục video hợp tác sử dụng phân tích ma trận (55 chars) | Bài báo này xem xét vấn đề mô hình tái tạo một đối tượng từ các mẫu tần số không đầy đủ. Xem xét một tín hiệu thời gian rời rạc f thuộc C^N và một tập hợp tần số được chọn ngẫu nhi ... [truncated from 1630 chars] (1,630 chars) |
-| Giảm phương sai để tối ưu hóa phi lồi nhanh hơn (47 chars) | Nhiều thuật toán cổ điển được phát hiện cho đến nhiều năm sau đó vẫn tồn tại ngoài những giới hạn mà chúng được hình thành, và tiếp tục có liên quan trong những bối cảnh không lườn ... [truncated from 975 chars] (975 chars) |
+| Bộ chuyển đổi tăng áp đa mức DC-DC mới (38 chars) | Tóm tắt: Các bộ chuyển đổi nguồn điện đa mức đang nổi lên như một loại tùy chọn bộ chuyển đổi năng lượng mới cho các ứng dụng công suất cao. Các bộ chuyển đổi nguồn điện đa mức thường tổng hợp sóng điện áp bậc thang từ nhiều ... [truncated 225 chars](920 chars) |
+| Học Lĩnh Vực Ngẫu Nhiên Markov Gauss Thưa Nhanh Dựa Trên Phân Tích Cholesky (75 chars) | Văn bản đã được dịch: (21 chars) |
+| Tổng hợp kết cấu sử dụng mạng nơ-ron tích chập (46 chars) | Trong công trình này, chúng tôi nghiên cứu ảnh hưởng của độ sâu của mạng nơ-ron tích chập đến độ chính xác của nó trong bối cảnh nhận diện hình ảnh quy mô lớn. Đóng góp chính của chúng tôi là một đánh giá kỹ lưỡng về các mạng ... [truncated 225 chars](908 chars) |
+| Antenna vòng tròn băng thông phẳng với phân cực tròn cho hệ thống RFID (70 chars) | Trong bài báo này, một kỹ thuật cấp nguồn dải uốn ngang (HMS) được đề xuất để đạt được sự khớp trở tốt và các mô hình bức xạ đối xứng cho một ăng-ten patch xếp chồng phân cực tròn băng thông rộng được cấp nguồn đơn, phù hợp c ... [truncated 225 chars](1256 chars) |
+| Thiết kế máy theo dõi nhịp tim kỹ thuật số tiên tiến sử dụng các linh kiện điện tử cơ bản (89 chars) | Trong bài báo này, chúng tôi trình bày thiết kế và phát triển một thiết bị tích hợp mới để đo nhịp tim bằng đầu ngón tay nhằm cải thiện việc ước lượng nhịp tim. Khi các bệnh liên quan đến tim mạch ngày càng gia tăng, nhu cầu ... [truncated 225 chars](1160 chars) |
 
 ## Dataset Information
 

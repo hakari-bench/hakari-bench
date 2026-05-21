@@ -49,16 +49,13 @@ but not the relation needed for the final answer.
 
 ## Example Data
 
-Line breaks are shown as `<br>`. The character counts are the full query and
-document lengths before truncation.
-
-| IDs | Chars query / doc | BM25 rank | Query | Positive document |
-| --- | ---: | ---: | --- | --- |
-| `5ae4a2b25542995ad6573de0` -> `35654419` | 96 / 218 | 1 | Red Mountain is a film that centers on an attempt by a group of what group of Civil War rangers? | Red Mountain (film)<br><br>Red Mountain is a 1951 Western historical film, starring Alan Ladd, set in the last days of the US Civil War. The plot centers on an attempt by Quantrill's Raiders to stir up rebellion in the West. |
-| `5a879ba55542993e715abfc3` -> `89753` | 69 / 349 | 1 | Which director had the longest career, Alain Resnais or Scott Sidney? | Alain Resnais<br><br>Alain Resnais was a French film director and screenwriter whose career extended over more than six decades. After training as a film editor in the mid-1940s, he went on to direct a number of short films which included "Night and Fog", an influential documentary about the Nazi concentration camps. |
-| `5ac1b1345542994ab5c67dd0` -> `32032154` | 96 / 1074 | 2 | Sinch when has the rank held by Sir Charles Comyn Egertong been the highest in the British Army? | Field marshal (United Kingdom)<br><br>Field Marshal has been the highest rank in the British Army since 1736. A five-star rank with NATO code OF-10, it is equivalent to an Admiral of the Fleet in the Royal Navy or a Marshal of the Royal Air Force in the Royal Air Force. A Field Marshal's insignia consists of two crossed batons ... [truncated] |
-| `5a81b43d5542995ce29dcc39` -> `13854872` | 77 / 166 | 2 | John Stoltenberg is the managing editor of the magazine that focuses on what? | AARP The Magazine<br><br>AARP The Magazine is an American bi-monthly magazine, published by the American Association of Retired People, AARP, which focuses on aging issues. |
-| `5a85b2d95542997b5ce40028` -> `282635` | 106 / 445 | 2 | Who was known by his stage name Aladin and helped organizations improve their performance as a consultant? | Management consulting<br><br>Management consulting is the practice of helping organizations to improve their performance, operating primarily through the analysis of existing organizational problems and the development of plans for improvement. Organizations may draw upon the services of management consultants for a number of reasons, including gaining external advice and access to the consultants' specialized expertise. |
+| Query | Positive document |
+| --- | --- |
+| The Soul of Buddha is a 1918 American silent romance film shot in a borough that is the western terminus of what? (114 chars) | The Soul of Buddha The Soul of Buddha is a 1918 American silent romance film directed by J. Gordon Edwards and starring Theda Bara, who also wrote the film's story. The film was produced by Fox Film Corporation and shot at th ... [truncated 225 chars](263 chars) |
+| The lamp used in many lighthouses is similiar to this type of lamp patented in 1780 by Aimé Argand? (99 chars) | Lewis lamp The Lewis lamp is a type of light fixture used in lighthouses. It was invented by Winslow Lewis who patented the design in 1810. The primary marketing point of the Lewis lamp was that it used less than half the oil ... [truncated 225 chars](708 chars) |
+| What is the shared country of ancestry between Art Laboe and Scout Tufankjian? (78 chars) | Art Laboe Art Laboe (born Arthur Egnoian on August 7, 1925) is an Armenian American disc jockey, songwriter, record producer, and radio station owner, generally credited with coining the term "Oldies But Goodies". (214 chars) |
+| Sebastian Gutierrez is known for writing the screenplay for the 2003 film directed by whom? (91 chars) | Sebastian Gutierrez Sebastian Gutierrez (born September 10, 1974) is a Venezuelan film director, screenwriter and film producer. known for writing the screenplays to the films "Gothika", "Snakes on a Plane", "The Eye" and "Th ... [truncated 225 chars](354 chars) |
+| When did the character on Grey's Anatomy, played by the same actor who portrayed Rev James Lawson in "Lee Daniel's The Butler", debut? (134 chars) | Jesse Williams (actor) Jesse Wesley Williams (born August 5, 1981) is an American actor, model, and activist, best known for his role as Dr. Jackson Avery on the ABC Television series "Grey's Anatomy". He also appeared in the ... [truncated 225 chars](526 chars) |
 
 ## Dataset Information
 

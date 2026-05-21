@@ -125,11 +125,11 @@ questions answerable from one passage alone are less useful for this benchmark.
 
 | Query | Positive document |
 | --- | --- |
-| Alice David is the voice of Lara Croft in a video game developed by which company ? (83 chars) | Tomb Raider is an action-adventure video game developed by Crystal Dynamics and published by Square Enix... [truncated from 399 chars] (399 chars) |
-| Who was born first Doug Liman or Saul Metzstein? (48 chars) | Saul Metzstein (born 30 December 1970) is a Scottish film director. He is the son of renowned modernist architect Isi Metzstein... [truncated from 254 chars] (254 chars) |
-| Both The Badgeman and +44 were bands concieved in which country? (64 chars) | The Badgeman were a four-piece indie rock band from Salisbury, Wiltshire formed in 1988... [truncated from 528 chars] (528 chars) |
-| Do Czeslaw Milosz and Nathalie Sarraute have the same nationality? (66 chars) | Czeslaw Milosz (30 June 1911 - 14 August 2004) was a Polish poet, prose writer, translator and diplomat... [truncated from 807 chars] (807 chars) |
-| Arthur Noss was a gunner for the commader during which two European theatre battles in WWII? (92 chars) | Second Lieutenant Arthur Rex Hurden Noss (22 January 1897 - 15 September 1917) was a British World War I flying ace credited with nine aerial victories... [truncated from 289 chars] (289 chars) |
+| Penny Rae Bridges starred in a television sitcom with what other actor? (71 chars) | Penny Rae Bridges (born July 29, 1990) is an American actress. Her television work has included roles in "For Your Love", "Family Law", "Boy Meets World" and "The Parent 'Hood". She is best known for her role in "Half & Half" ... [truncated 225 chars](245 chars) |
+| Who bestowed Kaganoi Shigemochi with a blade made by the person that founded the Muramasa school? (97 chars) | Kaganoi Shigemochi (加賀井 重望 , 1561 – August 27, 1600) was a Japanese samurai of the Azuchi-Momoyama period, who served the Oda clan. He ruled Kaganoi Castle. During the Battle of Komaki and Nagakute, Shigemochi fought under hi ... [truncated 225 chars](575 chars) |
+| What film was written and directed by Joby Harold with music written by Samuel Sim? (83 chars) | Samuel Sim is a film and television composer. He first gained recognition with his award winning score for the BBC drama series "Dunkirk". Since then he has written the music for a wide variety of film and television producti ... [truncated 225 chars](502 chars) |
+| What is the date played of this college football game at Sun Life Stadium in Miami Gardens, Florida, where Clemson defeated the No. 4 Oklahoma Sooners, 37-17? (158 chars) | The 2015 Clemson Tigers football team represented Clemson University in the 2015 NCAA Division I FBS football season. The Tigers were led by head coach Dabo Swinney in his seventh full year and eighth overall since taking ove ... [truncated 225 chars](1019 chars) |
+| Devil's Food is a singles compilation by an American rock and roll band that has also been known to play country shows under what? (130 chars) | Devil's Food is a singles compilation by the American rock and roll band Supersuckers, released in April 2005 on Mid-Fi records. (128 chars) |
 
 ## Dataset Information
 

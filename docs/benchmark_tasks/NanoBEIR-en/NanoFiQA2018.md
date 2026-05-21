@@ -137,11 +137,11 @@ decision.
 
 | Query | Positive document |
 | --- | --- |
-| Pay off credit card debt or earn employer 401(k) match? (55 chars) | Nope, take the match. I cannot see not taking the match unless you don't have enough money to cover the bills... [truncated from 450 chars] (450 chars) |
-| Typically how many digits are in a cheque number? (49 chars) | Checks are normally numbered sequentially, to keep them unique for record-keeping purposes. The check number takes as many digits as it takes... [truncated from 624 chars] (624 chars) |
-| How should I file my taxes as a contractor? (43 chars) | For tax purposes you will need to file as an employee (T4 slips and tax withheld automatically), but also as an entrepreneur... [truncated from 689 chars] (689 chars) |
-| Short selling - lender's motivation (35 chars) | "Oftentimes, the lender (the owner of the security) is not explicitly involved in the lending transaction. Let's say the broker... [truncated from 1,254 chars] (1,254 chars) |
-| How do you determine the dividend payout date for Mutual Funds? (63 chars) | "Determine which fund company issues the fund. In this case, a search reveals the fund name to be Vanguard Dividend Growth Fund from Vanguard... [truncated from 1,098 chars] (1,098 chars) |
+| What type of returns Vanguard is quoting? (41 chars) | "From the Vanguard page - This seemed the easiest one as S&P data is simple to find. I use MoneyChimp to get - which confirms that Vanguard's page is offering CAGR, not arithmetic Average. Note: Vanguard states ""For U.S. sto ... [truncated 225 chars](387 chars) |
+| Freelancing Tax implication (27 chars) | If you have income in the US, you will owe US income tax on it, unless there is a treaty with your country that says otherwise. (127 chars) |
+| What is considered high or low when talking about volume? (57 chars) | The daily Volume is usually compared to the average daily volume over the past 50 days for a stock. High volume is usually considered to be 2 or more times the average daily volume over the last 50 days for that stock, howeve ... [truncated 225 chars](684 chars) |
+| Using credit card points to pay for tax deductible business expenses (68 chars) | "For simplicity, let's start by just considering cash back. In general, cash back from credit cards for personal use is not taxable, but for business use it is taxable (sort of, I'll explain later). The reason is most persona ... [truncated 225 chars](3496 chars) |
+| How should I file my taxes as a contractor? (43 chars) | For tax purposes you will need to file as an employee (T4 slips and tax withheld automatically), but also as an entrepreneur. I had the same situation myself last year. Employee and self-employed is a publication from Revenue ... [truncated 225 chars](689 chars) |
 
 ## Dataset Information
 

@@ -44,9 +44,11 @@ hard negatives that do not provide the needed evidence.
 
 | Query | Positive document |
 | --- | --- |
-| Nero är en människa (19 chars) | Den julisk-claudiska dynastin syftar på de första fem romerska kejsarna - Augustus, Tiberius, Caligula, Claudius och Nero - eller familjen de tillhörde. De styrde Romarriket från dess bildande under Augustus i slutet av 1:a århundradet f.Kr ... [truncated from 2021 chars] (2,022 chars) |
-| Alex Jones föddes på sjuttiotalet. (34 chars) | Alexander Emerick Jones (född 11 februari 1974) är en amerikansk högerpopulistisk radioprogramledare, filmskapare, författare och konspirationsteoretiker. Han leder The Alex Jones Show från Austin, Texas, som sänds på Genesis Communications ... [truncated from 1579 chars] (1,582 chars) |
-| Wolfgang Amadeus Mozart var brottare. (37 chars) | Wolfgang Amadeus Mozart (27 januari 1756 - 5 december 1791), döpt till Johannes Chrysostomus Wolfgangus Theophilus Mozart, var en mycket produktiv och inflytelserik kompositör under den klassiska eran. Född i Salzburg, visade han tidigt en ... [truncated from 1380 chars] (1,380 chars) |
+| Keith Godchaux kände till Grateful Dead (39 chars) | The Grateful Dead var ett amerikanskt rockband som bildades 1965 i Palo Alto, Kalifornien. Bandet, som bestod av fem till sju medlemmar, är känt för sin unika och eklektiska stil, som blandade element från rock, psychedelia, ... [truncated 225 chars](2895 chars) |
+| Taarak Mehta Ka Ooltah Chashmah är en sitcom. (45 chars) | Taarak Mehta Ka Ooltah Chashmah (Engelska: Taarak Mehtas olika perspektiv) är Indiens längsta löpande sitcom, producerad av Neela Tele Films Private Limited. Serien sändes för första gången den 28 juli 2008. Den sänds från må ... [truncated 225 chars](583 chars) |
+| Hemliga och tekniskt avancerade flygplan tillverkades i Burbank, Kalifornien. (77 chars) | Burbank är en stad i Los Angeles County i södra Kalifornien, USA, cirka 19 kilometer nordväst om centrala Los Angeles. Vid folkräkningen 2010 hade staden 103 340 invånare. Staden marknadsförs som "Världens Mediehuvudstad" och ... [truncated 225 chars](1280 chars) |
+| Nero är en människa (19 chars) | Den julisk-claudiska dynastin syftar på de första fem romerska kejsarna – Augustus, Tiberius, Caligula, Claudius och Nero – eller familjen de tillhörde. De styrde Romarriket från dess bildande under Augustus i slutet av 1:a å ... [truncated 225 chars](2022 chars) |
+| Scream 2 är enbart en tysk film. (32 chars) | Scream 2 är en amerikansk slasherfilm från 1997, regisserad av Wes Craven och skriven av Kevin Williamson. Filmen har David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar, Jamie Kennedy, Laurie Metcalf, Jerry O ... [truncated 225 chars](2456 chars) |
 
 ## Dataset Information
 

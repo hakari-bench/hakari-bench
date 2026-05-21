@@ -72,32 +72,13 @@ Do not seed generation from Nano evaluation queries or positives.
 
 ## Example Data
 
-Examples below are deterministic query-positive samples from the Nano split.
-
-### Sample 1
-
-- Query (`query_57`, 594 chars, BM25 rank 14): Project Manager introduced a new remote control project. The team started to know each other by introducing their roles in this project. Project Manager then invited everyone to raise ideas about the remote.
-- Positive document (`doc_192`, 21917 chars): Project Manager: Okay. Oh, that's not gonna work. Marketing: I am Corinne Whiting and I will be the Marketing Expert and in each of the three phases I will have a different role. ... [truncated from 21917 chars]
-
-### Sample 2
-
-- Query (`query_195`, 462 chars, BM25 rank 2): Industrial Designer made a presentation about the personal preference for components design. The remote should have a solid case in plastic and soft rubber and the rubber push-buttons.
-- Positive document (`doc_80`, 56676 chars): Project Manager: Okay, all set? Welcome to the conceptual design meeting. User Interface: Uh, okay. Industrial Designer: Yes. Project Manager: The agenda. ... [truncated from 56676 chars]
-
-### Sample 3
-
-- Query (`query_76`, 225 chars, BM25 rank 2): The government let people who lived with substance use to access medications more easily. Safe injection sites had been made in communities and community-based projects had been supported for people who were using substances.
-- Positive document (`doc_53`, 122736 chars): The Chair: I call this meeting to order. Welcome to meeting number 22 of the House of Commons Special Committee on the COVID-19 Pandemic. ... [truncated from 122736 chars]
-
-### Sample 4
-
-- Query (`query_152`, 334 chars, BM25 rank 1): Industrial Designer suggested a rechargeable station like a cradle for the iPod when discussing the battery for essential functions because it might contribute to fewer people losing it too.
-- Positive document (`doc_34`, 42604 chars): Project Manager: Good to see you all again. This is our functional design meeting. We put the fashion in electronics. Let's start. ... [truncated from 42604 chars]
-
-### Sample 5
-
-- Query (`query_144`, 263 chars, BM25 rank 1): Too much noise was causing the model to perform worse, so the noise addition was constant and not too high. The overall improvement was good.
-- Positive document (`doc_132`, 90143 chars): PhD F: And we're on. Professor D: OK. Might wanna close the door. Grad C: This past week I've been mainly occupied with getting some results ... [truncated from 90143 chars]
+| Query | Positive document |
+| --- | --- |
+| They felt that the battery design should be long-lived, original, and conventional to ensure the battery's innovation, versatility, and durability. It should also not be far from the usual performance, or it may cause problem ... [truncated 225 chars](241 chars) | User Interface: .. . Project Manager: Okay . So , this is uh first meeting of this design project . Um and I um like to show you the agenda for the meeting , I don't know if it was sent round to all of you . User Interface: M ... [truncated 225 chars](22629 chars) |
+| The Prime Minister explained that the government recognized that several organizations and companies were facing difficulties because of COVID-19 and they were supporting people all over the country through that program. Alth ... [truncated 225 chars](537 chars) | The Chair (Hon. Anthony Rota (NipissingTimiskaming, Lib.)): I call this meeting to order. Welcome to the 12th meeting of the House of Commons Special Committee on the COVID-19 Pandemic. This will be the first hybrid meeting o ... [truncated 225 chars](120229 chars) |
+| In the product evaluation, the team was satisfied with its success in reducing the number of unused buttons. The user interface was considered to be user-friendly enough. However, the team also admitted that there was still r ... [truncated 225 chars](362 chars) | Project Manager: That should hopefully do the trick , um . 'Kay . Sorry about the small delay . Falling a little bit behind schedule . And that's uh fifteen twenty five . Okay . So just to try and roughly go over what we agre ... [truncated 225 chars](43300 chars) |
+| Grad F explained that he was focusing on writing his proposal for his qualification exams, which was on the 25th of July. He had to write a paper and pass it around before that date. (182 chars) | Professor B: I think for two years we were two months , uh , away from being done . PhD A: And what was that , Morgan ? What project ? Professor B: Uh , the , uh , TORRENT chip . PhD A: Oh . Professor B: Yeah . We were two {d ... [truncated 225 chars](56387 chars) |
+| The team agreed that there should be 17 buttons on the remote, including number 0 to 9, volume up and down, mute, channel up and down, stand-by and power buttons. Besides the buttons of brightness and contrast should be put o ... [truncated 225 chars](250 chars) | Project Manager: Right uh . So um . So where's the PowerPoint presentation ? Sorry ? Microsoft PowerPoint , right . Right , okay . So . Right . Okay , so we've got uh so we've got new project requirements . Um . So basically ... [truncated 225 chars](43476 chars) |
 
 ## Dataset Information
 

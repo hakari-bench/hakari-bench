@@ -46,9 +46,11 @@ include one mentioned entity but omit the bridging fact.
 
 | Query | Positive document |
 | --- | --- |
-| Vilken position hade Christian Albrecht Bluhme under det andra kriget i Schleswig-Holstein på grund av Schleswig-Holstein-frågan? (129 chars) | Andra Slesvigska kriget var den andra militära konflikten som ett resultat av Schleswig-Holstein-frågan. Det började den 1 februari 1864, när preussiska styrkor korsade gränse ... [truncated from 257 chars] (257 chars) |
-| Vilken typ av ledare har guvernören av Sheerness och Stapleton Cotton, viscount Combermere gemensamt? (101 chars) | Fältmarskalk Stapleton Cotton, 1:e viscount Combermere, var en brittisk arméofficer, diplomat och politiker. Som yngre officer deltog han i Flandernfälttåget ... [truncated from 595 chars] (595 chars) |
-| Vem var producenten för sångaren bakom 'For The Good Times'? (60 chars) | Message to Love är en dokumentärfilm om Isle of Wight Festival 1970. Filmen skildrar oförskämt och ofta komiskt de många problemen som förknippas med det berömda kaotiska festivalen ... [truncated from 813 chars] (813 chars) |
+| Med vilken annan skådespelare medverkade Penny Rae Bridges i en TV-sitcom? (74 chars) | Penny Rae Bridges (född 29 juli 1990) är en amerikansk skådespelerska. Hon har medverkat i TV-serier som "For Your Love", "Family Law", "Boy Meets World" och "The Parent 'Hood". Hon är mest känd för sin roll i "Half & Half", ... [truncated 225 chars](254 chars) |
+| Vem gav Kaganoi Shigemochi ett svärd som tillverkades av den som grundade Muramasa-skolan? (90 chars) | Kaganoi Shigemochi (加賀井 重望, 1561 – 27 augusti 1600) var en japansk samuraj under Azuchi-Momoyama-perioden, som tjänade Oda-klanen. Han styrde över Kaganoi-slottet. Under slagen vid Komaki och Nagakute kämpade Shigemochi under ... [truncated 225 chars](569 chars) |
+| Vilken film är skriven och regisserad av Joby Harold och har musik av Samuel Sim? (81 chars) | Samuel Sim är en film- och TV-kompositör. Han fick först uppmärksamhet med sin prisbelönta musik till BBC-dramaserien "Dunkirk". Sedan dess har han skrivit musik till en bred variation av film- och TV-produktioner. Senast gjo ... [truncated 225 chars](488 chars) |
+| När spelades denna college football-match på Sun Life Stadium i Miami Gardens, Florida, där Clemson slog de fjärdeplacerade Oklahoma Sooners med 37-17? (151 chars) | Clemson Tigers fotbollslaget 2015 representerade Clemson University i 2015 års NCAA Division I FBS fotbollssäsong. Tigers leddes av huvudtränaren Dabo Swinney i hans sjunde fulla år och åttonde år totalt sedan han tog över mi ... [truncated 225 chars](1007 chars) |
+| Devil's Food är en samling med singlar av ett amerikanskt rock and roll-band som också är känt för att spela country-konserter under vilket namn? (145 chars) | Devil's Food är en samling av singlar av det amerikanska rock'n'roll-bandet Supersuckers, utgiven i april 2005 på Mid-Fi Records. (129 chars) |
 
 ## Dataset Information
 

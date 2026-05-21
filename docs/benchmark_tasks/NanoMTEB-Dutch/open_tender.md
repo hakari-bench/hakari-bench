@@ -78,11 +78,11 @@ queries. Include hard negatives from the same sector or procedure type.
 
 | Query | Positive document |
 | --- | --- |
-| Inhuur Advies & Coaching: supervisie en intervisies (51 chars) | Inhuur tijdelijk docent/ programma manager / Professional (57 chars) |
-| Nieuwbouw Parkeergarage Nieuwe Oosterstraat. (44 chars) | Sloop bestaande bebouwing, nieuwebouw 2-laags ondergrondse parkeergarage circa 8 000 m2... [truncated from 236 chars] (236 chars) |
-| Europese Aanbesteding Druk- en Kopieerwerk (42 chars) | De opdracht betreft het leveren van druk- en print/kopieerwerk... Europese openbare aanbesteding... [truncated from 339 chars] (339 chars) |
-| Europese aanbesteding herontwikkeling azc Ter Apel (50 chars) | Ontwerp, Realisatie en Meerjarig onderhoud azc Ter Apel (55 chars) |
-| Vrijwillige transparantie vooraf Eemsdelta Digitaal (51 chars) | Deze aankondiging wordt enkel gebruikt om de voorgenomen procedurekeuze ... Ilionx Group B.V. vooraf bekend te stellen ... [truncated from 560 chars] (560 chars) |
+| Warmtebeeldcamera's (19 chars) | Warmtebeeldcamera TSWarmtebeeldcamera OvDten behoeve van de veiligheidsregio's Noord- en Oost Gelderland, IJsselland en Twente. (127 chars) |
+| Nieuwbouw van een vrijstaand gebouw voor dienstverlenende en adminstratieve functies. (85 chars) | Lot 4: Liften voor bouwen van een nieuwbouw voor dienstverlening van geestelijke gezondheid en bijhorende administratie. (120 chars) |
+| Toegangscontrolesysteem (23 chars) | Het leveren en installeren van online draadloos toegangscontrolesystemen. (73 chars) |
+| 57/52/3/18/032 - Area North-West - Omvorming van spoorinfrastructuur - Raamovereenkomst (87 chars) | De opdracht bestaat hoofdzakelijk uit:Hoofdzaak:— De opbraak en aanleg (vernieuwen) van spoortoestellen in hoofd- en bijspoor,— De opbraak en aanleg (vernieuwen) van spoorstaven, dwarsliggers en ballast in hoofd- en bijspoor. (225 chars) |
+| Europese aanbesteding brandverzekering Veiligheidsregio Zeeland (63 chars) | Het doel van deze openbare Europese aanbesteding is het op transparante wijze sluiten van een of meer brandverzekeringsovereenkomsten tussen Aanbestedende dienst, in hoedanigheid van Veiligheidsregio Zeeland in de ruimste zin ... [truncated 225 chars](884 chars) |
 
 ## Dataset Information
 

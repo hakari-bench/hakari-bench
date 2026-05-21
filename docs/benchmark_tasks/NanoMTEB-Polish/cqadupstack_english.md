@@ -56,11 +56,11 @@ the surface example sentence or terminology.
 
 | Query | Positive document |
 | --- | --- |
-| Kiedy kończy się "-uple"? (25 chars) | Czy istnieje inne słowo na pięć razy, takie jak potrójny, poczwórny? Zapomniałem, co oznacza słowo 5 razy. Wiem, że jest pojedynczy, podwójny, potrójny, poczwórny, ale zapomniałem, co to jest ten za 5. (201 chars) |
-| Jak się wymawia „ s’ ”? (23 chars) | Jaka jest poprawna osoba dzierżawcza dla rzeczowników kończących się na „-s”? Jaka jest własność rzeczownika kończącego się na _-s_? Czy oba mają rację, czy drugi jest zły? 1. książki dla chłopców 2. samochód szefa (214 chars) |
-| Przecinki i średniki z klauzulami nieograniczającymi (52 chars) | Dziwna struktura zdań z utworu Pauli Gunn Allen Ta lekcja znajduje się we wzorniku. Chcę wiedzieć, dlaczego słowo „o” powtarza się kilka razy w tekście: > Moja mama opowiadała mi historie o gotowaniu i rodzeniu dzieci; opowiedziała mi > historie o menstruacji... [truncated from 428 chars] (428 chars) |
-| „s” vs. „z” w BE vs. AE (23 chars) | Skąd wiedzieć, kiedy nie można użyć z zamiast s na końcu? Wiem, że końcówki -se -ses -sation itp. są brytyjskie, a amerykańskie odpowiedniki to z, a nie s. Natknąłem się jednak na słowo „improwizacja”, którego najwyraźniej nie można zapisać przez z. Skąd możes... [truncated from 334 chars] (334 chars) |
-| Zgoda czasownika złożonego (26 chars) | Mają lub mają w tym zdaniu, gdy mówimy o „jednym lub drugim” Które z tych dwóch zdań jest poprawne po angielsku? > Jeśli ty lub bliska osoba doznaliście urazu lub: > Jeśli ty lub bliska osoba doznaliście urazu Biorąc pod uwagę, że dotyczy to „ty **_lub_** ukoc... [truncated from 273 chars] (273 chars) |
+| Ogólne „to” (11 chars) | Do czego odnosi się „to” w „pada deszcz”? Chciałem pozostawić tytuł pytania bez zmian, aby nie odrywać się od zabawy `:)`. W każdym razie > pada deszcz. Co pada? Czy to niebo? Chmury? Pogoda? Deszcz? Co to jest"? Jakieś spost ... [truncated 225 chars](269 chars) |
+| Jak przebić zakres dzielonych liczb? (36 chars) | Kiedy powinienem używać pauzy, pauzy i łącznika? Generalnie wiem, jak używać myślnika, ale kiedy powinienem użyć en-dash zamiast em-myślnika, a kiedy powinienem użyć myślnika zamiast em-myślnika? (195 chars) |
+| Wybieranie między „z czym eksperymentować” a „z czym eksperymentować” (69 chars) | Kiedy należy kończyć zdanie przyimkiem? Jak wielu innych, często kończę zdanie przyimkiem. Tak, wzdrygam się. Zwykle przepisuję zdanie, ale czasami (w e-mailach) po prostu z tym żyję. _Do_ _z_... wiesz kim jesteś. Czy powinie ... [truncated 225 chars](303 chars) |
+| Zasady dotyczące wielkich liter dla „the” (41 chars) | Zapisywanie przedimka określonego wielkimi literami w nazwach Kiedy byłem młody kilkadziesiąt lat temu, uczono mnie, że w przypadku nazw osób, miejsc i rzeczy, które zawierały przedimek określony, przedimek nie był pisany wie ... [truncated 225 chars](752 chars) |
+| Jaka jest różnica między „częścią” a „częścią” ？ (48 chars) | Różnica między „częścią” a „częścią”? To pytanie może wydawać się bardzo proste, ale coś mi się myli, kiedy chcę mówić. Przeczytałem książkę zatytułowaną „re-start your English” i zobaczyłem zdanie. > to jest noga. jest częśc ... [truncated 225 chars](471 chars) |
 
 ## Dataset Information
 

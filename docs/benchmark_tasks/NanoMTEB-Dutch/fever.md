@@ -81,11 +81,11 @@ verify the claim.
 
 | Query | Positive document |
 | --- | --- |
-| De Dunne Rode Lijn (film uit 1998) toont alleen kikkers. (56 chars) | Ben Chaplin Ben Chaplin (geboren Benedict John Greenwood; 31 juli 1969) is een Engelse acteur. (95 chars) |
-| Benzodiazepine is een medicijn. (31 chars) | Premedicatie Premedicatie is het gebruik van medicatie vóór een andere therapie ... [truncated from 2980 chars] (2980 chars) |
-| Dissociatieve identiteitsstoornis staat bekend als meervoudige persoonlijkheidsstoornis. (88 chars) | Dissociatieve identiteitsstoornis Dissociatieve identiteitsstoornis (DIS), ook bekend als meervoudige persoonlijkheidsstoornis ... [truncated from 3622 chars] (3622 chars) |
-| Hendrik III besteeg de troon op negenjarige leeftijd te midden van de Eerste Baronnenoorlog. (92 chars) | Hendrik III van Engeland Hendrik III ... [truncated from 4569 chars] (4569 chars) |
-| Anne Boleyn was hofdame van de koningin van Engeland. (53 chars) | Anna Boleyn Anna Boleyn ... was koningin van Engeland van 1533 tot 1536 ... [truncated from 3985 chars] (3985 chars) |
+| De huidige Hertog van York is een persoon. (42 chars) | Hertog van York De Hertog van York is een adellijke titel in de Peerage van het Verenigd Koninkrijk. Sinds de 15e eeuw is deze titel, wanneer verleend, meestal gegeven aan de tweede zoon van Engelse (later Britse) monarchen. ... [truncated 225 chars](931 chars) |
+| Burbank, Californië is altijd volledig verstoken geweest van industrie. (71 chars) | Burbank, Californië Burbank is een stad in Los Angeles County in Zuid-Californië, Verenigde Staten, 19 km ten noordwesten van het centrum van Los Angeles. De bevolking bedroeg bij de volkstelling van 2010 103.340 inwoners. Be ... [truncated 225 chars](1459 chars) |
+| Er is software, genaamd Adobe Photoshop, waarvan de versies met een nummer worden aangeduid. (92 chars) | Adobe Photoshop Adobe Photoshop is een rastergrafische editor ontwikkeld en uitgegeven door Adobe Systems voor macOS en Windows. Photoshop werd in 1988 gecreëerd door Thomas en John Knoll. Sindsdien is het de facto industries ... [truncated 225 chars](2249 chars) |
+| Joseph Merrick was het onderwerp van duizenden haat-tweets. (59 chars) | Joseph Merrick Joseph Carey Merrick (5 augustus 1862 – 11 april 1890; vaak ten onrechte John Merrick genoemd) was een Engelsman met zeer ernstige misvormingen die eerst werd tentoongesteld in een freakshow als de "Olifantenma ... [truncated 225 chars](3706 chars) |
+| Vic Mensa werd geboren op 12 juni 1993. (39 chars) | Vic Mensa Victor Kwesi Mensah (geboren 6 juni 1993), beter bekend onder zijn artiestennaam Vic Mensa, is een Grammy-genomineerde Amerikaanse rapper uit Chicago, Illinois. Hij heeft momenteel een contract bij Roc Nation en was ... [truncated 225 chars](552 chars) |
 
 ## Dataset Information
 

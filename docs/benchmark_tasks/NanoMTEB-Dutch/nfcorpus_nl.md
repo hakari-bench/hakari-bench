@@ -84,11 +84,11 @@ conditions or similar compounds.
 
 | Query | Positive document |
 | --- | --- |
-| Het vermijden van carcinogenen in gekookt vlees (47 chars) | Vorming en biochemie van carcinogene heterocyclische aromatische aminen in gekookt vlees. Heterocyclische aromatische aminen (HAA's) ... [truncated from 1347 chars] (1347 chars) |
-| schaaldieren (12 chars) | Sociodemografische en leefstijlstatistieken van de oudste ouderen (>80 jaar) op het eiland Ikaria... [truncated from 2034 chars] (2034 chars) |
-| rapamycine (10 chars) | Decomplexering van de mTOR-biologie In meercellige organismen is TOR een essentieel eiwit... [truncated from 1392 chars] (1392 chars) |
-| bloemkool (9 chars) | Isothiocyanaatconcentraties en interconversie van sulforafaan naar erucine... [truncated from 1831 chars] (1831 chars) |
-| kookmethoden (12 chars) | Dieet en galblaaskanker: een case-control studie... [truncated from 1902 chars] (1902 chars) |
+| bagels (6 chars) | Papaverzaadproducten en opiaten drugstesten – waar staan we nu? Zaden van de opiumpapaverplant worden legaal verkocht en veel geconsumeerd als voedsel. Door contaminatie tijdens de oogst kunnen de zaden morfine en andere opia ... [truncated 225 chars](1902 chars) |
+| druiven (7 chars) | Een beslist prikkelend idee: de potentiële rol van plantaardige polyfenolen bij de behandeling van leeftijdsgebonden cognitieve stoornissen. Tegenwoordig lijden tientallen miljoenen ouderen wereldwijd aan dementie. Hoewel de ... [truncated 225 chars](1953 chars) |
+| Dr. Walter Willett (18 chars) | Cocountolie voorspelt een gunstig lipidenprofiel bij premenopauzale vrouwen in de Filipijnen Cocountolie is een veelgebruikte eetbare olie in veel landen, en er is gemengd bewijs voor de effecten ervan op lipidenprofielen en ... [truncated 225 chars](1491 chars) |
+| Chronische hoofdpijn en varkens parasieten (42 chars) | Klinische manifestaties, diagnose en behandeling van neurocysticercose. Neurocysticercose (NCC) is de meest voorkomende parasitaire ziekte van de hersenen. Moderne beeldvormende technieken, CT en MRI, hebben de diagnose en ka ... [truncated 225 chars](996 chars) |
+| Inheemse Amerikanen (19 chars) | Westerse ziekten en hun ontstaan in relatie tot voeding. Veel van de meest voorkomende ziekten in economisch ontwikkelde gemeenschappen zijn kenmerkend voor de moderne Westerse cultuur. Er wordt bewijs gepresenteerd dat sugge ... [truncated 225 chars](504 chars) |
 
 ## Dataset Information
 

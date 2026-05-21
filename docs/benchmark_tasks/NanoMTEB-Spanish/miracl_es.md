@@ -68,11 +68,11 @@ queries or positives.
 
 | Query | Positive document |
 | --- | --- |
-| ¿Cuándo nació el equipo más amado de la ciudad de São Paulo, el Corinthians? (`68736#0`, 76 chars, BM25 rank 10) | Sport Club Corinthians Paulista (femenino) Fundado en 1997, el equipo de fútbol femenino del Sport Club Corinthians Paulista es uno de los más exitosos de América Latina en la actualidad. ... [truncated from 1489 chars] (`9149778#1`) |
-| ¿Quiénes fueron las estrellas de la música popular paraguaya en los años 80? (`9194047#0`, 76 chars, BM25 rank 5) | Música de Paraguay Durante la época virreinal, la música introducida por los misioneros jesuitas tuvo alguna difusión. En el siglo XX los máximos representantes de la música paraguaya fueron Agustín Pío Barrios ... (`3802513#51`, 622 chars) |
-| ¿Qué fue la escuela peripatética de la Antigua Grecia? (`5953969#0`, 54 chars, BM25 rank 6) | Liceo (Antigua Grecia) En el Liceo, Aristóteles dictó las lecciones que constituirán luego la mayor parte de su obra conservada. ... (`236962#3`, 800 chars) |
-| ¿Cuáles son las características de una guerrilla y qué suelen reclamar? (`9765017#0`, 71 chars, BM25 rank 3) | Agricultura de guerrilla La agricultura de guerrilla es una forma de acción directa no-violenta relacionada con la reforma agraria, la permacultura y el desarrollo sostenible. ... (`1983352#0`, 457 chars) |
-| ¿En qué versión de consola está PlayStation? (`6431882#0`, 44 chars, BM25 rank 3) | PlayStation (marca) El 19 de septiembre de 2018, Sony Interactive Entertainment anunció el lanzamiento de la consola PlayStation Classic, una versión en miniatura de la primera PlayStation ... (`5583933#5`, 439 chars) |
+| ¿Cómo es la arquitectura del caravasar de Orbelián? (51 chars) | Caravasar de Orbelian El caravasar está construido con bloques de basalto. (75 chars) |
+| ¿Cómo llaman los judíos al Pentateuco? (38 chars) | Pentateuco Se corresponde con los que en la tradición hebrea forman la "Torá" —La Ley—, núcleo de la religión judía. Los cinco libros que lo componen son:Está contenido a su vez en el "Tanaj", el cual es considerado sagrado p ... [truncated 225 chars](679 chars) |
+| ¿Cuándo recibió Daniel Harold Rolling la inyección letal de su condenación? (75 chars) | Daniel Harold Rolling Rolling fue ejecutado por inyección letal en prisión estatal de Florida el 25 de octubre de 2006, después de que la Corte Suprema de Estados Unidos rechazó una última apelación. Fue declarado fallecido a ... [truncated 225 chars](241 chars) |
+| ¿Cómo definir el parlamentarismo? (33 chars) | Parlamentarismo El parlamentarismo, también conocido como sistema parlamentario o «régimen parlamentario» es en política, un sistema de gobierno en el que la elección del gobierno (poder ejecutivo) emana del parlamento (poder ... [truncated 225 chars](500 chars) |
+| ¿Cuál era la misión de la Guardia Pretoriana? (45 chars) | Guardia Pretoriana La Guardia Pretoriana era un cuerpo militar que servía de escolta y protección a los emperadores romanos. Antes de los emperadores, esta escolta ya era usada por los líderes militares desde la época de los ... [truncated 225 chars](387 chars) |
 
 ## Dataset Information
 

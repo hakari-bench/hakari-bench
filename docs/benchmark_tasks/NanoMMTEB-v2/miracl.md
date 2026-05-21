@@ -55,11 +55,11 @@ templates, and positives should explicitly answer the question.
 
 | Query | Positive document |
 | --- | --- |
-| زنان ایران در چه زمینه ای فعالیت دارند؟ (39 chars) | زنان در ایران  از دهه ۱۹۷۰ ایران تغییرات اقتصادی و اجتماعی قابل توجهی را تجربه کرده‌است. میزان مشارکت نیروی کار زنان از ۹٫۱ درصد در سال ۱۹۹۶ به ۱۴ درصد در سال ۲۰۰۴ به ۳۱٫۹ در سال ۲۰۰۹ رسیده‌است. مشارکت زنان در اقتصاد ایران در مدت ۱۳ سال ۲۲٫۸ درصد افزایش داشته‌... [truncated from 1390 chars] (1390 chars) |
-| What was the first film directed by Andrei Tarkovsky? (53 chars) | Andrei Tarkovsky  Tarkovsky's films include "Ivan's Childhood" (1962), "Andrei Rublev" (1966), "Solaris" (1972), "Mirror" (1975), and "Stalker" (1979). He directed the first five of his seven feature films in the Soviet Union; his last two films, "Nostalghia"... [truncated from 464 chars] (464 chars) |
-| اساس داستانهای کوتاه در ادبیات بر چیست؟ (39 chars) | داستان کوتاه  داستان کوتاه گونه‌ای از ادبیات داستانی است که نسبت به رمان یا داستان بلند حجم بسیار کم‌تری دارد و نویسنده در آن برشی از زندگی یا حوادث را می‌نویسد درحالی که در داستان بلند یا رمان، نویسنده به جنبه‌های مختلف زندگی یک یا چند شخصیت می‌پردازد و دستش... [truncated from 376 chars] (376 chars) |
-| Wie heißt der erste Film der über Satane gezeigt wurde? (55 chars) | Satan Opium  "Satan Opium" passierte die Zensur im Dezember 1915 und wurde zunächst für die Dauer des Ersten Weltkrieges verboten. Bei einer Neuvorlage Anfang 1916 wurde dieses Verbot jedoch aufgehoben. Daraufhin erlebte "Satan Opium" seine Uraufführung mutmaß... [truncated from 519 chars] (519 chars) |
-| ভারতীয় লেখক আর. কে. নারায়ণ রচিত প্রথম গ্রন্থের নাম কী ? (57 chars) | আর. কে. নারায়ণ  ১৯৬৪ সালে নারায়ণ তাঁর প্রথম পুরাণ-ভিত্তিক গ্রন্থটি প্রকাশ করেন। এই গ্রন্থটি ছিল "গডস, ডেমনস অ্যান্ড আদার্স"। এই গ্রন্থে তিনি হিন্দু মহাকাব্য থেকে নানা ছোটো গল্প অনুবাদ করেন। তাঁর অন্যান্য অনেক বইয়ের মতো এই বইটির অলংকরণের কাজও করেছিলেন তাঁর ছ... [truncated from 811 chars] (811 chars) |
+| కిమ్మూరు గ్రామ విస్తీర్ణం ఎంత? (30 chars) | కిమ్మూరు ఇది మండల కేంద్రమైన అడ్డతీగల నుండి 25 కి. మీ. దూరం లోను, సమీప పట్టణమైన పెద్దాపురం నుండి 33 కి. మీ. దూరంలోనూ ఉంది. 2011 భారత జనగణన గణాంకాల ప్రకారం ఈ గ్రామం 249 ఇళ్లతో, 887 జనాభాతో 283 హెక్టార్లలో విస్తరించి ఉంది. గ్రామ ... [truncated 225 chars](380 chars) |
+| Welche Sekte hat Jim Jones geführt? (35 chars) | William Branham In den Jahren 1956 und 1957 unterstützte William Branham den jungen Prediger des Latter-Rain Movements und späteren Sektenführer Jim Jones und trat beispielsweise als Gastprediger in einer von ihm geleiteten P ... [truncated 225 chars](541 chars) |
+| متى عقدت الجمعية البرلمانية لمجلس أوروبا دورتها الأولى؟ (55 chars) | الجمعية البرلمانية لمجلس أوروبا عقدت الجمعية دورتها الأولى في ستراسبورغ في 10 أغسطس 1949. (90 chars) |
+| 印度人口有多少？ (8 chars) | 印度人口 印度人口的结构主要以语言、宗教以及种姓来划分。2007年大概有11亿，2011年3月31日公布的人口普查的初步结果是12.1亿，2017年人口数为13.24亿人。印度目前是世界人口第二大国，2019年末总人口数13.687亿人。联合国《世界人口展望》2019年报告预计，大约在2027年左右，印度人口将会超过中国人口，成为世界人口最多的国家。 (177 chars) |
+| Mitä voivodi tarkoittaa? (24 chars) | Voivodi Voivodi on slaavilainen arvonimi, joka alkuaan annettiin sotaa johtamaan valitulle päällikölle. Myöhemmin sitä on käytetty eräistä ruhtinaista Moldovassa, Puolassa, Transilvaniassa ja Valakiassa. Serbiassa ja Monteneg ... [truncated 225 chars](525 chars) |
 
 ## Dataset Information
 

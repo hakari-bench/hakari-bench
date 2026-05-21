@@ -46,9 +46,11 @@ should come from the same field but different contribution.
 
 | Query | Positive document |
 | --- | --- |
-| Samarbetsbaserad omindexering av video genom matrisfaktorisering (64 chars) | Denna artikel behandlar modellproblemet att rekonstruera ett objekt från ofullständiga frekvensprov. Betrakta ett diskret tidssignal f ∈ C^N och en slumpmässigt vald uppsättning frekvenser Ω ... [truncated from 1724 chars] (1,724 chars) |
-| Variansreduktion för snabbare icke-konvex optimering (52 chars) | Många klassiska algoritmer visar sig flera år senare överleva de begränsningar de ursprungligen skapades inom och fortsätter att vara relevanta i oförutsedda sammanhang. I denna artikel visar vi att SVRG är ... [truncated from 911 chars] (911 chars) |
-| Kontrollteoretisk metod för radarspårning: Det första steget mot kognitiv förmåga (81 chars) | Denna artikel diskuterar en ny idé som kallas kognitiv radar. Tre grundläggande ingredienser utgör kognitiv radar: 1) intelligent signalbehandling, som bygger på inlärning genom radarns interaktioner ... [truncated from 980 chars] (980 chars) |
+| Ny DC-DC flernivåspänningshöjande omvandlare (44 chars) | Multinivåspänningsomvandlare är på väg att bli en ny typ av kraftomvandlare för högspänningsapplikationer. Multinivåspänningsomvandlare syntetiserar vanligtvis en trappformad spänningsvåg från flera nivåer av likspänningskond ... [truncated 225 chars](923 chars) |
+| Snabb inlärning av glesa gaussiska Markovfält baserat på Cholesky-faktorisering (79 chars) | Sure, please provide the English document text that you need translated into Swedish. (85 chars) |
+| Textursyntes med konvolutiva neurala nätverk (44 chars) | I detta arbete undersöker vi effekten av djupet i ett konvolutivt nätverk på dess noggrannhet i en stor skala bildigenkänningsinställning. Vår huvudsakliga bidrag är en grundlig utvärdering av nätverk med ökande djup, vilket ... [truncated 225 chars](830 chars) |
+| Planär bredbandsringantenn med cirkulär polarisering för RFID-system (68 chars) | I denna artikel föreslås en teknik med horisontellt meanderande strimma (HMS) för att uppnå god impedansanpassning och symmetriska bredsidorstrålningsmönster för en enkelmatad bredbandscirkulärt polariserad staplad patchanten ... [truncated 225 chars](1261 chars) |
+| Design av en avancerad digital hjärtmonitor med grundläggande elektroniska komponenter (86 chars) | I denna artikel presenterar vi designen och utvecklingen av en ny integrerad enhet för att mäta hjärtfrekvens med hjälp av fingertoppen för att förbättra uppskattningen av hjärtfrekvensen. Eftersom hjärtrelaterade sjukdomar ö ... [truncated 225 chars](1099 chars) |
 
 ## Dataset Information
 
