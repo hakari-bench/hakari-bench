@@ -52,13 +52,13 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
         "NanoMTEB-Misc",
     ]
     core_benchmarks = [
+        "MNanoBEIR",
         "NanoMMTEB-v2",
         "NanoRTEB",
-        "MNanoBEIR",
         "NanoMIRACL",
-        "NanoLongEmbed",
+        "NanoMLDR",
         "NanoBRIGHT",
-        "NanoBIRCO",
+        "NanoLaw",
         "NanoCoIR",
     ]
     all_benchmarks = [benchmark.name for benchmark in config.benchmarks]
@@ -173,11 +173,12 @@ def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> No
     assert _view_group("MNanoBEIR") == "Core benchmarks"
     assert _view_group("NanoRTEB") == "Core benchmarks"
     assert _view_group("NanoMIRACL") == "Core benchmarks"
-    assert _view_group("NanoLongEmbed") == "Core benchmarks"
+    assert _view_group("NanoMLDR") == "Core benchmarks"
     assert _view_group("NanoBRIGHT") == "Core benchmarks"
-    assert _view_group("NanoBIRCO") == "Core benchmarks"
+    assert _view_group("NanoLaw") == "Core benchmarks"
     assert _view_group("NanoCoIR") == "Core benchmarks"
-    assert _view_group("NanoMLDR") == "Domain-specific"
+    assert _view_group("NanoLongEmbed") == "Domain-specific"
+    assert _view_group("NanoBIRCO") == "Domain-specific"
     assert _view_group("NanoDAPFAM") == "Domain-specific"
 
 
