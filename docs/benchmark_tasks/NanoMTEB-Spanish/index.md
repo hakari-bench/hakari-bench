@@ -11,6 +11,13 @@ for separating models that only handle Spanish lexical passage matching from
 models that can retrieve short answers, multilingual entities, health evidence,
 and cross-lingual product snippets.
 
+The original task mix makes relevance granular in different ways. Mintaka
+positives can be short entity answers, MIRACL positives are Wikipedia evidence
+passages, Spanish Passage Retrieval distinguishes full health pages from answer
+passages, and xPQA uses compact product answers with multiple valid snippets.
+The main evaluation question is whether Spanish retrieval remains reliable when
+the target is not simply a Spanish paragraph with overlapping query terms.
+
 ## Details
 
 ### What the Original Group Measures

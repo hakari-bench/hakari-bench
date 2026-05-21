@@ -12,6 +12,14 @@ debate prose, short fact-checking claims, terse technical forum titles,
 financial advice questions, scientific paper titles, and COVID-19 information
 needs.
 
+The underlying MTEB/BEIR framing matters because each source task defines
+relevance differently. ArguAna positives are counterarguments, FEVER-style
+positives are evidence passages, CQADupStack positives are duplicate questions,
+SCIDOCS positives are related papers, and TREC-COVID positives are judged
+literature records for broad information needs. NanoMTEB-v2 is therefore a
+compact English heterogeneity check, not a plain English passage-retrieval
+score.
+
 ## Details
 
 ### What the Original Group Measures

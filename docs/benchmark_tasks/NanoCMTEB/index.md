@@ -6,8 +6,14 @@ NanoCMTEB is a compact Chinese retrieval group based on C-MTEB retrieval tasks.
 It covers Chinese medical consultation retrieval, COVID policy/news retrieval,
 general web passage retrieval, e-commerce product retrieval, translated MS
 MARCO-style retrieval, T2Ranking passage ranking, and entertainment-video
-retrieval. The group is dominated by short Chinese queries and 10,000-document
-candidate pools, with several tasks containing many positives per query.
+retrieval.
+
+The group follows the C-Pack/C-MTEB view of Chinese embedding evaluation as a
+multi-domain problem rather than a single web-search task. Its subtasks use very
+short Chinese queries, mixed-script product and video titles, medical answers,
+noisy web passages, and multi-positive relevance sets. The main retrieval
+challenge is often bridging terse user intent to domain-specific wording rather
+than matching long descriptive queries to long passages.
 
 ## Details
 

@@ -9,6 +9,14 @@ retrieval, Korean MIRACL Wikipedia retrieval, and Korean SQuAD/KorQuAD-style
 context retrieval. The group tests Korean retrieval across public reports,
 Wikipedia, statutes, and multi-hop evidence.
 
+Its value is in the contrast between direct evidence retrieval and hidden
+reasoning or domain lookup. AutoRAG and SQuADKor often reward finding an
+answer-bearing chunk, Ko-StrategyQA may require evidence for an implicit
+reasoning step, LawIRKo requires matching formal statute text, and MIRACL keeps
+the monolingual Wikipedia passage setting. The group is therefore a compact
+check of Korean morphology, legal wording, evidence granularity, and
+multi-positive retrieval.
+
 ## Details
 
 ### What the Original Group Measures

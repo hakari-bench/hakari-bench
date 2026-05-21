@@ -10,6 +10,13 @@ French-English product question answering. The group tests both monolingual
 French retrieval and cross-lingual product QA, with task formats ranging from
 long educational lessons to very short answer strings.
 
+The source tasks differ more than the shared French surface suggests. Alloprof
+and BSARD ask a model to map user-facing questions to long educational or legal
+documents, Mintaka asks for short entity-like answers, and xPQA asks for
+product answer snippets across language directions. NanoMTEB-French is
+therefore a test of French retrieval granularity, domain language, and
+cross-lingual answerability rather than one general French passage task.
+
 ## Details
 
 ### What the Original Group Measures

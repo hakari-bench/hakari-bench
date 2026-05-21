@@ -11,6 +11,14 @@ retrieval to one query shape: models must handle short search phrases, long
 problem statements, multi-turn dialogue histories, executable programs, API
 snippets, and cross-language or cross-framework equivalence.
 
+The CoIR paper treats code retrieval as a family of query-document format
+mismatches rather than only semantic code search. NanoCoIR preserves that idea
+in small splits: APPS and Text-to-SQL become text-to-code retrieval,
+CodeSearchNet appears as both code-to-text and code-continuation retrieval, and
+CodeTransOcean becomes code-to-code equivalence across languages or frameworks.
+The group is therefore a probe of developer intent, program semantics, and
+code/prose alignment at the same time.
+
 ## Details
 
 ### What the Original Group Measures

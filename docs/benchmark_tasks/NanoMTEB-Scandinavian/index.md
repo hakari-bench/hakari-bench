@@ -11,6 +11,13 @@ single-domain: it deliberately mixes highly lexical title/evidence retrieval
 with short-answer and conversational answer retrieval where lexical overlap is
 weak.
 
+The group follows the Scandinavian Embedding Benchmark pattern of adapting
+several non-retrieval resources into retrieval tasks. Claims, questions,
+headlines, titles, summaries, and social posts become queries, while evidence
+snippets, answer strings, encyclopedia articles, news articles, FAQ answers, or
+reply tweets become relevant documents. Danish, Norwegian, and Swedish language
+handling is therefore tested together with very different notions of relevance.
+
 ## Details
 
 ### What the Original Group Measures

@@ -10,6 +10,14 @@ question-answer retrieval, and Thai XQuAD context retrieval. The group is
 therefore a mixture of same-language Thai retrieval, Thai-English alignment,
 short answer-string retrieval, and long-document retrieval.
 
+The tasks stress different failure modes for Thai retrievers. Belebele tests
+whether passage relevance survives Thai-English direction changes, MKQA asks
+for short answer labels that may not repeat the question, MIRACL and Mr. TyDi
+use Thai Wikipedia evidence, and MultiLongDocRetrieval requires finding a full
+long document from a localized question. The group is useful because Thai
+segmentation and script handling interact with answer granularity and document
+length rather than appearing as an isolated language issue.
+
 ## Details
 
 ### What the Original Group Measures

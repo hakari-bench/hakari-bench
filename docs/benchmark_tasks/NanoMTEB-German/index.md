@@ -9,6 +9,13 @@ service retrieval, and German e-commerce category-to-product retrieval. The
 group tests German retrieval across very different document types, from long
 court decisions to short product metadata and government-service pages.
 
+The group is small, but its retrieval relations are deliberately different.
+GerDaLIR asks for long legal decisions from legal passages, GermanDPR and
+GermanQuAD ask for answer-bearing Wikipedia contexts, the Munich service task
+maps citizen wording to administrative pages, and XMarket maps short category
+queries to many relevant products. The group is best read as a mix of legal,
+encyclopedic, civic, and marketplace retrieval rather than as generic German QA.
+
 ## Details
 
 ### What the Original Group Measures

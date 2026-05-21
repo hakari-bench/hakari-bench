@@ -11,6 +11,13 @@ group is broader than duplicate QA: it also measures statutory article
 retrieval, scientific-paper relatedness, public procurement, fact verification,
 and cross-lingual passage matching.
 
+The group should be read as both a Dutch-language benchmark and a translation
+robustness benchmark. Some splits are native Dutch resources such as legal,
+news, tender, FAQ, or bibliography retrieval; others carry BEIR-style relevance
+relations into Dutch, including duplicate technical questions and scientific
+evidence. The hard cases are often not Dutch word matching itself, but preserving
+the original task relation after translation or across Dutch-English directions.
+
 ## Details
 
 ### What the Original Group Measures

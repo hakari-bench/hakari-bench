@@ -11,6 +11,13 @@ Vietnamese retrieval quality and robustness to translated benchmark artifacts:
 models must handle Vietnamese fluency, preserved named entities, technical
 terms, and source-task relevance definitions originally designed for English.
 
+The VN-MTEB paper emphasizes translation quality, meaning preservation, named
+entities, numbers, links, and special characters. Those concerns are central to
+this Nano group: a high score means that the retriever preserves the original
+retrieval relation after Vietnamese translation, whether that relation is
+duplicate intent, evidence support, argument stance, web answerability,
+scientific relatedness, or biomedical relevance.
+
 ## Details
 
 ### What the Original Group Measures

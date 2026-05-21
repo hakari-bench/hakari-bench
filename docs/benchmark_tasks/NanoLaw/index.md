@@ -6,11 +6,14 @@ NanoLaw is a compact legal retrieval benchmark group spanning English, German,
 and Chinese legal data. It includes Indian precedent and statute retrieval,
 German legal passage and QA retrieval, Chinese criminal-case retrieval,
 LegalBench-derived consumer-contract and corporate-lobbying retrieval, and
-plain-English contract-summary retrieval. The group is useful because it does
-not test only one legal search pattern: models must connect long factual
-scenarios to cases or statutes, short questions to long judgments, policy and
-contract questions to clauses, and Chinese court records to related criminal
-cases.
+plain-English contract-summary retrieval.
+
+The group is useful because it does not test only one legal search pattern.
+Several tasks require mapping facts to applicable law or analogous cases, while
+others require matching policy descriptions, consumer questions, or simplified
+contract summaries to exact clauses and summaries. A model can be topically
+close and still be wrong if it misses jurisdiction, statutory role, contract
+obligation, procedural posture, or legal analogy.
 
 ## Details
 
