@@ -1,0 +1,323 @@
+# NanoIndicQA
+
+## Overview
+
+NanoIndicQA is the Nano task group for IndicQA Retrieval. It covers eleven Indic
+language splits: Assamese, Bengali, Gujarati, Hindi, Kannada, Malayalam,
+Marathi, Odia, Punjabi, Tamil, and Telugu. Each split turns an IndicQA
+reading-comprehension example into retrieval: the query is a question in the
+target language, and the positive document is the context paragraph that
+contains the evidence needed to answer it.
+
+The group is useful as a compact multilingual passage-selection benchmark. It
+tests whether a model can match short questions to longer same-language
+paragraphs across several Indic scripts, rather than only retrieving by English
+keywords or by cross-lingual translation.
+
+## Details
+
+### What the Original Group Measures
+
+[Towards Leaving No Indic Language Behind](https://arxiv.org/abs/2212.05409)
+introduces IndicXTREME and includes IndicQA as a manually curated cloze-style
+reading-comprehension benchmark for Indic languages. The MTEB retrieval version
+repurposes IndicQA by making each question a retrieval query and the source
+context paragraph the relevant document. NanoIndicQA keeps this setup in small
+per-language corpora.
+
+The observed examples show that this is paragraph retrieval, not answer-string
+retrieval. Several questions often point to the same paragraph, and the positive
+document is usually much longer than the answer span. For example, Telugu
+questions about R. K. Narayan retrieve a long biographical paragraph, Marathi
+questions about Chandrayaan retrieve a mission-history paragraph, and Tamil
+questions about Rishikesh retrieve a paragraph mixing Tamil text with Sanskrit
+or Latin-script forms.
+
+### Subtask Coverage
+
+All eleven subtasks share the same retrieval shape: same-language question to
+same-language context paragraph. The variation comes from language, script,
+paragraph length, named-entity distribution, and how directly the question
+repeats terms from the evidence.
+
+- **Eastern Indo-Aryan scripts:** `as`, `bn`, and `or` cover Assamese, Bengali,
+  and Odia context retrieval.
+- **Western and northern Indo-Aryan scripts:** `gu`, `hi`, `mr`, and `pa` cover
+  Gujarati, Hindi, Marathi, and Punjabi.
+- **Dravidian scripts:** `kn`, `ml`, `ta`, and `te` cover Kannada, Malayalam,
+  Tamil, and Telugu.
+
+The task design is intentionally narrow: it asks for the supporting paragraph,
+not a generated answer. That makes it suitable for evaluating multilingual
+embedding models, sparse tokenizers, and rerankers on passage retrieval for
+Indic scripts.
+
+### Observed Group Profile
+
+Across the eleven splits, NanoIndicQA contains 2,200 queries, 2,759 split-local
+candidate documents, and 2,205 positive qrels. Every split has exactly 200
+queries. The document pools are compact, ranging from 241 documents in Punjabi
+to 261 documents in Hindi.
+
+The group is almost single-positive. Six splits are strictly single-positive,
+and five splits have exactly one query with two positives. Overall positives per
+query average 1.0023, the median is 1, and the maximum is 2. This means hit@10
+is easy to interpret as whether the model retrieves the supporting paragraph,
+while nDCG@10 mostly reflects rank quality for one target context.
+
+Text length varies more by language than by query count. Malayalam has the
+longest average query length at 81.55 characters. Telugu has the longest average
+document length at 2,936.18 characters, while Odia and Kannada have much shorter
+average documents, around 802 and 883 characters respectively. These differences
+matter because a retriever must handle both short context pools and long
+paragraph evidence.
+
+### BM25 Difficulty
+
+Because every split has 200 queries, query-weighted and unweighted BM25 means
+are the same: nDCG@10 is 0.5327 and hit@10 is 0.6736. The range across languages
+is substantial. Malayalam is easiest by nDCG@10 at 0.6528 and hit@10 at 0.7950.
+Tamil is hardest by nDCG@10 at 0.2932 and hit@10 at 0.4600.
+
+BM25 works well when a question repeats distinctive named entities, dates,
+places, or titles from the context. It is weaker when questions are short, use
+transliterated forms, or ask about a fact whose wording is distant from the
+paragraph. The sampled Tamil query `Hkea இன் அர்த்தம் என்ன?` retrieved its
+positive only at BM25 rank 36, which matches the low Tamil baseline. Assamese,
+Kannada, and Punjabi examples also show positives outside rank 10 for the first
+sampled query, even though all positives remain within the top 100 in the
+documented split summaries.
+
+### Training Data That May Help
+
+Useful training data includes non-overlapping IndicQA-style question-context
+pairs, same-language Wikipedia passage retrieval data, extractive QA data for
+each language, and multilingual retrieval data that preserves Indic scripts.
+Training should include hard negatives from the same topic, biography, place,
+historical period, or cultural domain, because the small corpora often contain
+nearby paragraphs with overlapping named entities.
+
+Training should exclude NanoIndicQA evaluation queries, qrels, and positive
+contexts. Upstream IndicQA and MTEB retrieval splits should be treated as
+potential leakage sources unless an overlap audit has been performed.
+
+### Synthetic Data Guidance
+
+Synthetic data for this group should generate questions from full paragraphs and
+keep the full paragraph as the positive document. It should include multiple
+questions per context, because the real data often maps several questions to one
+paragraph. Good synthetic examples include names, dates, places, organizations,
+titles, quotations, and local cultural or historical references.
+
+Negatives should be paragraph-level and same-topic: nearby biographies, related
+places, similar historical events, or paragraphs with shared entities but
+different evidence. Avoid reducing the task to answer extraction; the retrieval
+target is the evidence paragraph.
+
+## Task Summary
+
+| Task | Language | Retrieval shape | Queries | Docs | Positives | BM25 nDCG@10 | BM25 hit@10 | Query avg chars | Doc avg chars |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [as](as.md) | Assamese | question to context paragraph | 200 | 250 | 200 | 0.6111 | 0.7500 | 55.30 | 1,401.28 |
+| [bn](bn.md) | Bengali | question to context paragraph | 200 | 250 | 201 | 0.5077 | 0.6750 | 52.08 | 2,196.01 |
+| [gu](gu.md) | Gujarati | question to context paragraph | 200 | 248 | 201 | 0.6060 | 0.6900 | 61.01 | 960.50 |
+| [hi](hi.md) | Hindi | question to context paragraph | 200 | 261 | 201 | 0.4535 | 0.6400 | 56.91 | 2,550.77 |
+| [kn](kn.md) | Kannada | question to context paragraph | 200 | 257 | 200 | 0.4730 | 0.6000 | 53.27 | 882.74 |
+| [ml](ml.md) | Malayalam | question to context paragraph | 200 | 247 | 200 | 0.6528 | 0.7950 | 81.55 | 2,522.64 |
+| [mr](mr.md) | Marathi | question to context paragraph | 200 | 250 | 200 | 0.4612 | 0.5950 | 59.85 | 1,711.74 |
+| [or](or.md) | Odia | question to context paragraph | 200 | 252 | 201 | 0.6041 | 0.7250 | 57.16 | 801.92 |
+| [pa](pa.md) | Punjabi | question to context paragraph | 200 | 241 | 200 | 0.5983 | 0.7600 | 63.51 | 1,423.51 |
+| [ta](ta.md) | Tamil | question to context paragraph | 200 | 253 | 201 | 0.2932 | 0.4600 | 56.34 | 2,288.26 |
+| [te](te.md) | Telugu | question to context paragraph | 200 | 250 | 200 | 0.5986 | 0.7200 | 64.96 | 2,936.18 |
+
+## Dataset Information
+
+| Field | Value |
+| --- | --- |
+| Nano set | NanoIndicQA |
+| Backing dataset | NanoIndicQA |
+| Hugging Face dataset | [hakari-bench/NanoIndicQA](https://huggingface.co/datasets/hakari-bench/NanoIndicQA) |
+| Language | multilingual |
+| Category | natural_language |
+| Subtasks | 11 |
+| Total queries | 2,200 |
+| Split-local documents | 2,759 |
+| Positive qrels | 2,205 |
+| Positives per query | avg 1.0023, median 1, max 2 |
+| Multi-positive subtasks | 5 of 11 |
+| Multi-positive queries | 5 |
+| Query-weighted BM25 nDCG@10 | 0.5327 |
+| Query-weighted BM25 hit@10 | 0.6736 |
+| Mean query length | 60.18 chars, weighted by query count |
+| Mean document length | 1,790.25 chars, weighted by split-local document count |
+
+### Public Sources
+
+- [Towards Leaving No Indic Language Behind: Building Monolingual Corpora, Benchmark and Models for Indic Languages](https://arxiv.org/abs/2212.05409); 2023; IndicXTREME and IndicQA paper.
+- [mteb/IndicQARetrieval](https://huggingface.co/datasets/mteb/IndicQARetrieval); MTEB retrieval dataset card.
+- [ai4bharat/IndicQA](https://huggingface.co/datasets/ai4bharat/IndicQA); upstream IndicQA dataset card.
+
+### Hugging Face Links
+
+- Nano dataset: [hakari-bench/NanoIndicQA](https://huggingface.co/datasets/hakari-bench/NanoIndicQA)
+- Source datasets:
+  [mteb/IndicQARetrieval](https://huggingface.co/datasets/mteb/IndicQARetrieval),
+  [ai4bharat/IndicQA](https://huggingface.co/datasets/ai4bharat/IndicQA).
+
+### Source Reference Table
+
+| Title | Year | Type | URL |
+| --- | ---: | --- | --- |
+| Towards Leaving No Indic Language Behind | 2023 | source task paper | https://arxiv.org/abs/2212.05409 |
+| mteb/IndicQARetrieval |  | dataset card | https://huggingface.co/datasets/mteb/IndicQARetrieval |
+| ai4bharat/IndicQA |  | dataset card | https://huggingface.co/datasets/ai4bharat/IndicQA |
+
+## Machine-Readable Metadata
+
+<!-- benchmark-task-group-metadata:v1 -->
+
+```yaml
+benchmark_task_group_metadata:
+  schema_version: 1
+  document_status: reviewed_manual
+  nano_set: NanoIndicQA
+  backing_dataset: NanoIndicQA
+  dataset_id: hakari-bench/NanoIndicQA
+  language: multilingual
+  category: natural_language
+  document_path: docs/benchmark_tasks/NanoIndicQA/index.md
+  source_research:
+    primary_source_type: task_paper
+    paper_pdf_or_html_checked: true
+    no_paper_note: null
+  counts:
+    tasks: 11
+    queries: 2200
+    split_local_documents: 2759
+    positive_qrels: 2205
+  positives_per_query:
+    average: 1.0022727272727272
+    min: 1
+    median: 1.0
+    max: 2
+    multi_positive_tasks: 5
+    multi_positive_queries: 5
+  text_stats_chars:
+    query_mean_weighted_by_queries: 60.175909090909094
+    document_mean_weighted_by_documents: 1790.2468286991666
+  bm25:
+    ndcg_at_10_query_weighted: 0.5326805272636363
+    hit_at_10_query_weighted: 0.6736363636363636
+    ndcg_at_10_unweighted_task_mean: 0.5326805272636363
+    hit_at_10_unweighted_task_mean: 0.6736363636363637
+    source: dataset_bm25_column
+    easiest_task_by_ndcg_at_10: ml
+    hardest_task_by_ndcg_at_10: ta
+  tasks:
+    - name: as
+      path: docs/benchmark_tasks/NanoIndicQA/as.md
+      language: as
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 250
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.6110883622
+      bm25_hit_at_10: 0.75
+    - name: bn
+      path: docs/benchmark_tasks/NanoIndicQA/bn.md
+      language: bn
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 250
+      positive_qrels: 201
+      bm25_ndcg_at_10: 0.5076770387
+      bm25_hit_at_10: 0.675
+    - name: gu
+      path: docs/benchmark_tasks/NanoIndicQA/gu.md
+      language: gu
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 248
+      positive_qrels: 201
+      bm25_ndcg_at_10: 0.6060180577
+      bm25_hit_at_10: 0.69
+    - name: hi
+      path: docs/benchmark_tasks/NanoIndicQA/hi.md
+      language: hi
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 261
+      positive_qrels: 201
+      bm25_ndcg_at_10: 0.4535466574
+      bm25_hit_at_10: 0.64
+    - name: kn
+      path: docs/benchmark_tasks/NanoIndicQA/kn.md
+      language: kn
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 257
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.4730209757
+      bm25_hit_at_10: 0.6
+    - name: ml
+      path: docs/benchmark_tasks/NanoIndicQA/ml.md
+      language: ml
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 247
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.6527870423
+      bm25_hit_at_10: 0.795
+    - name: mr
+      path: docs/benchmark_tasks/NanoIndicQA/mr.md
+      language: mr
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 250
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.4611920408
+      bm25_hit_at_10: 0.595
+    - name: or
+      path: docs/benchmark_tasks/NanoIndicQA/or.md
+      language: or
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 252
+      positive_qrels: 201
+      bm25_ndcg_at_10: 0.6040623987
+      bm25_hit_at_10: 0.725
+    - name: pa
+      path: docs/benchmark_tasks/NanoIndicQA/pa.md
+      language: pa
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 241
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.5982647335
+      bm25_hit_at_10: 0.76
+    - name: ta
+      path: docs/benchmark_tasks/NanoIndicQA/ta.md
+      language: ta
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 253
+      positive_qrels: 201
+      bm25_ndcg_at_10: 0.2932109253
+      bm25_hit_at_10: 0.46
+    - name: te
+      path: docs/benchmark_tasks/NanoIndicQA/te.md
+      language: te
+      retrieval_shape: question_to_context_paragraph
+      queries: 200
+      documents: 250
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.5986175676
+      bm25_hit_at_10: 0.72
+  source_links:
+    - label: Towards Leaving No Indic Language Behind
+      url: https://arxiv.org/abs/2212.05409
+    - label: mteb/IndicQARetrieval
+      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+    - label: ai4bharat/IndicQA
+      url: https://huggingface.co/datasets/ai4bharat/IndicQA
+```

@@ -1,0 +1,215 @@
+# NanoBuiltBench
+
+## Overview
+
+NanoBuiltBench is a compact English benchmark for built-asset information
+retrieval. Its two tasks evaluate whether embedding and retrieval models can
+align entity descriptions used in architecture, engineering, construction, and
+operations with relevant classification-system descriptions. The concrete
+retrieval relation is not general web relevance: the model must connect
+IFC-style building, infrastructure, product, equipment, or facility-management
+entities to Uniclass-style product or class descriptions.
+
+The group contains one broader retrieval split and one reranking-oriented split.
+Both are domain-specific, terminology-heavy, and multi-positive: one built-asset
+entity can map to several relevant classification descriptions.
+
+## Details
+
+### What the Original Group Measures
+
+[Benchmarking pre-trained text embedding models in aligning built asset information](https://www.nature.com/articles/s41598-025-09052-5)
+studies how well text embedding models align built asset information across
+classification systems used in the built environment. NanoBuiltBench adapts that
+setting into compact retrieval tasks. Queries are IFC-style names and
+definitions, and documents are Uniclass product or class descriptions.
+
+This matters because built-asset retrieval is a specialized semantic alignment
+problem. Relevant matches may share terms such as `door`, `duct`, `valve`, or
+`sensor`, but correct ranking also depends on asset type, function, level of
+generality, and construction-domain vocabulary.
+
+### Subtask Coverage
+
+- **NanoBuiltBench:** a retrieval task where compact built-asset descriptions are
+  matched against a broader Uniclass-style document pool.
+- **NanoBuiltBenchReranking:** a reranking-style variant where IFC-style entity
+  names and definitions are ranked against candidate class or product
+  descriptions.
+
+Both subtasks are English natural-language tasks and both contain multiple
+positives per query.
+
+### Observed Group Profile
+
+The two task pages report 282 queries, 2,054 positive qrels, and 5,659
+split-local candidate documents. Queries average 112.64 characters when weighted
+by query count, and documents average 324.97 characters when weighted by
+split-local document count. This is a compact, terminology-dense group: neither
+queries nor documents are long, but both carry specialized classification
+language.
+
+The main retrieval challenge is controlled vocabulary alignment. Queries often
+describe a built asset in IFC-like language, while documents describe relevant
+Uniclass products or classes. The relevant set is multi-positive, so evaluation
+rewards retrieving a cluster of acceptable classifications rather than a single
+canonical answer.
+
+### BM25 Difficulty
+
+Using the dataset-provided BM25 candidate columns, the group has query-weighted
+BM25 nDCG@10 = 0.3453 and hit@10 = 0.6312. The broader `NanoBuiltBench` split has
+higher nDCG@10 (0.3890) but lower hit@10 (0.5850), while
+`NanoBuiltBenchReranking` has lower nDCG@10 (0.2389) but higher hit@10 (0.7439).
+
+This pattern suggests that lexical matching often finds at least one related
+candidate, especially in the reranking setting, but struggles to order all
+relevant built-asset descriptions correctly. Exact asset words help, but
+classification alignment also requires hierarchy, function, and synonym
+matching across IFC and Uniclass terminology.
+
+### Training Data That May Help
+
+Useful training data includes non-overlapping built-asset entity-to-class pairs,
+IFC and Uniclass descriptions, construction taxonomy mappings, facility
+management terminology, and hard negatives from nearby product classes. Because
+the qrels are multi-positive, training should preserve multiple valid class
+matches rather than forcing one positive per query.
+
+Training should exclude NanoBuiltBench evaluation queries, qrels, and positive
+documents. If source classification tables are used for training, the exact
+evaluation rows and near-duplicate descriptions should be audited.
+
+### Synthetic Data Guidance
+
+Synthetic data should use realistic built-environment vocabulary. Generate
+asset descriptions, product classes, and classification entries with functions,
+materials, system context, and hierarchy cues. Synthetic queries should be
+answerable by one or more generated class descriptions, and negatives should
+share common terms while differing in function or asset type.
+
+Do not seed synthetic data with NanoBuiltBench evaluation queries or positive
+documents. The positive relation should be classification compatibility, not
+surface overlap alone.
+
+## Task Summary
+
+| Task | Retrieval focus | Queries | Docs | Positive qrels | BM25 nDCG@10 | BM25 hit@10 | Query avg chars | Doc avg chars |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [NanoBuiltBench](NanoBuiltBench.md) | IFC-style asset description to Uniclass product description | 200 | 2,761 | 1,480 | 0.3890 | 0.5850 | 102.13 | 341.69 |
+| [NanoBuiltBenchReranking](NanoBuiltBenchReranking.md) | built-asset entity definition to candidate class description | 82 | 2,898 | 574 | 0.2389 | 0.7439 | 138.28 | 309.04 |
+
+## Dataset Information
+
+| Field | Value |
+| --- | --- |
+| Nano set | NanoBuiltBench |
+| Backing dataset | NanoBuiltBench |
+| Hugging Face dataset | [hakari-bench/NanoBuiltBench](https://huggingface.co/datasets/hakari-bench/NanoBuiltBench) |
+| Language | en |
+| Category | natural language |
+| Subtasks | 2 |
+| Total queries | 282 |
+| Split-local documents | 5,659 |
+| Positive qrels | 2,054 |
+| Average positives / query | 7.28 |
+| Query-weighted BM25 nDCG@10 | 0.3453 |
+| Query-weighted BM25 hit@10 | 0.6312 |
+| Mean query length | 112.64 chars, weighted by query count |
+| Mean document length | 324.97 chars, weighted by split-local document count |
+
+### Public Sources
+
+- [Benchmarking pre-trained text embedding models in aligning built asset information](https://www.nature.com/articles/s41598-025-09052-5); 2025; DOI: `10.1038/s41598-025-09052-5`.
+
+### Hugging Face Links
+
+- Nano dataset: [hakari-bench/NanoBuiltBench](https://huggingface.co/datasets/hakari-bench/NanoBuiltBench)
+
+### Source Reference Table
+
+| Title | Year | Type | URL |
+| --- | ---: | --- | --- |
+| Benchmarking pre-trained text embedding models in aligning built asset information | 2025 | source task paper | https://www.nature.com/articles/s41598-025-09052-5 |
+
+## Machine-Readable Metadata
+
+<!-- benchmark-task-group-metadata:v1 -->
+
+```yaml
+benchmark_task_group_metadata:
+  schema_version: 1
+  document_status: reviewed_manual
+  nano_set: NanoBuiltBench
+  backing_dataset: NanoBuiltBench
+  dataset_id: hakari-bench/NanoBuiltBench
+  language: en
+  category: natural_language
+  document_path: docs/benchmark_tasks/NanoBuiltBench/index.md
+  source_research:
+    primary_source_type: task_paper
+    paper_pdf_or_html_checked: true
+    no_paper_note: null
+  counts:
+    tasks: 2
+    queries: 282
+    split_local_documents: 5659
+    positive_qrels: 2054
+  positives_per_query:
+    average: 7.283687943262412
+    min: 1
+    median: 7.0
+    max: 10
+    multi_positive_tasks: 2
+    multi_positive_queries: 282
+  text_stats_chars:
+    query_mean_weighted_by_queries: 112.638297929078
+    document_mean_weighted_by_documents: 324.96730833698535
+  bm25:
+    ndcg_at_10_query_weighted: 0.34532694866028363
+    hit_at_10_query_weighted: 0.631205673751773
+    source: dataset_bm25_column
+    strongest_task_by_ndcg_at_10: NanoBuiltBench
+    weakest_task_by_ndcg_at_10: NanoBuiltBenchReranking
+  tasks:
+    - name: NanoBuiltBench
+      path: docs/benchmark_tasks/NanoBuiltBench/NanoBuiltBench.md
+      retrieval_focus: asset_description_to_uniclass_product_description
+      queries: 200
+      documents: 2761
+      positive_qrels: 1480
+      bm25_ndcg_at_10: 0.389
+      bm25_hit_at_10: 0.585
+    - name: NanoBuiltBenchReranking
+      path: docs/benchmark_tasks/NanoBuiltBench/NanoBuiltBenchReranking.md
+      retrieval_focus: asset_entity_definition_to_candidate_class_description
+      queries: 82
+      documents: 2898
+      positive_qrels: 574
+      bm25_ndcg_at_10: 0.2389
+      bm25_hit_at_10: 0.7439
+  learning:
+    leakage_note: exclude NanoBuiltBench evaluation queries, qrels, and positive documents; audit source classification rows before training
+    useful_training_data:
+      - IFC and Uniclass description alignment pairs
+      - built-asset entity-to-class mappings
+      - construction taxonomy descriptions and hard negatives
+      - facility management terminology pairs
+    synthetic_data:
+      document_generation: built-asset class and product descriptions with functions, materials, systems, and hierarchy cues
+      question_generation: IFC-style asset names and definitions grounded in one or more class descriptions
+      answerability: positives must be classification-compatible, not merely term-overlapping
+    multi_positive_training: multi_positive_objective
+  links:
+    nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBuiltBench
+    source_urls:
+      - label: Scientific Reports paper
+        url: https://www.nature.com/articles/s41598-025-09052-5
+  references:
+    - title: Benchmarking pre-trained text embedding models in aligning built asset information
+      url: https://www.nature.com/articles/s41598-025-09052-5
+      year: 2025
+      doi: 10.1038/s41598-025-09052-5
+      is_paper: true
+      source_confidence: definitive_paper_link
+```

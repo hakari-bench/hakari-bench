@@ -1,0 +1,526 @@
+# NanoVNMTEB
+
+## Overview
+
+NanoVNMTEB is the Nano task group for VN-MTEB retrieval. It contains Vietnamese
+retrieval versions of widely used MTEB and BEIR-style tasks, including duplicate
+question retrieval, fact-checking evidence retrieval, web search, natural
+question answering, finance QA, argument retrieval, biomedical retrieval, and
+scientific-paper retrieval. The group is useful because it evaluates both
+Vietnamese retrieval quality and robustness to translated benchmark artifacts:
+models must handle Vietnamese fluency, preserved named entities, technical
+terms, and source-task relevance definitions originally designed for English.
+
+The VN-MTEB paper emphasizes translation quality, meaning preservation, named
+entities, numbers, links, and special characters. Those concerns are central to
+this Nano group: a high score means that the retriever preserves the original
+retrieval relation after Vietnamese translation, whether that relation is
+duplicate intent, evidence support, argument stance, web answerability,
+scientific relatedness, or biomedical relevance.
+
+## Details
+
+### What the Original Group Measures
+
+[VN-MTEB: Vietnamese Massive Text Embedding Benchmark](https://aclanthology.org/2026.findings-eacl.86/)
+introduces a Vietnamese embedding benchmark created by translating English MTEB
+datasets and filtering the outputs. The paper describes a pipeline with language
+detection, LLM translation, semantic-similarity filtering, and LLM-as-judge
+quality scoring over criteria such as grammar, named entities, numbers, links,
+special characters, fluency, and meaning preservation. It reports 41 Vietnamese
+datasets across six embedding task families; this Nano group focuses on the
+retrieval family.
+
+The source retrieval tasks mostly come through MTEB and BEIR conventions. This
+means that relevance varies sharply by split: a positive may be a duplicate
+question, a counterargument, a Wikipedia evidence passage, a web answer passage,
+a biomedical abstract, a scientific paper, or a ranked argument passage. The
+Vietnamese translation layer is central to interpretation. A high score measures
+whether a retriever can solve the original task after translation, not whether
+the source data was originally authored in Vietnamese.
+
+### Subtask Coverage
+
+The twenty-six subtasks cover six retrieval families:
+
+- **Duplicate and paraphrase retrieval:** ten CQADupStack domain splits plus
+  `quora_vn` test duplicate-question matching across Android, GIS,
+  Mathematica, Physics, programming, statistics, TeX, Unix, webmasters, and
+  WordPress topics.
+- **Fact-checking and evidence retrieval:** `fever_vn`, `nano_fever`,
+  `climate_fever_vn`, and `sci_fact_vn` use translated claims to retrieve
+  Wikipedia or scientific evidence.
+- **Open-domain and web QA retrieval:** `msmarco_vn`, `nq_vn`, `nano_nq`, and
+  `hotpot_qa_vn` retrieve answer-bearing passages for real or synthetic search
+  questions.
+- **Argument and debate retrieval:** `argu_ana_vn` retrieves counterarguments,
+  while `touche2020_vn` retrieves argumentative passages for debate-style
+  topics.
+- **Domain retrieval:** `fi_qa2018_vn`, `nfcorpus_vn`, and `treccovid_vn`
+  cover finance, medical and nutrition evidence, and COVID-19 literature.
+- **Entity and scholarly retrieval:** `dbpedia_vn` retrieves entity articles,
+  and `scidocs_vn` retrieves related scientific papers.
+
+Because the group is built from many source benchmarks, the same Vietnamese
+retriever is tested against very different relevance semantics. Some splits are
+entity-heavy and lexically easy; others require stance, duplicate intent,
+scientific relatedness, or evidence support.
+
+### Observed Group Profile
+
+Across the twenty-six splits, NanoVNMTEB contains 4,768 queries, 24,671 positive
+qrels, and 247,475 split-local candidate documents. The document count is a sum
+over split-local pools, not a deduplicated corpus size. Most splits are labeled
+Vietnamese; `nfcorpus_vn` is marked multilingual in its task metadata, but the
+sampled queries and documents are primarily Vietnamese translations with
+biomedical terminology.
+
+The group average is 5.17 positives per query, but the global median is 1. The
+shape varies by task family. ArguAna is strictly single-positive. FEVER, MS
+MARCO, NQ, and SciFact are mostly single-positive with small multi-positive
+clusters. CQADupStack and Quora can have large duplicate clusters, with several
+splits containing queries that have dozens of positives. DBPedia, NFCorpus,
+Touche2020, and TREC-COVID are strongly multi-positive; TREC-COVID averages
+92.64 positives per query.
+
+Query length also changes by source task. `msmarco_vn`, `nq_vn`, `nano_nq`, and
+the CQADupStack titles are short search or question strings. `argu_ana_vn` is
+the outlier, with translated debate-argument queries averaging 1,183.88
+characters. Documents range from short Quora duplicate questions averaging
+129.22 characters to argument, biomedical, and scholarly passages above 1,000
+characters.
+
+### BM25 Difficulty
+
+The query-weighted BM25 nDCG@10 across NanoVNMTEB is 0.4878, with
+query-weighted hit@10 of 0.6724. The group-level average hides a large spread.
+Entity and fact-like tasks are lexically strong: `treccovid_vn`,
+`fever_vn`, `quora_vn`, `nano_fever`, `hotpot_qa_vn`, and `msmarco_vn` all
+show high BM25 scores because names, disease terms, titles, or short duplicate
+wording often survive translation.
+
+The hardest split by nDCG@10 is `scidocs_vn` at 0.1396. Its query is a translated
+scientific paper title and positives are related papers, so relevance depends on
+research topic and citation-like relatedness rather than exact wording.
+`cqadupstack_mathematica_vn`, `cqadupstack_webmasters_vn`, `argu_ana_vn`, and
+`climate_fever_vn` are also difficult. In those splits, lexical overlap can
+identify a topic but may not identify a true duplicate, a counterargument, or
+the right evidence passage.
+
+### Training Data That May Help
+
+Useful training data should match the source retrieval family. Duplicate
+question splits benefit from Vietnamese paraphrase, duplicate-question, and
+StackExchange-style technical QA pairs with domain-specific hard negatives.
+Evidence retrieval benefits from claim-to-passage training, Wikipedia evidence
+pairs, scientific claim evidence, and climate or biomedical fact-checking data.
+Web QA and NQ-style splits benefit from query-passage pairs and Vietnamese
+Wikipedia QA. Argument retrieval benefits from debate argument-counterargument
+pairs and stance-aware hard negatives. Scholarly and biomedical splits benefit
+from paper-title-to-paper, citation-context, medical search, and COVID-literature
+retrieval data.
+
+Training should exclude NanoVNMTEB evaluation queries, qrels, positive
+documents, and duplicate clusters. Because many source datasets are commonly
+used for retrieval training, overlap audits matter: translated MS MARCO, FEVER,
+NQ, Quora, CQADupStack, and TREC-COVID examples can easily leak into training
+sets through multilingual or synthetic variants.
+
+### Synthetic Data Guidance
+
+Synthetic data for NanoVNMTEB should be Vietnamese-first at the final text
+surface, even if source documents are translated or generated from English
+prompts. Preserve named entities, code snippets, math or TeX fragments,
+scientific terminology, URLs, numbers, and biomedical terms. The VN-MTEB paper
+explicitly treats preservation of named entities, numbers, links, special
+characters, fluency, and meaning as translation-quality criteria, and synthetic
+data should follow the same discipline.
+
+For duplicate tasks, create clusters of equivalent Vietnamese questions plus
+same-topic non-duplicates. For evidence tasks, generate claims that require a
+specific passage and include hard negatives that mention the same entity without
+supporting the claim. For web QA, generate short search-like questions and
+answer-bearing passages. For argument retrieval, generate stance-opposed pairs
+rather than topic-only pairs. For scientific and biomedical retrieval, keep
+technical terminology stable and avoid using NanoVNMTEB evaluation text as a
+seed.
+
+## Task Summary
+
+| Task | Retrieval shape | Queries | Docs | BM25 nDCG@10 | BM25 hit@10 | Query avg chars | Doc avg chars | Source status |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| [argu_ana_vn](argu_ana_vn.md) | argument to counterargument | 199 | 8,674 | 0.2591 | 0.5678 | 1,183.88 | 1,080.34 | VN-MTEB + ArguAna |
+| [climate_fever_vn](climate_fever_vn.md) | climate claim to evidence | 200 | 10,000 | 0.2780 | 0.6700 | 129.97 | 407.08 | VN-MTEB + Climate-FEVER |
+| [cqadupstack_android_vn](cqadupstack_android_vn.md) | Android duplicate question retrieval | 200 | 10,000 | 0.3993 | 0.6300 | 55.64 | 604.76 | VN-MTEB + CQADupStack |
+| [cqadupstack_gis_vn](cqadupstack_gis_vn.md) | GIS duplicate question retrieval | 200 | 10,000 | 0.3009 | 0.4300 | 59.16 | 929.23 | VN-MTEB + CQADupStack |
+| [cqadupstack_mathematica_vn](cqadupstack_mathematica_vn.md) | Mathematica duplicate question retrieval | 200 | 10,000 | 0.2114 | 0.3700 | 49.34 | 1,045.79 | VN-MTEB + CQADupStack |
+| [cqadupstack_physics_vn](cqadupstack_physics_vn.md) | Physics duplicate question retrieval | 200 | 10,000 | 0.4138 | 0.6100 | 58.56 | 800.96 | VN-MTEB + CQADupStack |
+| [cqadupstack_programmers_vn](cqadupstack_programmers_vn.md) | Programmers duplicate question retrieval | 200 | 10,000 | 0.3438 | 0.5550 | 58.73 | 1,070.56 | VN-MTEB + CQADupStack |
+| [cqadupstack_stats_vn](cqadupstack_stats_vn.md) | Statistics duplicate question retrieval | 200 | 10,000 | 0.3194 | 0.4550 | 52.76 | 998.86 | VN-MTEB + CQADupStack |
+| [cqadupstack_tex_vn](cqadupstack_tex_vn.md) | TeX duplicate question retrieval | 200 | 10,000 | 0.2923 | 0.4900 | 47.79 | 1,090.56 | VN-MTEB + CQADupStack |
+| [cqadupstack_unix_vn](cqadupstack_unix_vn.md) | Unix duplicate question retrieval | 200 | 10,000 | 0.3816 | 0.5750 | 52.80 | 875.76 | VN-MTEB + CQADupStack |
+| [cqadupstack_webmasters_vn](cqadupstack_webmasters_vn.md) | Webmasters duplicate question retrieval | 200 | 10,000 | 0.2582 | 0.4050 | 58.01 | 731.45 | VN-MTEB + CQADupStack |
+| [cqadupstack_wordpress_vn](cqadupstack_wordpress_vn.md) | WordPress duplicate question retrieval | 200 | 10,000 | 0.3170 | 0.4800 | 52.37 | 1,028.81 | VN-MTEB + CQADupStack |
+| [dbpedia_vn](dbpedia_vn.md) | entity query to DBPedia article | 200 | 10,000 | 0.7312 | 0.9700 | 42.09 | 340.38 | VN-MTEB + DBPedia |
+| [fever_vn](fever_vn.md) | claim to Wikipedia evidence | 200 | 10,000 | 0.8805 | 0.9500 | 56.03 | 392.40 | VN-MTEB + FEVER |
+| [fi_qa2018_vn](fi_qa2018_vn.md) | finance question to answer passage | 200 | 10,000 | 0.3112 | 0.5650 | 69.43 | 811.03 | VN-MTEB + FiQA |
+| [hotpot_qa_vn](hotpot_qa_vn.md) | multi-hop question to evidence passage | 200 | 10,000 | 0.8546 | 0.9850 | 99.53 | 445.27 | VN-MTEB + HotpotQA |
+| [msmarco_vn](msmarco_vn.md) | web search query to passage | 200 | 10,000 | 0.8519 | 0.9000 | 33.40 | 306.69 | VN-MTEB + MS MARCO |
+| [nano_fever](nano_fever.md) | claim to Wikipedia evidence variant | 200 | 10,000 | 0.8574 | 0.9350 | 56.03 | 462.25 | VN-MTEB + NanoFEVER |
+| [nano_nq](nano_nq.md) | natural question to Wikipedia passage variant | 200 | 10,000 | 0.7367 | 0.8600 | 39.40 | 565.28 | VN-MTEB + NanoNQ |
+| [nfcorpus_vn](nfcorpus_vn.md) | medical query to biomedical document | 166 | 3,618 | 0.3105 | 0.6084 | 24.72 | 1,584.25 | VN-MTEB + NFCorpus |
+| [nq_vn](nq_vn.md) | natural question to Wikipedia passage | 200 | 10,000 | 0.6789 | 0.8450 | 39.40 | 557.60 | VN-MTEB + NQ |
+| [quora_vn](quora_vn.md) | duplicate question retrieval | 200 | 10,000 | 0.8626 | 0.9800 | 76.51 | 129.22 | VN-MTEB + Quora |
+| [sci_fact_vn](sci_fact_vn.md) | scientific claim to paper evidence | 134 | 5,183 | 0.5954 | 0.7463 | 90.64 | 1,518.84 | VN-MTEB + SciFact |
+| [scidocs_vn](scidocs_vn.md) | scientific paper to related paper | 200 | 10,000 | 0.1396 | 0.4650 | 73.36 | 1,226.73 | VN-MTEB + SciDocs |
+| [touche2020_vn](touche2020_vn.md) | debate query to argument passage | 25 | 10,000 | 0.7369 | 1.0000 | 52.20 | 1,939.62 | VN-MTEB + Touché |
+| [treccovid_vn](treccovid_vn.md) | COVID information need to paper | 44 | 10,000 | 0.9169 | 0.9545 | 70.55 | 1,315.64 | VN-MTEB + TREC-COVID |
+
+## Dataset Information
+
+| Field | Value |
+| --- | --- |
+| Nano set | NanoVNMTEB |
+| Backing dataset | NanoVNMTEB |
+| Hugging Face dataset | [hakari-bench/NanoVNMTEB](https://huggingface.co/datasets/hakari-bench/NanoVNMTEB) |
+| Language | vi / multilingual task metadata |
+| Category | natural_language |
+| Subtasks | 26 |
+| Total queries | 4,768 |
+| Split-local documents | 247,475 |
+| Positive qrels | 24,671 |
+| Positives per query | avg 5.17, min 1, median 1, max 100 |
+| Multi-positive queries | 2,040 (42.79%) |
+| Query-weighted BM25 nDCG@10 | 0.4878 |
+| Query-weighted BM25 hit@10 | 0.6724 |
+| Mean query length | 106.61 chars, weighted by query count |
+| Mean document length | 823.25 chars, weighted by split-local document count |
+
+### Public Sources
+
+- [VN-MTEB: Vietnamese Massive Text Embedding Benchmark](https://aclanthology.org/2026.findings-eacl.86/); 2026; Loc Pham et al.; DOI: `10.18653/v1/2026.findings-eacl.86`.
+- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316); 2023; Niklas Muennighoff et al.; DOI: `10.48550/arXiv.2210.07316`.
+- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663); 2021; Nandan Thakur et al.
+- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934); 2015.
+- [FEVER: a large-scale dataset for Fact Extraction and VERification](https://arxiv.org/abs/1803.05355); 2018.
+- [Natural Questions: A Benchmark for Question Answering Research](https://aclanthology.org/Q19-1026/); 2019.
+- [MS MARCO: A Human Generated MAchine Reading COmprehension Dataset](https://arxiv.org/abs/1611.09268); 2016.
+- [TREC-COVID: Constructing a Pandemic Information Retrieval Test Collection](https://arxiv.org/abs/2005.04474); 2020.
+
+### Hugging Face Links
+
+- Nano dataset: [hakari-bench/NanoVNMTEB](https://huggingface.co/datasets/hakari-bench/NanoVNMTEB)
+- Source organization: [GreenNode datasets](https://huggingface.co/GreenNode)
+- Benchmark library: [MTEB](https://github.com/embeddings-benchmark/mteb)
+
+### Source Reference Table
+
+| Title | Year | Type | URL |
+| --- | ---: | --- | --- |
+| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | benchmark paper | https://aclanthology.org/2026.findings-eacl.86/ |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | source task paper | https://doi.org/10.1145/2838931.2838934 |
+| FEVER: a large-scale dataset for Fact Extraction and VERification | 2018 | source task paper | https://arxiv.org/abs/1803.05355 |
+| Natural Questions: A Benchmark for Question Answering Research | 2019 | source task paper | https://aclanthology.org/Q19-1026/ |
+| MS MARCO: A Human Generated MAchine Reading COmprehension Dataset | 2016 | source task paper | https://arxiv.org/abs/1611.09268 |
+| TREC-COVID: Constructing a Pandemic Information Retrieval Test Collection | 2020 | source task paper | https://arxiv.org/abs/2005.04474 |
+
+## Machine-Readable Metadata
+
+<!-- benchmark-task-group-metadata:v1 -->
+
+```yaml
+benchmark_task_group_metadata:
+  schema_version: 1
+  document_status: reviewed_manual
+  nano_set: NanoVNMTEB
+  backing_dataset: NanoVNMTEB
+  dataset_id: hakari-bench/NanoVNMTEB
+  language: multilingual
+  category: natural_language
+  document_path: docs/benchmark_tasks/NanoVNMTEB/index.md
+  source_research:
+    primary_source_type: benchmark_paper
+    paper_pdf_or_html_checked: true
+    no_paper_note: null
+  counts:
+    tasks: 26
+    queries: 4768
+    split_local_documents: 247475
+    positive_qrels: 24671
+  positives_per_query:
+    average: 5.174286912751678
+    min: 1
+    median: 1
+    max: 100
+    multi_positive_tasks: 25
+    multi_positive_queries: 2040
+    multi_positive_query_percent: 42.78523489932886
+  text_stats_chars:
+    query_mean_weighted_by_queries: 106.6078074664461
+    document_mean_weighted_by_documents: 823.2509968926132
+  bm25:
+    ndcg_at_10_query_weighted: 0.48776451696078016
+    hit_at_10_query_weighted: 0.6723993288741611
+    ndcg_at_10_unweighted_task_mean: 0.5091852961538461
+    hit_at_10_unweighted_task_mean: 0.6923879631923077
+    source: dataset_bm25_column
+    easiest_task_by_ndcg_at_10: treccovid_vn
+    hardest_task_by_ndcg_at_10: scidocs_vn
+  tasks:
+    - name: argu_ana_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/argu_ana_vn.md
+      retrieval_shape: argument_to_counterargument
+      queries: 199
+      documents: 8674
+      positive_qrels: 199
+      bm25_ndcg_at_10: 0.259066684
+      bm25_hit_at_10: 0.567839196
+    - name: climate_fever_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/climate_fever_vn.md
+      retrieval_shape: climate_claim_to_wikipedia_evidence
+      queries: 200
+      documents: 10000
+      positive_qrels: 635
+      bm25_ndcg_at_10: 0.278029502
+      bm25_hit_at_10: 0.67
+    - name: cqadupstack_android_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_android_vn.md
+      retrieval_shape: android_duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 811
+      bm25_ndcg_at_10: 0.399265669
+      bm25_hit_at_10: 0.63
+    - name: cqadupstack_gis_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_gis_vn.md
+      retrieval_shape: gis_duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 299
+      bm25_ndcg_at_10: 0.300878904
+      bm25_hit_at_10: 0.43
+    - name: cqadupstack_mathematica_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_mathematica_vn.md
+      retrieval_shape: mathematica_duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 424
+      bm25_ndcg_at_10: 0.211379253
+      bm25_hit_at_10: 0.37
+    - name: cqadupstack_physics_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_physics_vn.md
+      retrieval_shape: physics_duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 592
+      bm25_ndcg_at_10: 0.413754578
+      bm25_hit_at_10: 0.61
+    - name: cqadupstack_programmers_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_programmers_vn.md
+      retrieval_shape: programmers_duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 490
+      bm25_ndcg_at_10: 0.343848955
+      bm25_hit_at_10: 0.555
+    - name: cqadupstack_stats_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_stats_vn.md
+      retrieval_shape: statistics_duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 310
+      bm25_ndcg_at_10: 0.319379709
+      bm25_hit_at_10: 0.455
+    - name: cqadupstack_tex_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_tex_vn.md
+      retrieval_shape: tex_duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 743
+      bm25_ndcg_at_10: 0.292334482
+      bm25_hit_at_10: 0.49
+    - name: cqadupstack_unix_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_unix_vn.md
+      retrieval_shape: unix_duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 434
+      bm25_ndcg_at_10: 0.381628513
+      bm25_hit_at_10: 0.575
+    - name: cqadupstack_webmasters_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_webmasters_vn.md
+      retrieval_shape: webmasters_duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 825
+      bm25_ndcg_at_10: 0.258162337
+      bm25_hit_at_10: 0.405
+    - name: cqadupstack_wordpress_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_wordpress_vn.md
+      retrieval_shape: wordpress_duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 337
+      bm25_ndcg_at_10: 0.316960341
+      bm25_hit_at_10: 0.48
+    - name: dbpedia_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/dbpedia_vn.md
+      retrieval_shape: entity_query_to_dbpedia_article
+      queries: 200
+      documents: 10000
+      positive_qrels: 5754
+      bm25_ndcg_at_10: 0.731161413
+      bm25_hit_at_10: 0.97
+    - name: fever_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/fever_vn.md
+      retrieval_shape: claim_to_wikipedia_evidence
+      queries: 200
+      documents: 10000
+      positive_qrels: 232
+      bm25_ndcg_at_10: 0.880525723
+      bm25_hit_at_10: 0.95
+    - name: fi_qa2018_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/fi_qa2018_vn.md
+      retrieval_shape: finance_question_to_answer_passage
+      queries: 200
+      documents: 10000
+      positive_qrels: 549
+      bm25_ndcg_at_10: 0.311195336
+      bm25_hit_at_10: 0.565
+    - name: hotpot_qa_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/hotpot_qa_vn.md
+      retrieval_shape: multi_hop_question_to_wikipedia_evidence
+      queries: 200
+      documents: 10000
+      positive_qrels: 400
+      bm25_ndcg_at_10: 0.854605615
+      bm25_hit_at_10: 0.985
+    - name: msmarco_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/msmarco_vn.md
+      retrieval_shape: web_search_query_to_passage
+      queries: 200
+      documents: 10000
+      positive_qrels: 214
+      bm25_ndcg_at_10: 0.851862851
+      bm25_hit_at_10: 0.9
+    - name: nano_fever
+      path: docs/benchmark_tasks/NanoVNMTEB/nano_fever.md
+      retrieval_shape: claim_to_wikipedia_evidence_nano_variant
+      queries: 200
+      documents: 10000
+      positive_qrels: 232
+      bm25_ndcg_at_10: 0.857403879
+      bm25_hit_at_10: 0.935
+    - name: nano_nq
+      path: docs/benchmark_tasks/NanoVNMTEB/nano_nq.md
+      retrieval_shape: natural_question_to_wikipedia_passage_nano_variant
+      queries: 200
+      documents: 10000
+      positive_qrels: 234
+      bm25_ndcg_at_10: 0.736680668
+      bm25_hit_at_10: 0.86
+    - name: nfcorpus_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/nfcorpus_vn.md
+      retrieval_shape: medical_query_to_biomedical_document
+      queries: 166
+      documents: 3618
+      positive_qrels: 4571
+      bm25_ndcg_at_10: 0.310525083
+      bm25_hit_at_10: 0.608433735
+    - name: nq_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/nq_vn.md
+      retrieval_shape: natural_question_to_wikipedia_passage
+      queries: 200
+      documents: 10000
+      positive_qrels: 234
+      bm25_ndcg_at_10: 0.678882681
+      bm25_hit_at_10: 0.845
+    - name: quora_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/quora_vn.md
+      retrieval_shape: duplicate_question_retrieval
+      queries: 200
+      documents: 10000
+      positive_qrels: 452
+      bm25_ndcg_at_10: 0.862570196
+      bm25_hit_at_10: 0.98
+    - name: sci_fact_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/sci_fact_vn.md
+      retrieval_shape: scientific_claim_to_paper_evidence
+      queries: 134
+      documents: 5183
+      positive_qrels: 155
+      bm25_ndcg_at_10: 0.595353108
+      bm25_hit_at_10: 0.746268657
+    - name: scidocs_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/scidocs_vn.md
+      retrieval_shape: scientific_paper_to_related_paper
+      queries: 200
+      documents: 10000
+      positive_qrels: 988
+      bm25_ndcg_at_10: 0.139577852
+      bm25_hit_at_10: 0.465
+    - name: touche2020_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/touche2020_vn.md
+      retrieval_shape: argument_query_to_argument_passage
+      queries: 25
+      documents: 10000
+      positive_qrels: 481
+      bm25_ndcg_at_10: 0.736933531
+      bm25_hit_at_10: 1.0
+    - name: treccovid_vn
+      path: docs/benchmark_tasks/NanoVNMTEB/treccovid_vn.md
+      retrieval_shape: covid_information_need_to_biomedical_paper
+      queries: 44
+      documents: 10000
+      positive_qrels: 4076
+      bm25_ndcg_at_10: 0.916850837
+      bm25_hit_at_10: 0.954545455
+  learning:
+    leakage_note: exclude NanoVNMTEB evaluation queries, qrels, positive documents, duplicate clusters, and translated source passages; audit translated and multilingual source datasets before training on public MTEB or BEIR variants
+    useful_training_data:
+      - Vietnamese duplicate-question, paraphrase, and StackExchange-style QA pairs
+      - Vietnamese and translated claim-evidence retrieval pairs
+      - Vietnamese web-search and Wikipedia question-passage pairs
+      - Vietnamese argument-counterargument and debate passage retrieval data
+      - finance, biomedical, COVID literature, and scientific-paper retrieval pairs
+      - hard negatives matched by entity, domain, topic, stance, or source forum
+    synthetic_data:
+      document_generation: Vietnamese passages, duplicate questions, evidence pages, biomedical abstracts, scientific titles, and argument passages with preserved entities and technical terms
+      question_generation: Vietnamese search questions, claims, duplicate-question variants, debate prompts, medical queries, and scientific-paper titles grounded in the generated or selected document
+      answerability: positives should satisfy the source task relation, such as duplicate intent, evidence support, answer-bearing passage, counterargument stance, or scientific relatedness
+    multi_positive_training: mixed_single_and_multi_positive_retrieval_objective
+  links:
+    nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
+    source_urls:
+      - label: VN-MTEB ACL Anthology
+        url: https://aclanthology.org/2026.findings-eacl.86/
+      - label: MTEB arXiv
+        url: https://arxiv.org/abs/2210.07316
+      - label: BEIR arXiv
+        url: https://arxiv.org/abs/2104.08663
+      - label: GreenNode Hugging Face datasets
+        url: https://huggingface.co/GreenNode
+      - label: MTEB GitHub
+        url: https://github.com/embeddings-benchmark/mteb
+    source_notes: []
+  references:
+    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
+      url: https://aclanthology.org/2026.findings-eacl.86/
+      year: 2026
+      doi: 10.18653/v1/2026.findings-eacl.86
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: "MTEB: Massive Text Embedding Benchmark"
+      url: https://arxiv.org/abs/2210.07316
+      year: 2023
+      doi: 10.48550/arXiv.2210.07316
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+      url: https://arxiv.org/abs/2104.08663
+      year: 2021
+      is_paper: true
+      source_confidence: definitive_paper_link
+```

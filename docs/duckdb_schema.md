@@ -726,10 +726,10 @@ Only models that have every expected task in the selected view are ranked.
 3. Build the expected task set from the remaining rows.
 4. Keep only models whose task-key set exactly matches the expected task set.
 
-For grouped overall views such as `Group`, the viewer first checks raw
-task completeness within each model/benchmark pair, then aggregates rows by the
-configured group key, and finally applies the complete model rule again to the
-aggregated task set.
+For overall views with configured grouped components, such as `Core` and
+`Group`, the viewer first checks raw task completeness within each
+model/benchmark pair, then aggregates rows by the configured group key, and
+finally applies the complete model rule again to the aggregated task set.
 
 ### Benchmark and Overall Views
 
@@ -739,17 +739,23 @@ benchmark.
 For overall views:
 
 - `All`: all configured benchmark views using raw task rows.
-- `Core`: the curated core/domain set that was previously exposed as `Overall`.
+- `Core`: a compact curated set covering broad multilingual retrieval,
+  multilingual BEIR, English RTEB domains, multilingual long-document
+  retrieval, reasoning-heavy retrieval, legal retrieval, and code retrieval
+  (`MNanoBEIR`, `NanoMMTEB-v2`, `NanoRTEB`, `NanoMLDR`, `NanoBRIGHT`,
+  `NanoLaw`, and `NanoCoIR`). `MNanoBEIR` is grouped by `task_name` in Core so
+  each BEIR source task contributes once after averaging language variants.
 - `Group`: all configured benchmark views aggregated by each component's
   `group_by` setting before ranking.
 - `micro_mean`: mean over all included tasks with equal task weight.
 - `macro_mean`: mean of benchmark-level means with equal benchmark weight.
 - `mean_score`: `macro_mean` for overall views, task mean for benchmark views.
 
-`All` and `Core` use raw `task_key` values. `Group` uses the `group_by` settings
-from `overall.yaml` to average tasks into benchmark-local units before
-computing Borda and means. For task x language collections such as `MNanoBEIR`,
-`Group` uses the underlying task name (`task_name`) as the grouped unit.
+`All` uses raw `task_key` values. `Core` and `Group` use any component-level
+`group_by` settings from `overall.yaml` to average tasks into benchmark-local
+units before computing Borda and means. For task x language collections such as
+`MNanoBEIR`, Core and Group use the underlying task name (`task_name`) as the
+grouped unit.
 
 Grouped overall views also expose the aggregated benchmark-local units as
 metric columns. These columns use the aggregated `task_key` values, such as
@@ -893,11 +899,12 @@ choices:
   English; their Language pages therefore use the primary language, such as
   `NanoBEIR-ja` -> `ja` or the NanoMIRACL split code, rather than expanding
   every code in `languages`.
-- Viewer benchmark groups keep broader multilingual/domain suites under
-  Domain-specific unless they are an official language-specific NanoMTEB family
-  such as `NanoJMTEB-v2`, `NanoFaMTEB-v2`, `NanoRuMTEB`, `NanoVNMTEB`, or
-  `NanoCMTEB`. `NanoMLDR`, `NanoIndicQA`, `NanoMuPLeR`, `NanoChemTEB`, and
-  NanoMIRACL remain Domain-specific by viewer policy even when they expose
+- Viewer benchmark groups put the compact curated Core set under
+  Core benchmarks. Other broader multilingual/domain suites, including
+  `NanoMIRACL`, remain Domain-specific unless they are an official
+  language-specific NanoMTEB family such as `NanoJMTEB-v2`, `NanoFaMTEB-v2`,
+  `NanoRuMTEB`, `NanoVNMTEB`, or `NanoCMTEB`. `NanoIndicQA`, `NanoMuPLeR`, and
+  `NanoChemTEB` remain Domain-specific by viewer policy even when they expose
   language pages.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
@@ -948,8 +955,9 @@ materialized by a custom build. It is keyed by `view_name`, `score_target`, and
 the four display flags
 `include_quantization_variants`, `include_truncate_variants`,
 `include_rescore_variants`, and `include_other_variants`. The viewer uses this
-mart when language filters, task-score columns, and task text filters are not
-active. Those interactive cases still fall back to the normal
+mart when language filters, task-score columns, task text filters, and
+component-level overall grouping are not active. Those interactive and grouped
+cases still fall back to the normal
 `LeaderboardService` computation from task-score rows.
 
 | column | type | meaning |
@@ -1229,9 +1237,9 @@ SELECT
 
 ### 3. Raw Overall View Leaderboard
 
-For an overall view that uses raw tasks, such as `All` or `Core`, put the
-overall benchmarks into
-`selected_benchmarks` and replace `model_agg` with this version:
+For an overall view that uses raw tasks, such as `All`, put the overall
+benchmarks into `selected_benchmarks` and replace `model_agg` with this
+version:
 
 ```sql
 benchmark_means AS (
@@ -1286,11 +1294,11 @@ model_agg AS (
 The final result should return both `macro_mean` and `micro_mean`. `mean_rank`
 for overall views ranks `mean_score`, which is `macro_mean`.
 
-### 4. Group Leaderboard
+### 4. Grouped Overall View Leaderboard
 
-`Group` first averages raw tasks into benchmark-local groups, then computes
-Borda, means, and per-group metric columns. Generate `overall_components` from
-`config/viewer/overall.yaml`.
+Grouped overall views such as `Core` and `Group` first average raw tasks into
+benchmark-local groups, then compute Borda, means, and per-group metric
+columns. Generate `overall_components` from `config/viewer/overall.yaml`.
 
 ```sql
 WITH

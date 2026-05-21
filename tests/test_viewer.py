@@ -8,6 +8,7 @@ import time
 from pathlib import Path
 
 import duckdb
+from fastapi.testclient import TestClient
 import pytest
 
 from hakari_bench.viewer.app import (
@@ -52,26 +53,13 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
         "NanoMTEB-Misc",
     ]
     core_benchmarks = [
+        "MNanoBEIR",
         "NanoMMTEB-v2",
         "NanoRTEB",
-        "MNanoBEIR",
-        "NanoBIRCO",
         "NanoMLDR",
-        "NanoLongEmbed",
-        "NanoDAPFAM",
-        "NanoCoIR",
-        "NanoIFIR",
-        "NanoLaw",
-        "NanoMedical",
-        "NanoRARb",
         "NanoBRIGHT",
-        "NanoCodeRAG",
-        "NanoChemTEB",
-        "NanoR2MED",
-        "NanoBuiltBench",
-        "NanoCMTEB",
-        "NanoIndicQA",
-        "NanoMuPLeR",
+        "NanoLaw",
+        "NanoCoIR",
     ]
     all_benchmarks = [benchmark.name for benchmark in config.benchmarks]
 
@@ -81,6 +69,15 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
     core_overall = config.overall_for_view("Core")
     assert core_overall is not None
     assert core_overall.benchmark_names == core_benchmarks
+    assert [component.group_by for component in core_overall.benchmark_components] == [
+        "task_name",
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+    ]
     grouped_overall = config.overall_for_view("Group")
     assert grouped_overall is not None
     assert [component.name for component in grouped_overall.benchmark_components] == [
@@ -184,9 +181,14 @@ def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> No
     assert _view_group("NanoMMTEB-v2") == "Core benchmarks"
     assert _view_group("MNanoBEIR") == "Core benchmarks"
     assert _view_group("NanoRTEB") == "Core benchmarks"
-    assert _view_group("NanoMLDR") == "Domain-specific"
+    assert _view_group("NanoMIRACL") == "Domain-specific"
+    assert _view_group("NanoMLDR") == "Core benchmarks"
+    assert _view_group("NanoBRIGHT") == "Core benchmarks"
+    assert _view_group("NanoLaw") == "Core benchmarks"
+    assert _view_group("NanoCoIR") == "Core benchmarks"
     assert _view_group("NanoLongEmbed") == "Domain-specific"
     assert _view_group("NanoBIRCO") == "Domain-specific"
+    assert _view_group("NanoDAPFAM") == "Domain-specific"
 
 
 def test_language_specific_view_group_includes_official_language_mteb_families() -> None:
@@ -199,7 +201,6 @@ def test_language_specific_view_group_includes_official_language_mteb_families()
     assert _view_group("NanoIndicQA") == "Domain-specific"
     assert _view_group("NanoMuPLeR") == "Domain-specific"
     assert _view_group("NanoChemTEB") == "Domain-specific"
-    assert _view_group("NanoMIRACL") == "Domain-specific"
 
 
 def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Path) -> None:
@@ -438,6 +439,7 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert "DuckDB:" not in response.text
     assert str(db_path) not in response.text
     assert "Benchmark coverage" in response.text
+    assert 'data-icon="bar-chart-3"' in response.text
     assert "Models" in response.text
     assert re.search(r'<link rel="stylesheet" href="/assets/app\.css\?v=[0-9a-f]{12}">', response.text)
     assert re.search(r'<link rel="icon" type="image/png" href="/assets/favicon\.png\?v=[0-9a-f]{12}">', response.text)
@@ -465,6 +467,10 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
     assert leaderboard_response.status_code == 200
     assert "Analysis views" in leaderboard_response.text
+    assert 'data-icon="activity"' in leaderboard_response.text
+    assert 'data-icon="git-compare-arrows"' in leaderboard_response.text
+    assert 'data-icon="arrow-down-up"' in leaderboard_response.text
+    assert 'data-icon="database"' in leaderboard_response.text
     assert "Variant impact" in leaderboard_response.text
     assert "Reranking diagnostics" in leaderboard_response.text
     assert "Dataset diagnostics" in leaderboard_response.text
@@ -603,6 +609,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
 
     assert response.status_code == 200
     assert "Benchmark groups" in response.text
+    assert 'data-icon="layers"' in response.text
     assert response.text.index("Target") < response.text.index("Overall")
     assert 'data-testid="primary-benchmark-column"' in response.text
     primary_column = response.text.split('data-testid="primary-benchmark-column"', 1)[1].split('data-testid="secondary-benchmark-column"', 1)[0]
@@ -613,6 +620,8 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Reranking" in response.text
     assert "data-tooltip=" in response.text
     assert "data-tooltip-placement=\"left\"" in response.text
+    assert 'data-icon="circle-help"' in response.text
+    assert 'data-icon="question-mark"' not in response.text
     assert "full-corpus retrieval nDCG@10" in response.text
     assert "BM25 top-100 reranking nDCG@10" in response.text
     assert 'data-leaderboard-control="true"' in response.text
@@ -620,11 +629,14 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
     assert (
         'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_rank&amp;direction=asc'
-        '&amp;group=task&amp;task_z_scores=1&amp;target=reranking"'
+        '&amp;group=task&amp;task_z_scores=0&amp;target=reranking"'
     ) in response.text
     assert "Language-specific" in response.text
     assert "Domain-specific" in response.text
-    assert "sticky left-0" in response.text
+    assert "leaderboard-col-model sticky" in response.text
+    assert "leaderboard-col-rank" in response.text
+    assert "leaderboard-col-borda sticky" not in response.text
+    assert "leaderboard-col-mean sticky" not in response.text
     assert "z-20" in response.text
 
 
@@ -1071,7 +1083,7 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert 'name="lang_filter" value="ja" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert (
         'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task'
-        '&amp;task_z_scores=1&amp;lang_filter=en"'
+        '&amp;task_z_scores=0&amp;lang_filter=en"'
     ) in response.text
     assert 'data-language-page="ja"' in response.text
     assert 'data-shown-count="2"' in response.text
@@ -1315,14 +1327,20 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
 
     assert response.status_code == 200
     assert "Columns:" in response.text
+    assert 'data-icon="table-properties"' in response.text
     assert "Display:" in response.text
+    assert 'data-icon="eye"' in response.text
     assert "<span>STD</span>" in response.text
     assert "Include variants:" in response.text
+    assert 'data-icon="git-branch"' in response.text
     assert "Other variants" in response.text
     assert "Filters:" in response.text
+    assert 'data-icon="filter"' in response.text
     assert '<div class="mt-3 flex flex-wrap items-start gap-3">' in response.text
-    assert ">Dims</summary>" in response.text
-    assert ">Quantization</summary>" in response.text
+    assert 'data-filter-detail="dim_filter"' in response.text
+    assert 'data-filter-icon="ruler"' in response.text
+    assert 'data-filter-detail="quant_filter"' in response.text
+    assert 'data-filter-icon="binary"' in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
     assert response.text.count(">All</button>") == 5
@@ -1940,6 +1958,48 @@ def test_overall_task_filter_renders_single_task_mean_column(tmp_path: Path) -> 
     assert body.count(">55.00</td>") >= 2
 
 
+def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("org/model-a", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.90, 10, 12, 8192),
+            ("org/model-b", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.80, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA")
+
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+    body = render_table_body(result=result)
+
+    assert head.index("Model Name") < head.index("Borda")
+    assert body.index("model-a") < body.index(">1</td>")
+    assert 'data-column-key="model_name"' in head
+    assert (
+        'data-column-key="model_name" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
+        'text-left px-2 uppercase leaderboard-col-model sticky z-20'
+    ) in head
+    assert (
+        'data-column-key="borda_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
+        'text-left px-2 uppercase leaderboard-col-rank'
+    ) in head
+    assert (
+        'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
+        'text-left px-2 uppercase leaderboard-col-rank'
+    ) in head
+    assert '<tr class="leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50">' in body
+    assert '<td class="leaderboard-col-model sticky z-10' in body
+    assert '<td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">' in body
+    assert "leaderboard-col-borda sticky" not in body
+    assert "leaderboard-col-mean sticky" not in body
+    assert '<td class="px-2 py-1 text-left tabular-nums">' in body
+
+
 def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
@@ -2028,12 +2088,19 @@ def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "Runtime" in response.text
-    assert ">Attention</summary>" in response.text
-    assert ">Dtype</summary>" in response.text
-    assert ">Prompt</summary>" in response.text
-    assert ">Attention</span>" not in response.text
-    assert ">Dtype</span>" not in response.text
-    assert ">Prompt</span>" not in response.text
+    assert 'data-icon="cpu"' in response.text
+    assert 'data-filter-detail="attn_filter"' in response.text
+    assert 'data-filter-detail="dtype_filter"' in response.text
+    assert 'data-filter-detail="prompt_filter"' in response.text
+    assert 'data-filter-icon="activity"' in response.text
+    assert 'data-filter-icon="braces"' in response.text
+    assert 'data-filter-icon="table-properties"' in response.text
+    assert ">Attention</span>" in response.text
+    assert ">Dtype</span>" in response.text
+    assert ">Prompt</span>" in response.text
+    assert 'data-column-key="attn_implementation"' not in response.text
+    assert 'data-column-key="dtype"' not in response.text
+    assert 'data-column-key="prompt_summary"' not in response.text
     assert ">FA2</td>" not in response.text
     assert ">SDPA</td>" not in response.text
     assert ">BF16</td>" not in response.text
@@ -2456,6 +2523,46 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert '<span class="task-z-score-delta">+0.27σ</span>' in task_column_response.text
 
 
+def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "arguana", "arguana", "arguana", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "arguana", "arguana", "arguana", 0.80, 10, 12, 8192),
+            ("model/c", "BenchA", "bench/a", "BenchA", "arguana", "arguana", "arguana", 0.80, 10, 12, 8192),
+            ("model/d", "BenchA", "bench/a", "BenchA", "arguana", "arguana", "arguana", 0.70, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA", show_task_scores=True, show_task_ranks=True)
+    rows_by_name = {row.model_name: row for row in result.rows}
+
+    assert result.show_task_scores is True
+    assert result.show_task_ranks is True
+    assert rows_by_name["model/a"].metric_rank_values["arguana"] == 1
+    assert rows_by_name["model/b"].metric_rank_values["arguana"] == 2.5
+    assert rows_by_name["model/c"].metric_rank_values["arguana"] == 2.5
+    assert rows_by_name["model/d"].metric_rank_values["arguana"] == 4
+
+    response = TestClient(create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)).get(
+        "/leaderboard?view=BenchA&task_ranks=1"
+    )
+
+    assert response.status_code == 200
+    assert "<span>Task Rank</span>" in response.text
+    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="task_scores" value="1"' in response.text
+    assert ">1</td>" in response.text
+    assert ">2.5</td>" in response.text
+
+
 def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
@@ -2562,7 +2669,7 @@ def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) ->
     assert '<span class="task-z-score-delta">+0.50σ</span>' in response.text
 
 
-def test_std_display_is_default_and_can_be_disabled_without_task_columns(tmp_path: Path) -> None:
+def test_std_display_is_default_off_and_can_be_enabled_without_task_columns(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
     db_path = tmp_path / "results.duckdb"
@@ -2586,17 +2693,17 @@ def test_std_display_is_default_and_can_be_disabled_without_task_columns(tmp_pat
 
     assert default_response.status_code == 200
     assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700">' in default_response.text
-    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in default_response.text
+    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' not in default_response.text
     assert '<input type="hidden" name="task_z_scores" value="0">' in default_response.text
-    assert '<span class="task-z-score-delta">+1.00σ</span>' in default_response.text
+    assert "task-z-score" not in default_response.text
     assert "metric%3Aa1" not in default_response.text
 
-    disabled_response = client.get("/leaderboard?view=BenchA&task_z_scores=0")
+    enabled_response = client.get("/leaderboard?view=BenchA&task_z_scores=1")
 
-    assert disabled_response.status_code == 200
-    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' not in disabled_response.text
-    assert "task-z-score" not in disabled_response.text
-    assert "task_z_scores=0" in disabled_response.text
+    assert enabled_response.status_code == 200
+    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in enabled_response.text
+    assert '<span class="task-z-score-delta">+1.00σ</span>' in enabled_response.text
+    assert "task_z_scores=1" in enabled_response.text
 
 
 def test_task_z_score_heatmap_uses_quarter_sigma_buckets() -> None:
@@ -3085,7 +3192,9 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     assert "model/a" in response.text
     assert 'hx-get="/leaderboard?' in response.text
     assert 'href="/leaderboard.csv?view=Overall' in response.text
-    assert "[download csv]" in response.text
+    assert "Download CSV" in response.text
+    assert 'data-icon="file-spreadsheet"' in response.text
+    assert 'aria-label="Download visible leaderboard as CSV"' in response.text
 
 
 def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Path) -> None:

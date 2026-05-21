@@ -10,9 +10,6 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from hakari_bench.viewer.leaderboard import LeaderboardRow
 
-MODEL_NAME_DISPLAY_MAX_CHARS = 40
-
-
 class ModelCellView(BaseModel):
     model_config = ConfigDict(frozen=True)
 
@@ -238,11 +235,8 @@ def _model_metadata(
 
 def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> str:
     metadata_json = json.dumps(model_view.metadata, ensure_ascii=False, separators=(",", ":"))
-    display_name = _truncate_model_name_for_table(model_view.display_name)
-    name_attrs = ""
-    if display_name != model_view.display_name:
-        escaped_full_display_name = escape(model_view.display_name, quote=True)
-        name_attrs = f' title="{escaped_full_display_name}" aria-label="{escaped_full_display_name}"'
+    display_name = model_view.display_name
+    name_attrs = f' title="{escape(model_view.display_name, quote=True)}"'
     badges = []
     if model_view.model_type_badge_label is not None:
         badges.append(
@@ -282,19 +276,17 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> st
                 tooltip=model_view.variant_tooltip,
             )
         )
-    badge_html = f"""<span class="inline-flex shrink-0 flex-wrap gap-1 align-middle">{''.join(badges)}</span>""" if badges else ""
-    return f"""<td class="sticky left-32 z-10 w-[36rem] min-w-72 max-w-[36rem] overflow-hidden bg-inherit px-2 py-1">
-      <div class="flex min-w-0 items-center gap-2 overflow-hidden whitespace-nowrap">
-        <button type="button" class="model-detail-trigger block min-w-0 truncate text-left font-medium underline-offset-2 hover:underline"
+    badge_html = (
+        f"""<span class="model-variant-badges inline-flex min-w-0 flex-wrap gap-1 align-middle">{''.join(badges)}</span>"""
+        if badges
+        else ""
+    )
+    return f"""<td class="leaderboard-col-model sticky z-10 bg-inherit px-2 py-1">
+      <div class="flex min-w-0 flex-wrap items-center gap-1">
+        <button type="button" class="model-detail-trigger min-w-0 [overflow-wrap:anywhere] text-left text-[0.8125rem] leading-tight font-medium underline-offset-2 hover:underline"
                 data-model-metadata="{escape(metadata_json)}"{name_attrs}>{escape(display_name)}</button>{badge_html}
       </div>
     </td>"""
-
-
-def _truncate_model_name_for_table(model_name: str) -> str:
-    if len(model_name) <= MODEL_NAME_DISPLAY_MAX_CHARS:
-        return model_name
-    return f"{model_name[:MODEL_NAME_DISPLAY_MAX_CHARS]}..."
 
 
 def _render_badge(*, label: str, classes: str, tooltip: str | None = None) -> str:
@@ -302,7 +294,7 @@ def _render_badge(*, label: str, classes: str, tooltip: str | None = None) -> st
     tooltip_attrs = f' tabindex="0" data-tooltip="{escaped_tooltip}" aria-label="{escaped_tooltip}"' if tooltip else ""
     tooltip_class = "tooltip-trigger tooltip-delay cursor-pointer " if tooltip else ""
     return (
-        f"""<span class="{tooltip_class}inline-flex items-center border px-1.5 py-0.5 text-xs font-medium {classes}"{tooltip_attrs}>"""
+        f"""<span class="{tooltip_class}inline-flex items-center border px-1 py-0 text-[0.6875rem] leading-tight font-medium {classes}"{tooltip_attrs}>"""
         f"{escape(label)}</span>"
     )
 

@@ -1,0 +1,426 @@
+# NanoRTEB
+
+## Overview
+
+NanoRTEB is the Nano task group for the open English portion of RTEB, the
+Retrieval Embedding Benchmark. It covers 14 retrieval tasks across legal,
+finance, code, healthcare, and technical-document settings. The group is
+intentionally heterogeneous: some tasks retrieve statutes or case law from long
+legal fact patterns, some retrieve financial filing evidence, some retrieve code
+or SQL from programming questions, and some retrieve medical or developer-support
+answers from noisy real-world questions.
+
+The group is useful because it evaluates retrieval-first behavior across
+practical domains rather than one academic task family. Models must handle long
+queries, short queries, long documents, code snippets, SQL strings, tables,
+multi-positive medical evidence, and realistic enterprise-style search
+scenarios.
+
+## Details
+
+### What the Original Group Measures
+
+[Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb)
+presents RTEB as a benchmark for realistic retrieval evaluation, with a hybrid
+open/private strategy and a focus on real-world domains such as law, healthcare,
+code, and finance. The open RTEB table includes the datasets represented in this
+Nano group: AILA case and statute retrieval, legal summarization, FinanceBench,
+HC3Finance, FinQA, HumanEval, MBPP, APPS, DS1000, WikiSQL, ChatDoctor,
+CUREv1, and FreshStack.
+
+Several subtasks are repurposed from generation or QA datasets. APPS, HumanEval,
+MBPP, DS1000, and WikiSQL become query-to-code or query-to-SQL retrieval tasks.
+FinanceBench and FinQA become evidence retrieval over financial filings and
+tables. LegalSummarization becomes plain-English summary to source-clause
+retrieval. ChatDoctor and HC3Finance retrieve answer-style documents, while
+CUREv1 and FreshStack preserve multi-positive evidence retrieval.
+
+### Subtask Coverage
+
+NanoRTEB covers five practical retrieval families:
+
+- **Legal retrieval:** `NanoAILACasedocs`, `NanoAILAStatutes`, and
+  `NanoLegalSummarization` cover precedent search, statute search, and
+  plain-English summary to legal clause matching.
+- **Finance retrieval:** `NanoFinanceBench`, `NanoHC3Finance`, and `NanoFinQA`
+  cover analyst-style filing evidence, personal-finance answer retrieval, and
+  numerical reasoning evidence retrieval.
+- **Code and structured-query retrieval:** `NanoApps`, `NanoDS1000`,
+  `NanoHumanEval`, `NanoMBPP`, and `NanoWikiSQL` cover contest problems,
+  data-science API questions, compact Python tasks, and text-to-SQL retrieval.
+- **Healthcare retrieval:** `NanoChatDoctor` and `NanoCUREv1` cover patient
+  question to response matching and clinical evidence retrieval.
+- **Technical-document retrieval:** `NanoFreshStack` covers recent developer
+  questions over documentation, tests, release notes, and code-adjacent text.
+
+All current NanoRTEB tasks are English. The variety comes from domain, query
+shape, document type, and label structure rather than language diversity.
+
+### Observed Group Profile
+
+Across the 14 splits, NanoRTEB contains 2,390 queries, 33,864 split-local
+documents, and 9,150 positive qrel rows. The group has 5 multi-positive tasks:
+`NanoAILACasedocs`, `NanoAILAStatutes`, `NanoLegalSummarization`,
+`NanoFreshStack`, and `NanoCUREv1`. In total, 506 queries have multiple
+positive documents. `NanoCUREv1` dominates the qrel count with 5,163 positives
+and an average of 28.37 positives per query.
+
+The query-weighted mean query length is 733.63 characters. That average hides a
+large spread: AILA legal fact patterns average more than 3,000 characters,
+APPS/FreshStack/WikiSQL/DS1000 queries average more than 1,100 characters, while
+HC3Finance, CUREv1, MBPP, FinQA, and LegalSummarization use much shorter
+queries. Document lengths vary even more. AILA case documents average 26,947
+characters and can be very long; WikiSQL target documents average only 62
+characters because they are SQL statements.
+
+### BM25 Difficulty
+
+Using the dataset-provided BM25 candidate column, query-weighted BM25 nDCG@10 is
+0.3739 and query-weighted hit@10 is 0.5824. The unweighted task means are
+0.3583 nDCG@10 and 0.5892 hit@10.
+
+The task-level spread is the main story. `NanoFinQA` is the easiest split for
+BM25, with nDCG@10 = 0.8046 and hit@10 = 0.9500, because questions often share
+company names, years, and financial metrics with the evidence. `NanoApps` is the
+hardest split, with nDCG@10 = 0.0097 and hit@10 = 0.0150; problem statements
+and accepted Python solutions share very little surface text. APPS therefore
+tests semantic problem-to-code matching rather than keyword retrieval.
+
+Multi-positive tasks can show high hit@10 but still modest nDCG. `NanoCUREv1`
+has hit@10 = 0.9451, but nDCG@10 = 0.4709 because many passages may be relevant
+and ranking the strongest evidence first is harder than finding any relevant
+evidence. `NanoFreshStack` and the AILA tasks similarly require recall over
+multiple supports or legal precedents, not only one exact answer.
+
+### Training Data That May Help
+
+Training data should be chosen by domain and retrieval shape. Legal subtasks
+benefit from precedent retrieval, statute retrieval, contract clause retrieval,
+legal simplification, and same-document hard negatives. Finance subtasks benefit
+from filing evidence retrieval, table QA retrieval, SEC report search, and
+same-company same-year distractors. Code subtasks need problem-to-code,
+docstring-to-code, API documentation, notebook/code examples, and text-to-SQL
+pairs. Healthcare subtasks need clinical evidence retrieval, medical QA, and
+patient-question-to-answer ranking. FreshStack-style data should connect
+developer questions to documentation, tests, release notes, and code examples.
+
+Training should exclude NanoRTEB evaluation queries, qrels, and positive
+documents. Because many source datasets are common training material, overlap
+audits matter. For code tasks, exact solution memorization is a serious risk.
+For legal, finance, and healthcare tasks, exact passage or table overlap can
+inflate retrieval scores without improving generalization.
+
+### Synthetic Data Guidance
+
+Synthetic data should preserve the source task's retrieval contract. For code,
+generate realistic problem statements and pair them with executable solutions or
+valid SQL, using hard negatives with similar APIs, schemas, or algorithms. For
+finance, generate analyst questions from filing tables and require retrieval of
+the exact evidence section. For legal tasks, generate fact patterns or plain
+English summaries tied to applicable precedents, statutes, or clauses. For
+healthcare, generate patient-style or clinician-style questions with medically
+nearby but answer-distinct negatives.
+
+Multi-positive tasks should keep multi-positive labels when several documents
+jointly support the information need. Collapsing them into a single positive
+would change how CUREv1, FreshStack, and AILA-style retrieval are evaluated.
+
+## Task Summary
+
+| Task | Retrieval shape | Queries | Docs | BM25 nDCG@10 | BM25 hit@10 | Query avg chars | Doc avg chars | Source status |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| [NanoAILACasedocs](NanoAILACasedocs.md) | legal situation to Supreme Court precedent | 50 | 186 | 0.2932 | 0.6400 | 3,038.42 | 26,947.34 | RTEB + AILA FIRE paper |
+| [NanoAILAStatutes](NanoAILAStatutes.md) | legal situation to statutory provisions | 50 | 82 | 0.1647 | 0.6200 | 3,038.42 | 1,972.63 | RTEB + AILA FIRE paper |
+| [NanoApps](NanoApps.md) | programming problem to Python solution | 200 | 8,754 | 0.0097 | 0.0150 | 1,675.41 | 573.12 | RTEB + APPS paper |
+| [NanoCUREv1](NanoCUREv1.md) | clinical question to biomedical passages | 182 | 10,000 | 0.4709 | 0.9451 | 77.16 | 603.96 | RTEB + CURE paper |
+| [NanoChatDoctor](NanoChatDoctor.md) | patient question to medical response | 200 | 5,545 | 0.2420 | 0.3350 | 441.09 | 605.12 | RTEB + ChatDoctor paper |
+| [NanoDS1000](NanoDS1000.md) | data-science question to Python code | 200 | 997 | 0.4515 | 0.6050 | 1,154.15 | 687.85 | RTEB + DS-1000 paper |
+| [NanoFinQA](NanoFinQA.md) | financial question to report evidence | 200 | 380 | 0.8046 | 0.9500 | 101.45 | 3,918.54 | RTEB + FinQA paper |
+| [NanoFinanceBench](NanoFinanceBench.md) | analyst question to filing excerpt | 150 | 145 | 0.3165 | 0.5067 | 161.09 | 1,676.96 | RTEB + FinanceBench paper |
+| [NanoFreshStack](NanoFreshStack.md) | developer question to technical docs | 200 | 3,770 | 0.2755 | 0.6750 | 1,660.21 | 4,983.03 | RTEB + FreshStack paper |
+| [NanoHC3Finance](NanoHC3Finance.md) | personal-finance prompt to answer | 200 | 415 | 0.2708 | 0.4100 | 61.41 | 991.30 | RTEB + HC3 paper |
+| [NanoHumanEval](NanoHumanEval.md) | Python spec to implementation | 158 | 158 | 0.3990 | 0.6266 | 291.16 | 176.99 | RTEB + HumanEval paper |
+| [NanoLegalSummarization](NanoLegalSummarization.md) | plain-English summary to legal clause | 200 | 438 | 0.5374 | 0.7400 | 103.06 | 606.16 | RTEB + legal summarization paper |
+| [NanoMBPP](NanoMBPP.md) | short Python task to implementation | 200 | 972 | 0.3029 | 0.4700 | 78.40 | 180.80 | RTEB + MBPP paper |
+| [NanoWikiSQL](NanoWikiSQL.md) | table question to SQL query | 200 | 2,022 | 0.4778 | 0.7100 | 1,551.46 | 62.34 | RTEB + WikiSQL paper |
+
+## Dataset Information
+
+| Field | Value |
+| --- | --- |
+| Nano set | NanoRTEB |
+| Backing dataset | NanoRTEB |
+| Hugging Face dataset | [hakari-bench/NanoRTEB](https://huggingface.co/datasets/hakari-bench/NanoRTEB) |
+| Language | en |
+| Category | natural_language and code |
+| Subtasks | 14 |
+| Total queries | 2,390 |
+| Split-local documents | 33,864 |
+| Positive qrels | 9,150 |
+| Positives per query | avg 3.83 / min 1 / max 100 across the group |
+| Multi-positive tasks | 5 |
+| Multi-positive queries | 506 |
+| Query-weighted BM25 nDCG@10 | 0.3739 |
+| Query-weighted BM25 hit@10 | 0.5824 |
+| Mean query length | 733.63 chars, weighted by query count |
+| Mean document length | 1,234.25 chars, weighted by split-local document count |
+
+### Public Sources
+
+- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb); 2025; Frank Liu et al.
+- [Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance](https://ceur-ws.org/Vol-2517/T1-1.pdf); 2019; Paheli Bhattacharya et al.
+- [Plain English Summarization of Contracts](https://aclanthology.org/W19-2201/); 2019; Laura Manor and Junyi Jessy Li.
+- [FinanceBench: A New Benchmark for Financial Question Answering](https://arxiv.org/abs/2311.11944); 2023; Patronus AI.
+- [How Close is ChatGPT to Human Experts?](https://arxiv.org/abs/2301.07597); 2023; HC3 paper.
+- [FinQA: A Dataset of Numerical Reasoning over Financial Data](https://aclanthology.org/2021.emnlp-main.300/); 2021; Zhiyu Chen et al.
+- [Measuring Coding Challenge Competence With APPS](https://arxiv.org/abs/2105.09938); 2021; Dan Hendrycks et al.
+- [DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation](https://arxiv.org/abs/2211.11501); 2022; Yihong Lai et al.
+- [Evaluating Large Language Models Trained on Code](https://arxiv.org/abs/2107.03374); 2021; Mark Chen et al.
+- [Program Synthesis with Large Language Models](https://arxiv.org/abs/2108.07732); 2021; Jacob Austin et al.
+- [Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning](https://arxiv.org/abs/1709.00103); 2017; Victor Zhong et al.
+- [FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical Documents](https://arxiv.org/abs/2504.13128); 2025; FreshStack paper.
+- [ChatDoctor](https://arxiv.org/abs/2303.14070); 2023; medical dialogue model and dataset paper.
+- [CURE: A Dataset for Clinical Understanding & Retrieval Evaluation](https://arxiv.org/abs/2412.06954); 2024; clinical retrieval benchmark paper.
+
+### Hugging Face Links
+
+- Nano dataset: [hakari-bench/NanoRTEB](https://huggingface.co/datasets/hakari-bench/NanoRTEB)
+- Source datasets: [mteb/AILA_casedocs](https://huggingface.co/datasets/mteb/AILA_casedocs), [mteb/AILA_statutes](https://huggingface.co/datasets/mteb/AILA_statutes), [mteb/legal_summarization](https://huggingface.co/datasets/mteb/legal_summarization), [virattt/financebench](https://huggingface.co/datasets/virattt/financebench), [Hello-SimpleAI/HC3](https://huggingface.co/datasets/Hello-SimpleAI/HC3), [ibm/finqa](https://huggingface.co/datasets/ibm/finqa), [codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps), [xlangai/DS-1000](https://huggingface.co/datasets/xlangai/DS-1000), [openai/openai_humaneval](https://huggingface.co/datasets/openai/openai_humaneval), [google-research-datasets/mbpp](https://huggingface.co/datasets/google-research-datasets/mbpp), [Salesforce/wikisql](https://huggingface.co/datasets/Salesforce/wikisql), [mteb/FreshStackRetrieval](https://huggingface.co/datasets/mteb/FreshStackRetrieval), [lavita/ChatDoctor-HealthCareMagic-100k](https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k), and [clinia/CUREv1](https://huggingface.co/datasets/clinia/CUREv1).
+
+### Source Reference Table
+
+| Title | Year | Type | URL |
+| --- | ---: | --- | --- |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance | 2019 | task paper | https://ceur-ws.org/Vol-2517/T1-1.pdf |
+| Plain English Summarization of Contracts | 2019 | task paper | https://aclanthology.org/W19-2201/ |
+| FinanceBench: A New Benchmark for Financial Question Answering | 2023 | task paper | https://arxiv.org/abs/2311.11944 |
+| How Close is ChatGPT to Human Experts? | 2023 | task paper | https://arxiv.org/abs/2301.07597 |
+| FinQA: A Dataset of Numerical Reasoning over Financial Data | 2021 | task paper | https://aclanthology.org/2021.emnlp-main.300/ |
+| Measuring Coding Challenge Competence With APPS | 2021 | task paper | https://arxiv.org/abs/2105.09938 |
+| DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation | 2022 | task paper | https://arxiv.org/abs/2211.11501 |
+| Evaluating Large Language Models Trained on Code | 2021 | task paper | https://arxiv.org/abs/2107.03374 |
+| Program Synthesis with Large Language Models | 2021 | task paper | https://arxiv.org/abs/2108.07732 |
+| Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning | 2017 | task paper | https://arxiv.org/abs/1709.00103 |
+| FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical Documents | 2025 | task paper | https://arxiv.org/abs/2504.13128 |
+| ChatDoctor | 2023 | task paper | https://arxiv.org/abs/2303.14070 |
+| CURE: A Dataset for Clinical Understanding & Retrieval Evaluation | 2024 | task paper | https://arxiv.org/abs/2412.06954 |
+
+## Machine-Readable Metadata
+
+<!-- benchmark-task-group-metadata:v1 -->
+
+```yaml
+benchmark_task_group_metadata:
+  schema_version: 1
+  document_status: reviewed_manual
+  nano_set: NanoRTEB
+  backing_dataset: NanoRTEB
+  dataset_id: hakari-bench/NanoRTEB
+  language: en
+  category: mixed
+  document_path: docs/benchmark_tasks/NanoRTEB/index.md
+  source_research:
+    primary_source_type: benchmark_article_and_task_papers
+    paper_pdf_or_html_checked: true
+    no_paper_note: null
+  counts:
+    tasks: 14
+    queries: 2390
+    split_local_documents: 33864
+    positive_qrels: 9150
+  positives_per_query:
+    average: 3.8284518828451883
+    min: 1
+    median: 1.0
+    max: 100
+    multi_positive_tasks: 5
+    multi_positive_queries: 506
+  text_stats_chars:
+    query_mean_weighted_by_queries: 733.6317573221758
+    document_mean_weighted_by_documents: 1234.2516775927236
+  bm25:
+    ndcg_at_10_query_weighted: 0.37387271966527197
+    hit_at_10_query_weighted: 0.5824334728033473
+    ndcg_at_10_unweighted_task_mean: 0.35832142857142857
+    hit_at_10_unweighted_task_mean: 0.5891714285714286
+    source: dataset_bm25_column
+    easiest_task_by_ndcg_at_10: NanoFinQA
+    hardest_task_by_ndcg_at_10: NanoApps
+  tasks:
+    - name: NanoAILACasedocs
+      path: docs/benchmark_tasks/NanoRTEB/NanoAILACasedocs.md
+      retrieval_shape: legal_situation_to_supreme_court_precedent
+      queries: 50
+      documents: 186
+      positive_qrels: 195
+      bm25_ndcg_at_10: 0.2932
+      bm25_hit_at_10: 0.64
+    - name: NanoAILAStatutes
+      path: docs/benchmark_tasks/NanoRTEB/NanoAILAStatutes.md
+      retrieval_shape: legal_situation_to_statutory_provisions
+      queries: 50
+      documents: 82
+      positive_qrels: 217
+      bm25_ndcg_at_10: 0.1647
+      bm25_hit_at_10: 0.62
+    - name: NanoApps
+      path: docs/benchmark_tasks/NanoRTEB/NanoApps.md
+      retrieval_shape: programming_problem_to_python_solution
+      queries: 200
+      documents: 8754
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.0097
+      bm25_hit_at_10: 0.015
+    - name: NanoCUREv1
+      path: docs/benchmark_tasks/NanoRTEB/NanoCUREv1.md
+      retrieval_shape: clinical_question_to_biomedical_passages
+      queries: 182
+      documents: 10000
+      positive_qrels: 5163
+      bm25_ndcg_at_10: 0.4709
+      bm25_hit_at_10: 0.9451
+    - name: NanoChatDoctor
+      path: docs/benchmark_tasks/NanoRTEB/NanoChatDoctor.md
+      retrieval_shape: patient_question_to_medical_response
+      queries: 200
+      documents: 5545
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.242
+      bm25_hit_at_10: 0.335
+    - name: NanoDS1000
+      path: docs/benchmark_tasks/NanoRTEB/NanoDS1000.md
+      retrieval_shape: data_science_question_to_python_code
+      queries: 200
+      documents: 997
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.4515
+      bm25_hit_at_10: 0.605
+    - name: NanoFinQA
+      path: docs/benchmark_tasks/NanoRTEB/NanoFinQA.md
+      retrieval_shape: financial_question_to_report_evidence
+      queries: 200
+      documents: 380
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.8046
+      bm25_hit_at_10: 0.95
+    - name: NanoFinanceBench
+      path: docs/benchmark_tasks/NanoRTEB/NanoFinanceBench.md
+      retrieval_shape: analyst_question_to_filing_excerpt
+      queries: 150
+      documents: 145
+      positive_qrels: 150
+      bm25_ndcg_at_10: 0.3165
+      bm25_hit_at_10: 0.5067
+    - name: NanoFreshStack
+      path: docs/benchmark_tasks/NanoRTEB/NanoFreshStack.md
+      retrieval_shape: developer_question_to_technical_docs
+      queries: 200
+      documents: 3770
+      positive_qrels: 1522
+      bm25_ndcg_at_10: 0.2755
+      bm25_hit_at_10: 0.675
+    - name: NanoHC3Finance
+      path: docs/benchmark_tasks/NanoRTEB/NanoHC3Finance.md
+      retrieval_shape: personal_finance_prompt_to_answer
+      queries: 200
+      documents: 415
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.2708
+      bm25_hit_at_10: 0.41
+    - name: NanoHumanEval
+      path: docs/benchmark_tasks/NanoRTEB/NanoHumanEval.md
+      retrieval_shape: python_spec_to_implementation
+      queries: 158
+      documents: 158
+      positive_qrels: 158
+      bm25_ndcg_at_10: 0.399
+      bm25_hit_at_10: 0.6266
+    - name: NanoLegalSummarization
+      path: docs/benchmark_tasks/NanoRTEB/NanoLegalSummarization.md
+      retrieval_shape: plain_english_summary_to_legal_clause
+      queries: 200
+      documents: 438
+      positive_qrels: 345
+      bm25_ndcg_at_10: 0.5374
+      bm25_hit_at_10: 0.74
+    - name: NanoMBPP
+      path: docs/benchmark_tasks/NanoRTEB/NanoMBPP.md
+      retrieval_shape: short_python_task_to_implementation
+      queries: 200
+      documents: 972
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.3029
+      bm25_hit_at_10: 0.47
+    - name: NanoWikiSQL
+      path: docs/benchmark_tasks/NanoRTEB/NanoWikiSQL.md
+      retrieval_shape: table_question_to_sql_query
+      queries: 200
+      documents: 2022
+      positive_qrels: 200
+      bm25_ndcg_at_10: 0.4778
+      bm25_hit_at_10: 0.71
+  learning:
+    leakage_note: exclude NanoRTEB evaluation queries, qrels, positive documents, source-code solutions, financial filing excerpts, medical answers, and exact source passages from training
+    useful_training_data:
+      - legal precedent, statute, and contract clause retrieval
+      - financial filing evidence retrieval and table QA retrieval
+      - problem-to-code, docstring-to-code, API documentation, and text-to-SQL retrieval
+      - clinical evidence retrieval and patient-question-to-answer ranking
+      - developer question to technical documentation, release note, and test-file retrieval
+    synthetic_data:
+      document_generation: domain-specific passages, code, SQL, medical answers, legal clauses, financial tables, and technical docs with realistic hard negatives
+      question_generation: preserve each task's query shape, including long legal facts, code problems, table-aware questions, short finance prompts, and clinical questions
+      answerability: positives must satisfy the domain-specific evidence or code behavior, not merely share keywords
+    multi_positive_training: preserve_multi_positive_labels_for_legal_medical_and_technical_evidence_tasks
+  links:
+    nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoRTEB
+    source_urls:
+      - label: RTEB blog
+        url: https://huggingface.co/blog/rteb
+      - label: AILA casedocs
+        url: https://huggingface.co/datasets/mteb/AILA_casedocs
+      - label: AILA statutes
+        url: https://huggingface.co/datasets/mteb/AILA_statutes
+      - label: legal_summarization
+        url: https://huggingface.co/datasets/mteb/legal_summarization
+      - label: financebench
+        url: https://huggingface.co/datasets/virattt/financebench
+      - label: HC3
+        url: https://huggingface.co/datasets/Hello-SimpleAI/HC3
+      - label: finqa
+        url: https://huggingface.co/datasets/ibm/finqa
+      - label: apps
+        url: https://huggingface.co/datasets/codeparrot/apps
+      - label: DS-1000
+        url: https://huggingface.co/datasets/xlangai/DS-1000
+      - label: HumanEval
+        url: https://huggingface.co/datasets/openai/openai_humaneval
+      - label: MBPP
+        url: https://huggingface.co/datasets/google-research-datasets/mbpp
+      - label: WikiSQL
+        url: https://huggingface.co/datasets/Salesforce/wikisql
+      - label: FreshStackRetrieval
+        url: https://huggingface.co/datasets/mteb/FreshStackRetrieval
+      - label: ChatDoctor HealthCareMagic
+        url: https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k
+      - label: CUREv1
+        url: https://huggingface.co/datasets/clinia/CUREv1
+    source_notes: []
+  references:
+    - title: "Introducing RTEB: A New Standard for Retrieval Evaluation"
+      url: https://huggingface.co/blog/rteb
+      year: 2025
+      is_paper: false
+      source_confidence: benchmark_article
+    - title: "Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance"
+      url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+      year: 2019
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: "FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical Documents"
+      url: https://arxiv.org/abs/2504.13128
+      year: 2025
+      is_paper: true
+      source_confidence: definitive_paper_link
+```
