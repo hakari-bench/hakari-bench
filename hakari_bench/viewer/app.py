@@ -15,7 +15,7 @@ from pydantic import BaseModel, ConfigDict
 
 from hakari_bench.viewer.analytics import ViewerAnalyticsRepository, ViewerSummary
 from hakari_bench.viewer.config import ViewerConfig, load_viewer_config
-from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, render_markdown_page
+from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
     FilterContext,
@@ -118,6 +118,10 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
     @app.get("/favicon.ico")
     def favicon_ico() -> FileResponse:
         return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
+
+    @app.get("/docs/benchmark-tasks", response_class=HTMLResponse)
+    def benchmark_docs_index() -> HTMLResponse:
+        return HTMLResponse(render_docs_index_page(docs=benchmark_docs.group_docs(), css_version=_asset_version("app.css")))
 
     @app.get("/docs/benchmark-tasks/{benchmark}", response_class=HTMLResponse)
     def benchmark_doc(benchmark: str) -> HTMLResponse:

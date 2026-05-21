@@ -20,6 +20,18 @@ class BenchmarkDocs:
     def __init__(self, docs_dir: Path) -> None:
         self.docs_dir = docs_dir
 
+    def group_docs(self) -> list[BenchmarkDoc]:
+        if not self.docs_dir.is_dir():
+            return []
+        docs: list[BenchmarkDoc] = []
+        for path in sorted(self.docs_dir.glob("*/index.md")):
+            if not _is_relative_to(path, self.docs_dir):
+                continue
+            doc = self._doc_from_path(path, url_parts=(path.parent.name,))
+            if doc is not None:
+                docs.append(doc)
+        return sorted(docs, key=lambda doc: doc.title.lower())
+
     def group_doc(self, view_name: str) -> BenchmarkDoc | None:
         return self._doc_from_path(self.docs_dir / _safe_segment(view_name) / "index.md", url_parts=(view_name,))
 
@@ -90,6 +102,7 @@ class BenchmarkDocs:
 
 
 def render_markdown_page(*, doc: BenchmarkDoc, css_version: str) -> str:
+    breadcrumb = _render_doc_breadcrumb(doc.url)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -100,15 +113,49 @@ def render_markdown_page(*, doc: BenchmarkDoc, css_version: str) -> str:
 </head>
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-4xl px-4 py-6 sm:px-6">
+    {breadcrumb}
     <article class="benchmark-doc border border-zinc-200 bg-white px-4 py-5">
-      {render_markdown_to_html(doc.markdown)}
+      {render_markdown_to_html(doc.markdown, base_url=doc.url)}
     </article>
   </main>
 </body>
 </html>"""
 
 
-def render_markdown_to_html(markdown: str) -> str:
+def render_docs_index_page(*, docs: list[BenchmarkDoc], css_version: str) -> str:
+    items = "\n".join(
+        f"""<li class="border border-zinc-200 bg-white px-4 py-3">
+          <a class="font-semibold text-cyan-700 underline-offset-2 hover:underline" href="{escape(doc.url, quote=True)}">{escape(doc.title)}</a>
+          <p class="mt-1 text-sm leading-snug text-zinc-700">{escape(doc.description)}</p>
+        </li>"""
+        for doc in docs
+    )
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Benchmark documentation - HAKARI-bench docs</title>
+  <link rel="stylesheet" href="/assets/app.css?v={escape(css_version, quote=True)}">
+</head>
+<body class="bg-zinc-50 text-zinc-950">
+  <main class="mx-auto max-w-4xl px-4 py-6 sm:px-6">
+    <nav class="doc-breadcrumb mb-3 text-sm text-zinc-600" aria-label="Breadcrumb">
+      <span aria-current="page">Benchmark documentation</span>
+    </nav>
+    <header class="mb-4">
+      <h1 class="text-2xl font-semibold text-zinc-950">Benchmark documentation</h1>
+      <p class="mt-1 text-sm text-zinc-600">Dataset and benchmark task group descriptions used by the leaderboard viewer.</p>
+    </header>
+    <ul class="space-y-2">
+      {items}
+    </ul>
+  </main>
+</body>
+</html>"""
+
+
+def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
     lines = markdown.splitlines()
     html: list[str] = []
     paragraph: list[str] = []
@@ -116,11 +163,12 @@ def render_markdown_to_html(markdown: str) -> str:
     in_code = False
     code_lines: list[str] = []
     in_table = False
+    details_level: int | None = None
 
     def flush_paragraph() -> None:
         nonlocal paragraph
         if paragraph:
-            html.append(f"<p>{_inline_markdown(' '.join(line.strip() for line in paragraph))}</p>")
+            html.append(f"<p>{_inline_markdown(' '.join(line.strip() for line in paragraph), base_url=base_url)}</p>")
             paragraph = []
 
     def close_list() -> None:
@@ -134,6 +182,12 @@ def render_markdown_to_html(markdown: str) -> str:
         if in_table:
             html.append("</tbody></table></div>")
             in_table = False
+
+    def close_details() -> None:
+        nonlocal details_level
+        if details_level is not None:
+            html.append("</details>")
+            details_level = None
 
     for raw_line in lines:
         line = raw_line.rstrip()
@@ -162,13 +216,25 @@ def render_markdown_to_html(markdown: str) -> str:
             close_list()
             close_table()
             level = len(heading.group(1))
-            html.append(f"<h{level}>{_inline_markdown(heading.group(2).strip())}</h{level}>")
+            heading_text = heading.group(2).strip()
+            if details_level is not None and level <= details_level:
+                close_details()
+            if heading_text.lower() == "machine-readable metadata":
+                html.append(
+                    '<details class="machine-readable-metadata mt-6 border border-zinc-200 bg-zinc-50 px-3 py-2">'
+                    '<summary class="cursor-pointer text-sm font-semibold text-zinc-800">'
+                    f"{_inline_markdown(heading_text, base_url=base_url)}"
+                    "</summary>"
+                )
+                details_level = level
+                continue
+            html.append(f"<h{level}>{_inline_markdown(heading_text, base_url=base_url)}</h{level}>")
             continue
         if line.startswith(">"):
             flush_paragraph()
             close_list()
             close_table()
-            html.append(f"<blockquote>{_inline_markdown(line.lstrip('> ').strip())}</blockquote>")
+            html.append(f"<blockquote>{_inline_markdown(line.lstrip('> ').strip(), base_url=base_url)}</blockquote>")
             continue
         if line.startswith("- "):
             flush_paragraph()
@@ -176,7 +242,7 @@ def render_markdown_to_html(markdown: str) -> str:
             if not in_list:
                 html.append("<ul>")
                 in_list = True
-            html.append(f"<li>{_inline_markdown(line[2:].strip())}</li>")
+            html.append(f"<li>{_inline_markdown(line[2:].strip(), base_url=base_url)}</li>")
             continue
         if _is_table_row(line):
             flush_paragraph()
@@ -184,7 +250,7 @@ def render_markdown_to_html(markdown: str) -> str:
             if _is_table_separator(line):
                 continue
             cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-            row_html = "".join(f"<td>{_inline_markdown(cell)}</td>" for cell in cells)
+            row_html = "".join(f"<td>{_inline_markdown(cell, base_url=base_url)}</td>" for cell in cells)
             if not in_table:
                 html.append('<div class="overflow-x-auto"><table><tbody>')
                 in_table = True
@@ -197,7 +263,36 @@ def render_markdown_to_html(markdown: str) -> str:
     close_table()
     if in_code:
         html.append(f"<pre><code>{escape(chr(10).join(code_lines))}</code></pre>")
+    close_details()
     return "\n".join(html)
+
+
+def _render_doc_breadcrumb(url: str) -> str:
+    parts = _doc_url_parts(url)
+    if not parts:
+        return ""
+    crumbs = [
+        '<a href="/docs/benchmark-tasks">Benchmark documentation</a>',
+    ]
+    if len(parts) == 1:
+        crumbs.append(f'<span aria-current="page">{escape(parts[0])}</span>')
+    else:
+        group = parts[0]
+        crumbs.append(f'<a href="/docs/benchmark-tasks/{quote(group, safe="")}">{escape(group)}</a>')
+        crumbs.append(f'<span aria-current="page">{escape(parts[-1])}</span>')
+    separator = '<span class="px-1 text-zinc-400" aria-hidden="true">&gt;</span>'
+    return f"""<nav class="doc-breadcrumb mb-3 text-sm text-zinc-600" aria-label="Breadcrumb">
+      <ol class="flex flex-wrap items-center gap-y-1">
+        <li>{f'</li><li>{separator}</li><li>'.join(crumbs)}</li>
+      </ol>
+    </nav>"""
+
+
+def _doc_url_parts(url: str) -> list[str]:
+    prefix = "/docs/benchmark-tasks/"
+    if not url.startswith(prefix):
+        return []
+    return [part for part in url[len(prefix) :].strip("/").split("/") if part]
 
 
 def _read_markdown(path: Path) -> str:
@@ -241,20 +336,47 @@ def _plain_markdown(markdown: str) -> str:
     return text
 
 
-def _inline_markdown(text: str) -> str:
+def _inline_markdown(text: str, *, base_url: str = "") -> str:
     escaped = escape(text)
     escaped = re.sub(r"`([^`]+)`", r"<code>\1</code>", escaped)
-    escaped = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", _link_replacement, escaped)
+    escaped = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", lambda match: _link_replacement(match, base_url=base_url), escaped)
     return escaped
 
 
-def _link_replacement(match: re.Match[str]) -> str:
+def _link_replacement(match: re.Match[str], *, base_url: str = "") -> str:
     label = match.group(1)
     url = match.group(2)
     parsed = urlparse(url)
-    if parsed.scheme not in {"http", "https"}:
+    if parsed.scheme in {"http", "https"}:
+        return f'<a href="{escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">{label}</a>'
+    local_href = _local_doc_href(url, base_url=base_url)
+    if local_href is None:
         return label
-    return f'<a href="{escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">{label}</a>'
+    return f'<a href="{escape(local_href, quote=True)}">{label}</a>'
+
+
+def _local_doc_href(url: str, *, base_url: str) -> str | None:
+    if not base_url:
+        return None
+    parsed = urlparse(url)
+    if parsed.scheme or parsed.netloc or parsed.query:
+        return None
+    path = parsed.path
+    if "\\" in path or path.startswith("/"):
+        return None
+    parts = path.split("/")
+    if len(parts) != 1 or parts[0] in {"", ".", ".."}:
+        return None
+    filename = parts[0]
+    if not filename.endswith(".md"):
+        return None
+    stem = filename[:-3]
+    if not stem or _safe_segment(stem) != stem:
+        return None
+    href = f"{base_url.rstrip('/')}/{quote(stem, safe='')}"
+    if parsed.fragment:
+        href = f"{href}#{quote(parsed.fragment, safe='-_.:')}"
+    return href
 
 
 def _is_table_row(line: str) -> bool:
