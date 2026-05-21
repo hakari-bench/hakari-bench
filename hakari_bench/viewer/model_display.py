@@ -282,7 +282,7 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> st
         else ""
     )
     return f"""<td class="leaderboard-col-model sticky z-10 bg-inherit px-2 py-1">
-      <div class="flex min-w-0 flex-col items-start gap-1">
+      <div class="flex min-w-0 flex-wrap items-center gap-1">
         <button type="button" class="model-detail-trigger min-w-0 [overflow-wrap:anywhere] text-left text-[0.8125rem] leading-tight font-medium underline-offset-2 hover:underline"
                 data-model-metadata="{escape(metadata_json)}"{name_attrs}>{escape(display_name)}</button>{badge_html}
       </div>
@@ -294,7 +294,7 @@ def _render_badge(*, label: str, classes: str, tooltip: str | None = None) -> st
     tooltip_attrs = f' tabindex="0" data-tooltip="{escaped_tooltip}" aria-label="{escaped_tooltip}"' if tooltip else ""
     tooltip_class = "tooltip-trigger tooltip-delay cursor-pointer " if tooltip else ""
     return (
-        f"""<span class="{tooltip_class}inline-flex items-center border px-1.5 py-0.5 text-xs font-medium {classes}"{tooltip_attrs}>"""
+        f"""<span class="{tooltip_class}inline-flex items-center border px-1 py-0 text-[0.6875rem] leading-tight font-medium {classes}"{tooltip_attrs}>"""
         f"{escape(label)}</span>"
     )
 

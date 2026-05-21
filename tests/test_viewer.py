@@ -431,6 +431,7 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert "DuckDB:" not in response.text
     assert str(db_path) not in response.text
     assert "Benchmark coverage" in response.text
+    assert 'data-icon="bar-chart-3"' in response.text
     assert "Models" in response.text
     assert re.search(r'<link rel="stylesheet" href="/assets/app\.css\?v=[0-9a-f]{12}">', response.text)
     assert re.search(r'<link rel="icon" type="image/png" href="/assets/favicon\.png\?v=[0-9a-f]{12}">', response.text)
@@ -458,6 +459,10 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
     assert leaderboard_response.status_code == 200
     assert "Analysis views" in leaderboard_response.text
+    assert 'data-icon="activity"' in leaderboard_response.text
+    assert 'data-icon="git-compare-arrows"' in leaderboard_response.text
+    assert 'data-icon="arrow-down-up"' in leaderboard_response.text
+    assert 'data-icon="database"' in leaderboard_response.text
     assert "Variant impact" in leaderboard_response.text
     assert "Reranking diagnostics" in leaderboard_response.text
     assert "Dataset diagnostics" in leaderboard_response.text
@@ -596,6 +601,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
 
     assert response.status_code == 200
     assert "Benchmark groups" in response.text
+    assert 'data-icon="layers"' in response.text
     assert response.text.index("Target") < response.text.index("Overall")
     assert 'data-testid="primary-benchmark-column"' in response.text
     primary_column = response.text.split('data-testid="primary-benchmark-column"', 1)[1].split('data-testid="secondary-benchmark-column"', 1)[0]
@@ -606,6 +612,8 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Reranking" in response.text
     assert "data-tooltip=" in response.text
     assert "data-tooltip-placement=\"left\"" in response.text
+    assert 'data-icon="circle-help"' in response.text
+    assert 'data-icon="question-mark"' not in response.text
     assert "full-corpus retrieval nDCG@10" in response.text
     assert "BM25 top-100 reranking nDCG@10" in response.text
     assert 'data-leaderboard-control="true"' in response.text
@@ -618,8 +626,9 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Language-specific" in response.text
     assert "Domain-specific" in response.text
     assert "leaderboard-col-model sticky" in response.text
-    assert "leaderboard-col-borda sticky" in response.text
-    assert "leaderboard-col-mean sticky" in response.text
+    assert "leaderboard-col-rank" in response.text
+    assert "leaderboard-col-borda sticky" not in response.text
+    assert "leaderboard-col-mean sticky" not in response.text
     assert "z-20" in response.text
 
 
@@ -1310,14 +1319,20 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
 
     assert response.status_code == 200
     assert "Columns:" in response.text
+    assert 'data-icon="table-properties"' in response.text
     assert "Display:" in response.text
+    assert 'data-icon="eye"' in response.text
     assert "<span>STD</span>" in response.text
     assert "Include variants:" in response.text
+    assert 'data-icon="git-branch"' in response.text
     assert "Other variants" in response.text
     assert "Filters:" in response.text
+    assert 'data-icon="filter"' in response.text
     assert '<div class="mt-3 flex flex-wrap items-start gap-3">' in response.text
-    assert ">Dims</summary>" in response.text
-    assert ">Quantization</summary>" in response.text
+    assert 'data-filter-detail="dim_filter"' in response.text
+    assert 'data-filter-icon="ruler"' in response.text
+    assert 'data-filter-detail="quant_filter"' in response.text
+    assert 'data-filter-icon="binary"' in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
     assert response.text.count(">All</button>") == 5
@@ -1963,15 +1978,18 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
     ) in head
     assert (
         'data-column-key="borda_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
-        'text-right px-2 uppercase leaderboard-col-rank leaderboard-col-borda sticky z-20'
+        'text-left px-2 uppercase leaderboard-col-rank'
     ) in head
     assert (
         'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
-        'text-right px-2 uppercase leaderboard-col-rank leaderboard-col-mean sticky z-20'
+        'text-left px-2 uppercase leaderboard-col-rank'
     ) in head
+    assert '<tr class="leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50">' in body
     assert '<td class="leaderboard-col-model sticky z-10' in body
-    assert '<td class="leaderboard-col-rank leaderboard-col-borda sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums">' in body
-    assert '<td class="leaderboard-col-rank leaderboard-col-mean sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums">' in body
+    assert '<td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">' in body
+    assert "leaderboard-col-borda sticky" not in body
+    assert "leaderboard-col-mean sticky" not in body
+    assert '<td class="px-2 py-1 text-left tabular-nums">' in body
 
 
 def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
@@ -2062,12 +2080,19 @@ def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "Runtime" in response.text
-    assert ">Attention</summary>" in response.text
-    assert ">Dtype</summary>" in response.text
-    assert ">Prompt</summary>" in response.text
-    assert ">Attention</span>" not in response.text
-    assert ">Dtype</span>" not in response.text
-    assert ">Prompt</span>" not in response.text
+    assert 'data-icon="cpu"' in response.text
+    assert 'data-filter-detail="attn_filter"' in response.text
+    assert 'data-filter-detail="dtype_filter"' in response.text
+    assert 'data-filter-detail="prompt_filter"' in response.text
+    assert 'data-filter-icon="activity"' in response.text
+    assert 'data-filter-icon="braces"' in response.text
+    assert 'data-filter-icon="table-properties"' in response.text
+    assert ">Attention</span>" in response.text
+    assert ">Dtype</span>" in response.text
+    assert ">Prompt</span>" in response.text
+    assert 'data-column-key="attn_implementation"' not in response.text
+    assert 'data-column-key="dtype"' not in response.text
+    assert 'data-column-key="prompt_summary"' not in response.text
     assert ">FA2</td>" not in response.text
     assert ">SDPA</td>" not in response.text
     assert ">BF16</td>" not in response.text
@@ -3159,7 +3184,9 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     assert "model/a" in response.text
     assert 'hx-get="/leaderboard?' in response.text
     assert 'href="/leaderboard.csv?view=Overall' in response.text
-    assert "[download csv]" in response.text
+    assert "Download CSV" in response.text
+    assert 'data-icon="file-spreadsheet"' in response.text
+    assert 'aria-label="Download visible leaderboard as CSV"' in response.text
 
 
 def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Path) -> None:

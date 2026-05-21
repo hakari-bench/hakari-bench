@@ -75,6 +75,47 @@ Z_SCORE_BUCKET_CLASSES = (
     "task-z-neg-200",
 )
 
+_ICON_PATHS = {
+    "activity": '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+    "arrow-down-up": (
+        '<path d="m3 16 4 4 4-4"/>'
+        '<path d="M7 20V4"/>'
+        '<path d="m21 8-4-4-4 4"/>'
+        '<path d="M17 4v16"/>'
+    ),
+    "bar-chart-3": (
+        '<path d="M3 3v18h18"/>'
+        '<path d="M18 17V9"/>'
+        '<path d="M13 17V5"/>'
+        '<path d="M8 17v-3"/>'
+    ),
+    "binary": '<path d="M6 20h4"/><path d="M14 10h4"/><path d="M6 14h2v6"/><path d="M14 4h2v6"/>',
+    "braces": '<path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-4a2 2 0 0 1 2-2 2 2 0 0 1-2-2V7a2 2 0 0 0-2-2h-1"/>',
+    "circle-help": (
+        '<circle cx="12" cy="12" r="10"/>'
+        '<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>'
+        '<path d="M12 17h.01"/>'
+    ),
+    "cpu": '<rect width="16" height="16" x="4" y="4" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/>',
+    "database": '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>',
+    "eye": '<path d="M2.06 12.35a1 1 0 0 1 0-.7C3.42 7.7 7.16 5 12 5s8.58 2.7 9.94 6.65a1 1 0 0 1 0 .7C20.58 16.3 16.84 19 12 19s-8.58-2.7-9.94-6.65"/><circle cx="12" cy="12" r="3"/>',
+    "file-spreadsheet": (
+        '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>'
+        '<path d="M14 2v4a2 2 0 0 0 2 2h4"/>'
+        '<path d="M8 13h2"/>'
+        '<path d="M14 13h2"/>'
+        '<path d="M8 17h2"/>'
+        '<path d="M14 17h2"/>'
+    ),
+    "filter": '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
+    "git-branch": '<line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
+    "git-compare-arrows": '<circle cx="5" cy="6" r="3"/><circle cx="19" cy="18" r="3"/><path d="M12 6h3a4 4 0 0 1 4 4v5"/><path d="m15 9-3-3 3-3"/><path d="M12 18H9a4 4 0 0 1-4-4V9"/><path d="m9 15 3 3-3 3"/>',
+    "languages": '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
+    "layers": '<path d="m12.83 2.18 8.5 4.73a1 1 0 0 1 0 1.75l-8.5 4.73a1.7 1.7 0 0 1-1.66 0l-8.5-4.73a1 1 0 0 1 0-1.75l8.5-4.73a1.7 1.7 0 0 1 1.66 0Z"/><path d="m22 12.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 17.5"/>',
+    "ruler": '<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>',
+    "table-properties": '<path d="M15 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M21 9H3"/><path d="M21 15H3"/>',
+}
+
 
 class _TaskLengthFilterKwargs(TypedDict):
     rank_filtered: bool
@@ -560,6 +601,32 @@ def render_global_tooltip() -> str:
     """
 
 
+def _icon_svg(name: str, *, class_name: str = "hakari-icon") -> str:
+    path = _ICON_PATHS[name]
+    return (
+        f"""<svg class="{class_name}" data-icon="{escape(name, quote=True)}" aria-hidden="true" """
+        """viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" """
+        f"""stroke-linecap="round" stroke-linejoin="round">{path}</svg>"""
+    )
+
+
+def _section_title(*, icon: str, text: str, class_name: str = "text-base font-semibold") -> str:
+    return (
+        f"""<h2 class="inline-flex items-center gap-1.5 {class_name}">"""
+        f"""{_icon_svg(icon, class_name="hakari-icon section-heading-icon shrink-0")}"""
+        f"""<span>{escape(text)}</span></h2>"""
+    )
+
+
+def _control_label(*, icon: str, text: str, extra_class: str = "") -> str:
+    spacing = f" {extra_class}" if extra_class else ""
+    return (
+        f"""<span class="inline-flex items-center gap-1 font-medium text-zinc-800{spacing}">"""
+        f"""{_icon_svg(icon, class_name="hakari-icon control-heading-icon shrink-0")}"""
+        f"""<span>{escape(text)}</span></span>"""
+    )
+
+
 def render_doc_summary_modal() -> str:
     return """
 <dialog id="doc-summary-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
@@ -586,7 +653,7 @@ def _render_doc_summary_trigger(*, doc: BenchmarkDoc, label: str) -> str:
                   data-doc-title="{escape(doc.title, quote=True)}"
                   data-doc-description="{escape(doc.description, quote=True)}"
                   data-doc-url="{escape(doc.url, quote=True)}"
-                  aria-label="{escape(label, quote=True)}">?</button>"""
+                  aria-label="{escape(label, quote=True)}">{_icon_svg("circle-help")}</button>"""
 
 
 def _render_help_tooltip(tooltip: str) -> str:
@@ -594,7 +661,7 @@ def _render_help_tooltip(tooltip: str) -> str:
                     class="tooltip-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600 hover:border-cyan-600 hover:text-cyan-700"
                     data-tooltip="{escape(tooltip, quote=True)}"
                     data-tooltip-placement="left"
-                    aria-label="{escape(tooltip, quote=True)}">?</span>"""
+                    aria-label="{escape(tooltip, quote=True)}">{_icon_svg("circle-help")}</span>"""
 
 
 def render_summary_cards(summary: ViewerSummary) -> str:
@@ -624,7 +691,7 @@ def render_summary_cards(summary: ViewerSummary) -> str:
     <section class="mb-5" aria-label="Benchmark coverage">
       <div class="mb-2 flex flex-wrap items-end justify-between gap-2">
         <div>
-          <h2 class="text-base font-semibold">Benchmark coverage</h2>
+          {_section_title(icon="bar-chart-3", text="Benchmark coverage")}
           <p class="text-sm text-zinc-600">Result warehouse size and coverage visible in this viewer.</p>
         </div>
         {timestamp}
@@ -642,16 +709,16 @@ def render_analysis_shell(*, view: str) -> str:
     <section class="mb-5 border border-zinc-200 bg-white" aria-label="Analysis views">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 px-3 py-2">
         <div>
-          <h2 class="text-base font-semibold">Analysis views</h2>
+          {_section_title(icon="activity", text="Analysis views")}
           <p class="text-sm text-zinc-600">Use these panels for paper-facing variant, reranking, and Nano subset audits.</p>
         </div>
         <div class="flex flex-wrap gap-2">
-          <button type="button" class="border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
-                  hx-get="/analysis?{escape(variant_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">Variant impact</button>
-          <button type="button" class="border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
-                  hx-get="/analysis?{escape(rerank_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">Reranking diagnostics</button>
-          <button type="button" class="border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
-                  hx-get="/analysis?{escape(dataset_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">Dataset diagnostics</button>
+          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+                  hx-get="/analysis?{escape(variant_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("git-compare-arrows", class_name="hakari-icon action-icon shrink-0")}<span>Variant impact</span></button>
+          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+                  hx-get="/analysis?{escape(rerank_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("arrow-down-up", class_name="hakari-icon action-icon shrink-0")}<span>Reranking diagnostics</span></button>
+          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+                  hx-get="/analysis?{escape(dataset_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("database", class_name="hakari-icon action-icon shrink-0")}<span>Dataset diagnostics</span></button>
         </div>
       </div>
       <div id="analysis-panel">
@@ -685,7 +752,11 @@ def render_leaderboard(
       <h2 class="text-lg font-semibold">{escape(result.view_label)}</h2>
       <p class="mt-1 text-sm text-zinc-600" data-shown-count="{shown_count}">
         {shown_count} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks
-        <a class="ml-2 text-zinc-800 underline-offset-2 hover:underline" href="{_csv_url(csv_query)}">[download csv]</a>
+        <a class="ml-2 inline-flex items-center gap-1 border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-800 underline-offset-2 hover:border-cyan-600 hover:text-cyan-700"
+           href="{_csv_url(csv_query)}" aria-label="Download visible leaderboard as CSV">
+          {_icon_svg("file-spreadsheet", class_name="hakari-icon h-3.5 w-3.5")}
+          <span>Download CSV</span>
+        </a>
       </p>
     </div>
   </div>
@@ -775,7 +846,7 @@ def render_tabs(
     return f"""
     <nav class="mb-4 border border-zinc-200 bg-white p-3" aria-label="Benchmark views">
       <div class="mb-2 flex items-center justify-between gap-2">
-        <h2 class="text-sm font-semibold">Benchmark groups</h2>
+        {_section_title(icon="layers", text="Benchmark groups", class_name="text-sm font-semibold")}
         <p class="text-xs text-zinc-500">Views are grouped to keep multilingual and domain-specific suites scannable.</p>
       </div>
       <div class="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">{''.join(groups)}</div>
@@ -918,7 +989,7 @@ def render_language_pages(
         """
     return f"""
       <nav class="mb-4 flex flex-wrap items-start gap-2" aria-label="Language pages">
-        <span class="pt-1.5 text-sm font-medium text-zinc-800">Language pages</span>
+        {_control_label(icon="languages", text="Language pages", extra_class="pt-1.5 text-sm")}
         {''.join(buttons)}
         {more}
       </nav>
@@ -1243,6 +1314,7 @@ def render_controls(
         _render_filter_details(
             name="lang_filter",
             summary=f"Languages ({len(result.available_languages)})",
+            icon="languages",
             options=language_options,
             selected_values=set(result.selected_languages),
             all_query=language_all_query,
@@ -1259,12 +1331,12 @@ def render_controls(
             {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
         {column_hidden_html}
-        <span class="font-medium text-zinc-800">Columns:</span>
+        {_control_label(icon="table-properties", text="Columns:")}
         <label class="inline-flex items-center gap-2">
           <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
           <span>Tasks</span>
         </label>
-        <span class="font-medium text-zinc-800">Display:</span>
+        {_control_label(icon="eye", text="Display:")}
         <label class="inline-flex items-center gap-2">
           <input type="hidden" name="task_z_scores" value="0">
           <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
@@ -1281,7 +1353,7 @@ def render_controls(
             {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
         {variant_hidden_html}
-        <span class="font-medium text-zinc-800">Include variants:</span>
+        {_control_label(icon="git-branch", text="Include variants:")}
         <label class="inline-flex items-center gap-2">
           <input type="checkbox" name="quantization" value="1" class="h-4 w-4 accent-cyan-700"{quantization_checked}>
           <span>Quantization</span>
@@ -1300,7 +1372,7 @@ def render_controls(
         </label>
       </form>
       <div class="mt-3 flex flex-wrap items-start gap-3">
-        <p class="pt-1 font-medium text-zinc-800">Filters:</p>
+        <p class="pt-1">{_control_label(icon="filter", text="Filters:")}</p>
         <form id="filter-controls" class="flex flex-wrap items-start gap-3"
               hx-get="/leaderboard" hx-push-url="true"
               {_leaderboard_control_hx_attrs()}
@@ -1329,13 +1401,13 @@ def render_controls(
           <div id="facet-filters" class="flex flex-wrap items-start gap-3">
             {_render_task_length_filter_inputs(filter_state)}
             {language_filter_html}
-            {_render_filter_details(name="dim_filter", summary="Dims", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
-            {_render_filter_details(name="quant_filter", summary="Quantization", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
+            {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
+            {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
             <div class="flex flex-wrap items-start gap-3 border-l border-zinc-200 pl-3">
-              <p class="pt-1 font-medium text-zinc-800">Runtime</p>
-              {_render_filter_details(name="dtype_filter", summary="Dtype", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
-              {_render_filter_details(name="attn_filter", summary="Attention", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
-              {_render_filter_details(name="prompt_filter", summary="Prompt", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
+              <p class="pt-1">{_control_label(icon="cpu", text="Runtime")}</p>
+              {_render_filter_details(name="dtype_filter", summary="Dtype", icon="braces", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
+              {_render_filter_details(name="attn_filter", summary="Attention", icon="activity", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
+              {_render_filter_details(name="prompt_filter", summary="Prompt", icon="table-properties", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
             </div>
           </div>
         </form>
@@ -1478,6 +1550,7 @@ def render_table_head(
         columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False, ""))
     heads = []
     for key, label, default_direction, align, is_metric, full_metric_name in columns:
+        align = "left"
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
         indicator = " ▲" if sort == key and direction == "asc" else " ▼" if sort == key else ""
         query_payload = state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
@@ -1516,9 +1589,9 @@ def _sticky_head_class(key: str) -> str:
     if key == "model_name":
         return "leaderboard-col-model sticky z-20"
     if key == "borda_rank":
-        return "leaderboard-col-rank leaderboard-col-borda sticky z-20"
+        return "leaderboard-col-rank"
     if key == "mean_rank":
-        return "leaderboard-col-rank leaderboard-col-mean sticky z-20"
+        return "leaderboard-col-rank"
     return ""
 
 
@@ -1530,22 +1603,22 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
     model_views = model_cell_views(result.rows)
     for row in result.rows:
         hidden = not filter_context.is_visible(row)
-        row_class = "border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
+        row_class = "leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
               {render_model_name_cell(row, model_views[row.model_name])}
-              <td class="leaderboard-col-rank leaderboard-col-borda sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
-              <td class="leaderboard-col-rank leaderboard-col-mean sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
-              <td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
+              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{_fmt_rank(row.borda_rank)}</td>
+              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{_fmt_rank(row.mean_rank)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
               {_render_metric_cells(result=result, row=row)}
-              <td class="px-2 py-1 text-right tabular-nums">{row.task_count}</td>
-              <td class="px-2 py-1 text-right tabular-nums">{_fmt_params(row.active_parameters)}</td>
-              <td class="px-2 py-1 text-right tabular-nums">{_fmt_params(row.total_parameters)}</td>
-              <td class="px-2 py-1 text-right tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
-              <td class="px-2 py-1 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{row.task_count}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.active_parameters)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.total_parameters)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
+              <td class="px-2 py-1 text-left tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
               {_render_quantization_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
             </tr>"""
@@ -1942,7 +2015,7 @@ def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> s
     if result.show_task_ranks:
         values = row.metric_rank_values
         return "".join(
-            f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-right tabular-nums">{_fmt_optional_rank(values.get(column))}</td>"""
+            f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums">{_fmt_optional_rank(values.get(column))}</td>"""
             for column in result.metric_columns
         )
     if result.show_task_z_scores:
@@ -1952,7 +2025,7 @@ def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> s
         )
     values = row.metric_values
     return "".join(
-        f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-right tabular-nums">{_fmt_score(values.get(column))}</td>"""
+        f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums">{_fmt_score(values.get(column))}</td>"""
         for column in result.metric_columns
     )
 
@@ -1961,21 +2034,21 @@ def _render_mean_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str
     if result.is_overall and not (result.rank_filtered and result.task_filter):
         if result.show_task_z_scores:
             return (
-                _render_score_z_cell(score=row.macro_mean, z_score=row.macro_mean_z, cell_class="px-2 py-1 text-right tabular-nums")
-                + _render_score_z_cell(score=row.micro_mean, z_score=row.micro_mean_z, cell_class="px-2 py-1 text-right tabular-nums")
+                _render_score_z_cell(score=row.macro_mean, z_score=row.macro_mean_z, cell_class="px-2 py-1 text-left tabular-nums")
+                + _render_score_z_cell(score=row.micro_mean, z_score=row.micro_mean_z, cell_class="px-2 py-1 text-left tabular-nums")
             )
-        return f"""<td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.macro_mean)}</td>
-                <td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
+        return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.macro_mean)}</td>
+                <td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
     if result.show_task_z_scores:
-        return _render_score_z_cell(score=row.mean_score, z_score=row.mean_score_z, cell_class="px-2 py-1 text-right tabular-nums")
-    return f"""<td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.mean_score)}</td>"""
+        return _render_score_z_cell(score=row.mean_score, z_score=row.mean_score_z, cell_class="px-2 py-1 text-left tabular-nums")
+    return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.mean_score)}</td>"""
 
 
 def _render_metric_z_cell(*, score: float | None, z_score: float | None) -> str:
     return _render_score_z_cell(
         score=score,
         z_score=z_score,
-        cell_class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-right tabular-nums",
+        cell_class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums",
     )
 
 
@@ -2001,7 +2074,7 @@ def _render_score_z_cell(*, score: float | None, z_score: float | None, cell_cla
 def _render_base_delta_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
     if not _show_base_delta_column(result):
         return ""
-    return f"""<td class="px-2 py-1 text-right tabular-nums">{_fmt_percent_delta(row.base_score_delta_percent)}</td>"""
+    return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_percent_delta(row.base_score_delta_percent)}</td>"""
 
 
 def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
@@ -2018,6 +2091,7 @@ def _render_filter_details(
     *,
     name: str,
     summary: str,
+    icon: str,
     options: list[tuple[str, str]],
     selected_values: set[str],
     all_query: QueryState,
@@ -2038,8 +2112,13 @@ def _render_filter_details(
     all_page_url = _page_url(all_query)
     none_page_url = _page_url(none_query)
     return f"""
-      <details class="border border-zinc-300 bg-white">
-        <summary class="cursor-pointer px-2 py-1 font-medium text-zinc-800">{escape(summary)}</summary>
+      <details class="filter-detail border border-zinc-300 bg-white" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}">
+        <summary class="cursor-pointer px-2 py-1 font-medium text-zinc-800">
+          <span class="inline-flex items-center gap-1.5">
+            {_icon_svg(icon, class_name="hakari-icon filter-detail-icon shrink-0")}
+            <span>{escape(summary)}</span>
+          </span>
+        </summary>
         <div class="border-t border-zinc-200 p-2">
           <div class="mb-2 flex gap-1">
             <button type="button" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
