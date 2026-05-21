@@ -24,6 +24,7 @@ from hakari_bench.embedding_variants import (
     TORCH_SCORE_REPRESENTATION,
     dense_embedding_variants,
     parse_embedding_variants,
+    sparse_embedding_variants,
 )
 from hakari_bench.evaluation import LoadedIrDataset, load_ir_dataset, start_encode_pool, stop_encode_pool
 from hakari_bench.model_cards import load_model_cards, write_evaluation_model_card
@@ -223,7 +224,8 @@ def _add_embedding_variant_args(parser: argparse.ArgumentParser) -> None:
             "sparse-document-max-active-dims:DIM, normalize, int8, binary, "
             "rescore:int8, rescore:binary, int8-rescore, or binary-rescore. "
             "Dense runs automatically include full-dim quantized/rescore variants; "
-            "explicit truncate:DIM also expands to truncate x quantized/rescore variants."
+            "explicit truncate:DIM also expands to truncate x quantized/rescore variants. "
+            "Sparse runs automatically include query/document max-active-dims grid variants."
         ),
     )
     parser.add_argument(
@@ -243,7 +245,8 @@ def _add_embedding_variant_args(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help=(
             "Disable automatic dense int8/binary quantized and top-100 rescore variants, "
-            "including truncate x quantized/rescore expansion."
+            "including truncate x quantized/rescore expansion, and automatic sparse "
+            "query/document max-active-dims grid variants."
         ),
     )
 
@@ -377,6 +380,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         try:
             if args.model_type == "dense":
                 args.embedding_variants = dense_embedding_variants(
+                    args.embedding_variant_values,
+                    args.embedding_variant_grid_values,
+                    include_defaults=not args.no_default_embedding_variants,
+                )
+            elif args.model_type == "sparse":
+                args.embedding_variants = sparse_embedding_variants(
                     args.embedding_variant_values,
                     args.embedding_variant_grid_values,
                     include_defaults=not args.no_default_embedding_variants,

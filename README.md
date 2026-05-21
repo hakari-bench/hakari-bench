@@ -141,21 +141,28 @@ The selected limits are written to result JSON under
 Sparse embedding metadata records `nnz_total`, `nnz_mean`, `nnz_median`,
 `nnz_max`, and `density` for queries and documents.
 
-To compare multiple sparsity limits from one full sparse model encode, use
-post-encode embedding variants:
+Sparse evaluation automatically compares the default post-encode sparsity grid
+from one full sparse model encode unless `--no-default-embedding-variants` is
+set:
+
+- query max active dims: `8,16,24,32`
+- document max active dims: `64,128,256,512`
+
+To add other sparsity limits, use post-encode embedding variants:
 
 ```bash
 uv run hakari-bench evaluate sparse \
   --model naver/splade-v3 \
   --dataset NanoBEIR-en \
-  --embedding-variant sparse-query-max-active-dims:8,16,32 \
-  --embedding-variant sparse-document-max-active-dims:64,128,256 \
-  --embedding-variant-grid sparse-query-max-active-dims:8,16,32 sparse-document-max-active-dims:64,128,256
+  --embedding-variant sparse-query-max-active-dims:48 \
+  --embedding-variant-grid sparse-query-max-active-dims:48 sparse-document-max-active-dims:768
 ```
 
 These variants keep the top absolute-value dimensions per query/document row
 and record each derived result under `evaluation.embedding_evaluations`, like
-dense `truncate:` variants.
+dense `truncate:` variants. Use `--no-default-embedding-variants` when a sparse
+run should write only the base no-limit result or only explicitly requested
+sparse variants.
 
 Sparse embeddings intentionally do not support quantized embedding variants in
 the CLI. Use post-encode sparse truncation variants for sparse footprint and

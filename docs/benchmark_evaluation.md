@@ -222,32 +222,38 @@ uv run hakari-bench evaluate sparse \
 ```
 
 Do not add dense quantized embedding variants for sparse/SPLADE-style models.
-Sparse quantization is intentionally unsupported in the CLI. Use post-encode
-sparse truncation variants for footprint and latency trade-offs.
+Sparse quantization is intentionally unsupported in the CLI. Sparse runs
+automatically include post-encode query/document max-active-dims grid variants
+unless `--no-default-embedding-variants` is set:
 
-Query-only sparsity limits:
+- query max active dims: `8,16,24,32`
+- document max active dims: `64,128,256,512`
 
-```bash
-uv run hakari-bench evaluate sparse \
-  --model MODEL_NAME \
-  --dataset DATASET_NAME \
-  --embedding-variant sparse-query-max-active-dims:8,16,32
-```
+These variants are derived after one full sparse model encode and do not run
+additional model inference.
 
-Query/document grids:
+Additional query-only sparsity limits:
 
 ```bash
 uv run hakari-bench evaluate sparse \
   --model MODEL_NAME \
   --dataset DATASET_NAME \
-  --embedding-variant sparse-query-max-active-dims:8,16,32 \
-  --embedding-variant sparse-document-max-active-dims:64,128,256 \
-  --embedding-variant-grid sparse-query-max-active-dims:8,16,32 sparse-document-max-active-dims:64,128,256
+  --embedding-variant sparse-query-max-active-dims:48
 ```
 
-If only the full query x document grid is requested, the standalone query-only
-and document-only variants may be omitted. The base no-limit result is always
-included as `evaluation.embedding_evaluations[0]`.
+Additional query/document grids:
+
+```bash
+uv run hakari-bench evaluate sparse \
+  --model MODEL_NAME \
+  --dataset DATASET_NAME \
+  --embedding-variant-grid sparse-query-max-active-dims:48 sparse-document-max-active-dims:768
+```
+
+The base no-limit result is always included as
+`evaluation.embedding_evaluations[0]`. Use `--no-default-embedding-variants`
+when intentionally running only the base no-limit result or only explicitly
+specified sparse variants.
 
 ## Late-Interaction, Reranker, And BM25
 

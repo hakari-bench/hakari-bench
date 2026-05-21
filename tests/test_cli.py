@@ -66,6 +66,31 @@ def _default_dense_quantized_variants() -> list[dict[str, object]]:
     ]
 
 
+def _default_sparse_truncation_variants() -> list[dict[str, object]]:
+    return _sparse_truncation_grid_variants(
+        query_dims=[8, 16, 24, 32],
+        document_dims=[64, 128, 256, 512],
+    )
+
+
+def _sparse_truncation_grid_variants(
+    *,
+    query_dims: list[int],
+    document_dims: list[int],
+) -> list[dict[str, object]]:
+    variants: list[dict[str, object]] = []
+    for query_dim in query_dims:
+        for document_dim in document_dims:
+            variants.append(
+                _pipeline_variant(
+                    f"sparse_query_max_active_dims_{query_dim}_sparse_document_max_active_dims_{document_dim}",
+                    _truncate_sparse_max_dims_step(query_dim, target="query"),
+                    _truncate_sparse_max_dims_step(document_dim, target="corpus"),
+                )
+            )
+    return variants
+
+
 def _truncate_quantized_variants(*dims: int) -> list[dict[str, object]]:
     variants: list[dict[str, object]] = []
     for dim in dims:
@@ -465,13 +490,27 @@ def test_parse_args_no_default_keeps_explicit_truncate_variants_only() -> None:
     ]
 
 
-def test_parse_args_does_not_add_default_quantized_variants_to_sparse_models() -> None:
+def test_parse_args_defaults_to_sparse_truncation_grid_variants() -> None:
     args = parse_args(
         [
             "evaluate",
             "sparse",
             "--model",
             "naver/splade-v3",
+        ]
+    )
+
+    assert args.embedding_variants == _default_sparse_truncation_variants()
+
+
+def test_parse_args_can_disable_default_sparse_truncation_grid_variants() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "sparse",
+            "--model",
+            "naver/splade-v3",
+            "--no-default-embedding-variants",
         ]
     )
 
@@ -973,6 +1012,7 @@ def test_parse_args_accepts_query_truncate_sparse_max_dims_embedding_variants() 
     assert args.embedding_variants == [
         _pipeline_variant("sparse_query_max_active_dims_128", _truncate_sparse_max_dims_step(128, target="query")),
         _pipeline_variant("sparse_query_max_active_dims_64", _truncate_sparse_max_dims_step(64, target="query")),
+        *_default_sparse_truncation_variants(),
     ]
 
 
@@ -1007,52 +1047,19 @@ def test_parse_args_accepts_query_and_docs_truncate_sparse_max_dims_cross_produc
         ]
     )
 
+    explicit_variants = _sparse_truncation_grid_variants(
+        query_dims=[8, 16, 32],
+        document_dims=[64, 128, 256],
+    )
+    explicit_names = {str(variant["name"]) for variant in explicit_variants}
+
     assert args.embedding_variants == [
-        _pipeline_variant(
-            "sparse_query_max_active_dims_8_sparse_document_max_active_dims_64",
-            _truncate_sparse_max_dims_step(8, target="query"),
-            _truncate_sparse_max_dims_step(64, target="corpus"),
-        ),
-        _pipeline_variant(
-            "sparse_query_max_active_dims_8_sparse_document_max_active_dims_128",
-            _truncate_sparse_max_dims_step(8, target="query"),
-            _truncate_sparse_max_dims_step(128, target="corpus"),
-        ),
-        _pipeline_variant(
-            "sparse_query_max_active_dims_8_sparse_document_max_active_dims_256",
-            _truncate_sparse_max_dims_step(8, target="query"),
-            _truncate_sparse_max_dims_step(256, target="corpus"),
-        ),
-        _pipeline_variant(
-            "sparse_query_max_active_dims_16_sparse_document_max_active_dims_64",
-            _truncate_sparse_max_dims_step(16, target="query"),
-            _truncate_sparse_max_dims_step(64, target="corpus"),
-        ),
-        _pipeline_variant(
-            "sparse_query_max_active_dims_16_sparse_document_max_active_dims_128",
-            _truncate_sparse_max_dims_step(16, target="query"),
-            _truncate_sparse_max_dims_step(128, target="corpus"),
-        ),
-        _pipeline_variant(
-            "sparse_query_max_active_dims_16_sparse_document_max_active_dims_256",
-            _truncate_sparse_max_dims_step(16, target="query"),
-            _truncate_sparse_max_dims_step(256, target="corpus"),
-        ),
-        _pipeline_variant(
-            "sparse_query_max_active_dims_32_sparse_document_max_active_dims_64",
-            _truncate_sparse_max_dims_step(32, target="query"),
-            _truncate_sparse_max_dims_step(64, target="corpus"),
-        ),
-        _pipeline_variant(
-            "sparse_query_max_active_dims_32_sparse_document_max_active_dims_128",
-            _truncate_sparse_max_dims_step(32, target="query"),
-            _truncate_sparse_max_dims_step(128, target="corpus"),
-        ),
-        _pipeline_variant(
-            "sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",
-            _truncate_sparse_max_dims_step(32, target="query"),
-            _truncate_sparse_max_dims_step(256, target="corpus"),
-        ),
+        *explicit_variants,
+        *[
+            variant
+            for variant in _default_sparse_truncation_variants()
+            if str(variant["name"]) not in explicit_names
+        ],
     ]
 
 
