@@ -621,7 +621,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
     assert (
         'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_rank&amp;direction=asc'
-        '&amp;group=task&amp;task_z_scores=1&amp;target=reranking"'
+        '&amp;group=task&amp;task_z_scores=0&amp;target=reranking"'
     ) in response.text
     assert "Language-specific" in response.text
     assert "Domain-specific" in response.text
@@ -1072,7 +1072,7 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert 'name="lang_filter" value="ja" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert (
         'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task'
-        '&amp;task_z_scores=1&amp;lang_filter=en"'
+        '&amp;task_z_scores=0&amp;lang_filter=en"'
     ) in response.text
     assert 'data-language-page="ja"' in response.text
     assert 'data-shown-count="2"' in response.text
@@ -2603,7 +2603,7 @@ def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) ->
     assert '<span class="task-z-score-delta">+0.50σ</span>' in response.text
 
 
-def test_std_display_is_default_and_can_be_disabled_without_task_columns(tmp_path: Path) -> None:
+def test_std_display_is_default_off_and_can_be_enabled_without_task_columns(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
     db_path = tmp_path / "results.duckdb"
@@ -2627,17 +2627,17 @@ def test_std_display_is_default_and_can_be_disabled_without_task_columns(tmp_pat
 
     assert default_response.status_code == 200
     assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700">' in default_response.text
-    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in default_response.text
+    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' not in default_response.text
     assert '<input type="hidden" name="task_z_scores" value="0">' in default_response.text
-    assert '<span class="task-z-score-delta">+1.00σ</span>' in default_response.text
+    assert "task-z-score" not in default_response.text
     assert "metric%3Aa1" not in default_response.text
 
-    disabled_response = client.get("/leaderboard?view=BenchA&task_z_scores=0")
+    enabled_response = client.get("/leaderboard?view=BenchA&task_z_scores=1")
 
-    assert disabled_response.status_code == 200
-    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' not in disabled_response.text
-    assert "task-z-score" not in disabled_response.text
-    assert "task_z_scores=0" in disabled_response.text
+    assert enabled_response.status_code == 200
+    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in enabled_response.text
+    assert '<span class="task-z-score-delta">+1.00σ</span>' in enabled_response.text
+    assert "task_z_scores=1" in enabled_response.text
 
 
 def test_task_z_score_heatmap_uses_quarter_sigma_buckets() -> None:
