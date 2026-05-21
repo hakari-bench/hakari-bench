@@ -56,7 +56,6 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
         "MNanoBEIR",
         "NanoMMTEB-v2",
         "NanoRTEB",
-        "NanoMIRACL",
         "NanoMLDR",
         "NanoBRIGHT",
         "NanoLaw",
@@ -70,6 +69,15 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
     core_overall = config.overall_for_view("Core")
     assert core_overall is not None
     assert core_overall.benchmark_names == core_benchmarks
+    assert [component.group_by for component in core_overall.benchmark_components] == [
+        "task_name",
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+    ]
     grouped_overall = config.overall_for_view("Group")
     assert grouped_overall is not None
     assert [component.name for component in grouped_overall.benchmark_components] == [
@@ -135,7 +143,7 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
     assert all(benchmark in config.overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
     assert all(benchmark not in core_overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
     assert "NanoMIRACL" in config.overall.benchmark_names
-    assert "NanoMIRACL" in core_overall.benchmark_names
+    assert "NanoMIRACL" not in core_overall.benchmark_names
     assert "NanoCMTEB" in config.view_names
     assert "NanoCMTEB" in config.overall.benchmark_names
     nano_law = config.benchmark_for_view("NanoLaw")
@@ -173,7 +181,7 @@ def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> No
     assert _view_group("NanoMMTEB-v2") == "Core benchmarks"
     assert _view_group("MNanoBEIR") == "Core benchmarks"
     assert _view_group("NanoRTEB") == "Core benchmarks"
-    assert _view_group("NanoMIRACL") == "Core benchmarks"
+    assert _view_group("NanoMIRACL") == "Domain-specific"
     assert _view_group("NanoMLDR") == "Core benchmarks"
     assert _view_group("NanoBRIGHT") == "Core benchmarks"
     assert _view_group("NanoLaw") == "Core benchmarks"

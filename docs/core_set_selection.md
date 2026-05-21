@@ -12,13 +12,12 @@ set is:
 1. `MNanoBEIR`
 2. `NanoMMTEB-v2`
 3. `NanoRTEB`
-4. `NanoMIRACL`
-5. `NanoMLDR`
-6. `NanoBRIGHT`
-7. `NanoLaw`
-8. `NanoCoIR`
+4. `NanoMLDR`
+5. `NanoBRIGHT`
+6. `NanoLaw`
+7. `NanoCoIR`
 
-This document records why these eight Nano sets were selected. The decision was
+This document records why these seven Nano sets were selected. The decision was
 made by combining external adoption signals, source benchmark quality, task and
 language diversity, overlap analysis, lexical baseline difficulty, and actual
 dense-model score dispersion from the evaluated DuckDB warehouse. The goal was
@@ -26,18 +25,24 @@ not to maximize task count. It was to keep a compact set whose aggregate score
 is interpretable, broad, and difficult to game by over-weighting one benchmark
 family.
 
+The Core score also uses configured aggregation units rather than blindly
+averaging every raw task row. In particular, `MNanoBEIR` is aggregated by
+`task_name`: an ArguAna-style task is first averaged across its language
+variants and then contributes as one Core scoring unit. This preserves the
+multilingual BEIR anchor without allowing the raw language x task matrix to
+dominate the Core aggregate.
+
 ## Final Core Set
 
 | Position | Nano set | Role in Core | Main reason for inclusion |
 | ---: | --- | --- | --- |
-| 1 | `MNanoBEIR` | Classical multilingual IR anchor | BEIR-style retrieval remains a common reference point, and the multilingual Nano version gives broad language and task coverage. |
+| 1 | `MNanoBEIR` | Classical multilingual IR anchor | BEIR-style retrieval remains a common reference point; Core aggregates it by source task name so multilingual coverage does not dominate by raw row count. |
 | 2 | `NanoMMTEB-v2` | Broad multilingual MTEB/MMTEB anchor | Represents modern MTEB-style retrieval coverage across many task types and languages. |
 | 3 | `NanoRTEB` | Practical retrieval domains | Adds English RTEB-style applied retrieval tasks with strong model separation. |
-| 4 | `NanoMIRACL` | Canonical multilingual IR | Keeps MIRACL as an explicit multilingual retrieval anchor even though current dense models show low score dispersion on many splits. |
-| 5 | `NanoMLDR` | Multilingual long-document retrieval | Strong external adoption through BGE-M3/MLDR and excellent dense score dispersion across all languages. |
-| 6 | `NanoBRIGHT` | Reasoning-heavy retrieval stress test | Hard tasks with high model separation and strong dataset usage signals. |
-| 7 | `NanoLaw` | Legal-domain retrieval | A multilingual, multi-source legal retrieval group whose tasks are registered in MTEB and better supported than `NanoBIRCO` as a Core domain representative. |
-| 8 | `NanoCoIR` | Code retrieval | Preserves a code-search dimension that is not captured by legal, long-document, or general IR tasks. |
+| 4 | `NanoMLDR` | Multilingual long-document retrieval | Strong external adoption through BGE-M3/MLDR and excellent dense score dispersion across all languages. |
+| 5 | `NanoBRIGHT` | Reasoning-heavy retrieval stress test | Hard tasks with high model separation and strong dataset usage signals. |
+| 6 | `NanoLaw` | Legal-domain retrieval | A multilingual, multi-source legal retrieval group whose tasks are registered in MTEB and better supported than `NanoBIRCO` as a Core domain representative. |
+| 7 | `NanoCoIR` | Code retrieval | Preserves a code-search dimension that is not captured by legal, long-document, or general IR tasks. |
 
 ## Pruned or Not Promoted Sets
 
@@ -47,6 +52,7 @@ the `All` view.
 
 | Nano set | Decision | Reason |
 | --- | --- | --- |
+| `NanoMIRACL` | Removed from Core after review | MIRACL remains a canonical multilingual benchmark, but the analyzed dense results showed substantial saturation and low model separation. Its role is better served by the `All` and benchmark-specific views than by the compact Core score. |
 | `NanoLongEmbed` | Removed from the earlier Core proposal | Dense dispersion was good, but the set contains synthetic long-context probes such as passkey/needle-style tasks and has weaker external adoption than `NanoMLDR`. `NanoMLDR` gives a cleaner multilingual long-document retrieval signal. |
 | `NanoBIRCO` | Replaced by `NanoLaw` | `NanoBIRCO` is valuable as a complex-objective stress test, but it is small, English-only, and has weaker paper and dataset adoption signals. `NanoLaw` provides a better Core domain slot. |
 | `NanoDAPFAM` | Not promoted | Patent retrieval is distinctive, but dense model dispersion was very low and many tasks were floor-like. Better suited to a domain appendix. |
@@ -69,15 +75,15 @@ The Core set was chosen using five criteria.
 
 2. Task diversity
 
-   The final set covers classical IR, broad MTEB/MMTEB retrieval, RTEB-style
-   applied retrieval, MIRACL, multilingual long-document retrieval, hard
+   The final set covers classical multilingual IR, broad MTEB/MMTEB retrieval,
+   RTEB-style applied retrieval, multilingual long-document retrieval, hard
    reasoning retrieval, legal retrieval, and code retrieval.
 
 3. Language diversity
 
    The set contains broad multilingual groups (`MNanoBEIR`, `NanoMMTEB-v2`,
-   `NanoMIRACL`, `NanoMLDR`) while avoiding a Core made mostly of
-   language-specific MTEB-family views.
+   `NanoMLDR`) while avoiding a Core made mostly of language-specific
+   MTEB-family views.
 
 4. Low redundancy
 
@@ -112,12 +118,11 @@ Definitions:
 - `low-var`: tasks with std <= 0.03.
 - `healthy`: tasks with 0.25 < mean < 0.85 and std >= 0.05.
 
-| Nano set | Effective tasks | avg_mean | avg_std | p90-p10 | ceiling | floor | low-var | healthy |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `MNanoBEIR` | 182 | 0.5521 | 0.0476 | 0.1042 | 2 | 1 | 16 | 73 |
+| Nano set | Dense analysis task rows | avg_mean | avg_std | p90-p10 | ceiling | floor | low-var | healthy |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `MNanoBEIR` | 182 raw, grouped by `task_name` in Core | 0.5521 | 0.0476 | 0.1042 | 2 | 1 | 16 | 73 |
 | `NanoMMTEB-v2` proxy | 18 | 0.5434 | 0.0572 | 0.1206 | 5 | 2 | 5 | 9 |
 | `NanoRTEB` | 14 | 0.5954 | 0.0960 | 0.2203 | 0 | 0 | 0 | 11 |
-| `NanoMIRACL` | 18 | 0.7880 | 0.0280 | 0.0597 | 1 | 0 | 12 | 1 |
 | `NanoMLDR` | 13 | 0.5399 | 0.0844 | 0.1918 | 0 | 0 | 0 | 13 |
 | `NanoBRIGHT` | 20 | 0.3289 | 0.1021 | 0.2436 | 0 | 2 | 0 | 14 |
 | `NanoLaw` after Core overlap exclusions | 4 | 0.5634 | 0.0686 | 0.1516 | 0 | 0 | 0 | 4 |
@@ -133,9 +138,9 @@ This table explains several choices:
   were healthy and because its external adoption signals are stronger.
 - `NanoBRIGHT` and `NanoRTEB` were retained because they show high model
   separation and few saturation artifacts.
-- `NanoMIRACL` was retained despite low dispersion. Its purpose in Core is not
-  to maximize ranking separation, but to keep a widely recognized multilingual
-  IR anchor.
+- `NanoMIRACL` was removed from Core because its recognition as a multilingual
+  benchmark did not offset the low dense-model dispersion observed in this
+  result warehouse.
 - `NanoLaw` was selected over `NanoBIRCO` after comparing domain coverage,
   MTEB registration, citations, and effective Core overlap.
 
@@ -143,6 +148,7 @@ This table explains several choices:
 
 | Nano set | Effective tasks | avg_mean | avg_std | p90-p10 | ceiling | floor | low-var | healthy | Interpretation |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| `NanoMIRACL` | 18 | 0.7880 | 0.0280 | 0.0597 | 1 | 0 | 12 | 1 | Canonical multilingual benchmark, but too saturated and low-variance for the compact Core score. |
 | `NanoLongEmbed` | 6 | 0.6265 | 0.0911 | 0.2049 | 0 | 0 | 0 | 3 | Good dispersion, but weaker external signal and more synthetic long-context overlap than `NanoMLDR`. |
 | `NanoBIRCO` | 5 | 0.2890 | 0.0618 | 0.1182 | 0 | 1 | 1 | 3 | Valuable hard benchmark, but smaller, English-only, and weaker external signal than `NanoLaw`. |
 | `NanoDAPFAM` | 18 | 0.2870 | 0.0322 | 0.0754 | 0 | 6 | 8 | 0 | Too low-variance for Core, despite being domain-distinct. |
@@ -251,13 +257,17 @@ sets. `NanoBRIGHT` provides hard reasoning-heavy retrieval where BM25 is weak.
 but not sufficient. `NanoCoIR` keeps a code retrieval axis whose failure modes
 are different again.
 
-## Overlap Policy
+## Aggregation and Overlap Policy
 
-The Core set uses raw task rows, but some benchmark configurations define
-excluded tasks to prevent duplicate source tasks from being counted twice in
-benchmark-specific views. For `NanoLaw`, the following tasks overlap with
-`NanoRTEB` or `NanoMMTEB-v2` and are excluded by the viewer configuration when
-appropriate:
+Core normally uses one scoring unit per raw task row, except for explicitly
+configured grouped components. The important exception is `MNanoBEIR`, where
+Core uses `group_by: task_name` so that each BEIR source task contributes once
+after averaging across language variants.
+
+Some benchmark configurations also define excluded tasks to prevent duplicate
+source tasks from being counted twice in benchmark-specific views. For
+`NanoLaw`, the following tasks overlap with `NanoRTEB` or `NanoMMTEB-v2` and
+are excluded by the viewer configuration when appropriate:
 
 - `NanoAILACasedocs`
 - `NanoAILAStatutes`
@@ -282,8 +292,8 @@ This selection should be revisited when one of the following changes:
 - A new domain benchmark achieves both strong external adoption and strong model
   separation.
 - MTEB or MMTEB significantly changes the registered task catalog.
-- Saturation increases on `NanoMIRACL`, `NanoCoIR`, or `NanoMMTEB-v2` enough to
-  reduce their usefulness as Core components.
+- Saturation increases on `NanoCoIR` or `NanoMMTEB-v2` enough to reduce their
+  usefulness as Core components.
 
 The Core set is not intended to replace the full `All` view. It is a compact
 summary. Domain and language-specific diagnosis should still use `All`,

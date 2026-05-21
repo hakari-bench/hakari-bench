@@ -925,7 +925,6 @@ def _view_group(view_name: str) -> str:
         "MNanoBEIR",
         "NanoMMTEB-v2",
         "NanoRTEB",
-        "NanoMIRACL",
         "NanoMLDR",
         "NanoBRIGHT",
         "NanoLaw",

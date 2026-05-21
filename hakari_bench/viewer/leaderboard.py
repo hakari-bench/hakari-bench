@@ -233,6 +233,7 @@ class LeaderboardService:
                 and not task_filter.strip()
                 and not has_length_filters
                 and language_filter_mode == "languages"
+                and (overall is None or not _overall_uses_grouped_components(overall))
             ):
                 precomputed = _load_precomputed_leaderboard_rows(
                     duckdb_path=self.duckdb_path,
@@ -907,7 +908,7 @@ def _group_by_benchmark(rows: list[TaskScore]) -> dict[str, list[TaskScore]]:
 
 def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> list[TaskScore]:
     component_by_benchmark = {component.name: component for component in overall.benchmark_components}
-    if not any(component.group_by is not None for component in component_by_benchmark.values()):
+    if not _overall_uses_grouped_components(overall):
         return rows
 
     expected_raw_tasks: dict[str, set[str]] = defaultdict(set)
@@ -1262,9 +1263,13 @@ def _language_filter_mode_for_view(config: ViewerConfig, view_name: str) -> Lang
 
 
 def _overall_metric_score_group(overall: OverallConfig) -> ScoreGroupConfig | None:
-    if not any(component.group_by is not None for component in overall.benchmark_components):
+    if not _overall_uses_grouped_components(overall):
         return None
     return ScoreGroupConfig(name="grouped_tasks", label="Grouped Tasks", group_by="task_key")
+
+
+def _overall_uses_grouped_components(overall: OverallConfig) -> bool:
+    return any(component.group_by is not None for component in overall.benchmark_components)
 
 
 def _record_display_model_names(records: list[TaskResultRow], *, include_variant_details: bool) -> list[str]:
