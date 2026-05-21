@@ -689,8 +689,8 @@ def render_leaderboard(
       </p>
     </div>
   </div>
-  <div class="overflow-x-auto border border-zinc-200 bg-white">
-    <table class="min-w-full border-collapse text-sm">
+  <div class="leaderboard-table-scroll overflow-x-auto border border-zinc-200 bg-white">
+    <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
       {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
       {render_table_body(result=result, filter_context=filter_context)}
     </table>
@@ -1514,11 +1514,11 @@ def render_table_head(
 
 def _sticky_head_class(key: str) -> str:
     if key == "model_name":
-        return "sticky left-0 z-20 w-[36rem] min-w-72 max-w-[36rem]"
+        return "leaderboard-col-model sticky z-20"
     if key == "borda_rank":
-        return "sticky z-20 min-w-16 [left:36rem]"
+        return "leaderboard-col-rank leaderboard-col-borda sticky z-20"
     if key == "mean_rank":
-        return "sticky z-20 min-w-16 [left:40rem]"
+        return "leaderboard-col-rank leaderboard-col-mean sticky z-20"
     return ""
 
 
@@ -1536,8 +1536,8 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
               {render_model_name_cell(row, model_views[row.model_name])}
-              <td class="sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums" style="left: 36rem;">{_fmt_rank(row.borda_rank)}</td>
-              <td class="sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums" style="left: 40rem;">{_fmt_rank(row.mean_rank)}</td>
+              <td class="leaderboard-col-rank leaderboard-col-borda sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums">{_fmt_rank(row.borda_rank)}</td>
+              <td class="leaderboard-col-rank leaderboard-col-mean sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums">{_fmt_rank(row.mean_rank)}</td>
               <td class="px-2 py-1 text-right tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
               {_render_metric_cells(result=result, row=row)}

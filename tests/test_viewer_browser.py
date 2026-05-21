@@ -89,21 +89,34 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 long_model_layout = long_model_row.evaluate(
                     """(row) => {
                         const cells = row.querySelectorAll("td");
+                        const headers = row.closest("table").querySelectorAll("thead th");
                         const modelCell = cells[0].getBoundingClientRect();
                         const modelButton = cells[0].querySelector(".model-detail-trigger").getBoundingClientRect();
+                        const badgeRow = cells[0].querySelector(".model-variant-badges").getBoundingClientRect();
                         const bordaRankCell = cells[1].getBoundingClientRect();
                         const meanRankCell = cells[2].getBoundingClientRect();
                         const bordaScoreCell = cells[3].getBoundingClientRect();
                         const modelButtonStyle = getComputedStyle(cells[0].querySelector(".model-detail-trigger"));
+                        const bordaScoreStyle = getComputedStyle(cells[3]);
+                        const bordaHeader = headers[1].getBoundingClientRect();
+                        const meanHeader = headers[2].getBoundingClientRect();
                         return {
                             modelCellLeft: modelCell.left,
                             modelCellRight: modelCell.right,
                             modelButtonRight: modelButton.right,
+                            badgeRowTop: badgeRow.top,
+                            modelButtonBottom: modelButton.bottom,
                             bordaRankLeft: bordaRankCell.left,
                             meanRankLeft: meanRankCell.left,
                             bordaScoreLeft: bordaScoreCell.left,
+                            bordaHeaderText: headers[1].innerText,
+                            meanHeaderText: headers[2].innerText,
+                            bordaHeaderWidth: bordaHeader.width,
+                            meanHeaderWidth: meanHeader.width,
                             modelCellContentFlexWrap: getComputedStyle(cells[0].firstElementChild).flexWrap,
+                            modelCellContentFlexDirection: getComputedStyle(cells[0].firstElementChild).flexDirection,
                             modelButtonFontSize: parseFloat(modelButtonStyle.fontSize),
+                            bordaScoreFontSize: parseFloat(bordaScoreStyle.fontSize),
                             modelButtonLineHeight: parseFloat(modelButtonStyle.lineHeight),
                             modelButtonOverflowWrap: modelButtonStyle.overflowWrap,
                             modelButtonWhiteSpace: modelButtonStyle.whiteSpace,
@@ -115,12 +128,52 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert long_model_layout["modelCellRight"] <= long_model_layout["bordaRankLeft"] + 0.5
                 assert long_model_layout["bordaRankLeft"] < long_model_layout["meanRankLeft"] < long_model_layout["bordaScoreLeft"]
                 assert long_model_layout["modelButtonRight"] <= long_model_layout["bordaRankLeft"] + 0.5
-                assert long_model_layout["modelCellContentFlexWrap"] == "wrap"
+                assert long_model_layout["badgeRowTop"] >= long_model_layout["modelButtonBottom"] - 0.5
+                assert "Borda" in long_model_layout["bordaHeaderText"]
+                assert "Mean" in long_model_layout["meanHeaderText"]
+                assert long_model_layout["bordaHeaderWidth"] == pytest.approx(64.0, abs=0.5)
+                assert long_model_layout["meanHeaderWidth"] == pytest.approx(64.0, abs=0.5)
+                assert long_model_layout["modelCellContentFlexWrap"] == "nowrap"
+                assert long_model_layout["modelCellContentFlexDirection"] == "column"
                 assert long_model_layout["modelButtonFontSize"] == pytest.approx(13.0, abs=0.1)
+                assert long_model_layout["bordaScoreFontSize"] == pytest.approx(long_model_layout["modelButtonFontSize"], abs=0.1)
                 assert long_model_layout["modelButtonLineHeight"] == pytest.approx(16.25, abs=0.25)
                 assert long_model_layout["modelButtonOverflowWrap"] == "anywhere"
                 assert long_model_layout["modelButtonWhiteSpace"] == "normal"
                 assert long_model_layout["modelButtonTextOverflow"] == "clip"
+                page.set_viewport_size({"width": 1024, "height": 800})
+                page.locator("#leaderboard-panel table").wait_for(timeout=5_000)
+                compact_layout = long_model_row.evaluate(
+                    """(row) => {
+                        const cells = row.querySelectorAll("td");
+                        const headers = row.closest("table").querySelectorAll("thead th");
+                        const modelCell = cells[0].getBoundingClientRect();
+                        const bordaRankCell = cells[1].getBoundingClientRect();
+                        const meanRankCell = cells[2].getBoundingClientRect();
+                        const bordaScoreCell = cells[3].getBoundingClientRect();
+                        const bordaHeader = headers[1].getBoundingClientRect();
+                        const meanHeader = headers[2].getBoundingClientRect();
+                        return {
+                            modelCellRight: modelCell.right,
+                            bordaRankLeft: bordaRankCell.left,
+                            bordaRankRight: bordaRankCell.right,
+                            meanRankLeft: meanRankCell.left,
+                            meanRankRight: meanRankCell.right,
+                            bordaScoreLeft: bordaScoreCell.left,
+                            bordaHeaderLeft: bordaHeader.left,
+                            bordaHeaderRight: bordaHeader.right,
+                            meanHeaderLeft: meanHeader.left,
+                            meanHeaderRight: meanHeader.right,
+                        };
+                    }"""
+                )
+                assert compact_layout["modelCellRight"] == pytest.approx(compact_layout["bordaRankLeft"], abs=0.5)
+                assert compact_layout["bordaRankRight"] == pytest.approx(compact_layout["meanRankLeft"], abs=0.5)
+                assert compact_layout["meanRankRight"] == pytest.approx(compact_layout["bordaScoreLeft"], abs=0.5)
+                assert compact_layout["bordaHeaderLeft"] == pytest.approx(compact_layout["bordaRankLeft"], abs=0.5)
+                assert compact_layout["bordaHeaderRight"] == pytest.approx(compact_layout["bordaRankRight"], abs=0.5)
+                assert compact_layout["meanHeaderLeft"] == pytest.approx(compact_layout["meanRankLeft"], abs=0.5)
+                assert compact_layout["meanHeaderRight"] == pytest.approx(compact_layout["meanRankRight"], abs=0.5)
 
                 tooltip_trigger = page.locator("[data-tooltip]").first
                 tooltip_trigger.hover()

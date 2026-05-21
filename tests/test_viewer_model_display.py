@@ -28,9 +28,11 @@ def test_render_model_name_cell_uses_metadata_json_and_compact_badges() -> None:
     assert "jina-embeddings-v5-text-nano" in html
     assert "remote code" not in html
     assert "data-model-metadata=" in html
-    assert 'sticky left-0 z-10 w-[36rem] min-w-72 max-w-[36rem]' in html
-    assert 'class="flex min-w-0 flex-wrap items-center gap-1"' in html
+    assert 'leaderboard-col-model sticky z-10' in html
+    assert 'class="flex min-w-0 flex-col items-start gap-1"' in html
     assert "model-detail-trigger min-w-0 [overflow-wrap:anywhere] text-left text-[0.8125rem] leading-tight font-medium underline-offset-2" in html
+    assert 'class="model-variant-badges inline-flex min-w-0 flex-wrap gap-1 align-middle"' in html
+    assert html.index("jina-embeddings-v5-text-nano</button>") < html.index(">768d</span>")
     assert " min-w-0 truncate " not in html
     assert "whitespace-nowrap" not in html
     assert "&quot;trust_remote_code&quot;:true" in html
@@ -147,6 +149,33 @@ def test_render_model_name_cell_orders_dimension_badges_before_quantization() ->
     html = render_model_name_cell(truncated_quantized, model_view)
 
     assert html.index(">768d &lt;- 1024</span>") < html.index(">int8</span>")
+
+
+def test_render_model_name_cell_places_all_variant_badges_on_second_line() -> None:
+    row = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name="org/model-a (768 dims, int8, truncate_dim_768)",
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+        model_type="reranker",
+        embedding_variant_name="truncate_dim_768",
+        embedding_dim=768,
+        quantization="int8",
+    )
+    model_view = model_cell_views([row])[row.model_name]
+
+    html = render_model_name_cell(row, model_view)
+
+    assert "<button" in html
+    assert 'class="model-variant-badges inline-flex min-w-0 flex-wrap gap-1 align-middle"' in html
+    assert html.index("</button>") < html.index(
+        '<span class="model-variant-badges inline-flex min-w-0 flex-wrap gap-1 align-middle">'
+    )
+    assert html.index(">reranker</span>") > html.index("</button>")
+    assert html.index(">768d</span>") > html.index("</button>")
+    assert html.index(">int8</span>") > html.index("</button>")
 
 
 def test_render_model_name_cell_infers_reranker_type_without_dimension_badge() -> None:

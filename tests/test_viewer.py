@@ -616,7 +616,9 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     ) in response.text
     assert "Language-specific" in response.text
     assert "Domain-specific" in response.text
-    assert "sticky left-0" in response.text
+    assert "leaderboard-col-model sticky" in response.text
+    assert "leaderboard-col-borda sticky" in response.text
+    assert "leaderboard-col-mean sticky" in response.text
     assert "z-20" in response.text
 
 
@@ -1956,11 +1958,19 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
     assert 'data-column-key="model_name"' in head
     assert (
         'data-column-key="model_name" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
-        'text-left px-2 uppercase sticky left-0'
+        'text-left px-2 uppercase leaderboard-col-model sticky z-20'
     ) in head
-    assert '<td class="sticky left-0 z-10 w-[36rem]' in body
-    assert '<td class="sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums" style="left: 36rem;">' in body
-    assert '<td class="sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums" style="left: 40rem;">' in body
+    assert (
+        'data-column-key="borda_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
+        'text-right px-2 uppercase leaderboard-col-rank leaderboard-col-borda sticky z-20'
+    ) in head
+    assert (
+        'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
+        'text-right px-2 uppercase leaderboard-col-rank leaderboard-col-mean sticky z-20'
+    ) in head
+    assert '<td class="leaderboard-col-model sticky z-10' in body
+    assert '<td class="leaderboard-col-rank leaderboard-col-borda sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums">' in body
+    assert '<td class="leaderboard-col-rank leaderboard-col-mean sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums">' in body
 
 
 def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:

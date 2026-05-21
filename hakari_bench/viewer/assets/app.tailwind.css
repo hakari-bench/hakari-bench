@@ -204,6 +204,34 @@
     color: var(--hakari-text);
   }
 
+  .leaderboard-table-scroll {
+    --hakari-model-col-width: clamp(18rem, 40vw, 36rem);
+    --hakari-rank-col-width: 4rem;
+  }
+
+  .leaderboard-col-model {
+    box-sizing: border-box;
+    left: 0;
+    max-width: var(--hakari-model-col-width);
+    min-width: var(--hakari-model-col-width);
+    width: var(--hakari-model-col-width);
+  }
+
+  .leaderboard-col-rank {
+    box-sizing: border-box;
+    max-width: var(--hakari-rank-col-width);
+    min-width: var(--hakari-rank-col-width);
+    width: var(--hakari-rank-col-width);
+  }
+
+  .leaderboard-col-borda {
+    left: var(--hakari-model-col-width);
+  }
+
+  .leaderboard-col-mean {
+    left: calc(var(--hakari-model-col-width) + var(--hakari-rank-col-width));
+  }
+
   .benchmark-doc h1 {
     font-size: 1.5rem;
     font-weight: 600;
