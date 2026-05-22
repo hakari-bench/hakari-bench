@@ -103,10 +103,12 @@ def test_benchmark_docs_resolves_nanobeir_short_task_aliases(tmp_path: Path) -> 
 
 def test_markdown_renderer_escapes_html_and_renders_basic_markdown() -> None:
     html = render_markdown_to_html(
-        "# Title\n\n## Overview\n\nA [safe link](https://example.com) and <script>x</script>.\n\n- one\n- two\n"
+        "# Title\n\n## Overview\n\nA **bold phrase**, [safe link](https://example.com), and <script>x</script>.\n\n- one\n- two\n"
     )
 
     assert "<h1>Title</h1>" in html
+    assert "<strong>bold phrase</strong>" in html
+    assert "**bold phrase**" not in html
     assert '<a href="https://example.com" target="_blank" rel="noopener noreferrer">safe link</a>' in html
     assert "&lt;script&gt;x&lt;/script&gt;" in html
     assert "<ul>" in html
@@ -217,6 +219,8 @@ def test_docs_index_endpoint_lists_benchmark_docs(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "Benchmark documentation" in response.text
+    assert '<a class="underline underline-offset-2" href="/">Top</a>' in response.text
+    assert response.text.index(">Top</a>") < response.text.index(">Benchmark documentation</span>")
     assert 'class="font-semibold text-cyan-700 underline underline-offset-2" href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
     assert "MIRACL overview." in response.text
 
@@ -261,12 +265,19 @@ def test_docs_pages_render_breadcrumb_navigation(tmp_path: Path) -> None:
 
     assert group_response.status_code == 200
     assert 'class="doc-breadcrumb' in group_response.text
+    assert '<a class="underline underline-offset-2" href="/">Top</a>' in group_response.text
     assert '<a class="underline underline-offset-2" href="/docs/benchmark-tasks">Benchmark documentation</a>' in group_response.text
     assert '<span aria-current="page">NanoCodeRAG</span>' in group_response.text
+    assert group_response.text.index(">Top</a>") < group_response.text.index(">Benchmark documentation</a>")
+    assert group_response.text.index(">Benchmark documentation</a>") < group_response.text.index(">NanoCodeRAG</span>")
     assert task_response.status_code == 200
+    assert '<a class="underline underline-offset-2" href="/">Top</a>' in task_response.text
     assert '<a class="underline underline-offset-2" href="/docs/benchmark-tasks">Benchmark documentation</a>' in task_response.text
     assert '<a class="underline underline-offset-2" href="/docs/benchmark-tasks/NanoCodeRAG">NanoCodeRAG</a>' in task_response.text
     assert '<span aria-current="page">NanoCodeRAGOnlineTutorials</span>' in task_response.text
+    assert task_response.text.index(">Top</a>") < task_response.text.index(">Benchmark documentation</a>")
+    assert task_response.text.index(">Benchmark documentation</a>") < task_response.text.index(">NanoCodeRAG</a>")
+    assert task_response.text.index(">NanoCodeRAG</a>") < task_response.text.index(">NanoCodeRAGOnlineTutorials</span>")
 
 
 def test_docs_endpoint_renders_group_task_summary_links(tmp_path: Path) -> None:

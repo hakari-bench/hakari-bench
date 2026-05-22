@@ -141,7 +141,11 @@ def render_docs_index_page(*, docs: list[BenchmarkDoc], css_version: str) -> str
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-4xl px-4 py-6 sm:px-6">
     <nav class="doc-breadcrumb mb-3 text-sm text-zinc-600" aria-label="Breadcrumb">
-      <span aria-current="page">Benchmark documentation</span>
+      <ol class="flex flex-wrap items-center gap-y-1">
+        <li><a class="underline underline-offset-2" href="/">Top</a></li>
+        <li><span class="px-1 text-zinc-400" aria-hidden="true">&gt;</span></li>
+        <li><span aria-current="page">Benchmark documentation</span></li>
+      </ol>
     </nav>
     <header class="mb-4">
       <h1 class="text-2xl font-semibold text-zinc-950">Benchmark documentation</h1>
@@ -272,6 +276,7 @@ def _render_doc_breadcrumb(url: str) -> str:
     if not parts:
         return ""
     crumbs = [
+        '<a class="underline underline-offset-2" href="/">Top</a>',
         '<a class="underline underline-offset-2" href="/docs/benchmark-tasks">Benchmark documentation</a>',
     ]
     if len(parts) == 1:
@@ -337,9 +342,19 @@ def _plain_markdown(markdown: str) -> str:
 
 
 def _inline_markdown(text: str, *, base_url: str = "") -> str:
-    escaped = escape(text)
-    escaped = re.sub(r"`([^`]+)`", r"<code>\1</code>", escaped)
+    code_tokens: dict[str, str] = {}
+
+    def code_replacement(match: re.Match[str]) -> str:
+        token = f"\x00CODE{len(code_tokens)}\x00"
+        code_tokens[token] = f"<code>{escape(match.group(1))}</code>"
+        return token
+
+    text_without_code = re.sub(r"`([^`]+)`", code_replacement, text)
+    escaped = escape(text_without_code)
     escaped = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", lambda match: _link_replacement(match, base_url=base_url), escaped)
+    escaped = re.sub(r"\*\*([^*\n]+)\*\*", r"<strong>\1</strong>", escaped)
+    for token, code_html in code_tokens.items():
+        escaped = escaped.replace(token, code_html)
     return escaped
 
 
