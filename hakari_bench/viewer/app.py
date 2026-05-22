@@ -991,7 +991,6 @@ def _view_group(view_name: str) -> str:
         "NanoRTEB",
         "NanoMLDR",
         "NanoBRIGHT",
-        "NanoLaw",
         "NanoCoIR",
     }:
         return "Core benchmarks"

@@ -46,7 +46,6 @@ overalls:
       - NanoRTEB
       - NanoMLDR
       - NanoBRIGHT
-      - NanoLaw
       - NanoCoIR
   - name: Group
     label: Group

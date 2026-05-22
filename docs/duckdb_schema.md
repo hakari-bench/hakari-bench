@@ -759,10 +759,10 @@ For overall views:
 - `All`: all configured benchmark views using raw task rows.
 - `Core`: a compact curated set covering broad multilingual retrieval,
   multilingual BEIR, English RTEB domains, multilingual long-document
-  retrieval, reasoning-heavy retrieval, legal retrieval, and code retrieval
-  (`MNanoBEIR`, `NanoMMTEB-v2`, `NanoRTEB`, `NanoMLDR`, `NanoBRIGHT`,
-  `NanoLaw`, and `NanoCoIR`). `MNanoBEIR` is grouped by `task_name` in Core so
-  each BEIR source task contributes once after averaging language variants.
+  retrieval, reasoning-heavy retrieval, and code retrieval
+  (`MNanoBEIR`, `NanoMMTEB-v2`, `NanoRTEB`, `NanoMLDR`, `NanoBRIGHT`, and
+  `NanoCoIR`). `MNanoBEIR` is grouped by `task_name` in Core so each BEIR
+  source task contributes once after averaging language variants.
 - `Group`: all configured benchmark views aggregated by each component's
   `group_by` setting before ranking.
 - `micro_mean`: mean over all included tasks with equal task weight.
@@ -936,7 +936,7 @@ choices:
   every code in `languages`.
 - Viewer benchmark groups put the compact curated Core set under
   Core benchmarks. Other broader multilingual/domain suites, including
-  `NanoMIRACL`, remain Domain-specific unless they are an official
+  `NanoMIRACL` and `NanoLaw`, remain Domain-specific unless they are an official
   language-specific NanoMTEB family such as `NanoJMTEB-v2`, `NanoFaMTEB-v2`,
   `NanoRuMTEB`, `NanoVNMTEB`, or `NanoCMTEB`. `NanoIndicQA`, `NanoMuPLeR`, and
   `NanoChemTEB` remain Domain-specific by viewer policy even when they expose
