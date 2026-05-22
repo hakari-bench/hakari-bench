@@ -2965,6 +2965,15 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
         [
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@1", 0.10, "a.json"),
             ("model/b", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@1", 0.95, "b.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@3", 0.20, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@5", 0.30, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@10", 0.40, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_precision@1", 0.20, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_precision@10", 0.40, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_recall@1", 0.20, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_recall@10", 0.40, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_mrr@10", 0.50, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_map@100", 0.60, "a.json"),
         ],
     )
     config_dir = tmp_path / "config"
@@ -2978,7 +2987,15 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
     )
 
     assert result.selected_score_metric == "accuracy@1"
-    assert result.available_score_metrics == ["ndcg@10", "accuracy@1"]
+    assert result.available_score_metrics == [
+        "ndcg@10",
+        "accuracy@1",
+        "accuracy@10",
+        "precision@10",
+        "recall@10",
+        "mrr@10",
+        "map@100",
+    ]
     assert [row.model_name for row in result.rows] == ["model/b", "model/a"]
     assert result.rows[0].mean_score == pytest.approx(95.0)
 
@@ -2988,7 +3005,14 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
     assert response.status_code == 200
     assert "Metric" in response.text
     assert "Acc@1" in response.text
+    assert response.text.index("nDCG@10") < response.text.index("Acc@1") < response.text.index("Acc@10")
+    assert response.text.index("Acc@10") < response.text.index("Precision@10") < response.text.index("Recall@10")
+    assert response.text.index("Recall@10") < response.text.index("MRR@10") < response.text.index("MAP@100")
     assert "nDCG@10" in response.text
+    assert "Acc@3" not in response.text
+    assert "Acc@5" not in response.text
+    assert "Precision@1\n" not in response.text
+    assert "Recall@1\n" not in response.text
 
 
 def test_leaderboard_service_excludes_bm25_only_for_cutoff_100_metrics(tmp_path: Path) -> None:

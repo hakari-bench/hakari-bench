@@ -25,6 +25,15 @@ from hakari_bench.viewer.variant_display import VariantDisplayFlags
 CURRENT_DUCKDB_SCHEMA_VERSION = "5"
 COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {"3", "4", CURRENT_DUCKDB_SCHEMA_VERSION}
 REQUIRED_VIEWER_TABLES = ("meta_database", "viewer_task_results")
+DISPLAY_SCORE_METRIC_ORDER = (
+    "ndcg@10",
+    "accuracy@1",
+    "accuracy@10",
+    "precision@10",
+    "recall@10",
+    "mrr@10",
+    "map@100",
+)
 VIEWER_QUERY_TABLES = {
     *REQUIRED_VIEWER_TABLES,
     "dataset_metadata",
@@ -231,7 +240,7 @@ class TaskResultsRepository:
             con.close()
         metrics = {f"{str(family).lower()}@{int(cutoff)}" for family, cutoff in rows}
         metrics.add("ndcg@10")
-        return sorted(metrics, key=_score_metric_sort_key)
+        return [metric for metric in DISPLAY_SCORE_METRIC_ORDER if metric in metrics]
 
     def _fetch_metric_task_result_items(
         self,

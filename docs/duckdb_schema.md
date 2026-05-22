@@ -215,7 +215,7 @@ The web viewer exposes four user-facing query surfaces over the DuckDB file:
 | UI surface | source tables | semantics |
 | --- | --- | --- |
 | Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
-| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores and `Reranking` uses materialized BM25 top-100 rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. The `Metric` selector uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other metrics such as `accuracy@1`, `MRR@10`, or `MAP@100`. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
+| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores and `Reranking` uses materialized BM25 top-100 rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. The `Metric` selector displays the research-focused set `nDCG@10`, `accuracy@1`, `accuracy@10`, `precision@10`, `recall@10`, `MRR@10`, and `MAP@100`; it uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
 | Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for quantization-first comparisons; rescore and `truncate_dim` variants are hidden unless explicitly enabled in the panel. |
 | Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
 | Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
@@ -902,6 +902,11 @@ choices:
   result path, metric family, and cutoff. Full-corpus targets exclude metric
   names containing `_bm25_top100_rerank_`; reranking targets prefer that marker
   and fall back only for older DuckDB builds.
+- The visible metric selector is intentionally limited and ordered as
+  `nDCG@10`, `accuracy@1`, `accuracy@10`, `precision@10`, `recall@10`,
+  `MRR@10`, and `MAP@100`. Other stored metric families/cutoffs can remain in
+  DuckDB for analysis, but they are not exposed as primary leaderboard UI
+  choices.
 - For `score_target = 'reranking'`, append BM25 `score_target = 'all'` task
   rows as the candidate-order baseline before completeness filtering and Borda
   ranking. This keeps BM25 comparable to rerankers without treating BM25 as a

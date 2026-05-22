@@ -165,6 +165,41 @@ def test_task_results_repository_can_fetch_non_default_metric_scores(tmp_path: P
     assert [(row.model_name, row.score) for row in rows] == [("model/a", 0.20), ("model/b", 0.95)]
 
 
+def test_task_results_repository_limits_display_metric_options_to_research_focused_set(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_viewer_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192),
+        ],
+    )
+    _write_metric_tables(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@1", 0.20, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@3", 0.30, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@5", 0.40, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@10", 0.50, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_precision@1", 0.20, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_precision@10", 0.50, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_recall@1", 0.20, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_recall@10", 0.50, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_mrr@10", 0.70, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_map@100", 0.80, "a.json"),
+        ],
+    )
+
+    assert TaskResultsRepository(db_path).fetch_score_metric_options() == [
+        "ndcg@10",
+        "accuracy@1",
+        "accuracy@10",
+        "precision@10",
+        "recall@10",
+        "mrr@10",
+        "map@100",
+    ]
+
+
 def test_task_results_repository_uses_rerank_metrics_for_reranking_target(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_viewer_task_results(
