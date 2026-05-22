@@ -2,6 +2,8 @@
 
 Research date: 2026-05-21 JST
 
+Selection update: 2026-05-22 JST
+
 ## Abstract
 
 The HAKARI Core set is the small, curated leaderboard view intended to answer a
@@ -16,13 +18,17 @@ set is:
 5. `NanoBRIGHT`
 6. `NanoCoIR`
 
-This document records why these six Nano sets were selected. The decision was
-made by combining external adoption signals, source benchmark quality, task and
-language diversity, overlap analysis, lexical baseline difficulty, and actual
-dense-model score dispersion from the evaluated DuckDB warehouse. The goal was
-not to maximize task count. It was to keep a compact set whose aggregate score
-is interpretable, broad, and difficult to game by over-weighting one benchmark
-family.
+This document records why these six Nano sets were selected and why several
+plausible candidates were left out. The decision was made by combining external
+adoption signals, source benchmark quality, task and language diversity,
+overlap analysis, lexical baseline difficulty, and actual dense-model score
+dispersion from the evaluated DuckDB warehouse.
+
+The goal was not to maximize task count or to include every important domain.
+It was to keep a compact set whose aggregate score is interpretable, broad, and
+difficult to game by over-weighting one benchmark family. Domain-specific
+benchmarks that are useful but redundant, narrow, saturated, or better read in
+their own view remain available outside Core.
 
 The Core score also uses configured aggregation units rather than blindly
 averaging every raw task row. In particular, `MNanoBEIR` is aggregated by
@@ -42,7 +48,13 @@ dominate the Core aggregate.
 | 5 | `NanoBRIGHT` | Reasoning-heavy retrieval stress test | Hard tasks with high model separation and strong dataset usage signals. |
 | 6 | `NanoCoIR` | Code retrieval | Preserves a code-search dimension that is not captured by general, long-document, or reasoning-heavy retrieval tasks. |
 
-## Pruned or Not Promoted Sets
+The most important late-stage changes were the removals of `NanoMIRACL` and
+`NanoLaw`. `NanoMIRACL` is well known, but it was too saturated in the analyzed
+dense results. `NanoLaw` is a useful legal benchmark, but too many of its tasks
+are already represented through selected Core sources, leaving only four
+effective non-duplicate tasks.
+
+## Pruning Decisions
 
 The Core set was deliberately pruned. These decisions are as important as the
 selected set because they prevent the Core score from becoming a second copy of
@@ -70,7 +82,8 @@ The Core set was chosen using five criteria.
    Core tasks should come from benchmarks or datasets that are used outside this
    repository. Signals included paper citations, Hugging Face dataset likes and
    downloads, and whether the source tasks are registered in the official MTEB
-   task catalog.
+   task catalog. External credibility is necessary but not sufficient: a task can
+   still be excluded if it is saturated or redundant with a stronger Core source.
 
 2. Task diversity
 
@@ -89,7 +102,8 @@ The Core set was chosen using five criteria.
    Candidate groups were checked for source-task overlap and for rank
    correlation across evaluated dense models. Some overlap is intentional for
    anchor tasks, but the final set avoids adding multiple groups that primarily
-   express the same signal.
+   express the same signal. This criterion is the main reason `NanoLaw` was
+   moved out of Core despite its legal-domain value.
 
 5. Empirical model separation
 
@@ -104,8 +118,10 @@ Dense score evidence came from the evaluated DuckDB warehouse available on
 binary, truncate, and rescore variants were excluded. Ten dense embedding
 models had complete base results for 514 tasks across 32 benchmark groups.
 
-For each task, we computed score dispersion across the ten models. The table
-below reports benchmark-level means over those task-level statistics.
+For each raw task row, we computed score dispersion across the ten models. The
+table below reports benchmark-level means over those task-level statistics.
+`MNanoBEIR` is shown with its raw task-row count for transparency, even though
+Core scoring groups it by `task_name`.
 
 Definitions:
 
@@ -140,7 +156,8 @@ This table explains several choices:
   benchmark did not offset the low dense-model dispersion observed in this
   result warehouse.
 - `NanoLaw` was removed from Core because a large part of the set duplicates
-  legal tasks already represented by `NanoRTEB` or `NanoMMTEB-v2`.
+  legal tasks already represented by `NanoRTEB` or `NanoMMTEB-v2`; its
+  non-duplicate legal signal remains useful in the domain-specific view.
 
 ## Evidence from Pruned Alternatives
 
@@ -182,7 +199,8 @@ Official MTEB registration was checked against
 `embeddings-benchmark/mteb` main at commit
 `16cc3869619c78499c34bdb59533004899b0f4dc` on 2026-05-21. This matters because
 tasks already present in MTEB are more likely to be understood, reproduced, and
-compared by external users.
+compared by external users. It is not, by itself, a reason to include a Nano set
+in Core.
 
 All `NanoLaw` tasks map to MTEB retrieval tasks:
 
@@ -208,11 +226,11 @@ All `NanoBIRCO` tasks also map to MTEB retrieval tasks:
 | `NanoBIRCOWTB` | `BIRCO-WTB` |
 
 The MTEB check did not disqualify either `NanoLaw` or `NanoBIRCO`. The deciding
-factor was overlap and Core role clarity: `NanoLaw` contributes useful legal
+factor was overlap and Core role clarity. `NanoLaw` contributes useful legal
 coverage but duplicates several tasks already represented by selected Core
-groups, while `NanoBIRCO` is better kept as a specialized hard
-complex-objective group because `NanoBRIGHT` already fills the broader Core
-stress-test role.
+groups. `NanoBIRCO` is mostly non-overlapping, but it is better kept as a
+specialized hard complex-objective group because `NanoBRIGHT` fills the broader
+Core stress-test role with more tasks and stronger dense-model separation.
 
 ## NanoLaw and NanoBIRCO
 
@@ -234,10 +252,13 @@ different reasons.
 
 `NanoLaw` is stronger as a legal-domain benchmark, and its source papers are
 better established. However, four of its eight tasks overlap with `NanoRTEB` or
-`NanoMMTEB-v2`, leaving only four effective non-duplicate tasks in Core-style
-aggregation. `NanoBIRCO` is lexically harder and mostly non-overlapping, but it
-is small and its complex-objective role is covered more broadly by
-`NanoBRIGHT`. Both remain useful diagnostic views outside Core.
+`NanoMMTEB-v2`, leaving only four effective non-duplicate tasks for a Core-style
+overall score. That makes the legal signal better suited to a focused
+domain-specific view.
+
+`NanoBIRCO` is lexically harder and mostly non-overlapping, but it is small and
+its complex-objective role is covered more broadly by `NanoBRIGHT`. Both
+benchmarks remain useful diagnostic views outside Core.
 
 ## Dataset Scale and Lexical Baselines
 
@@ -268,9 +289,10 @@ Core uses `group_by: task_name` so that each BEIR source task contributes once
 after averaging across language variants.
 
 Some benchmark configurations also define excluded tasks to prevent duplicate
-source tasks from being counted twice in benchmark-specific views. For
-`NanoLaw`, the following tasks overlap with `NanoRTEB` or `NanoMMTEB-v2` and
-are excluded by the viewer configuration when appropriate:
+source tasks from being counted twice in leaderboard calculations. This does
+not mean the underlying dataset lacks those tasks; it means the viewer avoids
+scoring the uploaded duplicate copy. For `NanoLaw`, the following tasks overlap
+with `NanoRTEB` or `NanoMMTEB-v2`:
 
 - `NanoAILACasedocs`
 - `NanoAILAStatutes`

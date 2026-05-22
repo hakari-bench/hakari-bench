@@ -58,7 +58,6 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
         "NanoRTEB",
         "NanoMLDR",
         "NanoBRIGHT",
-        "NanoLaw",
         "NanoCoIR",
     ]
     all_benchmarks = [benchmark.name for benchmark in config.benchmarks]
@@ -71,7 +70,6 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
     assert core_overall.benchmark_names == core_benchmarks
     assert [component.group_by for component in core_overall.benchmark_components] == [
         "task_name",
-        None,
         None,
         None,
         None,
@@ -184,7 +182,7 @@ def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> No
     assert _view_group("NanoMIRACL") == "Domain-specific"
     assert _view_group("NanoMLDR") == "Core benchmarks"
     assert _view_group("NanoBRIGHT") == "Core benchmarks"
-    assert _view_group("NanoLaw") == "Core benchmarks"
+    assert _view_group("NanoLaw") == "Domain-specific"
     assert _view_group("NanoCoIR") == "Core benchmarks"
     assert _view_group("NanoLongEmbed") == "Domain-specific"
     assert _view_group("NanoBIRCO") == "Domain-specific"
