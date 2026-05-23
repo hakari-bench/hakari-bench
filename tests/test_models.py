@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import json
+from pathlib import Path
 
 import pytest
 import torch
 
 from hakari_bench.models import (
+    ColbertLateInteractionAdapter,
     ModelLoadConfig,
     collect_model_metadata,
     load_model,
@@ -92,6 +95,7 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
             late_interaction_document_length=300,
             late_interaction_query_prefix="[QueryMarker]",
             late_interaction_document_prefix="[DocumentMarker]",
+            late_interaction_do_query_expansion=False,
             late_interaction_attend_to_expansion_tokens=True,
         )
     )
@@ -109,9 +113,270 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
             "document_length": 300,
             "query_prefix": "[QueryMarker]",
             "document_prefix": "[DocumentMarker]",
+            "do_query_expansion": False,
             "attend_to_expansion_tokens": True,
         }
     ]
+
+
+def test_load_model_uses_late_interaction_colbert_config_defaults(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    config_path = tmp_path / "config_sentence_transformers.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "model_type": "ColBERT",
+                "query_prefix": "[Q] ",
+                "document_prefix": "[D] ",
+                "query_length": 48,
+                "document_length": 512,
+                "do_query_expansion": False,
+                "attend_to_expansion_tokens": False,
+            }
+        ),
+        encoding="utf-8",
+    )
+    calls: list[dict[str, object]] = []
+
+    class FakeColBERT(torch.nn.Module):
+        def __init__(self, model_name_or_path: str, **kwargs: object) -> None:
+            super().__init__()
+            calls.append({"model_name_or_path": model_name_or_path, **kwargs})
+            self.projection = torch.nn.Linear(2, 2)
+
+    def fake_hf_hub_download(repo_id: str, filename: str, *, revision: str | None = None) -> str:
+        assert repo_id == "mixedbread-ai/mxbai-edge-colbert-v0-17m"
+        assert filename == "config_sentence_transformers.json"
+        assert revision == "main"
+        return str(config_path)
+
+    monkeypatch.setattr("huggingface_hub.hf_hub_download", fake_hf_hub_download)
+    monkeypatch.setattr("hakari_bench.models._import_pylate_colbert", lambda: FakeColBERT)
+
+    model = load_model(
+        ModelLoadConfig(
+            model_name_or_path="mixedbread-ai/mxbai-edge-colbert-v0-17m",
+            model_type="late-interaction",
+            model_revision="main",
+            dtype="fp32",
+            device="cpu",
+        )
+    )
+
+    assert isinstance(model, FakeColBERT)
+    assert calls == [
+        {
+            "model_name_or_path": "mixedbread-ai/mxbai-edge-colbert-v0-17m",
+            "device": "cpu",
+            "revision": "main",
+            "trust_remote_code": False,
+            "model_kwargs": {"torch_dtype": torch.float32},
+            "query_length": 48,
+            "document_length": 512,
+            "query_prefix": "[Q] ",
+            "document_prefix": "[D] ",
+            "do_query_expansion": False,
+            "attend_to_expansion_tokens": False,
+        }
+    ]
+
+
+def test_load_model_defaults_late_interaction_query_expansion_to_false(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[dict[str, object]] = []
+
+    class FakeColBERT(torch.nn.Module):
+        def __init__(self, model_name_or_path: str, **kwargs: object) -> None:
+            super().__init__()
+            calls.append({"model_name_or_path": model_name_or_path, **kwargs})
+            self.projection = torch.nn.Linear(2, 2)
+
+    def missing_config(_repo_id: str, _filename: str, *, revision: str | None = None) -> str:
+        del revision
+        raise FileNotFoundError
+
+    monkeypatch.setattr("huggingface_hub.hf_hub_download", missing_config)
+    monkeypatch.setattr("hakari_bench.models._import_pylate_colbert", lambda: FakeColBERT)
+
+    model = load_model(
+        ModelLoadConfig(
+            model_name_or_path="answerdotai/answerai-colbert-small-v1",
+            model_type="late-interaction",
+            dtype="fp32",
+            device="cpu",
+        )
+    )
+
+    assert isinstance(model, FakeColBERT)
+    assert calls == [
+        {
+            "model_name_or_path": "answerdotai/answerai-colbert-small-v1",
+            "device": "cpu",
+            "revision": None,
+            "trust_remote_code": False,
+            "model_kwargs": {"torch_dtype": torch.float32},
+            "do_query_expansion": False,
+        }
+    ]
+
+
+def test_load_model_honors_late_interaction_config_query_expansion_true(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    config_path = tmp_path / "config_sentence_transformers.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "model_type": "ColBERT",
+                "do_query_expansion": True,
+            }
+        ),
+        encoding="utf-8",
+    )
+    calls: list[dict[str, object]] = []
+
+    class FakeColBERT(torch.nn.Module):
+        def __init__(self, model_name_or_path: str, **kwargs: object) -> None:
+            super().__init__()
+            calls.append({"model_name_or_path": model_name_or_path, **kwargs})
+            self.projection = torch.nn.Linear(2, 2)
+
+    monkeypatch.setattr("huggingface_hub.hf_hub_download", lambda *_args, **_kwargs: str(config_path))
+    monkeypatch.setattr("hakari_bench.models._import_pylate_colbert", lambda: FakeColBERT)
+
+    model = load_model(
+        ModelLoadConfig(
+            model_name_or_path="model/with-query-expansion",
+            model_type="late-interaction",
+            dtype="fp32",
+            device="cpu",
+        )
+    )
+
+    assert isinstance(model, FakeColBERT)
+    assert calls[0]["do_query_expansion"] is True
+
+
+def test_load_model_falls_back_to_colbert_adapter_when_pylate_load_fails(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[dict[str, object]] = []
+
+    class BrokenColBERT(torch.nn.Module):
+        def __init__(self, model_name_or_path: str, **kwargs: object) -> None:
+            del model_name_or_path, kwargs
+            raise KeyError("activation_function")
+
+    class FakeAdapter(torch.nn.Module):
+        projection = torch.nn.Linear(2, 2)
+
+        @classmethod
+        def from_pretrained(cls, model_name_or_path: str, **kwargs: object) -> "FakeAdapter":
+            calls.append({"model_name_or_path": model_name_or_path, **kwargs})
+            return cls()
+
+    monkeypatch.setattr("hakari_bench.models._import_pylate_colbert", lambda: BrokenColBERT)
+    monkeypatch.setattr("hakari_bench.models.ColbertLateInteractionAdapter", FakeAdapter)
+
+    model = load_model(
+        ModelLoadConfig(
+            model_name_or_path="answerdotai/answerai-colbert-small-v1",
+            model_type="late-interaction",
+            dtype="fp32",
+            device="cpu",
+            late_interaction_query_length=32,
+            late_interaction_document_length=300,
+            late_interaction_query_prefix="[Q]",
+            late_interaction_document_prefix="[D]",
+        )
+    )
+
+    assert isinstance(model, FakeAdapter)
+    assert calls == [
+        {
+            "model_name_or_path": "answerdotai/answerai-colbert-small-v1",
+            "device": "cpu",
+            "revision": None,
+            "trust_remote_code": False,
+            "model_kwargs": {"torch_dtype": torch.float32},
+            "query_length": 32,
+            "document_length": 300,
+            "query_prefix": "[Q]",
+            "document_prefix": "[D]",
+            "do_query_expansion": False,
+            "attend_to_expansion_tokens": None,
+        }
+    ]
+
+
+def test_colbert_adapter_applies_role_prefix_tokens_lengths_and_masks() -> None:
+    calls: list[dict[str, object]] = []
+
+    class FakeTokenizer:
+        model_max_length = 512
+        mask_token_id = 103
+        unk_token_id = 100
+        pad_token_id = 0
+
+        def convert_tokens_to_ids(self, token: str) -> int:
+            return {
+                "[unused0]": 1,
+                "[unused1]": 2,
+                ".": 9,
+            }.get(token, 100)
+
+        def __call__(self, sentences: list[str], **kwargs: object) -> dict[str, torch.Tensor]:
+            calls.append({"sentences": sentences, **kwargs})
+            if kwargs["padding"] == "max_length":
+                return {
+                    "input_ids": torch.tensor([[101, 10, 102, 103, 103], [101, 11, 12, 102, 103]]),
+                    "attention_mask": torch.tensor([[1, 1, 1, 0, 0], [1, 1, 1, 1, 0]]),
+                }
+            return {
+                "input_ids": torch.tensor([[101, 20, 9, 102, 0]]),
+                "attention_mask": torch.tensor([[1, 1, 1, 1, 0]]),
+            }
+
+    class FakeBackbone(torch.nn.Module):
+        def __init__(self) -> None:
+            super().__init__()
+            self.config = type("Config", (), {"hidden_size": 2})()
+
+        def forward(self, **kwargs: torch.Tensor) -> object:
+            batch_size, token_count = kwargs["input_ids"].shape
+            hidden = kwargs["input_ids"].float().unsqueeze(-1).repeat(1, 1, 2)
+            return type("Output", (), {"last_hidden_state": hidden.reshape(batch_size, token_count, 2)})()
+
+    model = ColbertLateInteractionAdapter(
+        model_name_or_path="toy",
+        tokenizer=FakeTokenizer(),
+        backbone=FakeBackbone(),
+        projection=None,
+        device="cpu",
+        query_prefix="[unused0]",
+        document_prefix="[unused1]",
+        query_length=32,
+        document_length=300,
+        do_query_expansion=True,
+    )
+
+    query_embeddings = model.encode(["hello", "world"], is_query=True, convert_to_tensor=True)
+    document_embeddings = model.encode(["doc"], is_query=False, convert_to_tensor=True)
+
+    assert calls[0]["sentences"] == ["hello", "world"]
+    assert calls[0]["max_length"] == 31
+    assert calls[0]["padding"] == "max_length"
+    assert calls[1]["sentences"] == ["doc"]
+    assert calls[1]["max_length"] == 299
+    assert calls[1]["padding"] is True
+    assert len(query_embeddings) == 2
+    assert query_embeddings[0].shape[0] == 6
+    assert len(document_embeddings) == 1
+    assert document_embeddings[0].shape[0] == 4
 
 
 def test_load_model_reranker_passes_cross_encoder_kwargs(monkeypatch: pytest.MonkeyPatch) -> None:

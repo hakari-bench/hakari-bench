@@ -571,6 +571,41 @@ Compatibility notes:
   `_text_length` before encoding. With that compatibility shim, NanoMIRACL/en
   succeeded with `tf5-sdpa`.
 
+## Mixedbread mxbai Edge ColBERT v0
+
+Applies to:
+
+- `mixedbread-ai/mxbai-edge-colbert-v0-17m`
+- `mixedbread-ai/mxbai-edge-colbert-v0-32m`
+
+Use the late-interaction evaluator and the ColBERT settings from
+`config_sentence_transformers.json`:
+
+- query prefix: `[Q] `
+- document prefix: `[D] `
+- query length: `48`
+- document length: `512`
+- query expansion: disabled
+- attend to expansion tokens: disabled
+
+Example:
+
+```bash
+uv run --group pylate hakari-bench evaluate late-interaction \
+  --model mixedbread-ai/mxbai-edge-colbert-v0-17m \
+  --dataset NanoMIRACL \
+  --split en \
+  --attn-implementation sdpa
+```
+
+Compatibility notes:
+
+- The loader reads `config_sentence_transformers.json` for ColBERT defaults, so
+  explicit CLI overrides are not required for the settings above.
+- HAKARI-Bench defaults query expansion to disabled unless the model config or
+  CLI explicitly enables it. This avoids accidentally using PyLate's API default
+  query expansion on models whose config does not request it.
+
 ## Sentence Transformers Static Similarity MRL
 
 Applies to:

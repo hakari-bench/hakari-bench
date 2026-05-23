@@ -306,6 +306,15 @@ def _add_late_interaction_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--late-interaction-document-length", type=int, default=None)
     parser.add_argument("--late-interaction-query-prefix", default=None)
     parser.add_argument("--late-interaction-document-prefix", default=None)
+    parser.add_argument(
+        "--late-interaction-do-query-expansion",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help=(
+            "Enable or disable ColBERT query expansion. If omitted, the model config is honored when it "
+            "explicitly sets do_query_expansion; otherwise HAKARI-Bench defaults to disabled."
+        ),
+    )
     parser.add_argument("--late-interaction-attend-to-expansion-tokens", action="store_true", default=None)
     parser.add_argument("--late-interaction-exact-doc-batch-size", type=int, default=128)
     parser.add_argument("--late-interaction-exact-query-batch-size", type=int, default=8)
@@ -895,6 +904,7 @@ def _apply_late_interaction_params(args: argparse.Namespace, value: dict[str, An
             "document_length",
             "query_prefix",
             "document_prefix",
+            "do_query_expansion",
             "attend_to_expansion_tokens",
             "exact_document_batch_size",
             "exact_query_batch_size",
@@ -909,6 +919,11 @@ def _apply_late_interaction_params(args: argparse.Namespace, value: dict[str, An
         args.late_interaction_query_prefix = _optional_string_param(value["query_prefix"], "params.late_interaction.query_prefix")
     if "document_prefix" in value:
         args.late_interaction_document_prefix = _optional_string_param(value["document_prefix"], "params.late_interaction.document_prefix")
+    if "do_query_expansion" in value:
+        args.late_interaction_do_query_expansion = _bool_param(
+            value["do_query_expansion"],
+            "params.late_interaction.do_query_expansion",
+        )
     if "attend_to_expansion_tokens" in value:
         args.late_interaction_attend_to_expansion_tokens = _bool_param(
             value["attend_to_expansion_tokens"],
@@ -1099,6 +1114,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 late_interaction_document_length=getattr(args, "late_interaction_document_length", None),
                 late_interaction_query_prefix=getattr(args, "late_interaction_query_prefix", None),
                 late_interaction_document_prefix=getattr(args, "late_interaction_document_prefix", None),
+                late_interaction_do_query_expansion=getattr(args, "late_interaction_do_query_expansion", None),
                 late_interaction_attend_to_expansion_tokens=getattr(
                     args,
                     "late_interaction_attend_to_expansion_tokens",

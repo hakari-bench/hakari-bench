@@ -259,7 +259,15 @@ specified sparse variants.
 
 Use `evaluate late-interaction` for PyLate ColBERT models. Check
 model-specific query/document prefixes, sequence lengths, `--trust-remote-code`,
-and `--late-interaction-attend-to-expansion-tokens` before running.
+query expansion, and `--late-interaction-attend-to-expansion-tokens` before
+running.
+
+HAKARI-Bench defaults ColBERT query expansion to disabled. This intentionally
+differs from PyLate's API default, because benchmark runs should not add mask
+token expansion unless the model config or CLI explicitly requests it. If a
+model's `config_sentence_transformers.json` sets `do_query_expansion` to `true`,
+the loader honors that value. Use `--late-interaction-do-query-expansion` only
+when the model documentation explicitly requires query expansion.
 
 For `jinaai/jina-colbert-v2`, the documented PyLate initialization uses
 `query_prefix="[QueryMarker]"`, `document_prefix="[DocumentMarker]"`,

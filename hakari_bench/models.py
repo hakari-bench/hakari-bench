@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import importlib
 import importlib.metadata
+import json
 import platform
+import string
 import sys
 from dataclasses import dataclass
 from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
 import torch
@@ -32,6 +35,7 @@ class ModelLoadConfig:
     late_interaction_document_length: int | None = None
     late_interaction_query_prefix: str | None = None
     late_interaction_document_prefix: str | None = None
+    late_interaction_do_query_expansion: bool | None = None
     late_interaction_attend_to_expansion_tokens: bool | None = None
 
 
@@ -104,12 +108,47 @@ def _import_pylate_colbert() -> Any:
     return getattr(importlib.import_module("pylate.models"), "ColBERT")
 
 
+def _can_fallback_to_colbert_adapter(exc: Exception) -> bool:
+    return isinstance(exc, KeyError) and exc.args == ("activation_function",)
+
+
 def _import_auto_tokenizer() -> Any:
     return getattr(importlib.import_module("transformers"), "AutoTokenizer")
 
 
 def _import_auto_model() -> Any:
     return getattr(importlib.import_module("transformers"), "AutoModel")
+
+
+def _token_id_or_none(tokenizer: Any, token: str | None) -> int | None:
+    if not token:
+        return None
+    try:
+        token_id = tokenizer.convert_tokens_to_ids(token)
+    except Exception:
+        return None
+    unk_token_id = getattr(tokenizer, "unk_token_id", None)
+    if token_id is None or token_id == unk_token_id:
+        return None
+    return int(token_id)
+
+
+def _insert_prefix_token(tokenized: dict[str, torch.Tensor], prefix_id: int) -> dict[str, torch.Tensor]:
+    result = dict(tokenized)
+    input_ids = result["input_ids"]
+    prefix = torch.full((input_ids.shape[0], 1), int(prefix_id), dtype=input_ids.dtype, device=input_ids.device)
+    result["input_ids"] = torch.cat([input_ids[:, :1], prefix, input_ids[:, 1:]], dim=1)
+    attention_mask = result.get("attention_mask")
+    if isinstance(attention_mask, torch.Tensor):
+        attention_prefix = torch.ones(
+            (attention_mask.shape[0], 1), dtype=attention_mask.dtype, device=attention_mask.device
+        )
+        result["attention_mask"] = torch.cat([attention_mask[:, :1], attention_prefix, attention_mask[:, 1:]], dim=1)
+    token_type_ids = result.get("token_type_ids")
+    if isinstance(token_type_ids, torch.Tensor):
+        type_prefix = torch.zeros((token_type_ids.shape[0], 1), dtype=token_type_ids.dtype, device=token_type_ids.device)
+        result["token_type_ids"] = torch.cat([token_type_ids[:, :1], type_prefix, token_type_ids[:, 1:]], dim=1)
+    return result
 
 
 class ColbertLateInteractionAdapter(torch.nn.Module):
@@ -123,6 +162,13 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         backbone: torch.nn.Module,
         projection: torch.nn.Module | None,
         device: str | None,
+        query_prefix: str | None = None,
+        document_prefix: str | None = None,
+        query_length: int | None = None,
+        document_length: int | None = None,
+        do_query_expansion: bool = False,
+        attend_to_expansion_tokens: bool = False,
+        skiplist_words: list[str] | None = None,
     ) -> None:
         super().__init__()
         self.model_name_or_path = model_name_or_path
@@ -130,6 +176,25 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         self.backbone = backbone
         self.projection = projection
         self.max_seq_length = _tokenizer_default_max_length(tokenizer)
+        self.query_prefix = query_prefix
+        self.document_prefix = document_prefix
+        self.query_prefix_id = _token_id_or_none(tokenizer, query_prefix)
+        self.document_prefix_id = _token_id_or_none(tokenizer, document_prefix)
+        self.query_length = query_length or 32
+        self.document_length = document_length or self.max_seq_length or 180
+        self.do_query_expansion = do_query_expansion
+        self.attend_to_expansion_tokens = attend_to_expansion_tokens
+        self.skiplist = {
+            token_id
+            for token_id in (_token_id_or_none(tokenizer, word) for word in (skiplist_words or list(string.punctuation)))
+            if token_id is not None
+        }
+        mask_token_id = getattr(tokenizer, "mask_token_id", None)
+        if mask_token_id is not None:
+            try:
+                tokenizer.pad_token_id = mask_token_id
+            except Exception:
+                pass
         self._target_device = torch.device(device) if device is not None else _first_module_device(self)
         if device is not None:
             self.to(self._target_device)
@@ -140,20 +205,43 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         model_name_or_path: str,
         *,
         device: str | None,
+        revision: str | None,
         trust_remote_code: bool,
         model_kwargs: dict[str, Any],
+        query_prefix: str | None = None,
+        document_prefix: str | None = None,
+        query_length: int | None = None,
+        document_length: int | None = None,
+        do_query_expansion: bool | None = None,
+        attend_to_expansion_tokens: bool | None = None,
     ) -> ColbertLateInteractionAdapter:
+        metadata = _load_colbert_metadata_from_hub(model_name_or_path, revision=revision)
+        if query_prefix is None:
+            query_prefix = _metadata_str(metadata, "query_token_id") or _metadata_str(metadata, "query_token")
+        if document_prefix is None:
+            document_prefix = _metadata_str(metadata, "doc_token_id") or _metadata_str(metadata, "doc_token")
+        if query_length is None:
+            query_length = _metadata_int(metadata, "query_maxlen")
+        if document_length is None:
+            document_length = _metadata_int(metadata, "doc_maxlen")
+        if do_query_expansion is None:
+            do_query_expansion = bool(metadata.get("do_query_expansion", False))
+        if attend_to_expansion_tokens is None:
+            attend_to_expansion_tokens = bool(metadata.get("attend_to_mask_tokens", False))
         tokenizer = _import_auto_tokenizer().from_pretrained(
             model_name_or_path,
+            revision=revision,
             trust_remote_code=trust_remote_code,
         )
         backbone = _import_auto_model().from_pretrained(
             model_name_or_path,
+            revision=revision,
             trust_remote_code=trust_remote_code,
             **model_kwargs,
         )
         projection = _load_colbert_projection_from_hub(
             model_name_or_path,
+            revision=revision,
             device=torch.device(device) if device is not None else None,
             dtype=model_kwargs.get("torch_dtype"),
         )
@@ -163,6 +251,12 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
             backbone=backbone,
             projection=projection,
             device=device,
+            query_prefix=query_prefix,
+            document_prefix=document_prefix,
+            query_length=query_length,
+            document_length=document_length,
+            do_query_expansion=do_query_expansion,
+            attend_to_expansion_tokens=attend_to_expansion_tokens,
         )
 
     @property
@@ -177,13 +271,23 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         show_progress_bar: bool | None = None,
         convert_to_numpy: bool = True,
         convert_to_tensor: bool = False,
+        max_length: int | None = None,
+        is_query: bool | None = None,
         **_: Any,
     ) -> torch.Tensor | Any:
         del show_progress_bar
+        if is_query is not None:
+            return self._encode_with_role(
+                inputs,
+                role="query" if is_query else "document",
+                batch_size=batch_size,
+                convert_to_numpy=convert_to_numpy,
+                convert_to_tensor=convert_to_tensor,
+            )
         sentences = [inputs] if isinstance(inputs, str) else list(inputs)
         batches: list[torch.Tensor] = []
         for start in range(0, len(sentences), batch_size):
-            batch = self._encode_batch(sentences[start : start + batch_size])
+            batch = self._encode_batch(sentences[start : start + batch_size], max_length=max_length)
             if convert_to_numpy and not convert_to_tensor:
                 batch = batch.cpu()
             batches.append(batch)
@@ -196,19 +300,38 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         return result
 
     def encode_query(self, inputs: list[str] | str, **kwargs: Any) -> torch.Tensor | Any:
-        return self.encode(inputs, **kwargs)
+        return self._encode_with_role(inputs, role="query", **kwargs)
 
     def encode_document(self, inputs: list[str] | str, **kwargs: Any) -> torch.Tensor | Any:
-        return self.encode(inputs, **kwargs)
+        return self._encode_with_role(inputs, role="document", **kwargs)
 
-    def _encode_batch(self, sentences: list[str]) -> torch.Tensor:
+    def _encode_with_role(self, inputs: list[str] | str, *, role: str, **kwargs: Any) -> torch.Tensor | Any:
+        input_was_string = isinstance(inputs, str)
+        sentences = [inputs] if isinstance(inputs, str) else list(inputs)
+        batch_size = int(kwargs.pop("batch_size", 32))
+        convert_to_numpy = bool(kwargs.pop("convert_to_numpy", True))
+        convert_to_tensor = bool(kwargs.pop("convert_to_tensor", False))
+        kwargs.pop("show_progress_bar", None)
+        del kwargs
+
+        encoded: list[torch.Tensor] = []
+        for start in range(0, len(sentences), batch_size):
+            encoded.extend(self._encode_role_batch(sentences[start : start + batch_size], role=role))
+        if convert_to_numpy and not convert_to_tensor:
+            result: Any = [embedding.detach().cpu().numpy() for embedding in encoded]
+        else:
+            result = encoded
+        return result[0] if input_was_string else result
+
+    def _encode_batch(self, sentences: list[str], *, max_length: int | None = None) -> torch.Tensor:
         tokenizer_kwargs: dict[str, Any] = {
             "padding": True,
             "truncation": True,
             "return_tensors": "pt",
         }
-        if self.max_seq_length is not None:
-            tokenizer_kwargs["max_length"] = self.max_seq_length
+        resolved_max_length = max_length or self.max_seq_length
+        if resolved_max_length is not None:
+            tokenizer_kwargs["max_length"] = resolved_max_length
         tokenized = self.tokenizer(sentences, **tokenizer_kwargs)
         tokenized = {
             key: value.to(self.device) if isinstance(value, torch.Tensor) else value for key, value in tokenized.items()
@@ -223,6 +346,48 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         if isinstance(attention_mask, torch.Tensor):
             token_embeddings = token_embeddings * attention_mask.unsqueeze(-1).to(dtype=token_embeddings.dtype)
         return token_embeddings
+
+    def _encode_role_batch(self, sentences: list[str], *, role: str) -> list[torch.Tensor]:
+        is_query = role == "query"
+        max_length = self.query_length if is_query else self.document_length
+        prefix_id = self.query_prefix_id if is_query else self.document_prefix_id
+        tokenizer_max_length = max_length - 1 if prefix_id is not None else max_length
+        padding: bool | str = "max_length" if is_query and self.do_query_expansion else True
+        tokenized = self.tokenizer(
+            sentences,
+            padding=padding,
+            truncation=True,
+            max_length=tokenizer_max_length,
+            return_tensors="pt",
+        )
+        if prefix_id is not None:
+            tokenized = _insert_prefix_token(tokenized, prefix_id)
+        if is_query and self.attend_to_expansion_tokens and isinstance(tokenized.get("attention_mask"), torch.Tensor):
+            tokenized["attention_mask"].fill_(1)
+
+        tokenized = {
+            key: value.to(self.device) if isinstance(value, torch.Tensor) else value for key, value in tokenized.items()
+        }
+        with torch.inference_mode():
+            outputs = self.backbone(**tokenized)
+            token_embeddings = _last_hidden_state(outputs)
+            if self.projection is not None:
+                token_embeddings = self.projection(token_embeddings)
+            token_embeddings = torch.nn.functional.normalize(token_embeddings.float(), p=2, dim=-1)
+
+        input_ids = tokenized["input_ids"]
+        attention_mask = tokenized.get("attention_mask", torch.ones_like(input_ids)).bool()
+        if is_query:
+            if self.do_query_expansion:
+                masks = torch.ones_like(input_ids, dtype=torch.bool)
+            else:
+                masks = attention_mask
+        else:
+            skiplist_mask = torch.ones_like(input_ids, dtype=torch.bool)
+            for token_id in self.skiplist:
+                skiplist_mask &= input_ids != token_id
+            masks = attention_mask & skiplist_mask
+        return [embedding[mask].detach() for embedding, mask in zip(token_embeddings, masks)]
 
     def _output_dim(self) -> int:
         if isinstance(self.projection, torch.nn.Linear):
@@ -241,23 +406,77 @@ def load_model(config: ModelLoadConfig) -> Any:
         flash_attn2=config.flash_attn2,
     )
     if config.model_type == "late-interaction":
+        colbert_config = _load_colbert_sentence_transformers_config(
+            config.model_name_or_path,
+            revision=config.model_revision,
+        )
+        query_length = _resolve_late_interaction_int(
+            explicit=config.late_interaction_query_length,
+            metadata=colbert_config,
+            key="query_length",
+        )
+        document_length = _resolve_late_interaction_int(
+            explicit=config.late_interaction_document_length,
+            metadata=colbert_config,
+            key="document_length",
+        )
+        query_prefix = _resolve_late_interaction_str(
+            explicit=config.late_interaction_query_prefix,
+            metadata=colbert_config,
+            key="query_prefix",
+        )
+        document_prefix = _resolve_late_interaction_str(
+            explicit=config.late_interaction_document_prefix,
+            metadata=colbert_config,
+            key="document_prefix",
+        )
+        do_query_expansion = _resolve_late_interaction_bool(
+            explicit=config.late_interaction_do_query_expansion,
+            metadata=colbert_config,
+            key="do_query_expansion",
+        )
+        if do_query_expansion is None:
+            do_query_expansion = False
+        attend_to_expansion_tokens = _resolve_late_interaction_bool(
+            explicit=config.late_interaction_attend_to_expansion_tokens,
+            metadata=colbert_config,
+            key="attend_to_expansion_tokens",
+        )
         kwargs: dict[str, Any] = {
             "device": config.device,
             "revision": config.model_revision,
             "trust_remote_code": config.trust_remote_code,
             "model_kwargs": model_kwargs,
         }
-        if config.late_interaction_query_length is not None:
-            kwargs["query_length"] = config.late_interaction_query_length
-        if config.late_interaction_document_length is not None:
-            kwargs["document_length"] = config.late_interaction_document_length
-        if config.late_interaction_query_prefix is not None:
-            kwargs["query_prefix"] = config.late_interaction_query_prefix
-        if config.late_interaction_document_prefix is not None:
-            kwargs["document_prefix"] = config.late_interaction_document_prefix
-        if config.late_interaction_attend_to_expansion_tokens is not None:
-            kwargs["attend_to_expansion_tokens"] = config.late_interaction_attend_to_expansion_tokens
-        model = _import_pylate_colbert()(config.model_name_or_path, **kwargs)
+        if query_length is not None:
+            kwargs["query_length"] = query_length
+        if document_length is not None:
+            kwargs["document_length"] = document_length
+        if query_prefix is not None:
+            kwargs["query_prefix"] = query_prefix
+        if document_prefix is not None:
+            kwargs["document_prefix"] = document_prefix
+        kwargs["do_query_expansion"] = do_query_expansion
+        if attend_to_expansion_tokens is not None:
+            kwargs["attend_to_expansion_tokens"] = attend_to_expansion_tokens
+        try:
+            model = _import_pylate_colbert()(config.model_name_or_path, **kwargs)
+        except Exception as exc:
+            if not _can_fallback_to_colbert_adapter(exc):
+                raise
+            model = ColbertLateInteractionAdapter.from_pretrained(
+                config.model_name_or_path,
+                device=config.device,
+                revision=config.model_revision,
+                trust_remote_code=config.trust_remote_code,
+                model_kwargs=model_kwargs,
+                query_prefix=query_prefix,
+                document_prefix=document_prefix,
+                query_length=query_length,
+                document_length=document_length,
+                do_query_expansion=do_query_expansion,
+                attend_to_expansion_tokens=attend_to_expansion_tokens,
+            )
         _set_model_dtype(model, config.dtype)
         _set_attn_implementation(model, attn_implementation)
         return model
@@ -358,13 +577,14 @@ def _pad_late_interaction_batches(
 def _load_colbert_projection_from_hub(
     model_name_or_path: str,
     *,
+    revision: str | None = None,
     device: torch.device | None,
     dtype: Any,
 ) -> torch.nn.Linear | None:
     try:
         hf_hub_download = getattr(importlib.import_module("huggingface_hub"), "hf_hub_download")
         safe_open = getattr(importlib.import_module("safetensors.torch"), "safe_open")
-        model_path = hf_hub_download(model_name_or_path, "model.safetensors")
+        model_path = hf_hub_download(model_name_or_path, "model.safetensors", revision=revision)
         with safe_open(model_path, framework="pt", device="cpu") as tensors:
             keys = set(tensors.keys())
             if "linear.weight" not in keys:
@@ -384,6 +604,78 @@ def _load_colbert_projection_from_hub(
     if device is not None:
         projection = projection.to(device=device)
     return projection
+
+
+def _load_colbert_metadata_from_hub(model_name_or_path: str, *, revision: str | None) -> dict[str, Any]:
+    try:
+        hf_hub_download = getattr(importlib.import_module("huggingface_hub"), "hf_hub_download")
+        metadata_path = hf_hub_download(model_name_or_path, "artifact.metadata", revision=revision)
+        with open(metadata_path, encoding="utf-8") as handle:
+            payload = json.load(handle)
+        return payload if isinstance(payload, dict) else {}
+    except Exception:
+        return {}
+
+
+def _load_colbert_sentence_transformers_config(model_name_or_path: str, *, revision: str | None) -> dict[str, Any]:
+    local_config = Path(model_name_or_path) / "config_sentence_transformers.json"
+    try:
+        if local_config.is_file():
+            with local_config.open(encoding="utf-8") as handle:
+                payload = json.load(handle)
+        else:
+            hf_hub_download = getattr(importlib.import_module("huggingface_hub"), "hf_hub_download")
+            config_path = hf_hub_download(
+                model_name_or_path,
+                "config_sentence_transformers.json",
+                revision=revision,
+            )
+            with open(config_path, encoding="utf-8") as handle:
+                payload = json.load(handle)
+    except Exception:
+        return {}
+    if not isinstance(payload, dict):
+        return {}
+    if str(payload.get("model_type", "")).lower() != "colbert":
+        return {}
+    return payload
+
+
+def _metadata_str(metadata: dict[str, Any], key: str) -> str | None:
+    value = metadata.get(key)
+    return value if isinstance(value, str) and value else None
+
+
+def _metadata_int(metadata: dict[str, Any], key: str) -> int | None:
+    value = metadata.get(key)
+    if isinstance(value, int):
+        return value
+    return None
+
+
+def _metadata_bool(metadata: dict[str, Any], key: str) -> bool | None:
+    value = metadata.get(key)
+    if isinstance(value, bool):
+        return value
+    return None
+
+
+def _resolve_late_interaction_str(*, explicit: str | None, metadata: dict[str, Any], key: str) -> str | None:
+    if explicit is not None:
+        return explicit
+    return _metadata_str(metadata, key)
+
+
+def _resolve_late_interaction_int(*, explicit: int | None, metadata: dict[str, Any], key: str) -> int | None:
+    if explicit is not None:
+        return explicit
+    return _metadata_int(metadata, key)
+
+
+def _resolve_late_interaction_bool(*, explicit: bool | None, metadata: dict[str, Any], key: str) -> bool | None:
+    if explicit is not None:
+        return explicit
+    return _metadata_bool(metadata, key)
 
 
 def _set_model_dtype(model: Any, dtype: str) -> None:

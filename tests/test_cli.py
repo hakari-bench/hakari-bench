@@ -532,6 +532,7 @@ def test_parse_args_accepts_late_interaction_options() -> None:
             "[QueryMarker]",
             "--late-interaction-document-prefix",
             "[DocumentMarker]",
+            "--no-late-interaction-do-query-expansion",
             "--late-interaction-attend-to-expansion-tokens",
             "--late-interaction-exact-doc-batch-size",
             "16",
@@ -547,6 +548,7 @@ def test_parse_args_accepts_late_interaction_options() -> None:
     assert args.late_interaction_document_length == 300
     assert args.late_interaction_query_prefix == "[QueryMarker]"
     assert args.late_interaction_document_prefix == "[DocumentMarker]"
+    assert args.late_interaction_do_query_expansion is False
     assert args.late_interaction_attend_to_expansion_tokens is True
     assert args.late_interaction_exact_doc_batch_size == 16
     assert args.late_interaction_exact_query_batch_size == 4

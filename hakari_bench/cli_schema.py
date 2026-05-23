@@ -151,6 +151,7 @@ class LateInteractionParams(ParamsModel):
     document_length: int | None = Field(default=None, gt=0)
     query_prefix: str | None = None
     document_prefix: str | None = None
+    do_query_expansion: bool | None = None
     attend_to_expansion_tokens: bool | None = None
     exact_document_batch_size: int | None = Field(default=None, gt=0)
     exact_query_batch_size: int | None = Field(default=None, gt=0)
