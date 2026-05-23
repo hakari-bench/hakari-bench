@@ -47,6 +47,19 @@ distractors that share identifiers or algorithm names but implement a different
 variant. Positives should be behaviorally equivalent, not merely topically
 similar.
 
+### Benchmark Information Leakage
+
+CoIR adapts CodeTransOcean contest data with roughly 561 train queries, 226 dev
+queries, and 446 test queries over a 1k-document corpus. This Nano split is
+derived from the CoIR CodeTransOcean-Contest test side. Training on unfiltered
+test pairs can leak the exact cross-language program pairs used for evaluation.
+
+Training should use train-side or non-overlapping parallel code pairs, then
+remove any row whose source program, target program, task name, or token
+fingerprint matches NanoCodeTransOceanContest. A model trained on leaked contest
+pairs may score highly by memorizing known Python-to-C++ equivalents rather than
+learning general cross-language code retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -133,8 +146,15 @@ benchmark_task_metadata:
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR CodeTransOcean-Contest test-derived retrieval split
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCodeTransOceanContest code pairs
+    train_eval_overlap_audit: not_audited_split_filtering_required
+    leakage_note: exclude NanoCodeTransOceanContest code pairs; do not train on CodeTransOcean-Contest test-derived rows
+    leakage_risk:
+      source_dataset: WeixiangYan/CodeTransOcean contest data
+      source_train_queries_reported_by_coir: 561
+      source_dev_queries_reported_by_coir: 226
+      source_test_queries_reported_by_coir: 446
+      risk: upstream CodeTransOcean contest test pairs can overlap with NanoCodeTransOceanContest evaluation rows
+      recommended_filter: train-side only plus normalized source-code, target-code, task-name, and token-fingerprint exclusion
     useful_training_data:
       - multilingual equivalent-code pairs
       - Rosetta Code style program pairs

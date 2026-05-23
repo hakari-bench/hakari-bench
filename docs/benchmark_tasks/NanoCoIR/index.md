@@ -134,6 +134,42 @@ nearby in language, API, or algorithm family but wrong in behavior. Evaluation
 queries and positive documents from NanoCoIR should not be used as seeds for
 synthetic generation.
 
+### Benchmark Information Leakage
+
+Some public source datasets are not safe to use as raw training data even when
+their Hugging Face split is named `train`. CoIR derives compact evaluation
+splits from upstream benchmark sources, and the public upstream files can still
+contain the same examples used by NanoCoIR. This is especially important for the
+CodeFeedback subtasks.
+
+An audit of the two CodeFeedback sources found direct overlap with the NanoCoIR
+evaluation rows. For `NanoCodeFeedbackMT`, scanning the 66,383-row
+`m-a-p/Code-Feedback` train file found normalized exact matches for 200/200 Nano
+queries against reconstructed dialogue prefixes and 200/200 Nano positives
+against final assistant responses. For `NanoCodeFeedbackST`, scanning the
+156,526-row `m-a-p/CodeFeedback-Filtered-Instruction` train file found
+normalized exact matches for 200/200 Nano queries, 199/200 Nano positives, and
+200/200 Nano query-positive concatenations. Token fingerprints and 7-token
+shingle containment checks confirmed the same high-risk overlap pattern.
+
+Training on these raw public train files can produce inflated NanoCoIR scores by
+memorizing benchmark queries and positive documents. Systems that use these
+sources for training should first remove any source row whose query, dialogue
+prefix, final answer, positive document, or query-positive concatenation matches
+NanoCoIR evaluation data by normalized text, token fingerprint, or high shingle
+containment. Reported high scores from models trained on unfiltered CodeFeedback
+sources should be treated as potentially contaminated until an overlap audit is
+available.
+
+The same split-safety principle applies to the other NanoCoIR families. APPS,
+CoSQA, Synthetic Text-to-SQL, CodeSearchNet, CodeTransOcean, and StackOverflow
+QA all have upstream train/test or train/dev/test partitions in CoIR. Training
+should use only train-side or otherwise non-overlapping rows, then remove any
+NanoCoIR query, qrel positive, code, SQL, answer, URL/id, or token fingerprint.
+Using upstream test-derived rows can inflate scores on NanoApps, NanoCosQA,
+NanoSyntheticText2SQL, NanoCodeSearchNet, NanoCodeSearchNetCCR,
+NanoCodeTransOceanContest, NanoCodeTransOceanDL, or NanoStackOverflowQA.
+
 ## Task Summary
 
 | Task | Retrieval shape | Queries | Docs | BM25 nDCG@10 | BM25 hit@10 | Query avg chars | Doc avg chars | Source status |
@@ -329,7 +365,28 @@ benchmark_task_group_metadata:
       bm25_ndcg_at_10: 0.5919819380677027
       bm25_hit_at_10: 0.695
   learning:
-    leakage_note: exclude NanoCoIR evaluation queries, qrels, and positive documents; audit upstream CoIR source splits before using public source data for training
+    leakage_note: exclude NanoCoIR evaluation queries, qrels, and positive documents; audit upstream CoIR source splits before using public source data for training; raw CodeFeedback public train files contain NanoCodeFeedback evaluation rows
+    leakage_audit:
+      codefeedback_mt:
+        source_dataset: m-a-p/Code-Feedback
+        source_train_rows_scanned: 66383
+        normalized_exact_query_matches: 200
+        normalized_exact_positive_matches: 200
+        risk: raw public train leaks NanoCodeFeedbackMT evaluation rows
+      codefeedback_st:
+        source_dataset: m-a-p/CodeFeedback-Filtered-Instruction
+        source_train_rows_scanned: 156526
+        normalized_exact_query_matches: 200
+        normalized_exact_positive_matches: 199
+        normalized_exact_query_positive_matches: 200
+        risk: raw public train leaks NanoCodeFeedbackST evaluation rows
+    split_leakage_risk:
+      apps: use APPS train-side rows only; exclude NanoApps problem statements and solutions
+      cosqa: use CoSQA train-side rows only; exclude NanoCosQA queries and Python functions
+      synthetic_text_to_sql: use Gretel train split only; exclude NanoSyntheticText2SQL prompts, SQL, and schema context
+      codesearchnet: use CodeSearchNet train-side rows only; exclude NanoCodeSearchNet code-docstring and CCR prefix-continuation pairs
+      codetransocean: use CodeTransOcean train or validation rows only; exclude NanoCodeTransOcean contest and DL code pairs
+      stackoverflow_qa: use StackOverflow QA train-side rows only; exclude NanoStackOverflowQA questions, answers, URLs, ids, and code blocks
     useful_training_data:
       - APPS-style problem-to-solution retrieval pairs
       - CoSQA and CodeSearchNet query-code or code-summary pairs

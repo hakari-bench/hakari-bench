@@ -52,6 +52,21 @@ solutions and include distractors that solve related but different algorithms.
 Generated statements should include constraints and examples so models learn to
 use specification details, not just topic words.
 
+### Benchmark Information Leakage
+
+CoIR adapts APPS into a retrieval benchmark with roughly 5k train queries and
+3.8k test queries over a 9k-document corpus, and this Nano split is derived from
+the CoIR APPS test side. Training on APPS test examples, or on any public APPS
+copy that has not been filtered by split and by Nano query/positive hashes, can
+leak the benchmark problem statements and solution documents.
+
+The safer use of APPS-like data is to restrict training to upstream train-side
+problem-solution pairs and then remove any row whose problem statement, solution,
+or normalized token fingerprint matches NanoApps queries, qrels, or positive
+documents. Models trained on unfiltered APPS test-derived data may score well on
+NanoApps by memorizing contest solutions rather than learning general
+problem-to-code retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -138,8 +153,14 @@ benchmark_task_metadata:
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR APPS test-derived retrieval split
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoApps queries, qrels, and positive solution documents
+    train_eval_overlap_audit: not_audited_split_filtering_required
+    leakage_note: exclude NanoApps queries, qrels, and positive solution documents; do not train on APPS test-derived rows
+    leakage_risk:
+      source_dataset: APPS / codeparrot/apps
+      source_train_queries_reported_by_coir: 5000
+      source_test_queries_reported_by_coir: 3800
+      risk: upstream APPS test examples can overlap with NanoApps evaluation rows
+      recommended_filter: train-side only plus normalized query, solution, and token-fingerprint exclusion
     useful_training_data:
       - APPS-style problem-to-solution retrieval pairs
       - competitive-programming solutions with hard negatives

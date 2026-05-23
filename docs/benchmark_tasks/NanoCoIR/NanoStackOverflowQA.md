@@ -45,6 +45,20 @@ Generate realistic developer questions with code snippets, error text, and
 environment details. Positives should diagnose or solve the issue, while hard
 negatives should share tags but solve a different failure.
 
+### Benchmark Information Leakage
+
+CoIR builds a StackOverflow QA retrieval task with roughly 13k train queries, 3k
+dev queries, and 2k test queries over a 20k-document corpus. This Nano split is
+derived from the CoIR StackOverflow QA test side. Training on unfiltered
+StackOverflow QA test rows, CoIR-Retrieval exports, or raw StackOverflow dumps
+without deduplication can leak the benchmark question-answer pairs.
+
+Training should use train-side or non-overlapping StackOverflow-style QA pairs,
+then remove any row whose question title, question body, accepted answer, code
+snippet, URL/id, or token fingerprint matches NanoStackOverflowQA. A model
+trained on leaked StackOverflow answers may report high scores by memorizing
+community posts rather than learning troubleshooting retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -131,8 +145,15 @@ benchmark_task_metadata:
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR StackOverflow QA test-derived retrieval split
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoStackOverflowQA question-answer pairs
+    train_eval_overlap_audit: not_audited_split_filtering_required
+    leakage_note: exclude NanoStackOverflowQA question-answer pairs; do not train on StackOverflow QA test-derived rows
+    leakage_risk:
+      source_dataset: CoIR StackOverflow QA / Stack Overflow data
+      source_train_queries_reported_by_coir: 13000
+      source_dev_queries_reported_by_coir: 3000
+      source_test_queries_reported_by_coir: 2000
+      risk: upstream StackOverflow QA test pairs can overlap with NanoStackOverflowQA evaluation rows
+      recommended_filter: train-side only plus normalized title, body, answer, code, URL/id, and token-fingerprint exclusion
     useful_training_data:
       - StackOverflow question-answer retrieval
       - code troubleshooting pairs

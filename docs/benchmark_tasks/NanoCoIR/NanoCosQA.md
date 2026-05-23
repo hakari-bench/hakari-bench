@@ -48,6 +48,20 @@ requirements. Positives should be executable or plausible Python utility
 functions, with negatives that share common words such as `date`, `list`, or
 `numpy` but implement a different operation.
 
+### Benchmark Information Leakage
+
+CoIR adapts CoSQA into a retrieval benchmark with roughly 19k train queries and
+500 test queries over a 21k-document corpus. This Nano split is derived from the
+CoIR CoSQA test side, so raw CoSQA test rows, CoIR-Retrieval test exports, or
+CodeSearchNet functions/docstrings reused without split filtering can leak the
+evaluation queries and positive Python functions.
+
+Training data should come from train-side CoSQA or non-overlapping
+CodeSearchNet-style query-code pairs, followed by normalized query, code, and
+token-fingerprint exclusion against NanoCosQA. A model trained on unfiltered
+CoSQA test-derived rows may inflate NanoCosQA scores by memorizing short search
+queries and their target functions.
+
 ## Example Data
 
 | Query | Positive document |
@@ -134,8 +148,14 @@ benchmark_task_metadata:
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR CoSQA test-derived retrieval split
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCosQA queries and positive Python functions
+    train_eval_overlap_audit: not_audited_split_filtering_required
+    leakage_note: exclude NanoCosQA queries and positive Python functions; do not train on CoSQA test-derived rows
+    leakage_risk:
+      source_dataset: CoSQA / CodeSearchNet Python functions
+      source_train_queries_reported_by_coir: 19000
+      source_test_queries_reported_by_coir: 500
+      risk: upstream CoSQA test examples can overlap with NanoCosQA evaluation rows
+      recommended_filter: train-side only plus normalized query, code, and token-fingerprint exclusion
     useful_training_data:
       - CoSQA query-code pairs
       - CodeSearchNet Python functions and docstrings

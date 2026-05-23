@@ -80,6 +80,20 @@ similar words but different conditions, such as sum vs product, first vs last,
 or increasing vs decreasing. Do not use Nano evaluation prompts or solution
 snippets as seeds.
 
+### Benchmark Information Leakage
+
+CodeRAG-Bench uses a small programming-solutions retrieval source of about 1.1k
+prompt-solution entries built from HumanEval/MBPP-style problems, and this Nano
+split is sampled from that source. Because the source is small and the Nano
+corpus contains many of its entries, unfiltered training on
+`code-rag-bench/programming-solutions` is especially high risk.
+
+Training should use non-overlapping prompt-to-code corpora or remove every row
+whose prompt, function name, solution body, tests, or token fingerprint matches
+NanoCodeRAG programming-solution queries and positives. Models trained on leaked
+solution snippets may score highly by memorizing short reference functions
+rather than learning behavior-aware prompt-to-code retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -174,8 +188,13 @@ benchmark_task_metadata:
   learning:
     original_train_split: unknown
     evaluation_split_origin: CodeRAG-Bench programming solutions retrieval source sampled into NanoCodeRAG
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCodeRAG programming prompts, qrels, and positive solution snippets
+    train_eval_overlap_audit: not_audited_source_datastore_filtering_required
+    leakage_note: exclude NanoCodeRAG programming prompts, qrels, and positive solution snippets; do not train on unfiltered code-rag-bench/programming-solutions rows
+    leakage_risk:
+      source_dataset: code-rag-bench/programming-solutions
+      source_corpus_size_reported_by_coderag_bench: 1100
+      risk: small CodeRAG-Bench programming-solutions source datastore can overlap heavily with NanoCodeRAG evaluation positives
+      recommended_filter: remove matching prompts, function names, solution bodies, tests, and token fingerprints
     useful_training_data:
       - non-overlapping HumanEval and MBPP style prompt-to-code pairs
       - APPS and CodeContests natural-language-to-code solutions

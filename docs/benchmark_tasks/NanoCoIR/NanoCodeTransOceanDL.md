@@ -49,6 +49,20 @@ Generate equivalent snippets across PyTorch, TensorFlow, MXNet, and Paddle.
 Keep tensor shapes, mathematical operations, and model structure aligned, and
 include negatives that use similar APIs for a different operation.
 
+### Benchmark Information Leakage
+
+CoIR adapts CodeTransOcean-DL with roughly 564 train queries, 72 dev queries,
+and 180 test queries over an 816-document corpus. This Nano split is derived
+from the CoIR CodeTransOcean-DL test side. Training on unfiltered test pairs can
+leak the exact cross-framework code equivalents used for evaluation.
+
+Training should use train-side or non-overlapping framework-conversion pairs,
+then remove any row whose source snippet, target snippet, framework pair,
+notebook context, or token fingerprint matches NanoCodeTransOceanDL. A model
+trained on leaked pairs may score highly by memorizing known TensorFlow,
+PyTorch, MXNet, or Paddle equivalents rather than learning cross-framework
+retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -135,8 +149,15 @@ benchmark_task_metadata:
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR CodeTransOcean-DL test-derived retrieval split
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCodeTransOceanDL cross-framework code pairs
+    train_eval_overlap_audit: not_audited_split_filtering_required
+    leakage_note: exclude NanoCodeTransOceanDL cross-framework code pairs; do not train on CodeTransOcean-DL test-derived rows
+    leakage_risk:
+      source_dataset: WeixiangYan/CodeTransOcean DL data
+      source_train_queries_reported_by_coir: 564
+      source_dev_queries_reported_by_coir: 72
+      source_test_queries_reported_by_coir: 180
+      risk: upstream CodeTransOcean-DL test pairs can overlap with NanoCodeTransOceanDL evaluation rows
+      recommended_filter: train-side only plus normalized source-code, target-code, framework-pair, notebook-context, and token-fingerprint exclusion
     useful_training_data:
       - cross-framework deep-learning code pairs
       - notebook translation examples

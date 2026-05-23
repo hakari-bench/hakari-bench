@@ -46,6 +46,22 @@ Generate realistic partial functions and matching continuations. To avoid an
 overly lexical task, include hard negatives with the same identifier names but a
 different control-flow or return behavior.
 
+### Benchmark Information Leakage
+
+CoIR constructs CodeSearchNet-CCR from CodeSearchNet by splitting functions into
+prefix queries and continuation documents, using the same broad split sizes as
+CodeSearchNet: roughly 905k train queries, 41k dev queries, and 53k test queries
+over a 1M-document corpus. This Nano split is derived from the CoIR
+CodeSearchNet-CCR test side. Training on the corresponding test functions or
+prefix-continuation pairs can leak the exact continuation target.
+
+Training should use train-side function completion pairs or synthetic
+repository-local continuations, then remove any row whose prefix, continuation,
+full function, repository-local identifier pattern, or token fingerprint matches
+NanoCodeSearchNetCCR. Because this task is highly lexical, memorized
+prefix-continuation pairs can produce high scores without improving general code
+retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -132,8 +148,15 @@ benchmark_task_metadata:
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR CodeSearchNet-CCR test-derived retrieval split
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCodeSearchNetCCR prefix-continuation pairs
+    train_eval_overlap_audit: not_audited_split_filtering_required
+    leakage_note: exclude NanoCodeSearchNetCCR prefix-continuation pairs; do not train on CodeSearchNet-CCR test-derived rows
+    leakage_risk:
+      source_dataset: CodeSearchNet-derived prefix-continuation pairs
+      source_train_queries_reported_by_coir: 905000
+      source_dev_queries_reported_by_coir: 41000
+      source_test_queries_reported_by_coir: 53000
+      risk: upstream CodeSearchNet test functions can overlap with NanoCodeSearchNetCCR evaluation prefix-continuation rows
+      recommended_filter: train-side only plus normalized prefix, continuation, full-function, and token-fingerprint exclusion
     useful_training_data:
       - function prefix-to-continuation retrieval data
       - CodeSearchNet code splits

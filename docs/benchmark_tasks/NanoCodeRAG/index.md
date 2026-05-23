@@ -100,6 +100,24 @@ Do not seed generation with NanoCodeRAG evaluation queries or positive
 documents. Negatives should share language, APIs, or task type while failing to
 answer the request or solve the implementation.
 
+### Benchmark Information Leakage
+
+CodeRAG-Bench builds retrieval datastores and then samples evaluation tasks from
+those sources. The public CodeRAG-Bench source datasets should therefore not be
+treated as ordinary safe training splits. In particular, the library
+documentation source contains about 34k documentation entries, the online
+tutorial source about 79.4k tutorial documents, the programming-solutions source
+about 1.1k prompt-solution entries, and the Stack Overflow source about 23.5M
+posts. NanoCodeRAG positives are sampled from these source genres, so unfiltered
+training on `code-rag-bench/*` can leak exact positive documents.
+
+Training should prefer non-overlapping sources that mimic the same genre, or it
+should remove any row whose query, document, API path, title, URL, prompt,
+solution, post id, code block, or token fingerprint matches NanoCodeRAG
+evaluation data. Reported high scores from models trained on unfiltered
+CodeRAG-Bench source datastores should be treated as potentially contaminated
+until a positive-document and near-duplicate audit is available.
+
 ## Task Summary
 
 | Task | Retrieval focus | Queries | Docs | Positive qrels | BM25 nDCG@10 | BM25 hit@10 | Query avg chars | Doc avg chars |
@@ -215,7 +233,25 @@ benchmark_task_group_metadata:
       bm25_ndcg_at_10: 0.6902
       bm25_hit_at_10: 0.795
   learning:
-    leakage_note: exclude NanoCodeRAG evaluation queries, qrels, and positive documents; deduplicate public documentation, tutorial, and Stack Overflow data before training
+    leakage_note: exclude NanoCodeRAG evaluation queries, qrels, and positive documents; do not train on unfiltered CodeRAG-Bench source datastores
+    leakage_risk:
+      library_documentation:
+        source_dataset: code-rag-bench/library-documentation
+        source_corpus_size_reported_by_coderag_bench: 34000
+        risk: source datastore can contain NanoCodeRAG library-documentation positives
+      online_tutorials:
+        source_dataset: code-rag-bench/online-tutorials
+        source_corpus_size_reported_by_coderag_bench: 79400
+        risk: source datastore can contain NanoCodeRAG tutorial positives
+      programming_solutions:
+        source_dataset: code-rag-bench/programming-solutions
+        source_corpus_size_reported_by_coderag_bench: 1100
+        risk: small source datastore can overlap heavily with NanoCodeRAG programming-solution positives
+      stackoverflow_posts:
+        source_dataset: code-rag-bench/stackoverflow-posts
+        source_corpus_size_reported_by_coderag_bench: 23500000
+        risk: source datastore can contain NanoCodeRAG Stack Overflow positives
+      recommended_filter: remove matching queries, positive documents, URLs, ids, prompts, code blocks, and token fingerprints before training
     useful_training_data:
       - CodeRAG-Bench retrieval pairs
       - API documentation search pairs
