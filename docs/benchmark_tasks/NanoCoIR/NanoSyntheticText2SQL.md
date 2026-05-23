@@ -45,6 +45,20 @@ Synthetic data should include varied domains, SQL task types, and complexity
 levels. Pair each natural-language prompt with executable SQL, and create hard
 negatives that use the same tables but answer a different analytical question.
 
+### Benchmark Information Leakage
+
+CoIR adapts Gretel's Synthetic Text-to-SQL data with roughly 100k train queries
+and 6k test queries over a 106k-document corpus. This Nano split is derived from
+the CoIR Synthetic Text-to-SQL test side. Training on the public Gretel test
+split, or on an unfiltered export that mixes train and test rows, can leak the
+evaluation natural-language prompts and SQL documents.
+
+The safer training source is the Gretel train split only, followed by normalized
+prompt, SQL, schema-context, and token-fingerprint exclusion against
+NanoSyntheticText2SQL. Models trained on unfiltered test-derived prompt-SQL
+pairs may report high scores by memorizing exact SQL statements rather than
+learning schema-aware retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -131,8 +145,14 @@ benchmark_task_metadata:
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR Synthetic Text-to-SQL test-derived retrieval split
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoSyntheticText2SQL prompt-SQL pairs
+    train_eval_overlap_audit: not_audited_split_filtering_required
+    leakage_note: exclude NanoSyntheticText2SQL prompt-SQL pairs; do not train on Gretel or CoIR Text-to-SQL test-derived rows
+    leakage_risk:
+      source_dataset: gretelai/synthetic_text_to_sql
+      source_train_queries_reported_by_coir: 100000
+      source_test_queries_reported_by_coir: 6000
+      risk: upstream Text-to-SQL test examples can overlap with NanoSyntheticText2SQL evaluation rows
+      recommended_filter: train split only plus normalized prompt, SQL, schema-context, and token-fingerprint exclusion
     useful_training_data:
       - text-to-SQL prompt and query pairs
       - schema-linking retrieval data

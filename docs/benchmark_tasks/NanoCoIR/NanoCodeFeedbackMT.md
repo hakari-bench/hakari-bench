@@ -49,6 +49,26 @@ Synthetic data should preserve long dialogue histories and retrieve the next
 assistant response, not just a standalone answer. Include hard negatives that
 answer earlier turns or similar tasks so the model must track dialogue state.
 
+### Benchmark Information Leakage
+
+The public `m-a-p/Code-Feedback` training file should not be used directly as
+training data for this benchmark. An overlap audit against the NanoCodeFeedbackMT
+evaluation split found that all 200 Nano queries have normalized exact matches
+against reconstructed Code-Feedback dialogue prefixes, and all 200 positive
+documents have normalized exact matches against the corresponding final assistant
+responses. The audit scanned 66,383 Code-Feedback train rows and compared Nano
+queries, positives, and query-positive concatenations with normalized hashes,
+token fingerprints, and 7-token shingle containment.
+
+Training on the raw public Code-Feedback train file can therefore leak benchmark
+queries and positive documents into the model. A model trained on those rows may
+obtain high NanoCodeFeedbackMT scores by memorizing the evaluation examples
+rather than by learning transferable multi-turn code-feedback retrieval. Any
+training pipeline using this source should drop the entire source row when its
+dialogue prefix, final assistant response, or query-positive concatenation
+matches NanoCodeFeedbackMT by normalized text, token fingerprint, or high
+7-token shingle containment.
+
 ## Example Data
 
 | Query | Positive document |
@@ -135,8 +155,17 @@ benchmark_task_metadata:
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR CodeFeedback-MT test-derived retrieval split
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCodeFeedbackMT dialogue histories and final responses
+    train_eval_overlap_audit: audited_raw_hf_train_contains_nano_eval_examples
+    leakage_note: raw m-a-p/Code-Feedback train contains NanoCodeFeedbackMT evaluation dialogue histories and final responses; exclude matching source rows before training
+    leakage_audit:
+      source_dataset: m-a-p/Code-Feedback
+      source_train_rows_scanned: 66383
+      nano_query_rows: 200
+      normalized_exact_query_matches: 200
+      normalized_exact_positive_matches: 200
+      high_shingle_query_matches: 200
+      high_shingle_positive_matches: 199
+      risk: direct benchmark leakage if raw public train is used
     useful_training_data:
       - multi-turn code assistant conversations
       - execution-feedback repair traces

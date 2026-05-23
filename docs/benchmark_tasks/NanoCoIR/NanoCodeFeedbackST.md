@@ -46,6 +46,27 @@ Generate specific programming instructions paired with complete assistant
 answers. Include both code-only and prose-plus-code responses, and ensure
 negative answers do not merely differ in formatting but solve a different task.
 
+### Benchmark Information Leakage
+
+The public `m-a-p/CodeFeedback-Filtered-Instruction` training file should not be
+used directly as training data for this benchmark. An overlap audit against the
+NanoCodeFeedbackST evaluation split found that all 200 Nano queries have
+normalized exact matches against the public training `query` field, 199 of 200
+positive documents have normalized exact matches against the `answer` field, and
+all 200 query-positive concatenations match the public training query-answer
+variant. The audit scanned 156,526 CodeFeedback-Filtered-Instruction train rows
+and compared Nano queries, positives, and query-positive concatenations with
+normalized hashes, token fingerprints, and 7-token shingle containment.
+
+Training on the raw public CodeFeedback-Filtered-Instruction train file can
+therefore leak benchmark queries and positive documents into the model. A model
+trained on those rows may obtain high NanoCodeFeedbackST scores by memorizing
+the evaluation examples rather than by learning transferable single-turn
+code-instruction retrieval. Any training pipeline using this source should drop
+the entire source row when its query, answer, or query-answer concatenation
+matches NanoCodeFeedbackST by normalized text, token fingerprint, or high
+7-token shingle containment.
+
 ## Example Data
 
 | Query | Positive document |
@@ -132,8 +153,18 @@ benchmark_task_metadata:
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR CodeFeedback-ST test-derived retrieval split
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCodeFeedbackST instructions and positive replies
+    train_eval_overlap_audit: audited_raw_hf_train_contains_nano_eval_examples
+    leakage_note: raw m-a-p/CodeFeedback-Filtered-Instruction train contains NanoCodeFeedbackST evaluation instructions and positive replies; exclude matching source rows before training
+    leakage_audit:
+      source_dataset: m-a-p/CodeFeedback-Filtered-Instruction
+      source_train_rows_scanned: 156526
+      nano_query_rows: 200
+      normalized_exact_query_matches: 200
+      normalized_exact_positive_matches: 199
+      normalized_exact_query_positive_matches: 200
+      high_shingle_query_matches: 193
+      high_shingle_positive_matches: 199
+      risk: direct benchmark leakage if raw public train is used
     useful_training_data:
       - single-turn code instruction answering data
       - SQL and Python assistant-response pairs

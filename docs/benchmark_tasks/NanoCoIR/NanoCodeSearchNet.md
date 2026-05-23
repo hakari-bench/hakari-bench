@@ -46,6 +46,21 @@ Generate realistic functions and concise docstrings. Negatives should be short
 descriptions from similar APIs so models cannot rely only on language or library
 names.
 
+### Benchmark Information Leakage
+
+CoIR adapts CodeSearchNet with roughly 905k train queries, 41k dev queries, and
+53k test queries over a 1M-document corpus. This Nano split is derived from the
+CoIR CodeSearchNet test side, where source code is the query and the docstring
+or summary is the document. Training on CodeSearchNet test rows, or on a public
+CodeSearchNet export that does not preserve the upstream split, can leak exact
+code-docstring pairs.
+
+Training should use train-side CodeSearchNet-style pairs or non-overlapping
+code-summary data, then remove any row whose code, docstring, function name, or
+token fingerprint matches NanoCodeSearchNet. A model trained on unfiltered
+test-derived pairs may get high scores by memorizing function summaries rather
+than learning robust code-to-text retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -132,8 +147,15 @@ benchmark_task_metadata:
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR CodeSearchNet test-derived retrieval split
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCodeSearchNet code-docstring pairs
+    train_eval_overlap_audit: not_audited_split_filtering_required
+    leakage_note: exclude NanoCodeSearchNet code-docstring pairs; do not train on CodeSearchNet test-derived rows
+    leakage_risk:
+      source_dataset: CodeSearchNet
+      source_train_queries_reported_by_coir: 905000
+      source_dev_queries_reported_by_coir: 41000
+      source_test_queries_reported_by_coir: 53000
+      risk: upstream CodeSearchNet test code-docstring pairs can overlap with NanoCodeSearchNet evaluation rows
+      recommended_filter: train-side only plus normalized code, docstring, function-name, and token-fingerprint exclusion
     useful_training_data:
       - CodeSearchNet code-docstring pairs
       - API documentation retrieval examples

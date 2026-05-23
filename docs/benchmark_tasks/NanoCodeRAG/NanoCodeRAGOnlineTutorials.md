@@ -79,6 +79,21 @@ code snippets, then generate concise page-title queries for them. Hard negatives
 should be tutorials from the same language or topic that solve a different task.
 Do not use Nano evaluation queries or positive tutorial pages as seeds.
 
+### Benchmark Information Leakage
+
+CodeRAG-Bench uses an online-tutorial retrieval source of about 79.4k tutorial
+documents collected from programming tutorial sites, and this Nano split is
+sampled from that source. The `code-rag-bench/online-tutorials` data should be
+treated as an evaluation-source datastore unless Nano positives and near
+duplicates have been removed. Training on the unfiltered source can leak the
+exact tutorial pages used by NanoCodeRAG.
+
+Training should use non-overlapping tutorial corpora or remove every row whose
+title, URL, article body, code snippet, or token fingerprint matches
+NanoCodeRAG tutorial queries and positives. Models trained on leaked tutorial
+pages may report high scores by memorizing page titles and long article text
+rather than learning long-document retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -173,8 +188,13 @@ benchmark_task_metadata:
   learning:
     original_train_split: unknown
     evaluation_split_origin: CodeRAG-Bench online tutorials retrieval source sampled into NanoCodeRAG
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCodeRAG tutorial queries, qrels, and positive tutorial pages
+    train_eval_overlap_audit: not_audited_source_datastore_filtering_required
+    leakage_note: exclude NanoCodeRAG tutorial queries, qrels, and positive tutorial pages; do not train on unfiltered code-rag-bench/online-tutorials rows
+    leakage_risk:
+      source_dataset: code-rag-bench/online-tutorials
+      source_corpus_size_reported_by_coderag_bench: 79400
+      risk: CodeRAG-Bench tutorial source datastore can contain NanoCodeRAG evaluation positives
+      recommended_filter: remove matching titles, URLs, article bodies, code snippets, and token fingerprints
     useful_training_data:
       - non-overlapping programming tutorial title-to-page pairs
       - developer search logs over tutorials and documentation

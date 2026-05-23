@@ -78,6 +78,21 @@ question, accepted answer, alternative answers, code snippets, and caveats. Hard
 negatives should share the same tags or tool names but solve a different
 failure mode. Do not use Nano evaluation queries or positive posts as seeds.
 
+### Benchmark Information Leakage
+
+CodeRAG-Bench uses a Stack Overflow retrieval source of about 23.5M posts from
+the RedPajama StackExchange split, and this Nano split is sampled from that
+source. The `code-rag-bench/stackoverflow-posts` data should be treated as an
+evaluation-source datastore unless Nano positives and near duplicates have been
+removed. Training on the unfiltered source can leak the exact posts used by
+NanoCodeRAG.
+
+Training should use non-overlapping Q&A corpora or remove every row whose
+question title, body, answer, post id, URL, code block, or token fingerprint
+matches NanoCodeRAG Stack Overflow queries and positives. Models trained on
+leaked posts may score highly by memorizing community answers rather than
+learning robust developer-Q&A retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -172,8 +187,13 @@ benchmark_task_metadata:
   learning:
     original_train_split: unknown
     evaluation_split_origin: CodeRAG-Bench Stack Overflow posts retrieval source sampled into NanoCodeRAG
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCodeRAG Stack Overflow queries, qrels, and positive posts
+    train_eval_overlap_audit: not_audited_source_datastore_filtering_required
+    leakage_note: exclude NanoCodeRAG Stack Overflow queries, qrels, and positive posts; do not train on unfiltered code-rag-bench/stackoverflow-posts rows
+    leakage_risk:
+      source_dataset: code-rag-bench/stackoverflow-posts
+      source_corpus_size_reported_by_coderag_bench: 23500000
+      risk: CodeRAG-Bench Stack Overflow source datastore can contain NanoCodeRAG evaluation positives
+      recommended_filter: remove matching titles, bodies, answers, post ids, URLs, code blocks, and token fingerprints
     useful_training_data:
       - non-overlapping Stack Overflow question-to-answer thread retrieval
       - duplicate-question and related-question retrieval pairs

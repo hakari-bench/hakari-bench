@@ -84,6 +84,21 @@ nearby APIs in the same namespace or functions with similar boilerplate but
 different behavior. Do not seed synthetic data with Nano evaluation queries or
 positive documentation entries.
 
+### Benchmark Information Leakage
+
+CodeRAG-Bench uses a library-documentation retrieval source of about 34k Python
+documentation entries, and this Nano split is sampled from that source. The
+`code-rag-bench/library-documentation` data should therefore be treated as an
+evaluation-source datastore, not as safe supervised training data by default.
+Training on the unfiltered source can leak the exact API reference pages and
+queries used by NanoCodeRAG.
+
+Training should use non-overlapping documentation sources or remove every row
+whose API path, query text, documentation page, section text, or token
+fingerprint matches NanoCodeRAG library-documentation queries and positives.
+Models trained on leaked pages may score highly by memorizing TensorFlow or
+Python API reference boilerplate rather than learning documentation retrieval.
+
 ## Example Data
 
 | Query | Positive document |
@@ -178,8 +193,13 @@ benchmark_task_metadata:
   learning:
     original_train_split: unknown
     evaluation_split_origin: CodeRAG-Bench library documentation retrieval source sampled into NanoCodeRAG
-    train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoCodeRAG library-documentation queries, qrels, and positive documentation entries
+    train_eval_overlap_audit: not_audited_source_datastore_filtering_required
+    leakage_note: exclude NanoCodeRAG library-documentation queries, qrels, and positive documentation entries; do not train on unfiltered code-rag-bench/library-documentation rows
+    leakage_risk:
+      source_dataset: code-rag-bench/library-documentation
+      source_corpus_size_reported_by_coderag_bench: 34000
+      risk: CodeRAG-Bench documentation source datastore can contain NanoCodeRAG evaluation positives
+      recommended_filter: remove matching API paths, query text, documentation pages, section text, and token fingerprints
     useful_training_data:
       - non-overlapping Python API documentation retrieval pairs
       - DocPrompting-style natural-language intent to documentation pairs
