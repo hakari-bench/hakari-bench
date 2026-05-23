@@ -262,6 +262,11 @@ model-specific query/document prefixes, sequence lengths, `--trust-remote-code`,
 query expansion, and `--late-interaction-attend-to-expansion-tokens` before
 running.
 
+For broad ColBERT reevaluation across Nano retrieval datasets, follow
+[`docs/late_interaction_evaluation.md`](late_interaction_evaluation.md). That
+document records the current model list, the standard `48` query token / `512`
+document token policy, and model-specific query expansion choices.
+
 HAKARI-Bench defaults ColBERT query expansion to disabled. This intentionally
 differs from PyLate's API default, because benchmark runs should not add mask
 token expansion unless the model config or CLI explicitly requests it. If a
