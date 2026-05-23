@@ -2792,7 +2792,9 @@ def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
     assert 'name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="task_scores" value="1"' in response.text
     assert ">1</td>" in response.text
-    assert ">2.5</td>" in response.text
+    assert ">T2</td>" in response.text
+    assert ">2.5</td>" not in response.text
+    assert "sort=metric%3Aarguana" in response.text
 
 
 def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) -> None:

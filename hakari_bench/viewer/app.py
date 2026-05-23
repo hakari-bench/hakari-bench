@@ -9,7 +9,7 @@ from io import StringIO
 import math
 import os
 from pathlib import Path
-from typing import TypedDict, cast
+from typing import Iterable, TypedDict, cast
 from urllib.parse import urlencode
 
 from pydantic import BaseModel, ConfigDict
@@ -1738,6 +1738,9 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
     filter_context = filter_context or row_filter_context(result.rows, FilterState())
     body_rows = []
     model_views = model_cell_views(result.rows)
+    borda_rank_labels = _rank_display_labels((row.model_name, row.borda_rank) for row in result.rows)
+    mean_rank_labels = _rank_display_labels((row.model_name, row.mean_rank) for row in result.rows)
+    metric_rank_labels = _metric_rank_display_labels(result)
     for row in result.rows:
         hidden = not filter_context.is_visible(row)
         row_class = "leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
@@ -1746,11 +1749,11 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
               {render_model_name_cell(row, model_views[row.model_name])}
-              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{_fmt_rank(row.borda_rank)}</td>
-              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{_fmt_rank(row.mean_rank)}</td>
+              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{borda_rank_labels[row.model_name]}</td>
+              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{mean_rank_labels[row.model_name]}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.borda_score)}</td>
               {mean_cells}
-              {_render_metric_cells(result=result, row=row)}
+              {_render_metric_cells(result=result, row=row, metric_rank_labels=metric_rank_labels)}
               <td class="px-2 py-1 text-left tabular-nums">{row.task_count}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.active_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.total_parameters)}</td>
@@ -2148,11 +2151,16 @@ def _empty_analysis_panel(*, title: str, body: str) -> str:
     """
 
 
-def _render_metric_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+def _render_metric_cells(
+    *,
+    result: LeaderboardResult,
+    row: LeaderboardRow,
+    metric_rank_labels: dict[tuple[str, str], str] | None = None,
+) -> str:
     if result.show_task_ranks:
         values = row.metric_rank_values
         return "".join(
-            f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums">{_fmt_optional_rank(values.get(column))}</td>"""
+            f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums">{_metric_rank_label(row, column, values.get(column), metric_rank_labels)}</td>"""
             for column in result.metric_columns
         )
     if result.show_task_z_scores:
@@ -2289,6 +2297,49 @@ def _fmt_rank(value: float) -> str:
 
 def _fmt_optional_rank(value: float | None) -> str:
     return "" if value is None else _fmt_rank(value)
+
+
+def _metric_rank_label(
+    row: LeaderboardRow,
+    column: str,
+    value: float | None,
+    metric_rank_labels: dict[tuple[str, str], str] | None,
+) -> str:
+    if value is None:
+        return ""
+    if metric_rank_labels is None:
+        return _fmt_rank(value)
+    return metric_rank_labels.get((row.model_name, column), _fmt_rank(value))
+
+
+def _metric_rank_display_labels(result: LeaderboardResult) -> dict[tuple[str, str], str]:
+    if not result.show_task_ranks:
+        return {}
+    labels: dict[tuple[str, str], str] = {}
+    for column in result.metric_columns:
+        column_labels = _rank_display_labels(
+            (row.model_name, row.metric_rank_values.get(column))
+            for row in result.rows
+            if row.metric_rank_values.get(column) is not None
+        )
+        labels.update({(model_name, column): label for model_name, label in column_labels.items()})
+    return labels
+
+
+def _rank_display_labels(items: Iterable[tuple[str, float | None]]) -> dict[str, str]:
+    values_by_key: dict[str, float] = {key: value for key, value in items if value is not None}
+    keys_by_value: dict[float, list[str]] = {}
+    for key, value in values_by_key.items():
+        keys_by_value.setdefault(value, []).append(key)
+    labels: dict[str, str] = {}
+    for value, keys in keys_by_value.items():
+        if len(keys) == 1:
+            labels[keys[0]] = _fmt_rank(value)
+            continue
+        start_rank = int(round(value - ((len(keys) - 1) / 2.0)))
+        for key in keys:
+            labels[key] = f"T{start_rank}"
+    return labels
 
 
 def _fmt_score(value: float | None) -> str:
