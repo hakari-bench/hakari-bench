@@ -190,6 +190,8 @@ def run_or_load_task(
             device=args.device,
             aggregate_metric=args.aggregate_metric,
             embedding_variants=getattr(args, "embedding_variants", []),
+            candidates=dataset.candidates,
+            rerank_top_n=args.rerank_top_n,
         )
     else:
         evaluation = evaluate_dense_task(

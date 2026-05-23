@@ -1761,6 +1761,45 @@ def test_evaluate_late_interaction_task_truncates_variants_after_single_encode()
     assert "ToyData_test_late_interaction_exact_maxsim_truncate_dim_1_ndcg@10" in truncate_eval["metrics"]
 
 
+def test_evaluate_late_interaction_task_records_bm25_top_n_reranking_metrics() -> None:
+    result = evaluate_late_interaction_task(
+        model=FakeLateInteractionModel(),
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        exact_doc_batch_size=2,
+        exact_query_batch_size=2,
+        device="cpu",
+        aggregate_metric="ndcg@10",
+        candidates=_toy_dataset().candidates,
+        rerank_top_n=1,
+    )
+
+    assert result.metrics["ToyData_test_late_interaction_exact_maxsim_ndcg@10"] == pytest.approx(1.0)
+    assert result.rerank_aggregate_metric_value == pytest.approx(0.5)
+    assert result.reranking_evaluations[0]["status"] == "available"
+    assert result.reranking_evaluations[0]["rerank_top_n"] == 1
+    assert result.reranking_evaluations[0]["aggregate_metric_value"] == pytest.approx(0.5)
+    assert result.reranking_evaluations[0]["best_score_name"] == "late_interaction_exact_maxsim_bm25_top1_rerank"
+    assert result.reranking_evaluations[0]["candidate_coverage"] == {
+        "top_k": 1,
+        "query_count": 2,
+        "query_with_relevance_count": 2,
+        "covered_query_count": 1,
+        "query_coverage": 0.5,
+        "relevant_count": 2,
+        "covered_relevant_count": 1,
+        "relevant_coverage": 0.5,
+    }
+    assert result.rerank_metrics["ToyData_test_late_interaction_exact_maxsim_bm25_top1_rerank_ndcg@10"] == pytest.approx(
+        0.5
+    )
+
+
 def test_evaluate_dense_task_records_bm25_top_n_reranking_metrics() -> None:
     result = evaluate_dense_task(
         model=FakeDenseModel(),

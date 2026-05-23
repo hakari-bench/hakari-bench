@@ -478,6 +478,9 @@ def evaluate_late_interaction_task(
     exact_query_batch_size: int = 8,
     aggregate_metric: str = "ndcg@10",
     embedding_variants: list[dict[str, Any]] | None = None,
+    candidates: dict[str, list[str]] | None = None,
+    rerank_top_n: int = 100,
+    metric_names: Sequence[str] | None = None,
 ) -> TaskEvaluation:
     if exact_doc_batch_size <= 0:
         raise ValueError("Late-interaction exact doc batch size must be positive.")
@@ -548,18 +551,106 @@ def evaluate_late_interaction_task(
         qrels=dataset.qrels,
         evaluator_name=dataset.evaluator_name,
         score_name=score_name,
+        metric_names=metric_names,
     )
     metric_seconds = time.perf_counter() - metric_start
     aggregate_metric_value = _aggregate_metric_value_for(metrics, aggregate_metric)
+    rerank_metrics: dict[str, float] = {}
+    reranking_evaluations: list[dict[str, Any]] = []
+    rerank_aggregate_metric_value: float | None = None
+    rerank_score_seconds = 0.0
+    rerank_metric_seconds = 0.0
+    top_rankings = [
+        top_ranking_payload(
+            name="base",
+            ranking_kind="retrieval",
+            embedding_variant_name=None,
+            distance=distance_name,
+            score_name=score_name,
+            rankings=rankings,
+        )
+    ]
+    if candidates is not None:
+        rerank_score_name = f"{score_name}_bm25_top{rerank_top_n}_rerank"
+        rerank_score_start = time.perf_counter()
+        rerank_rankings = _rank_late_interaction_candidate_subset_exact_maxsim(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            candidates=candidates,
+            rerank_top_n=rerank_top_n,
+            doc_batch_size=exact_doc_batch_size,
+            query_batch_size=exact_query_batch_size,
+            device=device,
+            show_progress=show_progress,
+        )
+        rerank_score_seconds = time.perf_counter() - rerank_score_start
+
+        rerank_metric_start = time.perf_counter()
+        rerank_metrics = compute_ir_metrics(
+            rankings=rerank_rankings,
+            qrels=dataset.qrels,
+            evaluator_name=dataset.evaluator_name,
+            score_name=rerank_score_name,
+            metric_names=metric_names,
+        )
+        rerank_metric_seconds = time.perf_counter() - rerank_metric_start
+        rerank_aggregate_metric_value = _aggregate_metric_value_for(rerank_metrics, aggregate_metric)
+        reranking_evaluations = [
+            _candidate_reranking_evaluation(
+                [
+                    {
+                        "distance": distance_name,
+                        "score_name": rerank_score_name,
+                        "aggregate_metric": aggregate_metric,
+                        "aggregate_metric_value": rerank_aggregate_metric_value,
+                        "metrics": rerank_metrics,
+                        "timing": {
+                            "score_and_topk_seconds": float(rerank_score_seconds),
+                            "metric_compute_seconds": float(rerank_metric_seconds),
+                            "pure_compute_seconds": float(rerank_score_seconds + rerank_metric_seconds),
+                        },
+                    }
+                ],
+                rerank_top_n=rerank_top_n,
+                aggregate_metric=aggregate_metric,
+                candidate_coverage=candidate_coverage_for_qrels(
+                    qrels=dataset.qrels,
+                    candidates=candidates,
+                    top_k=rerank_top_n,
+                ),
+            )
+        ]
+        top_rankings.append(
+            top_ranking_payload(
+                name="base",
+                ranking_kind="candidate_rerank",
+                embedding_variant_name=None,
+                distance=distance_name,
+                score_name=rerank_score_name,
+                rankings=rerank_rankings,
+            )
+        )
+    else:
+        reranking_evaluations = [
+            _candidate_reranking_evaluation(
+                [],
+                rerank_top_n=rerank_top_n,
+                aggregate_metric=aggregate_metric,
+            )
+        ]
 
     base_timing = {
         "query_embedding_seconds": float(query_seconds),
         "corpus_embedding_seconds": float(corpus_seconds),
-        "score_and_topk_seconds": float(score_seconds),
-        "metric_compute_seconds": float(metric_seconds),
+        "score_and_topk_seconds": float(score_seconds + rerank_score_seconds),
+        "metric_compute_seconds": float(metric_seconds + rerank_metric_seconds),
         "embedding_variant_score_and_topk_seconds": 0.0,
         "embedding_variant_metric_compute_seconds": 0.0,
-        "pure_compute_seconds": float(query_seconds + corpus_seconds + score_seconds + metric_seconds),
+        "pure_compute_seconds": float(
+            query_seconds + corpus_seconds + score_seconds + metric_seconds + rerank_score_seconds + rerank_metric_seconds
+        ),
     }
     embedding_evaluation = _embedding_evaluation_payload(
         name="base",
@@ -592,16 +683,6 @@ def evaluate_late_interaction_task(
     )
     embedding_evaluation["index"] = index_payload
     embedding_evaluations = [embedding_evaluation]
-    top_rankings = [
-        top_ranking_payload(
-            name="base",
-            ranking_kind="retrieval",
-            embedding_variant_name=None,
-            distance=distance_name,
-            score_name=score_name,
-            rankings=rankings,
-        )
-    ]
 
     variant_score_seconds = 0.0
     variant_metric_seconds = 0.0
@@ -702,11 +783,14 @@ def evaluate_late_interaction_task(
 
     return TaskEvaluation(
         metrics=metrics,
+        rerank_metrics=rerank_metrics,
+        reranking_evaluations=reranking_evaluations,
+        rerank_aggregate_metric_value=rerank_aggregate_metric_value,
         timing={
             "query_embedding_seconds": float(query_seconds),
             "corpus_embedding_seconds": float(corpus_seconds),
-            "score_and_topk_seconds": float(score_seconds),
-            "metric_compute_seconds": float(metric_seconds),
+            "score_and_topk_seconds": float(score_seconds + rerank_score_seconds),
+            "metric_compute_seconds": float(metric_seconds + rerank_metric_seconds),
             "embedding_variant_score_and_topk_seconds": float(variant_score_seconds),
             "embedding_variant_metric_compute_seconds": float(variant_metric_seconds),
             "pure_compute_seconds": float(
@@ -714,6 +798,8 @@ def evaluate_late_interaction_task(
                 + corpus_seconds
                 + score_seconds
                 + metric_seconds
+                + rerank_score_seconds
+                + rerank_metric_seconds
                 + variant_score_seconds
                 + variant_metric_seconds
             ),
@@ -809,6 +895,50 @@ def _rank_late_interaction_exact_maxsim(
         ranked_indices = sorted(range(len(corpus_ids)), key=lambda index: (-query_scores[index], corpus_ids[index]))
         rankings[query_id] = [corpus_ids[index] for index in ranked_indices[:top_k]]
     return rankings
+
+
+def _rank_late_interaction_candidate_subset_exact_maxsim(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    candidates: dict[str, list[str]],
+    rerank_top_n: int,
+    doc_batch_size: int,
+    query_batch_size: int,
+    device: str | None,
+    show_progress: bool,
+) -> dict[str, list[str]]:
+    corpus_index_by_id = {corpus_id: index for index, corpus_id in enumerate(corpus_ids)}
+    rankings: dict[str, list[str]] = {}
+    for query_index, query_id in enumerate(query_ids):
+        candidate_ids = [doc_id for doc_id in candidates.get(query_id, []) if doc_id in corpus_index_by_id][:rerank_top_n]
+        if not candidate_ids:
+            rankings[query_id] = []
+            continue
+        candidate_indices = [corpus_index_by_id[doc_id] for doc_id in candidate_ids]
+        reranked = _rank_late_interaction_exact_maxsim(
+            query_ids=[query_id],
+            corpus_ids=candidate_ids,
+            query_embeddings=_select_late_interaction_embeddings(query_embeddings, [query_index]),
+            corpus_embeddings=_select_late_interaction_embeddings(corpus_embeddings, candidate_indices),
+            top_k=len(candidate_ids),
+            doc_batch_size=doc_batch_size,
+            query_batch_size=query_batch_size,
+            device=device,
+            show_progress=show_progress,
+        )
+        rankings[query_id] = reranked[query_id]
+    return rankings
+
+
+def _select_late_interaction_embeddings(embeddings: Any, indices: list[int]) -> Any:
+    if isinstance(embeddings, torch.Tensor):
+        return embeddings[indices]
+    if isinstance(embeddings, np.ndarray):
+        return embeddings[indices]
+    return [embeddings[index] for index in indices]
 
 
 def _to_late_interaction_tensor(embedding: Any, *, device: torch.device) -> torch.Tensor:
