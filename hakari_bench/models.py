@@ -636,9 +636,27 @@ def _load_colbert_sentence_transformers_config(model_name_or_path: str, *, revis
         return {}
     if not isinstance(payload, dict):
         return {}
-    if str(payload.get("model_type", "")).lower() != "colbert":
+    if not _looks_like_colbert_sentence_transformers_config(payload):
         return {}
     return payload
+
+
+def _looks_like_colbert_sentence_transformers_config(payload: dict[str, Any]) -> bool:
+    if str(payload.get("model_type", "")).lower() == "colbert":
+        return True
+    if str(payload.get("similarity_fn_name", "")).lower() == "maxsim":
+        return True
+    return any(
+        key in payload
+        for key in [
+            "query_prefix",
+            "document_prefix",
+            "query_length",
+            "document_length",
+            "do_query_expansion",
+            "attend_to_expansion_tokens",
+        ]
+    )
 
 
 def _metadata_str(metadata: dict[str, Any], key: str) -> str | None:

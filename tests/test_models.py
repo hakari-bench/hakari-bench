@@ -183,6 +183,52 @@ def test_load_model_uses_late_interaction_colbert_config_defaults(
     ]
 
 
+def test_load_model_accepts_late_interaction_config_without_model_type(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    config_path = tmp_path / "config_sentence_transformers.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "similarity_fn_name": "MaxSim",
+                "query_prefix": "[Q] ",
+                "document_prefix": "[D] ",
+                "query_length": 48,
+                "document_length": 300,
+                "do_query_expansion": True,
+            }
+        ),
+        encoding="utf-8",
+    )
+    calls: list[dict[str, object]] = []
+
+    class FakeColBERT(torch.nn.Module):
+        def __init__(self, model_name_or_path: str, **kwargs: object) -> None:
+            super().__init__()
+            calls.append({"model_name_or_path": model_name_or_path, **kwargs})
+            self.projection = torch.nn.Linear(2, 2)
+
+    monkeypatch.setattr("huggingface_hub.hf_hub_download", lambda *_args, **_kwargs: str(config_path))
+    monkeypatch.setattr("hakari_bench.models._import_pylate_colbert", lambda: FakeColBERT)
+
+    model = load_model(
+        ModelLoadConfig(
+            model_name_or_path="lightonai/GTE-ModernColBERT-v1",
+            model_type="late-interaction",
+            dtype="fp32",
+            device="cpu",
+        )
+    )
+
+    assert isinstance(model, FakeColBERT)
+    assert calls[0]["query_length"] == 48
+    assert calls[0]["document_length"] == 300
+    assert calls[0]["query_prefix"] == "[Q] "
+    assert calls[0]["document_prefix"] == "[D] "
+    assert calls[0]["do_query_expansion"] is True
+
+
 def test_load_model_defaults_late_interaction_query_expansion_to_false(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
