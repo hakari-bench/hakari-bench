@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+from datetime import datetime, timezone
 from functools import lru_cache
 import hashlib
 from html import escape
@@ -543,6 +544,7 @@ def render_page(
     favicon_url = _asset_url("favicon.png")
     htmx_url = _asset_url("htmx.min.js")
     viewer_js_url = _asset_url("viewer.js")
+    latest_update = _render_latest_update(summary.latest_finished_at_utc if summary else None)
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -562,11 +564,11 @@ def render_page(
       <h1 class="flex items-center gap-2 text-2xl font-semibold">
         <img src="{favicon_url}" alt="" aria-hidden="true" class="h-8 w-8 shrink-0">
         <span>HAKARI-bench leaderboard</span>
+        {latest_update}
       </h1>
       <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
       <p class="mt-2 max-w-4xl text-sm text-zinc-600">Compare multilingual retrieval models, inspect compression variants, and audit reranking and Nano subset diagnostics from the DuckDB result warehouse.</p>
     </header>
-    {render_summary_cards(summary or ViewerSummary())}
     <section
       id="leaderboard-panel"
       hx-get="{_leaderboard_url(query)}"
@@ -578,6 +580,7 @@ def render_page(
     {render_leaderboard_loading_toast()}
     {render_global_tooltip()}
   </main>
+  <footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-xs text-zinc-500 sm:px-6">HAKARI-bench leaderboard</footer>
 </body>
 </html>"""
 
@@ -615,6 +618,30 @@ def render_global_tooltip() -> str:
     <div id="hakari-global-tooltip" class="global-tooltip fixed border border-zinc-300 bg-white px-2 py-1 text-xs font-medium text-zinc-800 shadow-sm"
          role="tooltip" hidden></div>
     """
+
+
+def _render_latest_update(latest_finished_at_utc: str | None) -> str:
+    label = _latest_update_label(latest_finished_at_utc)
+    if not label:
+        return ""
+    return f"""<span class="text-xs font-normal text-zinc-500">{escape(label)}</span>"""
+
+
+def _latest_update_label(latest_finished_at_utc: str | None) -> str:
+    if not latest_finished_at_utc:
+        return ""
+    value = latest_finished_at_utc.strip()
+    if not value:
+        return ""
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        timestamp = value.split(".", 1)[0]
+        timestamp = timestamp.removesuffix("+00:00").removesuffix("Z")
+        return f"Latest update: {timestamp}(UTC)" if timestamp else ""
+    if parsed.tzinfo is not None:
+        parsed = parsed.astimezone(timezone.utc)
+    return f"Latest update: {parsed.strftime('%Y-%m-%dT%H:%M:%S')}(UTC)"
 
 
 def _icon_svg(name: str, *, class_name: str = "hakari-icon") -> str:
@@ -758,7 +785,6 @@ def render_leaderboard(
     csv_query = urlencode(state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state), doseq=True)
     return f"""
 <div>
-  {render_analysis_shell(view=result.view_name)}
   {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
   {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
@@ -782,6 +808,7 @@ def render_leaderboard(
       {render_table_body(result=result, filter_context=filter_context)}
     </table>
   </div>
+  {render_analysis_shell(view=result.view_name)}
   {render_model_detail_modal()}
   {render_doc_summary_modal()}
 </div>

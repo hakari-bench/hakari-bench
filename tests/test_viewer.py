@@ -19,9 +19,11 @@ from hakari_bench.viewer.app import (
     _view_group,
     _z_score_bucket_class,
     create_app,
+    render_page,
     render_table_body,
     render_table_head,
 )
+from hakari_bench.viewer.analytics import ViewerSummary
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.leaderboard import (
@@ -530,6 +532,7 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    config = load_viewer_config(config_dir)
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
     response = TestClient(app).get("/")
@@ -547,9 +550,9 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     ) in response.text
     assert "DuckDB:" not in response.text
     assert str(db_path) not in response.text
-    assert "Benchmark coverage" in response.text
-    assert 'data-icon="bar-chart-3"' in response.text
-    assert "Models" in response.text
+    assert "Benchmark coverage" not in response.text
+    assert 'data-icon="bar-chart-3"' not in response.text
+    assert 'data-testid="summary-card-models"' not in response.text
     assert re.search(r'<link rel="stylesheet" href="/assets/app\.css\?v=[0-9a-f]{12}">', response.text)
     assert re.search(r'<link rel="icon" type="image/png" href="/assets/favicon\.png\?v=[0-9a-f]{12}">', response.text)
     assert (
@@ -572,10 +575,13 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert "https://cdn.tailwindcss.com" not in response.text
     assert "https://unpkg.com/htmx.org" not in response.text
     assert 'hx-get="/leaderboard?view=Overall' in response.text
+    assert "<footer" in response.text
+    assert response.text.index('id="leaderboard-panel"') < response.text.index("<footer")
 
     leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
     assert leaderboard_response.status_code == 200
     assert "Analysis views" in leaderboard_response.text
+    assert leaderboard_response.text.index("leaderboard-table-scroll") < leaderboard_response.text.index("Analysis views")
     assert 'data-icon="activity"' in leaderboard_response.text
     assert 'data-icon="git-compare-arrows"' in leaderboard_response.text
     assert 'data-icon="arrow-down-up"' in leaderboard_response.text
@@ -584,7 +590,15 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert "Reranking diagnostics" in leaderboard_response.text
     assert "Dataset diagnostics" in leaderboard_response.text
     assert 'hx-get="/analysis?panel=variants&amp;view=BenchA"' in leaderboard_response.text
-    assert 'data-testid="summary-card-models"' in response.text
+
+    page_with_latest = render_page(
+        viewer_config=config,
+        duckdb_path=db_path,
+        summary=ViewerSummary(latest_finished_at_utc="2026-05-22T20:27:54.839377+00:00"),
+    )
+    assert "Latest update: 2026-05-22T20:27:54(UTC)" in page_with_latest
+    assert page_with_latest.index("HAKARI-bench leaderboard</span>") < page_with_latest.index("Latest update:")
+    assert "Latest result:" not in page_with_latest
 
 
 def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
