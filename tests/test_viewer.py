@@ -576,12 +576,16 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert "https://unpkg.com/htmx.org" not in response.text
     assert 'hx-get="/leaderboard?view=Overall' in response.text
     assert "<footer" in response.text
+    assert '<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-center text-xs text-zinc-500 sm:px-6">' in response.text
     assert response.text.index('id="leaderboard-panel"') < response.text.index("<footer")
 
     leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
     assert leaderboard_response.status_code == 200
     assert "Analysis views" in leaderboard_response.text
     assert leaderboard_response.text.index("leaderboard-table-scroll") < leaderboard_response.text.index("Analysis views")
+    assert '<section class="mt-6 mb-5 border border-zinc-200 bg-white" aria-label="Analysis views">' in leaderboard_response.text
+    assert 'class="border-t border-zinc-200 px-3 py-3 text-sm text-zinc-600"' not in leaderboard_response.text
+    assert 'id="analysis-panel" class="px-3 pb-3"' in leaderboard_response.text
     assert 'data-icon="activity"' in leaderboard_response.text
     assert 'data-icon="git-compare-arrows"' in leaderboard_response.text
     assert 'data-icon="arrow-down-up"' in leaderboard_response.text

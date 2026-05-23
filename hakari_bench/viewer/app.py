@@ -580,7 +580,7 @@ def render_page(
     {render_leaderboard_loading_toast()}
     {render_global_tooltip()}
   </main>
-  <footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-xs text-zinc-500 sm:px-6">HAKARI-bench leaderboard</footer>
+  <footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-center text-xs text-zinc-500 sm:px-6">HAKARI-bench leaderboard</footer>
 </body>
 </html>"""
 
@@ -749,23 +749,23 @@ def render_analysis_shell(*, view: str) -> str:
     rerank_query = urlencode({"panel": "reranking", "view": view})
     dataset_query = urlencode({"panel": "datasets", "view": view})
     return f"""
-    <section class="mb-5 border border-zinc-200 bg-white" aria-label="Analysis views">
-      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 px-3 py-2">
-        <div>
+    <section class="mt-6 mb-5 border border-zinc-200 bg-white" aria-label="Analysis views">
+      <div class="px-3 pt-3">
+        <div class="mb-3">
           {_section_title(icon="activity", text="Analysis views")}
           <p class="text-sm text-zinc-600">Use these panels for paper-facing variant, reranking, and Nano subset audits.</p>
         </div>
-        <div class="flex flex-wrap gap-2">
-          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+        <div class="grid gap-2 sm:grid-cols-3">
+          <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
                   hx-get="/analysis?{escape(variant_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("git-compare-arrows", class_name="hakari-icon action-icon shrink-0")}<span>Variant impact</span></button>
-          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+          <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
                   hx-get="/analysis?{escape(rerank_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("arrow-down-up", class_name="hakari-icon action-icon shrink-0")}<span>Reranking diagnostics</span></button>
-          <button type="button" class="inline-flex items-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
+          <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
                   hx-get="/analysis?{escape(dataset_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("database", class_name="hakari-icon action-icon shrink-0")}<span>Dataset diagnostics</span></button>
         </div>
       </div>
-      <div id="analysis-panel">
-        <div class="border-t border-zinc-200 px-3 py-3 text-sm text-zinc-600">Select an analysis view to load paper-facing diagnostics for the current benchmark view.</div>
+      <div id="analysis-panel" class="px-3 pb-3">
+        <div class="mt-3 border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-600">Select an analysis view to load paper-facing diagnostics for the current benchmark view.</div>
       </div>
     </section>
     """
