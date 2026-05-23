@@ -64,6 +64,7 @@ exclude = ["tests*"]
 [tool.uv]
 package = true
 exclude-newer = "1 week"
+exclude-newer-package = { transformers = "2026-05-22T00:00:00Z" }
 conflicts = [
     [
         { group = "pylate" },
