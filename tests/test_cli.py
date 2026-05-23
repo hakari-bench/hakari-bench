@@ -169,6 +169,21 @@ def test_does_not_warn_for_bm25_evaluation(capsys) -> None:
     assert capsys.readouterr().err == ""
 
 
+def test_parse_args_accepts_benchmark_docs_validation_command() -> None:
+    args = parse_args(["validate-benchmark-docs"])
+
+    assert args.command == "validate-benchmark-docs"
+    assert args.docs_root.as_posix() == "docs/benchmark_tasks"
+    assert args.paths == []
+
+
+def test_parse_args_accepts_benchmark_docs_validation_alias() -> None:
+    args = parse_args(["validation-benchmark-docs", "docs/benchmark_tasks/NanoBEIR-en/NanoNQ.md"])
+
+    assert args.command == "validation-benchmark-docs"
+    assert [path.as_posix() for path in args.paths] == ["docs/benchmark_tasks/NanoBEIR-en/NanoNQ.md"]
+
+
 def test_parse_args_normalizes_local_model_alias() -> None:
     args = parse_args(["evaluate", "dense", "--model", "/local_model_A/", "--model-alias", "model_A"])
 

@@ -10,11 +10,11 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-import yaml
+from hakari_bench.benchmark_docs import BENCHMARK_TASK_METADATA_RE, load_benchmark_task_metadata
 
 
 EXAMPLE_SECTION_RE = re.compile(r"(## Example Data\n\n).*?(?=\n## Dataset Information)", re.DOTALL)
-METADATA_RE = re.compile(r"<!-- benchmark-task-metadata:v1 -->\s*```yaml\n(.*?)\n```", re.DOTALL)
+METADATA_RE = BENCHMARK_TASK_METADATA_RE
 DEFAULT_TEXT_LIMIT = 225
 DEFAULT_SAMPLE_SIZE = 5
 DEFAULT_SEED = 42
@@ -193,19 +193,8 @@ def _load_dataset_split(dataset_id: str, config_name: str, split_name: str) -> A
 
 
 def _task_reference_from_doc(path: Path) -> TaskReference:
-    text = path.read_text(encoding="utf-8")
-    match = METADATA_RE.search(text)
-    if not match:
-        raise ValueError(f"missing benchmark task metadata: {path}")
-    metadata = yaml.safe_load(match.group(1))
-    task_metadata = metadata.get("benchmark_task_metadata") if isinstance(metadata, dict) else None
-    if not isinstance(task_metadata, dict):
-        raise ValueError(f"invalid benchmark task metadata: {path}")
-    dataset_id = task_metadata.get("dataset_id")
-    split_name = task_metadata.get("split_name") or task_metadata.get("task_name")
-    if not dataset_id or not split_name:
-        raise ValueError(f"metadata must include dataset_id and split_name: {path}")
-    return TaskReference(dataset_id=str(dataset_id), split_name=str(split_name))
+    metadata = load_benchmark_task_metadata(path)
+    return TaskReference(dataset_id=metadata.dataset_id, split_name=metadata.split_name or metadata.task_name)
 
 
 def _replace_example_section(text: str, table: str) -> str:

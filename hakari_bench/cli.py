@@ -18,6 +18,7 @@ from hakari_bench.bm25 import (
     run_or_load_bm25_task,
 )
 from hakari_bench.cli_schema import BuildCandidatesParamsJson, EvaluateParamsJson
+from hakari_bench.benchmark_docs import validate_benchmark_task_docs
 from hakari_bench.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
 from hakari_bench.embedding_variants import (
     TORCH_RESCORE_SCORE_REPRESENTATION,
@@ -149,6 +150,24 @@ def build_parser() -> argparse.ArgumentParser:
     web.add_argument("--hf-dataset-path", default=None, help="DuckDB file path inside the Hugging Face dataset repo.")
     web.add_argument("--hf-dataset-revision", default=None, help="Hugging Face dataset revision to download.")
     web.add_argument("--viewer-config-dir", default="config/viewer", help="Viewer YAML config directory.")
+
+    validate_docs = subparsers.add_parser(
+        "validate-benchmark-docs",
+        aliases=["validation-benchmark-docs"],
+        help="Validate machine-readable benchmark task documentation metadata.",
+    )
+    validate_docs.add_argument(
+        "--docs-root",
+        type=Path,
+        default=Path("docs/benchmark_tasks"),
+        help="Benchmark task docs root used when no explicit paths are supplied.",
+    )
+    validate_docs.add_argument(
+        "paths",
+        nargs="*",
+        type=Path,
+        help="Optional Markdown files or directories to validate. Defaults to all task docs under --docs-root.",
+    )
     return parser
 
 
@@ -1348,7 +1367,19 @@ def main(argv: list[str] | None = None) -> None:
     if args.command == "web":
         run_web(args)
         return
+    if args.command in {"validate-benchmark-docs", "validation-benchmark-docs"}:
+        run_validate_benchmark_docs(args)
+        return
     raise ValueError(f"Unsupported command: {args.command}")
+
+
+def run_validate_benchmark_docs(args: argparse.Namespace) -> None:
+    metadata, issues = validate_benchmark_task_docs(args.paths, docs_root=args.docs_root)
+    if issues:
+        for issue in issues:
+            print(f"{issue.path}: {issue.message}", file=sys.stderr)
+        raise SystemExit(1)
+    print(f"Validated {len(metadata)} benchmark task docs.")
 
 
 if __name__ == "__main__":

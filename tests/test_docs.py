@@ -4,6 +4,7 @@ import re
 import shlex
 from pathlib import Path
 
+from hakari_bench.benchmark_docs import load_benchmark_task_metadata, validate_benchmark_task_docs
 from hakari_bench.cli import parse_args
 
 
@@ -39,6 +40,19 @@ def test_nano_readme_template_documents_fill_requirements() -> None:
     assert "{{BM25_SCORE_ROWS}}" in text
     assert "Do not include this checklist in the actual dataset README." in text
     assert "- [ ] every config lists the same Nano splits" in text
+
+
+def test_benchmark_task_metadata_schema_parses_yaml_boolean_language() -> None:
+    metadata = load_benchmark_task_metadata(Path("docs/benchmark_tasks/NanoMTEB-Scandinavian/nor_quad.md"))
+
+    assert metadata.language == "no"
+
+
+def test_benchmark_task_docs_metadata_validate() -> None:
+    metadata, issues = validate_benchmark_task_docs()
+
+    assert not issues
+    assert len(metadata) > 500
 
 
 def _normalize_shell_command(block: str) -> str:
