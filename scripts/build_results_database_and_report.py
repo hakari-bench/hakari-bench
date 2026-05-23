@@ -50,7 +50,7 @@ def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list
 
 TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
-WAREHOUSE_SCHEMA_VERSION = "5"
+WAREHOUSE_SCHEMA_VERSION = "6"
 WAREHOUSE_COMPATIBILITY_LEVEL = "current"
 WAREHOUSE_TABLES = (
     "meta_database",
@@ -110,6 +110,12 @@ TASK_RESULT_COLUMNS = (
     "query_encode_task",
     "document_encode_task",
     "trust_remote_code",
+    "late_interaction_query_length",
+    "late_interaction_document_length",
+    "late_interaction_query_prefix",
+    "late_interaction_document_prefix",
+    "late_interaction_query_expansion",
+    "late_interaction_attend_to_expansion_tokens",
     "torch_version",
     "transformers_version",
     "sentence_transformers_version",
@@ -549,6 +555,7 @@ def load_results(
         model_dir = selected_result.model_dir
         model_name = selected_result.model_name
         model_source = model.get("source", {}) if isinstance(model, dict) else {}
+        late_interaction = _late_interaction_metadata(model if isinstance(model, dict) else {}, evaluation)
         model_revision = _model_revision_value(model_source, key="revision")
         model_revision_requested = _model_revision_value(model_source, key="revision_requested")
         dataset_id = selected_result.dataset_id
@@ -598,6 +605,16 @@ def load_results(
             "query_encode_task": _str_or_none(config.get("query_encode_task")),
             "document_encode_task": _str_or_none(config.get("document_encode_task")),
             "trust_remote_code": _bool_or_none(model.get("trust_remote_code")) if isinstance(model, dict) else None,
+            "late_interaction_query_length": _int_or_none(late_interaction.get("query_length")),
+            "late_interaction_document_length": _int_or_none(late_interaction.get("document_length")),
+            "late_interaction_query_prefix": _str_or_none(late_interaction.get("query_prefix")),
+            "late_interaction_document_prefix": _str_or_none(late_interaction.get("document_prefix")),
+            "late_interaction_query_expansion": _bool_or_none(
+                late_interaction.get("do_query_expansion", late_interaction.get("query_expansion"))
+            ),
+            "late_interaction_attend_to_expansion_tokens": _bool_or_none(
+                late_interaction.get("attend_to_expansion_tokens")
+            ),
             "torch_version": package_versions.get("torch"),
             "transformers_version": package_versions.get("transformers"),
             "sentence_transformers_version": package_versions.get("sentence-transformers"),
@@ -935,6 +952,12 @@ def _fetch_task_result_rows(con: duckdb.DuckDBPyConnection) -> list[TaskResult]:
         "query_encode_task",
         "document_encode_task",
         "trust_remote_code",
+        "late_interaction_query_length",
+        "late_interaction_document_length",
+        "late_interaction_query_prefix",
+        "late_interaction_document_prefix",
+        "late_interaction_query_expansion",
+        "late_interaction_attend_to_expansion_tokens",
         "torch_version",
         "transformers_version",
         "sentence_transformers_version",
@@ -1192,6 +1215,8 @@ def _with_model_card_metadata(model: dict[str, Any], *, model_cards: dict[str, d
         updated["embedding_parameters"] = input_embedding_parameters
     if _int_or_none(updated.get("transformer_parameters")) is None and card_active_parameters is not None:
         updated["transformer_parameters"] = card_active_parameters
+    if not isinstance(updated.get("late_interaction"), dict) and isinstance(card.get("late_interaction"), dict):
+        updated["late_interaction"] = card["late_interaction"]
     return updated
 
 
@@ -1838,6 +1863,12 @@ def write_duckdb(
                 attn_implementation VARCHAR,
                 query_prompt VARCHAR, document_prompt VARCHAR, query_prompt_name VARCHAR, document_prompt_name VARCHAR,
                 query_encode_task VARCHAR, document_encode_task VARCHAR, trust_remote_code BOOLEAN,
+                late_interaction_query_length INTEGER,
+                late_interaction_document_length INTEGER,
+                late_interaction_query_prefix VARCHAR,
+                late_interaction_document_prefix VARCHAR,
+                late_interaction_query_expansion BOOLEAN,
+                late_interaction_attend_to_expansion_tokens BOOLEAN,
                 torch_version VARCHAR, transformers_version VARCHAR,
                 sentence_transformers_version VARCHAR, started_at_utc VARCHAR, finished_at_utc VARCHAR,
                 evaluated_at_utc VARCHAR, duration_seconds_including_dataset_load DOUBLE, wall_seconds DOUBLE
@@ -1880,6 +1911,12 @@ def write_duckdb(
                 "query_encode_task",
                 "document_encode_task",
                 "trust_remote_code",
+                "late_interaction_query_length",
+                "late_interaction_document_length",
+                "late_interaction_query_prefix",
+                "late_interaction_document_prefix",
+                "late_interaction_query_expansion",
+                "late_interaction_attend_to_expansion_tokens",
                 "torch_version",
                 "transformers_version",
                 "sentence_transformers_version",
@@ -2847,6 +2884,12 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
             tr.query_encode_task,
             tr.document_encode_task,
             tr.trust_remote_code,
+            tr.late_interaction_query_length,
+            tr.late_interaction_document_length,
+            tr.late_interaction_query_prefix,
+            tr.late_interaction_document_prefix,
+            tr.late_interaction_query_expansion,
+            tr.late_interaction_attend_to_expansion_tokens,
             NULL::VARCHAR AS candidate_source,
             NULL::VARCHAR AS candidate_ranking,
             NULL::INTEGER AS rerank_top_k,
@@ -2893,6 +2936,12 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
             tr.query_encode_task,
             tr.document_encode_task,
             tr.trust_remote_code,
+            tr.late_interaction_query_length,
+            tr.late_interaction_document_length,
+            tr.late_interaction_query_prefix,
+            tr.late_interaction_document_prefix,
+            tr.late_interaction_query_expansion,
+            tr.late_interaction_attend_to_expansion_tokens,
             td.candidate_source,
             td.candidate_ranking,
             td.rerank_top_k,
@@ -2953,6 +3002,12 @@ def _create_viewer_task_results_table(con: duckdb.DuckDBPyConnection) -> None:
             fts.query_encode_task,
             fts.document_encode_task,
             fts.trust_remote_code,
+            fts.late_interaction_query_length,
+            fts.late_interaction_document_length,
+            fts.late_interaction_query_prefix,
+            fts.late_interaction_document_prefix,
+            fts.late_interaction_query_expansion,
+            fts.late_interaction_attend_to_expansion_tokens,
             fts.embedding_variant_name,
             fts.embedding_dim,
             fts.quantization,
@@ -3508,6 +3563,19 @@ def render_html(*, data_json: str) -> str:
 def mean(values: Any) -> float:
     vals = list(values)
     return sum(vals) / len(vals) if vals else 0.0
+
+
+def _late_interaction_metadata(model: dict[str, Any], evaluation: dict[str, Any]) -> dict[str, Any]:
+    model_section = model.get("late_interaction")
+    evaluation_section = evaluation.get("late_interaction")
+    merged: dict[str, Any] = {}
+    if isinstance(model_section, dict):
+        merged.update(model_section)
+    if isinstance(evaluation_section, dict):
+        # Per-run evaluation options describe the actual run and should override
+        # model defaults when both are present.
+        merged.update({key: value for key, value in evaluation_section.items() if value is not None})
+    return merged
 
 
 def _int_or_none(value: Any) -> int | None:

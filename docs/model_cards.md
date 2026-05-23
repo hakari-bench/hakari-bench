@@ -40,6 +40,25 @@ The `from-model-card` evaluator reads `method`, `source`, `runtime`,
 options such as batch size, device, prompt options, candidate ranking, and output
 directory can still be supplied on the command line.
 
+Late-interaction model cards may also include a `late_interaction` section for
+ColBERT-style settings that should be visible in the leaderboard viewer, for
+example:
+
+```yaml
+late_interaction:
+  architecture: colbert
+  scoring: maxsim
+  query_prefix: "[Q] "
+  document_prefix: "[D] "
+  query_length: 48
+  document_length: 512
+  do_query_expansion: false
+  attend_to_expansion_tokens: false
+```
+
+The viewer uses this section to populate Model Details when older DuckDB builds
+do not carry these runtime fields directly.
+
 If a card sets `runtime.trust_remote_code: true`, the card must also include
 `runtime.remote_code_approved: true` and `source.revision` must be the full
 40-character Hugging Face commit SHA that was reviewed. Short revisions,

@@ -839,6 +839,7 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
                     "dtype": "bf16",
                     "attn_implementation": "flash_attention_2",
                     "trust_remote_code": True,
+                    "late_interaction": {"do_query_expansion": False},
                 },
                 "config": {
                     "query_prompt": "query: ",
@@ -870,6 +871,13 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
                 "evaluation": {
                     "aggregate_metric": "ndcg@10",
                     "aggregate_metric_value": 0.42,
+                    "late_interaction": {
+                        "query_length": 48,
+                        "document_length": 512,
+                        "query_prefix": "[Q] ",
+                        "document_prefix": "[D] ",
+                        "attend_to_expansion_tokens": False,
+                    },
                     "evaluated_at_utc": "2026-04-29T00:00:00+00:00",
                 },
                 "metrics": {"ja_cwir_ndcg@10": 0.42},
@@ -933,6 +941,12 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert rows[0].query_prompt == "query: "
     assert rows[0].document_prompt == "passage: "
     assert rows[0].trust_remote_code is True
+    assert rows[0].late_interaction_query_length == 48
+    assert rows[0].late_interaction_document_length == 512
+    assert rows[0].late_interaction_query_prefix == "[Q] "
+    assert rows[0].late_interaction_document_prefix == "[D] "
+    assert rows[0].late_interaction_query_expansion is False
+    assert rows[0].late_interaction_attend_to_expansion_tokens is False
     assert len(metric_rows) == 1
     assert len(diagnostic_rows) == 1
     assert diagnostic_rows[0].base_score == 0.42

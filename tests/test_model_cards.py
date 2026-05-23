@@ -52,6 +52,32 @@ def test_model_card_from_metadata_applies_parameter_overrides() -> None:
     assert card["target"] == {"datasets": ["hakari-bench/NanoBEIR-en"]}
 
 
+def test_model_card_from_metadata_preserves_late_interaction_settings() -> None:
+    metadata = {
+        "method": "late-interaction",
+        "id": "lightonai/ColBERT-Zero",
+        "source": {"type": "huggingface", "name": "lightonai/ColBERT-Zero"},
+        "late_interaction": {
+            "architecture": "colbert",
+            "scoring": "maxsim",
+            "query_prefix": "[Q] ",
+            "document_prefix": "[D] ",
+            "query_length": 39,
+            "document_length": 519,
+            "do_query_expansion": False,
+            "attend_to_expansion_tokens": False,
+        },
+    }
+
+    card = model_cards.model_card_from_metadata(
+        metadata,
+        truncate_dims=None,
+        overrides=model_cards.ModelCardOverrides(),
+    )
+
+    assert card["late_interaction"] == metadata["late_interaction"]
+
+
 def test_collect_model_cards_from_results_excludes_bekko_and_bm25(tmp_path: Path) -> None:
     _write_result(
         tmp_path / "BAAI__bge-m3" / "hakari-bench__NanoBEIR-en" / "arguana.json",
@@ -278,6 +304,9 @@ def test_static_model_cards_cover_latest_leaderboard_models() -> None:
         assert card["method"] == method
         assert card["parameters"]["total"] > 0
         assert card["parameters"]["input_embedding"] >= 0
+        if method == "late-interaction":
+            assert card["late_interaction"]["architecture"] == "colbert"
+            assert card["late_interaction"]["scoring"] == "maxsim"
         assert card["parameters"]["active"] >= 0
         assert card["source"]["revision"]
         assert card["target"]["datasets"]

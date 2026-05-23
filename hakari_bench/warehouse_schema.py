@@ -36,6 +36,12 @@ class TaskResultRow(WarehouseModel):
     query_encode_task: str | None = None
     document_encode_task: str | None = None
     trust_remote_code: bool | None = None
+    late_interaction_query_length: int | None = None
+    late_interaction_document_length: int | None = None
+    late_interaction_query_prefix: str | None = None
+    late_interaction_document_prefix: str | None = None
+    late_interaction_query_expansion: bool | None = None
+    late_interaction_attend_to_expansion_tokens: bool | None = None
     torch_version: str | None = None
     transformers_version: str | None = None
     sentence_transformers_version: str | None = None
@@ -86,6 +92,12 @@ class TaskResultRow(WarehouseModel):
             self.query_encode_task,
             self.document_encode_task,
             self.trust_remote_code,
+            self.late_interaction_query_length,
+            self.late_interaction_document_length,
+            self.late_interaction_query_prefix,
+            self.late_interaction_document_prefix,
+            self.late_interaction_query_expansion,
+            self.late_interaction_attend_to_expansion_tokens,
             self.torch_version,
             self.transformers_version,
             self.sentence_transformers_version,

@@ -212,6 +212,12 @@ def _model_metadata(
         "attention": row.attn_implementation,
         "prompt": row.prompt_summary,
         "trust_remote_code": row.trust_remote_code,
+        "late_interaction_query_length": row.late_interaction_query_length,
+        "late_interaction_document_length": row.late_interaction_document_length,
+        "late_interaction_query_prefix": row.late_interaction_query_prefix,
+        "late_interaction_document_prefix": row.late_interaction_document_prefix,
+        "late_interaction_query_expansion": row.late_interaction_query_expansion,
+        "late_interaction_attend_to_expansion_tokens": row.late_interaction_attend_to_expansion_tokens,
     }
 
 

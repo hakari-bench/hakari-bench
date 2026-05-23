@@ -3,10 +3,9 @@
 This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
-The current warehouse schema version is `5`. Version `5` keeps the same table
-shape as version `4` but rebuilds `metrics_long` / `fact_metric_score` so the
-best-distance BM25 top-100 reranking metrics are available to the viewer metric
-selector.
+The current warehouse schema version is `6`. Version `6` adds optional
+late-interaction runtime metadata columns while keeping version `5` DuckDB files
+viewer-compatible through model-card backfill.
 
 The canonical source table for benchmark results is `task_results`. New DuckDB
 builds also materialize `meta_database`, `schema_change_log`, and
@@ -347,6 +346,9 @@ one model, one benchmark task, and one embedding variant. Base results use
 | `query_encode_task` | `VARCHAR` | Query encode task hint from `config.query_encode_task`, when used by model-specific encoders. |
 | `document_encode_task` | `VARCHAR` | Document encode task hint from `config.document_encode_task`, when used by model-specific encoders. |
 | `trust_remote_code` | `BOOLEAN` | Whether model loading used Hugging Face `trust_remote_code`. |
+| `late_interaction_query_length`, `late_interaction_document_length` | `INTEGER` | ColBERT/late-interaction query and document token lengths from `evaluation.late_interaction` or `model.late_interaction`. |
+| `late_interaction_query_prefix`, `late_interaction_document_prefix` | `VARCHAR` | ColBERT/late-interaction query and document prefixes used by the run. |
+| `late_interaction_query_expansion`, `late_interaction_attend_to_expansion_tokens` | `BOOLEAN` | Late-interaction query expansion and expansion-token attention flags when available. |
 | `torch_version` | `VARCHAR` | Torch version used for evaluation. |
 | `transformers_version` | `VARCHAR` | Transformers version used for evaluation. |
 | `sentence_transformers_version` | `VARCHAR` | Sentence Transformers version used for evaluation. |
@@ -489,6 +491,9 @@ already materialized BM25 rows for `score_target = 'reranking'`.
 | `query_encode_task` | `VARCHAR` | Query encode task hint from `task_results`. |
 | `document_encode_task` | `VARCHAR` | Document encode task hint from `task_results`. |
 | `trust_remote_code` | `BOOLEAN` | Whether model loading used Hugging Face `trust_remote_code`. |
+| `late_interaction_query_length`, `late_interaction_document_length` | `INTEGER` | Late-interaction query and document lengths copied from `task_results`. |
+| `late_interaction_query_prefix`, `late_interaction_document_prefix` | `VARCHAR` | Late-interaction prefixes copied from `task_results`. |
+| `late_interaction_query_expansion`, `late_interaction_attend_to_expansion_tokens` | `BOOLEAN` | Late-interaction expansion flags copied from `task_results`. |
 | `candidate_source` | `VARCHAR` | Candidate source for reranking rows, otherwise `NULL`. |
 | `candidate_ranking` | `VARCHAR` | Candidate ranking label such as `bm25`, otherwise `NULL`. |
 | `rerank_top_k` | `INTEGER` | Candidate depth for reranking rows, otherwise `NULL`. |
@@ -975,8 +980,9 @@ DB build scripts create `viewer_task_results` as a physical table after
 `dataset_metadata` and `fact_task_score` are written. It selects only the
 columns required by `TaskResultsRepository`, includes `score_target`, joins
 `dataset_metadata` by `(benchmark, dataset_id, task_key)`, includes
-`query_mean_chars` and `document_mean_chars` for task text-length filters, and
-orders rows by
+`query_mean_chars` and `document_mean_chars` for task text-length filters,
+keeps late-interaction runtime fields for the Model Details modal, and orders
+rows by
 `(benchmark, score_target, dataset_id, task_name, model_name,
 embedding_variant_name)`. This avoids repeated metadata joins and lets the
 viewer switch `Target: All` / `Target: Reranking` without joining diagnostics
@@ -1021,6 +1027,10 @@ are recalculated with BM25 in the reranking population.
 | `dtype`, `attn_implementation`, `prompt_summary`, `trust_remote_code` | mixed | Runtime and prompt metadata used by the details modal. |
 | `embedding_variant_name`, `embedding_dim`, `quantization`, `source_model_name` | mixed | Variant metadata and source model identity. |
 | `base_score_delta_percent` | `DOUBLE` | Precomputed relative delta against the source model's base row. |
+
+Older schema 5 DuckDB builds do not have late-interaction runtime columns in
+`viewer_leaderboard_rows`. The viewer fills missing Model Details values from
+matching `config/model_cards/*.yaml` `late_interaction` sections at runtime.
 
 `viewer_leaderboard_language_options` uses the same key columns as
 `viewer_leaderboard_rows` and stores the language filter choices that should be

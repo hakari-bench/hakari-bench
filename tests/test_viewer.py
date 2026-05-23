@@ -513,6 +513,67 @@ runtime:
     assert result.rows[0].max_seq_length == 2048
 
 
+def test_leaderboard_service_backfills_late_interaction_metadata_from_model_cards(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "mixedbread-ai/mxbai-edge-colbert-v0-17m",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "BenchA::a1",
+                0.90,
+                None,
+                None,
+                None,
+            ),
+            (
+                "mixedbread-ai/mxbai-edge-colbert-v0-17m",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a2",
+                "a2",
+                "BenchA::a2",
+                0.80,
+                None,
+                None,
+                None,
+            ),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "mixedbread-ai__mxbai-edge-colbert-v0-17m.yaml").write_text(
+        """
+id: mixedbread-ai/mxbai-edge-colbert-v0-17m
+method: late-interaction
+late_interaction:
+  query_length: 48
+  document_length: 512
+  do_query_expansion: false
+  attend_to_expansion_tokens: false
+""".strip(),
+        encoding="utf-8",
+    )
+    config = ViewerConfig(benchmarks=[BenchmarkConfig(name="BenchA")], overalls=[])
+
+    result = LeaderboardService(
+        duckdb_path=db_path,
+        config=config,
+        model_cards_path=model_cards_dir,
+    ).get_leaderboard("BenchA")
+
+    assert result.rows[0].late_interaction_query_length == 48
+    assert result.rows[0].late_interaction_document_length == 512
+    assert result.rows[0].late_interaction_query_expansion is False
+    assert result.rows[0].late_interaction_attend_to_expansion_tokens is False
+
+
 def test_viewer_config_rejects_unknown_group_by(tmp_path: Path) -> None:
     config_dir = tmp_path / "config"
     config_dir.mkdir()

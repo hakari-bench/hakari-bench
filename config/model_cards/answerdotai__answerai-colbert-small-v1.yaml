@@ -16,6 +16,10 @@ runtime:
   trust_remote_code: false
   attn_implementation: sdpa
   backend_library: sentence-transformers
+late_interaction:
+  architecture: colbert
+  scoring: maxsim
+  query_length: 32
 target:
   datasets:
   - hakari-bench/NanoBEIR-en

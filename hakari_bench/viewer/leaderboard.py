@@ -29,6 +29,12 @@ class ModelCardParameters:
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
+    late_interaction_query_length: int | None = None
+    late_interaction_document_length: int | None = None
+    late_interaction_query_prefix: str | None = None
+    late_interaction_document_prefix: str | None = None
+    late_interaction_query_expansion: bool | None = None
+    late_interaction_attend_to_expansion_tokens: bool | None = None
 
 
 @dataclass(frozen=True)
@@ -57,6 +63,12 @@ class TaskScore:
     source_model_name: str | None = None
     query_mean_chars: float | None = None
     document_mean_chars: float | None = None
+    late_interaction_query_length: int | None = None
+    late_interaction_document_length: int | None = None
+    late_interaction_query_prefix: str | None = None
+    late_interaction_document_prefix: str | None = None
+    late_interaction_query_expansion: bool | None = None
+    late_interaction_attend_to_expansion_tokens: bool | None = None
 
 
 class LeaderboardRow(BaseModel):
@@ -86,6 +98,12 @@ class LeaderboardRow(BaseModel):
     quantization: str | None = None
     source_model_name: str | None = None
     base_score_delta_percent: float | None = None
+    late_interaction_query_length: int | None = None
+    late_interaction_document_length: int | None = None
+    late_interaction_query_prefix: str | None = None
+    late_interaction_document_prefix: str | None = None
+    late_interaction_query_expansion: bool | None = None
+    late_interaction_attend_to_expansion_tokens: bool | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
     metric_z_values: dict[str, float] = Field(default_factory=dict)
     metric_rank_values: dict[str, float] = Field(default_factory=dict)
@@ -512,10 +530,21 @@ def _cached_model_card_parameters(
             parameters = {}
         if not isinstance(runtime, dict):
             runtime = {}
+        late_interaction = _late_interaction_card_section(card)
         parameters_by_model[model_id] = ModelCardParameters(
             active_parameters=_int_or_none(parameters.get("active")),
             total_parameters=_int_or_none(parameters.get("total")),
             max_seq_length=_int_or_none(runtime.get("max_seq_length")),
+            late_interaction_query_length=_int_or_none(late_interaction.get("query_length")),
+            late_interaction_document_length=_int_or_none(late_interaction.get("document_length")),
+            late_interaction_query_prefix=_str_or_none(late_interaction.get("query_prefix")),
+            late_interaction_document_prefix=_str_or_none(late_interaction.get("document_prefix")),
+            late_interaction_query_expansion=_bool_or_none(
+                late_interaction.get("do_query_expansion", late_interaction.get("query_expansion"))
+            ),
+            late_interaction_attend_to_expansion_tokens=_bool_or_none(
+                late_interaction.get("attend_to_expansion_tokens")
+            ),
         )
     return parameters_by_model
 
@@ -549,6 +578,16 @@ def _model_card_yaml_paths(model_cards_path: Path) -> list[Path]:
     return [model_cards_path]
 
 
+def _late_interaction_card_section(card: dict[str, Any]) -> dict[str, Any]:
+    section = card.get("late_interaction")
+    if isinstance(section, dict):
+        return section
+    params = card.get("params")
+    if isinstance(params, dict) and isinstance(params.get("late_interaction"), dict):
+        return params["late_interaction"]
+    return {}
+
+
 def _with_model_card_parameters_for_task_scores(
     rows: list[TaskScore],
     parameters_by_model: dict[str, ModelCardParameters],
@@ -567,6 +606,24 @@ def _with_model_card_parameters_for_task_scores(
             max_seq_length=row.max_seq_length
             if row.max_seq_length is not None
             else _model_card_parameters(row, parameters_by_model).max_seq_length,
+            late_interaction_query_length=row.late_interaction_query_length
+            if row.late_interaction_query_length is not None
+            else _model_card_parameters(row, parameters_by_model).late_interaction_query_length,
+            late_interaction_document_length=row.late_interaction_document_length
+            if row.late_interaction_document_length is not None
+            else _model_card_parameters(row, parameters_by_model).late_interaction_document_length,
+            late_interaction_query_prefix=row.late_interaction_query_prefix
+            if row.late_interaction_query_prefix is not None
+            else _model_card_parameters(row, parameters_by_model).late_interaction_query_prefix,
+            late_interaction_document_prefix=row.late_interaction_document_prefix
+            if row.late_interaction_document_prefix is not None
+            else _model_card_parameters(row, parameters_by_model).late_interaction_document_prefix,
+            late_interaction_query_expansion=row.late_interaction_query_expansion
+            if row.late_interaction_query_expansion is not None
+            else _model_card_parameters(row, parameters_by_model).late_interaction_query_expansion,
+            late_interaction_attend_to_expansion_tokens=row.late_interaction_attend_to_expansion_tokens
+            if row.late_interaction_attend_to_expansion_tokens is not None
+            else _model_card_parameters(row, parameters_by_model).late_interaction_attend_to_expansion_tokens,
         )
         for row in rows
     ]
@@ -591,6 +648,24 @@ def _with_model_card_parameters_for_leaderboard_rows(
                     if row.total_parameters is not None
                     else parameters.total_parameters,
                     "max_seq_length": row.max_seq_length if row.max_seq_length is not None else parameters.max_seq_length,
+                    "late_interaction_query_length": row.late_interaction_query_length
+                    if row.late_interaction_query_length is not None
+                    else parameters.late_interaction_query_length,
+                    "late_interaction_document_length": row.late_interaction_document_length
+                    if row.late_interaction_document_length is not None
+                    else parameters.late_interaction_document_length,
+                    "late_interaction_query_prefix": row.late_interaction_query_prefix
+                    if row.late_interaction_query_prefix is not None
+                    else parameters.late_interaction_query_prefix,
+                    "late_interaction_document_prefix": row.late_interaction_document_prefix
+                    if row.late_interaction_document_prefix is not None
+                    else parameters.late_interaction_document_prefix,
+                    "late_interaction_query_expansion": row.late_interaction_query_expansion
+                    if row.late_interaction_query_expansion is not None
+                    else parameters.late_interaction_query_expansion,
+                    "late_interaction_attend_to_expansion_tokens": row.late_interaction_attend_to_expansion_tokens
+                    if row.late_interaction_attend_to_expansion_tokens is not None
+                    else parameters.late_interaction_attend_to_expansion_tokens,
                 }
             )
         )
@@ -614,6 +689,14 @@ def _int_or_none(value: Any) -> int | None:
         return int(value)
     except (TypeError, ValueError):
         return None
+
+
+def _str_or_none(value: Any) -> str | None:
+    return value if isinstance(value, str) else None
+
+
+def _bool_or_none(value: Any) -> bool | None:
+    return value if isinstance(value, bool) else None
 
 
 def _load_task_scores_uncached(
@@ -911,12 +994,18 @@ def _task_scores_from_records(
                     trust_remote_code=record.trust_remote_code,
                     embedding_variant_name=record.embedding_variant_name,
                     embedding_dim=record.embedding_dim,
-                    quantization=record.quantization,
-                    source_model_name=record.model_name,
-                    query_mean_chars=record.query_mean_chars,
-                    document_mean_chars=record.document_mean_chars,
-                )
+                quantization=record.quantization,
+                source_model_name=record.model_name,
+                query_mean_chars=record.query_mean_chars,
+                document_mean_chars=record.document_mean_chars,
+                late_interaction_query_length=record.late_interaction_query_length,
+                late_interaction_document_length=record.late_interaction_document_length,
+                late_interaction_query_prefix=record.late_interaction_query_prefix,
+                late_interaction_document_prefix=record.late_interaction_document_prefix,
+                late_interaction_query_expansion=record.late_interaction_query_expansion,
+                late_interaction_attend_to_expansion_tokens=record.late_interaction_attend_to_expansion_tokens,
             )
+        )
         timing["task_score_count"] = len(task_scores)
     return task_scores
 
@@ -1080,6 +1169,12 @@ def compute_leaderboard_rows(
                 embedding_dim=first.embedding_dim,
                 quantization=first.quantization,
                 source_model_name=first.source_model_name,
+                late_interaction_query_length=first.late_interaction_query_length,
+                late_interaction_document_length=first.late_interaction_document_length,
+                late_interaction_query_prefix=first.late_interaction_query_prefix,
+                late_interaction_document_prefix=first.late_interaction_document_prefix,
+                late_interaction_query_expansion=first.late_interaction_query_expansion,
+                late_interaction_attend_to_expansion_tokens=first.late_interaction_attend_to_expansion_tokens,
                 metric_values=metric_values,
                 metric_z_values=metric_z_values,
                 metric_rank_values=metric_rank_values,
@@ -1218,6 +1313,12 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
                 source_model_name=first.source_model_name,
                 query_mean_chars=_mean_optional(row.query_mean_chars for row in aggregate_rows),
                 document_mean_chars=_mean_optional(row.document_mean_chars for row in aggregate_rows),
+                late_interaction_query_length=first.late_interaction_query_length,
+                late_interaction_document_length=first.late_interaction_document_length,
+                late_interaction_query_prefix=first.late_interaction_query_prefix,
+                late_interaction_document_prefix=first.late_interaction_document_prefix,
+                late_interaction_query_expansion=first.late_interaction_query_expansion,
+                late_interaction_attend_to_expansion_tokens=first.late_interaction_attend_to_expansion_tokens,
             )
         )
     return aggregated
@@ -1267,6 +1368,12 @@ def _aggregate_benchmark_score_group_scores(rows: list[TaskScore], score_group: 
                 source_model_name=first.source_model_name,
                 query_mean_chars=_mean_optional(row.query_mean_chars for row in aggregate_rows),
                 document_mean_chars=_mean_optional(row.document_mean_chars for row in aggregate_rows),
+                late_interaction_query_length=first.late_interaction_query_length,
+                late_interaction_document_length=first.late_interaction_document_length,
+                late_interaction_query_prefix=first.late_interaction_query_prefix,
+                late_interaction_document_prefix=first.late_interaction_document_prefix,
+                late_interaction_query_expansion=first.late_interaction_query_expansion,
+                late_interaction_attend_to_expansion_tokens=first.late_interaction_attend_to_expansion_tokens,
             )
         )
     return aggregated

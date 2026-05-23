@@ -139,6 +139,12 @@
     ["Attention", "attention"],
     ["Prompt", "prompt"],
     ["HF trust", "trust_remote_code"],
+    ["Query len", "late_interaction_query_length"],
+    ["Doc len", "late_interaction_document_length"],
+    ["Query expansion", "late_interaction_query_expansion"],
+    ["Attend expansion tokens", "late_interaction_attend_to_expansion_tokens"],
+    ["Query prefix", "late_interaction_query_prefix"],
+    ["Doc prefix", "late_interaction_document_prefix"],
   ];
 
   function formatModelDetailValue(value) {

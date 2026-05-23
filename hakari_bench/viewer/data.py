@@ -22,8 +22,8 @@ from hakari_bench.viewer.task_names import (
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
-CURRENT_DUCKDB_SCHEMA_VERSION = "5"
-COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {"3", "4", CURRENT_DUCKDB_SCHEMA_VERSION}
+CURRENT_DUCKDB_SCHEMA_VERSION = "6"
+COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {"3", "4", "5", CURRENT_DUCKDB_SCHEMA_VERSION}
 REQUIRED_VIEWER_TABLES = ("meta_database", "viewer_task_results")
 DISPLAY_SCORE_METRIC_ORDER = (
     "ndcg@10",
@@ -94,6 +94,12 @@ class TaskResultRecord(BaseModel):
     quantization: str | None = None
     query_mean_chars: float | None = None
     document_mean_chars: float | None = None
+    late_interaction_query_length: int | None = None
+    late_interaction_document_length: int | None = None
+    late_interaction_query_prefix: str | None = None
+    late_interaction_document_prefix: str | None = None
+    late_interaction_query_expansion: bool | None = None
+    late_interaction_attend_to_expansion_tokens: bool | None = None
 
     @property
     def prompt_summary(self) -> str:
@@ -143,6 +149,12 @@ class TaskResultRow:
     quantization: str | None = None
     query_mean_chars: float | None = None
     document_mean_chars: float | None = None
+    late_interaction_query_length: int | None = None
+    late_interaction_document_length: int | None = None
+    late_interaction_query_prefix: str | None = None
+    late_interaction_document_prefix: str | None = None
+    late_interaction_query_expansion: bool | None = None
+    late_interaction_attend_to_expansion_tokens: bool | None = None
 
     @property
     def prompt_summary(self) -> str:
@@ -278,6 +290,12 @@ class TaskResultsRepository:
             query_encode_task_expr = _column_or_null(columns, "query_encode_task")
             document_encode_task_expr = _column_or_null(columns, "document_encode_task")
             trust_remote_code_expr = _column_or_null(columns, "trust_remote_code")
+            late_query_length_expr = _column_or_null(columns, "late_interaction_query_length")
+            late_document_length_expr = _column_or_null(columns, "late_interaction_document_length")
+            late_query_prefix_expr = _column_or_null(columns, "late_interaction_query_prefix")
+            late_document_prefix_expr = _column_or_null(columns, "late_interaction_document_prefix")
+            late_query_expansion_expr = _column_or_null(columns, "late_interaction_query_expansion")
+            late_attend_expansion_expr = _column_or_null(columns, "late_interaction_attend_to_expansion_tokens")
             query_mean_chars_expr, document_mean_chars_expr, metadata_join = _task_text_length_sql(
                 viewer_columns=columns,
                 metadata_columns=metadata_columns,
@@ -350,7 +368,13 @@ class TaskResultsRepository:
                     {embedding_dim_expr} AS embedding_dim,
                     {quantization_expr} AS quantization,
                     {query_mean_chars_expr} AS query_mean_chars,
-                    {document_mean_chars_expr} AS document_mean_chars
+                    {document_mean_chars_expr} AS document_mean_chars,
+                    {late_query_length_expr} AS late_interaction_query_length,
+                    {late_document_length_expr} AS late_interaction_document_length,
+                    {late_query_prefix_expr} AS late_interaction_query_prefix,
+                    {late_document_prefix_expr} AS late_interaction_document_prefix,
+                    {late_query_expansion_expr} AS late_interaction_query_expansion,
+                    {late_attend_expansion_expr} AS late_interaction_attend_to_expansion_tokens
                 FROM fact_task_score AS tr
                 JOIN fact_metric_score AS ms
                   ON ms.model_name = tr.model_name
@@ -440,6 +464,12 @@ class TaskResultsRepository:
             query_encode_task_expr = _column_or_null(columns, "query_encode_task")
             document_encode_task_expr = _column_or_null(columns, "document_encode_task")
             trust_remote_code_expr = _column_or_null(columns, "trust_remote_code")
+            late_query_length_expr = _column_or_null(columns, "late_interaction_query_length")
+            late_document_length_expr = _column_or_null(columns, "late_interaction_document_length")
+            late_query_prefix_expr = _column_or_null(columns, "late_interaction_query_prefix")
+            late_document_prefix_expr = _column_or_null(columns, "late_interaction_document_prefix")
+            late_query_expansion_expr = _column_or_null(columns, "late_interaction_query_expansion")
+            late_attend_expansion_expr = _column_or_null(columns, "late_interaction_attend_to_expansion_tokens")
             query_mean_chars_expr, document_mean_chars_expr, metadata_join = _task_text_length_sql(
                 viewer_columns=columns,
                 metadata_columns=metadata_columns,
@@ -480,7 +510,13 @@ class TaskResultsRepository:
                     {embedding_dim_expr} AS embedding_dim,
                     {quantization_expr} AS quantization,
                     {query_mean_chars_expr} AS query_mean_chars,
-                    {document_mean_chars_expr} AS document_mean_chars
+                    {document_mean_chars_expr} AS document_mean_chars,
+                    {late_query_length_expr} AS late_interaction_query_length,
+                    {late_document_length_expr} AS late_interaction_document_length,
+                    {late_query_prefix_expr} AS late_interaction_query_prefix,
+                    {late_document_prefix_expr} AS late_interaction_document_prefix,
+                    {late_query_expansion_expr} AS late_interaction_query_expansion,
+                    {late_attend_expansion_expr} AS late_interaction_attend_to_expansion_tokens
                 FROM viewer_task_results AS tr
                 {metadata_join}
                 WHERE tr.benchmark IN ({placeholders})
@@ -560,6 +596,20 @@ def _task_result_row(field_names: list[str], row: tuple[Any, ...]) -> TaskResult
         quantization=payload["quantization"] if isinstance(payload["quantization"], str) else None,
         query_mean_chars=_float_payload_value(payload.get("query_mean_chars")),
         document_mean_chars=_float_payload_value(payload.get("document_mean_chars")),
+        late_interaction_query_length=_int_payload_value(payload.get("late_interaction_query_length")),
+        late_interaction_document_length=_int_payload_value(payload.get("late_interaction_document_length")),
+        late_interaction_query_prefix=payload["late_interaction_query_prefix"]
+        if isinstance(payload.get("late_interaction_query_prefix"), str)
+        else None,
+        late_interaction_document_prefix=payload["late_interaction_document_prefix"]
+        if isinstance(payload.get("late_interaction_document_prefix"), str)
+        else None,
+        late_interaction_query_expansion=payload["late_interaction_query_expansion"]
+        if isinstance(payload.get("late_interaction_query_expansion"), bool)
+        else None,
+        late_interaction_attend_to_expansion_tokens=payload["late_interaction_attend_to_expansion_tokens"]
+        if isinstance(payload.get("late_interaction_attend_to_expansion_tokens"), bool)
+        else None,
     )
 
 

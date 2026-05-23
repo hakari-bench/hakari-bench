@@ -131,6 +131,20 @@ def model_card_from_metadata(
         "embedding": {"truncate_dims": truncate_dims},
         "runtime": _drop_none(runtime),
     }
+    late_interaction = metadata.get("late_interaction")
+    if isinstance(late_interaction, dict):
+        card["late_interaction"] = _drop_none(
+            {
+                "architecture": _clean_scalar(late_interaction.get("architecture")),
+                "scoring": _clean_scalar(late_interaction.get("scoring")),
+                "query_prefix": _clean_scalar(late_interaction.get("query_prefix")),
+                "document_prefix": _clean_scalar(late_interaction.get("document_prefix")),
+                "query_length": _int_or_none(late_interaction.get("query_length")),
+                "document_length": _int_or_none(late_interaction.get("document_length")),
+                "do_query_expansion": _clean_scalar(late_interaction.get("do_query_expansion")),
+                "attend_to_expansion_tokens": _clean_scalar(late_interaction.get("attend_to_expansion_tokens")),
+            }
+        )
     if target:
         card["target"] = _drop_empty(target)
     if overrides.display_name is not None:
@@ -415,6 +429,8 @@ def _merge_existing_card_metadata(metadata: dict[str, Any], existing_card: dict[
     runtime = existing_card.get("runtime")
     if isinstance(runtime, dict) and merged.get("max_seq_length") is None:
         merged["max_seq_length"] = runtime.get("max_seq_length")
+    if isinstance(existing_card.get("late_interaction"), dict) and not isinstance(merged.get("late_interaction"), dict):
+        merged["late_interaction"] = existing_card["late_interaction"]
     return merged
 
 

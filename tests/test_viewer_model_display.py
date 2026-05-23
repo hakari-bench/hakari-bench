@@ -195,6 +195,31 @@ def test_render_model_name_cell_infers_reranker_type_without_dimension_badge() -
     assert ">reranker</span>" in html
 
 
+def test_model_cell_views_include_late_interaction_metadata_for_details_modal() -> None:
+    row = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name="mixedbread-ai/mxbai-edge-colbert-v0-17m",
+        model_type="late-interaction",
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+        late_interaction_query_length=48,
+        late_interaction_document_length=512,
+        late_interaction_query_expansion=False,
+    )
+
+    model_view = model_cell_views([row])[row.model_name]
+    html = render_model_name_cell(row, model_view)
+
+    assert model_view.metadata["late_interaction_query_length"] == 48
+    assert model_view.metadata["late_interaction_document_length"] == 512
+    assert model_view.metadata["late_interaction_query_expansion"] is False
+    assert "&quot;late_interaction_query_length&quot;:48" in html
+    assert "&quot;late_interaction_document_length&quot;:512" in html
+    assert "&quot;late_interaction_query_expansion&quot;:false" in html
+
+
 def test_render_model_name_cell_hides_table_type_badge_for_dense_and_bm25() -> None:
     dense = LeaderboardRow(
         borda_rank=1,
