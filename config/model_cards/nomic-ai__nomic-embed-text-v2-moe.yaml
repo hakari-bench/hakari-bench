@@ -1,0 +1,70 @@
+id: nomic-ai/nomic-embed-text-v2-moe
+source:
+  type: huggingface
+  name: nomic-ai/nomic-embed-text-v2-moe
+  revision: 1066b6599d099fbb93dfcb64f9c37a7c9e503e85
+method: dense
+parameters:
+  total: 475292928
+  input_embedding: 192036864
+  active: 283256064
+embedding:
+  truncate_dims:
+  - 256
+runtime:
+  max_seq_length: 512
+  dtype: bf16
+  trust_remote_code: true
+  remote_code_approved: true
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoVNMTEB

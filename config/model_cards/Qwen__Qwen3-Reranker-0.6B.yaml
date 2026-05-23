@@ -1,0 +1,22 @@
+id: Qwen/Qwen3-Reranker-0.6B
+source:
+  type: huggingface
+  name: Qwen/Qwen3-Reranker-0.6B
+  revision: e61197ed45024b0ed8a2d74b80b4d909f1255473
+method: reranker
+parameters:
+  total: 595776512
+  input_embedding: 155309056
+  active: 440467456
+embedding:
+  truncate_dims: null
+runtime:
+  max_seq_length: 40960
+  dtype: bf16
+  trust_remote_code: true
+  remote_code_approved: true
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ja

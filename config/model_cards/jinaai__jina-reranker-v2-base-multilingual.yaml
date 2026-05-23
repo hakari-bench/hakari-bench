@@ -1,0 +1,68 @@
+id: jinaai/jina-reranker-v2-base-multilingual
+source:
+  type: huggingface
+  name: jinaai/jina-reranker-v2-base-multilingual
+  revision: 9cfeff2df7d40d1b78e75e5e9cebec92a99813c9
+method: reranker
+parameters:
+  total: 278437633
+  input_embedding: 192001536
+  active: 86436097
+embedding:
+  truncate_dims: null
+runtime:
+  max_seq_length: 1024
+  dtype: bf16
+  trust_remote_code: true
+  remote_code_approved: true
+  backend_library: sentence-transformers
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoVNMTEB

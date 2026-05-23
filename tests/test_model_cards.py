@@ -247,6 +247,42 @@ def test_collect_model_cards_from_results_preserves_remote_code_approval(tmp_pat
     assert cards["jinaai/jina-embeddings-v3"]["runtime"]["remote_code_approved"] is True
 
 
+def test_static_model_cards_cover_latest_leaderboard_models() -> None:
+    cards = model_cards.load_model_cards(Path("config/model_cards"))
+
+    expected_models = {
+        "Alibaba-NLP/gte-multilingual-reranker-base": "reranker",
+        "BAAI/bge-reranker-v2-m3": "reranker",
+        "BAAI/bge-small-en-v1.5": "dense",
+        "Qwen/Qwen3-Reranker-0.6B": "reranker",
+        "answerdotai/answerai-colbert-small-v1": "late-interaction",
+        "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1": "reranker",
+        "hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT": "dense",
+        "hotchpotch/bekko-embedding-small-beta-unir-v8": "dense",
+        "hotchpotch/japanese-reranker-xsmall-v2": "reranker",
+        "ibm-granite/granite-embedding-30m-sparse": "sparse",
+        "jinaai/jina-reranker-v2-base-multilingual": "reranker",
+        "lightonai/ColBERT-Zero": "late-interaction",
+        "microsoft/harrier-oss-v1-0.6b": "dense",
+        "mixedbread-ai/mxbai-edge-colbert-v0-17m": "late-interaction",
+        "mixedbread-ai/mxbai-embed-xsmall-v1": "dense",
+        "naver/splade-v3": "sparse",
+        "nomic-ai/nomic-embed-text-v1.5": "dense",
+        "nomic-ai/nomic-embed-text-v2-moe": "dense",
+        "opensearch-project/opensearch-neural-sparse-encoding-multilingual-v1": "sparse",
+        "prithivida/Splade_PP_en_v2": "sparse",
+    }
+
+    for model_id, method in expected_models.items():
+        card = cards[model_id]
+        assert card["method"] == method
+        assert card["parameters"]["total"] > 0
+        assert card["parameters"]["input_embedding"] >= 0
+        assert card["parameters"]["active"] >= 0
+        assert card["source"]["revision"]
+        assert card["target"]["datasets"]
+
+
 def _write_result(
     path: Path,
     *,

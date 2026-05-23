@@ -1,0 +1,21 @@
+id: answerdotai/answerai-colbert-small-v1
+source:
+  type: huggingface
+  name: answerdotai/answerai-colbert-small-v1
+  revision: c72aa89bc61afdd85373643f3a1a75b2aad6e0fe
+method: late-interaction
+parameters:
+  total: 33396864
+  input_embedding: 11720448
+  active: 21676416
+embedding:
+  truncate_dims: null
+runtime:
+  max_seq_length: 512
+  dtype: fp32
+  trust_remote_code: false
+  attn_implementation: sdpa
+  backend_library: sentence-transformers
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-en
