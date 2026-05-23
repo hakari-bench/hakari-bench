@@ -1017,7 +1017,7 @@ are recalculated with BM25 in the reranking population.
 | `model_name` | `VARCHAR` | Display model label, including variant details when needed. |
 | `borda_score`, `mean_score`, `macro_mean`, `micro_mean` | `DOUBLE` | Precomputed leaderboard scores on the 0 to 100 display scale. |
 | `task_count` | `INTEGER` | Number of tasks for the complete row. |
-| `active_parameters`, `total_parameters`, `max_seq_length` | `BIGINT` / `INTEGER` | Model size and sequence length metadata. |
+| `active_parameters`, `total_parameters`, `max_seq_length` | `BIGINT` / `INTEGER` | Model size and sequence length metadata. If older DuckDB materializations have `NULL` values here, the viewer fills missing display values from matching `config/model_cards/*.yaml` entries at runtime without overwriting non-`NULL` DuckDB values. |
 | `dtype`, `attn_implementation`, `prompt_summary`, `trust_remote_code` | mixed | Runtime and prompt metadata used by the details modal. |
 | `embedding_variant_name`, `embedding_dim`, `quantization`, `source_model_name` | mixed | Variant metadata and source model identity. |
 | `base_score_delta_percent` | `DOUBLE` | Precomputed relative delta against the source model's base row. |

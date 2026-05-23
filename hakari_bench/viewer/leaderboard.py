@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 import math
 from pathlib import Path
@@ -10,6 +10,7 @@ from typing import Any, Iterable, Literal
 
 import duckdb
 from pydantic import BaseModel, ConfigDict, Field
+import yaml
 
 from hakari_bench.viewer.config import LanguageFilterMode, OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository, _table_exists
@@ -20,6 +21,14 @@ from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_var
 
 SortDirection = Literal["asc", "desc"]
 ScoreTarget = Literal["all", "reranking"]
+DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
+
+
+@dataclass(frozen=True)
+class ModelCardParameters:
+    active_parameters: int | None = None
+    total_parameters: int | None = None
+    max_seq_length: int | None = None
 
 
 @dataclass(frozen=True)
@@ -147,11 +156,19 @@ SORT_COLUMNS = {
 
 
 class LeaderboardService:
-    def __init__(self, *, duckdb_path: Path, config: ViewerConfig, use_precomputed: bool = True) -> None:
+    def __init__(
+        self,
+        *,
+        duckdb_path: Path,
+        config: ViewerConfig,
+        use_precomputed: bool = True,
+        model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
+    ) -> None:
         self.config = config
         self.duckdb_path = duckdb_path
         self.use_precomputed = use_precomputed
         self.task_results_repository = TaskResultsRepository(duckdb_path)
+        self.model_card_parameters = _load_model_card_parameters(model_cards_path)
 
     def get_leaderboard(
         self,
@@ -253,6 +270,7 @@ class LeaderboardService:
                 )
                 if precomputed is not None:
                     rows, expected_tasks, available_languages = precomputed
+                    rows = _with_model_card_parameters_for_leaderboard_rows(rows, self.model_card_parameters)
                     sorted_rows = sort_rows(rows, sort=sort, direction=direction)
                     request_timing["task_score_count"] = None
                     request_timing["leaderboard_row_count"] = len(sorted_rows)
@@ -458,7 +476,144 @@ class LeaderboardService:
             size=cache_after.currsize,
             task_score_count=len(task_scores),
         )
-        return task_scores
+        return _with_model_card_parameters_for_task_scores(task_scores, self.model_card_parameters)
+
+
+def _load_model_card_parameters(model_cards_path: Path | None) -> dict[str, ModelCardParameters]:
+    if model_cards_path is None:
+        return {}
+    state = _model_cards_cache_state(model_cards_path)
+    if state is None:
+        return {}
+    return _cached_model_card_parameters(str(model_cards_path.resolve()), state)
+
+
+def _model_cards_cache_state(model_cards_path: Path) -> tuple[tuple[str, int, int], ...] | None:
+    if not model_cards_path.exists():
+        return None
+    return tuple(
+        (str(path.resolve()), path.stat().st_mtime_ns, path.stat().st_size)
+        for path in _model_card_yaml_paths(model_cards_path)
+    )
+
+
+@lru_cache(maxsize=16)
+def _cached_model_card_parameters(
+    model_cards_path: str,
+    state: tuple[tuple[str, int, int], ...],
+) -> dict[str, ModelCardParameters]:
+    del state
+    cards = _load_viewer_model_cards(Path(model_cards_path))
+    parameters_by_model: dict[str, ModelCardParameters] = {}
+    for model_id, card in cards.items():
+        parameters = card.get("parameters")
+        runtime = card.get("runtime")
+        if not isinstance(parameters, dict):
+            parameters = {}
+        if not isinstance(runtime, dict):
+            runtime = {}
+        parameters_by_model[model_id] = ModelCardParameters(
+            active_parameters=_int_or_none(parameters.get("active")),
+            total_parameters=_int_or_none(parameters.get("total")),
+            max_seq_length=_int_or_none(runtime.get("max_seq_length")),
+        )
+    return parameters_by_model
+
+
+def _load_viewer_model_cards(model_cards_path: Path) -> dict[str, dict[str, Any]]:
+    cards: dict[str, dict[str, Any]] = {}
+    for card_path in _model_card_yaml_paths(model_cards_path):
+        payload = yaml.safe_load(card_path.read_text(encoding="utf-8")) or {}
+        if not isinstance(payload, dict):
+            continue
+        if isinstance(payload.get("id"), str):
+            cards[str(payload["id"])] = payload
+            continue
+        models = payload.get("models", [])
+        if not isinstance(models, list):
+            continue
+        for item in models:
+            if isinstance(item, dict) and isinstance(item.get("id"), str):
+                cards[str(item["id"])] = item
+    return cards
+
+
+def _model_card_yaml_paths(model_cards_path: Path) -> list[Path]:
+    if model_cards_path.is_dir():
+        return sorted(
+            path
+            for pattern in ("*.yaml", "*.yml")
+            for path in model_cards_path.glob(pattern)
+            if path.is_file()
+        )
+    return [model_cards_path]
+
+
+def _with_model_card_parameters_for_task_scores(
+    rows: list[TaskScore],
+    parameters_by_model: dict[str, ModelCardParameters],
+) -> list[TaskScore]:
+    if not parameters_by_model:
+        return rows
+    return [
+        replace(
+            row,
+            active_parameters=row.active_parameters
+            if row.active_parameters is not None
+            else _model_card_parameters(row, parameters_by_model).active_parameters,
+            total_parameters=row.total_parameters
+            if row.total_parameters is not None
+            else _model_card_parameters(row, parameters_by_model).total_parameters,
+            max_seq_length=row.max_seq_length
+            if row.max_seq_length is not None
+            else _model_card_parameters(row, parameters_by_model).max_seq_length,
+        )
+        for row in rows
+    ]
+
+
+def _with_model_card_parameters_for_leaderboard_rows(
+    rows: list[LeaderboardRow],
+    parameters_by_model: dict[str, ModelCardParameters],
+) -> list[LeaderboardRow]:
+    if not parameters_by_model:
+        return rows
+    updated_rows = []
+    for row in rows:
+        parameters = _model_card_parameters(row, parameters_by_model)
+        updated_rows.append(
+            row.model_copy(
+                update={
+                    "active_parameters": row.active_parameters
+                    if row.active_parameters is not None
+                    else parameters.active_parameters,
+                    "total_parameters": row.total_parameters
+                    if row.total_parameters is not None
+                    else parameters.total_parameters,
+                    "max_seq_length": row.max_seq_length if row.max_seq_length is not None else parameters.max_seq_length,
+                }
+            )
+        )
+    return updated_rows
+
+
+def _model_card_parameters(
+    row: TaskScore | LeaderboardRow,
+    parameters_by_model: dict[str, ModelCardParameters],
+) -> ModelCardParameters:
+    model_name = row.source_model_name or row.model_name
+    return parameters_by_model.get(model_name, ModelCardParameters())
+
+
+def _int_or_none(value: Any) -> int | None:
+    if isinstance(value, bool) or value is None:
+        return None
+    if isinstance(value, int):
+        return value
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _load_task_scores_uncached(

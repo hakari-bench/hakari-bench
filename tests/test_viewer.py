@@ -265,7 +265,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 98.0,
                 97.0,
                 3,
-                10,
+                None,
                 12,
                 8192,
                 "bf16",
@@ -436,8 +436,21 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
         benchmarks=[BenchmarkConfig(name="BenchA")],
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
     )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "model__a.yaml").write_text(
+        """
+id: model/a
+parameters:
+  total: 1234
+  active: 123
+runtime:
+  max_seq_length: 2048
+""".strip(),
+        encoding="utf-8",
+    )
 
-    service = LeaderboardService(duckdb_path=db_path, config=config)
+    service = LeaderboardService(duckdb_path=db_path, config=config, model_cards_path=model_cards_dir)
     result = service.get_leaderboard(
         "Overall",
         include_quantization_variants=True,
@@ -452,6 +465,9 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
     assert [row.model_name for row in result.rows] == ["model/a (768 dims, int8)", "bm25"]
     assert result.rows[0].model_name == "model/a (768 dims, int8)"
     assert result.rows[0].borda_score == 99.0
+    assert result.rows[0].active_parameters == 123
+    assert result.rows[0].total_parameters == 12
+    assert result.rows[0].max_seq_length == 8192
     assert result.rows[0].embedding_variant_name == "int8"
     assert [row.model_name for row in reranking_result.rows] == ["model/reranker-output", "bm25"]
     assert reranking_result.rows[1].mean_score == 43.0
@@ -460,6 +476,41 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
         ("ar", "AR", 3),
         ("ja", "Japanese", 3),
     ]
+
+
+def test_leaderboard_service_backfills_task_result_parameters_from_model_cards(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, None, None, None),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.80, None, None, None),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "model__a.yaml").write_text(
+        """
+id: model/a
+parameters:
+  total: 456
+  active: 123
+runtime:
+  max_seq_length: 2048
+""".strip(),
+        encoding="utf-8",
+    )
+    config = ViewerConfig(benchmarks=[BenchmarkConfig(name="BenchA")], overalls=[])
+
+    result = LeaderboardService(
+        duckdb_path=db_path,
+        config=config,
+        model_cards_path=model_cards_dir,
+    ).get_leaderboard("BenchA")
+
+    assert result.rows[0].active_parameters == 123
+    assert result.rows[0].total_parameters == 456
+    assert result.rows[0].max_seq_length == 2048
 
 
 def test_viewer_config_rejects_unknown_group_by(tmp_path: Path) -> None:
