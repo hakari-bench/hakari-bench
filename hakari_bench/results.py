@@ -133,7 +133,7 @@ def run_or_load_task(
         if requested_bm25_source == "computed":
             bm25_source = "computed_bm25s"
             bm25_candidate_subset_name = None
-            bm25_config = resolve_bm25_config_for_queries(raw_bm25_config, dataset.queries)
+            bm25_config = resolve_bm25_config_for_queries(raw_bm25_config, dataset.queries, metadata=task.metadata)
         else:
             if dataset.candidates is None:
                 raise ValueError(
@@ -379,6 +379,7 @@ def _slim_reranking_evaluation(value: Any) -> dict[str, Any]:
         "best_distance",
         "best_score_name",
         "candidate_coverage",
+        "safeguard",
     )
     payload = {key: value[key] for key in keep_keys if key in value}
     if "distance_evaluations" in value:
@@ -434,18 +435,30 @@ def _top_ranking_rows(top_rankings: list[dict[str, Any]], *, top_k: int) -> list
         for query_id, corpus_ids in rankings.items():
             if not isinstance(corpus_ids, list):
                 continue
-            rows.append(
-                {
-                    "name": item.get("name"),
-                    "ranking_kind": item.get("ranking_kind"),
-                    "embedding_variant_name": item.get("embedding_variant_name"),
-                    "distance": item.get("distance"),
-                    "score_name": item.get("score_name"),
-                    "query_id": str(query_id),
-                    "corpus_ids": [str(corpus_id) for corpus_id in corpus_ids[:top_k]],
-                }
-            )
+            row = {
+                "name": item.get("name"),
+                "ranking_kind": item.get("ranking_kind"),
+                "embedding_variant_name": item.get("embedding_variant_name"),
+                "distance": item.get("distance"),
+                "score_name": item.get("score_name"),
+                "query_id": str(query_id),
+                "corpus_ids": [str(corpus_id) for corpus_id in corpus_ids[:top_k]],
+            }
+            if item.get("safeguard_policy") is not None:
+                row["safeguard_policy"] = item.get("safeguard_policy")
+            safeguard_corpus_id = _safeguard_corpus_id_for_query(item, str(query_id))
+            if safeguard_corpus_id is not None:
+                row["safeguard_corpus_id"] = safeguard_corpus_id
+            rows.append(row)
     return rows
+
+
+def _safeguard_corpus_id_for_query(item: dict[str, Any], query_id: str) -> str | None:
+    values = item.get("safeguard_corpus_ids_by_query")
+    if not isinstance(values, dict):
+        return None
+    corpus_id = values.get(query_id)
+    return str(corpus_id) if corpus_id is not None else None
 
 
 def build_experiment_manifest(payload: dict[str, Any]) -> dict[str, Any]:

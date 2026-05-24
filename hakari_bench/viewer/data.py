@@ -337,7 +337,7 @@ class TaskResultsRepository:
                     )
                   )
                 """
-                if score_target == "reranking"
+                if score_target != "all"
                 else f"AND NOT contains(lower(dm.metric_name), '{rerank_metric_marker}')"
             )
             query = f"""
@@ -398,7 +398,7 @@ class TaskResultsRepository:
                 ORDER BY tr.model_name, tr.benchmark, tr.dataset_id, tr.task_key
             """  # nosec B608
             query_params: list[Any] = [*benchmarks, score_target, metric_family, cutoff]
-            if score_target == "reranking":
+            if score_target != "all":
                 query_params.extend([metric_family, cutoff])
             with timed_operation(
                 "viewer.duckdb.query",
@@ -478,7 +478,7 @@ class TaskResultsRepository:
                 metadata_columns=metadata_columns,
             )
             variant_filter = ""
-            if "embedding_variant_name" in columns and (score_target == "reranking" or not include_embedding_variants):
+            if "embedding_variant_name" in columns and (score_target != "all" or not include_embedding_variants):
                 variant_filter = "AND tr.embedding_variant_name IS NULL"
             elif "embedding_variant_name" in columns and variant_display_flags is not None:
                 variant_filter = _variant_filter_sql(columns, variant_display_flags)

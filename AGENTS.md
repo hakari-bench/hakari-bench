@@ -128,9 +128,11 @@ uv run --group all ty check
 - If the default dataset subset is unavailable, fail with an actionable error
   instead of silently recomputing BM25 locally.
 - Local BM25 uses `bm25s` with the standard Okapi-style Robertson method.
-- If `--bm25-tokenizer` is omitted for local BM25, auto-select the tokenizer by
-  sampling 10 queries and detecting language with `fast-langdetect`: use
-  `wordseg` for supported languages and `regex` for all others.
+- If `--bm25-tokenizer` is omitted for local BM25, auto-select the tokenizer
+  from task metadata first and then from 10 sampled queries detected with
+  `fast-langdetect`. Tasks marked `category: code` use `regex`; natural
+  language tasks use `wordseg`, `english_porter_stop`, Snowball `stemmer`,
+  `whitespace`, or `regex` according to the language policy in the README.
 - Supported BM25 tokenizers are `regex`, `whitespace`, `transformer`, `stemmer`,
   `english_regex`, `english_porter`, `english_porter_stop`, and `wordseg`.
 - `wordseg` support is optional. Keep language-specific dependencies behind the

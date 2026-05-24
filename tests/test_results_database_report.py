@@ -329,6 +329,8 @@ def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_pa
                 "score_name": "cosine_bm25_top100_rerank",
                 "query_id": "q1",
                 "corpus_ids": ["d2", "d1"],
+                "safeguard_policy": "RRF top-100 plus optional safeguard positive at rank 101",
+                "safeguard_corpus_id": "d2",
             },
             {
                 "name": "base",
@@ -338,6 +340,7 @@ def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_pa
                 "score_name": "cosine_bm25_top100_rerank",
                 "query_id": "q2",
                 "corpus_ids": ["d3", "d4"],
+                "safeguard_policy": "RRF top-100 plus optional safeguard positive at rank 101",
             },
         ],
     }
@@ -399,6 +402,12 @@ def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_pa
     assert metric_values[("all", "truncate:2", "en_truncate:2_cosine_acc@10")] == pytest.approx(1.0)
     assert metric_values[("reranking", None, "en_cosine_bm25_top100_rerank_acc@1")] == pytest.approx(0.5)
     assert metric_values[("reranking", None, "en_cosine_bm25_top100_rerank_acc@10")] == pytest.approx(1.0)
+    assert metric_values[
+        ("reranking_without_safeguard", None, "en_cosine_bm25_top100_rerank_acc@1")
+    ] == pytest.approx(0.0)
+    assert metric_values[
+        ("reranking_without_safeguard", None, "en_cosine_bm25_top100_rerank_acc@10")
+    ] == pytest.approx(0.5)
 
 
 def test_main_incremental_noops_when_sources_are_unchanged(
@@ -1631,7 +1640,18 @@ def test_write_duckdb_persists_dataset_revision(tmp_path: Path) -> None:
                 "metric_name": "ja_cwir_ndcg@10",
                 "metric_value": 0.42,
                 "result_path": "result.json",
-            }
+            },
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_cosine_reranking_hybrid_top100_rerank_ndcg@10",
+                "metric_value": 0.45,
+                "result_path": "result.json",
+                "score_target": "reranking_without_safeguard",
+            },
         ],
         ranking_rows=[
             {
@@ -1752,7 +1772,18 @@ def test_write_duckdb_materializes_task_score_targets(tmp_path: Path) -> None:
                 "metric_name": "ja_cwir_ndcg@10",
                 "metric_value": 0.42,
                 "result_path": "result.json",
-            }
+            },
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_cosine_reranking_hybrid_top100_rerank_ndcg@10",
+                "metric_value": 0.45,
+                "result_path": "result.json",
+                "score_target": "reranking_without_safeguard",
+            },
         ],
         diagnostic_rows=[diagnostic_row],
         standings=standings,
@@ -1770,6 +1801,7 @@ def test_write_duckdb_materializes_task_score_targets(tmp_path: Path) -> None:
         ).fetchall() == [
             ("all", 0.42, None, None, None),
             ("reranking", 0.50, "reranking_hybrid", 101, None),
+            ("reranking_without_safeguard", 0.45, "reranking_hybrid", 100, None),
         ]
         assert con.execute(
             """
@@ -1777,7 +1809,21 @@ def test_write_duckdb_materializes_task_score_targets(tmp_path: Path) -> None:
             FROM viewer_task_results
             ORDER BY score_target
             """
-        ).fetchall() == [("all", 0.42), ("reranking", 0.50)]
+        ).fetchall() == [
+            ("all", 0.42),
+            ("reranking", 0.50),
+            ("reranking_without_safeguard", 0.45),
+        ]
+        assert (
+            con.execute(
+                """
+                SELECT label
+                FROM viewer_filter_values
+                WHERE filter_name = 'target' AND value = 'reranking_without_safeguard'
+                """
+            ).fetchone()
+            == ("Reranking without safeguard",)
+        )
     finally:
         con.close()
 

@@ -69,9 +69,15 @@ def test_rebuild_bm25_candidate_rows_can_cap_qrels_to_candidate_top_k() -> None:
 
 
 def test_rebuild_bm25_candidate_rows_records_resolved_auto_tokenizer(monkeypatch: pytest.MonkeyPatch) -> None:
-    def resolve_config(config: BM25Config, queries: dict[str, str]) -> BM25Config:
+    def resolve_config(
+        config: BM25Config,
+        queries: dict[str, str],
+        *,
+        metadata: dict[str, object] | None = None,
+    ) -> BM25Config:
         assert config.tokenizer is None
         assert queries == {"q1": "query token"}
+        assert metadata is None
         return BM25Config(
             tokenizer="whitespace",
             top_k=1,
@@ -98,3 +104,41 @@ def test_rebuild_bm25_candidate_rows_records_resolved_auto_tokenizer(monkeypatch
     assert config["tokenizer"] == "whitespace"
     assert config["auto_selected"] is True
     assert config["auto_detected_language"] == "en"
+
+
+def test_rebuild_bm25_candidate_rows_passes_task_metadata_to_auto_tokenizer(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def resolve_config(
+        config: BM25Config,
+        queries: dict[str, str],
+        *,
+        metadata: dict[str, object] | None = None,
+    ) -> BM25Config:
+        assert config.tokenizer is None
+        assert queries == {"q1": "def solve(): return 1"}
+        assert metadata == {"language": "en", "category": "code"}
+        return BM25Config(
+            tokenizer="regex",
+            top_k=1,
+            auto_selected=True,
+            auto_detected_language="en",
+            auto_detection_language_counts={"en": 1},
+            auto_detection_sample_size=1,
+        )
+
+    monkeypatch.setattr(nano_bm25_rebuild, "resolve_bm25_config_for_queries", resolve_config)
+
+    result = rebuild_bm25_candidate_rows(
+        corpus_rows=[
+            {"_id": "d-pos", "text": "def solve(): return 1"},
+            {"_id": "d-neg", "text": "other"},
+        ],
+        query_rows=[{"_id": "q1", "text": "def solve(): return 1"}],
+        qrels_rows=[{"query-id": "q1", "corpus-id": "d-pos"}],
+        split_name="NanoCode",
+        bm25_config=BM25Config(tokenizer=None, top_k=1),
+        task_metadata={"language": "en", "category": "code"},
+    )
+
+    assert result.metadata["bm25"]["config"]["tokenizer"] == "regex"

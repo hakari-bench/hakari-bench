@@ -61,12 +61,8 @@ def main() -> None:
                 item,
                 status="completed",
                 seconds=time.perf_counter() - started,
-                forced_positive_count=sum(
-                    split[args.hybrid_config_name]["forced_positive_count"]
-                    for split in metadata["splits"].values()
-                ),
-                random_filler_count=sum(
-                    split[args.hybrid_config_name]["random_filler_count"]
+                safeguard_positive_count=sum(
+                    split[args.hybrid_config_name]["safeguard_positive_count"]
                     for split in metadata["splits"].values()
                 ),
             )
@@ -91,10 +87,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--dense-score-batch-size", type=int, default=64)
-    parser.add_argument("--bm25-top-k", type=int, default=100)
-    parser.add_argument("--dense-top-k", type=int, default=100)
-    parser.add_argument("--hybrid-top-k", type=int, default=101)
-    parser.add_argument("--rrf-k", type=int, default=60)
+    parser.add_argument("--bm25-top-k", type=int, default=500)
+    parser.add_argument("--dense-top-k", type=int, default=500)
+    parser.add_argument("--hybrid-top-k", type=int, default=100)
+    parser.add_argument("--rrf-k", type=int, default=100)
     parser.add_argument("--seed", type=int, default=20260524)
     parser.add_argument("--worker-index", type=int, default=0)
     parser.add_argument("--worker-count", type=int, default=1)
@@ -139,4 +135,3 @@ def write_status(path: Path, item: dict[str, Any], *, status: str, **extra: Any)
 
 if __name__ == "__main__":
     main()
-

@@ -1181,6 +1181,13 @@ def _metric_rows_from_top_rankings(
         if not query_rankings:
             continue
         grouped_rankings.setdefault((score_target, embedding_variant_name, score_name), {}).update(query_rankings)
+        if score_target == "reranking":
+            no_safeguard_rankings = _query_rankings_without_safeguard_from_artifact_row(ranking)
+            if no_safeguard_rankings:
+                grouped_rankings.setdefault(
+                    ("reranking_without_safeguard", embedding_variant_name, score_name),
+                    {},
+                ).update(no_safeguard_rankings)
 
     rows: list[MetricLongRow] = []
     for (score_target, embedding_variant_name, score_name), query_rankings in grouped_rankings.items():
@@ -1266,6 +1273,20 @@ def _query_rankings_from_artifact_row(ranking: dict[str, Any]) -> dict[str, list
     if query_id is None or not isinstance(corpus_ids, list):
         return {}
     return {str(query_id): [str(corpus_id) for corpus_id in corpus_ids]}
+
+
+def _query_rankings_without_safeguard_from_artifact_row(ranking: dict[str, Any]) -> dict[str, list[str]]:
+    query_rankings = _query_rankings_from_artifact_row(ranking)
+    if not query_rankings:
+        return {}
+    query_id, corpus_ids = next(iter(query_rankings.items()))
+    safeguard_corpus_id = ranking.get("safeguard_corpus_id")
+    if safeguard_corpus_id is None:
+        if ranking.get("safeguard_policy") is None:
+            return {}
+        return query_rankings
+    filtered = [corpus_id for corpus_id in corpus_ids if corpus_id != str(safeguard_corpus_id)]
+    return {query_id: filtered}
 
 
 def _retrieval_ranking_rows(
@@ -3135,6 +3156,71 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
           AND td.rerank_score IS NOT NULL
           AND (td.rerank_status IS NULL OR td.rerank_status = 'available')
           AND (td.candidate_ranking IS NULL OR td.candidate_ranking = 'reranking_hybrid')
+
+        UNION ALL
+
+        SELECT
+            tr.model_dir,
+            tr.model_name,
+            tr.model_revision,
+            tr.model_revision_requested,
+            tr.benchmark,
+            tr.dataset_id,
+            tr.dataset_revision,
+            tr.dataset_revision_requested,
+            tr.dataset_name,
+            tr.split_name,
+            tr.task_name,
+            tr.task_key,
+            'reranking_without_safeguard' AS score_target,
+            ml.metric_value AS score,
+            ml.metric_value * 100.0 AS score_100,
+            tr.aggregate_metric,
+            tr.result_path,
+            tr.experiment_fingerprint,
+            tr.active_parameters,
+            tr.total_parameters,
+            tr.max_seq_length,
+            tr.dtype,
+            tr.embedding_variant_name,
+            tr.embedding_dim,
+            tr.quantization,
+            tr.attn_implementation,
+            tr.query_prompt,
+            tr.document_prompt,
+            tr.query_prompt_name,
+            tr.document_prompt_name,
+            tr.query_encode_task,
+            tr.document_encode_task,
+            tr.trust_remote_code,
+            tr.late_interaction_query_length,
+            tr.late_interaction_document_length,
+            tr.late_interaction_query_prefix,
+            tr.late_interaction_document_prefix,
+            tr.late_interaction_query_expansion,
+            tr.late_interaction_attend_to_expansion_tokens,
+            'dataset_candidate_subset' AS candidate_source,
+            'reranking_hybrid' AS candidate_ranking,
+            100 AS rerank_top_k,
+            'available' AS rerank_status,
+            tr.started_at_utc,
+            tr.finished_at_utc,
+            tr.evaluated_at_utc
+        FROM task_results AS tr
+        JOIN metrics_long AS ml
+          ON ml.model_dir = tr.model_dir
+         AND ml.model_name = tr.model_name
+         AND ml.benchmark = tr.benchmark
+         AND ml.dataset_id = tr.dataset_id
+         AND ml.task_name = tr.task_name
+         AND ml.result_path = tr.result_path
+         AND ml.embedding_variant_name IS NOT DISTINCT FROM tr.embedding_variant_name
+        JOIN dim_metric AS dm
+          ON dm.metric_name = ml.metric_name
+        WHERE tr.embedding_variant_name IS NULL
+          AND ml.score_target = 'reranking_without_safeguard'
+          AND dm.metric_family = nullif(lower(regexp_extract(COALESCE(tr.aggregate_metric, 'ndcg@10'), '([A-Za-z]+)@[0-9]+$', 1)), '')
+          AND dm.cutoff = try_cast(regexp_extract(COALESCE(tr.aggregate_metric, 'ndcg@10'), '@([0-9]+)$', 1) AS INTEGER)
         ) AS scores
         ORDER BY
             benchmark,
@@ -3216,12 +3302,14 @@ def _create_viewer_filter_values_table(con: duckdb.DuckDBPyConnection) -> None:
                 CASE score_target
                     WHEN 'all' THEN 'All'
                     WHEN 'reranking' THEN 'Reranking'
+                    WHEN 'reranking_without_safeguard' THEN 'Reranking without safeguard'
                     ELSE score_target
                 END AS label,
                 count(*) AS row_count,
                 CASE score_target
                     WHEN 'all' THEN '0:all'
                     WHEN 'reranking' THEN '1:reranking'
+                    WHEN 'reranking_without_safeguard' THEN '2:reranking_without_safeguard'
                     ELSE concat('9:', score_target)
                 END AS sort_key
             FROM viewer_task_results

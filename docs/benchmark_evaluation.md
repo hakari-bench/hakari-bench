@@ -68,6 +68,13 @@ uv run --group tf4-fa2 hakari-bench evaluate reranker \
   --device cuda:0
 ```
 
+`reranking_hybrid` means RRF top-100 plus optional safeguard positive at rank
+101. Evaluation reranks every candidate present in the row, so 100-candidate
+rows rerank the RRF top-100 and 101-candidate rows rerank the same top-100 plus
+the appended safeguard positive. DuckDB/report generation exposes both
+`reranking` and `reranking_without_safeguard` targets so the safeguard effect can
+be inspected separately.
+
 ```bash
 # Pin a physical GPU for a single process. Inside the process the visible GPU is
 # still addressed as cuda:0.

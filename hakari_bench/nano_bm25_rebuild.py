@@ -34,6 +34,7 @@ def rebuild_bm25_candidate_rows(
     qrels_rows: list[dict[str, Any]],
     split_name: str,
     bm25_config: BM25Config,
+    task_metadata: dict[str, Any] | None = None,
     cap_qrels_to_top_k: bool = False,
     require_full_coverage: bool = True,
 ) -> RebuiltBm25Split:
@@ -42,7 +43,7 @@ def rebuild_bm25_candidate_rows(
     positive_qrels, non_positive_qrels = normalize_qrels_rows(qrels_rows)
     query_map = {row["_id"]: row["text"] for row in queries}
     corpus_map = {row["_id"]: row["text"] for row in corpus}
-    resolved_bm25_config = resolve_bm25_config_for_queries(bm25_config, query_map)
+    resolved_bm25_config = resolve_bm25_config_for_queries(bm25_config, query_map, metadata=task_metadata)
     qrels_selection: dict[str, int | str] | None = None
     if cap_qrels_to_top_k:
         positive_qrels, qrels_selection = _cap_qrels_per_query(

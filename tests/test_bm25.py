@@ -100,11 +100,76 @@ def test_resolve_bm25_config_auto_selects_wordseg_for_vietnamese() -> None:
     assert config.auto_detected_language == "vi"
 
 
-def test_resolve_bm25_config_auto_selects_regex_for_other_languages() -> None:
+def test_resolve_bm25_config_auto_selects_english_porter_stop_for_english() -> None:
     config = resolve_bm25_config_for_queries(
         BM25Config(tokenizer=None),
         {"q1": "what is bm25", "q2": "retrieval benchmark"},
         detector=lambda _: {"lang": "en", "score": 0.98},
+    )
+
+    assert config.tokenizer == "english_porter_stop"
+    assert config.tokenizer_name is None
+    assert config.auto_selected is True
+    assert config.auto_detected_language == "en"
+
+
+def test_resolve_bm25_config_auto_selects_language_stemmer() -> None:
+    config = resolve_bm25_config_for_queries(
+        BM25Config(tokenizer=None),
+        {"q1": "was ist bm25", "q2": "retrieval benchmark"},
+        detector=lambda _: {"lang": "de", "score": 0.98},
+    )
+
+    assert config.tokenizer == "stemmer"
+    assert config.tokenizer_name is None
+    assert config.stemmer_algorithm == "german"
+    assert config.auto_detected_language == "de"
+
+
+def test_resolve_bm25_config_auto_selects_whitespace_for_bengali() -> None:
+    config = resolve_bm25_config_for_queries(
+        BM25Config(tokenizer=None),
+        {"q1": "বাংলা তথ্য অনুসন্ধান", "q2": "প্রশ্ন উত্তর"},
+        detector=lambda _: {"lang": "bn", "score": 0.98},
+    )
+
+    assert config.tokenizer == "whitespace"
+    assert config.tokenizer_name is None
+    assert config.auto_detected_language == "bn"
+
+
+def test_resolve_bm25_config_auto_selects_regex_for_other_languages() -> None:
+    config = resolve_bm25_config_for_queries(
+        BM25Config(tokenizer=None),
+        {"q1": "جستجوی اطلاعات", "q2": "بازیابی متن"},
+        detector=lambda _: {"lang": "fa", "score": 0.98},
+    )
+
+    assert config.tokenizer == "regex"
+    assert config.tokenizer_name is None
+    assert config.auto_selected is True
+    assert config.auto_detected_language == "fa"
+
+
+def test_resolve_bm25_config_uses_metadata_language_before_detector() -> None:
+    config = resolve_bm25_config_for_queries(
+        BM25Config(tokenizer=None),
+        {"q1": "short query that fast-langdetect might misclassify"},
+        detector=lambda _: {"lang": "en", "score": 0.98},
+        metadata={"language": "ja", "category": "natural_language"},
+    )
+
+    assert config.tokenizer == "wordseg"
+    assert config.tokenizer_name == "ja"
+    assert config.auto_detected_language == "en"
+
+
+def test_resolve_bm25_config_uses_regex_for_code_metadata() -> None:
+    config = resolve_bm25_config_for_queries(
+        BM25Config(tokenizer=None),
+        {"q1": "def solve(nums): return sorted(nums)"},
+        detector=lambda _: {"lang": "en", "score": 0.98},
+        metadata={"language": "en", "category": "code"},
     )
 
     assert config.tokenizer == "regex"

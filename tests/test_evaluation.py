@@ -16,6 +16,7 @@ from hakari_bench.datasets import EvalTask, NanoDatasetSpec
 from hakari_bench.evaluation import (
     LoadedIrDataset,
     QuantizedEmbeddingMatrix,
+    candidate_safeguard_metadata,
     evaluate_dense_task,
     evaluate_late_interaction_task,
     evaluate_reranker_task,
@@ -118,6 +119,25 @@ def _toy_dataset_without_candidates() -> LoadedIrDataset:
         candidates=None,
         evaluator_name=dataset.evaluator_name,
     )
+
+
+def test_candidate_safeguard_metadata_identifies_rank101_positive() -> None:
+    candidates = {
+        "q1": [f"d{i:03d}" for i in range(100)] + ["d120"],
+        "q2": [f"x{i:03d}" for i in range(100)],
+        "q3": [f"y{i:03d}" for i in range(50)],
+    }
+
+    metadata = candidate_safeguard_metadata(
+        candidates=candidates,
+        qrels={"q1": {"d120"}, "q2": {"x010"}, "q3": {"y049"}},
+    )
+
+    assert metadata["policy"] == "RRF top-100 plus optional safeguard positive at rank 101"
+    assert metadata["candidate_count_100"] == 1
+    assert metadata["candidate_count_101"] == 1
+    assert metadata["safeguard_query_count"] == 1
+    assert metadata["safeguard_corpus_ids_by_query"] == {"q1": "d120"}
 
 
 def test_load_ir_dataset_can_restrict_corpus_to_candidate_documents(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -2661,10 +2681,10 @@ def test_run_or_load_task_records_auto_bm25_config(tmp_path: Path, monkeypatch: 
     )
 
     assert result.payload["config"]["bm25"]["algorithm"] == "okapi"
-    assert result.payload["config"]["bm25"]["tokenizer"] == "regex"
+    assert result.payload["config"]["bm25"]["tokenizer"] == "english_porter_stop"
     assert result.payload["config"]["bm25"]["auto_selected"] is True
     assert result.payload["config"]["bm25"]["auto_detected_language"] == "en"
-    assert result.payload["model"]["bm25"]["tokenizer"] == "regex"
+    assert result.payload["model"]["bm25"]["tokenizer"] == "english_porter_stop"
 
 
 def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -> None:

@@ -144,8 +144,15 @@ zero, the split has more positives than the BM25 candidate cap can cover, or the
 candidate list is too short. Fix this by changing query selection, increasing
 `--top-k`, or explicitly documenting a qrels capping policy.
 
-For datasets used by top-100 reranking diagnostics, `candidate_coverage` should
-show both `query_coverage` and `relevant_coverage` as `1.0`.
+For datasets used by `reranking_hybrid` diagnostics, the candidate subset should
+follow the "RRF top-100 plus optional safeguard positive at rank 101" policy.
+Rows with 100 candidates mean the RRF top-100 already contains a qrels-positive
+document; rows with 101 candidates mean the 101st document is a safeguard
+positive appended only because the RRF top-100 missed all positives. Small
+corpus tasks with fewer than 100 documents should cover every qrels-positive
+document present in the corpus without adding a safeguard row. `candidate_coverage`
+should show both `query_coverage` and `relevant_coverage` as `1.0` for the
+safeguarded candidate set.
 
 To rebuild MNanoBEIR BM25 subsets without changing the existing corpus, queries,
 or qrels, use:
@@ -159,7 +166,9 @@ uv run python scripts/rebuild_mnanobeir_bm25.py \
 The script snapshots the published `hakari-bench/NanoBEIR-*` dataset layouts,
 regenerates `bm25/*.parquet`, updates split metadata, rewrites dataset READMEs,
 and fails by default if any rebuilt split is not 100% covered at top-k. It uses
-`--tokenizer auto` by default, so multilingual rebuilds should be run in an
+`--tokenizer auto` by default: code tasks use `regex`, and natural-language tasks
+use metadata language or deterministic query-language detection to choose a
+language-specific tokenizer. Multilingual rebuilds should be run in an
 environment prepared with `uv sync --extra wordseg`; otherwise languages that
 auto-select `wordseg` will fail with an actionable missing-dependency error.
 

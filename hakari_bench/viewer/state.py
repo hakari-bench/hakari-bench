@@ -74,7 +74,7 @@ def normalize_query_state(
         sort = "borda_rank"
     if direction not in {"asc", "desc"}:
         direction = "asc"
-    if target not in {"all", "reranking"}:
+    if target not in {"all", "reranking", "reranking_without_safeguard"}:
         target = "all"
     display_flags = variant_display_flags_from_values(
         variants=variants,

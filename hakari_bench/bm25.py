@@ -42,6 +42,18 @@ WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES: dict[str, tuple[str, ...]] = {
     "ko": ("kiwipiepy",),
     "vi": ("pyvi.ViTokenizer",),
 }
+STEMMER_ALGORITHM_BY_LANGUAGE = {
+    "ar": "arabic",
+    "de": "german",
+    "es": "spanish",
+    "fi": "finnish",
+    "fr": "french",
+    "hi": "hindi",
+    "id": "indonesian",
+    "ru": "russian",
+}
+WHITESPACE_TOKENIZER_LANGUAGES = {"bn", "te"}
+REGEX_TOKENIZER_LANGUAGES = {"fa", "sw", "yo"}
 _ENGLISH_STOPWORDS = frozenset(
     {
         "a",
@@ -364,6 +376,7 @@ def resolve_bm25_config_for_queries(
     queries: dict[str, str],
     *,
     detector: Callable[[str], Any] | None = None,
+    metadata: dict[str, Any] | None = None,
 ) -> BM25Config:
     if config.tokenizer is not None:
         return config
@@ -373,18 +386,37 @@ def resolve_bm25_config_for_queries(
     languages = [language for language, _score in detections if language]
     language_counts = dict(Counter(languages))
     detected_language = _select_detected_language(detections)
+    policy_language = _metadata_language(metadata) or detected_language
 
-    if detected_language in WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES:
+    if _metadata_category(metadata) == "code":
+        tokenizer = "regex"
+        tokenizer_name = None
+        stemmer_algorithm = config.stemmer_algorithm
+    elif policy_language in WORD_SEGMENTATION_TOKENIZER_DEPENDENCIES:
         tokenizer = "wordseg"
-        tokenizer_name = detected_language
+        tokenizer_name = policy_language
+        stemmer_algorithm = config.stemmer_algorithm
+    elif policy_language == "en":
+        tokenizer = "english_porter_stop"
+        tokenizer_name = None
+        stemmer_algorithm = config.stemmer_algorithm
+    elif policy_language in STEMMER_ALGORITHM_BY_LANGUAGE:
+        tokenizer = "stemmer"
+        tokenizer_name = None
+        stemmer_algorithm = STEMMER_ALGORITHM_BY_LANGUAGE[policy_language]
+    elif policy_language in WHITESPACE_TOKENIZER_LANGUAGES:
+        tokenizer = "whitespace"
+        tokenizer_name = None
+        stemmer_algorithm = config.stemmer_algorithm
     else:
         tokenizer = "regex"
         tokenizer_name = None
+        stemmer_algorithm = config.stemmer_algorithm
 
     return BM25Config(
         tokenizer=tokenizer,
         tokenizer_name=tokenizer_name,
-        stemmer_algorithm=config.stemmer_algorithm,
+        stemmer_algorithm=stemmer_algorithm,
         top_k=config.top_k,
         k1=config.k1,
         b=config.b,
@@ -394,6 +426,29 @@ def resolve_bm25_config_for_queries(
         auto_detection_language_counts=language_counts,
         auto_detection_sample_size=len(sampled_queries),
     )
+
+
+def _metadata_language(metadata: dict[str, Any] | None) -> str | None:
+    if not isinstance(metadata, dict):
+        return None
+    language = metadata.get("language")
+    if isinstance(language, str):
+        normalized = _normalize_language_code(language)
+        if normalized and normalized != "multilingual":
+            return normalized
+    languages = metadata.get("languages")
+    if isinstance(languages, list) and len(languages) == 1 and isinstance(languages[0], str):
+        normalized = _normalize_language_code(languages[0])
+        if normalized and normalized != "multilingual":
+            return normalized
+    return None
+
+
+def _metadata_category(metadata: dict[str, Any] | None) -> str | None:
+    if not isinstance(metadata, dict):
+        return None
+    category = metadata.get("category")
+    return str(category).strip().lower() if category is not None else None
 
 
 def rankings_to_candidate_rows(rankings: dict[str, list[str]]) -> list[dict[str, Any]]:
@@ -417,7 +472,7 @@ def run_or_load_bm25_task(
     args: Any,
     config: BM25Config,
 ) -> BM25BuildResult:
-    resolved_config = resolve_bm25_config_for_queries(config, dataset.queries)
+    resolved_config = resolve_bm25_config_for_queries(config, dataset.queries, metadata=task.metadata)
     output_path = bm25_candidate_path_for_task(output_dir=Path(args.output_dir), task=task, config=resolved_config)
     if output_path.exists() and not args.override:
         return BM25BuildResult(

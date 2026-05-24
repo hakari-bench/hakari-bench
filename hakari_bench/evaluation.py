@@ -30,6 +30,7 @@ QUANTIZED_RESCORE_SCORE_REPRESENTATIONS = {
     TORCH_RESCORE_SCORE_REPRESENTATION,
 }
 TOP_RANKING_ARTIFACT_DEPTH = 100
+RERANKING_HYBRID_RRF_TOP_K = 100
 
 
 @dataclass(frozen=True)
@@ -392,6 +393,15 @@ def evaluate_reranker_task(
 
     candidate_label = _candidate_ranking_score_label(candidate_ranking_name)
     effective_rerank_top_n = _effective_rerank_top_n(dataset.candidates, rerank_top_n)
+    safeguard_metadata = (
+        candidate_safeguard_metadata(
+            candidates=dataset.candidates,
+            qrels=dataset.qrels,
+            rrf_top_k=RERANKING_HYBRID_RRF_TOP_K,
+        )
+        if candidate_label == "reranking_hybrid"
+        else None
+    )
     score_start = time.perf_counter()
     if _can_score_reranker_pairs(model):
         rankings = _rank_all_with_reranker_model(
@@ -456,6 +466,7 @@ def evaluate_reranker_task(
                 "best_score_name": "reranker",
                 "metrics": metrics,
                 "candidate_coverage": candidate_coverage,
+                **({"safeguard": safeguard_metadata} if safeguard_metadata is not None else {}),
             }
         ],
         rerank_aggregate_metric_value=_aggregate_metric_value_for(metrics, aggregate_metric),
@@ -474,6 +485,11 @@ def evaluate_reranker_task(
                 distance="reranker",
                 score_name="reranker",
                 rankings=rankings,
+                safeguard_corpus_ids_by_query=(
+                    cast(dict[str, str], safeguard_metadata["safeguard_corpus_ids_by_query"])
+                    if safeguard_metadata is not None
+                    else None
+                ),
             )
         ],
     )
@@ -1224,7 +1240,7 @@ def _embedding_evaluation_payload(
     timing: dict[str, float],
     aggregate_metric: str,
 ) -> dict[str, Any]:
-    payload = {
+    payload: dict[str, Any] = {
         "name": name,
         "transform": transform,
         "embedding_dimensions": embedding_dimensions,
@@ -1278,6 +1294,16 @@ def _score_embedding_distances(
         if candidates is not None and effective_rerank_top_n is not None
         else None
     )
+    candidate_label = _candidate_ranking_score_label(candidate_ranking_name)
+    safeguard_metadata = (
+        candidate_safeguard_metadata(
+            candidates=candidates,
+            qrels=qrels,
+            rrf_top_k=RERANKING_HYBRID_RRF_TOP_K,
+        )
+        if candidates is not None and candidate_label == "reranking_hybrid"
+        else None
+    )
     score_seconds = 0.0
     metric_seconds = 0.0
     for distance in _distance_names(preferred_score_name):
@@ -1316,7 +1342,6 @@ def _score_embedding_distances(
         )
 
         if candidates is not None:
-            candidate_label = _candidate_ranking_score_label(candidate_ranking_name)
             rerank_score_name = f"{metric_score_name}_{candidate_label}_top{effective_rerank_top_n}_rerank"
             rerank_metric_start = time.perf_counter()
             rerank_rankings = _rank_candidate_subset_by_similarity(
@@ -1346,6 +1371,11 @@ def _score_embedding_distances(
                     distance=distance,
                     score_name=rerank_score_name,
                     rankings=rerank_rankings,
+                    safeguard_corpus_ids_by_query=(
+                        cast(dict[str, str], safeguard_metadata["safeguard_corpus_ids_by_query"])
+                        if safeguard_metadata is not None
+                        else None
+                    ),
                 )
             )
             rerank_distance_evaluations.append(
@@ -1387,6 +1417,7 @@ def _score_embedding_distances(
         aggregate_metric=aggregate_metric,
         candidate_coverage=candidate_coverage,
         candidate_ranking_name=candidate_ranking_name,
+        safeguard=safeguard_metadata,
     )
     return {
         "distance_evaluations": distance_evaluations,
@@ -1413,8 +1444,9 @@ def top_ranking_payload(
     score_name: str,
     rankings: dict[str, list[str]],
     top_k: int = TOP_RANKING_ARTIFACT_DEPTH,
+    safeguard_corpus_ids_by_query: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    return {
+    payload: dict[str, Any] = {
         "name": name,
         "ranking_kind": ranking_kind,
         "embedding_variant_name": embedding_variant_name,
@@ -1422,6 +1454,55 @@ def top_ranking_payload(
         "score_name": score_name,
         "rankings": {query_id: corpus_ids[:top_k] for query_id, corpus_ids in rankings.items()},
     }
+    if safeguard_corpus_ids_by_query is not None:
+        payload["safeguard_policy"] = "RRF top-100 plus optional safeguard positive at rank 101"
+        payload["safeguard_corpus_ids_by_query"] = dict(safeguard_corpus_ids_by_query)
+    return payload
+
+
+def candidate_safeguard_metadata(
+    *,
+    candidates: dict[str, list[str]],
+    qrels: dict[str, set[str]],
+    rrf_top_k: int = RERANKING_HYBRID_RRF_TOP_K,
+) -> dict[str, Any]:
+    safeguard_corpus_ids_by_query: dict[str, str] = {}
+    candidate_count_100 = 0
+    candidate_count_101 = 0
+    for query_id, candidate_ids in candidates.items():
+        deduped = _deduped_candidate_ids(candidate_ids)
+        if len(deduped) == rrf_top_k:
+            candidate_count_100 += 1
+        elif len(deduped) == rrf_top_k + 1:
+            candidate_count_101 += 1
+        positives = {str(doc_id) for doc_id in qrels.get(query_id, set())}
+        if len(deduped) != rrf_top_k + 1 or not positives:
+            continue
+        rrf_candidates = deduped[:rrf_top_k]
+        safeguard_candidate = deduped[rrf_top_k]
+        if safeguard_candidate in positives and not positives.intersection(rrf_candidates):
+            safeguard_corpus_ids_by_query[str(query_id)] = safeguard_candidate
+    return {
+        "policy": "RRF top-100 plus optional safeguard positive at rank 101",
+        "rrf_top_k": rrf_top_k,
+        "safeguard_rank": rrf_top_k + 1,
+        "candidate_count_100": candidate_count_100,
+        "candidate_count_101": candidate_count_101,
+        "safeguard_query_count": len(safeguard_corpus_ids_by_query),
+        "safeguard_corpus_ids_by_query": safeguard_corpus_ids_by_query,
+    }
+
+
+def _deduped_candidate_ids(candidate_ids: list[str]) -> list[str]:
+    deduped: list[str] = []
+    seen: set[str] = set()
+    for candidate_id in candidate_ids:
+        normalized = str(candidate_id)
+        if normalized in seen:
+            continue
+        seen.add(normalized)
+        deduped.append(normalized)
+    return deduped
 
 
 def _rank_candidate_subset_by_similarity(
@@ -1467,6 +1548,7 @@ def _candidate_reranking_evaluation(
     aggregate_metric: str,
     candidate_coverage: dict[str, int | float | None] | None = None,
     candidate_ranking_name: str | None = DEFAULT_CANDIDATE_RANKING,
+    safeguard: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     candidate_label = _candidate_ranking_score_label(candidate_ranking_name)
     name = f"{candidate_label}_top_{rerank_top_n}" if rerank_top_n is not None else f"{candidate_label}_all"
@@ -1494,6 +1576,8 @@ def _candidate_reranking_evaluation(
     }
     if candidate_coverage is not None:
         payload["candidate_coverage"] = candidate_coverage
+    if safeguard is not None:
+        payload["safeguard"] = safeguard
     return payload
 
 

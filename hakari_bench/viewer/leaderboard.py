@@ -20,7 +20,7 @@ from hakari_bench.viewer.text_match import active_filter_terms, text_matches_fil
 from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
 
 SortDirection = Literal["asc", "desc"]
-ScoreTarget = Literal["all", "reranking"]
+ScoreTarget = Literal["all", "reranking", "reranking_without_safeguard"]
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 
 

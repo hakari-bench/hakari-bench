@@ -311,9 +311,14 @@ and `evaluation.reranking_evaluations`. Candidate coverage against qrels is
 stored in the reranking evaluation so candidate recall can be separated
 from reranker quality. By default, reranking uses all candidates provided by the
 selected candidate subset, so no rerank depth has to be specified. For
-`reranking_hybrid` diagnostics, published Nano
-datasets should have 100% query coverage unless a dataset README explicitly
-documents why that is impossible. The CLI prints a
+`reranking_hybrid` diagnostics, the candidate subset is defined as "RRF top-100
+plus optional safeguard positive at rank 101": rows with 100 candidates already
+contain a qrels-positive document in the RRF top-100, while rows with 101
+candidates have the rank-101 document appended only because the RRF top-100
+missed all positives. DuckDB builds materialize both `reranking` scores with
+the safeguard and `reranking_without_safeguard` scores with that rank-101
+positive removed. Published Nano datasets should have 100% query coverage unless
+a dataset README explicitly documents why that is impossible. The CLI prints a
 JSON summary with `primary_metric_mean` and task counts after the run. If
 candidates are unavailable, the full-corpus evaluation still succeeds and
 reranking is recorded as skipped.
@@ -382,17 +387,21 @@ The rebuild script writes upload-ready local dataset repo layouts and regenerate
 each dataset README. The generated BM25 table includes query and relevant
 coverage columns, and the default run fails if any rebuilt split is not 100%
 covered at top-100. The script defaults to `--tokenizer auto`, matching the
-normal local BM25 policy: it detects query language and uses `wordseg` for
-supported languages such as `ja`, `ko`, `th`, and `vi`. Install the `wordseg`
-extra before rebuilding multilingual BM25 subsets.
+normal local BM25 policy: task metadata marked `category: code` uses `regex`;
+otherwise the task language, or a deterministic sample of 10 detected query
+languages, selects a language-specific tokenizer. Install the `wordseg` extra
+before rebuilding multilingual BM25 subsets that need segmentation.
 
 Local BM25 scoring uses `bm25s` with the standard Okapi-style Robertson method.
 Available tokenizers for `--bm25-source computed` and `build-candidates bm25`
 are `regex`, `whitespace`, `transformer`, `stemmer`, `english_regex`,
 `english_porter`, `english_porter_stop`, and `wordseg`. The local default is
-`auto`: 10 query texts are sampled deterministically and detected with
-`fast-langdetect`. If the detected language supports `wordseg`, BM25 uses
-`wordseg`; otherwise it uses `regex`.
+`auto`: task metadata marked `category: code` uses `regex`; otherwise metadata
+language, or 10 query texts sampled deterministically and detected with
+`fast-langdetect`, selects the tokenizer. The built-in policy uses `wordseg` for
+`ja`, `zh`, `th`, `ko`, and `vi`; `english_porter_stop` for `en`; Snowball
+`stemmer` for `ar`, `de`, `es`, `fi`, `fr`, `hi`, `id`, and `ru`; `whitespace`
+for `bn` and `te`; and `regex` for `fa`, `sw`, `yo`, and unknown languages.
 
 The resolved BM25 algorithm and tokenizer are written to each result JSON under
 `config.bm25` and `model.bm25`.

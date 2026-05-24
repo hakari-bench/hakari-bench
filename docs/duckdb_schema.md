@@ -216,7 +216,7 @@ The web viewer exposes four user-facing query surfaces over the DuckDB file:
 | UI surface | source tables | semantics |
 | --- | --- | --- |
 | Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
-| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores and `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
+| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores, `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`, and `Reranking without safeguard` removes the optional rank-101 safeguard positive before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
 | Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for quantization-first comparisons; rescore and `truncate_dim` variants are hidden unless explicitly enabled in the panel. |
 | Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
 | Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
@@ -452,8 +452,11 @@ default full-corpus score and candidate-reranking score in the same row shape
 with a `score_target` discriminator instead of adding one score column per
 target. `score_target = 'all'` rows are copied from `task_results.score`.
 `score_target = 'reranking'` rows are copied from `task_diagnostics.rerank_score`
-when the diagnostic row is available for `reranking_hybrid` reranking. Reranking rows
-are currently base-only because diagnostics do not yet carry embedding-variant
+when the diagnostic row is available for `reranking_hybrid` reranking.
+`score_target = 'reranking_without_safeguard'` rows are derived during DuckDB
+creation from `artifacts.top_rankings` by removing each query's optional
+rank-101 safeguard positive before recomputing metrics. Reranking rows are
+currently base-only because diagnostics do not yet carry embedding-variant
 identity. The viewer also adds the BM25 `score_target = 'all'` rows as the
 candidate-order baseline in `Reranking` displays, unless the DuckDB build has
 already materialized BM25 rows for `score_target = 'reranking'`.
@@ -550,7 +553,7 @@ for summary values, not the source of the full viewer metric set.
 | `metric_name` | `VARCHAR` | Metric name, such as `NanoJaCWIR_ndcg@10`. |
 | `metric_value` | `DOUBLE` | Metric value. |
 | `result_path` | `VARCHAR` | Source task JSON path. |
-| `score_target` | `VARCHAR` | `all` for full-corpus retrieval or `reranking` for `reranking_hybrid` rerank scores. |
+| `score_target` | `VARCHAR` | `all` for full-corpus retrieval, `reranking` for `reranking_hybrid` with safeguard, or `reranking_without_safeguard` with the optional rank-101 safeguard positive removed. |
 | `embedding_variant_name` | `VARCHAR` | Embedding variant name, or `NULL` for base rows. |
 
 ### `fact_metric_score`
@@ -559,8 +562,9 @@ for summary values, not the source of the full viewer metric set.
 `metrics_long` and `dim_metric`. It keeps detailed metrics separate from the
 primary leaderboard score in `fact_task_score`. For `Target: All`, the viewer
 uses metric names that do not contain `_reranking_hybrid_top`. For
-`Target: Reranking`, the viewer uses metric rows with `score_target =
-'reranking'` and metric names that contain `_reranking_hybrid_top`.
+`Target: Reranking` and `Target: Reranking without safeguard`, the viewer uses
+metric rows with the selected reranking `score_target` and metric names that
+contain `_reranking_hybrid_top`.
 
 | column | type | meaning |
 | --- | --- | --- |

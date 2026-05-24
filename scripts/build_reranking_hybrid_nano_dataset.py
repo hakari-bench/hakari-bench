@@ -13,6 +13,7 @@ from datasets import Dataset, get_dataset_split_names, load_dataset
 from sentence_transformers import SentenceTransformer
 
 from hakari_bench.bm25 import BM25Config, rank_bm25_candidates, resolve_bm25_config_for_queries
+from hakari_bench.datasets import DatasetRegistry
 
 SOURCE_DATASET = "hakari-bench/NanoMMTEB-v2"
 HARRIER_MODEL_ID = "microsoft/harrier-oss-v1-270m"
@@ -51,10 +52,10 @@ def build_dataset(
     device: str = "cpu",
     batch_size: int = 64,
     dense_score_batch_size: int = 64,
-    bm25_top_k: int = 100,
-    dense_top_k: int = 100,
-    hybrid_top_k: int = 101,
-    rrf_k: int = 60,
+    bm25_top_k: int = 500,
+    dense_top_k: int = 500,
+    hybrid_top_k: int = 100,
+    rrf_k: int = 100,
     seed: int = 20260524,
     overwrite: bool = False,
     show_progress: bool = False,
@@ -86,14 +87,17 @@ def build_dataset(
                 "document_prompt_name": None,
             },
             HYBRID_CONFIG_NAME: {
-                "top_k": hybrid_top_k,
+                "rrf_top_k": hybrid_top_k,
+                "max_candidates_per_query": hybrid_top_k + 1,
                 "method": "reciprocal_rank_fusion",
                 "rrf_k": rrf_k,
                 "random_seed": seed,
+                "construction_policy": "RRF top-100 plus optional safeguard positive at rank 101",
             },
         },
         "splits": {},
     }
+    task_metadata_by_split = builtin_task_metadata_by_split(source_dataset)
 
     for split in resolved_splits:
         split_metadata = build_split(
@@ -101,6 +105,7 @@ def build_dataset(
             split=split,
             output_dir=output_dir,
             model=model,
+            task_metadata=task_metadata_by_split.get(split),
             bm25_top_k=bm25_top_k,
             dense_top_k=dense_top_k,
             hybrid_top_k=hybrid_top_k,
@@ -135,10 +140,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", default="cuda:0" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--dense-score-batch-size", type=int, default=64)
-    parser.add_argument("--bm25-top-k", type=int, default=100)
-    parser.add_argument("--dense-top-k", type=int, default=100)
-    parser.add_argument("--hybrid-top-k", type=int, default=101)
-    parser.add_argument("--rrf-k", type=int, default=60)
+    parser.add_argument("--bm25-top-k", type=int, default=500)
+    parser.add_argument("--dense-top-k", type=int, default=500)
+    parser.add_argument("--hybrid-top-k", type=int, default=100)
+    parser.add_argument("--rrf-k", type=int, default=100)
     parser.add_argument("--seed", type=int, default=20260524)
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--show-progress", action="store_true")
@@ -151,6 +156,7 @@ def build_split(
     split: str,
     output_dir: Path,
     model: SentenceTransformer,
+    task_metadata: dict[str, Any] | None,
     bm25_top_k: int,
     dense_top_k: int,
     hybrid_top_k: int,
@@ -174,6 +180,7 @@ def build_split(
     bm25_config = resolve_bm25_config_for_queries(
         BM25Config(top_k=bm25_top_k, show_progress=show_progress),
         queries,
+        metadata=task_metadata,
     )
     bm25_rankings = rank_bm25_candidates(corpus=corpus, queries=queries, config=bm25_config)
     dense_rankings = rank_harrier_candidates(
@@ -210,8 +217,10 @@ def build_split(
             "candidate_count_max": max_len(bm25_rankings),
             "resolved_tokenizer": bm25_config.tokenizer,
             "resolved_tokenizer_name": bm25_config.tokenizer_name,
+            "resolved_stemmer_algorithm": bm25_config.stemmer_algorithm,
             "auto_detected_language": bm25_config.auto_detected_language,
             "auto_detection_language_counts": bm25_config.auto_detection_language_counts,
+            "auto_detection_sample_size": bm25_config.auto_detection_sample_size,
         },
         HARRIER_CONFIG_NAME: {
             "candidate_count_min": min_len(dense_rankings),
@@ -262,6 +271,24 @@ def rank_harrier_candidates(
     return rankings
 
 
+def builtin_task_metadata_by_split(source_dataset: str) -> dict[str, dict[str, Any]]:
+    try:
+        registry = DatasetRegistry.load_builtin()
+    except Exception:
+        return {}
+    for dataset_name in registry.dataset_names():
+        spec = registry.get_dataset(dataset_name)
+        if spec.dataset_id != source_dataset:
+            continue
+        splits = spec.splits or get_dataset_split_names(spec.dataset_id, "queries")
+        split_mapping = spec.effective_split_mapping or {}
+        return {
+            split: spec.metadata_for_task(split_name=split, task_name=split_mapping.get(split, split))
+            for split in splits
+        }
+    return {}
+
+
 def rrf_hybrid_rankings(
     *,
     query_ids: list[str],
@@ -276,8 +303,7 @@ def rrf_hybrid_rankings(
 ) -> tuple[dict[str, list[str]], dict[str, Any]]:
     corpus_set = set(corpus_ids)
     rankings: dict[str, list[str]] = {}
-    forced_positive_count = 0
-    random_filler_count = 0
+    safeguard_positive_count = 0
     limited_by_corpus_count = 0
     covered_query_count = 0
     relevant_query_count = 0
@@ -300,7 +326,8 @@ def rrf_hybrid_rankings(
                 best_source_rank[doc_id] = min(best_source_rank.get(doc_id, rank), rank)
 
         ordered = sorted(scores, key=lambda doc_id: (-scores[doc_id], best_source_rank[doc_id], doc_id))
-        ranking = ordered[: min(top_k, len(corpus_ids))]
+        rrf_limit = min(top_k, len(corpus_ids))
+        ranking = ordered[:rrf_limit]
         positives = [doc_id for doc_id in sorted(qrels.get(query_id, set())) if doc_id in corpus_set]
         if positives:
             relevant_query_count += 1
@@ -313,27 +340,16 @@ def rrf_hybrid_rankings(
                 query_id=query_id,
                 reason="positive_safeguard",
             )
-            ranking = add_or_replace_tail(ranking, selected_positive, top_k=top_k)
-            forced_positive_count += 1
+            ranking = add_safeguard_tail(ranking, selected_positive, top_k=top_k)
+            safeguard_positive_count += 1
             additions.append(
                 {
                     "query_id": query_id,
-                    "reason": "positive_safeguard",
+                    "reason": "missing_positive_in_rrf_top_100",
                     "corpus_id": selected_positive,
+                    "rank": min(top_k, len(corpus_ids)) + 1,
                 }
             )
-        elif len(ranking) < top_k and len(ranking) < len(corpus_ids):
-            remaining = [doc_id for doc_id in corpus_ids if doc_id not in set(ranking)]
-            selected_doc = stable_random_choice(
-                remaining,
-                seed=seed,
-                split=split,
-                query_id=query_id,
-                reason="random_filler",
-            )
-            ranking.append(selected_doc)
-            random_filler_count += 1
-            additions.append({"query_id": query_id, "reason": "random_filler", "corpus_id": selected_doc})
 
         if len(ranking) < top_k and len(ranking) == len(corpus_ids):
             limited_by_corpus_count += 1
@@ -354,18 +370,20 @@ def rrf_hybrid_rankings(
         "relevant_count": relevant_count,
         "covered_relevant_count": covered_relevant_count,
         "relevant_coverage": covered_relevant_count / relevant_count if relevant_count else 0.0,
-        "forced_positive_count": forced_positive_count,
-        "random_filler_count": random_filler_count,
+        "construction_policy": "RRF top-100 plus optional safeguard positive at rank 101",
+        "rrf_top_k": top_k,
+        "safeguard_rank": top_k + 1,
+        "safeguard_positive_count": safeguard_positive_count,
         "limited_by_corpus_size_count": limited_by_corpus_count,
         "additions": additions,
     }
 
 
-def add_or_replace_tail(ranking: list[str], doc_id: str, *, top_k: int) -> list[str]:
+def add_safeguard_tail(ranking: list[str], doc_id: str, *, top_k: int) -> list[str]:
     if doc_id in ranking:
-        return ranking[:top_k]
+        return ranking[: top_k + 1]
     if len(ranking) >= top_k:
-        return [*ranking[: top_k - 1], doc_id]
+        return [*ranking[:top_k], doc_id]
     return [*ranking, doc_id]
 
 
@@ -411,8 +429,7 @@ def write_dataset_readme(*, output_dir: Path, splits: list[str], metadata: dict[
         )
     frontmatter = yaml.safe_dump({"configs": configs}, sort_keys=False, allow_unicode=True)
     split_summaries = metadata["splits"]
-    forced_count = sum(item[HYBRID_CONFIG_NAME]["forced_positive_count"] for item in split_summaries.values())
-    filler_count = sum(item[HYBRID_CONFIG_NAME]["random_filler_count"] for item in split_summaries.values())
+    safeguard_count = sum(item[HYBRID_CONFIG_NAME]["safeguard_positive_count"] for item in split_summaries.values())
     limited_count = sum(item[HYBRID_CONFIG_NAME]["limited_by_corpus_size_count"] for item in split_summaries.values())
     readme = f"""---
 {frontmatter}---
@@ -422,20 +439,20 @@ This local dataset was generated from `{metadata["source_dataset"]}` and is not 
 
 Candidate configs:
 
-- `bm25`: locally recomputed BM25 top-100 with automatic language-aware tokenization. The tokenizer uses `wordseg` for supported detected languages and `regex` otherwise.
-- `{HARRIER_CONFIG_NAME}`: dense top-100 from `{HARRIER_MODEL_ID}`. Queries use the SentenceTransformers `{HARRIER_QUERY_PROMPT_NAME}` prompt; documents use no prompt.
-- `{HYBRID_CONFIG_NAME}`: top-101 Reciprocal Rank Fusion over `bm25` and `{HARRIER_CONFIG_NAME}`.
+- `bm25`: locally recomputed BM25 top-{metadata["configs"]["bm25"]["top_k"]} with automatic language-aware tokenization. Code tasks use `regex`; natural-language tasks use metadata language or query-language detection to select the tokenizer.
+- `{HARRIER_CONFIG_NAME}`: dense top-{metadata["configs"][HARRIER_CONFIG_NAME]["top_k"]} from `{HARRIER_MODEL_ID}`. Queries use the SentenceTransformers `{HARRIER_QUERY_PROMPT_NAME}` prompt; documents use no prompt.
+- `{HYBRID_CONFIG_NAME}`: RRF top-{metadata["configs"][HYBRID_CONFIG_NAME]["rrf_top_k"]} plus optional safeguard positive at rank {metadata["configs"][HYBRID_CONFIG_NAME]["max_candidates_per_query"]}. RRF uses `bm25` and `{HARRIER_CONFIG_NAME}` with `rrf_k={metadata["configs"][HYBRID_CONFIG_NAME]["rrf_k"]}`.
 
 Hybrid construction notes:
 
-- If no qrels-positive document appears in the hybrid top-101, position 101 is replaced with one deterministic random qrels-positive document.
-- If RRF produces only 100 unique documents and the corpus has additional documents, one deterministic random filler document is appended.
-- Some splits have fewer than 101 corpus documents; those candidate lists are limited by corpus size.
+- `reranking_hybrid` stores the RRF top-100 unchanged when it already contains a qrels-positive document.
+- If no qrels-positive document appears in the RRF top-100, one deterministic random qrels-positive document is appended as candidate 101.
+- A 100-candidate row therefore means RRF retrieved a positive; a 101-candidate row means candidate 101 is the safeguard positive.
+- Some splits have fewer than 100 corpus documents; those candidate lists are limited by corpus size and should already contain any qrels-positive document present in the corpus.
 
 Random addition counts:
 
-- Forced positives: {forced_count}
-- Random fillers: {filler_count}
+- Safeguard positives: {safeguard_count}
 - Limited by corpus size: {limited_count}
 
 Detailed per-split metadata is stored in `reranking_hybrid_metadata.json`.
@@ -463,12 +480,22 @@ def audit_dataset(*, output_dir: Path, splits: list[str], metadata: dict[str, An
             missing = [doc_id for doc_id in candidate_ids if doc_id not in corpus_ids]
             if missing:
                 errors.append(f"{split}/{query_id}: candidate ids missing from corpus: {missing[:3]}.")
-            expected = min(101, len(corpus_ids))
-            if len(candidate_ids) != expected:
-                errors.append(f"{split}/{query_id}: expected {expected} candidates, got {len(candidate_ids)}.")
             positives = qrels.get(query_id, set()).intersection(corpus_ids)
+            rrf_prefix = candidate_ids[: min(100, len(corpus_ids))]
+            if len(corpus_ids) < 100 and len(candidate_ids) != len(corpus_ids):
+                errors.append(f"{split}/{query_id}: expected corpus-size candidates, got {len(candidate_ids)}.")
+            elif len(corpus_ids) >= 100 and len(candidate_ids) not in {100, 101}:
+                errors.append(f"{split}/{query_id}: expected 100 or 101 candidates, got {len(candidate_ids)}.")
+            if len(candidate_ids) == 101:
+                safeguard_id = candidate_ids[100]
+                if not positives or safeguard_id not in positives or positives.intersection(rrf_prefix):
+                    errors.append(f"{split}/{query_id}: invalid rank-101 safeguard candidate.")
+            elif positives and not positives.intersection(rrf_prefix):
+                errors.append(f"{split}/{query_id}: RRF top-100 lacks positive but no safeguard candidate was appended.")
             if positives and not positives.intersection(candidate_ids):
                 errors.append(f"{split}/{query_id}: no qrels-positive candidate in hybrid list.")
+            if len(corpus_ids) < 100 and positives and not positives.intersection(candidate_ids):
+                errors.append(f"{split}/{query_id}: small corpus did not cover qrels-positive candidate.")
         split_meta = metadata["splits"][split][HYBRID_CONFIG_NAME]
         if split_meta["query_coverage"] != 1.0:
             errors.append(f"{split}: hybrid query coverage is {split_meta['query_coverage']}.")

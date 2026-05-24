@@ -42,7 +42,10 @@ def parse_args() -> argparse.Namespace:
             "english_porter_stop",
             "wordseg",
         ],
-        help="BM25 tokenizer. The default auto mode detects query language and uses wordseg for ja/zh/th/ko/vi.",
+        help=(
+            "BM25 tokenizer. The default auto mode uses task metadata or query language detection "
+            "to choose a language-specific tokenizer; code tasks use regex."
+        ),
     )
     parser.add_argument("--tokenizer-name")
     parser.add_argument("--stemmer-algorithm", default="english")
@@ -74,6 +77,7 @@ def main() -> None:
             _snapshot_dataset(spec, dataset_dir=dataset_dir, revision=args.revision)
         splits = _selected_splits(spec, selected=args.split)
         for split in splits:
+            task_name = (spec.effective_split_mapping or {}).get(split, split)
             bm25_path = _existing_split_parquet_path(dataset_dir, config="bm25", split=split)
             if bm25_path is not None and not args.overwrite:
                 print(f"skip existing {spec.name}/{split}: {bm25_path}")
@@ -88,6 +92,7 @@ def main() -> None:
                 qrels_rows=qrels_rows,
                 split_name=split,
                 bm25_config=bm25_config,
+                task_metadata=spec.metadata_for_task(split_name=split, task_name=task_name),
                 cap_qrels_to_top_k=not args.preserve_qrels,
                 require_full_coverage=not args.allow_incomplete_coverage,
             )

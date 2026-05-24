@@ -189,7 +189,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
-        target: str = Query(default="all", pattern="^(all|reranking)$"),
+        target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
@@ -311,7 +311,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
-        target: str = Query(default="all", pattern="^(all|reranking)$"),
+        target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
@@ -385,7 +385,7 @@ def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewe
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
-        target: str = Query(default="all", pattern="^(all|reranking)$"),
+        target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
@@ -913,10 +913,12 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
     target_options = [
         ("all", "All"),
         ("reranking", "Reranking"),
+        ("reranking_without_safeguard", "Reranking no safeguard"),
     ]
     tooltip = (
         "All shows full-corpus retrieval scores and excludes cross-encoder reranker runs. "
-        "Reranking shows reranking_hybrid reranking scores when available. BM25 is omitted only for @100 metrics because the candidate subset can contain relevant documents at the tail."
+        "Reranking shows reranking_hybrid reranking scores with the optional rank-101 safeguard. "
+        "Reranking no safeguard removes that rank-101 positive when present."
     )
     buttons = []
     for target, label in target_options:
