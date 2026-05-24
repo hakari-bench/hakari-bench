@@ -93,7 +93,7 @@ def test_build_nano_dataset_from_rows_writes_flat_subset_layout_yaml_and_bm25(tm
     assert config["corpus_config"] == "corpus"
     assert config["queries_config"] == "queries"
     assert config["qrels_config"] == "qrels"
-    assert config["candidate_config"] == "bm25"
+    assert config["candidate_config"] == "reranking_hybrid"
 
 
 def test_build_nano_dataset_from_rows_can_preserve_duplicate_texts(tmp_path: Path) -> None:

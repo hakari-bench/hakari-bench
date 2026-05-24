@@ -470,6 +470,8 @@ def test_evaluate_dense_task_uses_default_prompt_config_when_not_overridden() ->
     )
 
     assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+    assert result.metrics["ToyData_test_dot_acc@100"] == pytest.approx(1.0)
+    assert set(result.metrics) == {"ToyData_test_dot_ndcg@10", "ToyData_test_dot_acc@100"}
     assert model.query_calls[0]["sentences"] == ["cat query", "dog query"]
     assert "prompt" not in model.query_calls[0]
     assert "prompt_name" not in model.query_calls[0]
@@ -1773,6 +1775,7 @@ def test_evaluate_dense_task_records_bm25_top_n_reranking_metrics() -> None:
         corpus_prompt_name=None,
         truncate_dim=None,
         rerank_top_n=1,
+        candidate_ranking_name="bm25",
     )
 
     assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
@@ -1792,6 +1795,7 @@ def test_evaluate_dense_task_records_bm25_top_n_reranking_metrics() -> None:
         "relevant_coverage": 0.5,
     }
     assert result.rerank_metrics["ToyData_test_dot_bm25_top1_rerank_ndcg@10"] == pytest.approx(0.5)
+    assert result.rerank_metrics["ToyData_test_dot_bm25_top1_rerank_acc@100"] == pytest.approx(0.5)
 
 
 def test_evaluate_dense_task_skips_bm25_reranking_without_candidates() -> None:
@@ -1806,6 +1810,7 @@ def test_evaluate_dense_task_skips_bm25_reranking_without_candidates() -> None:
         corpus_prompt_name=None,
         truncate_dim=None,
         rerank_top_n=100,
+        candidate_ranking_name="bm25",
     )
 
     assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
@@ -1954,11 +1959,8 @@ def test_run_or_load_task_records_dataset_revision(tmp_path: Path, monkeypatch: 
         "source": "huggingface_hub",
     }
     manifest = result.payload["experiment_manifest"]
-    assert manifest["schema_version"] == 1
-    assert manifest["model_id"] == "hotchpotch/model"
-    assert manifest["dataset_id"] == "toy/data"
-    assert manifest["dataset_revision"] == result.payload["target"]["dataset_revision"]
-    assert manifest["candidate_ranking"] == "bm25"
+    assert manifest["schema_version"] == 2
+    assert set(manifest) == {"schema_version", "fingerprint_sha256"}
     assert len(manifest["fingerprint_sha256"]) == 64
 
 
@@ -2009,13 +2011,7 @@ def test_run_or_load_task_records_task_metadata(tmp_path: Path) -> None:
         dataset_loader=lambda _: _toy_dataset(),
     )
 
-    assert result.payload["target"]["metadata"] == {
-        "language": "en",
-        "category": "natural_language",
-        "short_description": "Toy task.",
-        "description": "Toy task metadata.",
-        "citation_keys": ["toy2024"],
-    }
+    assert "metadata" not in result.payload["target"]
 
 
 def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) -> None:
@@ -2047,14 +2043,15 @@ def test_run_or_load_task_records_embedding_variant_evaluations(tmp_path: Path) 
         dataset_loader=lambda _: _toy_dataset(),
     )
 
-    assert result.payload["config"]["embedding_variants"] == args.embedding_variants
+    assert "embedding_variants" not in result.payload["config"]
     embedding_evaluations = result.payload["evaluation"]["embedding_evaluations"]
     assert [item["name"] for item in embedding_evaluations] == ["base", "truncate_dim_1"]
     assert embedding_evaluations[1]["aggregate_metric"] == "ndcg@10"
     assert embedding_evaluations[1]["aggregate_metric_value"] < 1.0
     assert embedding_evaluations[1]["best_distance"] in {"dot", "cosine"}
     assert [item["distance"] for item in embedding_evaluations[1]["distance_evaluations"]] == ["dot", "cosine"]
-    assert result.payload["metrics"] == embedding_evaluations[0]["metrics"]
+    assert "metrics" not in embedding_evaluations[0]
+    assert set(result.payload["metrics"]) == {"ToyData_test_dot_ndcg@10", "ToyData_test_dot_acc@100"}
 
     run_summary_payload = build_run_summary_payload(
         args=args,
@@ -2124,7 +2121,44 @@ def test_run_or_load_task_records_embedding_model_reranking_evaluations(tmp_path
     assert "metrics" not in run_summary_payload["splits"][0]["reranking_evaluations"][0]["distance_evaluations"][0]
 
 
-def test_run_or_load_task_writes_top100_ranking_artifact(tmp_path: Path) -> None:
+def test_run_or_load_task_defaults_to_all_available_rerank_candidates(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        embedding_variants=[],
+        candidate_subset_name="bm25",
+        rerank_top_n=None,
+        aggregate_metric="ndcg@10",
+        override=False,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"id": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    reranking = result.payload["evaluation"]["reranking_evaluations"][0]
+    assert result.payload["config"]["rerank_top_k"] is None
+    assert reranking["name"] == "bm25_top_2"
+    assert reranking["rerank_top_n"] == 2
+    assert reranking["candidate_coverage"]["top_k"] == 2
+    assert reranking["best_score_name"] == "dot_bm25_top2_rerank"
+
+
+def test_run_or_load_task_embeds_top100_rankings_in_task_json(tmp_path: Path) -> None:
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
@@ -2140,7 +2174,6 @@ def test_run_or_load_task_writes_top100_ranking_artifact(tmp_path: Path) -> None
         embedding_variants=[],
         candidate_subset_name="bm25",
         rerank_top_n=1,
-        save_top_rankings=True,
         aggregate_metric="ndcg@10",
         override=False,
     )
@@ -2155,15 +2188,16 @@ def test_run_or_load_task_writes_top100_ranking_artifact(tmp_path: Path) -> None
     )
 
     artifact = result.payload["artifacts"]["top_rankings"]
-    ranking_path = result.output_path.parent / artifact["path"]
-    ranking_payload = json.loads(ranking_path.read_text(encoding="utf-8"))
 
     assert artifact["top_k"] == 100
-    assert artifact["path"] == "rankings/test.top100.json"
-    assert ranking_payload["schema_version"] == 1
-    assert ranking_payload["top_k"] == 100
-    assert ranking_payload["target"]["task_name"] == "test"
-    assert ranking_payload["rankings"][0] == {
+    assert "path" not in artifact
+    assert artifact["schema_version"] == 2
+    assert artifact["target"]["task_name"] == "test"
+    assert artifact["qrels"] == [
+        {"query_id": "q1", "relevant_corpus_ids": ["d1"]},
+        {"query_id": "q2", "relevant_corpus_ids": ["d2"]},
+    ]
+    assert artifact["rankings"][0] == {
         "name": "base",
         "ranking_kind": "retrieval",
         "embedding_variant_name": None,
@@ -2180,10 +2214,22 @@ def test_run_or_load_task_writes_top100_ranking_artifact(tmp_path: Path) -> None
         "score_name": "dot_bm25_top1_rerank",
         "query_id": "q1",
         "corpus_ids": ["d3"],
-    } in ranking_payload["rankings"]
+    } in artifact["rankings"]
+    assert "metadata" not in result.payload["target"]
+    assert "embedding_variants" not in result.payload["config"]
+    assert result.payload["experiment_manifest"] == {
+        "schema_version": 2,
+        "fingerprint_sha256": result.payload["experiment_manifest"]["fingerprint_sha256"],
+    }
+    base_eval = result.payload["evaluation"]["embedding_evaluations"][0]
+    assert "metrics" not in base_eval
+    assert "metrics" not in base_eval["distance_evaluations"][0]
+    assert "metrics" not in base_eval["reranking_evaluation"]
+    assert "metrics" not in base_eval["reranking_evaluation"]["distance_evaluations"][0]
+    assert set(result.payload["metrics"]) == {"ToyData_test_dot_ndcg@10", "ToyData_test_dot_acc@100"}
 
 
-def test_run_or_load_task_skips_top100_ranking_artifact_by_default(tmp_path: Path) -> None:
+def test_run_or_load_task_embeds_top100_rankings_by_default_and_removes_stale_sidecar(tmp_path: Path) -> None:
     task = _toy_task()
     stale_path = tmp_path / "hotchpotch__model" / "toy__data" / "rankings" / "test.top100.json"
     stale_path.parent.mkdir(parents=True)
@@ -2215,7 +2261,8 @@ def test_run_or_load_task_skips_top100_ranking_artifact_by_default(tmp_path: Pat
         dataset_loader=lambda _: _toy_dataset(),
     )
 
-    assert "artifacts" not in result.payload
+    assert result.payload["artifacts"]["top_rankings"]["schema_version"] == 2
+    assert "rankings" in result.payload["artifacts"]["top_rankings"]
     assert not stale_path.exists()
 
 

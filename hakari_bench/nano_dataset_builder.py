@@ -988,7 +988,7 @@ def upsert_dataset_config_yaml(
             "corpus_config": "corpus",
             "queries_config": "queries",
             "qrels_config": "qrels",
-            "candidate_config": "bm25",
+            "candidate_config": "reranking_hybrid",
             "splits": [],
             "metadata": _default_dataset_metadata(dataset_name, metadata),
         }

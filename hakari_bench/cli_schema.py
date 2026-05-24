@@ -58,7 +58,6 @@ class OutputParams(ParamsModel):
     results_dir: str | None = None
     candidates_dir: str | None = None
     overwrite: bool | None = None
-    save_top_rankings: bool | None = None
 
 
 class BuildCandidatesOutputParams(ParamsModel):

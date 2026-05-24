@@ -12,6 +12,7 @@ import numpy as np
 
 from hakari_bench.bm25 import BM25Config, evaluate_bm25_task
 from hakari_bench.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
+from hakari_bench.defaults import DEFAULT_CANDIDATE_RANKING, DEFAULT_RERANK_TOP_K
 from hakari_bench.evaluation import LoadedIrDataset, evaluate_dense_task, evaluate_reranker_task, load_ir_dataset
 from hakari_bench.metrics import normalize_ir_metric_names
 from sentence_transformers.base.evaluation import BaseEvaluator
@@ -267,7 +268,7 @@ class HakariNanoEmbeddingEvaluator(_HakariNanoBaseEvaluator):
         metrics: Sequence[str] = DEFAULT_TRAINING_METRICS,
         batch_size: int = 32,
         show_progress_bar: bool = False,
-        candidate_ranking: str | None = "bm25",
+        candidate_ranking: str | None = DEFAULT_CANDIDATE_RANKING,
         dataset_revision: str | None = None,
         query_limit: int | None = None,
         query_sample_seed: int = 13,
@@ -283,7 +284,7 @@ class HakariNanoEmbeddingEvaluator(_HakariNanoBaseEvaluator):
         sparse_document_max_active_dims: int | None = None,
         embedding_variants: list[dict[str, Any]] | None = None,
         retrieval_score_device: str = "auto",
-        rerank_top_k: int = 100,
+        rerank_top_k: int | None = DEFAULT_RERANK_TOP_K,
         write_csv: bool = False,
     ) -> None:
         super().__init__(
@@ -344,6 +345,7 @@ class HakariNanoEmbeddingEvaluator(_HakariNanoBaseEvaluator):
                 aggregate_metric=self.aggregate_metric_suffix,
                 score_device=self.retrieval_score_device,
                 rerank_top_n=self.rerank_top_k,
+                candidate_ranking_name=self.candidate_ranking,
                 metric_names=self.metric_suffixes,
             )
             task_metrics.append(evaluation.metrics)
@@ -373,17 +375,17 @@ class HakariNanoRerankerEvaluator(_HakariNanoBaseEvaluator):
         metrics: Sequence[str] = DEFAULT_TRAINING_METRICS,
         batch_size: int = 32,
         show_progress_bar: bool = False,
-        candidate_ranking: str = "bm25",
+        candidate_ranking: str = DEFAULT_CANDIDATE_RANKING,
         dataset_revision: str | None = None,
         query_limit: int | None = None,
         query_sample_seed: int = 13,
         corpus_policy: CorpusPolicy = "full",
-        rerank_top_k: int = 100,
+        rerank_top_k: int | None = DEFAULT_RERANK_TOP_K,
         inference_kwargs: dict[str, Any] | None = None,
         write_csv: bool = False,
     ) -> None:
         self.rerank_top_k = rerank_top_k
-        evaluator_name = name or f"HakariNano_R{rerank_top_k}"
+        evaluator_name = name or f"HakariNano_R{rerank_top_k if rerank_top_k is not None else 'all'}"
         super().__init__(
             targets=targets,
             name=evaluator_name,
@@ -419,6 +421,7 @@ class HakariNanoRerankerEvaluator(_HakariNanoBaseEvaluator):
                 batch_size=self.batch_size,
                 show_progress=self.show_progress_bar,
                 rerank_top_n=self.rerank_top_k,
+                candidate_ranking_name=self.candidate_ranking,
                 aggregate_metric=self.aggregate_metric_suffix,
                 score_kwargs=self.inference_kwargs,
                 metric_names=self.metric_suffixes,

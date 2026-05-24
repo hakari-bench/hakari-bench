@@ -167,6 +167,7 @@ def run_or_load_task(
             batch_size=args.batch_size,
             show_progress=args.show_progress,
             rerank_top_n=args.rerank_top_n,
+            candidate_ranking_name=getattr(args, "candidate_subset_name", None),
             aggregate_metric=args.aggregate_metric,
             score_kwargs=getattr(
                 args,
@@ -210,6 +211,7 @@ def run_or_load_task(
             aggregate_metric=args.aggregate_metric,
             score_device=getattr(args, "score_device", "auto"),
             rerank_top_n=args.rerank_top_n,
+            candidate_ranking_name=getattr(args, "candidate_subset_name", None),
             encode_devices=getattr(args, "encode_devices", None),
             encode_chunk_size=getattr(args, "encode_chunk_size", None),
             encode_pool=getattr(args, "encode_pool", None),
@@ -233,7 +235,6 @@ def run_or_load_task(
             "dataset_revision": dataset_revision,
             "split_name": task.split_name,
             "task_name": task.task_name,
-            "metadata": task.metadata,
             "corpus_config": task.dataset.corpus_config,
             "queries_config": task.dataset.queries_config,
             "qrels_config": task.dataset.qrels_config,
@@ -256,8 +257,6 @@ def run_or_load_task(
             "retrieval_score_device": getattr(args, "score_device", "auto"),
             "encode_devices": getattr(args, "encode_devices", None),
             "encode_chunk_size": getattr(args, "encode_chunk_size", None),
-            "embedding_variants": getattr(args, "embedding_variants", []),
-            "save_top_rankings": bool(getattr(args, "save_top_rankings", False)),
             "reranker_init_kwargs": getattr(args, "cross_encoder_kwargs", {})
             if args.model_type == "reranker"
             else {},
@@ -292,33 +291,27 @@ def run_or_load_task(
             "cache_hit": False,
             "timing": evaluation.timing,
             "embedding_conversion": evaluation.embedding_conversion,
-            "embedding_evaluations": evaluation.embedding_evaluations,
+            "embedding_evaluations": _slim_embedding_evaluations(evaluation.embedding_evaluations),
             "rerank_aggregate_metric_value": evaluation.rerank_aggregate_metric_value,
-            "reranking_evaluations": evaluation.reranking_evaluations,
+            "reranking_evaluations": _slim_reranking_evaluations(evaluation.reranking_evaluations),
         },
-        "metrics": evaluation.metrics,
-        "rerank_metrics": evaluation.rerank_metrics,
+        "metrics": _summary_metric_values(evaluation.metrics),
+        "rerank_metrics": _summary_metric_values(evaluation.rerank_metrics),
     }
     ranking_path = top_rankings_path_for_task(
         output_dir=Path(args.output_dir),
         model_id=getattr(args, "model_id", args.model),
         task=task,
     )
-    if getattr(args, "save_top_rankings", False) and evaluation.top_rankings:
+    if evaluation.top_rankings:
         artifact_payload = _top_rankings_artifact_payload(
             payload=payload,
             top_rankings=evaluation.top_rankings,
+            qrels=dataset.qrels,
             top_k=TOP_RANKING_ARTIFACT_DEPTH,
         )
-        relative_ranking_path = ranking_path.relative_to(output_path.parent).as_posix()
-        payload["artifacts"] = {
-            "top_rankings": {
-                "schema_version": artifact_payload["schema_version"],
-                "top_k": artifact_payload["top_k"],
-                "path": relative_ranking_path,
-            }
-        }
-        _write_json(ranking_path, artifact_payload)
+        payload["artifacts"] = {"top_rankings": artifact_payload}
+        _remove_optional_artifact(ranking_path)
     else:
         _remove_optional_artifact(ranking_path)
     payload["experiment_manifest"] = build_experiment_manifest(payload)
@@ -335,20 +328,101 @@ def _remove_optional_artifact(path: Path) -> None:
         pass
 
 
+def _summary_metric_values(metrics: dict[str, float]) -> dict[str, float]:
+    return {
+        key: float(value)
+        for key, value in metrics.items()
+        if key.lower().endswith(("ndcg@10", "acc@100"))
+    }
+
+
+def _slim_embedding_evaluations(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [_slim_embedding_evaluation(item) for item in items if isinstance(item, dict)]
+
+
+def _slim_embedding_evaluation(item: dict[str, Any]) -> dict[str, Any]:
+    keep_keys = (
+        "name",
+        "transform",
+        "embedding_dimensions",
+        "embedding_metadata",
+        "aggregate_metric",
+        "aggregate_metric_value",
+        "best_score",
+        "best_distance",
+        "best_score_name",
+        "timing",
+    )
+    payload = {key: item[key] for key in keep_keys if key in item}
+    payload["distance_evaluations"] = _slim_distance_evaluations(item.get("distance_evaluations"))
+    if "reranking_evaluation" in item:
+        payload["reranking_evaluation"] = _slim_reranking_evaluation(item.get("reranking_evaluation"))
+    return payload
+
+
+def _slim_reranking_evaluations(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [_slim_reranking_evaluation(item) for item in items if isinstance(item, dict)]
+
+
+def _slim_reranking_evaluation(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        return {}
+    keep_keys = (
+        "name",
+        "source",
+        "status",
+        "reason",
+        "rerank_top_n",
+        "aggregate_metric",
+        "aggregate_metric_value",
+        "best_score",
+        "best_distance",
+        "best_score_name",
+        "candidate_coverage",
+    )
+    payload = {key: value[key] for key in keep_keys if key in value}
+    if "distance_evaluations" in value:
+        payload["distance_evaluations"] = _slim_distance_evaluations(value.get("distance_evaluations"))
+    return payload
+
+
+def _slim_distance_evaluations(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    keep_keys = ("distance", "score_name", "aggregate_metric", "aggregate_metric_value", "timing")
+    return [
+        {key: item[key] for key in keep_keys if key in item}
+        for item in value
+        if isinstance(item, dict)
+    ]
+
+
 def _top_rankings_artifact_payload(
     *,
     payload: dict[str, Any],
     top_rankings: list[dict[str, Any]],
+    qrels: dict[str, set[str]],
     top_k: int,
 ) -> dict[str, Any]:
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "top_k": int(top_k),
         "model": payload.get("model"),
         "target": payload.get("target"),
+        "qrels": _qrels_rows(qrels),
         "rankings": _top_ranking_rows(top_rankings, top_k=top_k),
     }
+
+
+def _qrels_rows(qrels: dict[str, set[str]]) -> list[dict[str, Any]]:
+    return [
+        {
+            "query_id": str(query_id),
+            "relevant_corpus_ids": sorted(str(corpus_id) for corpus_id in relevant_corpus_ids),
+        }
+        for query_id, relevant_corpus_ids in sorted(qrels.items())
+    ]
 
 
 def _top_ranking_rows(top_rankings: list[dict[str, Any]], *, top_k: int) -> list[dict[str, Any]]:
@@ -382,24 +456,9 @@ def build_experiment_manifest(payload: dict[str, Any]) -> dict[str, Any]:
         "environment": payload.get("environment"),
     }
     fingerprint = sha256(_canonical_json_bytes(fingerprint_payload)).hexdigest()
-    model = payload.get("model")
-    target = payload.get("target")
-    config = payload.get("config")
-    model_source = model.get("source") if isinstance(model, dict) else None
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "fingerprint_sha256": fingerprint,
-        "model_id": model.get("id") if isinstance(model, dict) else None,
-        "method": model.get("method") if isinstance(model, dict) else None,
-        "model_revision": model_source.get("revision") if isinstance(model_source, dict) else None,
-        "model_revision_requested": model_source.get("revision_requested") if isinstance(model_source, dict) else None,
-        "dataset_id": target.get("dataset_id") if isinstance(target, dict) else None,
-        "dataset_revision": target.get("dataset_revision") if isinstance(target, dict) else None,
-        "split_name": target.get("split_name") if isinstance(target, dict) else None,
-        "task_name": target.get("task_name") if isinstance(target, dict) else None,
-        "primary_metric": config.get("primary_metric") if isinstance(config, dict) else None,
-        "candidate_ranking": config.get("candidate_ranking") if isinstance(config, dict) else None,
-        "rerank_top_k": config.get("rerank_top_k") if isinstance(config, dict) else None,
     }
 
 

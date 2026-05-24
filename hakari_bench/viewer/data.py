@@ -22,13 +22,14 @@ from hakari_bench.viewer.task_names import (
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
-CURRENT_DUCKDB_SCHEMA_VERSION = "6"
-COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {"3", "4", "5", CURRENT_DUCKDB_SCHEMA_VERSION}
+CURRENT_DUCKDB_SCHEMA_VERSION = "7"
+COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {CURRENT_DUCKDB_SCHEMA_VERSION}
 REQUIRED_VIEWER_TABLES = ("meta_database", "viewer_task_results")
 DISPLAY_SCORE_METRIC_ORDER = (
     "ndcg@10",
-    "accuracy@1",
-    "accuracy@10",
+    "acc@1",
+    "acc@10",
+    "acc@100",
     "precision@10",
     "recall@10",
     "mrr@10",
@@ -315,7 +316,7 @@ class TaskResultsRepository:
                 else "[]::VARCHAR[]"
             )
             placeholders = ", ".join("?" for _ in benchmarks)
-            rerank_metric_marker = "_bm25_top100_rerank_"
+            rerank_metric_marker = "_reranking_hybrid_top"
             rerank_metric_filter = (
                 f"""
                   AND (
@@ -382,6 +383,8 @@ class TaskResultsRepository:
                  AND ms.dataset_id = tr.dataset_id
                  AND ms.task_name = tr.task_name
                  AND ms.result_path = tr.result_path
+                 AND ms.score_target = tr.score_target
+                 AND ms.embedding_variant_name IS NOT DISTINCT FROM {variant_name_expr}
                 JOIN dim_metric AS dm
                   ON dm.metric_id = ms.metric_id
                 {metadata_join}
@@ -727,11 +730,12 @@ def _score_metric_sort_key(score_metric: str) -> tuple[int, str, int]:
     family, cutoff = _parse_score_metric(score_metric)
     family_order = {
         "ndcg": 0,
-        "map": 1,
-        "mrr": 2,
-        "accuracy": 3,
-        "precision": 4,
-        "recall": 5,
+        "acc": 1,
+        "map": 2,
+        "mrr": 3,
+        "accuracy": 4,
+        "precision": 5,
+        "recall": 6,
     }
     return (family_order.get(family or "", 99), family or score_metric, cutoff or 0)
 

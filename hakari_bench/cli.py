@@ -20,6 +20,7 @@ from hakari_bench.bm25 import (
 from hakari_bench.cli_schema import BuildCandidatesParamsJson, EvaluateParamsJson
 from hakari_bench.benchmark_docs import validate_benchmark_task_docs
 from hakari_bench.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
+from hakari_bench.defaults import DEFAULT_CANDIDATE_RANKING, DEFAULT_RERANK_TOP_K
 from hakari_bench.embedding_variants import (
     TORCH_RESCORE_SCORE_REPRESENTATION,
     TORCH_SCORE_REPRESENTATION,
@@ -97,7 +98,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_params_arg(bm25)
     bm25.add_argument("--model", default=None, help="Display/storage model id for BM25 result metadata.")
     _add_dataset_args(bm25, action="evaluate")
-    _add_candidate_args(bm25)
+    _add_candidate_args(bm25, candidate_default="bm25")
     _add_output_args(bm25, results_default="output/results")
     _add_bm25_args(bm25, include_source=True)
 
@@ -315,9 +316,13 @@ def _add_reranker_args(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def _add_candidate_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--candidate-ranking", default="bm25")
-    parser.add_argument("--rerank-top-k", type=int, default=100)
+def _add_candidate_args(
+    parser: argparse.ArgumentParser,
+    *,
+    candidate_default: str = DEFAULT_CANDIDATE_RANKING,
+) -> None:
+    parser.add_argument("--candidate-ranking", default=candidate_default)
+    parser.add_argument("--rerank-top-k", type=int, default=DEFAULT_RERANK_TOP_K)
 
 
 def _add_late_interaction_args(parser: argparse.ArgumentParser) -> None:
@@ -334,11 +339,6 @@ def _add_output_args(parser: argparse.ArgumentParser, *, results_default: str) -
     _add_execution_args(parser)
     parser.add_argument("--results-dir", default=results_default)
     parser.add_argument("--overwrite", action="store_true")
-    parser.add_argument(
-        "--save-top-rankings",
-        action="store_true",
-        help="Write optional top-100 ranking artifacts next to task result JSON files.",
-    )
     parser.add_argument("--primary-metric", default="ndcg@10")
 
 
@@ -456,7 +456,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         for option_name, value in truncate_sparse_values.items():
             if value is not None and value <= 0:
                 parser.error(f"{option_name} must be positive.")
-    if args.command == "evaluate" and getattr(args, "rerank_top_k", 1) <= 0:
+    if args.command == "evaluate" and getattr(args, "rerank_top_k", None) is not None and args.rerank_top_k <= 0:
         parser.error("--rerank-top-k must be positive.")
     if args.command == "evaluate" and args.model_type == "late-interaction":
         if args.embedding_variants and not _late_interaction_embedding_variants_are_supported(args.embedding_variants):
@@ -521,13 +521,13 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
     args.corpus_prompt_name = getattr(args, "document_prompt_name", None)
     args.query_task = getattr(args, "query_encode_task", None)
     args.corpus_task = getattr(args, "document_encode_task", None)
-    args.candidate_subset_name = getattr(args, "candidate_ranking", "bm25")
-    args.rerank_top_n = getattr(args, "rerank_top_k", 100)
+    args.candidate_subset_name = getattr(args, "candidate_ranking", DEFAULT_CANDIDATE_RANKING)
+    args.rerank_top_n = getattr(args, "rerank_top_k", DEFAULT_RERANK_TOP_K)
     args.truncate_sparse_query_max_dims = getattr(args, "sparse_query_max_active_dims", None)
     args.truncate_sparse_docs_max_dims = getattr(args, "sparse_document_max_active_dims", None)
     args.output_dir = getattr(args, "results_dir", "output/results")
     args.override = getattr(args, "overwrite", False)
-    args.save_top_rankings = getattr(args, "save_top_rankings", False)
+    args.save_top_rankings = True
     args.aggregate_metric = getattr(args, "primary_metric", "ndcg@10")
     _bridge_new_bm25_args(args)
 
@@ -812,7 +812,7 @@ def _apply_runtime_params(args: argparse.Namespace, value: dict[str, Any]) -> No
 def _apply_output_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
     _reject_unknown_keys(
         value,
-        allowed={"results_dir", "candidates_dir", "overwrite", "save_top_rankings"},
+        allowed={"results_dir", "candidates_dir", "overwrite"},
         path="params.output",
     )
     if "results_dir" in value:
@@ -821,8 +821,6 @@ def _apply_output_params(args: argparse.Namespace, value: dict[str, Any]) -> Non
         args.candidates_dir = _string_param(value["candidates_dir"], "params.output.candidates_dir")
     if "overwrite" in value:
         args.overwrite = _bool_param(value["overwrite"], "params.output.overwrite")
-    if "save_top_rankings" in value:
-        args.save_top_rankings = _bool_param(value["save_top_rankings"], "params.output.save_top_rankings")
 
 
 def _apply_build_candidates_output_params(args: argparse.Namespace, value: dict[str, Any]) -> None:

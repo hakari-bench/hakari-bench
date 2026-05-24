@@ -17,6 +17,7 @@ import orjson
 import pyarrow as pa
 
 from hakari_bench.datasets import DatasetRegistry
+from hakari_bench.metrics import compute_ir_metrics
 from hakari_bench.model_cards import load_model_cards, model_card_yaml_paths
 from hakari_bench.viewer.config import BenchmarkConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.leaderboard import LeaderboardService
@@ -50,7 +51,7 @@ def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list
 
 TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
-WAREHOUSE_SCHEMA_VERSION = "6"
+WAREHOUSE_SCHEMA_VERSION = "7"
 WAREHOUSE_COMPATIBILITY_LEVEL = "current"
 WAREHOUSE_TABLES = (
     "meta_database",
@@ -134,6 +135,18 @@ METRIC_LONG_COLUMNS = (
     "metric_name",
     "metric_value",
     "result_path",
+    "score_target",
+    "embedding_variant_name",
+)
+VIEWER_RECOMPUTED_METRICS = (
+    "nDCG@10",
+    "acc@1",
+    "acc@10",
+    "acc@100",
+    "precision@10",
+    "recall@10",
+    "mrr@10",
+    "map@100",
 )
 TASK_DIAGNOSTIC_COLUMNS = (
     "model_dir",
@@ -665,6 +678,15 @@ def load_results(
                     quantization=_quantization_precision(embedding_evaluation),
                 )
             )
+        metric_rows.extend(
+            _metric_rows_from_top_rankings(
+                common=common,
+                evaluation=evaluation,
+                embedding_evaluations=embedding_evaluations,
+                task_payload=task_payload,
+                result_path=result_path,
+            )
+        )
         for metric_name, metric_value in task_payload.get("metrics", {}).items():
             if isinstance(metric_value, int | float):
                 metric_rows.append(
@@ -677,9 +699,11 @@ def load_results(
                         metric_name=canonical_metric_name(benchmark, metric_name),
                         metric_value=float(metric_value),
                         result_path=str(result_path),
+                        score_target="all",
+                        embedding_variant_name=None,
                     )
                 )
-        for metric_name, metric_value in _best_rerank_metrics(evaluation).items():
+        for metric_name, metric_value in task_payload.get("rerank_metrics", {}).items():
             if isinstance(metric_value, int | float):
                 metric_rows.append(
                     MetricLongRow(
@@ -691,6 +715,8 @@ def load_results(
                         metric_name=canonical_metric_name(benchmark, metric_name),
                         metric_value=float(metric_value),
                         result_path=str(result_path),
+                        score_target="reranking",
+                        embedding_variant_name=None,
                     )
                 )
         if include_retrieval_rankings:
@@ -760,7 +786,7 @@ def _load_cached_warehouse_rows(
             con,
             "metrics_long",
             MetricLongRow,
-            ("model_dir", "model_name", "benchmark", "dataset_id", "task_name", "metric_name", "metric_value", "result_path"),
+            METRIC_LONG_COLUMNS,
         )
         metric_rows = _filter_rows_by_result_path(metric_rows, result_paths)
         diagnostic_rows = _fetch_model_rows(
@@ -1120,6 +1146,128 @@ def _model_name_from_payload(model: Any, *, model_dir: str) -> str:
     return str(model.get("id") or model_dir)
 
 
+def _metric_rows_from_top_rankings(
+    *,
+    common: dict[str, Any],
+    evaluation: dict[str, Any],
+    embedding_evaluations: list[dict[str, Any]],
+    task_payload: dict[str, Any],
+    result_path: Path,
+) -> list[MetricLongRow]:
+    artifact = _top_rankings_artifact(task_payload)
+    if artifact is None:
+        return []
+    ranking_payload = _top_rankings_payload(artifact=artifact, result_path=result_path)
+    if not isinstance(ranking_payload, dict):
+        return []
+    qrels = _qrels_from_ranking_payload(ranking_payload)
+    if not qrels:
+        return []
+    rankings = ranking_payload.get("rankings")
+    if not isinstance(rankings, list):
+        return []
+
+    selected_rankings = _selected_metric_rankings(
+        rankings,
+        evaluation=evaluation,
+        embedding_evaluations=embedding_evaluations,
+    )
+    grouped_rankings: dict[tuple[str, str | None, str], dict[str, list[str]]] = {}
+    for ranking, score_target, embedding_variant_name in selected_rankings:
+        score_name = ranking.get("score_name")
+        if not isinstance(score_name, str) or not score_name:
+            continue
+        query_rankings = _query_rankings_from_artifact_row(ranking)
+        if not query_rankings:
+            continue
+        grouped_rankings.setdefault((score_target, embedding_variant_name, score_name), {}).update(query_rankings)
+
+    rows: list[MetricLongRow] = []
+    for (score_target, embedding_variant_name, score_name), query_rankings in grouped_rankings.items():
+        metrics = compute_ir_metrics(
+            rankings=query_rankings,
+            qrels=qrels,
+            evaluator_name=str(common["task_name"]),
+            score_name=score_name,
+            metric_names=VIEWER_RECOMPUTED_METRICS,
+        )
+        for metric_name, metric_value in metrics.items():
+            rows.append(
+                MetricLongRow(
+                    model_dir=str(common["model_dir"]),
+                    model_name=str(common["model_name"]),
+                    benchmark=str(common["benchmark"]),
+                    dataset_id=str(common["dataset_id"]),
+                    task_name=str(common["task_name"]),
+                    metric_name=canonical_metric_name(str(common["benchmark"]), metric_name),
+                    metric_value=float(metric_value),
+                    result_path=str(result_path),
+                    score_target=score_target,
+                    embedding_variant_name=embedding_variant_name,
+                )
+            )
+    return rows
+
+
+def _qrels_from_ranking_payload(ranking_payload: dict[str, Any]) -> dict[str, set[str]]:
+    rows = ranking_payload.get("qrels")
+    if not isinstance(rows, list):
+        return {}
+    qrels: dict[str, set[str]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        query_id = row.get("query_id")
+        relevant_corpus_ids = row.get("relevant_corpus_ids")
+        if query_id is None or not isinstance(relevant_corpus_ids, list):
+            continue
+        qrels[str(query_id)] = {str(corpus_id) for corpus_id in relevant_corpus_ids}
+    return qrels
+
+
+def _selected_metric_rankings(
+    rankings: list[Any],
+    *,
+    evaluation: dict[str, Any],
+    embedding_evaluations: list[dict[str, Any]],
+) -> list[tuple[dict[str, Any], str, str | None]]:
+    selected: list[tuple[dict[str, Any], str, str | None]] = []
+    retrieval_score_names = {
+        _str_or_none(item.get("name")): _str_or_none(item.get("best_score_name"))
+        for item in embedding_evaluations
+        if isinstance(item, dict)
+    }
+    for ranking in rankings:
+        if not isinstance(ranking, dict):
+            continue
+        ranking_kind = ranking.get("ranking_kind")
+        embedding_variant_name = _str_or_none(ranking.get("embedding_variant_name"))
+        if ranking_kind == "retrieval":
+            variant_key = embedding_variant_name or "base"
+            if not retrieval_score_names or ranking.get("score_name") == retrieval_score_names.get(variant_key):
+                selected.append((ranking, "all", embedding_variant_name))
+        elif (
+            ranking_kind == "candidate_rerank"
+            and embedding_variant_name is None
+            and ranking.get("score_name") == _best_rerank_score_name(evaluation)
+        ):
+            selected.append((ranking, "reranking", None))
+    return selected
+
+
+def _best_rerank_score_name(evaluation: dict[str, Any]) -> str | None:
+    reranking = _first_reranking_evaluation(evaluation.get("reranking_evaluations"))
+    return _str_or_none(reranking.get("best_score_name"))
+
+
+def _query_rankings_from_artifact_row(ranking: dict[str, Any]) -> dict[str, list[str]]:
+    query_id = ranking.get("query_id")
+    corpus_ids = ranking.get("corpus_ids")
+    if query_id is None or not isinstance(corpus_ids, list):
+        return {}
+    return {str(query_id): [str(corpus_id) for corpus_id in corpus_ids]}
+
+
 def _retrieval_ranking_rows(
     *,
     common: dict[str, Any],
@@ -1129,10 +1277,7 @@ def _retrieval_ranking_rows(
     artifact = _top_rankings_artifact(task_payload)
     if artifact is None:
         return []
-    ranking_path = result_path.parent / artifact["path"]
-    if not ranking_path.exists():
-        return []
-    ranking_payload = _read_json(ranking_path)
+    ranking_payload = _top_rankings_payload(artifact=artifact, result_path=result_path)
     rankings = ranking_payload.get("rankings") if isinstance(ranking_payload, dict) else None
     if not isinstance(rankings, list):
         return []
@@ -1158,7 +1303,7 @@ def _retrieval_ranking_rows(
                     task_name=str(common["task_name"]),
                     task_key=str(common["task_key"]),
                     result_path=str(result_path),
-                    ranking_path=str(ranking_path),
+                    ranking_path=str(_top_rankings_location(artifact=artifact, result_path=result_path)),
                     ranking_name=_str_or_none(ranking.get("name")),
                     ranking_kind=_str_or_none(ranking.get("ranking_kind")),
                     embedding_variant_name=_str_or_none(ranking.get("embedding_variant_name")),
@@ -1180,9 +1325,30 @@ def _top_rankings_artifact(task_payload: dict[str, Any]) -> dict[str, Any] | Non
     if not isinstance(artifact, dict):
         return None
     path = artifact.get("path")
-    if not isinstance(path, str) or not path:
+    rankings = artifact.get("rankings")
+    if not isinstance(rankings, list) and (not isinstance(path, str) or not path):
         return None
     return artifact
+
+
+def _top_rankings_payload(*, artifact: dict[str, Any], result_path: Path) -> dict[str, Any] | None:
+    if isinstance(artifact.get("rankings"), list):
+        return artifact
+    path = artifact.get("path")
+    if not isinstance(path, str) or not path:
+        return None
+    ranking_path = result_path.parent / path
+    if not ranking_path.exists():
+        return None
+    ranking_payload = _read_json(ranking_path)
+    return ranking_payload if isinstance(ranking_payload, dict) else None
+
+
+def _top_rankings_location(*, artifact: dict[str, Any], result_path: Path) -> Path:
+    path = artifact.get("path")
+    if isinstance(path, str) and path:
+        return result_path.parent / path
+    return result_path
 
 
 def _with_model_card_metadata(model: dict[str, Any], *, model_cards: dict[str, dict[str, Any]]) -> dict[str, Any]:
@@ -1422,6 +1588,8 @@ def _dedupe_metric_rows(rows: list[MetricLongRow]) -> list[MetricLongRow]:
             row.benchmark,
             row.dataset_id,
             row.task_name,
+            row.score_target,
+            row.embedding_variant_name,
             row.metric_name,
         )
         current = deduped.get(key)
@@ -1932,7 +2100,8 @@ def write_duckdb(
             """
             CREATE TABLE metrics_long (
                 model_dir VARCHAR, model_name VARCHAR, benchmark VARCHAR,
-                dataset_id VARCHAR, task_name VARCHAR, metric_name VARCHAR, metric_value DOUBLE, result_path VARCHAR
+                dataset_id VARCHAR, task_name VARCHAR, metric_name VARCHAR, metric_value DOUBLE,
+                result_path VARCHAR, score_target VARCHAR, embedding_variant_name VARCHAR
             )
             """
         )
@@ -1948,6 +2117,8 @@ def write_duckdb(
                 "metric_name",
                 "metric_value",
                 "result_path",
+                "score_target",
+                "embedding_variant_name",
             ),
             (row.duckdb_values() for row in normalized_metric_rows),
         )
@@ -2830,7 +3001,9 @@ def _create_metric_dimension_and_fact_tables(con: duckdb.DuckDBPyConnection) -> 
             ml.dataset_id,
             ml.task_name,
             ml.metric_value,
-            ml.result_path
+            ml.result_path,
+            ml.score_target,
+            ml.embedding_variant_name
         FROM metrics_long AS ml
         JOIN dim_metric AS dm
           ON dm.metric_name = ml.metric_name
@@ -2839,6 +3012,8 @@ def _create_metric_dimension_and_fact_tables(con: duckdb.DuckDBPyConnection) -> 
             ml.dataset_id,
             ml.task_name,
             ml.model_name,
+            ml.score_target,
+            ml.embedding_variant_name,
             dm.metric_id
         """
     )
@@ -2959,8 +3134,7 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
         WHERE tr.embedding_variant_name IS NULL
           AND td.rerank_score IS NOT NULL
           AND (td.rerank_status IS NULL OR td.rerank_status = 'available')
-          AND (td.candidate_ranking IS NULL OR td.candidate_ranking = 'bm25')
-          AND (td.rerank_top_k IS NULL OR td.rerank_top_k = 100)
+          AND (td.candidate_ranking IS NULL OR td.candidate_ranking = 'reranking_hybrid')
         ) AS scores
         ORDER BY
             benchmark,

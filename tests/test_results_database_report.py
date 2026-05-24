@@ -273,10 +273,74 @@ def test_load_results_reuses_unchanged_incremental_duckdb_rows(
     assert cached_ranking_rows == []
 
 
-def test_load_results_adds_best_rerank_metrics_to_long_metric_rows(tmp_path: Path) -> None:
+def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_path: Path) -> None:
     results_dir = tmp_path / "results"
     task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / "en.json"
     task_path.parent.mkdir(parents=True)
+    top_rankings = {
+        "schema_version": 2,
+        "top_k": 100,
+        "qrels": [
+            {"query_id": "q1", "relevant_corpus_ids": ["d2"]},
+            {"query_id": "q2", "relevant_corpus_ids": ["d4"]},
+        ],
+        "rankings": [
+            {
+                "name": "base",
+                "ranking_kind": "retrieval",
+                "embedding_variant_name": None,
+                "distance": "cosine",
+                "score_name": "cosine",
+                "query_id": "q1",
+                "corpus_ids": ["d1", "d2"],
+            },
+            {
+                "name": "base",
+                "ranking_kind": "retrieval",
+                "embedding_variant_name": None,
+                "distance": "cosine",
+                "score_name": "cosine",
+                "query_id": "q2",
+                "corpus_ids": ["d4", "d3"],
+            },
+            {
+                "name": "truncate:2",
+                "ranking_kind": "retrieval",
+                "embedding_variant_name": "truncate:2",
+                "distance": "cosine",
+                "score_name": "truncate:2_cosine",
+                "query_id": "q1",
+                "corpus_ids": ["d1", "d2"],
+            },
+            {
+                "name": "truncate:2",
+                "ranking_kind": "retrieval",
+                "embedding_variant_name": "truncate:2",
+                "distance": "cosine",
+                "score_name": "truncate:2_cosine",
+                "query_id": "q2",
+                "corpus_ids": ["d3", "d4"],
+            },
+            {
+                "name": "base",
+                "ranking_kind": "candidate_rerank",
+                "embedding_variant_name": None,
+                "distance": "cosine",
+                "score_name": "cosine_bm25_top100_rerank",
+                "query_id": "q1",
+                "corpus_ids": ["d2", "d1"],
+            },
+            {
+                "name": "base",
+                "ranking_kind": "candidate_rerank",
+                "embedding_variant_name": None,
+                "distance": "cosine",
+                "score_name": "cosine_bm25_top100_rerank",
+                "query_id": "q2",
+                "corpus_ids": ["d3", "d4"],
+            },
+        ],
+    }
     task_path.write_text(
         json.dumps(
             {
@@ -290,33 +354,33 @@ def test_load_results_adds_best_rerank_metrics_to_long_metric_rows(tmp_path: Pat
                 "evaluation": {
                     "aggregate_metric": "ndcg@10",
                     "aggregate_metric_value": 0.42,
+                    "rerank_aggregate_metric_value": 0.70,
+                    "embedding_evaluations": [
+                        {
+                            "name": "base",
+                            "aggregate_metric": "ndcg@10",
+                            "aggregate_metric_value": 0.42,
+                            "best_score_name": "cosine",
+                        },
+                        {
+                            "name": "truncate:2",
+                            "aggregate_metric": "ndcg@10",
+                            "aggregate_metric_value": 0.30,
+                            "best_score_name": "truncate:2_cosine",
+                        },
+                    ],
                     "reranking_evaluations": [
                         {
                             "name": "bm25_top_100",
-                            "best_score_name": "cosine",
-                            "distance_evaluations": [
-                                {
-                                    "score_name": "dot",
-                                    "metrics": {
-                                        "NanoMIRACL_en_dot_bm25_top100_rerank_accuracy@1": 0.10,
-                                    },
-                                },
-                                {
-                                    "score_name": "cosine",
-                                    "metrics": {
-                                        "NanoMIRACL_en_cosine_bm25_top100_rerank_accuracy@1": 0.80,
-                                        "NanoMIRACL_en_cosine_bm25_top100_rerank_ndcg@10": 0.70,
-                                    },
-                                },
-                            ],
+                            "best_score_name": "cosine_bm25_top100_rerank",
+                            "aggregate_metric": "ndcg@10",
+                            "aggregate_metric_value": 0.70,
                         }
                     ],
                 },
-                "metrics": {"NanoMIRACL_en_cosine_ndcg@10": 0.42},
-                "rerank_metrics": {
-                    "NanoMIRACL_en_dot_bm25_top100_rerank_accuracy@1": 0.10,
-                    "NanoMIRACL_en_cosine_bm25_top100_rerank_accuracy@1": 0.80,
-                },
+                "metrics": {"NanoMIRACL_en_cosine_ndcg@10": 0.42, "NanoMIRACL_en_cosine_acc@100": 1.0},
+                "rerank_metrics": {"NanoMIRACL_en_cosine_bm25_top100_rerank_ndcg@10": 0.70},
+                "artifacts": {"top_rankings": top_rankings},
             }
         ),
         encoding="utf-8",
@@ -324,11 +388,17 @@ def test_load_results_adds_best_rerank_metrics_to_long_metric_rows(tmp_path: Pat
 
     _, _, metric_rows, _, _, _ = report.load_results(results_dir)
 
-    metric_values = {row.metric_name: row.metric_value for row in metric_rows}
-    assert metric_values["NanoMIRACL_en_cosine_ndcg@10"] == 0.42
-    assert metric_values["NanoMIRACL_en_cosine_bm25_top100_rerank_accuracy@1"] == 0.80
-    assert metric_values["NanoMIRACL_en_cosine_bm25_top100_rerank_ndcg@10"] == 0.70
-    assert "NanoMIRACL_en_dot_bm25_top100_rerank_accuracy@1" not in metric_values
+    metric_values = {
+        (row.score_target, row.embedding_variant_name, row.metric_name): row.metric_value
+        for row in metric_rows
+    }
+    assert metric_values[("all", None, "en_cosine_acc@1")] == pytest.approx(0.5)
+    assert metric_values[("all", None, "en_cosine_acc@10")] == pytest.approx(1.0)
+    assert metric_values[("all", None, "en_cosine_acc@100")] == pytest.approx(1.0)
+    assert metric_values[("all", None, "en_cosine_ndcg@10")] == pytest.approx((1 / math.log2(3) + 1) / 2)
+    assert metric_values[("all", "truncate:2", "en_truncate:2_cosine_acc@10")] == pytest.approx(1.0)
+    assert metric_values[("reranking", None, "en_cosine_bm25_top100_rerank_acc@1")] == pytest.approx(0.5)
+    assert metric_values[("reranking", None, "en_cosine_bm25_top100_rerank_acc@10")] == pytest.approx(1.0)
 
 
 def test_main_incremental_noops_when_sources_are_unchanged(
@@ -1259,6 +1329,8 @@ def test_metric_long_row_schema_exports_duckdb_values() -> None:
         "ja_cwir_ndcg@10",
         0.42,
         "result.json",
+        "all",
+        None,
     )
 
 
@@ -1659,9 +1731,9 @@ def test_write_duckdb_materializes_task_score_targets(tmp_path: Path) -> None:
         rerank_score=0.50,
         rerank_lift=0.08,
         rerank_status="available",
-        rerank_top_k=100,
+        rerank_top_k=101,
         candidate_source="dataset_candidate_subset",
-        candidate_ranking="bm25",
+        candidate_ranking="reranking_hybrid",
     )
     standings, borda_rows = report.compute_standings([row])
     db_path = tmp_path / "results.duckdb"
@@ -1697,7 +1769,7 @@ def test_write_duckdb_materializes_task_score_targets(tmp_path: Path) -> None:
             """
         ).fetchall() == [
             ("all", 0.42, None, None, None),
-            ("reranking", 0.50, "bm25", 100, None),
+            ("reranking", 0.50, "reranking_hybrid", 101, None),
         ]
         assert con.execute(
             """
@@ -2055,8 +2127,8 @@ def test_write_duckdb_materializes_viewer_filter_values(tmp_path: Path) -> None:
         base_score=0.42,
         rerank_score=0.50,
         rerank_status="available",
-        rerank_top_k=100,
-        candidate_ranking="bm25",
+        rerank_top_k=101,
+        candidate_ranking="reranking_hybrid",
     )
     standings, borda_rows = report.compute_standings([row])
     db_path = tmp_path / "results.duckdb"

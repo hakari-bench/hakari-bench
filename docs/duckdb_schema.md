@@ -3,9 +3,9 @@
 This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
-The current warehouse schema version is `6`. Version `6` adds optional
-late-interaction runtime metadata columns while keeping version `5` DuckDB files
-viewer-compatible through model-card backfill.
+The current warehouse schema version is `7`. Version `7` makes top-ranking
+artifacts the source for viewer metric recomputation and drops viewer
+compatibility with older warehouse files.
 
 The canonical source table for benchmark results is `task_results`. New DuckDB
 builds also materialize `meta_database`, `schema_change_log`, and
@@ -21,8 +21,8 @@ no-filter display modes, plus `viewer_leaderboard_language_options` for the
 matching language filter choices. The HTMX leaderboard requires the current
 schema and reads these mart tables or computes from `viewer_task_results`.
 `runs` contains run-level metadata,
-`metrics_long` contains detailed task metrics from full-corpus evaluation and
-the best-distance BM25 top-100 reranking evaluation, `retrieval_rankings` contains
+`metrics_long` contains task metrics recomputed from top-ranking artifacts for
+full-corpus, reranking, and embedding-variant rows, `retrieval_rankings` contains
 per-query top-100 retrieved document ids, `task_diagnostics` contains
 analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
 exposes YAML task metadata for language, category, citation, and text-stat
@@ -114,10 +114,12 @@ The input files are:
   JSON is missing the derived value. `--model-cards-path` may also point at a
   legacy aggregate YAML file with a top-level `models` list. See
   `docs/model_cards.md` for the generation workflow.
-- `output/results/{model_dir}/{huggingface_dataset_name}/rankings/{split_or_task}.top100.json`:
-  optional per-query top-100 ranking artifacts written only when evaluation is
-  run with `--save-top-rankings` and referenced by task JSON
-  `artifacts.top_rankings`.
+- `artifacts.top_rankings` inside each task result JSON: per-query top-100
+  ranking rows written by default. These embedded artifacts include both the
+  ranked top-100 corpus ids and the binary qrels relevant corpus ids, so metrics
+  such as nDCG@10, acc@1/10/100, MAP, MRR, precision, and recall can be
+  recomputed later without re-running model inference. Legacy sidecar artifacts
+  under `rankings/{split_or_task}.top100.json` are still readable.
 
 `load_results()` determines `benchmark` from `target.dataset_id` and
 `target.dataset_name` using `config/viewer/benchmarks.yaml`, then writes only
@@ -214,7 +216,7 @@ The web viewer exposes four user-facing query surfaces over the DuckDB file:
 | UI surface | source tables | semantics |
 | --- | --- | --- |
 | Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
-| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores and `Reranking` uses materialized BM25 top-100 rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. The `Metric` selector displays the research-focused set `nDCG@10`, `accuracy@1`, `accuracy@10`, `precision@10`, `recall@10`, `MRR@10`, and `MAP@100`; it uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
+| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores and `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
 | Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for quantization-first comparisons; rescore and `truncate_dim` variants are hidden unless explicitly enabled in the panel. |
 | Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
 | Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
@@ -432,9 +434,9 @@ rows with different embedding dimensions do not collide.
 `dim_metric` contains one deterministic row for each metric name in
 `metrics_long`. The writer parses common IR metric names into a metric family
 and cutoff, so new cutoffs such as `recall@100` can be stored without adding
-columns. Reranking metric names keep their original `_bm25_top100_rerank_`
+columns. Reranking metric names keep their original `_reranking_hybrid_top..._rerank_`
 marker so the viewer can distinguish them from full-corpus metrics with the
-same family and cutoff.
+same family and cutoff while allowing the candidate subset depth to vary.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -450,7 +452,7 @@ default full-corpus score and candidate-reranking score in the same row shape
 with a `score_target` discriminator instead of adding one score column per
 target. `score_target = 'all'` rows are copied from `task_results.score`.
 `score_target = 'reranking'` rows are copied from `task_diagnostics.rerank_score`
-when the diagnostic row is available for BM25 top-100 reranking. Reranking rows
+when the diagnostic row is available for `reranking_hybrid` reranking. Reranking rows
 are currently base-only because diagnostics do not yet carry embedding-variant
 identity. The viewer also adds the BM25 `score_target = 'all'` rows as the
 candidate-order baseline in `Reranking` displays, unless the DuckDB build has
@@ -531,13 +533,12 @@ completeness displays.
 
 ### `metrics_long`
 
-`metrics_long` is a long-format representation of each task JSON `metrics`
-dictionary plus the best-distance metrics from
-`evaluation.reranking_evaluations[*].distance_evaluations`. The builder writes
-only the reranking distance whose `score_name` matches `best_score_name`, so a
-single result contributes at most one reranking value for each metric family and
-cutoff. The viewer uses the normalized `fact_metric_score` table derived from
-this source when the user selects a non-default metric.
+`metrics_long` is a long-format representation of metrics computed while
+building DuckDB. The builder reads each result's top-ranking artifact, combines
+the ranked corpus ids with artifact qrels, and computes the viewer metric set
+for the selected full-corpus, reranking, and embedding-variant rankings. The
+small task JSON `metrics` and `rerank_metrics` dictionaries are fallback inputs
+for summary values, not the source of the full viewer metric set.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -549,16 +550,17 @@ this source when the user selects a non-default metric.
 | `metric_name` | `VARCHAR` | Metric name, such as `NanoJaCWIR_ndcg@10`. |
 | `metric_value` | `DOUBLE` | Metric value. |
 | `result_path` | `VARCHAR` | Source task JSON path. |
+| `score_target` | `VARCHAR` | `all` for full-corpus retrieval or `reranking` for `reranking_hybrid` rerank scores. |
+| `embedding_variant_name` | `VARCHAR` | Embedding variant name, or `NULL` for base rows. |
 
 ### `fact_metric_score`
 
 `fact_metric_score` is the normalized metric-value fact table derived from
 `metrics_long` and `dim_metric`. It keeps detailed metrics separate from the
 primary leaderboard score in `fact_task_score`. For `Target: All`, the viewer
-uses metric names that do not contain `_bm25_top100_rerank_`. For
-`Target: Reranking`, the viewer prefers metric names that contain
-`_bm25_top100_rerank_` and falls back to same-result-path metrics only for older
-DuckDB builds that do not yet materialize reranking metric rows.
+uses metric names that do not contain `_reranking_hybrid_top`. For
+`Target: Reranking`, the viewer uses metric rows with `score_target =
+'reranking'` and metric names that contain `_reranking_hybrid_top`.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -570,17 +572,21 @@ DuckDB builds that do not yet materialize reranking metric rows.
 | `task_name` | `VARCHAR` | Task name. |
 | `metric_value` | `DOUBLE` | Metric value. |
 | `result_path` | `VARCHAR` | Source task JSON path. |
+| `score_target` | `VARCHAR` | Metric target matching `fact_task_score.score_target`. |
+| `embedding_variant_name` | `VARCHAR` | Metric variant matching `fact_task_score.embedding_variant_name`. |
 
 ### `retrieval_rankings`
 
-`retrieval_rankings` is a normalized view of optional top-100 ranking artifact
+`retrieval_rankings` is a normalized view of top-100 ranking artifact
 JSON. It is populated only when database generation is run with
-`--include-retrieval-rankings` and matching task results were produced with
-`--save-top-rankings`. The default viewer database build leaves this table empty
-to avoid expanding large per-query ranking artifacts during leaderboard deploys.
+`--include-retrieval-rankings`. The default viewer database build reads these
+artifacts to recompute metrics but leaves this table empty to avoid expanding
+large per-query ranking artifacts during leaderboard deploys.
 It is intended for offline metric recomputation, rank-fusion experiments, hybrid
 search simulations, and reranker candidate analysis. It is not used for
-leaderboard ranking.
+leaderboard ranking. The source artifact also stores qrels rows with
+`query_id` and `relevant_corpus_ids`; the current normalized table contains the
+ranking rows only.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -904,14 +910,13 @@ choices:
 - For the default metric selector value, `nDCG@10`, use
   `viewer_task_results.score`. For other metric selector values, join
   `fact_task_score` with `fact_metric_score` and `dim_metric` by model, task,
-  result path, metric family, and cutoff. Full-corpus targets exclude metric
-  names containing `_bm25_top100_rerank_`; reranking targets prefer that marker
+	  result path, score target, embedding variant, metric family, and cutoff. Full-corpus targets exclude metric
+	  names containing `_reranking_hybrid_top`; reranking targets prefer that marker
   and fall back only for older DuckDB builds.
-- The visible metric selector is intentionally limited and ordered as
-  `nDCG@10`, `accuracy@1`, `accuracy@10`, `precision@10`, `recall@10`,
-  `MRR@10`, and `MAP@100`. Other stored metric families/cutoffs can remain in
-  DuckDB for analysis, but they are not exposed as primary leaderboard UI
-  choices.
+- The visible metric selector is intentionally limited and ordered with
+  `nDCG@10`, `acc@1`, `acc@10`, and `acc@100` first. Additional recomputed
+  families/cutoffs can remain in DuckDB for analysis and may be exposed after
+  those defaults when present.
 - For `score_target = 'reranking'`, append BM25 `score_target = 'all'` task
   rows as the candidate-order baseline before completeness filtering and Borda
   ranking. This keeps BM25 comparable to rerankers without treating BM25 as a

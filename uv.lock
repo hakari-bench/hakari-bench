@@ -15,7 +15,7 @@ conflicts = [[
 ]]
 
 [options]
-exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
+exclude-newer = "2026-05-17T00:55:53.855639175Z"
 exclude-newer-span = "P1W"
 
 [manifest]
@@ -740,6 +740,7 @@ dependencies = [
     { name = "bm25s" },
     { name = "datasets" },
     { name = "duckdb" },
+    { name = "einops" },
     { name = "fast-langdetect" },
     { name = "huggingface-hub", version = "0.36.2", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'group-12-hakari-bench-tf4-fa2'" },
     { name = "huggingface-hub", version = "1.12.0", source = { registry = "https://pypi.org/simple" }, marker = "extra == 'group-12-hakari-bench-pylate' or extra != 'group-12-hakari-bench-tf4-fa2'" },
@@ -824,6 +825,7 @@ requires-dist = [
     { name = "bm25s", specifier = ">=0.3.6" },
     { name = "datasets", specifier = ">=4.8.4" },
     { name = "duckdb", specifier = ">=1.5.2" },
+    { name = "einops", specifier = ">=0.8.2" },
     { name = "fast-langdetect", specifier = ">=1.0.0" },
     { name = "fugashi", marker = "extra == 'wordseg'", specifier = ">=1.5.2" },
     { name = "huggingface-hub", specifier = ">=0.34,<2" },

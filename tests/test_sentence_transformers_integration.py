@@ -118,7 +118,7 @@ def test_embedding_evaluator_returns_st_compatible_metrics(monkeypatch) -> None:
     assert results["HakariNano_combined_mAP@10"] == 1.0
     assert results["ToyData_test_dot_ndcg@10"] == 1.0
     assert results["ToyData_test_dot_map@10"] == 1.0
-    assert "ToyData_test_dot_accuracy@1" not in results
+    assert "ToyData_test_dot_acc@1" not in results
     assert "ToyData_test_dot_mrr@10" not in results
     assert "ToyData_test_dot_map@100" not in results
     assert any(key.startswith("ToyData_test_") for key in results)
@@ -142,7 +142,7 @@ def test_reranker_evaluator_uses_bm25_candidates(monkeypatch) -> None:
     assert evaluator.primary_metric == "HakariNano_R2_combined_nDCG@10"
     assert results[evaluator.primary_metric] == 1.0
     assert results["HakariNano_R2_combined_mAP@10"] == 1.0
-    assert "ToyData_test_reranker_accuracy@1" not in results
+    assert "ToyData_test_reranker_acc@1" not in results
     assert "ToyData_test_reranker_mrr@10" not in results
 
 
@@ -164,7 +164,7 @@ def test_bm25_evaluator_runs_without_model(monkeypatch) -> None:
     assert evaluator.primary_metric == "HakariNanoBM25_combined_nDCG@10"
     assert 0.0 < results[evaluator.primary_metric] <= 1.0
     assert 0.0 < results["HakariNanoBM25_combined_mAP@10"] <= 1.0
-    assert "ToyData_test_bm25_dataset_subset_accuracy@1" not in results
+    assert "ToyData_test_bm25_dataset_subset_acc@1" not in results
 
 
 def test_embedding_evaluator_accepts_explicit_metric_set(monkeypatch) -> None:
@@ -176,14 +176,14 @@ def test_embedding_evaluator_accepts_explicit_metric_set(monkeypatch) -> None:
 
     evaluator = HakariNanoEmbeddingEvaluator(
         targets=[HakariNanoTarget(dataset="ToyData", tasks=[task])],
-        metrics=["accuracy@1", "nDCG@10"],
+        metrics=["acc@1", "nDCG@10"],
     )
 
     results = evaluator(FakeDenseModel())
 
-    assert results["ToyData_test_dot_accuracy@1"] == 1.0
+    assert results["ToyData_test_dot_acc@1"] == 1.0
     assert results["ToyData_test_dot_ndcg@10"] == 1.0
-    assert results["HakariNano_combined_accuracy@1"] == 1.0
+    assert results["HakariNano_combined_acc@1"] == 1.0
     assert results["HakariNano_combined_nDCG@10"] == 1.0
     assert "ToyData_test_dot_map@10" not in results
 

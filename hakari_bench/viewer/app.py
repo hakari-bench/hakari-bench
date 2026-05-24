@@ -916,7 +916,7 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
     ]
     tooltip = (
         "All shows full-corpus retrieval scores and excludes cross-encoder reranker runs. "
-        "Reranking shows BM25 top-100 reranking scores when available. BM25 is omitted only for @100 metrics because the candidate subset can contain relevant documents at the tail."
+        "Reranking shows reranking_hybrid reranking scores when available. BM25 is omitted only for @100 metrics because the candidate subset can contain relevant documents at the tail."
     )
     buttons = []
     for target, label in target_options:
@@ -990,6 +990,8 @@ def _score_metric_label(metric: str) -> str:
     family, separator, cutoff = metric.partition("@")
     labels = {
         "ndcg": "nDCG",
+        "acc": "Acc",
+        "hit": "Acc",
         "map": "MAP",
         "mrr": "MRR",
         "accuracy": "Acc",

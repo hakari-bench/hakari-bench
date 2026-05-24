@@ -131,7 +131,7 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.retrieval_score_device == "auto"
     assert args.dataset == ["hakari-bench/NanoBEIR-en"]
     assert args.results_dir == "output/results"
-    assert args.save_top_rankings is False
+    assert args.save_top_rankings is True
     assert args.embedding_variants == _default_dense_quantized_variants()
 
 
@@ -224,7 +224,7 @@ def test_parse_args_accepts_structured_params_json() -> None:
                 '"target":{"collections":["MNanoBEIR"]},'
                 '"runtime":{"batch_size":16,"dtype":"fp16",'
                 '"encode_devices":["cuda:0","cuda:1"],"encode_chunk_size":64},'
-                '"output":{"results_dir":"output/custom","overwrite":true,"save_top_rankings":true}}'
+                '"output":{"results_dir":"output/custom","overwrite":true}}'
             ),
         ]
     )
@@ -243,10 +243,14 @@ def test_parse_args_accepts_structured_params_json() -> None:
     assert args.save_top_rankings is True
 
 
-def test_parse_args_accepts_save_top_rankings_flag() -> None:
-    args = parse_args(["evaluate", "dense", "--model", "hotchpotch/model", "--save-top-rankings"])
-
-    assert args.save_top_rankings is True
+def test_parse_args_rejects_save_top_rankings_flags() -> None:
+    for option in ("--save-top-rankings", "--no-save-top-rankings"):
+        try:
+            parse_args(["evaluate", "dense", "--model", "hotchpotch/model", option])
+        except SystemExit as exc:
+            assert exc.code == 2
+        else:
+            raise AssertionError(f"Expected {option} to be rejected.")
 
 
 def test_parse_args_from_model_card_sets_model_target_and_truncate_variants(tmp_path) -> None:
@@ -797,6 +801,13 @@ def test_parse_args_accepts_prompt_and_reranker_options() -> None:
     }
     assert args.reranker_score_kwargs == {"prompt_name": "retrieval"}
     assert args.rerank_top_k == 50
+
+
+def test_parse_args_defaults_rerank_top_k_to_none() -> None:
+    args = parse_args(["evaluate", "reranker", "--model", "hotchpotch/reranker"])
+
+    assert args.rerank_top_k is None
+    assert args.rerank_top_n is None
 
 
 def test_start_reranker_score_pool_reuses_device_list_as_pool() -> None:

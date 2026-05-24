@@ -96,7 +96,7 @@ def test_task_results_repository_rejects_old_schema_version(tmp_path: Path) -> N
         )
 
 
-def test_task_results_repository_accepts_schema_three_without_text_length_columns(tmp_path: Path) -> None:
+def test_task_results_repository_rejects_schema_three_without_text_length_columns(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_viewer_task_results(
         db_path,
@@ -107,14 +107,11 @@ def test_task_results_repository_accepts_schema_three_without_text_length_column
         include_text_length_columns=False,
     )
 
-    rows = TaskResultsRepository(db_path).fetch_task_result_rows(
-        benchmarks=["BenchA"],
-        include_embedding_variants=False,
-    )
-
-    assert [(row.model_name, row.query_mean_chars, row.document_mean_chars) for row in rows] == [
-        ("model/a", None, None)
-    ]
+    with pytest.raises(RuntimeError, match="schema version 3 is unsupported"):
+        TaskResultsRepository(db_path).fetch_task_result_rows(
+            benchmarks=["BenchA"],
+            include_embedding_variants=False,
+        )
 
 
 def test_task_results_repository_can_return_lightweight_rows_for_hot_path(tmp_path: Path) -> None:
@@ -151,15 +148,15 @@ def test_task_results_repository_can_fetch_non_default_metric_scores(tmp_path: P
     _write_metric_tables(
         db_path,
         [
-            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@1", 0.20, "a.json"),
-            ("model/b", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@1", 0.95, "b.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@1", 0.20, "a.json"),
+            ("model/b", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@1", 0.95, "b.json"),
         ],
     )
 
     rows = TaskResultsRepository(db_path).fetch_task_result_rows(
         benchmarks=["BenchA"],
         include_embedding_variants=False,
-        score_metric="accuracy@1",
+        score_metric="acc@1",
     )
 
     assert [(row.model_name, row.score) for row in rows] == [("model/a", 0.20), ("model/b", 0.95)]
@@ -176,10 +173,11 @@ def test_task_results_repository_limits_display_metric_options_to_research_focus
     _write_metric_tables(
         db_path,
         [
-            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@1", 0.20, "a.json"),
-            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@3", 0.30, "a.json"),
-            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@5", 0.40, "a.json"),
-            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@10", 0.50, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@1", 0.20, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@3", 0.30, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@5", 0.40, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@10", 0.50, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@100", 0.90, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_precision@1", 0.20, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_precision@10", 0.50, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_recall@1", 0.20, "a.json"),
@@ -191,8 +189,9 @@ def test_task_results_repository_limits_display_metric_options_to_research_focus
 
     assert TaskResultsRepository(db_path).fetch_score_metric_options() == [
         "ndcg@10",
-        "accuracy@1",
-        "accuracy@10",
+        "acc@1",
+        "acc@10",
+        "acc@100",
         "precision@10",
         "recall@10",
         "mrr@10",
@@ -211,14 +210,14 @@ def test_task_results_repository_uses_rerank_metrics_for_reranking_target(tmp_pa
     _write_metric_tables(
         db_path,
         [
-            ("cross-encoder/reranker", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_accuracy@1", 0.20, "r.json"),
+            ("cross-encoder/reranker", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@1", 0.20, "r.json"),
             (
                 "cross-encoder/reranker",
                 "BenchA",
                 "bench/a",
                 "a1",
                 "a1",
-                "BenchA_a1_cosine_bm25_top100_rerank_accuracy@1",
+                "BenchA_a1_cosine_reranking_hybrid_top12_rerank_acc@1",
                 0.85,
                 "r.json",
             ),
@@ -230,7 +229,7 @@ def test_task_results_repository_uses_rerank_metrics_for_reranking_target(tmp_pa
         benchmarks=["BenchA"],
         include_embedding_variants=False,
         score_target="reranking",
-        score_metric="accuracy@1",
+        score_metric="acc@1",
     )
 
     assert [(row.model_name, row.score) for row in rows] == [("cross-encoder/reranker", 0.85)]
@@ -860,7 +859,9 @@ def _write_metric_tables(db_path: Path, rows: list[tuple], *, score_target: str 
                 dataset_id VARCHAR,
                 task_name VARCHAR,
                 metric_value DOUBLE,
-                result_path VARCHAR
+                result_path VARCHAR,
+                score_target VARCHAR,
+                embedding_variant_name VARCHAR
             )
             """
         )
@@ -899,7 +900,7 @@ def _write_metric_tables(db_path: Path, rows: list[tuple], *, score_target: str 
         metric_id_by_name = {name: index for index, name in enumerate(metric_names, start=1)}
         for model_name, benchmark, dataset_id, task_name, task_key, metric_name, metric_value, result_path in rows:
             con.execute(
-                "INSERT INTO fact_metric_score VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO fact_metric_score VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [
                     metric_id_by_name[metric_name],
                     model_name.replace("/", "__"),
@@ -909,6 +910,8 @@ def _write_metric_tables(db_path: Path, rows: list[tuple], *, score_target: str 
                     task_name,
                     metric_value,
                     result_path,
+                    score_target,
+                    None,
                 ],
             )
             con.execute(

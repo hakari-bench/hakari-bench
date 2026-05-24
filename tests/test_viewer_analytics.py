@@ -87,7 +87,7 @@ def test_rerank_diagnostics_aggregate_candidate_coverage_and_lift(tmp_path: Path
     assert bench_a.relevant_coverage_percent == pytest.approx(50.0)
     assert bench_a.mean_lift_points == pytest.approx(2.5)
     assert bench_a.candidate_source == "dataset_candidate_subset"
-    assert bench_a.candidate_ranking == "bm25"
+    assert bench_a.candidate_ranking == "reranking_hybrid"
 
 
 def test_dataset_diagnostics_report_language_category_and_saturation(tmp_path: Path) -> None:
@@ -193,9 +193,9 @@ def _write_analytics_db(db_path: Path) -> None:
         con.executemany(
             "INSERT INTO task_diagnostics VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-                ("model/a", "BenchA", "bench/a", "t1", "BenchA::t1", 0.05, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.00, 0.75),
-                ("model/b", "BenchA", "bench/a", "t2", "BenchA::t2", 0.00, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 0.50, 0.25),
-                ("model/a", "BenchB", "bench/b", "t3", "BenchB::t3", 0.10, "available", 100, "computed_bm25s", "bm25", "computed", 1.00, 1.00),
+                ("model/a", "BenchA", "bench/a", "t1", "BenchA::t1", 0.05, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.00, 0.75),
+                ("model/b", "BenchA", "bench/a", "t2", "BenchA::t2", 0.00, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 0.50, 0.25),
+                ("model/a", "BenchB", "bench/b", "t3", "BenchB::t3", 0.10, "available", 101, "computed_bm25s", "reranking_hybrid", "computed", 1.00, 1.00),
             ],
         )
     finally:

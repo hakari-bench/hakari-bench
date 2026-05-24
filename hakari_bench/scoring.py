@@ -16,10 +16,10 @@ def rank_candidate_subset_by_similarity(
     corpus_embeddings: Any,
     candidates: dict[str, list[str]],
     score_name: str,
-    rerank_top_n: int,
+    rerank_top_n: int | None,
     rank_by_similarity: SimilarityRanker,
 ) -> dict[str, list[str]]:
-    if rerank_top_n <= 0:
+    if rerank_top_n is not None and rerank_top_n <= 0:
         raise ValueError("rerank_top_n must be positive.")
     corpus_index_by_id = {corpus_id: index for index, corpus_id in enumerate(corpus_ids)}
     rankings: dict[str, list[str]] = {}
@@ -36,7 +36,7 @@ def rank_candidate_subset_by_similarity(
             seen.add(candidate_id)
             candidate_indices.append(corpus_index)
             candidate_ids.append(candidate_id)
-            if len(candidate_ids) >= rerank_top_n:
+            if rerank_top_n is not None and len(candidate_ids) >= rerank_top_n:
                 break
         if not candidate_ids:
             rankings[query_id] = []

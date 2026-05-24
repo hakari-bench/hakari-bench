@@ -92,11 +92,11 @@ Use `metrics` to request a different small set:
 ```python
 evaluator = HakariNanoEmbeddingEvaluator(
     targets=[HakariNanoTarget(dataset="NanoMIRACL", splits=["en"])],
-    metrics=["accuracy@1", "nDCG@10", "mAP@10"],
+    metrics=["acc@1", "nDCG@10", "mAP@10"],
 )
 ```
 
-This computes only `accuracy@1`, `ndcg@10`, and `map@10`. It does not compute
+This computes only `acc@1`, `ndcg@10`, and `map@10`. It does not compute
 precision, recall, MRR, or other cutoffs unless requested.
 
 ## Target Selection
@@ -150,7 +150,7 @@ evaluator = HakariNanoEmbeddingEvaluator(
     metrics=["nDCG@10", "mAP@10"],
     query_limit=50,
     query_sample_seed=13,
-    candidate_ranking="bm25",
+    candidate_ranking="reranking_hybrid",
 )
 ```
 
@@ -177,26 +177,23 @@ HakariNano_combined_nDCG@10
 ## Reranker Training
 
 Use `HakariNanoRerankerEvaluator` with a SentenceTransformers `CrossEncoder`.
-The evaluator requires a candidate ranking, usually the built-in `bm25`
-candidate subset.
+The evaluator requires a candidate ranking, usually the built-in
+`reranking_hybrid` candidate subset.
 
 ```python
 from hakari_bench.sentence_transformers import HakariNanoRerankerEvaluator, HakariNanoTarget
 
 evaluator = HakariNanoRerankerEvaluator(
     targets=[HakariNanoTarget(dataset="NanoMIRACL", splits=["en"])],
-    candidate_ranking="bm25",
-    rerank_top_k=100,
     metrics=["nDCG@10", "mAP@10"],
 )
 ```
 
-The default evaluator name includes the rerank depth. For example,
-`rerank_top_k=100` produces:
+The default evaluator name uses `Rall` when no explicit rerank depth is set:
 
 ```text
-HakariNano_R100_combined_nDCG@10
-HakariNano_R100_combined_mAP@10
+HakariNano_Rall_combined_nDCG@10
+HakariNano_Rall_combined_mAP@10
 ```
 
 The example script keeps `CUDA_VISIBLE_DEVICES=0` by default because
@@ -353,16 +350,22 @@ The HAKARI CLI benchmark runner records more structured variant data in result
 JSON:
 
 ```text
-payload["config"]["embedding_variants"]
 payload["evaluation"]["embedding_evaluations"]
 ```
 
 Each `embedding_evaluations` item contains the variant name, transform metadata,
-embedding metadata, selected aggregate metric, distance evaluations, and metric
-dictionary. With `--save-top-rankings`, ranking artifacts also include:
+embedding metadata, selected aggregate metric, compact distance evaluations,
+and best-score metadata. Ranking artifacts also include the binary qrels IDs
+needed to recompute IR metrics from the saved top-100 rows:
 
 ```json
 {
+  "qrels": [
+    {
+      "query_id": "q1",
+      "relevant_corpus_ids": ["d1"]
+    }
+  ],
   "embedding_variant_name": "int8"
 }
 ```
@@ -403,7 +406,7 @@ Useful example options:
 | `--eval-query-limit N` | dense, reranker | Sample at most `N` queries per task. |
 | `--hakari-metric nDCG@10` | dense, reranker | Add or override requested HAKARI metrics. |
 | `--extra-embedding-variant int8` | dense | Add a separate dense embedding variant evaluation. |
-| `--rerank-top-k N` | reranker | Limit BM25 candidates reranked by the cross encoder. |
+| `--rerank-top-k N` | reranker | Optional limit for candidate documents reranked by the cross encoder. Omit it to rerank all provided candidates. |
 
 ## Development And Testing
 

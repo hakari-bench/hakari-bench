@@ -867,7 +867,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'data-icon="circle-help"' in response.text
     assert 'data-icon="question-mark"' not in response.text
     assert "full-corpus retrieval scores" in response.text
-    assert "BM25 top-100 reranking scores" in response.text
+    assert "reranking_hybrid reranking scores" in response.text
     assert 'data-leaderboard-control="true"' in response.text
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
@@ -884,7 +884,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "z-20" in response.text
 
 
-def test_leaderboard_target_reranking_uses_bm25_top100_rerank_scores(tmp_path: Path) -> None:
+def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
     db_path = tmp_path / "results.duckdb"
@@ -899,10 +899,10 @@ def test_leaderboard_target_reranking_uses_bm25_top100_rerank_scores(tmp_path: P
             ("bm25", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.10, 0, 0, None),
         ],
         task_diagnostics_rows=[
-            ("model/a", "BenchA", "bench/a", "a1", "BenchA::a1", 0.90, 0.20, -0.70, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
-            ("model/b", "BenchA", "bench/a", "a1", "BenchA::a1", 0.80, 0.90, 0.10, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
-            ("model/a", "BenchA", "bench/a", "a2", "BenchA::a2", 0.40, 0.20, -0.20, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
-            ("model/b", "BenchA", "bench/a", "a2", "BenchA::a2", 0.30, 0.90, 0.60, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
+            ("model/a", "BenchA", "bench/a", "a1", "BenchA::a1", 0.90, 0.20, -0.70, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
+            ("model/b", "BenchA", "bench/a", "a1", "BenchA::a1", 0.80, 0.90, 0.10, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
+            ("model/a", "BenchA", "bench/a", "a2", "BenchA::a2", 0.40, 0.20, -0.20, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
+            ("model/b", "BenchA", "bench/a", "a2", "BenchA::a2", 0.30, 0.90, 0.60, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
         ],
     )
     config_dir = tmp_path / "config"
@@ -941,8 +941,8 @@ def test_leaderboard_target_all_excludes_reranker_models(tmp_path: Path) -> None
             ("cross-encoder/example-reranker", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.60, 10, 12, 8192),
         ],
         task_diagnostics_rows=[
-            ("cross-encoder/example-reranker", "BenchA", "bench/a", "a1", "BenchA::a1", 0.70, 0.95, 0.25, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
-            ("cross-encoder/example-reranker", "BenchA", "bench/a", "a2", "BenchA::a2", 0.60, 0.85, 0.25, "available", 100, "dataset_candidate_subset", "bm25", "dataset", 1.0, 1.0),
+            ("cross-encoder/example-reranker", "BenchA", "bench/a", "a1", "BenchA::a1", 0.70, 0.95, 0.25, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
+            ("cross-encoder/example-reranker", "BenchA", "bench/a", "a2", "BenchA::a2", 0.60, 0.85, 0.25, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
         ],
     )
     config = ViewerConfig(
@@ -3095,11 +3095,11 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
     _write_metric_tables(
         db_path,
         [
-            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@1", 0.10, "a.json"),
-            ("model/b", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@1", 0.95, "b.json"),
-            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@3", 0.20, "a.json"),
-            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@5", 0.30, "a.json"),
-            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@10", 0.40, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_acc@1", 0.10, "a.json"),
+            ("model/b", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_acc@1", 0.95, "b.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_acc@3", 0.20, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_acc@5", 0.30, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_acc@10", 0.40, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_precision@1", 0.20, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_precision@10", 0.40, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_recall@1", 0.20, "a.json"),
@@ -3115,14 +3115,14 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
 
     result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard(
         "BenchA",
-        score_metric="accuracy@1",
+        score_metric="acc@1",
     )
 
-    assert result.selected_score_metric == "accuracy@1"
+    assert result.selected_score_metric == "acc@1"
     assert result.available_score_metrics == [
         "ndcg@10",
-        "accuracy@1",
-        "accuracy@10",
+        "acc@1",
+        "acc@10",
         "precision@10",
         "recall@10",
         "mrr@10",
@@ -3132,7 +3132,7 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
     assert result.rows[0].mean_score == pytest.approx(95.0)
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=BenchA&metric=accuracy@1")
+    response = TestClient(app).get("/leaderboard?view=BenchA&metric=acc@1")
 
     assert response.status_code == 200
     assert "Metric" in response.text
@@ -3159,8 +3159,8 @@ def test_leaderboard_service_excludes_bm25_only_for_cutoff_100_metrics(tmp_path:
         [
             ("bm25", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_bm25_dataset_subset_map@100", 0.99, "bm25.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_map@100", 0.10, "a.json"),
-            ("bm25", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_bm25_dataset_subset_accuracy@1", 0.20, "bm25.json"),
-            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_accuracy@1", 0.90, "a.json"),
+            ("bm25", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_bm25_dataset_subset_acc@1", 0.20, "bm25.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_acc@1", 0.90, "a.json"),
         ],
     )
     config_dir = tmp_path / "config"
@@ -3170,7 +3170,7 @@ def test_leaderboard_service_excludes_bm25_only_for_cutoff_100_metrics(tmp_path:
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
 
     cutoff_100 = service.get_leaderboard("BenchA", score_metric="map@100")
-    cutoff_1 = service.get_leaderboard("BenchA", score_metric="accuracy@1")
+    cutoff_1 = service.get_leaderboard("BenchA", score_metric="acc@1")
 
     assert [row.model_name for row in cutoff_100.rows] == ["model/a"]
     assert [row.model_name for row in cutoff_1.rows] == ["model/a", "bm25"]
@@ -3888,7 +3888,9 @@ def _write_metric_tables(db_path: Path, rows: list[tuple], *, score_target: str 
                 dataset_id VARCHAR,
                 task_name VARCHAR,
                 metric_value DOUBLE,
-                result_path VARCHAR
+                result_path VARCHAR,
+                score_target VARCHAR,
+                embedding_variant_name VARCHAR
             )
             """
         )
@@ -3928,7 +3930,7 @@ def _write_metric_tables(db_path: Path, rows: list[tuple], *, score_target: str 
         inserted_task_scores: set[tuple[str, str, str, str, str]] = set()
         for model_name, benchmark, dataset_id, dataset_name, task_name, task_key, metric_name, metric_value, result_path in rows:
             con.execute(
-                "INSERT INTO fact_metric_score VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO fact_metric_score VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [
                     metric_id_by_name[metric_name],
                     model_name.replace("/", "__"),
@@ -3938,6 +3940,8 @@ def _write_metric_tables(db_path: Path, rows: list[tuple], *, score_target: str 
                     task_name,
                     metric_value,
                     result_path,
+                    score_target,
+                    None,
                 ],
             )
             task_key_tuple = (model_name, benchmark, dataset_id, task_name, result_path)
@@ -4088,8 +4092,7 @@ def _reranking_viewer_rows(base_rows: list[tuple], diagnostic_rows: list[tuple])
             base_row is None
             or rerank_score is None
             or rerank_status != "available"
-            or rerank_top_k != 100
-            or candidate_ranking != "bm25"
+            or candidate_ranking != "reranking_hybrid"
         ):
             continue
         reranking_rows.append(

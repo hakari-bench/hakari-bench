@@ -4,12 +4,12 @@ import math
 from collections.abc import Iterable
 from collections.abc import Sequence
 
-DEFAULT_ACCURACY_K = [1, 3, 5, 10]
-DEFAULT_PRECISION_RECALL_K = [1, 3, 5, 10]
-DEFAULT_MRR_K = [10]
+DEFAULT_ACC_K = [100]
+DEFAULT_PRECISION_RECALL_K: list[int] = []
+DEFAULT_MRR_K: list[int] = []
 DEFAULT_NDCG_K = [10]
-DEFAULT_MAP_K = [100]
-SUPPORTED_IR_METRIC_FAMILIES = ("accuracy", "precision", "recall", "mrr", "ndcg", "map")
+DEFAULT_MAP_K: list[int] = []
+SUPPORTED_IR_METRIC_FAMILIES = ("acc", "accuracy", "hit", "precision", "recall", "mrr", "ndcg", "map")
 
 
 def compute_ir_metrics(
@@ -26,8 +26,8 @@ def compute_ir_metrics(
 
     requested_metrics = _requested_metric_groups(metric_names)
     metrics: dict[str, float] = {}
-    for k_value in requested_metrics["accuracy"]:
-        metrics[f"accuracy@{k_value}"] = _mean(
+    for k_value in requested_metrics["acc"]:
+        metrics[f"acc@{k_value}"] = _mean(
             1.0 if _hits_at_k(rankings[query_id], qrels.get(query_id, set()), k_value) else 0.0
             for query_id in query_ids
         )
@@ -78,7 +78,8 @@ def normalize_ir_metric_names(metric_names: Sequence[str]) -> tuple[str, ...]:
             raise ValueError(f"IR metric cutoff must be an integer: {metric_name!r}.") from exc
         if cutoff <= 0:
             raise ValueError(f"IR metric cutoff must be positive: {metric_name!r}.")
-        canonical = f"{family}@{cutoff}"
+        canonical_family = "acc" if family in {"accuracy", "hit"} else family
+        canonical = f"{canonical_family}@{cutoff}"
         if canonical in seen:
             continue
         seen.add(canonical)
@@ -91,7 +92,9 @@ def normalize_ir_metric_names(metric_names: Sequence[str]) -> tuple[str, ...]:
 def _requested_metric_groups(metric_names: Sequence[str] | None) -> dict[str, tuple[int, ...]]:
     if metric_names is None:
         return {
-            "accuracy": tuple(DEFAULT_ACCURACY_K),
+            "acc": tuple(DEFAULT_ACC_K),
+            "accuracy": (),
+            "hit": (),
             "precision": tuple(DEFAULT_PRECISION_RECALL_K),
             "recall": tuple(DEFAULT_PRECISION_RECALL_K),
             "mrr": tuple(DEFAULT_MRR_K),

@@ -10,6 +10,7 @@ from typing import Any, cast
 import yaml
 
 from hakari_bench.config_schema import DatasetCollectionConfigModel, DatasetConfigFileModel, DatasetConfigModel
+from hakari_bench.defaults import DEFAULT_CANDIDATE_RANKING
 
 try:
     HfApi: Any = getattr(importlib.import_module("huggingface_hub"), "HfApi")
@@ -71,7 +72,7 @@ class NanoDatasetSpec:
     corpus_config: str = "corpus"
     queries_config: str = "queries"
     qrels_config: str = "qrels"
-    candidate_config: str | None = "bm25"
+    candidate_config: str | None = DEFAULT_CANDIDATE_RANKING
     benchmark_kind: str = "nano"
     splits: list[str] | None = None
     split_mapping: dict[str, str] | None = None

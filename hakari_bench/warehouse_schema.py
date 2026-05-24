@@ -118,6 +118,8 @@ class MetricLongRow(WarehouseModel):
     metric_name: str
     metric_value: float
     result_path: str
+    score_target: str = "all"
+    embedding_variant_name: str | None = None
 
     def duckdb_values(self) -> tuple[object, ...]:
         return (
@@ -129,6 +131,8 @@ class MetricLongRow(WarehouseModel):
             self.metric_name,
             self.metric_value,
             self.result_path,
+            self.score_target,
+            self.embedding_variant_name,
         )
 
 

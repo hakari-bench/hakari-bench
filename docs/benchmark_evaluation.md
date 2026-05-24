@@ -58,13 +58,11 @@ uv run --group tf4-fa2 hakari-bench evaluate dense \
 ```
 
 ```bash
-# Fill missing reranker results for every built-in dataset using the dataset BM25
-# candidate subset. This is the preferred default for CrossEncoder rerankers.
+# Fill missing reranker results for every built-in dataset using the default
+# reranking_hybrid candidate subset.
 uv run --group tf4-fa2 hakari-bench evaluate reranker \
   --model BAAI/bge-reranker-v2-m3 \
   --all \
-  --candidate-ranking bm25 \
-  --rerank-top-k 100 \
   --batch-size 128 \
   --dtype bf16 \
   --device cuda:0
@@ -76,8 +74,6 @@ uv run --group tf4-fa2 hakari-bench evaluate reranker \
 CUDA_VISIBLE_DEVICES=1 uv run --group tf4-fa2 hakari-bench evaluate reranker \
   --model hotchpotch/japanese-reranker-xsmall-v2 \
   --all \
-  --candidate-ranking bm25 \
-  --rerank-top-k 100 \
   --batch-size 256 \
   --dtype bf16 \
   --device cuda:0 \
@@ -91,7 +87,7 @@ uv run --group tf4-fa2 hakari-bench evaluate reranker \
     "model": {"source": "BAAI/bge-reranker-v2-m3"},
     "target": {"all": true},
     "runtime": {"dtype": "bf16", "device": "cuda:0", "batch_size": 128},
-    "reranker": {"candidate_ranking": "bm25", "rerank_top_k": 100}
+    "reranker": {"candidate_ranking": "reranking_hybrid"}
   }'
 ```
 
@@ -354,14 +350,18 @@ Per-task result JSON should preserve enough metadata to explain the run:
 - parameter counts,
 - model maximum sequence length.
 
-Top-100 ranking artifacts are optional because they are much larger than the
-summary task JSON. Pass `--save-top-rankings` when a run needs per-query ranked
-corpus ids for metric recomputation, rank-fusion analysis, or candidate audits.
-When enabled, each evaluated task writes a referenced artifact under
-`rankings/{split_or_task}.top100.json` containing base retrieval, available
-embedding variants, BM25/reranker outputs, and candidate-rerank outputs. Rebuild
-the DuckDB warehouse after evaluation to expose these rows in
-`retrieval_rankings`.
+Task result JSON stores only the default `nDCG@10` and `acc@100` metric values.
+Recompute other viewer metrics from saved top-100 ranking artifacts during
+DuckDB warehouse creation instead of expanding every result JSON with redundant
+metric cutoffs.
+
+Top-100 ranking rows are embedded in each task result JSON under
+`artifacts.top_rankings` because they are the canonical source for later metric
+recomputation. The embedded artifact contains base retrieval, available
+embedding variants, BM25/reranker outputs, candidate-rerank outputs, and binary
+qrels relevant corpus ids. Rebuild the DuckDB warehouse after evaluation to
+compute `acc@1`, `acc@10`, `acc@100`, `precision@10`, `recall@10`, `mrr@10`,
+and `map@100` for the viewer.
 
 When comparing models, check that prompt and embedding-variant choices are fair
 and intentional.

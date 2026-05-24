@@ -290,40 +290,42 @@ sparse nnz/density statistics when available. Quantized variants also record
 the value dtype, quantization precision, original dimension, stored dimension,
 calibration/ranges source, scoring representation, quantization method
 (`corpus_only` or `query_and_corpus`), and side (`query` or `corpus`) when
-applicable. Dense embedding evaluations score both `cosine` and `dot`, store
-both entries in `distance_evaluations`, and copy the better aggregate result to
-`metrics`, `aggregate_metric_value`, `best_score`, `best_distance`, and
-`best_score_name`.
+applicable. By default, JSON metrics are limited to `nDCG@10` and `acc@100`;
+other IR metrics are recomputed from saved top-100 ranking artifacts when the
+DuckDB warehouse is built. Dense embedding evaluations score both `cosine` and
+`dot`, keep compact `distance_evaluations` summaries, and record the better
+aggregate result in `aggregate_metric_value`, `best_score`, `best_distance`,
+and `best_score_name`.
 
-## BM25 top-100 reranking
+## Hybrid reranking
 
-Dense, sparse, and late-interaction evaluations also report BM25 top-100
-reranking by default when the dataset provides the `bm25` candidate subset. The
+Dense, sparse, and late-interaction evaluations also report `reranking_hybrid`
+reranking by default when the dataset provides that candidate subset. The
 model is still encoded and scored through the normal full-corpus path; the
-reranking metrics are computed by scoring only each query's BM25 candidates with
-the already-computed embeddings, so no second model inference is required.
+reranking metrics are computed by scoring only each query's hybrid candidates
+with the already-computed embeddings, so no second model inference is required.
 
 The full-corpus result remains the main aggregate. Reranking results are stored
 separately under `rerank_metrics`, `evaluation.rerank_aggregate_metric_value`,
 and `evaluation.reranking_evaluations`. Candidate coverage against qrels is
-stored in the reranking evaluation so BM25 candidate recall can be separated
-from reranker quality. For top-100 reranking diagnostics, published Nano
-datasets should have 100% query coverage and 100% relevant coverage unless a
-dataset README explicitly documents why that is impossible. The CLI prints a
-JSON summary with `primary_metric_mean` and task counts after the run. If BM25
+stored in the reranking evaluation so candidate recall can be separated
+from reranker quality. By default, reranking uses all candidates provided by the
+selected candidate subset, so no rerank depth has to be specified. For
+`reranking_hybrid` diagnostics, published Nano
+datasets should have 100% query coverage unless a dataset README explicitly
+documents why that is impossible. The CLI prints a
+JSON summary with `primary_metric_mean` and task counts after the run. If
 candidates are unavailable, the full-corpus evaluation still succeeds and
 reranking is recorded as skipped.
 
 CrossEncoder-style reranker models can be evaluated directly with
-`evaluate reranker`. They score only the BM25 candidate subset and support
+`evaluate reranker`. They score only the selected candidate subset and support
 models exposing `rank`, `predict`, or a callable pair-scoring API.
 
 ```bash
 uv run hakari-bench evaluate reranker \
   --model nreimers/mmarco-mMiniLMv2-L6-H384-v1 \
   --dataset NanoRTEB \
-  --candidate-ranking bm25 \
-  --rerank-top-k 100 \
   --batch-size 32
 ```
 

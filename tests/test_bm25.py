@@ -274,6 +274,8 @@ def test_evaluate_bm25_task_returns_ir_metrics() -> None:
     )
 
     assert result.metrics["Toy_bm25_bm25s_okapi_ndcg@10"] == pytest.approx(1.0)
+    assert result.metrics["Toy_bm25_bm25s_okapi_acc@100"] == pytest.approx(1.0)
+    assert set(result.metrics) == {"Toy_bm25_bm25s_okapi_ndcg@10", "Toy_bm25_bm25s_okapi_acc@100"}
     assert result.timing["score_and_topk_seconds"] >= 0.0
 
 
@@ -298,6 +300,7 @@ def test_evaluate_bm25_task_uses_dataset_candidate_subset_without_bm25s(monkeypa
     )
 
     assert result.metrics["Toy_bm25_dataset_subset_ndcg@10"] == pytest.approx(1.0)
+    assert result.metrics["Toy_bm25_dataset_subset_acc@100"] == pytest.approx(1.0)
     assert result.timing["score_and_topk_seconds"] >= 0.0
 
 

@@ -25,6 +25,7 @@ dependencies = [
     "transformers>=4.57,<6",
     "orjson>=3.11.5",
     "urllib3>=2.7.0",
+    "einops>=0.8.2",
 ]
 
 [build-system]
