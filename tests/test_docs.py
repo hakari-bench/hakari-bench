@@ -34,10 +34,12 @@ def test_nano_readme_template_documents_fill_requirements() -> None:
 
     assert template.exists()
     text = template.read_text(encoding="utf-8")
-    assert "[HAKARI-Bench](https://github.com/hotchpotch/hakari-bench)" in text
+    assert "[HAKARI-bench](https://github.com/hakari-bench/hakari-bench)" in text
     assert "[NanoBEIR](https://huggingface.co/blog/sionic-ai/eval-sionic-nano-beir)" in text
     assert "{{SPLIT_STATISTICS_ROWS}}" in text
-    assert "{{BM25_SCORE_ROWS}}" in text
+    assert "{{CANDIDATE_SCORE_ROWS}}" in text
+    assert "BM25 nDCG@10 | Dense nDCG@10 | Hybrid nDCG@10" in text
+    assert "Dense means `microsoft/harrier-oss-v1-270m`" in text
     assert "Do not include this checklist in the actual dataset README." in text
     assert "- [ ] every config lists the same Nano splits" in text
 

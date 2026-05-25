@@ -12,6 +12,10 @@ standard Hugging Face Datasets shape is:
 - config `queries`
 - config `qrels`
 - config `bm25`
+- config `harrier_oss_v1_270m` for dense candidates when building
+  reranking-hybrid Nano sets
+- config `reranking_hybrid` for default reranking candidates when building
+  reranking-hybrid Nano sets
 - task/subset names stored as split names in every config
 
 Example local output:
@@ -24,7 +28,10 @@ output/NanoExample/
   queries/NanoTask.parquet
   qrels/NanoTask.parquet
   bm25/NanoTask.parquet
+  harrier_oss_v1_270m/NanoTask.parquet
+  reranking_hybrid/NanoTask.parquet
   metadata/NanoTask.json
+  reranking_hybrid_metadata.json
 ```
 
 The matching HAKARI dataset YAML is generated at the same time when
@@ -144,15 +151,42 @@ zero, the split has more positives than the BM25 candidate cap can cover, or the
 candidate list is too short. Fix this by changing query selection, increasing
 `--top-k`, or explicitly documenting a qrels capping policy.
 
-For datasets used by `reranking_hybrid` diagnostics, the candidate subset should
-follow the "RRF top-100 plus optional safeguard positive at rank 101" policy.
-Rows with 100 candidates mean the RRF top-100 already contains a qrels-positive
-document; rows with 101 candidates mean the 101st document is a safeguard
-positive appended only because the RRF top-100 missed all positives. Small
-corpus tasks with fewer than 100 documents should cover every qrels-positive
-document present in the corpus without adding a safeguard row. `candidate_coverage`
-should show both `query_coverage` and `relevant_coverage` as `1.0` for the
-safeguarded candidate set.
+## Reranking Hybrid Candidate Generation
+
+For datasets used by `reranking_hybrid` diagnostics, build three candidate
+configs:
+
+- `bm25`: local BM25 top-500. The tokenizer should be selected from task
+  metadata first, then from deterministic query-language detection. For example,
+  Japanese uses `wordseg@ja`; code tasks use `regex`.
+- `harrier_oss_v1_270m`: dense top-500 from
+  `microsoft/harrier-oss-v1-270m`. In README tables this is shown as `Dense`.
+  `Dense` means this Harrier model with the `web_search_query` prompt for
+  queries and cosine similarity over normalized embeddings.
+- `reranking_hybrid`: RRF over `bm25` and `harrier_oss_v1_270m`.
+
+The hybrid candidate subset should follow the "RRF top-100 plus optional
+safeguard positive at rank 101" policy. Rows with 100 candidates mean the RRF
+top-100 already contains a qrels-positive document; rows with 101 candidates
+mean the 101st document is a safeguard positive appended only because the RRF
+top-100 missed all positives. Small corpus tasks with fewer than 100 documents
+should cover every qrels-positive document present in the corpus without adding
+a safeguard row. `candidate_coverage` should show both `query_coverage` and
+`relevant_coverage` as `1.0` for the safeguarded candidate set.
+
+README candidate quality tables should report `nDCG@10` and `Recall@100` as
+0-100 scores with two decimals. Put ranking quality columns together before
+recall columns:
+
+```text
+BM25 nDCG@10 | Dense nDCG@10 | Hybrid nDCG@10 |
+BM25 Recall@100 | Dense Recall@100 | Hybrid Recall@100
+```
+
+`Recall@100` uses only the top 100 candidates, so the optional rank-101
+safeguard positive is not counted in `Recall@100`. Also include the resolved
+BM25 tokenizer, hybrid candidate count range, and safeguard-positive count per
+split.
 
 To rebuild MNanoBEIR BM25 subsets without changing the existing corpus, queries,
 or qrels, use:
@@ -271,13 +305,15 @@ requirements: `language`, `category`, `short_description`, and `description`.
 
 Use [`NanoREADME.template.md`](NanoREADME.template.md) as the canonical dataset
 README template. The converter writes `README.md` from this template and fills
-the generated split paths, split statistics, split mapping, BM25 coverage, and
-BM25 `nDCG@10` table from the parquet files and `metadata/<split>.json`.
+the generated split paths, split statistics, split mapping, candidate coverage,
+and candidate quality table from the parquet files and split metadata.
 
 The template includes a fill checklist for maintainers. That checklist is only
 for editing the template and must not remain in a published dataset README. The
 generated README strips the checklist and should not contain any `{{...}}`
-placeholders.
+placeholders. Do not hand-maintain `dataset_info` metadata in the template;
+leave it to `ds.push_to_hub()` and Hugging Face automatic dataset card
+generation.
 
 Before publishing, review the generated README and revise source-specific text
 when needed:
@@ -286,7 +322,9 @@ when needed:
 - source split policy
 - skipped task list and reasons
 - tokenizer policy if it differs by split
-- BM25 query/relevant coverage if the dataset is used for reranking diagnostics
+- BM25, Dense, and Hybrid candidate quality metrics if the dataset is used for
+  reranking diagnostics
+- the one-line safeguard definition for `reranking_hybrid`
 - license and upstream attribution wording
 - any source schema differences from the standard Nano layout
 
@@ -313,23 +351,29 @@ Before upload, verify:
 - corpus text has no exact duplicates within the split
 - qrels are positive-only and have no `score <= 0` rows
 - every qrel references selected query and corpus ids
-- every BM25 row references an existing query
-- every BM25 `corpus-ids` value references an existing corpus id
-- every BM25 row has unique candidate ids
+- every candidate row references an existing query
+- every candidate `corpus-ids` value references an existing corpus id
+- every candidate row has unique candidate ids
 - `missing_positive_doc_count_after_forcing` is `0`, or the exception is
   documented in metadata and README
-- BM25 `candidate_coverage.query_coverage` and
-  `candidate_coverage.relevant_coverage` are `1.0` for top-k reranking datasets
+- candidate `candidate_coverage.query_coverage` and
+  `candidate_coverage.relevant_coverage` are `1.0` for safeguarded reranking
+  datasets
 - the generated HAKARI dataset YAML points to the intended final dataset id
 
 ## Upload Shape
 
-Upload four `DatasetDict`s or equivalent parquet files:
+Upload four base `DatasetDict`s or equivalent parquet files:
 
 - config `corpus`
 - config `queries`
 - config `qrels`
 - config `bm25`
+
+For reranking-hybrid Nano sets, also upload:
+
+- config `harrier_oss_v1_270m`
+- config `reranking_hybrid`
 
 Each config must expose the same Nano task/subset names as Hugging Face split
 names. Do not upload a layout where each task is a separate config or where the

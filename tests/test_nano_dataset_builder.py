@@ -78,11 +78,11 @@ def test_build_nano_dataset_from_rows_writes_flat_subset_layout_yaml_and_bm25(tm
     readme = (output_dir / "README.md").read_text(encoding="utf-8")
     assert "config_name: bm25" in readme
     assert "path: bm25/NanoToy.parquet" in readme
-    assert "[HAKARI-Bench](https://github.com/hotchpotch/hakari-bench)" in readme
+    assert "[HAKARI-bench](https://github.com/hakari-bench/hakari-bench)" in readme
     assert "## Split Statistics" in readme
     assert "| NanoToy | 1 | 3 | 1 |" in readme
-    assert "## BM25 nDCG@10" in readme
-    assert "| NanoToy | whitespace | 1 |" in readme
+    assert "## Candidate Quality" in readme
+    assert "| NanoToy | whitespace | 100.00 | n/a | n/a | 100.00% | n/a | n/a | n/a | n/a |" in readme
     assert "{{" not in readme
     assert "Template Fill Checklist" not in readme
 
@@ -174,8 +174,11 @@ def test_build_nano_dataset_from_rows_records_bm25_candidate_coverage(tmp_path: 
     }
 
     readme = (output_dir / "README.md").read_text(encoding="utf-8")
-    assert "| Nano split | Tokenizer | Forced BM25 positives | Query cov | Relevant cov | BM25 nDCG@10 |" in readme
-    assert "| NanoToy | whitespace | 1 | 100.00% | 100.00% |" in readme
+    assert (
+        "| Nano split | BM25 tokenizer | BM25 nDCG@10 | Dense nDCG@10 | Hybrid nDCG@10 | "
+        "BM25 Recall@100 | Dense Recall@100 | Hybrid Recall@100 | Hybrid candidates | Safeguard positives |"
+    ) in readme
+    assert "| NanoToy | whitespace | 100.00 | n/a | n/a | 100.00% | n/a | n/a | n/a | n/a |" in readme
 
 
 def test_build_nano_dataset_from_local_source_supports_nested_mteb_layout(tmp_path: Path) -> None:

@@ -22,6 +22,7 @@ DEFAULT_QUERY_LIMIT = 200
 DEFAULT_DOC_LIMIT = 10_000
 DEFAULT_BM25_TOP_K = 100
 NANO_CONFIGS = ("bm25", "corpus", "qrels", "queries")
+CANDIDATE_CONFIGS = ("bm25", "harrier_oss_v1_270m", "reranking_hybrid")
 _README_TEMPLATE_PATH = Path(__file__).resolve().parents[1] / "docs" / "NanoREADME.template.md"
 
 _CORPUS_ID_COLUMNS = ("_id", "id", "docid", "doc_id", "corpus-id", "corpus_id", "document_id")
@@ -608,11 +609,11 @@ def _read_readme_template() -> str:
     return (
         "# {{DATASET_NAME}}\n\n"
         "This dataset is a Nano-style retrieval dataset. Nano-series evaluation can "
-        "be run easily with [HAKARI-Bench](https://github.com/hotchpotch/hakari-bench).\n\n"
+        "be run easily with [HAKARI-bench](https://github.com/hakari-bench/hakari-bench).\n\n"
         "## Split Statistics\n\n"
         "{{SPLIT_STATISTICS_ROWS}}\n\n"
-        "## BM25 nDCG@10\n\n"
-        "{{BM25_SCORE_ROWS}}\n"
+        "## Candidate Quality\n\n"
+        "{{CANDIDATE_SCORE_ROWS}}\n"
     )
 
 
@@ -641,9 +642,13 @@ def _readme_context(
     max_query_limit = _max_split_metadata_value(output_dir, splits, "query_limit", DEFAULT_QUERY_LIMIT)
     max_doc_limit = _max_split_metadata_value(output_dir, splits, "doc_limit", DEFAULT_DOC_LIMIT)
     bm25_top_k = _max_bm25_top_k(output_dir, splits)
+    dense_top_k = _max_candidate_top_k(output_dir, splits, "harrier_oss_v1_270m")
+    hybrid_top_k = _max_candidate_top_k(output_dir, splits, "reranking_hybrid", cap=100)
     tokenizer_policy = _default_tokenizer_policy(output_dir, splits)
     return {
         "CONFIG_BM25_DATA_FILES": _data_files_yaml("bm25", splits),
+        "CONFIG_DENSE_DATA_FILES": _existing_data_files_yaml(output_dir, "harrier_oss_v1_270m", splits),
+        "CONFIG_HYBRID_DATA_FILES": _existing_data_files_yaml(output_dir, "reranking_hybrid", splits),
         "CONFIG_CORPUS_DATA_FILES": _data_files_yaml("corpus", splits),
         "CONFIG_QRELS_DATA_FILES": _data_files_yaml("qrels", splits),
         "CONFIG_QUERIES_DATA_FILES": _data_files_yaml("queries", splits),
@@ -674,6 +679,10 @@ def _readme_context(
         "QRELS_DUPLICATE_POLICY": _metadata_text(metadata, "qrels_duplicate_policy", "the qrels row was removed"),
         "CORPUS_TEXT_POLICY": _metadata_text(metadata, "corpus_text_policy", "`title` plus body text when available"),
         "BM25_TOP_K": str(bm25_top_k),
+        "DENSE_TOP_K": str(dense_top_k),
+        "HYBRID_TOP_K": str(hybrid_top_k),
+        "RRF_K": _metadata_text(metadata, "rrf_k", "60"),
+        "SAFEGUARD_RANK": str(hybrid_top_k + 1 if hybrid_top_k > 0 else 101),
         "BM25_TOKENIZER_POLICY": tokenizer_policy,
         "QRELS_SCORE_POLICY_NOTE": _metadata_text(
             metadata,
@@ -693,12 +702,12 @@ def _readme_context(
             "Each Nano split maps to one source retrieval task unless noted otherwise.",
         ),
         "SPLIT_MAPPING_ROWS": _split_mapping_rows(output_dir, splits, metadata, dataset_id),
-        "BM25_SCORE_NOTES": _metadata_text(
+        "CANDIDATE_SCORE_NOTES": _metadata_text(
             metadata,
-            "bm25_score_notes",
-            "Scores are reported for the included BM25 candidate subset after forced-positive insertion.",
+            "candidate_score_notes",
+            "Scores are reported for available candidate subsets; unavailable candidate configs are shown as `n/a`.",
         ),
-        "BM25_SCORE_ROWS": _bm25_score_rows(output_dir, splits),
+        "CANDIDATE_SCORE_ROWS": _candidate_score_rows(output_dir, splits),
         "SKIPPED_TASKS_SECTION": _skipped_tasks_section(metadata),
         "UPSTREAM_LICENSE_TARGET": _metadata_text(metadata, "upstream_license_target", "the upstream source datasets"),
     }
@@ -716,6 +725,13 @@ def _readme_splits(output_dir: Path) -> list[str]:
 def _data_files_yaml(config: str, splits: list[str]) -> str:
     rows = [{"split": split, "path": f"{config}/{split}.parquet"} for split in splits]
     return _indent(yaml.safe_dump(rows, sort_keys=False, allow_unicode=True).rstrip(), spaces=2)
+
+
+def _existing_data_files_yaml(output_dir: Path, config: str, splits: list[str]) -> str:
+    existing_splits = [split for split in splits if (output_dir / config / f"{split}.parquet").exists()]
+    if not existing_splits:
+        return _indent("[]", spaces=2)
+    return _data_files_yaml(config, existing_splits)
 
 
 def _language_list_yaml(metadata: Mapping[str, Any]) -> str:
@@ -828,10 +844,99 @@ def _bm25_score_rows(output_dir: Path, splits: list[str]) -> str:
     return "\n".join(rows)
 
 
+def _candidate_score_rows(output_dir: Path, splits: list[str]) -> str:
+    rows: list[str] = []
+    for split in splits:
+        split_metadata = _read_optional_json(output_dir / "metadata" / f"{split}.json")
+        bm25 = _candidate_metadata(split_metadata, "bm25")
+        dense = _candidate_metadata(split_metadata, "harrier_oss_v1_270m")
+        hybrid = _candidate_metadata(split_metadata, "reranking_hybrid")
+        tokenizer = _bm25_tokenizer_label(bm25)
+        rows.append(
+            "| "
+            + " | ".join(
+                [
+                    split,
+                    tokenizer,
+                    _format_score_100_or_na(bm25.get("ndcg_at_10")),
+                    _format_score_100_or_na(dense.get("ndcg_at_10")),
+                    _format_score_100_or_na(hybrid.get("ndcg_at_10")),
+                    _candidate_recall_at_100(bm25),
+                    _candidate_recall_at_100(dense),
+                    _candidate_recall_at_100(hybrid),
+                    _candidate_count_range(output_dir, "reranking_hybrid", split),
+                    _format_int_or_na(hybrid.get("safeguard_positive_count")),
+                ]
+            )
+            + " |"
+        )
+    return "\n".join(rows)
+
+
+def _candidate_metadata(split_metadata: Mapping[str, Any], key: str) -> dict[str, Any]:
+    raw = split_metadata.get(key)
+    return raw if isinstance(raw, dict) else {}
+
+
+def _bm25_tokenizer_label(bm25: Mapping[str, Any]) -> str:
+    config = bm25.get("config")
+    config = config if isinstance(config, dict) else {}
+    tokenizer = str(config.get("tokenizer") or "auto")
+    tokenizer_name = config.get("tokenizer_name")
+    if isinstance(tokenizer_name, str) and tokenizer_name:
+        tokenizer = f"{tokenizer}:{tokenizer_name}"
+    return tokenizer
+
+
+def _candidate_recall_at_100(candidate: Mapping[str, Any]) -> str:
+    coverage = candidate.get("candidate_coverage")
+    coverage = coverage if isinstance(coverage, dict) else {}
+    return _format_percent_or_unknown(coverage.get("relevant_coverage"))
+
+
+def _candidate_count_range(output_dir: Path, config: str, split: str) -> str:
+    rows = _read_optional_parquet(output_dir / config / f"{split}.parquet")
+    lengths = sorted(
+        len(corpus_ids)
+        for row in rows
+        if isinstance(corpus_ids := row.get("corpus-ids"), list)
+    )
+    if not lengths:
+        return "n/a"
+    if lengths[0] == lengths[-1]:
+        return str(lengths[0])
+    return f"{lengths[0]}-{lengths[-1]}"
+
+
+def _format_score_100_or_na(value: Any) -> str:
+    if isinstance(value, int | float):
+        return f"{float(value) * 100.0:.2f}"
+    return "n/a"
+
+
+def _format_int_or_na(value: Any) -> str:
+    if isinstance(value, int):
+        return str(value)
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return "n/a"
+
+
 def _format_percent_or_unknown(value: Any) -> str:
     if isinstance(value, int | float):
         return f"{float(value) * 100.0:.2f}%"
-    return "unknown"
+    return "n/a"
+
+
+def _max_candidate_top_k(output_dir: Path, splits: list[str], config: str, *, cap: int | None = None) -> int:
+    top_k = 0
+    for split in splits:
+        for row in _read_optional_parquet(output_dir / config / f"{split}.parquet"):
+            corpus_ids = row.get("corpus-ids")
+            if isinstance(corpus_ids, list):
+                length = min(len(corpus_ids), cap) if cap is not None else len(corpus_ids)
+                top_k = max(top_k, length)
+    return top_k
 
 
 def _read_optional_parquet(path: Path) -> list[dict[str, Any]]:
