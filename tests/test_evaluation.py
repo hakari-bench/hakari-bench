@@ -178,6 +178,60 @@ def test_load_ir_dataset_can_restrict_corpus_to_candidate_documents(monkeypatch:
     assert calls == [("queries", "test"), ("qrels", "test"), ("bm25", "test"), ("corpus", "test")]
 
 
+def test_load_ir_dataset_forces_redownload_for_local_dataset_paths(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    task = EvalTask(
+        dataset=NanoDatasetSpec(name="NanoLocal", dataset_id=str(tmp_path), candidate_config="reranking_hybrid"),
+        split_name="test",
+        task_name="test",
+    )
+    force_redownload = object()
+    calls: list[tuple[str, object | None]] = []
+
+    def fake_load_dataset(
+        dataset_id: str,
+        config_name: str,
+        *,
+        split: str,
+        revision: str | None = None,
+        download_mode: object | None = None,
+    ) -> list[dict[str, object]]:
+        assert dataset_id == str(tmp_path)
+        assert split == "test"
+        assert revision is None
+        calls.append((config_name, download_mode))
+        if config_name == "reranking_hybrid":
+            return [{"query-id": "q1", "corpus-ids": ["d1"]}]
+        if config_name == "corpus":
+            return [{"_id": "d1", "text": "candidate doc"}]
+        if config_name == "queries":
+            return [{"_id": "q1", "text": "query"}]
+        if config_name == "qrels":
+            return [{"query-id": "q1", "corpus-id": "d1"}]
+        raise AssertionError(config_name)
+
+    monkeypatch.setitem(
+        sys.modules,
+        "datasets",
+        types.SimpleNamespace(
+            load_dataset=fake_load_dataset,
+            DownloadMode=types.SimpleNamespace(FORCE_REDOWNLOAD=force_redownload),
+        ),
+    )
+
+    dataset = load_ir_dataset(task, candidate_subset_name="reranking_hybrid")
+
+    assert dataset.candidates == {"q1": ["d1"]}
+    assert calls == [
+        ("queries", force_redownload),
+        ("qrels", force_redownload),
+        ("reranking_hybrid", force_redownload),
+        ("corpus", force_redownload),
+    ]
+
+
 class FakeDenseModel:
     similarity_fn_name = "dot"
     prompts = {"query": "query: ", "document": "document: "}

@@ -9,7 +9,7 @@ from typing import Any
 
 import torch
 import yaml
-from datasets import Dataset, get_dataset_split_names, load_dataset
+from datasets import Dataset, DownloadMode, get_dataset_split_names, load_dataset
 from sentence_transformers import SentenceTransformer
 
 from hakari_bench.bm25 import BM25Config, rank_bm25_candidates, resolve_bm25_config_for_queries
@@ -463,10 +463,12 @@ Detailed per-split metadata is stored in `reranking_hybrid_metadata.json`.
 def audit_dataset(*, output_dir: Path, splits: list[str], metadata: dict[str, Any]) -> None:
     errors: list[str] = []
     for split in splits:
-        corpus_rows = list(load_dataset(str(output_dir), "corpus", split=split))
-        query_rows = list(load_dataset(str(output_dir), "queries", split=split))
-        qrel_rows = list(load_dataset(str(output_dir), "qrels", split=split))
-        hybrid_rows = list(load_dataset(str(output_dir), HYBRID_CONFIG_NAME, split=split))
+        corpus_rows = list(load_dataset(str(output_dir), "corpus", split=split, download_mode=DownloadMode.FORCE_REDOWNLOAD))
+        query_rows = list(load_dataset(str(output_dir), "queries", split=split, download_mode=DownloadMode.FORCE_REDOWNLOAD))
+        qrel_rows = list(load_dataset(str(output_dir), "qrels", split=split, download_mode=DownloadMode.FORCE_REDOWNLOAD))
+        hybrid_rows = list(
+            load_dataset(str(output_dir), HYBRID_CONFIG_NAME, split=split, download_mode=DownloadMode.FORCE_REDOWNLOAD)
+        )
         corpus_ids = {str(row["_id"]) for row in corpus_rows}
         query_ids = {str(row["_id"]) for row in query_rows}
         qrels = qrels_by_query(qrel_rows)

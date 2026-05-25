@@ -108,3 +108,44 @@ def test_rrf_hybrid_small_corpus_covers_positive_without_safeguard() -> None:
     assert "d049" in rankings["q1"]
     assert metadata["safeguard_positive_count"] == 0
     assert metadata["limited_by_corpus_size_count"] == 1
+
+
+def test_audit_dataset_forces_redownload_for_written_local_files(monkeypatch, tmp_path) -> None:
+    calls = []
+
+    def fake_load_dataset(dataset_id, config_name, *, split, download_mode=None):
+        assert dataset_id == str(tmp_path)
+        assert split == "toy"
+        calls.append((config_name, download_mode))
+        if config_name == "corpus":
+            return [{"_id": "d1"}, {"_id": "d2"}]
+        if config_name == "queries":
+            return [{"_id": "q1"}]
+        if config_name == "qrels":
+            return [{"query-id": "q1", "corpus-id": "d1"}]
+        if config_name == build_one.HYBRID_CONFIG_NAME:
+            return [{"query-id": "q1", "corpus-ids": ["d2", "d1"]}]
+        raise AssertionError(config_name)
+
+    monkeypatch.setattr(build_one, "load_dataset", fake_load_dataset)
+
+    build_one.audit_dataset(
+        output_dir=tmp_path,
+        splits=["toy"],
+        metadata={
+            "splits": {
+                "toy": {
+                    build_one.HYBRID_CONFIG_NAME: {
+                        "query_coverage": 1.0,
+                    }
+                }
+            }
+        },
+    )
+
+    assert calls == [
+        ("corpus", build_one.DownloadMode.FORCE_REDOWNLOAD),
+        ("queries", build_one.DownloadMode.FORCE_REDOWNLOAD),
+        ("qrels", build_one.DownloadMode.FORCE_REDOWNLOAD),
+        (build_one.HYBRID_CONFIG_NAME, build_one.DownloadMode.FORCE_REDOWNLOAD),
+    ]

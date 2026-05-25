@@ -102,15 +102,16 @@ def load_ir_dataset(
 ) -> LoadedIrDataset:
     from datasets import load_dataset
 
-    queries_dataset = load_dataset(task.dataset_id, task.dataset.queries_config, split=task.split_name, revision=revision)
-    qrels_dataset = load_dataset(task.dataset_id, task.dataset.qrels_config, split=task.split_name, revision=revision)
+    load_kwargs = _dataset_load_kwargs(task.dataset_id, revision=revision)
+    queries_dataset = load_dataset(task.dataset_id, task.dataset.queries_config, split=task.split_name, **load_kwargs)
+    qrels_dataset = load_dataset(task.dataset_id, task.dataset.qrels_config, split=task.split_name, **load_kwargs)
     candidates = _load_candidates(task, candidate_subset_name=candidate_subset_name, revision=revision)
 
     candidate_corpus_ids: set[str] | None = None
     if restrict_corpus_to_candidates and candidates is not None:
         candidate_corpus_ids = {corpus_id for corpus_ids in candidates.values() for corpus_id in corpus_ids}
 
-    corpus_dataset = load_dataset(task.dataset_id, task.dataset.corpus_config, split=task.split_name, revision=revision)
+    corpus_dataset = load_dataset(task.dataset_id, task.dataset.corpus_config, split=task.split_name, **load_kwargs)
 
     if candidate_corpus_ids is not None:
         corpus: Mapping[str, str] = _LazyCorpusById(corpus_dataset, candidate_corpus_ids)
@@ -148,13 +149,27 @@ def _load_candidates(
     try:
         from datasets import load_dataset
 
-        rows = load_dataset(task.dataset_id, candidate_subset_name, split=task.split_name, revision=revision)
+        rows = load_dataset(
+            task.dataset_id,
+            candidate_subset_name,
+            split=task.split_name,
+            **_dataset_load_kwargs(task.dataset_id, revision=revision),
+        )
     except Exception:
         return None
     candidates: dict[str, list[str]] = {}
     for row in rows:
         candidates[str(row["query-id"])] = [str(corpus_id) for corpus_id in row["corpus-ids"]]
     return candidates
+
+
+def _dataset_load_kwargs(dataset_id: str, *, revision: str | None) -> dict[str, Any]:
+    kwargs: dict[str, Any] = {"revision": revision}
+    if os.path.exists(os.path.expanduser(dataset_id)):
+        from datasets import DownloadMode
+
+        kwargs["download_mode"] = DownloadMode.FORCE_REDOWNLOAD
+    return kwargs
 
 
 def evaluate_dense_task(
