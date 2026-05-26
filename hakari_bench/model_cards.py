@@ -258,6 +258,7 @@ def target_from_args(args: Any) -> dict[str, Any]:
             "datasets": list(getattr(args, "dataset", None) or []),
             "collections": list(getattr(args, "collection", None) or []),
             "splits": list(getattr(args, "split", None) or []),
+            "evaluation_scope": getattr(args, "evaluation_scope", None),
             "dataset_revision": getattr(args, "dataset_revision", None),
         }
     )

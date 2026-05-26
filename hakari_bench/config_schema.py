@@ -11,6 +11,12 @@ class ConfigModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class EvaluationScopeConfigModel(ConfigModel):
+    include_by_default: bool = True
+    tags: list[str] = Field(default_factory=list)
+    reason: str | None = None
+
+
 class DatasetConfigModel(ConfigModel):
     name: str
     dataset_id: str
@@ -21,6 +27,8 @@ class DatasetConfigModel(ConfigModel):
     benchmark_kind: str = "nano"
     splits: list[str] | None = None
     split_mapping: dict[str, str] | None = None
+    evaluation_scope: EvaluationScopeConfigModel | None = None
+    task_evaluation_scope: dict[str, EvaluationScopeConfigModel] | None = None
     metadata: dict[str, Any] | None = None
     task_metadata: dict[str, dict[str, Any]] | None = None
 

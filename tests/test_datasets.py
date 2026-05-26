@@ -221,6 +221,26 @@ def test_resolve_eval_tasks_for_builtin_nanocoir_uses_declared_splits() -> None:
     ]
 
 
+def test_resolve_eval_tasks_for_builtin_nanodapfam_excludes_fulltext_by_default() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    standard_tasks = resolve_eval_tasks(registry=registry, dataset_values=["NanoDAPFAM"], collection_values=[], split_values=[])
+    all_tasks = resolve_eval_tasks(
+        registry=registry,
+        dataset_values=["NanoDAPFAM"],
+        collection_values=[],
+        split_values=[],
+        evaluation_scope="all",
+    )
+
+    assert len(standard_tasks) == 12
+    assert len(all_tasks) == 18
+    assert all("ToFullText" not in task.split_name for task in standard_tasks)
+    fulltext_tasks = [task for task in all_tasks if task.split_name.endswith("ToFullText")]
+    assert len(fulltext_tasks) == 6
+    assert all(not task.evaluation_scope.include_by_default for task in fulltext_tasks)
+
+
 def test_resolve_eval_tasks_for_new_builtin_nano_datasets_use_declared_splits() -> None:
     registry = DatasetRegistry.load_builtin()
 
@@ -367,6 +387,104 @@ def test_resolve_dataset_splits_uses_yaml_splits_without_network() -> None:
     )
 
     assert resolve_dataset_splits(spec) == ["a", "b"]
+
+
+def test_resolve_eval_tasks_excludes_non_default_tasks_from_standard_scope(tmp_path: Path) -> None:
+    (tmp_path / "datasets").mkdir()
+    (tmp_path / "datasets" / "toy.yaml").write_text(
+        """
+name: Toy
+dataset_id: local/toy
+splits: [short, long]
+task_evaluation_scope:
+  long:
+    include_by_default: false
+    tags: [long_context, expensive]
+    reason: Long-context task is evaluated only when explicitly requested.
+""".strip(),
+        encoding="utf-8",
+    )
+    registry = DatasetRegistry.load_from_root(tmp_path)
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["Toy"], collection_values=[], split_values=[])
+
+    assert [(task.split_name, task.evaluation_scope.include_by_default) for task in tasks] == [("short", True)]
+
+
+def test_resolve_eval_tasks_all_scope_includes_non_default_tasks(tmp_path: Path) -> None:
+    (tmp_path / "datasets").mkdir()
+    (tmp_path / "datasets" / "toy.yaml").write_text(
+        """
+name: Toy
+dataset_id: local/toy
+splits: [short, long]
+task_evaluation_scope:
+  long:
+    include_by_default: false
+    tags: [long_context, expensive]
+    reason: Long-context task is evaluated only when explicitly requested.
+""".strip(),
+        encoding="utf-8",
+    )
+    registry = DatasetRegistry.load_from_root(tmp_path)
+
+    tasks = resolve_eval_tasks(
+        registry=registry,
+        dataset_values=["Toy"],
+        collection_values=[],
+        split_values=[],
+        evaluation_scope="all",
+    )
+
+    assert [(task.split_name, task.evaluation_scope.include_by_default) for task in tasks] == [
+        ("short", True),
+        ("long", False),
+    ]
+    assert tasks[1].evaluation_scope.tags == ["long_context", "expensive"]
+
+
+def test_resolve_eval_tasks_explicit_split_bypasses_standard_scope_filter(tmp_path: Path) -> None:
+    (tmp_path / "datasets").mkdir()
+    (tmp_path / "datasets" / "toy.yaml").write_text(
+        """
+name: Toy
+dataset_id: local/toy
+splits: [short, long]
+task_evaluation_scope:
+  long:
+    include_by_default: false
+    tags: [long_context]
+""".strip(),
+        encoding="utf-8",
+    )
+    registry = DatasetRegistry.load_from_root(tmp_path)
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["Toy"], collection_values=[], split_values=["long"])
+
+    assert [(task.split_name, task.evaluation_scope.include_by_default) for task in tasks] == [("long", False)]
+
+
+def test_resolve_eval_tasks_dataset_scope_is_inherited_by_tasks(tmp_path: Path) -> None:
+    (tmp_path / "datasets").mkdir()
+    (tmp_path / "datasets" / "toy.yaml").write_text(
+        """
+name: Toy
+dataset_id: local/toy
+splits: [heldout, standard]
+evaluation_scope:
+  include_by_default: false
+  tags: [heldout]
+task_evaluation_scope:
+  standard:
+    include_by_default: true
+""".strip(),
+        encoding="utf-8",
+    )
+    registry = DatasetRegistry.load_from_root(tmp_path)
+
+    tasks = resolve_eval_tasks(registry=registry, dataset_values=["Toy"], collection_values=[], split_values=[])
+
+    assert [(task.split_name, task.evaluation_scope.include_by_default) for task in tasks] == [("standard", True)]
 
 
 def test_resolve_dataset_revision_uses_huggingface_hub_sha(monkeypatch: pytest.MonkeyPatch) -> None:

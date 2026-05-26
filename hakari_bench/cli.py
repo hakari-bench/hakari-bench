@@ -286,6 +286,15 @@ def _add_dataset_args(parser: argparse.ArgumentParser, *, action: str) -> None:
     )
     parser.add_argument("--collection", action="append", default=[], help="Dataset collection name.")
     parser.add_argument("--split", action="append", default=[], help="Split/task name. Repeat or comma-separate.")
+    parser.add_argument(
+        "--evaluation-scope",
+        choices=("standard", "all"),
+        default="standard",
+        help=(
+            "Task inclusion scope. 'standard' skips tasks marked include_by_default: false unless --split is used; "
+            "'all' includes extended tasks as well."
+        ),
+    )
     parser.add_argument("--dataset-revision", default=None, help=f"Hugging Face dataset revision to {verb}.")
 
 
@@ -469,6 +478,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error("--late-interaction-exact-query-batch-size must be positive.")
     if args.command == "evaluate":
         _validate_all_target_args(args, parser)
+        _validate_evaluation_scope_arg(args, parser)
     if args.command == "evaluate" and args.dataset is None and not args.collection:
         args.dataset = [] if args.all else ["hakari-bench/NanoBEIR-en"]
     elif args.command == "evaluate" and args.dataset is None:
@@ -486,6 +496,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         args.output_dir = args.candidates_dir
         args.override = args.overwrite
         _validate_all_target_args(args, parser)
+        _validate_evaluation_scope_arg(args, parser)
     if args.command == "build-candidates" and args.dataset is None and not args.collection:
         args.dataset = [] if args.all else ["hakari-bench/NanoBEIR-en"]
     elif args.command == "build-candidates" and args.dataset is None:
@@ -519,6 +530,7 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
     args.document_encode_task = getattr(args, "document_encode_task", None)
     args.corpus_prompt = getattr(args, "document_prompt", None)
     args.corpus_prompt_name = getattr(args, "document_prompt_name", None)
+    args.evaluation_scope = getattr(args, "evaluation_scope", "standard")
     args.query_task = getattr(args, "query_encode_task", None)
     args.corpus_task = getattr(args, "document_encode_task", None)
     args.candidate_subset_name = getattr(args, "candidate_ranking", DEFAULT_CANDIDATE_RANKING)
@@ -534,6 +546,7 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
 
 def _bridge_new_bm25_args(args: argparse.Namespace) -> None:
     args.all = getattr(args, "all", False)
+    args.evaluation_scope = getattr(args, "evaluation_scope", "standard")
     args.top_k = getattr(args, "bm25_top_k", 100)
     args.bm25_source = getattr(args, "bm25_source", "dataset")
     args.bm25_tokenizer_name = getattr(args, "bm25_wordseg_language", None) or getattr(
@@ -575,6 +588,8 @@ def _apply_model_card_args(args: argparse.Namespace, *, provided_options: set[st
                 args.collection = _string_list_param(target["collections"], "model_card.target.collections")
             if not args.split and target.get("splits") is not None:
                 args.split = _string_list_param(target["splits"], "model_card.target.splits")
+            if getattr(args, "evaluation_scope", "standard") == "standard" and target.get("evaluation_scope") is not None:
+                args.evaluation_scope = _string_param(target["evaluation_scope"], "model_card.target.evaluation_scope")
         if getattr(args, "dataset_revision", None) is None and target.get("dataset_revision") is not None:
             args.dataset_revision = _optional_string_param(target["dataset_revision"], "model_card.target.dataset_revision")
     embedding = card.get("embedding")
@@ -764,7 +779,11 @@ def _apply_model_params(args: argparse.Namespace, value: dict[str, Any]) -> None
 
 
 def _apply_target_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
-    _reject_unknown_keys(value, allowed={"all", "datasets", "collections", "splits", "dataset_revision"}, path="params.target")
+    _reject_unknown_keys(
+        value,
+        allowed={"all", "datasets", "collections", "splits", "evaluation_scope", "dataset_revision"},
+        path="params.target",
+    )
     if "all" in value:
         args.all = _bool_param(value["all"], "params.target.all")
     if "datasets" in value:
@@ -773,6 +792,8 @@ def _apply_target_params(args: argparse.Namespace, value: dict[str, Any]) -> Non
         args.collection = _string_list_param(value["collections"], "params.target.collections")
     if "splits" in value:
         args.split = _string_list_param(value["splits"], "params.target.splits")
+    if "evaluation_scope" in value:
+        args.evaluation_scope = _string_param(value["evaluation_scope"], "params.target.evaluation_scope")
     if "dataset_revision" in value:
         args.dataset_revision = _optional_string_param(value["dataset_revision"], "params.target.dataset_revision")
 
@@ -1070,6 +1091,11 @@ def _validate_all_target_args(args: argparse.Namespace, parser: argparse.Argumen
         parser.error("--all cannot be combined with --split.")
 
 
+def _validate_evaluation_scope_arg(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
+    if getattr(args, "evaluation_scope", "standard") not in {"standard", "all"}:
+        parser.error("--evaluation-scope must be one of: standard, all.")
+
+
 def _dataset_values_for_args(args: argparse.Namespace, registry: DatasetRegistry) -> list[str]:
     if getattr(args, "all", False):
         return registry.dataset_names()
@@ -1086,6 +1112,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         dataset_values=dataset_values,
         collection_values=args.collection,
         split_values=args.split,
+        evaluation_scope=args.evaluation_scope,
     )
     output_dir = Path(args.output_dir)
     pending_tasks = [
@@ -1241,6 +1268,7 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
         dataset_values=dataset_values,
         collection_values=args.collection,
         split_values=args.split,
+        evaluation_scope=args.evaluation_scope,
     )
     config = bm25_config_from_args(args)
     results: list[BM25BuildResult] = []

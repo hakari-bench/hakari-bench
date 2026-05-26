@@ -5,11 +5,16 @@ import importlib.resources
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 import yaml
 
-from hakari_bench.config_schema import DatasetCollectionConfigModel, DatasetConfigFileModel, DatasetConfigModel
+from hakari_bench.config_schema import (
+    DatasetCollectionConfigModel,
+    DatasetConfigFileModel,
+    DatasetConfigModel,
+    EvaluationScopeConfigModel,
+)
 from hakari_bench.defaults import DEFAULT_CANDIDATE_RANKING
 
 try:
@@ -42,6 +47,7 @@ NANOBEIR_SPLIT_MAPPING: dict[str, str] = {
 }
 
 VALID_METADATA_CATEGORIES = {"natural_language", "code"}
+EVALUATION_SCOPES = ("standard", "all")
 REQUIRED_METADATA_FIELDS = {"language", "category", "short_description", "description"}
 TEXT_STATS_FIELDS = {"count", "min_chars", "max_chars", "mean_chars", "median_chars"}
 LANGUAGE_DETECTION_SIDES = ("query", "document")
@@ -63,6 +69,21 @@ REFERENCE_SOURCE_CONFIDENCE_LABELS = {
     ),
 }
 VALID_REFERENCE_SOURCE_CONFIDENCE = set(REFERENCE_SOURCE_CONFIDENCE_LABELS)
+EvaluationScopeMode = Literal["standard", "all"]
+
+
+@dataclass(frozen=True)
+class EvaluationScope:
+    include_by_default: bool = True
+    tags: list[str] | None = None
+    reason: str | None = None
+
+    def to_payload(self) -> dict[str, Any]:
+        return {
+            "include_by_default": self.include_by_default,
+            "tags": list(self.tags or []),
+            "reason": self.reason,
+        }
 
 
 @dataclass(frozen=True)
@@ -76,6 +97,8 @@ class NanoDatasetSpec:
     benchmark_kind: str = "nano"
     splits: list[str] | None = None
     split_mapping: dict[str, str] | None = None
+    evaluation_scope: EvaluationScope | None = None
+    task_evaluation_scope: dict[str, EvaluationScope] | None = None
     metadata: dict[str, Any] | None = None
     task_metadata: dict[str, dict[str, Any]] | None = None
 
@@ -93,6 +116,14 @@ class NanoDatasetSpec:
         selected = task_metadata.get(task_name) or task_metadata.get(split_name) or {}
         metadata.update(selected)
         return metadata
+
+    def evaluation_scope_for_task(self, *, split_name: str, task_name: str) -> EvaluationScope:
+        default_scope = self.evaluation_scope or EvaluationScope()
+        task_scope = self.task_evaluation_scope or {}
+        selected = task_scope.get(task_name) or task_scope.get(split_name)
+        if selected is None:
+            return default_scope
+        return selected
 
     def validate_metadata(self) -> list[str]:
         errors = _validate_metadata_mapping(self.metadata or {}, context=f"{self.name} metadata")
@@ -133,6 +164,10 @@ class EvalTask:
     def metadata(self) -> dict[str, Any]:
         return self.dataset.metadata_for_task(split_name=self.split_name, task_name=self.task_name)
 
+    @property
+    def evaluation_scope(self) -> EvaluationScope:
+        return self.dataset.evaluation_scope_for_task(split_name=self.split_name, task_name=self.task_name)
+
 
 def _normalize_key(value: str) -> str:
     return value.strip().lower()
@@ -160,12 +195,28 @@ def _dataset_from_config(config: DatasetConfigModel) -> NanoDatasetSpec:
         benchmark_kind=config.benchmark_kind,
         splits=list(config.splits) if config.splits is not None else None,
         split_mapping=dict(config.split_mapping) if config.split_mapping else None,
+        evaluation_scope=(
+            _evaluation_scope_from_config(config.evaluation_scope) if config.evaluation_scope is not None else None
+        ),
+        task_evaluation_scope=(
+            {task_name: _evaluation_scope_from_config(scope) for task_name, scope in config.task_evaluation_scope.items()}
+            if config.task_evaluation_scope is not None
+            else None
+        ),
         metadata=dict(config.metadata) if config.metadata is not None else None,
         task_metadata=(
             {task_name: dict(metadata) for task_name, metadata in config.task_metadata.items()}
             if config.task_metadata is not None
             else None
         ),
+    )
+
+
+def _evaluation_scope_from_config(config: EvaluationScopeConfigModel) -> EvaluationScope:
+    return EvaluationScope(
+        include_by_default=config.include_by_default,
+        tags=list(config.tags),
+        reason=config.reason,
     )
 
 
@@ -506,7 +557,10 @@ def resolve_eval_tasks(
     dataset_values: list[str],
     collection_values: list[str],
     split_values: list[str] | None,
+    evaluation_scope: EvaluationScopeMode = "standard",
 ) -> list[EvalTask]:
+    if evaluation_scope not in EVALUATION_SCOPES:
+        raise ValueError(f"Unknown evaluation scope '{evaluation_scope}'. Available: {list(EVALUATION_SCOPES)}")
     dataset_specs: list[NanoDatasetSpec] = []
     for collection_name in parse_csv_values(collection_values):
         collection = registry.get_collection(collection_name)
@@ -516,12 +570,24 @@ def resolve_eval_tasks(
     selected_splits = parse_csv_values(split_values)
     tasks: list[EvalTask] = []
     for spec in dataset_specs:
+        explicit_splits = bool(selected_splits)
         if selected_splits:
             split_pairs = [_resolve_selected_split(spec, value) for value in selected_splits]
         else:
             split_pairs = [(split_name, _task_name_for_split(spec, split_name)) for split_name in resolve_dataset_splits(spec)]
         for split_name, task_name in split_pairs:
-            tasks.append(EvalTask(dataset=spec, split_name=split_name, task_name=task_name))
+            task = EvalTask(dataset=spec, split_name=split_name, task_name=task_name)
+            # `include_by_default` controls only standard target expansion. Omitted
+            # scope metadata means included, keeping older YAML configs compatible.
+            # Explicit --split selection bypasses this filter so extended tasks
+            # remain runnable without editing dataset configuration.
+            if (
+                evaluation_scope == "standard"
+                and not explicit_splits
+                and not task.evaluation_scope.include_by_default
+            ):
+                continue
+            tasks.append(task)
 
     deduped: list[EvalTask] = []
     seen: set[tuple[str, str]] = set()

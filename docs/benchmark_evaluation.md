@@ -31,9 +31,10 @@ coverage checks should be maintained in this document.
 
 ## Target Selection
 
-Use `--all` when the requested run should cover every built-in dataset from
-`config/datasets/`. Existing per-task result JSON files are skipped unless
-`--overwrite` is set, so `--all` can be used to fill missing benchmark coverage:
+Use `--all` when the requested run should cover every standard built-in dataset
+task from `config/datasets/`. Existing per-task result JSON files are skipped
+unless `--overwrite` is set, so `--all` can be used to fill missing benchmark
+coverage:
 
 ```bash
 uv run hakari-bench evaluate reranker \
@@ -44,6 +45,18 @@ uv run hakari-bench evaluate reranker \
 
 Use `--dataset` or `--collection` only for intentionally narrower runs. `--all`
 is mutually exclusive with `--dataset`, `--collection`, and `--split`.
+
+Target expansion uses `--evaluation-scope standard` by default. Dataset YAML may
+mark an entire dataset or individual tasks with `include_by_default: false`;
+those tasks are skipped by normal `--all`, `--dataset`, and `--collection`
+expansion but remain part of the dataset. Use `--evaluation-scope all` to include
+these extended tasks, or pass `--split` for an explicit task override. Omitted
+`evaluation_scope` metadata means `include_by_default: true`, so existing YAML
+does not need to repeat the default.
+
+For example, NanoDAPFAM keeps the six `ToFullText` tasks in the dataset but marks
+them as `fulltext`, `long_context`, and `expensive`; standard evaluation uses the
+12 non-FullText tasks, while `--evaluation-scope all` evaluates all 18 tasks.
 
 Common examples:
 

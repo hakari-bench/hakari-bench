@@ -1436,6 +1436,15 @@ def test_parse_args_accepts_all_dataset_target() -> None:
     assert args.all is True
     assert args.dataset == []
     assert args.collection == []
+    assert args.evaluation_scope == "standard"
+
+
+def test_parse_args_accepts_all_evaluation_scope() -> None:
+    args = parse_args(
+        ["evaluate", "reranker", "--model", "hotchpotch/reranker", "--dataset", "NanoDAPFAM", "--evaluation-scope", "all"]
+    )
+
+    assert args.evaluation_scope == "all"
 
 
 def test_parse_args_accepts_all_dataset_target_from_params_json() -> None:
@@ -1444,13 +1453,19 @@ def test_parse_args_accepts_all_dataset_target_from_params_json() -> None:
             "evaluate",
             "reranker",
             "--params-json",
-            json.dumps({"model": {"source": "hotchpotch/reranker"}, "target": {"all": True}}),
+            json.dumps(
+                {
+                    "model": {"source": "hotchpotch/reranker"},
+                    "target": {"all": True, "evaluation_scope": "all"},
+                }
+            ),
         ]
     )
 
     assert args.all is True
     assert args.dataset == []
     assert args.collection == []
+    assert args.evaluation_scope == "all"
 
 
 def test_parse_args_rejects_all_mixed_with_dataset() -> None:

@@ -26,6 +26,7 @@ class TargetParams(ParamsModel):
     datasets: list[str] | None = None
     collections: list[str] | None = None
     splits: list[str] | None = None
+    evaluation_scope: Literal["standard", "all"] | None = None
     dataset_revision: str | None = None
 
     @field_validator("datasets", "collections", "splits")

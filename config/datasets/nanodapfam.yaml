@@ -24,6 +24,49 @@ splits:
 - NanoDAPFAMOutTitlAbsToFullText
 - NanoDAPFAMOutTitlAbsToTitlAbs
 - NanoDAPFAMOutTitlAbsToTitlAbsClm
+task_evaluation_scope:
+  NanoDAPFAMAllTitlAbsClmToFullText:
+    include_by_default: false
+    tags:
+    - fulltext
+    - long_context
+    - expensive
+    reason: Full-text patent targets are evaluated as an extended long-context track.
+  NanoDAPFAMAllTitlAbsToFullText:
+    include_by_default: false
+    tags:
+    - fulltext
+    - long_context
+    - expensive
+    reason: Full-text patent targets are evaluated as an extended long-context track.
+  NanoDAPFAMInTitlAbsClmToFullText:
+    include_by_default: false
+    tags:
+    - fulltext
+    - long_context
+    - expensive
+    reason: Full-text patent targets are evaluated as an extended long-context track.
+  NanoDAPFAMInTitlAbsToFullText:
+    include_by_default: false
+    tags:
+    - fulltext
+    - long_context
+    - expensive
+    reason: Full-text patent targets are evaluated as an extended long-context track.
+  NanoDAPFAMOutTitlAbsClmToFullText:
+    include_by_default: false
+    tags:
+    - fulltext
+    - long_context
+    - expensive
+    reason: Full-text patent targets are evaluated as an extended long-context track.
+  NanoDAPFAMOutTitlAbsToFullText:
+    include_by_default: false
+    tags:
+    - fulltext
+    - long_context
+    - expensive
+    reason: Full-text patent targets are evaluated as an extended long-context track.
 metadata:
   language: en
   category: natural_language

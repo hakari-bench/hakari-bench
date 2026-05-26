@@ -239,6 +239,7 @@ def run_or_load_task(
             "queries_config": task.dataset.queries_config,
             "qrels_config": task.dataset.qrels_config,
             "candidate_config": task.dataset.candidate_config,
+            "evaluation_scope": task.evaluation_scope.to_payload(),
         },
         "config": {
             "batch_size": args.batch_size,
