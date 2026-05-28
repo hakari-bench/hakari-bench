@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import argparse
+from types import SimpleNamespace
 
 import pytest
 import torch
 
 from hakari_bench.models import (
     ModelLoadConfig,
+    _patch_pylate_dense_missing_activation_function,
     collect_model_metadata,
     load_model,
     resolve_model_revision,
@@ -112,6 +114,45 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
             "attend_to_expansion_tokens": True,
         }
     ]
+
+
+def test_pylate_dense_patch_defaults_missing_activation_function(monkeypatch: pytest.MonkeyPatch) -> None:
+    class FakePylateDense:
+        def __init__(self, **config: object) -> None:
+            self.config = config
+            self.loaded_state = None
+
+        @staticmethod
+        def from_sentence_transformers(dense: object) -> object:
+            config = dense.get_config_dict()  # type: ignore[attr-defined]
+            config["activation_function"]
+            raise AssertionError("unreachable")
+
+        def load_state_dict(self, state: dict[str, object]) -> None:
+            self.loaded_state = state
+
+    class FakeSentenceTransformersDense:
+        def get_config_dict(self) -> dict[str, object]:
+            return {"in_features": 3, "out_features": 2, "bias": False}
+
+        def state_dict(self) -> dict[str, object]:
+            return {"linear.weight": "weights"}
+
+    def fake_import_module(name: str) -> object:
+        if name == "pylate.models":
+            return SimpleNamespace(Dense=FakePylateDense)
+        if name == "sentence_transformers.util":
+            return SimpleNamespace(import_from_string=lambda dotted: torch.nn.Identity)
+        raise AssertionError(f"unexpected import: {name}")
+
+    monkeypatch.setattr("hakari_bench.models.importlib.import_module", fake_import_module)
+
+    _patch_pylate_dense_missing_activation_function()
+    model = FakePylateDense.from_sentence_transformers(FakeSentenceTransformersDense())
+
+    assert isinstance(model, FakePylateDense)
+    assert isinstance(model.config["activation_function"], torch.nn.Identity)
+    assert model.loaded_state == {"linear.weight": "weights"}
 
 
 def test_load_model_reranker_passes_cross_encoder_kwargs(monkeypatch: pytest.MonkeyPatch) -> None:
