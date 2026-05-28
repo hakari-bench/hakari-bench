@@ -1,18 +1,23 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
+import lzma
 import math
+import resource
+import sys
 from collections import defaultdict
 from collections.abc import Iterable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from itertools import islice, product
 from pathlib import Path
 from typing import Any, Literal
 
 import duckdb
+import ijson
 import orjson
 import pyarrow as pa
 
@@ -39,6 +44,7 @@ from hakari_bench.warehouse_schema import (
 DEFAULT_VIEWER_CONFIG_DIR = Path("config/viewer")
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 DuplicateResultPolicy = Literal["first-wins", "last-wins"]
+RESULT_JSON_SUFFIXES = (".json", ".json.gz", ".json.xz")
 
 
 def load_benchmark_configs(config_dir: Path = DEFAULT_VIEWER_CONFIG_DIR) -> list[BenchmarkConfig]:
@@ -261,13 +267,209 @@ def _insert_duckdb_rows(
 
 
 def _read_json(path: Path) -> Any:
-    payload = path.read_bytes()
+    with _open_json_bytes(path) as file:
+        payload = file.read()
     try:
         return orjson.loads(payload)
     except orjson.JSONDecodeError:
         # Some legacy result JSON contains non-standard NaN/Infinity values.
         # Keep the fast path strict, but preserve compatibility for old runs.
         return json.loads(payload.decode("utf-8"))
+
+
+def _open_json_bytes(path: Path) -> Any:
+    if path.name.endswith(".json.gz"):
+        return gzip.open(path, "rb")
+    if path.name.endswith(".json.xz"):
+        return lzma.open(path, "rb")
+    return path.open("rb")
+
+
+def _read_result_json(
+    path: Path,
+    *,
+    include_retrieval_rankings: bool,
+) -> dict[str, Any] | None:
+    try:
+        payload = _read_result_summary_json(path)
+        artifact = _read_top_rankings_artifact_stream(
+            path,
+            payload=payload,
+            include_retrieval_rankings=include_retrieval_rankings,
+        )
+        if artifact is not None:
+            artifacts = dict(payload.get("artifacts", {}))
+            artifacts["top_rankings"] = artifact
+            payload["artifacts"] = artifacts
+        return payload
+    except (ijson.JSONError, UnicodeDecodeError, ValueError):
+        payload = _read_json(path)
+        if not isinstance(payload, dict):
+            return None
+        return _compact_result_payload(
+            payload,
+            include_retrieval_rankings=include_retrieval_rankings,
+        )
+
+
+def _read_result_summary_payload(path: Path) -> dict[str, Any] | None:
+    try:
+        return _read_result_summary_json(path)
+    except (ijson.JSONError, UnicodeDecodeError, ValueError):
+        payload = _read_json(path)
+        if not isinstance(payload, dict):
+            return None
+        summary_payload = dict(payload)
+        summary_payload.pop("artifacts", None)
+        return summary_payload
+
+
+class _JsonValueBuilder:
+    def __init__(self) -> None:
+        self._root: Any = None
+        self._stack: list[list[Any]] = []
+
+    def feed(self, event: str, value: Any) -> tuple[bool, Any]:
+        if event == "start_map":
+            container: dict[str, Any] = {}
+            self._append(container)
+            self._stack.append([container, None])
+            return False, None
+        if event == "start_array":
+            container: list[Any] = []
+            self._append(container)
+            self._stack.append([container, None])
+            return False, None
+        if event == "map_key":
+            if self._stack:
+                self._stack[-1][1] = str(value)
+            return False, None
+        if event in {"string", "number", "boolean", "null"}:
+            self._append(value)
+            if not self._stack:
+                return True, self._root
+            return False, None
+        if event in {"end_map", "end_array"}:
+            if not self._stack:
+                return True, self._root
+            self._stack.pop()
+            if not self._stack:
+                return True, self._root
+        return False, None
+
+    def _append(self, value: Any) -> None:
+        if not self._stack:
+            self._root = value
+            return
+        parent, key = self._stack[-1]
+        if isinstance(parent, list):
+            parent.append(value)
+            return
+        if key is not None:
+            parent[key] = value
+            self._stack[-1][1] = None
+
+
+def _read_result_summary_json(path: Path) -> dict[str, Any]:
+    payload: dict[str, Any] = {}
+    current_key: str | None = None
+    builder: _JsonValueBuilder | None = None
+    skipping_artifacts = False
+    with _open_json_bytes(path) as file:
+        for prefix, event, value in ijson.parse(file, use_float=True):
+            if prefix == "" and event == "start_map":
+                continue
+            if prefix == "" and event == "map_key":
+                current_key = str(value)
+                builder = None
+                skipping_artifacts = current_key == "artifacts"
+                continue
+            if prefix == "" and event == "end_map":
+                break
+            if current_key is None or skipping_artifacts:
+                continue
+            if builder is None:
+                builder = _JsonValueBuilder()
+            done, result = builder.feed(event, value)
+            if done:
+                payload[current_key] = result
+                current_key = None
+                builder = None
+    return payload
+
+
+def _read_top_rankings_artifact_stream(
+    path: Path,
+    *,
+    payload: dict[str, Any],
+    include_retrieval_rankings: bool,
+) -> dict[str, Any] | None:
+    artifact: dict[str, Any] = {}
+    qrels: list[Any] = []
+    rankings: list[dict[str, Any]] = []
+    qrel_builder: _JsonValueBuilder | None = None
+    ranking_builder: _JsonValueBuilder | None = None
+    evaluation = payload.get("evaluation", {})
+    if not isinstance(evaluation, dict):
+        evaluation = {}
+    embedding_evaluations = _embedding_evaluations(
+        evaluation.get("embedding_evaluations") or payload.get("embedding_evaluations")
+    )
+    with _open_json_bytes(path) as file:
+        for prefix, event, value in ijson.parse(file, use_float=True):
+            if prefix in {
+                "artifacts.top_rankings.schema_version",
+                "artifacts.top_rankings.top_k",
+                "artifacts.top_rankings.path",
+            } and event in {"string", "number", "boolean", "null"}:
+                artifact[prefix.rsplit(".", 1)[-1]] = value
+                continue
+            if prefix.startswith("artifacts.top_rankings.qrels.item"):
+                if qrel_builder is None:
+                    qrel_builder = _JsonValueBuilder()
+                done, qrel = qrel_builder.feed(event, value)
+                if done:
+                    qrels.append(qrel)
+                    qrel_builder = None
+                continue
+            if prefix.startswith("artifacts.top_rankings.rankings.item"):
+                if ranking_builder is None:
+                    ranking_builder = _JsonValueBuilder()
+                done, ranking = ranking_builder.feed(event, value)
+                if done:
+                    if _keep_top_ranking_row(
+                        ranking,
+                        evaluation=evaluation,
+                        embedding_evaluations=embedding_evaluations,
+                        include_retrieval_rankings=include_retrieval_rankings,
+                    ):
+                        rankings.append(ranking)
+                    ranking_builder = None
+    if not qrels and not rankings and "path" not in artifact:
+        return None
+    artifact["qrels"] = qrels
+    artifact["rankings"] = rankings
+    return artifact
+
+
+def _keep_top_ranking_row(
+    ranking: Any,
+    *,
+    evaluation: dict[str, Any],
+    embedding_evaluations: list[dict[str, Any]],
+    include_retrieval_rankings: bool,
+) -> bool:
+    if not isinstance(ranking, dict):
+        return False
+    if include_retrieval_rankings:
+        return True
+    return bool(
+        _selected_metric_rankings(
+            [ranking],
+            evaluation=evaluation,
+            embedding_evaluations=embedding_evaluations,
+        )
+    )
 
 
 @dataclass(frozen=True)
@@ -282,6 +484,56 @@ class SelectedResultJson:
     dataset_id: str
     task_name: str
     task_key: str
+
+
+@dataclass
+class MemoryMonitor:
+    log_path: Path | None = None
+    sample_interval: int = 500
+    _last_processed_count_by_label: dict[str, int] = field(default_factory=dict)
+
+    def sample(self, label: str, *, processed_count: int | None = None) -> None:
+        if self.log_path is None:
+            return
+        self.log_path.parent.mkdir(parents=True, exist_ok=True)
+        row = {
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "label": label,
+            "processed_count": processed_count,
+            "current_rss_bytes": _current_rss_bytes(),
+            "peak_rss_bytes": _peak_rss_bytes(),
+        }
+        with self.log_path.open("a", encoding="utf-8") as file:
+            file.write(json.dumps(row, sort_keys=True) + "\n")
+
+    def maybe_sample(self, label: str, *, processed_count: int) -> None:
+        if self.log_path is None:
+            return
+        interval = max(1, self.sample_interval)
+        last_processed_count = self._last_processed_count_by_label.get(label, -1)
+        if (
+            last_processed_count < 0
+            or processed_count - last_processed_count >= interval
+        ):
+            self.sample(label, processed_count=processed_count)
+            self._last_processed_count_by_label[label] = processed_count
+
+
+def _current_rss_bytes() -> int | None:
+    status_path = Path("/proc/self/status")
+    if not status_path.exists():
+        return None
+    for line in status_path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("VmRSS:"):
+            parts = line.split()
+            if len(parts) >= 2 and parts[1].isdigit():
+                return int(parts[1]) * 1024
+    return None
+
+
+def _peak_rss_bytes() -> int:
+    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return peak if sys.platform == "darwin" else peak * 1024
 
 
 def main() -> None:
@@ -355,6 +607,18 @@ def main() -> None:
         help="Reuse unchanged canonical rows from the existing DuckDB database when possible.",
     )
     parser.add_argument(
+        "--memory-log-path",
+        type=Path,
+        default=None,
+        help="Optional JSONL path for RSS/peak RSS samples while result JSON is selected and loaded.",
+    )
+    parser.add_argument(
+        "--memory-log-interval",
+        type=int,
+        default=500,
+        help="Number of parsed result JSON files between memory samples when --memory-log-path is set.",
+    )
+    parser.add_argument(
         "--exclude-model-name",
         action="append",
         default=None,
@@ -362,6 +626,11 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    memory_monitor = MemoryMonitor(
+        log_path=args.memory_log_path,
+        sample_interval=args.memory_log_interval,
+    )
+    memory_monitor.sample("start", processed_count=0)
     viewer_config = load_viewer_config(args.viewer_config_dir)
     benchmark_configs = viewer_config.benchmarks
     target_benchmarks = target_benchmark_names(benchmark_configs)
@@ -380,6 +649,7 @@ def main() -> None:
             include_retrieval_rankings=args.include_retrieval_rankings,
             model_cards_path=args.model_cards_path,
             exclude_model_names=set(args.exclude_model_name or []),
+            memory_monitor=memory_monitor,
         )
         append_duckdb_results(
             args.duckdb_path,
@@ -396,6 +666,7 @@ def main() -> None:
         )
         if args.parquet_output_dir is not None:
             export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
+        memory_monitor.sample("complete")
         return
     results_dirs = args.results_dir or [Path("output/results")]
     duplicate_result_policy: DuplicateResultPolicy = "last-wins" if args.overwrite_result_duplicates else "first-wins"
@@ -415,6 +686,7 @@ def main() -> None:
             model_cards_path=args.model_cards_path,
         )
     ):
+        memory_monitor.sample("incremental_cache_current")
         return
     rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = load_results(
         results_dirs,
@@ -424,6 +696,7 @@ def main() -> None:
         model_cards_path=args.model_cards_path,
         exclude_model_names=set(args.exclude_model_name or []),
         duplicate_result_policy=duplicate_result_policy,
+        memory_monitor=memory_monitor,
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
@@ -460,6 +733,7 @@ def main() -> None:
             standings=standings,
             target_benchmarks=target_benchmarks,
         )
+    memory_monitor.sample("complete")
 
 
 def load_results(
@@ -471,6 +745,7 @@ def load_results(
     model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
     exclude_model_names: set[str] | None = None,
     duplicate_result_policy: DuplicateResultPolicy = "first-wins",
+    memory_monitor: MemoryMonitor | None = None,
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -541,6 +816,7 @@ def load_results(
     model_cards = load_model_cards(model_cards_path)
     exclude_model_names = exclude_model_names or set()
 
+    processed_result_count = 0
     for selected_result in _selected_result_jsons(
         results_dir,
         benchmark_configs=benchmark_configs,
@@ -548,9 +824,19 @@ def load_results(
         exclude_model_names=exclude_model_names,
         result_paths=selected_result_path_filter,
         duplicate_result_policy=duplicate_result_policy,
+        include_retrieval_rankings=include_retrieval_rankings,
+        memory_monitor=memory_monitor,
     ):
         result_path = selected_result.result_path
-        task_payload = selected_result.payload
+        task_payload = _read_result_json(
+            result_path,
+            include_retrieval_rankings=include_retrieval_rankings,
+        )
+        if task_payload is None:
+            continue
+        processed_result_count += 1
+        if memory_monitor is not None:
+            memory_monitor.maybe_sample("result_json_loaded", processed_count=processed_result_count)
         target = task_payload["target"]
         benchmark = selected_result.benchmark
         evaluation = task_payload["evaluation"]
@@ -723,6 +1009,8 @@ def load_results(
             ranking_rows.extend(_retrieval_ranking_rows(common=common, task_payload=task_payload, result_path=result_path))
 
     deduped_rows = _dedupe_task_results(rows)
+    if memory_monitor is not None:
+        memory_monitor.sample("load_results_complete", processed_count=len(rows))
     return (
         deduped_rows,
         _runs_from_task_result_rows(deduped_rows) if rebuild_runs_from_rows else _runs_from_task_results(run_accumulators),
@@ -899,8 +1187,12 @@ def _current_source_hashes(results_dir: Path | Sequence[Path]) -> dict[str, str 
 def _result_json_paths(results_dir: Path | Sequence[Path]) -> list[Path]:
     paths: list[Path] = []
     for source_dir in _results_dirs(results_dir):
-        paths.extend(sorted(source_dir.glob("*/*/*.json")))
+        paths.extend(path for path in sorted(source_dir.glob("*/*/*")) if _is_result_json_path(path))
     return sorted(paths)
+
+
+def _is_result_json_path(path: Path) -> bool:
+    return path.is_file() and path.name.endswith(RESULT_JSON_SUFFIXES)
 
 
 def _incremental_cache_current(
@@ -1027,10 +1319,13 @@ def _selected_result_jsons(
     exclude_model_names: set[str],
     result_paths: set[str] | None = None,
     duplicate_result_policy: DuplicateResultPolicy = "first-wins",
+    include_retrieval_rankings: bool = False,
+    memory_monitor: MemoryMonitor | None = None,
 ) -> list[SelectedResultJson]:
     selected_by_task: dict[tuple[str, str, str, str], SelectedResultJson] = {}
+    parsed_count = 0
     for source_priority, source_dir in enumerate(_results_dirs(results_dir)):
-        for result_path in sorted(source_dir.glob("*/*/*.json")):
+        for result_path in _result_json_paths(source_dir):
             if result_paths is not None and str(result_path) not in result_paths:
                 continue
             selected = _selected_result_json(
@@ -1041,6 +1336,9 @@ def _selected_result_jsons(
                 target_benchmarks=target_benchmarks,
                 exclude_model_names=exclude_model_names,
             )
+            parsed_count += 1
+            if memory_monitor is not None:
+                memory_monitor.maybe_sample("result_json_selected", processed_count=parsed_count)
             if selected is None:
                 continue
             key = (
@@ -1083,7 +1381,9 @@ def _selected_result_json(
     target_benchmarks: set[str],
     exclude_model_names: set[str],
 ) -> SelectedResultJson | None:
-    task_payload = _read_json(result_path)
+    task_payload = _read_result_summary_payload(result_path)
+    if task_payload is None:
+        return None
     target = task_payload.get("target", {})
     if not isinstance(target, dict):
         return None
@@ -1137,7 +1437,51 @@ def _prefer_selected_result_json(
 
 
 def _selected_result_path_stem_matches_task(selected: SelectedResultJson) -> bool:
-    return selected.result_path.stem == selected.task_name
+    return _result_task_stem(selected.result_path) == selected.task_name
+
+
+def _compact_result_payload(
+    task_payload: dict[str, Any],
+    *,
+    include_retrieval_rankings: bool,
+) -> dict[str, Any]:
+    if include_retrieval_rankings:
+        return task_payload
+    artifact = _top_rankings_artifact(task_payload)
+    if artifact is None:
+        return task_payload
+    rankings = artifact.get("rankings")
+    if not isinstance(rankings, list):
+        return task_payload
+    evaluation = task_payload.get("evaluation", {})
+    if not isinstance(evaluation, dict):
+        return task_payload
+    embedding_evaluations = _embedding_evaluations(
+        evaluation.get("embedding_evaluations") or task_payload.get("embedding_evaluations")
+    )
+    selected_rankings = [
+        ranking
+        for ranking, _, _ in _selected_metric_rankings(
+            rankings,
+            evaluation=evaluation,
+            embedding_evaluations=embedding_evaluations,
+        )
+    ]
+    compact_artifact = dict(artifact)
+    compact_artifact["rankings"] = selected_rankings
+    compact_artifacts = dict(task_payload.get("artifacts", {}))
+    compact_artifacts["top_rankings"] = compact_artifact
+    compact_payload = dict(task_payload)
+    compact_payload["artifacts"] = compact_artifacts
+    return compact_payload
+
+
+def _result_task_stem(path: Path) -> str:
+    name = path.name
+    for suffix in RESULT_JSON_SUFFIXES:
+        if name.endswith(suffix):
+            return name[: -len(suffix)]
+    return path.stem
 
 
 def _model_name_from_payload(model: Any, *, model_dir: str) -> str:
@@ -1353,9 +1697,10 @@ def _top_rankings_artifact(task_payload: dict[str, Any]) -> dict[str, Any] | Non
 
 
 def _top_rankings_payload(*, artifact: dict[str, Any], result_path: Path) -> dict[str, Any] | None:
-    if isinstance(artifact.get("rankings"), list):
-        return artifact
+    rankings = artifact.get("rankings")
     path = artifact.get("path")
+    if isinstance(rankings, list) and (rankings or not isinstance(path, str) or not path):
+        return artifact
     if not isinstance(path, str) or not path:
         return None
     ranking_path = result_path.parent / path
@@ -1579,7 +1924,7 @@ def _prefer_task_result(candidate: TaskResult, current: TaskResult) -> bool:
 
 
 def _result_path_stem_matches_task(row: TaskResult) -> bool:
-    return Path(row.result_path).stem == row.task_name
+    return _result_task_stem(Path(row.result_path)) == row.task_name
 
 
 def _best_rerank_metrics(evaluation: dict[str, Any]) -> dict[str, Any]:
@@ -1624,7 +1969,7 @@ def _prefer_metric_row(candidate: MetricLongRow, current: MetricLongRow) -> bool
 
 
 def _metric_result_path_stem_matches_task(row: MetricLongRow) -> bool:
-    return Path(row.result_path).stem == row.task_name
+    return _result_task_stem(Path(row.result_path)) == row.task_name
 
 
 def _dedupe_task_diagnostic_rows(rows: list[TaskDiagnosticRow]) -> list[TaskDiagnosticRow]:
@@ -1638,7 +1983,7 @@ def _dedupe_task_diagnostic_rows(rows: list[TaskDiagnosticRow]) -> list[TaskDiag
 
 
 def _diagnostic_result_path_stem_matches_task(row: TaskDiagnosticRow) -> bool:
-    return Path(row.result_path).stem == row.task_name
+    return _result_task_stem(Path(row.result_path)) == row.task_name
 
 
 def _dedupe_dataset_metadata_rows(rows: list[DatasetMetadataRow]) -> list[DatasetMetadataRow]:
@@ -2630,7 +2975,11 @@ def _payload_sha256(result_path: str) -> str | None:
     path = Path(result_path)
     if not path.exists() or not path.is_file():
         return None
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    digest = hashlib.sha256()
+    with path.open("rb") as file:
+        for chunk in iter(lambda: file.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _model_cards_state(model_cards_path: Path | None) -> tuple[str | None, str | None]:

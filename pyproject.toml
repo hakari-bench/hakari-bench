@@ -26,6 +26,7 @@ dependencies = [
     "orjson>=3.11.5",
     "urllib3>=2.7.0",
     "einops>=0.8.2",
+    "ijson>=3.5.0",
 ]
 
 [build-system]

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import gzip
 import json
+import lzma
 import math
 import hashlib
 from pathlib import Path
@@ -76,6 +78,47 @@ def test_read_json_falls_back_for_non_standard_json_numbers(tmp_path: Path) -> N
     path.write_text('{"score": NaN}', encoding="utf-8")
 
     assert math.isnan(report._read_json(path)["score"])
+
+
+def test_read_json_reads_compressed_result_json(tmp_path: Path) -> None:
+    payload = {"name": "compressed", "score": 0.42}
+    gzip_path = tmp_path / "payload.json.gz"
+    xz_path = tmp_path / "payload.json.xz"
+    with gzip.open(gzip_path, "wt", encoding="utf-8") as file:
+        json.dump(payload, file)
+    with lzma.open(xz_path, "wt", encoding="utf-8") as file:
+        json.dump(payload, file)
+
+    assert report._read_json(gzip_path) == payload
+    assert report._read_json(xz_path) == payload
+
+
+def test_result_json_paths_include_compressed_result_json(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    task_dir = results_dir / "model" / "hakari-bench__NanoMIRACL"
+    task_dir.mkdir(parents=True)
+    json_path = task_dir / "en.json"
+    gzip_path = task_dir / "ja.json.gz"
+    xz_path = task_dir / "ko.json.xz"
+    ignored_path = task_dir / "notes.jsonl"
+    for path in [json_path, gzip_path, xz_path, ignored_path]:
+        path.write_text("{}", encoding="utf-8")
+
+    assert report._result_json_paths(results_dir) == [json_path, gzip_path, xz_path]
+
+
+def test_memory_monitor_writes_jsonl_samples(tmp_path: Path) -> None:
+    log_path = tmp_path / "memory.jsonl"
+    monitor = report.MemoryMonitor(log_path=log_path, sample_interval=1)
+
+    monitor.sample("start", processed_count=0)
+    monitor.maybe_sample("selected", processed_count=1)
+
+    samples = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines()]
+    assert [sample["label"] for sample in samples] == ["start", "selected"]
+    assert samples[0]["processed_count"] == 0
+    assert samples[1]["processed_count"] == 1
+    assert isinstance(samples[1]["peak_rss_bytes"], int)
 
 
 def test_nanomteb_chinese_is_a_ranked_benchmark() -> None:
@@ -408,6 +451,142 @@ def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_pa
     assert metric_values[
         ("reranking_without_safeguard", None, "en_cosine_bm25_top100_rerank_acc@10")
     ] == pytest.approx(0.5)
+
+
+def test_read_result_json_drops_unneeded_retrieval_rankings(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / "en.json"
+    task_path.parent.mkdir(parents=True)
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {"id": "example/model"},
+                "target": {
+                    "dataset_name": "NanoMIRACL",
+                    "dataset_id": "hakari-bench/NanoMIRACL",
+                    "split_name": "en",
+                    "task_name": "en",
+                },
+                "evaluation": {
+                    "aggregate_metric": "ndcg@10",
+                    "aggregate_metric_value": 0.42,
+                    "embedding_evaluations": [
+                        {
+                            "name": "base",
+                            "aggregate_metric": "ndcg@10",
+                            "aggregate_metric_value": 0.42,
+                            "best_score_name": "cosine",
+                        }
+                    ],
+                    "reranking_evaluations": [
+                        {
+                            "name": "bm25_top_100",
+                            "best_score_name": "cosine_bm25_top100_rerank",
+                            "aggregate_metric": "ndcg@10",
+                            "aggregate_metric_value": 0.70,
+                        }
+                    ],
+                },
+                "artifacts": {
+                    "top_rankings": {
+                        "schema_version": 2,
+                        "top_k": 100,
+                        "qrels": [{"query_id": "q1", "relevant_corpus_ids": ["d2"]}],
+                        "rankings": [
+                            {
+                                "name": "base",
+                                "ranking_kind": "retrieval",
+                                "embedding_variant_name": None,
+                                "score_name": "cosine",
+                                "query_id": "q1",
+                                "corpus_ids": ["d1", "d2"],
+                            },
+                            {
+                                "name": "base",
+                                "ranking_kind": "retrieval",
+                                "embedding_variant_name": None,
+                                "score_name": "dot",
+                                "query_id": "q1",
+                                "corpus_ids": ["d2", "d1"],
+                            },
+                            {
+                                "name": "base",
+                                "ranking_kind": "candidate_rerank",
+                                "embedding_variant_name": None,
+                                "score_name": "cosine_bm25_top100_rerank",
+                                "query_id": "q1",
+                                "corpus_ids": ["d2", "d1"],
+                                "safeguard_corpus_id": "d2",
+                            },
+                        ],
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    task_payload = report._read_result_json(
+        task_path,
+        include_retrieval_rankings=False,
+    )
+    assert task_payload is not None
+    artifact = task_payload["artifacts"]["top_rankings"]
+    assert artifact["qrels"] == [{"query_id": "q1", "relevant_corpus_ids": ["d2"]}]
+    assert [(row["ranking_kind"], row["score_name"]) for row in artifact["rankings"]] == [
+        ("retrieval", "cosine"),
+        ("candidate_rerank", "cosine_bm25_top100_rerank"),
+    ]
+
+    task_payload_with_rankings = report._read_result_json(
+        task_path,
+        include_retrieval_rankings=True,
+    )
+    assert task_payload_with_rankings is not None
+    full_artifact = task_payload_with_rankings["artifacts"]["top_rankings"]
+    assert [row["score_name"] for row in full_artifact["rankings"]] == [
+        "cosine",
+        "dot",
+        "cosine_bm25_top100_rerank",
+    ]
+
+
+def test_selected_result_json_uses_streaming_reader_for_result_payload(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    results_dir = tmp_path / "results"
+    task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / "en.json.gz"
+    task_path.parent.mkdir(parents=True)
+    with gzip.open(task_path, "wt", encoding="utf-8") as file:
+        json.dump(
+            {
+                "model": {"id": "example/model"},
+                "target": {
+                    "dataset_name": "NanoMIRACL",
+                    "dataset_id": "hakari-bench/NanoMIRACL",
+                    "split_name": "en",
+                    "task_name": "en",
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.42},
+                "metrics": {"NanoMIRACL_en_cosine_ndcg@10": 0.42},
+                "artifacts": {"top_rankings": {"schema_version": 2, "top_k": 100, "qrels": [], "rankings": []}},
+            },
+            file,
+        )
+    monkeypatch.setattr(report, "_read_json", lambda path: pytest.fail(f"should stream {path}"))
+
+    selected = report._selected_result_json(
+        task_path,
+        results_dir=results_dir,
+        source_priority=0,
+        benchmark_configs=report.load_benchmark_configs(),
+        target_benchmarks=set(report.TARGET_BENCHMARKS),
+        exclude_model_names=set(),
+    )
+
+    assert selected is not None
+    assert selected.model_name == "example/model"
 
 
 def test_main_incremental_noops_when_sources_are_unchanged(
