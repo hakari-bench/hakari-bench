@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import argparse
-from concurrent.futures import FIRST_COMPLETED, Future, ProcessPoolExecutor, wait
+import asyncio
+from concurrent.futures import ProcessPoolExecutor
 import gzip
 import hashlib
 import json
@@ -10,7 +11,7 @@ import math
 import resource
 import sys
 from collections import defaultdict
-from collections.abc import Iterable, Sequence
+from collections.abc import AsyncIterable, Awaitable, Callable, Iterable, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from itertools import islice, product
@@ -626,6 +627,15 @@ def main() -> None:
         help="Number of worker processes used to parse selected result JSON files. Use 1 for serial parsing.",
     )
     parser.add_argument(
+        "--result-row-workers",
+        type=int,
+        default=1,
+        help=(
+            "Number of worker processes used to parse selected result JSON and build per-file warehouse rows. "
+            "When greater than 1, this supersedes --result-json-workers."
+        ),
+    )
+    parser.add_argument(
         "--exclude-model-name",
         action="append",
         default=None,
@@ -658,6 +668,7 @@ def main() -> None:
             exclude_model_names=set(args.exclude_model_name or []),
             memory_monitor=memory_monitor,
             result_json_workers=args.result_json_workers,
+            result_row_workers=args.result_row_workers,
         )
         append_duckdb_results(
             args.duckdb_path,
@@ -706,6 +717,7 @@ def main() -> None:
         duplicate_result_policy=duplicate_result_policy,
         memory_monitor=memory_monitor,
         result_json_workers=args.result_json_workers,
+        result_row_workers=args.result_row_workers,
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
@@ -756,6 +768,7 @@ def load_results(
     duplicate_result_policy: DuplicateResultPolicy = "first-wins",
     memory_monitor: MemoryMonitor | None = None,
     result_json_workers: int = 1,
+    result_row_workers: int = 1,
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -837,187 +850,26 @@ def load_results(
         memory_monitor=memory_monitor,
     )
     processed_result_count = 0
-    for selected_result, task_payload in _loaded_result_payloads(
+    for processed in _processed_result_rows(
         selected_results,
+        registry=registry,
+        model_cards=model_cards,
+        model_cards_path=model_cards_path,
         include_retrieval_rankings=include_retrieval_rankings,
         result_json_workers=result_json_workers,
+        result_row_workers=result_row_workers,
     ):
-        result_path = selected_result.result_path
-        if task_payload is None:
+        if processed is None:
             continue
         processed_result_count += 1
         if memory_monitor is not None:
             memory_monitor.maybe_sample("result_json_loaded", processed_count=processed_result_count)
-        target = task_payload["target"]
-        benchmark = selected_result.benchmark
-        evaluation = task_payload["evaluation"]
-        config = task_payload.get("config", {})
-        if not isinstance(config, dict):
-            config = {}
-        score = evaluation["aggregate_metric_value"]
-        model = task_payload.get("model", {})
-        if isinstance(model, dict):
-            model = _with_model_card_metadata(model, model_cards=model_cards)
-        environment = task_payload.get("environment", {})
-        package_versions = environment.get("package_versions", {}) if isinstance(environment, dict) else {}
-        experiment_manifest = task_payload.get("experiment_manifest", {})
-        experiment_manifest = experiment_manifest if isinstance(experiment_manifest, dict) else {}
-        model_dir = selected_result.model_dir
-        model_name = selected_result.model_name
-        model_source = model.get("source", {}) if isinstance(model, dict) else {}
-        late_interaction = _late_interaction_metadata(model if isinstance(model, dict) else {}, evaluation)
-        model_revision = _model_revision_value(model_source, key="revision")
-        model_revision_requested = _model_revision_value(model_source, key="revision_requested")
-        dataset_id = selected_result.dataset_id
-        dataset_revision = _dataset_revision_value(target.get("dataset_revision"), key="resolved")
-        dataset_revision_requested = _dataset_revision_value(target.get("dataset_revision"), key="requested")
-        task_name = selected_result.task_name
-        split_name = canonical_split_name(
-            benchmark,
-            str(target["split_name"]) if target.get("split_name") is not None else None,
-        )
-        task_key = selected_result.task_key
-        _accumulate_run(
-            run_accumulators,
-            model_dir=model_dir,
-            model_name=model_name,
-            model=model if isinstance(model, dict) else {},
-            package_versions=package_versions,
-            target=target,
-            evaluation=evaluation,
-            generated_at_utc=task_payload.get("generated_at_utc"),
-            score=float(score),
-        )
-        common: dict[str, Any] = {
-            "model_dir": model_dir,
-            "model_name": model_name,
-            "model_revision": model_revision,
-            "model_revision_requested": model_revision_requested,
-            "benchmark": benchmark,
-            "dataset_id": dataset_id,
-            "dataset_revision": dataset_revision,
-            "dataset_revision_requested": dataset_revision_requested,
-            "dataset_name": str(target.get("dataset_name") or ""),
-            "split_name": split_name,
-            "task_name": task_name,
-            "task_key": task_key,
-            "result_path": str(result_path),
-            "experiment_fingerprint": _str_or_none(experiment_manifest.get("fingerprint_sha256")),
-            "active_parameters": _int_or_none(model.get("active_parameters")) if isinstance(model, dict) else None,
-            "total_parameters": _int_or_none(model.get("total_parameters")) if isinstance(model, dict) else None,
-            "max_seq_length": _int_or_none(model.get("max_seq_length")) if isinstance(model, dict) else None,
-            "dtype": model.get("dtype") if isinstance(model, dict) else None,
-            "attn_implementation": model.get("attn_implementation") if isinstance(model, dict) else None,
-            "query_prompt": _str_or_none(config.get("query_prompt")),
-            "document_prompt": _str_or_none(config.get("document_prompt")),
-            "query_prompt_name": _str_or_none(config.get("query_prompt_name")),
-            "document_prompt_name": _str_or_none(config.get("document_prompt_name")),
-            "query_encode_task": _str_or_none(config.get("query_encode_task")),
-            "document_encode_task": _str_or_none(config.get("document_encode_task")),
-            "trust_remote_code": _bool_or_none(model.get("trust_remote_code")) if isinstance(model, dict) else None,
-            "late_interaction_query_length": _int_or_none(late_interaction.get("query_length")),
-            "late_interaction_document_length": _int_or_none(late_interaction.get("document_length")),
-            "late_interaction_query_prefix": _str_or_none(late_interaction.get("query_prefix")),
-            "late_interaction_document_prefix": _str_or_none(late_interaction.get("document_prefix")),
-            "late_interaction_query_expansion": _bool_or_none(
-                late_interaction.get("do_query_expansion", late_interaction.get("query_expansion"))
-            ),
-            "late_interaction_attend_to_expansion_tokens": _bool_or_none(
-                late_interaction.get("attend_to_expansion_tokens")
-            ),
-            "torch_version": package_versions.get("torch"),
-            "transformers_version": package_versions.get("transformers"),
-            "sentence_transformers_version": package_versions.get("sentence-transformers"),
-            "started_at_utc": evaluation.get("started_at_utc"),
-            "finished_at_utc": evaluation.get("finished_at_utc"),
-            "evaluated_at_utc": evaluation.get("evaluated_at_utc"),
-            "duration_seconds_including_dataset_load": _float_or_none(
-                evaluation.get("duration_seconds_including_dataset_load")
-            ),
-            "wall_seconds": _float_or_none(evaluation.get("wall_seconds")),
-        }
-        embedding_evaluations = _embedding_evaluations(
-            evaluation.get("embedding_evaluations") or task_payload.get("embedding_evaluations")
-        )
-        base_embedding = _embedding_evaluation_named(embedding_evaluations, "base")
-        rows.append(
-            TaskResult(
-                **common,
-                score=float(score),
-                aggregate_metric=evaluation.get("aggregate_metric"),
-                embedding_dim=_embedding_dim(base_embedding),
-                quantization=_quantization_precision(base_embedding),
-            )
-        )
-        diagnostic_rows.append(
-            _task_diagnostic_row(
-                common=common,
-                config=config,
-                evaluation=evaluation,
-                base_score=float(score),
-            )
-        )
-        dataset_metadata_rows.append(_dataset_metadata_row(common=common, registry=registry))
-        for embedding_evaluation in embedding_evaluations:
-            variant_name = embedding_evaluation.get("name")
-            if not isinstance(variant_name, str) or variant_name == "base":
-                continue
-            variant_score = embedding_evaluation.get("aggregate_metric_value")
-            if not isinstance(variant_score, int | float):
-                continue
-            rows.append(
-                TaskResult(
-                    **common,
-                    score=float(variant_score),
-                    aggregate_metric=embedding_evaluation.get("aggregate_metric") or evaluation.get("aggregate_metric"),
-                    embedding_variant_name=variant_name,
-                    embedding_dim=_embedding_dim(embedding_evaluation),
-                    quantization=_quantization_precision(embedding_evaluation),
-                )
-            )
-        metric_rows.extend(
-            _metric_rows_from_top_rankings(
-                common=common,
-                evaluation=evaluation,
-                embedding_evaluations=embedding_evaluations,
-                task_payload=task_payload,
-                result_path=result_path,
-            )
-        )
-        for metric_name, metric_value in task_payload.get("metrics", {}).items():
-            if isinstance(metric_value, int | float):
-                metric_rows.append(
-                    MetricLongRow(
-                        model_dir=model_dir,
-                        model_name=model_name,
-                        benchmark=benchmark,
-                        dataset_id=dataset_id,
-                        task_name=task_name,
-                        metric_name=canonical_metric_name(benchmark, metric_name),
-                        metric_value=float(metric_value),
-                        result_path=str(result_path),
-                        score_target="all",
-                        embedding_variant_name=None,
-                    )
-                )
-        for metric_name, metric_value in task_payload.get("rerank_metrics", {}).items():
-            if isinstance(metric_value, int | float):
-                metric_rows.append(
-                    MetricLongRow(
-                        model_dir=model_dir,
-                        model_name=model_name,
-                        benchmark=benchmark,
-                        dataset_id=dataset_id,
-                        task_name=task_name,
-                        metric_name=canonical_metric_name(benchmark, metric_name),
-                        metric_value=float(metric_value),
-                        result_path=str(result_path),
-                        score_target="reranking",
-                        embedding_variant_name=None,
-                    )
-                )
-        if include_retrieval_rankings:
-            ranking_rows.extend(_retrieval_ranking_rows(common=common, task_payload=task_payload, result_path=result_path))
+        _merge_run_accumulators(run_accumulators, processed.run_accumulators)
+        rows.extend(processed.rows)
+        metric_rows.extend(processed.metric_rows)
+        diagnostic_rows.extend(processed.diagnostic_rows)
+        dataset_metadata_rows.extend(processed.dataset_metadata_rows)
+        ranking_rows.extend(processed.ranking_rows)
 
     deduped_rows = _dedupe_task_results(rows)
     if memory_monitor is not None:
@@ -1040,6 +892,16 @@ LoadResultsPayload = tuple[
     list[DatasetMetadataRow],
     list[RetrievalRankingRow],
 ]
+
+
+@dataclass
+class ProcessedResultRows:
+    rows: list[TaskResult]
+    run_accumulators: dict[str, dict[str, Any]]
+    metric_rows: list[MetricLongRow]
+    diagnostic_rows: list[TaskDiagnosticRow]
+    dataset_metadata_rows: list[DatasetMetadataRow]
+    ranking_rows: list[RetrievalRankingRow]
 
 
 def _load_results_from_incremental_cache(
@@ -1185,6 +1047,59 @@ def _load_cached_warehouse_rows(
         con.close()
 
 
+async def _ordered_async_bounded_map(
+    items: Sequence[Any],
+    submit: Callable[[Any], Awaitable[Any]],
+    *,
+    max_pending: int,
+) -> AsyncIterable[Any]:
+    next_submit_index = 0
+    next_yield_index = 0
+    pending: dict[asyncio.Task[Any], int] = {}
+    completed: dict[int, Any] = {}
+    pending_limit = max(1, max_pending)
+    while next_submit_index < len(items) and len(pending) < pending_limit:
+        task = asyncio.ensure_future(submit(items[next_submit_index]))
+        pending[task] = next_submit_index
+        next_submit_index += 1
+    while pending:
+        done, _ = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED)
+        for task in done:
+            result_index = pending.pop(task)
+            completed[result_index] = task.result()
+            while next_submit_index < len(items) and len(pending) < pending_limit:
+                next_task = asyncio.ensure_future(submit(items[next_submit_index]))
+                pending[next_task] = next_submit_index
+                next_submit_index += 1
+        while next_yield_index in completed:
+            yield completed.pop(next_yield_index)
+            next_yield_index += 1
+
+
+def _iterate_async(async_iterable: AsyncIterable[Any]) -> Iterable[Any]:
+    loop = asyncio.new_event_loop()
+    previous_loop: asyncio.AbstractEventLoop | None
+    try:
+        previous_loop = asyncio.get_running_loop()
+    except RuntimeError:
+        previous_loop = None
+    asyncio.set_event_loop(loop)
+    iterator = async_iterable.__aiter__()
+    try:
+        while True:
+            try:
+                yield loop.run_until_complete(iterator.__anext__())
+            except StopAsyncIteration:
+                break
+    finally:
+        close = getattr(iterator, "aclose", None)
+        if close is not None:
+            loop.run_until_complete(close())
+        loop.run_until_complete(loop.shutdown_asyncgens())
+        loop.close()
+        asyncio.set_event_loop(previous_loop)
+
+
 def _loaded_result_payloads(
     selected_results: Sequence[SelectedResultJson],
     *,
@@ -1200,45 +1115,383 @@ def _loaded_result_payloads(
                     selected_result.result_path,
                     include_retrieval_rankings=include_retrieval_rankings,
                 ),
-            )
+        )
         return
 
-    next_submit_index = 0
-    next_yield_index = 0
-    pending: dict[Future[dict[str, Any] | None], int] = {}
-    completed: dict[int, dict[str, Any] | None] = {}
-    max_pending = max(1, workers * 2)
+    yield from _iterate_async(
+        _async_loaded_result_payloads(
+            selected_results,
+            include_retrieval_rankings=include_retrieval_rankings,
+            workers=workers,
+        )
+    )
+
+
+async def _async_loaded_result_payloads(
+    selected_results: Sequence[SelectedResultJson],
+    *,
+    include_retrieval_rankings: bool,
+    workers: int,
+) -> AsyncIterable[tuple[SelectedResultJson, dict[str, Any] | None]]:
+    loop = asyncio.get_running_loop()
     with ProcessPoolExecutor(max_workers=workers) as executor:
-        while next_submit_index < len(selected_results) and len(pending) < max_pending:
-            selected_result = selected_results[next_submit_index]
-            future = executor.submit(
+        async def submit(selected_result: SelectedResultJson) -> tuple[SelectedResultJson, dict[str, Any] | None]:
+            payload = await loop.run_in_executor(
+                executor,
                 _read_result_json_worker,
                 str(selected_result.result_path),
                 include_retrieval_rankings,
             )
-            pending[future] = next_submit_index
-            next_submit_index += 1
-        while pending:
-            done, _ = wait(pending, return_when=FIRST_COMPLETED)
-            for future in done:
-                result_index = pending.pop(future)
-                completed[result_index] = future.result()
-                while next_submit_index < len(selected_results) and len(pending) < max_pending:
-                    selected_result = selected_results[next_submit_index]
-                    next_future = executor.submit(
-                        _read_result_json_worker,
-                        str(selected_result.result_path),
-                        include_retrieval_rankings,
-                    )
-                    pending[next_future] = next_submit_index
-                    next_submit_index += 1
-            while next_yield_index in completed:
-                yield selected_results[next_yield_index], completed.pop(next_yield_index)
-                next_yield_index += 1
+            return selected_result, payload
+
+        async for item in _ordered_async_bounded_map(
+            selected_results,
+            submit,
+            max_pending=workers * 2,
+        ):
+            yield item
 
 
 def _read_result_json_worker(path: str, include_retrieval_rankings: bool) -> dict[str, Any] | None:
     return _read_result_json(Path(path), include_retrieval_rankings=include_retrieval_rankings)
+
+
+def _processed_result_rows(
+    selected_results: Sequence[SelectedResultJson],
+    *,
+    registry: DatasetRegistry,
+    model_cards: dict[str, dict[str, Any]],
+    model_cards_path: Path | None,
+    include_retrieval_rankings: bool,
+    result_json_workers: int,
+    result_row_workers: int,
+) -> Iterable[ProcessedResultRows | None]:
+    workers = max(1, result_row_workers)
+    if workers == 1 or len(selected_results) <= 1:
+        for selected_result, task_payload in _loaded_result_payloads(
+            selected_results,
+            include_retrieval_rankings=include_retrieval_rankings,
+            result_json_workers=result_json_workers,
+        ):
+            if task_payload is None:
+                yield None
+                continue
+            yield _process_result_rows(
+                selected_result=selected_result,
+                task_payload=task_payload,
+                registry=registry,
+                model_cards=model_cards,
+                include_retrieval_rankings=include_retrieval_rankings,
+            )
+        return
+
+    model_cards_path_arg = str(model_cards_path) if model_cards_path is not None else None
+    yield from _iterate_async(
+        _async_processed_result_rows(
+            selected_results,
+            include_retrieval_rankings=include_retrieval_rankings,
+            model_cards_path=model_cards_path_arg,
+            workers=workers,
+        )
+    )
+
+
+async def _async_processed_result_rows(
+    selected_results: Sequence[SelectedResultJson],
+    *,
+    include_retrieval_rankings: bool,
+    model_cards_path: str | None,
+    workers: int,
+) -> AsyncIterable[ProcessedResultRows | None]:
+    loop = asyncio.get_running_loop()
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        async def submit(selected_result: SelectedResultJson) -> ProcessedResultRows | None:
+            return await loop.run_in_executor(
+                executor,
+                _process_result_rows_worker,
+                selected_result,
+                include_retrieval_rankings,
+                model_cards_path,
+            )
+
+        async for item in _ordered_async_bounded_map(
+            selected_results,
+            submit,
+            max_pending=workers * 2,
+        ):
+            yield item
+
+
+_WORKER_REGISTRY: DatasetRegistry | None = None
+_WORKER_MODEL_CARDS: dict[str, dict[str, Any]] | None = None
+_WORKER_MODEL_CARDS_PATH: str | None = None
+
+
+def _worker_registry() -> DatasetRegistry:
+    global _WORKER_REGISTRY
+    if _WORKER_REGISTRY is None:
+        _WORKER_REGISTRY = DatasetRegistry.load_builtin()
+    return _WORKER_REGISTRY
+
+
+def _worker_model_cards(model_cards_path: str | None) -> dict[str, dict[str, Any]]:
+    global _WORKER_MODEL_CARDS, _WORKER_MODEL_CARDS_PATH
+    if _WORKER_MODEL_CARDS is None or _WORKER_MODEL_CARDS_PATH != model_cards_path:
+        _WORKER_MODEL_CARDS = load_model_cards(Path(model_cards_path) if model_cards_path is not None else None)
+        _WORKER_MODEL_CARDS_PATH = model_cards_path
+    return _WORKER_MODEL_CARDS
+
+
+def _process_result_rows_worker(
+    selected_result: SelectedResultJson,
+    include_retrieval_rankings: bool,
+    model_cards_path: str | None,
+) -> ProcessedResultRows | None:
+    task_payload = _read_result_json(
+        selected_result.result_path,
+        include_retrieval_rankings=include_retrieval_rankings,
+    )
+    if task_payload is None:
+        return None
+    return _process_result_rows(
+        selected_result=selected_result,
+        task_payload=task_payload,
+        registry=_worker_registry(),
+        model_cards=_worker_model_cards(model_cards_path),
+        include_retrieval_rankings=include_retrieval_rankings,
+    )
+
+
+def _process_result_rows(
+    *,
+    selected_result: SelectedResultJson,
+    task_payload: dict[str, Any],
+    registry: DatasetRegistry,
+    model_cards: dict[str, dict[str, Any]],
+    include_retrieval_rankings: bool,
+) -> ProcessedResultRows:
+    rows: list[TaskResult] = []
+    run_accumulators: dict[str, dict[str, Any]] = {}
+    metric_rows: list[MetricLongRow] = []
+    diagnostic_rows: list[TaskDiagnosticRow] = []
+    dataset_metadata_rows: list[DatasetMetadataRow] = []
+    ranking_rows: list[RetrievalRankingRow] = []
+    result_path = selected_result.result_path
+    target = task_payload["target"]
+    benchmark = selected_result.benchmark
+    evaluation = task_payload["evaluation"]
+    config = task_payload.get("config", {})
+    if not isinstance(config, dict):
+        config = {}
+    score = evaluation["aggregate_metric_value"]
+    model = task_payload.get("model", {})
+    if isinstance(model, dict):
+        model = _with_model_card_metadata(model, model_cards=model_cards)
+    environment = task_payload.get("environment", {})
+    package_versions = environment.get("package_versions", {}) if isinstance(environment, dict) else {}
+    experiment_manifest = task_payload.get("experiment_manifest", {})
+    experiment_manifest = experiment_manifest if isinstance(experiment_manifest, dict) else {}
+    model_dir = selected_result.model_dir
+    model_name = selected_result.model_name
+    model_source = model.get("source", {}) if isinstance(model, dict) else {}
+    late_interaction = _late_interaction_metadata(model if isinstance(model, dict) else {}, evaluation)
+    model_revision = _model_revision_value(model_source, key="revision")
+    model_revision_requested = _model_revision_value(model_source, key="revision_requested")
+    dataset_id = selected_result.dataset_id
+    dataset_revision = _dataset_revision_value(target.get("dataset_revision"), key="resolved")
+    dataset_revision_requested = _dataset_revision_value(target.get("dataset_revision"), key="requested")
+    task_name = selected_result.task_name
+    split_name = canonical_split_name(
+        benchmark,
+        str(target["split_name"]) if target.get("split_name") is not None else None,
+    )
+    task_key = selected_result.task_key
+    _accumulate_run(
+        run_accumulators,
+        model_dir=model_dir,
+        model_name=model_name,
+        model=model if isinstance(model, dict) else {},
+        package_versions=package_versions,
+        target=target,
+        evaluation=evaluation,
+        generated_at_utc=task_payload.get("generated_at_utc"),
+        score=float(score),
+    )
+    common: dict[str, Any] = {
+        "model_dir": model_dir,
+        "model_name": model_name,
+        "model_revision": model_revision,
+        "model_revision_requested": model_revision_requested,
+        "benchmark": benchmark,
+        "dataset_id": dataset_id,
+        "dataset_revision": dataset_revision,
+        "dataset_revision_requested": dataset_revision_requested,
+        "dataset_name": str(target.get("dataset_name") or ""),
+        "split_name": split_name,
+        "task_name": task_name,
+        "task_key": task_key,
+        "result_path": str(result_path),
+        "experiment_fingerprint": _str_or_none(experiment_manifest.get("fingerprint_sha256")),
+        "active_parameters": _int_or_none(model.get("active_parameters")) if isinstance(model, dict) else None,
+        "total_parameters": _int_or_none(model.get("total_parameters")) if isinstance(model, dict) else None,
+        "max_seq_length": _int_or_none(model.get("max_seq_length")) if isinstance(model, dict) else None,
+        "dtype": model.get("dtype") if isinstance(model, dict) else None,
+        "attn_implementation": model.get("attn_implementation") if isinstance(model, dict) else None,
+        "query_prompt": _str_or_none(config.get("query_prompt")),
+        "document_prompt": _str_or_none(config.get("document_prompt")),
+        "query_prompt_name": _str_or_none(config.get("query_prompt_name")),
+        "document_prompt_name": _str_or_none(config.get("document_prompt_name")),
+        "query_encode_task": _str_or_none(config.get("query_encode_task")),
+        "document_encode_task": _str_or_none(config.get("document_encode_task")),
+        "trust_remote_code": _bool_or_none(model.get("trust_remote_code")) if isinstance(model, dict) else None,
+        "late_interaction_query_length": _int_or_none(late_interaction.get("query_length")),
+        "late_interaction_document_length": _int_or_none(late_interaction.get("document_length")),
+        "late_interaction_query_prefix": _str_or_none(late_interaction.get("query_prefix")),
+        "late_interaction_document_prefix": _str_or_none(late_interaction.get("document_prefix")),
+        "late_interaction_query_expansion": _bool_or_none(
+            late_interaction.get("do_query_expansion", late_interaction.get("query_expansion"))
+        ),
+        "late_interaction_attend_to_expansion_tokens": _bool_or_none(
+            late_interaction.get("attend_to_expansion_tokens")
+        ),
+        "torch_version": package_versions.get("torch"),
+        "transformers_version": package_versions.get("transformers"),
+        "sentence_transformers_version": package_versions.get("sentence-transformers"),
+        "started_at_utc": evaluation.get("started_at_utc"),
+        "finished_at_utc": evaluation.get("finished_at_utc"),
+        "evaluated_at_utc": evaluation.get("evaluated_at_utc"),
+        "duration_seconds_including_dataset_load": _float_or_none(
+            evaluation.get("duration_seconds_including_dataset_load")
+        ),
+        "wall_seconds": _float_or_none(evaluation.get("wall_seconds")),
+    }
+    embedding_evaluations = _embedding_evaluations(
+        evaluation.get("embedding_evaluations") or task_payload.get("embedding_evaluations")
+    )
+    base_embedding = _embedding_evaluation_named(embedding_evaluations, "base")
+    rows.append(
+        TaskResult(
+            **common,
+            score=float(score),
+            aggregate_metric=evaluation.get("aggregate_metric"),
+            embedding_dim=_embedding_dim(base_embedding),
+            quantization=_quantization_precision(base_embedding),
+        )
+    )
+    diagnostic_rows.append(
+        _task_diagnostic_row(
+            common=common,
+            config=config,
+            evaluation=evaluation,
+            base_score=float(score),
+        )
+    )
+    dataset_metadata_rows.append(_dataset_metadata_row(common=common, registry=registry))
+    for embedding_evaluation in embedding_evaluations:
+        variant_name = embedding_evaluation.get("name")
+        if not isinstance(variant_name, str) or variant_name == "base":
+            continue
+        variant_score = embedding_evaluation.get("aggregate_metric_value")
+        if not isinstance(variant_score, int | float):
+            continue
+        rows.append(
+            TaskResult(
+                **common,
+                score=float(variant_score),
+                aggregate_metric=embedding_evaluation.get("aggregate_metric") or evaluation.get("aggregate_metric"),
+                embedding_variant_name=variant_name,
+                embedding_dim=_embedding_dim(embedding_evaluation),
+                quantization=_quantization_precision(embedding_evaluation),
+            )
+        )
+    metric_rows.extend(
+        _metric_rows_from_top_rankings(
+            common=common,
+            evaluation=evaluation,
+            embedding_evaluations=embedding_evaluations,
+            task_payload=task_payload,
+            result_path=result_path,
+        )
+    )
+    for metric_name, metric_value in task_payload.get("metrics", {}).items():
+        if isinstance(metric_value, int | float):
+            metric_rows.append(
+                MetricLongRow(
+                    model_dir=model_dir,
+                    model_name=model_name,
+                    benchmark=benchmark,
+                    dataset_id=dataset_id,
+                    task_name=task_name,
+                    metric_name=canonical_metric_name(benchmark, metric_name),
+                    metric_value=float(metric_value),
+                    result_path=str(result_path),
+                    score_target="all",
+                    embedding_variant_name=None,
+                )
+            )
+    for metric_name, metric_value in task_payload.get("rerank_metrics", {}).items():
+        if isinstance(metric_value, int | float):
+            metric_rows.append(
+                MetricLongRow(
+                    model_dir=model_dir,
+                    model_name=model_name,
+                    benchmark=benchmark,
+                    dataset_id=dataset_id,
+                    task_name=task_name,
+                    metric_name=canonical_metric_name(benchmark, metric_name),
+                    metric_value=float(metric_value),
+                    result_path=str(result_path),
+                    score_target="reranking",
+                    embedding_variant_name=None,
+                )
+            )
+    if include_retrieval_rankings:
+        ranking_rows.extend(_retrieval_ranking_rows(common=common, task_payload=task_payload, result_path=result_path))
+    return ProcessedResultRows(
+        rows=rows,
+        run_accumulators=run_accumulators,
+        metric_rows=metric_rows,
+        diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
+        ranking_rows=ranking_rows,
+    )
+
+
+def _merge_run_accumulators(target: dict[str, dict[str, Any]], source: dict[str, dict[str, Any]]) -> None:
+    for model_name, source_item in source.items():
+        target_item = target.setdefault(
+            model_name,
+            {
+                "model_dir": source_item["model_dir"],
+                "model_name": source_item["model_name"],
+                "generated_at_utc": None,
+                "started_at_values": [],
+                "finished_at_values": [],
+                "targets": set(),
+                "split_count": 0,
+                "cache_hit_values": [],
+                "scores": [],
+                "active_parameters": source_item["active_parameters"],
+                "total_parameters": source_item["total_parameters"],
+                "max_seq_length": source_item["max_seq_length"],
+                "dtype": source_item["dtype"],
+                "attn_implementation": source_item["attn_implementation"],
+                "torch_version": source_item["torch_version"],
+                "transformers_version": source_item["transformers_version"],
+                "sentence_transformers_version": source_item["sentence_transformers_version"],
+            },
+        )
+        target_item["model_name"] = source_item["model_name"]
+        target_item["generated_at_utc"] = _max_string(
+            target_item.get("generated_at_utc"),
+            source_item.get("generated_at_utc"),
+        )
+        target_item["started_at_values"].extend(source_item["started_at_values"])
+        target_item["finished_at_values"].extend(source_item["finished_at_values"])
+        target_item["targets"].update(source_item["targets"])
+        target_item["split_count"] += source_item["split_count"]
+        target_item["cache_hit_values"].extend(source_item["cache_hit_values"])
+        target_item["scores"].extend(source_item["scores"])
 
 
 def _filter_rows_by_result_path(rows: list[Any], result_paths: set[str] | None) -> list[Any]:

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import gzip
 import json
 import lzma
@@ -119,6 +120,24 @@ def test_memory_monitor_writes_jsonl_samples(tmp_path: Path) -> None:
     assert samples[0]["processed_count"] == 0
     assert samples[1]["processed_count"] == 1
     assert isinstance(samples[1]["peak_rss_bytes"], int)
+
+
+def test_ordered_async_bounded_map_preserves_input_order() -> None:
+    async def run() -> list[int]:
+        async def submit(value: int) -> int:
+            await asyncio.sleep(0.01 * (3 - value))
+            return value * 10
+
+        return [
+            result
+            async for result in report._ordered_async_bounded_map(
+                [1, 2, 3],
+                submit,
+                max_pending=2,
+            )
+        ]
+
+    assert asyncio.run(run()) == [10, 20, 30]
 
 
 def test_nanomteb_chinese_is_a_ranked_benchmark() -> None:
@@ -507,6 +526,86 @@ def test_load_results_parallel_json_workers_match_serial(tmp_path: Path) -> None
 
     serial = report.load_results(results_dir, result_json_workers=1)
     parallel = report.load_results(results_dir, result_json_workers=2)
+
+    assert parallel == serial
+
+
+def test_load_results_parallel_row_workers_match_serial(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    for task_name, score in [("en", 0.42), ("ja", 0.35)]:
+        task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / f"{task_name}.json"
+        task_path.parent.mkdir(parents=True, exist_ok=True)
+        task_path.write_text(
+            json.dumps(
+                {
+                    "model": {"id": "example/model"},
+                    "target": {
+                        "dataset_name": "NanoMIRACL",
+                        "dataset_id": "hakari-bench/NanoMIRACL",
+                        "split_name": task_name,
+                        "task_name": task_name,
+                    },
+                    "evaluation": {
+                        "aggregate_metric": "ndcg@10",
+                        "aggregate_metric_value": score,
+                        "embedding_evaluations": [
+                            {
+                                "name": "base",
+                                "aggregate_metric": "ndcg@10",
+                                "aggregate_metric_value": score,
+                                "best_score_name": "cosine",
+                            },
+                            {
+                                "name": "truncate:2",
+                                "aggregate_metric": "ndcg@10",
+                                "aggregate_metric_value": score - 0.05,
+                                "best_score_name": "truncate:2_cosine",
+                            },
+                        ],
+                        "reranking_evaluations": [
+                            {
+                                "name": "bm25_top_100",
+                                "best_score_name": "cosine_bm25_top100_rerank",
+                                "aggregate_metric": "ndcg@10",
+                                "aggregate_metric_value": score + 0.1,
+                            }
+                        ],
+                    },
+                    "metrics": {f"NanoMIRACL_{task_name}_cosine_ndcg@10": score},
+                    "rerank_metrics": {f"NanoMIRACL_{task_name}_cosine_bm25_top100_rerank_ndcg@10": score + 0.1},
+                    "artifacts": {
+                        "top_rankings": {
+                            "schema_version": 2,
+                            "top_k": 100,
+                            "qrels": [{"query_id": "q1", "relevant_corpus_ids": ["d2"]}],
+                            "rankings": [
+                                {
+                                    "name": "base",
+                                    "ranking_kind": "retrieval",
+                                    "embedding_variant_name": None,
+                                    "score_name": "cosine",
+                                    "query_id": "q1",
+                                    "corpus_ids": ["d1", "d2"],
+                                },
+                                {
+                                    "name": "base",
+                                    "ranking_kind": "candidate_rerank",
+                                    "embedding_variant_name": None,
+                                    "score_name": "cosine_bm25_top100_rerank",
+                                    "query_id": "q1",
+                                    "corpus_ids": ["d2", "d1"],
+                                    "safeguard_corpus_id": "d2",
+                                },
+                            ],
+                        }
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    serial = report.load_results(results_dir, result_row_workers=1)
+    parallel = report.load_results(results_dir, result_row_workers=2)
 
     assert parallel == serial
 
