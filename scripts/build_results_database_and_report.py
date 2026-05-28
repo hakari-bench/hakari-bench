@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import FIRST_COMPLETED, Future, ProcessPoolExecutor, wait
 import gzip
 import hashlib
 import json
@@ -619,6 +620,12 @@ def main() -> None:
         help="Number of parsed result JSON files between memory samples when --memory-log-path is set.",
     )
     parser.add_argument(
+        "--result-json-workers",
+        type=int,
+        default=1,
+        help="Number of worker processes used to parse selected result JSON files. Use 1 for serial parsing.",
+    )
+    parser.add_argument(
         "--exclude-model-name",
         action="append",
         default=None,
@@ -650,6 +657,7 @@ def main() -> None:
             model_cards_path=args.model_cards_path,
             exclude_model_names=set(args.exclude_model_name or []),
             memory_monitor=memory_monitor,
+            result_json_workers=args.result_json_workers,
         )
         append_duckdb_results(
             args.duckdb_path,
@@ -697,6 +705,7 @@ def main() -> None:
         exclude_model_names=set(args.exclude_model_name or []),
         duplicate_result_policy=duplicate_result_policy,
         memory_monitor=memory_monitor,
+        result_json_workers=args.result_json_workers,
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
@@ -746,6 +755,7 @@ def load_results(
     exclude_model_names: set[str] | None = None,
     duplicate_result_policy: DuplicateResultPolicy = "first-wins",
     memory_monitor: MemoryMonitor | None = None,
+    result_json_workers: int = 1,
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -816,8 +826,7 @@ def load_results(
     model_cards = load_model_cards(model_cards_path)
     exclude_model_names = exclude_model_names or set()
 
-    processed_result_count = 0
-    for selected_result in _selected_result_jsons(
+    selected_results = _selected_result_jsons(
         results_dir,
         benchmark_configs=benchmark_configs,
         target_benchmarks=target_benchmarks,
@@ -826,12 +835,14 @@ def load_results(
         duplicate_result_policy=duplicate_result_policy,
         include_retrieval_rankings=include_retrieval_rankings,
         memory_monitor=memory_monitor,
+    )
+    processed_result_count = 0
+    for selected_result, task_payload in _loaded_result_payloads(
+        selected_results,
+        include_retrieval_rankings=include_retrieval_rankings,
+        result_json_workers=result_json_workers,
     ):
         result_path = selected_result.result_path
-        task_payload = _read_result_json(
-            result_path,
-            include_retrieval_rankings=include_retrieval_rankings,
-        )
         if task_payload is None:
             continue
         processed_result_count += 1
@@ -1172,6 +1183,62 @@ def _load_cached_warehouse_rows(
         return rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows
     finally:
         con.close()
+
+
+def _loaded_result_payloads(
+    selected_results: Sequence[SelectedResultJson],
+    *,
+    include_retrieval_rankings: bool,
+    result_json_workers: int,
+) -> Iterable[tuple[SelectedResultJson, dict[str, Any] | None]]:
+    workers = max(1, result_json_workers)
+    if workers == 1 or len(selected_results) <= 1:
+        for selected_result in selected_results:
+            yield (
+                selected_result,
+                _read_result_json(
+                    selected_result.result_path,
+                    include_retrieval_rankings=include_retrieval_rankings,
+                ),
+            )
+        return
+
+    next_submit_index = 0
+    next_yield_index = 0
+    pending: dict[Future[dict[str, Any] | None], int] = {}
+    completed: dict[int, dict[str, Any] | None] = {}
+    max_pending = max(1, workers * 2)
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        while next_submit_index < len(selected_results) and len(pending) < max_pending:
+            selected_result = selected_results[next_submit_index]
+            future = executor.submit(
+                _read_result_json_worker,
+                str(selected_result.result_path),
+                include_retrieval_rankings,
+            )
+            pending[future] = next_submit_index
+            next_submit_index += 1
+        while pending:
+            done, _ = wait(pending, return_when=FIRST_COMPLETED)
+            for future in done:
+                result_index = pending.pop(future)
+                completed[result_index] = future.result()
+                while next_submit_index < len(selected_results) and len(pending) < max_pending:
+                    selected_result = selected_results[next_submit_index]
+                    next_future = executor.submit(
+                        _read_result_json_worker,
+                        str(selected_result.result_path),
+                        include_retrieval_rankings,
+                    )
+                    pending[next_future] = next_submit_index
+                    next_submit_index += 1
+            while next_yield_index in completed:
+                yield selected_results[next_yield_index], completed.pop(next_yield_index)
+                next_yield_index += 1
+
+
+def _read_result_json_worker(path: str, include_retrieval_rankings: bool) -> dict[str, Any] | None:
+    return _read_result_json(Path(path), include_retrieval_rankings=include_retrieval_rankings)
 
 
 def _filter_rows_by_result_path(rows: list[Any], result_paths: set[str] | None) -> list[Any]:
