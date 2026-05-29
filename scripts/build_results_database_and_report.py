@@ -1100,13 +1100,13 @@ def _iterate_async(async_iterable: AsyncIterable[Any]) -> Iterable[Any]:
         asyncio.set_event_loop(previous_loop)
 
 
-def _loaded_result_payloads(
+async def _async_loaded_result_payloads(
     selected_results: Sequence[SelectedResultJson],
     *,
     include_retrieval_rankings: bool,
-    result_json_workers: int,
-) -> Iterable[tuple[SelectedResultJson, dict[str, Any] | None]]:
-    workers = max(1, result_json_workers)
+    workers: int,
+) -> AsyncIterable[tuple[SelectedResultJson, dict[str, Any] | None]]:
+    workers = max(1, workers)
     if workers == 1 or len(selected_results) <= 1:
         for selected_result in selected_results:
             yield (
@@ -1115,24 +1115,9 @@ def _loaded_result_payloads(
                     selected_result.result_path,
                     include_retrieval_rankings=include_retrieval_rankings,
                 ),
-        )
+            )
         return
 
-    yield from _iterate_async(
-        _async_loaded_result_payloads(
-            selected_results,
-            include_retrieval_rankings=include_retrieval_rankings,
-            workers=workers,
-        )
-    )
-
-
-async def _async_loaded_result_payloads(
-    selected_results: Sequence[SelectedResultJson],
-    *,
-    include_retrieval_rankings: bool,
-    workers: int,
-) -> AsyncIterable[tuple[SelectedResultJson, dict[str, Any] | None]]:
     loop = asyncio.get_running_loop()
     with ProcessPoolExecutor(max_workers=workers) as executor:
         async def submit(selected_result: SelectedResultJson) -> tuple[SelectedResultJson, dict[str, Any] | None]:
@@ -1166,12 +1151,35 @@ def _processed_result_rows(
     result_json_workers: int,
     result_row_workers: int,
 ) -> Iterable[ProcessedResultRows | None]:
-    workers = max(1, result_row_workers)
-    if workers == 1 or len(selected_results) <= 1:
-        for selected_result, task_payload in _loaded_result_payloads(
+    yield from _iterate_async(
+        _async_processed_result_rows(
             selected_results,
+            registry=registry,
+            model_cards=model_cards,
+            model_cards_path=str(model_cards_path) if model_cards_path is not None else None,
             include_retrieval_rankings=include_retrieval_rankings,
             result_json_workers=result_json_workers,
+            result_row_workers=result_row_workers,
+        )
+    )
+
+
+async def _async_processed_result_rows(
+    selected_results: Sequence[SelectedResultJson],
+    *,
+    registry: DatasetRegistry,
+    model_cards: dict[str, dict[str, Any]],
+    include_retrieval_rankings: bool,
+    model_cards_path: str | None,
+    result_json_workers: int,
+    result_row_workers: int,
+) -> AsyncIterable[ProcessedResultRows | None]:
+    workers = max(1, result_row_workers)
+    if workers == 1 or len(selected_results) <= 1:
+        async for selected_result, task_payload in _async_loaded_result_payloads(
+            selected_results,
+            include_retrieval_rankings=include_retrieval_rankings,
+            workers=result_json_workers,
         ):
             if task_payload is None:
                 yield None
@@ -1185,24 +1193,6 @@ def _processed_result_rows(
             )
         return
 
-    model_cards_path_arg = str(model_cards_path) if model_cards_path is not None else None
-    yield from _iterate_async(
-        _async_processed_result_rows(
-            selected_results,
-            include_retrieval_rankings=include_retrieval_rankings,
-            model_cards_path=model_cards_path_arg,
-            workers=workers,
-        )
-    )
-
-
-async def _async_processed_result_rows(
-    selected_results: Sequence[SelectedResultJson],
-    *,
-    include_retrieval_rankings: bool,
-    model_cards_path: str | None,
-    workers: int,
-) -> AsyncIterable[ProcessedResultRows | None]:
     loop = asyncio.get_running_loop()
     with ProcessPoolExecutor(max_workers=workers) as executor:
         async def submit(selected_result: SelectedResultJson) -> ProcessedResultRows | None:
