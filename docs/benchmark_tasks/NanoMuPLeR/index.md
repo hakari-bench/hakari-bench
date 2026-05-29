@@ -146,8 +146,15 @@ Lithuanian, and for preserving Greek script and EU legal terminology.
 | Split-local documents | 140,000 |
 | Positive qrels | 2,800 |
 | Positives per query | exactly 1.00 for every subtask |
-| Query-weighted BM25 nDCG@10 | 0.7787 |
-| Query-weighted BM25 hit@10 | 0.8561 |
+| Query-weighted BM25 nDCG@10 | 0.7994 |
+| Query-weighted BM25 hit@10 | 0.8750 |
+| Query-weighted BM25 Recall@100 | 0.9493 |
+| Query-weighted Dense nDCG@10 | 0.8158 |
+| Query-weighted Dense hit@10 | 0.9025 |
+| Query-weighted Dense Recall@100 | 0.9568 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.8554 |
+| Query-weighted Reranking hybrid hit@10 | 0.9300 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9914 |
 | Mean query length | 141.44 chars, weighted by query count |
 | Mean document length | 679.65 chars, weighted by split-local document count |
 
@@ -191,7 +198,8 @@ benchmark_task_group_metadata:
   source_research:
     primary_source_type: dataset_card_and_source_corpus_page
     paper_pdf_or_html_checked: false
-    no_paper_note: MuPLeR dataset card says the technical paper is in progress; DGT-Acquis source article landing page and European Commission corpus page were checked.
+    no_paper_note: MuPLeR dataset card says the technical paper is in progress; DGT-Acquis
+      source article landing page and European Commission corpus page were checked.
   counts:
     tasks: 14
     queries: 2800
@@ -208,166 +216,186 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 141.43714285714285
     document_mean_weighted_by_documents: 679.6528571428571
   bm25:
-    ndcg_at_10_query_weighted: 0.7786785714285714
-    hit_at_10_query_weighted: 0.8560714285714286
+    ndcg_at_10_query_weighted: 0.7993851488
+    hit_at_10_query_weighted: 0.875
     ndcg_at_10_unweighted_task_mean: 0.7786785714285714
     hit_at_10_unweighted_task_mean: 0.8560714285714285
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: nl
     hardest_task_by_ndcg_at_10: en
   tasks:
-    - name: el
-      path: docs/benchmark_tasks/NanoMuPLeR/el.md
-      retrieval_shape: greek_legal_question_to_greek_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7749
-      bm25_hit_at_10: 0.86
-    - name: en
-      path: docs/benchmark_tasks/NanoMuPLeR/en.md
-      retrieval_shape: english_legal_question_to_english_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5994
-      bm25_hit_at_10: 0.71
-    - name: es
-      path: docs/benchmark_tasks/NanoMuPLeR/es.md
-      retrieval_shape: spanish_legal_question_to_spanish_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7792
-      bm25_hit_at_10: 0.86
-    - name: fi
-      path: docs/benchmark_tasks/NanoMuPLeR/fi.md
-      retrieval_shape: finnish_legal_question_to_finnish_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6706
-      bm25_hit_at_10: 0.74
-    - name: fr
-      path: docs/benchmark_tasks/NanoMuPLeR/fr.md
-      retrieval_shape: french_legal_question_to_french_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7773
-      bm25_hit_at_10: 0.885
-    - name: it
-      path: docs/benchmark_tasks/NanoMuPLeR/it.md
-      retrieval_shape: italian_legal_question_to_italian_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.792
-      bm25_hit_at_10: 0.875
-    - name: lt
-      path: docs/benchmark_tasks/NanoMuPLeR/lt.md
-      retrieval_shape: lithuanian_legal_question_to_lithuanian_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8115
-      bm25_hit_at_10: 0.875
-    - name: lv
-      path: docs/benchmark_tasks/NanoMuPLeR/lv.md
-      retrieval_shape: latvian_legal_question_to_latvian_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8376
-      bm25_hit_at_10: 0.89
-    - name: nl
-      path: docs/benchmark_tasks/NanoMuPLeR/nl.md
-      retrieval_shape: dutch_legal_question_to_dutch_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8909
-      bm25_hit_at_10: 0.94
-    - name: pl
-      path: docs/benchmark_tasks/NanoMuPLeR/pl.md
-      retrieval_shape: polish_legal_question_to_polish_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.84
-      bm25_hit_at_10: 0.905
-    - name: pt
-      path: docs/benchmark_tasks/NanoMuPLeR/pt.md
-      retrieval_shape: portuguese_legal_question_to_portuguese_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8222
-      bm25_hit_at_10: 0.895
-    - name: sk
-      path: docs/benchmark_tasks/NanoMuPLeR/sk.md
-      retrieval_shape: slovak_legal_question_to_slovak_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7041
-      bm25_hit_at_10: 0.785
-    - name: sl
-      path: docs/benchmark_tasks/NanoMuPLeR/sl.md
-      retrieval_shape: slovenian_legal_question_to_slovenian_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7455
-      bm25_hit_at_10: 0.835
-    - name: sv
-      path: docs/benchmark_tasks/NanoMuPLeR/sv.md
-      retrieval_shape: swedish_legal_question_to_swedish_eu_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8563
-      bm25_hit_at_10: 0.93
+  - name: el
+    path: docs/benchmark_tasks/NanoMuPLeR/el.md
+    retrieval_shape: greek_legal_question_to_greek_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7749
+    bm25_hit_at_10: 0.86
+  - name: en
+    path: docs/benchmark_tasks/NanoMuPLeR/en.md
+    retrieval_shape: english_legal_question_to_english_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5994
+    bm25_hit_at_10: 0.71
+  - name: es
+    path: docs/benchmark_tasks/NanoMuPLeR/es.md
+    retrieval_shape: spanish_legal_question_to_spanish_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7792
+    bm25_hit_at_10: 0.86
+  - name: fi
+    path: docs/benchmark_tasks/NanoMuPLeR/fi.md
+    retrieval_shape: finnish_legal_question_to_finnish_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6706
+    bm25_hit_at_10: 0.74
+  - name: fr
+    path: docs/benchmark_tasks/NanoMuPLeR/fr.md
+    retrieval_shape: french_legal_question_to_french_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7773
+    bm25_hit_at_10: 0.885
+  - name: it
+    path: docs/benchmark_tasks/NanoMuPLeR/it.md
+    retrieval_shape: italian_legal_question_to_italian_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.792
+    bm25_hit_at_10: 0.875
+  - name: lt
+    path: docs/benchmark_tasks/NanoMuPLeR/lt.md
+    retrieval_shape: lithuanian_legal_question_to_lithuanian_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8115
+    bm25_hit_at_10: 0.875
+  - name: lv
+    path: docs/benchmark_tasks/NanoMuPLeR/lv.md
+    retrieval_shape: latvian_legal_question_to_latvian_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8376
+    bm25_hit_at_10: 0.89
+  - name: nl
+    path: docs/benchmark_tasks/NanoMuPLeR/nl.md
+    retrieval_shape: dutch_legal_question_to_dutch_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8909
+    bm25_hit_at_10: 0.94
+  - name: pl
+    path: docs/benchmark_tasks/NanoMuPLeR/pl.md
+    retrieval_shape: polish_legal_question_to_polish_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.84
+    bm25_hit_at_10: 0.905
+  - name: pt
+    path: docs/benchmark_tasks/NanoMuPLeR/pt.md
+    retrieval_shape: portuguese_legal_question_to_portuguese_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8222
+    bm25_hit_at_10: 0.895
+  - name: sk
+    path: docs/benchmark_tasks/NanoMuPLeR/sk.md
+    retrieval_shape: slovak_legal_question_to_slovak_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7041
+    bm25_hit_at_10: 0.785
+  - name: sl
+    path: docs/benchmark_tasks/NanoMuPLeR/sl.md
+    retrieval_shape: slovenian_legal_question_to_slovenian_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7455
+    bm25_hit_at_10: 0.835
+  - name: sv
+    path: docs/benchmark_tasks/NanoMuPLeR/sv.md
+    retrieval_shape: swedish_legal_question_to_swedish_eu_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8563
+    bm25_hit_at_10: 0.93
   learning:
-    leakage_note: exclude NanoMuPLeR evaluation queries, qrels, positive passages, and exact parallel equivalents across all 14 languages
+    leakage_note: exclude NanoMuPLeR evaluation queries, qrels, positive passages,
+      and exact parallel equivalents across all 14 languages
     useful_training_data:
-      - non-overlapping EUR-Lex and DGT-Acquis legal retrieval pairs
-      - multilingual legal QA and legal passage reranking data
-      - parallel legal bitext with language-specific hard negatives
-      - EU legal passages with synthetic questions grounded in specific legal conditions
+    - non-overlapping EUR-Lex and DGT-Acquis legal retrieval pairs
+    - multilingual legal QA and legal passage reranking data
+    - parallel legal bitext with language-specific hard negatives
+    - EU legal passages with synthetic questions grounded in specific legal conditions
     synthetic_data:
-      document_generation: medium-length EU legal passages preserving article references, dates, percentages, institutions, and procedural conditions
-      question_generation: language-specific legal questions grounded in one passage, validated in the target language
-      answerability: the positive passage must answer the exact legal condition or procedural rule in the query
+      document_generation: medium-length EU legal passages preserving article references,
+        dates, percentages, institutions, and procedural conditions
+      question_generation: language-specific legal questions grounded in one passage,
+        validated in the target language
+      answerability: the positive passage must answer the exact legal condition or
+        procedural rule in the query
     multi_positive_training: single_positive_parallel_legal_retrieval
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMuPLeR
     source_urls:
-      - label: mteb/MuPLeR-retrieval
-        url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
-      - label: DGT-Acquis
-        url: https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en
-      - label: DGT-Acquis source reference article
-        url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      - label: MTEB
-        url: https://github.com/embeddings-benchmark/mteb
-    source_notes:
-      - MuPLeR dataset card states that the technical paper is in progress.
-  references:
-    - title: "MuPLeR: Multilingual Parallel Legal Retrieval"
+    - label: mteb/MuPLeR-retrieval
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
-      year: 2026
-      is_paper: false
-      source_confidence: official_dataset_card
-    - title: DGT-Acquis
+    - label: DGT-Acquis
       url: https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en
-      year: 2026
-      is_paper: false
-      source_confidence: official_source_corpus_page
-    - title: "An overview of the European Union's highly multilingual parallel corpora"
+    - label: DGT-Acquis source reference article
       url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      year: 2014
-      doi: 10.1007/s10579-014-9277-0
-      is_paper: true
-      source_confidence: source_reference_paper_landing_page
+    - label: MTEB
+      url: https://github.com/embeddings-benchmark/mteb
+    source_notes:
+    - MuPLeR dataset card states that the technical paper is in progress.
+  references:
+  - title: 'MuPLeR: Multilingual Parallel Legal Retrieval'
+    url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+    year: 2026
+    is_paper: false
+    source_confidence: official_dataset_card
+  - title: DGT-Acquis
+    url: https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en
+    year: 2026
+    is_paper: false
+    source_confidence: official_source_corpus_page
+  - title: An overview of the European Union's highly multilingual parallel corpora
+    url: https://link.springer.com/article/10.1007/s10579-014-9277-0
+    year: 2014
+    doi: 10.1007/s10579-014-9277-0
+    is_paper: true
+    source_confidence: source_reference_paper_landing_page
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.7993851488
+      query_weighted_hit_at_10: 0.875
+      query_weighted_recall_at_100: 0.9492857143
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.8157754022
+      query_weighted_hit_at_10: 0.9025
+      query_weighted_recall_at_100: 0.9567857143
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.8554438526
+      query_weighted_hit_at_10: 0.93
+      query_weighted_recall_at_100: 0.9914285714
+      source: dataset_candidate_subset
 ```

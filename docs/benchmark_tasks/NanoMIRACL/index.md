@@ -156,8 +156,15 @@ seed from Nano evaluation queries or positive passages.
 | Split-local documents | 29,897 |
 | Positive qrels | 3,403 |
 | Positives per query | exactly 1.00 for every observed query |
-| Query-weighted BM25 nDCG@10 | 0.5201 |
-| Query-weighted BM25 hit@10 | 0.7875 |
+| Query-weighted BM25 nDCG@10 | 0.5727 |
+| Query-weighted BM25 hit@10 | 0.8595 |
+| Query-weighted BM25 Recall@100 | 0.9398 |
+| Query-weighted Dense nDCG@10 | 0.7571 |
+| Query-weighted Dense hit@10 | 0.9350 |
+| Query-weighted Dense Recall@100 | 0.9417 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6881 |
+| Query-weighted Reranking hybrid hit@10 | 0.9350 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9936 |
 | Mean query length | 37.68 chars, weighted by query count |
 | Mean document length | 556.87 chars, weighted by split-local document count |
 
@@ -220,202 +227,224 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 37.68322070761093
     document_mean_weighted_by_documents: 556.8686157020103
   bm25:
-    ndcg_at_10_query_weighted: 0.5201325202857772
-    hit_at_10_query_weighted: 0.787540405522539
+    ndcg_at_10_query_weighted: 0.5727262131
+    hit_at_10_query_weighted: 0.8594651778
     ndcg_at_10_unweighted_task_mean: 0.5231217559611111
     hit_at_10_unweighted_task_mean: 0.7879403983777777
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: th
     hardest_task_by_ndcg_at_10: fr
   tasks:
-    - name: ar
-      path: docs/benchmark_tasks/NanoMIRACL/ar.md
-      retrieval_shape: arabic_question_to_arabic_wikipedia_passage
-      queries: 200
-      documents: 1854
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5445
-      bm25_hit_at_10: 0.81
-    - name: bn
-      path: docs/benchmark_tasks/NanoMIRACL/bn.md
-      retrieval_shape: bengali_question_to_bengali_wikipedia_passage
-      queries: 200
-      documents: 1731
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5103
-      bm25_hit_at_10: 0.775
-    - name: de
-      path: docs/benchmark_tasks/NanoMIRACL/de.md
-      retrieval_shape: german_question_to_german_wikipedia_passage
-      queries: 200
-      documents: 1748
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.3665
-      bm25_hit_at_10: 0.6
-    - name: en
-      path: docs/benchmark_tasks/NanoMIRACL/en.md
-      retrieval_shape: english_question_to_english_wikipedia_passage
-      queries: 200
-      documents: 1657
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5432
-      bm25_hit_at_10: 0.875
-    - name: es
-      path: docs/benchmark_tasks/NanoMIRACL/es.md
-      retrieval_shape: spanish_question_to_spanish_wikipedia_passage
-      queries: 200
-      documents: 1312
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.511
-      bm25_hit_at_10: 0.76
-    - name: fa
-      path: docs/benchmark_tasks/NanoMIRACL/fa.md
-      retrieval_shape: persian_question_to_persian_wikipedia_passage
-      queries: 200
-      documents: 1858
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5337
-      bm25_hit_at_10: 0.84
-    - name: fi
-      path: docs/benchmark_tasks/NanoMIRACL/fi.md
-      retrieval_shape: finnish_question_to_finnish_wikipedia_passage
-      queries: 200
-      documents: 1828
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.624
-      bm25_hit_at_10: 0.895
-    - name: fr
-      path: docs/benchmark_tasks/NanoMIRACL/fr.md
-      retrieval_shape: french_question_to_french_wikipedia_passage
-      queries: 200
-      documents: 1777
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.3034
-      bm25_hit_at_10: 0.57
-    - name: hi
-      path: docs/benchmark_tasks/NanoMIRACL/hi.md
-      retrieval_shape: hindi_question_to_hindi_wikipedia_passage
-      queries: 200
-      documents: 1748
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5497
-      bm25_hit_at_10: 0.855
-    - name: id
-      path: docs/benchmark_tasks/NanoMIRACL/id.md
-      retrieval_shape: indonesian_question_to_indonesian_wikipedia_passage
-      queries: 200
-      documents: 1520
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5705
-      bm25_hit_at_10: 0.835
-    - name: ja
-      path: docs/benchmark_tasks/NanoMIRACL/ja.md
-      retrieval_shape: japanese_question_to_japanese_wikipedia_passage
-      queries: 200
-      documents: 1846
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5956
-      bm25_hit_at_10: 0.94
-    - name: ko
-      path: docs/benchmark_tasks/NanoMIRACL/ko.md
-      retrieval_shape: korean_question_to_korean_wikipedia_passage
-      queries: 200
-      documents: 2419
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.509
-      bm25_hit_at_10: 0.715
-    - name: ru
-      path: docs/benchmark_tasks/NanoMIRACL/ru.md
-      retrieval_shape: russian_question_to_russian_wikipedia_passage
-      queries: 200
-      documents: 1727
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4457
-      bm25_hit_at_10: 0.675
-    - name: sw
-      path: docs/benchmark_tasks/NanoMIRACL/sw.md
-      retrieval_shape: swahili_question_to_swahili_wikipedia_passage
-      queries: 200
-      documents: 1600
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5782
-      bm25_hit_at_10: 0.815
-    - name: te
-      path: docs/benchmark_tasks/NanoMIRACL/te.md
-      retrieval_shape: telugu_question_to_telugu_wikipedia_passage
-      queries: 84
-      documents: 754
-      positive_qrels: 84
-      bm25_ndcg_at_10: 0.6044
-      bm25_hit_at_10: 0.8452
-    - name: th
-      path: docs/benchmark_tasks/NanoMIRACL/th.md
-      retrieval_shape: thai_question_to_thai_wikipedia_passage
-      queries: 200
-      documents: 1897
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6475
-      bm25_hit_at_10: 0.915
-    - name: yo
-      path: docs/benchmark_tasks/NanoMIRACL/yo.md
-      retrieval_shape: yoruba_question_to_yoruba_wikipedia_passage
-      queries: 119
-      documents: 921
-      positive_qrels: 119
-      bm25_ndcg_at_10: 0.5323
-      bm25_hit_at_10: 0.7227
-    - name: zh
-      path: docs/benchmark_tasks/NanoMIRACL/zh.md
-      retrieval_shape: chinese_question_to_chinese_wikipedia_passage
-      queries: 200
-      documents: 1700
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4466
-      bm25_hit_at_10: 0.74
+  - name: ar
+    path: docs/benchmark_tasks/NanoMIRACL/ar.md
+    retrieval_shape: arabic_question_to_arabic_wikipedia_passage
+    queries: 200
+    documents: 1854
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5445
+    bm25_hit_at_10: 0.81
+  - name: bn
+    path: docs/benchmark_tasks/NanoMIRACL/bn.md
+    retrieval_shape: bengali_question_to_bengali_wikipedia_passage
+    queries: 200
+    documents: 1731
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5103
+    bm25_hit_at_10: 0.775
+  - name: de
+    path: docs/benchmark_tasks/NanoMIRACL/de.md
+    retrieval_shape: german_question_to_german_wikipedia_passage
+    queries: 200
+    documents: 1748
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.3665
+    bm25_hit_at_10: 0.6
+  - name: en
+    path: docs/benchmark_tasks/NanoMIRACL/en.md
+    retrieval_shape: english_question_to_english_wikipedia_passage
+    queries: 200
+    documents: 1657
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5432
+    bm25_hit_at_10: 0.875
+  - name: es
+    path: docs/benchmark_tasks/NanoMIRACL/es.md
+    retrieval_shape: spanish_question_to_spanish_wikipedia_passage
+    queries: 200
+    documents: 1312
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.511
+    bm25_hit_at_10: 0.76
+  - name: fa
+    path: docs/benchmark_tasks/NanoMIRACL/fa.md
+    retrieval_shape: persian_question_to_persian_wikipedia_passage
+    queries: 200
+    documents: 1858
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5337
+    bm25_hit_at_10: 0.84
+  - name: fi
+    path: docs/benchmark_tasks/NanoMIRACL/fi.md
+    retrieval_shape: finnish_question_to_finnish_wikipedia_passage
+    queries: 200
+    documents: 1828
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.624
+    bm25_hit_at_10: 0.895
+  - name: fr
+    path: docs/benchmark_tasks/NanoMIRACL/fr.md
+    retrieval_shape: french_question_to_french_wikipedia_passage
+    queries: 200
+    documents: 1777
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.3034
+    bm25_hit_at_10: 0.57
+  - name: hi
+    path: docs/benchmark_tasks/NanoMIRACL/hi.md
+    retrieval_shape: hindi_question_to_hindi_wikipedia_passage
+    queries: 200
+    documents: 1748
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5497
+    bm25_hit_at_10: 0.855
+  - name: id
+    path: docs/benchmark_tasks/NanoMIRACL/id.md
+    retrieval_shape: indonesian_question_to_indonesian_wikipedia_passage
+    queries: 200
+    documents: 1520
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5705
+    bm25_hit_at_10: 0.835
+  - name: ja
+    path: docs/benchmark_tasks/NanoMIRACL/ja.md
+    retrieval_shape: japanese_question_to_japanese_wikipedia_passage
+    queries: 200
+    documents: 1846
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5956
+    bm25_hit_at_10: 0.94
+  - name: ko
+    path: docs/benchmark_tasks/NanoMIRACL/ko.md
+    retrieval_shape: korean_question_to_korean_wikipedia_passage
+    queries: 200
+    documents: 2419
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.509
+    bm25_hit_at_10: 0.715
+  - name: ru
+    path: docs/benchmark_tasks/NanoMIRACL/ru.md
+    retrieval_shape: russian_question_to_russian_wikipedia_passage
+    queries: 200
+    documents: 1727
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4457
+    bm25_hit_at_10: 0.675
+  - name: sw
+    path: docs/benchmark_tasks/NanoMIRACL/sw.md
+    retrieval_shape: swahili_question_to_swahili_wikipedia_passage
+    queries: 200
+    documents: 1600
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5782
+    bm25_hit_at_10: 0.815
+  - name: te
+    path: docs/benchmark_tasks/NanoMIRACL/te.md
+    retrieval_shape: telugu_question_to_telugu_wikipedia_passage
+    queries: 84
+    documents: 754
+    positive_qrels: 84
+    bm25_ndcg_at_10: 0.6044
+    bm25_hit_at_10: 0.8452
+  - name: th
+    path: docs/benchmark_tasks/NanoMIRACL/th.md
+    retrieval_shape: thai_question_to_thai_wikipedia_passage
+    queries: 200
+    documents: 1897
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6475
+    bm25_hit_at_10: 0.915
+  - name: yo
+    path: docs/benchmark_tasks/NanoMIRACL/yo.md
+    retrieval_shape: yoruba_question_to_yoruba_wikipedia_passage
+    queries: 119
+    documents: 921
+    positive_qrels: 119
+    bm25_ndcg_at_10: 0.5323
+    bm25_hit_at_10: 0.7227
+  - name: zh
+    path: docs/benchmark_tasks/NanoMIRACL/zh.md
+    retrieval_shape: chinese_question_to_chinese_wikipedia_passage
+    queries: 200
+    documents: 1700
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4466
+    bm25_hit_at_10: 0.74
   learning:
-    leakage_note: exclude NanoMIRACL evaluation queries, qrels, positive passages, and overlapping MIRACL dev or test rows unless an explicit overlap audit has been performed
+    leakage_note: exclude NanoMIRACL evaluation queries, qrels, positive passages,
+      and overlapping MIRACL dev or test rows unless an explicit overlap audit has
+      been performed
     useful_training_data:
-      - non-overlapping MIRACL training data in each language
-      - multilingual Wikipedia question-to-passage retrieval pairs
-      - monolingual open-domain QA evidence retrieval data
-      - hard negatives from same article, same entity, and homonymous passages
-      - low-resource retrieval data for Swahili, Yoruba, Telugu, and other smaller splits
+    - non-overlapping MIRACL training data in each language
+    - multilingual Wikipedia question-to-passage retrieval pairs
+    - monolingual open-domain QA evidence retrieval data
+    - hard negatives from same article, same entity, and homonymous passages
+    - low-resource retrieval data for Swahili, Yoruba, Telugu, and other smaller splits
     synthetic_data:
-      document_generation: Wikipedia-style passages with article titles, aliases, dates, roles, locations, counts, and definitions in each target language
-      question_generation: grounded factual questions in the same language as the passage
-      answerability: each positive should be the passage that contains the requested evidence, not merely a topical page
+      document_generation: Wikipedia-style passages with article titles, aliases,
+        dates, roles, locations, counts, and definitions in each target language
+      question_generation: grounded factual questions in the same language as the
+        passage
+      answerability: each positive should be the passage that contains the requested
+        evidence, not merely a topical page
     multi_positive_training: single_positive_passage_retrieval_in_observed_nano_splits
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMIRACL
     source_urls:
-      - label: MIRACL TACL paper
-        url: https://aclanthology.org/2023.tacl-1.63/
-      - label: MIRACL arXiv
-        url: https://arxiv.org/abs/2210.09984
-      - label: MIRACL project
-        url: http://miracl.ai/
-      - label: MIRACL GitHub
-        url: https://github.com/project-miracl/miracl
-      - label: miracl/miracl-corpus
-        url: https://huggingface.co/datasets/miracl/miracl-corpus
-      - label: miracl/miracl
-        url: https://huggingface.co/datasets/miracl/miracl
+    - label: MIRACL TACL paper
+      url: https://aclanthology.org/2023.tacl-1.63/
+    - label: MIRACL arXiv
+      url: https://arxiv.org/abs/2210.09984
+    - label: MIRACL project
+      url: http://miracl.ai/
+    - label: MIRACL GitHub
+      url: https://github.com/project-miracl/miracl
+    - label: miracl/miracl-corpus
+      url: https://huggingface.co/datasets/miracl/miracl-corpus
+    - label: miracl/miracl
+      url: https://huggingface.co/datasets/miracl/miracl
     source_notes: []
   references:
-    - title: "MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages"
-      url: https://aclanthology.org/2023.tacl-1.63/
-      year: 2023
-      doi: 10.1162/tacl_a_00595
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages"
-      url: https://arxiv.org/abs/2210.09984
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: MIRACL project site
-      url: http://miracl.ai/
-      year: 2023
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+    url: https://aclanthology.org/2023.tacl-1.63/
+    year: 2023
+    doi: 10.1162/tacl_a_00595
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Making a MIRACL: Multilingual Information Retrieval Across a Continuum
+      of Languages'
+    url: https://arxiv.org/abs/2210.09984
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: MIRACL project site
+    url: http://miracl.ai/
+    year: 2023
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.5727262131
+      query_weighted_hit_at_10: 0.8594651778
+      query_weighted_recall_at_100: 0.9397934651
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.7571472414
+      query_weighted_hit_at_10: 0.9350161622
+      query_weighted_recall_at_100: 0.9417335309
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.6880547774
+      query_weighted_hit_at_10: 0.9349573905
+      query_weighted_recall_at_100: 0.9935957469
+      source: dataset_candidate_subset
 ```

@@ -79,6 +79,18 @@ question.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.5449 |
 | BM25 hit@10 | 0.7500 |
+| BM25 Recall@100 | 0.9050 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6488 |
+| Dense hit@10 | 0.8100 |
+| Dense Recall@100 | 0.9400 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6395 |
+| Reranking hybrid hit@10 | 0.8000 |
+| Reranking hybrid Recall@100 | 0.9650 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 7 |
 | Query length avg chars | 73.33 |
 | Document length avg chars | 319.78 |
 
@@ -138,37 +150,86 @@ benchmark_task_metadata:
   bm25:
     ndcg_at_10: 0.5449484654219235
     hit_at_10: 0.75
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude SweFAQ/SuperLim test examples, Nano qrels, and answer documents in this split
+    leakage_note: exclude SweFAQ/SuperLim test examples, Nano qrels, and answer documents
+      in this split
     useful_training_data:
-      - non-overlapping Swedish FAQ question-answer pairs
-      - Swedish public-sector help-center retrieval
-      - same-benefit hard negatives
-      - Swedish administrative QA paraphrases
+    - non-overlapping Swedish FAQ question-answer pairs
+    - Swedish public-sector help-center retrieval
+    - same-benefit hard negatives
+    - Swedish administrative QA paraphrases
     synthetic_data:
-      document_generation: Swedish authority-style FAQ answers covering eligibility, payment, timing, applications, and exceptions
-      question_generation: practical Swedish user questions about benefits, taxes, and public services
-      answerability: each positive should directly answer the user's administrative question
+      document_generation: Swedish authority-style FAQ answers covering eligibility,
+        payment, timing, applications, and exceptions
+      question_generation: practical Swedish user questions about benefits, taxes,
+        and public services
+      answerability: each positive should directly answer the user's administrative
+        question
     multi_positive_training: single_positive_question_answer_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Scandinavian
     source_urls:
-      - label: Scandinavian Embedding Benchmarks
-        url: https://arxiv.org/abs/2406.02396
-      - label: Superlim paper
-        url: https://aclanthology.org/2023.emnlp-main.506/
-      - label: mteb/SweFaqRetrieval
-        url: https://huggingface.co/datasets/mteb/SweFaqRetrieval
+    - label: Scandinavian Embedding Benchmarks
+      url: https://arxiv.org/abs/2406.02396
+    - label: Superlim paper
+      url: https://aclanthology.org/2023.emnlp-main.506/
+    - label: mteb/SweFaqRetrieval
+      url: https://huggingface.co/datasets/mteb/SweFaqRetrieval
     source_notes: []
   references:
-    - title: "Superlim: A Swedish Language Understanding Evaluation Benchmark"
-      url: https://aclanthology.org/2023.emnlp-main.506/
-      year: 2023
-      doi: 10.18653/v1/2023.emnlp-main.506
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'Superlim: A Swedish Language Understanding Evaluation Benchmark'
+    url: https://aclanthology.org/2023.emnlp-main.506/
+    year: 2023
+    doi: 10.18653/v1/2023.emnlp-main.506
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5449484654
+      hit_at_10: 0.75
+      recall_at_100: 0.905
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.905
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.648795866
+      hit_at_10: 0.81
+      recall_at_100: 0.94
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.94
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6395195585
+      hit_at_10: 0.8
+      recall_at_100: 0.965
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.035
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.965
+      safeguard_positive_rows: 7
+      rows_with_101_candidates: 7
 ```

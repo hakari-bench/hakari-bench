@@ -75,8 +75,20 @@ terminology but answer a different procedural or substantive issue.
 | Queries | 200 |
 | Documents | 200 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.6765 |
-| BM25 hit@10 | 0.7950 |
+| BM25 nDCG@10 | 0.7420 |
+| BM25 hit@10 | 0.8650 |
+| BM25 Recall@100 | 0.9750 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5819 |
+| Dense hit@10 | 0.7350 |
+| Dense Recall@100 | 0.9200 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7043 |
+| Reranking hybrid hit@10 | 0.8500 |
+| Reranking hybrid Recall@100 | 0.9850 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 3 |
 | Query length avg chars | 71.94 |
 | Document length avg chars | 19481.02 |
 
@@ -132,38 +144,86 @@ benchmark_task_metadata:
     query_mean: 71.94
     document_mean: 19481.02
   bm25:
-    ndcg_at_10: 0.6765084712604355
-    hit_at_10: 0.795
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7419988012043903
+    hit_at_10: 0.865
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: legalquad_test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoLegalQuAD questions, qrels, and positive German legal documents
+    leakage_note: exclude NanoLegalQuAD questions, qrels, and positive German legal
+      documents
     useful_training_data:
-      - German legal QA
-      - question-to-judgment retrieval
-      - long-document German legal search
-      - same-statute German legal hard negatives
+    - German legal QA
+    - question-to-judgment retrieval
+    - long-document German legal search
+    - same-statute German legal hard negatives
     synthetic_data:
       document_generation: German court decisions containing answer-bearing passages
       question_generation: concise German legal questions
-      answerability: positives should contain the legal discussion needed to answer the question
+      answerability: positives should contain the legal discussion needed to answer
+        the question
     multi_positive_training: single_positive
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoLaw
     source_urls:
-      - label: LegalQuAD DOI
-        url: https://doi.org/10.1109/AIKE52691.2021.00011
-      - label: MTEB LegalQuAD
-        url: https://huggingface.co/datasets/mteb/LegalQuAD
-    source_notes:
-      - full paper text not confirmed as freely accessible during first pass
-  references:
-    - title: "Towards Intelligent Legal Advisors for Document Retrieval and Question-Answering in German Legal Documents"
+    - label: LegalQuAD DOI
       url: https://doi.org/10.1109/AIKE52691.2021.00011
-      year: 2021
-      doi: 10.1109/AIKE52691.2021.00011
-      is_paper: true
-      source_confidence: definitive_paper_link
+    - label: MTEB LegalQuAD
+      url: https://huggingface.co/datasets/mteb/LegalQuAD
+    source_notes:
+    - full paper text not confirmed as freely accessible during first pass
+  references:
+  - title: Towards Intelligent Legal Advisors for Document Retrieval and Question-Answering
+      in German Legal Documents
+    url: https://doi.org/10.1109/AIKE52691.2021.00011
+    year: 2021
+    doi: 10.1109/AIKE52691.2021.00011
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7419988012
+      hit_at_10: 0.865
+      recall_at_100: 0.975
+      candidate_count_min: 200
+      candidate_count_max: 200
+      candidate_count_mean: 200.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.975
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5819055367
+      hit_at_10: 0.735
+      recall_at_100: 0.92
+      candidate_count_min: 200
+      candidate_count_max: 200
+      candidate_count_mean: 200.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.92
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.704296562
+      hit_at_10: 0.85
+      recall_at_100: 0.985
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.015
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.985
+      safeguard_positive_rows: 3
+      rows_with_101_candidates: 3
 ```

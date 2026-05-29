@@ -75,8 +75,20 @@ positive passages.
 | Avg positives / query | 1.02 |
 | Positives per query (min / median / max) | 1 / 1.0 / 4 |
 | Queries with multiple positives | 2 (1.00%) |
-| BM25 nDCG@10 | 0.1830 |
-| BM25 hit@10 | 0.2050 |
+| BM25 nDCG@10 | 0.7888 |
+| BM25 hit@10 | 0.8750 |
+| BM25 Recall@100 | 0.9608 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7592 |
+| Dense hit@10 | 0.8600 |
+| Dense Recall@100 | 0.9363 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7873 |
+| Reranking hybrid hit@10 | 0.8900 |
+| Reranking hybrid Recall@100 | 0.9902 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 25.74 |
 | Document length avg chars | 409.35 |
 
@@ -134,38 +146,84 @@ benchmark_task_metadata:
     query_mean: 25.735
     document_mean: 409.3471
   bm25:
-    ndcg_at_10: 0.18298861461046276
-    hit_at_10: 0.205
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7888439205474314
+    hit_at_10: 0.875
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: dev
     train_eval_overlap_audit: not_audited
     leakage_note: do not train on this Nano split's queries, qrels, or positive passages
     useful_training_data:
-      - Chinese passage retrieval data
-      - Chinese news QA pairs
-      - COVID-era policy and public-service retrieval data
-      - locality and agency matched hard negatives
+    - Chinese passage retrieval data
+    - Chinese news QA pairs
+    - COVID-era policy and public-service retrieval data
+    - locality and agency matched hard negatives
     synthetic_data:
-      document_generation: Chinese news and government notices with dates, agencies, services, and rates
+      document_generation: Chinese news and government notices with dates, agencies,
+        services, and rates
       question_generation: concise Chinese questions targeting one explicit fact
       answerability: positive passage should contain the requested fact directly
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMMTEB-v2
     source_urls:
-      - label: Multi-CPR arXiv
-        url: https://arxiv.org/abs/2203.03367
-      - label: mteb/CovidRetrieval
-        url: https://huggingface.co/datasets/mteb/CovidRetrieval
-      - label: MMTEB arXiv
-        url: https://arxiv.org/abs/2502.13595
+    - label: Multi-CPR arXiv
+      url: https://arxiv.org/abs/2203.03367
+    - label: mteb/CovidRetrieval
+      url: https://huggingface.co/datasets/mteb/CovidRetrieval
+    - label: MMTEB arXiv
+      url: https://arxiv.org/abs/2502.13595
     source_notes: []
   references:
-    - title: "Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval"
-      url: https://arxiv.org/abs/2203.03367
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
+    url: https://arxiv.org/abs/2203.03367
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7888439205
+      hit_at_10: 0.875
+      recall_at_100: 0.9607843137
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9607843137
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7592275436
+      hit_at_10: 0.86
+      recall_at_100: 0.9362745098
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9362745098
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7873451094
+      hit_at_10: 0.89
+      recall_at_100: 0.9901960784
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9901960784
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

@@ -71,8 +71,20 @@ matching rather than only topical similarity.
 | Queries | 199 |
 | Documents | 8626 |
 | Positive qrels | 199 |
-| BM25 nDCG@10 | 0.3326 |
-| BM25 hit@10 | 0.7085 |
+| BM25 nDCG@10 | 0.3464 |
+| BM25 hit@10 | 0.7387 |
+| BM25 Recall@100 | 0.9548 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4092 |
+| Dense hit@10 | 0.8342 |
+| Dense Recall@100 | 0.9598 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3775 |
+| Reranking hybrid hit@10 | 0.7739 |
+| Reranking hybrid Recall@100 | 0.9899 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 1199.80 |
 | Document length avg chars | 1029.60 |
 
@@ -132,18 +144,18 @@ benchmark_task_metadata:
     query_mean: 1199.8040201005026
     document_mean: 1029.6044516577788
   bm25:
-    ndcg_at_10: 0.3325660140573749
-    hit_at_10: 0.7085427135678392
-    source: dataset_bm25_column
+    ndcg_at_10: 0.3464013771616086
+    hit_at_10: 0.7386934673366834
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MTEB ArguAna test split
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoMTEB-v2 argu_ana queries, qrels, and positive documents
     useful_training_data:
-      - argument-counterargument pairs outside this evaluation split
-      - stance-labeled debate arguments
-      - same-topic same-stance hard negatives
+    - argument-counterargument pairs outside this evaluation split
+    - stance-labeled debate arguments
+    - same-topic same-stance hard negatives
     synthetic_data:
       document_generation: stance-opposed counterarguments with shared aspects
       question_generation: long debate arguments as queries
@@ -152,22 +164,67 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-v2
     source_urls:
-      - label: ArguAna paper
-        url: https://aclanthology.org/P18-1023/
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: mteb/arguana
-        url: https://huggingface.co/datasets/mteb/arguana
+    - label: ArguAna paper
+      url: https://aclanthology.org/P18-1023/
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: mteb/arguana
+      url: https://huggingface.co/datasets/mteb/arguana
     source_notes: []
   references:
-    - title: Retrieval of the Best Counterargument without Prior Topic Knowledge
-      url: https://aclanthology.org/P18-1023/
-      year: 2018
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: Retrieval of the Best Counterargument without Prior Topic Knowledge
+    url: https://aclanthology.org/P18-1023/
+    year: 2018
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3464013772
+      hit_at_10: 0.7386934673
+      recall_at_100: 0.9547738693
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9547738693
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4091604132
+      hit_at_10: 0.8341708543
+      recall_at_100: 0.959798995
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.959798995
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3774842994
+      hit_at_10: 0.7738693467
+      recall_at_100: 0.9899497487
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01005
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9899497487
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

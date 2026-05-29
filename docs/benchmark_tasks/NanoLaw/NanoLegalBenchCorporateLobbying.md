@@ -78,8 +78,20 @@ the bill's actual policy effect.
 | Queries | 200 |
 | Documents | 319 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.8757 |
-| BM25 hit@10 | 0.9700 |
+| BM25 nDCG@10 | 0.8955 |
+| BM25 hit@10 | 0.9800 |
+| BM25 Recall@100 | 1.0000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9108 |
+| Dense hit@10 | 0.9750 |
+| Dense Recall@100 | 0.9800 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9068 |
+| Reranking hybrid hit@10 | 0.9700 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 179.67 |
 | Document length avg chars | 1157.21 |
 
@@ -135,39 +147,87 @@ benchmark_task_metadata:
     query_mean: 179.67
     document_mean: 1157.2131661442006
   bm25:
-    ndcg_at_10: 0.8756703056285763
-    hit_at_10: 0.97
-    source: dataset_bm25_column
+    ndcg_at_10: 0.8955364489395502
+    hit_at_10: 0.98
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: legalbench_corporate_lobbying_retrieval
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoLegalBenchCorporateLobbying queries, qrels, and positive bill summaries
+    leakage_note: exclude NanoLegalBenchCorporateLobbying queries, qrels, and positive
+      bill summaries
     useful_training_data:
-      - bill-title to bill-summary retrieval
-      - legislative search data
-      - corporate lobbying issue spotting
-      - same-policy-area hard negatives
+    - bill-title to bill-summary retrieval
+    - legislative search data
+    - corporate lobbying issue spotting
+    - same-policy-area hard negatives
     synthetic_data:
       document_generation: bill titles with concise legislative summaries
       question_generation: formal bill descriptions or policy objectives
-      answerability: positives should describe the same bill or exact legislative proposal
+      answerability: positives should describe the same bill or exact legislative
+        proposal
     multi_positive_training: single_positive
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoLaw
     source_urls:
-      - label: LegalBench arXiv
-        url: https://arxiv.org/abs/2308.11462
-      - label: LegalBench task page
-        url: https://hazyresearch.stanford.edu/legalbench/tasks/corporate_lobbying.html
-      - label: MTEB legalbench_corporate_lobbying
-        url: https://huggingface.co/datasets/mteb/legalbench_corporate_lobbying
+    - label: LegalBench arXiv
+      url: https://arxiv.org/abs/2308.11462
+    - label: LegalBench task page
+      url: https://hazyresearch.stanford.edu/legalbench/tasks/corporate_lobbying.html
+    - label: MTEB legalbench_corporate_lobbying
+      url: https://huggingface.co/datasets/mteb/legalbench_corporate_lobbying
     source_notes: []
   references:
-    - title: "LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models"
-      url: https://arxiv.org/abs/2308.11462
-      year: 2023
-      doi: 10.48550/arXiv.2308.11462
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning
+      in Large Language Models'
+    url: https://arxiv.org/abs/2308.11462
+    year: 2023
+    doi: 10.48550/arXiv.2308.11462
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8955364489
+      hit_at_10: 0.98
+      recall_at_100: 1.0
+      candidate_count_min: 319
+      candidate_count_max: 319
+      candidate_count_mean: 319.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9108104527
+      hit_at_10: 0.975
+      recall_at_100: 0.98
+      candidate_count_min: 319
+      candidate_count_max: 319
+      candidate_count_mean: 319.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.98
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9068404209
+      hit_at_10: 0.97
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

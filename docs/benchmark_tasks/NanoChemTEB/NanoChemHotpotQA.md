@@ -108,8 +108,20 @@ the Nano evaluation queries or positive passages as seeds.
 | Queries | 18 |
 | Documents | 10,000 |
 | Positive qrels | 18 |
-| BM25 nDCG@10 | 0.6496 |
-| BM25 hit@10 | 0.7222 |
+| BM25 nDCG@10 | 0.7178 |
+| BM25 hit@10 | 0.7778 |
+| BM25 Recall@100 | 0.8889 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7748 |
+| Dense hit@10 | 0.8333 |
+| Dense Recall@100 | 1.0000 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7923 |
+| Reranking hybrid hit@10 | 0.8333 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 104.22 |
 | Document length avg chars | 402.40 |
 
@@ -155,9 +167,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2412.00532
     additional_source_urls:
-      - https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html
-      - https://aclanthology.org/D18-1259/
-      - https://huggingface.co/datasets/BASF-AI/ChemHotpotQARetrieval
+    - https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html
+    - https://aclanthology.org/D18-1259/
+    - https://huggingface.co/datasets/BASF-AI/ChemHotpotQARetrieval
   counts:
     queries: 18
     documents: 10000
@@ -173,45 +185,95 @@ benchmark_task_metadata:
     query_mean: 104.2222222222
     document_mean: 402.3997
   bm25:
-    ndcg_at_10: 0.649585337
-    hit_at_10: 0.7222222222
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7177774766605192
+    hit_at_10: 0.7777777777777778
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: ChemHotpotQARetrieval test split derived from HotpotQA
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude ChemHotpotQA test queries, qrels, and positive Wikipedia passages
+    leakage_note: exclude ChemHotpotQA test queries, qrels, and positive Wikipedia
+      passages
     useful_training_data:
-      - non-overlapping ChemHotpotQA train retrieval pairs
-      - HotpotQA multi-hop retrieval with supporting facts
-      - chemistry-filtered Wikipedia question-passage pairs
-      - multi-hop scientific QA with bridge-entity hard negatives
+    - non-overlapping ChemHotpotQA train retrieval pairs
+    - HotpotQA multi-hop retrieval with supporting facts
+    - chemistry-filtered Wikipedia question-passage pairs
+    - multi-hop scientific QA with bridge-entity hard negatives
     synthetic_data:
-      document_generation: non-evaluation chemistry-related Wikipedia passages with bridge entities and scientific facts
-      question_generation: HotpotQA-style multi-hop questions requiring a bridge from one entity or property to another
-      answerability: the positive passage should contain the final answer fact and negatives may share only the bridge term
+      document_generation: non-evaluation chemistry-related Wikipedia passages with
+        bridge entities and scientific facts
+      question_generation: HotpotQA-style multi-hop questions requiring a bridge from
+        one entity or property to another
+      answerability: the positive passage should contain the final answer fact and
+        negatives may share only the bridge term
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoChemTEB
     source_urls:
-      - label: ChemTEB arXiv
-        url: https://arxiv.org/abs/2412.00532
-      - label: HotpotQA ACL Anthology
-        url: https://aclanthology.org/D18-1259/
-      - label: BASF-AI/ChemHotpotQARetrieval
-        url: https://huggingface.co/datasets/BASF-AI/ChemHotpotQARetrieval
+    - label: ChemTEB arXiv
+      url: https://arxiv.org/abs/2412.00532
+    - label: HotpotQA ACL Anthology
+      url: https://aclanthology.org/D18-1259/
+    - label: BASF-AI/ChemHotpotQARetrieval
+      url: https://huggingface.co/datasets/BASF-AI/ChemHotpotQARetrieval
     source_notes: []
   references:
-    - title: "ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance & Efficiency on a Specific Domain"
-      url: https://arxiv.org/abs/2412.00532
-      year: 2024
-      doi: 10.48550/arXiv.2412.00532
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering"
-      url: https://aclanthology.org/D18-1259/
-      year: 2018
-      doi: 10.18653/v1/D18-1259
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models
+      Performance & Efficiency on a Specific Domain'
+    url: https://arxiv.org/abs/2412.00532
+    year: 2024
+    doi: 10.48550/arXiv.2412.00532
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering'
+    url: https://aclanthology.org/D18-1259/
+    year: 2018
+    doi: 10.18653/v1/D18-1259
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7177774767
+      hit_at_10: 0.7777777778
+      recall_at_100: 0.8888888889
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 18
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8888888889
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7747997017
+      hit_at_10: 0.8333333333
+      recall_at_100: 1.0
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 18
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7923255282
+      hit_at_10: 0.8333333333
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 18
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

@@ -166,8 +166,15 @@ NanoJMTEB-v2 evaluation queries or positive documents.
 | Positives per query | avg 1.1055, median 1, max 8 |
 | Multi-positive subtasks | 2 of 11 |
 | Multi-positive queries | 134 |
-| Query-weighted BM25 nDCG@10 | 0.2390 |
-| Query-weighted BM25 hit@10 | 0.2727 |
+| Query-weighted BM25 nDCG@10 | 0.7465 |
+| Query-weighted BM25 hit@10 | 0.8464 |
+| Query-weighted BM25 Recall@100 | 0.9148 |
+| Query-weighted Dense nDCG@10 | 0.7535 |
+| Query-weighted Dense hit@10 | 0.8309 |
+| Query-weighted Dense Recall@100 | 0.8868 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.7553 |
+| Query-weighted Reranking hybrid hit@10 | 0.8455 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9365 |
 | Mean query length | 120.23 chars, weighted by query count |
 | Mean document length | 3,548.78 chars, weighted by split-local document count |
 
@@ -247,119 +254,135 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 120.23454545454545
     document_mean_weighted_by_documents: 3548.7846738207672
   bm25:
-    ndcg_at_10_query_weighted: 0.23903082157272726
-    hit_at_10_query_weighted: 0.2727272727272727
+    ndcg_at_10_query_weighted: 0.7465132991
+    hit_at_10_query_weighted: 0.8463636364
     ndcg_at_10_unweighted_task_mean: 0.23903082157272726
     hit_at_10_unweighted_task_mean: 0.2727272727272727
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: nlpjournal_abs_article
     hardest_task_by_ndcg_at_10: miracl_ja
   tasks:
-    - name: ja_cwir
-      path: docs/benchmark_tasks/NanoJMTEB-v2/ja_cwir.md
-      retrieval_shape: generated_web_question_to_page_snippet
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2431216201
-      bm25_hit_at_10: 0.275
-    - name: ja_gov_faqs
-      path: docs/benchmark_tasks/NanoJMTEB-v2/ja_gov_faqs.md
-      retrieval_shape: government_faq_question_to_answer
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.1586009307
-      bm25_hit_at_10: 0.165
-    - name: jaqket
-      path: docs/benchmark_tasks/NanoJMTEB-v2/jaqket.md
-      retrieval_shape: quiz_clue_to_entity_page
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.1743146674
-      bm25_hit_at_10: 0.21
-    - name: mintaka_ja
-      path: docs/benchmark_tasks/NanoJMTEB-v2/mintaka_ja.md
-      retrieval_shape: complex_question_to_answer_label
-      queries: 200
-      documents: 1592
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.1311528332
-      bm25_hit_at_10: 0.16
-    - name: miracl_ja
-      path: docs/benchmark_tasks/NanoJMTEB-v2/miracl_ja.md
-      retrieval_shape: japanese_question_to_wikipedia_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 373
-      bm25_ndcg_at_10: 0.0587521649
-      bm25_hit_at_10: 0.1
-    - name: mr_tidy_japanese
-      path: docs/benchmark_tasks/NanoJMTEB-v2/mr_tidy_japanese.md
-      retrieval_shape: japanese_question_to_mr_tydi_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 259
-      bm25_ndcg_at_10: 0.0710585196
-      bm25_hit_at_10: 0.105
-    - name: multi_long_doc_ja
-      path: docs/benchmark_tasks/NanoJMTEB-v2/multi_long_doc_ja.md
-      retrieval_shape: generated_question_to_long_article
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.1435515931
-      bm25_hit_at_10: 0.16
-    - name: nlpjournal_abs_article
-      path: docs/benchmark_tasks/NanoJMTEB-v2/nlpjournal_abs_article.md
-      retrieval_shape: abstract_to_full_article
-      queries: 200
-      documents: 637
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8266619326
-      bm25_hit_at_10: 0.89
-    - name: nlpjournal_abs_intro
-      path: docs/benchmark_tasks/NanoJMTEB-v2/nlpjournal_abs_intro.md
-      retrieval_shape: abstract_to_introduction
-      queries: 200
-      documents: 637
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6416981491
-      bm25_hit_at_10: 0.74
-    - name: nlpjournal_title_abs
-      path: docs/benchmark_tasks/NanoJMTEB-v2/nlpjournal_title_abs.md
-      retrieval_shape: title_to_abstract
-      queries: 200
-      documents: 637
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0813092975
-      bm25_hit_at_10: 0.085
-    - name: nlpjournal_title_intro
-      path: docs/benchmark_tasks/NanoJMTEB-v2/nlpjournal_title_intro.md
-      retrieval_shape: title_to_introduction
-      queries: 200
-      documents: 637
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0991173291
-      bm25_hit_at_10: 0.11
+  - name: ja_cwir
+    path: docs/benchmark_tasks/NanoJMTEB-v2/ja_cwir.md
+    retrieval_shape: generated_web_question_to_page_snippet
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2431216201
+    bm25_hit_at_10: 0.275
+  - name: ja_gov_faqs
+    path: docs/benchmark_tasks/NanoJMTEB-v2/ja_gov_faqs.md
+    retrieval_shape: government_faq_question_to_answer
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.1586009307
+    bm25_hit_at_10: 0.165
+  - name: jaqket
+    path: docs/benchmark_tasks/NanoJMTEB-v2/jaqket.md
+    retrieval_shape: quiz_clue_to_entity_page
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.1743146674
+    bm25_hit_at_10: 0.21
+  - name: mintaka_ja
+    path: docs/benchmark_tasks/NanoJMTEB-v2/mintaka_ja.md
+    retrieval_shape: complex_question_to_answer_label
+    queries: 200
+    documents: 1592
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.1311528332
+    bm25_hit_at_10: 0.16
+  - name: miracl_ja
+    path: docs/benchmark_tasks/NanoJMTEB-v2/miracl_ja.md
+    retrieval_shape: japanese_question_to_wikipedia_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 373
+    bm25_ndcg_at_10: 0.0587521649
+    bm25_hit_at_10: 0.1
+  - name: mr_tidy_japanese
+    path: docs/benchmark_tasks/NanoJMTEB-v2/mr_tidy_japanese.md
+    retrieval_shape: japanese_question_to_mr_tydi_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 259
+    bm25_ndcg_at_10: 0.0710585196
+    bm25_hit_at_10: 0.105
+  - name: multi_long_doc_ja
+    path: docs/benchmark_tasks/NanoJMTEB-v2/multi_long_doc_ja.md
+    retrieval_shape: generated_question_to_long_article
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.1435515931
+    bm25_hit_at_10: 0.16
+  - name: nlpjournal_abs_article
+    path: docs/benchmark_tasks/NanoJMTEB-v2/nlpjournal_abs_article.md
+    retrieval_shape: abstract_to_full_article
+    queries: 200
+    documents: 637
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8266619326
+    bm25_hit_at_10: 0.89
+  - name: nlpjournal_abs_intro
+    path: docs/benchmark_tasks/NanoJMTEB-v2/nlpjournal_abs_intro.md
+    retrieval_shape: abstract_to_introduction
+    queries: 200
+    documents: 637
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6416981491
+    bm25_hit_at_10: 0.74
+  - name: nlpjournal_title_abs
+    path: docs/benchmark_tasks/NanoJMTEB-v2/nlpjournal_title_abs.md
+    retrieval_shape: title_to_abstract
+    queries: 200
+    documents: 637
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0813092975
+    bm25_hit_at_10: 0.085
+  - name: nlpjournal_title_intro
+    path: docs/benchmark_tasks/NanoJMTEB-v2/nlpjournal_title_intro.md
+    retrieval_shape: title_to_introduction
+    queries: 200
+    documents: 637
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0991173291
+    bm25_hit_at_10: 0.11
   source_links:
-    - label: MTEB paper
-      url: https://arxiv.org/abs/2210.07316
-    - label: JMTEB dataset card
-      url: https://huggingface.co/datasets/sbintuitions/JMTEB
-    - label: JaCWIR dataset card
-      url: https://huggingface.co/datasets/hotchpotch/JaCWIR
-    - label: JAQKET paper
-      url: https://www.anlp.jp/proceedings/annual_meeting/2020/pdf_dir/P2-24.pdf
-    - label: Mintaka paper
-      url: https://aclanthology.org/2022.coling-1.138/
-    - label: MIRACL paper
-      url: https://arxiv.org/abs/2210.09984
-    - label: Mr. TyDi paper
-      url: https://arxiv.org/abs/2108.08787
-    - label: M3-Embedding paper
-      url: https://arxiv.org/abs/2402.03216
-    - label: NLP Journal LaTeX Corpus
-      url: https://github.com/jenio/nlp-journal-latex-corpus
+  - label: MTEB paper
+    url: https://arxiv.org/abs/2210.07316
+  - label: JMTEB dataset card
+    url: https://huggingface.co/datasets/sbintuitions/JMTEB
+  - label: JaCWIR dataset card
+    url: https://huggingface.co/datasets/hotchpotch/JaCWIR
+  - label: JAQKET paper
+    url: https://www.anlp.jp/proceedings/annual_meeting/2020/pdf_dir/P2-24.pdf
+  - label: Mintaka paper
+    url: https://aclanthology.org/2022.coling-1.138/
+  - label: MIRACL paper
+    url: https://arxiv.org/abs/2210.09984
+  - label: Mr. TyDi paper
+    url: https://arxiv.org/abs/2108.08787
+  - label: M3-Embedding paper
+    url: https://arxiv.org/abs/2402.03216
+  - label: NLP Journal LaTeX Corpus
+    url: https://github.com/jenio/nlp-journal-latex-corpus
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.7465132991
+      query_weighted_hit_at_10: 0.8463636364
+      query_weighted_recall_at_100: 0.914751025
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.753517748
+      query_weighted_hit_at_10: 0.8309090909
+      query_weighted_recall_at_100: 0.8868210849
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.7553409282
+      query_weighted_hit_at_10: 0.8454545455
+      query_weighted_recall_at_100: 0.9365340927
+      source: dataset_candidate_subset
 ```

@@ -79,8 +79,20 @@ another, such as cancer type, variant, stage, or prior therapy.
 | Positive qrels | 1,217 |
 | Positives per query | avg 20.63 / min 1 / median 22 / max 47 |
 | Multi-positive queries | 57 (96.61%) |
-| BM25 nDCG@10 | 0.3522 |
-| BM25 hit@10 | 0.8136 |
+| BM25 nDCG@10 | 0.4232 |
+| BM25 hit@10 | 0.8644 |
+| BM25 Recall@100 | 0.5768 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5448 |
+| Dense hit@10 | 0.9153 |
+| Dense Recall@100 | 0.6812 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.5468 |
+| Reranking hybrid hit@10 | 0.8983 |
+| Reranking hybrid Recall@100 | 0.7305 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 145.75 |
 | Document length avg chars | 2,233.58 |
 
@@ -135,37 +147,84 @@ benchmark_task_metadata:
     query_mean: 145.74576271186442
     document_mean: 2233.5822
   bm25:
-    ndcg_at_10: 0.3521957216011021
-    hit_at_10: 0.8135593220338984
-    source: dataset_bm25_column
+    ndcg_at_10: 0.42322297218973576
+    hit_at_10: 0.864406779661017
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: ifir_adapted
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoIFIRPm patient queries, qrels, and positive clinical trial documents
+    leakage_note: exclude NanoIFIRPm patient queries, qrels, and positive clinical
+      trial documents
     useful_training_data:
-      - non-overlapping TREC Precision Medicine topics
-      - ClinicalTrials.gov oncology trial retrieval pairs
-      - biomedical entity linking and gene-variant normalization
-      - same-cancer different-mutation hard negatives
+    - non-overlapping TREC Precision Medicine topics
+    - ClinicalTrials.gov oncology trial retrieval pairs
+    - biomedical entity linking and gene-variant normalization
+    - same-cancer different-mutation hard negatives
     synthetic_data:
-      document_generation: clinical trial descriptions with cancer type, gene variants, inclusion criteria, and interventions
+      document_generation: clinical trial descriptions with cancer type, gene variants,
+        inclusion criteria, and interventions
       question_generation: patient-specific oncology trial search instructions
       answerability: positives should satisfy the patient disease and mutation profile
     multi_positive_training: preserve_multiple_suitable_trials
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoIFIR
     source_urls:
-      - label: IFIR arXiv
-        url: https://arxiv.org/abs/2503.04644
-      - label: TREC 2017 Precision Medicine overview
-        url: https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf
+    - label: IFIR arXiv
+      url: https://arxiv.org/abs/2503.04644
+    - label: TREC 2017 Precision Medicine overview
+      url: https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf
     source_notes: []
   references:
-    - title: "Overview of the TREC 2017 Precision Medicine Track"
-      url: https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf
-      year: 2017
-      doi: null
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: Overview of the TREC 2017 Precision Medicine Track
+    url: https://trec.nist.gov/pubs/trec26/papers/Overview-PM.pdf
+    year: 2017
+    doi: null
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4232229722
+      hit_at_10: 0.8644067797
+      recall_at_100: 0.5768282662
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 59
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5768282662
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5447890924
+      hit_at_10: 0.9152542373
+      recall_at_100: 0.6811832375
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 59
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6811832375
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.5468354766
+      hit_at_10: 0.8983050847
+      recall_at_100: 0.7304847987
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.016949
+      query_count: 59
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7304847987
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

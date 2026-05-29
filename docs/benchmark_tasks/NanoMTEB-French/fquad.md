@@ -75,8 +75,20 @@ related entities.
 | Queries | 200 |
 | Documents | 269 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.8990 |
-| BM25 hit@10 | 0.9550 |
+| BM25 nDCG@10 | 0.8899 |
+| BM25 hit@10 | 0.9700 |
+| BM25 Recall@100 | 1.0000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8102 |
+| Dense hit@10 | 0.9250 |
+| Dense Recall@100 | 0.9600 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8666 |
+| Reranking hybrid hit@10 | 0.9500 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 56.21 |
 | Document length avg chars | 898.31 |
 
@@ -134,39 +146,88 @@ benchmark_task_metadata:
     query_mean: 56.21
     document_mean: 898.3122676579926
   bm25:
-    ndcg_at_10: 0.8989719806
-    hit_at_10: 0.955
-    source: dataset_bm25_column
+    ndcg_at_10: 0.8899346608879181
+    hit_at_10: 0.97
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude FQuAD test examples, Nano queries, qrels, and positive French Wikipedia passages likely to overlap with this evaluation
+    leakage_note: exclude FQuAD test examples, Nano queries, qrels, and positive French
+      Wikipedia passages likely to overlap with this evaluation
     useful_training_data:
-      - non-overlapping FQuAD train examples
-      - French Wikipedia QA retrieval pairs
-      - same-article hard negatives
-      - French extractive QA paraphrases
+    - non-overlapping FQuAD train examples
+    - French Wikipedia QA retrieval pairs
+    - same-article hard negatives
+    - French extractive QA paraphrases
     synthetic_data:
-      document_generation: French Wikipedia-style paragraphs with explicit facts, entities, dates, and definitions
-      question_generation: French extractive QA questions whose answer is stated in the passage
-      answerability: each positive passage should contain the answer span and sufficient local evidence
+      document_generation: French Wikipedia-style paragraphs with explicit facts,
+        entities, dates, and definitions
+      question_generation: French extractive QA questions whose answer is stated in
+        the passage
+      answerability: each positive passage should contain the answer span and sufficient
+        local evidence
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-French
     source_urls:
-      - label: FQuAD arXiv
-        url: https://arxiv.org/abs/2002.06071
-      - label: FQuAD2 arXiv
-        url: https://arxiv.org/abs/2109.13209
-      - label: manu/fquad2_test
-        url: https://huggingface.co/datasets/manu/fquad2_test
+    - label: FQuAD arXiv
+      url: https://arxiv.org/abs/2002.06071
+    - label: FQuAD2 arXiv
+      url: https://arxiv.org/abs/2109.13209
+    - label: manu/fquad2_test
+      url: https://huggingface.co/datasets/manu/fquad2_test
     source_notes: []
   references:
-    - title: "FQuAD: French Question Answering Dataset"
-      url: https://arxiv.org/abs/2002.06071
-      year: 2020
-      doi: 10.18653/v1/2020.findings-emnlp.107
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'FQuAD: French Question Answering Dataset'
+    url: https://arxiv.org/abs/2002.06071
+    year: 2020
+    doi: 10.18653/v1/2020.findings-emnlp.107
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8899346609
+      hit_at_10: 0.97
+      recall_at_100: 1.0
+      candidate_count_min: 269
+      candidate_count_max: 269
+      candidate_count_mean: 269.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8101621634
+      hit_at_10: 0.925
+      recall_at_100: 0.96
+      candidate_count_min: 269
+      candidate_count_max: 269
+      candidate_count_mean: 269.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.96
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8666102068
+      hit_at_10: 0.95
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

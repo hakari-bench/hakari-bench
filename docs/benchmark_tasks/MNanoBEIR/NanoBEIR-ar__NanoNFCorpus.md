@@ -110,8 +110,20 @@ avoid generic medical neighbors that are not evidence for the query.
 | Avg positives / query | 33.02 |
 | Positives per query (min / median / max) | 1 / 23.50 / 100 |
 | Queries with multiple positives | 47 (94.0%) |
-| BM25 nDCG@10 | 0.2440 |
-| BM25 hit@10 | 0.5200 |
+| BM25 nDCG@10 | 0.2350 |
+| BM25 hit@10 | 0.5600 |
+| BM25 Recall@100 | 0.1569 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.1966 |
+| Dense hit@10 | 0.4800 |
+| Dense Recall@100 | 0.1605 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2343 |
+| Reranking hybrid hit@10 | 0.6000 |
+| Reranking hybrid Recall@100 | 0.1841 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 9 |
 | Query length avg chars | 22.30 |
 | Document length avg chars | 1,408.18 |
 
@@ -173,68 +185,119 @@ benchmark_task_metadata:
     query_mean: 22.3
     document_mean: 1408.180833
   bm25:
-    ndcg_at_10: 0.2439734056
-    hit_at_10: 0.52
-    source: dataset_bm25_column
+    ndcg_at_10: 0.23495873584649601
+    hit_at_10: 0.56
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MNanoBEIR Arabic NanoBEIR task split from hakari-bench/NanoBEIR-ar
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding NFCorpus, NutritionFacts, BEIR, or NanoBEIR records likely to overlap with these evaluation health topics or documents
+    leakage_note: prefer excluding NFCorpus, NutritionFacts, BEIR, or NanoBEIR records
+      likely to overlap with these evaluation health topics or documents
     useful_training_data:
-      - non-overlapping NFCorpus train split
-      - Arabic or multilingual consumer-health to biomedical evidence pairs
-      - BioASQ-style medical question-to-article data
-      - biomedical abstract retrieval and citation-link supervision
+    - non-overlapping NFCorpus train split
+    - Arabic or multilingual consumer-health to biomedical evidence pairs
+    - BioASQ-style medical question-to-article data
+    - biomedical abstract retrieval and citation-link supervision
     synthetic_data:
-      document_generation: Arabic biomedical abstract-style passages with study population, exposure or intervention, outcome, and measurements
-      question_generation: short Arabic consumer-health, nutrition, food, drug, or disease topics supported by the evidence document
-      answerability: positives should be biomedical evidence documents linked to the same health topic, not generic medical neighbors
+      document_generation: Arabic biomedical abstract-style passages with study population,
+        exposure or intervention, outcome, and measurements
+      question_generation: short Arabic consumer-health, nutrition, food, drug, or
+        disease topics supported by the evidence document
+      answerability: positives should be biomedical evidence documents linked to the
+        same health topic, not generic medical neighbors
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-ar
     source_urls:
-      - label: NFCorpus paper
-        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
-      - label: NFCorpus project page
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
-      - label: BEIR paper
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB paper
-        url: https://arxiv.org/abs/2502.13595
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR task
-  references:
-    - title: "A Full-Text Learning to Rank Dataset for Medical Information Retrieval"
+    - label: NFCorpus paper
       url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
-      year: 2016
-      doi: 10.1007/978-3-319-30671-1_58
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: NFCorpus project page
+    - label: NFCorpus project page
       url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_dataset_page
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR paper
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
+    - label: MMTEB paper
       url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: Zeta Alpha NanoBEIR collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: dataset_collection
+    source_notes:
+    - Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR
+      task
+  references:
+  - title: A Full-Text Learning to Rank Dataset for Medical Information Retrieval
+    url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+    year: 2016
+    doi: 10.1007/978-3-319-30671-1_58
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: NFCorpus project page
+    url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_dataset_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: dataset_collection
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2349587358
+      hit_at_10: 0.56
+      recall_at_100: 0.1568746214
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1568746214
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1965546668
+      hit_at_10: 0.48
+      recall_at_100: 0.1605087826
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1605087826
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2343290911
+      hit_at_10: 0.6
+      recall_at_100: 0.1841308298
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.18
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1841308298
+      safeguard_positive_rows: 9
+      rows_with_101_candidates: 9
 ```

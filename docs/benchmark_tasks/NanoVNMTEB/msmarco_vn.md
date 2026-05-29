@@ -94,8 +94,20 @@ but answer a different attribute.
 | Avg positives / query | 1.07 |
 | Positives per query (min / median / max) | 1 / 1 / 3 |
 | Queries with multiple positives | 12 (6.00%) |
-| BM25 nDCG@10 | 0.8519 |
-| BM25 hit@10 | 0.9000 |
+| BM25 nDCG@10 | 0.7579 |
+| BM25 hit@10 | 0.8250 |
+| BM25 Recall@100 | 0.9065 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9259 |
+| Dense hit@10 | 0.9650 |
+| Dense Recall@100 | 0.9720 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8285 |
+| Reranking hybrid hit@10 | 0.9000 |
+| Reranking hybrid Recall@100 | 0.9907 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 33.40 |
 | Document length avg chars | 306.69 |
 
@@ -143,10 +155,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/1611.09268
     additional_source_urls:
-      - https://microsoft.github.io/msmarco/
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/msmarco-vn
+    - https://microsoft.github.io/msmarco/
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/msmarco-vn
     no_paper_note: null
   counts:
     queries: 200
@@ -163,61 +175,111 @@ benchmark_task_metadata:
     query_mean: 33.395
     document_mean: 306.69
   bm25:
-    ndcg_at_10: 0.851862851
-    hit_at_10: 0.9
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7578794816474226
+    hit_at_10: 0.825
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB MS MARCO dev split from GreenNode/msmarco-vn"
+    evaluation_split_origin: translated VN-MTEB MS MARCO dev split from GreenNode/msmarco-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated MS MARCO-VN dev queries, qrels, and positive passages used by this Nano split."
+    leakage_note: Exclude translated MS MARCO-VN dev queries, qrels, and positive
+      passages used by this Nano split.
     useful_training_data:
-      - official MS MARCO passage-ranking train data with overlap removed
-      - Vietnamese web-search query-passage pairs
-      - multilingual search click or answer-passage data
-      - translated MS MARCO data with overlap removed
+    - official MS MARCO passage-ranking train data with overlap removed
+    - Vietnamese web-search query-passage pairs
+    - multilingual search click or answer-passage data
+    - translated MS MARCO data with overlap removed
     synthetic_data:
-      document_generation: "Vietnamese short web passages answering everyday search intents."
-      question_generation: "Short Vietnamese web-search queries with entity, weather, location, entertainment, education, and definition intents."
-      answerability: "Each query should be directly answerable from the positive passage, with same-entity different-attribute negatives."
+      document_generation: Vietnamese short web passages answering everyday search
+        intents.
+      question_generation: Short Vietnamese web-search queries with entity, weather,
+        location, entertainment, education, and definition intents.
+      answerability: Each query should be directly answerable from the positive passage,
+        with same-entity different-attribute negatives.
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: MS MARCO arXiv
-        url: https://arxiv.org/abs/1611.09268
-      - label: MS MARCO official page
-        url: https://microsoft.github.io/msmarco/
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/msmarco-vn
-        url: https://huggingface.co/datasets/GreenNode/msmarco-vn
+    - label: MS MARCO arXiv
+      url: https://arxiv.org/abs/1611.09268
+    - label: MS MARCO official page
+      url: https://microsoft.github.io/msmarco/
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/msmarco-vn
+      url: https://huggingface.co/datasets/GreenNode/msmarco-vn
     source_notes: []
   references:
-    - title: "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset"
-      url: https://arxiv.org/abs/1611.09268
-      year: 2016
-      doi: 10.48550/arXiv.1611.09268
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/msmarco-vn
-      url: https://huggingface.co/datasets/GreenNode/msmarco-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'MS MARCO: A Human Generated MAchine Reading COmprehension Dataset'
+    url: https://arxiv.org/abs/1611.09268
+    year: 2016
+    doi: 10.48550/arXiv.1611.09268
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/msmarco-vn
+    url: https://huggingface.co/datasets/GreenNode/msmarco-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7578794816
+      hit_at_10: 0.825
+      recall_at_100: 0.9065420561
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9065420561
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9258599329
+      hit_at_10: 0.965
+      recall_at_100: 0.9719626168
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9719626168
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8285481029
+      hit_at_10: 0.9
+      recall_at_100: 0.9906542056
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9906542056
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

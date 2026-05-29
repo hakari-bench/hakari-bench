@@ -84,8 +84,20 @@ when several pages answer the same information need.
 | Avg positives / query | 5.96 |
 | Positives per query (min / median / max) | 1 / 5 / 19 |
 | Queries with multiple positives | 165 (98.80%) |
-| BM25 nDCG@10 | 0.4831 |
-| BM25 hit@10 | 0.8922 |
+| BM25 nDCG@10 | 0.5129 |
+| BM25 hit@10 | 0.9162 |
+| BM25 Recall@100 | 0.8855 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4719 |
+| Dense hit@10 | 0.9281 |
+| Dense Recall@100 | 0.8363 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6220 |
+| Reranking hybrid hit@10 | 0.9880 |
+| Reranking hybrid Recall@100 | 0.9488 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 67.56 |
 | Document length avg chars | 2710.85 |
 
@@ -127,7 +139,8 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: project_page
     paper_pdf_or_html_checked: false
-    no_paper_note: ECIR 2019 paper metadata was confirmed, but only the public project page and dataset cards were inspected for construction details
+    no_paper_note: ECIR 2019 paper metadata was confirmed, but only the public project
+      page and dataset cards were inspected for construction details
   counts:
     queries: 167
     documents: 7501
@@ -143,39 +156,89 @@ benchmark_task_metadata:
     query_mean: 67.55688622754491
     document_mean: 2710.8465537928278
   bm25:
-    ndcg_at_10: 0.4830697435
-    hit_at_10: 0.8922155689
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5128967701594193
+    hit_at_10: 0.9161676646706587
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude PRES evaluation questions, qrels, and Spanish health web pages likely to overlap with Nano
+    leakage_note: exclude PRES evaluation questions, qrels, and Spanish health web
+      pages likely to overlap with Nano
     useful_training_data:
-      - Spanish consumer-health QA pairs
-      - Spanish medical FAQ retrieval pairs
-      - non-overlapping health web document retrieval data
-      - multi-positive document-level health retrieval examples
+    - Spanish consumer-health QA pairs
+    - Spanish medical FAQ retrieval pairs
+    - non-overlapping health web document retrieval data
+    - multi-positive document-level health retrieval examples
     synthetic_data:
-      document_generation: Spanish consumer-health web pages about baby care, vaccination, emergencies, and low back pain
-      question_generation: Spanish layperson health questions with varied paraphrases and urgency levels
-      answerability: full positive pages should contain explicit answer passages for the question
+      document_generation: Spanish consumer-health web pages about baby care, vaccination,
+        emergencies, and low back pain
+      question_generation: Spanish layperson health questions with varied paraphrases
+        and urgency levels
+      answerability: full positive pages should contain explicit answer passages for
+        the question
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Spanish
     source_urls:
-      - label: Spanish Passage Retrieval dataset page
-        url: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
-      - label: jinaai/spanish_passage_retrieval
-        url: https://huggingface.co/datasets/jinaai/spanish_passage_retrieval
-      - label: mteb/SpanishPassageRetrievalS2P
-        url: https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2P
+    - label: Spanish Passage Retrieval dataset page
+      url: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
+    - label: jinaai/spanish_passage_retrieval
+      url: https://huggingface.co/datasets/jinaai/spanish_passage_retrieval
+    - label: mteb/SpanishPassageRetrievalS2P
+      url: https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2P
     source_notes: []
   references:
-    - title: "A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related Resources"
-      url: https://doi.org/10.1007/978-3-030-15719-7_19
-      year: 2019
-      doi: 10.1007/978-3-030-15719-7_19
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related
+      Resources
+    url: https://doi.org/10.1007/978-3-030-15719-7_19
+    year: 2019
+    doi: 10.1007/978-3-030-15719-7_19
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5128967702
+      hit_at_10: 0.9161676647
+      recall_at_100: 0.8855421687
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 167
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8855421687
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4719481412
+      hit_at_10: 0.9281437126
+      recall_at_100: 0.8363453815
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 167
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8363453815
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6219620039
+      hit_at_10: 0.9880239521
+      recall_at_100: 0.9487951807
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.005988
+      query_count: 167
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9487951807
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

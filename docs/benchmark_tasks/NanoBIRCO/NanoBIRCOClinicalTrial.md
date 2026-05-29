@@ -134,8 +134,20 @@ biomarker, or treatment phase.
 | Positive qrels | 1,042 |
 | Positives per query | avg 20.84; min 1; median 15; max 68 |
 | Multi-positive queries | 49 / 50 (98.00%) |
-| BM25 nDCG@10 | 0.1194 |
-| BM25 hit@10 | 0.6200 |
+| BM25 nDCG@10 | 0.1322 |
+| BM25 hit@10 | 0.5800 |
+| BM25 Recall@100 | 0.2735 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2152 |
+| Dense hit@10 | 0.7400 |
+| Dense Recall@100 | 0.4309 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1959 |
+| Reranking hybrid hit@10 | 0.7600 |
+| Reranking hybrid Recall@100 | 0.3954 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 496.98 |
 | Document length avg chars | 1174.34 |
 
@@ -190,41 +202,90 @@ benchmark_task_metadata:
     query_mean: 496.98
     document_mean: 1174.340148
   bm25:
-    ndcg_at_10: 0.1193681048
-    hit_at_10: 0.62
-    source: dataset_bm25_column
+    ndcg_at_10: 0.13215960115546393
+    hit_at_10: 0.58
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding BIRCO Clinical-Trial evaluation queries, candidate pools, and positive clinical trial descriptions from training data
+    leakage_note: prefer excluding BIRCO Clinical-Trial evaluation queries, candidate
+      pools, and positive clinical trial descriptions from training data
     useful_training_data:
-      - non-overlapping patient-to-clinical-trial matching pairs
-      - clinical trial eligibility matching datasets
-      - biomedical passage retrieval with patient criteria
-      - diagnosis-matched hard negatives that fail other eligibility constraints
+    - non-overlapping patient-to-clinical-trial matching pairs
+    - clinical trial eligibility matching datasets
+    - biomedical passage retrieval with patient criteria
+    - diagnosis-matched hard negatives that fail other eligibility constraints
     synthetic_data:
-      document_generation: clinical trial summaries with condition, intervention, inclusion context, exclusion context, and trial population
-      question_generation: patient case reports with age, sex, diagnosis, symptoms, medications, comorbidities, tests, and procedures
-      answerability: multiple trial passages may be relevant; positives should satisfy the patient condition and eligibility context
+      document_generation: clinical trial summaries with condition, intervention,
+        inclusion context, exclusion context, and trial population
+      question_generation: patient case reports with age, sex, diagnosis, symptoms,
+        medications, comorbidities, tests, and procedures
+      answerability: multiple trial passages may be relevant; positives should satisfy
+        the patient condition and eligibility context
     multi_positive_training: preserve_multi_positive_trial_matching
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBIRCO
     source_urls:
-      - label: BIRCO GitHub repository
-        url: https://github.com/BIRCO-benchmark/BIRCO
+    - label: BIRCO GitHub repository
+      url: https://github.com/BIRCO-benchmark/BIRCO
     source_notes: []
   references:
-    - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
-      url: https://arxiv.org/abs/2402.14151
-      year: 2024
-      doi: 10.48550/arXiv.2402.14151
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: BIRCO GitHub repository
-      url: https://github.com/BIRCO-benchmark/BIRCO
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: official_project_repository
+  - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
+    url: https://arxiv.org/abs/2402.14151
+    year: 2024
+    doi: 10.48550/arXiv.2402.14151
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: BIRCO GitHub repository
+    url: https://github.com/BIRCO-benchmark/BIRCO
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: official_project_repository
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1321596012
+      hit_at_10: 0.58
+      recall_at_100: 0.273512476
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.273512476
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2152399174
+      hit_at_10: 0.74
+      recall_at_100: 0.4309021113
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4309021113
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.1958838925
+      hit_at_10: 0.76
+      recall_at_100: 0.3953934741
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.02
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3953934741
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

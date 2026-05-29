@@ -90,8 +90,20 @@ information, or discuss a different facet of the topic.
 | Positive qrels | 889 |
 | Positives per query | avg 4.45 / min 1 / median 4.0 / max 27 |
 | Multi-positive queries | 173 (86.50%) |
-| BM25 nDCG@10 | 0.0399 |
-| BM25 hit@10 | 0.0800 |
+| BM25 nDCG@10 | 0.7337 |
+| BM25 hit@10 | 0.9150 |
+| BM25 Recall@100 | 0.8639 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9286 |
+| Dense hit@10 | 0.9800 |
+| Dense Recall@100 | 0.9764 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8224 |
+| Reranking hybrid hit@10 | 0.9300 |
+| Reranking hybrid Recall@100 | 0.9831 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 9.12 |
 | Document length avg chars | 397.39 |
 
@@ -149,43 +161,89 @@ benchmark_task_metadata:
     query_mean: 9.125
     document_mean: 397.3869
   bm25:
-    ndcg_at_10: 0.03993315000492959
-    hit_at_10: 0.08
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7337214089271549
+    hit_at_10: 0.915
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: DuRetrieval dev
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoCMTEB du queries, qrels, and web passages
     useful_training_data:
-      - non-overlapping DuReader retrieval pairs
-      - Chinese web search query-passage annotations
-      - answer-bearing passage retrieval data
-      - lexical-overlap hard negatives from the same query topic
+    - non-overlapping DuReader retrieval pairs
+    - Chinese web search query-passage annotations
+    - answer-bearing passage retrieval data
+    - lexical-overlap hard negatives from the same query topic
     synthetic_data:
       document_generation: noisy Chinese web passages with answer-bearing paragraphs
       question_generation: short Chinese web-search queries
-      answerability: positives should answer the query intent, not merely mention query terms
+      answerability: positives should answer the query intent, not merely mention
+        query terms
     multi_positive_training: preserve_multiple_relevant_passages_per_query
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCMTEB
     source_urls:
-      - label: DuReader-retrieval paper
-        url: https://aclanthology.org/2022.emnlp-main.357/
-      - label: C-Pack arXiv
-        url: https://arxiv.org/abs/2309.07597
-      - label: mteb/DuRetrieval
-        url: https://huggingface.co/datasets/mteb/DuRetrieval
+    - label: DuReader-retrieval paper
+      url: https://aclanthology.org/2022.emnlp-main.357/
+    - label: C-Pack arXiv
+      url: https://arxiv.org/abs/2309.07597
+    - label: mteb/DuRetrieval
+      url: https://huggingface.co/datasets/mteb/DuRetrieval
     source_notes: []
   references:
-    - title: "DuReader-retrieval: A Large-scale Chinese Benchmark for Passage Retrieval"
-      url: https://aclanthology.org/2022.emnlp-main.357/
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "C-Pack: Packed Resources For General Chinese Embeddings"
-      url: https://arxiv.org/abs/2309.07597
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_benchmark_paper
+  - title: 'DuReader-retrieval: A Large-scale Chinese Benchmark for Passage Retrieval'
+    url: https://aclanthology.org/2022.emnlp-main.357/
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'C-Pack: Packed Resources For General Chinese Embeddings'
+    url: https://arxiv.org/abs/2309.07597
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_benchmark_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7337214089
+      hit_at_10: 0.915
+      recall_at_100: 0.8638920135
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8638920135
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9285641685
+      hit_at_10: 0.98
+      recall_at_100: 0.9763779528
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9763779528
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8223570703
+      hit_at_10: 0.93
+      recall_at_100: 0.9831271091
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9831271091
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

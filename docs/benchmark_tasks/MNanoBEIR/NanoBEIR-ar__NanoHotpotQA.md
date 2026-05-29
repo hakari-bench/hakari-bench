@@ -108,8 +108,20 @@ from only one passage are less useful for this task.
 | Avg positives / query | 2.00 |
 | Positives per query (min / median / max) | 2 / 2.00 / 2 |
 | Queries with multiple positives | 50 (100.0%) |
-| BM25 nDCG@10 | 0.6505 |
-| BM25 hit@10 | 0.9200 |
+| BM25 nDCG@10 | 0.6837 |
+| BM25 hit@10 | 0.9400 |
+| BM25 Recall@100 | 0.8900 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7365 |
+| Dense hit@10 | 0.9800 |
+| Dense Recall@100 | 0.9400 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7798 |
+| Reranking hybrid hit@10 | 0.9800 |
+| Reranking hybrid Recall@100 | 0.9400 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 72.76 |
 | Document length avg chars | 410.03 |
 
@@ -171,68 +183,119 @@ benchmark_task_metadata:
     query_mean: 72.76
     document_mean: 410.025147
   bm25:
-    ndcg_at_10: 0.6505198272
-    hit_at_10: 0.92
-    source: dataset_bm25_column
+    ndcg_at_10: 0.6836749082085007
+    hit_at_10: 0.94
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MNanoBEIR Arabic NanoBEIR task split from hakari-bench/NanoBEIR-ar
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding HotpotQA, BEIR, or NanoBEIR records likely to overlap with these evaluation questions or supporting pages
+    leakage_note: prefer excluding HotpotQA, BEIR, or NanoBEIR records likely to overlap
+      with these evaluation questions or supporting pages
     useful_training_data:
-      - non-overlapping HotpotQA examples with supporting facts
-      - Arabic or multilingual multi-hop QA retrieval datasets
-      - Wikipedia hyperlink graph retrieval pairs
-      - question-to-multiple-document supervision
+    - non-overlapping HotpotQA examples with supporting facts
+    - Arabic or multilingual multi-hop QA retrieval datasets
+    - Wikipedia hyperlink graph retrieval pairs
+    - question-to-multiple-document supervision
     synthetic_data:
-      document_generation: paired Arabic Wikipedia-style entity passages connected by hyperlinks, shared types, dates, locations, occupations, creators, or memberships
-      question_generation: Arabic bridge and comparison questions that require both generated passages
-      answerability: positives should be both documents needed for the reasoning path, not a single answer-bearing passage
+      document_generation: paired Arabic Wikipedia-style entity passages connected
+        by hyperlinks, shared types, dates, locations, occupations, creators, or memberships
+      question_generation: Arabic bridge and comparison questions that require both
+        generated passages
+      answerability: positives should be both documents needed for the reasoning path,
+        not a single answer-bearing passage
     multi_positive_training: required
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-ar
     source_urls:
-      - label: HotpotQA paper
-        url: https://arxiv.org/abs/1809.09600
-      - label: HotpotQA official site
-        url: https://hotpotqa.github.io/
-      - label: BEIR paper
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB paper
-        url: https://arxiv.org/abs/2502.13595
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR task
-  references:
-    - title: "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering"
+    - label: HotpotQA paper
       url: https://arxiv.org/abs/1809.09600
-      year: 2018
-      doi: 10.18653/v1/D18-1259
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: HotpotQA official site
+    - label: HotpotQA official site
       url: https://hotpotqa.github.io/
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_project_page
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR paper
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
+    - label: MMTEB paper
       url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: Zeta Alpha NanoBEIR collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: dataset_collection
+    source_notes:
+    - Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR
+      task
+  references:
+  - title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering'
+    url: https://arxiv.org/abs/1809.09600
+    year: 2018
+    doi: 10.18653/v1/D18-1259
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: HotpotQA official site
+    url: https://hotpotqa.github.io/
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_project_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: dataset_collection
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6836749082
+      hit_at_10: 0.94
+      recall_at_100: 0.89
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.89
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7365317285
+      hit_at_10: 0.98
+      recall_at_100: 0.94
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.94
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7798242459
+      hit_at_10: 0.98
+      recall_at_100: 0.94
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.94
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

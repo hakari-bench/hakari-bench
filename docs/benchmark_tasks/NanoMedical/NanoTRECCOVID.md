@@ -118,8 +118,20 @@ positive documents.
 | Queries | 50 |
 | Documents | 10,000 |
 | Positive qrels | 50 |
-| BM25 nDCG@10 | 0.1966 |
-| BM25 hit@10 | 0.3200 |
+| BM25 nDCG@10 | 0.3983 |
+| BM25 hit@10 | 0.5200 |
+| BM25 Recall@100 | 0.8000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3875 |
+| Dense hit@10 | 0.5200 |
+| Dense Recall@100 | 0.7000 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3193 |
+| Reranking hybrid hit@10 | 0.4400 |
+| Reranking hybrid Recall@100 | 0.9600 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 69.24 |
 | Document length avg chars | 1,208.78 |
 
@@ -160,7 +172,7 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2104.09632
     additional_source_urls:
-      - https://ir.nist.gov/trec-covid/
+    - https://ir.nist.gov/trec-covid/
   counts:
     queries: 50
     documents: 10000
@@ -176,30 +188,79 @@ benchmark_task_metadata:
     query_mean: 69.24
     document_mean: 1208.7826
   bm25:
-    ndcg_at_10: 0.1966089962
-    hit_at_10: 0.32
-    source: dataset_bm25_column
+    ndcg_at_10: 0.3983195524616401
+    hit_at_10: 0.52
+    source: dataset_candidate_subset
   learning:
     original_train_split: available_as_prior_round_or_feedback_judgments
     evaluation_split_origin: TREC-COVID retrieval split sampled into NanoMedical
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude TREC-COVID Complete qrels for evaluation topics and exact CORD-19 positive documents from this Nano split for clean zero-shot evaluation
+    leakage_note: exclude TREC-COVID Complete qrels for evaluation topics and exact
+      CORD-19 positive documents from this Nano split for clean zero-shot evaluation
     useful_training_data:
-      - non-overlapping COVID-19 literature retrieval judgments
-      - biomedical ad hoc retrieval data
-      - clinical and public-health question-to-abstract data
-      - coronavirus and influenza hard negatives
+    - non-overlapping COVID-19 literature retrieval judgments
+    - biomedical ad hoc retrieval data
+    - clinical and public-health question-to-abstract data
+    - coronavirus and influenza hard negatives
     synthetic_data:
       document_generation: COVID-19 and coronavirus title-plus-abstract passages
-      question_generation: clinical, biological, or public-health pandemic information needs
-      hard_negatives: same-COVID-vocabulary documents with different intervention, population, outcome, or virus family
-      answerability: the document should contain evidence responsive to the information need
+      question_generation: clinical, biological, or public-health pandemic information
+        needs
+      hard_negatives: same-COVID-vocabulary documents with different intervention,
+        population, outcome, or virus family
+      answerability: the document should contain evidence responsive to the information
+        need
     multi_positive_training: single_positive_question_document_focus_in_this_nano_split
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMedical
     source_urls:
-      - label: TREC-COVID arXiv
-        url: https://arxiv.org/abs/2104.09632
-      - label: TREC-COVID archive
-        url: https://ir.nist.gov/trec-covid/
+    - label: TREC-COVID arXiv
+      url: https://arxiv.org/abs/2104.09632
+    - label: TREC-COVID archive
+      url: https://ir.nist.gov/trec-covid/
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3983195525
+      hit_at_10: 0.52
+      recall_at_100: 0.8
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3874516535
+      hit_at_10: 0.52
+      recall_at_100: 0.7
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3192729308
+      hit_at_10: 0.44
+      recall_at_100: 0.96
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.04
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.96
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

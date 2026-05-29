@@ -83,8 +83,20 @@ long-document noise.
 | Queries | 200 |
 | Documents | 10,000 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.1743 |
-| BM25 hit@10 | 0.2100 |
+| BM25 nDCG@10 | 0.7837 |
+| BM25 hit@10 | 0.8650 |
+| BM25 Recall@100 | 0.9450 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7830 |
+| Dense hit@10 | 0.8650 |
+| Dense Recall@100 | 0.9300 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7876 |
+| Reranking hybrid hit@10 | 0.8750 |
+| Reranking hybrid Recall@100 | 0.9650 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 7 |
 | Query length avg chars | 52.98 |
 | Document length avg chars | 5,363.14 |
 
@@ -142,8 +154,53 @@ benchmark_task_metadata:
     query_mean: 52.985
     document_mean: 5363.1378
   bm25:
-    ndcg_at_10: 0.1743146674
-    hit_at_10: 0.21
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7836864885615483
+    hit_at_10: 0.865
+    source: dataset_candidate_subset
   example_count: 5
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7836864886
+      hit_at_10: 0.865
+      recall_at_100: 0.945
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.945
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7830125873
+      hit_at_10: 0.865
+      recall_at_100: 0.93
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.93
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7875517792
+      hit_at_10: 0.875
+      recall_at_100: 0.965
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.035
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.965
+      safeguard_positive_rows: 7
+      rows_with_101_candidates: 7
 ```

@@ -116,8 +116,20 @@ learning robust developer-Q&A retrieval.
 | Queries | 200 |
 | Documents | 10,000 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.6902 |
-| BM25 hit@10 | 0.7950 |
+| BM25 nDCG@10 | 0.7737 |
+| BM25 hit@10 | 0.9000 |
+| BM25 Recall@100 | 0.9650 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8865 |
+| Dense hit@10 | 0.9500 |
+| Dense Recall@100 | 0.9600 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8373 |
+| Reranking hybrid hit@10 | 0.9250 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 209.84 |
 | Document length avg chars | 4,735.05 |
 
@@ -162,10 +174,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2406.14497
     additional_source_urls:
-      - https://aclanthology.org/2025.findings-naacl.176/
-      - https://code-rag-bench.github.io/
-      - https://github.com/code-rag-bench/code-rag-bench
-      - https://huggingface.co/datasets/code-rag-bench/stackoverflow-posts
+    - https://aclanthology.org/2025.findings-naacl.176/
+    - https://code-rag-bench.github.io/
+    - https://github.com/code-rag-bench/code-rag-bench
+    - https://huggingface.co/datasets/code-rag-bench/stackoverflow-posts
   counts:
     queries: 200
     documents: 10000
@@ -181,46 +193,98 @@ benchmark_task_metadata:
     query_mean: 209.835
     document_mean: 4735.0462
   bm25:
-    ndcg_at_10: 0.6901992074
-    hit_at_10: 0.795
-    source: dataset_bm25_column
+    ndcg_at_10: 0.773715574957152
+    hit_at_10: 0.9
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: CodeRAG-Bench Stack Overflow posts retrieval source sampled into NanoCodeRAG
+    evaluation_split_origin: CodeRAG-Bench Stack Overflow posts retrieval source sampled
+      into NanoCodeRAG
     train_eval_overlap_audit: not_audited_source_datastore_filtering_required
-    leakage_note: exclude NanoCodeRAG Stack Overflow queries, qrels, and positive posts; do not train on unfiltered code-rag-bench/stackoverflow-posts rows
+    leakage_note: exclude NanoCodeRAG Stack Overflow queries, qrels, and positive
+      posts; do not train on unfiltered code-rag-bench/stackoverflow-posts rows
     leakage_risk:
       source_dataset: code-rag-bench/stackoverflow-posts
       source_corpus_size_reported_by_coderag_bench: 23500000
-      risk: CodeRAG-Bench Stack Overflow source datastore can contain NanoCodeRAG evaluation positives
-      recommended_filter: remove matching titles, bodies, answers, post ids, URLs, code blocks, and token fingerprints
+      risk: CodeRAG-Bench Stack Overflow source datastore can contain NanoCodeRAG
+        evaluation positives
+      recommended_filter: remove matching titles, bodies, answers, post ids, URLs,
+        code blocks, and token fingerprints
     useful_training_data:
-      - non-overlapping Stack Overflow question-to-answer thread retrieval
-      - duplicate-question and related-question retrieval pairs
-      - issue-to-fix and API usage Q&A pairs
-      - documentation-linked Q&A with tag-matched hard negatives
+    - non-overlapping Stack Overflow question-to-answer thread retrieval
+    - duplicate-question and related-question retrieval pairs
+    - issue-to-fix and API usage Q&A pairs
+    - documentation-linked Q&A with tag-matched hard negatives
     synthetic_data:
-      document_generation: realistic Stack Overflow-style threads with question, accepted answer, alternative answers, code snippets, caveats, and environment details
-      question_generation: developer questions preserving language, framework, error message, and desired operation
-      answerability: the selected post should contain a usable answer, workaround, warning, or API usage pattern
+      document_generation: realistic Stack Overflow-style threads with question, accepted
+        answer, alternative answers, code snippets, caveats, and environment details
+      question_generation: developer questions preserving language, framework, error
+        message, and desired operation
+      answerability: the selected post should contain a usable answer, workaround,
+        warning, or API usage pattern
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCodeRAG
     source_urls:
-      - label: CodeRAG-Bench arXiv
-        url: https://arxiv.org/abs/2406.14497
-      - label: CodeRAG-Bench project page
-        url: https://code-rag-bench.github.io/
-      - label: CodeRAG-Bench GitHub
-        url: https://github.com/code-rag-bench/code-rag-bench
-      - label: code-rag-bench/stackoverflow-posts
-        url: https://huggingface.co/datasets/code-rag-bench/stackoverflow-posts
+    - label: CodeRAG-Bench arXiv
+      url: https://arxiv.org/abs/2406.14497
+    - label: CodeRAG-Bench project page
+      url: https://code-rag-bench.github.io/
+    - label: CodeRAG-Bench GitHub
+      url: https://github.com/code-rag-bench/code-rag-bench
+    - label: code-rag-bench/stackoverflow-posts
+      url: https://huggingface.co/datasets/code-rag-bench/stackoverflow-posts
     source_notes: []
   references:
-    - title: "CodeRAG-Bench: Can Retrieval Augment Code Generation?"
-      url: https://arxiv.org/abs/2406.14497
-      year: 2025
-      doi: 10.18653/v1/2025.findings-naacl.176
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
+    url: https://arxiv.org/abs/2406.14497
+    year: 2025
+    doi: 10.18653/v1/2025.findings-naacl.176
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.773715575
+      hit_at_10: 0.9
+      recall_at_100: 0.965
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.965
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8865380247
+      hit_at_10: 0.95
+      recall_at_100: 0.96
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.96
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8373297243
+      hit_at_10: 0.925
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

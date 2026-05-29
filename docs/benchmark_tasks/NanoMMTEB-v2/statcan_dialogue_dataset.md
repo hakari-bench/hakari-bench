@@ -74,8 +74,20 @@ measure.
 | Avg positives / query | 1.56 |
 | Positives per query (min / median / max) | 1 / 1.0 / 9 |
 | Queries with multiple positives | 56 (28.00%) |
-| BM25 nDCG@10 | 0.0111 |
+| BM25 nDCG@10 | 0.0112 |
 | BM25 hit@10 | 0.0300 |
+| BM25 Recall@100 | 0.1406 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2731 |
+| Dense hit@10 | 0.4550 |
+| Dense Recall@100 | 0.7220 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1564 |
+| Reranking hybrid hit@10 | 0.3400 |
+| Reranking hybrid Recall@100 | 0.6581 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 47 |
 | Query length avg chars | 794.77 |
 | Document length avg chars | 7237.69 |
 
@@ -133,38 +145,87 @@ benchmark_task_metadata:
     query_mean: 794.77
     document_mean: 7237.6861
   bm25:
-    ndcg_at_10: 0.011116257596372493
+    ndcg_at_10: 0.011182567329507074
     hit_at_10: 0.03
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: dev
     train_eval_overlap_audit: not_audited
-    leakage_note: do not train on this Nano split's conversations, table IDs, qrels, or target metadata records
+    leakage_note: do not train on this Nano split's conversations, table IDs, qrels,
+      or target metadata records
     useful_training_data:
-      - conversational search data
-      - table retrieval pairs
-      - government statistics search logs
-      - bilingual English/French support conversations
+    - conversational search data
+    - table retrieval pairs
+    - government statistics search logs
+    - bilingual English/French support conversations
     synthetic_data:
-      document_generation: table metadata with title, dimensions, survey, frequency, subject, date range, and geography
+      document_generation: table metadata with title, dimensions, survey, frequency,
+        subject, date range, and geography
       question_generation: partial support conversations asking for official statistics
-      answerability: positive table should satisfy the user's measure, geography, sector, and time requirement
+      answerability: positive table should satisfy the user's measure, geography,
+        sector, and time requirement
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMMTEB-v2
     source_urls:
-      - label: StatCan Dialogue Dataset arXiv
-        url: https://arxiv.org/abs/2304.01412
-      - label: StatCan Dialogue Dataset project
-        url: https://mcgill-nlp.github.io/statcan-dialogue-dataset/
-      - label: mteb/StatcanDialogueDatasetRetrieval
-        url: https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval
+    - label: StatCan Dialogue Dataset arXiv
+      url: https://arxiv.org/abs/2304.01412
+    - label: StatCan Dialogue Dataset project
+      url: https://mcgill-nlp.github.io/statcan-dialogue-dataset/
+    - label: mteb/StatcanDialogueDatasetRetrieval
+      url: https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval
     source_notes: []
   references:
-    - title: "A Dataset for Retrieving Data Tables through Conversations with Genuine Intents"
-      url: https://arxiv.org/abs/2304.01412
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: A Dataset for Retrieving Data Tables through Conversations with Genuine
+      Intents
+    url: https://arxiv.org/abs/2304.01412
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.0111825673
+      hit_at_10: 0.03
+      recall_at_100: 0.1405750799
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1405750799
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2730851332
+      hit_at_10: 0.455
+      recall_at_100: 0.7220447284
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7220447284
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.1564489282
+      hit_at_10: 0.34
+      recall_at_100: 0.6581469649
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.235
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6581469649
+      safeguard_positive_rows: 47
+      rows_with_101_candidates: 47
 ```

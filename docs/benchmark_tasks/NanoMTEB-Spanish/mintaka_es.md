@@ -79,8 +79,20 @@ evaluation questions or answer strings as seeds.
 | Queries | 200 |
 | Documents | 1693 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.2467 |
-| BM25 hit@10 | 0.3050 |
+| BM25 nDCG@10 | 0.2502 |
+| BM25 hit@10 | 0.3150 |
+| BM25 Recall@100 | 0.3500 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3614 |
+| Dense hit@10 | 0.5100 |
+| Dense Recall@100 | 0.7500 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2721 |
+| Reranking hybrid hit@10 | 0.3300 |
+| Reranking hybrid Recall@100 | 0.6200 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 76 |
 | Query length avg chars | 66.93 |
 | Document length avg chars | 14.29 |
 
@@ -138,39 +150,89 @@ benchmark_task_metadata:
     query_mean: 66.925
     document_mean: 14.291789722386296
   bm25:
-    ndcg_at_10: 0.2467222553
-    hit_at_10: 0.305
-    source: dataset_bm25_column
+    ndcg_at_10: 0.25018493566322303
+    hit_at_10: 0.315
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude Mintaka test examples, Nano queries, qrels, and answer strings likely to overlap with this evaluation
+    leakage_note: exclude Mintaka test examples, Nano queries, qrels, and answer strings
+      likely to overlap with this evaluation
     useful_training_data:
-      - non-overlapping Mintaka train examples
-      - Spanish Wikidata entity-linking QA pairs
-      - multilingual complex question paraphrases
-      - hard negatives with related entity names
+    - non-overlapping Mintaka train examples
+    - Spanish Wikidata entity-linking QA pairs
+    - multilingual complex question paraphrases
+    - hard negatives with related entity names
     synthetic_data:
-      document_generation: short canonical entity or answer strings from Wikidata-like domains
-      question_generation: Spanish complex QA questions with superlative, comparison, count, intersection, and multi-hop forms
-      answerability: each answer string should be the canonical entity or value implied by the question
+      document_generation: short canonical entity or answer strings from Wikidata-like
+        domains
+      question_generation: Spanish complex QA questions with superlative, comparison,
+        count, intersection, and multi-hop forms
+      answerability: each answer string should be the canonical entity or value implied
+        by the question
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Spanish
     source_urls:
-      - label: Mintaka arXiv
-        url: https://arxiv.org/abs/2210.01613
-      - label: mteb/MintakaRetrieval
-        url: https://huggingface.co/datasets/mteb/MintakaRetrieval
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
+    - label: Mintaka arXiv
+      url: https://arxiv.org/abs/2210.01613
+    - label: mteb/MintakaRetrieval
+      url: https://huggingface.co/datasets/mteb/MintakaRetrieval
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
     source_notes: []
   references:
-    - title: "Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering"
-      url: https://arxiv.org/abs/2210.01613
-      year: 2022
-      doi: 10.48550/arXiv.2210.01613
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question
+      Answering'
+    url: https://arxiv.org/abs/2210.01613
+    year: 2022
+    doi: 10.48550/arXiv.2210.01613
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2501849357
+      hit_at_10: 0.315
+      recall_at_100: 0.35
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.35
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.361428097
+      hit_at_10: 0.51
+      recall_at_100: 0.75
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.75
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2721193099
+      hit_at_10: 0.33
+      recall_at_100: 0.62
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.38
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.62
+      safeguard_positive_rows: 76
+      rows_with_101_candidates: 76
 ```

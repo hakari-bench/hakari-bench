@@ -82,6 +82,18 @@ event or opinion.
 | Positive qrels | 400 |
 | BM25 nDCG@10 | 0.7081 |
 | BM25 hit@10 | 0.8950 |
+| BM25 Recall@100 | 0.8375 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7757 |
+| Dense hit@10 | 0.9100 |
+| Dense Recall@100 | 0.9025 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7398 |
+| Reranking hybrid hit@10 | 0.8800 |
+| Reranking hybrid Recall@100 | 0.9400 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 45.26 |
 | Document length avg chars | 2,895.97 |
 
@@ -125,7 +137,8 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: resource_page_and_benchmark_paper
     paper_pdf_or_html_checked: true
-    no_paper_note: CLARIN/SweDN resource page and SuperLim/SEB papers were checked; the separate CLARIN annual conference paper was not fully reviewed in this pass.
+    no_paper_note: CLARIN/SweDN resource page and SuperLim/SEB papers were checked;
+      the separate CLARIN annual conference paper was not fully reviewed in this pass.
   counts:
     queries: 200
     documents: 2046
@@ -143,40 +156,90 @@ benchmark_task_metadata:
   bm25:
     ndcg_at_10: 0.7081125173979356
     hit_at_10: 0.895
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude Nano headlines, qrels, and matching SWE-DN summary/article documents
+    leakage_note: exclude Nano headlines, qrels, and matching SWE-DN summary/article
+      documents
     useful_training_data:
-      - non-overlapping SWE-DN headline-summary-article pairs
-      - Swedish news title-to-article retrieval pairs
-      - same-section and same-date hard negatives
-      - multi-positive news retrieval examples
+    - non-overlapping SWE-DN headline-summary-article pairs
+    - Swedish news title-to-article retrieval pairs
+    - same-section and same-date hard negatives
+    - multi-positive news retrieval examples
     synthetic_data:
-      document_generation: Swedish news articles and lead summaries with headline, date, section, and named entities
-      question_generation: Swedish headline queries, including opinion and quote-style headlines
-      answerability: both the summary and the full article can be positive for a headline query
+      document_generation: Swedish news articles and lead summaries with headline,
+        date, section, and named entities
+      question_generation: Swedish headline queries, including opinion and quote-style
+        headlines
+      answerability: both the summary and the full article can be positive for a headline
+        query
     multi_positive_training: treat_summary_and_article_as_valid_positives
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Scandinavian
     source_urls:
-      - label: Scandinavian Embedding Benchmarks
-        url: https://arxiv.org/abs/2406.02396
-      - label: SweDN 1.0
-        url: https://spraakbanken.gu.se/resurser/swedn
-      - label: Superlim paper
-        url: https://aclanthology.org/2023.emnlp-main.506/
-      - label: mteb/SwednRetrieval
-        url: https://huggingface.co/datasets/mteb/SwednRetrieval
-    source_notes:
-      - SEB states that summarization datasets are converted by using headlines as queries and summaries/articles as corpus positives.
-  references:
-    - title: "SweDN 1.0"
+    - label: Scandinavian Embedding Benchmarks
+      url: https://arxiv.org/abs/2406.02396
+    - label: SweDN 1.0
       url: https://spraakbanken.gu.se/resurser/swedn
-      year: 2025
-      doi: 10.23695/36v9-9017
-      is_paper: false
-      source_confidence: official_resource_page
+    - label: Superlim paper
+      url: https://aclanthology.org/2023.emnlp-main.506/
+    - label: mteb/SwednRetrieval
+      url: https://huggingface.co/datasets/mteb/SwednRetrieval
+    source_notes:
+    - SEB states that summarization datasets are converted by using headlines as queries
+      and summaries/articles as corpus positives.
+  references:
+  - title: SweDN 1.0
+    url: https://spraakbanken.gu.se/resurser/swedn
+    year: 2025
+    doi: 10.23695/36v9-9017
+    is_paper: false
+    source_confidence: official_resource_page
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7081125174
+      hit_at_10: 0.895
+      recall_at_100: 0.8375
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8375
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7757365464
+      hit_at_10: 0.91
+      recall_at_100: 0.9025
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9025
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7398145343
+      hit_at_10: 0.88
+      recall_at_100: 0.94
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.94
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

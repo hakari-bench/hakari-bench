@@ -135,8 +135,20 @@ but differ in the named entity or requested attribute.
 | Queries | 119 |
 | Documents | 921 |
 | Positive qrels | 119 |
-| BM25 nDCG@10 | 0.5323 |
-| BM25 hit@10 | 0.7227 |
+| BM25 nDCG@10 | 0.5816 |
+| BM25 hit@10 | 0.8151 |
+| BM25 Recall@100 | 0.9167 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8416 |
+| Dense hit@10 | 0.9496 |
+| Dense Recall@100 | 0.9653 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7651 |
+| Reranking hybrid hit@10 | 0.9412 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 37.69 |
 | Document length avg chars | 397.16 |
 
@@ -198,65 +210,119 @@ benchmark_task_metadata:
     query_mean: 37.689076
     document_mean: 397.161781
   bm25:
-    ndcg_at_10: 0.5322781359
-    hit_at_10: 0.7226890756
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5816424741595791
+    hit_at_10: 0.8151260504201681
+    source: dataset_candidate_subset
   learning:
     original_train_split: unavailable
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: Yoruba MIRACL has no original train split; avoid NanoMIRACL evaluation queries and positive passages when building external or synthetic training data
+    leakage_note: Yoruba MIRACL has no original train split; avoid NanoMIRACL evaluation
+      queries and positive passages when building external or synthetic training data
     useful_training_data:
-      - Yoruba Wikipedia question-to-passage retrieval pairs from non-evaluation pages
-      - Yoruba open-domain QA evidence retrieval datasets
-      - Nigerian geography and biography retrieval data with Yoruba evidence passages
-      - multilingual African-language retrieval data with Yoruba evidence passages
+    - Yoruba Wikipedia question-to-passage retrieval pairs from non-evaluation pages
+    - Yoruba open-domain QA evidence retrieval datasets
+    - Nigerian geography and biography retrieval data with Yoruba evidence passages
+    - multilingual African-language retrieval data with Yoruba evidence passages
     synthetic_data:
-      document_generation: Yoruba Wikipedia-style passages with titles, capitals, countries, years, biographies, institutions, food descriptions, and Nigerian history facts
-      question_generation: Yoruba fact questions using Ki ni, Ta ni, Ilu wo, Orile ede wo, Omo orile ede wo, odun wo, Osu wo, and nibo forms with diacritic-rich and plain variants
-      answerability: questions should be grounded in explicit facts or relations in the generated or selected passage
+      document_generation: Yoruba Wikipedia-style passages with titles, capitals,
+        countries, years, biographies, institutions, food descriptions, and Nigerian
+        history facts
+      question_generation: Yoruba fact questions using Ki ni, Ta ni, Ilu wo, Orile
+        ede wo, Omo orile ede wo, odun wo, Osu wo, and nibo forms with diacritic-rich
+        and plain variants
+      answerability: questions should be grounded in explicit facts or relations in
+        the generated or selected passage
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMIRACL
     source_urls:
-      - label: MIRACL corpus dataset
-        url: https://huggingface.co/datasets/miracl/miracl-corpus
-      - label: MIRACL source queries and qrels
-        url: https://huggingface.co/datasets/miracl/miracl
-      - label: MIRACL GitHub repository
-        url: https://github.com/project-miracl/miracl
-    source_notes:
-      - repository metadata labels this split as multilingual and lists yo, en, and sw; observed data is Yoruba-centered with English names and code-mixed text
-      - the TACL paper identifies Yoruba as a WSDM Cup surprise language with no original training split
-  references:
-    - title: 'Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages'
-      url: https://arxiv.org/abs/2210.09984
-      year: 2022
-      doi: 10.48550/arXiv.2210.09984
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      url: https://aclanthology.org/2023.tacl-1.63/
-      year: 2023
-      doi: 10.1162/tacl_a_00595
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: MIRACL GitHub repository
-      url: https://github.com/project-miracl/miracl
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: official_project_repository
-    - title: MIRACL corpus dataset
+    - label: MIRACL corpus dataset
       url: https://huggingface.co/datasets/miracl/miracl-corpus
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: official_dataset_card
-    - title: MIRACL source queries and qrels
+    - label: MIRACL source queries and qrels
       url: https://huggingface.co/datasets/miracl/miracl
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: official_dataset_card
+    - label: MIRACL GitHub repository
+      url: https://github.com/project-miracl/miracl
+    source_notes:
+    - repository metadata labels this split as multilingual and lists yo, en, and
+      sw; observed data is Yoruba-centered with English names and code-mixed text
+    - the TACL paper identifies Yoruba as a WSDM Cup surprise language with no original
+      training split
+  references:
+  - title: 'Making a MIRACL: Multilingual Information Retrieval Across a Continuum
+      of Languages'
+    url: https://arxiv.org/abs/2210.09984
+    year: 2022
+    doi: 10.48550/arXiv.2210.09984
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+    url: https://aclanthology.org/2023.tacl-1.63/
+    year: 2023
+    doi: 10.1162/tacl_a_00595
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: MIRACL GitHub repository
+    url: https://github.com/project-miracl/miracl
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: official_project_repository
+  - title: MIRACL corpus dataset
+    url: https://huggingface.co/datasets/miracl/miracl-corpus
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: official_dataset_card
+  - title: MIRACL source queries and qrels
+    url: https://huggingface.co/datasets/miracl/miracl
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: official_dataset_card
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5816424742
+      hit_at_10: 0.8151260504
+      recall_at_100: 0.9166666667
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 119
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9166666667
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8416263978
+      hit_at_10: 0.9495798319
+      recall_at_100: 0.9652777778
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 119
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9652777778
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7651054659
+      hit_at_10: 0.9411764706
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 119
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

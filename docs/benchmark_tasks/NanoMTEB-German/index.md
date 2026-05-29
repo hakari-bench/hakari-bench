@@ -137,8 +137,15 @@ Nano evaluation documents or qrels should not be used as seeds.
 | Positive qrels | 4,959 |
 | Positives per query | 5.05 average |
 | Multi-positive queries | 184 |
-| Query-weighted BM25 nDCG@10 | 0.5455 |
-| Query-weighted BM25 hit@10 | 0.7424 |
+| Query-weighted BM25 nDCG@10 | 0.5587 |
+| Query-weighted BM25 hit@10 | 0.7709 |
+| Query-weighted BM25 Recall@100 | 0.8019 |
+| Query-weighted Dense nDCG@10 | 0.6119 |
+| Query-weighted Dense hit@10 | 0.7709 |
+| Query-weighted Dense Recall@100 | 0.7627 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.5902 |
+| Query-weighted Reranking hybrid hit@10 | 0.7912 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8223 |
 | Mean query length | 218.99 chars, weighted by query count |
 | Mean document length | 8,099.81 chars, weighted by split-local document count |
 
@@ -185,8 +192,8 @@ benchmark_task_group_metadata:
   dataset_id: hakari-bench/NanoMTEB-German
   language: de
   languages:
-    - de
-    - multilingual
+  - de
+  - multilingual
   category: natural_language
   document_path: docs/benchmark_tasks/NanoMTEB-German/index.md
   source_research:
@@ -209,124 +216,146 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 218.9928716904224
     document_mean_weighted_by_documents: 8099.812278879512
   bm25:
-    ndcg_at_10_query_weighted: 0.5454870786727087
-    hit_at_10_query_weighted: 0.7423625254635439
+    ndcg_at_10_query_weighted: 0.5586510539
+    hit_at_10_query_weighted: 0.7708757637
     ndcg_at_10_unweighted_task_mean: 0.5400028974
     hit_at_10_unweighted_task_mean: 0.73671428572
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: german_qu_ad
     hardest_task_by_ndcg_at_10: xmarket_de
   tasks:
-    - name: ger_da_lir
-      path: docs/benchmark_tasks/NanoMTEB-German/ger_da_lir.md
-      retrieval_shape: legal_passage_to_german_case_document
-      language: de
-      queries: 200
-      documents: 10000
-      positive_qrels: 235
-      bm25_ndcg_at_10: 0.5444239126
-      bm25_hit_at_10: 0.69
-    - name: german_dpr
-      path: docs/benchmark_tasks/NanoMTEB-German/german_dpr.md
-      retrieval_shape: german_fact_question_to_wikipedia_passage
-      language: de
-      queries: 200
-      documents: 2876
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4230457645
-      bm25_hit_at_10: 0.79
-    - name: german_qu_ad
-      path: docs/benchmark_tasks/NanoMTEB-German/german_qu_ad.md
-      retrieval_shape: germanquad_question_to_context_paragraph
-      language: de
-      queries: 200
-      documents: 474
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.9042226524
-      bm25_hit_at_10: 0.975
-    - name: gov_service
-      path: docs/benchmark_tasks/NanoMTEB-German/gov_service.md
-      retrieval_shape: citizen_question_to_municipal_service_page
-      language: de
-      queries: 200
-      documents: 105
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5875118162
-      bm25_hit_at_10: 0.8
-    - name: xmarket_de
-      path: docs/benchmark_tasks/NanoMTEB-German/xmarket_de.md
-      retrieval_shape: german_category_label_to_product_metadata
-      language: multilingual
-      queries: 182
-      documents: 10000
-      positive_qrels: 4124
-      bm25_ndcg_at_10: 0.2408103413
-      bm25_hit_at_10: 0.4285714286
+  - name: ger_da_lir
+    path: docs/benchmark_tasks/NanoMTEB-German/ger_da_lir.md
+    retrieval_shape: legal_passage_to_german_case_document
+    language: de
+    queries: 200
+    documents: 10000
+    positive_qrels: 235
+    bm25_ndcg_at_10: 0.5444239126
+    bm25_hit_at_10: 0.69
+  - name: german_dpr
+    path: docs/benchmark_tasks/NanoMTEB-German/german_dpr.md
+    retrieval_shape: german_fact_question_to_wikipedia_passage
+    language: de
+    queries: 200
+    documents: 2876
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4230457645
+    bm25_hit_at_10: 0.79
+  - name: german_qu_ad
+    path: docs/benchmark_tasks/NanoMTEB-German/german_qu_ad.md
+    retrieval_shape: germanquad_question_to_context_paragraph
+    language: de
+    queries: 200
+    documents: 474
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.9042226524
+    bm25_hit_at_10: 0.975
+  - name: gov_service
+    path: docs/benchmark_tasks/NanoMTEB-German/gov_service.md
+    retrieval_shape: citizen_question_to_municipal_service_page
+    language: de
+    queries: 200
+    documents: 105
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5875118162
+    bm25_hit_at_10: 0.8
+  - name: xmarket_de
+    path: docs/benchmark_tasks/NanoMTEB-German/xmarket_de.md
+    retrieval_shape: german_category_label_to_product_metadata
+    language: multilingual
+    queries: 182
+    documents: 10000
+    positive_qrels: 4124
+    bm25_ndcg_at_10: 0.2408103413
+    bm25_hit_at_10: 0.4285714286
   learning:
-    leakage_note: exclude NanoMTEB-German evaluation queries, qrels, positive documents, and upstream test examples from the source datasets
+    leakage_note: exclude NanoMTEB-German evaluation queries, qrels, positive documents,
+      and upstream test examples from the source datasets
     useful_training_data:
-      - GermanDPR and GermanQuAD train question-context pairs
-      - German Wikipedia passage retrieval with hard negatives
-      - German legal passage-to-case and citation retrieval pairs
-      - German municipal service question-page mappings
-      - multilingual e-commerce category-product retrieval pairs
-      - task-specific hard negatives from related pages, services, cases, or product categories
+    - GermanDPR and GermanQuAD train question-context pairs
+    - German Wikipedia passage retrieval with hard negatives
+    - German legal passage-to-case and citation retrieval pairs
+    - German municipal service question-page mappings
+    - multilingual e-commerce category-product retrieval pairs
+    - task-specific hard negatives from related pages, services, cases, or product
+      categories
     synthetic_data:
-      document_generation: German Wikipedia passages, legal decisions, municipal service pages, and product metadata in the appropriate genre
-      question_generation: German fact questions, legal reasoning passages, citizen service questions, and concise product-category queries grounded in the generated or selected document
-      answerability: positives must satisfy the exact answer, service, precedent, or category relation rather than only sharing German keywords
+      document_generation: German Wikipedia passages, legal decisions, municipal service
+        pages, and product metadata in the appropriate genre
+      question_generation: German fact questions, legal reasoning passages, citizen
+        service questions, and concise product-category queries grounded in the generated
+        or selected document
+      answerability: positives must satisfy the exact answer, service, precedent,
+        or category relation rather than only sharing German keywords
     multi_positive_training: preserve_xmarket_category_product_multi_positive_structure
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-German
     source_urls:
-      - label: GerDaLIR source reference
-        url: https://github.com/lavis-nlp/GerDaLIR
-      - label: mteb/GerDaLIR
-        url: https://huggingface.co/datasets/mteb/GerDaLIR
-      - label: deepset/germandpr
-        url: https://huggingface.co/datasets/deepset/germandpr
-      - label: mteb/GermanDPR
-        url: https://huggingface.co/datasets/mteb/GermanDPR
-      - label: deepset/germanquad
-        url: https://huggingface.co/datasets/deepset/germanquad
-      - label: mteb/germanquad-retrieval
-        url: https://huggingface.co/datasets/mteb/germanquad-retrieval
-      - label: it-at-m/LHM-Dienstleistungen-QA
-        url: https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA
-      - label: XMarket paper DOI
-        url: http://dx.doi.org/10.1145/3459637.3482493
-      - label: mteb/XMarket
-        url: https://huggingface.co/datasets/mteb/XMarket
+    - label: GerDaLIR source reference
+      url: https://github.com/lavis-nlp/GerDaLIR
+    - label: mteb/GerDaLIR
+      url: https://huggingface.co/datasets/mteb/GerDaLIR
+    - label: deepset/germandpr
+      url: https://huggingface.co/datasets/deepset/germandpr
+    - label: mteb/GermanDPR
+      url: https://huggingface.co/datasets/mteb/GermanDPR
+    - label: deepset/germanquad
+      url: https://huggingface.co/datasets/deepset/germanquad
+    - label: mteb/germanquad-retrieval
+      url: https://huggingface.co/datasets/mteb/germanquad-retrieval
+    - label: it-at-m/LHM-Dienstleistungen-QA
+      url: https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA
+    - label: XMarket paper DOI
+      url: http://dx.doi.org/10.1145/3459637.3482493
+    - label: mteb/XMarket
+      url: https://huggingface.co/datasets/mteb/XMarket
     source_notes: []
   references:
-    - title: GerDaLIR source reference
-      url: https://github.com/lavis-nlp/GerDaLIR
-      year: 2021
-      is_paper: false
-      source_confidence: dataset_source_reference
-    - title: GermanDPR source reference
-      url: https://huggingface.co/datasets/deepset/germandpr
-      year: 2021
-      is_paper: false
-      source_confidence: dataset_source_reference
-    - title: GermanQuAD-Retrieval source reference
-      url: https://huggingface.co/datasets/deepset/germanquad
-      year: 2021
-      is_paper: false
-      source_confidence: dataset_source_reference
-    - title: GermanGovServiceRetrieval source reference
-      url: https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA
-      year: 2022
-      is_paper: false
-      source_confidence: dataset_source_reference
-    - title: Cross-Market Product Recommendation
-      url: http://dx.doi.org/10.1145/3459637.3482493
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Massive Text Embedding Benchmark (MTEB)
-      url: https://github.com/embeddings-benchmark/mteb
-      year: 2022
-      is_paper: false
-      source_confidence: benchmark_repository
+  - title: GerDaLIR source reference
+    url: https://github.com/lavis-nlp/GerDaLIR
+    year: 2021
+    is_paper: false
+    source_confidence: dataset_source_reference
+  - title: GermanDPR source reference
+    url: https://huggingface.co/datasets/deepset/germandpr
+    year: 2021
+    is_paper: false
+    source_confidence: dataset_source_reference
+  - title: GermanQuAD-Retrieval source reference
+    url: https://huggingface.co/datasets/deepset/germanquad
+    year: 2021
+    is_paper: false
+    source_confidence: dataset_source_reference
+  - title: GermanGovServiceRetrieval source reference
+    url: https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA
+    year: 2022
+    is_paper: false
+    source_confidence: dataset_source_reference
+  - title: Cross-Market Product Recommendation
+    url: http://dx.doi.org/10.1145/3459637.3482493
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Massive Text Embedding Benchmark (MTEB)
+    url: https://github.com/embeddings-benchmark/mteb
+    year: 2022
+    is_paper: false
+    source_confidence: benchmark_repository
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.5586510539
+      query_weighted_hit_at_10: 0.7708757637
+      query_weighted_recall_at_100: 0.8018508925
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.6119409686
+      query_weighted_hit_at_10: 0.7708757637
+      query_weighted_recall_at_100: 0.762742038
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.590214438
+      query_weighted_hit_at_10: 0.7912423625
+      query_weighted_recall_at_100: 0.8223378869
+      source: dataset_candidate_subset
 ```

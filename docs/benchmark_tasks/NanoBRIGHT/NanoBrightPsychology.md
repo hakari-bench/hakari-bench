@@ -76,8 +76,20 @@ addiction while failing to support the specific explanation.
 | Positive qrels | 692 |
 | Positives per query | avg 6.85, min 1, median 3, max 54 |
 | Multi-positive queries | 66 (65.35%) |
-| BM25 nDCG@10 | 0.1475 |
-| BM25 hit@10 | 0.3168 |
+| BM25 nDCG@10 | 0.2474 |
+| BM25 hit@10 | 0.4653 |
+| BM25 Recall@100 | 0.3829 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4591 |
+| Dense hit@10 | 0.6634 |
+| Dense Recall@100 | 0.6329 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4124 |
+| Reranking hybrid hit@10 | 0.6634 |
+| Reranking hybrid Recall@100 | 0.5853 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 11 |
 | Query length avg chars | 693.16 |
 | Document length avg chars | 504.47 |
 
@@ -138,38 +150,86 @@ benchmark_task_metadata:
     query_mean: 693.1584158415842
     document_mean: 504.4673
   bm25:
-    ndcg_at_10: 0.14754529592509114
-    hit_at_10: 0.31683168316831684
-    source: dataset_bm25_column
+    ndcg_at_10: 0.24741945854194833
+    hit_at_10: 0.46534653465346537
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: BRIGHT Psychology StackExchange evaluation split
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoBRIGHT Psychology queries, cited positives, and linked answer pages
+    leakage_note: exclude NanoBRIGHT Psychology queries, cited positives, and linked
+      answer pages
     useful_training_data:
-      - non-overlapping Psychology StackExchange posts with cited sources
-      - psychology QA with references
-      - paper-to-question retrieval data
+    - non-overlapping Psychology StackExchange posts with cited sources
+    - psychology QA with references
+    - paper-to-question retrieval data
     synthetic_data:
-      document_generation: psychology source passages naming constructs, experiments, or measures
+      document_generation: psychology source passages naming constructs, experiments,
+        or measures
       question_generation: user-style psychology questions with concrete scenarios
       answerability: positives should support the specific psychological explanation
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBRIGHT
     source_urls:
-      - label: BRIGHT arXiv
-        url: https://arxiv.org/abs/2407.12883
-      - label: BRIGHT project
-        url: https://brightbenchmark.github.io/
-      - label: xlangai/BRIGHT
-        url: https://huggingface.co/datasets/xlangai/BRIGHT
+    - label: BRIGHT arXiv
+      url: https://arxiv.org/abs/2407.12883
+    - label: BRIGHT project
+      url: https://brightbenchmark.github.io/
+    - label: xlangai/BRIGHT
+      url: https://huggingface.co/datasets/xlangai/BRIGHT
     source_notes: []
   references:
-    - title: "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval"
-      url: https://arxiv.org/abs/2407.12883
-      year: 2024
-      doi: 10.48550/arXiv.2407.12883
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+      Retrieval'
+    url: https://arxiv.org/abs/2407.12883
+    year: 2024
+    doi: 10.48550/arXiv.2407.12883
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2474194585
+      hit_at_10: 0.4653465347
+      recall_at_100: 0.3829479769
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 101
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3829479769
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4591441906
+      hit_at_10: 0.6633663366
+      recall_at_100: 0.6329479769
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 101
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6329479769
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4124033275
+      hit_at_10: 0.6633663366
+      recall_at_100: 0.5852601156
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.108911
+      query_count: 101
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5852601156
+      safeguard_positive_rows: 11
+      rows_with_101_candidates: 11
 ```

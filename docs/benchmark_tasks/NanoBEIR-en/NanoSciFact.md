@@ -132,8 +132,20 @@ claims or positive abstracts.
 | Avg positives / query | 1.12 |
 | Positives per query (min / median / max) | 1 / 1.00 / 4 |
 | Queries with multiple positives | 4 (8.0%) |
-| BM25 nDCG@10 | 0.7174 |
-| BM25 hit@10 | 0.8600 |
+| BM25 nDCG@10 | 0.7282 |
+| BM25 hit@10 | 0.8800 |
+| BM25 Recall@100 | 0.9464 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7679 |
+| Dense hit@10 | 0.8400 |
+| Dense Recall@100 | 0.9286 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7397 |
+| Reranking hybrid hit@10 | 0.8800 |
+| Reranking hybrid Recall@100 | 0.9821 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 95.80 |
 | Document length avg chars | 1,431.23 |
 
@@ -195,59 +207,108 @@ benchmark_task_metadata:
     query_mean: 95.8
     document_mean: 1431.234327
   bm25:
-    ndcg_at_10: 0.7173872076
-    hit_at_10: 0.86
-    source: dataset_bm25_column
+    ndcg_at_10: 0.728167773383239
+    hit_at_10: 0.88
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding upstream SciFact dev/test claims, evidence abstracts, rationales, and Nano evaluation qrels from training
+    leakage_note: prefer excluding upstream SciFact dev/test claims, evidence abstracts,
+      rationales, and Nano evaluation qrels from training
     useful_training_data:
-      - official non-overlapping SciFact train split
-      - scientific claim and evidence abstract pairs
-      - biomedical entailment and scientific NLI data
-      - citation-sentence to cited-abstract supervision
+    - official non-overlapping SciFact train split
+    - scientific claim and evidence abstract pairs
+    - biomedical entailment and scientific NLI data
+    - citation-sentence to cited-abstract supervision
     synthetic_data:
-      document_generation: biomedical abstracts with explicit methods, results, quantities, and outcomes
+      document_generation: biomedical abstracts with explicit methods, results, quantities,
+        and outcomes
       question_generation: atomic scientific claims supported or refuted by one abstract
-      answerability: positives should contain evidence needed to verify the claim, not just share terminology
+      answerability: positives should contain evidence needed to verify the claim,
+        not just share terminology
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-en
     source_urls:
-      - label: SciFact paper
-        url: https://arxiv.org/abs/2004.14974
-      - label: SciFact GitHub repository
-        url: https://github.com/allenai/scifact
-      - label: mteb/scifact
-        url: https://huggingface.co/datasets/mteb/scifact
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    - label: SciFact paper
+      url: https://arxiv.org/abs/2004.14974
+    - label: SciFact GitHub repository
+      url: https://github.com/allenai/scifact
+    - label: mteb/scifact
+      url: https://huggingface.co/datasets/mteb/scifact
+    - label: Zeta Alpha NanoBEIR collection
+      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
     source_notes: []
   references:
-    - title: "Fact or Fiction: Verifying Scientific Claims"
-      url: https://arxiv.org/abs/2004.14974
-      year: 2020
-      doi: 10.48550/arXiv.2004.14974
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Fact or Fiction: Verifying Scientific Claims"
-      url: https://aclanthology.org/2020.emnlp-main.609/
-      year: 2020
-      doi: 10.18653/v1/2020.emnlp-main.609
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "SciFact GitHub repository"
-      url: https://github.com/allenai/scifact
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_project_page
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'Fact or Fiction: Verifying Scientific Claims'
+    url: https://arxiv.org/abs/2004.14974
+    year: 2020
+    doi: 10.48550/arXiv.2004.14974
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Fact or Fiction: Verifying Scientific Claims'
+    url: https://aclanthology.org/2020.emnlp-main.609/
+    year: 2020
+    doi: 10.18653/v1/2020.emnlp-main.609
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: SciFact GitHub repository
+    url: https://github.com/allenai/scifact
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_project_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7281677734
+      hit_at_10: 0.88
+      recall_at_100: 0.9464285714
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9464285714
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7678520072
+      hit_at_10: 0.84
+      recall_at_100: 0.9285714286
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9285714286
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7396804671
+      hit_at_10: 0.88
+      recall_at_100: 0.9821428571
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.02
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9821428571
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

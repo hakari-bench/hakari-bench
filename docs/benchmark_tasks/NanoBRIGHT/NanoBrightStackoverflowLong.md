@@ -75,8 +75,20 @@ family that do not resolve the issue.
 | Positive qrels | 129 |
 | Positives per query | avg 1.10, min 1, median 1, max 2 |
 | Multi-positive queries | 12 (10.26%) |
-| BM25 nDCG@10 | 0.3084 |
-| BM25 hit@10 | 0.5214 |
+| BM25 nDCG@10 | 0.4440 |
+| BM25 hit@10 | 0.7009 |
+| BM25 Recall@100 | 0.9225 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3894 |
+| Dense hit@10 | 0.6581 |
+| Dense Recall@100 | 0.9070 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4744 |
+| Reranking hybrid hit@10 | 0.8376 |
+| Reranking hybrid Recall@100 | 0.9767 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 3 |
 | Query length avg chars | 1292.97 |
 | Document length avg chars | 77578.44 |
 
@@ -137,38 +149,87 @@ benchmark_task_metadata:
     query_mean: 1292.965811965812
     document_mean: 77578.43770314193
   bm25:
-    ndcg_at_10: 0.308370058146309
-    hit_at_10: 0.5213675213675214
-    source: dataset_bm25_column
+    ndcg_at_10: 0.44401084662537865
+    hit_at_10: 0.7008547008547008
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: BRIGHT Stack Overflow long-document evaluation split
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoBRIGHT StackoverflowLong queries and full cited source pages
+    leakage_note: exclude NanoBRIGHT StackoverflowLong queries and full cited source
+      pages
     useful_training_data:
-      - document-level API documentation retrieval
-      - Stack Overflow questions with cited links
-      - long technical-reference QA
+    - document-level API documentation retrieval
+    - Stack Overflow questions with cited links
+    - long technical-reference QA
     synthetic_data:
-      document_generation: full API documentation or specification pages with many sections
+      document_generation: full API documentation or specification pages with many
+        sections
       question_generation: developer questions with code and environment context
-      answerability: positive full document should contain the API behavior or feature needed to solve the issue
+      answerability: positive full document should contain the API behavior or feature
+        needed to solve the issue
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBRIGHT
     source_urls:
-      - label: BRIGHT arXiv
-        url: https://arxiv.org/abs/2407.12883
-      - label: BRIGHT project
-        url: https://brightbenchmark.github.io/
-      - label: xlangai/BRIGHT
-        url: https://huggingface.co/datasets/xlangai/BRIGHT
+    - label: BRIGHT arXiv
+      url: https://arxiv.org/abs/2407.12883
+    - label: BRIGHT project
+      url: https://brightbenchmark.github.io/
+    - label: xlangai/BRIGHT
+      url: https://huggingface.co/datasets/xlangai/BRIGHT
     source_notes: []
   references:
-    - title: "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval"
-      url: https://arxiv.org/abs/2407.12883
-      year: 2024
-      doi: 10.48550/arXiv.2407.12883
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+      Retrieval'
+    url: https://arxiv.org/abs/2407.12883
+    year: 2024
+    doi: 10.48550/arXiv.2407.12883
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4440108466
+      hit_at_10: 0.7008547009
+      recall_at_100: 0.9224806202
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 117
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9224806202
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3894004556
+      hit_at_10: 0.6581196581
+      recall_at_100: 0.9069767442
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 117
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9069767442
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4743933597
+      hit_at_10: 0.8376068376
+      recall_at_100: 0.976744186
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.025641
+      query_count: 117
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.976744186
+      safeguard_positive_rows: 3
+      rows_with_101_candidates: 3
 ```

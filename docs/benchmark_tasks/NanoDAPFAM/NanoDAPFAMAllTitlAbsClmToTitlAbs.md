@@ -77,8 +77,20 @@ dependency or prior-art relations.
 | Documents | 10000 |
 | Positive qrels | 3981 |
 | Positives per query | avg 19.91, min 9, median 20.0, max 20 |
-| BM25 nDCG@10 | 0.5531 |
-| BM25 hit@10 | 0.7650 |
+| BM25 nDCG@10 | 0.2864 |
+| BM25 hit@10 | 0.8250 |
+| BM25 Recall@100 | 0.3587 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3997 |
+| Dense hit@10 | 0.9000 |
+| Dense Recall@100 | 0.5278 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3767 |
+| Reranking hybrid hit@10 | 0.8850 |
+| Reranking hybrid Recall@100 | 0.5046 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 8 |
 | Query length avg chars | 8339.47 |
 | Document length avg chars | 777.85 |
 
@@ -134,37 +146,87 @@ benchmark_task_metadata:
     query_mean: 8339.47
     document_mean: 777.854
   bm25:
-    ndcg_at_10: 0.5530710805
-    hit_at_10: 0.765
-    source: dataset_bm25_column
+    ndcg_at_10: 0.28635134652350086
+    hit_at_10: 0.825
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_confirmed
-    evaluation_split_origin: DAPFAM ALL title-abstract-claims to title-abstract patent-family retrieval
+    evaluation_split_origin: DAPFAM ALL title-abstract-claims to title-abstract patent-family
+      retrieval
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoDAPFAM evaluation families, qrels, positives, and same-family duplicates
+    leakage_note: exclude NanoDAPFAM evaluation families, qrels, positives, and same-family
+      duplicates
     useful_training_data:
-      - patent citation retrieval with claim-rich queries
-      - title-abstract patent search pairs
-      - prior-art search examples outside NanoDAPFAM families
+    - patent citation retrieval with claim-rich queries
+    - title-abstract patent search pairs
+    - prior-art search examples outside NanoDAPFAM families
     synthetic_data:
-      document_generation: concise patent title and abstract records paired with longer source claims
-      question_generation: use source patent title abstract and claims as retrieval queries
+      document_generation: concise patent title and abstract records paired with longer
+        source claims
+      question_generation: use source patent title abstract and claims as retrieval
+        queries
       answerability: positives should preserve citation-style technical relevance
     multi_positive_training: citation_family_multi_positive
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoDAPFAM
     source_urls:
-      - label: DAPFAM arXiv
-        url: https://arxiv.org/abs/2506.22141
-      - label: DAPFAM DOI
-        url: https://doi.org/10.1016/j.array.2026.100720
-      - label: datalyes/DAPFAM_patent
-        url: https://huggingface.co/datasets/datalyes/DAPFAM_patent
-  references:
-    - title: "DAPFAM: A Domain-Aware Family-level Dataset to benchmark cross domain patent retrieval"
+    - label: DAPFAM arXiv
       url: https://arxiv.org/abs/2506.22141
-      year: 2026
-      doi: 10.1016/j.array.2026.100720
-      is_paper: true
-      source_confidence: definitive_paper_link
+    - label: DAPFAM DOI
+      url: https://doi.org/10.1016/j.array.2026.100720
+    - label: datalyes/DAPFAM_patent
+      url: https://huggingface.co/datasets/datalyes/DAPFAM_patent
+  references:
+  - title: 'DAPFAM: A Domain-Aware Family-level Dataset to benchmark cross domain
+      patent retrieval'
+    url: https://arxiv.org/abs/2506.22141
+    year: 2026
+    doi: 10.1016/j.array.2026.100720
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2863513465
+      hit_at_10: 0.825
+      recall_at_100: 0.3587038433
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3587038433
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3996627994
+      hit_at_10: 0.9
+      recall_at_100: 0.527756845
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.527756845
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3767351918
+      hit_at_10: 0.885
+      recall_at_100: 0.5046470736
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.04
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5046470736
+      safeguard_positive_rows: 8
+      rows_with_101_candidates: 8
 ```

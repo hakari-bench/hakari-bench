@@ -103,6 +103,18 @@ similar powers to teach precise legal retrieval.
 | Queries with multiple positives | 41 (40.20%) |
 | BM25 nDCG@10 | 0.8143 |
 | BM25 hit@10 | 0.9804 |
+| BM25 Recall@100 | 0.9618 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8050 |
+| Dense hit@10 | 0.9608 |
+| Dense Recall@100 | 0.9108 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8455 |
+| Reranking hybrid hit@10 | 0.9706 |
+| Reranking hybrid Recall@100 | 0.9745 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 104.29 |
 | Document length avg chars | 665.01 |
 
@@ -148,9 +160,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://aclanthology.org/2024.nllp-1.12/
     additional_source_urls:
-      - https://arxiv.org/abs/2509.12340
-      - https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr
-      - https://github.com/embeddings-benchmark/mteb
+    - https://arxiv.org/abs/2509.12340
+    - https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr
+    - https://github.com/embeddings-benchmark/mteb
     no_paper_note: null
   counts:
     queries: 102
@@ -167,53 +179,102 @@ benchmark_task_metadata:
     query_mean: 104.294117647
     document_mean: 665.007
   bm25:
-    ndcg_at_10: 0.814312257
-    hit_at_10: 0.980392157
-    source: dataset_bm25_column
+    ndcg_at_10: 0.814312257246524
+    hit_at_10: 0.9803921568627451
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: "test split from clips/mteb-nl-legalqa-pr"
+    evaluation_split_origin: test split from clips/mteb-nl-legalqa-pr
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude LegalQA-NL evaluation questions, qrels, and law article chunks used in this Nano split."
+    leakage_note: Exclude LegalQA-NL evaluation questions, qrels, and law article
+      chunks used in this Nano split.
     useful_training_data:
-      - non-overlapping Dutch legal QA pairs with statute attributions
-      - Dutch law article search or citation data
-      - public legal question-answer data with source articles
-      - hard negatives from adjacent law articles and similar provisions
+    - non-overlapping Dutch legal QA pairs with statute attributions
+    - Dutch law article search or citation data
+    - public legal question-answer data with source articles
+    - hard negatives from adjacent law articles and similar provisions
     synthetic_data:
-      document_generation: "Dutch statute-like article chunks with law, chapter, article, and condition text."
-      question_generation: "Dutch legal questions about powers, rights, conditions, deadlines, and exceptions."
-      answerability: "Questions should be answerable from one or more explicit legal provisions."
+      document_generation: Dutch statute-like article chunks with law, chapter, article,
+        and condition text.
+      question_generation: Dutch legal questions about powers, rights, conditions,
+        deadlines, and exceptions.
+      answerability: Questions should be answerable from one or more explicit legal
+        provisions.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: LegalQA-NL ACL Anthology
-        url: https://aclanthology.org/2024.nllp-1.12/
-      - label: MTEB-NL arXiv
-        url: https://arxiv.org/abs/2509.12340
-      - label: clips/mteb-nl-legalqa-pr
-        url: https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr
-      - label: MTEB repository
-        url: https://github.com/embeddings-benchmark/mteb
+    - label: LegalQA-NL ACL Anthology
+      url: https://aclanthology.org/2024.nllp-1.12/
+    - label: MTEB-NL arXiv
+      url: https://arxiv.org/abs/2509.12340
+    - label: clips/mteb-nl-legalqa-pr
+      url: https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr
+    - label: MTEB repository
+      url: https://github.com/embeddings-benchmark/mteb
     source_notes: []
   references:
-    - title: "Retrieval-Augmented Generation for Long-form Question Answering in Dutch"
-      url: https://aclanthology.org/2024.nllp-1.12/
-      year: 2024
-      doi: 10.18653/v1/2024.nllp-1.12
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch"
-      url: https://arxiv.org/abs/2509.12340
-      year: 2025
-      doi: 10.48550/arXiv.2509.12340
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: clips/mteb-nl-legalqa-pr
-      url: https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: Retrieval-Augmented Generation for Long-form Question Answering in Dutch
+    url: https://aclanthology.org/2024.nllp-1.12/
+    year: 2024
+    doi: 10.18653/v1/2024.nllp-1.12
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+    url: https://arxiv.org/abs/2509.12340
+    year: 2025
+    doi: 10.48550/arXiv.2509.12340
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: clips/mteb-nl-legalqa-pr
+    url: https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8143122572
+      hit_at_10: 0.9803921569
+      recall_at_100: 0.9617834395
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 102
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9617834395
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8049601356
+      hit_at_10: 0.9607843137
+      recall_at_100: 0.9108280255
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 102
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9108280255
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8454968273
+      hit_at_10: 0.9705882353
+      recall_at_100: 0.974522293
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.009804
+      query_count: 102
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.974522293
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

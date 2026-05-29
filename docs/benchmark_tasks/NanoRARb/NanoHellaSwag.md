@@ -70,8 +70,20 @@ share objects or actions but violate temporal or physical plausibility.
 | Queries | 200 |
 | Documents | 10000 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.1166 |
-| BM25 hit@10 | 0.2000 |
+| BM25 nDCG@10 | 0.1393 |
+| BM25 hit@10 | 0.2300 |
+| BM25 Recall@100 | 0.5250 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.1253 |
+| Dense hit@10 | 0.2500 |
+| Dense Recall@100 | 0.5250 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1551 |
+| Reranking hybrid hit@10 | 0.2900 |
+| Reranking hybrid Recall@100 | 0.5950 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 81 |
 | Query length avg chars | 114.68 |
 | Document length avg chars | 62.15 |
 
@@ -124,23 +136,68 @@ benchmark_task_metadata:
     query_mean: 114.68
     document_mean: 62.1517
   bm25:
-    ndcg_at_10: 0.1166
-    hit_at_10: 0.2
-    source: dataset_bm25_column
+    ndcg_at_10: 0.13925998972991618
+    hit_at_10: 0.23
+    source: dataset_candidate_subset
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoRARb
     source_urls:
-      - label: RAR-b arXiv
-        url: https://arxiv.org/abs/2404.06347
-      - label: HellaSwag arXiv
-        url: https://arxiv.org/abs/1905.07830
-  references:
-    - title: "RAR-b: Reasoning as Retrieval Benchmark"
+    - label: RAR-b arXiv
       url: https://arxiv.org/abs/2404.06347
-      year: 2024
-      is_paper: true
-    - title: "HellaSwag: Can a Machine Really Finish Your Sentence?"
+    - label: HellaSwag arXiv
       url: https://arxiv.org/abs/1905.07830
-      year: 2019
-      is_paper: true
+  references:
+  - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+    url: https://arxiv.org/abs/2404.06347
+    year: 2024
+    is_paper: true
+  - title: 'HellaSwag: Can a Machine Really Finish Your Sentence?'
+    url: https://arxiv.org/abs/1905.07830
+    year: 2019
+    is_paper: true
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1392599897
+      hit_at_10: 0.23
+      recall_at_100: 0.525
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.525
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1253130035
+      hit_at_10: 0.25
+      recall_at_100: 0.525
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.525
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.1550535462
+      hit_at_10: 0.29
+      recall_at_100: 0.595
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.405
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.595
+      safeguard_positive_rows: 81
+      rows_with_101_candidates: 81
 ```

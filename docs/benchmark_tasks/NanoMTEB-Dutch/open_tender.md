@@ -95,6 +95,18 @@ queries. Include hard negatives from the same sector or procedure type.
 | Positive qrels | 199 |
 | BM25 nDCG@10 | 0.6712 |
 | BM25 hit@10 | 0.7136 |
+| BM25 Recall@100 | 0.8090 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6044 |
+| Dense hit@10 | 0.6734 |
+| Dense Recall@100 | 0.8090 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6556 |
+| Reranking hybrid hit@10 | 0.7286 |
+| Reranking hybrid Recall@100 | 0.8543 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 29 |
 | Query length avg chars | 62.19 |
 | Document length avg chars | 442.03 |
 
@@ -138,9 +150,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2509.12340
     additional_source_urls:
-      - https://huggingface.co/datasets/clips/mteb-nl-opentender-ret
-      - https://github.com/embeddings-benchmark/mteb
-    no_paper_note: "No standalone OpenTender retrieval paper was confirmed; MTEB-NL and the source dataset card were used."
+    - https://huggingface.co/datasets/clips/mteb-nl-opentender-ret
+    - https://github.com/embeddings-benchmark/mteb
+    no_paper_note: No standalone OpenTender retrieval paper was confirmed; MTEB-NL
+      and the source dataset card were used.
   counts:
     queries: 199
     documents: 10000
@@ -156,45 +169,93 @@ benchmark_task_metadata:
     query_mean: 62.185929648
     document_mean: 442.0317
   bm25:
-    ndcg_at_10: 0.671173217
-    hit_at_10: 0.713567839
-    source: dataset_bm25_column
+    ndcg_at_10: 0.6711732173395353
+    hit_at_10: 0.7135678391959799
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: "test split from clips/mteb-nl-opentender-ret"
+    evaluation_split_origin: test split from clips/mteb-nl-opentender-ret
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude overlapping OpenTender titles, descriptions, qrels, and evaluation rows."
+    leakage_note: Exclude overlapping OpenTender titles, descriptions, qrels, and
+      evaluation rows.
     useful_training_data:
-      - non-overlapping Dutch tender title-description pairs
-      - public procurement notices with category metadata
-      - procurement search logs and clicked tender records
-      - same-category hard negatives from tender corpora
+    - non-overlapping Dutch tender title-description pairs
+    - public procurement notices with category metadata
+    - procurement search logs and clicked tender records
+    - same-category hard negatives from tender corpora
     synthetic_data:
-      document_generation: "Dutch procurement notices with buyer, scope, procedure, and contract details."
-      question_generation: "Concise tender titles or procurement search queries."
-      answerability: "Each query should map to one procurement notice, with same-sector hard negatives."
+      document_generation: Dutch procurement notices with buyer, scope, procedure,
+        and contract details.
+      question_generation: Concise tender titles or procurement search queries.
+      answerability: Each query should map to one procurement notice, with same-sector
+        hard negatives.
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: MTEB-NL arXiv
-        url: https://arxiv.org/abs/2509.12340
-      - label: clips/mteb-nl-opentender-ret
-        url: https://huggingface.co/datasets/clips/mteb-nl-opentender-ret
-      - label: MTEB repository
-        url: https://github.com/embeddings-benchmark/mteb
+    - label: MTEB-NL arXiv
+      url: https://arxiv.org/abs/2509.12340
+    - label: clips/mteb-nl-opentender-ret
+      url: https://huggingface.co/datasets/clips/mteb-nl-opentender-ret
+    - label: MTEB repository
+      url: https://github.com/embeddings-benchmark/mteb
     source_notes: []
   references:
-    - title: "MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch"
-      url: https://arxiv.org/abs/2509.12340
-      year: 2025
-      doi: 10.48550/arXiv.2509.12340
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: clips/mteb-nl-opentender-ret
-      url: https://huggingface.co/datasets/clips/mteb-nl-opentender-ret
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+    url: https://arxiv.org/abs/2509.12340
+    year: 2025
+    doi: 10.48550/arXiv.2509.12340
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: clips/mteb-nl-opentender-ret
+    url: https://huggingface.co/datasets/clips/mteb-nl-opentender-ret
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6711732173
+      hit_at_10: 0.7135678392
+      recall_at_100: 0.8090452261
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8090452261
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6044057976
+      hit_at_10: 0.6733668342
+      recall_at_100: 0.8090452261
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8090452261
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6555984882
+      hit_at_10: 0.7286432161
+      recall_at_100: 0.8542713568
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.145729
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8542713568
+      safeguard_positive_rows: 29
+      rows_with_101_candidates: 29
 ```

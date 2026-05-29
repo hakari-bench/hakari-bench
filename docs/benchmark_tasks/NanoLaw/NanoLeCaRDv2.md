@@ -81,8 +81,20 @@ fail one of the legal relevance dimensions.
 | Positive qrels | 3,896 |
 | Positives per query | avg 24.50 / min 4 / median 28 / max 30 |
 | Multi-positive queries | 159 (100.00%) |
-| BM25 nDCG@10 | 0.6379 |
-| BM25 hit@10 | 0.9371 |
+| BM25 nDCG@10 | 0.6528 |
+| BM25 hit@10 | 0.9497 |
+| BM25 Recall@100 | 0.7523 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6940 |
+| Dense hit@10 | 0.9560 |
+| Dense Recall@100 | 0.8611 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7225 |
+| Reranking hybrid hit@10 | 0.9686 |
+| Reranking hybrid Recall@100 | 0.8619 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 4259.44 |
 | Document length avg chars | 7231.82 |
 
@@ -138,39 +150,86 @@ benchmark_task_metadata:
     query_mean: 4259.440251572327
     document_mean: 7231.823978919631
   bm25:
-    ndcg_at_10: 0.6379051373412444
-    hit_at_10: 0.9371069182389937
-    source: dataset_bm25_column
+    ndcg_at_10: 0.6527794285644833
+    hit_at_10: 0.949685534591195
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: lecardv2_test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoLeCaRDv2 queries, qrels, and relevant criminal case documents
+    leakage_note: exclude NanoLeCaRDv2 queries, qrels, and relevant criminal case
+      documents
     useful_training_data:
-      - Chinese legal case retrieval
-      - criminal charge and fact-section retrieval pairs
-      - court-document similarity data
-      - same-charge hard negatives
+    - Chinese legal case retrieval
+    - criminal charge and fact-section retrieval pairs
+    - court-document similarity data
+    - same-charge hard negatives
     synthetic_data:
       document_generation: Chinese criminal judgments with facts, reasoning, and sentencing
-      question_generation: Chinese criminal query cases with material facts and procedural details
+      question_generation: Chinese criminal query cases with material facts and procedural
+        details
       answerability: positives should align on characterization, penalty, or procedure
     multi_positive_training: preserve_large_positive_sets_per_query
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoLaw
     source_urls:
-      - label: LeCaRDv2 arXiv
-        url: https://arxiv.org/abs/2310.17609
-      - label: THUIR LeCaRDv2
-        url: https://github.com/THUIR/LeCaRDv2
-      - label: MTEB LeCaRDv2
-        url: https://huggingface.co/datasets/mteb/LeCaRDv2
+    - label: LeCaRDv2 arXiv
+      url: https://arxiv.org/abs/2310.17609
+    - label: THUIR LeCaRDv2
+      url: https://github.com/THUIR/LeCaRDv2
+    - label: MTEB LeCaRDv2
+      url: https://huggingface.co/datasets/mteb/LeCaRDv2
     source_notes: []
   references:
-    - title: "LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset"
-      url: https://arxiv.org/abs/2310.17609
-      year: 2023
-      doi: 10.48550/arXiv.2310.17609
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset'
+    url: https://arxiv.org/abs/2310.17609
+    year: 2023
+    doi: 10.48550/arXiv.2310.17609
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6527794286
+      hit_at_10: 0.9496855346
+      recall_at_100: 0.7523100616
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 159
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7523100616
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6939641293
+      hit_at_10: 0.9559748428
+      recall_at_100: 0.8611396304
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 159
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8611396304
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7225237853
+      hit_at_10: 0.9685534591
+      recall_at_100: 0.8619096509
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.006289
+      query_count: 159
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8619096509
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

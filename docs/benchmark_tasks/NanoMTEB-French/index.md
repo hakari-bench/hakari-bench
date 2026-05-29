@@ -150,8 +150,15 @@ positive documents, source article text, or xPQA product candidates as seeds.
 | Positive qrels | 2,212 |
 | Positives per query | 1.47 average |
 | Multi-positive queries | 314 |
-| Query-weighted BM25 nDCG@10 | 0.3961 |
-| Query-weighted BM25 hit@10 | 0.5073 |
+| Query-weighted BM25 nDCG@10 | 0.4066 |
+| Query-weighted BM25 hit@10 | 0.5287 |
+| Query-weighted BM25 Recall@100 | 0.6403 |
+| Query-weighted Dense nDCG@10 | 0.5438 |
+| Query-weighted Dense hit@10 | 0.7027 |
+| Query-weighted Dense Recall@100 | 0.8471 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.4836 |
+| Query-weighted Reranking hybrid hit@10 | 0.6153 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8224 |
 | Mean query length | 86.63 chars, weighted by query count |
 | Mean document length | 914.18 chars, weighted by split-local document count |
 
@@ -201,9 +208,9 @@ benchmark_task_group_metadata:
   dataset_id: hakari-bench/NanoMTEB-French
   language: multilingual
   languages:
-    - fr
-    - en
-    - multilingual
+  - fr
+  - en
+  - multilingual
   category: natural_language
   document_path: docs/benchmark_tasks/NanoMTEB-French/index.md
   source_research:
@@ -226,152 +233,178 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 86.63266666666667
     document_mean_weighted_by_documents: 914.1844615146672
   bm25:
-    ndcg_at_10_query_weighted: 0.39608970838666663
-    hit_at_10_query_weighted: 0.5073333333333333
+    ndcg_at_10_query_weighted: 0.4066448169
+    hit_at_10_query_weighted: 0.5286666667
     ndcg_at_10_unweighted_task_mean: 0.41449726666250003
     hit_at_10_unweighted_task_mean: 0.53
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: fquad
     hardest_task_by_ndcg_at_10: xpqa_eng_fra
   tasks:
-    - name: alloprof
-      path: docs/benchmark_tasks/NanoMTEB-French/alloprof.md
-      retrieval_shape: french_student_question_to_educational_resource
-      language: fr
-      queries: 200
-      documents: 2556
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.3389716145
-      bm25_hit_at_10: 0.475
-    - name: bsard
-      path: docs/benchmark_tasks/NanoMTEB-French/bsard.md
-      retrieval_shape: french_lay_legal_question_to_belgian_statute
-      language: fr
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.1707572164
-      bm25_hit_at_10: 0.285
-    - name: fquad
-      path: docs/benchmark_tasks/NanoMTEB-French/fquad.md
-      retrieval_shape: french_qa_question_to_wikipedia_passage
-      language: fr
-      queries: 200
-      documents: 269
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8989719806
-      bm25_hit_at_10: 0.955
-    - name: mintaka_fr
-      path: docs/benchmark_tasks/NanoMTEB-French/mintaka_fr.md
-      retrieval_shape: french_complex_question_to_short_answer
-      language: multilingual
-      queries: 200
-      documents: 1714
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2999749748
-      bm25_hit_at_10: 0.4
-    - name: syntec
-      path: docs/benchmark_tasks/NanoMTEB-French/syntec.md
-      retrieval_shape: french_employment_question_to_agreement_article
-      language: fr
-      queries: 100
-      documents: 90
-      positive_qrels: 100
-      bm25_ndcg_at_10: 0.6906106408
-      bm25_hit_at_10: 0.87
-    - name: xpqa_eng_fra
-      path: docs/benchmark_tasks/NanoMTEB-French/xpqa_eng_fra.md
-      retrieval_shape: french_product_question_to_english_answer_snippet
-      language: multilingual
-      queries: 200
-      documents: 1674
-      positive_qrels: 451
-      bm25_ndcg_at_10: 0.1030484088
-      bm25_hit_at_10: 0.175
-    - name: xpqa_fra_eng
-      path: docs/benchmark_tasks/NanoMTEB-French/xpqa_fra_eng.md
-      retrieval_shape: english_product_question_to_french_answer_snippet
-      language: multilingual
-      queries: 200
-      documents: 1547
-      positive_qrels: 437
-      bm25_ndcg_at_10: 0.2584987816
-      bm25_hit_at_10: 0.345
-    - name: xpqa_fra_fra
-      path: docs/benchmark_tasks/NanoMTEB-French/xpqa_fra_fra.md
-      retrieval_shape: french_product_question_to_french_answer_snippet
-      language: fr
-      queries: 200
-      documents: 1547
-      positive_qrels: 424
-      bm25_ndcg_at_10: 0.5551445158
-      bm25_hit_at_10: 0.735
+  - name: alloprof
+    path: docs/benchmark_tasks/NanoMTEB-French/alloprof.md
+    retrieval_shape: french_student_question_to_educational_resource
+    language: fr
+    queries: 200
+    documents: 2556
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.3389716145
+    bm25_hit_at_10: 0.475
+  - name: bsard
+    path: docs/benchmark_tasks/NanoMTEB-French/bsard.md
+    retrieval_shape: french_lay_legal_question_to_belgian_statute
+    language: fr
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.1707572164
+    bm25_hit_at_10: 0.285
+  - name: fquad
+    path: docs/benchmark_tasks/NanoMTEB-French/fquad.md
+    retrieval_shape: french_qa_question_to_wikipedia_passage
+    language: fr
+    queries: 200
+    documents: 269
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8989719806
+    bm25_hit_at_10: 0.955
+  - name: mintaka_fr
+    path: docs/benchmark_tasks/NanoMTEB-French/mintaka_fr.md
+    retrieval_shape: french_complex_question_to_short_answer
+    language: multilingual
+    queries: 200
+    documents: 1714
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2999749748
+    bm25_hit_at_10: 0.4
+  - name: syntec
+    path: docs/benchmark_tasks/NanoMTEB-French/syntec.md
+    retrieval_shape: french_employment_question_to_agreement_article
+    language: fr
+    queries: 100
+    documents: 90
+    positive_qrels: 100
+    bm25_ndcg_at_10: 0.6906106408
+    bm25_hit_at_10: 0.87
+  - name: xpqa_eng_fra
+    path: docs/benchmark_tasks/NanoMTEB-French/xpqa_eng_fra.md
+    retrieval_shape: french_product_question_to_english_answer_snippet
+    language: multilingual
+    queries: 200
+    documents: 1674
+    positive_qrels: 451
+    bm25_ndcg_at_10: 0.1030484088
+    bm25_hit_at_10: 0.175
+  - name: xpqa_fra_eng
+    path: docs/benchmark_tasks/NanoMTEB-French/xpqa_fra_eng.md
+    retrieval_shape: english_product_question_to_french_answer_snippet
+    language: multilingual
+    queries: 200
+    documents: 1547
+    positive_qrels: 437
+    bm25_ndcg_at_10: 0.2584987816
+    bm25_hit_at_10: 0.345
+  - name: xpqa_fra_fra
+    path: docs/benchmark_tasks/NanoMTEB-French/xpqa_fra_fra.md
+    retrieval_shape: french_product_question_to_french_answer_snippet
+    language: fr
+    queries: 200
+    documents: 1547
+    positive_qrels: 424
+    bm25_ndcg_at_10: 0.5551445158
+    bm25_hit_at_10: 0.735
   learning:
-    leakage_note: exclude NanoMTEB-French evaluation queries, qrels, positive documents, answer strings, statutes, lesson resources, Syntec articles, xPQA product snippets, and upstream test rows from training
+    leakage_note: exclude NanoMTEB-French evaluation queries, qrels, positive documents,
+      answer strings, statutes, lesson resources, Syntec articles, xPQA product snippets,
+      and upstream test rows from training
     useful_training_data:
-      - non-overlapping French educational forum question-resource pairs
-      - French legal, labor-law, and collective-agreement question-to-article pairs
-      - non-overlapping FQuAD and French Wikipedia QA retrieval pairs
-      - French Mintaka and Wikidata entity-answer QA pairs
-      - French-English xPQA and e-commerce product QA ranking data
-      - hard negatives from the same school subject, legal code, agreement article family, Wikipedia article, entity class, product model, or product category
+    - non-overlapping French educational forum question-resource pairs
+    - French legal, labor-law, and collective-agreement question-to-article pairs
+    - non-overlapping FQuAD and French Wikipedia QA retrieval pairs
+    - French Mintaka and Wikidata entity-answer QA pairs
+    - French-English xPQA and e-commerce product QA ranking data
+    - hard negatives from the same school subject, legal code, agreement article family,
+      Wikipedia article, entity class, product model, or product category
     synthetic_data:
-      document_generation: French lessons, statutes, agreement articles, Wikipedia passages, short answer strings, and product answer snippets in source-like style
-      question_generation: French student questions, lay legal questions, workplace questions, extractive QA questions, complex entity questions, and French or English product questions grounded in generated documents
-      answerability: positives must preserve lesson explanation, statutory or agreement support, answer-bearing evidence, entity identity, product-property answerability, and cross-lingual alignment rather than broad topic overlap
+      document_generation: French lessons, statutes, agreement articles, Wikipedia
+        passages, short answer strings, and product answer snippets in source-like
+        style
+      question_generation: French student questions, lay legal questions, workplace
+        questions, extractive QA questions, complex entity questions, and French or
+        English product questions grounded in generated documents
+      answerability: positives must preserve lesson explanation, statutory or agreement
+        support, answer-bearing evidence, entity identity, product-property answerability,
+        and cross-lingual alignment rather than broad topic overlap
     multi_positive_training: preserve_xpqa_multi_positive_qrels
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-French
     source_urls:
-      - label: MTEB-French arXiv
-        url: https://arxiv.org/abs/2405.20468
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: BSARD arXiv
-        url: https://arxiv.org/abs/2108.11792
-      - label: FQuAD arXiv
-        url: https://arxiv.org/abs/2002.06071
-      - label: FQuAD2 arXiv
-        url: https://arxiv.org/abs/2109.13209
-      - label: Mintaka arXiv
-        url: https://arxiv.org/abs/2210.01613
-      - label: xPQA arXiv
-        url: https://arxiv.org/abs/2305.09249
+    - label: MTEB-French arXiv
+      url: https://arxiv.org/abs/2405.20468
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: BSARD arXiv
+      url: https://arxiv.org/abs/2108.11792
+    - label: FQuAD arXiv
+      url: https://arxiv.org/abs/2002.06071
+    - label: FQuAD2 arXiv
+      url: https://arxiv.org/abs/2109.13209
+    - label: Mintaka arXiv
+      url: https://arxiv.org/abs/2210.01613
+    - label: xPQA arXiv
+      url: https://arxiv.org/abs/2305.09249
     source_notes: []
   references:
-    - title: "MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis"
-      url: https://arxiv.org/abs/2405.20468
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "A Statutory Article Retrieval Dataset in French"
-      url: https://arxiv.org/abs/2108.11792
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "FQuAD: French Question Answering Dataset"
-      url: https://arxiv.org/abs/2002.06071
-      year: 2020
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "FQuAD2.0: French Question Answering and knowing that you know nothing"
-      url: https://arxiv.org/abs/2109.13209
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering"
-      url: https://arxiv.org/abs/2210.01613
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "xPQA: Cross-Lingual Product Question Answering across 12 Languages"
-      url: https://arxiv.org/abs/2305.09249
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis'
+    url: https://arxiv.org/abs/2405.20468
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: A Statutory Article Retrieval Dataset in French
+    url: https://arxiv.org/abs/2108.11792
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'FQuAD: French Question Answering Dataset'
+    url: https://arxiv.org/abs/2002.06071
+    year: 2020
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'FQuAD2.0: French Question Answering and knowing that you know nothing'
+    url: https://arxiv.org/abs/2109.13209
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question
+      Answering'
+    url: https://arxiv.org/abs/2210.01613
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'xPQA: Cross-Lingual Product Question Answering across 12 Languages'
+    url: https://arxiv.org/abs/2305.09249
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.4066448169
+      query_weighted_hit_at_10: 0.5286666667
+      query_weighted_recall_at_100: 0.6403362949
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.5438261037
+      query_weighted_hit_at_10: 0.7026666667
+      query_weighted_recall_at_100: 0.8470607629
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.483566707
+      query_weighted_hit_at_10: 0.6153333333
+      query_weighted_recall_at_100: 0.8224163169
+      source: dataset_candidate_subset
 ```

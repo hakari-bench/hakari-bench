@@ -199,8 +199,15 @@ NanoCodeTransOceanContest, NanoCodeTransOceanDL, or NanoStackOverflowQA.
 | Split-local documents | 76,295 |
 | Positive qrels | 1,850 |
 | Positives per query | exactly 1.00 for every subtask |
-| Query-weighted BM25 nDCG@10 | 0.5965 |
-| Query-weighted BM25 hit@10 | 0.6962 |
+| Query-weighted BM25 nDCG@10 | 0.5425 |
+| Query-weighted BM25 hit@10 | 0.6416 |
+| Query-weighted BM25 Recall@100 | 0.7914 |
+| Query-weighted Dense nDCG@10 | 0.8042 |
+| Query-weighted Dense hit@10 | 0.8795 |
+| Query-weighted Dense Recall@100 | 0.9362 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6908 |
+| Query-weighted Reranking hybrid hit@10 | 0.8038 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9411 |
 | Mean query length | 1,181.89 chars, weighted by query count |
 | Mean document length | 719.89 chars, weighted by split-local document count |
 
@@ -276,96 +283,98 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 1181.8908108108108
     document_mean_weighted_by_documents: 719.8876597417917
   bm25:
-    ndcg_at_10_query_weighted: 0.5964998831489635
-    hit_at_10_query_weighted: 0.6962162162162162
+    ndcg_at_10_query_weighted: 0.5424549525
+    hit_at_10_query_weighted: 0.6416216216
     ndcg_at_10_unweighted_task_mean: 0.5926997035618973
     hit_at_10_unweighted_task_mean: 0.7145
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: NanoCodeSearchNetCCR
     hardest_task_by_ndcg_at_10: NanoApps
   tasks:
-    - name: NanoApps
-      path: docs/benchmark_tasks/NanoCoIR/NanoApps.md
-      retrieval_shape: problem_statement_to_python_solution
-      queries: 200
-      documents: 8754
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.009653382790366965
-      bm25_hit_at_10: 0.015
-    - name: NanoCodeFeedbackMT
-      path: docs/benchmark_tasks/NanoCoIR/NanoCodeFeedbackMT.md
-      retrieval_shape: multi_turn_dialogue_to_assistant_response
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7311153823775425
-      bm25_hit_at_10: 0.805
-    - name: NanoCodeFeedbackST
-      path: docs/benchmark_tasks/NanoCoIR/NanoCodeFeedbackST.md
-      retrieval_shape: single_instruction_to_assistant_response
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8754924057812555
-      bm25_hit_at_10: 0.93
-    - name: NanoCodeSearchNet
-      path: docs/benchmark_tasks/NanoCoIR/NanoCodeSearchNet.md
-      retrieval_shape: code_snippet_to_natural_language_summary
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6470749577416152
-      bm25_hit_at_10: 0.77
-    - name: NanoCodeSearchNetCCR
-      path: docs/benchmark_tasks/NanoCoIR/NanoCodeSearchNetCCR.md
-      retrieval_shape: function_prefix_to_code_continuation
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8921900411147616
-      bm25_hit_at_10: 0.97
-    - name: NanoCodeTransOceanContest
-      path: docs/benchmark_tasks/NanoCoIR/NanoCodeTransOceanContest.md
-      retrieval_shape: python_program_to_equivalent_cpp_program
-      queries: 200
-      documents: 1008
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5360624784473309
-      bm25_hit_at_10: 0.685
-    - name: NanoCodeTransOceanDL
-      path: docs/benchmark_tasks/NanoCoIR/NanoCodeTransOceanDL.md
-      retrieval_shape: cross_framework_deep_learning_code_equivalence
-      queries: 50
-      documents: 266
-      positive_qrels: 50
-      bm25_ndcg_at_10: 0.5457652860119118
-      bm25_hit_at_10: 0.94
-    - name: NanoCosQA
-      path: docs/benchmark_tasks/NanoCoIR/NanoCosQA.md
-      retrieval_shape: short_web_query_to_python_function
-      queries: 200
-      documents: 6267
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.3573610255127629
-      bm25_hit_at_10: 0.52
-    - name: NanoStackOverflowQA
-      path: docs/benchmark_tasks/NanoCoIR/NanoStackOverflowQA.md
-      retrieval_shape: developer_question_to_stackoverflow_answer
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7403011377737236
-      bm25_hit_at_10: 0.815
-    - name: NanoSyntheticText2SQL
-      path: docs/benchmark_tasks/NanoCoIR/NanoSyntheticText2SQL.md
-      retrieval_shape: database_question_to_sql_query
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5919819380677027
-      bm25_hit_at_10: 0.695
+  - name: NanoApps
+    path: docs/benchmark_tasks/NanoCoIR/NanoApps.md
+    retrieval_shape: problem_statement_to_python_solution
+    queries: 200
+    documents: 8754
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.009653382790366965
+    bm25_hit_at_10: 0.015
+  - name: NanoCodeFeedbackMT
+    path: docs/benchmark_tasks/NanoCoIR/NanoCodeFeedbackMT.md
+    retrieval_shape: multi_turn_dialogue_to_assistant_response
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7311153823775425
+    bm25_hit_at_10: 0.805
+  - name: NanoCodeFeedbackST
+    path: docs/benchmark_tasks/NanoCoIR/NanoCodeFeedbackST.md
+    retrieval_shape: single_instruction_to_assistant_response
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8754924057812555
+    bm25_hit_at_10: 0.93
+  - name: NanoCodeSearchNet
+    path: docs/benchmark_tasks/NanoCoIR/NanoCodeSearchNet.md
+    retrieval_shape: code_snippet_to_natural_language_summary
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6470749577416152
+    bm25_hit_at_10: 0.77
+  - name: NanoCodeSearchNetCCR
+    path: docs/benchmark_tasks/NanoCoIR/NanoCodeSearchNetCCR.md
+    retrieval_shape: function_prefix_to_code_continuation
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8921900411147616
+    bm25_hit_at_10: 0.97
+  - name: NanoCodeTransOceanContest
+    path: docs/benchmark_tasks/NanoCoIR/NanoCodeTransOceanContest.md
+    retrieval_shape: python_program_to_equivalent_cpp_program
+    queries: 200
+    documents: 1008
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5360624784473309
+    bm25_hit_at_10: 0.685
+  - name: NanoCodeTransOceanDL
+    path: docs/benchmark_tasks/NanoCoIR/NanoCodeTransOceanDL.md
+    retrieval_shape: cross_framework_deep_learning_code_equivalence
+    queries: 50
+    documents: 266
+    positive_qrels: 50
+    bm25_ndcg_at_10: 0.5457652860119118
+    bm25_hit_at_10: 0.94
+  - name: NanoCosQA
+    path: docs/benchmark_tasks/NanoCoIR/NanoCosQA.md
+    retrieval_shape: short_web_query_to_python_function
+    queries: 200
+    documents: 6267
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.3573610255127629
+    bm25_hit_at_10: 0.52
+  - name: NanoStackOverflowQA
+    path: docs/benchmark_tasks/NanoCoIR/NanoStackOverflowQA.md
+    retrieval_shape: developer_question_to_stackoverflow_answer
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7403011377737236
+    bm25_hit_at_10: 0.815
+  - name: NanoSyntheticText2SQL
+    path: docs/benchmark_tasks/NanoCoIR/NanoSyntheticText2SQL.md
+    retrieval_shape: database_question_to_sql_query
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5919819380677027
+    bm25_hit_at_10: 0.695
   learning:
-    leakage_note: exclude NanoCoIR evaluation queries, qrels, and positive documents; audit upstream CoIR source splits before using public source data for training; raw CodeFeedback public train files contain NanoCodeFeedback evaluation rows
+    leakage_note: exclude NanoCoIR evaluation queries, qrels, and positive documents;
+      audit upstream CoIR source splits before using public source data for training;
+      raw CodeFeedback public train files contain NanoCodeFeedback evaluation rows
     leakage_audit:
       codefeedback_mt:
         source_dataset: m-a-p/Code-Feedback
@@ -381,80 +390,107 @@ benchmark_task_group_metadata:
         normalized_exact_query_positive_matches: 200
         risk: raw public train leaks NanoCodeFeedbackST evaluation rows
     split_leakage_risk:
-      apps: use APPS train-side rows only; exclude NanoApps problem statements and solutions
-      cosqa: use CoSQA train-side rows only; exclude NanoCosQA queries and Python functions
-      synthetic_text_to_sql: use Gretel train split only; exclude NanoSyntheticText2SQL prompts, SQL, and schema context
-      codesearchnet: use CodeSearchNet train-side rows only; exclude NanoCodeSearchNet code-docstring and CCR prefix-continuation pairs
-      codetransocean: use CodeTransOcean train or validation rows only; exclude NanoCodeTransOcean contest and DL code pairs
-      stackoverflow_qa: use StackOverflow QA train-side rows only; exclude NanoStackOverflowQA questions, answers, URLs, ids, and code blocks
+      apps: use APPS train-side rows only; exclude NanoApps problem statements and
+        solutions
+      cosqa: use CoSQA train-side rows only; exclude NanoCosQA queries and Python
+        functions
+      synthetic_text_to_sql: use Gretel train split only; exclude NanoSyntheticText2SQL
+        prompts, SQL, and schema context
+      codesearchnet: use CodeSearchNet train-side rows only; exclude NanoCodeSearchNet
+        code-docstring and CCR prefix-continuation pairs
+      codetransocean: use CodeTransOcean train or validation rows only; exclude NanoCodeTransOcean
+        contest and DL code pairs
+      stackoverflow_qa: use StackOverflow QA train-side rows only; exclude NanoStackOverflowQA
+        questions, answers, URLs, ids, and code blocks
     useful_training_data:
-      - APPS-style problem-to-solution retrieval pairs
-      - CoSQA and CodeSearchNet query-code or code-summary pairs
-      - code-assistant instruction-answer and multi-turn feedback data
-      - StackOverflow question-answer pairs with code and diagnostic context
-      - code translation, code continuation, and cross-framework API examples
-      - Text-to-SQL prompt-query pairs with schema-aware supervision
+    - APPS-style problem-to-solution retrieval pairs
+    - CoSQA and CodeSearchNet query-code or code-summary pairs
+    - code-assistant instruction-answer and multi-turn feedback data
+    - StackOverflow question-answer pairs with code and diagnostic context
+    - code translation, code continuation, and cross-framework API examples
+    - Text-to-SQL prompt-query pairs with schema-aware supervision
     synthetic_data:
-      document_generation: runnable code, valid SQL, code answers, code continuations, and equivalent programs with realistic identifiers, APIs, errors, and constraints
-      question_generation: natural developer requests, short web queries, long programming statements, dialogue histories, and database questions grounded in the generated or selected document
-      answerability: each positive must satisfy executable behavior, API semantics, SQL intent, or developer-answer relevance rather than sharing only surface words
+      document_generation: runnable code, valid SQL, code answers, code continuations,
+        and equivalent programs with realistic identifiers, APIs, errors, and constraints
+      question_generation: natural developer requests, short web queries, long programming
+        statements, dialogue histories, and database questions grounded in the generated
+        or selected document
+      answerability: each positive must satisfy executable behavior, API semantics,
+        SQL intent, or developer-answer relevance rather than sharing only surface
+        words
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCoIR
     source_urls:
-      - label: CoIR arXiv
-        url: https://arxiv.org/abs/2407.02883
-      - label: CoIR ACL Anthology
-        url: https://aclanthology.org/2025.acl-long.1072/
-      - label: codeparrot/apps
-        url: https://huggingface.co/datasets/codeparrot/apps
-      - label: m-a-p/Code-Feedback
-        url: https://huggingface.co/datasets/m-a-p/Code-Feedback
-      - label: m-a-p/CodeFeedback-Filtered-Instruction
-        url: https://huggingface.co/datasets/m-a-p/CodeFeedback-Filtered-Instruction
-      - label: code-search-net/code_search_net
-        url: https://huggingface.co/datasets/code-search-net/code_search_net
-      - label: CoIR-Retrieval/CodeSearchNet-ccr
-        url: https://huggingface.co/datasets/CoIR-Retrieval/CodeSearchNet-ccr
-      - label: WeixiangYan/CodeTransOcean
-        url: https://huggingface.co/datasets/WeixiangYan/CodeTransOcean
-      - label: CoIR-Retrieval/cosqa
-        url: https://huggingface.co/datasets/CoIR-Retrieval/cosqa
-      - label: CoIR-Retrieval/stackoverflow-qa
-        url: https://huggingface.co/datasets/CoIR-Retrieval/stackoverflow-qa
-      - label: gretelai/synthetic_text_to_sql
-        url: https://huggingface.co/datasets/gretelai/synthetic_text_to_sql
+    - label: CoIR arXiv
+      url: https://arxiv.org/abs/2407.02883
+    - label: CoIR ACL Anthology
+      url: https://aclanthology.org/2025.acl-long.1072/
+    - label: codeparrot/apps
+      url: https://huggingface.co/datasets/codeparrot/apps
+    - label: m-a-p/Code-Feedback
+      url: https://huggingface.co/datasets/m-a-p/Code-Feedback
+    - label: m-a-p/CodeFeedback-Filtered-Instruction
+      url: https://huggingface.co/datasets/m-a-p/CodeFeedback-Filtered-Instruction
+    - label: code-search-net/code_search_net
+      url: https://huggingface.co/datasets/code-search-net/code_search_net
+    - label: CoIR-Retrieval/CodeSearchNet-ccr
+      url: https://huggingface.co/datasets/CoIR-Retrieval/CodeSearchNet-ccr
+    - label: WeixiangYan/CodeTransOcean
+      url: https://huggingface.co/datasets/WeixiangYan/CodeTransOcean
+    - label: CoIR-Retrieval/cosqa
+      url: https://huggingface.co/datasets/CoIR-Retrieval/cosqa
+    - label: CoIR-Retrieval/stackoverflow-qa
+      url: https://huggingface.co/datasets/CoIR-Retrieval/stackoverflow-qa
+    - label: gretelai/synthetic_text_to_sql
+      url: https://huggingface.co/datasets/gretelai/synthetic_text_to_sql
     source_notes: []
   references:
-    - title: "CoIR: A Comprehensive Benchmark for Code Information Retrieval Models"
-      url: https://arxiv.org/abs/2407.02883
-      year: 2025
-      doi: 10.18653/v1/2025.acl-long.1072
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Measuring Coding Challenge Competence With APPS
-      url: https://arxiv.org/abs/2105.09938
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "OpenCodeInterpreter: Integrating Code Generation with Execution and Refinement"
-      url: https://arxiv.org/abs/2402.14658
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "CodeSearchNet Challenge: Evaluating the State of Semantic Code Search"
-      url: https://arxiv.org/abs/1909.09436
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation"
-      url: https://arxiv.org/abs/2310.04951
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "CoSQA: 20,000+ Web Queries for Code Search and Question Answering"
-      url: https://arxiv.org/abs/2105.13239
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+    url: https://arxiv.org/abs/2407.02883
+    year: 2025
+    doi: 10.18653/v1/2025.acl-long.1072
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Measuring Coding Challenge Competence With APPS
+    url: https://arxiv.org/abs/2105.09938
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'OpenCodeInterpreter: Integrating Code Generation with Execution and Refinement'
+    url: https://arxiv.org/abs/2402.14658
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'CodeSearchNet Challenge: Evaluating the State of Semantic Code Search'
+    url: https://arxiv.org/abs/1909.09436
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation'
+    url: https://arxiv.org/abs/2310.04951
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'CoSQA: 20,000+ Web Queries for Code Search and Question Answering'
+    url: https://arxiv.org/abs/2105.13239
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.5424549525
+      query_weighted_hit_at_10: 0.6416216216
+      query_weighted_recall_at_100: 0.7913513514
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.8042306683
+      query_weighted_hit_at_10: 0.8794594595
+      query_weighted_recall_at_100: 0.9362162162
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.6908000765
+      query_weighted_hit_at_10: 0.8037837838
+      query_weighted_recall_at_100: 0.9410810811
+      source: dataset_candidate_subset
 ```

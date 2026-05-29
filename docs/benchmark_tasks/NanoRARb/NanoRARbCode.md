@@ -73,8 +73,20 @@ specified behavior.
 | Queries | 200 |
 | Documents | 10000 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.0263 |
-| BM25 hit@10 | 0.0350 |
+| BM25 nDCG@10 | 0.1318 |
+| BM25 hit@10 | 0.2150 |
+| BM25 Recall@100 | 0.4450 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.1173 |
+| Dense hit@10 | 0.2000 |
+| Dense Recall@100 | 0.4350 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1773 |
+| Reranking hybrid hit@10 | 0.3000 |
+| Reranking hybrid Recall@100 | 0.5750 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 85 |
 | Query length avg chars | 470.08 |
 | Document length avg chars | 256.00 |
 
@@ -129,29 +141,74 @@ benchmark_task_metadata:
     query_mean: 470.08
     document_mean: 255.998
   bm25:
-    ndcg_at_10: 0.0263
-    hit_at_10: 0.035
-    source: dataset_bm25_column
+    ndcg_at_10: 0.1318144120626158
+    hit_at_10: 0.215
+    source: dataset_candidate_subset
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoRARb
     source_urls:
-      - label: RAR-b arXiv
-        url: https://arxiv.org/abs/2404.06347
-      - label: CodeSearchNet arXiv
-        url: https://arxiv.org/abs/1909.09436
-      - label: OctoPack arXiv
-        url: https://arxiv.org/abs/2308.07124
-  references:
-    - title: "RAR-b: Reasoning as Retrieval Benchmark"
+    - label: RAR-b arXiv
       url: https://arxiv.org/abs/2404.06347
-      year: 2024
-      is_paper: true
-    - title: "CodeSearchNet Challenge: Evaluating the State of Semantic Code Search"
+    - label: CodeSearchNet arXiv
       url: https://arxiv.org/abs/1909.09436
-      year: 2019
-      is_paper: true
-    - title: "OctoPack: Instruction Tuning Code Large Language Models"
+    - label: OctoPack arXiv
       url: https://arxiv.org/abs/2308.07124
-      year: 2023
-      is_paper: true
+  references:
+  - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+    url: https://arxiv.org/abs/2404.06347
+    year: 2024
+    is_paper: true
+  - title: 'CodeSearchNet Challenge: Evaluating the State of Semantic Code Search'
+    url: https://arxiv.org/abs/1909.09436
+    year: 2019
+    is_paper: true
+  - title: 'OctoPack: Instruction Tuning Code Large Language Models'
+    url: https://arxiv.org/abs/2308.07124
+    year: 2023
+    is_paper: true
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1318144121
+      hit_at_10: 0.215
+      recall_at_100: 0.445
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.445
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1172756841
+      hit_at_10: 0.2
+      recall_at_100: 0.435
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.435
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.1773298312
+      hit_at_10: 0.3
+      recall_at_100: 0.575
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.425
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.575
+      safeguard_positive_rows: 85
+      rows_with_101_candidates: 85
 ```

@@ -98,8 +98,20 @@ for the same health topic.
 | Avg positives / query | 33.02 |
 | Positives per query (min / median / max) | 1 / 23.50 / 100 |
 | Queries with multiple positives | 47 (94.0%) |
-| BM25 nDCG@10 | 0.2753 |
-| BM25 hit@10 | 0.6400 |
+| BM25 nDCG@10 | 0.2003 |
+| BM25 hit@10 | 0.5600 |
+| BM25 Recall@100 | 0.1248 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2521 |
+| Dense hit@10 | 0.6800 |
+| Dense Recall@100 | 0.1726 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2289 |
+| Reranking hybrid hit@10 | 0.6200 |
+| Reranking hybrid Recall@100 | 0.1720 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 5 |
 | Query length avg chars | 29.14 |
 | Document length avg chars | 1,731.88 |
 
@@ -161,68 +173,119 @@ benchmark_task_metadata:
     query_mean: 29.14
     document_mean: 1731.880122
   bm25:
-    ndcg_at_10: 0.2752833111
-    hit_at_10: 0.64
-    source: dataset_bm25_column
+    ndcg_at_10: 0.20031689990834167
+    hit_at_10: 0.56
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MNanoBEIR German NanoBEIR task split from hakari-bench/NanoBEIR-de
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding NFCorpus, BEIR, or NanoBEIR records likely to overlap with these evaluation queries or linked medical documents
+    leakage_note: prefer excluding NFCorpus, BEIR, or NanoBEIR records likely to overlap
+      with these evaluation queries or linked medical documents
     useful_training_data:
-      - non-overlapping biomedical information retrieval datasets
-      - consumer-health question to biomedical abstract pairs
-      - PubMed relevance ranking data
-      - German or multilingual medical retrieval supervision
+    - non-overlapping biomedical information retrieval datasets
+    - consumer-health question to biomedical abstract pairs
+    - PubMed relevance ranking data
+    - German or multilingual medical retrieval supervision
     synthetic_data:
-      document_generation: German translated or German biomedical abstracts and health article summaries outside the evaluation set
-      question_generation: short lay German health questions and topic labels that bridge to biomedical terminology
-      answerability: positives should be medically relevant evidence documents, not only documents sharing a disease or diet keyword
+      document_generation: German translated or German biomedical abstracts and health
+        article summaries outside the evaluation set
+      question_generation: short lay German health questions and topic labels that
+        bridge to biomedical terminology
+      answerability: positives should be medically relevant evidence documents, not
+        only documents sharing a disease or diet keyword
     multi_positive_training: recommended
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-de
     source_urls:
-      - label: NFCorpus paper
-        url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
-      - label: NFCorpus project page
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
-      - label: BEIR paper
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB paper
-        url: https://arxiv.org/abs/2502.13595
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - German task is a multilingual NanoBEIR adaptation of the original English BEIR task
-  references:
-    - title: A Full-Text Learning to Rank Dataset for Medical Information Retrieval
+    - label: NFCorpus paper
       url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
-      year: 2016
-      doi: 10.1007/978-3-319-30671-1_58
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: NFCorpus project page
+    - label: NFCorpus project page
       url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_project_page
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR paper
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
+    - label: MMTEB paper
       url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: Zeta Alpha NanoBEIR collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: dataset_collection
+    source_notes:
+    - German task is a multilingual NanoBEIR adaptation of the original English BEIR
+      task
+  references:
+  - title: A Full-Text Learning to Rank Dataset for Medical Information Retrieval
+    url: https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+    year: 2016
+    doi: 10.1007/978-3-319-30671-1_58
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: NFCorpus project page
+    url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_project_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: dataset_collection
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2003168999
+      hit_at_10: 0.56
+      recall_at_100: 0.1247728649
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1247728649
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2521009306
+      hit_at_10: 0.68
+      recall_at_100: 0.1726226529
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1726226529
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2289317081
+      hit_at_10: 0.62
+      recall_at_100: 0.1720169594
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.1
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1720169594
+      safeguard_positive_rows: 5
+      rows_with_101_candidates: 5
 ```

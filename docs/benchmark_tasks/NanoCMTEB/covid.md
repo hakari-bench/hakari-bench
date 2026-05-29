@@ -81,8 +81,20 @@ similar notices that mention the same pandemic context but not the answer.
 | Positive qrels | 204 |
 | Positives per query | avg 1.02 / min 1 / median 1.0 / max 4 |
 | Multi-positive queries | 2 (1.00%) |
-| BM25 nDCG@10 | 0.1778 |
-| BM25 hit@10 | 0.2000 |
+| BM25 nDCG@10 | 0.7888 |
+| BM25 hit@10 | 0.8750 |
+| BM25 Recall@100 | 0.9608 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7518 |
+| Dense hit@10 | 0.8550 |
+| Dense Recall@100 | 0.9314 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7834 |
+| Reranking hybrid hit@10 | 0.8850 |
+| Reranking hybrid Recall@100 | 0.9902 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 25.73 |
 | Document length avg chars | 409.35 |
 
@@ -140,43 +152,89 @@ benchmark_task_metadata:
     query_mean: 25.735
     document_mean: 409.3471
   bm25:
-    ndcg_at_10: 0.17776949585626847
-    hit_at_10: 0.2
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7888439205474314
+    hit_at_10: 0.875
+    source: dataset_candidate_subset
   learning:
     original_train_split: available_in_source_family
     evaluation_split_origin: CovidRetrieval dev
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoCMTEB covid queries, qrels, and COVID news passages
     useful_training_data:
-      - Chinese COVID policy question-answer data
-      - Chinese news retrieval pairs
-      - public-service FAQ retrieval data
-      - same-agency and same-city hard negatives
+    - Chinese COVID policy question-answer data
+    - Chinese news retrieval pairs
+    - public-service FAQ retrieval data
+    - same-agency and same-city hard negatives
     synthetic_data:
       document_generation: Chinese pandemic news and public-policy notices
-      question_generation: fact-seeking questions about policies, dates, benefits, and procedures
+      question_generation: fact-seeking questions about policies, dates, benefits,
+        and procedures
       answerability: positives should contain the requested policy detail
     multi_positive_training: mostly_single_positive
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCMTEB
     source_urls:
-      - label: Multi-CPR arXiv
-        url: https://arxiv.org/abs/2203.03367
-      - label: C-Pack arXiv
-        url: https://arxiv.org/abs/2309.07597
-      - label: mteb/CovidRetrieval
-        url: https://huggingface.co/datasets/mteb/CovidRetrieval
+    - label: Multi-CPR arXiv
+      url: https://arxiv.org/abs/2203.03367
+    - label: C-Pack arXiv
+      url: https://arxiv.org/abs/2309.07597
+    - label: mteb/CovidRetrieval
+      url: https://huggingface.co/datasets/mteb/CovidRetrieval
     source_notes: []
   references:
-    - title: "Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval"
-      url: https://arxiv.org/abs/2203.03367
-      year: 2022
-      is_paper: true
-      source_confidence: probably_correct_task_family
-    - title: "C-Pack: Packed Resources For General Chinese Embeddings"
-      url: https://arxiv.org/abs/2309.07597
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_benchmark_paper
+  - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
+    url: https://arxiv.org/abs/2203.03367
+    year: 2022
+    is_paper: true
+    source_confidence: probably_correct_task_family
+  - title: 'C-Pack: Packed Resources For General Chinese Embeddings'
+    url: https://arxiv.org/abs/2309.07597
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_benchmark_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7888439205
+      hit_at_10: 0.875
+      recall_at_100: 0.9607843137
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9607843137
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.751799718
+      hit_at_10: 0.855
+      recall_at_100: 0.931372549
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.931372549
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7834415507
+      hit_at_10: 0.885
+      recall_at_100: 0.9901960784
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9901960784
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

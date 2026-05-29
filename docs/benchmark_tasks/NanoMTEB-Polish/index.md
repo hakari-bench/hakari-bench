@@ -148,8 +148,15 @@ queries and positive documents should not be used as seeds.
 | Positive qrels | 8,151 |
 | Positives per query | 2.91 average |
 | Multi-positive queries | 1,002 |
-| Query-weighted BM25 nDCG@10 | 0.3442 |
-| Query-weighted BM25 hit@10 | 0.5064 |
+| Query-weighted BM25 nDCG@10 | 0.3424 |
+| Query-weighted BM25 hit@10 | 0.5054 |
+| Query-weighted BM25 Recall@100 | 0.4856 |
+| Query-weighted Dense nDCG@10 | 0.4271 |
+| Query-weighted Dense hit@10 | 0.6089 |
+| Query-weighted Dense Recall@100 | 0.5839 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.4088 |
+| Query-weighted Reranking hybrid hit@10 | 0.5986 |
+| Query-weighted Reranking hybrid Recall@100 | 0.6087 |
 | Mean query length | 54.80 chars, weighted by query count |
 | Mean document length | 807.31 chars, weighted by split-local document count |
 
@@ -220,187 +227,210 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 54.80464285714286
     document_mean_weighted_by_documents: 807.3122
   bm25:
-    ndcg_at_10_query_weighted: 0.34415714285714283
-    hit_at_10_query_weighted: 0.5064285714285715
+    ndcg_at_10_query_weighted: 0.342397198
+    hit_at_10_query_weighted: 0.5053571429
     ndcg_at_10_unweighted_task_mean: 0.34415714285714283
     hit_at_10_unweighted_task_mean: 0.5064285714285715
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: quora
     hardest_task_by_ndcg_at_10: cqadupstack_mathematica
   tasks:
-    - name: cqadupstack_android
-      path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_android.md
-      retrieval_shape: polish_android_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 809
-      bm25_ndcg_at_10: 0.3407
-      bm25_hit_at_10: 0.51
-    - name: cqadupstack_english
-      path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_english.md
-      retrieval_shape: polish_english_usage_duplicate_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 1356
-      bm25_ndcg_at_10: 0.3188
-      bm25_hit_at_10: 0.485
-    - name: cqadupstack_gis
-      path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_gis.md
-      retrieval_shape: polish_gis_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 313
-      bm25_ndcg_at_10: 0.2423
-      bm25_hit_at_10: 0.38
-    - name: cqadupstack_mathematica
-      path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_mathematica.md
-      retrieval_shape: polish_mathematica_duplicate_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 506
-      bm25_ndcg_at_10: 0.2129
-      bm25_hit_at_10: 0.355
-    - name: cqadupstack_physics
-      path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_physics.md
-      retrieval_shape: polish_physics_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 621
-      bm25_ndcg_at_10: 0.3359
-      bm25_hit_at_10: 0.545
-    - name: cqadupstack_programmers
-      path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_programmers.md
-      retrieval_shape: polish_software_engineering_duplicate_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 634
-      bm25_ndcg_at_10: 0.3241
-      bm25_hit_at_10: 0.47
-    - name: cqadupstack_stats
-      path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_stats.md
-      retrieval_shape: polish_statistics_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 373
-      bm25_ndcg_at_10: 0.2662
-      bm25_hit_at_10: 0.38
-    - name: cqadupstack_tex
-      path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_tex.md
-      retrieval_shape: polish_tex_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 843
-      bm25_ndcg_at_10: 0.2615
-      bm25_hit_at_10: 0.435
-    - name: cqadupstack_webmasters
-      path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_webmasters.md
-      retrieval_shape: polish_webmaster_duplicate_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 882
-      bm25_ndcg_at_10: 0.255
-      bm25_hit_at_10: 0.395
-    - name: cqadupstack_wordpress
-      path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_wordpress.md
-      retrieval_shape: polish_wordpress_duplicate_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 344
-      bm25_ndcg_at_10: 0.3139
-      bm25_hit_at_10: 0.425
-    - name: fiqa
-      path: docs/benchmark_tasks/NanoMTEB-Polish/fiqa.md
-      retrieval_shape: polish_finance_question_to_answer_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 534
-      bm25_ndcg_at_10: 0.2353
-      bm25_hit_at_10: 0.455
-    - name: nq
-      path: docs/benchmark_tasks/NanoMTEB-Polish/nq.md
-      retrieval_shape: polish_fact_question_to_answer_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 251
-      bm25_ndcg_at_10: 0.3021
-      bm25_hit_at_10: 0.55
-    - name: pugg
-      path: docs/benchmark_tasks/NanoMTEB-Polish/pugg.md
-      retrieval_shape: polish_factoid_question_to_wikipedia_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.639
-      bm25_hit_at_10: 0.795
-    - name: quora
-      path: docs/benchmark_tasks/NanoMTEB-Polish/quora.md
-      retrieval_shape: polish_duplicate_short_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 485
-      bm25_ndcg_at_10: 0.7705
-      bm25_hit_at_10: 0.91
+  - name: cqadupstack_android
+    path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_android.md
+    retrieval_shape: polish_android_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 809
+    bm25_ndcg_at_10: 0.3407
+    bm25_hit_at_10: 0.51
+  - name: cqadupstack_english
+    path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_english.md
+    retrieval_shape: polish_english_usage_duplicate_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 1356
+    bm25_ndcg_at_10: 0.3188
+    bm25_hit_at_10: 0.485
+  - name: cqadupstack_gis
+    path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_gis.md
+    retrieval_shape: polish_gis_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 313
+    bm25_ndcg_at_10: 0.2423
+    bm25_hit_at_10: 0.38
+  - name: cqadupstack_mathematica
+    path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_mathematica.md
+    retrieval_shape: polish_mathematica_duplicate_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 506
+    bm25_ndcg_at_10: 0.2129
+    bm25_hit_at_10: 0.355
+  - name: cqadupstack_physics
+    path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_physics.md
+    retrieval_shape: polish_physics_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 621
+    bm25_ndcg_at_10: 0.3359
+    bm25_hit_at_10: 0.545
+  - name: cqadupstack_programmers
+    path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_programmers.md
+    retrieval_shape: polish_software_engineering_duplicate_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 634
+    bm25_ndcg_at_10: 0.3241
+    bm25_hit_at_10: 0.47
+  - name: cqadupstack_stats
+    path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_stats.md
+    retrieval_shape: polish_statistics_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 373
+    bm25_ndcg_at_10: 0.2662
+    bm25_hit_at_10: 0.38
+  - name: cqadupstack_tex
+    path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_tex.md
+    retrieval_shape: polish_tex_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 843
+    bm25_ndcg_at_10: 0.2615
+    bm25_hit_at_10: 0.435
+  - name: cqadupstack_webmasters
+    path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_webmasters.md
+    retrieval_shape: polish_webmaster_duplicate_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 882
+    bm25_ndcg_at_10: 0.255
+    bm25_hit_at_10: 0.395
+  - name: cqadupstack_wordpress
+    path: docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_wordpress.md
+    retrieval_shape: polish_wordpress_duplicate_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 344
+    bm25_ndcg_at_10: 0.3139
+    bm25_hit_at_10: 0.425
+  - name: fiqa
+    path: docs/benchmark_tasks/NanoMTEB-Polish/fiqa.md
+    retrieval_shape: polish_finance_question_to_answer_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 534
+    bm25_ndcg_at_10: 0.2353
+    bm25_hit_at_10: 0.455
+  - name: nq
+    path: docs/benchmark_tasks/NanoMTEB-Polish/nq.md
+    retrieval_shape: polish_fact_question_to_answer_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 251
+    bm25_ndcg_at_10: 0.3021
+    bm25_hit_at_10: 0.55
+  - name: pugg
+    path: docs/benchmark_tasks/NanoMTEB-Polish/pugg.md
+    retrieval_shape: polish_factoid_question_to_wikipedia_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.639
+    bm25_hit_at_10: 0.795
+  - name: quora
+    path: docs/benchmark_tasks/NanoMTEB-Polish/quora.md
+    retrieval_shape: polish_duplicate_short_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 485
+    bm25_ndcg_at_10: 0.7705
+    bm25_hit_at_10: 0.91
   learning:
-    leakage_note: exclude NanoMTEB-Polish evaluation queries, qrels, positive documents, and upstream translated test duplicate clusters from training
+    leakage_note: exclude NanoMTEB-Polish evaluation queries, qrels, positive documents,
+      and upstream translated test duplicate clusters from training
     useful_training_data:
-      - Polish duplicate-question and paraphrase retrieval pairs
-      - translated or native Stack Exchange duplicate question pairs
-      - Polish technical QA in Android, GIS, Mathematica, TeX, WordPress, and webmaster domains
-      - Polish Wikipedia QA retrieval and PUGG training data
-      - FiQA-style financial question-answer retrieval
-      - hard negatives from the same forum, entity family, or finance topic
+    - Polish duplicate-question and paraphrase retrieval pairs
+    - translated or native Stack Exchange duplicate question pairs
+    - Polish technical QA in Android, GIS, Mathematica, TeX, WordPress, and webmaster
+      domains
+    - Polish Wikipedia QA retrieval and PUGG training data
+    - FiQA-style financial question-answer retrieval
+    - hard negatives from the same forum, entity family, or finance topic
     synthetic_data:
-      document_generation: Polish technical posts, finance answers, Wikipedia passages, and short duplicate questions in source-like style
-      question_generation: duplicate Polish questions, factoid questions, finance questions, and technical troubleshooting questions grounded in generated or selected documents
-      answerability: positives must preserve duplicate intent or answer evidence, not only broad topic overlap
+      document_generation: Polish technical posts, finance answers, Wikipedia passages,
+        and short duplicate questions in source-like style
+      question_generation: duplicate Polish questions, factoid questions, finance
+        questions, and technical troubleshooting questions grounded in generated or
+        selected documents
+      answerability: positives must preserve duplicate intent or answer evidence,
+        not only broad topic overlap
     multi_positive_training: preserve_duplicate_clusters_and_multi_positive_qrels
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish
     source_urls:
-      - label: CQADupStack paper
-        url: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-      - label: BEIR-PL ACL Anthology
-        url: https://aclanthology.org/2024.lrec-main.194/
-      - label: FiQA challenge
-        url: https://sites.google.com/view/fiqa/
-      - label: Natural Questions
-        url: https://ai.google.com/research/NaturalQuestions/
-      - label: PUGG paper
-        url: https://aclanthology.org/2024.findings-acl.652/
-      - label: Quora Question Pairs
-        url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
-      - label: MTEB repository
-        url: https://github.com/embeddings-benchmark/mteb
+    - label: CQADupStack paper
+      url: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
+    - label: BEIR-PL ACL Anthology
+      url: https://aclanthology.org/2024.lrec-main.194/
+    - label: FiQA challenge
+      url: https://sites.google.com/view/fiqa/
+    - label: Natural Questions
+      url: https://ai.google.com/research/NaturalQuestions/
+    - label: PUGG paper
+      url: https://aclanthology.org/2024.findings-acl.652/
+    - label: Quora Question Pairs
+      url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
+    - label: MTEB repository
+      url: https://github.com/embeddings-benchmark/mteb
     source_notes: []
   references:
-    - title: "CQADupStack: A Benchmark Data Set for Community Question-Answering Research"
-      url: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-      year: 2015
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language"
-      url: https://aclanthology.org/2024.lrec-main.194/
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: FiQA challenge site
-      url: https://sites.google.com/view/fiqa/
-      year: 2018
-      is_paper: false
-      source_confidence: benchmark_page
-    - title: Natural Questions
-      url: https://ai.google.com/research/NaturalQuestions/
-      year: 2019
-      is_paper: false
-      source_confidence: benchmark_page
-    - title: "Developing PUGG for Polish: A Modern Approach to KBQA, MRC, and IR Dataset Construction"
-      url: https://aclanthology.org/2024.findings-acl.652/
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "First Quora Dataset Release: Question Pairs"
-      url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
-      year: 2017
-      is_paper: false
-      source_confidence: dataset_source_reference
+  - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+    url: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
+    year: 2015
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language'
+    url: https://aclanthology.org/2024.lrec-main.194/
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: FiQA challenge site
+    url: https://sites.google.com/view/fiqa/
+    year: 2018
+    is_paper: false
+    source_confidence: benchmark_page
+  - title: Natural Questions
+    url: https://ai.google.com/research/NaturalQuestions/
+    year: 2019
+    is_paper: false
+    source_confidence: benchmark_page
+  - title: 'Developing PUGG for Polish: A Modern Approach to KBQA, MRC, and IR Dataset
+      Construction'
+    url: https://aclanthology.org/2024.findings-acl.652/
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'First Quora Dataset Release: Question Pairs'
+    url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
+    year: 2017
+    is_paper: false
+    source_confidence: dataset_source_reference
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.342397198
+      query_weighted_hit_at_10: 0.5053571429
+      query_weighted_recall_at_100: 0.4856417464
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.4270542915
+      query_weighted_hit_at_10: 0.6089285714
+      query_weighted_recall_at_100: 0.5838815223
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.4088155552
+      query_weighted_hit_at_10: 0.5985714286
+      query_weighted_recall_at_100: 0.6087093207
+      source: dataset_candidate_subset
 ```

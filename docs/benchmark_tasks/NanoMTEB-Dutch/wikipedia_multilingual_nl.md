@@ -91,6 +91,18 @@ answer the requested relation.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.8444 |
 | BM25 hit@10 | 0.9250 |
+| BM25 Recall@100 | 0.9600 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8948 |
+| Dense hit@10 | 0.9550 |
+| Dense Recall@100 | 0.9750 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8840 |
+| Reranking hybrid hit@10 | 0.9500 |
+| Reranking hybrid Recall@100 | 0.9950 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 63.54 |
 | Document length avg chars | 381.01 |
 
@@ -137,10 +149,11 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2509.12340
     additional_source_urls:
-      - https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
-      - https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual
-      - https://github.com/embeddings-benchmark/mteb
-    no_paper_note: "No standalone paper for WikipediaRetrievalMultilingual was confirmed; MTEB-NL and the source dataset cards were used."
+    - https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
+    - https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual
+    - https://github.com/embeddings-benchmark/mteb
+    no_paper_note: No standalone paper for WikipediaRetrievalMultilingual was confirmed;
+      MTEB-NL and the source dataset cards were used.
   counts:
     queries: 200
     documents: 10000
@@ -156,53 +169,101 @@ benchmark_task_metadata:
     query_mean: 63.54
     document_mean: 381.0117
   bm25:
-    ndcg_at_10: 0.844434252
+    ndcg_at_10: 0.8444342521007769
     hit_at_10: 0.925
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: "test split, nl subset from mteb/WikipediaRetrievalMultilingual"
+    evaluation_split_origin: test split, nl subset from mteb/WikipediaRetrievalMultilingual
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude WikipediaRetrievalMultilingual Dutch test queries, positives, and qrels used by this Nano split."
+    leakage_note: Exclude WikipediaRetrievalMultilingual Dutch test queries, positives,
+      and qrels used by this Nano split.
     useful_training_data:
-      - non-overlapping Dutch Wikipedia question-passage pairs
-      - multilingual Wikipedia retrieval datasets
-      - SQuAD-style synthetic QA pairs from non-evaluation passages
-      - entity-near hard negatives from Dutch Wikipedia
+    - non-overlapping Dutch Wikipedia question-passage pairs
+    - multilingual Wikipedia retrieval datasets
+    - SQuAD-style synthetic QA pairs from non-evaluation passages
+    - entity-near hard negatives from Dutch Wikipedia
     synthetic_data:
-      document_generation: "Dutch Wikipedia-style passages with entities, dates, quantities, and relations."
-      question_generation: "Dutch factual questions grounded in one passage."
-      answerability: "Questions should have explicit answer support and hard negatives about the same entity or topic."
+      document_generation: Dutch Wikipedia-style passages with entities, dates, quantities,
+        and relations.
+      question_generation: Dutch factual questions grounded in one passage.
+      answerability: Questions should have explicit answer support and hard negatives
+        about the same entity or topic.
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: MTEB-NL arXiv
-        url: https://arxiv.org/abs/2509.12340
-      - label: ellamind multilingual Wikipedia queries
-        url: https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
-      - label: mteb/WikipediaRetrievalMultilingual
-        url: https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual
-      - label: MTEB repository
-        url: https://github.com/embeddings-benchmark/mteb
+    - label: MTEB-NL arXiv
+      url: https://arxiv.org/abs/2509.12340
+    - label: ellamind multilingual Wikipedia queries
+      url: https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
+    - label: mteb/WikipediaRetrievalMultilingual
+      url: https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual
+    - label: MTEB repository
+      url: https://github.com/embeddings-benchmark/mteb
     source_notes: []
   references:
-    - title: "MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch"
-      url: https://arxiv.org/abs/2509.12340
-      year: 2025
-      doi: 10.48550/arXiv.2509.12340
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: ellamind/wikipedia-2023-11-retrieval-multilingual-queries
-      url: https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
-    - title: mteb/WikipediaRetrievalMultilingual
-      url: https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+    url: https://arxiv.org/abs/2509.12340
+    year: 2025
+    doi: 10.48550/arXiv.2509.12340
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: ellamind/wikipedia-2023-11-retrieval-multilingual-queries
+    url: https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  - title: mteb/WikipediaRetrievalMultilingual
+    url: https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8444342521
+      hit_at_10: 0.925
+      recall_at_100: 0.96
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.96
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8947859204
+      hit_at_10: 0.955
+      recall_at_100: 0.975
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.975
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8840474773
+      hit_at_10: 0.95
+      recall_at_100: 0.995
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.005
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.995
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

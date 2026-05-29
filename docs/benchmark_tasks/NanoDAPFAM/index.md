@@ -166,8 +166,15 @@ padding the target with repeated query terms.
 | Positive qrels | 49,879 |
 | Positives per query | avg 13.86, min 1, median 18, max 20 |
 | Multi-positive tasks | 18 |
-| Query-weighted BM25 nDCG@10 | 0.4622 |
-| Query-weighted BM25 hit@10 | 0.6142 |
+| Query-weighted BM25 nDCG@10 | 0.2430 |
+| Query-weighted BM25 hit@10 | 0.6272 |
+| Query-weighted BM25 Recall@100 | 0.3680 |
+| Query-weighted Dense nDCG@10 | 0.3073 |
+| Query-weighted Dense hit@10 | 0.6992 |
+| Query-weighted Dense Recall@100 | 0.4795 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.2981 |
+| Query-weighted Reranking hybrid hit@10 | 0.6867 |
+| Query-weighted Reranking hybrid Recall@100 | 0.4770 |
 | Mean query length | 4,732.44 chars, weighted by query count |
 | Mean document length | 26,216.21 chars, weighted by split-local document count |
 
@@ -224,190 +231,211 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 4732.435
     document_mean_weighted_by_documents: 26216.211005555557
   bm25:
-    ndcg_at_10_query_weighted: 0.4621641346611111
-    hit_at_10_query_weighted: 0.6141666666666666
+    ndcg_at_10_query_weighted: 0.243035538
+    hit_at_10_query_weighted: 0.6272222222
     ndcg_at_10_unweighted_task_mean: 0.46216413466111106
     hit_at_10_unweighted_task_mean: 0.6141666666666666
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: NanoDAPFAMAllTitlAbsToTitlAbsClm
     hardest_task_by_ndcg_at_10: NanoDAPFAMOutTitlAbsClmToTitlAbs
   tasks:
-    - name: NanoDAPFAMAllTitlAbsClmToFullText
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsClmToFullText.md
-      retrieval_shape: all_tac_query_to_full_text_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3989
-      bm25_ndcg_at_10: 0.6536271218
-      bm25_hit_at_10: 0.81
-    - name: NanoDAPFAMAllTitlAbsClmToTitlAbs
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsClmToTitlAbs.md
-      retrieval_shape: all_tac_query_to_title_abstract_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3981
-      bm25_ndcg_at_10: 0.5530559263
-      bm25_hit_at_10: 0.765
-    - name: NanoDAPFAMAllTitlAbsClmToTitlAbsClm
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsClmToTitlAbsClm.md
-      retrieval_shape: all_tac_query_to_tac_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3989
-      bm25_ndcg_at_10: 0.649629719
-      bm25_hit_at_10: 0.85
-    - name: NanoDAPFAMAllTitlAbsToFullText
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsToFullText.md
-      retrieval_shape: all_title_abstract_query_to_full_text_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3989
-      bm25_ndcg_at_10: 0.6624146211
-      bm25_hit_at_10: 0.86
-    - name: NanoDAPFAMAllTitlAbsToTitlAbs
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsToTitlAbs.md
-      retrieval_shape: all_title_abstract_query_to_title_abstract_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3982
-      bm25_ndcg_at_10: 0.6619173841
-      bm25_hit_at_10: 0.85
-    - name: NanoDAPFAMAllTitlAbsToTitlAbsClm
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsToTitlAbsClm.md
-      retrieval_shape: all_title_abstract_query_to_tac_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3989
-      bm25_ndcg_at_10: 0.6647799735
-      bm25_hit_at_10: 0.845
-    - name: NanoDAPFAMInTitlAbsClmToFullText
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsClmToFullText.md
-      retrieval_shape: in_tac_query_to_full_text_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3069
-      bm25_ndcg_at_10: 0.6536934861
-      bm25_hit_at_10: 0.81
-    - name: NanoDAPFAMInTitlAbsClmToTitlAbs
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsClmToTitlAbs.md
-      retrieval_shape: in_tac_query_to_title_abstract_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3062
-      bm25_ndcg_at_10: 0.5528351845
-      bm25_hit_at_10: 0.755
-    - name: NanoDAPFAMInTitlAbsClmToTitlAbsClm
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsClmToTitlAbsClm.md
-      retrieval_shape: in_tac_query_to_tac_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3069
-      bm25_ndcg_at_10: 0.6500601851
-      bm25_hit_at_10: 0.85
-    - name: NanoDAPFAMInTitlAbsToFullText
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsToFullText.md
-      retrieval_shape: in_title_abstract_query_to_full_text_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3072
-      bm25_ndcg_at_10: 0.6642622409
-      bm25_hit_at_10: 0.85
-    - name: NanoDAPFAMInTitlAbsToTitlAbs
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsToTitlAbs.md
-      retrieval_shape: in_title_abstract_query_to_title_abstract_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3066
-      bm25_ndcg_at_10: 0.6477545469
-      bm25_hit_at_10: 0.84
-    - name: NanoDAPFAMInTitlAbsToTitlAbsClm
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsToTitlAbsClm.md
-      retrieval_shape: in_title_abstract_query_to_tac_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 3072
-      bm25_ndcg_at_10: 0.6549393307
-      bm25_hit_at_10: 0.83
-    - name: NanoDAPFAMOutTitlAbsClmToFullText
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsClmToFullText.md
-      retrieval_shape: out_tac_query_to_full_text_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 1259
-      bm25_ndcg_at_10: 0.0980162949
-      bm25_hit_at_10: 0.185
-    - name: NanoDAPFAMOutTitlAbsClmToTitlAbs
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsClmToTitlAbs.md
-      retrieval_shape: out_tac_query_to_title_abstract_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 1257
-      bm25_ndcg_at_10: 0.0719133832
-      bm25_hit_at_10: 0.115
-    - name: NanoDAPFAMOutTitlAbsClmToTitlAbsClm
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsClmToTitlAbsClm.md
-      retrieval_shape: out_tac_query_to_tac_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 1259
-      bm25_ndcg_at_10: 0.1187650288
-      bm25_hit_at_10: 0.22
-    - name: NanoDAPFAMOutTitlAbsToFullText
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsToFullText.md
-      retrieval_shape: out_title_abstract_query_to_full_text_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 1259
-      bm25_ndcg_at_10: 0.110174417
-      bm25_hit_at_10: 0.21
-    - name: NanoDAPFAMOutTitlAbsToTitlAbs
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsToTitlAbs.md
-      retrieval_shape: out_title_abstract_query_to_title_abstract_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 1257
-      bm25_ndcg_at_10: 0.1079449736
-      bm25_hit_at_10: 0.175
-    - name: NanoDAPFAMOutTitlAbsToTitlAbsClm
-      path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsToTitlAbsClm.md
-      retrieval_shape: out_title_abstract_query_to_tac_target
-      queries: 200
-      documents: 10000
-      positive_qrels: 1259
-      bm25_ndcg_at_10: 0.1431495331
-      bm25_hit_at_10: 0.235
+  - name: NanoDAPFAMAllTitlAbsClmToFullText
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsClmToFullText.md
+    retrieval_shape: all_tac_query_to_full_text_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3989
+    bm25_ndcg_at_10: 0.6536271218
+    bm25_hit_at_10: 0.81
+  - name: NanoDAPFAMAllTitlAbsClmToTitlAbs
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsClmToTitlAbs.md
+    retrieval_shape: all_tac_query_to_title_abstract_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3981
+    bm25_ndcg_at_10: 0.5530559263
+    bm25_hit_at_10: 0.765
+  - name: NanoDAPFAMAllTitlAbsClmToTitlAbsClm
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsClmToTitlAbsClm.md
+    retrieval_shape: all_tac_query_to_tac_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3989
+    bm25_ndcg_at_10: 0.649629719
+    bm25_hit_at_10: 0.85
+  - name: NanoDAPFAMAllTitlAbsToFullText
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsToFullText.md
+    retrieval_shape: all_title_abstract_query_to_full_text_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3989
+    bm25_ndcg_at_10: 0.6624146211
+    bm25_hit_at_10: 0.86
+  - name: NanoDAPFAMAllTitlAbsToTitlAbs
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsToTitlAbs.md
+    retrieval_shape: all_title_abstract_query_to_title_abstract_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3982
+    bm25_ndcg_at_10: 0.6619173841
+    bm25_hit_at_10: 0.85
+  - name: NanoDAPFAMAllTitlAbsToTitlAbsClm
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMAllTitlAbsToTitlAbsClm.md
+    retrieval_shape: all_title_abstract_query_to_tac_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3989
+    bm25_ndcg_at_10: 0.6647799735
+    bm25_hit_at_10: 0.845
+  - name: NanoDAPFAMInTitlAbsClmToFullText
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsClmToFullText.md
+    retrieval_shape: in_tac_query_to_full_text_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3069
+    bm25_ndcg_at_10: 0.6536934861
+    bm25_hit_at_10: 0.81
+  - name: NanoDAPFAMInTitlAbsClmToTitlAbs
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsClmToTitlAbs.md
+    retrieval_shape: in_tac_query_to_title_abstract_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3062
+    bm25_ndcg_at_10: 0.5528351845
+    bm25_hit_at_10: 0.755
+  - name: NanoDAPFAMInTitlAbsClmToTitlAbsClm
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsClmToTitlAbsClm.md
+    retrieval_shape: in_tac_query_to_tac_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3069
+    bm25_ndcg_at_10: 0.6500601851
+    bm25_hit_at_10: 0.85
+  - name: NanoDAPFAMInTitlAbsToFullText
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsToFullText.md
+    retrieval_shape: in_title_abstract_query_to_full_text_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3072
+    bm25_ndcg_at_10: 0.6642622409
+    bm25_hit_at_10: 0.85
+  - name: NanoDAPFAMInTitlAbsToTitlAbs
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsToTitlAbs.md
+    retrieval_shape: in_title_abstract_query_to_title_abstract_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3066
+    bm25_ndcg_at_10: 0.6477545469
+    bm25_hit_at_10: 0.84
+  - name: NanoDAPFAMInTitlAbsToTitlAbsClm
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMInTitlAbsToTitlAbsClm.md
+    retrieval_shape: in_title_abstract_query_to_tac_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 3072
+    bm25_ndcg_at_10: 0.6549393307
+    bm25_hit_at_10: 0.83
+  - name: NanoDAPFAMOutTitlAbsClmToFullText
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsClmToFullText.md
+    retrieval_shape: out_tac_query_to_full_text_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 1259
+    bm25_ndcg_at_10: 0.0980162949
+    bm25_hit_at_10: 0.185
+  - name: NanoDAPFAMOutTitlAbsClmToTitlAbs
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsClmToTitlAbs.md
+    retrieval_shape: out_tac_query_to_title_abstract_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 1257
+    bm25_ndcg_at_10: 0.0719133832
+    bm25_hit_at_10: 0.115
+  - name: NanoDAPFAMOutTitlAbsClmToTitlAbsClm
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsClmToTitlAbsClm.md
+    retrieval_shape: out_tac_query_to_tac_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 1259
+    bm25_ndcg_at_10: 0.1187650288
+    bm25_hit_at_10: 0.22
+  - name: NanoDAPFAMOutTitlAbsToFullText
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsToFullText.md
+    retrieval_shape: out_title_abstract_query_to_full_text_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 1259
+    bm25_ndcg_at_10: 0.110174417
+    bm25_hit_at_10: 0.21
+  - name: NanoDAPFAMOutTitlAbsToTitlAbs
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsToTitlAbs.md
+    retrieval_shape: out_title_abstract_query_to_title_abstract_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 1257
+    bm25_ndcg_at_10: 0.1079449736
+    bm25_hit_at_10: 0.175
+  - name: NanoDAPFAMOutTitlAbsToTitlAbsClm
+    path: docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsToTitlAbsClm.md
+    retrieval_shape: out_title_abstract_query_to_tac_target
+    queries: 200
+    documents: 10000
+    positive_qrels: 1259
+    bm25_ndcg_at_10: 0.1431495331
+    bm25_hit_at_10: 0.235
   learning:
-    leakage_note: exclude NanoDAPFAM evaluation family IDs, qrels, positive target families, same-family duplicate publications, and source rows used in Nano splits
+    leakage_note: exclude NanoDAPFAM evaluation family IDs, qrels, positive target
+      families, same-family duplicate publications, and source rows used in Nano splits
     useful_training_data:
-      - patent-family citation retrieval and prior-art search pairs
-      - cross-IPC citation prediction and patent analogy retrieval
-      - title, abstract, claims, and description field-aware patent search data
-      - hard negatives from same IPC3 classes and cross-domain near-neighbor families
+    - patent-family citation retrieval and prior-art search pairs
+    - cross-IPC citation prediction and patent analogy retrieval
+    - title, abstract, claims, and description field-aware patent search data
+    - hard negatives from same IPC3 classes and cross-domain near-neighbor families
     synthetic_data:
-      document_generation: patent title, abstract, claims, and description-style full text with family-level technical fields
-      question_generation: patent-family records represented as title-abstract or title-abstract-claims queries
-      answerability: positives should be cited or technically dependent patent families, not merely keyword-overlapping records
+      document_generation: patent title, abstract, claims, and description-style full
+        text with family-level technical fields
+      question_generation: patent-family records represented as title-abstract or
+        title-abstract-claims queries
+      answerability: positives should be cited or technically dependent patent families,
+        not merely keyword-overlapping records
     multi_positive_training: citation_family_multi_positive_with_domain_partition_preserved
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoDAPFAM
     source_urls:
-      - label: DAPFAM arXiv
-        url: https://arxiv.org/abs/2506.22141
-      - label: DAPFAM DOI
-        url: https://doi.org/10.1016/j.array.2026.100720
-      - label: datalyes/DAPFAM_patent
-        url: https://huggingface.co/datasets/datalyes/DAPFAM_patent
+    - label: DAPFAM arXiv
+      url: https://arxiv.org/abs/2506.22141
+    - label: DAPFAM DOI
+      url: https://doi.org/10.1016/j.array.2026.100720
+    - label: datalyes/DAPFAM_patent
+      url: https://huggingface.co/datasets/datalyes/DAPFAM_patent
     source_notes: []
   references:
-    - title: "DAPFAM: A Domain-Aware Family-level Dataset to benchmark cross domain patent retrieval"
-      url: https://arxiv.org/abs/2506.22141
-      year: 2026
-      doi: 10.1016/j.array.2026.100720
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: datalyes/DAPFAM_patent
-      url: https://huggingface.co/datasets/datalyes/DAPFAM_patent
-      year: 2025
-      is_paper: false
-      source_confidence: definitive_dataset_card
+  - title: 'DAPFAM: A Domain-Aware Family-level Dataset to benchmark cross domain
+      patent retrieval'
+    url: https://arxiv.org/abs/2506.22141
+    year: 2026
+    doi: 10.1016/j.array.2026.100720
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: datalyes/DAPFAM_patent
+    url: https://huggingface.co/datasets/datalyes/DAPFAM_patent
+    year: 2025
+    is_paper: false
+    source_confidence: definitive_dataset_card
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.243035538
+      query_weighted_hit_at_10: 0.6272222222
+      query_weighted_recall_at_100: 0.367950443
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.3072562585
+      query_weighted_hit_at_10: 0.6991666667
+      query_weighted_recall_at_100: 0.479549192
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.2981459553
+      query_weighted_hit_at_10: 0.6866666667
+      query_weighted_recall_at_100: 0.4769897611
+      source: dataset_candidate_subset
 ```

@@ -97,8 +97,20 @@ measurements, and experimental context.
 | Avg positives / query | 1.16 |
 | Positives per query (min / median / max) | 1 / 1 / 5 |
 | Queries with multiple positives | 13 (9.70%) |
-| BM25 nDCG@10 | 0.5954 |
-| BM25 hit@10 | 0.7463 |
+| BM25 nDCG@10 | 0.6158 |
+| BM25 hit@10 | 0.7537 |
+| BM25 Recall@100 | 0.8774 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6636 |
+| Dense hit@10 | 0.7836 |
+| Dense Recall@100 | 0.9097 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6485 |
+| Reranking hybrid hit@10 | 0.7612 |
+| Reranking hybrid Recall@100 | 0.9290 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 10 |
 | Query length avg chars | 90.64 |
 | Document length avg chars | 1,518.84 |
 
@@ -146,10 +158,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2004.14974
     additional_source_urls:
-      - https://github.com/allenai/scifact
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/scifact-vn
+    - https://github.com/allenai/scifact
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/scifact-vn
     no_paper_note: null
   counts:
     queries: 134
@@ -166,61 +178,111 @@ benchmark_task_metadata:
     query_mean: 90.642
     document_mean: 1518.84
   bm25:
-    ndcg_at_10: 0.595353108
-    hit_at_10: 0.746268657
-    source: dataset_bm25_column
+    ndcg_at_10: 0.6157620166338039
+    hit_at_10: 0.753731343283582
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB SciFact test split from GreenNode/scifact-vn"
+    evaluation_split_origin: translated VN-MTEB SciFact test split from GreenNode/scifact-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated SciFact-VN test claims, qrels, and positive abstracts used by this Nano split."
+    leakage_note: Exclude translated SciFact-VN test claims, qrels, and positive abstracts
+      used by this Nano split.
     useful_training_data:
-      - official SciFact training claims and abstracts with overlap removed
-      - biomedical claim-evidence retrieval pairs
-      - scientific NLI and fact-verification data
-      - translated scientific retrieval data with overlap removed
+    - official SciFact training claims and abstracts with overlap removed
+    - biomedical claim-evidence retrieval pairs
+    - scientific NLI and fact-verification data
+    - translated scientific retrieval data with overlap removed
     synthetic_data:
-      document_generation: "Vietnamese scientific abstracts preserving genes, proteins, disease names, measurements, and experimental context."
-      question_generation: "Vietnamese scientific claims about explicit findings, mechanisms, interventions, or biomarkers."
-      answerability: "Claims should be supported or refuted by rationale-bearing abstracts with entity-sharing hard negatives."
+      document_generation: Vietnamese scientific abstracts preserving genes, proteins,
+        disease names, measurements, and experimental context.
+      question_generation: Vietnamese scientific claims about explicit findings, mechanisms,
+        interventions, or biomarkers.
+      answerability: Claims should be supported or refuted by rationale-bearing abstracts
+        with entity-sharing hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: SciFact arXiv
-        url: https://arxiv.org/abs/2004.14974
-      - label: SciFact GitHub
-        url: https://github.com/allenai/scifact
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/scifact-vn
-        url: https://huggingface.co/datasets/GreenNode/scifact-vn
+    - label: SciFact arXiv
+      url: https://arxiv.org/abs/2004.14974
+    - label: SciFact GitHub
+      url: https://github.com/allenai/scifact
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/scifact-vn
+      url: https://huggingface.co/datasets/GreenNode/scifact-vn
     source_notes: []
   references:
-    - title: "Fact or Fiction: Verifying Scientific Claims"
-      url: https://arxiv.org/abs/2004.14974
-      year: 2020
-      doi: 10.48550/arXiv.2004.14974
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/scifact-vn
-      url: https://huggingface.co/datasets/GreenNode/scifact-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'Fact or Fiction: Verifying Scientific Claims'
+    url: https://arxiv.org/abs/2004.14974
+    year: 2020
+    doi: 10.48550/arXiv.2004.14974
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/scifact-vn
+    url: https://huggingface.co/datasets/GreenNode/scifact-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6157620166
+      hit_at_10: 0.7537313433
+      recall_at_100: 0.8774193548
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 134
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8774193548
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6635889042
+      hit_at_10: 0.7835820896
+      recall_at_100: 0.9096774194
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 134
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9096774194
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6485360114
+      hit_at_10: 0.7611940299
+      recall_at_100: 0.9290322581
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.074627
+      query_count: 134
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9290322581
+      safeguard_positive_rows: 10
+      rows_with_101_candidates: 10
 ```

@@ -107,8 +107,20 @@ evaluation cases or positives.
 | Avg positives / query | 3.54 |
 | Positives per query (min / median / max) | 1 / 3 / 6 |
 | Queries with multiple positives | 114 (88.37%) |
-| BM25 nDCG@10 | 0.1246 |
-| BM25 hit@10 | 0.3798 |
+| BM25 nDCG@10 | 0.1482 |
+| BM25 hit@10 | 0.4109 |
+| BM25 Recall@100 | 0.4617 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.1870 |
+| Dense hit@10 | 0.4961 |
+| Dense Recall@100 | 0.6674 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1975 |
+| Reranking hybrid hit@10 | 0.5426 |
+| Reranking hybrid Recall@100 | 0.6674 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 14 |
 | Query length avg chars | 2,584.10 |
 | Document length avg chars | 5,042.31 |
 
@@ -154,9 +166,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2505.14558
     additional_source_urls:
-      - https://r2med.github.io/
-      - https://github.com/R2MED/R2MED
-      - https://huggingface.co/datasets/R2MED/IIYi-Clinical
+    - https://r2med.github.io/
+    - https://github.com/R2MED/R2MED
+    - https://huggingface.co/datasets/R2MED/IIYi-Clinical
   counts:
     queries: 129
     documents: 10000
@@ -172,42 +184,91 @@ benchmark_task_metadata:
     query_mean: 2584.100775
     document_mean: 5042.3094
   bm25:
-    ndcg_at_10: 0.1246035498
-    hit_at_10: 0.3798449612
-    source: dataset_bm25_column
+    ndcg_at_10: 0.14823428202946706
+    hit_at_10: 0.4108527131782946
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: R2MED benchmark release sampled into NanoR2MED
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude R2MED IIYi-Clinical evaluation queries, qrels, and positive translated case records
+    leakage_note: exclude R2MED IIYi-Clinical evaluation queries, qrels, and positive
+      translated case records
     useful_training_data:
-      - non-overlapping diagnosis-labeled clinical case retrieval
-      - de-identified consultation case similarity pairs
-      - translated or native-English clinical case retrieval
-      - hard negatives with similar chief complaints but different diagnoses
+    - non-overlapping diagnosis-labeled clinical case retrieval
+    - de-identified consultation case similarity pairs
+    - translated or native-English clinical case retrieval
+    - hard negatives with similar chief complaints but different diagnoses
     synthetic_data:
-      document_generation: structured de-identified clinical cases with diagnosis-bearing outcomes
-      question_generation: diagnosis-removed patient records asking for similar supporting cases
+      document_generation: structured de-identified clinical cases with diagnosis-bearing
+        outcomes
+      question_generation: diagnosis-removed patient records asking for similar supporting
+        cases
       hard_negatives: similar demographics or chief complaints with a different condition
-      answerability: positives should share the diagnosis or provide diagnostically useful support
+      answerability: positives should share the diagnosis or provide diagnostically
+        useful support
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoR2MED
     source_urls:
-      - label: R2MED arXiv
-        url: https://arxiv.org/abs/2505.14558
-      - label: R2MED project page
-        url: https://r2med.github.io/
-      - label: R2MED GitHub
-        url: https://github.com/R2MED/R2MED
-      - label: R2MED/IIYi-Clinical
-        url: https://huggingface.co/datasets/R2MED/IIYi-Clinical
+    - label: R2MED arXiv
+      url: https://arxiv.org/abs/2505.14558
+    - label: R2MED project page
+      url: https://r2med.github.io/
+    - label: R2MED GitHub
+      url: https://github.com/R2MED/R2MED
+    - label: R2MED/IIYi-Clinical
+      url: https://huggingface.co/datasets/R2MED/IIYi-Clinical
     source_notes: []
   references:
-    - title: "R2MED: A Benchmark for Reasoning-Driven Medical Retrieval"
-      url: https://arxiv.org/abs/2505.14558
-      year: 2025
-      doi: 10.48550/arXiv.2505.14558
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
+    url: https://arxiv.org/abs/2505.14558
+    year: 2025
+    doi: 10.48550/arXiv.2505.14558
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.148234282
+      hit_at_10: 0.4108527132
+      recall_at_100: 0.4617067834
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 129
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4617067834
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1869592556
+      hit_at_10: 0.496124031
+      recall_at_100: 0.6673960613
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 129
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6673960613
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.1975344312
+      hit_at_10: 0.5426356589
+      recall_at_100: 0.6673960613
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.108527
+      query_count: 129
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6673960613
+      safeguard_positive_rows: 14
+      rows_with_101_candidates: 14
 ```

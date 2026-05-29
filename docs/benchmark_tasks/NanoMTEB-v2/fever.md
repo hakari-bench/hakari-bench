@@ -69,8 +69,20 @@ model must match the exact evidence, not only the entity name.
 | Positive qrels | 229 |
 | Positives per query | avg 1.15, min 1, median 1, max 4 |
 | Multi-positive queries | 25 (12.50%) |
-| BM25 nDCG@10 | 0.8951 |
+| BM25 nDCG@10 | 0.8893 |
 | BM25 hit@10 | 0.9950 |
+| BM25 Recall@100 | 0.9869 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9652 |
+| Dense hit@10 | 0.9800 |
+| Dense Recall@100 | 0.9738 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9450 |
+| Reranking hybrid hit@10 | 0.9950 |
+| Reranking hybrid Recall@100 | 0.9869 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 50.56 |
 | Document length avg chars | 565.98 |
 
@@ -130,42 +142,88 @@ benchmark_task_metadata:
     query_mean: 50.565
     document_mean: 565.9753
   bm25:
-    ndcg_at_10: 0.8951263986829078
+    ndcg_at_10: 0.8892881849810772
     hit_at_10: 0.995
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MTEB FEVER hard-negative test split
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoMTEB-v2 fever claims and evidence pages
     useful_training_data:
-      - FEVER claim-evidence pairs
-      - Wikipedia evidence retrieval data
-      - fact-checking hard negatives
+    - FEVER claim-evidence pairs
+    - Wikipedia evidence retrieval data
+    - fact-checking hard negatives
     synthetic_data:
       document_generation: Wikipedia-style passages with explicit factual evidence
       question_generation: short factual claims about entities and relations
-      answerability: positive document should contain evidence for or against the claim
+      answerability: positive document should contain evidence for or against the
+        claim
     multi_positive_training: optional
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-v2
     source_urls:
-      - label: FEVER arXiv
-        url: https://arxiv.org/abs/1803.05355
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: mteb/FEVER_test_top_250_only_w_correct-v2
-        url: https://huggingface.co/datasets/mteb/FEVER_test_top_250_only_w_correct-v2
+    - label: FEVER arXiv
+      url: https://arxiv.org/abs/1803.05355
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: mteb/FEVER_test_top_250_only_w_correct-v2
+      url: https://huggingface.co/datasets/mteb/FEVER_test_top_250_only_w_correct-v2
     source_notes: []
   references:
-    - title: "FEVER: a Large-scale Dataset for Fact Extraction and VERification"
-      url: https://arxiv.org/abs/1803.05355
-      year: 2018
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'FEVER: a Large-scale Dataset for Fact Extraction and VERification'
+    url: https://arxiv.org/abs/1803.05355
+    year: 2018
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.889288185
+      hit_at_10: 0.995
+      recall_at_100: 0.9868995633
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9868995633
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9651833644
+      hit_at_10: 0.98
+      recall_at_100: 0.9737991266
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9737991266
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9450278818
+      hit_at_10: 0.995
+      recall_at_100: 0.9868995633
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9868995633
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

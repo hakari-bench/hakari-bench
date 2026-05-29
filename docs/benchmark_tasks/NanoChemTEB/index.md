@@ -119,8 +119,15 @@ evaluation queries or positive paragraphs as generation seeds.
 | Positive qrels | 253 |
 | Average positives / query | 1.03 |
 | Queries with multiple positives | 7 |
-| Query-weighted BM25 nDCG@10 | 0.7992 |
-| Query-weighted BM25 hit@10 | 0.8735 |
+| Query-weighted BM25 nDCG@10 | 0.8700 |
+| Query-weighted BM25 hit@10 | 0.9388 |
+| Query-weighted BM25 Recall@100 | 0.9752 |
+| Query-weighted Dense nDCG@10 | 0.8597 |
+| Query-weighted Dense hit@10 | 0.9224 |
+| Query-weighted Dense Recall@100 | 0.9846 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.8880 |
+| Query-weighted Reranking hybrid hit@10 | 0.9429 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9969 |
 | Mean query length | 104.80 chars, weighted by query count |
 | Mean document length | 654.24 chars, weighted by split-local document count |
 
@@ -178,65 +185,87 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 104.79591836734531
     document_mean_weighted_by_documents: 654.2387666666667
   bm25:
-    ndcg_at_10_query_weighted: 0.7992161145591837
-    hit_at_10_query_weighted: 0.8734693877555102
-    source: dataset_bm25_column
+    ndcg_at_10_query_weighted: 0.869990365
+    hit_at_10_query_weighted: 0.9387755102
+    source: dataset_candidate_subset
     strongest_task_by_ndcg_at_10: NanoChemRxiv
     weakest_task_by_ndcg_at_10: NanoChemNQ
   tasks:
-    - name: NanoChemHotpotQA
-      path: docs/benchmark_tasks/NanoChemTEB/NanoChemHotpotQA.md
-      retrieval_focus: chemistry_multihop_question_to_evidence_passage
-      queries: 18
-      documents: 10000
-      positive_qrels: 18
-      bm25_ndcg_at_10: 0.6496
-      bm25_hit_at_10: 0.7222
-    - name: NanoChemNQ
-      path: docs/benchmark_tasks/NanoChemTEB/NanoChemNQ.md
-      retrieval_focus: chemistry_natural_question_to_evidence_passage
-      queries: 27
-      documents: 10000
-      positive_qrels: 35
-      bm25_ndcg_at_10: 0.3616
-      bm25_hit_at_10: 0.4815
-    - name: NanoChemRxiv
-      path: docs/benchmark_tasks/NanoChemTEB/NanoChemRxiv.md
-      retrieval_focus: chemistry_question_to_chemrxiv_paragraph
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8718
-      bm25_hit_at_10: 0.94
+  - name: NanoChemHotpotQA
+    path: docs/benchmark_tasks/NanoChemTEB/NanoChemHotpotQA.md
+    retrieval_focus: chemistry_multihop_question_to_evidence_passage
+    queries: 18
+    documents: 10000
+    positive_qrels: 18
+    bm25_ndcg_at_10: 0.6496
+    bm25_hit_at_10: 0.7222
+  - name: NanoChemNQ
+    path: docs/benchmark_tasks/NanoChemTEB/NanoChemNQ.md
+    retrieval_focus: chemistry_natural_question_to_evidence_passage
+    queries: 27
+    documents: 10000
+    positive_qrels: 35
+    bm25_ndcg_at_10: 0.3616
+    bm25_hit_at_10: 0.4815
+  - name: NanoChemRxiv
+    path: docs/benchmark_tasks/NanoChemTEB/NanoChemRxiv.md
+    retrieval_focus: chemistry_question_to_chemrxiv_paragraph
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8718
+    bm25_hit_at_10: 0.94
   learning:
-    leakage_note: exclude NanoChemTEB evaluation queries, qrels, and positive documents; audit ChemTEB, ChemRxiv, HotpotQA, and Natural Questions overlap before training
+    leakage_note: exclude NanoChemTEB evaluation queries, qrels, and positive documents;
+      audit ChemTEB, ChemRxiv, HotpotQA, and Natural Questions overlap before training
     useful_training_data:
-      - chemistry-focused QA evidence retrieval pairs
-      - ChemRxiv or PubMed-style literature search pairs
-      - scientific paragraph retrieval data with chemistry hard negatives
-      - non-overlapping HotpotQA and Natural Questions evidence pairs
+    - chemistry-focused QA evidence retrieval pairs
+    - ChemRxiv or PubMed-style literature search pairs
+    - scientific paragraph retrieval data with chemistry hard negatives
+    - non-overlapping HotpotQA and Natural Questions evidence pairs
     synthetic_data:
-      document_generation: chemistry passages with compounds, reactions, materials, methods, measurements, and paragraph-level evidence
-      question_generation: chemistry questions answerable from selected non-evaluation passages
-      answerability: positives must contain explicit chemical or scientific evidence for the query
+      document_generation: chemistry passages with compounds, reactions, materials,
+        methods, measurements, and paragraph-level evidence
+      question_generation: chemistry questions answerable from selected non-evaluation
+        passages
+      answerability: positives must contain explicit chemical or scientific evidence
+        for the query
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoChemTEB
     source_urls:
-      - label: ChemTEB PMLR
-        url: https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html
-      - label: ChEmbed arXiv
-        url: https://arxiv.org/abs/2508.01643
-  references:
-    - title: "ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance & Efficiency on a Specific Domain"
+    - label: ChemTEB PMLR
       url: https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings"
+    - label: ChEmbed arXiv
       url: https://arxiv.org/abs/2508.01643
-      year: 2025
-      doi: 10.48550/arXiv.2508.01643
-      is_paper: true
-      source_confidence: definitive_paper_link
+  references:
+  - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models
+      Performance & Efficiency on a Specific Domain'
+    url: https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific
+      Text Embeddings'
+    url: https://arxiv.org/abs/2508.01643
+    year: 2025
+    doi: 10.48550/arXiv.2508.01643
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.869990365
+      query_weighted_hit_at_10: 0.9387755102
+      query_weighted_recall_at_100: 0.9751603499
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.8597498592
+      query_weighted_hit_at_10: 0.9224489796
+      query_weighted_recall_at_100: 0.984606414
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.8880241301
+      query_weighted_hit_at_10: 0.9428571429
+      query_weighted_recall_at_100: 0.996851312
+      source: dataset_candidate_subset
 ```

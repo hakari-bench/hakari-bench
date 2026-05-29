@@ -69,8 +69,20 @@ support the answer explicitly and be suitable as cited evidence.
 | Queries | 200 |
 | Documents | 493 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.9657 |
-| BM25 hit@10 | 0.9900 |
+| BM25 nDCG@10 | 0.9814 |
+| BM25 hit@10 | 0.9950 |
+| BM25 Recall@100 | 0.9950 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9570 |
+| Dense hit@10 | 0.9650 |
+| Dense Recall@100 | 0.9800 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9639 |
+| Reranking hybrid hit@10 | 0.9800 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 38.36 |
 | Document length avg chars | 229.57 |
 
@@ -128,38 +140,86 @@ benchmark_task_metadata:
     query_mean: 38.36
     document_mean: 229.56795131845843
   bm25:
-    ndcg_at_10: 0.9657410741436879
-    hit_at_10: 0.99
-    source: dataset_bm25_column
+    ndcg_at_10: 0.9814278926071437
+    hit_at_10: 0.995
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: dev
     train_eval_overlap_audit: not_audited
-    leakage_note: do not train on this Nano split's questions, qrels, or cited answer passages
+    leakage_note: do not train on this Nano split's questions, qrels, or cited answer
+      passages
     useful_training_data:
-      - open-domain QA retrieval pairs
-      - attributable answer support selection data
-      - non-overlapping MIRACL or Wikipedia question-passage pairs
-      - same-entity factual hard negatives
+    - open-domain QA retrieval pairs
+    - attributable answer support selection data
+    - non-overlapping MIRACL or Wikipedia question-passage pairs
+    - same-entity factual hard negatives
     synthetic_data:
       document_generation: concise answer snippets with citation-like source markers
-      question_generation: short fact-seeking questions about entities, dates, and places
+      question_generation: short fact-seeking questions about entities, dates, and
+        places
       answerability: positive passage should explicitly support a cited answer
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMMTEB-v2
     source_urls:
-      - label: HAGRID arXiv
-        url: https://arxiv.org/abs/2307.16883
-      - label: HAGRID GitHub
-        url: https://github.com/project-miracl/hagrid
-      - label: mteb/HagridRetrieval
-        url: https://huggingface.co/datasets/mteb/HagridRetrieval
+    - label: HAGRID arXiv
+      url: https://arxiv.org/abs/2307.16883
+    - label: HAGRID GitHub
+      url: https://github.com/project-miracl/hagrid
+    - label: mteb/HagridRetrieval
+      url: https://huggingface.co/datasets/mteb/HagridRetrieval
     source_notes: []
   references:
-    - title: "HAGRID: A Human-LLM Collaborative Dataset for Generative Information-Seeking with Attribution"
-      url: https://arxiv.org/abs/2307.16883
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'HAGRID: A Human-LLM Collaborative Dataset for Generative Information-Seeking
+      with Attribution'
+    url: https://arxiv.org/abs/2307.16883
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9814278926
+      hit_at_10: 0.995
+      recall_at_100: 0.995
+      candidate_count_min: 493
+      candidate_count_max: 493
+      candidate_count_mean: 493.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.995
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9569639463
+      hit_at_10: 0.965
+      recall_at_100: 0.98
+      candidate_count_min: 493
+      candidate_count_max: 493
+      candidate_count_mean: 493.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.98
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9639131544
+      hit_at_10: 0.98
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

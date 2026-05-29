@@ -81,6 +81,18 @@ the same API surface.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.2608 |
 | BM25 hit@10 | 0.3700 |
+| BM25 Recall@100 | 0.5950 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3057 |
+| Dense hit@10 | 0.4250 |
+| Dense Recall@100 | 0.6850 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3371 |
+| Reranking hybrid hit@10 | 0.4600 |
+| Reranking hybrid Recall@100 | 0.7250 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 55 |
 | Query length avg chars | 56.55 |
 | Document length avg chars | 1,183.40 |
 
@@ -127,10 +139,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://doi.org/10.1145/2838931.2838934
     additional_source_urls:
-      - https://eltimster.github.io/www/pubs/adcs2015.pdf
-      - https://aclanthology.org/2025.bucc-1.5/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+    - https://eltimster.github.io/www/pubs/adcs2015.pdf
+    - https://aclanthology.org/2025.bucc-1.5/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/clips/beir-nl-cqadupstack
   counts:
     queries: 200
     documents: 10000
@@ -146,22 +158,70 @@ benchmark_task_metadata:
     query_mean: 56.55
     document_mean: 1183.4007
   bm25:
-    ndcg_at_10: 0.2607990583
+    ndcg_at_10: 0.2607990583308149
     hit_at_10: 0.37
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "CQADupstackWordpress-NL test split from clips/beir-nl-cqadupstack"
+    evaluation_split_origin: CQADupstackWordpress-NL test split from clips/beir-nl-cqadupstack
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated CQADupStack WordPress test queries and duplicate positives used by this Nano split."
+    leakage_note: Exclude translated CQADupStack WordPress test queries and duplicate
+      positives used by this Nano split.
     useful_training_data:
-      - non-overlapping WordPress Stack Exchange duplicate-question pairs
-      - WordPress support forum QA pairs
-      - code-aware CMS duplicate retrieval data
+    - non-overlapping WordPress Stack Exchange duplicate-question pairs
+    - WordPress support forum QA pairs
+    - code-aware CMS duplicate retrieval data
     synthetic_data:
-      document_generation: "Dutch WordPress support posts with function names and hooks preserved."
-      question_generation: "Paraphrased duplicate WordPress implementation questions."
-      answerability: "Each query should duplicate one prior WordPress question, with same-API hard negatives."
+      document_generation: Dutch WordPress support posts with function names and hooks
+        preserved.
+      question_generation: Paraphrased duplicate WordPress implementation questions.
+      answerability: Each query should duplicate one prior WordPress question, with
+        same-API hard negatives.
     multi_positive_training: single_positive
   example_count: 5
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2607990583
+      hit_at_10: 0.37
+      recall_at_100: 0.595
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.595
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3056615361
+      hit_at_10: 0.425
+      recall_at_100: 0.685
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.685
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.337105607
+      hit_at_10: 0.46
+      recall_at_100: 0.725
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.275
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.725
+      safeguard_positive_rows: 55
+      rows_with_101_candidates: 55
 ```

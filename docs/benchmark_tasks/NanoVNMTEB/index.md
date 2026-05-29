@@ -191,8 +191,15 @@ seed.
 | Positive qrels | 24,671 |
 | Positives per query | avg 5.17, min 1, median 1, max 100 |
 | Multi-positive queries | 2,040 (42.79%) |
-| Query-weighted BM25 nDCG@10 | 0.4878 |
-| Query-weighted BM25 hit@10 | 0.6724 |
+| Query-weighted BM25 nDCG@10 | 0.4538 |
+| Query-weighted BM25 hit@10 | 0.6567 |
+| Query-weighted BM25 Recall@100 | 0.6486 |
+| Query-weighted Dense nDCG@10 | 0.5400 |
+| Query-weighted Dense hit@10 | 0.7332 |
+| Query-weighted Dense Recall@100 | 0.7148 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.5168 |
+| Query-weighted Reranking hybrid hit@10 | 0.7261 |
+| Query-weighted Reranking hybrid Recall@100 | 0.7403 |
 | Mean query length | 106.61 chars, weighted by query count |
 | Mean document length | 823.25 chars, weighted by split-local document count |
 
@@ -261,266 +268,291 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 106.6078074664461
     document_mean_weighted_by_documents: 823.2509968926132
   bm25:
-    ndcg_at_10_query_weighted: 0.48776451696078016
-    hit_at_10_query_weighted: 0.6723993288741611
+    ndcg_at_10_query_weighted: 0.4537656885
+    hit_at_10_query_weighted: 0.6566694631
     ndcg_at_10_unweighted_task_mean: 0.5091852961538461
     hit_at_10_unweighted_task_mean: 0.6923879631923077
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: treccovid_vn
     hardest_task_by_ndcg_at_10: scidocs_vn
   tasks:
-    - name: argu_ana_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/argu_ana_vn.md
-      retrieval_shape: argument_to_counterargument
-      queries: 199
-      documents: 8674
-      positive_qrels: 199
-      bm25_ndcg_at_10: 0.259066684
-      bm25_hit_at_10: 0.567839196
-    - name: climate_fever_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/climate_fever_vn.md
-      retrieval_shape: climate_claim_to_wikipedia_evidence
-      queries: 200
-      documents: 10000
-      positive_qrels: 635
-      bm25_ndcg_at_10: 0.278029502
-      bm25_hit_at_10: 0.67
-    - name: cqadupstack_android_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_android_vn.md
-      retrieval_shape: android_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 811
-      bm25_ndcg_at_10: 0.399265669
-      bm25_hit_at_10: 0.63
-    - name: cqadupstack_gis_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_gis_vn.md
-      retrieval_shape: gis_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 299
-      bm25_ndcg_at_10: 0.300878904
-      bm25_hit_at_10: 0.43
-    - name: cqadupstack_mathematica_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_mathematica_vn.md
-      retrieval_shape: mathematica_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 424
-      bm25_ndcg_at_10: 0.211379253
-      bm25_hit_at_10: 0.37
-    - name: cqadupstack_physics_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_physics_vn.md
-      retrieval_shape: physics_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 592
-      bm25_ndcg_at_10: 0.413754578
-      bm25_hit_at_10: 0.61
-    - name: cqadupstack_programmers_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_programmers_vn.md
-      retrieval_shape: programmers_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 490
-      bm25_ndcg_at_10: 0.343848955
-      bm25_hit_at_10: 0.555
-    - name: cqadupstack_stats_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_stats_vn.md
-      retrieval_shape: statistics_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 310
-      bm25_ndcg_at_10: 0.319379709
-      bm25_hit_at_10: 0.455
-    - name: cqadupstack_tex_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_tex_vn.md
-      retrieval_shape: tex_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 743
-      bm25_ndcg_at_10: 0.292334482
-      bm25_hit_at_10: 0.49
-    - name: cqadupstack_unix_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_unix_vn.md
-      retrieval_shape: unix_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 434
-      bm25_ndcg_at_10: 0.381628513
-      bm25_hit_at_10: 0.575
-    - name: cqadupstack_webmasters_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_webmasters_vn.md
-      retrieval_shape: webmasters_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 825
-      bm25_ndcg_at_10: 0.258162337
-      bm25_hit_at_10: 0.405
-    - name: cqadupstack_wordpress_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_wordpress_vn.md
-      retrieval_shape: wordpress_duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 337
-      bm25_ndcg_at_10: 0.316960341
-      bm25_hit_at_10: 0.48
-    - name: dbpedia_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/dbpedia_vn.md
-      retrieval_shape: entity_query_to_dbpedia_article
-      queries: 200
-      documents: 10000
-      positive_qrels: 5754
-      bm25_ndcg_at_10: 0.731161413
-      bm25_hit_at_10: 0.97
-    - name: fever_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/fever_vn.md
-      retrieval_shape: claim_to_wikipedia_evidence
-      queries: 200
-      documents: 10000
-      positive_qrels: 232
-      bm25_ndcg_at_10: 0.880525723
-      bm25_hit_at_10: 0.95
-    - name: fi_qa2018_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/fi_qa2018_vn.md
-      retrieval_shape: finance_question_to_answer_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 549
-      bm25_ndcg_at_10: 0.311195336
-      bm25_hit_at_10: 0.565
-    - name: hotpot_qa_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/hotpot_qa_vn.md
-      retrieval_shape: multi_hop_question_to_wikipedia_evidence
-      queries: 200
-      documents: 10000
-      positive_qrels: 400
-      bm25_ndcg_at_10: 0.854605615
-      bm25_hit_at_10: 0.985
-    - name: msmarco_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/msmarco_vn.md
-      retrieval_shape: web_search_query_to_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 214
-      bm25_ndcg_at_10: 0.851862851
-      bm25_hit_at_10: 0.9
-    - name: nano_fever
-      path: docs/benchmark_tasks/NanoVNMTEB/nano_fever.md
-      retrieval_shape: claim_to_wikipedia_evidence_nano_variant
-      queries: 200
-      documents: 10000
-      positive_qrels: 232
-      bm25_ndcg_at_10: 0.857403879
-      bm25_hit_at_10: 0.935
-    - name: nano_nq
-      path: docs/benchmark_tasks/NanoVNMTEB/nano_nq.md
-      retrieval_shape: natural_question_to_wikipedia_passage_nano_variant
-      queries: 200
-      documents: 10000
-      positive_qrels: 234
-      bm25_ndcg_at_10: 0.736680668
-      bm25_hit_at_10: 0.86
-    - name: nfcorpus_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/nfcorpus_vn.md
-      retrieval_shape: medical_query_to_biomedical_document
-      queries: 166
-      documents: 3618
-      positive_qrels: 4571
-      bm25_ndcg_at_10: 0.310525083
-      bm25_hit_at_10: 0.608433735
-    - name: nq_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/nq_vn.md
-      retrieval_shape: natural_question_to_wikipedia_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 234
-      bm25_ndcg_at_10: 0.678882681
-      bm25_hit_at_10: 0.845
-    - name: quora_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/quora_vn.md
-      retrieval_shape: duplicate_question_retrieval
-      queries: 200
-      documents: 10000
-      positive_qrels: 452
-      bm25_ndcg_at_10: 0.862570196
-      bm25_hit_at_10: 0.98
-    - name: sci_fact_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/sci_fact_vn.md
-      retrieval_shape: scientific_claim_to_paper_evidence
-      queries: 134
-      documents: 5183
-      positive_qrels: 155
-      bm25_ndcg_at_10: 0.595353108
-      bm25_hit_at_10: 0.746268657
-    - name: scidocs_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/scidocs_vn.md
-      retrieval_shape: scientific_paper_to_related_paper
-      queries: 200
-      documents: 10000
-      positive_qrels: 988
-      bm25_ndcg_at_10: 0.139577852
-      bm25_hit_at_10: 0.465
-    - name: touche2020_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/touche2020_vn.md
-      retrieval_shape: argument_query_to_argument_passage
-      queries: 25
-      documents: 10000
-      positive_qrels: 481
-      bm25_ndcg_at_10: 0.736933531
-      bm25_hit_at_10: 1.0
-    - name: treccovid_vn
-      path: docs/benchmark_tasks/NanoVNMTEB/treccovid_vn.md
-      retrieval_shape: covid_information_need_to_biomedical_paper
-      queries: 44
-      documents: 10000
-      positive_qrels: 4076
-      bm25_ndcg_at_10: 0.916850837
-      bm25_hit_at_10: 0.954545455
+  - name: argu_ana_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/argu_ana_vn.md
+    retrieval_shape: argument_to_counterargument
+    queries: 199
+    documents: 8674
+    positive_qrels: 199
+    bm25_ndcg_at_10: 0.259066684
+    bm25_hit_at_10: 0.567839196
+  - name: climate_fever_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/climate_fever_vn.md
+    retrieval_shape: climate_claim_to_wikipedia_evidence
+    queries: 200
+    documents: 10000
+    positive_qrels: 635
+    bm25_ndcg_at_10: 0.278029502
+    bm25_hit_at_10: 0.67
+  - name: cqadupstack_android_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_android_vn.md
+    retrieval_shape: android_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 811
+    bm25_ndcg_at_10: 0.399265669
+    bm25_hit_at_10: 0.63
+  - name: cqadupstack_gis_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_gis_vn.md
+    retrieval_shape: gis_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 299
+    bm25_ndcg_at_10: 0.300878904
+    bm25_hit_at_10: 0.43
+  - name: cqadupstack_mathematica_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_mathematica_vn.md
+    retrieval_shape: mathematica_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 424
+    bm25_ndcg_at_10: 0.211379253
+    bm25_hit_at_10: 0.37
+  - name: cqadupstack_physics_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_physics_vn.md
+    retrieval_shape: physics_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 592
+    bm25_ndcg_at_10: 0.413754578
+    bm25_hit_at_10: 0.61
+  - name: cqadupstack_programmers_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_programmers_vn.md
+    retrieval_shape: programmers_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 490
+    bm25_ndcg_at_10: 0.343848955
+    bm25_hit_at_10: 0.555
+  - name: cqadupstack_stats_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_stats_vn.md
+    retrieval_shape: statistics_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 310
+    bm25_ndcg_at_10: 0.319379709
+    bm25_hit_at_10: 0.455
+  - name: cqadupstack_tex_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_tex_vn.md
+    retrieval_shape: tex_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 743
+    bm25_ndcg_at_10: 0.292334482
+    bm25_hit_at_10: 0.49
+  - name: cqadupstack_unix_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_unix_vn.md
+    retrieval_shape: unix_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 434
+    bm25_ndcg_at_10: 0.381628513
+    bm25_hit_at_10: 0.575
+  - name: cqadupstack_webmasters_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_webmasters_vn.md
+    retrieval_shape: webmasters_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 825
+    bm25_ndcg_at_10: 0.258162337
+    bm25_hit_at_10: 0.405
+  - name: cqadupstack_wordpress_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/cqadupstack_wordpress_vn.md
+    retrieval_shape: wordpress_duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 337
+    bm25_ndcg_at_10: 0.316960341
+    bm25_hit_at_10: 0.48
+  - name: dbpedia_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/dbpedia_vn.md
+    retrieval_shape: entity_query_to_dbpedia_article
+    queries: 200
+    documents: 10000
+    positive_qrels: 5754
+    bm25_ndcg_at_10: 0.731161413
+    bm25_hit_at_10: 0.97
+  - name: fever_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/fever_vn.md
+    retrieval_shape: claim_to_wikipedia_evidence
+    queries: 200
+    documents: 10000
+    positive_qrels: 232
+    bm25_ndcg_at_10: 0.880525723
+    bm25_hit_at_10: 0.95
+  - name: fi_qa2018_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/fi_qa2018_vn.md
+    retrieval_shape: finance_question_to_answer_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 549
+    bm25_ndcg_at_10: 0.311195336
+    bm25_hit_at_10: 0.565
+  - name: hotpot_qa_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/hotpot_qa_vn.md
+    retrieval_shape: multi_hop_question_to_wikipedia_evidence
+    queries: 200
+    documents: 10000
+    positive_qrels: 400
+    bm25_ndcg_at_10: 0.854605615
+    bm25_hit_at_10: 0.985
+  - name: msmarco_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/msmarco_vn.md
+    retrieval_shape: web_search_query_to_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 214
+    bm25_ndcg_at_10: 0.851862851
+    bm25_hit_at_10: 0.9
+  - name: nano_fever
+    path: docs/benchmark_tasks/NanoVNMTEB/nano_fever.md
+    retrieval_shape: claim_to_wikipedia_evidence_nano_variant
+    queries: 200
+    documents: 10000
+    positive_qrels: 232
+    bm25_ndcg_at_10: 0.857403879
+    bm25_hit_at_10: 0.935
+  - name: nano_nq
+    path: docs/benchmark_tasks/NanoVNMTEB/nano_nq.md
+    retrieval_shape: natural_question_to_wikipedia_passage_nano_variant
+    queries: 200
+    documents: 10000
+    positive_qrels: 234
+    bm25_ndcg_at_10: 0.736680668
+    bm25_hit_at_10: 0.86
+  - name: nfcorpus_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/nfcorpus_vn.md
+    retrieval_shape: medical_query_to_biomedical_document
+    queries: 166
+    documents: 3618
+    positive_qrels: 4571
+    bm25_ndcg_at_10: 0.310525083
+    bm25_hit_at_10: 0.608433735
+  - name: nq_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/nq_vn.md
+    retrieval_shape: natural_question_to_wikipedia_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 234
+    bm25_ndcg_at_10: 0.678882681
+    bm25_hit_at_10: 0.845
+  - name: quora_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/quora_vn.md
+    retrieval_shape: duplicate_question_retrieval
+    queries: 200
+    documents: 10000
+    positive_qrels: 452
+    bm25_ndcg_at_10: 0.862570196
+    bm25_hit_at_10: 0.98
+  - name: sci_fact_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/sci_fact_vn.md
+    retrieval_shape: scientific_claim_to_paper_evidence
+    queries: 134
+    documents: 5183
+    positive_qrels: 155
+    bm25_ndcg_at_10: 0.595353108
+    bm25_hit_at_10: 0.746268657
+  - name: scidocs_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/scidocs_vn.md
+    retrieval_shape: scientific_paper_to_related_paper
+    queries: 200
+    documents: 10000
+    positive_qrels: 988
+    bm25_ndcg_at_10: 0.139577852
+    bm25_hit_at_10: 0.465
+  - name: touche2020_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/touche2020_vn.md
+    retrieval_shape: argument_query_to_argument_passage
+    queries: 25
+    documents: 10000
+    positive_qrels: 481
+    bm25_ndcg_at_10: 0.736933531
+    bm25_hit_at_10: 1.0
+  - name: treccovid_vn
+    path: docs/benchmark_tasks/NanoVNMTEB/treccovid_vn.md
+    retrieval_shape: covid_information_need_to_biomedical_paper
+    queries: 44
+    documents: 10000
+    positive_qrels: 4076
+    bm25_ndcg_at_10: 0.916850837
+    bm25_hit_at_10: 0.954545455
   learning:
-    leakage_note: exclude NanoVNMTEB evaluation queries, qrels, positive documents, duplicate clusters, and translated source passages; audit translated and multilingual source datasets before training on public MTEB or BEIR variants
+    leakage_note: exclude NanoVNMTEB evaluation queries, qrels, positive documents,
+      duplicate clusters, and translated source passages; audit translated and multilingual
+      source datasets before training on public MTEB or BEIR variants
     useful_training_data:
-      - Vietnamese duplicate-question, paraphrase, and StackExchange-style QA pairs
-      - Vietnamese and translated claim-evidence retrieval pairs
-      - Vietnamese web-search and Wikipedia question-passage pairs
-      - Vietnamese argument-counterargument and debate passage retrieval data
-      - finance, biomedical, COVID literature, and scientific-paper retrieval pairs
-      - hard negatives matched by entity, domain, topic, stance, or source forum
+    - Vietnamese duplicate-question, paraphrase, and StackExchange-style QA pairs
+    - Vietnamese and translated claim-evidence retrieval pairs
+    - Vietnamese web-search and Wikipedia question-passage pairs
+    - Vietnamese argument-counterargument and debate passage retrieval data
+    - finance, biomedical, COVID literature, and scientific-paper retrieval pairs
+    - hard negatives matched by entity, domain, topic, stance, or source forum
     synthetic_data:
-      document_generation: Vietnamese passages, duplicate questions, evidence pages, biomedical abstracts, scientific titles, and argument passages with preserved entities and technical terms
-      question_generation: Vietnamese search questions, claims, duplicate-question variants, debate prompts, medical queries, and scientific-paper titles grounded in the generated or selected document
-      answerability: positives should satisfy the source task relation, such as duplicate intent, evidence support, answer-bearing passage, counterargument stance, or scientific relatedness
+      document_generation: Vietnamese passages, duplicate questions, evidence pages,
+        biomedical abstracts, scientific titles, and argument passages with preserved
+        entities and technical terms
+      question_generation: Vietnamese search questions, claims, duplicate-question
+        variants, debate prompts, medical queries, and scientific-paper titles grounded
+        in the generated or selected document
+      answerability: positives should satisfy the source task relation, such as duplicate
+        intent, evidence support, answer-bearing passage, counterargument stance,
+        or scientific relatedness
     multi_positive_training: mixed_single_and_multi_positive_retrieval_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode Hugging Face datasets
-        url: https://huggingface.co/GreenNode
-      - label: MTEB GitHub
-        url: https://github.com/embeddings-benchmark/mteb
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode Hugging Face datasets
+      url: https://huggingface.co/GreenNode
+    - label: MTEB GitHub
+      url: https://github.com/embeddings-benchmark/mteb
     source_notes: []
   references:
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      doi: 10.48550/arXiv.2210.07316
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    doi: 10.48550/arXiv.2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.4537656885
+      query_weighted_hit_at_10: 0.6566694631
+      query_weighted_recall_at_100: 0.64857685
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.539985858
+      query_weighted_hit_at_10: 0.7332214765
+      query_weighted_recall_at_100: 0.7148482685
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.5167861508
+      query_weighted_hit_at_10: 0.726090604
+      query_weighted_recall_at_100: 0.7403310721
+      source: dataset_candidate_subset
 ```

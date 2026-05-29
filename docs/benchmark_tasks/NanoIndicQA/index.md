@@ -146,8 +146,15 @@ target is the evidence paragraph.
 | Positives per query | avg 1.0023, median 1, max 2 |
 | Multi-positive subtasks | 5 of 11 |
 | Multi-positive queries | 5 |
-| Query-weighted BM25 nDCG@10 | 0.5327 |
-| Query-weighted BM25 hit@10 | 0.6736 |
+| Query-weighted BM25 nDCG@10 | 0.5653 |
+| Query-weighted BM25 hit@10 | 0.7009 |
+| Query-weighted BM25 Recall@100 | 0.8839 |
+| Query-weighted Dense nDCG@10 | 0.7164 |
+| Query-weighted Dense hit@10 | 0.8545 |
+| Query-weighted Dense Recall@100 | 0.9583 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6688 |
+| Query-weighted Reranking hybrid hit@10 | 0.8032 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9719 |
 | Mean query length | 60.18 chars, weighted by query count |
 | Mean document length | 1,790.25 chars, weighted by split-local document count |
 
@@ -206,118 +213,134 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 60.175909090909094
     document_mean_weighted_by_documents: 1790.2468286991666
   bm25:
-    ndcg_at_10_query_weighted: 0.5326805272636363
-    hit_at_10_query_weighted: 0.6736363636363636
+    ndcg_at_10_query_weighted: 0.5653351387
+    hit_at_10_query_weighted: 0.7009090909
     ndcg_at_10_unweighted_task_mean: 0.5326805272636363
     hit_at_10_unweighted_task_mean: 0.6736363636363637
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: ml
     hardest_task_by_ndcg_at_10: ta
   tasks:
-    - name: as
-      path: docs/benchmark_tasks/NanoIndicQA/as.md
-      language: as
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 250
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6110883622
-      bm25_hit_at_10: 0.75
-    - name: bn
-      path: docs/benchmark_tasks/NanoIndicQA/bn.md
-      language: bn
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 250
-      positive_qrels: 201
-      bm25_ndcg_at_10: 0.5076770387
-      bm25_hit_at_10: 0.675
-    - name: gu
-      path: docs/benchmark_tasks/NanoIndicQA/gu.md
-      language: gu
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 248
-      positive_qrels: 201
-      bm25_ndcg_at_10: 0.6060180577
-      bm25_hit_at_10: 0.69
-    - name: hi
-      path: docs/benchmark_tasks/NanoIndicQA/hi.md
-      language: hi
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 261
-      positive_qrels: 201
-      bm25_ndcg_at_10: 0.4535466574
-      bm25_hit_at_10: 0.64
-    - name: kn
-      path: docs/benchmark_tasks/NanoIndicQA/kn.md
-      language: kn
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 257
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4730209757
-      bm25_hit_at_10: 0.6
-    - name: ml
-      path: docs/benchmark_tasks/NanoIndicQA/ml.md
-      language: ml
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 247
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6527870423
-      bm25_hit_at_10: 0.795
-    - name: mr
-      path: docs/benchmark_tasks/NanoIndicQA/mr.md
-      language: mr
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 250
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4611920408
-      bm25_hit_at_10: 0.595
-    - name: or
-      path: docs/benchmark_tasks/NanoIndicQA/or.md
-      language: or
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 252
-      positive_qrels: 201
-      bm25_ndcg_at_10: 0.6040623987
-      bm25_hit_at_10: 0.725
-    - name: pa
-      path: docs/benchmark_tasks/NanoIndicQA/pa.md
-      language: pa
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 241
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5982647335
-      bm25_hit_at_10: 0.76
-    - name: ta
-      path: docs/benchmark_tasks/NanoIndicQA/ta.md
-      language: ta
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 253
-      positive_qrels: 201
-      bm25_ndcg_at_10: 0.2932109253
-      bm25_hit_at_10: 0.46
-    - name: te
-      path: docs/benchmark_tasks/NanoIndicQA/te.md
-      language: te
-      retrieval_shape: question_to_context_paragraph
-      queries: 200
-      documents: 250
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5986175676
-      bm25_hit_at_10: 0.72
+  - name: as
+    path: docs/benchmark_tasks/NanoIndicQA/as.md
+    language: as
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 250
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6110883622
+    bm25_hit_at_10: 0.75
+  - name: bn
+    path: docs/benchmark_tasks/NanoIndicQA/bn.md
+    language: bn
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 250
+    positive_qrels: 201
+    bm25_ndcg_at_10: 0.5076770387
+    bm25_hit_at_10: 0.675
+  - name: gu
+    path: docs/benchmark_tasks/NanoIndicQA/gu.md
+    language: gu
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 248
+    positive_qrels: 201
+    bm25_ndcg_at_10: 0.6060180577
+    bm25_hit_at_10: 0.69
+  - name: hi
+    path: docs/benchmark_tasks/NanoIndicQA/hi.md
+    language: hi
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 261
+    positive_qrels: 201
+    bm25_ndcg_at_10: 0.4535466574
+    bm25_hit_at_10: 0.64
+  - name: kn
+    path: docs/benchmark_tasks/NanoIndicQA/kn.md
+    language: kn
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 257
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4730209757
+    bm25_hit_at_10: 0.6
+  - name: ml
+    path: docs/benchmark_tasks/NanoIndicQA/ml.md
+    language: ml
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 247
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6527870423
+    bm25_hit_at_10: 0.795
+  - name: mr
+    path: docs/benchmark_tasks/NanoIndicQA/mr.md
+    language: mr
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 250
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4611920408
+    bm25_hit_at_10: 0.595
+  - name: or
+    path: docs/benchmark_tasks/NanoIndicQA/or.md
+    language: or
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 252
+    positive_qrels: 201
+    bm25_ndcg_at_10: 0.6040623987
+    bm25_hit_at_10: 0.725
+  - name: pa
+    path: docs/benchmark_tasks/NanoIndicQA/pa.md
+    language: pa
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 241
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5982647335
+    bm25_hit_at_10: 0.76
+  - name: ta
+    path: docs/benchmark_tasks/NanoIndicQA/ta.md
+    language: ta
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 253
+    positive_qrels: 201
+    bm25_ndcg_at_10: 0.2932109253
+    bm25_hit_at_10: 0.46
+  - name: te
+    path: docs/benchmark_tasks/NanoIndicQA/te.md
+    language: te
+    retrieval_shape: question_to_context_paragraph
+    queries: 200
+    documents: 250
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5986175676
+    bm25_hit_at_10: 0.72
   source_links:
-    - label: Towards Leaving No Indic Language Behind
-      url: https://arxiv.org/abs/2212.05409
-    - label: mteb/IndicQARetrieval
-      url: https://huggingface.co/datasets/mteb/IndicQARetrieval
-    - label: ai4bharat/IndicQA
-      url: https://huggingface.co/datasets/ai4bharat/IndicQA
+  - label: Towards Leaving No Indic Language Behind
+    url: https://arxiv.org/abs/2212.05409
+  - label: mteb/IndicQARetrieval
+    url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+  - label: ai4bharat/IndicQA
+    url: https://huggingface.co/datasets/ai4bharat/IndicQA
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.5653351387
+      query_weighted_hit_at_10: 0.7009090909
+      query_weighted_recall_at_100: 0.8839348711
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.7164321702
+      query_weighted_hit_at_10: 0.8545454545
+      query_weighted_recall_at_100: 0.9583107191
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.6688474565
+      query_weighted_hit_at_10: 0.8031818182
+      query_weighted_recall_at_100: 0.9718950701
+      source: dataset_candidate_subset
 ```

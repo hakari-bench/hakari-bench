@@ -106,6 +106,18 @@ article-level legal grounding.
 | Queries with multiple positives | 125 (62.50%) |
 | BM25 nDCG@10 | 0.1249 |
 | BM25 hit@10 | 0.2950 |
+| BM25 Recall@100 | 0.3402 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2749 |
+| Dense hit@10 | 0.5350 |
+| Dense Recall@100 | 0.4464 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2234 |
+| Reranking hybrid hit@10 | 0.4500 |
+| Reranking hybrid Recall@100 | 0.4518 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 42 |
 | Query length avg chars | 93.84 |
 | Document length avg chars | 863.16 |
 
@@ -151,9 +163,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2412.07462
     additional_source_urls:
-      - https://aclanthology.org/2025.regnlp-1.3/
-      - https://arxiv.org/abs/2509.12340
-      - https://huggingface.co/datasets/clips/mteb-nl-bbsard
+    - https://aclanthology.org/2025.regnlp-1.3/
+    - https://arxiv.org/abs/2509.12340
+    - https://huggingface.co/datasets/clips/mteb-nl-bbsard
   counts:
     queries: 200
     documents: 10000
@@ -169,52 +181,101 @@ benchmark_task_metadata:
     query_mean: 93.845
     document_mean: 863.1596
   bm25:
-    ndcg_at_10: 0.1249128833
+    ndcg_at_10: 0.12491288325054355
     hit_at_10: 0.295
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "bBSARDNLRetrieval test split from clips/mteb-nl-bbsard"
+    evaluation_split_origin: bBSARDNLRetrieval test split from clips/mteb-nl-bbsard
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude bBSARD Dutch test questions, qrels, and positive statutory articles used by this Nano split."
+    leakage_note: Exclude bBSARD Dutch test questions, qrels, and positive statutory
+      articles used by this Nano split.
     useful_training_data:
-      - non-overlapping bBSARD train retrieval pairs
-      - Dutch statutory article retrieval data
-      - Belgian legal QA and legal-aid question-answer pairs
-      - French-Dutch parallel legal retrieval data with overlap removed
+    - non-overlapping bBSARD train retrieval pairs
+    - Dutch statutory article retrieval data
+    - Belgian legal QA and legal-aid question-answer pairs
+    - French-Dutch parallel legal retrieval data with overlap removed
     synthetic_data:
-      document_generation: "Dutch Belgian statutory articles or article-like legal provisions outside the evaluation set."
-      question_generation: "Layperson Dutch legal questions that paraphrase article conditions, exceptions, and procedures."
-      answerability: "Questions should be answerable from one or more explicit statutory articles."
+      document_generation: Dutch Belgian statutory articles or article-like legal
+        provisions outside the evaluation set.
+      question_generation: Layperson Dutch legal questions that paraphrase article
+        conditions, exceptions, and procedures.
+      answerability: Questions should be answerable from one or more explicit statutory
+        articles.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: bBSARD arXiv
-        url: https://arxiv.org/abs/2412.07462
-      - label: bBSARD ACL Anthology
-        url: https://aclanthology.org/2025.regnlp-1.3/
-      - label: MTEB-NL arXiv
-        url: https://arxiv.org/abs/2509.12340
-      - label: clips/mteb-nl-bbsard
-        url: https://huggingface.co/datasets/clips/mteb-nl-bbsard
+    - label: bBSARD arXiv
+      url: https://arxiv.org/abs/2412.07462
+    - label: bBSARD ACL Anthology
+      url: https://aclanthology.org/2025.regnlp-1.3/
+    - label: MTEB-NL arXiv
+      url: https://arxiv.org/abs/2509.12340
+    - label: clips/mteb-nl-bbsard
+      url: https://huggingface.co/datasets/clips/mteb-nl-bbsard
     source_notes: []
   references:
-    - title: "Bilingual BSARD: Extending Statutory Article Retrieval to Dutch"
-      url: https://arxiv.org/abs/2412.07462
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch"
-      url: https://arxiv.org/abs/2509.12340
-      year: 2025
-      doi: 10.48550/arXiv.2509.12340
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: clips/mteb-nl-bbsard
-      url: https://huggingface.co/datasets/clips/mteb-nl-bbsard
-      year: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'Bilingual BSARD: Extending Statutory Article Retrieval to Dutch'
+    url: https://arxiv.org/abs/2412.07462
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+    url: https://arxiv.org/abs/2509.12340
+    year: 2025
+    doi: 10.48550/arXiv.2509.12340
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: clips/mteb-nl-bbsard
+    url: https://huggingface.co/datasets/clips/mteb-nl-bbsard
+    year: null
+    is_paper: false
+    source_confidence: probably_correct
   example_count: 5
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1249128833
+      hit_at_10: 0.295
+      recall_at_100: 0.3401950163
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3401950163
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2749144486
+      hit_at_10: 0.535
+      recall_at_100: 0.4463705309
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4463705309
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2234049624
+      hit_at_10: 0.45
+      recall_at_100: 0.451787649
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.21
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.451787649
+      safeguard_positive_rows: 42
+      rows_with_101_candidates: 42
 ```

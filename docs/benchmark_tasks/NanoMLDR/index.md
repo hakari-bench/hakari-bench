@@ -149,8 +149,15 @@ or simplifying the text.
 | Split-local documents | 55,585 |
 | Positive qrels | 2,089 |
 | Positives per query | exactly 1.00 for every subtask |
-| Query-weighted BM25 nDCG@10 | 0.7178 |
-| Query-weighted BM25 hit@10 | 0.7946 |
+| Query-weighted BM25 nDCG@10 | 0.7391 |
+| Query-weighted BM25 hit@10 | 0.8114 |
+| Query-weighted BM25 Recall@100 | 0.9081 |
+| Query-weighted Dense nDCG@10 | 0.5176 |
+| Query-weighted Dense hit@10 | 0.6094 |
+| Query-weighted Dense Recall@100 | 0.7865 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6349 |
+| Query-weighted Reranking hybrid hit@10 | 0.7439 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9215 |
 | Mean query length | 79.20 chars, weighted by query count |
 | Mean document length | 14,246.54 chars, weighted by split-local document count |
 
@@ -207,150 +214,172 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 79.20344662517951
     document_mean_weighted_by_documents: 14246.537249257894
   bm25:
-    ndcg_at_10_query_weighted: 0.7177946337582393
-    hit_at_10_query_weighted: 0.7946385830540929
+    ndcg_at_10_query_weighted: 0.7391246825
+    hit_at_10_query_weighted: 0.811393011
     ndcg_at_10_unweighted_task_mean: 0.7168650575081323
     hit_at_10_unweighted_task_mean: 0.7931845561201285
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: pt
     hardest_task_by_ndcg_at_10: th
   tasks:
-    - name: ar
-      path: docs/benchmark_tasks/NanoMLDR/ar.md
-      retrieval_shape: arabic_question_to_long_arabic_article
-      queries: 150
-      documents: 4766
-      positive_qrels: 150
-      bm25_ndcg_at_10: 0.6629625044353348
-      bm25_hit_at_10: 0.7866666666666666
-    - name: de
-      path: docs/benchmark_tasks/NanoMLDR/de.md
-      retrieval_shape: german_question_to_long_german_article_or_web_page
-      queries: 117
-      documents: 5046
-      positive_qrels: 117
-      bm25_ndcg_at_10: 0.593344802399522
-      bm25_hit_at_10: 0.6666666666666666
-    - name: en
-      path: docs/benchmark_tasks/NanoMLDR/en.md
-      retrieval_shape: english_question_to_long_english_article
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6351102290874667
-      bm25_hit_at_10: 0.725
-    - name: es
-      path: docs/benchmark_tasks/NanoMLDR/es.md
-      retrieval_shape: spanish_question_to_long_spanish_article
-      queries: 176
-      documents: 3312
-      positive_qrels: 176
-      bm25_ndcg_at_10: 0.8997918474653237
-      bm25_hit_at_10: 0.9488636363636364
-    - name: fr
-      path: docs/benchmark_tasks/NanoMLDR/fr.md
-      retrieval_shape: french_question_to_long_french_article
-      queries: 152
-      documents: 3059
-      positive_qrels: 152
-      bm25_ndcg_at_10: 0.8773643204517384
-      bm25_hit_at_10: 0.9210526315789473
-    - name: hi
-      path: docs/benchmark_tasks/NanoMLDR/hi.md
-      retrieval_shape: hindi_question_to_long_hindi_article
-      queries: 159
-      documents: 2858
-      positive_qrels: 159
-      bm25_ndcg_at_10: 0.6515063205133107
-      bm25_hit_at_10: 0.7421383647798742
-    - name: it
-      path: docs/benchmark_tasks/NanoMLDR/it.md
-      retrieval_shape: italian_question_to_long_italian_article
-      queries: 158
-      documents: 3116
-      positive_qrels: 158
-      bm25_ndcg_at_10: 0.7634699580512225
-      bm25_hit_at_10: 0.8354430379746836
-    - name: ja
-      path: docs/benchmark_tasks/NanoMLDR/ja.md
-      retrieval_shape: japanese_question_to_long_japanese_article
-      queries: 148
-      documents: 3112
-      positive_qrels: 148
-      bm25_ndcg_at_10: 0.758961534219206
-      bm25_hit_at_10: 0.8445945945945946
-    - name: ko
-      path: docs/benchmark_tasks/NanoMLDR/ko.md
-      retrieval_shape: korean_question_to_long_korean_article
-      queries: 177
-      documents: 3087
-      positive_qrels: 177
-      bm25_ndcg_at_10: 0.7010081474034279
-      bm25_hit_at_10: 0.7740112994350282
-    - name: pt
-      path: docs/benchmark_tasks/NanoMLDR/pt.md
-      retrieval_shape: portuguese_question_to_long_portuguese_article
-      queries: 141
-      documents: 3028
-      positive_qrels: 141
-      bm25_ndcg_at_10: 0.9210128865930197
-      bm25_hit_at_10: 0.9716312056737588
-    - name: ru
-      path: docs/benchmark_tasks/NanoMLDR/ru.md
-      retrieval_shape: russian_question_to_long_russian_article
-      queries: 160
-      documents: 3125
-      positive_qrels: 160
-      bm25_ndcg_at_10: 0.7813743571573165
-      bm25_hit_at_10: 0.85
-    - name: th
-      path: docs/benchmark_tasks/NanoMLDR/th.md
-      retrieval_shape: thai_question_to_noisy_long_thai_web_document
-      queries: 151
-      documents: 3199
-      positive_qrels: 151
-      bm25_ndcg_at_10: 0.3736837737601653
-      bm25_hit_at_10: 0.4503311258278146
-    - name: zh
-      path: docs/benchmark_tasks/NanoMLDR/zh.md
-      retrieval_shape: chinese_question_to_long_chinese_article_or_wudao_text
-      queries: 200
-      documents: 7877
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6996550660686651
-      bm25_hit_at_10: 0.795
+  - name: ar
+    path: docs/benchmark_tasks/NanoMLDR/ar.md
+    retrieval_shape: arabic_question_to_long_arabic_article
+    queries: 150
+    documents: 4766
+    positive_qrels: 150
+    bm25_ndcg_at_10: 0.6629625044353348
+    bm25_hit_at_10: 0.7866666666666666
+  - name: de
+    path: docs/benchmark_tasks/NanoMLDR/de.md
+    retrieval_shape: german_question_to_long_german_article_or_web_page
+    queries: 117
+    documents: 5046
+    positive_qrels: 117
+    bm25_ndcg_at_10: 0.593344802399522
+    bm25_hit_at_10: 0.6666666666666666
+  - name: en
+    path: docs/benchmark_tasks/NanoMLDR/en.md
+    retrieval_shape: english_question_to_long_english_article
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6351102290874667
+    bm25_hit_at_10: 0.725
+  - name: es
+    path: docs/benchmark_tasks/NanoMLDR/es.md
+    retrieval_shape: spanish_question_to_long_spanish_article
+    queries: 176
+    documents: 3312
+    positive_qrels: 176
+    bm25_ndcg_at_10: 0.8997918474653237
+    bm25_hit_at_10: 0.9488636363636364
+  - name: fr
+    path: docs/benchmark_tasks/NanoMLDR/fr.md
+    retrieval_shape: french_question_to_long_french_article
+    queries: 152
+    documents: 3059
+    positive_qrels: 152
+    bm25_ndcg_at_10: 0.8773643204517384
+    bm25_hit_at_10: 0.9210526315789473
+  - name: hi
+    path: docs/benchmark_tasks/NanoMLDR/hi.md
+    retrieval_shape: hindi_question_to_long_hindi_article
+    queries: 159
+    documents: 2858
+    positive_qrels: 159
+    bm25_ndcg_at_10: 0.6515063205133107
+    bm25_hit_at_10: 0.7421383647798742
+  - name: it
+    path: docs/benchmark_tasks/NanoMLDR/it.md
+    retrieval_shape: italian_question_to_long_italian_article
+    queries: 158
+    documents: 3116
+    positive_qrels: 158
+    bm25_ndcg_at_10: 0.7634699580512225
+    bm25_hit_at_10: 0.8354430379746836
+  - name: ja
+    path: docs/benchmark_tasks/NanoMLDR/ja.md
+    retrieval_shape: japanese_question_to_long_japanese_article
+    queries: 148
+    documents: 3112
+    positive_qrels: 148
+    bm25_ndcg_at_10: 0.758961534219206
+    bm25_hit_at_10: 0.8445945945945946
+  - name: ko
+    path: docs/benchmark_tasks/NanoMLDR/ko.md
+    retrieval_shape: korean_question_to_long_korean_article
+    queries: 177
+    documents: 3087
+    positive_qrels: 177
+    bm25_ndcg_at_10: 0.7010081474034279
+    bm25_hit_at_10: 0.7740112994350282
+  - name: pt
+    path: docs/benchmark_tasks/NanoMLDR/pt.md
+    retrieval_shape: portuguese_question_to_long_portuguese_article
+    queries: 141
+    documents: 3028
+    positive_qrels: 141
+    bm25_ndcg_at_10: 0.9210128865930197
+    bm25_hit_at_10: 0.9716312056737588
+  - name: ru
+    path: docs/benchmark_tasks/NanoMLDR/ru.md
+    retrieval_shape: russian_question_to_long_russian_article
+    queries: 160
+    documents: 3125
+    positive_qrels: 160
+    bm25_ndcg_at_10: 0.7813743571573165
+    bm25_hit_at_10: 0.85
+  - name: th
+    path: docs/benchmark_tasks/NanoMLDR/th.md
+    retrieval_shape: thai_question_to_noisy_long_thai_web_document
+    queries: 151
+    documents: 3199
+    positive_qrels: 151
+    bm25_ndcg_at_10: 0.3736837737601653
+    bm25_hit_at_10: 0.4503311258278146
+  - name: zh
+    path: docs/benchmark_tasks/NanoMLDR/zh.md
+    retrieval_shape: chinese_question_to_long_chinese_article_or_wudao_text
+    queries: 200
+    documents: 7877
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6996550660686651
+    bm25_hit_at_10: 0.795
   learning:
-    leakage_note: exclude NanoMLDR evaluation queries, qrels, and positive documents; audit source MLDR split and article overlap before using public MLDR data for training
+    leakage_note: exclude NanoMLDR evaluation queries, qrels, and positive documents;
+      audit source MLDR split and article overlap before using public MLDR data for
+      training
     useful_training_data:
-      - MLDR-style paragraph-grounded question and full-article retrieval pairs
-      - multilingual Wikipedia long-document retrieval
-      - mC4 and Wudao web-document retrieval with source-language hard negatives
-      - multilingual long-document QA and entity-overlap hard negatives
+    - MLDR-style paragraph-grounded question and full-article retrieval pairs
+    - multilingual Wikipedia long-document retrieval
+    - mC4 and Wudao web-document retrieval with source-language hard negatives
+    - multilingual long-document QA and entity-overlap hard negatives
     synthetic_data:
-      document_generation: long same-language articles or noisy web pages with one selected answer-bearing paragraph
-      question_generation: specific paragraph-grounded questions in the same language as the document
-      answerability: the full document must contain the paragraph needed to answer the generated question
+      document_generation: long same-language articles or noisy web pages with one
+        selected answer-bearing paragraph
+      question_generation: specific paragraph-grounded questions in the same language
+        as the document
+      answerability: the full document must contain the paragraph needed to answer
+        the generated question
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMLDR
     source_urls:
-      - label: M3-Embedding arXiv
-        url: https://arxiv.org/abs/2402.03216
-      - label: M3-Embedding ACL Anthology
-        url: https://aclanthology.org/2024.findings-acl.137/
-      - label: Shitao/MLDR
-        url: https://huggingface.co/datasets/Shitao/MLDR
+    - label: M3-Embedding arXiv
+      url: https://arxiv.org/abs/2402.03216
+    - label: M3-Embedding ACL Anthology
+      url: https://aclanthology.org/2024.findings-acl.137/
+    - label: Shitao/MLDR
+      url: https://huggingface.co/datasets/Shitao/MLDR
     source_notes: []
   references:
-    - title: "M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation"
-      url: https://arxiv.org/abs/2402.03216
-      year: 2024
-      doi: 10.18653/v1/2024.findings-acl.137
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MLDR: Multilingual Long-Document Retrieval dataset"
-      url: https://huggingface.co/datasets/Shitao/MLDR
-      year: 2024
-      is_paper: false
-      source_confidence: official_dataset_card
+  - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity
+      Text Embeddings Through Self-Knowledge Distillation'
+    url: https://arxiv.org/abs/2402.03216
+    year: 2024
+    doi: 10.18653/v1/2024.findings-acl.137
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MLDR: Multilingual Long-Document Retrieval dataset'
+    url: https://huggingface.co/datasets/Shitao/MLDR
+    year: 2024
+    is_paper: false
+    source_confidence: official_dataset_card
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.7391246825
+      query_weighted_hit_at_10: 0.811393011
+      query_weighted_recall_at_100: 0.9080899952
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.5175988895
+      query_weighted_hit_at_10: 0.6093824797
+      query_weighted_recall_at_100: 0.786500718
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.634903378
+      query_weighted_hit_at_10: 0.7438966012
+      query_weighted_recall_at_100: 0.9214935376
+      source: dataset_candidate_subset
 ```

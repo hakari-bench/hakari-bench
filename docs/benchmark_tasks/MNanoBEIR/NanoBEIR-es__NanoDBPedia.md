@@ -90,8 +90,20 @@ publication history.
 | Avg positives / query | 23.16 |
 | Positives per query (min / median / max) | 1 / 18.00 / 81 |
 | Queries with multiple positives | 48 (96.0%) |
-| BM25 nDCG@10 | 0.5215 |
-| BM25 hit@10 | 0.9200 |
+| BM25 nDCG@10 | 0.6140 |
+| BM25 hit@10 | 0.9600 |
+| BM25 Recall@100 | 0.6770 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6099 |
+| Dense hit@10 | 0.9400 |
+| Dense Recall@100 | 0.7055 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6210 |
+| Reranking hybrid hit@10 | 0.9400 |
+| Reranking hybrid Recall@100 | 0.7263 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 37.98 |
 | Document length avg chars | 367.78 |
 
@@ -151,60 +163,110 @@ benchmark_task_metadata:
     query_mean: 37.98
     document_mean: 367.776344
   bm25:
-    ndcg_at_10: 0.5215127654
-    hit_at_10: 0.92
-    source: dataset_bm25_column
+    ndcg_at_10: 0.6139768715463029
+    hit_at_10: 0.96
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MNanoBEIR Spanish NanoBEIR task split from hakari-bench/NanoBEIR-es
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding DBpedia-Entity, BEIR, or NanoBEIR records likely to overlap with these evaluation queries or entity pages
+    leakage_note: prefer excluding DBpedia-Entity, BEIR, or NanoBEIR records likely
+      to overlap with these evaluation queries or entity pages
     useful_training_data:
-      - non-overlapping entity search datasets
-      - knowledge-base page retrieval pairs
-      - Spanish or multilingual entity linking and description retrieval data
-      - hard negatives from same-type entities
+    - non-overlapping entity search datasets
+    - knowledge-base page retrieval pairs
+    - Spanish or multilingual entity linking and description retrieval data
+    - hard negatives from same-type entities
     synthetic_data:
       document_generation: Spanish DBpedia-style entity descriptions
-      question_generation: short entity-search queries, aliases, categories, and property questions
-      answerability: positives should be the intended entity pages, not merely same-type entities
+      question_generation: short entity-search queries, aliases, categories, and property
+        questions
+      answerability: positives should be the intended entity pages, not merely same-type
+        entities
     multi_positive_training: recommended
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-es
     source_urls:
-      - label: DBpedia-Entity V2 paper
-        url: https://doi.org/10.1145/3077136.3080751
-      - label: BEIR paper
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB paper
-        url: https://arxiv.org/abs/2502.13595
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - Spanish task is a multilingual NanoBEIR adaptation of the original English BEIR task
-  references:
-    - title: "DBpedia-Entity V2: A Test Collection for Entity Search"
+    - label: DBpedia-Entity V2 paper
       url: https://doi.org/10.1145/3077136.3080751
-      year: 2017
-      doi: 10.1145/3077136.3080751
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR paper
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
+    - label: MMTEB paper
       url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: Zeta Alpha NanoBEIR collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: dataset_collection
+    source_notes:
+    - Spanish task is a multilingual NanoBEIR adaptation of the original English BEIR
+      task
+  references:
+  - title: 'DBpedia-Entity V2: A Test Collection for Entity Search'
+    url: https://doi.org/10.1145/3077136.3080751
+    year: 2017
+    doi: 10.1145/3077136.3080751
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: dataset_collection
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6139768715
+      hit_at_10: 0.96
+      recall_at_100: 0.677029361
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.677029361
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6098501445
+      hit_at_10: 0.94
+      recall_at_100: 0.7055267703
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7055267703
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6210069573
+      hit_at_10: 0.94
+      recall_at_100: 0.7262521589
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7262521589
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

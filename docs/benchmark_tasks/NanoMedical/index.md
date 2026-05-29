@@ -160,8 +160,15 @@ be used as seeds.
 | Positive qrels | 10,438 |
 | Positives per query | 6.58 average |
 | Multi-positive queries | 521 |
-| Query-weighted BM25 nDCG@10 | 0.3670 |
-| Query-weighted BM25 hit@10 | 0.5731 |
+| Query-weighted BM25 nDCG@10 | 0.4288 |
+| Query-weighted BM25 hit@10 | 0.6501 |
+| Query-weighted BM25 Recall@100 | 0.6254 |
+| Query-weighted Dense nDCG@10 | 0.5138 |
+| Query-weighted Dense hit@10 | 0.7219 |
+| Query-weighted Dense Recall@100 | 0.7361 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.4950 |
+| Query-weighted Reranking hybrid hit@10 | 0.7087 |
+| Query-weighted Reranking hybrid Recall@100 | 0.7507 |
 | Mean query length | 63.55 chars, weighted by query count |
 | Mean document length | 863.82 chars, weighted by split-local document count |
 
@@ -214,10 +221,10 @@ benchmark_task_group_metadata:
   dataset_id: hakari-bench/NanoMedical
   language: multilingual
   languages:
-    - en
-    - zh
-    - ar
-    - pl
+  - en
+  - zh
+  - ar
+  - pl
   category: natural_language
   document_path: docs/benchmark_tasks/NanoMedical/index.md
   source_research:
@@ -240,185 +247,209 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 63.55044135056746
     document_mean_weighted_by_documents: 863.8210349510234
   bm25:
-    ndcg_at_10_query_weighted: 0.3669964444663304
-    hit_at_10_query_weighted: 0.5731399747779319
+    ndcg_at_10_query_weighted: 0.4287643157
+    hit_at_10_query_weighted: 0.6500630517
     ndcg_at_10_unweighted_task_mean: 0.35232356405
     hit_at_10_unweighted_task_mean: 0.53822093023
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: NanoPublicHealthQA
     hardest_task_by_ndcg_at_10: NanoTRECCOVIDPL
   tasks:
-    - name: NanoCMedQAv2reranking
-      path: docs/benchmark_tasks/NanoMedical/NanoCMedQAv2reranking.md
-      retrieval_shape: chinese_medical_question_to_answer_candidate
-      language: zh
-      queries: 200
-      documents: 10000
-      positive_qrels: 377
-      bm25_ndcg_at_10: 0.1500390078
-      bm25_hit_at_10: 0.275
-    - name: NanoCUREv1
-      path: docs/benchmark_tasks/NanoMedical/NanoCUREv1.md
-      retrieval_shape: clinical_question_to_biomedical_passage
-      language: en
-      queries: 200
-      documents: 10000
-      positive_qrels: 5181
-      bm25_ndcg_at_10: 0.3698959662
-      bm25_hit_at_10: 0.805
-    - name: NanoCmedqa
-      path: docs/benchmark_tasks/NanoMedical/NanoCmedqa.md
-      retrieval_shape: chinese_consultation_question_to_answer
-      language: zh
-      queries: 200
-      documents: 10000
-      positive_qrels: 324
-      bm25_ndcg_at_10: 0.1667886836
-      bm25_hit_at_10: 0.275
-    - name: NanoMedicalQA
-      path: docs/benchmark_tasks/NanoMedical/NanoMedicalQA.md
-      retrieval_shape: medical_faq_question_to_answer_passage
-      language: en
-      queries: 200
-      documents: 2007
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4735533647
-      bm25_hit_at_10: 0.7
-    - name: NanoNFCorpus
-      path: docs/benchmark_tasks/NanoMedical/NanoNFCorpus.md
-      retrieval_shape: health_topic_to_biomedical_article
-      language: en
-      queries: 200
-      documents: 3593
-      positive_qrels: 3718
-      bm25_ndcg_at_10: 0.2434183752
-      bm25_hit_at_10: 0.565
-    - name: NanoPublicHealthQA
-      path: docs/benchmark_tasks/NanoMedical/NanoPublicHealthQA.md
-      retrieval_shape: arabic_public_health_question_to_faq_answer
-      language: ar
-      queries: 86
-      documents: 86
-      positive_qrels: 86
-      bm25_ndcg_at_10: 0.6722409776
-      bm25_hit_at_10: 0.8372093023
-    - name: NanoSciFact
-      path: docs/benchmark_tasks/NanoMedical/NanoSciFact.md
-      retrieval_shape: scientific_claim_to_evidence_abstract
-      language: en
-      queries: 200
-      documents: 5183
-      positive_qrels: 226
-      bm25_ndcg_at_10: 0.6288504435
-      bm25_hit_at_10: 0.785
-    - name: NanoSciFactPL
-      path: docs/benchmark_tasks/NanoMedical/NanoSciFactPL.md
-      retrieval_shape: polish_claim_to_translated_evidence_abstract
-      language: pl
-      queries: 200
-      documents: 5183
-      positive_qrels: 226
-      bm25_ndcg_at_10: 0.5120801837
-      bm25_hit_at_10: 0.66
-    - name: NanoTRECCOVID
-      path: docs/benchmark_tasks/NanoMedical/NanoTRECCOVID.md
-      retrieval_shape: covid19_question_to_scientific_article
-      language: en
-      queries: 50
-      documents: 10000
-      positive_qrels: 50
-      bm25_ndcg_at_10: 0.1966089962
-      bm25_hit_at_10: 0.32
-    - name: NanoTRECCOVIDPL
-      path: docs/benchmark_tasks/NanoMedical/NanoTRECCOVIDPL.md
-      retrieval_shape: polish_covid19_question_to_article
-      language: pl
-      queries: 50
-      documents: 10000
-      positive_qrels: 50
-      bm25_ndcg_at_10: 0.109759642
-      bm25_hit_at_10: 0.16
+  - name: NanoCMedQAv2reranking
+    path: docs/benchmark_tasks/NanoMedical/NanoCMedQAv2reranking.md
+    retrieval_shape: chinese_medical_question_to_answer_candidate
+    language: zh
+    queries: 200
+    documents: 10000
+    positive_qrels: 377
+    bm25_ndcg_at_10: 0.1500390078
+    bm25_hit_at_10: 0.275
+  - name: NanoCUREv1
+    path: docs/benchmark_tasks/NanoMedical/NanoCUREv1.md
+    retrieval_shape: clinical_question_to_biomedical_passage
+    language: en
+    queries: 200
+    documents: 10000
+    positive_qrels: 5181
+    bm25_ndcg_at_10: 0.3698959662
+    bm25_hit_at_10: 0.805
+  - name: NanoCmedqa
+    path: docs/benchmark_tasks/NanoMedical/NanoCmedqa.md
+    retrieval_shape: chinese_consultation_question_to_answer
+    language: zh
+    queries: 200
+    documents: 10000
+    positive_qrels: 324
+    bm25_ndcg_at_10: 0.1667886836
+    bm25_hit_at_10: 0.275
+  - name: NanoMedicalQA
+    path: docs/benchmark_tasks/NanoMedical/NanoMedicalQA.md
+    retrieval_shape: medical_faq_question_to_answer_passage
+    language: en
+    queries: 200
+    documents: 2007
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4735533647
+    bm25_hit_at_10: 0.7
+  - name: NanoNFCorpus
+    path: docs/benchmark_tasks/NanoMedical/NanoNFCorpus.md
+    retrieval_shape: health_topic_to_biomedical_article
+    language: en
+    queries: 200
+    documents: 3593
+    positive_qrels: 3718
+    bm25_ndcg_at_10: 0.2434183752
+    bm25_hit_at_10: 0.565
+  - name: NanoPublicHealthQA
+    path: docs/benchmark_tasks/NanoMedical/NanoPublicHealthQA.md
+    retrieval_shape: arabic_public_health_question_to_faq_answer
+    language: ar
+    queries: 86
+    documents: 86
+    positive_qrels: 86
+    bm25_ndcg_at_10: 0.6722409776
+    bm25_hit_at_10: 0.8372093023
+  - name: NanoSciFact
+    path: docs/benchmark_tasks/NanoMedical/NanoSciFact.md
+    retrieval_shape: scientific_claim_to_evidence_abstract
+    language: en
+    queries: 200
+    documents: 5183
+    positive_qrels: 226
+    bm25_ndcg_at_10: 0.6288504435
+    bm25_hit_at_10: 0.785
+  - name: NanoSciFactPL
+    path: docs/benchmark_tasks/NanoMedical/NanoSciFactPL.md
+    retrieval_shape: polish_claim_to_translated_evidence_abstract
+    language: pl
+    queries: 200
+    documents: 5183
+    positive_qrels: 226
+    bm25_ndcg_at_10: 0.5120801837
+    bm25_hit_at_10: 0.66
+  - name: NanoTRECCOVID
+    path: docs/benchmark_tasks/NanoMedical/NanoTRECCOVID.md
+    retrieval_shape: covid19_question_to_scientific_article
+    language: en
+    queries: 50
+    documents: 10000
+    positive_qrels: 50
+    bm25_ndcg_at_10: 0.1966089962
+    bm25_hit_at_10: 0.32
+  - name: NanoTRECCOVIDPL
+    path: docs/benchmark_tasks/NanoMedical/NanoTRECCOVIDPL.md
+    retrieval_shape: polish_covid19_question_to_article
+    language: pl
+    queries: 50
+    documents: 10000
+    positive_qrels: 50
+    bm25_ndcg_at_10: 0.109759642
+    bm25_hit_at_10: 0.16
   learning:
-    leakage_note: exclude NanoMedical evaluation queries, qrels, positive documents, translated variants, same FAQ pages, and near-duplicate biomedical abstracts when training
+    leakage_note: exclude NanoMedical evaluation queries, qrels, positive documents,
+      translated variants, same FAQ pages, and near-duplicate biomedical abstracts
+      when training
     useful_training_data:
-      - clinical question to biomedical passage retrieval
-      - medical FAQ and trusted-source answer passage retrieval
-      - Chinese medical consultation QA and answer selection
-      - NFCorpus-style health topic to biomedical literature retrieval
-      - SciFact-style claim to evidence abstract retrieval
-      - CORD-19 and COVID-19 ad hoc retrieval with hard negatives
-      - Polish biomedical retrieval and Arabic public-health QA
+    - clinical question to biomedical passage retrieval
+    - medical FAQ and trusted-source answer passage retrieval
+    - Chinese medical consultation QA and answer selection
+    - NFCorpus-style health topic to biomedical literature retrieval
+    - SciFact-style claim to evidence abstract retrieval
+    - CORD-19 and COVID-19 ad hoc retrieval with hard negatives
+    - Polish biomedical retrieval and Arabic public-health QA
     synthetic_data:
-      document_generation: medical FAQ answers, consultation replies, biomedical abstracts, public-health guidance, and COVID-19 evidence passages in the target language
-      question_generation: consumer medical questions, clinical questions, health topics, scientific claims, public-health FAQ questions, and Chinese consultation questions grounded in the generated or selected document
-      answerability: positives should answer the exact medical, public-health, or evidence relation rather than only sharing the disease or biomedical term
+      document_generation: medical FAQ answers, consultation replies, biomedical abstracts,
+        public-health guidance, and COVID-19 evidence passages in the target language
+      question_generation: consumer medical questions, clinical questions, health
+        topics, scientific claims, public-health FAQ questions, and Chinese consultation
+        questions grounded in the generated or selected document
+      answerability: positives should answer the exact medical, public-health, or
+        evidence relation rather than only sharing the disease or biomedical term
     multi_positive_training: preserve_multi_positive_cure_nfcorpus_and_evidence_tasks
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMedical
     source_urls:
-      - label: CURE KDD DOI
-        url: https://doi.org/10.1145/3711896.3737435
-      - label: NFCorpus ECIR paper
-        url: http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
-      - label: TREC-COVID arXiv
-        url: https://arxiv.org/abs/2104.09632
-      - label: BEIR-PL ACL Anthology
-        url: https://aclanthology.org/2024.lrec-main.194/
-      - label: SciFact ACL Anthology
-        url: https://aclanthology.org/2020.emnlp-main.609/
-      - label: BMC Bioinformatics medical QA article
-        url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4
-      - label: publichealth-qa
-        url: https://huggingface.co/datasets/xhluca/publichealth-qa
-      - label: DuReader-Retrieval ACL Anthology
-        url: https://aclanthology.org/2022.emnlp-main.357/
-      - label: CMedQAv2 paper DOI
-        url: https://doi.org/10.1109/ACCESS.2018.2883637
+    - label: CURE KDD DOI
+      url: https://doi.org/10.1145/3711896.3737435
+    - label: NFCorpus ECIR paper
+      url: http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+    - label: TREC-COVID arXiv
+      url: https://arxiv.org/abs/2104.09632
+    - label: BEIR-PL ACL Anthology
+      url: https://aclanthology.org/2024.lrec-main.194/
+    - label: SciFact ACL Anthology
+      url: https://aclanthology.org/2020.emnlp-main.609/
+    - label: BMC Bioinformatics medical QA article
+      url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4
+    - label: publichealth-qa
+      url: https://huggingface.co/datasets/xhluca/publichealth-qa
+    - label: DuReader-Retrieval ACL Anthology
+      url: https://aclanthology.org/2022.emnlp-main.357/
+    - label: CMedQAv2 paper DOI
+      url: https://doi.org/10.1109/ACCESS.2018.2883637
     source_notes: []
   references:
-    - title: "CURE: A Dataset for Clinical Understanding & Retrieval Evaluation"
-      url: https://doi.org/10.1145/3711896.3737435
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: A Full-Text Learning to Rank Dataset for Medical Information Retrieval
-      url: http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
-      year: 2016
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID"
-      url: https://arxiv.org/abs/2104.09632
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language"
-      url: https://aclanthology.org/2024.lrec-main.194/
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Fact or Fiction: Verifying Scientific Claims"
-      url: https://aclanthology.org/2020.emnlp-main.609/
-      year: 2020
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: A Question-Entailment Approach to Question Answering
-      url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: publichealth-qa
-      url: https://huggingface.co/datasets/xhluca/publichealth-qa
-      year: 2024
-      is_paper: false
-      source_confidence: probably_correct
-    - title: "DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from Web Search Engine"
-      url: https://aclanthology.org/2022.emnlp-main.357/
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer Selection
-      url: https://doi.org/10.1109/ACCESS.2018.2883637
-      year: 2018
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'CURE: A Dataset for Clinical Understanding & Retrieval Evaluation'
+    url: https://doi.org/10.1145/3711896.3737435
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: A Full-Text Learning to Rank Dataset for Medical Information Retrieval
+    url: http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf
+    year: 2016
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID'
+    url: https://arxiv.org/abs/2104.09632
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language'
+    url: https://aclanthology.org/2024.lrec-main.194/
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Fact or Fiction: Verifying Scientific Claims'
+    url: https://aclanthology.org/2020.emnlp-main.609/
+    year: 2020
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: A Question-Entailment Approach to Question Answering
+    url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: publichealth-qa
+    url: https://huggingface.co/datasets/xhluca/publichealth-qa
+    year: 2024
+    is_paper: false
+    source_confidence: probably_correct
+  - title: 'DuReader_retrieval: A Large-scale Chinese Benchmark for Passage Retrieval
+      from Web Search Engine'
+    url: https://aclanthology.org/2022.emnlp-main.357/
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Multi-Scale Attentive Interaction Networks for Chinese Medical Question
+      Answer Selection
+    url: https://doi.org/10.1109/ACCESS.2018.2883637
+    year: 2018
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.4287643157
+      query_weighted_hit_at_10: 0.6500630517
+      query_weighted_recall_at_100: 0.6253599223
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.5137977232
+      query_weighted_hit_at_10: 0.7219419924
+      query_weighted_recall_at_100: 0.7360534411
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.4950289811
+      query_weighted_hit_at_10: 0.7087011349
+      query_weighted_recall_at_100: 0.7506581441
+      source: dataset_candidate_subset
 ```

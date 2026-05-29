@@ -143,8 +143,20 @@ that should not define relevance by themselves.
 | Queries | 200 |
 | Documents | 1,748 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.3665 |
-| BM25 hit@10 | 0.6000 |
+| BM25 nDCG@10 | 0.5172 |
+| BM25 hit@10 | 0.8550 |
+| BM25 Recall@100 | 0.9126 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7389 |
+| Dense hit@10 | 0.9550 |
+| Dense Recall@100 | 0.9387 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6418 |
+| Reranking hybrid hit@10 | 0.9350 |
+| Reranking hybrid Recall@100 | 0.9796 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 45.57 |
 | Document length avg chars | 629.75 |
 
@@ -206,44 +218,94 @@ benchmark_task_metadata:
     query_mean: 45.57
     document_mean: 629.745423
   bm25:
-    ndcg_at_10: 0.3665482433
-    hit_at_10: 0.6
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5171646804884762
+    hit_at_10: 0.855
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding MIRACL German development/test data or other MIRACL-derived data likely to overlap with the NanoMIRACL evaluation questions and passages
+    leakage_note: prefer excluding MIRACL German development/test data or other MIRACL-derived
+      data likely to overlap with the NanoMIRACL evaluation questions and passages
     useful_training_data:
-      - non-overlapping German Wikipedia question-to-passage retrieval pairs
-      - German QA evidence retrieval datasets
-      - German entity-attribute retrieval supervision
+    - non-overlapping German Wikipedia question-to-passage retrieval pairs
+    - German QA evidence retrieval datasets
+    - German entity-attribute retrieval supervision
     synthetic_data:
-      document_generation: German Wikipedia-style passages with titles, aliases, dates, locations, counts, abbreviations, organizations, and factual evidence
-      question_generation: German fact questions using varied Wer, Was, Wann, Wo, Wie viele, Welche, and Wozu forms
-      answerability: questions should be grounded in explicit facts or relations in the generated or selected passage
+      document_generation: German Wikipedia-style passages with titles, aliases, dates,
+        locations, counts, abbreviations, organizations, and factual evidence
+      question_generation: German fact questions using varied Wer, Was, Wann, Wo,
+        Wie viele, Welche, and Wozu forms
+      answerability: questions should be grounded in explicit facts or relations in
+        the generated or selected passage
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMIRACL
     source_urls:
-      - label: MIRACL corpus dataset
-        url: https://huggingface.co/datasets/miracl/miracl-corpus
-      - label: MIRACL source queries and qrels
-        url: https://huggingface.co/datasets/miracl/miracl
-      - label: MIRACL GitHub repository
-        url: https://github.com/project-miracl/miracl
+    - label: MIRACL corpus dataset
+      url: https://huggingface.co/datasets/miracl/miracl-corpus
+    - label: MIRACL source queries and qrels
+      url: https://huggingface.co/datasets/miracl/miracl
+    - label: MIRACL GitHub repository
+      url: https://github.com/project-miracl/miracl
     source_notes: []
   references:
-    - title: 'Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages'
-      url: https://arxiv.org/abs/2210.09984
-      year: 2022
-      doi: 10.48550/arXiv.2210.09984
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      url: https://aclanthology.org/2023.tacl-1.63/
-      year: 2023
-      doi: 10.1162/tacl_a_00595
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'Making a MIRACL: Multilingual Information Retrieval Across a Continuum
+      of Languages'
+    url: https://arxiv.org/abs/2210.09984
+    year: 2022
+    doi: 10.48550/arXiv.2210.09984
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+    url: https://aclanthology.org/2023.tacl-1.63/
+    year: 2023
+    doi: 10.1162/tacl_a_00595
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5171646805
+      hit_at_10: 0.855
+      recall_at_100: 0.9126394052
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9126394052
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7389131283
+      hit_at_10: 0.955
+      recall_at_100: 0.93866171
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.93866171
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6417542501
+      hit_at_10: 0.935
+      recall_at_100: 0.9795539033
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.005
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9795539033
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

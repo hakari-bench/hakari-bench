@@ -105,8 +105,20 @@ class. Do not seed generation with Nano evaluation query or candidate text.
 | Avg positives / query | 7.00 |
 | Positives per query (min / median / max) | 7 / 7 / 7 |
 | Queries with multiple positives | 82 (100.00%) |
-| BM25 nDCG@10 | 0.2389 |
-| BM25 hit@10 | 0.7439 |
+| BM25 nDCG@10 | 0.2681 |
+| BM25 hit@10 | 0.8171 |
+| BM25 Recall@100 | 0.8397 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3650 |
+| Dense hit@10 | 0.9024 |
+| Dense Recall@100 | 0.8937 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3277 |
+| Reranking hybrid hit@10 | 0.8659 |
+| Reranking hybrid Recall@100 | 0.8955 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 138.28 |
 | Document length avg chars | 309.04 |
 
@@ -152,9 +164,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2411.12056
     additional_source_urls:
-      - https://www.nature.com/articles/s41598-025-09052-5
-      - https://github.com/mehrzadshm/built-bench-paper
-      - https://huggingface.co/datasets/mteb/BuiltBenchReranking
+    - https://www.nature.com/articles/s41598-025-09052-5
+    - https://github.com/mehrzadshm/built-bench-paper
+    - https://huggingface.co/datasets/mteb/BuiltBenchReranking
   counts:
     queries: 82
     documents: 2898
@@ -170,48 +182,100 @@ benchmark_task_metadata:
     query_mean: 138.280488
     document_mean: 309.038992
   bm25:
-    ndcg_at_10: 0.2388753471
-    hit_at_10: 0.743902439
-    source: dataset_bm25_column
+    ndcg_at_10: 0.26807631329485493
+    hit_at_10: 0.8170731707317073
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: BuiltBench reranking release sampled into NanoBuiltBench
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoBuiltBenchReranking evaluation IFC queries, qrels, and candidate Uniclass descriptions
+    leakage_note: exclude NanoBuiltBenchReranking evaluation IFC queries, qrels, and
+      candidate Uniclass descriptions
     useful_training_data:
-      - non-overlapping IFC to Uniclass reranking sets
-      - BIM product catalog matching pairs
-      - construction taxonomy crosswalks
-      - hard negatives from neighboring product classes
+    - non-overlapping IFC to Uniclass reranking sets
+    - BIM product catalog matching pairs
+    - construction taxonomy crosswalks
+    - hard negatives from neighboring product classes
     synthetic_data:
-      document_generation: candidate product-class descriptions with hierarchy, material, function, and system context
-      question_generation: concise IFC-style entity labels and definitions with parent type context
-      hard_negatives: nearby categories sharing material or service context but differing in function
-      answerability: candidate relevance should follow the intended cross-classification mapping
+      document_generation: candidate product-class descriptions with hierarchy, material,
+        function, and system context
+      question_generation: concise IFC-style entity labels and definitions with parent
+        type context
+      hard_negatives: nearby categories sharing material or service context but differing
+        in function
+      answerability: candidate relevance should follow the intended cross-classification
+        mapping
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBuiltBench
     source_urls:
-      - label: BuiltBench arXiv
-        url: https://arxiv.org/abs/2411.12056
-      - label: Scientific Reports article
-        url: https://www.nature.com/articles/s41598-025-09052-5
-      - label: BuiltBench GitHub
-        url: https://github.com/mehrzadshm/built-bench-paper
-      - label: MTEB BuiltBenchReranking
-        url: https://huggingface.co/datasets/mteb/BuiltBenchReranking
+    - label: BuiltBench arXiv
+      url: https://arxiv.org/abs/2411.12056
+    - label: Scientific Reports article
+      url: https://www.nature.com/articles/s41598-025-09052-5
+    - label: BuiltBench GitHub
+      url: https://github.com/mehrzadshm/built-bench-paper
+    - label: MTEB BuiltBenchReranking
+      url: https://huggingface.co/datasets/mteb/BuiltBenchReranking
     source_notes: []
   references:
-    - title: "Benchmarking pre-trained text embedding models in aligning built asset information"
-      url: https://arxiv.org/abs/2411.12056
-      year: 2024
-      doi: 10.48550/arXiv.2411.12056
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Benchmarking pre-trained text embedding models in aligning built asset information"
-      url: https://www.nature.com/articles/s41598-025-09052-5
-      year: 2025
-      doi: 10.1038/s41598-025-09052-5
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: Benchmarking pre-trained text embedding models in aligning built asset
+      information
+    url: https://arxiv.org/abs/2411.12056
+    year: 2024
+    doi: 10.48550/arXiv.2411.12056
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Benchmarking pre-trained text embedding models in aligning built asset
+      information
+    url: https://www.nature.com/articles/s41598-025-09052-5
+    year: 2025
+    doi: 10.1038/s41598-025-09052-5
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2680763133
+      hit_at_10: 0.8170731707
+      recall_at_100: 0.8397212544
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 82
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8397212544
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.364959316
+      hit_at_10: 0.9024390244
+      recall_at_100: 0.893728223
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 82
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.893728223
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3276963859
+      hit_at_10: 0.8658536585
+      recall_at_100: 0.8954703833
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.012195
+      query_count: 82
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8954703833
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

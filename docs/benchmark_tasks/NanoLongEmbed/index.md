@@ -127,8 +127,15 @@ retrieval rather than short-passage lookup.
 | Split-local documents | 2,788 |
 | Positive qrels | 998 |
 | Positives per query | exactly 1.00 for every subtask |
-| Query-weighted BM25 nDCG@10 | 0.8099 |
-| Query-weighted BM25 hit@10 | 0.9108 |
+| Query-weighted BM25 nDCG@10 | 0.8370 |
+| Query-weighted BM25 hit@10 | 0.9309 |
+| Query-weighted BM25 Recall@100 | 0.9749 |
+| Query-weighted Dense nDCG@10 | 0.6172 |
+| Query-weighted Dense hit@10 | 0.7465 |
+| Query-weighted Dense Recall@100 | 0.9248 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.7367 |
+| Query-weighted Reranking hybrid hit@10 | 0.8647 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9870 |
 | Mean query length | 242.81 chars, weighted by query count |
 | Mean document length | 71,544.99 chars, weighted by split-local document count |
 
@@ -188,83 +195,103 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 242.81062124248496
     document_mean_weighted_by_documents: 71544.99390243902
   bm25:
-    ndcg_at_10_query_weighted: 0.8098694452835671
-    hit_at_10_query_weighted: 0.9108216432893788
-    source: dataset_bm25_column
+    ndcg_at_10_query_weighted: 0.8369972334
+    hit_at_10_query_weighted: 0.9308617234
+    source: dataset_candidate_subset
     strongest_task_by_ndcg_at_10: NanoSummScreenFD
     weakest_task_by_ndcg_at_10: NanoNeedle
   tasks:
-    - name: Nano2WikiMultihopQA
-      path: docs/benchmark_tasks/NanoLongEmbed/Nano2WikiMultihopQA.md
-      retrieval_focus: multihop_question_to_wikipedia_evidence_bundle
-      queries: 200
-      documents: 300
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.9515
-      bm25_hit_at_10: 0.98
-    - name: NanoNarrativeQA
-      path: docs/benchmark_tasks/NanoLongEmbed/NanoNarrativeQA.md
-      retrieval_focus: story_question_to_whole_narrative_document
-      queries: 200
-      documents: 355
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.691
-      bm25_hit_at_10: 0.79
-    - name: NanoNeedle
-      path: docs/benchmark_tasks/NanoLongEmbed/NanoNeedle.md
-      retrieval_focus: fact_query_to_long_document_with_inserted_needle
-      queries: 98
-      documents: 800
-      positive_qrels: 98
-      bm25_ndcg_at_10: 0.6852
-      bm25_hit_at_10: 0.9286
-    - name: NanoPasskey
-      path: docs/benchmark_tasks/NanoLongEmbed/NanoPasskey.md
-      retrieval_focus: passkey_query_to_long_document_with_key_statement
-      queries: 100
-      documents: 800
-      positive_qrels: 100
-      bm25_ndcg_at_10: 0.7506
-      bm25_hit_at_10: 0.99
-    - name: NanoQMSum
-      path: docs/benchmark_tasks/NanoLongEmbed/NanoQMSum.md
-      retrieval_focus: meeting_request_to_meeting_transcript
-      queries: 200
-      documents: 197
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7132
-      bm25_hit_at_10: 0.83
-    - name: NanoSummScreenFD
-      path: docs/benchmark_tasks/NanoLongEmbed/NanoSummScreenFD.md
-      retrieval_focus: episode_recap_to_screenplay_transcript
-      queries: 200
-      documents: 336
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.9746
-      bm25_hit_at_10: 0.995
+  - name: Nano2WikiMultihopQA
+    path: docs/benchmark_tasks/NanoLongEmbed/Nano2WikiMultihopQA.md
+    retrieval_focus: multihop_question_to_wikipedia_evidence_bundle
+    queries: 200
+    documents: 300
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.9515
+    bm25_hit_at_10: 0.98
+  - name: NanoNarrativeQA
+    path: docs/benchmark_tasks/NanoLongEmbed/NanoNarrativeQA.md
+    retrieval_focus: story_question_to_whole_narrative_document
+    queries: 200
+    documents: 355
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.691
+    bm25_hit_at_10: 0.79
+  - name: NanoNeedle
+    path: docs/benchmark_tasks/NanoLongEmbed/NanoNeedle.md
+    retrieval_focus: fact_query_to_long_document_with_inserted_needle
+    queries: 98
+    documents: 800
+    positive_qrels: 98
+    bm25_ndcg_at_10: 0.6852
+    bm25_hit_at_10: 0.9286
+  - name: NanoPasskey
+    path: docs/benchmark_tasks/NanoLongEmbed/NanoPasskey.md
+    retrieval_focus: passkey_query_to_long_document_with_key_statement
+    queries: 100
+    documents: 800
+    positive_qrels: 100
+    bm25_ndcg_at_10: 0.7506
+    bm25_hit_at_10: 0.99
+  - name: NanoQMSum
+    path: docs/benchmark_tasks/NanoLongEmbed/NanoQMSum.md
+    retrieval_focus: meeting_request_to_meeting_transcript
+    queries: 200
+    documents: 197
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7132
+    bm25_hit_at_10: 0.83
+  - name: NanoSummScreenFD
+    path: docs/benchmark_tasks/NanoLongEmbed/NanoSummScreenFD.md
+    retrieval_focus: episode_recap_to_screenplay_transcript
+    queries: 200
+    documents: 336
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.9746
+    bm25_hit_at_10: 0.995
   learning:
-    leakage_note: exclude NanoLongEmbed evaluation queries, qrels, and positive documents; audit LongEmbed source splits before training
+    leakage_note: exclude NanoLongEmbed evaluation queries, qrels, and positive documents;
+      audit LongEmbed source splits before training
     useful_training_data:
-      - long-document QA pairs
-      - story and script question answering data
-      - meeting transcript retrieval data
-      - multi-hop Wikipedia retrieval pairs
-      - synthetic long-context passkey and needle retrieval data
+    - long-document QA pairs
+    - story and script question answering data
+    - meeting transcript retrieval data
+    - multi-hop Wikipedia retrieval pairs
+    - synthetic long-context passkey and needle retrieval data
     synthetic_data:
-      document_generation: long stories, transcripts, Wikipedia bundles, and filler contexts with grounded evidence or inserted facts
-      question_generation: short questions, meeting requests, recaps, passkey prompts, or needle queries grounded in the long document
-      answerability: positives must contain the needed evidence inside the long document, not only a short isolated passage
+      document_generation: long stories, transcripts, Wikipedia bundles, and filler
+        contexts with grounded evidence or inserted facts
+      question_generation: short questions, meeting requests, recaps, passkey prompts,
+        or needle queries grounded in the long document
+      answerability: positives must contain the needed evidence inside the long document,
+        not only a short isolated passage
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoLongEmbed
     source_urls:
-      - label: LongEmbed ACL Anthology
-        url: https://aclanthology.org/2024.emnlp-main.47/
-  references:
-    - title: "LongEmbed: Extending Embedding Models for Long Context Retrieval"
+    - label: LongEmbed ACL Anthology
       url: https://aclanthology.org/2024.emnlp-main.47/
-      year: 2024
-      doi: 10.18653/v1/2024.emnlp-main.47
-      is_paper: true
-      source_confidence: definitive_paper_link
+  references:
+  - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+    url: https://aclanthology.org/2024.emnlp-main.47/
+    year: 2024
+    doi: 10.18653/v1/2024.emnlp-main.47
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.8369972334
+      query_weighted_hit_at_10: 0.9308617234
+      query_weighted_recall_at_100: 0.9749498998
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.6172107285
+      query_weighted_hit_at_10: 0.746492986
+      query_weighted_recall_at_100: 0.9248496994
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.7367199744
+      query_weighted_hit_at_10: 0.8647294589
+      query_weighted_recall_at_100: 0.9869739479
+      source: dataset_candidate_subset
 ```

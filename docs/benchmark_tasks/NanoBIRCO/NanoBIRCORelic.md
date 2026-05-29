@@ -120,8 +120,20 @@ model must identify the passage that actually supports the analysis.
 | Queries | 100 |
 | Documents | 5,023 |
 | Positive qrels | 100 |
-| BM25 nDCG@10 | 0.0633 |
-| BM25 hit@10 | 0.1200 |
+| BM25 nDCG@10 | 0.1314 |
+| BM25 hit@10 | 0.2300 |
+| BM25 Recall@100 | 0.5900 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.0725 |
+| Dense hit@10 | 0.1300 |
+| Dense Recall@100 | 0.6600 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1276 |
+| Reranking hybrid hit@10 | 0.2200 |
+| Reranking hybrid Recall@100 | 0.6900 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 31 |
 | Query length avg chars | 1016.31 |
 | Document length avg chars | 477.34 |
 
@@ -176,41 +188,91 @@ benchmark_task_metadata:
     query_mean: 1016.31
     document_mean: 477.338244
   bm25:
-    ndcg_at_10: 0.0633094248
-    hit_at_10: 0.12
-    source: dataset_bm25_column
+    ndcg_at_10: 0.1314230259314642
+    hit_at_10: 0.23
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding RELIC/BIRCO evaluation queries, masked contexts, source passages, and same-work candidate pools from training data
+    leakage_note: prefer excluding RELIC/BIRCO evaluation queries, masked contexts,
+      source passages, and same-work candidate pools from training data
     useful_training_data:
-      - non-overlapping literary evidence retrieval pairs
-      - quotation recovery tasks from public-domain literature
-      - literary analysis paired with supporting source passages
-      - same-work hard negatives that share characters or themes but do not support the claim
+    - non-overlapping literary evidence retrieval pairs
+    - quotation recovery tasks from public-domain literature
+    - literary analysis paired with supporting source passages
+    - same-work hard negatives that share characters or themes but do not support
+      the claim
     synthetic_data:
-      document_generation: public-domain literary passages with character actions, tone, imagery, irony, and narrative context
-      question_generation: literary-analysis contexts with one or more masked quotations and surrounding interpretive claims
-      answerability: the positive passage should directly support the surrounding analysis without merely repeating adjacent context
+      document_generation: public-domain literary passages with character actions,
+        tone, imagery, irony, and narrative context
+      question_generation: literary-analysis contexts with one or more masked quotations
+        and surrounding interpretive claims
+      answerability: the positive passage should directly support the surrounding
+        analysis without merely repeating adjacent context
     multi_positive_training: single_positive_quotation_recovery_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBIRCO
     source_urls:
-      - label: BIRCO GitHub repository
-        url: https://github.com/BIRCO-benchmark/BIRCO
+    - label: BIRCO GitHub repository
+      url: https://github.com/BIRCO-benchmark/BIRCO
     source_notes: []
   references:
-    - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
-      url: https://arxiv.org/abs/2402.14151
-      year: 2024
-      doi: 10.48550/arXiv.2402.14151
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: BIRCO GitHub repository
-      url: https://github.com/BIRCO-benchmark/BIRCO
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: official_project_repository
+  - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
+    url: https://arxiv.org/abs/2402.14151
+    year: 2024
+    doi: 10.48550/arXiv.2402.14151
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: BIRCO GitHub repository
+    url: https://github.com/BIRCO-benchmark/BIRCO
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: official_project_repository
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1314230259
+      hit_at_10: 0.23
+      recall_at_100: 0.59
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 100
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.59
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.0724851371
+      hit_at_10: 0.13
+      recall_at_100: 0.66
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 100
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.66
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.1276115034
+      hit_at_10: 0.22
+      recall_at_100: 0.69
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.31
+      query_count: 100
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.69
+      safeguard_positive_rows: 31
+      rows_with_101_candidates: 31
 ```

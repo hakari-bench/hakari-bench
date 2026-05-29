@@ -96,6 +96,18 @@ different method or contribution.
 | Queries with multiple positives | 200 (100.00%) |
 | BM25 nDCG@10 | 0.1335 |
 | BM25 hit@10 | 0.4250 |
+| BM25 Recall@100 | 0.2698 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2264 |
+| Dense hit@10 | 0.6400 |
+| Dense Recall@100 | 0.4564 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1835 |
+| Reranking hybrid hit@10 | 0.5700 |
+| Reranking hybrid Recall@100 | 0.4280 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 26 |
 | Query length avg chars | 77.73 |
 | Document length avg chars | 1,331.57 |
 
@@ -141,9 +153,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2004.07180
     additional_source_urls:
-      - https://arxiv.org/abs/2104.08663
-      - https://arxiv.org/abs/2509.12340
-      - https://huggingface.co/datasets/clips/beir-nl-scidocs
+    - https://arxiv.org/abs/2104.08663
+    - https://arxiv.org/abs/2509.12340
+    - https://huggingface.co/datasets/clips/beir-nl-scidocs
     no_paper_note: null
   counts:
     queries: 200
@@ -160,59 +172,110 @@ benchmark_task_metadata:
     query_mean: 77.725
     document_mean: 1331.5728
   bm25:
-    ndcg_at_10: 0.133520298
+    ndcg_at_10: 0.1335202980213538
     hit_at_10: 0.425
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: "translated BEIR-NL SCIDOCS test split from clips/beir-nl-scidocs"
+    evaluation_split_origin: translated BEIR-NL SCIDOCS test split from clips/beir-nl-scidocs
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude SCIDOCS-NL evaluation titles, qrels, and positive scientific documents used in this Nano split."
+    leakage_note: Exclude SCIDOCS-NL evaluation titles, qrels, and positive scientific
+      documents used in this Nano split.
     useful_training_data:
-      - non-overlapping citation graph pairs
-      - scientific paper recommendation datasets
-      - title-to-cited-paper and title-to-abstract retrieval pairs
-      - multilingual scientific retrieval data with overlap removed
+    - non-overlapping citation graph pairs
+    - scientific paper recommendation datasets
+    - title-to-cited-paper and title-to-abstract retrieval pairs
+    - multilingual scientific retrieval data with overlap removed
     synthetic_data:
-      document_generation: "Dutch scientific titles and abstracts grouped by method, dataset, or research problem."
-      question_generation: "Title-like scientific queries for papers that would cite or recommend the documents."
-      answerability: "Each query should have several related-paper positives plus same-field hard negatives."
+      document_generation: Dutch scientific titles and abstracts grouped by method,
+        dataset, or research problem.
+      question_generation: Title-like scientific queries for papers that would cite
+        or recommend the documents.
+      answerability: Each query should have several related-paper positives plus same-field
+        hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: SPECTER arXiv
-        url: https://arxiv.org/abs/2004.07180
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: MTEB-NL arXiv
-        url: https://arxiv.org/abs/2509.12340
-      - label: clips/beir-nl-scidocs
-        url: https://huggingface.co/datasets/clips/beir-nl-scidocs
+    - label: SPECTER arXiv
+      url: https://arxiv.org/abs/2004.07180
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: MTEB-NL arXiv
+      url: https://arxiv.org/abs/2509.12340
+    - label: clips/beir-nl-scidocs
+      url: https://huggingface.co/datasets/clips/beir-nl-scidocs
     source_notes: []
   references:
-    - title: "SPECTER: Document-level Representation Learning using Citation-informed Transformers"
-      url: https://arxiv.org/abs/2004.07180
-      year: 2020
-      doi: 10.48550/arXiv.2004.07180
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch"
-      url: https://arxiv.org/abs/2509.12340
-      year: 2025
-      doi: 10.48550/arXiv.2509.12340
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: clips/beir-nl-scidocs
-      url: https://huggingface.co/datasets/clips/beir-nl-scidocs
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'SPECTER: Document-level Representation Learning using Citation-informed
+      Transformers'
+    url: https://arxiv.org/abs/2004.07180
+    year: 2020
+    doi: 10.48550/arXiv.2004.07180
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+    url: https://arxiv.org/abs/2509.12340
+    year: 2025
+    doi: 10.48550/arXiv.2509.12340
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: clips/beir-nl-scidocs
+    url: https://huggingface.co/datasets/clips/beir-nl-scidocs
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.133520298
+      hit_at_10: 0.425
+      recall_at_100: 0.2697768763
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2697768763
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2264130512
+      hit_at_10: 0.64
+      recall_at_100: 0.4563894523
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4563894523
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.1835185049
+      hit_at_10: 0.57
+      recall_at_100: 0.4279918864
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.13
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4279918864
+      safeguard_positive_rows: 26
+      rows_with_101_candidates: 26
 ```

@@ -65,8 +65,20 @@ method, dataset, or claim.
 | Avg positives / query | 4.88 |
 | Positives per query (min / median / max) | 3 / 5.00 / 5 |
 | Queries with multiple positives | 50 (100.0%) |
-| BM25 nDCG@10 | 0.2688 |
+| BM25 nDCG@10 | 0.2673 |
 | BM25 hit@10 | 0.7400 |
+| BM25 Recall@100 | 0.6066 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3310 |
+| Dense hit@10 | 0.8600 |
+| Dense Recall@100 | 0.6434 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3380 |
+| Reranking hybrid hit@10 | 0.8800 |
+| Reranking hybrid Recall@100 | 0.6434 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 32.10 |
 | Document length avg chars | 452.83 |
 
@@ -126,7 +138,52 @@ benchmark_task_metadata:
     query_mean: 32.1
     document_mean: 452.833937
   bm25:
-    ndcg_at_10: 0.2687685741
+    ndcg_at_10: 0.2672595100113479
     hit_at_10: 0.74
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.26725951
+      hit_at_10: 0.74
+      recall_at_100: 0.606557377
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.606557377
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.330995521
+      hit_at_10: 0.86
+      recall_at_100: 0.643442623
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.643442623
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.338003064
+      hit_at_10: 0.88
+      recall_at_100: 0.643442623
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.02
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.643442623
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

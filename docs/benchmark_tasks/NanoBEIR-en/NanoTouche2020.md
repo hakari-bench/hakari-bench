@@ -136,8 +136,20 @@ evaluation queries or positive documents.
 | Avg positives / query | 19.02 |
 | Positives per query (min / median / max) | 6 / 19.00 / 32 |
 | Queries with multiple positives | 49 (100.0%) |
-| BM25 nDCG@10 | 0.7072 |
+| BM25 nDCG@10 | 0.6648 |
 | BM25 hit@10 | 1.0000 |
+| BM25 Recall@100 | 0.8176 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5407 |
+| Dense hit@10 | 1.0000 |
+| Dense Recall@100 | 0.8079 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6184 |
+| Reranking hybrid hit@10 | 1.0000 |
+| Reranking hybrid Recall@100 | 0.8391 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 43.43 |
 | Document length avg chars | 2,142.57 |
 
@@ -199,55 +211,105 @@ benchmark_task_metadata:
     query_mean: 43.428571
     document_mean: 2142.569539
   bm25:
-    ndcg_at_10: 0.7071948183
+    ndcg_at_10: 0.6647881346489578
     hit_at_10: 1.0
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding Touché/args.me/BEIR records likely to overlap with Nano evaluation topics, qrels, or debate documents
+    leakage_note: prefer excluding Touché/args.me/BEIR records likely to overlap with
+      Nano evaluation topics, qrels, or debate documents
     useful_training_data:
-      - non-overlapping debate-portal argument relevance data
-      - args.me-style query-to-argument supervision
-      - pro/con topic retrieval and stance-labeled arguments
-      - multi-positive argument retrieval judgments
+    - non-overlapping debate-portal argument relevance data
+    - args.me-style query-to-argument supervision
+    - pro/con topic retrieval and stance-labeled arguments
+    - multi-positive argument retrieval judgments
     synthetic_data:
-      document_generation: debate-style argumentative passages with claims, premises, evidence, rebuttals, and stance
-      question_generation: short controversial questions answerable by stance-diverse arguments
-      answerability: positives should substantively address the topic narrative, not merely mention query terms
+      document_generation: debate-style argumentative passages with claims, premises,
+        evidence, rebuttals, and stance
+      question_generation: short controversial questions answerable by stance-diverse
+        arguments
+      answerability: positives should substantively address the topic narrative, not
+        merely mention query terms
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-en
     source_urls:
-      - label: Overview of Touché 2020 paper
-        url: https://doi.org/10.1007/978-3-030-58219-7_26
-      - label: Open PDF
-        url: https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf
-      - label: Touche20 dataset record
-        url: https://doi.org/10.5281/zenodo.6862281
-      - label: mteb/touche2020
-        url: https://huggingface.co/datasets/mteb/touche2020
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    - label: Overview of Touché 2020 paper
+      url: https://doi.org/10.1007/978-3-030-58219-7_26
+    - label: Open PDF
+      url: https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf
+    - label: Touche20 dataset record
+      url: https://doi.org/10.5281/zenodo.6862281
+    - label: mteb/touche2020
+      url: https://huggingface.co/datasets/mteb/touche2020
+    - label: Zeta Alpha NanoBEIR collection
+      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
     source_notes: []
   references:
-    - title: "Overview of Touché 2020: Argument Retrieval"
-      url: https://doi.org/10.1007/978-3-030-58219-7_26
-      year: 2020
-      doi: 10.1007/978-3-030-58219-7_26
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Touche20-Argument-Retrieval-for-Controversial-Questions"
-      url: https://doi.org/10.5281/zenodo.6862281
-      year: 2022
-      doi: 10.5281/zenodo.6862281
-      is_paper: false
-      source_confidence: definitive_dataset_record
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'Overview of Touché 2020: Argument Retrieval'
+    url: https://doi.org/10.1007/978-3-030-58219-7_26
+    year: 2020
+    doi: 10.1007/978-3-030-58219-7_26
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Touche20-Argument-Retrieval-for-Controversial-Questions
+    url: https://doi.org/10.5281/zenodo.6862281
+    year: 2022
+    doi: 10.5281/zenodo.6862281
+    is_paper: false
+    source_confidence: definitive_dataset_record
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6647881346
+      hit_at_10: 1.0
+      recall_at_100: 0.8175965665
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 49
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8175965665
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5407197951
+      hit_at_10: 1.0
+      recall_at_100: 0.8079399142
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 49
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8079399142
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6183824659
+      hit_at_10: 1.0
+      recall_at_100: 0.839055794
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 49
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.839055794
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

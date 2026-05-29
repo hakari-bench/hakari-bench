@@ -93,8 +93,20 @@ financial keyword.
 | Avg positives / query | 2.46 |
 | Positives per query (min / median / max) | 1 / 2.00 / 15 |
 | Queries with multiple positives | 28 (56.0%) |
-| BM25 nDCG@10 | 0.2720 |
-| BM25 hit@10 | 0.4600 |
+| BM25 nDCG@10 | 0.3205 |
+| BM25 hit@10 | 0.5800 |
+| BM25 Recall@100 | 0.6667 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3819 |
+| Dense hit@10 | 0.6400 |
+| Dense Recall@100 | 0.7398 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4174 |
+| Reranking hybrid hit@10 | 0.7000 |
+| Reranking hybrid Recall@100 | 0.7805 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 4 |
 | Query length avg chars | 70.34 |
 | Document length avg chars | 993.55 |
 
@@ -154,60 +166,111 @@ benchmark_task_metadata:
     query_mean: 70.34
     document_mean: 993.551109
   bm25:
-    ndcg_at_10: 0.2720213143
-    hit_at_10: 0.46
-    source: dataset_bm25_column
+    ndcg_at_10: 0.3205376270981585
+    hit_at_10: 0.58
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MNanoBEIR Spanish NanoBEIR task split from hakari-bench/NanoBEIR-es
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding FiQA, BEIR, or NanoBEIR records likely to overlap with these evaluation questions or answers
+    leakage_note: prefer excluding FiQA, BEIR, or NanoBEIR records likely to overlap
+      with these evaluation questions or answers
     useful_training_data:
-      - non-overlapping financial QA pairs
-      - consumer finance forum retrieval data
-      - investment and debt advice question-answer pairs
-      - Spanish or multilingual finance-domain retrieval supervision
+    - non-overlapping financial QA pairs
+    - consumer finance forum retrieval data
+    - investment and debt advice question-answer pairs
+    - Spanish or multilingual finance-domain retrieval supervision
     synthetic_data:
-      document_generation: Spanish personal finance answer passages with practical caveats
-      question_generation: realistic finance questions about debt, investing, accounts, taxes, and risk
-      answerability: positives should address the financial scenario, not merely mention the same product
+      document_generation: Spanish personal finance answer passages with practical
+        caveats
+      question_generation: realistic finance questions about debt, investing, accounts,
+        taxes, and risk
+      answerability: positives should address the financial scenario, not merely mention
+        the same product
     multi_positive_training: useful
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-es
     source_urls:
-      - label: FiQA paper
-        url: https://doi.org/10.1145/3184558.3192301
-      - label: BEIR paper
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB paper
-        url: https://arxiv.org/abs/2502.13595
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - Spanish task is a multilingual NanoBEIR adaptation of the original English BEIR task
-  references:
-    - title: "FiQA: A Question Answering Dataset for Financial Opinion Mining"
+    - label: FiQA paper
       url: https://doi.org/10.1145/3184558.3192301
-      year: 2018
-      doi: 10.1145/3184558.3192301
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR paper
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
+    - label: MMTEB paper
       url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: Zeta Alpha NanoBEIR collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: dataset_collection
+    source_notes:
+    - Spanish task is a multilingual NanoBEIR adaptation of the original English BEIR
+      task
+  references:
+  - title: 'FiQA: A Question Answering Dataset for Financial Opinion Mining'
+    url: https://doi.org/10.1145/3184558.3192301
+    year: 2018
+    doi: 10.1145/3184558.3192301
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: dataset_collection
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3205376271
+      hit_at_10: 0.58
+      recall_at_100: 0.6666666667
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6666666667
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3819415207
+      hit_at_10: 0.64
+      recall_at_100: 0.7398373984
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7398373984
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4173531376
+      hit_at_10: 0.7
+      recall_at_100: 0.7804878049
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.08
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7804878049
+      safeguard_positive_rows: 4
+      rows_with_101_candidates: 4
 ```

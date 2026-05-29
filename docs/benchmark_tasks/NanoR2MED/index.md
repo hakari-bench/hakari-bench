@@ -157,8 +157,15 @@ NanoR2MED evaluation queries and positive passages should not be used as seeds.
 | Positive qrels | 2,678 |
 | Positives per query | 3.06 average |
 | Multi-positive queries | 651 |
-| Query-weighted BM25 nDCG@10 | 0.1263 |
-| Query-weighted BM25 hit@10 | 0.2979 |
+| Query-weighted BM25 nDCG@10 | 0.2110 |
+| Query-weighted BM25 hit@10 | 0.4326 |
+| Query-weighted BM25 Recall@100 | 0.5070 |
+| Query-weighted Dense nDCG@10 | 0.2980 |
+| Query-weighted Dense hit@10 | 0.5674 |
+| Query-weighted Dense Recall@100 | 0.6553 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.2899 |
+| Query-weighted Reranking hybrid hit@10 | 0.5833 |
+| Query-weighted Reranking hybrid Recall@100 | 0.6694 |
 | Mean query length | 1,174.65 chars, weighted by query count |
 | Mean document length | 1,400.90 chars, weighted by split-local document count |
 
@@ -225,124 +232,148 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 1174.6461187340183
     document_mean_weighted_by_documents: 1400.90165
   bm25:
-    ndcg_at_10_query_weighted: 0.12628940727671234
-    hit_at_10_query_weighted: 0.29794520546803654
+    ndcg_at_10_query_weighted: 0.2110402849
+    hit_at_10_query_weighted: 0.4326484018
     ndcg_at_10_unweighted_task_mean: 0.132126414825
     hit_at_10_unweighted_task_mean: 0.3100972876125
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: NanoR2MEDPMCClinical
     hardest_task_by_ndcg_at_10: NanoR2MEDPMCTreatment
   tasks:
-    - name: NanoR2MEDBioinformatics
-      path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDBioinformatics.md
-      retrieval_shape: bioinformatics_question_to_supporting_reference
-      queries: 77
-      documents: 10000
-      positive_qrels: 226
-      bm25_ndcg_at_10: 0.1785792901
-      bm25_hit_at_10: 0.4415584416
-    - name: NanoR2MEDBiology
-      path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDBiology.md
-      retrieval_shape: biology_question_to_explanatory_passage
-      queries: 103
-      documents: 10000
-      positive_qrels: 374
-      bm25_ndcg_at_10: 0.2512844907
-      bm25_hit_at_10: 0.5048543689
-    - name: NanoR2MEDIIYiClinical
-      path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDIIYiClinical.md
-      retrieval_shape: translated_clinical_case_to_similar_cases
-      queries: 129
-      documents: 10000
-      positive_qrels: 457
-      bm25_ndcg_at_10: 0.1246035498
-      bm25_hit_at_10: 0.3798449612
-    - name: NanoR2MEDMedQADiag
-      path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDMedQADiag.md
-      retrieval_shape: diagnostic_vignette_to_textbook_evidence
-      queries: 118
-      documents: 10000
-      positive_qrels: 522
-      bm25_ndcg_at_10: 0.0281042121
-      bm25_hit_at_10: 0.1355932203
-    - name: NanoR2MEDMedXpertQAExam
-      path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDMedXpertQAExam.md
-      retrieval_shape: exam_vignette_to_examination_evidence
-      queries: 97
-      documents: 10000
-      positive_qrels: 292
-      bm25_ndcg_at_10: 0.0244625982
-      bm25_hit_at_10: 0.0721649485
-    - name: NanoR2MEDMedicalSciences
-      path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDMedicalSciences.md
-      retrieval_shape: medical_sciences_question_to_reference_passage
-      queries: 88
-      documents: 10000
-      positive_qrels: 244
-      bm25_ndcg_at_10: 0.1042864669
-      bm25_hit_at_10: 0.2727272727
-    - name: NanoR2MEDPMCClinical
-      path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDPMCClinical.md
-      retrieval_shape: pmc_case_summary_to_similar_clinical_cases
-      queries: 114
-      documents: 10000
-      positive_qrels: 248
-      bm25_ndcg_at_10: 0.3277008275
-      bm25_hit_at_10: 0.6140350877
-    - name: NanoR2MEDPMCTreatment
-      path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDPMCTreatment.md
-      retrieval_shape: treatment_case_summary_to_pmc_evidence
-      queries: 150
-      documents: 10000
-      positive_qrels: 315
-      bm25_ndcg_at_10: 0.0179898833
-      bm25_hit_at_10: 0.06
+  - name: NanoR2MEDBioinformatics
+    path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDBioinformatics.md
+    retrieval_shape: bioinformatics_question_to_supporting_reference
+    queries: 77
+    documents: 10000
+    positive_qrels: 226
+    bm25_ndcg_at_10: 0.1785792901
+    bm25_hit_at_10: 0.4415584416
+  - name: NanoR2MEDBiology
+    path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDBiology.md
+    retrieval_shape: biology_question_to_explanatory_passage
+    queries: 103
+    documents: 10000
+    positive_qrels: 374
+    bm25_ndcg_at_10: 0.2512844907
+    bm25_hit_at_10: 0.5048543689
+  - name: NanoR2MEDIIYiClinical
+    path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDIIYiClinical.md
+    retrieval_shape: translated_clinical_case_to_similar_cases
+    queries: 129
+    documents: 10000
+    positive_qrels: 457
+    bm25_ndcg_at_10: 0.1246035498
+    bm25_hit_at_10: 0.3798449612
+  - name: NanoR2MEDMedQADiag
+    path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDMedQADiag.md
+    retrieval_shape: diagnostic_vignette_to_textbook_evidence
+    queries: 118
+    documents: 10000
+    positive_qrels: 522
+    bm25_ndcg_at_10: 0.0281042121
+    bm25_hit_at_10: 0.1355932203
+  - name: NanoR2MEDMedXpertQAExam
+    path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDMedXpertQAExam.md
+    retrieval_shape: exam_vignette_to_examination_evidence
+    queries: 97
+    documents: 10000
+    positive_qrels: 292
+    bm25_ndcg_at_10: 0.0244625982
+    bm25_hit_at_10: 0.0721649485
+  - name: NanoR2MEDMedicalSciences
+    path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDMedicalSciences.md
+    retrieval_shape: medical_sciences_question_to_reference_passage
+    queries: 88
+    documents: 10000
+    positive_qrels: 244
+    bm25_ndcg_at_10: 0.1042864669
+    bm25_hit_at_10: 0.2727272727
+  - name: NanoR2MEDPMCClinical
+    path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDPMCClinical.md
+    retrieval_shape: pmc_case_summary_to_similar_clinical_cases
+    queries: 114
+    documents: 10000
+    positive_qrels: 248
+    bm25_ndcg_at_10: 0.3277008275
+    bm25_hit_at_10: 0.6140350877
+  - name: NanoR2MEDPMCTreatment
+    path: docs/benchmark_tasks/NanoR2MED/NanoR2MEDPMCTreatment.md
+    retrieval_shape: treatment_case_summary_to_pmc_evidence
+    queries: 150
+    documents: 10000
+    positive_qrels: 315
+    bm25_ndcg_at_10: 0.0179898833
+    bm25_hit_at_10: 0.06
   learning:
-    leakage_note: exclude NanoR2MED evaluation queries, qrels, positive passages, same-source near duplicates, and same-article clinical case duplicates where applicable
+    leakage_note: exclude NanoR2MED evaluation queries, qrels, positive passages,
+      same-source near duplicates, and same-article clinical case duplicates where
+      applicable
     useful_training_data:
-      - non-overlapping biomedical StackExchange answer-link retrieval
-      - BRIGHT-style reasoning-intensive biomedical retrieval
-      - medical exam vignette to textbook evidence retrieval
-      - clinical entity linking from vignette to diagnosis, examination, or treatment
-      - PubMed Central treatment and case-report evidence retrieval
-      - diagnosis-labeled clinical case similarity pairs
-      - hard negatives sharing symptoms, disease, tool, or treatment vocabulary but differing in the reasoning target
+    - non-overlapping biomedical StackExchange answer-link retrieval
+    - BRIGHT-style reasoning-intensive biomedical retrieval
+    - medical exam vignette to textbook evidence retrieval
+    - clinical entity linking from vignette to diagnosis, examination, or treatment
+    - PubMed Central treatment and case-report evidence retrieval
+    - diagnosis-labeled clinical case similarity pairs
+    - hard negatives sharing symptoms, disease, tool, or treatment vocabulary but
+      differing in the reasoning target
     synthetic_data:
-      document_generation: non-evaluation biomedical references, medical textbook chunks, Wikipedia medical passages, PMC evidence paragraphs, and de-identified clinical cases
-      question_generation: practical bioinformatics questions, biology explanations, medical-sciences questions, diagnostic vignettes, examination vignettes, treatment-planning cases, and diagnosis-hidden case summaries
-      answerability: positives must support the latent biomedical or clinical reasoning target, not merely repeat terms from the query
+      document_generation: non-evaluation biomedical references, medical textbook
+        chunks, Wikipedia medical passages, PMC evidence paragraphs, and de-identified
+        clinical cases
+      question_generation: practical bioinformatics questions, biology explanations,
+        medical-sciences questions, diagnostic vignettes, examination vignettes, treatment-planning
+        cases, and diagnosis-hidden case summaries
+      answerability: positives must support the latent biomedical or clinical reasoning
+        target, not merely repeat terms from the query
     multi_positive_training: preserve_multi_positive_evidence_and_case_clusters
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoR2MED
     source_urls:
-      - label: R2MED arXiv
-        url: https://arxiv.org/abs/2505.14558
-      - label: R2MED project page
-        url: https://r2med.github.io/
-      - label: R2MED GitHub
-        url: https://github.com/R2MED/R2MED
-      - label: R2MED/Bioinformatics
-        url: https://huggingface.co/datasets/R2MED/Bioinformatics
-      - label: R2MED/Biology
-        url: https://huggingface.co/datasets/R2MED/Biology
-      - label: R2MED/IIYi-Clinical
-        url: https://huggingface.co/datasets/R2MED/IIYi-Clinical
-      - label: R2MED/MedQA-Diag
-        url: https://huggingface.co/datasets/R2MED/MedQA-Diag
-      - label: R2MED/MedXpertQA-Exam
-        url: https://huggingface.co/datasets/R2MED/MedXpertQA-Exam
-      - label: R2MED/Medical-Sciences
-        url: https://huggingface.co/datasets/R2MED/Medical-Sciences
-      - label: R2MED/PMC-Clinical
-        url: https://huggingface.co/datasets/R2MED/PMC-Clinical
-      - label: R2MED/PMC-Treatment
-        url: https://huggingface.co/datasets/R2MED/PMC-Treatment
+    - label: R2MED arXiv
+      url: https://arxiv.org/abs/2505.14558
+    - label: R2MED project page
+      url: https://r2med.github.io/
+    - label: R2MED GitHub
+      url: https://github.com/R2MED/R2MED
+    - label: R2MED/Bioinformatics
+      url: https://huggingface.co/datasets/R2MED/Bioinformatics
+    - label: R2MED/Biology
+      url: https://huggingface.co/datasets/R2MED/Biology
+    - label: R2MED/IIYi-Clinical
+      url: https://huggingface.co/datasets/R2MED/IIYi-Clinical
+    - label: R2MED/MedQA-Diag
+      url: https://huggingface.co/datasets/R2MED/MedQA-Diag
+    - label: R2MED/MedXpertQA-Exam
+      url: https://huggingface.co/datasets/R2MED/MedXpertQA-Exam
+    - label: R2MED/Medical-Sciences
+      url: https://huggingface.co/datasets/R2MED/Medical-Sciences
+    - label: R2MED/PMC-Clinical
+      url: https://huggingface.co/datasets/R2MED/PMC-Clinical
+    - label: R2MED/PMC-Treatment
+      url: https://huggingface.co/datasets/R2MED/PMC-Treatment
     source_notes: []
   references:
-    - title: "R2MED: A Benchmark for Reasoning-Driven Medical Retrieval"
-      url: https://arxiv.org/abs/2505.14558
-      year: 2025
-      doi: 10.48550/arXiv.2505.14558
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
+    url: https://arxiv.org/abs/2505.14558
+    year: 2025
+    doi: 10.48550/arXiv.2505.14558
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.2110402849
+      query_weighted_hit_at_10: 0.4326484018
+      query_weighted_recall_at_100: 0.5069889618
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.2980336251
+      query_weighted_hit_at_10: 0.5673515982
+      query_weighted_recall_at_100: 0.6553416953
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.2899036792
+      query_weighted_hit_at_10: 0.5833333333
+      query_weighted_recall_at_100: 0.6694371004
+      source: dataset_candidate_subset
 ```

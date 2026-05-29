@@ -92,8 +92,20 @@ not merely the same entity name.
 | Avg positives / query | 1.14 |
 | Positives per query (min / median / max) | 1 / 1.00 / 3 |
 | Queries with multiple positives | 6 (12.0%) |
-| BM25 nDCG@10 | 0.7430 |
-| BM25 hit@10 | 0.9000 |
+| BM25 nDCG@10 | 0.7362 |
+| BM25 hit@10 | 0.9200 |
+| BM25 Recall@100 | 0.9825 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8449 |
+| Dense hit@10 | 0.9800 |
+| Dense Recall@100 | 0.9825 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8004 |
+| Reranking hybrid hit@10 | 0.9800 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 52.60 |
 | Document length avg chars | 1,308.21 |
 
@@ -153,60 +165,111 @@ benchmark_task_metadata:
     query_mean: 52.6
     document_mean: 1308.21257
   bm25:
-    ndcg_at_10: 0.7430021178
-    hit_at_10: 0.9
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7362066720789742
+    hit_at_10: 0.92
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MNanoBEIR German NanoBEIR task split from hakari-bench/NanoBEIR-de
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding FEVER, BEIR, or NanoBEIR records likely to overlap with these evaluation claims or evidence passages
+    leakage_note: prefer excluding FEVER, BEIR, or NanoBEIR records likely to overlap
+      with these evaluation claims or evidence passages
     useful_training_data:
-      - non-overlapping FEVER claim-evidence pairs
-      - German or multilingual fact-checking datasets
-      - Wikipedia claim verification retrieval data
-      - entity-centric factual retrieval pairs
+    - non-overlapping FEVER claim-evidence pairs
+    - German or multilingual fact-checking datasets
+    - Wikipedia claim verification retrieval data
+    - entity-centric factual retrieval pairs
     synthetic_data:
-      document_generation: German Wikipedia-style entity and event passages containing factual relations
-      question_generation: German factual claims about dates, offices, ranks, biographies, works, and family relations
-      answerability: positives should contain evidence for verifying the claim, not just the same entity name
+      document_generation: German Wikipedia-style entity and event passages containing
+        factual relations
+      question_generation: German factual claims about dates, offices, ranks, biographies,
+        works, and family relations
+      answerability: positives should contain evidence for verifying the claim, not
+        just the same entity name
     multi_positive_training: optional_multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-de
     source_urls:
-      - label: FEVER paper
-        url: https://arxiv.org/abs/1803.05355
-      - label: BEIR paper
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB paper
-        url: https://arxiv.org/abs/2502.13595
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - German task is a multilingual NanoBEIR adaptation of the original English BEIR task
-  references:
-    - title: "FEVER: a large-scale dataset for Fact Extraction and VERification"
+    - label: FEVER paper
       url: https://arxiv.org/abs/1803.05355
-      year: 2018
-      doi: 10.18653/v1/N18-1074
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR paper
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
+    - label: MMTEB paper
       url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: Zeta Alpha NanoBEIR collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: dataset_collection
+    source_notes:
+    - German task is a multilingual NanoBEIR adaptation of the original English BEIR
+      task
+  references:
+  - title: 'FEVER: a large-scale dataset for Fact Extraction and VERification'
+    url: https://arxiv.org/abs/1803.05355
+    year: 2018
+    doi: 10.18653/v1/N18-1074
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: dataset_collection
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7362066721
+      hit_at_10: 0.92
+      recall_at_100: 0.9824561404
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9824561404
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8448551501
+      hit_at_10: 0.98
+      recall_at_100: 0.9824561404
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9824561404
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.800396243
+      hit_at_10: 0.98
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

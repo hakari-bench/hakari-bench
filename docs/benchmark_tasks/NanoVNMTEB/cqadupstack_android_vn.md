@@ -95,8 +95,20 @@ is well suited to multi-positive contrastive training.
 | Avg positives / query | 4.05 |
 | Positives per query (min / median / max) | 1 / 1 / 100 |
 | Queries with multiple positives | 95 (47.50%) |
-| BM25 nDCG@10 | 0.3993 |
-| BM25 hit@10 | 0.6300 |
+| BM25 nDCG@10 | 0.3774 |
+| BM25 hit@10 | 0.6100 |
+| BM25 Recall@100 | 0.4747 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4991 |
+| Dense hit@10 | 0.7550 |
+| Dense Recall@100 | 0.5845 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4629 |
+| Reranking hybrid hit@10 | 0.7050 |
+| Reranking hybrid Recall@100 | 0.5980 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 14 |
 | Query length avg chars | 55.64 |
 | Document length avg chars | 604.76 |
 
@@ -142,9 +154,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://doi.org/10.1145/2838931.2838934
     additional_source_urls:
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn
     no_paper_note: null
   counts:
     queries: 200
@@ -161,59 +173,109 @@ benchmark_task_metadata:
     query_mean: 55.64
     document_mean: 604.7554
   bm25:
-    ndcg_at_10: 0.399265669
-    hit_at_10: 0.63
-    source: dataset_bm25_column
+    ndcg_at_10: 0.37738176887803376
+    hit_at_10: 0.61
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB CQADupStack Android test split from GreenNode/cqadupstack-android-vn"
+    evaluation_split_origin: translated VN-MTEB CQADupStack Android test split from
+      GreenNode/cqadupstack-android-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated Android test questions, documents, qrels, and duplicate clusters used by this Nano split."
+    leakage_note: Exclude translated Android test questions, documents, qrels, and
+      duplicate clusters used by this Nano split.
     useful_training_data:
-      - non-overlapping Android duplicate-question pairs
-      - Vietnamese mobile troubleshooting QA pairs
-      - translated CQADupStack training splits with overlap removed
-      - same-device and same-feature hard negatives
+    - non-overlapping Android duplicate-question pairs
+    - Vietnamese mobile troubleshooting QA pairs
+    - translated CQADupStack training splits with overlap removed
+    - same-device and same-feature hard negatives
     synthetic_data:
-      document_generation: "Vietnamese Android support threads with model names, apps, commands, and troubleshooting context."
-      question_generation: "Short Vietnamese duplicate Android question titles."
-      answerability: "Each query should have duplicate-thread positives and same-device non-duplicate hard negatives."
+      document_generation: Vietnamese Android support threads with model names, apps,
+        commands, and troubleshooting context.
+      question_generation: Short Vietnamese duplicate Android question titles.
+      answerability: Each query should have duplicate-thread positives and same-device
+        non-duplicate hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: CQADupStack DOI
-        url: https://doi.org/10.1145/2838931.2838934
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/cqadupstack-android-vn
-        url: https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn
+    - label: CQADupStack DOI
+      url: https://doi.org/10.1145/2838931.2838934
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/cqadupstack-android-vn
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn
     source_notes: []
   references:
-    - title: "CQADupStack: A Benchmark Data Set for Community Question-Answering Research"
-      url: https://doi.org/10.1145/2838931.2838934
-      year: 2015
-      doi: 10.1145/2838931.2838934
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/cqadupstack-android-vn
-      url: https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+    url: https://doi.org/10.1145/2838931.2838934
+    year: 2015
+    doi: 10.1145/2838931.2838934
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/cqadupstack-android-vn
+    url: https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3773817689
+      hit_at_10: 0.61
+      recall_at_100: 0.4747225647
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4747225647
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4990775314
+      hit_at_10: 0.755
+      recall_at_100: 0.5844636252
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5844636252
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4629189706
+      hit_at_10: 0.705
+      recall_at_100: 0.598027127
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.07
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.598027127
+      safeguard_positive_rows: 14
+      rows_with_101_candidates: 14
 ```

@@ -171,8 +171,15 @@ as generation seeds.
 | Positive qrels | 17,925 |
 | Positives per query | avg 6.04, min 1, median 1.0, max 100 |
 | Multi-positive tasks | 12 |
-| Query-weighted BM25 nDCG@10 | 0.6570 |
-| Query-weighted BM25 hit@10 | 0.7984 |
+| Query-weighted BM25 nDCG@10 | 0.5864 |
+| Query-weighted BM25 hit@10 | 0.7953 |
+| Query-weighted BM25 Recall@100 | 0.8415 |
+| Query-weighted Dense nDCG@10 | 0.6476 |
+| Query-weighted Dense hit@10 | 0.8358 |
+| Query-weighted Dense Recall@100 | 0.8530 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6407 |
+| Query-weighted Reranking hybrid hit@10 | 0.8456 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8874 |
 | Mean query length | 161.54 chars, weighted by query count |
 | Mean document length | 694.08 chars, weighted by split-local document count |
 
@@ -254,203 +261,229 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 161.54484153742413
     document_mean_weighted_by_documents: 694.0769059102124
   bm25:
-    ndcg_at_10_query_weighted: 0.6569951786918409
-    hit_at_10_query_weighted: 0.7983799393122051
+    ndcg_at_10_query_weighted: 0.5863708271
+    hit_at_10_query_weighted: 0.795347269
     ndcg_at_10_unweighted_task_mean: 0.6815294117647059
     hit_at_10_unweighted_task_mean: 0.8184764705882352
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: treccovid_fa
     hardest_task_by_ndcg_at_10: argu_ana_fa
   tasks:
-    - name: argu_ana_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/argu_ana_fa.md
-      retrieval_shape: argument_to_paired_counterargument
-      queries: 199
-      documents: 8669
-      positive_qrels: 199
-      bm25_ndcg_at_10: 0.286
-      bm25_hit_at_10: 0.6432
-    - name: fever_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/fever_fa.md
-      retrieval_shape: claim_to_fact_verification_evidence
-      queries: 200
-      documents: 10000
-      positive_qrels: 229
-      bm25_ndcg_at_10: 0.824
-      bm25_hit_at_10: 0.9
-    - name: fi_qa2018_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/fi_qa2018_fa.md
-      retrieval_shape: finance_question_to_answer_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 534
-      bm25_ndcg_at_10: 0.3888
-      bm25_hit_at_10: 0.53
-    - name: hotpot_qa_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/hotpot_qa_fa.md
-      retrieval_shape: multi_hop_question_to_evidence_passages
-      queries: 200
-      documents: 10000
-      positive_qrels: 400
-      bm25_ndcg_at_10: 0.9102
-      bm25_hit_at_10: 0.965
-    - name: miracl_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/miracl_fa.md
-      retrieval_shape: persian_miracl_query_to_wikipedia_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 427
-      bm25_ndcg_at_10: 0.5509
-      bm25_hit_at_10: 0.8
-    - name: msmarco_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/msmarco_fa.md
-      retrieval_shape: web_query_to_passage_answer
-      queries: 43
-      documents: 8766
-      positive_qrels: 2826
-      bm25_ndcg_at_10: 0.8161
-      bm25_hit_at_10: 0.9535
-    - name: neu_clir2023_fas
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/neu_clir2023_fas.md
-      retrieval_shape: information_need_to_news_web_documents
-      queries: 74
-      documents: 10000
-      positive_qrels: 3669
-      bm25_ndcg_at_10: 0.7761
-      bm25_hit_at_10: 0.9324
-    - name: nq_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/nq_fa.md
-      retrieval_shape: natural_question_to_evidence_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 251
-      bm25_ndcg_at_10: 0.4683
-      bm25_hit_at_10: 0.7
-    - name: persian_web_document
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/persian_web_document.md
-      retrieval_shape: short_web_query_to_web_document_snippet
-      queries: 200
-      documents: 10000
-      positive_qrels: 2186
-      bm25_ndcg_at_10: 0.821
-      bm25_hit_at_10: 0.95
-    - name: quora_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/quora_fa.md
-      retrieval_shape: question_to_duplicate_question
-      queries: 200
-      documents: 10000
-      positive_qrels: 570
-      bm25_ndcg_at_10: 0.8832
-      bm25_hit_at_10: 0.955
-    - name: sci_fact_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/sci_fact_fa.md
-      retrieval_shape: scientific_claim_to_evidence_abstract
-      queries: 200
-      documents: 5183
-      positive_qrels: 225
-      bm25_ndcg_at_10: 0.6374
-      bm25_hit_at_10: 0.79
-    - name: scidocs_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/scidocs_fa.md
-      retrieval_shape: paper_title_to_related_scientific_document
-      queries: 200
-      documents: 10000
-      positive_qrels: 986
-      bm25_ndcg_at_10: 0.3664
-      bm25_hit_at_10: 0.565
-    - name: syn_per_chatbot_ragfaq
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/syn_per_chatbot_ragfaq.md
-      retrieval_shape: multi_turn_chatbot_dialogue_to_faq_entry
-      queries: 200
-      documents: 8696
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2882
-      bm25_hit_at_10: 0.415
-    - name: syn_per_qa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/syn_per_qa.md
-      retrieval_shape: synthetic_persian_question_to_answer
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8609
-      bm25_hit_at_10: 0.94
-    - name: treccovid_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/treccovid_fa.md
-      retrieval_shape: covid19_topic_to_biomedical_abstract
-      queries: 50
-      documents: 10000
-      positive_qrels: 4623
-      bm25_ndcg_at_10: 0.949
-      bm25_hit_at_10: 0.98
-    - name: web_faq_fas
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/web_faq_fas.md
-      retrieval_shape: faq_question_to_answer_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.868
-      bm25_hit_at_10: 0.935
-    - name: wikipedia_multilingual_fa
-      path: docs/benchmark_tasks/NanoFaMTEB-v2/wikipedia_multilingual_fa.md
-      retrieval_shape: wikipedia_style_question_to_answer_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8915
-      bm25_hit_at_10: 0.96
+  - name: argu_ana_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/argu_ana_fa.md
+    retrieval_shape: argument_to_paired_counterargument
+    queries: 199
+    documents: 8669
+    positive_qrels: 199
+    bm25_ndcg_at_10: 0.286
+    bm25_hit_at_10: 0.6432
+  - name: fever_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/fever_fa.md
+    retrieval_shape: claim_to_fact_verification_evidence
+    queries: 200
+    documents: 10000
+    positive_qrels: 229
+    bm25_ndcg_at_10: 0.824
+    bm25_hit_at_10: 0.9
+  - name: fi_qa2018_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/fi_qa2018_fa.md
+    retrieval_shape: finance_question_to_answer_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 534
+    bm25_ndcg_at_10: 0.3888
+    bm25_hit_at_10: 0.53
+  - name: hotpot_qa_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/hotpot_qa_fa.md
+    retrieval_shape: multi_hop_question_to_evidence_passages
+    queries: 200
+    documents: 10000
+    positive_qrels: 400
+    bm25_ndcg_at_10: 0.9102
+    bm25_hit_at_10: 0.965
+  - name: miracl_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/miracl_fa.md
+    retrieval_shape: persian_miracl_query_to_wikipedia_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 427
+    bm25_ndcg_at_10: 0.5509
+    bm25_hit_at_10: 0.8
+  - name: msmarco_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/msmarco_fa.md
+    retrieval_shape: web_query_to_passage_answer
+    queries: 43
+    documents: 8766
+    positive_qrels: 2826
+    bm25_ndcg_at_10: 0.8161
+    bm25_hit_at_10: 0.9535
+  - name: neu_clir2023_fas
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/neu_clir2023_fas.md
+    retrieval_shape: information_need_to_news_web_documents
+    queries: 74
+    documents: 10000
+    positive_qrels: 3669
+    bm25_ndcg_at_10: 0.7761
+    bm25_hit_at_10: 0.9324
+  - name: nq_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/nq_fa.md
+    retrieval_shape: natural_question_to_evidence_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 251
+    bm25_ndcg_at_10: 0.4683
+    bm25_hit_at_10: 0.7
+  - name: persian_web_document
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/persian_web_document.md
+    retrieval_shape: short_web_query_to_web_document_snippet
+    queries: 200
+    documents: 10000
+    positive_qrels: 2186
+    bm25_ndcg_at_10: 0.821
+    bm25_hit_at_10: 0.95
+  - name: quora_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/quora_fa.md
+    retrieval_shape: question_to_duplicate_question
+    queries: 200
+    documents: 10000
+    positive_qrels: 570
+    bm25_ndcg_at_10: 0.8832
+    bm25_hit_at_10: 0.955
+  - name: sci_fact_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/sci_fact_fa.md
+    retrieval_shape: scientific_claim_to_evidence_abstract
+    queries: 200
+    documents: 5183
+    positive_qrels: 225
+    bm25_ndcg_at_10: 0.6374
+    bm25_hit_at_10: 0.79
+  - name: scidocs_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/scidocs_fa.md
+    retrieval_shape: paper_title_to_related_scientific_document
+    queries: 200
+    documents: 10000
+    positive_qrels: 986
+    bm25_ndcg_at_10: 0.3664
+    bm25_hit_at_10: 0.565
+  - name: syn_per_chatbot_ragfaq
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/syn_per_chatbot_ragfaq.md
+    retrieval_shape: multi_turn_chatbot_dialogue_to_faq_entry
+    queries: 200
+    documents: 8696
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2882
+    bm25_hit_at_10: 0.415
+  - name: syn_per_qa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/syn_per_qa.md
+    retrieval_shape: synthetic_persian_question_to_answer
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8609
+    bm25_hit_at_10: 0.94
+  - name: treccovid_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/treccovid_fa.md
+    retrieval_shape: covid19_topic_to_biomedical_abstract
+    queries: 50
+    documents: 10000
+    positive_qrels: 4623
+    bm25_ndcg_at_10: 0.949
+    bm25_hit_at_10: 0.98
+  - name: web_faq_fas
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/web_faq_fas.md
+    retrieval_shape: faq_question_to_answer_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.868
+    bm25_hit_at_10: 0.935
+  - name: wikipedia_multilingual_fa
+    path: docs/benchmark_tasks/NanoFaMTEB-v2/wikipedia_multilingual_fa.md
+    retrieval_shape: wikipedia_style_question_to_answer_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8915
+    bm25_hit_at_10: 0.96
   learning:
-    leakage_note: exclude NanoFaMTEB-v2 evaluation queries, qrels, positive documents, and upstream source rows used in the Nano splits; audit public FaMTEB and MCINext source splits before using them for training
+    leakage_note: exclude NanoFaMTEB-v2 evaluation queries, qrels, positive documents,
+      and upstream source rows used in the Nano splits; audit public FaMTEB and MCINext
+      source splits before using them for training
     useful_training_data:
-      - Persian web search, FAQ, Wikipedia QA, and mMARCO-style query-passage retrieval data
-      - Persian MIRACL, Natural Questions, FEVER, HotpotQA, and hard-negative evidence retrieval data
-      - Persian or translated finance, scientific, biomedical, and news retrieval data
-      - stance-aware Persian argument-pair and duplicate-question retrieval data
-      - Persian chatbot RAG, conversation-to-FAQ, and query-rewriting data
+    - Persian web search, FAQ, Wikipedia QA, and mMARCO-style query-passage retrieval
+      data
+    - Persian MIRACL, Natural Questions, FEVER, HotpotQA, and hard-negative evidence
+      retrieval data
+    - Persian or translated finance, scientific, biomedical, and news retrieval data
+    - stance-aware Persian argument-pair and duplicate-question retrieval data
+    - Persian chatbot RAG, conversation-to-FAQ, and query-rewriting data
     synthetic_data:
-      document_generation: Persian counterarguments, evidence passages, answer passages, web snippets, scientific abstracts, biomedical abstracts, news articles, FAQ answers, and chatbot knowledge-base entries
-      question_generation: Persian claims, web queries, information needs, scientific titles, FAQ questions, multi-turn dialogues, and domain-specific QA prompts grounded in selected documents
-      answerability: each positive must satisfy the task relation, not only share Persian surface terms with the query
-    multi_positive_training: preserve many-positive qrel structure for TREC-COVID, NeuCLIR, MS MARCO, Persian web retrieval, SCIDOCS, Quora, and MIRACL-style tasks
+      document_generation: Persian counterarguments, evidence passages, answer passages,
+        web snippets, scientific abstracts, biomedical abstracts, news articles, FAQ
+        answers, and chatbot knowledge-base entries
+      question_generation: Persian claims, web queries, information needs, scientific
+        titles, FAQ questions, multi-turn dialogues, and domain-specific QA prompts
+        grounded in selected documents
+      answerability: each positive must satisfy the task relation, not only share
+        Persian surface terms with the query
+    multi_positive_training: preserve many-positive qrel structure for TREC-COVID,
+      NeuCLIR, MS MARCO, Persian web retrieval, SCIDOCS, Quora, and MIRACL-style tasks
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoFaMTEB-v2
     source_urls:
-      - label: FaMTEB arXiv
-        url: https://arxiv.org/abs/2502.11571
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: MIRACL project
-        url: http://miracl.ai/
-      - label: NeuCLIR project
-        url: https://neuclir.github.io/
-      - label: mteb/WebFAQRetrieval
-        url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
-      - label: MCINext Hugging Face organization
-        url: https://huggingface.co/MCINext
+    - label: FaMTEB arXiv
+      url: https://arxiv.org/abs/2502.11571
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: MIRACL project
+      url: http://miracl.ai/
+    - label: NeuCLIR project
+      url: https://neuclir.github.io/
+    - label: mteb/WebFAQRetrieval
+      url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
+    - label: MCINext Hugging Face organization
+      url: https://huggingface.co/MCINext
     source_notes: []
   references:
-    - title: "FaMTEB: Massive Text Embedding Benchmark in Persian Language"
-      url: https://arxiv.org/abs/2502.11571
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: MIRACL
-      url: http://miracl.ai/
-      year: 2022
-      is_paper: false
-      source_confidence: probably_correct
-    - title: NeuCLIR
-      url: https://neuclir.github.io/
-      year: 2023
-      is_paper: false
-      source_confidence: probably_correct
-    - title: mteb/WebFAQRetrieval
-      url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
-      year: 2024
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'FaMTEB: Massive Text Embedding Benchmark in Persian Language'
+    url: https://arxiv.org/abs/2502.11571
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: MIRACL
+    url: http://miracl.ai/
+    year: 2022
+    is_paper: false
+    source_confidence: probably_correct
+  - title: NeuCLIR
+    url: https://neuclir.github.io/
+    year: 2023
+    is_paper: false
+    source_confidence: probably_correct
+  - title: mteb/WebFAQRetrieval
+    url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
+    year: 2024
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.5863708271
+      query_weighted_hit_at_10: 0.795347269
+      query_weighted_recall_at_100: 0.8415178339
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.6475720291
+      query_weighted_hit_at_10: 0.8358057991
+      query_weighted_recall_at_100: 0.853037377
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.6407388047
+      query_weighted_hit_at_10: 0.8455832771
+      query_weighted_recall_at_100: 0.8873826283
+      source: dataset_candidate_subset
 ```

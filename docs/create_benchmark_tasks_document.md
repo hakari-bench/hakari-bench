@@ -111,9 +111,13 @@ should include at least:
 - Task or split name.
 - Language and category.
 - Query count, document count, and positive qrels row count.
-- BM25 nDCG@10 computed from the dataset's `bm25` candidate column and positive
-  qrels.
-- BM25 hit@10 when available.
+- BM25 nDCG@10, hit@10, and Recall@100 computed from the dataset's `bm25`
+  top-500 candidate subset and positive qrels.
+- Dense nDCG@10, hit@10, and Recall@100 computed from the dataset's
+  `harrier_oss_v1_270m` top-500 candidate subset.
+- Reranking hybrid nDCG@10, hit@10, and Recall@100 computed from the dataset's
+  `reranking_hybrid` candidate subset. This subset is top-100 plus an optional
+  rank-101 safeguard positive when the top-100 contains no qrels positive.
 - Average query length and document length in characters.
 
 Include positives-per-query rows in the visible information table only when they
@@ -256,6 +260,8 @@ Discuss:
   long-document-oriented, or fact/evidence-oriented,
 - whether qrels are mostly single-positive or multi-positive,
 - how BM25 nDCG@10 and hit@10 should be read for this task,
+- how dense and reranking hybrid candidate metrics should be read when they are
+  available,
 - what existing non-evaluation training data may help,
 - what synthetic source documents and synthetic questions would be useful.
 
@@ -390,7 +396,7 @@ benchmark_task_metadata:
   bm25:
     ndcg_at_10: 0.5956231823
     hit_at_10: 0.94
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: unknown
@@ -434,8 +440,11 @@ Metadata field guidance:
   the paper PDF or HTML was inspected beyond title/abstract metadata.
 - `source_research.no_paper_note`: short public note when no paper was
   confirmed, otherwise `null`.
-- `bm25.source`: must be `dataset_bm25_column` unless the task explicitly uses a
-  different source.
+- `bm25.source`: must be `dataset_candidate_subset` for the current Nano set
+  unless the task explicitly uses a different source.
+- `candidate_subsets`: records `bm25`, `dense`, and `reranking_hybrid`
+  candidate metrics. `bm25` and `dense` are top-500 candidate subsets.
+  `reranking_hybrid` is top-100 plus optional rank-101 safeguard.
 - `learning.original_train_split`: use `available`, `not_found`, or `unknown`.
   Leave this as `unknown` unless the original source split was explicitly
   audited.
@@ -543,6 +552,18 @@ include full character counts inline, and visibly truncate long content with
 | Queries with multiple positives | {count} ({percent}%; omit this row when all queries have exactly one positive} |
 | BM25 nDCG@10 | {bm25_ndcg_at_10} |
 | BM25 hit@10 | {bm25_hit_at_10} |
+| BM25 Recall@100 | {bm25_recall_at_100} |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | {dense_ndcg_at_10} |
+| Dense hit@10 | {dense_hit_at_10} |
+| Dense Recall@100 | {dense_recall_at_100} |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | {reranking_hybrid_ndcg_at_10} |
+| Reranking hybrid hit@10 | {reranking_hybrid_hit_at_10} |
+| Reranking hybrid Recall@100 | {reranking_hybrid_recall_at_100} |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | {100 or 100-101} |
+| Reranking hybrid safeguard rows | {safeguard_positive_rows} |
 | Query length avg chars | {query_mean_chars} |
 | Document length avg chars | {document_mean_chars} |
 
@@ -599,7 +620,52 @@ benchmark_task_metadata:
   bm25:
     ndcg_at_10: {bm25_ndcg_at_10}
     hit_at_10: {bm25_hit_at_10}
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: {bm25_ndcg_at_10}
+      hit_at_10: {bm25_hit_at_10}
+      recall_at_100: {bm25_recall_at_100}
+      candidate_count_min: {bm25_candidate_count_min}
+      candidate_count_max: {bm25_candidate_count_max}
+      candidate_count_mean: {bm25_candidate_count_mean}
+      query_count: {query_count}
+      query_coverage: {bm25_query_coverage}
+      relevant_coverage_at_100: {bm25_relevant_coverage_at_100}
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: {dense_ndcg_at_10}
+      hit_at_10: {dense_hit_at_10}
+      recall_at_100: {dense_recall_at_100}
+      candidate_count_min: {dense_candidate_count_min}
+      candidate_count_max: {dense_candidate_count_max}
+      candidate_count_mean: {dense_candidate_count_mean}
+      query_count: {query_count}
+      query_coverage: {dense_query_coverage}
+      relevant_coverage_at_100: {dense_relevant_coverage_at_100}
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: {reranking_hybrid_ndcg_at_10}
+      hit_at_10: {reranking_hybrid_hit_at_10}
+      recall_at_100: {reranking_hybrid_recall_at_100}
+      candidate_count_min: {reranking_hybrid_candidate_count_min}
+      candidate_count_max: {reranking_hybrid_candidate_count_max}
+      candidate_count_mean: {reranking_hybrid_candidate_count_mean}
+      query_count: {query_count}
+      query_coverage: {reranking_hybrid_query_coverage}
+      relevant_coverage_at_100: {reranking_hybrid_relevant_coverage_at_100}
+      safeguard_positive_rows: {reranking_hybrid_safeguard_positive_rows}
+      rows_with_101_candidates: {reranking_hybrid_rows_with_101_candidates}
   learning:
     original_train_split: unknown
     evaluation_split_origin: {train|dev|test|validation|unknown}
@@ -644,7 +710,10 @@ should include:
 - query/document/qrels counts,
 - positives-per-query summary only when the task is not exactly one-positive per
   query,
-- BM25 nDCG@10 and hit@10,
+- BM25 nDCG@10, hit@10, and Recall@100,
+- Dense top-500 nDCG@10, hit@10, and Recall@100,
+- Reranking hybrid top-100/top-101 nDCG@10, hit@10, Recall@100, candidate
+  count range, and safeguard row count,
 - average query/document character lengths,
 - source status and primary paper title,
 - document status.
@@ -666,8 +735,8 @@ Before publishing a batch:
 5. Confirm train/dev/test provenance. If the Nano task comes from an upstream
    dev/test split, the page must warn against training on that split and should
    recommend only non-overlapping train or source-corpus data.
-6. Confirm BM25 nDCG@10 was computed from the Nano `bm25` table, not from a
-   fresh local BM25 run.
+6. Confirm BM25 nDCG@10 was computed from the Nano `bm25` top-500 table, not
+   from a fresh local BM25 run.
 7. Confirm positives-per-query statistics were computed from qrels.
 8. Confirm exactly five random examples come from the selected Nano split when
    at least five qrel pairs are available.

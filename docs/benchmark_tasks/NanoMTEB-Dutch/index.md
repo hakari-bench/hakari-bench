@@ -177,8 +177,15 @@ NanoMTEB-Dutch should not be used as seeds.
 | Positive qrels | 13,018 |
 | Positives per query | 2.46 average |
 | Multi-positive queries | 708 |
-| Query-weighted BM25 nDCG@10 | 0.4560 |
-| Query-weighted BM25 hit@10 | 0.5820 |
+| Query-weighted BM25 nDCG@10 | 0.4609 |
+| Query-weighted BM25 hit@10 | 0.5880 |
+| Query-weighted BM25 Recall@100 | 0.6775 |
+| Query-weighted Dense nDCG@10 | 0.5550 |
+| Query-weighted Dense hit@10 | 0.6973 |
+| Query-weighted Dense Recall@100 | 0.7751 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.5181 |
+| Query-weighted Reranking hybrid hit@10 | 0.6596 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8024 |
 | Mean query length | 110.04 chars, weighted by query count |
 | Mean document length | 841.65 chars, weighted by split-local document count |
 
@@ -235,8 +242,8 @@ benchmark_task_group_metadata:
   dataset_id: hakari-bench/NanoMTEB-Dutch
   language: nl
   languages:
-    - nl
-    - multilingual
+  - nl
+  - multilingual
   category: natural_language
   document_path: docs/benchmark_tasks/NanoMTEB-Dutch/index.md
   source_research:
@@ -259,321 +266,345 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 110.04415928983921
     document_mean_weighted_by_documents: 841.6543881824689
   bm25:
-    ndcg_at_10_query_weighted: 0.45604667070484994
-    hit_at_10_query_weighted: 0.5819966031117192
+    ndcg_at_10_query_weighted: 0.4608692935
+    hit_at_10_query_weighted: 0.5880354784
     ndcg_at_10_unweighted_task_mean: 0.46253901523703705
     hit_at_10_unweighted_task_mean: 0.5892747141481481
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: fever
     hardest_task_by_ndcg_at_10: belebele_nld_latn_eng_latn
   tasks:
-    - name: argu_ana_nl
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/argu_ana_nl.md
-      retrieval_shape: dutch_argument_to_counterargument
-      language: nl
-      queries: 199
-      documents: 8624
-      positive_qrels: 199
-      bm25_ndcg_at_10: 0.296979197
-      bm25_hit_at_10: 0.648241206
-    - name: b_bsardnl
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/b_bsardnl.md
-      retrieval_shape: dutch_legal_question_to_belgian_statute_articles
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 923
-      bm25_ndcg_at_10: 0.1249128833
-      bm25_hit_at_10: 0.295
-    - name: belebele_eng_latn_nld_latn
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/belebele_eng_latn_nld_latn.md
-      retrieval_shape: dutch_question_to_english_passage
-      language: multilingual
-      queries: 200
-      documents: 488
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4737822933
-      bm25_hit_at_10: 0.585
-    - name: belebele_nld_latn_eng_latn
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/belebele_nld_latn_eng_latn.md
-      retrieval_shape: english_question_to_dutch_passage
-      language: multilingual
-      queries: 200
-      documents: 488
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.1226419985
-      bm25_hit_at_10: 0.195
-    - name: belebele_nld_latn_nld_latn
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/belebele_nld_latn_nld_latn.md
-      retrieval_shape: dutch_question_to_dutch_passage
-      language: nl
-      queries: 200
-      documents: 488
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8364107302
-      bm25_hit_at_10: 0.915
-    - name: cqadupstack_android
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_android.md
-      retrieval_shape: dutch_android_duplicate_question_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2943883243
-      bm25_hit_at_10: 0.425
-    - name: cqadupstack_english
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_english.md
-      retrieval_shape: dutch_english_usage_duplicate_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2768966576
-      bm25_hit_at_10: 0.355
-    - name: cqadupstack_gis
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_gis.md
-      retrieval_shape: dutch_gis_duplicate_question_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2790339168
-      bm25_hit_at_10: 0.37
-    - name: cqadupstack_mathematica
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_mathematica.md
-      retrieval_shape: dutch_mathematica_duplicate_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.1826120876
-      bm25_hit_at_10: 0.275
-    - name: cqadupstack_physics
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_physics.md
-      retrieval_shape: dutch_physics_duplicate_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.32693259
-      bm25_hit_at_10: 0.425
-    - name: cqadupstack_programmers
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_programmers.md
-      retrieval_shape: dutch_software_engineering_duplicate_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2990881643
-      bm25_hit_at_10: 0.415
-    - name: cqadupstack_stats
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_stats.md
-      retrieval_shape: dutch_statistics_duplicate_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2826641003
-      bm25_hit_at_10: 0.385
-    - name: cqadupstack_tex
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_tex.md
-      retrieval_shape: dutch_tex_duplicate_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2105825851
-      bm25_hit_at_10: 0.285
-    - name: cqadupstack_webmasters
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_webmasters.md
-      retrieval_shape: dutch_webmaster_duplicate_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2306924388
-      bm25_hit_at_10: 0.285
-    - name: cqadupstack_wordpress
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_wordpress.md
-      retrieval_shape: dutch_wordpress_duplicate_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2607990583
-      bm25_hit_at_10: 0.37
-    - name: dutch_news_articles
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/dutch_news_articles.md
-      retrieval_shape: dutch_headline_to_news_article
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.886775466
-      bm25_hit_at_10: 0.935
-    - name: fever
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/fever.md
-      retrieval_shape: dutch_claim_to_wikipedia_evidence
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 233
-      bm25_ndcg_at_10: 0.92210826
-      bm25_hit_at_10: 0.98
-    - name: legal_qanl
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/legal_qanl.md
-      retrieval_shape: dutch_legal_question_to_law_article
-      language: nl
-      queries: 102
-      documents: 10000
-      positive_qrels: 157
-      bm25_ndcg_at_10: 0.814312257
-      bm25_hit_at_10: 0.980392157
-    - name: nfcorpus_nl
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/nfcorpus_nl.md
-      retrieval_shape: dutch_health_topic_to_biomedical_article
-      language: multilingual
-      queries: 199
-      documents: 3593
-      positive_qrels: 5880
-      bm25_ndcg_at_10: 0.348620615
-      bm25_hit_at_10: 0.64321608
-    - name: nq
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/nq.md
-      retrieval_shape: dutch_web_question_to_wikipedia_passage
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 242
-      bm25_ndcg_at_10: 0.45050919
-      bm25_hit_at_10: 0.705
-    - name: open_tender
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/open_tender.md
-      retrieval_shape: dutch_tender_title_to_procurement_notice
-      language: nl
-      queries: 199
-      documents: 10000
-      positive_qrels: 199
-      bm25_ndcg_at_10: 0.671173217
-      bm25_hit_at_10: 0.713567839
-    - name: quora
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/quora.md
-      retrieval_shape: dutch_duplicate_short_question_retrieval
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 573
-      bm25_ndcg_at_10: 0.837639743
-      bm25_hit_at_10: 0.955
-    - name: sci_fact_nl
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/sci_fact_nl.md
-      retrieval_shape: dutch_scientific_claim_to_evidence_abstract
-      language: nl
-      queries: 200
-      documents: 5183
-      positive_qrels: 226
-      bm25_ndcg_at_10: 0.616037929
-      bm25_hit_at_10: 0.79
-    - name: scidocs_nl
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/scidocs_nl.md
-      retrieval_shape: dutch_scientific_title_to_related_papers
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 986
-      bm25_ndcg_at_10: 0.133520298
-      bm25_hit_at_10: 0.425
-    - name: vabb
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/vabb.md
-      retrieval_shape: dutch_academic_title_to_bibliography_record
-      language: nl
-      queries: 200
-      documents: 9123
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.695249921
-      bm25_hit_at_10: 0.785
-    - name: web_faq_nld
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/web_faq_nld.md
-      retrieval_shape: dutch_faq_question_to_answer_snippet
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.769755238
-      bm25_hit_at_10: 0.845
-    - name: wikipedia_multilingual_nl
-      path: docs/benchmark_tasks/NanoMTEB-Dutch/wikipedia_multilingual_nl.md
-      retrieval_shape: dutch_synthetic_question_to_wikipedia_passage
-      language: nl
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.844434252
-      bm25_hit_at_10: 0.925
+  - name: argu_ana_nl
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/argu_ana_nl.md
+    retrieval_shape: dutch_argument_to_counterargument
+    language: nl
+    queries: 199
+    documents: 8624
+    positive_qrels: 199
+    bm25_ndcg_at_10: 0.296979197
+    bm25_hit_at_10: 0.648241206
+  - name: b_bsardnl
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/b_bsardnl.md
+    retrieval_shape: dutch_legal_question_to_belgian_statute_articles
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 923
+    bm25_ndcg_at_10: 0.1249128833
+    bm25_hit_at_10: 0.295
+  - name: belebele_eng_latn_nld_latn
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/belebele_eng_latn_nld_latn.md
+    retrieval_shape: dutch_question_to_english_passage
+    language: multilingual
+    queries: 200
+    documents: 488
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4737822933
+    bm25_hit_at_10: 0.585
+  - name: belebele_nld_latn_eng_latn
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/belebele_nld_latn_eng_latn.md
+    retrieval_shape: english_question_to_dutch_passage
+    language: multilingual
+    queries: 200
+    documents: 488
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.1226419985
+    bm25_hit_at_10: 0.195
+  - name: belebele_nld_latn_nld_latn
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/belebele_nld_latn_nld_latn.md
+    retrieval_shape: dutch_question_to_dutch_passage
+    language: nl
+    queries: 200
+    documents: 488
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8364107302
+    bm25_hit_at_10: 0.915
+  - name: cqadupstack_android
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_android.md
+    retrieval_shape: dutch_android_duplicate_question_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2943883243
+    bm25_hit_at_10: 0.425
+  - name: cqadupstack_english
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_english.md
+    retrieval_shape: dutch_english_usage_duplicate_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2768966576
+    bm25_hit_at_10: 0.355
+  - name: cqadupstack_gis
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_gis.md
+    retrieval_shape: dutch_gis_duplicate_question_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2790339168
+    bm25_hit_at_10: 0.37
+  - name: cqadupstack_mathematica
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_mathematica.md
+    retrieval_shape: dutch_mathematica_duplicate_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.1826120876
+    bm25_hit_at_10: 0.275
+  - name: cqadupstack_physics
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_physics.md
+    retrieval_shape: dutch_physics_duplicate_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.32693259
+    bm25_hit_at_10: 0.425
+  - name: cqadupstack_programmers
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_programmers.md
+    retrieval_shape: dutch_software_engineering_duplicate_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2990881643
+    bm25_hit_at_10: 0.415
+  - name: cqadupstack_stats
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_stats.md
+    retrieval_shape: dutch_statistics_duplicate_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2826641003
+    bm25_hit_at_10: 0.385
+  - name: cqadupstack_tex
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_tex.md
+    retrieval_shape: dutch_tex_duplicate_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2105825851
+    bm25_hit_at_10: 0.285
+  - name: cqadupstack_webmasters
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_webmasters.md
+    retrieval_shape: dutch_webmaster_duplicate_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2306924388
+    bm25_hit_at_10: 0.285
+  - name: cqadupstack_wordpress
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_wordpress.md
+    retrieval_shape: dutch_wordpress_duplicate_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2607990583
+    bm25_hit_at_10: 0.37
+  - name: dutch_news_articles
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/dutch_news_articles.md
+    retrieval_shape: dutch_headline_to_news_article
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.886775466
+    bm25_hit_at_10: 0.935
+  - name: fever
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/fever.md
+    retrieval_shape: dutch_claim_to_wikipedia_evidence
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 233
+    bm25_ndcg_at_10: 0.92210826
+    bm25_hit_at_10: 0.98
+  - name: legal_qanl
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/legal_qanl.md
+    retrieval_shape: dutch_legal_question_to_law_article
+    language: nl
+    queries: 102
+    documents: 10000
+    positive_qrels: 157
+    bm25_ndcg_at_10: 0.814312257
+    bm25_hit_at_10: 0.980392157
+  - name: nfcorpus_nl
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/nfcorpus_nl.md
+    retrieval_shape: dutch_health_topic_to_biomedical_article
+    language: multilingual
+    queries: 199
+    documents: 3593
+    positive_qrels: 5880
+    bm25_ndcg_at_10: 0.348620615
+    bm25_hit_at_10: 0.64321608
+  - name: nq
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/nq.md
+    retrieval_shape: dutch_web_question_to_wikipedia_passage
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 242
+    bm25_ndcg_at_10: 0.45050919
+    bm25_hit_at_10: 0.705
+  - name: open_tender
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/open_tender.md
+    retrieval_shape: dutch_tender_title_to_procurement_notice
+    language: nl
+    queries: 199
+    documents: 10000
+    positive_qrels: 199
+    bm25_ndcg_at_10: 0.671173217
+    bm25_hit_at_10: 0.713567839
+  - name: quora
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/quora.md
+    retrieval_shape: dutch_duplicate_short_question_retrieval
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 573
+    bm25_ndcg_at_10: 0.837639743
+    bm25_hit_at_10: 0.955
+  - name: sci_fact_nl
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/sci_fact_nl.md
+    retrieval_shape: dutch_scientific_claim_to_evidence_abstract
+    language: nl
+    queries: 200
+    documents: 5183
+    positive_qrels: 226
+    bm25_ndcg_at_10: 0.616037929
+    bm25_hit_at_10: 0.79
+  - name: scidocs_nl
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/scidocs_nl.md
+    retrieval_shape: dutch_scientific_title_to_related_papers
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 986
+    bm25_ndcg_at_10: 0.133520298
+    bm25_hit_at_10: 0.425
+  - name: vabb
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/vabb.md
+    retrieval_shape: dutch_academic_title_to_bibliography_record
+    language: nl
+    queries: 200
+    documents: 9123
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.695249921
+    bm25_hit_at_10: 0.785
+  - name: web_faq_nld
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/web_faq_nld.md
+    retrieval_shape: dutch_faq_question_to_answer_snippet
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.769755238
+    bm25_hit_at_10: 0.845
+  - name: wikipedia_multilingual_nl
+    path: docs/benchmark_tasks/NanoMTEB-Dutch/wikipedia_multilingual_nl.md
+    retrieval_shape: dutch_synthetic_question_to_wikipedia_passage
+    language: nl
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.844434252
+    bm25_hit_at_10: 0.925
   learning:
-    leakage_note: exclude NanoMTEB-Dutch evaluation queries, qrels, positive documents, translated duplicate clusters, and upstream test rows from training
+    leakage_note: exclude NanoMTEB-Dutch evaluation queries, qrels, positive documents,
+      translated duplicate clusters, and upstream test rows from training
     useful_training_data:
-      - Dutch and multilingual duplicate-question retrieval pairs
-      - BEIR-NL and MTEB-NL training data with evaluation rows removed
-      - Dutch legal question-to-statute and legal attribution pairs
-      - Dutch biomedical and scientific evidence retrieval pairs
-      - Dutch news, procurement, bibliography, FAQ, and Wikipedia retrieval pairs
-      - cross-lingual Dutch-English reading-comprehension retrieval pairs
-      - hard negatives from the same forum, statute family, paper area, tender domain, or Wikipedia entity
+    - Dutch and multilingual duplicate-question retrieval pairs
+    - BEIR-NL and MTEB-NL training data with evaluation rows removed
+    - Dutch legal question-to-statute and legal attribution pairs
+    - Dutch biomedical and scientific evidence retrieval pairs
+    - Dutch news, procurement, bibliography, FAQ, and Wikipedia retrieval pairs
+    - cross-lingual Dutch-English reading-comprehension retrieval pairs
+    - hard negatives from the same forum, statute family, paper area, tender domain,
+      or Wikipedia entity
     synthetic_data:
-      document_generation: Dutch forum posts, legal articles, news articles, tender notices, scientific abstracts, FAQ answers, and Wikipedia passages in source-like style
-      question_generation: Dutch duplicate questions, legal questions, claims, headlines, tender titles, FAQ questions, and cross-lingual reading-comprehension questions grounded in generated or selected documents
-      answerability: positives must preserve counterargument, duplicate intent, answer evidence, statutory support, citation relevance, or passage grounding rather than only broad topic overlap
+      document_generation: Dutch forum posts, legal articles, news articles, tender
+        notices, scientific abstracts, FAQ answers, and Wikipedia passages in source-like
+        style
+      question_generation: Dutch duplicate questions, legal questions, claims, headlines,
+        tender titles, FAQ questions, and cross-lingual reading-comprehension questions
+        grounded in generated or selected documents
+      answerability: positives must preserve counterargument, duplicate intent, answer
+        evidence, statutory support, citation relevance, or passage grounding rather
+        than only broad topic overlap
     multi_positive_training: preserve_nfcorpus_bbsard_scidocs_quora_and_other_multi_positive_qrels
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: MTEB-NL arXiv
-        url: https://arxiv.org/abs/2509.12340
-      - label: BEIR-NL ACL Anthology
-        url: https://aclanthology.org/2025.bucc-1.5/
-      - label: Belebele arXiv
-        url: https://arxiv.org/abs/2308.16884
-      - label: CQADupStack DOI
-        url: https://doi.org/10.1145/2838931.2838934
-      - label: bBSARD arXiv
-        url: https://arxiv.org/abs/2412.07462
-      - label: LegalQA-NL paper
-        url: https://aclanthology.org/2024.nllp-1.12/
-      - label: WebFAQ arXiv
-        url: https://arxiv.org/abs/2502.20936
-      - label: VABB-SHW Zenodo
-        url: https://zenodo.org/records/14214806
+    - label: MTEB-NL arXiv
+      url: https://arxiv.org/abs/2509.12340
+    - label: BEIR-NL ACL Anthology
+      url: https://aclanthology.org/2025.bucc-1.5/
+    - label: Belebele arXiv
+      url: https://arxiv.org/abs/2308.16884
+    - label: CQADupStack DOI
+      url: https://doi.org/10.1145/2838931.2838934
+    - label: bBSARD arXiv
+      url: https://arxiv.org/abs/2412.07462
+    - label: LegalQA-NL paper
+      url: https://aclanthology.org/2024.nllp-1.12/
+    - label: WebFAQ arXiv
+      url: https://arxiv.org/abs/2502.20936
+    - label: VABB-SHW Zenodo
+      url: https://zenodo.org/records/14214806
     source_notes: []
   references:
-    - title: MTEB-NL and E5-NL
-      url: https://arxiv.org/abs/2509.12340
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language"
-      url: https://aclanthology.org/2025.bucc-1.5/
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: The Belebele Benchmark
-      url: https://arxiv.org/abs/2308.16884
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "CQADupStack: A Benchmark Data Set for Community Question-Answering Research"
-      url: https://doi.org/10.1145/2838931.2838934
-      year: 2015
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Bilingual BSARD: Extending Statutory Article Retrieval to Dutch"
-      url: https://arxiv.org/abs/2412.07462
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Retrieval-Augmented Generation for Long-form Question Answering in Dutch
-      url: https://aclanthology.org/2024.nllp-1.12/
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: MTEB-NL and E5-NL
+    url: https://arxiv.org/abs/2509.12340
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language'
+    url: https://aclanthology.org/2025.bucc-1.5/
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: The Belebele Benchmark
+    url: https://arxiv.org/abs/2308.16884
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+    url: https://doi.org/10.1145/2838931.2838934
+    year: 2015
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Bilingual BSARD: Extending Statutory Article Retrieval to Dutch'
+    url: https://arxiv.org/abs/2412.07462
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Retrieval-Augmented Generation for Long-form Question Answering in Dutch
+    url: https://aclanthology.org/2024.nllp-1.12/
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.4608692935
+      query_weighted_hit_at_10: 0.5880354784
+      query_weighted_recall_at_100: 0.6775396486
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.555044886
+      query_weighted_hit_at_10: 0.6973013776
+      query_weighted_recall_at_100: 0.7751371415
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.5181199686
+      query_weighted_hit_at_10: 0.6595584072
+      query_weighted_recall_at_100: 0.8023512006
+      source: dataset_candidate_subset
 ```

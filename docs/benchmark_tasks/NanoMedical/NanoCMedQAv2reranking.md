@@ -121,8 +121,20 @@ queries or answers.
 | Positive qrels | 377 |
 | Positives per query | avg 1.89; min 1; median 1; max 16 |
 | Multi-positive queries | 88 / 200 (44.00%) |
-| BM25 nDCG@10 | 0.1500 |
+| BM25 nDCG@10 | 0.1527 |
 | BM25 hit@10 | 0.2750 |
+| BM25 Recall@100 | 0.3263 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3209 |
+| Dense hit@10 | 0.5100 |
+| Dense Recall@100 | 0.7003 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2529 |
+| Reranking hybrid hit@10 | 0.4300 |
+| Reranking hybrid Recall@100 | 0.6260 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 59 |
 | Query length avg chars | 50.10 |
 | Document length avg chars | 100.90 |
 
@@ -161,10 +173,12 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: task_paper_and_repository
     paper_pdf_or_html_checked: false
-    no_fulltext_note: IEEE full text was not accessible from the local environment; official DOI metadata, the cMedQA2 repository, and observed Nano samples were checked
+    no_fulltext_note: IEEE full text was not accessible from the local environment;
+      official DOI metadata, the cMedQA2 repository, and observed Nano samples were
+      checked
     paper_url: https://doi.org/10.1109/ACCESS.2018.2883637
     additional_source_urls:
-      - https://github.com/zhangsheng93/cMedQA2
+    - https://github.com/zhangsheng93/cMedQA2
   counts:
     queries: 200
     documents: 10000
@@ -180,29 +194,81 @@ benchmark_task_metadata:
     query_mean: 50.105
     document_mean: 100.8981
   bm25:
-    ndcg_at_10: 0.1500390078
+    ndcg_at_10: 0.1526891236344384
     hit_at_10: 0.275
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available_in_cMedQAv2
-    evaluation_split_origin: CMedQAv2 answer-selection candidate split sampled into NanoMedical
+    evaluation_split_origin: CMedQAv2 answer-selection candidate split sampled into
+      NanoMedical
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude CMedQAv2 test candidates and duplicate question-answer rows overlapping this Nano split
+    leakage_note: exclude CMedQAv2 test candidates and duplicate question-answer rows
+      overlapping this Nano split
     useful_training_data:
-      - non-overlapping Chinese medical community QA pairs
-      - Chinese medical answer-selection data with hard negatives
-      - consultation-style symptom-to-advice retrieval pairs
+    - non-overlapping Chinese medical community QA pairs
+    - Chinese medical answer-selection data with hard negatives
+    - consultation-style symptom-to-advice retrieval pairs
     synthetic_data:
-      document_generation: short Chinese consultation answers with diagnosis, examination, treatment, or referral advice
-      question_generation: informal Chinese patient questions with symptoms, duration, and context
-      hard_negatives: same-symptom answers with different diagnosis, patient context, or recommendation
-      answerability: correct answers should directly address the patient question without requiring external context
-    multi_positive_training: support multiple acceptable answers per question and short hard-negative answers
+      document_generation: short Chinese consultation answers with diagnosis, examination,
+        treatment, or referral advice
+      question_generation: informal Chinese patient questions with symptoms, duration,
+        and context
+      hard_negatives: same-symptom answers with different diagnosis, patient context,
+        or recommendation
+      answerability: correct answers should directly address the patient question
+        without requiring external context
+    multi_positive_training: support multiple acceptable answers per question and
+      short hard-negative answers
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMedical
     source_urls:
-      - label: CMedQAv2 paper DOI
-        url: https://doi.org/10.1109/ACCESS.2018.2883637
-      - label: cMedQA2 repository
-        url: https://github.com/zhangsheng93/cMedQA2
+    - label: CMedQAv2 paper DOI
+      url: https://doi.org/10.1109/ACCESS.2018.2883637
+    - label: cMedQA2 repository
+      url: https://github.com/zhangsheng93/cMedQA2
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1526891236
+      hit_at_10: 0.275
+      recall_at_100: 0.3262599469
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3262599469
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3208849024
+      hit_at_10: 0.51
+      recall_at_100: 0.700265252
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.700265252
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2528717939
+      hit_at_10: 0.43
+      recall_at_100: 0.625994695
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.295
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.625994695
+      safeguard_positive_rows: 59
+      rows_with_101_candidates: 59
 ```

@@ -98,8 +98,20 @@ share one entity but do not complete the second hop.
 | Avg positives / query | 2.00 |
 | Positives per query (min / median / max) | 2 / 2 / 2 |
 | Queries with multiple positives | 200 (100.00%) |
-| BM25 nDCG@10 | 0.8546 |
-| BM25 hit@10 | 0.9850 |
+| BM25 nDCG@10 | 0.8001 |
+| BM25 hit@10 | 0.9500 |
+| BM25 Recall@100 | 0.9425 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8773 |
+| Dense hit@10 | 0.9800 |
+| Dense Recall@100 | 0.9600 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8649 |
+| Reranking hybrid hit@10 | 0.9950 |
+| Reranking hybrid Recall@100 | 0.9925 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 99.53 |
 | Document length avg chars | 445.27 |
 
@@ -147,10 +159,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/1809.09600
     additional_source_urls:
-      - https://hotpotqa.github.io/
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/hotpotqa-vn
+    - https://hotpotqa.github.io/
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/hotpotqa-vn
     no_paper_note: null
   counts:
     queries: 200
@@ -167,61 +179,111 @@ benchmark_task_metadata:
     query_mean: 99.525
     document_mean: 445.274
   bm25:
-    ndcg_at_10: 0.854605615
-    hit_at_10: 0.985
-    source: dataset_bm25_column
+    ndcg_at_10: 0.8001155514812699
+    hit_at_10: 0.95
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB HotpotQA test split from GreenNode/hotpotqa-vn"
+    evaluation_split_origin: translated VN-MTEB HotpotQA test split from GreenNode/hotpotqa-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated HotpotQA-VN test questions, qrels, and positive supporting passages used by this Nano split."
+    leakage_note: Exclude translated HotpotQA-VN test questions, qrels, and positive
+      supporting passages used by this Nano split.
     useful_training_data:
-      - official HotpotQA train examples with overlap removed
-      - Vietnamese multi-hop QA data
-      - Wikipedia question-to-supporting-page retrieval pairs
-      - translated multi-hop retrieval data with overlap removed
+    - official HotpotQA train examples with overlap removed
+    - Vietnamese multi-hop QA data
+    - Wikipedia question-to-supporting-page retrieval pairs
+    - translated multi-hop retrieval data with overlap removed
     synthetic_data:
-      document_generation: "Vietnamese linked Wikipedia-style entity passages for bridge and comparison reasoning."
-      question_generation: "Vietnamese multi-hop questions requiring retrieval of both supporting passages."
-      answerability: "Each query should require two labeled positives, with one-hop hard negatives."
+      document_generation: Vietnamese linked Wikipedia-style entity passages for bridge
+        and comparison reasoning.
+      question_generation: Vietnamese multi-hop questions requiring retrieval of both
+        supporting passages.
+      answerability: Each query should require two labeled positives, with one-hop
+        hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: HotpotQA arXiv
-        url: https://arxiv.org/abs/1809.09600
-      - label: HotpotQA project page
-        url: https://hotpotqa.github.io/
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/hotpotqa-vn
-        url: https://huggingface.co/datasets/GreenNode/hotpotqa-vn
+    - label: HotpotQA arXiv
+      url: https://arxiv.org/abs/1809.09600
+    - label: HotpotQA project page
+      url: https://hotpotqa.github.io/
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/hotpotqa-vn
+      url: https://huggingface.co/datasets/GreenNode/hotpotqa-vn
     source_notes: []
   references:
-    - title: "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering"
-      url: https://arxiv.org/abs/1809.09600
-      year: 2018
-      doi: 10.48550/arXiv.1809.09600
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/hotpotqa-vn
-      url: https://huggingface.co/datasets/GreenNode/hotpotqa-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering'
+    url: https://arxiv.org/abs/1809.09600
+    year: 2018
+    doi: 10.48550/arXiv.1809.09600
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/hotpotqa-vn
+    url: https://huggingface.co/datasets/GreenNode/hotpotqa-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8001155515
+      hit_at_10: 0.95
+      recall_at_100: 0.9425
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9425
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8772754905
+      hit_at_10: 0.98
+      recall_at_100: 0.96
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.96
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8649405263
+      hit_at_10: 0.995
+      recall_at_100: 0.9925
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9925
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

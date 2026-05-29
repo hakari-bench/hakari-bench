@@ -86,8 +86,20 @@ retrieval.
 | Queries | 50 |
 | Documents | 266 |
 | Positive qrels | 50 |
-| BM25 nDCG@10 | 0.5458 |
-| BM25 hit@10 | 0.9400 |
+| BM25 nDCG@10 | 0.5581 |
+| BM25 hit@10 | 0.9800 |
+| BM25 Recall@100 | 1.0000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6327 |
+| Dense hit@10 | 0.9800 |
+| Dense Recall@100 | 0.9800 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.5956 |
+| Reranking hybrid hit@10 | 0.9800 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 2153.80 |
 | Document length avg chars | 1644.99 |
 
@@ -143,49 +155,98 @@ benchmark_task_metadata:
     query_mean: 2153.8
     document_mean: 1644.9924812030076
   bm25:
-    ndcg_at_10: 0.5458308219880807
-    hit_at_10: 0.94
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5580757586557883
+    hit_at_10: 0.98
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR CodeTransOcean-DL test-derived retrieval split
     train_eval_overlap_audit: not_audited_split_filtering_required
-    leakage_note: exclude NanoCodeTransOceanDL cross-framework code pairs; do not train on CodeTransOcean-DL test-derived rows
+    leakage_note: exclude NanoCodeTransOceanDL cross-framework code pairs; do not
+      train on CodeTransOcean-DL test-derived rows
     leakage_risk:
       source_dataset: WeixiangYan/CodeTransOcean DL data
       source_train_queries_reported_by_coir: 564
       source_dev_queries_reported_by_coir: 72
       source_test_queries_reported_by_coir: 180
-      risk: upstream CodeTransOcean-DL test pairs can overlap with NanoCodeTransOceanDL evaluation rows
-      recommended_filter: train-side only plus normalized source-code, target-code, framework-pair, notebook-context, and token-fingerprint exclusion
+      risk: upstream CodeTransOcean-DL test pairs can overlap with NanoCodeTransOceanDL
+        evaluation rows
+      recommended_filter: train-side only plus normalized source-code, target-code,
+        framework-pair, notebook-context, and token-fingerprint exclusion
     useful_training_data:
-      - cross-framework deep-learning code pairs
-      - notebook translation examples
-      - framework migration hard negatives
+    - cross-framework deep-learning code pairs
+    - notebook translation examples
+    - framework migration hard negatives
     synthetic_data:
       document_generation: equivalent implementations in another deep-learning framework
       question_generation: framework-specific source snippets
-      answerability: positive code must implement the same tensor operation or model block
+      answerability: positive code must implement the same tensor operation or model
+        block
     multi_positive_training: single_positive
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCoIR
     source_urls:
-      - label: CoIR arXiv
-        url: https://arxiv.org/abs/2407.02883
-      - label: CodeTransOcean arXiv
-        url: https://arxiv.org/abs/2310.04951
-      - label: WeixiangYan/CodeTransOcean
-        url: https://huggingface.co/datasets/WeixiangYan/CodeTransOcean
+    - label: CoIR arXiv
+      url: https://arxiv.org/abs/2407.02883
+    - label: CodeTransOcean arXiv
+      url: https://arxiv.org/abs/2310.04951
+    - label: WeixiangYan/CodeTransOcean
+      url: https://huggingface.co/datasets/WeixiangYan/CodeTransOcean
     source_notes: []
   references:
-    - title: "CoIR: A Comprehensive Benchmark for Code Information Retrieval Models"
-      url: https://arxiv.org/abs/2407.02883
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation"
-      url: https://arxiv.org/abs/2310.04951
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+    url: https://arxiv.org/abs/2407.02883
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation'
+    url: https://arxiv.org/abs/2310.04951
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5580757587
+      hit_at_10: 0.98
+      recall_at_100: 1.0
+      candidate_count_min: 266
+      candidate_count_max: 266
+      candidate_count_mean: 266.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6327022331
+      hit_at_10: 0.98
+      recall_at_100: 0.98
+      candidate_count_min: 266
+      candidate_count_max: 266
+      candidate_count_mean: 266.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.98
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.5956456681
+      hit_at_10: 0.98
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

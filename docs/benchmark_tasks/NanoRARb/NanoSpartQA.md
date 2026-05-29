@@ -74,8 +74,20 @@ distractors that share object names but violate location constraints.
 | Documents | 1592 |
 | Positive qrels | 384 |
 | Positives per query | avg 1.92, min 1, median 1.0, max 3 |
-| BM25 nDCG@10 | 0.2321 |
-| BM25 hit@10 | 0.3350 |
+| BM25 nDCG@10 | 0.1888 |
+| BM25 hit@10 | 0.3750 |
+| BM25 Recall@100 | 0.5260 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2634 |
+| Dense hit@10 | 0.4950 |
+| Dense Recall@100 | 0.4870 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3419 |
+| Reranking hybrid hit@10 | 0.5600 |
+| Reranking hybrid Recall@100 | 0.5443 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 37 |
 | Query length avg chars | 654.85 |
 | Document length avg chars | 49.80 |
 
@@ -128,23 +140,68 @@ benchmark_task_metadata:
     query_mean: 654.85
     document_mean: 49.79711055276382
   bm25:
-    ndcg_at_10: 0.2321
-    hit_at_10: 0.335
-    source: dataset_bm25_column
+    ndcg_at_10: 0.188797063880075
+    hit_at_10: 0.375
+    source: dataset_candidate_subset
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoRARb
     source_urls:
-      - label: RAR-b arXiv
-        url: https://arxiv.org/abs/2404.06347
-      - label: SpartQA arXiv
-        url: https://arxiv.org/abs/2104.05832
-  references:
-    - title: "RAR-b: Reasoning as Retrieval Benchmark"
+    - label: RAR-b arXiv
       url: https://arxiv.org/abs/2404.06347
-      year: 2024
-      is_paper: true
-    - title: "SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning"
+    - label: SpartQA arXiv
       url: https://arxiv.org/abs/2104.05832
-      year: 2021
-      is_paper: true
+  references:
+  - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+    url: https://arxiv.org/abs/2404.06347
+    year: 2024
+    is_paper: true
+  - title: 'SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning'
+    url: https://arxiv.org/abs/2104.05832
+    year: 2021
+    is_paper: true
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1887970639
+      hit_at_10: 0.375
+      recall_at_100: 0.5260416667
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5260416667
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2633728519
+      hit_at_10: 0.495
+      recall_at_100: 0.4869791667
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4869791667
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3418953726
+      hit_at_10: 0.56
+      recall_at_100: 0.5442708333
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.185
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5442708333
+      safeguard_positive_rows: 37
+      rows_with_101_candidates: 37
 ```

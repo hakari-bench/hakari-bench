@@ -79,8 +79,20 @@ decision problem.
 | Positive qrels | 1,010 |
 | Positives per query | avg 5.05 / min 3 / median 4.0 / max 23 |
 | Multi-positive queries | 200 (100.00%) |
-| BM25 nDCG@10 | 0.2252 |
-| BM25 hit@10 | 0.6100 |
+| BM25 nDCG@10 | 0.3422 |
+| BM25 hit@10 | 0.7650 |
+| BM25 Recall@100 | 0.5802 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5328 |
+| Dense hit@10 | 0.8750 |
+| Dense Recall@100 | 0.7614 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4678 |
+| Reranking hybrid hit@10 | 0.8750 |
+| Reranking hybrid Recall@100 | 0.7455 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 3 |
 | Query length avg chars | 65.79 |
 | Document length avg chars | 788.42 |
 
@@ -135,37 +147,86 @@ benchmark_task_metadata:
     query_mean: 65.79
     document_mean: 788.4161
   bm25:
-    ndcg_at_10: 0.22520266779388926
-    hit_at_10: 0.61
-    source: dataset_bm25_column
+    ndcg_at_10: 0.34221328710644366
+    hit_at_10: 0.765
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: ifir_adapted
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoIFIRFiQA queries, qrels, and positive financial answer posts
+    leakage_note: exclude NanoIFIRFiQA queries, qrels, and positive financial answer
+      posts
     useful_training_data:
-      - non-overlapping FiQA question-document pairs
-      - personal finance forum QA
-      - financial advice retrieval pairs
-      - same-topic financial hard negatives
+    - non-overlapping FiQA question-document pairs
+    - personal finance forum QA
+    - financial advice retrieval pairs
+    - same-topic financial hard negatives
     synthetic_data:
-      document_generation: practical personal-finance advice posts with caveats and decision factors
-      question_generation: user-specific financial questions with goals, constraints, and product context
-      answerability: positives should address the financial decision or advice need in the query
+      document_generation: practical personal-finance advice posts with caveats and
+        decision factors
+      question_generation: user-specific financial questions with goals, constraints,
+        and product context
+      answerability: positives should address the financial decision or advice need
+        in the query
     multi_positive_training: preserve_multiple_useful_financial_answers
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoIFIR
     source_urls:
-      - label: IFIR arXiv
-        url: https://arxiv.org/abs/2503.04644
-      - label: FiQA DOI
-        url: https://doi.org/10.1145/3184558.3192301
+    - label: IFIR arXiv
+      url: https://arxiv.org/abs/2503.04644
+    - label: FiQA DOI
+      url: https://doi.org/10.1145/3184558.3192301
     source_notes: []
   references:
-    - title: "WWW'18 Open Challenge: Financial Opinion Mining and Question Answering"
-      url: https://doi.org/10.1145/3184558.3192301
-      year: 2018
-      doi: 10.1145/3184558.3192301
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'WWW''18 Open Challenge: Financial Opinion Mining and Question Answering'
+    url: https://doi.org/10.1145/3184558.3192301
+    year: 2018
+    doi: 10.1145/3184558.3192301
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3422132871
+      hit_at_10: 0.765
+      recall_at_100: 0.5801980198
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5801980198
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5328158992
+      hit_at_10: 0.875
+      recall_at_100: 0.7613861386
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7613861386
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4677708963
+      hit_at_10: 0.875
+      recall_at_100: 0.7455445545
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.015
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7455445545
+      safeguard_positive_rows: 3
+      rows_with_101_candidates: 3
 ```

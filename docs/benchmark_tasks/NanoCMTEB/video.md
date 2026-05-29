@@ -82,8 +82,20 @@ episode, season, device model, or media object.
 | Queries | 200 |
 | Documents | 10000 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.0400 |
-| BM25 hit@10 | 0.0450 |
+| BM25 nDCG@10 | 0.6897 |
+| BM25 hit@10 | 0.8050 |
+| BM25 Recall@100 | 0.8950 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8629 |
+| Dense hit@10 | 0.9500 |
+| Dense Recall@100 | 0.9850 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8103 |
+| Reranking hybrid hit@10 | 0.9200 |
+| Reranking hybrid Recall@100 | 0.9950 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 7.07 |
 | Document length avg chars | 30.52 |
 
@@ -141,19 +153,19 @@ benchmark_task_metadata:
     query_mean: 7.07
     document_mean: 30.5164
   bm25:
-    ndcg_at_10: 0.04
-    hit_at_10: 0.045
-    source: dataset_bm25_column
+    ndcg_at_10: 0.6896746207440746
+    hit_at_10: 0.805
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: VideoRetrieval dev
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoCMTEB video queries, qrels, and video metadata passages
     useful_training_data:
-      - video search query-title pairs
-      - entertainment metadata retrieval pairs
-      - multilingual title alias pairs
-      - same-series and same-cast hard negatives
+    - video search query-title pairs
+    - entertainment metadata retrieval pairs
+    - multilingual title alias pairs
+    - same-series and same-cast hard negatives
     synthetic_data:
       document_generation: compact Chinese video titles and metadata records
       question_generation: short user video-search strings with aliases and romanization
@@ -162,22 +174,67 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCMTEB
     source_urls:
-      - label: Multi-CPR arXiv
-        url: https://arxiv.org/abs/2203.03367
-      - label: C-Pack arXiv
-        url: https://arxiv.org/abs/2309.07597
-      - label: mteb/VideoRetrieval
-        url: https://huggingface.co/datasets/mteb/VideoRetrieval
+    - label: Multi-CPR arXiv
+      url: https://arxiv.org/abs/2203.03367
+    - label: C-Pack arXiv
+      url: https://arxiv.org/abs/2309.07597
+    - label: mteb/VideoRetrieval
+      url: https://huggingface.co/datasets/mteb/VideoRetrieval
     source_notes: []
   references:
-    - title: "Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval"
-      url: https://arxiv.org/abs/2203.03367
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "C-Pack: Packed Resources For General Chinese Embeddings"
-      url: https://arxiv.org/abs/2309.07597
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_benchmark_paper
+  - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
+    url: https://arxiv.org/abs/2203.03367
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'C-Pack: Packed Resources For General Chinese Embeddings'
+    url: https://arxiv.org/abs/2309.07597
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_benchmark_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6896746207
+      hit_at_10: 0.805
+      recall_at_100: 0.895
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.895
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8628599086
+      hit_at_10: 0.95
+      recall_at_100: 0.985
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.985
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8103028152
+      hit_at_10: 0.92
+      recall_at_100: 0.995
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.005
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.995
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

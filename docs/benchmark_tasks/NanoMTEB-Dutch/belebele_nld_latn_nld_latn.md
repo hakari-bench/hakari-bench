@@ -96,6 +96,18 @@ but do not answer the exact question.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.8364 |
 | BM25 hit@10 | 0.9150 |
+| BM25 Recall@100 | 0.9700 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8899 |
+| Dense hit@10 | 0.9600 |
+| Dense Recall@100 | 0.9650 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8999 |
+| Reranking hybrid hit@10 | 0.9500 |
+| Reranking hybrid Recall@100 | 0.9900 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 69.39 |
 | Document length avg chars | 529.14 |
 
@@ -141,9 +153,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2308.16884
     additional_source_urls:
-      - https://github.com/facebookresearch/belebele
-      - https://huggingface.co/datasets/mteb/belebele
-      - https://arxiv.org/abs/2509.12340
+    - https://github.com/facebookresearch/belebele
+    - https://huggingface.co/datasets/mteb/belebele
+    - https://arxiv.org/abs/2509.12340
   counts:
     queries: 200
     documents: 488
@@ -159,52 +171,101 @@ benchmark_task_metadata:
     query_mean: 69.39
     document_mean: 529.143443
   bm25:
-    ndcg_at_10: 0.8364107302
+    ndcg_at_10: 0.8364152115644063
     hit_at_10: 0.915
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: "mteb/belebele nld_Latn-nld_Latn test split"
+    evaluation_split_origin: mteb/belebele nld_Latn-nld_Latn test split
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude Belebele test questions and passages used by this Nano split."
+    leakage_note: Exclude Belebele test questions and passages used by this Nano split.
     useful_training_data:
-      - Dutch reading-comprehension retrieval pairs
-      - Dutch QA-to-passage retrieval data
-      - non-overlapping Belebele-style translated data
-      - Dutch hard-negative passage ranking data
+    - Dutch reading-comprehension retrieval pairs
+    - Dutch QA-to-passage retrieval data
+    - non-overlapping Belebele-style translated data
+    - Dutch hard-negative passage ranking data
     synthetic_data:
-      document_generation: "Short Dutch news or encyclopedic passages outside the evaluation set."
-      question_generation: "Dutch comprehension questions answerable from one selected passage."
-      answerability: "The positive passage should explicitly contain the answer, with same-topic Dutch hard negatives."
+      document_generation: Short Dutch news or encyclopedic passages outside the evaluation
+        set.
+      question_generation: Dutch comprehension questions answerable from one selected
+        passage.
+      answerability: The positive passage should explicitly contain the answer, with
+        same-topic Dutch hard negatives.
     multi_positive_training: single_positive
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: Belebele arXiv
-        url: https://arxiv.org/abs/2308.16884
-      - label: Belebele repository
-        url: https://github.com/facebookresearch/belebele
-      - label: mteb/belebele
-        url: https://huggingface.co/datasets/mteb/belebele
-      - label: MTEB-NL arXiv
-        url: https://arxiv.org/abs/2509.12340
+    - label: Belebele arXiv
+      url: https://arxiv.org/abs/2308.16884
+    - label: Belebele repository
+      url: https://github.com/facebookresearch/belebele
+    - label: mteb/belebele
+      url: https://huggingface.co/datasets/mteb/belebele
+    - label: MTEB-NL arXiv
+      url: https://arxiv.org/abs/2509.12340
     source_notes: []
   references:
-    - title: "The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants"
-      url: https://arxiv.org/abs/2308.16884
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch"
-      url: https://arxiv.org/abs/2509.12340
-      year: 2025
-      doi: 10.48550/arXiv.2509.12340
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: mteb/belebele
-      url: https://huggingface.co/datasets/mteb/belebele
-      year: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122
+      Language Variants'
+    url: https://arxiv.org/abs/2308.16884
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+    url: https://arxiv.org/abs/2509.12340
+    year: 2025
+    doi: 10.48550/arXiv.2509.12340
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: mteb/belebele
+    url: https://huggingface.co/datasets/mteb/belebele
+    year: null
+    is_paper: false
+    source_confidence: probably_correct
   example_count: 5
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8364152116
+      hit_at_10: 0.915
+      recall_at_100: 0.97
+      candidate_count_min: 488
+      candidate_count_max: 488
+      candidate_count_mean: 488.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.97
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8899230055
+      hit_at_10: 0.96
+      recall_at_100: 0.965
+      candidate_count_min: 488
+      candidate_count_max: 488
+      candidate_count_mean: 488.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.965
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8999042286
+      hit_at_10: 0.95
+      recall_at_100: 0.99
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.99
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

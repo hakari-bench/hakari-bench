@@ -69,8 +69,20 @@ finding.
 | Avg positives / query | 33.02 |
 | Positives per query (min / median / max) | 1 / 23.50 / 100 |
 | Queries with multiple positives | 47 (94.0%) |
-| BM25 nDCG@10 | 0.3134 |
-| BM25 hit@10 | 0.6000 |
+| BM25 nDCG@10 | 0.2414 |
+| BM25 hit@10 | 0.5800 |
+| BM25 Recall@100 | 0.1514 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2368 |
+| Dense hit@10 | 0.6600 |
+| Dense Recall@100 | 0.1787 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2757 |
+| Reranking hybrid hit@10 | 0.6800 |
+| Reranking hybrid Recall@100 | 0.1926 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 7 |
 | Query length avg chars | 11.16 |
 | Document length avg chars | 655.83 |
 
@@ -130,7 +142,52 @@ benchmark_task_metadata:
     query_mean: 11.16
     document_mean: 655.83339
   bm25:
-    ndcg_at_10: 0.3133998324
-    hit_at_10: 0.6
-    source: dataset_bm25_column
+    ndcg_at_10: 0.24138925212715853
+    hit_at_10: 0.58
+    source: dataset_candidate_subset
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2413892521
+      hit_at_10: 0.58
+      recall_at_100: 0.1514233798
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1514233798
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.236829563
+      hit_at_10: 0.66
+      recall_at_100: 0.1786795881
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1786795881
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2757395297
+      hit_at_10: 0.68
+      recall_at_100: 0.1926105391
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.14
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1926105391
+      safeguard_positive_rows: 7
+      rows_with_101_candidates: 7
 ```

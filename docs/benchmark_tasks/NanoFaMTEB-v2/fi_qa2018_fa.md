@@ -69,8 +69,20 @@ financial terms but answer a different question.
 | Documents | 10000 |
 | Positive qrels | 534 |
 | Positives per query | avg 2.67, min 1, median 2.0, max 12 |
-| BM25 nDCG@10 | 0.3888 |
+| BM25 nDCG@10 | 0.2923 |
 | BM25 hit@10 | 0.5300 |
+| BM25 Recall@100 | 0.6180 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3525 |
+| Dense hit@10 | 0.6150 |
+| Dense Recall@100 | 0.6948 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3722 |
+| Reranking hybrid hit@10 | 0.6500 |
+| Reranking hybrid Recall@100 | 0.7247 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 25 |
 | Query length avg chars | 65.78 |
 | Document length avg chars | 763.49 |
 
@@ -126,19 +138,64 @@ benchmark_task_metadata:
     query_mean: 65.775
     document_mean: 763.4903
   bm25:
-    ndcg_at_10: 0.3888
+    ndcg_at_10: 0.2923185989510702
     hit_at_10: 0.53
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoFaMTEB-v2
     source_urls:
-      - label: FaMTEB arXiv
-        url: https://arxiv.org/abs/2502.11571
-      - label: MCINext/fiqa-fa-v2
-        url: https://huggingface.co/datasets/MCINext/fiqa-fa-v2
-  references:
-    - title: "FaMTEB: Massive Text Embedding Benchmark in Persian Language"
+    - label: FaMTEB arXiv
       url: https://arxiv.org/abs/2502.11571
-      year: 2025
-      is_paper: true
+    - label: MCINext/fiqa-fa-v2
+      url: https://huggingface.co/datasets/MCINext/fiqa-fa-v2
+  references:
+  - title: 'FaMTEB: Massive Text Embedding Benchmark in Persian Language'
+    url: https://arxiv.org/abs/2502.11571
+    year: 2025
+    is_paper: true
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.292318599
+      hit_at_10: 0.53
+      recall_at_100: 0.6179775281
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6179775281
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3525202666
+      hit_at_10: 0.615
+      recall_at_100: 0.6947565543
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6947565543
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3722161762
+      hit_at_10: 0.65
+      recall_at_100: 0.7247191011
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.125
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7247191011
+      safeguard_positive_rows: 25
+      rows_with_101_candidates: 25
 ```

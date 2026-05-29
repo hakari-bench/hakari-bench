@@ -174,8 +174,15 @@ documents.
 | Positives per query | avg 5.98, min 1, median varies by split, max 100 |
 | Multi-positive subtasks | 9 of 10 |
 | Multi-positive queries | 982 |
-| Query-weighted BM25 nDCG@10 | 0.4852 |
-| Query-weighted BM25 hit@10 | 0.7167 |
+| Query-weighted BM25 nDCG@10 | 0.4827 |
+| Query-weighted BM25 hit@10 | 0.7267 |
+| Query-weighted BM25 Recall@100 | 0.7188 |
+| Query-weighted Dense nDCG@10 | 0.5751 |
+| Query-weighted Dense hit@10 | 0.8233 |
+| Query-weighted Dense Recall@100 | 0.7969 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.5524 |
+| Query-weighted Reranking hybrid hit@10 | 0.8045 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8087 |
 | Mean query length | 201.58 chars, weighted by query count |
 | Mean document length | 1,027.86 chars, weighted by split-local document count |
 
@@ -258,115 +265,131 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 201.58127208480568
     document_mean_weighted_by_documents: 1027.856386754
   bm25:
-    ndcg_at_10_query_weighted: 0.48523283029423026
-    hit_at_10_query_weighted: 0.7167255594817432
+    ndcg_at_10_query_weighted: 0.4827391744
+    hit_at_10_query_weighted: 0.726737338
     ndcg_at_10_unweighted_task_mean: 0.5409424516462953
     hit_at_10_unweighted_task_mean: 0.7578134550302533
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: treccovid
     hardest_task_by_ndcg_at_10: scidocs
   tasks:
-    - name: argu_ana
-      path: docs/benchmark_tasks/NanoMTEB-v2/argu_ana.md
-      retrieval_shape: debate_argument_to_counterargument
-      queries: 199
-      documents: 8626
-      positive_qrels: 199
-      bm25_ndcg_at_10: 0.3325660140573749
-      bm25_hit_at_10: 0.7085427135678392
-    - name: climate_fever
-      path: docs/benchmark_tasks/NanoMTEB-v2/climate_fever.md
-      retrieval_shape: climate_claim_to_wikipedia_evidence
-      queries: 200
-      documents: 10000
-      positive_qrels: 621
-      bm25_ndcg_at_10: 0.19336752051783465
-      bm25_hit_at_10: 0.475
-    - name: cqadupstack_gaming
-      path: docs/benchmark_tasks/NanoMTEB-v2/cqadupstack_gaming.md
-      retrieval_shape: gaming_question_title_to_duplicate_question
-      queries: 200
-      documents: 10000
-      positive_qrels: 415
-      bm25_ndcg_at_10: 0.4888328019086286
-      bm25_hit_at_10: 0.685
-    - name: cqadupstack_unix
-      path: docs/benchmark_tasks/NanoMTEB-v2/cqadupstack_unix.md
-      retrieval_shape: unix_question_title_to_duplicate_question
-      queries: 200
-      documents: 10000
-      positive_qrels: 486
-      bm25_ndcg_at_10: 0.36656783742488813
-      bm25_hit_at_10: 0.535
-    - name: fever
-      path: docs/benchmark_tasks/NanoMTEB-v2/fever.md
-      retrieval_shape: factual_claim_to_wikipedia_evidence
-      queries: 200
-      documents: 10000
-      positive_qrels: 229
-      bm25_ndcg_at_10: 0.8951263986829078
-      bm25_hit_at_10: 0.995
-    - name: fi_qa2018
-      path: docs/benchmark_tasks/NanoMTEB-v2/fi_qa2018.md
-      retrieval_shape: finance_question_to_answer_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 534
-      bm25_ndcg_at_10: 0.33847946359419095
-      bm25_hit_at_10: 0.595
-    - name: hotpot_qa
-      path: docs/benchmark_tasks/NanoMTEB-v2/hotpot_qa.md
-      retrieval_shape: multi_hop_question_to_supporting_passages
-      queries: 200
-      documents: 10000
-      positive_qrels: 400
-      bm25_ndcg_at_10: 0.889065539981155
-      bm25_hit_at_10: 1.0
-    - name: scidocs
-      path: docs/benchmark_tasks/NanoMTEB-v2/scidocs.md
-      retrieval_shape: paper_title_to_related_paper
-      queries: 200
-      documents: 10000
-      positive_qrels: 986
-      bm25_ndcg_at_10: 0.19329407857667313
-      bm25_hit_at_10: 0.605
-    - name: touche2020_v3
-      path: docs/benchmark_tasks/NanoMTEB-v2/touche2020_v3.md
-      retrieval_shape: controversial_question_to_argument_passage
-      queries: 49
-      documents: 10000
-      positive_qrels: 1704
-      bm25_ndcg_at_10: 0.8082621810352335
-      bm25_hit_at_10: 0.9795918367346939
-    - name: treccovid
-      path: docs/benchmark_tasks/NanoMTEB-v2/treccovid.md
-      retrieval_shape: covid_information_need_to_article_record
-      queries: 50
-      documents: 10000
-      positive_qrels: 4584
-      bm25_ndcg_at_10: 0.9038626806840664
-      bm25_hit_at_10: 1.0
+  - name: argu_ana
+    path: docs/benchmark_tasks/NanoMTEB-v2/argu_ana.md
+    retrieval_shape: debate_argument_to_counterargument
+    queries: 199
+    documents: 8626
+    positive_qrels: 199
+    bm25_ndcg_at_10: 0.3325660140573749
+    bm25_hit_at_10: 0.7085427135678392
+  - name: climate_fever
+    path: docs/benchmark_tasks/NanoMTEB-v2/climate_fever.md
+    retrieval_shape: climate_claim_to_wikipedia_evidence
+    queries: 200
+    documents: 10000
+    positive_qrels: 621
+    bm25_ndcg_at_10: 0.19336752051783465
+    bm25_hit_at_10: 0.475
+  - name: cqadupstack_gaming
+    path: docs/benchmark_tasks/NanoMTEB-v2/cqadupstack_gaming.md
+    retrieval_shape: gaming_question_title_to_duplicate_question
+    queries: 200
+    documents: 10000
+    positive_qrels: 415
+    bm25_ndcg_at_10: 0.4888328019086286
+    bm25_hit_at_10: 0.685
+  - name: cqadupstack_unix
+    path: docs/benchmark_tasks/NanoMTEB-v2/cqadupstack_unix.md
+    retrieval_shape: unix_question_title_to_duplicate_question
+    queries: 200
+    documents: 10000
+    positive_qrels: 486
+    bm25_ndcg_at_10: 0.36656783742488813
+    bm25_hit_at_10: 0.535
+  - name: fever
+    path: docs/benchmark_tasks/NanoMTEB-v2/fever.md
+    retrieval_shape: factual_claim_to_wikipedia_evidence
+    queries: 200
+    documents: 10000
+    positive_qrels: 229
+    bm25_ndcg_at_10: 0.8951263986829078
+    bm25_hit_at_10: 0.995
+  - name: fi_qa2018
+    path: docs/benchmark_tasks/NanoMTEB-v2/fi_qa2018.md
+    retrieval_shape: finance_question_to_answer_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 534
+    bm25_ndcg_at_10: 0.33847946359419095
+    bm25_hit_at_10: 0.595
+  - name: hotpot_qa
+    path: docs/benchmark_tasks/NanoMTEB-v2/hotpot_qa.md
+    retrieval_shape: multi_hop_question_to_supporting_passages
+    queries: 200
+    documents: 10000
+    positive_qrels: 400
+    bm25_ndcg_at_10: 0.889065539981155
+    bm25_hit_at_10: 1.0
+  - name: scidocs
+    path: docs/benchmark_tasks/NanoMTEB-v2/scidocs.md
+    retrieval_shape: paper_title_to_related_paper
+    queries: 200
+    documents: 10000
+    positive_qrels: 986
+    bm25_ndcg_at_10: 0.19329407857667313
+    bm25_hit_at_10: 0.605
+  - name: touche2020_v3
+    path: docs/benchmark_tasks/NanoMTEB-v2/touche2020_v3.md
+    retrieval_shape: controversial_question_to_argument_passage
+    queries: 49
+    documents: 10000
+    positive_qrels: 1704
+    bm25_ndcg_at_10: 0.8082621810352335
+    bm25_hit_at_10: 0.9795918367346939
+  - name: treccovid
+    path: docs/benchmark_tasks/NanoMTEB-v2/treccovid.md
+    retrieval_shape: covid_information_need_to_article_record
+    queries: 50
+    documents: 10000
+    positive_qrels: 4584
+    bm25_ndcg_at_10: 0.9038626806840664
+    bm25_hit_at_10: 1.0
   source_links:
-    - label: MTEB paper
-      url: https://arxiv.org/abs/2210.07316
-    - label: ArguAna paper
-      url: https://aclanthology.org/P18-1023/
-    - label: CLIMATE-FEVER paper
-      url: https://arxiv.org/abs/2012.00614
-    - label: CQADupStack paper
-      url: https://eltimster.github.io/www/pubs/adcs2015.pdf
-    - label: FEVER paper
-      url: https://arxiv.org/abs/1803.05355
-    - label: FiQA paper
-      url: https://doi.org/10.1145/3184558.3192301
-    - label: HotpotQA paper
-      url: https://arxiv.org/abs/1809.09600
-    - label: SCIDOCS/SPECTER paper
-      url: https://arxiv.org/abs/2004.07180
-    - label: Touché 2020 overview
-      url: https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf
-    - label: TREC-COVID paper
-      url: https://arxiv.org/abs/2005.04474
-    - label: NIST TREC-COVID
-      url: https://ir.nist.gov/covidSubmit/index.html
+  - label: MTEB paper
+    url: https://arxiv.org/abs/2210.07316
+  - label: ArguAna paper
+    url: https://aclanthology.org/P18-1023/
+  - label: CLIMATE-FEVER paper
+    url: https://arxiv.org/abs/2012.00614
+  - label: CQADupStack paper
+    url: https://eltimster.github.io/www/pubs/adcs2015.pdf
+  - label: FEVER paper
+    url: https://arxiv.org/abs/1803.05355
+  - label: FiQA paper
+    url: https://doi.org/10.1145/3184558.3192301
+  - label: HotpotQA paper
+    url: https://arxiv.org/abs/1809.09600
+  - label: SCIDOCS/SPECTER paper
+    url: https://arxiv.org/abs/2004.07180
+  - label: Touché 2020 overview
+    url: https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf
+  - label: TREC-COVID paper
+    url: https://arxiv.org/abs/2005.04474
+  - label: NIST TREC-COVID
+    url: https://ir.nist.gov/covidSubmit/index.html
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.4827391744
+      query_weighted_hit_at_10: 0.726737338
+      query_weighted_recall_at_100: 0.7188086394
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.5751153287
+      query_weighted_hit_at_10: 0.8233215548
+      query_weighted_recall_at_100: 0.7969329407
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.5524414613
+      query_weighted_hit_at_10: 0.8044758539
+      query_weighted_recall_at_100: 0.8086560439
+      source: dataset_candidate_subset
 ```

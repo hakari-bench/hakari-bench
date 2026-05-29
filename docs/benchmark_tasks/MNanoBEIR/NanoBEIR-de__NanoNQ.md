@@ -92,8 +92,20 @@ recognizing a named entity.
 | Avg positives / query | 1.14 |
 | Positives per query (min / median / max) | 1 / 1.00 / 2 |
 | Queries with multiple positives | 7 (14.0%) |
-| BM25 nDCG@10 | 0.3438 |
-| BM25 hit@10 | 0.5400 |
+| BM25 nDCG@10 | 0.3757 |
+| BM25 hit@10 | 0.5600 |
+| BM25 Recall@100 | 0.8772 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5266 |
+| Dense hit@10 | 0.6600 |
+| Dense Recall@100 | 0.8947 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4491 |
+| Reranking hybrid hit@10 | 0.6800 |
+| Reranking hybrid Recall@100 | 0.9298 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 4 |
 | Query length avg chars | 55.38 |
 | Document length avg chars | 588.54 |
 
@@ -155,68 +167,119 @@ benchmark_task_metadata:
     query_mean: 55.38
     document_mean: 588.540417
   bm25:
-    ndcg_at_10: 0.343849737
-    hit_at_10: 0.54
-    source: dataset_bm25_column
+    ndcg_at_10: 0.37573252115913197
+    hit_at_10: 0.56
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MNanoBEIR German NanoBEIR task split from hakari-bench/NanoBEIR-de
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding Natural Questions, BEIR, or NanoBEIR records likely to overlap with these evaluation questions or passages
+    leakage_note: prefer excluding Natural Questions, BEIR, or NanoBEIR records likely
+      to overlap with these evaluation questions or passages
     useful_training_data:
-      - non-overlapping Natural Questions retrieval data
-      - open-domain QA evidence retrieval pairs
-      - German or multilingual Wikipedia QA datasets
-      - question-to-passage supervision with real user questions
+    - non-overlapping Natural Questions retrieval data
+    - open-domain QA evidence retrieval pairs
+    - German or multilingual Wikipedia QA datasets
+    - question-to-passage supervision with real user questions
     synthetic_data:
-      document_generation: German Wikipedia-style answer passages outside the evaluation set
-      question_generation: natural German search questions whose answer is present in the passage
-      answerability: positives should contain the answer evidence, not merely mention the same entity
+      document_generation: German Wikipedia-style answer passages outside the evaluation
+        set
+      question_generation: natural German search questions whose answer is present
+        in the passage
+      answerability: positives should contain the answer evidence, not merely mention
+        the same entity
     multi_positive_training: useful_but_not_central
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-de
     source_urls:
-      - label: Natural Questions paper
-        url: https://aclanthology.org/Q19-1026/
-      - label: Natural Questions dataset page
-        url: https://ai.google.com/research/NaturalQuestions
-      - label: BEIR paper
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB paper
-        url: https://arxiv.org/abs/2502.13595
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - German task is a multilingual NanoBEIR adaptation of the original English BEIR task
-  references:
-    - title: "Natural Questions: a Benchmark for Question Answering Research"
+    - label: Natural Questions paper
       url: https://aclanthology.org/Q19-1026/
-      year: 2019
-      doi: 10.1162/tacl_a_00276
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Natural Questions dataset page
+    - label: Natural Questions dataset page
       url: https://ai.google.com/research/NaturalQuestions
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_dataset_page
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR paper
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
+    - label: MMTEB paper
       url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: Zeta Alpha NanoBEIR collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: dataset_collection
+    source_notes:
+    - German task is a multilingual NanoBEIR adaptation of the original English BEIR
+      task
+  references:
+  - title: 'Natural Questions: a Benchmark for Question Answering Research'
+    url: https://aclanthology.org/Q19-1026/
+    year: 2019
+    doi: 10.1162/tacl_a_00276
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Natural Questions dataset page
+    url: https://ai.google.com/research/NaturalQuestions
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_dataset_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: dataset_collection
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3757325212
+      hit_at_10: 0.56
+      recall_at_100: 0.8771929825
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8771929825
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5266430576
+      hit_at_10: 0.66
+      recall_at_100: 0.8947368421
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8947368421
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4491457233
+      hit_at_10: 0.68
+      recall_at_100: 0.9298245614
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.08
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9298245614
+      safeguard_positive_rows: 4
+      rows_with_101_candidates: 4
 ```

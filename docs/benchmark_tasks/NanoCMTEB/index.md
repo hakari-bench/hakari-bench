@@ -146,8 +146,15 @@ documents as seeds.
 | Positive qrels | 3,208 |
 | Positives per query | 2.01 average |
 | Multi-positive queries | 432 |
-| Query-weighted BM25 nDCG@10 | 0.0510 |
-| Query-weighted BM25 hit@10 | 0.0650 |
+| Query-weighted BM25 nDCG@10 | 0.6003 |
+| Query-weighted BM25 hit@10 | 0.7281 |
+| Query-weighted BM25 Recall@100 | 0.7818 |
+| Query-weighted Dense nDCG@10 | 0.7575 |
+| Query-weighted Dense hit@10 | 0.8500 |
+| Query-weighted Dense Recall@100 | 0.9188 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6884 |
+| Query-weighted Reranking hybrid hit@10 | 0.8050 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9237 |
 | Mean query length | 17.51 chars, weighted by query count |
 | Mean document length | 271.88 chars, weighted by split-local document count |
 
@@ -195,8 +202,8 @@ benchmark_task_group_metadata:
   dataset_id: hakari-bench/NanoCMTEB
   language: multilingual
   languages:
-    - zh
-    - multilingual
+  - zh
+  - multilingual
   category: natural_language
   document_path: docs/benchmark_tasks/NanoCMTEB/index.md
   source_research:
@@ -219,139 +226,166 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 17.51375
     document_mean_weighted_by_documents: 271.877075
   bm25:
-    ndcg_at_10_query_weighted: 0.05097835520376681
-    hit_at_10_query_weighted: 0.065
+    ndcg_at_10_query_weighted: 0.6002869462
+    hit_at_10_query_weighted: 0.728125
     ndcg_at_10_unweighted_task_mean: 0.050978355203766805
     hit_at_10_unweighted_task_mean: 0.065
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: covid
     hardest_task_by_ndcg_at_10: cmedqa
   tasks:
-    - name: cmedqa
-      path: docs/benchmark_tasks/NanoCMTEB/cmedqa.md
-      retrieval_shape: chinese_patient_question_to_doctor_answer
-      language: zh
-      queries: 200
-      documents: 10000
-      positive_qrels: 324
-      bm25_ndcg_at_10: 0.011250194130034799
-      bm25_hit_at_10: 0.02
-    - name: covid
-      path: docs/benchmark_tasks/NanoCMTEB/covid.md
-      retrieval_shape: chinese_covid_query_to_news_or_policy_passage
-      language: zh
-      queries: 200
-      documents: 10000
-      positive_qrels: 204
-      bm25_ndcg_at_10: 0.17776949585626847
-      bm25_hit_at_10: 0.2
-    - name: du
-      path: docs/benchmark_tasks/NanoCMTEB/du.md
-      retrieval_shape: chinese_web_query_to_answer_bearing_passage
-      language: zh
-      queries: 200
-      documents: 10000
-      positive_qrels: 889
-      bm25_ndcg_at_10: 0.03993315000492959
-      bm25_hit_at_10: 0.08
-    - name: ecom
-      path: docs/benchmark_tasks/NanoCMTEB/ecom.md
-      retrieval_shape: chinese_shopping_query_to_product_title
-      language: multilingual
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.01315464876785729
-      bm25_hit_at_10: 0.015
-    - name: medical
-      path: docs/benchmark_tasks/NanoCMTEB/medical.md
-      retrieval_shape: chinese_health_query_to_medical_answer_passage
-      language: zh
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.015
-      bm25_hit_at_10: 0.015
-    - name: mmarco
-      path: docs/benchmark_tasks/NanoCMTEB/mmarco.md
-      retrieval_shape: chinese_translated_ms_marco_query_to_passage
-      language: zh
-      queries: 200
-      documents: 10000
-      positive_qrels: 212
-      bm25_ndcg_at_10: 0.09022048770790005
-      bm25_hit_at_10: 0.105
-    - name: t2
-      path: docs/benchmark_tasks/NanoCMTEB/t2.md
-      retrieval_shape: chinese_search_query_to_noisy_web_passage
-      language: zh
-      queries: 200
-      documents: 10000
-      positive_qrels: 979
-      bm25_ndcg_at_10: 0.020498865163144264
-      bm25_hit_at_10: 0.04
-    - name: video
-      path: docs/benchmark_tasks/NanoCMTEB/video.md
-      retrieval_shape: chinese_video_search_query_to_title_or_metadata
-      language: zh
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.04
-      bm25_hit_at_10: 0.045
+  - name: cmedqa
+    path: docs/benchmark_tasks/NanoCMTEB/cmedqa.md
+    retrieval_shape: chinese_patient_question_to_doctor_answer
+    language: zh
+    queries: 200
+    documents: 10000
+    positive_qrels: 324
+    bm25_ndcg_at_10: 0.011250194130034799
+    bm25_hit_at_10: 0.02
+  - name: covid
+    path: docs/benchmark_tasks/NanoCMTEB/covid.md
+    retrieval_shape: chinese_covid_query_to_news_or_policy_passage
+    language: zh
+    queries: 200
+    documents: 10000
+    positive_qrels: 204
+    bm25_ndcg_at_10: 0.17776949585626847
+    bm25_hit_at_10: 0.2
+  - name: du
+    path: docs/benchmark_tasks/NanoCMTEB/du.md
+    retrieval_shape: chinese_web_query_to_answer_bearing_passage
+    language: zh
+    queries: 200
+    documents: 10000
+    positive_qrels: 889
+    bm25_ndcg_at_10: 0.03993315000492959
+    bm25_hit_at_10: 0.08
+  - name: ecom
+    path: docs/benchmark_tasks/NanoCMTEB/ecom.md
+    retrieval_shape: chinese_shopping_query_to_product_title
+    language: multilingual
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.01315464876785729
+    bm25_hit_at_10: 0.015
+  - name: medical
+    path: docs/benchmark_tasks/NanoCMTEB/medical.md
+    retrieval_shape: chinese_health_query_to_medical_answer_passage
+    language: zh
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.015
+    bm25_hit_at_10: 0.015
+  - name: mmarco
+    path: docs/benchmark_tasks/NanoCMTEB/mmarco.md
+    retrieval_shape: chinese_translated_ms_marco_query_to_passage
+    language: zh
+    queries: 200
+    documents: 10000
+    positive_qrels: 212
+    bm25_ndcg_at_10: 0.09022048770790005
+    bm25_hit_at_10: 0.105
+  - name: t2
+    path: docs/benchmark_tasks/NanoCMTEB/t2.md
+    retrieval_shape: chinese_search_query_to_noisy_web_passage
+    language: zh
+    queries: 200
+    documents: 10000
+    positive_qrels: 979
+    bm25_ndcg_at_10: 0.020498865163144264
+    bm25_hit_at_10: 0.04
+  - name: video
+    path: docs/benchmark_tasks/NanoCMTEB/video.md
+    retrieval_shape: chinese_video_search_query_to_title_or_metadata
+    language: zh
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.04
+    bm25_hit_at_10: 0.045
   learning:
-    leakage_note: exclude NanoCMTEB evaluation queries, qrels, positive documents, consultation threads, product titles, video titles, translated MS MARCO rows, and upstream dev/test rows from training
+    leakage_note: exclude NanoCMTEB evaluation queries, qrels, positive documents,
+      consultation threads, product titles, video titles, translated MS MARCO rows,
+      and upstream dev/test rows from training
     useful_training_data:
-      - Chinese medical consultation and symptom-to-answer retrieval pairs
-      - Chinese COVID, public-policy, and government-notice QA retrieval pairs
-      - DuReader, T2Ranking, and Chinese web search relevance annotations with multi-positive labels
-      - mMARCO Chinese and multilingual MS MARCO passage ranking data with evaluation rows removed
-      - Chinese e-commerce query-title and click/relevance data
-      - Chinese and mixed-script entertainment video query-title pairs
-      - hard negatives from the same medical specialty, policy topic, web entity, product category, brand, model, series, performer, or episode
+    - Chinese medical consultation and symptom-to-answer retrieval pairs
+    - Chinese COVID, public-policy, and government-notice QA retrieval pairs
+    - DuReader, T2Ranking, and Chinese web search relevance annotations with multi-positive
+      labels
+    - mMARCO Chinese and multilingual MS MARCO passage ranking data with evaluation
+      rows removed
+    - Chinese e-commerce query-title and click/relevance data
+    - Chinese and mixed-script entertainment video query-title pairs
+    - hard negatives from the same medical specialty, policy topic, web entity, product
+      category, brand, model, series, performer, or episode
     synthetic_data:
-      document_generation: Chinese medical answers, policy notices, noisy web passages, product titles, translated web passages, T2-style long passages, and video metadata in source-like style
-      question_generation: short Chinese search queries, patient questions, policy questions, shopping queries, and video title queries grounded in generated documents
-      answerability: positives must preserve clinical answerability, policy answer support, passage relevance, product identity, title identity, or translated MS MARCO relevance rather than broad lexical overlap
+      document_generation: Chinese medical answers, policy notices, noisy web passages,
+        product titles, translated web passages, T2-style long passages, and video
+        metadata in source-like style
+      question_generation: short Chinese search queries, patient questions, policy
+        questions, shopping queries, and video title queries grounded in generated
+        documents
+      answerability: positives must preserve clinical answerability, policy answer
+        support, passage relevance, product identity, title identity, or translated
+        MS MARCO relevance rather than broad lexical overlap
     multi_positive_training: preserve_cmedqa_covid_du_mmarco_and_t2_multi_positive_qrels
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCMTEB
     source_urls:
-      - label: C-Pack arXiv
-        url: https://arxiv.org/abs/2309.07597
-      - label: Multi-CPR arXiv
-        url: https://arxiv.org/abs/2203.03367
-      - label: DuReader Retrieval paper
-        url: https://aclanthology.org/2022.emnlp-main.357/
-      - label: mMARCO arXiv
-        url: https://arxiv.org/abs/2108.13897
-      - label: T2Ranking arXiv
-        url: https://arxiv.org/abs/2304.03679
+    - label: C-Pack arXiv
+      url: https://arxiv.org/abs/2309.07597
+    - label: Multi-CPR arXiv
+      url: https://arxiv.org/abs/2203.03367
+    - label: DuReader Retrieval paper
+      url: https://aclanthology.org/2022.emnlp-main.357/
+    - label: mMARCO arXiv
+      url: https://arxiv.org/abs/2108.13897
+    - label: T2Ranking arXiv
+      url: https://arxiv.org/abs/2304.03679
     source_notes: []
   references:
-    - title: "C-Pack: Packed Resources For General Chinese Embeddings"
-      url: https://arxiv.org/abs/2309.07597
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval"
-      url: https://arxiv.org/abs/2203.03367
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "DuReader-retrieval: A Large-scale Chinese Benchmark for Passage Retrieval"
-      url: https://aclanthology.org/2022.emnlp-main.357/
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset"
-      url: https://arxiv.org/abs/2108.13897
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "T2Ranking: A large-scale Chinese Benchmark for Passage Ranking"
-      url: https://arxiv.org/abs/2304.03679
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'C-Pack: Packed Resources For General Chinese Embeddings'
+    url: https://arxiv.org/abs/2309.07597
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval'
+    url: https://arxiv.org/abs/2203.03367
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'DuReader-retrieval: A Large-scale Chinese Benchmark for Passage Retrieval'
+    url: https://aclanthology.org/2022.emnlp-main.357/
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset'
+    url: https://arxiv.org/abs/2108.13897
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'T2Ranking: A large-scale Chinese Benchmark for Passage Ranking'
+    url: https://arxiv.org/abs/2304.03679
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.6002869462
+      query_weighted_hit_at_10: 0.728125
+      query_weighted_recall_at_100: 0.7818375582
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.7575148889
+      query_weighted_hit_at_10: 0.85
+      query_weighted_recall_at_100: 0.9187507341
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.6883551533
+      query_weighted_hit_at_10: 0.805
+      query_weighted_recall_at_100: 0.9236897215
+      source: dataset_candidate_subset
 ```

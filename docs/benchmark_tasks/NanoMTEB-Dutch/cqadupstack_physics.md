@@ -81,6 +81,18 @@ share variables or equations but ask about a different physical concept.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.3269 |
 | BM25 hit@10 | 0.4250 |
+| BM25 Recall@100 | 0.6250 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4020 |
+| Dense hit@10 | 0.5450 |
+| Dense Recall@100 | 0.7500 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3756 |
+| Reranking hybrid hit@10 | 0.5050 |
+| Reranking hybrid Recall@100 | 0.7550 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 49 |
 | Query length avg chars | 62.09 |
 | Document length avg chars | 870.44 |
 
@@ -127,10 +139,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://doi.org/10.1145/2838931.2838934
     additional_source_urls:
-      - https://eltimster.github.io/www/pubs/adcs2015.pdf
-      - https://aclanthology.org/2025.bucc-1.5/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+    - https://eltimster.github.io/www/pubs/adcs2015.pdf
+    - https://aclanthology.org/2025.bucc-1.5/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/clips/beir-nl-cqadupstack
   counts:
     queries: 200
     documents: 10000
@@ -146,22 +158,71 @@ benchmark_task_metadata:
     query_mean: 62.095
     document_mean: 870.4386
   bm25:
-    ndcg_at_10: 0.32693259
+    ndcg_at_10: 0.3269325900023652
     hit_at_10: 0.425
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "CQADupstackPhysics-NL test split from clips/beir-nl-cqadupstack"
+    evaluation_split_origin: CQADupstackPhysics-NL test split from clips/beir-nl-cqadupstack
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated CQADupStack Physics test queries and duplicate positives used by this Nano split."
+    leakage_note: Exclude translated CQADupStack Physics test queries and duplicate
+      positives used by this Nano split.
     useful_training_data:
-      - non-overlapping CQADupStack Physics duplicate-question pairs
-      - Dutch-translated scientific QA pairs
-      - formula-aware STEM duplicate retrieval data
+    - non-overlapping CQADupStack Physics duplicate-question pairs
+    - Dutch-translated scientific QA pairs
+    - formula-aware STEM duplicate retrieval data
     synthetic_data:
-      document_generation: "Dutch physics forum questions with equations and variables preserved."
-      question_generation: "Paraphrased duplicate physics questions targeting the same concept."
-      answerability: "Each query should duplicate one prior physics question, with equation-near hard negatives."
+      document_generation: Dutch physics forum questions with equations and variables
+        preserved.
+      question_generation: Paraphrased duplicate physics questions targeting the same
+        concept.
+      answerability: Each query should duplicate one prior physics question, with
+        equation-near hard negatives.
     multi_positive_training: single_positive
   example_count: 5
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.32693259
+      hit_at_10: 0.425
+      recall_at_100: 0.625
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.625
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4020023438
+      hit_at_10: 0.545
+      recall_at_100: 0.75
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.75
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3756414365
+      hit_at_10: 0.505
+      recall_at_100: 0.755
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.245
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.755
+      safeguard_positive_rows: 49
+      rows_with_101_candidates: 49
 ```

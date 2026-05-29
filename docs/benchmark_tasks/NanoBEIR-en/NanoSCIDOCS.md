@@ -144,8 +144,20 @@ single-positive contrastive pairs.
 | Avg positives / query | 4.88 |
 | Positives per query (min / median / max) | 3 / 5.00 / 5 |
 | Queries with multiple positives | 50 (100.0%) |
-| BM25 nDCG@10 | 0.3360 |
-| BM25 hit@10 | 0.7800 |
+| BM25 nDCG@10 | 0.3294 |
+| BM25 hit@10 | 0.8400 |
+| BM25 Recall@100 | 0.6148 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4392 |
+| Dense hit@10 | 0.9200 |
+| Dense Recall@100 | 0.8115 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3962 |
+| Reranking hybrid hit@10 | 0.8800 |
+| Reranking hybrid Recall@100 | 0.7090 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 72.78 |
 | Document length avg chars | 1,093.83 |
 
@@ -208,61 +220,113 @@ benchmark_task_metadata:
     query_mean: 72.78
     document_mean: 1093.832262
   bm25:
-    ndcg_at_10: 0.3360257934
-    hit_at_10: 0.78
-    source: dataset_bm25_column
+    ndcg_at_10: 0.32941713280185714
+    hit_at_10: 0.84
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding SCIDOCS/BEIR evaluation query papers, qrels, and candidate records from training data
+    leakage_note: prefer excluding SCIDOCS/BEIR evaluation query papers, qrels, and
+      candidate records from training data
     useful_training_data:
-      - non-overlapping scientific citation pairs
-      - co-citation and related-paper recommendation pairs
-      - Semantic Scholar-style title abstract citation triples
-      - scholarly hard negatives from nearby topics or venues
+    - non-overlapping scientific citation pairs
+    - co-citation and related-paper recommendation pairs
+    - Semantic Scholar-style title abstract citation triples
+    - scholarly hard negatives from nearby topics or venues
     synthetic_data:
-      document_generation: scientific title-and-abstract records with methods, tasks, datasets, and domain terminology
-      question_generation: paper titles or related-work intents for finding academically related papers
-      answerability: positives should be scholarly related papers, not merely keyword neighbors
+      document_generation: scientific title-and-abstract records with methods, tasks,
+        datasets, and domain terminology
+      question_generation: paper titles or related-work intents for finding academically
+        related papers
+      answerability: positives should be scholarly related papers, not merely keyword
+        neighbors
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-en
     source_urls:
-      - label: SPECTER paper
-        url: https://arxiv.org/abs/2004.07180
-      - label: SCIDOCS GitHub repository
-        url: https://github.com/allenai/scidocs
-      - label: mteb/scidocs
-        url: https://huggingface.co/datasets/mteb/scidocs
-      - label: BeIR/scidocs
-        url: https://huggingface.co/datasets/BeIR/scidocs
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    - label: SPECTER paper
+      url: https://arxiv.org/abs/2004.07180
+    - label: SCIDOCS GitHub repository
+      url: https://github.com/allenai/scidocs
+    - label: mteb/scidocs
+      url: https://huggingface.co/datasets/mteb/scidocs
+    - label: BeIR/scidocs
+      url: https://huggingface.co/datasets/BeIR/scidocs
+    - label: Zeta Alpha NanoBEIR collection
+      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
     source_notes: []
   references:
-    - title: "SPECTER: Document-level Representation Learning using Citation-informed Transformers"
-      url: https://arxiv.org/abs/2004.07180
-      year: 2020
-      doi: 10.48550/arXiv.2004.07180
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "SPECTER: Document-level Representation Learning using Citation-informed Transformers"
-      url: https://aclanthology.org/2020.acl-main.207/
-      year: 2020
-      doi: 10.18653/v1/2020.acl-main.207
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "SCIDOCS GitHub repository"
-      url: https://github.com/allenai/scidocs
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_project_page
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'SPECTER: Document-level Representation Learning using Citation-informed
+      Transformers'
+    url: https://arxiv.org/abs/2004.07180
+    year: 2020
+    doi: 10.48550/arXiv.2004.07180
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'SPECTER: Document-level Representation Learning using Citation-informed
+      Transformers'
+    url: https://aclanthology.org/2020.acl-main.207/
+    year: 2020
+    doi: 10.18653/v1/2020.acl-main.207
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: SCIDOCS GitHub repository
+    url: https://github.com/allenai/scidocs
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_project_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3294171328
+      hit_at_10: 0.84
+      recall_at_100: 0.6147540984
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6147540984
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.43919168
+      hit_at_10: 0.92
+      recall_at_100: 0.8114754098
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8114754098
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.396234927
+      hit_at_10: 0.88
+      recall_at_100: 0.7090163934
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.02
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7090163934
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

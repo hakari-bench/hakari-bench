@@ -94,8 +94,20 @@ technical terms, datasets, algorithms, and application domains.
 | Avg positives / query | 4.94 |
 | Positives per query (min / median / max) | 3 / 5 / 5 |
 | Queries with multiple positives | 200 (100.00%) |
-| BM25 nDCG@10 | 0.1396 |
-| BM25 hit@10 | 0.4650 |
+| BM25 nDCG@10 | 0.1613 |
+| BM25 hit@10 | 0.5200 |
+| BM25 Recall@100 | 0.3806 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2028 |
+| Dense hit@10 | 0.5800 |
+| Dense Recall@100 | 0.4565 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2039 |
+| Reranking hybrid hit@10 | 0.5650 |
+| Reranking hybrid Recall@100 | 0.4676 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 26 |
 | Query length avg chars | 73.36 |
 | Document length avg chars | 1,226.73 |
 
@@ -143,10 +155,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2004.07180
     additional_source_urls:
-      - https://allenai.org/data/scidocs
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/scidocs-vn
+    - https://allenai.org/data/scidocs
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/scidocs-vn
     no_paper_note: null
   counts:
     queries: 200
@@ -163,61 +175,112 @@ benchmark_task_metadata:
     query_mean: 73.355
     document_mean: 1226.728
   bm25:
-    ndcg_at_10: 0.139577852
-    hit_at_10: 0.465
-    source: dataset_bm25_column
+    ndcg_at_10: 0.1613400597766722
+    hit_at_10: 0.52
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB SCIDOCS test split from GreenNode/scidocs-vn"
+    evaluation_split_origin: translated VN-MTEB SCIDOCS test split from GreenNode/scidocs-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated SCIDOCS-VN test queries, qrels, and positive abstracts used by this Nano split."
+    leakage_note: Exclude translated SCIDOCS-VN test queries, qrels, and positive
+      abstracts used by this Nano split.
     useful_training_data:
-      - non-overlapping SciDocs citation and recommendation signals
-      - scientific citation and co-citation pairs
-      - paper-recommendation logs with overlap removed
-      - translated scientific abstract retrieval data with overlap removed
+    - non-overlapping SciDocs citation and recommendation signals
+    - scientific citation and co-citation pairs
+    - paper-recommendation logs with overlap removed
+    - translated scientific abstract retrieval data with overlap removed
     synthetic_data:
-      document_generation: "Vietnamese scientific abstracts preserving technical terms, datasets, algorithms, and application domains."
-      question_generation: "Vietnamese paper-title or related-work queries asking for similar methods, datasets, applications, or evaluation settings."
-      answerability: "Each query should have multiple related papers and same-field hard negatives."
+      document_generation: Vietnamese scientific abstracts preserving technical terms,
+        datasets, algorithms, and application domains.
+      question_generation: Vietnamese paper-title or related-work queries asking for
+        similar methods, datasets, applications, or evaluation settings.
+      answerability: Each query should have multiple related papers and same-field
+        hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: SPECTER/SciDocs arXiv
-        url: https://arxiv.org/abs/2004.07180
-      - label: SciDocs dataset page
-        url: https://allenai.org/data/scidocs
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/scidocs-vn
-        url: https://huggingface.co/datasets/GreenNode/scidocs-vn
+    - label: SPECTER/SciDocs arXiv
+      url: https://arxiv.org/abs/2004.07180
+    - label: SciDocs dataset page
+      url: https://allenai.org/data/scidocs
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/scidocs-vn
+      url: https://huggingface.co/datasets/GreenNode/scidocs-vn
     source_notes: []
   references:
-    - title: "SPECTER: Document-level Representation Learning using Citation-informed Transformers"
-      url: https://arxiv.org/abs/2004.07180
-      year: 2020
-      doi: 10.48550/arXiv.2004.07180
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/scidocs-vn
-      url: https://huggingface.co/datasets/GreenNode/scidocs-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'SPECTER: Document-level Representation Learning using Citation-informed
+      Transformers'
+    url: https://arxiv.org/abs/2004.07180
+    year: 2020
+    doi: 10.48550/arXiv.2004.07180
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/scidocs-vn
+    url: https://huggingface.co/datasets/GreenNode/scidocs-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1613400598
+      hit_at_10: 0.52
+      recall_at_100: 0.3805668016
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3805668016
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2028299676
+      hit_at_10: 0.58
+      recall_at_100: 0.4564777328
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4564777328
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2038882997
+      hit_at_10: 0.565
+      recall_at_100: 0.467611336
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.13
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.467611336
+      safeguard_positive_rows: 26
+      rows_with_101_candidates: 26
 ```

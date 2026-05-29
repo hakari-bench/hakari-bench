@@ -156,8 +156,15 @@ documents, answer labels, or generated long-document rows as seeds.
 | Positive qrels | 2,077 |
 | Positives per query | 1.15 average |
 | Multi-positive queries | 167 |
-| Query-weighted BM25 nDCG@10 | 0.4400 |
-| Query-weighted BM25 hit@10 | 0.5183 |
+| Query-weighted BM25 nDCG@10 | 0.5216 |
+| Query-weighted BM25 hit@10 | 0.5906 |
+| Query-weighted BM25 Recall@100 | 0.6794 |
+| Query-weighted Dense nDCG@10 | 0.6978 |
+| Query-weighted Dense hit@10 | 0.7606 |
+| Query-weighted Dense Recall@100 | 0.8292 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.5880 |
+| Query-weighted Reranking hybrid hit@10 | 0.6639 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8556 |
 | Mean query length | 58.65 chars, weighted by query count |
 | Mean document length | 5,624.96 chars, weighted by split-local document count |
 
@@ -210,9 +217,9 @@ benchmark_task_group_metadata:
   dataset_id: hakari-bench/NanoMTEB-Thai
   language: multilingual
   languages:
-    - th
-    - en
-    - multilingual
+  - th
+  - en
+  - multilingual
   category: natural_language
   document_path: docs/benchmark_tasks/NanoMTEB-Thai/index.md
   source_research:
@@ -235,168 +242,197 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 58.653333333333336
     document_mean_weighted_by_documents: 5624.959984336587
   bm25:
-    ndcg_at_10_query_weighted: 0.43996005250000003
-    hit_at_10_query_weighted: 0.5183333333333333
+    ndcg_at_10_query_weighted: 0.5215671864
+    hit_at_10_query_weighted: 0.5905555556
     ndcg_at_10_unweighted_task_mean: 0.43996005250000003
     hit_at_10_unweighted_task_mean: 0.5183333333333333
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: xqu_ad_th
     hardest_task_by_ndcg_at_10: mkqa_th
   tasks:
-    - name: belebele_eng_latn_tha_thai
-      path: docs/benchmark_tasks/NanoMTEB-Thai/belebele_eng_latn_tha_thai.md
-      retrieval_shape: thai_question_to_english_passage
-      language: multilingual
-      queries: 200
-      documents: 488
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0808654178
-      bm25_hit_at_10: 0.095
-    - name: belebele_tha_thai_eng_latn
-      path: docs/benchmark_tasks/NanoMTEB-Thai/belebele_tha_thai_eng_latn.md
-      retrieval_shape: english_question_to_thai_passage
-      language: multilingual
-      queries: 200
-      documents: 488
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0394649682
-      bm25_hit_at_10: 0.075
-    - name: belebele_tha_thai_tha_thai
-      path: docs/benchmark_tasks/NanoMTEB-Thai/belebele_tha_thai_tha_thai.md
-      retrieval_shape: thai_question_to_thai_passage
-      language: th
-      queries: 200
-      documents: 488
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7271309311
-      bm25_hit_at_10: 0.815
-    - name: miracl_th
-      path: docs/benchmark_tasks/NanoMTEB-Thai/miracl_th.md
-      retrieval_shape: thai_query_to_wikipedia_passages
-      language: th
-      queries: 200
-      documents: 10000
-      positive_qrels: 343
-      bm25_ndcg_at_10: 0.5737129626
-      bm25_hit_at_10: 0.815
-    - name: mkqa_th
-      path: docs/benchmark_tasks/NanoMTEB-Thai/mkqa_th.md
-      retrieval_shape: thai_question_to_short_answer_label
-      language: multilingual
-      queries: 200
-      documents: 6652
-      positive_qrels: 300
-      bm25_ndcg_at_10: 0.013244828
-      bm25_hit_at_10: 0.035
-    - name: mr_tidy_thai
-      path: docs/benchmark_tasks/NanoMTEB-Thai/mr_tidy_thai.md
-      retrieval_shape: thai_question_to_evidence_passage
-      language: th
-      queries: 200
-      documents: 10000
-      positive_qrels: 234
-      bm25_ndcg_at_10: 0.7290643071
-      bm25_hit_at_10: 0.8
-    - name: multi_long_doc_th
-      path: docs/benchmark_tasks/NanoMTEB-Thai/multi_long_doc_th.md
-      retrieval_shape: thai_generated_question_to_long_document
-      language: th
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.3425451901
-      bm25_hit_at_10: 0.4
-    - name: web_faq_tha
-      path: docs/benchmark_tasks/NanoMTEB-Thai/web_faq_tha.md
-      retrieval_shape: thai_faq_question_to_answer_snippet
-      language: th
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6501360545
-      bm25_hit_at_10: 0.745
-    - name: xqu_ad_th
-      path: docs/benchmark_tasks/NanoMTEB-Thai/xqu_ad_th.md
-      retrieval_shape: thai_qa_question_to_context_paragraph
-      language: th
-      queries: 200
-      documents: 240
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8034758131
-      bm25_hit_at_10: 0.885
+  - name: belebele_eng_latn_tha_thai
+    path: docs/benchmark_tasks/NanoMTEB-Thai/belebele_eng_latn_tha_thai.md
+    retrieval_shape: thai_question_to_english_passage
+    language: multilingual
+    queries: 200
+    documents: 488
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0808654178
+    bm25_hit_at_10: 0.095
+  - name: belebele_tha_thai_eng_latn
+    path: docs/benchmark_tasks/NanoMTEB-Thai/belebele_tha_thai_eng_latn.md
+    retrieval_shape: english_question_to_thai_passage
+    language: multilingual
+    queries: 200
+    documents: 488
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0394649682
+    bm25_hit_at_10: 0.075
+  - name: belebele_tha_thai_tha_thai
+    path: docs/benchmark_tasks/NanoMTEB-Thai/belebele_tha_thai_tha_thai.md
+    retrieval_shape: thai_question_to_thai_passage
+    language: th
+    queries: 200
+    documents: 488
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7271309311
+    bm25_hit_at_10: 0.815
+  - name: miracl_th
+    path: docs/benchmark_tasks/NanoMTEB-Thai/miracl_th.md
+    retrieval_shape: thai_query_to_wikipedia_passages
+    language: th
+    queries: 200
+    documents: 10000
+    positive_qrels: 343
+    bm25_ndcg_at_10: 0.5737129626
+    bm25_hit_at_10: 0.815
+  - name: mkqa_th
+    path: docs/benchmark_tasks/NanoMTEB-Thai/mkqa_th.md
+    retrieval_shape: thai_question_to_short_answer_label
+    language: multilingual
+    queries: 200
+    documents: 6652
+    positive_qrels: 300
+    bm25_ndcg_at_10: 0.013244828
+    bm25_hit_at_10: 0.035
+  - name: mr_tidy_thai
+    path: docs/benchmark_tasks/NanoMTEB-Thai/mr_tidy_thai.md
+    retrieval_shape: thai_question_to_evidence_passage
+    language: th
+    queries: 200
+    documents: 10000
+    positive_qrels: 234
+    bm25_ndcg_at_10: 0.7290643071
+    bm25_hit_at_10: 0.8
+  - name: multi_long_doc_th
+    path: docs/benchmark_tasks/NanoMTEB-Thai/multi_long_doc_th.md
+    retrieval_shape: thai_generated_question_to_long_document
+    language: th
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.3425451901
+    bm25_hit_at_10: 0.4
+  - name: web_faq_tha
+    path: docs/benchmark_tasks/NanoMTEB-Thai/web_faq_tha.md
+    retrieval_shape: thai_faq_question_to_answer_snippet
+    language: th
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6501360545
+    bm25_hit_at_10: 0.745
+  - name: xqu_ad_th
+    path: docs/benchmark_tasks/NanoMTEB-Thai/xqu_ad_th.md
+    retrieval_shape: thai_qa_question_to_context_paragraph
+    language: th
+    queries: 200
+    documents: 240
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8034758131
+    bm25_hit_at_10: 0.885
   learning:
-    leakage_note: exclude NanoMTEB-Thai evaluation queries, qrels, positive passages, answer labels, generated long-document rows, FAQ answers, XQuAD contexts, and upstream dev/test rows from training
+    leakage_note: exclude NanoMTEB-Thai evaluation queries, qrels, positive passages,
+      answer labels, generated long-document rows, FAQ answers, XQuAD contexts, and
+      upstream dev/test rows from training
     useful_training_data:
-      - Thai and English-Thai parallel reading-comprehension retrieval pairs
-      - Thai MIRACL, Mr. TyDi, XQuAD, and Wikipedia QA retrieval pairs
-      - MKQA-style Thai question-to-answer-label supervision
-      - Thai long-document paragraph-to-document retrieval examples
-      - Thai and multilingual FAQ question-answer retrieval data
-      - hard negatives from the same passage topic, entity family, answer type, long-document topic, FAQ site, or adjacent QA context
+    - Thai and English-Thai parallel reading-comprehension retrieval pairs
+    - Thai MIRACL, Mr. TyDi, XQuAD, and Wikipedia QA retrieval pairs
+    - MKQA-style Thai question-to-answer-label supervision
+    - Thai long-document paragraph-to-document retrieval examples
+    - Thai and multilingual FAQ question-answer retrieval data
+    - hard negatives from the same passage topic, entity family, answer type, long-document
+      topic, FAQ site, or adjacent QA context
     synthetic_data:
-      document_generation: Thai and English passages, short answer labels, Thai Wikipedia passages, long Thai documents, FAQ answers, and XQuAD-style context paragraphs in source-like style
-      question_generation: Thai and English reading-comprehension questions, Thai factual questions, Thai answer-label questions, generated long-document questions, and FAQ questions grounded in generated documents
-      answerability: positives must preserve cross-lingual passage grounding, evidence passage support, answer-label identity, long-document containment, FAQ answerability, or context-level QA grounding rather than broad topic overlap
+      document_generation: Thai and English passages, short answer labels, Thai Wikipedia
+        passages, long Thai documents, FAQ answers, and XQuAD-style context paragraphs
+        in source-like style
+      question_generation: Thai and English reading-comprehension questions, Thai
+        factual questions, Thai answer-label questions, generated long-document questions,
+        and FAQ questions grounded in generated documents
+      answerability: positives must preserve cross-lingual passage grounding, evidence
+        passage support, answer-label identity, long-document containment, FAQ answerability,
+        or context-level QA grounding rather than broad topic overlap
     multi_positive_training: preserve_miracl_mkqa_and_mr_tidy_multi_positive_qrels
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai
     source_urls:
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: Belebele arXiv
-        url: https://arxiv.org/abs/2308.16884
-      - label: MIRACL arXiv
-        url: https://arxiv.org/abs/2210.09984
-      - label: MKQA arXiv
-        url: https://arxiv.org/abs/2007.15207
-      - label: Mr. TyDi arXiv
-        url: https://arxiv.org/abs/2108.08787
-      - label: M3-Embedding arXiv
-        url: https://arxiv.org/abs/2402.03216
-      - label: WebFAQ arXiv
-        url: https://arxiv.org/abs/2502.20936
-      - label: XQuAD source paper
-        url: https://arxiv.org/abs/1910.11856
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: Belebele arXiv
+      url: https://arxiv.org/abs/2308.16884
+    - label: MIRACL arXiv
+      url: https://arxiv.org/abs/2210.09984
+    - label: MKQA arXiv
+      url: https://arxiv.org/abs/2007.15207
+    - label: Mr. TyDi arXiv
+      url: https://arxiv.org/abs/2108.08787
+    - label: M3-Embedding arXiv
+      url: https://arxiv.org/abs/2402.03216
+    - label: WebFAQ arXiv
+      url: https://arxiv.org/abs/2502.20936
+    - label: XQuAD source paper
+      url: https://arxiv.org/abs/1910.11856
     source_notes: []
   references:
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants"
-      url: https://arxiv.org/abs/2308.16884
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages"
-      url: https://arxiv.org/abs/2210.09984
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MKQA: A Linguistically Diverse Benchmark for Multilingual Open Domain Question Answering"
-      url: https://arxiv.org/abs/2007.15207
-      year: 2020
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval"
-      url: https://arxiv.org/abs/2108.08787
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation"
-      url: https://arxiv.org/abs/2402.03216
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval"
-      url: https://arxiv.org/abs/2502.20936
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "On the Cross-lingual Transferability of Monolingual Representations"
-      url: https://arxiv.org/abs/1910.11856
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122
+      Language Variants'
+    url: https://arxiv.org/abs/2308.16884
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Making a MIRACL: Multilingual Information Retrieval Across a Continuum
+      of Languages'
+    url: https://arxiv.org/abs/2210.09984
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MKQA: A Linguistically Diverse Benchmark for Multilingual Open Domain
+      Question Answering'
+    url: https://arxiv.org/abs/2007.15207
+    year: 2020
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval'
+    url: https://arxiv.org/abs/2108.08787
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity
+      Text Embeddings Through Self-Knowledge Distillation'
+    url: https://arxiv.org/abs/2402.03216
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval'
+    url: https://arxiv.org/abs/2502.20936
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: On the Cross-lingual Transferability of Monolingual Representations
+    url: https://arxiv.org/abs/1910.11856
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.5215671864
+      query_weighted_hit_at_10: 0.5905555556
+      query_weighted_recall_at_100: 0.6793975287
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.6978149134
+      query_weighted_hit_at_10: 0.7605555556
+      query_weighted_recall_at_100: 0.8291770009
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.5880492253
+      query_weighted_hit_at_10: 0.6638888889
+      query_weighted_recall_at_100: 0.8555782451
+      source: dataset_candidate_subset
 ```

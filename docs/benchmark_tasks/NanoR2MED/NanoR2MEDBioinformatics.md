@@ -111,8 +111,20 @@ evaluation queries or positives.
 | Avg positives / query | 2.94 |
 | Positives per query (min / median / max) | 1 / 2 / 8 |
 | Queries with multiple positives | 49 (63.64%) |
-| BM25 nDCG@10 | 0.1786 |
-| BM25 hit@10 | 0.4416 |
+| BM25 nDCG@10 | 0.2189 |
+| BM25 hit@10 | 0.4805 |
+| BM25 Recall@100 | 0.5664 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3425 |
+| Dense hit@10 | 0.6234 |
+| Dense Recall@100 | 0.7389 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2623 |
+| Reranking hybrid hit@10 | 0.5844 |
+| Reranking hybrid Recall@100 | 0.7478 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 6 |
 | Query length avg chars | 890.32 |
 | Document length avg chars | 666.84 |
 
@@ -158,9 +170,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2505.14558
     additional_source_urls:
-      - https://r2med.github.io/
-      - https://github.com/R2MED/R2MED
-      - https://huggingface.co/datasets/R2MED/Bioinformatics
+    - https://r2med.github.io/
+    - https://github.com/R2MED/R2MED
+    - https://huggingface.co/datasets/R2MED/Bioinformatics
   counts:
     queries: 77
     documents: 10000
@@ -176,42 +188,92 @@ benchmark_task_metadata:
     query_mean: 890.324675
     document_mean: 666.8386
   bm25:
-    ndcg_at_10: 0.1785792901
-    hit_at_10: 0.4415584416
-    source: dataset_bm25_column
+    ndcg_at_10: 0.21890410386227224
+    hit_at_10: 0.4805194805194805
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: R2MED benchmark release sampled into NanoR2MED
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude R2MED Bioinformatics evaluation queries, qrels, and linked positive passages
+    leakage_note: exclude R2MED Bioinformatics evaluation queries, qrels, and linked
+      positive passages
     useful_training_data:
-      - non-overlapping Bioinformatics StackExchange answer-link retrieval
-      - genomics tool documentation retrieval pairs
-      - sequencing and variant-format QA with hard negatives
-      - BRIGHT-style reasoning-intensive reference retrieval data
+    - non-overlapping Bioinformatics StackExchange answer-link retrieval
+    - genomics tool documentation retrieval pairs
+    - sequencing and variant-format QA with hard negatives
+    - BRIGHT-style reasoning-intensive reference retrieval data
     synthetic_data:
-      document_generation: non-evaluation bioinformatics manuals, file-format specifications, and method passages
-      question_generation: StackExchange-style troubleshooting or explanation questions grounded in those passages
-      hard_negatives: passages sharing tools or file formats but answering a different operation
-      answerability: the selected document should explain the command, format, method, or biological mechanism needed by the query
+      document_generation: non-evaluation bioinformatics manuals, file-format specifications,
+        and method passages
+      question_generation: StackExchange-style troubleshooting or explanation questions
+        grounded in those passages
+      hard_negatives: passages sharing tools or file formats but answering a different
+        operation
+      answerability: the selected document should explain the command, format, method,
+        or biological mechanism needed by the query
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoR2MED
     source_urls:
-      - label: R2MED arXiv
-        url: https://arxiv.org/abs/2505.14558
-      - label: R2MED project page
-        url: https://r2med.github.io/
-      - label: R2MED GitHub
-        url: https://github.com/R2MED/R2MED
-      - label: R2MED/Bioinformatics
-        url: https://huggingface.co/datasets/R2MED/Bioinformatics
+    - label: R2MED arXiv
+      url: https://arxiv.org/abs/2505.14558
+    - label: R2MED project page
+      url: https://r2med.github.io/
+    - label: R2MED GitHub
+      url: https://github.com/R2MED/R2MED
+    - label: R2MED/Bioinformatics
+      url: https://huggingface.co/datasets/R2MED/Bioinformatics
     source_notes: []
   references:
-    - title: "R2MED: A Benchmark for Reasoning-Driven Medical Retrieval"
-      url: https://arxiv.org/abs/2505.14558
-      year: 2025
-      doi: 10.48550/arXiv.2505.14558
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
+    url: https://arxiv.org/abs/2505.14558
+    year: 2025
+    doi: 10.48550/arXiv.2505.14558
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2189041039
+      hit_at_10: 0.4805194805
+      recall_at_100: 0.5663716814
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 77
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5663716814
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3424739075
+      hit_at_10: 0.6233766234
+      recall_at_100: 0.7389380531
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 77
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7389380531
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2622800156
+      hit_at_10: 0.5844155844
+      recall_at_100: 0.7477876106
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.077922
+      query_count: 77
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7477876106
+      safeguard_positive_rows: 6
+      rows_with_101_candidates: 6
 ```

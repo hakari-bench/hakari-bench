@@ -96,8 +96,20 @@ not only topic retrieval.
 | Queries | 199 |
 | Documents | 8,674 |
 | Positive qrels | 199 |
-| BM25 nDCG@10 | 0.2591 |
-| BM25 hit@10 | 0.5678 |
+| BM25 nDCG@10 | 0.2742 |
+| BM25 hit@10 | 0.6030 |
+| BM25 Recall@100 | 0.9548 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3698 |
+| Dense hit@10 | 0.7889 |
+| Dense Recall@100 | 0.9447 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3372 |
+| Reranking hybrid hit@10 | 0.7387 |
+| Reranking hybrid Recall@100 | 0.9799 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 4 |
 | Query length avg chars | 1,183.88 |
 | Document length avg chars | 1,080.34 |
 
@@ -143,9 +155,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://aclanthology.org/P18-1023/
     additional_source_urls:
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/arguana-vn
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/arguana-vn
     no_paper_note: null
   counts:
     queries: 199
@@ -162,59 +174,109 @@ benchmark_task_metadata:
     query_mean: 1183.879396985
     document_mean: 1080.336407655
   bm25:
-    ndcg_at_10: 0.259066684
-    hit_at_10: 0.567839196
-    source: dataset_bm25_column
+    ndcg_at_10: 0.2742105725041169
+    hit_at_10: 0.6030150753768844
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB ArguAna test split from GreenNode/arguana-vn"
+    evaluation_split_origin: translated VN-MTEB ArguAna test split from GreenNode/arguana-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated ArguAna-VN test queries, qrels, and positive counterarguments used by this Nano split."
+    leakage_note: Exclude translated ArguAna-VN test queries, qrels, and positive
+      counterarguments used by this Nano split.
     useful_training_data:
-      - non-overlapping Vietnamese argument-counterargument pairs
-      - translated ArguAna training material with test overlap removed
-      - Vietnamese debate or stance-labeled forum data
-      - multilingual argument-mining corpora adapted to Vietnamese
+    - non-overlapping Vietnamese argument-counterargument pairs
+    - translated ArguAna training material with test overlap removed
+    - Vietnamese debate or stance-labeled forum data
+    - multilingual argument-mining corpora adapted to Vietnamese
     synthetic_data:
-      document_generation: "Vietnamese counterargument paragraphs with clear rebuttal targets."
-      question_generation: "Long Vietnamese arguments that can be answered by retrieving an opposing counterargument."
-      answerability: "Each generated query should have one explicit counterargument positive and same-topic hard negatives."
+      document_generation: Vietnamese counterargument paragraphs with clear rebuttal
+        targets.
+      question_generation: Long Vietnamese arguments that can be answered by retrieving
+        an opposing counterargument.
+      answerability: Each generated query should have one explicit counterargument
+        positive and same-topic hard negatives.
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: ArguAna ACL Anthology
-        url: https://aclanthology.org/P18-1023/
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/arguana-vn
-        url: https://huggingface.co/datasets/GreenNode/arguana-vn
+    - label: ArguAna ACL Anthology
+      url: https://aclanthology.org/P18-1023/
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/arguana-vn
+      url: https://huggingface.co/datasets/GreenNode/arguana-vn
     source_notes: []
   references:
-    - title: "Retrieval of the Best Counterargument without Prior Topic Knowledge"
-      url: https://aclanthology.org/P18-1023/
-      year: 2018
-      doi: 10.18653/v1/P18-1023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/arguana-vn
-      url: https://huggingface.co/datasets/GreenNode/arguana-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: Retrieval of the Best Counterargument without Prior Topic Knowledge
+    url: https://aclanthology.org/P18-1023/
+    year: 2018
+    doi: 10.18653/v1/P18-1023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/arguana-vn
+    url: https://huggingface.co/datasets/GreenNode/arguana-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2742105725
+      hit_at_10: 0.6030150754
+      recall_at_100: 0.9547738693
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9547738693
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3697788862
+      hit_at_10: 0.7889447236
+      recall_at_100: 0.9447236181
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9447236181
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3371939282
+      hit_at_10: 0.7386934673
+      recall_at_100: 0.9798994975
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.020101
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9798994975
+      safeguard_positive_rows: 4
+      rows_with_101_candidates: 4
 ```

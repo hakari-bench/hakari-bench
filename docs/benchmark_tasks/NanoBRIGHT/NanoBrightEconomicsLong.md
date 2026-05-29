@@ -73,8 +73,20 @@ economics topic but with the wrong model, region, or empirical claim.
 | Positive qrels | 109 |
 | Positives per query | avg 1.06, min 1, median 1, max 3 |
 | Multi-positive queries | 5 (4.85%) |
-| BM25 nDCG@10 | 0.2510 |
-| BM25 hit@10 | 0.3592 |
+| BM25 nDCG@10 | 0.2658 |
+| BM25 hit@10 | 0.4369 |
+| BM25 Recall@100 | 0.7248 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4266 |
+| Dense hit@10 | 0.6602 |
+| Dense Recall@100 | 0.9083 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3764 |
+| Reranking hybrid hit@10 | 0.5728 |
+| Reranking hybrid Recall@100 | 0.8991 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 10 |
 | Query length avg chars | 739.57 |
 | Document length avg chars | 38615.97 |
 
@@ -135,38 +147,87 @@ benchmark_task_metadata:
     query_mean: 739.5728155339806
     document_mean: 38615.970873786406
   bm25:
-    ndcg_at_10: 0.25101039352381815
-    hit_at_10: 0.3592233009708738
-    source: dataset_bm25_column
+    ndcg_at_10: 0.26583981555927855
+    hit_at_10: 0.4368932038834951
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: BRIGHT Economics long-document evaluation split
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoBRIGHT EconomicsLong queries and full cited source pages
     useful_training_data:
-      - long economics reports aligned to questions
-      - document-level paper recommendation data
-      - cited-source retrieval from economics forums
+    - long economics reports aligned to questions
+    - document-level paper recommendation data
+    - cited-source retrieval from economics forums
     synthetic_data:
-      document_generation: long economics documents with abstracts, tables, and policy context
-      question_generation: detailed economics questions requiring one section of the source
-      answerability: positive full document should contain the relevant model, evidence, or explanation
+      document_generation: long economics documents with abstracts, tables, and policy
+        context
+      question_generation: detailed economics questions requiring one section of the
+        source
+      answerability: positive full document should contain the relevant model, evidence,
+        or explanation
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBRIGHT
     source_urls:
-      - label: BRIGHT arXiv
-        url: https://arxiv.org/abs/2407.12883
-      - label: BRIGHT project
-        url: https://brightbenchmark.github.io/
-      - label: xlangai/BRIGHT
-        url: https://huggingface.co/datasets/xlangai/BRIGHT
+    - label: BRIGHT arXiv
+      url: https://arxiv.org/abs/2407.12883
+    - label: BRIGHT project
+      url: https://brightbenchmark.github.io/
+    - label: xlangai/BRIGHT
+      url: https://huggingface.co/datasets/xlangai/BRIGHT
     source_notes: []
   references:
-    - title: "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval"
-      url: https://arxiv.org/abs/2407.12883
-      year: 2024
-      doi: 10.48550/arXiv.2407.12883
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+      Retrieval'
+    url: https://arxiv.org/abs/2407.12883
+    year: 2024
+    doi: 10.48550/arXiv.2407.12883
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2658398156
+      hit_at_10: 0.4368932039
+      recall_at_100: 0.7247706422
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 103
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7247706422
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.426587992
+      hit_at_10: 0.6601941748
+      recall_at_100: 0.9082568807
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 103
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9082568807
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3764442369
+      hit_at_10: 0.572815534
+      recall_at_100: 0.8990825688
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.097087
+      query_count: 103
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8990825688
+      safeguard_positive_rows: 10
+      rows_with_101_candidates: 10
 ```

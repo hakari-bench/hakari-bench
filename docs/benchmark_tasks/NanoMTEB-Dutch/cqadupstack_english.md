@@ -83,6 +83,18 @@ nearby but distinct usage issues.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.2769 |
 | BM25 hit@10 | 0.3550 |
+| BM25 Recall@100 | 0.4950 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3587 |
+| Dense hit@10 | 0.5150 |
+| Dense Recall@100 | 0.6500 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3248 |
+| Reranking hybrid hit@10 | 0.4250 |
+| Reranking hybrid Recall@100 | 0.6850 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 63 |
 | Query length avg chars | 49.65 |
 | Document length avg chars | 521.67 |
 
@@ -129,10 +141,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://doi.org/10.1145/2838931.2838934
     additional_source_urls:
-      - https://eltimster.github.io/www/pubs/adcs2015.pdf
-      - https://aclanthology.org/2025.bucc-1.5/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+    - https://eltimster.github.io/www/pubs/adcs2015.pdf
+    - https://aclanthology.org/2025.bucc-1.5/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/clips/beir-nl-cqadupstack
   counts:
     queries: 200
     documents: 10000
@@ -148,51 +160,99 @@ benchmark_task_metadata:
     query_mean: 49.65
     document_mean: 521.6717
   bm25:
-    ndcg_at_10: 0.2768966576
+    ndcg_at_10: 0.2768966576105474
     hit_at_10: 0.355
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "CQADupstackEnglish-NL test split from clips/beir-nl-cqadupstack"
+    evaluation_split_origin: CQADupstackEnglish-NL test split from clips/beir-nl-cqadupstack
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated CQADupStack English subforum test queries and duplicate positives used by this Nano split."
+    leakage_note: Exclude translated CQADupStack English subforum test queries and
+      duplicate positives used by this Nano split.
     useful_training_data:
-      - non-overlapping CQADupStack English duplicate-question pairs
-      - Dutch-translated grammar and usage duplicate questions
-      - multilingual duplicate-question retrieval data with quoted phrases preserved
+    - non-overlapping CQADupStack English duplicate-question pairs
+    - Dutch-translated grammar and usage duplicate questions
+    - multilingual duplicate-question retrieval data with quoted phrases preserved
     synthetic_data:
-      document_generation: "Dutch-translated English usage forum questions outside the evaluation set."
-      question_generation: "Paraphrased duplicate grammar and wording questions."
-      answerability: "Each synthetic query should duplicate one prior usage question, with near-topic hard negatives."
+      document_generation: Dutch-translated English usage forum questions outside
+        the evaluation set.
+      question_generation: Paraphrased duplicate grammar and wording questions.
+      answerability: Each synthetic query should duplicate one prior usage question,
+        with near-topic hard negatives.
     multi_positive_training: single_positive
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: CQADupStack DOI
-        url: https://doi.org/10.1145/2838931.2838934
-      - label: BEIR-NL ACL Anthology
-        url: https://aclanthology.org/2025.bucc-1.5/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: clips/beir-nl-cqadupstack
-        url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+    - label: CQADupStack DOI
+      url: https://doi.org/10.1145/2838931.2838934
+    - label: BEIR-NL ACL Anthology
+      url: https://aclanthology.org/2025.bucc-1.5/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: clips/beir-nl-cqadupstack
+      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
     source_notes: []
   references:
-    - title: "CQADupStack: A Benchmark Data Set for Community Question-Answering Research"
-      url: https://doi.org/10.1145/2838931.2838934
-      year: 2015
-      doi: 10.1145/2838931.2838934
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language"
-      url: https://aclanthology.org/2025.bucc-1.5/
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: clips/beir-nl-cqadupstack
-      url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
-      year: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+    url: https://doi.org/10.1145/2838931.2838934
+    year: 2015
+    doi: 10.1145/2838931.2838934
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language'
+    url: https://aclanthology.org/2025.bucc-1.5/
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: clips/beir-nl-cqadupstack
+    url: https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+    year: null
+    is_paper: false
+    source_confidence: probably_correct
   example_count: 5
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2768966576
+      hit_at_10: 0.355
+      recall_at_100: 0.495
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.495
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3586537072
+      hit_at_10: 0.515
+      recall_at_100: 0.65
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.65
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3248057175
+      hit_at_10: 0.425
+      recall_at_100: 0.685
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.315
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.685
+      safeguard_positive_rows: 63
+      rows_with_101_candidates: 63
 ```

@@ -113,8 +113,15 @@ surface overlap alone.
 | Split-local documents | 5,659 |
 | Positive qrels | 2,054 |
 | Average positives / query | 7.28 |
-| Query-weighted BM25 nDCG@10 | 0.3453 |
-| Query-weighted BM25 hit@10 | 0.6312 |
+| Query-weighted BM25 nDCG@10 | 0.4492 |
+| Query-weighted BM25 hit@10 | 0.7624 |
+| Query-weighted BM25 Recall@100 | 0.7152 |
+| Query-weighted Dense nDCG@10 | 0.5465 |
+| Query-weighted Dense hit@10 | 0.8582 |
+| Query-weighted Dense Recall@100 | 0.8023 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.5032 |
+| Query-weighted Reranking hybrid hit@10 | 0.8191 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8024 |
 | Mean query length | 112.64 chars, weighted by query count |
 | Mean document length | 324.97 chars, weighted by split-local document count |
 
@@ -166,50 +173,70 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 112.638297929078
     document_mean_weighted_by_documents: 324.96730833698535
   bm25:
-    ndcg_at_10_query_weighted: 0.34532694866028363
-    hit_at_10_query_weighted: 0.631205673751773
-    source: dataset_bm25_column
+    ndcg_at_10_query_weighted: 0.4492138871
+    hit_at_10_query_weighted: 0.7624113475
+    source: dataset_candidate_subset
     strongest_task_by_ndcg_at_10: NanoBuiltBench
     weakest_task_by_ndcg_at_10: NanoBuiltBenchReranking
   tasks:
-    - name: NanoBuiltBench
-      path: docs/benchmark_tasks/NanoBuiltBench/NanoBuiltBench.md
-      retrieval_focus: asset_description_to_uniclass_product_description
-      queries: 200
-      documents: 2761
-      positive_qrels: 1480
-      bm25_ndcg_at_10: 0.389
-      bm25_hit_at_10: 0.585
-    - name: NanoBuiltBenchReranking
-      path: docs/benchmark_tasks/NanoBuiltBench/NanoBuiltBenchReranking.md
-      retrieval_focus: asset_entity_definition_to_candidate_class_description
-      queries: 82
-      documents: 2898
-      positive_qrels: 574
-      bm25_ndcg_at_10: 0.2389
-      bm25_hit_at_10: 0.7439
+  - name: NanoBuiltBench
+    path: docs/benchmark_tasks/NanoBuiltBench/NanoBuiltBench.md
+    retrieval_focus: asset_description_to_uniclass_product_description
+    queries: 200
+    documents: 2761
+    positive_qrels: 1480
+    bm25_ndcg_at_10: 0.389
+    bm25_hit_at_10: 0.585
+  - name: NanoBuiltBenchReranking
+    path: docs/benchmark_tasks/NanoBuiltBench/NanoBuiltBenchReranking.md
+    retrieval_focus: asset_entity_definition_to_candidate_class_description
+    queries: 82
+    documents: 2898
+    positive_qrels: 574
+    bm25_ndcg_at_10: 0.2389
+    bm25_hit_at_10: 0.7439
   learning:
-    leakage_note: exclude NanoBuiltBench evaluation queries, qrels, and positive documents; audit source classification rows before training
+    leakage_note: exclude NanoBuiltBench evaluation queries, qrels, and positive documents;
+      audit source classification rows before training
     useful_training_data:
-      - IFC and Uniclass description alignment pairs
-      - built-asset entity-to-class mappings
-      - construction taxonomy descriptions and hard negatives
-      - facility management terminology pairs
+    - IFC and Uniclass description alignment pairs
+    - built-asset entity-to-class mappings
+    - construction taxonomy descriptions and hard negatives
+    - facility management terminology pairs
     synthetic_data:
-      document_generation: built-asset class and product descriptions with functions, materials, systems, and hierarchy cues
-      question_generation: IFC-style asset names and definitions grounded in one or more class descriptions
+      document_generation: built-asset class and product descriptions with functions,
+        materials, systems, and hierarchy cues
+      question_generation: IFC-style asset names and definitions grounded in one or
+        more class descriptions
       answerability: positives must be classification-compatible, not merely term-overlapping
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBuiltBench
     source_urls:
-      - label: Scientific Reports paper
-        url: https://www.nature.com/articles/s41598-025-09052-5
-  references:
-    - title: Benchmarking pre-trained text embedding models in aligning built asset information
+    - label: Scientific Reports paper
       url: https://www.nature.com/articles/s41598-025-09052-5
-      year: 2025
-      doi: 10.1038/s41598-025-09052-5
-      is_paper: true
-      source_confidence: definitive_paper_link
+  references:
+  - title: Benchmarking pre-trained text embedding models in aligning built asset
+      information
+    url: https://www.nature.com/articles/s41598-025-09052-5
+    year: 2025
+    doi: 10.1038/s41598-025-09052-5
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.4492138871
+      query_weighted_hit_at_10: 0.7624113475
+      query_weighted_recall_at_100: 0.715230428
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.5464628054
+      query_weighted_hit_at_10: 0.8581560284
+      query_weighted_recall_at_100: 0.8023357704
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.5031637842
+      query_weighted_hit_at_10: 0.8191489362
+      query_weighted_recall_at_100: 0.8023631534
+      source: dataset_candidate_subset
 ```

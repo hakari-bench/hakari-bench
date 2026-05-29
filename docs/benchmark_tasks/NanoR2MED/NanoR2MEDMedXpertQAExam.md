@@ -104,8 +104,20 @@ seed generation with Nano evaluation queries or positives.
 | Avg positives / query | 3.01 |
 | Positives per query (min / median / max) | 1 / 3 / 8 |
 | Queries with multiple positives | 74 (76.29%) |
-| BM25 nDCG@10 | 0.0245 |
-| BM25 hit@10 | 0.0722 |
+| BM25 nDCG@10 | 0.0277 |
+| BM25 hit@10 | 0.0825 |
+| BM25 Recall@100 | 0.1678 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.1599 |
+| Dense hit@10 | 0.4021 |
+| Dense Recall@100 | 0.4144 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.0979 |
+| Reranking hybrid hit@10 | 0.2577 |
+| Reranking hybrid Recall@100 | 0.3699 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 33 |
 | Query length avg chars | 928.44 |
 | Document length avg chars | 723.85 |
 
@@ -151,9 +163,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2505.14558
     additional_source_urls:
-      - https://r2med.github.io/
-      - https://github.com/R2MED/R2MED
-      - https://huggingface.co/datasets/R2MED/MedXpertQA-Exam
+    - https://r2med.github.io/
+    - https://github.com/R2MED/R2MED
+    - https://huggingface.co/datasets/R2MED/MedXpertQA-Exam
   counts:
     queries: 97
     documents: 10000
@@ -169,42 +181,90 @@ benchmark_task_metadata:
     query_mean: 928.443299
     document_mean: 723.8511
   bm25:
-    ndcg_at_10: 0.0244625982
-    hit_at_10: 0.0721649485
-    source: dataset_bm25_column
+    ndcg_at_10: 0.02772033243605187
+    hit_at_10: 0.08247422680412371
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: R2MED benchmark release sampled into NanoR2MED
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude R2MED MedXpertQA-Exam evaluation queries, qrels, and positive Wikipedia passages
+    leakage_note: exclude R2MED MedXpertQA-Exam evaluation queries, qrels, and positive
+      Wikipedia passages
     useful_training_data:
-      - non-overlapping expert medical exam questions paired with test evidence
-      - clinical examination recommendation retrieval
-      - medical entity linking from vignettes to diagnostic tests
-      - hard negatives from similar symptoms with different tests
+    - non-overlapping expert medical exam questions paired with test evidence
+    - clinical examination recommendation retrieval
+    - medical entity linking from vignettes to diagnostic tests
+    - hard negatives from similar symptoms with different tests
     synthetic_data:
-      document_generation: non-evaluation medical reference sections about diagnostic tests, imaging, labs, or screening instruments
+      document_generation: non-evaluation medical reference sections about diagnostic
+        tests, imaging, labs, or screening instruments
       question_generation: patient vignettes asking for the best examination or test
-      hard_negatives: same disease or symptom vocabulary but different diagnostic procedure
+      hard_negatives: same disease or symptom vocabulary but different diagnostic
+        procedure
       answerability: the passage should justify the inferred examination recommendation
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoR2MED
     source_urls:
-      - label: R2MED arXiv
-        url: https://arxiv.org/abs/2505.14558
-      - label: R2MED project page
-        url: https://r2med.github.io/
-      - label: R2MED GitHub
-        url: https://github.com/R2MED/R2MED
-      - label: R2MED/MedXpertQA-Exam
-        url: https://huggingface.co/datasets/R2MED/MedXpertQA-Exam
+    - label: R2MED arXiv
+      url: https://arxiv.org/abs/2505.14558
+    - label: R2MED project page
+      url: https://r2med.github.io/
+    - label: R2MED GitHub
+      url: https://github.com/R2MED/R2MED
+    - label: R2MED/MedXpertQA-Exam
+      url: https://huggingface.co/datasets/R2MED/MedXpertQA-Exam
     source_notes: []
   references:
-    - title: "R2MED: A Benchmark for Reasoning-Driven Medical Retrieval"
-      url: https://arxiv.org/abs/2505.14558
-      year: 2025
-      doi: 10.48550/arXiv.2505.14558
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'R2MED: A Benchmark for Reasoning-Driven Medical Retrieval'
+    url: https://arxiv.org/abs/2505.14558
+    year: 2025
+    doi: 10.48550/arXiv.2505.14558
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.0277203324
+      hit_at_10: 0.0824742268
+      recall_at_100: 0.1678082192
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 97
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1678082192
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1599222724
+      hit_at_10: 0.4020618557
+      recall_at_100: 0.4143835616
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 97
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4143835616
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.0978686011
+      hit_at_10: 0.2577319588
+      recall_at_100: 0.3698630137
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.340206
+      query_count: 97
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3698630137
+      safeguard_positive_rows: 33
+      rows_with_101_candidates: 33
 ```

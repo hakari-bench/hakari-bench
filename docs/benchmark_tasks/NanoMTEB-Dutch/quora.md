@@ -96,8 +96,20 @@ questions for training discrimination.
 | Avg positives / query | 2.87 |
 | Positives per query (min / median / max) | 1 / 1 / 50 |
 | Queries with multiple positives | 80 (40.00%) |
-| BM25 nDCG@10 | 0.8376 |
+| BM25 nDCG@10 | 0.8391 |
 | BM25 hit@10 | 0.9550 |
+| BM25 Recall@100 | 0.9023 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9289 |
+| Dense hit@10 | 0.9600 |
+| Dense Recall@100 | 0.9494 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8772 |
+| Reranking hybrid hit@10 | 0.9700 |
+| Reranking hybrid Recall@100 | 0.9791 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 51.80 |
 | Document length avg chars | 66.56 |
 
@@ -143,10 +155,11 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2104.08663
     additional_source_urls:
-      - https://aclanthology.org/2025.bucc-1.5/
-      - https://kaggle.com/competitions/quora-question-pairs
-      - https://huggingface.co/datasets/clips/beir-nl-quora
-    no_paper_note: "No standalone Quora retrieval paper was confirmed; BEIR and the Quora source dataset record were used."
+    - https://aclanthology.org/2025.bucc-1.5/
+    - https://kaggle.com/competitions/quora-question-pairs
+    - https://huggingface.co/datasets/clips/beir-nl-quora
+    no_paper_note: No standalone Quora retrieval paper was confirmed; BEIR and the
+      Quora source dataset record were used.
   counts:
     queries: 200
     documents: 10000
@@ -162,59 +175,108 @@ benchmark_task_metadata:
     query_mean: 51.795
     document_mean: 66.5588
   bm25:
-    ndcg_at_10: 0.837639743
+    ndcg_at_10: 0.8390729136480184
     hit_at_10: 0.955
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated BEIR-NL Quora test split from clips/beir-nl-quora"
+    evaluation_split_origin: translated BEIR-NL Quora test split from clips/beir-nl-quora
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated Quora test questions, duplicate clusters, qrels, and positives from this Nano split."
+    leakage_note: Exclude translated Quora test questions, duplicate clusters, qrels,
+      and positives from this Nano split.
     useful_training_data:
-      - official Quora duplicate-question training data with split overlap removed
-      - Dutch paraphrase and duplicate-question pairs
-      - multilingual community-QA duplicate question datasets
-      - same-topic non-duplicate hard negatives
+    - official Quora duplicate-question training data with split overlap removed
+    - Dutch paraphrase and duplicate-question pairs
+    - multilingual community-QA duplicate question datasets
+    - same-topic non-duplicate hard negatives
     synthetic_data:
-      document_generation: "Dutch question clusters with equivalent and non-equivalent paraphrases."
-      question_generation: "Alternative Dutch phrasings with the same user intent."
-      answerability: "Each query should have duplicate positives and hard negatives that change the intent."
+      document_generation: Dutch question clusters with equivalent and non-equivalent
+        paraphrases.
+      question_generation: Alternative Dutch phrasings with the same user intent.
+      answerability: Each query should have duplicate positives and hard negatives
+        that change the intent.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: BEIR-NL ACL Anthology
-        url: https://aclanthology.org/2025.bucc-1.5/
-      - label: Quora Question Pairs
-        url: https://kaggle.com/competitions/quora-question-pairs
-      - label: clips/beir-nl-quora
-        url: https://huggingface.co/datasets/clips/beir-nl-quora
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: BEIR-NL ACL Anthology
+      url: https://aclanthology.org/2025.bucc-1.5/
+    - label: Quora Question Pairs
+      url: https://kaggle.com/competitions/quora-question-pairs
+    - label: clips/beir-nl-quora
+      url: https://huggingface.co/datasets/clips/beir-nl-quora
     source_notes: []
   references:
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language"
-      url: https://aclanthology.org/2025.bucc-1.5/
-      year: 2025
-      doi: null
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Quora Question Pairs
-      url: https://kaggle.com/competitions/quora-question-pairs
-      year: 2017
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
-    - title: clips/beir-nl-quora
-      url: https://huggingface.co/datasets/clips/beir-nl-quora
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language'
+    url: https://aclanthology.org/2025.bucc-1.5/
+    year: 2025
+    doi: null
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Quora Question Pairs
+    url: https://kaggle.com/competitions/quora-question-pairs
+    year: 2017
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  - title: clips/beir-nl-quora
+    url: https://huggingface.co/datasets/clips/beir-nl-quora
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8390729136
+      hit_at_10: 0.955
+      recall_at_100: 0.9022687609
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9022687609
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9289102757
+      hit_at_10: 0.96
+      recall_at_100: 0.9493891798
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9493891798
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8771578007
+      hit_at_10: 0.97
+      recall_at_100: 0.9790575916
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9790575916
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

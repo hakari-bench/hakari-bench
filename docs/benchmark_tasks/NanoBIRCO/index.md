@@ -130,8 +130,15 @@ with the query instead of rebutting it.
 | Positive qrels | 2,909 |
 | Average positives / query | 7.13 |
 | Queries with multiple positives | 65 |
-| Query-weighted BM25 nDCG@10 | 0.1822 |
-| Query-weighted BM25 hit@10 | 0.3750 |
+| Query-weighted BM25 nDCG@10 | 0.2738 |
+| Query-weighted BM25 hit@10 | 0.4951 |
+| Query-weighted BM25 Recall@100 | 0.6454 |
+| Query-weighted Dense nDCG@10 | 0.2931 |
+| Query-weighted Dense hit@10 | 0.4951 |
+| Query-weighted Dense Recall@100 | 0.6997 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.3155 |
+| Query-weighted Reranking hybrid hit@10 | 0.5417 |
+| Query-weighted Reranking hybrid Recall@100 | 0.7287 |
 | Mean query length | 925.24 chars, weighted by query count |
 | Mean document length | 988.13 chars, weighted by split-local document count |
 
@@ -183,76 +190,96 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 925.2377450686275
     document_mean_weighted_by_documents: 988.1341209377294
   bm25:
-    ndcg_at_10_query_weighted: 0.182175196075
-    hit_at_10_query_weighted: 0.3750000000009804
-    source: dataset_bm25_column
+    ndcg_at_10_query_weighted: 0.2737781626
+    hit_at_10_query_weighted: 0.4950980392
+    source: dataset_candidate_subset
     strongest_task_by_ndcg_at_10: NanoBIRCOArguAna
     weakest_task_by_ndcg_at_10: NanoBIRCORelic
   tasks:
-    - name: NanoBIRCOArguAna
-      path: docs/benchmark_tasks/NanoBIRCO/NanoBIRCOArguAna.md
-      retrieval_focus: argument_to_counterargument
-      queries: 98
-      documents: 3081
-      positive_qrels: 98
-      bm25_ndcg_at_10: 0.4051
-      bm25_hit_at_10: 0.7551
-    - name: NanoBIRCOClinicalTrial
-      path: docs/benchmark_tasks/NanoBIRCO/NanoBIRCOClinicalTrial.md
-      retrieval_focus: patient_case_to_clinical_trial
-      queries: 50
-      documents: 3375
-      positive_qrels: 1042
-      bm25_ndcg_at_10: 0.1194
-      bm25_hit_at_10: 0.62
-    - name: NanoBIRCODorisMae
-      path: docs/benchmark_tasks/NanoBIRCO/NanoBIRCODorisMae.md
-      retrieval_focus: research_need_to_scientific_abstract
-      queries: 60
-      documents: 5544
-      positive_qrels: 1569
-      bm25_ndcg_at_10: 0.2469
-      bm25_hit_at_10: 0.4167
-    - name: NanoBIRCORelic
-      path: docs/benchmark_tasks/NanoBIRCO/NanoBIRCORelic.md
-      retrieval_focus: literary_context_to_missing_quotation
-      queries: 100
-      documents: 5023
-      positive_qrels: 100
-      bm25_ndcg_at_10: 0.0633
-      bm25_hit_at_10: 0.12
-    - name: NanoBIRCOWTB
-      path: docs/benchmark_tasks/NanoBIRCO/NanoBIRCOWTB.md
-      retrieval_focus: vague_memory_to_book
-      queries: 100
-      documents: 1766
-      positive_qrels: 100
-      bm25_ndcg_at_10: 0.0751
-      bm25_hit_at_10: 0.11
+  - name: NanoBIRCOArguAna
+    path: docs/benchmark_tasks/NanoBIRCO/NanoBIRCOArguAna.md
+    retrieval_focus: argument_to_counterargument
+    queries: 98
+    documents: 3081
+    positive_qrels: 98
+    bm25_ndcg_at_10: 0.4051
+    bm25_hit_at_10: 0.7551
+  - name: NanoBIRCOClinicalTrial
+    path: docs/benchmark_tasks/NanoBIRCO/NanoBIRCOClinicalTrial.md
+    retrieval_focus: patient_case_to_clinical_trial
+    queries: 50
+    documents: 3375
+    positive_qrels: 1042
+    bm25_ndcg_at_10: 0.1194
+    bm25_hit_at_10: 0.62
+  - name: NanoBIRCODorisMae
+    path: docs/benchmark_tasks/NanoBIRCO/NanoBIRCODorisMae.md
+    retrieval_focus: research_need_to_scientific_abstract
+    queries: 60
+    documents: 5544
+    positive_qrels: 1569
+    bm25_ndcg_at_10: 0.2469
+    bm25_hit_at_10: 0.4167
+  - name: NanoBIRCORelic
+    path: docs/benchmark_tasks/NanoBIRCO/NanoBIRCORelic.md
+    retrieval_focus: literary_context_to_missing_quotation
+    queries: 100
+    documents: 5023
+    positive_qrels: 100
+    bm25_ndcg_at_10: 0.0633
+    bm25_hit_at_10: 0.12
+  - name: NanoBIRCOWTB
+    path: docs/benchmark_tasks/NanoBIRCO/NanoBIRCOWTB.md
+    retrieval_focus: vague_memory_to_book
+    queries: 100
+    documents: 1766
+    positive_qrels: 100
+    bm25_ndcg_at_10: 0.0751
+    bm25_hit_at_10: 0.11
   learning:
-    leakage_note: exclude NanoBIRCO evaluation queries, qrels, and positive documents; audit BIRCO source overlap before training
+    leakage_note: exclude NanoBIRCO evaluation queries, qrels, and positive documents;
+      audit BIRCO source overlap before training
     useful_training_data:
-      - BIRCO-style objective retrieval pairs
-      - argument-counterargument retrieval data
-      - clinical trial eligibility matching data
-      - scientific abstract recommendation and review-search data
-      - literary quotation retrieval data
-      - book-description and recommendation search data
+    - BIRCO-style objective retrieval pairs
+    - argument-counterargument retrieval data
+    - clinical trial eligibility matching data
+    - scientific abstract recommendation and review-search data
+    - literary quotation retrieval data
+    - book-description and recommendation search data
     synthetic_data:
-      document_generation: trial records, abstracts, counterarguments, literary passages, and book descriptions with explicit objective-satisfying details
-      question_generation: long natural-language objectives with constraints, missing information, stance, or vague memory clues
-      answerability: positives must satisfy the stated objective, not only share topic vocabulary
+      document_generation: trial records, abstracts, counterarguments, literary passages,
+        and book descriptions with explicit objective-satisfying details
+      question_generation: long natural-language objectives with constraints, missing
+        information, stance, or vague memory clues
+      answerability: positives must satisfy the stated objective, not only share topic
+        vocabulary
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBIRCO
     source_urls:
-      - label: BIRCO arXiv
-        url: https://arxiv.org/abs/2402.14151
-  references:
-    - title: "BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives"
+    - label: BIRCO arXiv
       url: https://arxiv.org/abs/2402.14151
-      year: 2024
-      doi: 10.48550/arXiv.2402.14151
-      is_paper: true
-      source_confidence: definitive_paper_link
+  references:
+  - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
+    url: https://arxiv.org/abs/2402.14151
+    year: 2024
+    doi: 10.48550/arXiv.2402.14151
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.2737781626
+      query_weighted_hit_at_10: 0.4950980392
+      query_weighted_recall_at_100: 0.6453827431
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.2931387044
+      query_weighted_hit_at_10: 0.4950980392
+      query_weighted_recall_at_100: 0.6996967449
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.315499723
+      query_weighted_hit_at_10: 0.5416666667
+      query_weighted_recall_at_100: 0.7287169579
+      source: dataset_candidate_subset
 ```

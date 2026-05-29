@@ -95,8 +95,20 @@ articles as seeds.
 | Queries | 200 |
 | Documents | 3,562 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.2783 |
-| BM25 hit@10 | 0.3950 |
+| BM25 nDCG@10 | 0.5232 |
+| BM25 hit@10 | 0.7100 |
+| BM25 Recall@100 | 0.9200 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6534 |
+| Dense hit@10 | 0.8200 |
+| Dense Recall@100 | 0.9700 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6491 |
+| Reranking hybrid hit@10 | 0.8200 |
+| Reranking hybrid Recall@100 | 0.9750 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 5 |
 | Query length avg chars | 50.62 |
 | Document length avg chars | 387.21 |
 
@@ -138,11 +150,12 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: dataset_card
     paper_pdf_or_html_checked: true
-    no_paper_note: No standalone task paper was confirmed; interpretation is based on the official dataset card, MTEB metadata, and observed Nano data.
+    no_paper_note: No standalone task paper was confirmed; interpretation is based
+      on the official dataset card, MTEB metadata, and observed Nano data.
     paper_url: https://arxiv.org/abs/2210.07316
     additional_source_urls:
-      - https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
-      - https://www.law.go.kr/LSW/main.html
+    - https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
+    - https://www.law.go.kr/LSW/main.html
   counts:
     queries: 200
     documents: 3562
@@ -158,46 +171,95 @@ benchmark_task_metadata:
     query_mean: 50.62
     document_mean: 387.2071869736
   bm25:
-    ndcg_at_10: 0.2782674716
-    hit_at_10: 0.395
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5231729437250633
+    hit_at_10: 0.71
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude lawgov_ir-ko evaluation rows, Nano queries, qrels, and positive statute articles
+    leakage_note: exclude lawgov_ir-ko evaluation rows, Nano queries, qrels, and positive
+      statute articles
     useful_training_data:
-      - non-overlapping lawgov_ir-ko examples
-      - Korean statute article retrieval pairs
-      - law-title and article-title matching pairs
-      - hard negatives from the same law and adjacent provisions
+    - non-overlapping lawgov_ir-ko examples
+    - Korean statute article retrieval pairs
+    - law-title and article-title matching pairs
+    - hard negatives from the same law and adjacent provisions
     synthetic_data:
-      document_generation: Korean statute articles with numbered clauses, article titles, definitions, duties, and cross-references
-      question_generation: Korean legal retrieval queries naming a law and asking for the article that explains a provision
-      answerability: the positive article should be the provision that directly matches the queried law title and article concept
+      document_generation: Korean statute articles with numbered clauses, article
+        titles, definitions, duties, and cross-references
+      question_generation: Korean legal retrieval queries naming a law and asking
+        for the article that explains a provision
+      answerability: the positive article should be the provision that directly matches
+        the queried law title and article concept
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Korean
     source_urls:
-      - label: on-and-on/lawgov_ir-ko
-        url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
-      - label: Korea Law Information Center
-        url: https://www.law.go.kr/LSW/main.html
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
+    - label: on-and-on/lawgov_ir-ko
+      url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
+    - label: Korea Law Information Center
+      url: https://www.law.go.kr/LSW/main.html
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
     source_notes: []
   references:
-    - title: "on-and-on/lawgov_ir-ko"
-      url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
-      year: 2026
-      doi: null
-      is_paper: false
-      source_confidence: definitive_dataset_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      doi: 10.48550/arXiv.2210.07316
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: on-and-on/lawgov_ir-ko
+    url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
+    year: 2026
+    doi: null
+    is_paper: false
+    source_confidence: definitive_dataset_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    doi: 10.48550/arXiv.2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5231729437
+      hit_at_10: 0.71
+      recall_at_100: 0.92
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.92
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6533854503
+      hit_at_10: 0.82
+      recall_at_100: 0.97
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.97
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6491401096
+      hit_at_10: 0.82
+      recall_at_100: 0.975
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.025
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.975
+      safeguard_positive_rows: 5
+      rows_with_101_candidates: 5
 ```
 

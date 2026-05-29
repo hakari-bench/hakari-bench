@@ -124,8 +124,20 @@ similar but unhelpful replies. Do not seed generation with Nano evaluation text.
 | Positive qrels | 324 |
 | Positives per query | avg 1.62; min 1; median 1; max 9 |
 | Multi-positive queries | 70 / 200 (35.00%) |
-| BM25 nDCG@10 | 0.1668 |
-| BM25 hit@10 | 0.2750 |
+| BM25 nDCG@10 | 0.1669 |
+| BM25 hit@10 | 0.2700 |
+| BM25 Recall@100 | 0.3735 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3380 |
+| Dense hit@10 | 0.5250 |
+| Dense Recall@100 | 0.7191 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2591 |
+| Reranking hybrid hit@10 | 0.4250 |
+| Reranking hybrid Recall@100 | 0.6667 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 57 |
 | Query length avg chars | 52.00 |
 | Document length avg chars | 157.57 |
 
@@ -170,10 +182,11 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2203.10232
     additional_source_urls:
-      - https://aclanthology.org/2022.emnlp-main.357/
-      - https://doi.org/10.1109/ACCESS.2018.2883637
-      - https://github.com/zhangsheng93/cMedQA2
-    note: DuReader-Retrieval PDF and ACL record were checked; IEEE CMedQAv2 full text was not accessible from the local environment
+    - https://aclanthology.org/2022.emnlp-main.357/
+    - https://doi.org/10.1109/ACCESS.2018.2883637
+    - https://github.com/zhangsheng93/cMedQA2
+    note: DuReader-Retrieval PDF and ACL record were checked; IEEE CMedQAv2 full text
+      was not accessible from the local environment
   counts:
     queries: 200
     documents: 10000
@@ -189,37 +202,84 @@ benchmark_task_metadata:
     query_mean: 51.995
     document_mean: 157.5694
   bm25:
-    ndcg_at_10: 0.1667886836
-    hit_at_10: 0.275
-    source: dataset_bm25_column
-    dureader_paper_cmedqa_bm25_mrr_at_10: 6.26
-    dureader_paper_cmedqa_bm25_recall_at_1: 4.98
-    dureader_paper_cmedqa_bm25_recall_at_50: 14.05
+    ndcg_at_10: 0.16690737678031634
+    hit_at_10: 0.27
+    source: dataset_candidate_subset
   learning:
     original_train_split: available_in_cMedQAv2
     evaluation_split_origin: cMedQA out-of-domain retrieval setting sampled into NanoMedical
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude CMedQA and CMedQAv2 rows overlapping this split, especially if using DuReader-retrieval out-of-domain cMedQA test data
+    leakage_note: exclude CMedQA and CMedQAv2 rows overlapping this split, especially
+      if using DuReader-retrieval out-of-domain cMedQA test data
     useful_training_data:
-      - non-overlapping Chinese medical QA retrieval pairs
-      - doctor-patient consultation corpora with answer relevance labels
-      - Chinese answer-selection data with hard negatives
-      - symptom normalization and medical-intent matching data
+    - non-overlapping Chinese medical QA retrieval pairs
+    - doctor-patient consultation corpora with answer relevance labels
+    - Chinese answer-selection data with hard negatives
+    - symptom normalization and medical-intent matching data
     synthetic_data:
-      document_generation: Chinese medical consultation answers with concise advice and test interpretation
-      question_generation: patient-style Chinese questions with symptoms, timing, examination results, and concern
-      hard_negatives: same-disease or same-symptom answers with different recommendation or context
+      document_generation: Chinese medical consultation answers with concise advice
+        and test interpretation
+      question_generation: patient-style Chinese questions with symptoms, timing,
+        examination results, and concern
+      hard_negatives: same-disease or same-symptom answers with different recommendation
+        or context
       answerability: correct answers should directly address the patient concern
-    multi_positive_training: support multiple acceptable answers and noisy same-topic negatives
+    multi_positive_training: support multiple acceptable answers and noisy same-topic
+      negatives
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMedical
     source_urls:
-      - label: DuReader-Retrieval arXiv
-        url: https://arxiv.org/abs/2203.10232
-      - label: DuReader-Retrieval ACL Anthology
-        url: https://aclanthology.org/2022.emnlp-main.357/
-      - label: CMedQAv2 paper DOI
-        url: https://doi.org/10.1109/ACCESS.2018.2883637
-      - label: cMedQA2 repository
-        url: https://github.com/zhangsheng93/cMedQA2
+    - label: DuReader-Retrieval arXiv
+      url: https://arxiv.org/abs/2203.10232
+    - label: DuReader-Retrieval ACL Anthology
+      url: https://aclanthology.org/2022.emnlp-main.357/
+    - label: CMedQAv2 paper DOI
+      url: https://doi.org/10.1109/ACCESS.2018.2883637
+    - label: cMedQA2 repository
+      url: https://github.com/zhangsheng93/cMedQA2
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1669073768
+      hit_at_10: 0.27
+      recall_at_100: 0.3734567901
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3734567901
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3379648515
+      hit_at_10: 0.525
+      recall_at_100: 0.7191358025
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7191358025
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2591338538
+      hit_at_10: 0.425
+      recall_at_100: 0.6666666667
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.285
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6666666667
+      safeguard_positive_rows: 57
+      rows_with_101_candidates: 57
 ```

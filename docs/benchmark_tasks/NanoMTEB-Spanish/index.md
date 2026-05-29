@@ -151,8 +151,15 @@ positive documents, answer strings, or product candidates as seeds.
 | Positive qrels | 4,806 |
 | Positives per query | 3.60 average |
 | Multi-positive queries | 877 |
-| Query-weighted BM25 nDCG@10 | 0.3351 |
-| Query-weighted BM25 hit@10 | 0.5540 |
+| Query-weighted BM25 nDCG@10 | 0.3599 |
+| Query-weighted BM25 hit@10 | 0.5825 |
+| Query-weighted BM25 Recall@100 | 0.6145 |
+| Query-weighted Dense nDCG@10 | 0.5100 |
+| Query-weighted Dense hit@10 | 0.7586 |
+| Query-weighted Dense Recall@100 | 0.8579 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.4302 |
+| Query-weighted Reranking hybrid hit@10 | 0.6252 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8368 |
 | Mean query length | 54.74 chars, weighted by query count |
 | Mean document length | 1,049.92 chars, weighted by split-local document count |
 
@@ -199,9 +206,9 @@ benchmark_task_group_metadata:
   dataset_id: hakari-bench/NanoMTEB-Spanish
   language: multilingual
   languages:
-    - es
-    - en
-    - multilingual
+  - es
+  - en
+  - multilingual
   category: natural_language
   document_path: docs/benchmark_tasks/NanoMTEB-Spanish/index.md
   source_research:
@@ -224,132 +231,160 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 54.742128935532236
     document_mean_weighted_by_documents: 1049.9211068007285
   bm25:
-    ndcg_at_10_query_weighted: 0.33507480443560717
-    hit_at_10_query_weighted: 0.5539730135026986
+    ndcg_at_10_query_weighted: 0.359882464
+    hit_at_10_query_weighted: 0.5824587706
     ndcg_at_10_unweighted_task_mean: 0.34219876977142855
     hit_at_10_unweighted_task_mean: 0.5699187339714286
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: miracl_es
     hardest_task_by_ndcg_at_10: xpqa_eng_spa
   tasks:
-    - name: mintaka_es
-      path: docs/benchmark_tasks/NanoMTEB-Spanish/mintaka_es.md
-      retrieval_shape: spanish_complex_question_to_short_answer
-      language: multilingual
-      queries: 200
-      documents: 1693
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2467222553
-      bm25_hit_at_10: 0.305
-    - name: miracl_es
-      path: docs/benchmark_tasks/NanoMTEB-Spanish/miracl_es.md
-      retrieval_shape: spanish_query_to_wikipedia_passages
-      language: es
-      queries: 200
-      documents: 10000
-      positive_qrels: 934
-      bm25_ndcg_at_10: 0.5245549493
-      bm25_hit_at_10: 0.93
-    - name: spanish_passage_s2_p
-      path: docs/benchmark_tasks/NanoMTEB-Spanish/spanish_passage_s2_p.md
-      retrieval_shape: spanish_health_question_to_full_web_page
-      language: es
-      queries: 167
-      documents: 7501
-      positive_qrels: 996
-      bm25_ndcg_at_10: 0.4830697435
-      bm25_hit_at_10: 0.8922155689
-    - name: spanish_passage_s2_s
-      path: docs/benchmark_tasks/NanoMTEB-Spanish/spanish_passage_s2_s.md
-      retrieval_shape: spanish_health_question_to_answer_passage
-      language: es
-      queries: 167
-      documents: 250
-      positive_qrels: 1228
-      bm25_ndcg_at_10: 0.4893086978
-      bm25_hit_at_10: 0.8922155689
-    - name: xpqa_eng_spa
-      path: docs/benchmark_tasks/NanoMTEB-Spanish/xpqa_eng_spa.md
-      retrieval_shape: spanish_product_question_to_english_answer_snippet
-      language: multilingual
-      queries: 200
-      documents: 1936
-      positive_qrels: 491
-      bm25_ndcg_at_10: 0.0946244797
-      bm25_hit_at_10: 0.175
-    - name: xpqa_spa_eng
-      path: docs/benchmark_tasks/NanoMTEB-Spanish/xpqa_spa_eng.md
-      retrieval_shape: english_product_question_to_spanish_answer_snippet
-      language: multilingual
-      queries: 200
-      documents: 1941
-      positive_qrels: 469
-      bm25_ndcg_at_10: 0.1162198676
-      bm25_hit_at_10: 0.175
-    - name: xpqa_spa_spa
-      path: docs/benchmark_tasks/NanoMTEB-Spanish/xpqa_spa_spa.md
-      retrieval_shape: spanish_product_question_to_spanish_answer_snippet
-      language: es
-      queries: 200
-      documents: 1941
-      positive_qrels: 488
-      bm25_ndcg_at_10: 0.4408913952
-      bm25_hit_at_10: 0.62
+  - name: mintaka_es
+    path: docs/benchmark_tasks/NanoMTEB-Spanish/mintaka_es.md
+    retrieval_shape: spanish_complex_question_to_short_answer
+    language: multilingual
+    queries: 200
+    documents: 1693
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2467222553
+    bm25_hit_at_10: 0.305
+  - name: miracl_es
+    path: docs/benchmark_tasks/NanoMTEB-Spanish/miracl_es.md
+    retrieval_shape: spanish_query_to_wikipedia_passages
+    language: es
+    queries: 200
+    documents: 10000
+    positive_qrels: 934
+    bm25_ndcg_at_10: 0.5245549493
+    bm25_hit_at_10: 0.93
+  - name: spanish_passage_s2_p
+    path: docs/benchmark_tasks/NanoMTEB-Spanish/spanish_passage_s2_p.md
+    retrieval_shape: spanish_health_question_to_full_web_page
+    language: es
+    queries: 167
+    documents: 7501
+    positive_qrels: 996
+    bm25_ndcg_at_10: 0.4830697435
+    bm25_hit_at_10: 0.8922155689
+  - name: spanish_passage_s2_s
+    path: docs/benchmark_tasks/NanoMTEB-Spanish/spanish_passage_s2_s.md
+    retrieval_shape: spanish_health_question_to_answer_passage
+    language: es
+    queries: 167
+    documents: 250
+    positive_qrels: 1228
+    bm25_ndcg_at_10: 0.4893086978
+    bm25_hit_at_10: 0.8922155689
+  - name: xpqa_eng_spa
+    path: docs/benchmark_tasks/NanoMTEB-Spanish/xpqa_eng_spa.md
+    retrieval_shape: spanish_product_question_to_english_answer_snippet
+    language: multilingual
+    queries: 200
+    documents: 1936
+    positive_qrels: 491
+    bm25_ndcg_at_10: 0.0946244797
+    bm25_hit_at_10: 0.175
+  - name: xpqa_spa_eng
+    path: docs/benchmark_tasks/NanoMTEB-Spanish/xpqa_spa_eng.md
+    retrieval_shape: english_product_question_to_spanish_answer_snippet
+    language: multilingual
+    queries: 200
+    documents: 1941
+    positive_qrels: 469
+    bm25_ndcg_at_10: 0.1162198676
+    bm25_hit_at_10: 0.175
+  - name: xpqa_spa_spa
+    path: docs/benchmark_tasks/NanoMTEB-Spanish/xpqa_spa_spa.md
+    retrieval_shape: spanish_product_question_to_spanish_answer_snippet
+    language: es
+    queries: 200
+    documents: 1941
+    positive_qrels: 488
+    bm25_ndcg_at_10: 0.4408913952
+    bm25_hit_at_10: 0.62
   learning:
-    leakage_note: exclude NanoMTEB-Spanish evaluation queries, qrels, positive answer strings, Wikipedia passages, health pages and passages, product snippets, and upstream test rows from training
+    leakage_note: exclude NanoMTEB-Spanish evaluation queries, qrels, positive answer
+      strings, Wikipedia passages, health pages and passages, product snippets, and
+      upstream test rows from training
     useful_training_data:
-      - non-overlapping Mintaka and Spanish Wikidata entity-answer QA pairs
-      - MIRACL Spanish training data and Spanish Wikipedia passage retrieval pairs
-      - Spanish consumer-health QA and medical FAQ retrieval examples
-      - Spanish health document and passage retrieval data with multi-positive labels
-      - xPQA product QA ranking data in Spanish and English
-      - bilingual Spanish-English product question-answer pairs
-      - hard negatives from the same entity family, Wikipedia topic, health topic, product category, or product model
+    - non-overlapping Mintaka and Spanish Wikidata entity-answer QA pairs
+    - MIRACL Spanish training data and Spanish Wikipedia passage retrieval pairs
+    - Spanish consumer-health QA and medical FAQ retrieval examples
+    - Spanish health document and passage retrieval data with multi-positive labels
+    - xPQA product QA ranking data in Spanish and English
+    - bilingual Spanish-English product question-answer pairs
+    - hard negatives from the same entity family, Wikipedia topic, health topic, product
+      category, or product model
     synthetic_data:
-      document_generation: Spanish and English answer strings, Wikipedia passages, health pages, health passages, and product answer snippets in source-like style
-      question_generation: Spanish complex entity questions, Spanish information needs, Spanish health questions, and Spanish or English product questions grounded in generated documents
-      answerability: positives must preserve entity identity, answer-bearing passage evidence, medical answer support, product-property answerability, and cross-lingual alignment rather than broad topic overlap
+      document_generation: Spanish and English answer strings, Wikipedia passages,
+        health pages, health passages, and product answer snippets in source-like
+        style
+      question_generation: Spanish complex entity questions, Spanish information needs,
+        Spanish health questions, and Spanish or English product questions grounded
+        in generated documents
+      answerability: positives must preserve entity identity, answer-bearing passage
+        evidence, medical answer support, product-property answerability, and cross-lingual
+        alignment rather than broad topic overlap
     multi_positive_training: preserve_miracl_spanish_passage_and_xpqa_multi_positive_qrels
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Spanish
     source_urls:
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: Mintaka arXiv
-        url: https://arxiv.org/abs/2210.01613
-      - label: MIRACL arXiv
-        url: https://arxiv.org/abs/2210.09984
-      - label: Spanish Passage Retrieval project page
-        url: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
-      - label: Spanish Passage Retrieval ECIR paper
-        url: https://doi.org/10.1007/978-3-030-15719-7_19
-      - label: xPQA arXiv
-        url: https://arxiv.org/abs/2305.09249
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: Mintaka arXiv
+      url: https://arxiv.org/abs/2210.01613
+    - label: MIRACL arXiv
+      url: https://arxiv.org/abs/2210.09984
+    - label: Spanish Passage Retrieval project page
+      url: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
+    - label: Spanish Passage Retrieval ECIR paper
+      url: https://doi.org/10.1007/978-3-030-15719-7_19
+    - label: xPQA arXiv
+      url: https://arxiv.org/abs/2305.09249
     source_notes: []
   references:
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering"
-      url: https://arxiv.org/abs/2210.01613
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages"
-      url: https://arxiv.org/abs/2210.09984
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related Resources"
-      url: https://doi.org/10.1007/978-3-030-15719-7_19
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "xPQA: Cross-Lingual Product Question Answering across 12 Languages"
-      url: https://arxiv.org/abs/2305.09249
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question
+      Answering'
+    url: https://arxiv.org/abs/2210.01613
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Making a MIRACL: Multilingual Information Retrieval Across a Continuum
+      of Languages'
+    url: https://arxiv.org/abs/2210.09984
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related
+      Resources
+    url: https://doi.org/10.1007/978-3-030-15719-7_19
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'xPQA: Cross-Lingual Product Question Answering across 12 Languages'
+    url: https://arxiv.org/abs/2305.09249
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.359882464
+      query_weighted_hit_at_10: 0.5824587706
+      query_weighted_recall_at_100: 0.6144509248
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.5100485779
+      query_weighted_hit_at_10: 0.7586206897
+      query_weighted_recall_at_100: 0.8579032177
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.4302458962
+      query_weighted_hit_at_10: 0.6251874063
+      query_weighted_recall_at_100: 0.8368131992
+      source: dataset_candidate_subset
 ```

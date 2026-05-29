@@ -65,6 +65,18 @@ responding to a different premise.
 | Positive qrels | 50 |
 | BM25 nDCG@10 | 0.3620 |
 | BM25 hit@10 | 0.6600 |
+| BM25 Recall@100 | 0.8800 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4239 |
+| Dense hit@10 | 0.7800 |
+| Dense Recall@100 | 0.9400 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4022 |
+| Reranking hybrid hit@10 | 0.7600 |
+| Reranking hybrid Recall@100 | 0.9600 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 553.90 |
 | Document length avg chars | 458.77 |
 
@@ -124,7 +136,52 @@ benchmark_task_metadata:
     query_mean: 553.9
     document_mean: 458.769188
   bm25:
-    ndcg_at_10: 0.3619676352
+    ndcg_at_10: 0.3619676352200447
     hit_at_10: 0.66
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3619676352
+      hit_at_10: 0.66
+      recall_at_100: 0.88
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.88
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4239288872
+      hit_at_10: 0.78
+      recall_at_100: 0.94
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.94
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4022230934
+      hit_at_10: 0.76
+      recall_at_100: 0.96
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.04
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.96
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

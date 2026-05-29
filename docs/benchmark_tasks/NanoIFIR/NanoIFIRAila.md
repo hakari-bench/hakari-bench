@@ -85,8 +85,20 @@ topics but differ on material facts, procedural posture, or legal standard.
 | Positive qrels | 119 |
 | Positives per query | avg 2.98 / min 1 / median 2.0 / max 10 |
 | Multi-positive queries | 30 (75.00%) |
-| BM25 nDCG@10 | 0.1051 |
-| BM25 hit@10 | 0.2250 |
+| BM25 nDCG@10 | 0.0988 |
+| BM25 hit@10 | 0.2000 |
+| BM25 Recall@100 | 0.3361 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.0878 |
+| Dense hit@10 | 0.2750 |
+| Dense Recall@100 | 0.3950 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.0798 |
+| Reranking hybrid hit@10 | 0.2000 |
+| Reranking hybrid Recall@100 | 0.4034 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 21 |
 | Query length avg chars | 2,889.40 |
 | Document length avg chars | 19,987.82 |
 
@@ -141,37 +153,86 @@ benchmark_task_metadata:
     query_mean: 2889.4
     document_mean: 19987.820178448866
   bm25:
-    ndcg_at_10: 0.10511247991122552
-    hit_at_10: 0.225
-    source: dataset_bm25_column
+    ndcg_at_10: 0.09884050780615407
+    hit_at_10: 0.2
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: ifir_adapted
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoIFIRAila queries, qrels, and positive prior-case documents
     useful_training_data:
-      - non-overlapping AILA precedent retrieval pairs
-      - Indian Supreme Court citation graphs
-      - legal case similarity datasets
-      - same-statute legal hard negatives
+    - non-overlapping AILA precedent retrieval pairs
+    - Indian Supreme Court citation graphs
+    - legal case similarity datasets
+    - same-statute legal hard negatives
     synthetic_data:
-      document_generation: long Indian Supreme Court-style judgments with issues, facts, citations, and reasoning
-      question_generation: legal fact patterns with explicit retrieval instructions and desired precedent constraints
-      answerability: positives should be prior cases satisfying the legal analogy or instruction constraints
+      document_generation: long Indian Supreme Court-style judgments with issues,
+        facts, citations, and reasoning
+      question_generation: legal fact patterns with explicit retrieval instructions
+        and desired precedent constraints
+      answerability: positives should be prior cases satisfying the legal analogy
+        or instruction constraints
     multi_positive_training: preserve_multiple_relevant_prior_cases
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoIFIR
     source_urls:
-      - label: IFIR arXiv
-        url: https://arxiv.org/abs/2503.04644
-      - label: AILA 2019 overview
-        url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+    - label: IFIR arXiv
+      url: https://arxiv.org/abs/2503.04644
+    - label: AILA 2019 overview
+      url: https://ceur-ws.org/Vol-2517/T1-1.pdf
     source_notes: []
   references:
-    - title: "IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain Information Retrieval"
-      url: https://arxiv.org/abs/2503.04644
-      year: 2025
-      doi: 10.18653/v1/2025.naacl-long.511
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in
+      Expert-Domain Information Retrieval'
+    url: https://arxiv.org/abs/2503.04644
+    year: 2025
+    doi: 10.18653/v1/2025.naacl-long.511
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.0988405078
+      hit_at_10: 0.2
+      recall_at_100: 0.3361344538
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 40
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3361344538
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.0878033668
+      hit_at_10: 0.275
+      recall_at_100: 0.3949579832
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 40
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3949579832
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.0797521737
+      hit_at_10: 0.2
+      recall_at_100: 0.4033613445
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.525
+      query_count: 40
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4033613445
+      safeguard_positive_rows: 21
+      rows_with_101_candidates: 21
 ```

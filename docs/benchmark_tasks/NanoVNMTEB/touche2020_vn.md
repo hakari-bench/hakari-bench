@@ -94,8 +94,20 @@ seed generation from this evaluation split.
 | Avg positives / query | 19.24 |
 | Positives per query (min / median / max) | 6 / 19 / 32 |
 | Queries with multiple positives | 25 (100.00%) |
-| BM25 nDCG@10 | 0.7369 |
+| BM25 nDCG@10 | 0.6841 |
 | BM25 hit@10 | 1.0000 |
+| BM25 Recall@100 | 0.8212 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6869 |
+| Dense hit@10 | 1.0000 |
+| Dense Recall@100 | 0.9044 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7280 |
+| Reranking hybrid hit@10 | 1.0000 |
+| Reranking hybrid Recall@100 | 0.8960 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 52.20 |
 | Document length avg chars | 1,939.62 |
 
@@ -143,10 +155,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://ceur-ws.org/Vol-2696/paper_261.pdf
     additional_source_urls:
-      - https://webis.de/events/touche-20/shared-task-1.html
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/webis-touche2020-vn
+    - https://webis.de/events/touche-20/shared-task-1.html
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/webis-touche2020-vn
     no_paper_note: null
   counts:
     queries: 25
@@ -163,61 +175,110 @@ benchmark_task_metadata:
     query_mean: 52.2
     document_mean: 1939.618
   bm25:
-    ndcg_at_10: 0.736933531
+    ndcg_at_10: 0.6841345408850984
     hit_at_10: 1.0
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB Touché 2020 test split from GreenNode/webis-touche2020-vn"
+    evaluation_split_origin: translated VN-MTEB Touché 2020 test split from GreenNode/webis-touche2020-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated Touché2020-VN test topics, qrels, and positive argument passages used by this Nano split."
+    leakage_note: Exclude translated Touché2020-VN test topics, qrels, and positive
+      argument passages used by this Nano split.
     useful_training_data:
-      - non-overlapping Touché argument retrieval data
-      - Vietnamese debate and opinion QA
-      - argument mining and stance-labeled argument corpora
-      - translated argument retrieval data with overlap removed
+    - non-overlapping Touché argument retrieval data
+    - Vietnamese debate and opinion QA
+    - argument mining and stance-labeled argument corpora
+    - translated argument retrieval data with overlap removed
     synthetic_data:
-      document_generation: "Vietnamese debate passages preserving stance, claim, premises, and policy details."
-      question_generation: "Vietnamese controversial questions that the arguments address."
-      answerability: "Queries should have multiple pro and con arguments plus same-topic off-stance hard negatives."
+      document_generation: Vietnamese debate passages preserving stance, claim, premises,
+        and policy details.
+      question_generation: Vietnamese controversial questions that the arguments address.
+      answerability: Queries should have multiple pro and con arguments plus same-topic
+        off-stance hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: Touché 2020 overview
-        url: https://ceur-ws.org/Vol-2696/paper_261.pdf
-      - label: Touché 2020 Task 1 page
-        url: https://webis.de/events/touche-20/shared-task-1.html
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/webis-touche2020-vn
-        url: https://huggingface.co/datasets/GreenNode/webis-touche2020-vn
+    - label: Touché 2020 overview
+      url: https://ceur-ws.org/Vol-2696/paper_261.pdf
+    - label: Touché 2020 Task 1 page
+      url: https://webis.de/events/touche-20/shared-task-1.html
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/webis-touche2020-vn
+      url: https://huggingface.co/datasets/GreenNode/webis-touche2020-vn
     source_notes: []
   references:
-    - title: "Overview of Touché 2020: Argument Retrieval"
-      url: https://ceur-ws.org/Vol-2696/paper_261.pdf
-      year: 2020
-      doi: null
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/webis-touche2020-vn
-      url: https://huggingface.co/datasets/GreenNode/webis-touche2020-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'Overview of Touché 2020: Argument Retrieval'
+    url: https://ceur-ws.org/Vol-2696/paper_261.pdf
+    year: 2020
+    doi: null
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/webis-touche2020-vn
+    url: https://huggingface.co/datasets/GreenNode/webis-touche2020-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6841345409
+      hit_at_10: 1.0
+      recall_at_100: 0.8212058212
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 25
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8212058212
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6869062421
+      hit_at_10: 1.0
+      recall_at_100: 0.9043659044
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 25
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9043659044
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7280316314
+      hit_at_10: 1.0
+      recall_at_100: 0.896049896
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 25
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.896049896
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

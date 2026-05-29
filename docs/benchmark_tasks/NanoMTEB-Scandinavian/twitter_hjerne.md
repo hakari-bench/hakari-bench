@@ -80,6 +80,18 @@ the specific question.
 | Positive qrels | 262 |
 | BM25 nDCG@10 | 0.2395 |
 | BM25 hit@10 | 0.6104 |
+| BM25 Recall@100 | 0.6527 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6211 |
+| Dense hit@10 | 0.9091 |
+| Dense Recall@100 | 0.9008 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4480 |
+| Reranking hybrid hit@10 | 0.8182 |
+| Reranking hybrid Recall@100 | 0.8664 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 165.01 |
 | Document length avg chars | 128.49 |
 
@@ -124,7 +136,8 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: thesis_and_dataset_card
     paper_pdf_or_html_checked: true
-    no_paper_note: No standalone retrieval paper was found; SEB paper, source dataset card, MTEB card, and Danoliterate thesis were checked.
+    no_paper_note: No standalone retrieval paper was found; SEB paper, source dataset
+      card, MTEB card, and Danoliterate thesis were checked.
   counts:
     queries: 77
     documents: 262
@@ -142,40 +155,88 @@ benchmark_task_metadata:
   bm25:
     ndcg_at_10: 0.23947764988878614
     hit_at_10: 0.6103896103896104
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: train
     train_eval_overlap_audit: not_audited
     leakage_note: exclude Nano question tweets, reply tweets, and qrels from training
     useful_training_data:
-      - Danish forum question-reply pairs
-      - Danish social-media QA pairs
-      - community-support and recommendation threads
-      - multi-positive answer retrieval examples
+    - Danish forum question-reply pairs
+    - Danish social-media QA pairs
+    - community-support and recommendation threads
+    - multi-positive answer retrieval examples
     synthetic_data:
-      document_generation: informal Danish reply tweets with advice, recommendations, troubleshooting, and subjective suggestions
-      question_generation: Danish help-seeking #twitterhjerne-style question tweets
-      answerability: multiple replies can be valid if they attempt to answer the same question
+      document_generation: informal Danish reply tweets with advice, recommendations,
+        troubleshooting, and subjective suggestions
+      question_generation: Danish help-seeking
+      answerability: multiple replies can be valid if they attempt to answer the same
+        question
     multi_positive_training: preserve_multiple_human_replies_as_positives
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Scandinavian
     source_urls:
-      - label: Scandinavian Embedding Benchmarks
-        url: https://arxiv.org/abs/2406.02396
-      - label: Are GLLMs Danoliterate?
-        url: https://sorenmulli.github.io/thesis/thesis.pdf
-      - label: sorenmulli/da-hashtag-twitterhjerne
-        url: https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne
-      - label: mteb/TwitterHjerneRetrieval
-        url: https://huggingface.co/datasets/mteb/TwitterHjerneRetrieval
-    source_notes:
-      - The original dataset has 2-6 answer tweets per question; the Nano split keeps a multi-positive retrieval framing.
-  references:
-    - title: "Are GLLMs Danoliterate?"
+    - label: Scandinavian Embedding Benchmarks
+      url: https://arxiv.org/abs/2406.02396
+    - label: Are GLLMs Danoliterate?
       url: https://sorenmulli.github.io/thesis/thesis.pdf
-      year: 2024
-      doi: null
-      is_paper: true
-      source_confidence: thesis_source
+    - label: sorenmulli/da-hashtag-twitterhjerne
+      url: https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne
+    - label: mteb/TwitterHjerneRetrieval
+      url: https://huggingface.co/datasets/mteb/TwitterHjerneRetrieval
+    source_notes:
+    - The original dataset has 2-6 answer tweets per question; the Nano split keeps
+      a multi-positive retrieval framing.
+  references:
+  - title: Are GLLMs Danoliterate?
+    url: https://sorenmulli.github.io/thesis/thesis.pdf
+    year: 2024
+    doi: null
+    is_paper: true
+    source_confidence: thesis_source
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2394776499
+      hit_at_10: 0.6103896104
+      recall_at_100: 0.6526717557
+      candidate_count_min: 262
+      candidate_count_max: 262
+      candidate_count_mean: 262.0
+      query_count: 77
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6526717557
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6211487703
+      hit_at_10: 0.9090909091
+      recall_at_100: 0.9007633588
+      candidate_count_min: 262
+      candidate_count_max: 262
+      candidate_count_mean: 262.0
+      query_count: 77
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9007633588
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4480048098
+      hit_at_10: 0.8181818182
+      recall_at_100: 0.8664122137
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.025974
+      query_count: 77
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8664122137
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

@@ -78,8 +78,20 @@ wrong for the question type or patient context.
 | Positive qrels | 466 |
 | Positives per query | avg 11.10 / min 1 / median 9.0 / max 37 |
 | Multi-positive queries | 38 (90.48%) |
-| BM25 nDCG@10 | 0.1345 |
-| BM25 hit@10 | 0.4762 |
+| BM25 nDCG@10 | 0.2258 |
+| BM25 hit@10 | 0.6905 |
+| BM25 Recall@100 | 0.3927 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4073 |
+| Dense hit@10 | 0.8095 |
+| Dense Recall@100 | 0.7124 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3376 |
+| Reranking hybrid hit@10 | 0.7619 |
+| Reranking hybrid Recall@100 | 0.6652 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 3 |
 | Query length avg chars | 225.21 |
 | Document length avg chars | 1,627.45 |
 
@@ -134,37 +146,85 @@ benchmark_task_metadata:
     query_mean: 225.21428571428572
     document_mean: 1627.4549
   bm25:
-    ndcg_at_10: 0.13446779691687544
-    hit_at_10: 0.47619047619047616
-    source: dataset_bm25_column
+    ndcg_at_10: 0.22575663643446836
+    hit_at_10: 0.6904761904761905
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: ifir_adapted
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoIFIRCds queries, qrels, and positive biomedical articles
     useful_training_data:
-      - non-overlapping TREC-CDS topics
-      - PubMed and PMC clinical case retrieval
-      - biomedical diagnosis treatment and test retrieval data
-      - same-disease hard negatives
+    - non-overlapping TREC-CDS topics
+    - PubMed and PMC clinical case retrieval
+    - biomedical diagnosis treatment and test retrieval data
+    - same-disease hard negatives
     synthetic_data:
-      document_generation: biomedical article titles and abstracts about diagnosis, testing, and treatment
-      question_generation: patient vignettes with explicit diagnosis/test/treatment retrieval instructions
-      answerability: positives should provide information useful for the patient-specific clinical need
+      document_generation: biomedical article titles and abstracts about diagnosis,
+        testing, and treatment
+      question_generation: patient vignettes with explicit diagnosis/test/treatment
+        retrieval instructions
+      answerability: positives should provide information useful for the patient-specific
+        clinical need
     multi_positive_training: preserve_multiple_clinically_relevant_articles
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoIFIR
     source_urls:
-      - label: IFIR arXiv
-        url: https://arxiv.org/abs/2503.04644
-      - label: TREC 2015 CDS overview
-        url: https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf
+    - label: IFIR arXiv
+      url: https://arxiv.org/abs/2503.04644
+    - label: TREC 2015 CDS overview
+      url: https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf
     source_notes: []
   references:
-    - title: "Overview of the TREC 2015 Clinical Decision Support Track"
-      url: https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf
-      year: 2015
-      doi: null
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: Overview of the TREC 2015 Clinical Decision Support Track
+    url: https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf
+    year: 2015
+    doi: null
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2257566364
+      hit_at_10: 0.6904761905
+      recall_at_100: 0.3927038627
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 42
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3927038627
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4073249106
+      hit_at_10: 0.8095238095
+      recall_at_100: 0.7124463519
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 42
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7124463519
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3376132788
+      hit_at_10: 0.7619047619
+      recall_at_100: 0.6652360515
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.071429
+      query_count: 42
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6652360515
+      safeguard_positive_rows: 3
+      rows_with_101_candidates: 3
 ```

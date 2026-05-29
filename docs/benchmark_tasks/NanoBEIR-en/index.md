@@ -159,8 +159,15 @@ entity documents should identify the intended entity.
 | Positive qrels | 4,696 |
 | Average positives / query | 7.24 |
 | Queries with multiple positives | 343 |
-| Query-weighted BM25 nDCG@10 | 0.5533 |
-| Query-weighted BM25 hit@10 | 0.8182 |
+| Query-weighted BM25 nDCG@10 | 0.5714 |
+| Query-weighted BM25 hit@10 | 0.8459 |
+| Query-weighted BM25 Recall@100 | 0.8026 |
+| Query-weighted Dense nDCG@10 | 0.6088 |
+| Query-weighted Dense hit@10 | 0.8752 |
+| Query-weighted Dense Recall@100 | 0.8280 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6152 |
+| Query-weighted Reranking hybrid hit@10 | 0.8737 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8447 |
 | Mean query length | 147.53 chars, weighted by query count |
 | Mean document length | 903.41 chars, weighted by split-local document count |
 
@@ -233,148 +240,169 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 147.5315870246533
     document_mean_weighted_by_documents: 903.4117960579307
   bm25:
-    ndcg_at_10_query_weighted: 0.5532781202953775
-    hit_at_10_query_weighted: 0.8181818181818182
-    source: dataset_bm25_column
+    ndcg_at_10_query_weighted: 0.5713905535
+    hit_at_10_query_weighted: 0.8459167951
+    source: dataset_candidate_subset
     strongest_task_by_ndcg_at_10: NanoHotpotQA
     weakest_task_by_ndcg_at_10: NanoClimateFEVER
   tasks:
-    - name: NanoArguAna
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoArguAna.md
-      retrieval_focus: argument_to_counterargument
-      queries: 50
-      documents: 3635
-      positive_qrels: 50
-      bm25_ndcg_at_10: 0.4462
-      bm25_hit_at_10: 0.74
-    - name: NanoClimateFEVER
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoClimateFEVER.md
-      retrieval_focus: climate_claim_to_evidence
-      queries: 50
-      documents: 3408
-      positive_qrels: 148
-      bm25_ndcg_at_10: 0.3288755905
-      bm25_hit_at_10: 0.74
-    - name: NanoDBPedia
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoDBPedia.md
-      retrieval_focus: entity_query_to_dbpedia_document
-      queries: 50
-      documents: 6045
-      positive_qrels: 1158
-      bm25_ndcg_at_10: 0.5619
-      bm25_hit_at_10: 0.92
-    - name: NanoFEVER
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoFEVER.md
-      retrieval_focus: factual_claim_to_wikipedia_evidence
-      queries: 50
-      documents: 4996
-      positive_qrels: 57
-      bm25_ndcg_at_10: 0.8141
-      bm25_hit_at_10: 0.94
-    - name: NanoFiQA2018
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoFiQA2018.md
-      retrieval_focus: finance_question_to_answer_passage
-      queries: 50
-      documents: 4598
-      positive_qrels: 123
-      bm25_ndcg_at_10: 0.3583
-      bm25_hit_at_10: 0.64
-    - name: NanoHotpotQA
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoHotpotQA.md
-      retrieval_focus: multihop_question_to_wikipedia_evidence
-      queries: 50
-      documents: 5090
-      positive_qrels: 100
-      bm25_ndcg_at_10: 0.8175905937
-      bm25_hit_at_10: 1.0
-    - name: NanoMSMARCO
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoMSMARCO.md
-      retrieval_focus: web_question_to_passage
-      queries: 50
-      documents: 5043
-      positive_qrels: 50
-      bm25_ndcg_at_10: 0.489
-      bm25_hit_at_10: 0.74
-    - name: NanoNFCorpus
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoNFCorpus.md
-      retrieval_focus: health_topic_to_medical_evidence
-      queries: 50
-      documents: 2953
-      positive_qrels: 1651
-      bm25_ndcg_at_10: 0.362
-      bm25_hit_at_10: 0.66
-    - name: NanoNQ
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoNQ.md
-      retrieval_focus: natural_question_to_wikipedia_evidence
-      queries: 50
-      documents: 5035
-      positive_qrels: 57
-      bm25_ndcg_at_10: 0.4708
-      bm25_hit_at_10: 0.68
-    - name: NanoQuoraRetrieval
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoQuoraRetrieval.md
-      retrieval_focus: question_to_duplicate_question
-      queries: 50
-      documents: 5046
-      positive_qrels: 70
-      bm25_ndcg_at_10: 0.7864
-      bm25_hit_at_10: 0.94
-    - name: NanoSCIDOCS
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoSCIDOCS.md
-      retrieval_focus: paper_title_to_related_scientific_document
-      queries: 50
-      documents: 2210
-      positive_qrels: 244
-      bm25_ndcg_at_10: 0.336
-      bm25_hit_at_10: 0.78
-    - name: NanoSciFact
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoSciFact.md
-      retrieval_focus: scientific_claim_to_evidence_abstract
-      queries: 50
-      documents: 2919
-      positive_qrels: 56
-      bm25_ndcg_at_10: 0.7174
-      bm25_hit_at_10: 0.86
-    - name: NanoTouche2020
-      path: docs/benchmark_tasks/NanoBEIR-en/NanoTouche2020.md
-      retrieval_focus: controversial_question_to_argument_passage
-      queries: 49
-      documents: 5745
-      positive_qrels: 932
-      bm25_ndcg_at_10: 0.7072
-      bm25_hit_at_10: 1.0
+  - name: NanoArguAna
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoArguAna.md
+    retrieval_focus: argument_to_counterargument
+    queries: 50
+    documents: 3635
+    positive_qrels: 50
+    bm25_ndcg_at_10: 0.4462
+    bm25_hit_at_10: 0.74
+  - name: NanoClimateFEVER
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoClimateFEVER.md
+    retrieval_focus: climate_claim_to_evidence
+    queries: 50
+    documents: 3408
+    positive_qrels: 148
+    bm25_ndcg_at_10: 0.3288755905
+    bm25_hit_at_10: 0.74
+  - name: NanoDBPedia
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoDBPedia.md
+    retrieval_focus: entity_query_to_dbpedia_document
+    queries: 50
+    documents: 6045
+    positive_qrels: 1158
+    bm25_ndcg_at_10: 0.5619
+    bm25_hit_at_10: 0.92
+  - name: NanoFEVER
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoFEVER.md
+    retrieval_focus: factual_claim_to_wikipedia_evidence
+    queries: 50
+    documents: 4996
+    positive_qrels: 57
+    bm25_ndcg_at_10: 0.8141
+    bm25_hit_at_10: 0.94
+  - name: NanoFiQA2018
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoFiQA2018.md
+    retrieval_focus: finance_question_to_answer_passage
+    queries: 50
+    documents: 4598
+    positive_qrels: 123
+    bm25_ndcg_at_10: 0.3583
+    bm25_hit_at_10: 0.64
+  - name: NanoHotpotQA
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoHotpotQA.md
+    retrieval_focus: multihop_question_to_wikipedia_evidence
+    queries: 50
+    documents: 5090
+    positive_qrels: 100
+    bm25_ndcg_at_10: 0.8175905937
+    bm25_hit_at_10: 1.0
+  - name: NanoMSMARCO
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoMSMARCO.md
+    retrieval_focus: web_question_to_passage
+    queries: 50
+    documents: 5043
+    positive_qrels: 50
+    bm25_ndcg_at_10: 0.489
+    bm25_hit_at_10: 0.74
+  - name: NanoNFCorpus
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoNFCorpus.md
+    retrieval_focus: health_topic_to_medical_evidence
+    queries: 50
+    documents: 2953
+    positive_qrels: 1651
+    bm25_ndcg_at_10: 0.362
+    bm25_hit_at_10: 0.66
+  - name: NanoNQ
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoNQ.md
+    retrieval_focus: natural_question_to_wikipedia_evidence
+    queries: 50
+    documents: 5035
+    positive_qrels: 57
+    bm25_ndcg_at_10: 0.4708
+    bm25_hit_at_10: 0.68
+  - name: NanoQuoraRetrieval
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoQuoraRetrieval.md
+    retrieval_focus: question_to_duplicate_question
+    queries: 50
+    documents: 5046
+    positive_qrels: 70
+    bm25_ndcg_at_10: 0.7864
+    bm25_hit_at_10: 0.94
+  - name: NanoSCIDOCS
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoSCIDOCS.md
+    retrieval_focus: paper_title_to_related_scientific_document
+    queries: 50
+    documents: 2210
+    positive_qrels: 244
+    bm25_ndcg_at_10: 0.336
+    bm25_hit_at_10: 0.78
+  - name: NanoSciFact
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoSciFact.md
+    retrieval_focus: scientific_claim_to_evidence_abstract
+    queries: 50
+    documents: 2919
+    positive_qrels: 56
+    bm25_ndcg_at_10: 0.7174
+    bm25_hit_at_10: 0.86
+  - name: NanoTouche2020
+    path: docs/benchmark_tasks/NanoBEIR-en/NanoTouche2020.md
+    retrieval_focus: controversial_question_to_argument_passage
+    queries: 49
+    documents: 5745
+    positive_qrels: 932
+    bm25_ndcg_at_10: 0.7072
+    bm25_hit_at_10: 1.0
   learning:
-    leakage_note: exclude NanoBEIR-en evaluation queries, qrels, and positive documents; audit BEIR and source-task split overlap before training on public source data
+    leakage_note: exclude NanoBEIR-en evaluation queries, qrels, and positive documents;
+      audit BEIR and source-task split overlap before training on public source data
     useful_training_data:
-      - non-overlapping BEIR-style retrieval training pairs
-      - MS MARCO and Natural Questions passage retrieval train data
-      - FEVER, Climate-FEVER, and SciFact claim-evidence pairs
-      - finance, medical, and scientific document retrieval data
-      - duplicate-question and paraphrase retrieval pairs
-      - argument-counterargument retrieval pairs
-      - entity search and disambiguation examples
+    - non-overlapping BEIR-style retrieval training pairs
+    - MS MARCO and Natural Questions passage retrieval train data
+    - FEVER, Climate-FEVER, and SciFact claim-evidence pairs
+    - finance, medical, and scientific document retrieval data
+    - duplicate-question and paraphrase retrieval pairs
+    - argument-counterargument retrieval pairs
+    - entity search and disambiguation examples
     synthetic_data:
-      document_generation: source-style English passages, entity descriptions, evidence abstracts, finance or medical documents, and argument passages
-      question_generation: task-specific English claims, questions, duplicate-question paraphrases, entity queries, and counterargument prompts
-      answerability: positives must satisfy the source task's relevance relation, not only topical overlap
+      document_generation: source-style English passages, entity descriptions, evidence
+        abstracts, finance or medical documents, and argument passages
+      question_generation: task-specific English claims, questions, duplicate-question
+        paraphrases, entity queries, and counterargument prompts
+      answerability: positives must satisfy the source task's relevance relation,
+        not only topical overlap
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-en
     source_urls:
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: NanoBEIR Hugging Face collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-  references:
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR arXiv
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: NanoBEIR Hugging Face collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      is_paper: false
-      source_confidence: probably_correct
+  references:
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.5713905535
+      query_weighted_hit_at_10: 0.8459167951
+      query_weighted_recall_at_100: 0.8026464623
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.6087538568
+      query_weighted_hit_at_10: 0.875192604
+      query_weighted_recall_at_100: 0.8280220921
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.6152406781
+      query_weighted_hit_at_10: 0.873651772
+      query_weighted_recall_at_100: 0.8446633563
+      source: dataset_candidate_subset
 ```

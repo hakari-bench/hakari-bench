@@ -142,8 +142,20 @@ should share the same entity or broad topic while lacking the requested relation
 | Avg positives / query | 1.14 |
 | Positives per query (min / median / max) | 1 / 1.00 / 2 |
 | Queries with multiple positives | 7 (14.0%) |
-| BM25 nDCG@10 | 0.4708 |
-| BM25 hit@10 | 0.6800 |
+| BM25 nDCG@10 | 0.5140 |
+| BM25 hit@10 | 0.8000 |
+| BM25 Recall@100 | 0.9123 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6726 |
+| Dense hit@10 | 0.8600 |
+| Dense Recall@100 | 1.0000 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6584 |
+| Reranking hybrid hit@10 | 0.8800 |
+| Reranking hybrid Recall@100 | 0.9649 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 47.04 |
 | Document length avg chars | 525.60 |
 
@@ -204,53 +216,103 @@ benchmark_task_metadata:
     query_mean: 47.04
     document_mean: 525.595829
   bm25:
-    ndcg_at_10: 0.470773212
-    hit_at_10: 0.68
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5140475661271899
+    hit_at_10: 0.8
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding upstream dev/test data and any NQ/BEIR-derived records likely to overlap with Nano evaluation questions or passages
+    leakage_note: prefer excluding upstream dev/test data and any NQ/BEIR-derived
+      records likely to overlap with Nano evaluation questions or passages
     useful_training_data:
-      - official non-overlapping Natural Questions train split
-      - open-domain QA retrieval pairs over Wikipedia
-      - answer-span to passage retrieval supervision
-      - KILT-style question-to-Wikipedia evidence pairs
+    - official non-overlapping Natural Questions train split
+    - open-domain QA retrieval pairs over Wikipedia
+    - answer-span to passage retrieval supervision
+    - KILT-style question-to-Wikipedia evidence pairs
     synthetic_data:
-      document_generation: non-evaluation Wikipedia passages with factual answer-bearing statements
-      question_generation: natural search-style fact questions answerable from a single passage
-      answerability: positives should contain the requested relation and answer evidence, not just the same entity
+      document_generation: non-evaluation Wikipedia passages with factual answer-bearing
+        statements
+      question_generation: natural search-style fact questions answerable from a single
+        passage
+      answerability: positives should contain the requested relation and answer evidence,
+        not just the same entity
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-en
     source_urls:
-      - label: Natural Questions paper
-        url: https://aclanthology.org/Q19-1026/
-      - label: Google Research Natural Questions page
-        url: https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/
-      - label: BeIR/nq
-        url: https://huggingface.co/datasets/BeIR/nq
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    - label: Natural Questions paper
+      url: https://aclanthology.org/Q19-1026/
+    - label: Google Research Natural Questions page
+      url: https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/
+    - label: BeIR/nq
+      url: https://huggingface.co/datasets/BeIR/nq
+    - label: Zeta Alpha NanoBEIR collection
+      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
     source_notes: []
   references:
-    - title: "Natural Questions: A Benchmark for Question Answering Research"
-      url: https://aclanthology.org/Q19-1026/
-      year: 2019
-      doi: 10.1162/tacl_a_00276
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Google Research Natural Questions publication page"
-      url: https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/
-      year: 2019
-      doi: null
-      is_paper: false
-      source_confidence: definitive_project_page
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'Natural Questions: A Benchmark for Question Answering Research'
+    url: https://aclanthology.org/Q19-1026/
+    year: 2019
+    doi: 10.1162/tacl_a_00276
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Google Research Natural Questions publication page
+    url: https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/
+    year: 2019
+    doi: null
+    is_paper: false
+    source_confidence: definitive_project_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5140475661
+      hit_at_10: 0.8
+      recall_at_100: 0.9122807018
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9122807018
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6725556727
+      hit_at_10: 0.86
+      recall_at_100: 1.0
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6584447174
+      hit_at_10: 0.88
+      recall_at_100: 0.9649122807
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.02
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9649122807
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

@@ -132,8 +132,15 @@ related but different claim.
 | Positive qrels | 3,872 |
 | Average positives / query | 6.08 |
 | Queries with multiple positives | 588 |
-| Query-weighted BM25 nDCG@10 | 0.3069 |
-| Query-weighted BM25 hit@10 | 0.6499 |
+| Query-weighted BM25 nDCG@10 | 0.3649 |
+| Query-weighted BM25 hit@10 | 0.7190 |
+| Query-weighted BM25 Recall@100 | 0.6345 |
+| Query-weighted Dense nDCG@10 | 0.4591 |
+| Query-weighted Dense hit@10 | 0.7771 |
+| Query-weighted Dense Recall@100 | 0.7377 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.4461 |
+| Query-weighted Reranking hybrid hit@10 | 0.7928 |
+| Query-weighted Reranking hybrid Recall@100 | 0.7528 |
 | Mean query length | 1,100.29 chars, weighted by query count |
 | Mean document length | 3,569.62 chars, weighted by split-local document count |
 
@@ -191,91 +198,112 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 1100.287284144427
     document_mean_weighted_by_documents: 3569.6247564564937
   bm25:
-    ndcg_at_10_query_weighted: 0.30693814967397987
-    hit_at_10_query_weighted: 0.6499215070643642
-    source: dataset_bm25_column
+    ndcg_at_10_query_weighted: 0.3648991461
+    hit_at_10_query_weighted: 0.7189952904
+    source: dataset_candidate_subset
     strongest_task_by_ndcg_at_10: NanoIFIRScifact
     weakest_task_by_ndcg_at_10: NanoIFIRAila
   tasks:
-    - name: NanoIFIRAila
-      path: docs/benchmark_tasks/NanoIFIR/NanoIFIRAila.md
-      retrieval_focus: legal_fact_pattern_to_prior_case_judgment
-      queries: 40
-      documents: 2914
-      positive_qrels: 119
-      bm25_ndcg_at_10: 0.1051
-      bm25_hit_at_10: 0.225
-    - name: NanoIFIRCds
-      path: docs/benchmark_tasks/NanoIFIR/NanoIFIRCds.md
-      retrieval_focus: clinical_case_to_biomedical_evidence
-      queries: 42
-      documents: 10000
-      positive_qrels: 466
-      bm25_ndcg_at_10: 0.1345
-      bm25_hit_at_10: 0.4762
-    - name: NanoIFIRFiQA
-      path: docs/benchmark_tasks/NanoIFIR/NanoIFIRFiQA.md
-      retrieval_focus: finance_question_to_advice_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 1010
-      bm25_ndcg_at_10: 0.2252
-      bm25_hit_at_10: 0.61
-    - name: NanoIFIRFire
-      path: docs/benchmark_tasks/NanoIFIR/NanoIFIRFire.md
-      retrieval_focus: legal_case_summary_to_precedent_document
-      queries: 167
-      documents: 1739
-      positive_qrels: 563
-      bm25_ndcg_at_10: 0.3704
-      bm25_hit_at_10: 0.7365
-    - name: NanoIFIRNFCorpus
-      path: docs/benchmark_tasks/NanoIFIR/NanoIFIRNFCorpus.md
-      retrieval_focus: health_topic_to_medical_research_evidence
-      queries: 86
-      documents: 3593
-      positive_qrels: 242
-      bm25_ndcg_at_10: 0.2833
-      bm25_hit_at_10: 0.5698
-    - name: NanoIFIRPm
-      path: docs/benchmark_tasks/NanoIFIR/NanoIFIRPm.md
-      retrieval_focus: precision_medicine_case_to_clinical_trial
-      queries: 59
-      documents: 10000
-      positive_qrels: 1217
-      bm25_ndcg_at_10: 0.3522
-      bm25_hit_at_10: 0.8136
-    - name: NanoIFIRScifact
-      path: docs/benchmark_tasks/NanoIFIR/NanoIFIRScifact.md
-      retrieval_focus: scientific_claim_to_evidence_abstract
-      queries: 43
-      documents: 10000
-      positive_qrels: 255
-      bm25_ndcg_at_10: 0.782
-      bm25_hit_at_10: 1.0
+  - name: NanoIFIRAila
+    path: docs/benchmark_tasks/NanoIFIR/NanoIFIRAila.md
+    retrieval_focus: legal_fact_pattern_to_prior_case_judgment
+    queries: 40
+    documents: 2914
+    positive_qrels: 119
+    bm25_ndcg_at_10: 0.1051
+    bm25_hit_at_10: 0.225
+  - name: NanoIFIRCds
+    path: docs/benchmark_tasks/NanoIFIR/NanoIFIRCds.md
+    retrieval_focus: clinical_case_to_biomedical_evidence
+    queries: 42
+    documents: 10000
+    positive_qrels: 466
+    bm25_ndcg_at_10: 0.1345
+    bm25_hit_at_10: 0.4762
+  - name: NanoIFIRFiQA
+    path: docs/benchmark_tasks/NanoIFIR/NanoIFIRFiQA.md
+    retrieval_focus: finance_question_to_advice_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 1010
+    bm25_ndcg_at_10: 0.2252
+    bm25_hit_at_10: 0.61
+  - name: NanoIFIRFire
+    path: docs/benchmark_tasks/NanoIFIR/NanoIFIRFire.md
+    retrieval_focus: legal_case_summary_to_precedent_document
+    queries: 167
+    documents: 1739
+    positive_qrels: 563
+    bm25_ndcg_at_10: 0.3704
+    bm25_hit_at_10: 0.7365
+  - name: NanoIFIRNFCorpus
+    path: docs/benchmark_tasks/NanoIFIR/NanoIFIRNFCorpus.md
+    retrieval_focus: health_topic_to_medical_research_evidence
+    queries: 86
+    documents: 3593
+    positive_qrels: 242
+    bm25_ndcg_at_10: 0.2833
+    bm25_hit_at_10: 0.5698
+  - name: NanoIFIRPm
+    path: docs/benchmark_tasks/NanoIFIR/NanoIFIRPm.md
+    retrieval_focus: precision_medicine_case_to_clinical_trial
+    queries: 59
+    documents: 10000
+    positive_qrels: 1217
+    bm25_ndcg_at_10: 0.3522
+    bm25_hit_at_10: 0.8136
+  - name: NanoIFIRScifact
+    path: docs/benchmark_tasks/NanoIFIR/NanoIFIRScifact.md
+    retrieval_focus: scientific_claim_to_evidence_abstract
+    queries: 43
+    documents: 10000
+    positive_qrels: 255
+    bm25_ndcg_at_10: 0.782
+    bm25_hit_at_10: 1.0
   learning:
-    leakage_note: exclude NanoIFIR evaluation queries, qrels, and positive documents; audit expert-domain source overlap before training
+    leakage_note: exclude NanoIFIR evaluation queries, qrels, and positive documents;
+      audit expert-domain source overlap before training
     useful_training_data:
-      - IFIR-style instruction-query retrieval pairs
-      - legal case and precedent retrieval data
-      - clinical decision support and precision-medicine trial matching data
-      - FiQA-style finance question-answer retrieval data
-      - NFCorpus and SciFact evidence retrieval data
+    - IFIR-style instruction-query retrieval pairs
+    - legal case and precedent retrieval data
+    - clinical decision support and precision-medicine trial matching data
+    - FiQA-style finance question-answer retrieval data
+    - NFCorpus and SciFact evidence retrieval data
     synthetic_data:
-      document_generation: expert-domain legal, clinical, financial, medical, trial, or scientific documents with explicit constraints and evidence
-      question_generation: instruction-bearing expert-domain queries grounded in the document and role-specific need
-      answerability: positives must satisfy the instruction and domain constraints, not only topical overlap
+      document_generation: expert-domain legal, clinical, financial, medical, trial,
+        or scientific documents with explicit constraints and evidence
+      question_generation: instruction-bearing expert-domain queries grounded in the
+        document and role-specific need
+      answerability: positives must satisfy the instruction and domain constraints,
+        not only topical overlap
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoIFIR
     source_urls:
-      - label: IFIR ACL Anthology
-        url: https://aclanthology.org/2025.naacl-long.511/
-  references:
-    - title: "IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain Information Retrieval"
+    - label: IFIR ACL Anthology
       url: https://aclanthology.org/2025.naacl-long.511/
-      year: 2025
-      doi: 10.18653/v1/2025.naacl-long.511
-      is_paper: true
-      source_confidence: definitive_paper_link
+  references:
+  - title: 'IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in
+      Expert-Domain Information Retrieval'
+    url: https://aclanthology.org/2025.naacl-long.511/
+    year: 2025
+    doi: 10.18653/v1/2025.naacl-long.511
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.3648991461
+      query_weighted_hit_at_10: 0.7189952904
+      query_weighted_recall_at_100: 0.6344668451
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.4591234904
+      query_weighted_hit_at_10: 0.7770800628
+      query_weighted_recall_at_100: 0.7377063204
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.446114219
+      query_weighted_hit_at_10: 0.7927786499
+      query_weighted_recall_at_100: 0.7527937641
+      source: dataset_candidate_subset
 ```

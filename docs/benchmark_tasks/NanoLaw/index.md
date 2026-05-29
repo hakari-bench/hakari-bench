@@ -159,8 +159,15 @@ keywords. Synthetic data should not use NanoLaw evaluation documents as seeds.
 | Positive qrels | 5,488 |
 | Positives per query | 4.36 average |
 | Multi-positive queries | 334 |
-| Query-weighted BM25 nDCG@10 | 0.6275 |
-| Query-weighted BM25 hit@10 | 0.8133 |
+| Query-weighted BM25 nDCG@10 | 0.6661 |
+| Query-weighted BM25 hit@10 | 0.8523 |
+| Query-weighted BM25 Recall@100 | 0.9135 |
+| Query-weighted Dense nDCG@10 | 0.6064 |
+| Query-weighted Dense hit@10 | 0.7792 |
+| Query-weighted Dense Recall@100 | 0.8830 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6646 |
+| Query-weighted Reranking hybrid hit@10 | 0.8435 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9430 |
 | Mean query length | 992.41 chars, weighted by query count |
 | Mean document length | 15,455.46 chars, weighted by split-local document count |
 
@@ -212,9 +219,9 @@ benchmark_task_group_metadata:
   dataset_id: hakari-bench/NanoLaw
   language: multilingual
   languages:
-    - en
-    - de
-    - zh
+  - en
+  - de
+  - zh
   category: natural_language
   document_path: docs/benchmark_tasks/NanoLaw/index.md
   source_research:
@@ -237,164 +244,188 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 992.4130262112787
     document_mean_weighted_by_documents: 15455.464469686964
   bm25:
-    ndcg_at_10_query_weighted: 0.6274820930535272
-    hit_at_10_query_weighted: 0.8133439237490071
+    ndcg_at_10_query_weighted: 0.6660581196
+    hit_at_10_query_weighted: 0.8522637014
     ndcg_at_10_unweighted_task_mean: 0.5552953413500401
     hit_at_10_unweighted_task_mean: 0.7821383647798742
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: NanoLegalBenchCorporateLobbying
     hardest_task_by_ndcg_at_10: NanoAILAStatutes
   tasks:
-    - name: NanoAILACasedocs
-      path: docs/benchmark_tasks/NanoLaw/NanoAILACasedocs.md
-      retrieval_shape: long_legal_scenario_to_precedent_case
-      language: en
-      queries: 50
-      documents: 186
-      positive_qrels: 195
-      bm25_ndcg_at_10: 0.29210253925435126
-      bm25_hit_at_10: 0.6
-    - name: NanoAILAStatutes
-      path: docs/benchmark_tasks/NanoLaw/NanoAILAStatutes.md
-      retrieval_shape: long_legal_scenario_to_statute_provision
-      language: en
-      queries: 50
-      documents: 82
-      positive_qrels: 217
-      bm25_ndcg_at_10: 0.19002066324353106
-      bm25_hit_at_10: 0.66
-    - name: NanoGerDaLIRSmall
-      path: docs/benchmark_tasks/NanoLaw/NanoGerDaLIRSmall.md
-      retrieval_shape: german_legal_passage_to_judgment
-      language: de
-      queries: 200
-      documents: 9969
-      positive_qrels: 235
-      bm25_ndcg_at_10: 0.5847975886774149
-      bm25_hit_at_10: 0.72
-    - name: NanoLeCaRDv2
-      path: docs/benchmark_tasks/NanoLaw/NanoLeCaRDv2.md
-      retrieval_shape: chinese_criminal_case_to_related_cases
-      language: zh
-      queries: 159
-      documents: 3795
-      positive_qrels: 3896
-      bm25_ndcg_at_10: 0.6379051373412444
-      bm25_hit_at_10: 0.9371069182389937
-    - name: NanoLegalBenchConsumerContractsQA
-      path: docs/benchmark_tasks/NanoLaw/NanoLegalBenchConsumerContractsQA.md
-      retrieval_shape: contract_question_to_clause
-      language: en
-      queries: 200
-      documents: 153
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6453269540326203
-      bm25_hit_at_10: 0.84
-    - name: NanoLegalBenchCorporateLobbying
-      path: docs/benchmark_tasks/NanoLaw/NanoLegalBenchCorporateLobbying.md
-      retrieval_shape: bill_description_to_bill_summary
-      language: en
-      queries: 200
-      documents: 319
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8756703056285763
-      bm25_hit_at_10: 0.97
-    - name: NanoLegalQuAD
-      path: docs/benchmark_tasks/NanoLaw/NanoLegalQuAD.md
-      retrieval_shape: german_legal_question_to_judgment
-      language: de
-      queries: 200
-      documents: 200
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6765084712604355
-      bm25_hit_at_10: 0.795
-    - name: NanoLegalSummarization
-      path: docs/benchmark_tasks/NanoLaw/NanoLegalSummarization.md
-      retrieval_shape: plain_english_summary_to_contract_snippet
-      language: en
-      queries: 200
-      documents: 438
-      positive_qrels: 345
-      bm25_ndcg_at_10: 0.5400310713621468
-      bm25_hit_at_10: 0.735
+  - name: NanoAILACasedocs
+    path: docs/benchmark_tasks/NanoLaw/NanoAILACasedocs.md
+    retrieval_shape: long_legal_scenario_to_precedent_case
+    language: en
+    queries: 50
+    documents: 186
+    positive_qrels: 195
+    bm25_ndcg_at_10: 0.29210253925435126
+    bm25_hit_at_10: 0.6
+  - name: NanoAILAStatutes
+    path: docs/benchmark_tasks/NanoLaw/NanoAILAStatutes.md
+    retrieval_shape: long_legal_scenario_to_statute_provision
+    language: en
+    queries: 50
+    documents: 82
+    positive_qrels: 217
+    bm25_ndcg_at_10: 0.19002066324353106
+    bm25_hit_at_10: 0.66
+  - name: NanoGerDaLIRSmall
+    path: docs/benchmark_tasks/NanoLaw/NanoGerDaLIRSmall.md
+    retrieval_shape: german_legal_passage_to_judgment
+    language: de
+    queries: 200
+    documents: 9969
+    positive_qrels: 235
+    bm25_ndcg_at_10: 0.5847975886774149
+    bm25_hit_at_10: 0.72
+  - name: NanoLeCaRDv2
+    path: docs/benchmark_tasks/NanoLaw/NanoLeCaRDv2.md
+    retrieval_shape: chinese_criminal_case_to_related_cases
+    language: zh
+    queries: 159
+    documents: 3795
+    positive_qrels: 3896
+    bm25_ndcg_at_10: 0.6379051373412444
+    bm25_hit_at_10: 0.9371069182389937
+  - name: NanoLegalBenchConsumerContractsQA
+    path: docs/benchmark_tasks/NanoLaw/NanoLegalBenchConsumerContractsQA.md
+    retrieval_shape: contract_question_to_clause
+    language: en
+    queries: 200
+    documents: 153
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6453269540326203
+    bm25_hit_at_10: 0.84
+  - name: NanoLegalBenchCorporateLobbying
+    path: docs/benchmark_tasks/NanoLaw/NanoLegalBenchCorporateLobbying.md
+    retrieval_shape: bill_description_to_bill_summary
+    language: en
+    queries: 200
+    documents: 319
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8756703056285763
+    bm25_hit_at_10: 0.97
+  - name: NanoLegalQuAD
+    path: docs/benchmark_tasks/NanoLaw/NanoLegalQuAD.md
+    retrieval_shape: german_legal_question_to_judgment
+    language: de
+    queries: 200
+    documents: 200
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6765084712604355
+    bm25_hit_at_10: 0.795
+  - name: NanoLegalSummarization
+    path: docs/benchmark_tasks/NanoLaw/NanoLegalSummarization.md
+    retrieval_shape: plain_english_summary_to_contract_snippet
+    language: en
+    queries: 200
+    documents: 438
+    positive_qrels: 345
+    bm25_ndcg_at_10: 0.5400310713621468
+    bm25_hit_at_10: 0.735
   learning:
-    leakage_note: exclude NanoLaw evaluation queries, qrels, and positive documents; audit upstream legal benchmark splits before using public source data for training
+    leakage_note: exclude NanoLaw evaluation queries, qrels, and positive documents;
+      audit upstream legal benchmark splits before using public source data for training
     useful_training_data:
-      - Indian legal precedent retrieval and fact-to-statute retrieval
-      - German legal passage retrieval and legal QA over long judgments
-      - Chinese legal case retrieval and criminal-charge similarity data
-      - consumer-contract QA and terms-of-service clause retrieval
-      - legislative bill title and bill summary retrieval
-      - hard negatives sharing legal vocabulary but differing in governing issue
+    - Indian legal precedent retrieval and fact-to-statute retrieval
+    - German legal passage retrieval and legal QA over long judgments
+    - Chinese legal case retrieval and criminal-charge similarity data
+    - consumer-contract QA and terms-of-service clause retrieval
+    - legislative bill title and bill summary retrieval
+    - hard negatives sharing legal vocabulary but differing in governing issue
     synthetic_data:
-      document_generation: jurisdiction-specific cases, statutes, judgments, contract clauses, and bill summaries with realistic legal terminology and structure
-      question_generation: factual legal scenarios, legal questions, contract questions, plain-English clause summaries, and policy descriptions grounded in the generated or selected document
-      answerability: positives must be legally applicable, analogous, or evidential rather than merely sharing legal keywords
+      document_generation: jurisdiction-specific cases, statutes, judgments, contract
+        clauses, and bill summaries with realistic legal terminology and structure
+      question_generation: factual legal scenarios, legal questions, contract questions,
+        plain-English clause summaries, and policy descriptions grounded in the generated
+        or selected document
+      answerability: positives must be legally applicable, analogous, or evidential
+        rather than merely sharing legal keywords
     multi_positive_training: preserve_multi_authority_tasks_for_aila_and_lecardv2
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoLaw
     source_urls:
-      - label: AILA 2019 paper
-        url: https://ceur-ws.org/Vol-2517/T1-1.pdf
-      - label: Plain English Summarization of Contracts
-        url: https://aclanthology.org/W19-2201/
-      - label: GerDaLIR paper
-        url: https://aclanthology.org/2021.nllp-1.13/
-      - label: LeCaRDv2 arXiv
-        url: https://arxiv.org/abs/2310.17609
-      - label: LegalBench arXiv
-        url: https://arxiv.org/abs/2308.11462
-      - label: LegalQuAD paper DOI
-        url: https://doi.org/10.1109/AIKE52691.2021.00011
-      - label: Predicting Consumer Contracts DOI
-        url: https://doi.org/10.15779/Z382B8VC90
-      - label: mteb/AILA_casedocs
-        url: https://huggingface.co/datasets/mteb/AILA_casedocs
-      - label: mteb/AILA_statutes
-        url: https://huggingface.co/datasets/mteb/AILA_statutes
-      - label: mteb/GerDaLIRSmall
-        url: https://huggingface.co/datasets/mteb/GerDaLIRSmall
-      - label: mteb/LeCaRDv2
-        url: https://huggingface.co/datasets/mteb/LeCaRDv2
-      - label: mteb/LegalQuAD
-        url: https://huggingface.co/datasets/mteb/LegalQuAD
-      - label: mteb/legal_summarization
-        url: https://huggingface.co/datasets/mteb/legal_summarization
+    - label: AILA 2019 paper
+      url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+    - label: Plain English Summarization of Contracts
+      url: https://aclanthology.org/W19-2201/
+    - label: GerDaLIR paper
+      url: https://aclanthology.org/2021.nllp-1.13/
+    - label: LeCaRDv2 arXiv
+      url: https://arxiv.org/abs/2310.17609
+    - label: LegalBench arXiv
+      url: https://arxiv.org/abs/2308.11462
+    - label: LegalQuAD paper DOI
+      url: https://doi.org/10.1109/AIKE52691.2021.00011
+    - label: Predicting Consumer Contracts DOI
+      url: https://doi.org/10.15779/Z382B8VC90
+    - label: mteb/AILA_casedocs
+      url: https://huggingface.co/datasets/mteb/AILA_casedocs
+    - label: mteb/AILA_statutes
+      url: https://huggingface.co/datasets/mteb/AILA_statutes
+    - label: mteb/GerDaLIRSmall
+      url: https://huggingface.co/datasets/mteb/GerDaLIRSmall
+    - label: mteb/LeCaRDv2
+      url: https://huggingface.co/datasets/mteb/LeCaRDv2
+    - label: mteb/LegalQuAD
+      url: https://huggingface.co/datasets/mteb/LegalQuAD
+    - label: mteb/legal_summarization
+      url: https://huggingface.co/datasets/mteb/legal_summarization
     source_notes: []
   references:
-    - title: "Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance"
-      url: https://ceur-ws.org/Vol-2517/T1-1.pdf
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Plain English Summarization of Contracts
-      url: https://aclanthology.org/W19-2201/
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "GerDaLIR: A German Dataset for Legal Information Retrieval"
-      url: https://aclanthology.org/2021.nllp-1.13/
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset"
-      url: https://arxiv.org/abs/2310.17609
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models"
-      url: https://arxiv.org/abs/2308.11462
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Towards Intelligent Legal Advisors for Document Retrieval and Question-Answering in German Legal Documents
-      url: https://doi.org/10.1109/AIKE52691.2021.00011
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Predicting Consumer Contracts
-      url: https://doi.org/10.15779/Z382B8VC90
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal
+      Assistance'
+    url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Plain English Summarization of Contracts
+    url: https://aclanthology.org/W19-2201/
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'GerDaLIR: A German Dataset for Legal Information Retrieval'
+    url: https://aclanthology.org/2021.nllp-1.13/
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset'
+    url: https://arxiv.org/abs/2310.17609
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning
+      in Large Language Models'
+    url: https://arxiv.org/abs/2308.11462
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Towards Intelligent Legal Advisors for Document Retrieval and Question-Answering
+      in German Legal Documents
+    url: https://doi.org/10.1109/AIKE52691.2021.00011
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Predicting Consumer Contracts
+    url: https://doi.org/10.15779/Z382B8VC90
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.6660581196
+      query_weighted_hit_at_10: 0.8522637014
+      query_weighted_recall_at_100: 0.9135046045
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.6064118823
+      query_weighted_hit_at_10: 0.7791898332
+      query_weighted_recall_at_100: 0.8829563681
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.6646410752
+      query_weighted_hit_at_10: 0.8435266084
+      query_weighted_recall_at_100: 0.9429821189
+      source: dataset_candidate_subset
 ```

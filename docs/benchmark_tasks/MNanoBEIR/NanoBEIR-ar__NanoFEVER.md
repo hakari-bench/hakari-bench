@@ -109,8 +109,20 @@ keyword-equivalent pairs; the claim should require checking a factual relation.
 | Avg positives / query | 1.14 |
 | Positives per query (min / median / max) | 1 / 1.00 / 3 |
 | Queries with multiple positives | 6 (12.0%) |
-| BM25 nDCG@10 | 0.6670 |
-| BM25 hit@10 | 0.8200 |
+| BM25 nDCG@10 | 0.6665 |
+| BM25 hit@10 | 0.8000 |
+| BM25 Recall@100 | 0.9298 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8243 |
+| Dense hit@10 | 0.9600 |
+| Dense Recall@100 | 0.9825 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7767 |
+| Reranking hybrid hit@10 | 0.9200 |
+| Reranking hybrid Recall@100 | 0.9825 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 40.14 |
 | Document length avg chars | 1,039.03 |
 
@@ -170,60 +182,111 @@ benchmark_task_metadata:
     query_mean: 40.14
     document_mean: 1039.031825
   bm25:
-    ndcg_at_10: 0.6669815133
-    hit_at_10: 0.82
-    source: dataset_bm25_column
+    ndcg_at_10: 0.6665110333080634
+    hit_at_10: 0.8
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MNanoBEIR Arabic NanoBEIR task split from hakari-bench/NanoBEIR-ar
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding FEVER, BEIR, or NanoBEIR records likely to overlap with these evaluation claims or evidence passages
+    leakage_note: prefer excluding FEVER, BEIR, or NanoBEIR records likely to overlap
+      with these evaluation claims or evidence passages
     useful_training_data:
-      - non-overlapping FEVER claim-evidence pairs
-      - Wikipedia claim verification retrieval data
-      - Arabic or multilingual fact-checking datasets
-      - entity-centric factual retrieval pairs
+    - non-overlapping FEVER claim-evidence pairs
+    - Wikipedia claim verification retrieval data
+    - Arabic or multilingual fact-checking datasets
+    - entity-centric factual retrieval pairs
     synthetic_data:
-      document_generation: Arabic Wikipedia-style entity and event passages containing factual relations
-      question_generation: Arabic factual claims about dates, offices, ranks, biographies, works, and family relations
-      answerability: positives should contain evidence for verifying the claim, not just the same entity name
+      document_generation: Arabic Wikipedia-style entity and event passages containing
+        factual relations
+      question_generation: Arabic factual claims about dates, offices, ranks, biographies,
+        works, and family relations
+      answerability: positives should contain evidence for verifying the claim, not
+        just the same entity name
     multi_positive_training: optional_multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-ar
     source_urls:
-      - label: FEVER paper
-        url: https://arxiv.org/abs/1803.05355
-      - label: BEIR paper
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB paper
-        url: https://arxiv.org/abs/2502.13595
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR task
-  references:
-    - title: "FEVER: a large-scale dataset for Fact Extraction and VERification"
+    - label: FEVER paper
       url: https://arxiv.org/abs/1803.05355
-      year: 2018
-      doi: 10.18653/v1/N18-1074
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR paper
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
+    - label: MMTEB paper
       url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: Zeta Alpha NanoBEIR collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: dataset_collection
+    source_notes:
+    - Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR
+      task
+  references:
+  - title: 'FEVER: a large-scale dataset for Fact Extraction and VERification'
+    url: https://arxiv.org/abs/1803.05355
+    year: 2018
+    doi: 10.18653/v1/N18-1074
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: dataset_collection
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6665110333
+      hit_at_10: 0.8
+      recall_at_100: 0.9298245614
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9298245614
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8243489048
+      hit_at_10: 0.96
+      recall_at_100: 0.9824561404
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9824561404
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7766510421
+      hit_at_10: 0.92
+      recall_at_100: 0.9824561404
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.02
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9824561404
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

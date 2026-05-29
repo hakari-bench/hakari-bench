@@ -74,8 +74,20 @@ while positives use legal article style, with explicit statutory grounding.
 | Queries | 200 |
 | Documents | 10000 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.1708 |
-| BM25 hit@10 | 0.2850 |
+| BM25 nDCG@10 | 0.1943 |
+| BM25 hit@10 | 0.3350 |
+| BM25 Recall@100 | 0.5500 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3023 |
+| Dense hit@10 | 0.4550 |
+| Dense Recall@100 | 0.7250 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3048 |
+| Reranking hybrid hit@10 | 0.4350 |
+| Reranking hybrid Recall@100 | 0.6750 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 65 |
 | Query length avg chars | 144.97 |
 | Document length avg chars | 793.01 |
 
@@ -133,39 +145,88 @@ benchmark_task_metadata:
     query_mean: 144.965
     document_mean: 793.0132
   bm25:
-    ndcg_at_10: 0.1707572164
-    hit_at_10: 0.285
-    source: dataset_bm25_column
+    ndcg_at_10: 0.19434638271082683
+    hit_at_10: 0.335
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude BSARD test questions, Nano queries, qrels, and positive Belgian law articles likely to overlap with this evaluation
+    leakage_note: exclude BSARD test questions, Nano queries, qrels, and positive
+      Belgian law articles likely to overlap with this evaluation
     useful_training_data:
-      - non-overlapping BSARD train examples
-      - French legal question-to-statute retrieval pairs
-      - legal FAQ to code article mappings
-      - hard negatives from the same Belgian code or legal topic
+    - non-overlapping BSARD train examples
+    - French legal question-to-statute retrieval pairs
+    - legal FAQ to code article mappings
+    - hard negatives from the same Belgian code or legal topic
     synthetic_data:
-      document_generation: formal French Belgian-style statutory articles with sections, clauses, and legal terminology
-      question_generation: lay French legal questions about debt, rental law, family law, legal aid, procedure, and benefits
-      answerability: each positive article should provide the statutory basis needed to address the lay question
+      document_generation: formal French Belgian-style statutory articles with sections,
+        clauses, and legal terminology
+      question_generation: lay French legal questions about debt, rental law, family
+        law, legal aid, procedure, and benefits
+      answerability: each positive article should provide the statutory basis needed
+        to address the lay question
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-French
     source_urls:
-      - label: BSARD arXiv
-        url: https://arxiv.org/abs/2108.11792
-      - label: mteb/BSARDRetrieval
-        url: https://huggingface.co/datasets/mteb/BSARDRetrieval
-      - label: MTEB-French arXiv
-        url: https://arxiv.org/abs/2405.20468
+    - label: BSARD arXiv
+      url: https://arxiv.org/abs/2108.11792
+    - label: mteb/BSARDRetrieval
+      url: https://huggingface.co/datasets/mteb/BSARDRetrieval
+    - label: MTEB-French arXiv
+      url: https://arxiv.org/abs/2405.20468
     source_notes: []
   references:
-    - title: "A Statutory Article Retrieval Dataset in French"
-      url: https://arxiv.org/abs/2108.11792
-      year: 2022
-      doi: 10.18653/v1/2022.acl-long.468
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: A Statutory Article Retrieval Dataset in French
+    url: https://arxiv.org/abs/2108.11792
+    year: 2022
+    doi: 10.18653/v1/2022.acl-long.468
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1943463827
+      hit_at_10: 0.335
+      recall_at_100: 0.55
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.55
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.302275112
+      hit_at_10: 0.455
+      recall_at_100: 0.725
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.725
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.304846447
+      hit_at_10: 0.435
+      recall_at_100: 0.675
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.325
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.675
+      safeguard_positive_rows: 65
+      rows_with_101_candidates: 65
 ```

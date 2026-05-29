@@ -90,8 +90,20 @@ problem-to-code retrieval.
 | Queries | 200 |
 | Documents | 8754 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.0097 |
+| BM25 nDCG@10 | 0.0084 |
 | BM25 hit@10 | 0.0150 |
+| BM25 Recall@100 | 0.0750 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2528 |
+| Dense hit@10 | 0.3500 |
+| Dense Recall@100 | 0.6700 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1655 |
+| Reranking hybrid hit@10 | 0.2750 |
+| Reranking hybrid Recall@100 | 0.5400 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 92 |
 | Query length avg chars | 1675.41 |
 | Document length avg chars | 573.12 |
 
@@ -147,24 +159,26 @@ benchmark_task_metadata:
     query_mean: 1675.415
     document_mean: 573.1170893305917
   bm25:
-    ndcg_at_10: 0.009653382790366965
+    ndcg_at_10: 0.008379588167762148
     hit_at_10: 0.015
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR APPS test-derived retrieval split
     train_eval_overlap_audit: not_audited_split_filtering_required
-    leakage_note: exclude NanoApps queries, qrels, and positive solution documents; do not train on APPS test-derived rows
+    leakage_note: exclude NanoApps queries, qrels, and positive solution documents;
+      do not train on APPS test-derived rows
     leakage_risk:
       source_dataset: APPS / codeparrot/apps
       source_train_queries_reported_by_coir: 5000
       source_test_queries_reported_by_coir: 3800
       risk: upstream APPS test examples can overlap with NanoApps evaluation rows
-      recommended_filter: train-side only plus normalized query, solution, and token-fingerprint exclusion
+      recommended_filter: train-side only plus normalized query, solution, and token-fingerprint
+        exclusion
     useful_training_data:
-      - APPS-style problem-to-solution retrieval pairs
-      - competitive-programming solutions with hard negatives
-      - long specification to code retrieval data
+    - APPS-style problem-to-solution retrieval pairs
+    - competitive-programming solutions with hard negatives
+    - long specification to code retrieval data
     synthetic_data:
       document_generation: working Python solutions for contest-style problems
       question_generation: full algorithmic problem statements with constraints
@@ -173,22 +187,67 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCoIR
     source_urls:
-      - label: CoIR arXiv
-        url: https://arxiv.org/abs/2407.02883
-      - label: APPS arXiv
-        url: https://arxiv.org/abs/2105.09938
-      - label: codeparrot/apps
-        url: https://huggingface.co/datasets/codeparrot/apps
+    - label: CoIR arXiv
+      url: https://arxiv.org/abs/2407.02883
+    - label: APPS arXiv
+      url: https://arxiv.org/abs/2105.09938
+    - label: codeparrot/apps
+      url: https://huggingface.co/datasets/codeparrot/apps
     source_notes: []
   references:
-    - title: "CoIR: A Comprehensive Benchmark for Code Information Retrieval Models"
-      url: https://arxiv.org/abs/2407.02883
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Measuring Coding Challenge Competence With APPS
-      url: https://arxiv.org/abs/2105.09938
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+    url: https://arxiv.org/abs/2407.02883
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Measuring Coding Challenge Competence With APPS
+    url: https://arxiv.org/abs/2105.09938
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.0083795882
+      hit_at_10: 0.015
+      recall_at_100: 0.075
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.075
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2527864024
+      hit_at_10: 0.35
+      recall_at_100: 0.67
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.67
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.1654971989
+      hit_at_10: 0.275
+      recall_at_100: 0.54
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.46
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.54
+      safeguard_positive_rows: 92
+      rows_with_101_candidates: 92
 ```

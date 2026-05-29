@@ -87,8 +87,20 @@ through the chain. Do not use Nano evaluation questions or positives as seeds.
 | Queries | 200 |
 | Documents | 300 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.9515 |
+| BM25 nDCG@10 | 0.9503 |
 | BM25 hit@10 | 0.9800 |
+| BM25 Recall@100 | 0.9900 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8400 |
+| Dense hit@10 | 0.9050 |
+| Dense Recall@100 | 0.9650 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9111 |
+| Reranking hybrid hit@10 | 0.9550 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 67.52 |
 | Document length avg chars | 37445.60 |
 
@@ -146,45 +158,95 @@ benchmark_task_metadata:
     query_mean: 67.515
     document_mean: 37445.60333333333
   bm25:
-    ndcg_at_10: 0.9514741474
+    ndcg_at_10: 0.9502725395716047
     hit_at_10: 0.98
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude 2WikiMultiHopQA test data, Nano queries, qrels, and positive passage bundles likely to overlap with this evaluation
+    leakage_note: exclude 2WikiMultiHopQA test data, Nano queries, qrels, and positive
+      passage bundles likely to overlap with this evaluation
     useful_training_data:
-      - non-overlapping 2WikiMultiHopQA train examples
-      - HotpotQA-style multi-hop retrieval pairs
-      - Wikipedia entity-linking retrieval pairs
-      - hard negatives sharing one bridge entity but not the full reasoning chain
+    - non-overlapping 2WikiMultiHopQA train examples
+    - HotpotQA-style multi-hop retrieval pairs
+    - Wikipedia entity-linking retrieval pairs
+    - hard negatives sharing one bridge entity but not the full reasoning chain
     synthetic_data:
-      document_generation: bundled Wikipedia-style passages with explicit entities, relations, bridge entities, and distractor passages
-      question_generation: multi-hop questions requiring comparison, inference, compositional, or bridge-comparison reasoning
-      answerability: the answer should require evidence from the linked passage bundle rather than one isolated entity mention
+      document_generation: bundled Wikipedia-style passages with explicit entities,
+        relations, bridge entities, and distractor passages
+      question_generation: multi-hop questions requiring comparison, inference, compositional,
+        or bridge-comparison reasoning
+      answerability: the answer should require evidence from the linked passage bundle
+        rather than one isolated entity mention
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoLongEmbed
     source_urls:
-      - label: 2WikiMultiHopQA arXiv
-        url: https://arxiv.org/abs/2011.01060
-      - label: LongEmbed arXiv
-        url: https://arxiv.org/abs/2404.12096
-      - label: dwzhu/LongEmbed
-        url: https://huggingface.co/datasets/dwzhu/LongEmbed
+    - label: 2WikiMultiHopQA arXiv
+      url: https://arxiv.org/abs/2011.01060
+    - label: LongEmbed arXiv
+      url: https://arxiv.org/abs/2404.12096
+    - label: dwzhu/LongEmbed
+      url: https://huggingface.co/datasets/dwzhu/LongEmbed
     source_notes: []
   references:
-    - title: "Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning Steps"
-      url: https://arxiv.org/abs/2011.01060
-      year: 2020
-      doi: 10.18653/v1/2020.coling-main.580
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "LongEmbed: Extending Embedding Models for Long Context Retrieval"
-      url: https://arxiv.org/abs/2404.12096
-      year: 2024
-      doi: 10.18653/v1/2024.emnlp-main.47
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning
+      Steps
+    url: https://arxiv.org/abs/2011.01060
+    year: 2020
+    doi: 10.18653/v1/2020.coling-main.580
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+    url: https://arxiv.org/abs/2404.12096
+    year: 2024
+    doi: 10.18653/v1/2024.emnlp-main.47
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9502725396
+      hit_at_10: 0.98
+      recall_at_100: 0.99
+      candidate_count_min: 300
+      candidate_count_max: 300
+      candidate_count_mean: 300.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.99
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8400424577
+      hit_at_10: 0.905
+      recall_at_100: 0.965
+      candidate_count_min: 300
+      candidate_count_max: 300
+      candidate_count_mean: 300.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.965
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9110949311
+      hit_at_10: 0.955
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

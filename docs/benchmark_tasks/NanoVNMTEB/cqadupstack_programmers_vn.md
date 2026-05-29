@@ -104,8 +104,20 @@ queries or positive passages.
 | Avg positives / query | 2.45 |
 | Positives per query (min / median / max) | 1 / 1 / 32 |
 | Queries with multiple positives | 74 (37.00%) |
-| BM25 nDCG@10 | 0.3438 |
-| BM25 hit@10 | 0.5550 |
+| BM25 nDCG@10 | 0.3568 |
+| BM25 hit@10 | 0.5500 |
+| BM25 Recall@100 | 0.5388 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4294 |
+| Dense hit@10 | 0.6400 |
+| Dense Recall@100 | 0.6306 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4229 |
+| Reranking hybrid hit@10 | 0.6350 |
+| Reranking hybrid Recall@100 | 0.6388 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 27 |
 | Query length avg chars | 58.73 |
 | Document length avg chars | 1,070.56 |
 
@@ -151,9 +163,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://doi.org/10.1145/2838931.2838934
     additional_source_urls:
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/cqadupstack-programmers-vn
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/cqadupstack-programmers-vn
     no_paper_note: null
   counts:
     queries: 200
@@ -170,59 +182,110 @@ benchmark_task_metadata:
     query_mean: 58.73
     document_mean: 1070.557
   bm25:
-    ndcg_at_10: 0.343848955
-    hit_at_10: 0.555
-    source: dataset_bm25_column
+    ndcg_at_10: 0.35680960307366844
+    hit_at_10: 0.55
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB CQADupStack Programmers test split from GreenNode/cqadupstack-programmers-vn"
+    evaluation_split_origin: translated VN-MTEB CQADupStack Programmers test split
+      from GreenNode/cqadupstack-programmers-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated Programmers test questions, documents, qrels, and duplicate clusters used by this Nano split."
+    leakage_note: Exclude translated Programmers test questions, documents, qrels,
+      and duplicate clusters used by this Nano split.
     useful_training_data:
-      - non-overlapping Programmers StackExchange duplicate-question pairs
-      - Vietnamese software-engineering QA
-      - translated CQADupStack training splits with overlap removed
-      - same-topic software-design hard negatives
+    - non-overlapping Programmers StackExchange duplicate-question pairs
+    - Vietnamese software-engineering QA
+    - translated CQADupStack training splits with overlap removed
+    - same-topic software-design hard negatives
     synthetic_data:
-      document_generation: "Vietnamese software-engineering QA threads with tools, APIs, design constraints, and career context."
-      question_generation: "Short Vietnamese duplicate titles asking the same software-engineering decision."
-      answerability: "Each query should match the duplicate engineering intent, with same-tool but different-intent negatives."
+      document_generation: Vietnamese software-engineering QA threads with tools,
+        APIs, design constraints, and career context.
+      question_generation: Short Vietnamese duplicate titles asking the same software-engineering
+        decision.
+      answerability: Each query should match the duplicate engineering intent, with
+        same-tool but different-intent negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: CQADupStack DOI
-        url: https://doi.org/10.1145/2838931.2838934
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/cqadupstack-programmers-vn
-        url: https://huggingface.co/datasets/GreenNode/cqadupstack-programmers-vn
+    - label: CQADupStack DOI
+      url: https://doi.org/10.1145/2838931.2838934
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/cqadupstack-programmers-vn
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-programmers-vn
     source_notes: []
   references:
-    - title: "CQADupStack: A Benchmark Data Set for Community Question-Answering Research"
-      url: https://doi.org/10.1145/2838931.2838934
-      year: 2015
-      doi: 10.1145/2838931.2838934
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/cqadupstack-programmers-vn
-      url: https://huggingface.co/datasets/GreenNode/cqadupstack-programmers-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+    url: https://doi.org/10.1145/2838931.2838934
+    year: 2015
+    doi: 10.1145/2838931.2838934
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/cqadupstack-programmers-vn
+    url: https://huggingface.co/datasets/GreenNode/cqadupstack-programmers-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3568096031
+      hit_at_10: 0.55
+      recall_at_100: 0.5387755102
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5387755102
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4294210014
+      hit_at_10: 0.64
+      recall_at_100: 0.6306122449
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6306122449
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4229354048
+      hit_at_10: 0.635
+      recall_at_100: 0.6387755102
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.135
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6387755102
+      safeguard_positive_rows: 27
+      rows_with_101_candidates: 27
 ```

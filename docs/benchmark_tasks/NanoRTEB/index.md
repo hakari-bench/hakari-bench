@@ -160,8 +160,15 @@ would change how CUREv1, FreshStack, and AILA-style retrieval are evaluated.
 | Positives per query | avg 3.83 / min 1 / max 100 across the group |
 | Multi-positive tasks | 5 |
 | Multi-positive queries | 506 |
-| Query-weighted BM25 nDCG@10 | 0.3739 |
-| Query-weighted BM25 hit@10 | 0.5824 |
+| Query-weighted BM25 nDCG@10 | 0.3669 |
+| Query-weighted BM25 hit@10 | 0.5791 |
+| Query-weighted BM25 Recall@100 | 0.7179 |
+| Query-weighted Dense nDCG@10 | 0.5764 |
+| Query-weighted Dense hit@10 | 0.7782 |
+| Query-weighted Dense Recall@100 | 0.8741 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.5000 |
+| Query-weighted Reranking hybrid hit@10 | 0.7209 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8791 |
 | Mean query length | 733.63 chars, weighted by query count |
 | Mean document length | 1,234.25 chars, weighted by split-local document count |
 
@@ -240,187 +247,211 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 733.6317573221758
     document_mean_weighted_by_documents: 1234.2516775927236
   bm25:
-    ndcg_at_10_query_weighted: 0.37387271966527197
-    hit_at_10_query_weighted: 0.5824334728033473
+    ndcg_at_10_query_weighted: 0.3668516388
+    hit_at_10_query_weighted: 0.5790794979
     ndcg_at_10_unweighted_task_mean: 0.35832142857142857
     hit_at_10_unweighted_task_mean: 0.5891714285714286
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: NanoFinQA
     hardest_task_by_ndcg_at_10: NanoApps
   tasks:
-    - name: NanoAILACasedocs
-      path: docs/benchmark_tasks/NanoRTEB/NanoAILACasedocs.md
-      retrieval_shape: legal_situation_to_supreme_court_precedent
-      queries: 50
-      documents: 186
-      positive_qrels: 195
-      bm25_ndcg_at_10: 0.2932
-      bm25_hit_at_10: 0.64
-    - name: NanoAILAStatutes
-      path: docs/benchmark_tasks/NanoRTEB/NanoAILAStatutes.md
-      retrieval_shape: legal_situation_to_statutory_provisions
-      queries: 50
-      documents: 82
-      positive_qrels: 217
-      bm25_ndcg_at_10: 0.1647
-      bm25_hit_at_10: 0.62
-    - name: NanoApps
-      path: docs/benchmark_tasks/NanoRTEB/NanoApps.md
-      retrieval_shape: programming_problem_to_python_solution
-      queries: 200
-      documents: 8754
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0097
-      bm25_hit_at_10: 0.015
-    - name: NanoCUREv1
-      path: docs/benchmark_tasks/NanoRTEB/NanoCUREv1.md
-      retrieval_shape: clinical_question_to_biomedical_passages
-      queries: 182
-      documents: 10000
-      positive_qrels: 5163
-      bm25_ndcg_at_10: 0.4709
-      bm25_hit_at_10: 0.9451
-    - name: NanoChatDoctor
-      path: docs/benchmark_tasks/NanoRTEB/NanoChatDoctor.md
-      retrieval_shape: patient_question_to_medical_response
-      queries: 200
-      documents: 5545
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.242
-      bm25_hit_at_10: 0.335
-    - name: NanoDS1000
-      path: docs/benchmark_tasks/NanoRTEB/NanoDS1000.md
-      retrieval_shape: data_science_question_to_python_code
-      queries: 200
-      documents: 997
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4515
-      bm25_hit_at_10: 0.605
-    - name: NanoFinQA
-      path: docs/benchmark_tasks/NanoRTEB/NanoFinQA.md
-      retrieval_shape: financial_question_to_report_evidence
-      queries: 200
-      documents: 380
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8046
-      bm25_hit_at_10: 0.95
-    - name: NanoFinanceBench
-      path: docs/benchmark_tasks/NanoRTEB/NanoFinanceBench.md
-      retrieval_shape: analyst_question_to_filing_excerpt
-      queries: 150
-      documents: 145
-      positive_qrels: 150
-      bm25_ndcg_at_10: 0.3165
-      bm25_hit_at_10: 0.5067
-    - name: NanoFreshStack
-      path: docs/benchmark_tasks/NanoRTEB/NanoFreshStack.md
-      retrieval_shape: developer_question_to_technical_docs
-      queries: 200
-      documents: 3770
-      positive_qrels: 1522
-      bm25_ndcg_at_10: 0.2755
-      bm25_hit_at_10: 0.675
-    - name: NanoHC3Finance
-      path: docs/benchmark_tasks/NanoRTEB/NanoHC3Finance.md
-      retrieval_shape: personal_finance_prompt_to_answer
-      queries: 200
-      documents: 415
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2708
-      bm25_hit_at_10: 0.41
-    - name: NanoHumanEval
-      path: docs/benchmark_tasks/NanoRTEB/NanoHumanEval.md
-      retrieval_shape: python_spec_to_implementation
-      queries: 158
-      documents: 158
-      positive_qrels: 158
-      bm25_ndcg_at_10: 0.399
-      bm25_hit_at_10: 0.6266
-    - name: NanoLegalSummarization
-      path: docs/benchmark_tasks/NanoRTEB/NanoLegalSummarization.md
-      retrieval_shape: plain_english_summary_to_legal_clause
-      queries: 200
-      documents: 438
-      positive_qrels: 345
-      bm25_ndcg_at_10: 0.5374
-      bm25_hit_at_10: 0.74
-    - name: NanoMBPP
-      path: docs/benchmark_tasks/NanoRTEB/NanoMBPP.md
-      retrieval_shape: short_python_task_to_implementation
-      queries: 200
-      documents: 972
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.3029
-      bm25_hit_at_10: 0.47
-    - name: NanoWikiSQL
-      path: docs/benchmark_tasks/NanoRTEB/NanoWikiSQL.md
-      retrieval_shape: table_question_to_sql_query
-      queries: 200
-      documents: 2022
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4778
-      bm25_hit_at_10: 0.71
+  - name: NanoAILACasedocs
+    path: docs/benchmark_tasks/NanoRTEB/NanoAILACasedocs.md
+    retrieval_shape: legal_situation_to_supreme_court_precedent
+    queries: 50
+    documents: 186
+    positive_qrels: 195
+    bm25_ndcg_at_10: 0.2932
+    bm25_hit_at_10: 0.64
+  - name: NanoAILAStatutes
+    path: docs/benchmark_tasks/NanoRTEB/NanoAILAStatutes.md
+    retrieval_shape: legal_situation_to_statutory_provisions
+    queries: 50
+    documents: 82
+    positive_qrels: 217
+    bm25_ndcg_at_10: 0.1647
+    bm25_hit_at_10: 0.62
+  - name: NanoApps
+    path: docs/benchmark_tasks/NanoRTEB/NanoApps.md
+    retrieval_shape: programming_problem_to_python_solution
+    queries: 200
+    documents: 8754
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0097
+    bm25_hit_at_10: 0.015
+  - name: NanoCUREv1
+    path: docs/benchmark_tasks/NanoRTEB/NanoCUREv1.md
+    retrieval_shape: clinical_question_to_biomedical_passages
+    queries: 182
+    documents: 10000
+    positive_qrels: 5163
+    bm25_ndcg_at_10: 0.4709
+    bm25_hit_at_10: 0.9451
+  - name: NanoChatDoctor
+    path: docs/benchmark_tasks/NanoRTEB/NanoChatDoctor.md
+    retrieval_shape: patient_question_to_medical_response
+    queries: 200
+    documents: 5545
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.242
+    bm25_hit_at_10: 0.335
+  - name: NanoDS1000
+    path: docs/benchmark_tasks/NanoRTEB/NanoDS1000.md
+    retrieval_shape: data_science_question_to_python_code
+    queries: 200
+    documents: 997
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4515
+    bm25_hit_at_10: 0.605
+  - name: NanoFinQA
+    path: docs/benchmark_tasks/NanoRTEB/NanoFinQA.md
+    retrieval_shape: financial_question_to_report_evidence
+    queries: 200
+    documents: 380
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8046
+    bm25_hit_at_10: 0.95
+  - name: NanoFinanceBench
+    path: docs/benchmark_tasks/NanoRTEB/NanoFinanceBench.md
+    retrieval_shape: analyst_question_to_filing_excerpt
+    queries: 150
+    documents: 145
+    positive_qrels: 150
+    bm25_ndcg_at_10: 0.3165
+    bm25_hit_at_10: 0.5067
+  - name: NanoFreshStack
+    path: docs/benchmark_tasks/NanoRTEB/NanoFreshStack.md
+    retrieval_shape: developer_question_to_technical_docs
+    queries: 200
+    documents: 3770
+    positive_qrels: 1522
+    bm25_ndcg_at_10: 0.2755
+    bm25_hit_at_10: 0.675
+  - name: NanoHC3Finance
+    path: docs/benchmark_tasks/NanoRTEB/NanoHC3Finance.md
+    retrieval_shape: personal_finance_prompt_to_answer
+    queries: 200
+    documents: 415
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2708
+    bm25_hit_at_10: 0.41
+  - name: NanoHumanEval
+    path: docs/benchmark_tasks/NanoRTEB/NanoHumanEval.md
+    retrieval_shape: python_spec_to_implementation
+    queries: 158
+    documents: 158
+    positive_qrels: 158
+    bm25_ndcg_at_10: 0.399
+    bm25_hit_at_10: 0.6266
+  - name: NanoLegalSummarization
+    path: docs/benchmark_tasks/NanoRTEB/NanoLegalSummarization.md
+    retrieval_shape: plain_english_summary_to_legal_clause
+    queries: 200
+    documents: 438
+    positive_qrels: 345
+    bm25_ndcg_at_10: 0.5374
+    bm25_hit_at_10: 0.74
+  - name: NanoMBPP
+    path: docs/benchmark_tasks/NanoRTEB/NanoMBPP.md
+    retrieval_shape: short_python_task_to_implementation
+    queries: 200
+    documents: 972
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.3029
+    bm25_hit_at_10: 0.47
+  - name: NanoWikiSQL
+    path: docs/benchmark_tasks/NanoRTEB/NanoWikiSQL.md
+    retrieval_shape: table_question_to_sql_query
+    queries: 200
+    documents: 2022
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4778
+    bm25_hit_at_10: 0.71
   learning:
-    leakage_note: exclude NanoRTEB evaluation queries, qrels, positive documents, source-code solutions, financial filing excerpts, medical answers, and exact source passages from training
+    leakage_note: exclude NanoRTEB evaluation queries, qrels, positive documents,
+      source-code solutions, financial filing excerpts, medical answers, and exact
+      source passages from training
     useful_training_data:
-      - legal precedent, statute, and contract clause retrieval
-      - financial filing evidence retrieval and table QA retrieval
-      - problem-to-code, docstring-to-code, API documentation, and text-to-SQL retrieval
-      - clinical evidence retrieval and patient-question-to-answer ranking
-      - developer question to technical documentation, release note, and test-file retrieval
+    - legal precedent, statute, and contract clause retrieval
+    - financial filing evidence retrieval and table QA retrieval
+    - problem-to-code, docstring-to-code, API documentation, and text-to-SQL retrieval
+    - clinical evidence retrieval and patient-question-to-answer ranking
+    - developer question to technical documentation, release note, and test-file retrieval
     synthetic_data:
-      document_generation: domain-specific passages, code, SQL, medical answers, legal clauses, financial tables, and technical docs with realistic hard negatives
-      question_generation: preserve each task's query shape, including long legal facts, code problems, table-aware questions, short finance prompts, and clinical questions
-      answerability: positives must satisfy the domain-specific evidence or code behavior, not merely share keywords
+      document_generation: domain-specific passages, code, SQL, medical answers, legal
+        clauses, financial tables, and technical docs with realistic hard negatives
+      question_generation: preserve each task's query shape, including long legal
+        facts, code problems, table-aware questions, short finance prompts, and clinical
+        questions
+      answerability: positives must satisfy the domain-specific evidence or code behavior,
+        not merely share keywords
     multi_positive_training: preserve_multi_positive_labels_for_legal_medical_and_technical_evidence_tasks
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoRTEB
     source_urls:
-      - label: RTEB blog
-        url: https://huggingface.co/blog/rteb
-      - label: AILA casedocs
-        url: https://huggingface.co/datasets/mteb/AILA_casedocs
-      - label: AILA statutes
-        url: https://huggingface.co/datasets/mteb/AILA_statutes
-      - label: legal_summarization
-        url: https://huggingface.co/datasets/mteb/legal_summarization
-      - label: financebench
-        url: https://huggingface.co/datasets/virattt/financebench
-      - label: HC3
-        url: https://huggingface.co/datasets/Hello-SimpleAI/HC3
-      - label: finqa
-        url: https://huggingface.co/datasets/ibm/finqa
-      - label: apps
-        url: https://huggingface.co/datasets/codeparrot/apps
-      - label: DS-1000
-        url: https://huggingface.co/datasets/xlangai/DS-1000
-      - label: HumanEval
-        url: https://huggingface.co/datasets/openai/openai_humaneval
-      - label: MBPP
-        url: https://huggingface.co/datasets/google-research-datasets/mbpp
-      - label: WikiSQL
-        url: https://huggingface.co/datasets/Salesforce/wikisql
-      - label: FreshStackRetrieval
-        url: https://huggingface.co/datasets/mteb/FreshStackRetrieval
-      - label: ChatDoctor HealthCareMagic
-        url: https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k
-      - label: CUREv1
-        url: https://huggingface.co/datasets/clinia/CUREv1
+    - label: RTEB blog
+      url: https://huggingface.co/blog/rteb
+    - label: AILA casedocs
+      url: https://huggingface.co/datasets/mteb/AILA_casedocs
+    - label: AILA statutes
+      url: https://huggingface.co/datasets/mteb/AILA_statutes
+    - label: legal_summarization
+      url: https://huggingface.co/datasets/mteb/legal_summarization
+    - label: financebench
+      url: https://huggingface.co/datasets/virattt/financebench
+    - label: HC3
+      url: https://huggingface.co/datasets/Hello-SimpleAI/HC3
+    - label: finqa
+      url: https://huggingface.co/datasets/ibm/finqa
+    - label: apps
+      url: https://huggingface.co/datasets/codeparrot/apps
+    - label: DS-1000
+      url: https://huggingface.co/datasets/xlangai/DS-1000
+    - label: HumanEval
+      url: https://huggingface.co/datasets/openai/openai_humaneval
+    - label: MBPP
+      url: https://huggingface.co/datasets/google-research-datasets/mbpp
+    - label: WikiSQL
+      url: https://huggingface.co/datasets/Salesforce/wikisql
+    - label: FreshStackRetrieval
+      url: https://huggingface.co/datasets/mteb/FreshStackRetrieval
+    - label: ChatDoctor HealthCareMagic
+      url: https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k
+    - label: CUREv1
+      url: https://huggingface.co/datasets/clinia/CUREv1
     source_notes: []
   references:
-    - title: "Introducing RTEB: A New Standard for Retrieval Evaluation"
-      url: https://huggingface.co/blog/rteb
-      year: 2025
-      is_paper: false
-      source_confidence: benchmark_article
-    - title: "Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance"
-      url: https://ceur-ws.org/Vol-2517/T1-1.pdf
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical Documents"
-      url: https://arxiv.org/abs/2504.13128
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'Introducing RTEB: A New Standard for Retrieval Evaluation'
+    url: https://huggingface.co/blog/rteb
+    year: 2025
+    is_paper: false
+    source_confidence: benchmark_article
+  - title: 'Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal
+      Assistance'
+    url: https://ceur-ws.org/Vol-2517/T1-1.pdf
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on
+      Technical Documents'
+    url: https://arxiv.org/abs/2504.13128
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.3668516388
+      query_weighted_hit_at_10: 0.5790794979
+      query_weighted_recall_at_100: 0.7179205116
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.5763643898
+      query_weighted_hit_at_10: 0.7782426778
+      query_weighted_recall_at_100: 0.8740679971
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.5000235157
+      query_weighted_hit_at_10: 0.7209205021
+      query_weighted_recall_at_100: 0.8790866676
+      source: dataset_candidate_subset
 ```

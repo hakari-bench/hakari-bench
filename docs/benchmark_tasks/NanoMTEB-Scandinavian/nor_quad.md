@@ -82,6 +82,18 @@ plausible answers of the same type.
 | Positive qrels | 291 |
 | BM25 nDCG@10 | 0.1118 |
 | BM25 hit@10 | 0.2143 |
+| BM25 Recall@100 | 0.2131 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2378 |
+| Dense hit@10 | 0.3724 |
+| Dense Recall@100 | 0.4536 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1301 |
+| Reranking hybrid hit@10 | 0.2296 |
+| Reranking hybrid Recall@100 | 0.4261 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 89 |
 | Query length avg chars | 48.61 |
 | Document length avg chars | 214.39 |
 
@@ -117,7 +129,7 @@ benchmark_task_metadata:
   dataset_id: hakari-bench/NanoMTEB-Scandinavian
   task_name: nor_quad
   split_name: nor_quad
-  language: no
+  language: false
   category: natural_language
   document_path: docs/benchmark_tasks/NanoMTEB-Scandinavian/nor_quad.md
   source_research:
@@ -141,37 +153,86 @@ benchmark_task_metadata:
   bm25:
     ndcg_at_10: 0.11183189367748354
     hit_at_10: 0.21428571428571427
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NorQuAD test questions, Nano qrels, and answer strings in this split
+    leakage_note: exclude NorQuAD test questions, Nano qrels, and answer strings in
+      this split
     useful_training_data:
-      - non-overlapping NorQuAD train question-answer pairs
-      - Norwegian Wikipedia extractive QA pairs
-      - Norwegian news QA pairs
-      - short-answer answer-selection negatives
+    - non-overlapping NorQuAD train question-answer pairs
+    - Norwegian Wikipedia extractive QA pairs
+    - Norwegian news QA pairs
+    - short-answer answer-selection negatives
     synthetic_data:
-      document_generation: concise Norwegian answer strings plus optional short evidence snippets
-      question_generation: Norwegian wh-questions targeting person, place, date, quantity, and reason answers
-      answerability: positive answer text should answer the question directly, even when lexical overlap is low
+      document_generation: concise Norwegian answer strings plus optional short evidence
+        snippets
+      question_generation: Norwegian wh-questions targeting person, place, date, quantity,
+        and reason answers
+      answerability: positive answer text should answer the question directly, even
+        when lexical overlap is low
     multi_positive_training: support_multiple_valid_answers_per_question
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Scandinavian
     source_urls:
-      - label: Scandinavian Embedding Benchmarks
-        url: https://arxiv.org/abs/2406.02396
-      - label: NorQuAD paper
-        url: https://aclanthology.org/2023.nodalida-1.17/
-      - label: mteb/norquad_retrieval
-        url: https://huggingface.co/datasets/mteb/norquad_retrieval
+    - label: Scandinavian Embedding Benchmarks
+      url: https://arxiv.org/abs/2406.02396
+    - label: NorQuAD paper
+      url: https://aclanthology.org/2023.nodalida-1.17/
+    - label: mteb/norquad_retrieval
+      url: https://huggingface.co/datasets/mteb/norquad_retrieval
     source_notes: []
   references:
-    - title: "NorQuAD: Norwegian Question Answering Dataset"
-      url: https://aclanthology.org/2023.nodalida-1.17/
-      year: 2023
-      doi: null
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'NorQuAD: Norwegian Question Answering Dataset'
+    url: https://aclanthology.org/2023.nodalida-1.17/
+    year: 2023
+    doi: null
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1118318937
+      hit_at_10: 0.2142857143
+      recall_at_100: 0.2130584192
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 196
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2130584192
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2378449014
+      hit_at_10: 0.3724489796
+      recall_at_100: 0.4536082474
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 196
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4536082474
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.1300945227
+      hit_at_10: 0.2295918367
+      recall_at_100: 0.4261168385
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.454082
+      query_count: 196
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4261168385
+      safeguard_positive_rows: 89
+      rows_with_101_candidates: 89
 ```

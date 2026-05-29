@@ -95,8 +95,20 @@ intervention family. Do not use evaluation split passages as seeds.
 | Avg positives / query | 27.54 |
 | Positives per query (min / median / max) | 1 / 14 / 100 |
 | Queries with multiple positives | 156 (93.98%) |
-| BM25 nDCG@10 | 0.3105 |
-| BM25 hit@10 | 0.6084 |
+| BM25 nDCG@10 | 0.2552 |
+| BM25 hit@10 | 0.5964 |
+| BM25 Recall@100 | 0.1818 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2827 |
+| Dense hit@10 | 0.6386 |
+| Dense Recall@100 | 0.2168 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2902 |
+| Reranking hybrid hit@10 | 0.6506 |
+| Reranking hybrid Recall@100 | 0.2194 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 30 |
 | Query length avg chars | 24.72 |
 | Document length avg chars | 1,584.25 |
 
@@ -144,10 +156,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://doi.org/10.1007/978-3-319-30671-1_58
     additional_source_urls:
-      - https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/nfcorpus-vn
+    - https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/nfcorpus-vn
     no_paper_note: null
   counts:
     queries: 166
@@ -164,61 +176,111 @@ benchmark_task_metadata:
     query_mean: 24.723
     document_mean: 1584.252
   bm25:
-    ndcg_at_10: 0.310525083
-    hit_at_10: 0.608433735
-    source: dataset_bm25_column
+    ndcg_at_10: 0.2551666290340828
+    hit_at_10: 0.5963855421686747
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB NFCorpus test split from GreenNode/nfcorpus-vn"
+    evaluation_split_origin: translated VN-MTEB NFCorpus test split from GreenNode/nfcorpus-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated NFCorpus-VN test queries, qrels, and positive abstracts used by this Nano split."
+    leakage_note: Exclude translated NFCorpus-VN test queries, qrels, and positive
+      abstracts used by this Nano split.
     useful_training_data:
-      - official NFCorpus training data with overlap removed
-      - Vietnamese consumer-health QA
-      - medical abstract retrieval pairs
-      - translated biomedical retrieval data with overlap removed
+    - official NFCorpus training data with overlap removed
+    - Vietnamese consumer-health QA
+    - medical abstract retrieval pairs
+    - translated biomedical retrieval data with overlap removed
     synthetic_data:
-      document_generation: "Vietnamese biomedical abstracts preserving interventions, outcomes, populations, measurements, and disease names."
-      question_generation: "Vietnamese lay health and nutrition queries answerable by those abstracts."
-      answerability: "Queries should support multiple relevant abstracts and include same-disease or same-food hard negatives."
+      document_generation: Vietnamese biomedical abstracts preserving interventions,
+        outcomes, populations, measurements, and disease names.
+      question_generation: Vietnamese lay health and nutrition queries answerable
+        by those abstracts.
+      answerability: Queries should support multiple relevant abstracts and include
+        same-disease or same-food hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: NFCorpus DOI
-        url: https://doi.org/10.1007/978-3-319-30671-1_58
-      - label: NFCorpus project page
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/nfcorpus-vn
-        url: https://huggingface.co/datasets/GreenNode/nfcorpus-vn
+    - label: NFCorpus DOI
+      url: https://doi.org/10.1007/978-3-319-30671-1_58
+    - label: NFCorpus project page
+      url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/nfcorpus-vn
+      url: https://huggingface.co/datasets/GreenNode/nfcorpus-vn
     source_notes: []
   references:
-    - title: "A Full-Text Learning to Rank Dataset for Medical Information Retrieval"
-      url: https://doi.org/10.1007/978-3-319-30671-1_58
-      year: 2016
-      doi: 10.1007/978-3-319-30671-1_58
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/nfcorpus-vn
-      url: https://huggingface.co/datasets/GreenNode/nfcorpus-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: A Full-Text Learning to Rank Dataset for Medical Information Retrieval
+    url: https://doi.org/10.1007/978-3-319-30671-1_58
+    year: 2016
+    doi: 10.1007/978-3-319-30671-1_58
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/nfcorpus-vn
+    url: https://huggingface.co/datasets/GreenNode/nfcorpus-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.255166629
+      hit_at_10: 0.5963855422
+      recall_at_100: 0.1817982936
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 166
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1817982936
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2827302811
+      hit_at_10: 0.6385542169
+      recall_at_100: 0.2168015751
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 166
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2168015751
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2901899855
+      hit_at_10: 0.6506024096
+      recall_at_100: 0.2194268213
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.180723
+      query_count: 166
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2194268213
+      safeguard_positive_rows: 30
+      rows_with_101_candidates: 30
 ```

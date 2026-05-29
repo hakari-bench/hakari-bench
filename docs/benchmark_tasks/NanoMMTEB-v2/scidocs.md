@@ -72,8 +72,20 @@ belonging to a different research line.
 | Avg positives / query | 4.93 |
 | Positives per query (min / median / max) | 3 / 5.0 / 5 |
 | Queries with multiple positives | 200 (100.00%) |
-| BM25 nDCG@10 | 0.1933 |
-| BM25 hit@10 | 0.6050 |
+| BM25 nDCG@10 | 0.2067 |
+| BM25 hit@10 | 0.6100 |
+| BM25 Recall@100 | 0.4209 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2773 |
+| Dense hit@10 | 0.7050 |
+| Dense Recall@100 | 0.5740 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2590 |
+| Reranking hybrid hit@10 | 0.6750 |
+| Reranking hybrid Recall@100 | 0.5335 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 11 |
 | Query length avg chars | 69.79 |
 | Document length avg chars | 1202.68 |
 
@@ -131,38 +143,87 @@ benchmark_task_metadata:
     query_mean: 69.79
     document_mean: 1202.6798
   bm25:
-    ndcg_at_10: 0.19326143403163346
-    hit_at_10: 0.605
-    source: dataset_bm25_column
+    ndcg_at_10: 0.20668680497487518
+    hit_at_10: 0.61
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: do not train on this Nano split's SCIDOCS query papers, qrels, or positive records
+    leakage_note: do not train on this Nano split's SCIDOCS query papers, qrels, or
+      positive records
     useful_training_data:
-      - citation-linked paper pairs
-      - title and abstract similarity data
-      - co-citation and bibliography graph pairs
-      - SPECTER-style scientific paper triplets
+    - citation-linked paper pairs
+    - title and abstract similarity data
+    - co-citation and bibliography graph pairs
+    - SPECTER-style scientific paper triplets
     synthetic_data:
-      document_generation: scientific title and abstract records with methods, tasks, and claims
+      document_generation: scientific title and abstract records with methods, tasks,
+        and claims
       question_generation: paper titles or short related-work search needs
-      answerability: positives should be scientifically related by citation, method, task, or application
+      answerability: positives should be scientifically related by citation, method,
+        task, or application
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMMTEB-v2
     source_urls:
-      - label: SPECTER arXiv
-        url: https://arxiv.org/abs/2004.07180
-      - label: SCIDOCS project page
-        url: https://allenai.org/data/scidocs
-      - label: mteb/scidocs
-        url: https://huggingface.co/datasets/mteb/scidocs
+    - label: SPECTER arXiv
+      url: https://arxiv.org/abs/2004.07180
+    - label: SCIDOCS project page
+      url: https://allenai.org/data/scidocs
+    - label: mteb/scidocs
+      url: https://huggingface.co/datasets/mteb/scidocs
     source_notes: []
   references:
-    - title: "SPECTER: Document-level Representation Learning using Citation-informed Transformers"
-      url: https://arxiv.org/abs/2004.07180
-      year: 2020
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'SPECTER: Document-level Representation Learning using Citation-informed
+      Transformers'
+    url: https://arxiv.org/abs/2004.07180
+    year: 2020
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.206686805
+      hit_at_10: 0.61
+      recall_at_100: 0.4208924949
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4208924949
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.277277139
+      hit_at_10: 0.705
+      recall_at_100: 0.5740365112
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5740365112
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.259048321
+      hit_at_10: 0.675
+      recall_at_100: 0.5334685598
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.055
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5334685598
+      safeguard_positive_rows: 11
+      rows_with_101_candidates: 11
 ```

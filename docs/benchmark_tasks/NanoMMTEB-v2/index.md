@@ -173,8 +173,15 @@ bug.
 | Positive qrels | 9,408 |
 | Positives per query | avg 2.90, min 1, median 1, max 100 |
 | Multi-positive tasks | 8 |
-| Query-weighted BM25 nDCG@10 | 0.4089 |
-| Query-weighted BM25 hit@10 | 0.5545 |
+| Query-weighted BM25 nDCG@10 | 0.4430 |
+| Query-weighted BM25 hit@10 | 0.5948 |
+| Query-weighted BM25 Recall@100 | 0.6422 |
+| Query-weighted Dense nDCG@10 | 0.5210 |
+| Query-weighted Dense hit@10 | 0.6810 |
+| Query-weighted Dense Recall@100 | 0.7826 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.4960 |
+| Query-weighted Reranking hybrid hit@10 | 0.6583 |
+| Query-weighted Reranking hybrid Recall@100 | 0.7636 |
 | Mean query length | 348.67 chars, weighted by query count |
 | Mean document length | 1,262.66 chars, weighted by split-local document count |
 
@@ -231,191 +238,212 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 348.67087438423647
     document_mean_weighted_by_documents: 1262.6648508608635
   bm25:
-    ndcg_at_10_query_weighted: 0.4089221727567385
-    hit_at_10_query_weighted: 0.5544950738916257
+    ndcg_at_10_query_weighted: 0.4429824883
+    hit_at_10_query_weighted: 0.5948275862
     ndcg_at_10_unweighted_task_mean: 0.4433376115585698
     hit_at_10_unweighted_task_mean: 0.607832806051865
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: lembpasskey
     hardest_task_by_ndcg_at_10: statcan_dialogue_dataset
   tasks:
-    - name: ailastatutes
-      path: docs/benchmark_tasks/NanoMMTEB-v2/ailastatutes.md
-      retrieval_shape: legal_situation_to_statutes
-      queries: 50
-      documents: 82
-      positive_qrels: 217
-      bm25_ndcg_at_10: 0.188
-      bm25_hit_at_10: 0.66
-    - name: argu_ana
-      path: docs/benchmark_tasks/NanoMMTEB-v2/argu_ana.md
-      retrieval_shape: argument_to_counterargument
-      queries: 199
-      documents: 8626
-      positive_qrels: 199
-      bm25_ndcg_at_10: 0.3326
-      bm25_hit_at_10: 0.7085
-    - name: belebele
-      path: docs/benchmark_tasks/NanoMMTEB-v2/belebele.md
-      retrieval_shape: multilingual_mrc_question_to_passage
-      queries: 376
-      documents: 10000
-      positive_qrels: 376
-      bm25_ndcg_at_10: 0.1402
-      bm25_hit_at_10: 0.2154
-    - name: covid
-      path: docs/benchmark_tasks/NanoMMTEB-v2/covid.md
-      retrieval_shape: chinese_covid_query_to_policy_or_news_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 204
-      bm25_ndcg_at_10: 0.183
-      bm25_hit_at_10: 0.205
-    - name: hagrid
-      path: docs/benchmark_tasks/NanoMMTEB-v2/hagrid.md
-      retrieval_shape: factual_question_to_answer
-      queries: 200
-      documents: 493
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.9657
-      bm25_hit_at_10: 0.99
-    - name: legal_bench_corporate_lobbying
-      path: docs/benchmark_tasks/NanoMMTEB-v2/legal_bench_corporate_lobbying.md
-      retrieval_shape: bill_description_to_bill
-      queries: 200
-      documents: 319
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8993
-      bm25_hit_at_10: 0.98
-    - name: lembpasskey
-      path: docs/benchmark_tasks/NanoMMTEB-v2/lembpasskey.md
-      retrieval_shape: passkey_question_to_long_document
-      queries: 100
-      documents: 100
-      positive_qrels: 100
-      bm25_ndcg_at_10: 0.9963
-      bm25_hit_at_10: 1.0
-    - name: miracl
-      path: docs/benchmark_tasks/NanoMMTEB-v2/miracl.md
-      retrieval_shape: multilingual_question_to_wikipedia_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 444
-      bm25_ndcg_at_10: 0.5714
-      bm25_hit_at_10: 0.84
-    - name: mlqa
-      path: docs/benchmark_tasks/NanoMMTEB-v2/mlqa.md
-      retrieval_shape: multilingual_question_to_answer_passage
-      queries: 196
-      documents: 10000
-      positive_qrels: 196
-      bm25_ndcg_at_10: 0.0503
-      bm25_hit_at_10: 0.0816
-    - name: scidocs
-      path: docs/benchmark_tasks/NanoMMTEB-v2/scidocs.md
-      retrieval_shape: scientific_title_to_related_document
-      queries: 200
-      documents: 10000
-      positive_qrels: 986
-      bm25_ndcg_at_10: 0.1933
-      bm25_hit_at_10: 0.605
-    - name: spart_qa
-      path: docs/benchmark_tasks/NanoMMTEB-v2/spart_qa.md
-      retrieval_shape: spatial_reasoning_query_to_answer_phrase
-      queries: 200
-      documents: 1592
-      positive_qrels: 384
-      bm25_ndcg_at_10: 0.1435
-      bm25_hit_at_10: 0.28
-    - name: stack_overflow_qa
-      path: docs/benchmark_tasks/NanoMMTEB-v2/stack_overflow_qa.md
-      retrieval_shape: developer_question_to_stackoverflow_answer
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7482
-      bm25_hit_at_10: 0.83
-    - name: statcan_dialogue_dataset
-      path: docs/benchmark_tasks/NanoMMTEB-v2/statcan_dialogue_dataset.md
-      retrieval_shape: dialogue_to_statcan_table_metadata
-      queries: 200
-      documents: 10000
-      positive_qrels: 313
-      bm25_ndcg_at_10: 0.0111
-      bm25_hit_at_10: 0.03
-    - name: temp_reason_l1
-      path: docs/benchmark_tasks/NanoMMTEB-v2/temp_reason_l1.md
-      retrieval_shape: temporal_arithmetic_question_to_date
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0161
-      bm25_hit_at_10: 0.035
-    - name: treccovid
-      path: docs/benchmark_tasks/NanoMMTEB-v2/treccovid.md
-      retrieval_shape: covid_topic_to_biomedical_abstract
-      queries: 50
-      documents: 10000
-      positive_qrels: 4527
-      bm25_ndcg_at_10: 0.8979
-      bm25_hit_at_10: 1.0
-    - name: twitter_hjerne
-      path: docs/benchmark_tasks/NanoMMTEB-v2/twitter_hjerne.md
-      retrieval_shape: danish_tweet_to_reply
-      queries: 77
-      documents: 262
-      positive_qrels: 262
-      bm25_ndcg_at_10: 0.2395
-      bm25_hit_at_10: 0.6104
-    - name: wikipedia_multilingual
-      path: docs/benchmark_tasks/NanoMMTEB-v2/wikipedia_multilingual.md
-      retrieval_shape: multilingual_question_to_answer_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.9425
-      bm25_hit_at_10: 0.97
-    - name: wino_grande
-      path: docs/benchmark_tasks/NanoMMTEB-v2/wino_grande.md
-      retrieval_shape: masked_sentence_to_referent
-      queries: 200
-      documents: 5095
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4611
-      bm25_hit_at_10: 0.9
+  - name: ailastatutes
+    path: docs/benchmark_tasks/NanoMMTEB-v2/ailastatutes.md
+    retrieval_shape: legal_situation_to_statutes
+    queries: 50
+    documents: 82
+    positive_qrels: 217
+    bm25_ndcg_at_10: 0.188
+    bm25_hit_at_10: 0.66
+  - name: argu_ana
+    path: docs/benchmark_tasks/NanoMMTEB-v2/argu_ana.md
+    retrieval_shape: argument_to_counterargument
+    queries: 199
+    documents: 8626
+    positive_qrels: 199
+    bm25_ndcg_at_10: 0.3326
+    bm25_hit_at_10: 0.7085
+  - name: belebele
+    path: docs/benchmark_tasks/NanoMMTEB-v2/belebele.md
+    retrieval_shape: multilingual_mrc_question_to_passage
+    queries: 376
+    documents: 10000
+    positive_qrels: 376
+    bm25_ndcg_at_10: 0.1402
+    bm25_hit_at_10: 0.2154
+  - name: covid
+    path: docs/benchmark_tasks/NanoMMTEB-v2/covid.md
+    retrieval_shape: chinese_covid_query_to_policy_or_news_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 204
+    bm25_ndcg_at_10: 0.183
+    bm25_hit_at_10: 0.205
+  - name: hagrid
+    path: docs/benchmark_tasks/NanoMMTEB-v2/hagrid.md
+    retrieval_shape: factual_question_to_answer
+    queries: 200
+    documents: 493
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.9657
+    bm25_hit_at_10: 0.99
+  - name: legal_bench_corporate_lobbying
+    path: docs/benchmark_tasks/NanoMMTEB-v2/legal_bench_corporate_lobbying.md
+    retrieval_shape: bill_description_to_bill
+    queries: 200
+    documents: 319
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8993
+    bm25_hit_at_10: 0.98
+  - name: lembpasskey
+    path: docs/benchmark_tasks/NanoMMTEB-v2/lembpasskey.md
+    retrieval_shape: passkey_question_to_long_document
+    queries: 100
+    documents: 100
+    positive_qrels: 100
+    bm25_ndcg_at_10: 0.9963
+    bm25_hit_at_10: 1.0
+  - name: miracl
+    path: docs/benchmark_tasks/NanoMMTEB-v2/miracl.md
+    retrieval_shape: multilingual_question_to_wikipedia_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 444
+    bm25_ndcg_at_10: 0.5714
+    bm25_hit_at_10: 0.84
+  - name: mlqa
+    path: docs/benchmark_tasks/NanoMMTEB-v2/mlqa.md
+    retrieval_shape: multilingual_question_to_answer_passage
+    queries: 196
+    documents: 10000
+    positive_qrels: 196
+    bm25_ndcg_at_10: 0.0503
+    bm25_hit_at_10: 0.0816
+  - name: scidocs
+    path: docs/benchmark_tasks/NanoMMTEB-v2/scidocs.md
+    retrieval_shape: scientific_title_to_related_document
+    queries: 200
+    documents: 10000
+    positive_qrels: 986
+    bm25_ndcg_at_10: 0.1933
+    bm25_hit_at_10: 0.605
+  - name: spart_qa
+    path: docs/benchmark_tasks/NanoMMTEB-v2/spart_qa.md
+    retrieval_shape: spatial_reasoning_query_to_answer_phrase
+    queries: 200
+    documents: 1592
+    positive_qrels: 384
+    bm25_ndcg_at_10: 0.1435
+    bm25_hit_at_10: 0.28
+  - name: stack_overflow_qa
+    path: docs/benchmark_tasks/NanoMMTEB-v2/stack_overflow_qa.md
+    retrieval_shape: developer_question_to_stackoverflow_answer
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7482
+    bm25_hit_at_10: 0.83
+  - name: statcan_dialogue_dataset
+    path: docs/benchmark_tasks/NanoMMTEB-v2/statcan_dialogue_dataset.md
+    retrieval_shape: dialogue_to_statcan_table_metadata
+    queries: 200
+    documents: 10000
+    positive_qrels: 313
+    bm25_ndcg_at_10: 0.0111
+    bm25_hit_at_10: 0.03
+  - name: temp_reason_l1
+    path: docs/benchmark_tasks/NanoMMTEB-v2/temp_reason_l1.md
+    retrieval_shape: temporal_arithmetic_question_to_date
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0161
+    bm25_hit_at_10: 0.035
+  - name: treccovid
+    path: docs/benchmark_tasks/NanoMMTEB-v2/treccovid.md
+    retrieval_shape: covid_topic_to_biomedical_abstract
+    queries: 50
+    documents: 10000
+    positive_qrels: 4527
+    bm25_ndcg_at_10: 0.8979
+    bm25_hit_at_10: 1.0
+  - name: twitter_hjerne
+    path: docs/benchmark_tasks/NanoMMTEB-v2/twitter_hjerne.md
+    retrieval_shape: danish_tweet_to_reply
+    queries: 77
+    documents: 262
+    positive_qrels: 262
+    bm25_ndcg_at_10: 0.2395
+    bm25_hit_at_10: 0.6104
+  - name: wikipedia_multilingual
+    path: docs/benchmark_tasks/NanoMMTEB-v2/wikipedia_multilingual.md
+    retrieval_shape: multilingual_question_to_answer_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.9425
+    bm25_hit_at_10: 0.97
+  - name: wino_grande
+    path: docs/benchmark_tasks/NanoMMTEB-v2/wino_grande.md
+    retrieval_shape: masked_sentence_to_referent
+    queries: 200
+    documents: 5095
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4611
+    bm25_hit_at_10: 0.9
   learning:
-    leakage_note: exclude NanoMMTEB-v2 evaluation queries, qrels, positive documents, and upstream benchmark rows used in the Nano splits
+    leakage_note: exclude NanoMMTEB-v2 evaluation queries, qrels, positive documents,
+      and upstream benchmark rows used in the Nano splits
     useful_training_data:
-      - multilingual QA evidence retrieval and MIRACL-style passage data
-      - legal statute, bill, and regulatory retrieval pairs
-      - scientific, biomedical, and COVID literature retrieval data
-      - StackOverflow and community-answer retrieval data
-      - spatial, temporal, and coreference reasoning retrieval examples
-      - dialogue-to-table or dialogue-to-knowledge-base retrieval data
+    - multilingual QA evidence retrieval and MIRACL-style passage data
+    - legal statute, bill, and regulatory retrieval pairs
+    - scientific, biomedical, and COVID literature retrieval data
+    - StackOverflow and community-answer retrieval data
+    - spatial, temporal, and coreference reasoning retrieval examples
+    - dialogue-to-table or dialogue-to-knowledge-base retrieval data
     synthetic_data:
-      document_generation: task-specific passages, statutes, bills, answers, tables, long contexts, abstracts, replies, dates, and referent strings
-      question_generation: multilingual questions, legal situations, dialogues, reasoning prompts, developer questions, and biomedical topics grounded in documents
-      answerability: positives must satisfy the task relation rather than share only broad topic words
-    multi_positive_training: preserve task-specific qrel multiplicity, especially for TREC-COVID, SCIDOCS, MIRACL, AILAStatutes, StatCan, and Twitter Hjerne
+      document_generation: task-specific passages, statutes, bills, answers, tables,
+        long contexts, abstracts, replies, dates, and referent strings
+      question_generation: multilingual questions, legal situations, dialogues, reasoning
+        prompts, developer questions, and biomedical topics grounded in documents
+      answerability: positives must satisfy the task relation rather than share only
+        broad topic words
+    multi_positive_training: preserve task-specific qrel multiplicity, especially
+      for TREC-COVID, SCIDOCS, MIRACL, AILAStatutes, StatCan, and Twitter Hjerne
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMMTEB-v2
     source_urls:
-      - label: MMTEB arXiv
-        url: https://arxiv.org/abs/2502.13595
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: MTEB Hugging Face
-        url: https://huggingface.co/mteb
+    - label: MMTEB arXiv
+      url: https://arxiv.org/abs/2502.13595
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: MTEB Hugging Face
+      url: https://huggingface.co/mteb
     source_notes: []
   references:
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.4429824883
+      query_weighted_hit_at_10: 0.5948275862
+      query_weighted_recall_at_100: 0.6421603281
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.5209917658
+      query_weighted_hit_at_10: 0.6810344828
+      query_weighted_recall_at_100: 0.7825693745
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.4959932917
+      query_weighted_hit_at_10: 0.6582512315
+      query_weighted_recall_at_100: 0.7636387791
+      source: dataset_candidate_subset
 ```

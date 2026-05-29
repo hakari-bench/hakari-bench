@@ -117,8 +117,20 @@ rather than learning long-document retrieval.
 | Queries | 200 |
 | Documents | 9,997 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.7472 |
-| BM25 hit@10 | 0.8400 |
+| BM25 nDCG@10 | 0.8175 |
+| BM25 hit@10 | 0.9200 |
+| BM25 Recall@100 | 0.9700 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9027 |
+| Dense hit@10 | 0.9400 |
+| Dense Recall@100 | 0.9550 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8673 |
+| Reranking hybrid hit@10 | 0.9550 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 51.91 |
 | Document length avg chars | 5,722.55 |
 
@@ -163,10 +175,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2406.14497
     additional_source_urls:
-      - https://aclanthology.org/2025.findings-naacl.176/
-      - https://code-rag-bench.github.io/
-      - https://github.com/code-rag-bench/code-rag-bench
-      - https://huggingface.co/datasets/code-rag-bench/online-tutorials
+    - https://aclanthology.org/2025.findings-naacl.176/
+    - https://code-rag-bench.github.io/
+    - https://github.com/code-rag-bench/code-rag-bench
+    - https://huggingface.co/datasets/code-rag-bench/online-tutorials
   counts:
     queries: 200
     documents: 9997
@@ -182,46 +194,98 @@ benchmark_task_metadata:
     query_mean: 51.905
     document_mean: 5722.545864
   bm25:
-    ndcg_at_10: 0.7471740687
-    hit_at_10: 0.84
-    source: dataset_bm25_column
+    ndcg_at_10: 0.8175335893265803
+    hit_at_10: 0.92
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: CodeRAG-Bench online tutorials retrieval source sampled into NanoCodeRAG
+    evaluation_split_origin: CodeRAG-Bench online tutorials retrieval source sampled
+      into NanoCodeRAG
     train_eval_overlap_audit: not_audited_source_datastore_filtering_required
-    leakage_note: exclude NanoCodeRAG tutorial queries, qrels, and positive tutorial pages; do not train on unfiltered code-rag-bench/online-tutorials rows
+    leakage_note: exclude NanoCodeRAG tutorial queries, qrels, and positive tutorial
+      pages; do not train on unfiltered code-rag-bench/online-tutorials rows
     leakage_risk:
       source_dataset: code-rag-bench/online-tutorials
       source_corpus_size_reported_by_coderag_bench: 79400
-      risk: CodeRAG-Bench tutorial source datastore can contain NanoCodeRAG evaluation positives
-      recommended_filter: remove matching titles, URLs, article bodies, code snippets, and token fingerprints
+      risk: CodeRAG-Bench tutorial source datastore can contain NanoCodeRAG evaluation
+        positives
+      recommended_filter: remove matching titles, URLs, article bodies, code snippets,
+        and token fingerprints
     useful_training_data:
-      - non-overlapping programming tutorial title-to-page pairs
-      - developer search logs over tutorials and documentation
-      - Stack Overflow question-to-tutorial citation pairs
-      - code example retrieval with long tutorial hard negatives
+    - non-overlapping programming tutorial title-to-page pairs
+    - developer search logs over tutorials and documentation
+    - Stack Overflow question-to-tutorial citation pairs
+    - code example retrieval with long tutorial hard negatives
     synthetic_data:
-      document_generation: realistic programming tutorials with prose, steps, code snippets, inputs, outputs, and language-specific details
-      question_generation: title-like and how-to programming queries grounded in the tutorial's main task
-      answerability: the selected tutorial should explain the requested API, algorithm, or programming procedure
+      document_generation: realistic programming tutorials with prose, steps, code
+        snippets, inputs, outputs, and language-specific details
+      question_generation: title-like and how-to programming queries grounded in the
+        tutorial's main task
+      answerability: the selected tutorial should explain the requested API, algorithm,
+        or programming procedure
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCodeRAG
     source_urls:
-      - label: CodeRAG-Bench arXiv
-        url: https://arxiv.org/abs/2406.14497
-      - label: CodeRAG-Bench project page
-        url: https://code-rag-bench.github.io/
-      - label: CodeRAG-Bench GitHub
-        url: https://github.com/code-rag-bench/code-rag-bench
-      - label: code-rag-bench/online-tutorials
-        url: https://huggingface.co/datasets/code-rag-bench/online-tutorials
+    - label: CodeRAG-Bench arXiv
+      url: https://arxiv.org/abs/2406.14497
+    - label: CodeRAG-Bench project page
+      url: https://code-rag-bench.github.io/
+    - label: CodeRAG-Bench GitHub
+      url: https://github.com/code-rag-bench/code-rag-bench
+    - label: code-rag-bench/online-tutorials
+      url: https://huggingface.co/datasets/code-rag-bench/online-tutorials
     source_notes: []
   references:
-    - title: "CodeRAG-Bench: Can Retrieval Augment Code Generation?"
-      url: https://arxiv.org/abs/2406.14497
-      year: 2025
-      doi: 10.18653/v1/2025.findings-naacl.176
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
+    url: https://arxiv.org/abs/2406.14497
+    year: 2025
+    doi: 10.18653/v1/2025.findings-naacl.176
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8175335893
+      hit_at_10: 0.92
+      recall_at_100: 0.97
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.97
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9027475126
+      hit_at_10: 0.94
+      recall_at_100: 0.955
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.955
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8672771705
+      hit_at_10: 0.955
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

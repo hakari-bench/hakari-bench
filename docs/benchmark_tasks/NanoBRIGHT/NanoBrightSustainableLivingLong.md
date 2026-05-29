@@ -73,8 +73,20 @@ or impact category but not answer the specific question.
 | Positive qrels | 129 |
 | Positives per query | avg 1.19, min 1, median 1, max 5 |
 | Multi-positive queries | 15 (13.89%) |
-| BM25 nDCG@10 | 0.3038 |
-| BM25 hit@10 | 0.4815 |
+| BM25 nDCG@10 | 0.3277 |
+| BM25 hit@10 | 0.5000 |
+| BM25 Recall@100 | 0.8992 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5501 |
+| Dense hit@10 | 0.7870 |
+| Dense Recall@100 | 0.9690 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4436 |
+| Reranking hybrid hit@10 | 0.6852 |
+| Reranking hybrid Recall@100 | 0.9845 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 682.84 |
 | Document length avg chars | 38204.30 |
 
@@ -135,38 +147,88 @@ benchmark_task_metadata:
     query_mean: 682.8425925925926
     document_mean: 38204.29945553539
   bm25:
-    ndcg_at_10: 0.30381074672192243
-    hit_at_10: 0.48148148148148145
-    source: dataset_bm25_column
+    ndcg_at_10: 0.32772659949565813
+    hit_at_10: 0.5
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: BRIGHT Sustainable Living long-document evaluation split
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoBRIGHT SustainableLivingLong queries and full cited source pages
+    leakage_note: exclude NanoBRIGHT SustainableLivingLong queries and full cited
+      source pages
     useful_training_data:
-      - long environmental report retrieval
-      - document-level sustainability QA
-      - cited-source retrieval from environmental forums
+    - long environmental report retrieval
+    - document-level sustainability QA
+    - cited-source retrieval from environmental forums
     synthetic_data:
-      document_generation: long environmental pages about products, materials, energy, and lifecycle impacts
-      question_generation: sustainability questions asking practical comparisons or decision criteria
-      answerability: positive full document should contain evidence for the specific environmental decision
+      document_generation: long environmental pages about products, materials, energy,
+        and lifecycle impacts
+      question_generation: sustainability questions asking practical comparisons or
+        decision criteria
+      answerability: positive full document should contain evidence for the specific
+        environmental decision
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBRIGHT
     source_urls:
-      - label: BRIGHT arXiv
-        url: https://arxiv.org/abs/2407.12883
-      - label: BRIGHT project
-        url: https://brightbenchmark.github.io/
-      - label: xlangai/BRIGHT
-        url: https://huggingface.co/datasets/xlangai/BRIGHT
+    - label: BRIGHT arXiv
+      url: https://arxiv.org/abs/2407.12883
+    - label: BRIGHT project
+      url: https://brightbenchmark.github.io/
+    - label: xlangai/BRIGHT
+      url: https://huggingface.co/datasets/xlangai/BRIGHT
     source_notes: []
   references:
-    - title: "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval"
-      url: https://arxiv.org/abs/2407.12883
-      year: 2024
-      doi: 10.48550/arXiv.2407.12883
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+      Retrieval'
+    url: https://arxiv.org/abs/2407.12883
+    year: 2024
+    doi: 10.48550/arXiv.2407.12883
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3277265995
+      hit_at_10: 0.5
+      recall_at_100: 0.8992248062
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 108
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8992248062
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5500845834
+      hit_at_10: 0.787037037
+      recall_at_100: 0.9689922481
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 108
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9689922481
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4435759713
+      hit_at_10: 0.6851851852
+      recall_at_100: 0.984496124
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.018519
+      query_count: 108
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.984496124
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

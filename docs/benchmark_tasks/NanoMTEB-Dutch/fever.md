@@ -101,6 +101,18 @@ verify the claim.
 | Queries with multiple positives | 27 (13.50%) |
 | BM25 nDCG@10 | 0.9221 |
 | BM25 hit@10 | 0.9800 |
+| BM25 Recall@100 | 0.9700 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9207 |
+| Dense hit@10 | 0.9400 |
+| Dense Recall@100 | 0.9313 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9215 |
+| Reranking hybrid hit@10 | 0.9800 |
+| Reranking hybrid Recall@100 | 0.9785 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 54.87 |
 | Document length avg chars | 445.71 |
 
@@ -146,9 +158,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://aclanthology.org/N18-1074/
     additional_source_urls:
-      - https://arxiv.org/abs/2104.08663
-      - https://aclanthology.org/2025.bucc-1.5/
-      - https://huggingface.co/datasets/clips/beir-nl-fever
+    - https://arxiv.org/abs/2104.08663
+    - https://aclanthology.org/2025.bucc-1.5/
+    - https://huggingface.co/datasets/clips/beir-nl-fever
     no_paper_note: null
   counts:
     queries: 200
@@ -165,59 +177,108 @@ benchmark_task_metadata:
     query_mean: 54.865
     document_mean: 445.7136
   bm25:
-    ndcg_at_10: 0.92210826
+    ndcg_at_10: 0.9221082599124395
     hit_at_10: 0.98
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated BEIR-NL FEVER test split from clips/beir-nl-fever"
+    evaluation_split_origin: translated BEIR-NL FEVER test split from clips/beir-nl-fever
     train_eval_overlap_audit: not_audited
-    leakage_note: "Do not train on the translated FEVER test queries, qrels, or positive evidence passages used by this Nano split."
+    leakage_note: Do not train on the translated FEVER test queries, qrels, or positive
+      evidence passages used by this Nano split.
     useful_training_data:
-      - official FEVER training claim-evidence pairs with overlap removed
-      - Dutch and multilingual fact-verification retrieval data
-      - non-overlapping Dutch Wikipedia claim-evidence pairs
-      - hard negatives from related Wikipedia pages
+    - official FEVER training claim-evidence pairs with overlap removed
+    - Dutch and multilingual fact-verification retrieval data
+    - non-overlapping Dutch Wikipedia claim-evidence pairs
+    - hard negatives from related Wikipedia pages
     synthetic_data:
-      document_generation: "Dutch encyclopedia passages with explicit facts, dates, entities, and relations."
-      question_generation: "Dutch factual claims that require retrieving evidence passages."
-      answerability: "Claims should be supported or contradicted by explicit evidence in the positive passage."
+      document_generation: Dutch encyclopedia passages with explicit facts, dates,
+        entities, and relations.
+      question_generation: Dutch factual claims that require retrieving evidence passages.
+      answerability: Claims should be supported or contradicted by explicit evidence
+        in the positive passage.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: FEVER ACL Anthology
-        url: https://aclanthology.org/N18-1074/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: BEIR-NL ACL Anthology
-        url: https://aclanthology.org/2025.bucc-1.5/
-      - label: clips/beir-nl-fever
-        url: https://huggingface.co/datasets/clips/beir-nl-fever
+    - label: FEVER ACL Anthology
+      url: https://aclanthology.org/N18-1074/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: BEIR-NL ACL Anthology
+      url: https://aclanthology.org/2025.bucc-1.5/
+    - label: clips/beir-nl-fever
+      url: https://huggingface.co/datasets/clips/beir-nl-fever
     source_notes: []
   references:
-    - title: "FEVER: a Large-scale Dataset for Fact Extraction and Verification"
-      url: https://aclanthology.org/N18-1074/
-      year: 2018
-      doi: 10.18653/v1/N18-1074
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language"
-      url: https://aclanthology.org/2025.bucc-1.5/
-      year: 2025
-      doi: null
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: clips/beir-nl-fever
-      url: https://huggingface.co/datasets/clips/beir-nl-fever
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'FEVER: a Large-scale Dataset for Fact Extraction and Verification'
+    url: https://aclanthology.org/N18-1074/
+    year: 2018
+    doi: 10.18653/v1/N18-1074
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language'
+    url: https://aclanthology.org/2025.bucc-1.5/
+    year: 2025
+    doi: null
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: clips/beir-nl-fever
+    url: https://huggingface.co/datasets/clips/beir-nl-fever
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9221082599
+      hit_at_10: 0.98
+      recall_at_100: 0.9699570815
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9699570815
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9207434832
+      hit_at_10: 0.94
+      recall_at_100: 0.9313304721
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9313304721
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9215361267
+      hit_at_10: 0.98
+      recall_at_100: 0.9785407725
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9785407725
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

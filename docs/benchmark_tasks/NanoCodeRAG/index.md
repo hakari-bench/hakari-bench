@@ -141,8 +141,15 @@ until a positive-document and near-duplicate audit is available.
 | Split-local documents | 29,664 |
 | Positive qrels | 800 |
 | Positives per query | exactly 1.00 for every subtask |
-| Query-weighted BM25 nDCG@10 | 0.4198 |
-| Query-weighted BM25 hit@10 | 0.5100 |
+| Query-weighted BM25 nDCG@10 | 0.5823 |
+| Query-weighted BM25 hit@10 | 0.6787 |
+| Query-weighted BM25 Recall@100 | 0.8050 |
+| Query-weighted Dense nDCG@10 | 0.8296 |
+| Query-weighted Dense hit@10 | 0.9175 |
+| Query-weighted Dense Recall@100 | 0.9513 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6685 |
+| Query-weighted Reranking hybrid hit@10 | 0.7800 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9775 |
 | Mean query length | 184.36 chars, weighted by query count |
 | Mean document length | 4,129.84 chars, weighted by split-local document count |
 
@@ -194,46 +201,47 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 184.3625
     document_mean_weighted_by_documents: 4129.841626299554
   bm25:
-    ndcg_at_10_query_weighted: 0.419752935175
-    hit_at_10_query_weighted: 0.51
-    source: dataset_bm25_column
+    ndcg_at_10_query_weighted: 0.5822803815
+    hit_at_10_query_weighted: 0.67875
+    source: dataset_candidate_subset
     strongest_task_by_ndcg_at_10: NanoCodeRAGOnlineTutorials
     weakest_task_by_ndcg_at_10: NanoCodeRAGProgrammingSolutions
   tasks:
-    - name: NanoCodeRAGLibraryDocumentationSolutions
-      path: docs/benchmark_tasks/NanoCodeRAG/NanoCodeRAGLibraryDocumentationSolutions.md
-      retrieval_focus: api_or_library_query_to_documentation
-      queries: 200
-      documents: 8683
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2279
-      bm25_hit_at_10: 0.38
-    - name: NanoCodeRAGOnlineTutorials
-      path: docs/benchmark_tasks/NanoCodeRAG/NanoCodeRAGOnlineTutorials.md
-      retrieval_focus: tutorial_title_to_tutorial_article
-      queries: 200
-      documents: 9997
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.7472
-      bm25_hit_at_10: 0.84
-    - name: NanoCodeRAGProgrammingSolutions
-      path: docs/benchmark_tasks/NanoCodeRAG/NanoCodeRAGProgrammingSolutions.md
-      retrieval_focus: programming_prompt_to_solution_snippet
-      queries: 200
-      documents: 984
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0138
-      bm25_hit_at_10: 0.025
-    - name: NanoCodeRAGStackoverflowPosts
-      path: docs/benchmark_tasks/NanoCodeRAG/NanoCodeRAGStackoverflowPosts.md
-      retrieval_focus: programming_question_to_stackoverflow_post
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.6902
-      bm25_hit_at_10: 0.795
+  - name: NanoCodeRAGLibraryDocumentationSolutions
+    path: docs/benchmark_tasks/NanoCodeRAG/NanoCodeRAGLibraryDocumentationSolutions.md
+    retrieval_focus: api_or_library_query_to_documentation
+    queries: 200
+    documents: 8683
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2279
+    bm25_hit_at_10: 0.38
+  - name: NanoCodeRAGOnlineTutorials
+    path: docs/benchmark_tasks/NanoCodeRAG/NanoCodeRAGOnlineTutorials.md
+    retrieval_focus: tutorial_title_to_tutorial_article
+    queries: 200
+    documents: 9997
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.7472
+    bm25_hit_at_10: 0.84
+  - name: NanoCodeRAGProgrammingSolutions
+    path: docs/benchmark_tasks/NanoCodeRAG/NanoCodeRAGProgrammingSolutions.md
+    retrieval_focus: programming_prompt_to_solution_snippet
+    queries: 200
+    documents: 984
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0138
+    bm25_hit_at_10: 0.025
+  - name: NanoCodeRAGStackoverflowPosts
+    path: docs/benchmark_tasks/NanoCodeRAG/NanoCodeRAGStackoverflowPosts.md
+    retrieval_focus: programming_question_to_stackoverflow_post
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.6902
+    bm25_hit_at_10: 0.795
   learning:
-    leakage_note: exclude NanoCodeRAG evaluation queries, qrels, and positive documents; do not train on unfiltered CodeRAG-Bench source datastores
+    leakage_note: exclude NanoCodeRAG evaluation queries, qrels, and positive documents;
+      do not train on unfiltered CodeRAG-Bench source datastores
     leakage_risk:
       library_documentation:
         source_dataset: code-rag-bench/library-documentation
@@ -246,33 +254,54 @@ benchmark_task_group_metadata:
       programming_solutions:
         source_dataset: code-rag-bench/programming-solutions
         source_corpus_size_reported_by_coderag_bench: 1100
-        risk: small source datastore can overlap heavily with NanoCodeRAG programming-solution positives
+        risk: small source datastore can overlap heavily with NanoCodeRAG programming-solution
+          positives
       stackoverflow_posts:
         source_dataset: code-rag-bench/stackoverflow-posts
         source_corpus_size_reported_by_coderag_bench: 23500000
         risk: source datastore can contain NanoCodeRAG Stack Overflow positives
-      recommended_filter: remove matching queries, positive documents, URLs, ids, prompts, code blocks, and token fingerprints before training
+      recommended_filter: remove matching queries, positive documents, URLs, ids,
+        prompts, code blocks, and token fingerprints before training
     useful_training_data:
-      - CodeRAG-Bench retrieval pairs
-      - API documentation search pairs
-      - tutorial title-to-article pairs
-      - Stack Overflow question-answer retrieval pairs
-      - natural-language prompt-to-code solution pairs
+    - CodeRAG-Bench retrieval pairs
+    - API documentation search pairs
+    - tutorial title-to-article pairs
+    - Stack Overflow question-answer retrieval pairs
+    - natural-language prompt-to-code solution pairs
     synthetic_data:
-      document_generation: documentation pages, tutorials, Stack Overflow posts, and compact solution snippets with realistic APIs and code
-      question_generation: developer requests, API queries, tutorial titles, errors, and implementation prompts grounded in the source document
-      answerability: positives must help solve the programming request or supply the needed code context
+      document_generation: documentation pages, tutorials, Stack Overflow posts, and
+        compact solution snippets with realistic APIs and code
+      question_generation: developer requests, API queries, tutorial titles, errors,
+        and implementation prompts grounded in the source document
+      answerability: positives must help solve the programming request or supply the
+        needed code context
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCodeRAG
     source_urls:
-      - label: CodeRAG-Bench ACL Anthology
-        url: https://aclanthology.org/2025.findings-naacl.176/
-  references:
-    - title: "CodeRAG-Bench: Can Retrieval Augment Code Generation?"
+    - label: CodeRAG-Bench ACL Anthology
       url: https://aclanthology.org/2025.findings-naacl.176/
-      year: 2025
-      doi: 10.18653/v1/2025.findings-naacl.176
-      is_paper: true
-      source_confidence: definitive_paper_link
+  references:
+  - title: 'CodeRAG-Bench: Can Retrieval Augment Code Generation?'
+    url: https://aclanthology.org/2025.findings-naacl.176/
+    year: 2025
+    doi: 10.18653/v1/2025.findings-naacl.176
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.5822803815
+      query_weighted_hit_at_10: 0.67875
+      query_weighted_recall_at_100: 0.805
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.8296015191
+      query_weighted_hit_at_10: 0.9175
+      query_weighted_recall_at_100: 0.95125
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.6685249316
+      query_weighted_hit_at_10: 0.78
+      query_weighted_recall_at_100: 0.9775
+      source: dataset_candidate_subset
 ```

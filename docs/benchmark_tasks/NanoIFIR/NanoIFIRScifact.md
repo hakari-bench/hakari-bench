@@ -79,8 +79,20 @@ instruction polarity.
 | Positive qrels | 255 |
 | Positives per query | avg 5.93 / min 3 / median 5 / max 24 |
 | Multi-positive queries | 43 (100.00%) |
-| BM25 nDCG@10 | 0.7820 |
+| BM25 nDCG@10 | 0.8682 |
 | BM25 hit@10 | 1.0000 |
+| BM25 Recall@100 | 0.9765 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8516 |
+| Dense hit@10 | 0.9767 |
+| Dense Recall@100 | 0.9686 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9055 |
+| Reranking hybrid hit@10 | 1.0000 |
+| Reranking hybrid Recall@100 | 0.9922 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 73.60 |
 | Document length avg chars | 1,452.55 |
 
@@ -135,37 +147,85 @@ benchmark_task_metadata:
     query_mean: 73.6046511627907
     document_mean: 1452.5508
   bm25:
-    ndcg_at_10: 0.7819890221502135
+    ndcg_at_10: 0.8682016230002862
     hit_at_10: 1.0
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: ifir_adapted
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoIFIRScifact claims, qrels, and positive evidence abstracts
     useful_training_data:
-      - non-overlapping SciFact claim-evidence pairs
-      - scientific abstract retrieval pairs
-      - citation intent and evidence retrieval data
-      - same-entity scientific hard negatives
+    - non-overlapping SciFact claim-evidence pairs
+    - scientific abstract retrieval pairs
+    - citation intent and evidence retrieval data
+    - same-entity scientific hard negatives
     synthetic_data:
-      document_generation: scientific titles and abstracts with explicit findings, mechanisms, and evidence polarity
-      question_generation: atomic scientific claims with support/refute/evidence retrieval instructions
-      answerability: positives should contain evidence relevant to the claim and instruction polarity
+      document_generation: scientific titles and abstracts with explicit findings,
+        mechanisms, and evidence polarity
+      question_generation: atomic scientific claims with support/refute/evidence retrieval
+        instructions
+      answerability: positives should contain evidence relevant to the claim and instruction
+        polarity
     multi_positive_training: preserve_multiple_evidence_abstracts
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoIFIR
     source_urls:
-      - label: IFIR arXiv
-        url: https://arxiv.org/abs/2503.04644
-      - label: SciFact paper
-        url: https://aclanthology.org/2020.emnlp-main.609/
+    - label: IFIR arXiv
+      url: https://arxiv.org/abs/2503.04644
+    - label: SciFact paper
+      url: https://aclanthology.org/2020.emnlp-main.609/
     source_notes: []
   references:
-    - title: "SciFact: A Dataset and Benchmark for Scientific Claim Verification"
-      url: https://aclanthology.org/2020.emnlp-main.609/
-      year: 2020
-      doi: 10.18653/v1/2020.emnlp-main.609
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'SciFact: A Dataset and Benchmark for Scientific Claim Verification'
+    url: https://aclanthology.org/2020.emnlp-main.609/
+    year: 2020
+    doi: 10.18653/v1/2020.emnlp-main.609
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.868201623
+      hit_at_10: 1.0
+      recall_at_100: 0.9764705882
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 43
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9764705882
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8516120726
+      hit_at_10: 0.976744186
+      recall_at_100: 0.968627451
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 43
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.968627451
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9054727143
+      hit_at_10: 1.0
+      recall_at_100: 0.9921568627
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 43
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9921568627
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

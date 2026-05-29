@@ -98,8 +98,20 @@ share climate terminology but fail to validate the claim.
 | Avg positives / query | 3.17 |
 | Positives per query (min / median / max) | 1 / 3 / 5 |
 | Queries with multiple positives | 186 (93.00%) |
-| BM25 nDCG@10 | 0.2780 |
-| BM25 hit@10 | 0.6700 |
+| BM25 nDCG@10 | 0.2447 |
+| BM25 hit@10 | 0.6350 |
+| BM25 Recall@100 | 0.7339 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3713 |
+| Dense hit@10 | 0.7950 |
+| Dense Recall@100 | 0.8063 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3245 |
+| Reranking hybrid hit@10 | 0.7700 |
+| Reranking hybrid Recall@100 | 0.8126 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 8 |
 | Query length avg chars | 129.97 |
 | Document length avg chars | 407.08 |
 
@@ -145,9 +157,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2012.00614
     additional_source_urls:
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/climate-fever-vn
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/climate-fever-vn
     no_paper_note: null
   counts:
     queries: 200
@@ -164,59 +176,109 @@ benchmark_task_metadata:
     query_mean: 129.965
     document_mean: 407.0829
   bm25:
-    ndcg_at_10: 0.278029502
-    hit_at_10: 0.67
-    source: dataset_bm25_column
+    ndcg_at_10: 0.24471971879109686
+    hit_at_10: 0.635
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: "translated VN-MTEB ClimateFEVER test split from GreenNode/climate-fever-vn"
+    evaluation_split_origin: translated VN-MTEB ClimateFEVER test split from GreenNode/climate-fever-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated ClimateFEVER-VN test claims, qrels, and positive evidence passages used by this Nano split."
+    leakage_note: Exclude translated ClimateFEVER-VN test claims, qrels, and positive
+      evidence passages used by this Nano split.
     useful_training_data:
-      - official Climate-FEVER claim-evidence data with overlap removed
-      - FEVER-style claim verification retrieval pairs
-      - Vietnamese climate and science fact-checking data
-      - multilingual climate evidence retrieval pairs
+    - official Climate-FEVER claim-evidence data with overlap removed
+    - FEVER-style claim verification retrieval pairs
+    - Vietnamese climate and science fact-checking data
+    - multilingual climate evidence retrieval pairs
     synthetic_data:
-      document_generation: "Vietnamese climate evidence passages with scientific entities, numbers, and causal statements."
-      question_generation: "Vietnamese climate claims that require retrieving supporting or refuting evidence."
-      answerability: "Claims should have multiple explicit evidence positives and climate-topic hard negatives."
+      document_generation: Vietnamese climate evidence passages with scientific entities,
+        numbers, and causal statements.
+      question_generation: Vietnamese climate claims that require retrieving supporting
+        or refuting evidence.
+      answerability: Claims should have multiple explicit evidence positives and climate-topic
+        hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: CLIMATE-FEVER arXiv
-        url: https://arxiv.org/abs/2012.00614
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/climate-fever-vn
-        url: https://huggingface.co/datasets/GreenNode/climate-fever-vn
+    - label: CLIMATE-FEVER arXiv
+      url: https://arxiv.org/abs/2012.00614
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/climate-fever-vn
+      url: https://huggingface.co/datasets/GreenNode/climate-fever-vn
     source_notes: []
   references:
-    - title: "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims"
-      url: https://arxiv.org/abs/2012.00614
-      year: 2020
-      doi: 10.48550/arXiv.2012.00614
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/climate-fever-vn
-      url: https://huggingface.co/datasets/GreenNode/climate-fever-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims'
+    url: https://arxiv.org/abs/2012.00614
+    year: 2020
+    doi: 10.48550/arXiv.2012.00614
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/climate-fever-vn
+    url: https://huggingface.co/datasets/GreenNode/climate-fever-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2447197188
+      hit_at_10: 0.635
+      recall_at_100: 0.7338582677
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7338582677
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3712914705
+      hit_at_10: 0.795
+      recall_at_100: 0.8062992126
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8062992126
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.324487811
+      hit_at_10: 0.77
+      recall_at_100: 0.8125984252
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.04
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8125984252
+      safeguard_positive_rows: 8
+      rows_with_101_candidates: 8
 ```

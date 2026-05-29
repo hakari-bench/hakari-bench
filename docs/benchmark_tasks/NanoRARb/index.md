@@ -178,8 +178,15 @@ would make the retrieval problem less faithful to the original benchmark.
 | Positive qrels | 3,584 |
 | Positives per query | avg 1.05, min 1, median 1.0, max 3 |
 | Multi-positive tasks | 1 |
-| Query-weighted BM25 nDCG@10 | 0.1246 |
-| Query-weighted BM25 hit@10 | 0.1982 |
+| Query-weighted BM25 nDCG@10 | 0.1536 |
+| Query-weighted BM25 hit@10 | 0.2479 |
+| Query-weighted BM25 Recall@100 | 0.4554 |
+| Query-weighted Dense nDCG@10 | 0.2469 |
+| Query-weighted Dense hit@10 | 0.3841 |
+| Query-weighted Dense Recall@100 | 0.6563 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.2310 |
+| Query-weighted Reranking hybrid hit@10 | 0.3674 |
+| Query-weighted Reranking hybrid Recall@100 | 0.6400 |
 | Mean query length | 4,012.63 chars, weighted by query count |
 | Mean document length | 74.15 chars, weighted by split-local document count |
 
@@ -257,238 +264,265 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 4012.627941176471
     document_mean_weighted_by_documents: 74.15082961092561
   bm25:
-    ndcg_at_10_query_weighted: 0.12457058823529413
-    hit_at_10_query_weighted: 0.19823529411764707
+    ndcg_at_10_query_weighted: 0.1535945993
+    hit_at_10_query_weighted: 0.2479411765
     ndcg_at_10_unweighted_task_mean: 0.12457058823529413
     hit_at_10_unweighted_task_mean: 0.19823529411764707
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: NanoRARbMath
     hardest_task_by_ndcg_at_10: NanoTempReasonL2Pure
   tasks:
-    - name: NanoARCChallenge
-      path: docs/benchmark_tasks/NanoRARb/NanoARCChallenge.md
-      retrieval_shape: science_question_to_answer_option
-      queries: 200
-      documents: 9350
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0394
-      bm25_hit_at_10: 0.08
-    - name: NanoAlphaNLI
-      path: docs/benchmark_tasks/NanoRARb/NanoAlphaNLI.md
-      retrieval_shape: story_observations_to_explanatory_event
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2936
-      bm25_hit_at_10: 0.445
-    - name: NanoHellaSwag
-      path: docs/benchmark_tasks/NanoRARb/NanoHellaSwag.md
-      retrieval_shape: activity_context_to_plausible_continuation
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.1166
-      bm25_hit_at_10: 0.2
-    - name: NanoPIQA
-      path: docs/benchmark_tasks/NanoRARb/NanoPIQA.md
-      retrieval_shape: physical_goal_to_procedure_solution
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.1571
-      bm25_hit_at_10: 0.235
-    - name: NanoQuail
-      path: docs/benchmark_tasks/NanoRARb/NanoQuail.md
-      retrieval_shape: long_passage_question_to_short_answer
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0215
-      bm25_hit_at_10: 0.035
-    - name: NanoRARbCode
-      path: docs/benchmark_tasks/NanoRARb/NanoRARbCode.md
-      retrieval_shape: code_prompt_docstring_to_implementation
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0263
-      bm25_hit_at_10: 0.035
-    - name: NanoRARbMath
-      path: docs/benchmark_tasks/NanoRARb/NanoRARbMath.md
-      retrieval_shape: math_problem_to_worked_solution
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5348
-      bm25_hit_at_10: 0.66
-    - name: NanoSIQA
-      path: docs/benchmark_tasks/NanoRARb/NanoSIQA.md
-      retrieval_shape: social_context_question_to_answer
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0278
-      bm25_hit_at_10: 0.045
-    - name: NanoSpartQA
-      path: docs/benchmark_tasks/NanoRARb/NanoSpartQA.md
-      retrieval_shape: spatial_scene_question_to_answer_phrase
-      queries: 200
-      documents: 1592
-      positive_qrels: 384
-      bm25_ndcg_at_10: 0.2321
-      bm25_hit_at_10: 0.335
-    - name: NanoTempReasonL1
-      path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL1.md
-      retrieval_shape: date_arithmetic_question_to_date
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0125
-      bm25_hit_at_10: 0.035
-    - name: NanoTempReasonL2Context
-      path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL2Context.md
-      retrieval_shape: long_temporal_facts_to_active_entity
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0287
-      bm25_hit_at_10: 0.065
-    - name: NanoTempReasonL2Fact
-      path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL2Fact.md
-      retrieval_shape: temporal_facts_to_active_entity
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0969
-      bm25_hit_at_10: 0.195
-    - name: NanoTempReasonL2Pure
-      path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL2Pure.md
-      retrieval_shape: temporal_question_to_active_entity
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0
-      bm25_hit_at_10: 0.0
-    - name: NanoTempReasonL3Context
-      path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL3Context.md
-      retrieval_shape: long_temporal_facts_to_before_after_entity
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0262
-      bm25_hit_at_10: 0.06
-    - name: NanoTempReasonL3Fact
-      path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL3Fact.md
-      retrieval_shape: temporal_facts_to_before_after_entity
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0679
-      bm25_hit_at_10: 0.14
-    - name: NanoTempReasonL3Pure
-      path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL3Pure.md
-      retrieval_shape: temporal_relation_question_to_entity
-      queries: 200
-      documents: 10000
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.0057
-      bm25_hit_at_10: 0.01
-    - name: NanoWinoGrande
-      path: docs/benchmark_tasks/NanoRARb/NanoWinoGrande.md
-      retrieval_shape: masked_sentence_to_referent
-      queries: 200
-      documents: 5095
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4306
-      bm25_hit_at_10: 0.795
+  - name: NanoARCChallenge
+    path: docs/benchmark_tasks/NanoRARb/NanoARCChallenge.md
+    retrieval_shape: science_question_to_answer_option
+    queries: 200
+    documents: 9350
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0394
+    bm25_hit_at_10: 0.08
+  - name: NanoAlphaNLI
+    path: docs/benchmark_tasks/NanoRARb/NanoAlphaNLI.md
+    retrieval_shape: story_observations_to_explanatory_event
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2936
+    bm25_hit_at_10: 0.445
+  - name: NanoHellaSwag
+    path: docs/benchmark_tasks/NanoRARb/NanoHellaSwag.md
+    retrieval_shape: activity_context_to_plausible_continuation
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.1166
+    bm25_hit_at_10: 0.2
+  - name: NanoPIQA
+    path: docs/benchmark_tasks/NanoRARb/NanoPIQA.md
+    retrieval_shape: physical_goal_to_procedure_solution
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.1571
+    bm25_hit_at_10: 0.235
+  - name: NanoQuail
+    path: docs/benchmark_tasks/NanoRARb/NanoQuail.md
+    retrieval_shape: long_passage_question_to_short_answer
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0215
+    bm25_hit_at_10: 0.035
+  - name: NanoRARbCode
+    path: docs/benchmark_tasks/NanoRARb/NanoRARbCode.md
+    retrieval_shape: code_prompt_docstring_to_implementation
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0263
+    bm25_hit_at_10: 0.035
+  - name: NanoRARbMath
+    path: docs/benchmark_tasks/NanoRARb/NanoRARbMath.md
+    retrieval_shape: math_problem_to_worked_solution
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5348
+    bm25_hit_at_10: 0.66
+  - name: NanoSIQA
+    path: docs/benchmark_tasks/NanoRARb/NanoSIQA.md
+    retrieval_shape: social_context_question_to_answer
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0278
+    bm25_hit_at_10: 0.045
+  - name: NanoSpartQA
+    path: docs/benchmark_tasks/NanoRARb/NanoSpartQA.md
+    retrieval_shape: spatial_scene_question_to_answer_phrase
+    queries: 200
+    documents: 1592
+    positive_qrels: 384
+    bm25_ndcg_at_10: 0.2321
+    bm25_hit_at_10: 0.335
+  - name: NanoTempReasonL1
+    path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL1.md
+    retrieval_shape: date_arithmetic_question_to_date
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0125
+    bm25_hit_at_10: 0.035
+  - name: NanoTempReasonL2Context
+    path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL2Context.md
+    retrieval_shape: long_temporal_facts_to_active_entity
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0287
+    bm25_hit_at_10: 0.065
+  - name: NanoTempReasonL2Fact
+    path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL2Fact.md
+    retrieval_shape: temporal_facts_to_active_entity
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0969
+    bm25_hit_at_10: 0.195
+  - name: NanoTempReasonL2Pure
+    path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL2Pure.md
+    retrieval_shape: temporal_question_to_active_entity
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0
+    bm25_hit_at_10: 0.0
+  - name: NanoTempReasonL3Context
+    path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL3Context.md
+    retrieval_shape: long_temporal_facts_to_before_after_entity
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0262
+    bm25_hit_at_10: 0.06
+  - name: NanoTempReasonL3Fact
+    path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL3Fact.md
+    retrieval_shape: temporal_facts_to_before_after_entity
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0679
+    bm25_hit_at_10: 0.14
+  - name: NanoTempReasonL3Pure
+    path: docs/benchmark_tasks/NanoRARb/NanoTempReasonL3Pure.md
+    retrieval_shape: temporal_relation_question_to_entity
+    queries: 200
+    documents: 10000
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.0057
+    bm25_hit_at_10: 0.01
+  - name: NanoWinoGrande
+    path: docs/benchmark_tasks/NanoRARb/NanoWinoGrande.md
+    retrieval_shape: masked_sentence_to_referent
+    queries: 200
+    documents: 5095
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4306
+    bm25_hit_at_10: 0.795
   learning:
-    leakage_note: exclude NanoRARb evaluation queries, qrels, candidate answers, code snippets, math solutions, temporal answer strings, and upstream evaluation rows used in RAR-b answer pools
+    leakage_note: exclude NanoRARb evaluation queries, qrels, candidate answers, code
+      snippets, math solutions, temporal answer strings, and upstream evaluation rows
+      used in RAR-b answer pools
     useful_training_data:
-      - ARC-style science answer selection and explanation-backed multiple-choice QA
-      - abductive, physical, social, event-continuation, and Winograd-style commonsense data
-      - long-passage reading-comprehension answer selection and textual spatial reasoning data
-      - temporal interval QA, date arithmetic, and entity-time retrieval examples
-      - docstring-to-code retrieval and HumanEval or MBPP-style code tasks outside evaluation rows
-      - GSM8K, MATH, verifier, and worked-solution retrieval data outside evaluation rows
+    - ARC-style science answer selection and explanation-backed multiple-choice QA
+    - abductive, physical, social, event-continuation, and Winograd-style commonsense
+      data
+    - long-passage reading-comprehension answer selection and textual spatial reasoning
+      data
+    - temporal interval QA, date arithmetic, and entity-time retrieval examples
+    - docstring-to-code retrieval and HumanEval or MBPP-style code tasks outside evaluation
+      rows
+    - GSM8K, MATH, verifier, and worked-solution retrieval data outside evaluation
+      rows
     synthetic_data:
-      document_generation: concise answer strings, plausible continuations, referents, temporal entities, code implementations, and worked math solutions
-      question_generation: reasoning prompts with enough context to determine one correct answer or a small set of correct answer strings
-      answerability: positives must satisfy the reasoning relation rather than repeat query words
+      document_generation: concise answer strings, plausible continuations, referents,
+        temporal entities, code implementations, and worked math solutions
+      question_generation: reasoning prompts with enough context to determine one
+        correct answer or a small set of correct answer strings
+      answerability: positives must satisfy the reasoning relation rather than repeat
+        query words
     multi_positive_training: mostly_single_positive_with_spartqa_multi_positive_spatial_answers
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoRARb
     source_urls:
-      - label: RAR-b arXiv
-        url: https://arxiv.org/abs/2404.06347
-      - label: ARC arXiv
-        url: https://arxiv.org/abs/1803.05457
-      - label: AlphaNLI arXiv
-        url: https://arxiv.org/abs/1908.05739
-      - label: HellaSwag arXiv
-        url: https://arxiv.org/abs/1905.07830
-      - label: PIQA arXiv
-        url: https://arxiv.org/abs/1911.11641
-      - label: QuAIL AAAI
-        url: https://ojs.aaai.org/index.php/AAAI/article/view/6398
-      - label: Social IQA arXiv
-        url: https://arxiv.org/abs/1904.09728
-      - label: SpartQA arXiv
-        url: https://arxiv.org/abs/2104.05832
-      - label: WinoGrande arXiv
-        url: https://arxiv.org/abs/1907.10641
-      - label: TempReason arXiv
-        url: https://arxiv.org/abs/2306.08952
+    - label: RAR-b arXiv
+      url: https://arxiv.org/abs/2404.06347
+    - label: ARC arXiv
+      url: https://arxiv.org/abs/1803.05457
+    - label: AlphaNLI arXiv
+      url: https://arxiv.org/abs/1908.05739
+    - label: HellaSwag arXiv
+      url: https://arxiv.org/abs/1905.07830
+    - label: PIQA arXiv
+      url: https://arxiv.org/abs/1911.11641
+    - label: QuAIL AAAI
+      url: https://ojs.aaai.org/index.php/AAAI/article/view/6398
+    - label: Social IQA arXiv
+      url: https://arxiv.org/abs/1904.09728
+    - label: SpartQA arXiv
+      url: https://arxiv.org/abs/2104.05832
+    - label: WinoGrande arXiv
+      url: https://arxiv.org/abs/1907.10641
+    - label: TempReason arXiv
+      url: https://arxiv.org/abs/2306.08952
     source_notes: []
   references:
-    - title: "RAR-b: Reasoning as Retrieval Benchmark"
-      url: https://arxiv.org/abs/2404.06347
-      year: 2024
-      doi: 10.48550/arXiv.2404.06347
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge"
-      url: https://arxiv.org/abs/1803.05457
-      year: 2018
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Abductive Commonsense Reasoning"
-      url: https://arxiv.org/abs/1908.05739
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "HellaSwag: Can a Machine Really Finish Your Sentence?"
-      url: https://arxiv.org/abs/1905.07830
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "PIQA: Reasoning about Physical Commonsense in Natural Language"
-      url: https://arxiv.org/abs/1911.11641
-      year: 2020
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real Tasks"
-      url: https://ojs.aaai.org/index.php/AAAI/article/view/6398
-      year: 2020
-      is_paper: true
-      source_confidence: probably_correct
-    - title: "Social IQa: Commonsense Reasoning about Social Interactions"
-      url: https://arxiv.org/abs/1904.09728
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning"
-      url: https://arxiv.org/abs/2104.05832
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "WinoGrande: An Adversarial Winograd Schema Challenge at Scale"
-      url: https://arxiv.org/abs/1907.10641
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models"
-      url: https://arxiv.org/abs/2306.08952
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+    url: https://arxiv.org/abs/2404.06347
+    year: 2024
+    doi: 10.48550/arXiv.2404.06347
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge
+    url: https://arxiv.org/abs/1803.05457
+    year: 2018
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Abductive Commonsense Reasoning
+    url: https://arxiv.org/abs/1908.05739
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'HellaSwag: Can a Machine Really Finish Your Sentence?'
+    url: https://arxiv.org/abs/1905.07830
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'PIQA: Reasoning about Physical Commonsense in Natural Language'
+    url: https://arxiv.org/abs/1911.11641
+    year: 2020
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Getting Closer to AI Complete Question Answering: A Set of Prerequisite
+      Real Tasks'
+    url: https://ojs.aaai.org/index.php/AAAI/article/view/6398
+    year: 2020
+    is_paper: true
+    source_confidence: probably_correct
+  - title: 'Social IQa: Commonsense Reasoning about Social Interactions'
+    url: https://arxiv.org/abs/1904.09728
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning'
+    url: https://arxiv.org/abs/2104.05832
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'WinoGrande: An Adversarial Winograd Schema Challenge at Scale'
+    url: https://arxiv.org/abs/1907.10641
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Towards Benchmarking and Improving the Temporal Reasoning Capability of
+      Large Language Models
+    url: https://arxiv.org/abs/2306.08952
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.1535945993
+      query_weighted_hit_at_10: 0.2479411765
+      query_weighted_recall_at_100: 0.4553553922
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.2469035576
+      query_weighted_hit_at_10: 0.3841176471
+      query_weighted_recall_at_100: 0.6562928922
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.2310024796
+      query_weighted_hit_at_10: 0.3673529412
+      query_weighted_recall_at_100: 0.6399571078
+      source: dataset_candidate_subset
 ```

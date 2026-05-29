@@ -74,8 +74,20 @@ interface or failure.
 | Positive qrels | 106 |
 | Positives per query | avg 1.05, min 1, median 1, max 2 |
 | Multi-positive queries | 5 (4.95%) |
-| BM25 nDCG@10 | 0.2193 |
-| BM25 hit@10 | 0.3465 |
+| BM25 nDCG@10 | 0.2490 |
+| BM25 hit@10 | 0.4257 |
+| BM25 Recall@100 | 0.8019 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2851 |
+| Dense hit@10 | 0.4950 |
+| Dense Recall@100 | 0.8868 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2866 |
+| Reranking hybrid hit@10 | 0.5347 |
+| Reranking hybrid Recall@100 | 0.8774 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 12 |
 | Query length avg chars | 2179.45 |
 | Document length avg chars | 35895.20 |
 
@@ -136,38 +148,86 @@ benchmark_task_metadata:
     query_mean: 2179.4455445544554
     document_mean: 35895.2
   bm25:
-    ndcg_at_10: 0.21929135808585956
-    hit_at_10: 0.3465346534653465
-    source: dataset_bm25_column
+    ndcg_at_10: 0.2489505233164181
+    hit_at_10: 0.42574257425742573
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: BRIGHT Robotics long-document evaluation split
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoBRIGHT RoboticsLong queries and full cited source pages
     useful_training_data:
-      - document-level robotics documentation retrieval
-      - ROS issue or Q&A posts linked to source pages
-      - troubleshooting datasets aligned to manual pages
+    - document-level robotics documentation retrieval
+    - ROS issue or Q&A posts linked to source pages
+    - troubleshooting datasets aligned to manual pages
     synthetic_data:
       document_generation: long ROS, Gazebo, controller, or robotics issue pages
-      question_generation: specific robotics troubleshooting posts with configuration details
-      answerability: positive full document should solve the interface or failure mode
+      question_generation: specific robotics troubleshooting posts with configuration
+        details
+      answerability: positive full document should solve the interface or failure
+        mode
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBRIGHT
     source_urls:
-      - label: BRIGHT arXiv
-        url: https://arxiv.org/abs/2407.12883
-      - label: BRIGHT project
-        url: https://brightbenchmark.github.io/
-      - label: xlangai/BRIGHT
-        url: https://huggingface.co/datasets/xlangai/BRIGHT
+    - label: BRIGHT arXiv
+      url: https://arxiv.org/abs/2407.12883
+    - label: BRIGHT project
+      url: https://brightbenchmark.github.io/
+    - label: xlangai/BRIGHT
+      url: https://huggingface.co/datasets/xlangai/BRIGHT
     source_notes: []
   references:
-    - title: "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval"
-      url: https://arxiv.org/abs/2407.12883
-      year: 2024
-      doi: 10.48550/arXiv.2407.12883
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+      Retrieval'
+    url: https://arxiv.org/abs/2407.12883
+    year: 2024
+    doi: 10.48550/arXiv.2407.12883
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2489505233
+      hit_at_10: 0.4257425743
+      recall_at_100: 0.8018867925
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 101
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8018867925
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2850816873
+      hit_at_10: 0.495049505
+      recall_at_100: 0.8867924528
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 101
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8867924528
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2865678197
+      hit_at_10: 0.5346534653
+      recall_at_100: 0.8773584906
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.118812
+      query_count: 101
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8773584906
+      safeguard_positive_rows: 12
+      rows_with_101_candidates: 12
 ```

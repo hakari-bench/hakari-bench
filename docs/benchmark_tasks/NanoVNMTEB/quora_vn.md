@@ -98,8 +98,20 @@ Do not seed generation from this evaluation split.
 | Avg positives / query | 2.26 |
 | Positives per query (min / median / max) | 1 / 1 / 57 |
 | Queries with multiple positives | 67 (33.50%) |
-| BM25 nDCG@10 | 0.8626 |
-| BM25 hit@10 | 0.9800 |
+| BM25 nDCG@10 | 0.8345 |
+| BM25 hit@10 | 0.9600 |
+| BM25 Recall@100 | 0.9403 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8259 |
+| Dense hit@10 | 0.9350 |
+| Dense Recall@100 | 0.9049 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8510 |
+| Reranking hybrid hit@10 | 0.9600 |
+| Reranking hybrid Recall@100 | 0.9624 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 76.51 |
 | Document length avg chars | 129.22 |
 
@@ -145,10 +157,11 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2104.08663
     additional_source_urls:
-      - https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://huggingface.co/datasets/GreenNode/quora-vn
-    no_paper_note: "No standalone Quora retrieval task paper was confirmed; BEIR and the official Quora data release describe the source task."
+    - https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://huggingface.co/datasets/GreenNode/quora-vn
+    no_paper_note: No standalone Quora retrieval task paper was confirmed; BEIR and
+      the official Quora data release describe the source task.
   counts:
     queries: 200
     documents: 10000
@@ -164,59 +177,107 @@ benchmark_task_metadata:
     query_mean: 76.51
     document_mean: 129.215
   bm25:
-    ndcg_at_10: 0.862570196
-    hit_at_10: 0.98
-    source: dataset_bm25_column
+    ndcg_at_10: 0.8345337070261717
+    hit_at_10: 0.96
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB Quora test split from GreenNode/quora-vn"
+    evaluation_split_origin: translated VN-MTEB Quora test split from GreenNode/quora-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated Quora-VN test questions, qrels, and positive duplicate questions used by this Nano split."
+    leakage_note: Exclude translated Quora-VN test questions, qrels, and positive
+      duplicate questions used by this Nano split.
     useful_training_data:
-      - non-overlapping Quora duplicate-question pairs
-      - Vietnamese duplicate-question and paraphrase data
-      - translated duplicate-question pairs with overlap removed
-      - same-entity hard negatives with different intent
+    - non-overlapping Quora duplicate-question pairs
+    - Vietnamese duplicate-question and paraphrase data
+    - translated duplicate-question pairs with overlap removed
+    - same-entity hard negatives with different intent
     synthetic_data:
-      document_generation: "Vietnamese forum-style questions and noisy translated variants."
-      question_generation: "Vietnamese paraphrases preserving the same user intent."
-      answerability: "Equivalent questions should be clustered, with same-keyword non-duplicates as hard negatives."
+      document_generation: Vietnamese forum-style questions and noisy translated variants.
+      question_generation: Vietnamese paraphrases preserving the same user intent.
+      answerability: Equivalent questions should be clustered, with same-keyword non-duplicates
+        as hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: Quora Question Pairs release
-        url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: GreenNode/quora-vn
-        url: https://huggingface.co/datasets/GreenNode/quora-vn
+    - label: Quora Question Pairs release
+      url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: GreenNode/quora-vn
+      url: https://huggingface.co/datasets/GreenNode/quora-vn
     source_notes: []
   references:
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "First Quora Dataset Release: Question Pairs"
-      url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
-    - title: GreenNode/quora-vn
-      url: https://huggingface.co/datasets/GreenNode/quora-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'First Quora Dataset Release: Question Pairs'
+    url: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  - title: GreenNode/quora-vn
+    url: https://huggingface.co/datasets/GreenNode/quora-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.834533707
+      hit_at_10: 0.96
+      recall_at_100: 0.9402654867
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9402654867
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8259395743
+      hit_at_10: 0.935
+      recall_at_100: 0.9048672566
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9048672566
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8510204725
+      hit_at_10: 0.96
+      recall_at_100: 0.9623893805
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9623893805
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

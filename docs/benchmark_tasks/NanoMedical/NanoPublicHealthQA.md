@@ -152,8 +152,20 @@ or positive passages.
 | Queries | 86 |
 | Documents | 86 |
 | Positive qrels | 86 |
-| BM25 nDCG@10 | 0.6722 |
-| BM25 hit@10 | 0.8372 |
+| BM25 nDCG@10 | 0.7379 |
+| BM25 hit@10 | 0.9419 |
+| BM25 Recall@100 | 1.0000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8176 |
+| Dense hit@10 | 0.9767 |
+| Dense Recall@100 | 1.0000 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7847 |
+| Reranking hybrid hit@10 | 0.9535 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 86 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 79.85 |
 | Document length avg chars | 828.15 |
 
@@ -195,7 +207,9 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: dataset_card
     paper_pdf_or_html_checked: false
-    no_paper_note: no standalone task paper or benchmark paper was confirmed; interpretation is based on the Hugging Face dataset card, public repository metadata, and observed Nano sample data
+    no_paper_note: no standalone task paper or benchmark paper was confirmed; interpretation
+      is based on the Hugging Face dataset card, public repository metadata, and observed
+      Nano sample data
   counts:
     queries: 86
     documents: 86
@@ -211,38 +225,88 @@ benchmark_task_metadata:
     query_mean: 79.848837
     document_mean: 828.151163
   bm25:
-    ndcg_at_10: 0.6722409776
-    hit_at_10: 0.8372093023
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7378604109892222
+    hit_at_10: 0.9418604651162791
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding publichealth-qa examples, COVID-QA multilingual examples, or regenerated copies likely to overlap with this NanoMedical benchmark split
+    leakage_note: prefer excluding publichealth-qa examples, COVID-QA multilingual
+      examples, or regenerated copies likely to overlap with this NanoMedical benchmark
+      split
     useful_training_data:
-      - non-overlapping Arabic public-health FAQ retrieval pairs
-      - WHO and CDC style question-answer guidance data
-      - Arabic medical FAQ and healthcare guidance retrieval pairs
+    - non-overlapping Arabic public-health FAQ retrieval pairs
+    - WHO and CDC style question-answer guidance data
+    - Arabic medical FAQ and healthcare guidance retrieval pairs
     synthetic_data:
-      document_generation: Arabic official-guidance style public-health answer passages with conditions and recommended actions
-      question_generation: Arabic user-facing health questions targeting one recommendation or safety condition
-      answerability: each question should be answerable from the selected guidance passage without relying on outside medical knowledge
+      document_generation: Arabic official-guidance style public-health answer passages
+        with conditions and recommended actions
+      question_generation: Arabic user-facing health questions targeting one recommendation
+        or safety condition
+      answerability: each question should be answerable from the selected guidance
+        passage without relying on outside medical knowledge
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMedical
     source_urls:
-      - label: publichealth-qa
-        url: https://huggingface.co/datasets/xhluca/publichealth-qa
-      - label: publichealth-qa repository
-        url: https://github.com/xhluca/publichealth-qa
-      - label: COVID-QA dataset
-        url: https://www.kaggle.com/datasets/xhlulu/covidqa
+    - label: publichealth-qa
+      url: https://huggingface.co/datasets/xhluca/publichealth-qa
+    - label: publichealth-qa repository
+      url: https://github.com/xhluca/publichealth-qa
+    - label: COVID-QA dataset
+      url: https://www.kaggle.com/datasets/xhlulu/covidqa
     source_notes: []
   references:
-    - title: publichealth-qa
-      url: https://huggingface.co/datasets/xhluca/publichealth-qa
-      year: 2024
-      doi: 10.57967/hf/2247
-      is_paper: false
-      source_confidence: probably_correct
+  - title: publichealth-qa
+    url: https://huggingface.co/datasets/xhluca/publichealth-qa
+    year: 2024
+    doi: 10.57967/hf/2247
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.737860411
+      hit_at_10: 0.9418604651
+      recall_at_100: 1.0
+      candidate_count_min: 86
+      candidate_count_max: 86
+      candidate_count_mean: 86.0
+      query_count: 86
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8175674497
+      hit_at_10: 0.976744186
+      recall_at_100: 1.0
+      candidate_count_min: 86
+      candidate_count_max: 86
+      candidate_count_mean: 86.0
+      query_count: 86
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7847483023
+      hit_at_10: 0.9534883721
+      recall_at_100: 1.0
+      candidate_count_min: 86
+      candidate_count_max: 86
+      candidate_count_mean: 86.0
+      query_count: 86
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

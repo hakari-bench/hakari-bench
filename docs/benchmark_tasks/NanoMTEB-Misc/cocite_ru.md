@@ -81,8 +81,20 @@ as positives unless a co-citation relation is known.
 | Positive qrels | 1,000 |
 | Positives per query | avg 5.00 / min 5 / median 5 / max 5 |
 | Multi-positive queries | 200 |
-| BM25 nDCG@10 | 0.3593 |
-| BM25 hit@10 | 0.7150 |
+| BM25 nDCG@10 | 0.3920 |
+| BM25 hit@10 | 0.7300 |
+| BM25 Recall@100 | 0.5960 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4249 |
+| Dense hit@10 | 0.7550 |
+| Dense Recall@100 | 0.6620 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4346 |
+| Reranking hybrid hit@10 | 0.7550 |
+| Reranking hybrid Recall@100 | 0.6810 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 18 |
 | Query length avg chars | 961.80 |
 | Document length avg chars | 908.88 |
 
@@ -140,8 +152,53 @@ benchmark_task_metadata:
     query_mean: 961.8
     document_mean: 908.88
   bm25:
-    ndcg_at_10: 0.3593
-    hit_at_10: 0.715
-    source: dataset_bm25_column
+    ndcg_at_10: 0.3920323427330925
+    hit_at_10: 0.73
+    source: dataset_candidate_subset
   example_count: 5
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3920323427
+      hit_at_10: 0.73
+      recall_at_100: 0.596
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.596
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4249331349
+      hit_at_10: 0.755
+      recall_at_100: 0.662
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.662
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4346494972
+      hit_at_10: 0.755
+      recall_at_100: 0.681
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.09
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.681
+      safeguard_positive_rows: 18
+      rows_with_101_candidates: 18
 ```

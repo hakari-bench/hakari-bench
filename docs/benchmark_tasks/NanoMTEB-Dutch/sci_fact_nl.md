@@ -98,6 +98,18 @@ or relation.
 | Queries with multiple positives | 16 (8.00%) |
 | BM25 nDCG@10 | 0.6160 |
 | BM25 hit@10 | 0.7900 |
+| BM25 Recall@100 | 0.8363 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6758 |
+| Dense hit@10 | 0.8300 |
+| Dense Recall@100 | 0.9336 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6709 |
+| Reranking hybrid hit@10 | 0.8200 |
+| Reranking hybrid Recall@100 | 0.9558 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 10 |
 | Query length avg chars | 100.13 |
 | Document length avg chars | 1,640.32 |
 
@@ -143,9 +155,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2004.14974
     additional_source_urls:
-      - https://arxiv.org/abs/2104.08663
-      - https://aclanthology.org/2025.bucc-1.5/
-      - https://huggingface.co/datasets/clips/beir-nl-scifact
+    - https://arxiv.org/abs/2104.08663
+    - https://aclanthology.org/2025.bucc-1.5/
+    - https://huggingface.co/datasets/clips/beir-nl-scifact
     no_paper_note: null
   counts:
     queries: 200
@@ -162,59 +174,109 @@ benchmark_task_metadata:
     query_mean: 100.13
     document_mean: 1640.316226124
   bm25:
-    ndcg_at_10: 0.616037929
+    ndcg_at_10: 0.616037929182313
     hit_at_10: 0.79
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated BEIR-NL SciFact test split from clips/beir-nl-scifact"
+    evaluation_split_origin: translated BEIR-NL SciFact test split from clips/beir-nl-scifact
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated SciFact test claims, qrels, and evidence abstracts used by this Nano split."
+    leakage_note: Exclude translated SciFact test claims, qrels, and evidence abstracts
+      used by this Nano split.
     useful_training_data:
-      - official SciFact training data with overlap removed
-      - scientific claim verification retrieval datasets
-      - biomedical abstract retrieval pairs
-      - Dutch or multilingual scientific evidence pairs
+    - official SciFact training data with overlap removed
+    - scientific claim verification retrieval datasets
+    - biomedical abstract retrieval pairs
+    - Dutch or multilingual scientific evidence pairs
     synthetic_data:
-      document_generation: "Dutch scientific abstracts with methods, measurements, entities, and findings."
-      question_generation: "Precise Dutch scientific claims supported or refuted by the abstract."
-      answerability: "Claims should be grounded in explicit findings, with terminology-sharing hard negatives."
+      document_generation: Dutch scientific abstracts with methods, measurements,
+        entities, and findings.
+      question_generation: Precise Dutch scientific claims supported or refuted by
+        the abstract.
+      answerability: Claims should be grounded in explicit findings, with terminology-sharing
+        hard negatives.
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: SciFact arXiv
-        url: https://arxiv.org/abs/2004.14974
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: BEIR-NL ACL Anthology
-        url: https://aclanthology.org/2025.bucc-1.5/
-      - label: clips/beir-nl-scifact
-        url: https://huggingface.co/datasets/clips/beir-nl-scifact
+    - label: SciFact arXiv
+      url: https://arxiv.org/abs/2004.14974
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: BEIR-NL ACL Anthology
+      url: https://aclanthology.org/2025.bucc-1.5/
+    - label: clips/beir-nl-scifact
+      url: https://huggingface.co/datasets/clips/beir-nl-scifact
     source_notes: []
   references:
-    - title: "Fact or Fiction: Verifying Scientific Claims"
-      url: https://arxiv.org/abs/2004.14974
-      year: 2020
-      doi: 10.48550/arXiv.2004.14974
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language"
-      url: https://aclanthology.org/2025.bucc-1.5/
-      year: 2025
-      doi: null
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: clips/beir-nl-scifact
-      url: https://huggingface.co/datasets/clips/beir-nl-scifact
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'Fact or Fiction: Verifying Scientific Claims'
+    url: https://arxiv.org/abs/2004.14974
+    year: 2020
+    doi: 10.48550/arXiv.2004.14974
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language'
+    url: https://aclanthology.org/2025.bucc-1.5/
+    year: 2025
+    doi: null
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: clips/beir-nl-scifact
+    url: https://huggingface.co/datasets/clips/beir-nl-scifact
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6160379292
+      hit_at_10: 0.79
+      recall_at_100: 0.8362831858
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8362831858
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6758142619
+      hit_at_10: 0.83
+      recall_at_100: 0.9336283186
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9336283186
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6709460898
+      hit_at_10: 0.82
+      recall_at_100: 0.9557522124
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.05
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9557522124
+      safeguard_positive_rows: 10
+      rows_with_101_candidates: 10
 ```

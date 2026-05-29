@@ -138,8 +138,20 @@ not duplicate questions should not be labeled positive.
 | Avg positives / query | 1.40 |
 | Positives per query (min / median / max) | 1 / 1.00 / 6 |
 | Queries with multiple positives | 10 (20.0%) |
-| BM25 nDCG@10 | 0.7864 |
-| BM25 hit@10 | 0.9400 |
+| BM25 nDCG@10 | 0.8745 |
+| BM25 hit@10 | 0.9800 |
+| BM25 Recall@100 | 1.0000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8888 |
+| Dense hit@10 | 0.9600 |
+| Dense Recall@100 | 0.9714 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9105 |
+| Reranking hybrid hit@10 | 0.9800 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 47.96 |
 | Document length avg chars | 54.81 |
 
@@ -181,7 +193,9 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: benchmark_paper
     paper_pdf_or_html_checked: true
-    no_paper_note: no standalone Quora duplicate-question retrieval paper was confirmed; the BEIR benchmark paper was inspected for Quora construction and evaluation context
+    no_paper_note: no standalone Quora duplicate-question retrieval paper was confirmed;
+      the BEIR benchmark paper was inspected for Quora construction and evaluation
+      context
   counts:
     queries: 50
     documents: 5046
@@ -197,44 +211,93 @@ benchmark_task_metadata:
     query_mean: 47.96
     document_mean: 54.808165
   bm25:
-    ndcg_at_10: 0.7864009435
-    hit_at_10: 0.94
-    source: dataset_bm25_column
+    ndcg_at_10: 0.8745265891744632
+    hit_at_10: 0.98
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding upstream dev/test data or other Quora-derived data likely to overlap with the BEIR/NanoBEIR evaluation questions
+    leakage_note: prefer excluding upstream dev/test data or other Quora-derived data
+      likely to overlap with the BEIR/NanoBEIR evaluation questions
     useful_training_data:
-      - non-overlapping Quora duplicate-question training pairs
-      - FAQ and community-question duplicate pairs
-      - supervised paraphrase and intent-equivalence datasets
+    - non-overlapping Quora duplicate-question training pairs
+    - FAQ and community-question duplicate pairs
+    - supervised paraphrase and intent-equivalence datasets
     synthetic_data:
       document_generation: short user questions grouped by shared intent
-      question_generation: paraphrased duplicate questions with varied wording and grammar
-      answerability: positives should be answer-equivalent duplicate questions, not merely related questions
+      question_generation: paraphrased duplicate questions with varied wording and
+        grammar
+      answerability: positives should be answer-equivalent duplicate questions, not
+        merely related questions
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-en
     source_urls:
-      - label: Quora Question Pairs
-        url: https://kaggle.com/competitions/quora-question-pairs
-      - label: ir_datasets BEIR documentation
-        url: https://ir-datasets.com/beir
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    - label: Quora Question Pairs
+      url: https://kaggle.com/competitions/quora-question-pairs
+    - label: ir_datasets BEIR documentation
+      url: https://ir-datasets.com/beir
+    - label: Zeta Alpha NanoBEIR collection
+      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
     source_notes: []
   references:
-    - title: Quora Question Pairs
-      url: https://kaggle.com/competitions/quora-question-pairs
-      year: 2017
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
-    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models'
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
+  - title: Quora Question Pairs
+    url: https://kaggle.com/competitions/quora-question-pairs
+    year: 2017
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8745265892
+      hit_at_10: 0.98
+      recall_at_100: 1.0
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8887758482
+      hit_at_10: 0.96
+      recall_at_100: 0.9714285714
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9714285714
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9104956509
+      hit_at_10: 0.98
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

@@ -156,8 +156,15 @@ not sufficient.
 | Positives per query | avg 4.6076, median varies by source family, max 100 |
 | Multi-positive subtasks | 5 of 12 |
 | Multi-positive queries | 530 |
-| Query-weighted BM25 nDCG@10 | 0.4315 |
-| Query-weighted BM25 hit@10 | 0.6229 |
+| Query-weighted BM25 nDCG@10 | 0.4700 |
+| Query-weighted BM25 hit@10 | 0.6742 |
+| Query-weighted BM25 Recall@100 | 0.7276 |
+| Query-weighted Dense nDCG@10 | 0.7842 |
+| Query-weighted Dense hit@10 | 0.9273 |
+| Query-weighted Dense Recall@100 | 0.8844 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6327 |
+| Query-weighted Reranking hybrid hit@10 | 0.8386 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9019 |
 | Mean query length | 400.43 chars, weighted by query count |
 | Mean document length | 963.24 chars, weighted by split-local document count |
 
@@ -229,125 +236,141 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 400.4284413202934
     document_mean_weighted_by_documents: 963.2428978960894
   bm25:
-    ndcg_at_10_query_weighted: 0.4314622249388753
-    hit_at_10_query_weighted: 0.6228614303178485
+    ndcg_at_10_query_weighted: 0.4699564294
+    hit_at_10_query_weighted: 0.674205379
     ndcg_at_10_unweighted_task_mean: 0.4607833333333333
     hit_at_10_unweighted_task_mean: 0.6450333333333333
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: en
     hardest_task_by_ndcg_at_10: wmt19_de_fr
   tasks:
-    - name: 2022_fa
-      path: docs/benchmark_tasks/NanoMTEB-Misc/2022_fa.md
-      retrieval_shape: persian_topic_to_persian_news_articles
-      queries: 45
-      documents: 8882
-      positive_qrels: 1131
-      bm25_ndcg_at_10: 0.289
-      bm25_hit_at_10: 0.5778
-    - name: 2022_ru
-      path: docs/benchmark_tasks/NanoMTEB-Misc/2022_ru.md
-      retrieval_shape: russian_topic_to_russian_news_articles
-      queries: 44
-      documents: 8722
-      positive_qrels: 1664
-      bm25_ndcg_at_10: 0.3182
-      bm25_hit_at_10: 0.7273
-    - name: 2022_zh
-      path: docs/benchmark_tasks/NanoMTEB-Misc/2022_zh.md
-      retrieval_shape: chinese_topic_to_chinese_news_articles
-      queries: 47
-      documents: 10000
-      positive_qrels: 1643
-      bm25_ndcg_at_10: 0.2212
-      bm25_hit_at_10: 0.2553
-    - name: cite_ru
-      path: docs/benchmark_tasks/NanoMTEB-Misc/cite_ru.md
-      retrieval_shape: russian_paper_to_directly_cited_papers
-      queries: 200
-      documents: 10000
-      positive_qrels: 1000
-      bm25_ndcg_at_10: 0.5081
-      bm25_hit_at_10: 0.875
-    - name: cocite_ru
-      path: docs/benchmark_tasks/NanoMTEB-Misc/cocite_ru.md
-      retrieval_shape: russian_paper_to_co_cited_papers
-      queries: 200
-      documents: 10000
-      positive_qrels: 1000
-      bm25_ndcg_at_10: 0.3593
-      bm25_hit_at_10: 0.715
-    - name: en
-      path: docs/benchmark_tasks/NanoMTEB-Misc/en.md
-      retrieval_shape: english_legal_question_to_eu_passage
-      queries: 100
-      documents: 9422
-      positive_qrels: 100
-      bm25_ndcg_at_10: 0.9491
-      bm25_hit_at_10: 0.97
-    - name: fi
-      path: docs/benchmark_tasks/NanoMTEB-Misc/fi.md
-      retrieval_shape: finnish_legal_question_to_eu_passage
-      queries: 100
-      documents: 9422
-      positive_qrels: 100
-      bm25_ndcg_at_10: 0.8493
-      bm25_hit_at_10: 0.92
-    - name: pt
-      path: docs/benchmark_tasks/NanoMTEB-Misc/pt.md
-      retrieval_shape: portuguese_legal_question_to_eu_passage
-      queries: 100
-      documents: 9517
-      positive_qrels: 100
-      bm25_ndcg_at_10: 0.9189
-      bm25_hit_at_10: 0.98
-    - name: wmt19_de_fr
-      path: docs/benchmark_tasks/NanoMTEB-Misc/wmt19_de_fr.md
-      retrieval_shape: french_sentence_to_german_translation
-      queries: 200
-      documents: 7364
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2053
-      bm25_hit_at_10: 0.315
-    - name: wmt19_fr_de
-      path: docs/benchmark_tasks/NanoMTEB-Misc/wmt19_fr_de.md
-      retrieval_shape: german_sentence_to_french_translation
-      queries: 200
-      documents: 7365
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.266
-      bm25_hit_at_10: 0.42
-    - name: wmt21_de_fr
-      path: docs/benchmark_tasks/NanoMTEB-Misc/wmt21_de_fr.md
-      retrieval_shape: french_sentence_to_german_translation
-      queries: 200
-      documents: 4465
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2167
-      bm25_hit_at_10: 0.35
-    - name: wmt21_fr_de
-      path: docs/benchmark_tasks/NanoMTEB-Misc/wmt21_fr_de.md
-      retrieval_shape: german_sentence_to_french_translation
-      queries: 200
-      documents: 4465
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.4283
-      bm25_hit_at_10: 0.635
+  - name: 2022_fa
+    path: docs/benchmark_tasks/NanoMTEB-Misc/2022_fa.md
+    retrieval_shape: persian_topic_to_persian_news_articles
+    queries: 45
+    documents: 8882
+    positive_qrels: 1131
+    bm25_ndcg_at_10: 0.289
+    bm25_hit_at_10: 0.5778
+  - name: 2022_ru
+    path: docs/benchmark_tasks/NanoMTEB-Misc/2022_ru.md
+    retrieval_shape: russian_topic_to_russian_news_articles
+    queries: 44
+    documents: 8722
+    positive_qrels: 1664
+    bm25_ndcg_at_10: 0.3182
+    bm25_hit_at_10: 0.7273
+  - name: 2022_zh
+    path: docs/benchmark_tasks/NanoMTEB-Misc/2022_zh.md
+    retrieval_shape: chinese_topic_to_chinese_news_articles
+    queries: 47
+    documents: 10000
+    positive_qrels: 1643
+    bm25_ndcg_at_10: 0.2212
+    bm25_hit_at_10: 0.2553
+  - name: cite_ru
+    path: docs/benchmark_tasks/NanoMTEB-Misc/cite_ru.md
+    retrieval_shape: russian_paper_to_directly_cited_papers
+    queries: 200
+    documents: 10000
+    positive_qrels: 1000
+    bm25_ndcg_at_10: 0.5081
+    bm25_hit_at_10: 0.875
+  - name: cocite_ru
+    path: docs/benchmark_tasks/NanoMTEB-Misc/cocite_ru.md
+    retrieval_shape: russian_paper_to_co_cited_papers
+    queries: 200
+    documents: 10000
+    positive_qrels: 1000
+    bm25_ndcg_at_10: 0.3593
+    bm25_hit_at_10: 0.715
+  - name: en
+    path: docs/benchmark_tasks/NanoMTEB-Misc/en.md
+    retrieval_shape: english_legal_question_to_eu_passage
+    queries: 100
+    documents: 9422
+    positive_qrels: 100
+    bm25_ndcg_at_10: 0.9491
+    bm25_hit_at_10: 0.97
+  - name: fi
+    path: docs/benchmark_tasks/NanoMTEB-Misc/fi.md
+    retrieval_shape: finnish_legal_question_to_eu_passage
+    queries: 100
+    documents: 9422
+    positive_qrels: 100
+    bm25_ndcg_at_10: 0.8493
+    bm25_hit_at_10: 0.92
+  - name: pt
+    path: docs/benchmark_tasks/NanoMTEB-Misc/pt.md
+    retrieval_shape: portuguese_legal_question_to_eu_passage
+    queries: 100
+    documents: 9517
+    positive_qrels: 100
+    bm25_ndcg_at_10: 0.9189
+    bm25_hit_at_10: 0.98
+  - name: wmt19_de_fr
+    path: docs/benchmark_tasks/NanoMTEB-Misc/wmt19_de_fr.md
+    retrieval_shape: french_sentence_to_german_translation
+    queries: 200
+    documents: 7364
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2053
+    bm25_hit_at_10: 0.315
+  - name: wmt19_fr_de
+    path: docs/benchmark_tasks/NanoMTEB-Misc/wmt19_fr_de.md
+    retrieval_shape: german_sentence_to_french_translation
+    queries: 200
+    documents: 7365
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.266
+    bm25_hit_at_10: 0.42
+  - name: wmt21_de_fr
+    path: docs/benchmark_tasks/NanoMTEB-Misc/wmt21_de_fr.md
+    retrieval_shape: french_sentence_to_german_translation
+    queries: 200
+    documents: 4465
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2167
+    bm25_hit_at_10: 0.35
+  - name: wmt21_fr_de
+    path: docs/benchmark_tasks/NanoMTEB-Misc/wmt21_fr_de.md
+    retrieval_shape: german_sentence_to_french_translation
+    queries: 200
+    documents: 4465
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.4283
+    bm25_hit_at_10: 0.635
   source_links:
-    - label: MTEB paper
-      url: https://arxiv.org/abs/2210.07316
-    - label: NeuCLIR 2022 overview
-      url: https://arxiv.org/abs/2304.12367
-    - label: NeuCLIR official site
-      url: https://neuclir.github.io/
-    - label: RuSciBench paper
-      url: https://doi.org/10.1134/S1064562424602191
-    - label: EuroPIRQ dataset card
-      url: https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval
-    - label: MMTEB paper
-      url: https://arxiv.org/abs/2502.13595
-    - label: CLSD paper
-      url: https://arxiv.org/abs/2502.08638
-    - label: CLSD WMT dataset card
-      url: https://huggingface.co/datasets/Andrianos/clsd_wmt19_21
+  - label: MTEB paper
+    url: https://arxiv.org/abs/2210.07316
+  - label: NeuCLIR 2022 overview
+    url: https://arxiv.org/abs/2304.12367
+  - label: NeuCLIR official site
+    url: https://neuclir.github.io/
+  - label: RuSciBench paper
+    url: https://doi.org/10.1134/S1064562424602191
+  - label: EuroPIRQ dataset card
+    url: https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval
+  - label: MMTEB paper
+    url: https://arxiv.org/abs/2502.13595
+  - label: CLSD paper
+    url: https://arxiv.org/abs/2502.08638
+  - label: CLSD WMT dataset card
+    url: https://huggingface.co/datasets/Andrianos/clsd_wmt19_21
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.4699564294
+      query_weighted_hit_at_10: 0.674205379
+      query_weighted_recall_at_100: 0.7275711372
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.7842372923
+      query_weighted_hit_at_10: 0.9272616137
+      query_weighted_recall_at_100: 0.8843751942
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.6327034738
+      query_weighted_hit_at_10: 0.8386308068
+      query_weighted_recall_at_100: 0.9018882727
+      source: dataset_candidate_subset
 ```

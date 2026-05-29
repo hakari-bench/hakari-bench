@@ -79,8 +79,20 @@ all valid passages rather than one exact lexical match.
 | Avg positives / query | 7.35 |
 | Positives per query (min / median / max) | 1 / 6 / 20 |
 | Queries with multiple positives | 165 (98.80%) |
-| BM25 nDCG@10 | 0.4893 |
-| BM25 hit@10 | 0.8922 |
+| BM25 nDCG@10 | 0.5458 |
+| BM25 hit@10 | 0.9401 |
+| BM25 Recall@100 | 0.9438 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6398 |
+| Dense hit@10 | 0.9701 |
+| Dense Recall@100 | 0.9902 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6333 |
+| Reranking hybrid hit@10 | 0.9701 |
+| Reranking hybrid Recall@100 | 0.9919 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 67.56 |
 | Document length avg chars | 442.43 |
 
@@ -122,7 +134,8 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: project_page
     paper_pdf_or_html_checked: false
-    no_paper_note: ECIR 2019 paper metadata was confirmed, but only the public project page and dataset cards were inspected for construction details
+    no_paper_note: ECIR 2019 paper metadata was confirmed, but only the public project
+      page and dataset cards were inspected for construction details
   counts:
     queries: 167
     documents: 250
@@ -138,39 +151,88 @@ benchmark_task_metadata:
     query_mean: 67.55688622754491
     document_mean: 442.432
   bm25:
-    ndcg_at_10: 0.4893086978
-    hit_at_10: 0.8922155689
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5458057826871833
+    hit_at_10: 0.9401197604790419
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude PRES evaluation questions, qrels, and Spanish health passages likely to overlap with Nano
+    leakage_note: exclude PRES evaluation questions, qrels, and Spanish health passages
+      likely to overlap with Nano
     useful_training_data:
-      - Spanish medical FAQ passage retrieval pairs
-      - consumer-health question-answer sentence pairs
-      - multi-positive Spanish health retrieval examples
-      - paraphrase-rich baby care, vaccination, and low back pain data
+    - Spanish medical FAQ passage retrieval pairs
+    - consumer-health question-answer sentence pairs
+    - multi-positive Spanish health retrieval examples
+    - paraphrase-rich baby care, vaccination, and low back pain data
     synthetic_data:
       document_generation: concise Spanish health answer passages for lay readers
-      question_generation: Spanish consumer-health questions with paraphrases and topic variants
-      answerability: each positive passage should explicitly answer the information need
+      question_generation: Spanish consumer-health questions with paraphrases and
+        topic variants
+      answerability: each positive passage should explicitly answer the information
+        need
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Spanish
     source_urls:
-      - label: Spanish Passage Retrieval dataset page
-        url: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
-      - label: jinaai/spanish_passage_retrieval
-        url: https://huggingface.co/datasets/jinaai/spanish_passage_retrieval
-      - label: mteb/SpanishPassageRetrievalS2S
-        url: https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2S
+    - label: Spanish Passage Retrieval dataset page
+      url: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
+    - label: jinaai/spanish_passage_retrieval
+      url: https://huggingface.co/datasets/jinaai/spanish_passage_retrieval
+    - label: mteb/SpanishPassageRetrievalS2S
+      url: https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2S
     source_notes: []
   references:
-    - title: "A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related Resources"
-      url: https://doi.org/10.1007/978-3-030-15719-7_19
-      year: 2019
-      doi: 10.1007/978-3-030-15719-7_19
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related
+      Resources
+    url: https://doi.org/10.1007/978-3-030-15719-7_19
+    year: 2019
+    doi: 10.1007/978-3-030-15719-7_19
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5458057827
+      hit_at_10: 0.9401197605
+      recall_at_100: 0.9438110749
+      candidate_count_min: 250
+      candidate_count_max: 250
+      candidate_count_mean: 250.0
+      query_count: 167
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9438110749
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6397708028
+      hit_at_10: 0.9700598802
+      recall_at_100: 0.990228013
+      candidate_count_min: 250
+      candidate_count_max: 250
+      candidate_count_mean: 250.0
+      query_count: 167
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.990228013
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6332506097
+      hit_at_10: 0.9700598802
+      recall_at_100: 0.9918566775
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 167
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9918566775
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

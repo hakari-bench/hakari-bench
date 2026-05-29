@@ -109,8 +109,20 @@ synthetic data with MIRACL dev queries or Nano positive passages.
 | Avg positives / query | 2.90 |
 | Positives per query (min / median / max) | 1 / 2 / 10 |
 | Queries with multiple positives | 136 (68.00%) |
-| BM25 nDCG@10 | 0.4590 |
-| BM25 hit@10 | 0.7750 |
+| BM25 nDCG@10 | 0.5154 |
+| BM25 hit@10 | 0.8250 |
+| BM25 Recall@100 | 0.9326 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7938 |
+| Dense hit@10 | 0.9550 |
+| Dense Recall@100 | 0.9585 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6646 |
+| Reranking hybrid hit@10 | 0.9050 |
+| Reranking hybrid Recall@100 | 0.9948 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 45.37 |
 | Document length avg chars | 517.26 |
 
@@ -156,10 +168,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2210.09984
     additional_source_urls:
-      - https://arxiv.org/abs/2408.12503
-      - https://aclanthology.org/2025.naacl-long.12/
-      - http://miracl.ai/
-      - https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives
+    - https://arxiv.org/abs/2408.12503
+    - https://aclanthology.org/2025.naacl-long.12/
+    - http://miracl.ai/
+    - https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives
   counts:
     queries: 200
     documents: 10000
@@ -175,47 +187,97 @@ benchmark_task_metadata:
     query_mean: 45.365
     document_mean: 517.2626
   bm25:
-    ndcg_at_10: 0.4590294596
-    hit_at_10: 0.775
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5154199212966255
+    hit_at_10: 0.825
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MIRACL Russian dev split through MIRACLRetrievalHardNegatives.v2
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude MIRACL Russian dev queries, qrels, and positive passages used by this task
+    leakage_note: exclude MIRACL Russian dev queries, qrels, and positive passages
+      used by this task
     useful_training_data:
-      - non-overlapping MIRACL Russian train retrieval pairs
-      - native Russian Wikipedia question-passage retrieval pairs
-      - same-language multilingual retrieval data with Russian passages
-      - Russian entity search and factual QA pairs with overlap removed
+    - non-overlapping MIRACL Russian train retrieval pairs
+    - native Russian Wikipedia question-passage retrieval pairs
+    - same-language multilingual retrieval data with Russian passages
+    - Russian entity search and factual QA pairs with overlap removed
     synthetic_data:
-      document_generation: non-evaluation Russian Wikipedia-style passages about entities, events, works, and definitions
-      question_generation: short native Russian fact, yes-no, and definition questions answerable from those passages
-      answerability: questions should be grounded in explicit facts in one or more selected passages
+      document_generation: non-evaluation Russian Wikipedia-style passages about entities,
+        events, works, and definitions
+      question_generation: short native Russian fact, yes-no, and definition questions
+        answerable from those passages
+      answerability: questions should be grounded in explicit facts in one or more
+        selected passages
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoRuMTEB
     source_urls:
-      - label: MIRACL arXiv
-        url: https://arxiv.org/abs/2210.09984
-      - label: ruMTEB arXiv
-        url: https://arxiv.org/abs/2408.12503
-      - label: MIRACL project page
-        url: http://miracl.ai/
-      - label: MIRACLRetrievalHardNegatives
-        url: https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives
+    - label: MIRACL arXiv
+      url: https://arxiv.org/abs/2210.09984
+    - label: ruMTEB arXiv
+      url: https://arxiv.org/abs/2408.12503
+    - label: MIRACL project page
+      url: http://miracl.ai/
+    - label: MIRACLRetrievalHardNegatives
+      url: https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives
     source_notes: []
   references:
-    - title: "MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages"
-      url: https://arxiv.org/abs/2210.09984
-      year: 2023
-      doi: 10.1162/tacl_a_00595
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design"
-      url: https://arxiv.org/abs/2408.12503
-      year: 2025
-      doi: 10.18653/v1/2025.naacl-long.12
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+    url: https://arxiv.org/abs/2210.09984
+    year: 2023
+    doi: 10.1162/tacl_a_00595
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'The Russian-focused embedders'' exploration: ruMTEB benchmark and Russian
+      embedding model design'
+    url: https://arxiv.org/abs/2408.12503
+    year: 2025
+    doi: 10.18653/v1/2025.naacl-long.12
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5154199213
+      hit_at_10: 0.825
+      recall_at_100: 0.932642487
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.932642487
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7937963237
+      hit_at_10: 0.955
+      recall_at_100: 0.9585492228
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9585492228
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6645751775
+      hit_at_10: 0.905
+      recall_at_100: 0.9948186528
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.005
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9948186528
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

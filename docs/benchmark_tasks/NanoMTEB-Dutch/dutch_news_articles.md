@@ -101,6 +101,18 @@ nearby but not answer the same news event.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.8868 |
 | BM25 hit@10 | 0.9350 |
+| BM25 Recall@100 | 0.9750 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8996 |
+| Dense hit@10 | 0.9200 |
+| Dense Recall@100 | 0.9450 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8954 |
+| Reranking hybrid hit@10 | 0.9600 |
+| Reranking hybrid Recall@100 | 0.9950 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 48.96 |
 | Document length avg chars | 1,146.66 |
 
@@ -146,10 +158,11 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2509.12340
     additional_source_urls:
-      - https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles
-      - https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret
-      - https://github.com/embeddings-benchmark/mteb
-    no_paper_note: "No standalone retrieval paper was confirmed; MTEB-NL, the Kaggle source record, and the source dataset card were used."
+    - https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles
+    - https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret
+    - https://github.com/embeddings-benchmark/mteb
+    no_paper_note: No standalone retrieval paper was confirmed; MTEB-NL, the Kaggle
+      source record, and the source dataset card were used.
   counts:
     queries: 200
     documents: 10000
@@ -165,53 +178,101 @@ benchmark_task_metadata:
     query_mean: 48.96
     document_mean: 1146.6649
   bm25:
-    ndcg_at_10: 0.886775466
+    ndcg_at_10: 0.8867754657690416
     hit_at_10: 0.935
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: "test split from clips/mteb-nl-news-articles-ret"
+    evaluation_split_origin: test split from clips/mteb-nl-news-articles-ret
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude overlapping NOS article titles, article bodies, qrels, and sampled evaluation rows."
+    leakage_note: Exclude overlapping NOS article titles, article bodies, qrels, and
+      sampled evaluation rows.
     useful_training_data:
-      - non-overlapping Dutch headline-to-article retrieval pairs
-      - Dutch news search logs with clicked articles
-      - public Dutch title-body article pairs with overlap removed
-      - same-entity hard negatives from Dutch news corpora
+    - non-overlapping Dutch headline-to-article retrieval pairs
+    - Dutch news search logs with clicked articles
+    - public Dutch title-body article pairs with overlap removed
+    - same-entity hard negatives from Dutch news corpora
     synthetic_data:
-      document_generation: "Dutch news article bodies in NOS-like current-affairs style."
-      question_generation: "Concise Dutch headlines answerable by one generated or selected article."
-      answerability: "Each headline should identify one event and have same-topic hard negatives."
+      document_generation: Dutch news article bodies in NOS-like current-affairs style.
+      question_generation: Concise Dutch headlines answerable by one generated or
+        selected article.
+      answerability: Each headline should identify one event and have same-topic hard
+        negatives.
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: MTEB-NL arXiv
-        url: https://arxiv.org/abs/2509.12340
-      - label: Dutch News Articles Kaggle
-        url: https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles
-      - label: clips/mteb-nl-news-articles-ret
-        url: https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret
-      - label: MTEB repository
-        url: https://github.com/embeddings-benchmark/mteb
+    - label: MTEB-NL arXiv
+      url: https://arxiv.org/abs/2509.12340
+    - label: Dutch News Articles Kaggle
+      url: https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles
+    - label: clips/mteb-nl-news-articles-ret
+      url: https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret
+    - label: MTEB repository
+      url: https://github.com/embeddings-benchmark/mteb
     source_notes: []
   references:
-    - title: "MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch"
-      url: https://arxiv.org/abs/2509.12340
-      year: 2025
-      doi: 10.48550/arXiv.2509.12340
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Dutch News Articles
-      url: https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
-    - title: clips/mteb-nl-news-articles-ret
-      url: https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+    url: https://arxiv.org/abs/2509.12340
+    year: 2025
+    doi: 10.48550/arXiv.2509.12340
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Dutch News Articles
+    url: https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  - title: clips/mteb-nl-news-articles-ret
+    url: https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8867754658
+      hit_at_10: 0.935
+      recall_at_100: 0.975
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.975
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8996417719
+      hit_at_10: 0.92
+      recall_at_100: 0.945
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.945
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8954088195
+      hit_at_10: 0.96
+      recall_at_100: 0.995
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.005
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.995
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

@@ -103,6 +103,18 @@ counterargument matching rather than broad topic matching.
 | Positive qrels | 199 |
 | BM25 nDCG@10 | 0.2970 |
 | BM25 hit@10 | 0.6482 |
+| BM25 Recall@100 | 0.9246 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3723 |
+| Dense hit@10 | 0.7839 |
+| Dense Recall@100 | 0.9749 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3529 |
+| Reranking hybrid hit@10 | 0.7538 |
+| Reranking hybrid Recall@100 | 0.9950 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 1,316.90 |
 | Document length avg chars | 1,141.13 |
 
@@ -148,10 +160,11 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2509.12340
     additional_source_urls:
-      - https://arxiv.org/abs/2210.07316
-      - https://huggingface.co/datasets/clips/beir-nl-arguana
-      - https://github.com/embeddings-benchmark/mteb
-    no_paper_note: "No standalone Dutch ArguAna task paper was confirmed; MTEB-NL and the source dataset card were used."
+    - https://arxiv.org/abs/2210.07316
+    - https://huggingface.co/datasets/clips/beir-nl-arguana
+    - https://github.com/embeddings-benchmark/mteb
+    no_paper_note: No standalone Dutch ArguAna task paper was confirmed; MTEB-NL and
+      the source dataset card were used.
   counts:
     queries: 199
     documents: 8624
@@ -167,53 +180,101 @@ benchmark_task_metadata:
     query_mean: 1316.904523
     document_mean: 1141.134856
   bm25:
-    ndcg_at_10: 0.296979197
-    hit_at_10: 0.648241206
-    source: dataset_bm25_column
+    ndcg_at_10: 0.29697919701637815
+    hit_at_10: 0.6482412060301508
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: "ArguAna-NL.v2 test split from clips/beir-nl-arguana"
+    evaluation_split_origin: ArguAna-NL.v2 test split from clips/beir-nl-arguana
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude ArguAna-NL test queries, qrels, and positive documents used by this Nano split."
+    leakage_note: Exclude ArguAna-NL test queries, qrels, and positive documents used
+      by this Nano split.
     useful_training_data:
-      - non-overlapping Dutch argument-counterargument retrieval pairs
-      - Dutch debate corpora with stance or rebuttal labels
-      - translated multilingual argument-mining data with overlap removed
-      - native Dutch and Flemish policy discussion pairs
+    - non-overlapping Dutch argument-counterargument retrieval pairs
+    - Dutch debate corpora with stance or rebuttal labels
+    - translated multilingual argument-mining data with overlap removed
+    - native Dutch and Flemish policy discussion pairs
     synthetic_data:
-      document_generation: "Dutch counterargument passages with clear rebuttal targets."
-      question_generation: "Long Dutch arguments that can be answered by retrieving the best opposing counterargument."
-      answerability: "Each generated query should have one explicit counterargument positive and same-topic hard negatives."
+      document_generation: Dutch counterargument passages with clear rebuttal targets.
+      question_generation: Long Dutch arguments that can be answered by retrieving
+        the best opposing counterargument.
+      answerability: Each generated query should have one explicit counterargument
+        positive and same-topic hard negatives.
     multi_positive_training: single_positive
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: MTEB-NL arXiv
-        url: https://arxiv.org/abs/2509.12340
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: clips/beir-nl-arguana
-        url: https://huggingface.co/datasets/clips/beir-nl-arguana
-      - label: MTEB repository
-        url: https://github.com/embeddings-benchmark/mteb
+    - label: MTEB-NL arXiv
+      url: https://arxiv.org/abs/2509.12340
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: clips/beir-nl-arguana
+      url: https://huggingface.co/datasets/clips/beir-nl-arguana
+    - label: MTEB repository
+      url: https://github.com/embeddings-benchmark/mteb
     source_notes: []
   references:
-    - title: "MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch"
-      url: https://arxiv.org/abs/2509.12340
-      year: 2025
-      doi: 10.48550/arXiv.2509.12340
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      doi: 10.48550/arXiv.2210.07316
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: clips/beir-nl-arguana
-      url: https://huggingface.co/datasets/clips/beir-nl-arguana
-      year: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+    url: https://arxiv.org/abs/2509.12340
+    year: 2025
+    doi: 10.48550/arXiv.2509.12340
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    doi: 10.48550/arXiv.2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: clips/beir-nl-arguana
+    url: https://huggingface.co/datasets/clips/beir-nl-arguana
+    year: null
+    is_paper: false
+    source_confidence: probably_correct
   example_count: 5
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.296979197
+      hit_at_10: 0.648241206
+      recall_at_100: 0.9246231156
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9246231156
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.372258568
+      hit_at_10: 0.783919598
+      recall_at_100: 0.9748743719
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9748743719
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3529047518
+      hit_at_10: 0.7537688442
+      recall_at_100: 0.9949748744
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.005025
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9949748744
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

@@ -79,6 +79,18 @@ the same location or topic but describe a different event.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.8957 |
 | BM25 hit@10 | 0.9350 |
+| BM25 Recall@100 | 0.9850 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9127 |
+| Dense hit@10 | 0.9500 |
+| Dense Recall@100 | 0.9750 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8998 |
+| Reranking hybrid hit@10 | 0.9450 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 127.97 |
 | Document length avg chars | 1,440.57 |
 
@@ -122,7 +134,9 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: datasheet_and_thesis
     paper_pdf_or_html_checked: true
-    no_paper_note: No standalone TV2 Nord retrieval paper was found; SEB paper, Danish Foundation Models datasheet, source dataset card, and Danoliterate thesis were checked.
+    no_paper_note: No standalone TV2 Nord retrieval paper was found; SEB paper, Danish
+      Foundation Models datasheet, source dataset card, and Danoliterate thesis were
+      checked.
   counts:
     queries: 200
     documents: 2048
@@ -140,40 +154,89 @@ benchmark_task_metadata:
   bm25:
     ndcg_at_10: 0.8956934192768778
     hit_at_10: 0.935
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude Nano summary queries, qrels, and matching TV2 Nord article texts
+    leakage_note: exclude Nano summary queries, qrels, and matching TV2 Nord article
+      texts
     useful_training_data:
-      - non-overlapping Danish news summary/article pairs
-      - Danish headline-to-article retrieval pairs
-      - local-news same-location hard negatives
-      - Danish summarization retrieval data
+    - non-overlapping Danish news summary/article pairs
+    - Danish headline-to-article retrieval pairs
+    - local-news same-location hard negatives
+    - Danish summarization retrieval data
     synthetic_data:
-      document_generation: Danish local-news articles with municipality names, events, quotes, and background
+      document_generation: Danish local-news articles with municipality names, events,
+        quotes, and background
       question_generation: concise Danish news-summary queries
-      answerability: each positive article should contain the facts summarized by the query
+      answerability: each positive article should contain the facts summarized by
+        the query
     multi_positive_training: single_positive_summary_article_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Scandinavian
     source_urls:
-      - label: Scandinavian Embedding Benchmarks
-        url: https://arxiv.org/abs/2406.02396
-      - label: Nordjylland News datasheet
-        url: https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html
-      - label: Are GLLMs Danoliterate?
-        url: https://sorenmulli.github.io/thesis/thesis.pdf
-      - label: alexandrainst/nordjylland-news-summarization
-        url: https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization
-    source_notes:
-      - SEB states that summarization datasets are converted into retrieval using summaries/headlines as queries and matching articles as positives.
-  references:
-    - title: "Nordjylland News datasheet"
+    - label: Scandinavian Embedding Benchmarks
+      url: https://arxiv.org/abs/2406.02396
+    - label: Nordjylland News datasheet
       url: https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: official_datasheet
+    - label: Are GLLMs Danoliterate?
+      url: https://sorenmulli.github.io/thesis/thesis.pdf
+    - label: alexandrainst/nordjylland-news-summarization
+      url: https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization
+    source_notes:
+    - SEB states that summarization datasets are converted into retrieval using summaries/headlines
+      as queries and matching articles as positives.
+  references:
+  - title: Nordjylland News datasheet
+    url: https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: official_datasheet
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8956934193
+      hit_at_10: 0.935
+      recall_at_100: 0.985
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.985
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9127153429
+      hit_at_10: 0.95
+      recall_at_100: 0.975
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.975
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8998241536
+      hit_at_10: 0.945
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

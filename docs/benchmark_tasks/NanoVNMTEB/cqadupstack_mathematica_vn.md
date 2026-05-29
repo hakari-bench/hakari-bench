@@ -98,8 +98,20 @@ similar functions for different outcomes.
 | Avg positives / query | 2.12 |
 | Positives per query (min / median / max) | 1 / 1 / 56 |
 | Queries with multiple positives | 71 (35.50%) |
-| BM25 nDCG@10 | 0.2114 |
-| BM25 hit@10 | 0.3700 |
+| BM25 nDCG@10 | 0.2157 |
+| BM25 hit@10 | 0.3750 |
+| BM25 Recall@100 | 0.3892 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.1975 |
+| Dense hit@10 | 0.3450 |
+| Dense Recall@100 | 0.3868 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2367 |
+| Reranking hybrid hit@10 | 0.4100 |
+| Reranking hybrid Recall@100 | 0.4505 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 65 |
 | Query length avg chars | 49.35 |
 | Document length avg chars | 1,045.79 |
 
@@ -145,9 +157,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://doi.org/10.1145/2838931.2838934
     additional_source_urls:
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/cqadupstack-mathematica-vn
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/cqadupstack-mathematica-vn
     no_paper_note: null
   counts:
     queries: 200
@@ -164,59 +176,110 @@ benchmark_task_metadata:
     query_mean: 49.345
     document_mean: 1045.7923
   bm25:
-    ndcg_at_10: 0.211379253
-    hit_at_10: 0.37
-    source: dataset_bm25_column
+    ndcg_at_10: 0.21567515824361927
+    hit_at_10: 0.375
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB CQADupStack Mathematica test split from GreenNode/cqadupstack-mathematica-vn"
+    evaluation_split_origin: translated VN-MTEB CQADupStack Mathematica test split
+      from GreenNode/cqadupstack-mathematica-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated Mathematica test questions, documents, qrels, and duplicate clusters used by this Nano split."
+    leakage_note: Exclude translated Mathematica test questions, documents, qrels,
+      and duplicate clusters used by this Nano split.
     useful_training_data:
-      - non-overlapping Mathematica duplicate-question pairs
-      - Wolfram Language QA and documentation retrieval data
-      - translated CQADupStack training splits with overlap removed
-      - code-aware paraphrase pairs with identifiers preserved
+    - non-overlapping Mathematica duplicate-question pairs
+    - Wolfram Language QA and documentation retrieval data
+    - translated CQADupStack training splits with overlap removed
+    - code-aware paraphrase pairs with identifiers preserved
     synthetic_data:
-      document_generation: "Vietnamese Mathematica support threads with Wolfram Language code and explanation."
-      question_generation: "Short Vietnamese duplicate titles preserving functions, symbols, and code syntax."
-      answerability: "Each query should match duplicate programming intent, with same-function hard negatives."
+      document_generation: Vietnamese Mathematica support threads with Wolfram Language
+        code and explanation.
+      question_generation: Short Vietnamese duplicate titles preserving functions,
+        symbols, and code syntax.
+      answerability: Each query should match duplicate programming intent, with same-function
+        hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: CQADupStack DOI
-        url: https://doi.org/10.1145/2838931.2838934
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/cqadupstack-mathematica-vn
-        url: https://huggingface.co/datasets/GreenNode/cqadupstack-mathematica-vn
+    - label: CQADupStack DOI
+      url: https://doi.org/10.1145/2838931.2838934
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/cqadupstack-mathematica-vn
+      url: https://huggingface.co/datasets/GreenNode/cqadupstack-mathematica-vn
     source_notes: []
   references:
-    - title: "CQADupStack: A Benchmark Data Set for Community Question-Answering Research"
-      url: https://doi.org/10.1145/2838931.2838934
-      year: 2015
-      doi: 10.1145/2838931.2838934
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/cqadupstack-mathematica-vn
-      url: https://huggingface.co/datasets/GreenNode/cqadupstack-mathematica-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+    url: https://doi.org/10.1145/2838931.2838934
+    year: 2015
+    doi: 10.1145/2838931.2838934
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/cqadupstack-mathematica-vn
+    url: https://huggingface.co/datasets/GreenNode/cqadupstack-mathematica-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2156751582
+      hit_at_10: 0.375
+      recall_at_100: 0.3891509434
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3891509434
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1974986624
+      hit_at_10: 0.345
+      recall_at_100: 0.3867924528
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3867924528
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2366666289
+      hit_at_10: 0.41
+      recall_at_100: 0.4504716981
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.325
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4504716981
+      safeguard_positive_rows: 65
+      rows_with_101_candidates: 65
 ```

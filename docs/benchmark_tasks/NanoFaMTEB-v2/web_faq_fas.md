@@ -66,6 +66,18 @@ the same product, topic, or definition family.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.8680 |
 | BM25 hit@10 | 0.9350 |
+| BM25 Recall@100 | 0.9900 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8756 |
+| Dense hit@10 | 0.9250 |
+| Dense Recall@100 | 0.9600 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9029 |
+| Reranking hybrid hit@10 | 0.9700 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 48.01 |
 | Document length avg chars | 209.60 |
 
@@ -122,19 +134,64 @@ benchmark_task_metadata:
     query_mean: 48.005
     document_mean: 209.6025
   bm25:
-    ndcg_at_10: 0.868
+    ndcg_at_10: 0.8680245079793178
     hit_at_10: 0.935
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoFaMTEB-v2
     source_urls:
-      - label: FaMTEB arXiv
-        url: https://arxiv.org/abs/2502.11571
-      - label: mteb/WebFAQRetrieval
-        url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
-  references:
-    - title: "FaMTEB: Massive Text Embedding Benchmark in Persian Language"
+    - label: FaMTEB arXiv
       url: https://arxiv.org/abs/2502.11571
-      year: 2025
-      is_paper: true
+    - label: mteb/WebFAQRetrieval
+      url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
+  references:
+  - title: 'FaMTEB: Massive Text Embedding Benchmark in Persian Language'
+    url: https://arxiv.org/abs/2502.11571
+    year: 2025
+    is_paper: true
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.868024508
+      hit_at_10: 0.935
+      recall_at_100: 0.99
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.99
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.875648815
+      hit_at_10: 0.925
+      recall_at_100: 0.96
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.96
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9029148396
+      hit_at_10: 0.97
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

@@ -102,8 +102,20 @@ use Nano evaluation passages or positive decisions as seeds.
 | Avg positives / query | 1.18 |
 | Positives per query (min / median / max) | 1 / 1.0 / 4 |
 | Queries with multiple positives | 29 (14.5%) |
-| BM25 nDCG@10 | 0.5444 |
-| BM25 hit@10 | 0.6900 |
+| BM25 nDCG@10 | 0.5360 |
+| BM25 hit@10 | 0.7050 |
+| BM25 Recall@100 | 0.8383 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2920 |
+| Dense hit@10 | 0.4150 |
+| Dense Recall@100 | 0.6340 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4461 |
+| Reranking hybrid hit@10 | 0.6300 |
+| Reranking hybrid Recall@100 | 0.8468 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 29 |
 | Query length avg chars | 879.53 |
 | Document length avg chars | 18,071.48 |
 
@@ -150,10 +162,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://aclanthology.org/2021.nllp-1.13/
     additional_source_urls:
-      - https://arxiv.org/abs/2210.07316
-      - https://arxiv.org/abs/2502.13595
-      - https://github.com/lavis-nlp/GerDaLIR
-      - https://huggingface.co/datasets/mteb/GerDaLIR
+    - https://arxiv.org/abs/2210.07316
+    - https://arxiv.org/abs/2502.13595
+    - https://github.com/lavis-nlp/GerDaLIR
+    - https://huggingface.co/datasets/mteb/GerDaLIR
   counts:
     queries: 200
     documents: 10000
@@ -169,45 +181,94 @@ benchmark_task_metadata:
     query_mean: 879.53
     document_mean: 18071.4799
   bm25:
-    ndcg_at_10: 0.5444239126
-    hit_at_10: 0.69
-    source: dataset_bm25_column
+    ndcg_at_10: 0.536047033406684
+    hit_at_10: 0.705
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude GerDaLIR test data, Nano queries, qrels, and positive case documents likely to overlap with the evaluation split
+    leakage_note: exclude GerDaLIR test data, Nano queries, qrels, and positive case
+      documents likely to overlap with the evaluation split
     useful_training_data:
-      - non-overlapping GerDaLIR train examples
-      - German court-decision citation retrieval pairs
-      - German legal passage-to-case relevance pairs
-      - same-statute and same-court hard negatives
+    - non-overlapping GerDaLIR train examples
+    - German court-decision citation retrieval pairs
+    - German legal passage-to-case relevance pairs
+    - same-statute and same-court hard negatives
     synthetic_data:
-      document_generation: German legal decisions with courts, statutes, procedural posture, findings, and sanitized references
-      question_generation: German legal argument passages that imply one or more relevant precedent cases
-      answerability: positives should contain the precedent reasoning or case context needed by the query passage
+      document_generation: German legal decisions with courts, statutes, procedural
+        posture, findings, and sanitized references
+      question_generation: German legal argument passages that imply one or more relevant
+        precedent cases
+      answerability: positives should contain the precedent reasoning or case context
+        needed by the query passage
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-German
     source_urls:
-      - label: GerDaLIR paper
-        url: https://aclanthology.org/2021.nllp-1.13/
-      - label: GerDaLIR GitHub
-        url: https://github.com/lavis-nlp/GerDaLIR
-      - label: mteb/GerDaLIR
-        url: https://huggingface.co/datasets/mteb/GerDaLIR
+    - label: GerDaLIR paper
+      url: https://aclanthology.org/2021.nllp-1.13/
+    - label: GerDaLIR GitHub
+      url: https://github.com/lavis-nlp/GerDaLIR
+    - label: mteb/GerDaLIR
+      url: https://huggingface.co/datasets/mteb/GerDaLIR
     source_notes: []
   references:
-    - title: "GerDaLIR: A German Dataset for Legal Information Retrieval"
-      url: https://aclanthology.org/2021.nllp-1.13/
-      year: 2021
-      doi: 10.18653/v1/2021.nllp-1.13
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      doi: 10.48550/arXiv.2210.07316
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'GerDaLIR: A German Dataset for Legal Information Retrieval'
+    url: https://aclanthology.org/2021.nllp-1.13/
+    year: 2021
+    doi: 10.18653/v1/2021.nllp-1.13
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    doi: 10.48550/arXiv.2210.07316
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5360470334
+      hit_at_10: 0.705
+      recall_at_100: 0.8382978723
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8382978723
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2920030786
+      hit_at_10: 0.415
+      recall_at_100: 0.6340425532
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6340425532
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4461480241
+      hit_at_10: 0.63
+      recall_at_100: 0.8468085106
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.145
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8468085106
+      safeguard_positive_rows: 29
+      rows_with_101_candidates: 29
 ```

@@ -63,8 +63,20 @@ topic area but lacking the relevant paragraph.
 | Queries | 141 |
 | Documents | 3028 |
 | Positive qrels | 141 |
-| BM25 nDCG@10 | 0.9210 |
-| BM25 hit@10 | 0.9716 |
+| BM25 nDCG@10 | 0.9503 |
+| BM25 hit@10 | 0.9858 |
+| BM25 Recall@100 | 1.0000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7667 |
+| Dense hit@10 | 0.8298 |
+| Dense Recall@100 | 0.9362 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8565 |
+| Reranking hybrid hit@10 | 0.9362 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 110.99 |
 | Document length avg chars | 14744.68 |
 
@@ -120,36 +132,83 @@ benchmark_task_metadata:
     query_mean: 110.99290780141844
     document_mean: 14744.681307793924
   bm25:
-    ndcg_at_10: 0.9210128865930197
-    hit_at_10: 0.9716312056737588
-    source: dataset_bm25_column
+    ndcg_at_10: 0.9502925098236401
+    hit_at_10: 0.9858156028368794
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MLDR Portuguese split
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoMLDR pt queries, qrels, and positive documents
     useful_training_data:
-      - Portuguese long-document QA retrieval pairs
-      - Portuguese Wikipedia article retrieval
-      - multilingual MLDR training data outside this Nano split
-      - same-entity Portuguese hard negatives
+    - Portuguese long-document QA retrieval pairs
+    - Portuguese Wikipedia article retrieval
+    - multilingual MLDR training data outside this Nano split
+    - same-entity Portuguese hard negatives
     synthetic_data:
       document_generation: long Portuguese encyclopedic articles
       question_generation: paragraph-grounded Portuguese questions
-      answerability: positives should be full articles containing the answer-bearing paragraph
+      answerability: positives should be full articles containing the answer-bearing
+        paragraph
     multi_positive_training: single_positive
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMLDR
     source_urls:
-      - label: M3-Embedding arXiv
-        url: https://arxiv.org/abs/2402.03216
-      - label: Shitao/MLDR
-        url: https://huggingface.co/datasets/Shitao/MLDR
+    - label: M3-Embedding arXiv
+      url: https://arxiv.org/abs/2402.03216
+    - label: Shitao/MLDR
+      url: https://huggingface.co/datasets/Shitao/MLDR
     source_notes: []
   references:
-    - title: "M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation"
-      url: https://arxiv.org/abs/2402.03216
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity
+      Text Embeddings Through Self-Knowledge Distillation'
+    url: https://arxiv.org/abs/2402.03216
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9502925098
+      hit_at_10: 0.9858156028
+      recall_at_100: 1.0
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 141
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7666938279
+      hit_at_10: 0.829787234
+      recall_at_100: 0.9361702128
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 141
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9361702128
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8564577342
+      hit_at_10: 0.9361702128
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 141
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

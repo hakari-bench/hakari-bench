@@ -107,8 +107,20 @@ generic entity mentions alone.
 | Avg positives / query | 1.14 |
 | Positives per query (min / median / max) | 1 / 1.00 / 2 |
 | Queries with multiple positives | 7 (14.0%) |
-| BM25 nDCG@10 | 0.2885 |
-| BM25 hit@10 | 0.5200 |
+| BM25 nDCG@10 | 0.3555 |
+| BM25 hit@10 | 0.5800 |
+| BM25 Recall@100 | 0.8772 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4600 |
+| Dense hit@10 | 0.6600 |
+| Dense Recall@100 | 0.8421 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4247 |
+| Reranking hybrid hit@10 | 0.7200 |
+| Reranking hybrid Recall@100 | 0.9123 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 3 |
 | Query length avg chars | 40.16 |
 | Document length avg chars | 447.30 |
 
@@ -170,68 +182,119 @@ benchmark_task_metadata:
     query_mean: 40.16
     document_mean: 447.302681
   bm25:
-    ndcg_at_10: 0.288525414
-    hit_at_10: 0.52
-    source: dataset_bm25_column
+    ndcg_at_10: 0.3554652088716489
+    hit_at_10: 0.58
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MNanoBEIR Arabic NanoBEIR task split from hakari-bench/NanoBEIR-ar
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding NQ, BEIR, or NanoBEIR records likely to overlap with these evaluation questions or evidence passages
+    leakage_note: prefer excluding NQ, BEIR, or NanoBEIR records likely to overlap
+      with these evaluation questions or evidence passages
     useful_training_data:
-      - non-overlapping Natural Questions train examples
-      - Arabic or multilingual open-domain QA retrieval pairs
-      - Wikipedia question-to-passage evidence supervision
-      - KILT-style question-to-Wikipedia evidence pairs
+    - non-overlapping Natural Questions train examples
+    - Arabic or multilingual open-domain QA retrieval pairs
+    - Wikipedia question-to-passage evidence supervision
+    - KILT-style question-to-Wikipedia evidence pairs
     synthetic_data:
-      document_generation: Arabic Wikipedia-style passages with factual answer-bearing statements
-      question_generation: Arabic natural search-style fact questions answerable from a single passage
-      answerability: positives should contain the requested relation and answer evidence, not just the same entity
+      document_generation: Arabic Wikipedia-style passages with factual answer-bearing
+        statements
+      question_generation: Arabic natural search-style fact questions answerable from
+        a single passage
+      answerability: positives should contain the requested relation and answer evidence,
+        not just the same entity
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-ar
     source_urls:
-      - label: Natural Questions paper
-        url: https://aclanthology.org/Q19-1026/
-      - label: Google Research Natural Questions page
-        url: https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/
-      - label: BEIR paper
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB paper
-        url: https://arxiv.org/abs/2502.13595
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR task
-  references:
-    - title: "Natural Questions: A Benchmark for Question Answering Research"
+    - label: Natural Questions paper
       url: https://aclanthology.org/Q19-1026/
-      year: 2019
-      doi: 10.1162/tacl_a_00276
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Google Research Natural Questions publication page
+    - label: Google Research Natural Questions page
       url: https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_project_page
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR paper
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
+    - label: MMTEB paper
       url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: Zeta Alpha NanoBEIR collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: dataset_collection
+    source_notes:
+    - Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR
+      task
+  references:
+  - title: 'Natural Questions: A Benchmark for Question Answering Research'
+    url: https://aclanthology.org/Q19-1026/
+    year: 2019
+    doi: 10.1162/tacl_a_00276
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Google Research Natural Questions publication page
+    url: https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_project_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: dataset_collection
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3554652089
+      hit_at_10: 0.58
+      recall_at_100: 0.8771929825
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8771929825
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4600138197
+      hit_at_10: 0.66
+      recall_at_100: 0.8421052632
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8421052632
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4247278819
+      hit_at_10: 0.72
+      recall_at_100: 0.9122807018
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.06
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9122807018
+      safeguard_positive_rows: 3
+      rows_with_101_candidates: 3
 ```

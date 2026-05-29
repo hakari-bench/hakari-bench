@@ -116,8 +116,20 @@ evaluation text or direct translations of its claims.
 | Positive qrels | 226 |
 | Positives per query | avg 1.13; min 1; median 1; max 5 |
 | Multi-positive queries | 16 / 200 (8.00%) |
-| BM25 nDCG@10 | 0.5121 |
-| BM25 hit@10 | 0.6600 |
+| BM25 nDCG@10 | 0.5750 |
+| BM25 hit@10 | 0.7250 |
+| BM25 Recall@100 | 0.8540 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6061 |
+| Dense hit@10 | 0.7600 |
+| Dense Recall@100 | 0.8894 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6538 |
+| Reranking hybrid hit@10 | 0.8100 |
+| Reranking hybrid Recall@100 | 0.9292 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 13 |
 | Query length avg chars | 95.52 |
 | Document length avg chars | 1,554.52 |
 
@@ -162,10 +174,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2305.19840
     additional_source_urls:
-      - https://aclanthology.org/2024.lrec-main.194/
-      - https://arxiv.org/abs/2004.14974
-      - https://aclanthology.org/2020.emnlp-main.609/
-      - https://huggingface.co/clarin-knext
+    - https://aclanthology.org/2024.lrec-main.194/
+    - https://arxiv.org/abs/2004.14974
+    - https://aclanthology.org/2020.emnlp-main.609/
+    - https://huggingface.co/clarin-knext
   counts:
     queries: 200
     documents: 5183
@@ -181,36 +193,87 @@ benchmark_task_metadata:
     query_mean: 95.52
     document_mean: 1554.517847
   bm25:
-    ndcg_at_10: 0.5120801837
-    hit_at_10: 0.66
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5749962931973077
+    hit_at_10: 0.725
+    source: dataset_candidate_subset
   learning:
     original_train_split: available_in_BEIR_PL_and_SciFact_sources
-    evaluation_split_origin: BEIR-PL translated SciFact retrieval split sampled into NanoMedical
+    evaluation_split_origin: BEIR-PL translated SciFact retrieval split sampled into
+      NanoMedical
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude BEIR-PL SciFact test examples and translated duplicates of English SciFact evaluation claims or positive abstracts
+    leakage_note: exclude BEIR-PL SciFact test examples and translated duplicates
+      of English SciFact evaluation claims or positive abstracts
     useful_training_data:
-      - non-overlapping Polish scientific claim-evidence pairs
-      - Polish biomedical retrieval data
-      - translated SciFact-style supervision outside the evaluation split
-      - multilingual biomedical retrieval with same-topic hard negatives
+    - non-overlapping Polish scientific claim-evidence pairs
+    - Polish biomedical retrieval data
+    - translated SciFact-style supervision outside the evaluation split
+    - multilingual biomedical retrieval with same-topic hard negatives
     synthetic_data:
-      document_generation: Polish biomedical abstracts or high-quality translations preserving technical names
-      question_generation: Polish atomic scientific claims with natural inflection and careful biomedical terminology
-      hard_negatives: same-topic abstracts differing in direction, condition, population, organism, or outcome
-      answerability: the abstract should contain evidence sufficient to support or refute the Polish claim
+      document_generation: Polish biomedical abstracts or high-quality translations
+        preserving technical names
+      question_generation: Polish atomic scientific claims with natural inflection
+        and careful biomedical terminology
+      hard_negatives: same-topic abstracts differing in direction, condition, population,
+        organism, or outcome
+      answerability: the abstract should contain evidence sufficient to support or
+        refute the Polish claim
     multi_positive_training: mostly single-positive with limited multi-positive support
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMedical
     source_urls:
-      - label: BEIR-PL arXiv
-        url: https://arxiv.org/abs/2305.19840
-      - label: BEIR-PL ACL Anthology
-        url: https://aclanthology.org/2024.lrec-main.194/
-      - label: SciFact arXiv
-        url: https://arxiv.org/abs/2004.14974
-      - label: SciFact ACL Anthology
-        url: https://aclanthology.org/2020.emnlp-main.609/
-      - label: clarin-knext Hugging Face
-        url: https://huggingface.co/clarin-knext
+    - label: BEIR-PL arXiv
+      url: https://arxiv.org/abs/2305.19840
+    - label: BEIR-PL ACL Anthology
+      url: https://aclanthology.org/2024.lrec-main.194/
+    - label: SciFact arXiv
+      url: https://arxiv.org/abs/2004.14974
+    - label: SciFact ACL Anthology
+      url: https://aclanthology.org/2020.emnlp-main.609/
+    - label: clarin-knext Hugging Face
+      url: https://huggingface.co/clarin-knext
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5749962932
+      hit_at_10: 0.725
+      recall_at_100: 0.8539823009
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8539823009
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6060723997
+      hit_at_10: 0.76
+      recall_at_100: 0.889380531
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.889380531
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6538049109
+      hit_at_10: 0.81
+      recall_at_100: 0.9292035398
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.065
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9292035398
+      safeguard_positive_rows: 13
+      rows_with_101_candidates: 13
 ```

@@ -74,8 +74,20 @@ specific physical, geological, or data-access question.
 | Positive qrels | 579 |
 | Positives per query | avg 4.99, min 1, median 4, max 22 |
 | Multi-positive queries | 96 (82.76%) |
-| BM25 nDCG@10 | 0.3163 |
-| BM25 hit@10 | 0.6552 |
+| BM25 nDCG@10 | 0.4611 |
+| BM25 hit@10 | 0.7672 |
+| BM25 Recall@100 | 0.6839 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5406 |
+| Dense hit@10 | 0.8448 |
+| Dense Recall@100 | 0.7288 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.5518 |
+| Reranking hybrid hit@10 | 0.9052 |
+| Reranking hybrid Recall@100 | 0.7979 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 476.71 |
 | Document length avg chars | 716.25 |
 
@@ -136,38 +148,88 @@ benchmark_task_metadata:
     query_mean: 476.7068965517241
     document_mean: 716.2489
   bm25:
-    ndcg_at_10: 0.31634958706490335
-    hit_at_10: 0.6551724137931034
-    source: dataset_bm25_column
+    ndcg_at_10: 0.46112272549313976
+    hit_at_10: 0.7672413793103449
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: BRIGHT Earth Science StackExchange evaluation split
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NanoBRIGHT EarthScience queries, cited positives, and linked answer pages
+    leakage_note: exclude NanoBRIGHT EarthScience queries, cited positives, and linked
+      answer pages
     useful_training_data:
-      - Earth Science StackExchange posts with cited sources
-      - geology and climate QA with references
-      - technical documentation retrieval for scientific data products
+    - Earth Science StackExchange posts with cited sources
+    - geology and climate QA with references
+    - technical documentation retrieval for scientific data products
     synthetic_data:
-      document_generation: reports, encyclopedic passages, or data documentation about Earth science
-      question_generation: contextual Earth-science questions with physical or data-access intent
-      answerability: positives should support the specific geological, climate, or data explanation
+      document_generation: reports, encyclopedic passages, or data documentation about
+        Earth science
+      question_generation: contextual Earth-science questions with physical or data-access
+        intent
+      answerability: positives should support the specific geological, climate, or
+        data explanation
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBRIGHT
     source_urls:
-      - label: BRIGHT arXiv
-        url: https://arxiv.org/abs/2407.12883
-      - label: BRIGHT project
-        url: https://brightbenchmark.github.io/
-      - label: xlangai/BRIGHT
-        url: https://huggingface.co/datasets/xlangai/BRIGHT
+    - label: BRIGHT arXiv
+      url: https://arxiv.org/abs/2407.12883
+    - label: BRIGHT project
+      url: https://brightbenchmark.github.io/
+    - label: xlangai/BRIGHT
+      url: https://huggingface.co/datasets/xlangai/BRIGHT
     source_notes: []
   references:
-    - title: "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval"
-      url: https://arxiv.org/abs/2407.12883
-      year: 2024
-      doi: 10.48550/arXiv.2407.12883
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+      Retrieval'
+    url: https://arxiv.org/abs/2407.12883
+    year: 2024
+    doi: 10.48550/arXiv.2407.12883
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4611227255
+      hit_at_10: 0.7672413793
+      recall_at_100: 0.6839378238
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 116
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6839378238
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5405929676
+      hit_at_10: 0.8448275862
+      recall_at_100: 0.7288428325
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 116
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7288428325
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.5518341636
+      hit_at_10: 0.9051724138
+      recall_at_100: 0.7979274611
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.017241
+      query_count: 116
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7979274611
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

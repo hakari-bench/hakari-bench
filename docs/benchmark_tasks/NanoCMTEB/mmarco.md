@@ -84,8 +84,20 @@ types while answering a different fact.
 | Positive qrels | 212 |
 | Positives per query | avg 1.06 / min 1 / median 1.0 / max 2 |
 | Multi-positive queries | 12 (6.00%) |
-| BM25 nDCG@10 | 0.0902 |
-| BM25 hit@10 | 0.1050 |
+| BM25 nDCG@10 | 0.6795 |
+| BM25 hit@10 | 0.8050 |
+| BM25 Recall@100 | 0.9104 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8859 |
+| Dense hit@10 | 0.9350 |
+| Dense Recall@100 | 0.9717 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7984 |
+| Reranking hybrid hit@10 | 0.9000 |
+| Reranking hybrid Recall@100 | 0.9858 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 3 |
 | Query length avg chars | 10.44 |
 | Document length avg chars | 113.91 |
 
@@ -143,19 +155,19 @@ benchmark_task_metadata:
     query_mean: 10.44
     document_mean: 113.9105
   bm25:
-    ndcg_at_10: 0.09022048770790005
-    hit_at_10: 0.105
-    source: dataset_bm25_column
+    ndcg_at_10: 0.6794677888583007
+    hit_at_10: 0.805
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MMarcoRetrieval dev
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoCMTEB mmarco queries, qrels, and translated passages
     useful_training_data:
-      - non-overlapping mMARCO Chinese pairs
-      - multilingual MS MARCO passage ranking data
-      - Chinese fact-seeking QA retrieval pairs
-      - translated entity-sharing hard negatives
+    - non-overlapping mMARCO Chinese pairs
+    - multilingual MS MARCO passage ranking data
+    - Chinese fact-seeking QA retrieval pairs
+    - translated entity-sharing hard negatives
     synthetic_data:
       document_generation: Chinese translated or native web fact passages
       question_generation: short fact-seeking Chinese queries
@@ -164,22 +176,67 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCMTEB
     source_urls:
-      - label: mMARCO arXiv
-        url: https://arxiv.org/abs/2108.13897
-      - label: C-Pack arXiv
-        url: https://arxiv.org/abs/2309.07597
-      - label: mteb/MMarcoRetrieval
-        url: https://huggingface.co/datasets/mteb/MMarcoRetrieval
+    - label: mMARCO arXiv
+      url: https://arxiv.org/abs/2108.13897
+    - label: C-Pack arXiv
+      url: https://arxiv.org/abs/2309.07597
+    - label: mteb/MMarcoRetrieval
+      url: https://huggingface.co/datasets/mteb/MMarcoRetrieval
     source_notes: []
   references:
-    - title: "mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset"
-      url: https://arxiv.org/abs/2108.13897
-      year: 2022
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "C-Pack: Packed Resources For General Chinese Embeddings"
-      url: https://arxiv.org/abs/2309.07597
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_benchmark_paper
+  - title: 'mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset'
+    url: https://arxiv.org/abs/2108.13897
+    year: 2022
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'C-Pack: Packed Resources For General Chinese Embeddings'
+    url: https://arxiv.org/abs/2309.07597
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_benchmark_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6794677889
+      hit_at_10: 0.805
+      recall_at_100: 0.9103773585
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9103773585
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8858607869
+      hit_at_10: 0.935
+      recall_at_100: 0.9716981132
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9716981132
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7983972733
+      hit_at_10: 0.9
+      recall_at_100: 0.9858490566
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.015
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9858490566
+      safeguard_positive_rows: 3
+      rows_with_101_candidates: 3
 ```

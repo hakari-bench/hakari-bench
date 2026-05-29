@@ -102,6 +102,18 @@ negatives should share the entity or topic but not answer the asked relation.
 | Queries with multiple positives | 38 (19.00%) |
 | BM25 nDCG@10 | 0.4505 |
 | BM25 hit@10 | 0.7050 |
+| BM25 Recall@100 | 0.8760 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6335 |
+| Dense hit@10 | 0.8650 |
+| Dense Recall@100 | 0.9008 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.5473 |
+| Reranking hybrid hit@10 | 0.7700 |
+| Reranking hybrid Recall@100 | 0.9876 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 52.69 |
 | Document length avg chars | 595.40 |
 
@@ -147,9 +159,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://aclanthology.org/Q19-1026/
     additional_source_urls:
-      - https://arxiv.org/abs/2104.08663
-      - https://aclanthology.org/2025.bucc-1.5/
-      - https://huggingface.co/datasets/clips/beir-nl-nq
+    - https://arxiv.org/abs/2104.08663
+    - https://aclanthology.org/2025.bucc-1.5/
+    - https://huggingface.co/datasets/clips/beir-nl-nq
     no_paper_note: null
   counts:
     queries: 200
@@ -166,59 +178,108 @@ benchmark_task_metadata:
     query_mean: 52.685
     document_mean: 595.3998
   bm25:
-    ndcg_at_10: 0.45050919
+    ndcg_at_10: 0.4505091899889148
     hit_at_10: 0.705
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated BEIR-NL NQ test split from clips/beir-nl-nq"
+    evaluation_split_origin: translated BEIR-NL NQ test split from clips/beir-nl-nq
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated NQ test questions, qrels, and positive Wikipedia passages used by this Nano split."
+    leakage_note: Exclude translated NQ test questions, qrels, and positive Wikipedia
+      passages used by this Nano split.
     useful_training_data:
-      - official Natural Questions training data with overlap removed
-      - Dutch Wikipedia question-answer retrieval pairs
-      - multilingual open-domain QA retrieval datasets
-      - hard negatives sharing entity pages but not answer relations
+    - official Natural Questions training data with overlap removed
+    - Dutch Wikipedia question-answer retrieval pairs
+    - multilingual open-domain QA retrieval datasets
+    - hard negatives sharing entity pages but not answer relations
     synthetic_data:
-      document_generation: "Dutch Wikipedia-style passages with explicit answer facts."
-      question_generation: "Natural Dutch search questions about entities, dates, counts, definitions, and relations."
-      answerability: "Each question should be answerable from explicit passage text, with entity-near hard negatives."
+      document_generation: Dutch Wikipedia-style passages with explicit answer facts.
+      question_generation: Natural Dutch search questions about entities, dates, counts,
+        definitions, and relations.
+      answerability: Each question should be answerable from explicit passage text,
+        with entity-near hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: Natural Questions ACL Anthology
-        url: https://aclanthology.org/Q19-1026/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: BEIR-NL ACL Anthology
-        url: https://aclanthology.org/2025.bucc-1.5/
-      - label: clips/beir-nl-nq
-        url: https://huggingface.co/datasets/clips/beir-nl-nq
+    - label: Natural Questions ACL Anthology
+      url: https://aclanthology.org/Q19-1026/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: BEIR-NL ACL Anthology
+      url: https://aclanthology.org/2025.bucc-1.5/
+    - label: clips/beir-nl-nq
+      url: https://huggingface.co/datasets/clips/beir-nl-nq
     source_notes: []
   references:
-    - title: "Natural Questions: A Benchmark for Question Answering Research"
-      url: https://aclanthology.org/Q19-1026/
-      year: 2019
-      doi: 10.1162/tacl_a_00276
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language"
-      url: https://aclanthology.org/2025.bucc-1.5/
-      year: 2025
-      doi: null
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: clips/beir-nl-nq
-      url: https://huggingface.co/datasets/clips/beir-nl-nq
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'Natural Questions: A Benchmark for Question Answering Research'
+    url: https://aclanthology.org/Q19-1026/
+    year: 2019
+    doi: 10.1162/tacl_a_00276
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language'
+    url: https://aclanthology.org/2025.bucc-1.5/
+    year: 2025
+    doi: null
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: clips/beir-nl-nq
+    url: https://huggingface.co/datasets/clips/beir-nl-nq
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.45050919
+      hit_at_10: 0.705
+      recall_at_100: 0.8760330579
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8760330579
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6335465226
+      hit_at_10: 0.865
+      recall_at_100: 0.9008264463
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9008264463
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.5473034755
+      hit_at_10: 0.77
+      recall_at_100: 0.9876033058
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9876033058
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

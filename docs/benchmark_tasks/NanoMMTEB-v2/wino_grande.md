@@ -68,8 +68,20 @@ referent from the same sentence.
 | Queries | 200 |
 | Documents | 5095 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.4611 |
-| BM25 hit@10 | 0.9000 |
+| BM25 nDCG@10 | 0.5084 |
+| BM25 hit@10 | 0.8750 |
+| BM25 Recall@100 | 1.0000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4940 |
+| Dense hit@10 | 0.7750 |
+| Dense Recall@100 | 0.9800 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6139 |
+| Reranking hybrid hit@10 | 0.9050 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 111.98 |
 | Document length avg chars | 7.68 |
 
@@ -127,38 +139,85 @@ benchmark_task_metadata:
     query_mean: 111.975
     document_mean: 7.68243375858685
   bm25:
-    ndcg_at_10: 0.4610888847104283
-    hit_at_10: 0.9
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5084184388392939
+    hit_at_10: 0.875
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: do not train on this Nano split's Winogrande sentences, qrels, or answer candidates
+    leakage_note: do not train on this Nano split's Winogrande sentences, qrels, or
+      answer candidates
     useful_training_data:
-      - Winograd-style pronoun resolution
-      - coreference question answering
-      - commonsense cloze tasks
-      - candidate-referent retrieval pairs
+    - Winograd-style pronoun resolution
+    - coreference question answering
+    - commonsense cloze tasks
+    - candidate-referent retrieval pairs
     synthetic_data:
       document_generation: short candidate referent strings from sentence entities
       question_generation: masked commonsense sentences with two plausible referents
-      answerability: positive referent should be selected by commonsense constraints in the sentence
+      answerability: positive referent should be selected by commonsense constraints
+        in the sentence
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMMTEB-v2
     source_urls:
-      - label: WinoGrande arXiv
-        url: https://arxiv.org/abs/1907.10641
-      - label: WinoGrande project page
-        url: https://winogrande.allenai.org/
-      - label: mteb/WinoGrande
-        url: https://huggingface.co/datasets/mteb/WinoGrande
+    - label: WinoGrande arXiv
+      url: https://arxiv.org/abs/1907.10641
+    - label: WinoGrande project page
+      url: https://winogrande.allenai.org/
+    - label: mteb/WinoGrande
+      url: https://huggingface.co/datasets/mteb/WinoGrande
     source_notes: []
   references:
-    - title: "WinoGrande: An Adversarial Winograd Schema Challenge at Scale"
-      url: https://arxiv.org/abs/1907.10641
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'WinoGrande: An Adversarial Winograd Schema Challenge at Scale'
+    url: https://arxiv.org/abs/1907.10641
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5084184388
+      hit_at_10: 0.875
+      recall_at_100: 1.0
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4939897818
+      hit_at_10: 0.775
+      recall_at_100: 0.98
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.98
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6139469035
+      hit_at_10: 0.905
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

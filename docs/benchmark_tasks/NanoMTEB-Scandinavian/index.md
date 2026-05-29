@@ -152,6 +152,13 @@ positive documents, tweet threads, or article pairs as seeds.
 | Multi-positive queries | 370 |
 | Query-weighted BM25 nDCG@10 | 0.6464 |
 | Query-weighted BM25 hit@10 | 0.7722 |
+| Query-weighted BM25 Recall@100 | 0.8024 |
+| Query-weighted Dense nDCG@10 | 0.7278 |
+| Query-weighted Dense hit@10 | 0.8382 |
+| Query-weighted Dense Recall@100 | 0.8757 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.6857 |
+| Query-weighted Reranking hybrid hit@10 | 0.7942 |
+| Query-weighted Reranking hybrid Recall@100 | 0.8878 |
 | Mean query length | 67.63 chars, weighted by query count |
 | Mean document length | 1,300.38 chars, weighted by split-local document count |
 
@@ -202,10 +209,10 @@ benchmark_task_group_metadata:
   dataset_id: hakari-bench/NanoMTEB-Scandinavian
   language: multilingual
   languages:
-    - da
-    - no
-    - sv
-    - multilingual
+  - da
+  - false
+  - sv
+  - multilingual
   category: natural_language
   document_path: docs/benchmark_tasks/NanoMTEB-Scandinavian/index.md
   source_research:
@@ -228,144 +235,168 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 67.6268656716418
     document_mean_weighted_by_documents: 1300.3762966005957
   bm25:
-    ndcg_at_10_query_weighted: 0.6463871836210713
-    hit_at_10_query_weighted: 0.772191673212883
+    ndcg_at_10_query_weighted: 0.6463871836
+    hit_at_10_query_weighted: 0.7721916732
     ndcg_at_10_unweighted_task_mean: 0.6091099737576102
     hit_at_10_unweighted_task_mean: 0.7563821892393321
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: tv2_nordretrieval
     hardest_task_by_ndcg_at_10: nor_quad
   tasks:
-    - name: dan_fever
-      path: docs/benchmark_tasks/NanoMTEB-Scandinavian/dan_fever.md
-      retrieval_shape: danish_claim_to_evidence_snippet
-      language: da
-      queries: 200
-      documents: 2522
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8856498970178633
-      bm25_hit_at_10: 0.99
-    - name: nor_quad
-      path: docs/benchmark_tasks/NanoMTEB-Scandinavian/nor_quad.md
-      retrieval_shape: norwegian_question_to_short_answer
-      language: no
-      queries: 196
-      documents: 1048
-      positive_qrels: 291
-      bm25_ndcg_at_10: 0.11183189367748354
-      bm25_hit_at_10: 0.21428571428571427
-    - name: snl
-      path: docs/benchmark_tasks/NanoMTEB-Scandinavian/snl.md
-      retrieval_shape: norwegian_headword_to_lexicon_article
-      language: no
-      queries: 200
-      documents: 1300
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8780559736224016
-      bm25_hit_at_10: 0.9
-    - name: swe_faq
-      path: docs/benchmark_tasks/NanoMTEB-Scandinavian/swe_faq.md
-      retrieval_shape: swedish_faq_question_to_authority_answer
-      language: sv
-      queries: 200
-      documents: 511
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.5449484654219235
-      bm25_hit_at_10: 0.75
-    - name: swedn
-      path: docs/benchmark_tasks/NanoMTEB-Scandinavian/swedn.md
-      retrieval_shape: swedish_headline_to_summary_and_article
-      language: sv
-      queries: 200
-      documents: 2046
-      positive_qrels: 400
-      bm25_ndcg_at_10: 0.7081125173979356
-      bm25_hit_at_10: 0.895
-    - name: tv2_nordretrieval
-      path: docs/benchmark_tasks/NanoMTEB-Scandinavian/tv2_nordretrieval.md
-      retrieval_shape: danish_local_news_summary_to_article
-      language: da
-      queries: 200
-      documents: 2048
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8956934192768778
-      bm25_hit_at_10: 0.935
-    - name: twitter_hjerne
-      path: docs/benchmark_tasks/NanoMTEB-Scandinavian/twitter_hjerne.md
-      retrieval_shape: danish_question_tweet_to_answer_tweets
-      language: da
-      queries: 77
-      documents: 262
-      positive_qrels: 262
-      bm25_ndcg_at_10: 0.23947764988878614
-      bm25_hit_at_10: 0.6103896103896104
+  - name: dan_fever
+    path: docs/benchmark_tasks/NanoMTEB-Scandinavian/dan_fever.md
+    retrieval_shape: danish_claim_to_evidence_snippet
+    language: da
+    queries: 200
+    documents: 2522
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8856498970178633
+    bm25_hit_at_10: 0.99
+  - name: nor_quad
+    path: docs/benchmark_tasks/NanoMTEB-Scandinavian/nor_quad.md
+    retrieval_shape: norwegian_question_to_short_answer
+    language: false
+    queries: 196
+    documents: 1048
+    positive_qrels: 291
+    bm25_ndcg_at_10: 0.11183189367748354
+    bm25_hit_at_10: 0.21428571428571427
+  - name: snl
+    path: docs/benchmark_tasks/NanoMTEB-Scandinavian/snl.md
+    retrieval_shape: norwegian_headword_to_lexicon_article
+    language: false
+    queries: 200
+    documents: 1300
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8780559736224016
+    bm25_hit_at_10: 0.9
+  - name: swe_faq
+    path: docs/benchmark_tasks/NanoMTEB-Scandinavian/swe_faq.md
+    retrieval_shape: swedish_faq_question_to_authority_answer
+    language: sv
+    queries: 200
+    documents: 511
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.5449484654219235
+    bm25_hit_at_10: 0.75
+  - name: swedn
+    path: docs/benchmark_tasks/NanoMTEB-Scandinavian/swedn.md
+    retrieval_shape: swedish_headline_to_summary_and_article
+    language: sv
+    queries: 200
+    documents: 2046
+    positive_qrels: 400
+    bm25_ndcg_at_10: 0.7081125173979356
+    bm25_hit_at_10: 0.895
+  - name: tv2_nordretrieval
+    path: docs/benchmark_tasks/NanoMTEB-Scandinavian/tv2_nordretrieval.md
+    retrieval_shape: danish_local_news_summary_to_article
+    language: da
+    queries: 200
+    documents: 2048
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8956934192768778
+    bm25_hit_at_10: 0.935
+  - name: twitter_hjerne
+    path: docs/benchmark_tasks/NanoMTEB-Scandinavian/twitter_hjerne.md
+    retrieval_shape: danish_question_tweet_to_answer_tweets
+    language: da
+    queries: 77
+    documents: 262
+    positive_qrels: 262
+    bm25_ndcg_at_10: 0.23947764988878614
+    bm25_hit_at_10: 0.6103896103896104
   learning:
-    leakage_note: exclude NanoMTEB-Scandinavian evaluation queries, qrels, positive documents, tweet threads, answer strings, and source article pairs from training
+    leakage_note: exclude NanoMTEB-Scandinavian evaluation queries, qrels, positive
+      documents, tweet threads, answer strings, and source article pairs from training
     useful_training_data:
-      - Danish claim/evidence and Wikipedia retrieval pairs
-      - Norwegian extractive QA and short-answer selection pairs
-      - Norwegian lexicon title-to-article pairs
-      - Swedish public-sector FAQ question-answer pairs
-      - Danish and Swedish headline, summary, and article retrieval pairs
-      - Danish social QA and forum answer-retrieval threads
-      - hard negatives from the same entity, answer type, authority topic, news section, local place, or social question topic
+    - Danish claim/evidence and Wikipedia retrieval pairs
+    - Norwegian extractive QA and short-answer selection pairs
+    - Norwegian lexicon title-to-article pairs
+    - Swedish public-sector FAQ question-answer pairs
+    - Danish and Swedish headline, summary, and article retrieval pairs
+    - Danish social QA and forum answer-retrieval threads
+    - hard negatives from the same entity, answer type, authority topic, news section,
+      local place, or social question topic
     synthetic_data:
-      document_generation: Scandinavian evidence snippets, short answers, encyclopedia entries, FAQ answers, news articles, summaries, and social replies in source-like style
-      question_generation: Danish claims, Norwegian questions and headwords, Swedish FAQ questions and headlines, Danish local-news summaries, and informal Danish question tweets grounded in generated documents
-      answerability: positives must preserve evidence support, exact answer validity, title/article identity, FAQ resolution, headline/article pairing, or useful reply relevance rather than broad topical similarity
+      document_generation: Scandinavian evidence snippets, short answers, encyclopedia
+        entries, FAQ answers, news articles, summaries, and social replies in source-like
+        style
+      question_generation: Danish claims, Norwegian questions and headwords, Swedish
+        FAQ questions and headlines, Danish local-news summaries, and informal Danish
+        question tweets grounded in generated documents
+      answerability: positives must preserve evidence support, exact answer validity,
+        title/article identity, FAQ resolution, headline/article pairing, or useful
+        reply relevance rather than broad topical similarity
     multi_positive_training: preserve_nor_quad_swedn_and_twitter_hjerne_multi_positive_qrels
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Scandinavian
     source_urls:
-      - label: Scandinavian Embedding Benchmarks
-        url: https://arxiv.org/abs/2406.02396
-      - label: DanFEVER paper
-        url: https://aclanthology.org/2021.nodalida-main.47/
-      - label: NorQuAD paper
-        url: https://aclanthology.org/2023.nodalida-1.17/
-      - label: Superlim paper
-        url: https://aclanthology.org/2023.emnlp-main.506/
-      - label: SweDN resource page
-        url: https://spraakbanken.gu.se/en/resources/swedn
-      - label: Nordjylland News datasheet
-        url: https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html
-      - label: da-hashtag-twitterhjerne dataset card
-        url: https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne
+    - label: Scandinavian Embedding Benchmarks
+      url: https://arxiv.org/abs/2406.02396
+    - label: DanFEVER paper
+      url: https://aclanthology.org/2021.nodalida-main.47/
+    - label: NorQuAD paper
+      url: https://aclanthology.org/2023.nodalida-1.17/
+    - label: Superlim paper
+      url: https://aclanthology.org/2023.emnlp-main.506/
+    - label: SweDN resource page
+      url: https://spraakbanken.gu.se/en/resources/swedn
+    - label: Nordjylland News datasheet
+      url: https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html
+    - label: da-hashtag-twitterhjerne dataset card
+      url: https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne
     source_notes: []
   references:
-    - title: The Scandinavian Embedding Benchmarks
-      url: https://arxiv.org/abs/2406.02396
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "DanFEVER: claim verification dataset for Danish"
-      url: https://aclanthology.org/2021.nodalida-main.47/
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "NorQuAD: Norwegian Question Answering Dataset"
-      url: https://aclanthology.org/2023.nodalida-1.17/
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Superlim: A Swedish Language Understanding Evaluation Benchmark"
-      url: https://aclanthology.org/2023.emnlp-main.506/
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: SweDN 1.0
-      url: https://spraakbanken.gu.se/en/resources/swedn
-      year: 2022
-      is_paper: false
-      source_confidence: definitive_dataset_card
-    - title: Nordjylland News
-      url: https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html
-      year: 2024
-      is_paper: false
-      source_confidence: definitive_dataset_card
-    - title: da-hashtag-twitterhjerne
-      url: https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne
-      year: 2024
-      is_paper: false
-      source_confidence: definitive_dataset_card
+  - title: The Scandinavian Embedding Benchmarks
+    url: https://arxiv.org/abs/2406.02396
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'DanFEVER: claim verification dataset for Danish'
+    url: https://aclanthology.org/2021.nodalida-main.47/
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'NorQuAD: Norwegian Question Answering Dataset'
+    url: https://aclanthology.org/2023.nodalida-1.17/
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Superlim: A Swedish Language Understanding Evaluation Benchmark'
+    url: https://aclanthology.org/2023.emnlp-main.506/
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: SweDN 1.0
+    url: https://spraakbanken.gu.se/en/resources/swedn
+    year: 2022
+    is_paper: false
+    source_confidence: definitive_dataset_card
+  - title: Nordjylland News
+    url: https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html
+    year: 2024
+    is_paper: false
+    source_confidence: definitive_dataset_card
+  - title: da-hashtag-twitterhjerne
+    url: https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne
+    year: 2024
+    is_paper: false
+    source_confidence: definitive_dataset_card
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.6463871836
+      query_weighted_hit_at_10: 0.7721916732
+      query_weighted_recall_at_100: 0.8024471134
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.7277895601
+      query_weighted_hit_at_10: 0.8381775334
+      query_weighted_recall_at_100: 0.8756999176
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.6857336119
+      query_weighted_hit_at_10: 0.7941869599
+      query_weighted_recall_at_100: 0.8878496786
+      source: dataset_candidate_subset
 ```

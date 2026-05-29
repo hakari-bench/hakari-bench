@@ -135,8 +135,20 @@ same country, person, institution, animal, disease, or scientific term.
 | Queries | 200 |
 | Documents | 1,600 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.5782 |
-| BM25 hit@10 | 0.8150 |
+| BM25 nDCG@10 | 0.5852 |
+| BM25 hit@10 | 0.8550 |
+| BM25 Recall@100 | 0.9630 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7872 |
+| Dense hit@10 | 0.9350 |
+| Dense Recall@100 | 0.9630 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7292 |
+| Reranking hybrid hit@10 | 0.9250 |
+| Reranking hybrid Recall@100 | 0.9975 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 38.33 |
 | Document length avg chars | 532.75 |
 
@@ -198,64 +210,117 @@ benchmark_task_metadata:
     query_mean: 38.33
     document_mean: 532.750625
   bm25:
-    ndcg_at_10: 0.5781778774
-    hit_at_10: 0.815
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5852161848765267
+    hit_at_10: 0.855
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding upstream development/test data or other MIRACL-derived data likely to overlap with the NanoMIRACL evaluation questions and passages
+    leakage_note: prefer excluding upstream development/test data or other MIRACL-derived
+      data likely to overlap with the NanoMIRACL evaluation questions and passages
     useful_training_data:
-      - non-overlapping MIRACL Swahili train split data
-      - Swahili Wikipedia question-to-passage retrieval pairs
-      - Swahili open-domain QA evidence retrieval datasets
-      - multilingual African-language QA pairs with explicit Swahili evidence passages
+    - non-overlapping MIRACL Swahili train split data
+    - Swahili Wikipedia question-to-passage retrieval pairs
+    - Swahili open-domain QA evidence retrieval datasets
+    - multilingual African-language QA pairs with explicit Swahili evidence passages
     synthetic_data:
-      document_generation: Swahili Wikipedia-style passages with titles, aliases, dates, locations, offices, borders, scientific names, definitions, and factual evidence
-      question_generation: Swahili fact questions using Je, Nani, Mji, Nchi, Jina, Rais, Ni nini, lini, and ngapi forms with realistic punctuation and spacing variants
-      answerability: questions should be grounded in explicit facts or relations in the generated or selected passage
+      document_generation: Swahili Wikipedia-style passages with titles, aliases,
+        dates, locations, offices, borders, scientific names, definitions, and factual
+        evidence
+      question_generation: Swahili fact questions using Je, Nani, Mji, Nchi, Jina,
+        Rais, Ni nini, lini, and ngapi forms with realistic punctuation and spacing
+        variants
+      answerability: questions should be grounded in explicit facts or relations in
+        the generated or selected passage
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMIRACL
     source_urls:
-      - label: MIRACL corpus dataset
-        url: https://huggingface.co/datasets/miracl/miracl-corpus
-      - label: MIRACL source queries and qrels
-        url: https://huggingface.co/datasets/miracl/miracl
-      - label: MIRACL GitHub repository
-        url: https://github.com/project-miracl/miracl
-    source_notes:
-      - repository metadata labels this split as multilingual and lists sw and en, although observed queries and positives are primarily Swahili
-  references:
-    - title: 'Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages'
-      url: https://arxiv.org/abs/2210.09984
-      year: 2022
-      doi: 10.48550/arXiv.2210.09984
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-      url: https://aclanthology.org/2023.tacl-1.63/
-      year: 2023
-      doi: 10.1162/tacl_a_00595
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: MIRACL GitHub repository
-      url: https://github.com/project-miracl/miracl
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: official_project_repository
-    - title: MIRACL corpus dataset
+    - label: MIRACL corpus dataset
       url: https://huggingface.co/datasets/miracl/miracl-corpus
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: official_dataset_card
-    - title: MIRACL source queries and qrels
+    - label: MIRACL source queries and qrels
       url: https://huggingface.co/datasets/miracl/miracl
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: official_dataset_card
+    - label: MIRACL GitHub repository
+      url: https://github.com/project-miracl/miracl
+    source_notes:
+    - repository metadata labels this split as multilingual and lists sw and en, although
+      observed queries and positives are primarily Swahili
+  references:
+  - title: 'Making a MIRACL: Multilingual Information Retrieval Across a Continuum
+      of Languages'
+    url: https://arxiv.org/abs/2210.09984
+    year: 2022
+    doi: 10.48550/arXiv.2210.09984
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+    url: https://aclanthology.org/2023.tacl-1.63/
+    year: 2023
+    doi: 10.1162/tacl_a_00595
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: MIRACL GitHub repository
+    url: https://github.com/project-miracl/miracl
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: official_project_repository
+  - title: MIRACL corpus dataset
+    url: https://huggingface.co/datasets/miracl/miracl-corpus
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: official_dataset_card
+  - title: MIRACL source queries and qrels
+    url: https://huggingface.co/datasets/miracl/miracl
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: official_dataset_card
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5852161849
+      hit_at_10: 0.855
+      recall_at_100: 0.962962963
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.962962963
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7871870106
+      hit_at_10: 0.935
+      recall_at_100: 0.962962963
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.962962963
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7291690317
+      hit_at_10: 0.925
+      recall_at_100: 0.9975308642
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9975308642
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

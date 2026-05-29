@@ -79,6 +79,18 @@ support a different relation or stance than the positive.
 | Positive qrels | 199 |
 | BM25 nDCG@10 | 0.2860 |
 | BM25 hit@10 | 0.6432 |
+| BM25 Recall@100 | 0.9347 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3287 |
+| Dense hit@10 | 0.7236 |
+| Dense Recall@100 | 0.9397 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3128 |
+| Reranking hybrid hit@10 | 0.6834 |
+| Reranking hybrid Recall@100 | 0.9598 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 8 |
 | Query length avg chars | 1100.98 |
 | Document length avg chars | 973.15 |
 
@@ -134,19 +146,64 @@ benchmark_task_metadata:
     query_mean: 1100.9849246231156
     document_mean: 973.1475372015227
   bm25:
-    ndcg_at_10: 0.286
-    hit_at_10: 0.6432
-    source: dataset_bm25_column
+    ndcg_at_10: 0.28595771155512506
+    hit_at_10: 0.6432160804020101
+    source: dataset_candidate_subset
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoFaMTEB-v2
     source_urls:
-      - label: FaMTEB arXiv
-        url: https://arxiv.org/abs/2502.11571
-      - label: MCINext/arguana-fa-v2
-        url: https://huggingface.co/datasets/MCINext/arguana-fa-v2
-  references:
-    - title: "FaMTEB: Massive Text Embedding Benchmark in Persian Language"
+    - label: FaMTEB arXiv
       url: https://arxiv.org/abs/2502.11571
-      year: 2025
-      is_paper: true
+    - label: MCINext/arguana-fa-v2
+      url: https://huggingface.co/datasets/MCINext/arguana-fa-v2
+  references:
+  - title: 'FaMTEB: Massive Text Embedding Benchmark in Persian Language'
+    url: https://arxiv.org/abs/2502.11571
+    year: 2025
+    is_paper: true
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2859577116
+      hit_at_10: 0.6432160804
+      recall_at_100: 0.9346733668
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9346733668
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.328705939
+      hit_at_10: 0.7236180905
+      recall_at_100: 0.9396984925
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9396984925
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3128265331
+      hit_at_10: 0.6834170854
+      recall_at_100: 0.959798995
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.040201
+      query_count: 199
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.959798995
+      safeguard_positive_rows: 8
+      rows_with_101_candidates: 8
 ```

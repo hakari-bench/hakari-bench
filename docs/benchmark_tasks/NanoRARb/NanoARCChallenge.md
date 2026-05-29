@@ -74,8 +74,20 @@ biological reasoning grounded in the question.
 | Queries | 200 |
 | Documents | 9350 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.0394 |
-| BM25 hit@10 | 0.0800 |
+| BM25 nDCG@10 | 0.0386 |
+| BM25 hit@10 | 0.0850 |
+| BM25 Recall@100 | 0.2250 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.1113 |
+| Dense hit@10 | 0.1900 |
+| Dense Recall@100 | 0.3600 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.0642 |
+| Reranking hybrid hit@10 | 0.1350 |
+| Reranking hybrid Recall@100 | 0.3550 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 129 |
 | Query length avg chars | 126.66 |
 | Document length avg chars | 30.94 |
 
@@ -128,23 +140,68 @@ benchmark_task_metadata:
     query_mean: 126.66
     document_mean: 30.94235294117647
   bm25:
-    ndcg_at_10: 0.0394
-    hit_at_10: 0.08
-    source: dataset_bm25_column
+    ndcg_at_10: 0.03862006820672147
+    hit_at_10: 0.085
+    source: dataset_candidate_subset
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoRARb
     source_urls:
-      - label: RAR-b arXiv
-        url: https://arxiv.org/abs/2404.06347
-      - label: ARC arXiv
-        url: https://arxiv.org/abs/1803.05457
-  references:
-    - title: "RAR-b: Reasoning as Retrieval Benchmark"
+    - label: RAR-b arXiv
       url: https://arxiv.org/abs/2404.06347
-      year: 2024
-      is_paper: true
-    - title: "Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge"
+    - label: ARC arXiv
       url: https://arxiv.org/abs/1803.05457
-      year: 2018
-      is_paper: true
+  references:
+  - title: 'RAR-b: Reasoning as Retrieval Benchmark'
+    url: https://arxiv.org/abs/2404.06347
+    year: 2024
+    is_paper: true
+  - title: Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge
+    url: https://arxiv.org/abs/1803.05457
+    year: 2018
+    is_paper: true
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.0386200682
+      hit_at_10: 0.085
+      recall_at_100: 0.225
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.225
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1113404108
+      hit_at_10: 0.19
+      recall_at_100: 0.36
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.36
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.0641517955
+      hit_at_10: 0.135
+      recall_at_100: 0.355
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.645
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.355
+      safeguard_positive_rows: 129
+      rows_with_101_candidates: 129
 ```

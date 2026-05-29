@@ -160,8 +160,20 @@ includes list, class, and relation-seeking queries.
 | Avg positives / query | 23.16 |
 | Positives per query (min / median / max) | 1 / 18.00 / 81 |
 | Queries with multiple positives | 48 (96.0%) |
-| BM25 nDCG@10 | 0.5619 |
-| BM25 hit@10 | 0.9200 |
+| BM25 nDCG@10 | 0.6374 |
+| BM25 hit@10 | 0.9400 |
+| BM25 Recall@100 | 0.7168 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6243 |
+| Dense hit@10 | 0.9600 |
+| Dense Recall@100 | 0.7599 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6564 |
+| Reranking hybrid hit@10 | 0.9200 |
+| Reranking hybrid Recall@100 | 0.7746 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 33.10 |
 | Document length avg chars | 336.31 |
 
@@ -219,50 +231,100 @@ benchmark_task_metadata:
     query_mean: 33.1
     document_mean: 336.3067
   bm25:
-    ndcg_at_10: 0.5618747471
-    hit_at_10: 0.92
-    source: dataset_bm25_column
+    ndcg_at_10: 0.6373845172851081
+    hit_at_10: 0.94
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding upstream dev/test data or other DBpedia-Entity/BEIR-derived data likely to overlap with the NanoBEIR evaluation queries and judged entities
+    leakage_note: prefer excluding upstream dev/test data or other DBpedia-Entity/BEIR-derived
+      data likely to overlap with the NanoBEIR evaluation queries and judged entities
     useful_training_data:
-      - non-overlapping DBpedia or Wikidata entity-search pairs
-      - Wikipedia title and abstract retrieval data
-      - knowledge-base question answering data with entity answers
-      - list-completion and entity-set retrieval data
+    - non-overlapping DBpedia or Wikidata entity-search pairs
+    - Wikipedia title and abstract retrieval data
+    - knowledge-base question answering data with entity answers
+    - list-completion and entity-set retrieval data
     synthetic_data:
-      document_generation: DBpedia-style entity descriptions with titles, aliases, entity types, attributes, locations, dates, and relations
-      question_generation: short entity-oriented queries including direct lookups, aliases, type constraints, relation questions, and list requests
-      answerability: positives should be one or more entities satisfying the query, not merely pages sharing surface terms
+      document_generation: DBpedia-style entity descriptions with titles, aliases,
+        entity types, attributes, locations, dates, and relations
+      question_generation: short entity-oriented queries including direct lookups,
+        aliases, type constraints, relation questions, and list requests
+      answerability: positives should be one or more entities satisfying the query,
+        not merely pages sharing surface terms
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-en
     source_urls:
-      - label: DBpedia-Entity official project page
-        url: https://iai-group.github.io/DBpedia-Entity/
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - no_arxiv_page_confirmed_for_original_task_paper
-  references:
-    - title: 'DBpedia-Entity v2: A Test Collection for Entity Search'
-      url: https://doi.org/10.1145/3077136.3080751
-      year: 2017
-      doi: 10.1145/3077136.3080751
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: DBpedia-Entity official project page
+    - label: DBpedia-Entity official project page
       url: https://iai-group.github.io/DBpedia-Entity/
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_project_page
-    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models'
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
+    - label: Zeta Alpha NanoBEIR collection
+      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    source_notes:
+    - no_arxiv_page_confirmed_for_original_task_paper
+  references:
+  - title: 'DBpedia-Entity v2: A Test Collection for Entity Search'
+    url: https://doi.org/10.1145/3077136.3080751
+    year: 2017
+    doi: 10.1145/3077136.3080751
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: DBpedia-Entity official project page
+    url: https://iai-group.github.io/DBpedia-Entity/
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_project_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6373845173
+      hit_at_10: 0.94
+      recall_at_100: 0.7167530225
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7167530225
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6243012778
+      hit_at_10: 0.96
+      recall_at_100: 0.7599309154
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7599309154
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6563665569
+      hit_at_10: 0.92
+      recall_at_100: 0.774611399
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.774611399
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

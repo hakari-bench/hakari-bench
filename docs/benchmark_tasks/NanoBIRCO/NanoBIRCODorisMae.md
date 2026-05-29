@@ -129,8 +129,20 @@ keywords.
 | Positive qrels | 1,569 |
 | Positives per query | avg 26.15; min 1; median 1; max 100 |
 | Multi-positive queries | 16 / 60 (26.67%) |
-| BM25 nDCG@10 | 0.2469 |
-| BM25 hit@10 | 0.4167 |
+| BM25 nDCG@10 | 0.3866 |
+| BM25 hit@10 | 0.5500 |
+| BM25 Recall@100 | 0.5940 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4140 |
+| Dense hit@10 | 0.5167 |
+| Dense Recall@100 | 0.5322 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4012 |
+| Reranking hybrid hit@10 | 0.5167 |
+| Reranking hybrid Recall@100 | 0.6424 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 6 |
 | Query length avg chars | 995.53 |
 | Document length avg chars | 1220.27 |
 
@@ -185,41 +197,90 @@ benchmark_task_metadata:
     query_mean: 995.533333
     document_mean: 1220.273629
   bm25:
-    ndcg_at_10: 0.2469215094
-    hit_at_10: 0.4166666667
-    source: dataset_bm25_column
+    ndcg_at_10: 0.3866246010286225
+    hit_at_10: 0.55
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding DORIS-MAE/BIRCO evaluation queries, abstracts, and candidate pools likely to overlap with NanoBIRCO
+    leakage_note: prefer excluding DORIS-MAE/BIRCO evaluation queries, abstracts,
+      and candidate pools likely to overlap with NanoBIRCO
     useful_training_data:
-      - non-overlapping DORIS-MAE complex research-need retrieval pairs
-      - paper recommendation datasets with expert-written research needs
-      - citation intent retrieval datasets
-      - same-topic abstracts that miss one or more query facets as hard negatives
+    - non-overlapping DORIS-MAE complex research-need retrieval pairs
+    - paper recommendation datasets with expert-written research needs
+    - citation intent retrieval datasets
+    - same-topic abstracts that miss one or more query facets as hard negatives
     synthetic_data:
-      document_generation: computer-science abstracts with methods, tasks, modalities, constraints, and evaluation settings
-      question_generation: paragraph-length research needs with multiple technical facets and desired paper properties
-      answerability: relevant abstracts should satisfy the research need holistically, with partial matches treated below stronger matches
+      document_generation: computer-science abstracts with methods, tasks, modalities,
+        constraints, and evaluation settings
+      question_generation: paragraph-length research needs with multiple technical
+        facets and desired paper properties
+      answerability: relevant abstracts should satisfy the research need holistically,
+        with partial matches treated below stronger matches
     multi_positive_training: preserve_multi_positive_scientific_search
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBIRCO
     source_urls:
-      - label: BIRCO GitHub repository
-        url: https://github.com/BIRCO-benchmark/BIRCO
+    - label: BIRCO GitHub repository
+      url: https://github.com/BIRCO-benchmark/BIRCO
     source_notes: []
   references:
-    - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
-      url: https://arxiv.org/abs/2402.14151
-      year: 2024
-      doi: 10.48550/arXiv.2402.14151
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: BIRCO GitHub repository
-      url: https://github.com/BIRCO-benchmark/BIRCO
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: official_project_repository
+  - title: 'BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives'
+    url: https://arxiv.org/abs/2402.14151
+    year: 2024
+    doi: 10.48550/arXiv.2402.14151
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: BIRCO GitHub repository
+    url: https://github.com/BIRCO-benchmark/BIRCO
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: official_project_repository
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.386624601
+      hit_at_10: 0.55
+      recall_at_100: 0.5940089229
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 60
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5940089229
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4140286277
+      hit_at_10: 0.5166666667
+      recall_at_100: 0.5321861058
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 60
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5321861058
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4011657599
+      hit_at_10: 0.5166666667
+      recall_at_100: 0.6424474187
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.1
+      query_count: 60
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6424474187
+      safeguard_positive_rows: 6
+      rows_with_101_candidates: 6
 ```

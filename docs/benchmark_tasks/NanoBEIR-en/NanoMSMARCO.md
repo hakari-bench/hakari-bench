@@ -128,8 +128,20 @@ retrieval, not only title matching or formal QA over polished paragraphs.
 | Queries | 50 |
 | Documents | 5,043 |
 | Positive qrels | 50 |
-| BM25 nDCG@10 | 0.4890 |
-| BM25 hit@10 | 0.7400 |
+| BM25 nDCG@10 | 0.5217 |
+| BM25 hit@10 | 0.7200 |
+| BM25 Recall@100 | 1.0000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6188 |
+| Dense hit@10 | 0.8400 |
+| Dense Recall@100 | 1.0000 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6170 |
+| Reranking hybrid hit@10 | 0.7600 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 32.22 |
 | Document length avg chars | 330.16 |
 
@@ -187,49 +199,98 @@ benchmark_task_metadata:
     query_mean: 32.22
     document_mean: 330.159826
   bm25:
-    ndcg_at_10: 0.4890021495
-    hit_at_10: 0.74
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5216718567672881
+    hit_at_10: 0.72
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding upstream dev/test data or other MS MARCO/BEIR-derived records likely to overlap with the NanoBEIR evaluation queries and passages
+    leakage_note: prefer excluding upstream dev/test data or other MS MARCO/BEIR-derived
+      records likely to overlap with the NanoBEIR evaluation queries and passages
     useful_training_data:
-      - non-overlapping MS MARCO passage-ranking training pairs
-      - web QA retrieval data
-      - search query to answer-passage pairs
-      - noisy real user question datasets
+    - non-overlapping MS MARCO passage-ranking training pairs
+    - web QA retrieval data
+    - search query to answer-passage pairs
+    - noisy real user question datasets
     synthetic_data:
       document_generation: concise web-style answer passages across everyday domains
-      question_generation: realistic search questions with lowercase fragments, typos, abbreviations, definition requests, and direct questions
-      answerability: positives should directly answer the user's information need, not merely share keywords
+      question_generation: realistic search questions with lowercase fragments, typos,
+        abbreviations, definition requests, and direct questions
+      answerability: positives should directly answer the user's information need,
+        not merely share keywords
     multi_positive_training: not_required_for_this_sample
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-en
     source_urls:
-      - label: MS MARCO dataset site
-        url: https://microsoft.github.io/msmarco/Datasets.html
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    - label: MS MARCO dataset site
+      url: https://microsoft.github.io/msmarco/Datasets.html
+    - label: Zeta Alpha NanoBEIR collection
+      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
     source_notes: []
   references:
-    - title: 'MS MARCO: A Human Generated MAchine Reading COmprehension Dataset'
-      url: https://arxiv.org/abs/1611.09268
-      year: 2016
-      doi: 10.48550/arXiv.1611.09268
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: MS MARCO dataset site
-      url: https://microsoft.github.io/msmarco/Datasets.html
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_dataset_page
-    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models'
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
+  - title: 'MS MARCO: A Human Generated MAchine Reading COmprehension Dataset'
+    url: https://arxiv.org/abs/1611.09268
+    year: 2016
+    doi: 10.48550/arXiv.1611.09268
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: MS MARCO dataset site
+    url: https://microsoft.github.io/msmarco/Datasets.html
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_dataset_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5216718568
+      hit_at_10: 0.72
+      recall_at_100: 1.0
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6187742499
+      hit_at_10: 0.84
+      recall_at_100: 1.0
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6170106503
+      hit_at_10: 0.76
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

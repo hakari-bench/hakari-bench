@@ -82,8 +82,20 @@ community posts rather than learning troubleshooting retrieval.
 | Queries | 200 |
 | Documents | 10000 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.7403 |
-| BM25 hit@10 | 0.8150 |
+| BM25 nDCG@10 | 0.7482 |
+| BM25 hit@10 | 0.8300 |
+| BM25 Recall@100 | 0.9250 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8836 |
+| Dense hit@10 | 0.9300 |
+| Dense Recall@100 | 0.9400 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8328 |
+| Reranking hybrid hit@10 | 0.8850 |
+| Reranking hybrid Recall@100 | 0.9900 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 1361.81 |
 | Document length avg chars | 1218.06 |
 
@@ -139,25 +151,28 @@ benchmark_task_metadata:
     query_mean: 1361.805
     document_mean: 1218.0589
   bm25:
-    ndcg_at_10: 0.7402598826234619
-    hit_at_10: 0.815
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7481959299785959
+    hit_at_10: 0.83
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR StackOverflow QA test-derived retrieval split
     train_eval_overlap_audit: not_audited_split_filtering_required
-    leakage_note: exclude NanoStackOverflowQA question-answer pairs; do not train on StackOverflow QA test-derived rows
+    leakage_note: exclude NanoStackOverflowQA question-answer pairs; do not train
+      on StackOverflow QA test-derived rows
     leakage_risk:
       source_dataset: CoIR StackOverflow QA / Stack Overflow data
       source_train_queries_reported_by_coir: 13000
       source_dev_queries_reported_by_coir: 3000
       source_test_queries_reported_by_coir: 2000
-      risk: upstream StackOverflow QA test pairs can overlap with NanoStackOverflowQA evaluation rows
-      recommended_filter: train-side only plus normalized title, body, answer, code, URL/id, and token-fingerprint exclusion
+      risk: upstream StackOverflow QA test pairs can overlap with NanoStackOverflowQA
+        evaluation rows
+      recommended_filter: train-side only plus normalized title, body, answer, code,
+        URL/id, and token-fingerprint exclusion
     useful_training_data:
-      - StackOverflow question-answer retrieval
-      - code troubleshooting pairs
-      - framework-tag hard negatives
+    - StackOverflow question-answer retrieval
+    - code troubleshooting pairs
+    - framework-tag hard negatives
     synthetic_data:
       document_generation: developer answers with fixes and code snippets
       question_generation: realistic programming questions with errors and context
@@ -166,17 +181,62 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCoIR
     source_urls:
-      - label: CoIR arXiv
-        url: https://arxiv.org/abs/2407.02883
-      - label: CoIR-Retrieval/stackoverflow-qa
-        url: https://huggingface.co/datasets/CoIR-Retrieval/stackoverflow-qa
-      - label: Stack Overflow Data on Kaggle
-        url: https://www.kaggle.com/datasets/stackoverflow/stacksample/data
+    - label: CoIR arXiv
+      url: https://arxiv.org/abs/2407.02883
+    - label: CoIR-Retrieval/stackoverflow-qa
+      url: https://huggingface.co/datasets/CoIR-Retrieval/stackoverflow-qa
+    - label: Stack Overflow Data on Kaggle
+      url: https://www.kaggle.com/datasets/stackoverflow/stacksample/data
     source_notes: []
   references:
-    - title: "CoIR: A Comprehensive Benchmark for Code Information Retrieval Models"
-      url: https://arxiv.org/abs/2407.02883
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+    url: https://arxiv.org/abs/2407.02883
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.74819593
+      hit_at_10: 0.83
+      recall_at_100: 0.925
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.925
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8835799533
+      hit_at_10: 0.93
+      recall_at_100: 0.94
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.94
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8328011758
+      hit_at_10: 0.885
+      recall_at_100: 0.99
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.99
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

@@ -189,8 +189,15 @@ from MNanoBEIR evaluation query or positive text.
 | Positive qrels | 61,048 |
 | Positives per query | avg 7.24, min 1, max 100 |
 | Multi-positive queries | 4,459 |
-| Query-weighted BM25 nDCG@10 | 0.4502 |
-| Query-weighted BM25 hit@10 | 0.7272 |
+| Query-weighted BM25 nDCG@10 | 0.4547 |
+| Query-weighted BM25 hit@10 | 0.7330 |
+| Query-weighted BM25 Recall@100 | 0.7200 |
+| Query-weighted Dense nDCG@10 | 0.5199 |
+| Query-weighted Dense hit@10 | 0.7967 |
+| Query-weighted Dense Recall@100 | 0.7724 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.5103 |
+| Query-weighted Reranking hybrid hit@10 | 0.7972 |
+| Query-weighted Reranking hybrid Recall@100 | 0.7965 |
 | Mean query length | 134.00 chars, weighted by query count |
 | Mean document length | 837.76 chars, weighted by split-local document count |
 
@@ -254,253 +261,277 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 134.00367429678798
     document_mean_weighted_by_documents: 837.7634889414416
   bm25:
-    ndcg_at_10_query_weighted: 0.4501844200621074
-    hit_at_10_query_weighted: 0.7271542017292165
+    ndcg_at_10_query_weighted: 0.454680472
+    hit_at_10_query_weighted: 0.7329619533
     ndcg_at_10_unweighted_task_mean: 0.4502587566337278
     hit_at_10_unweighted_task_mean: 0.7275449824887574
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: NanoBEIR-pt__NanoFEVER
     hardest_task_by_ndcg_at_10: NanoBEIR-sv__NanoFiQA2018
   languages:
-    - ar
-    - de
-    - es
-    - fr
-    - it
-    - ja
-    - ko
-    - "no"
-    - pt
-    - sr
-    - sv
-    - th
-    - vi
+  - ar
+  - de
+  - es
+  - fr
+  - it
+  - ja
+  - ko
+  - 'no'
+  - pt
+  - sr
+  - sv
+  - th
+  - vi
   base_tasks:
-    - NanoArguAna
-    - NanoClimateFEVER
-    - NanoDBPedia
-    - NanoFEVER
-    - NanoFiQA2018
-    - NanoHotpotQA
-    - NanoMSMARCO
-    - NanoNFCorpus
-    - NanoNQ
-    - NanoQuoraRetrieval
-    - NanoSCIDOCS
-    - NanoSciFact
-    - NanoTouche2020
+  - NanoArguAna
+  - NanoClimateFEVER
+  - NanoDBPedia
+  - NanoFEVER
+  - NanoFiQA2018
+  - NanoHotpotQA
+  - NanoMSMARCO
+  - NanoNFCorpus
+  - NanoNQ
+  - NanoQuoraRetrieval
+  - NanoSCIDOCS
+  - NanoSciFact
+  - NanoTouche2020
   tasks:
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoTouche2020.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoArguAna.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoClimateFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoDBPedia.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoFEVER.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoFiQA2018.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoHotpotQA.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoMSMARCO.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoNFCorpus.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoNQ.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoQuoraRetrieval.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoSCIDOCS.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoSciFact.md
-    - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-es__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-fr__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-it__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-pt__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sr__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-sv__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoTouche2020.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoArguAna.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoClimateFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoDBPedia.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoFEVER.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoFiQA2018.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoHotpotQA.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoMSMARCO.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoNFCorpus.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoNQ.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoQuoraRetrieval.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoSCIDOCS.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoSciFact.md
+  - path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoTouche2020.md
   learning:
-    leakage_note: exclude MNanoBEIR evaluation queries, qrels, positive documents, translated candidate pools, and direct translations of evaluation items; audit source BEIR and multilingual training data before use
+    leakage_note: exclude MNanoBEIR evaluation queries, qrels, positive documents,
+      translated candidate pools, and direct translations of evaluation items; audit
+      source BEIR and multilingual training data before use
     useful_training_data:
-      - multilingual question-passage retrieval pairs
-      - multilingual claim-evidence and scientific-claim retrieval data
-      - argument, counterargument, and debate passage retrieval data
-      - duplicate-question and paraphrase retrieval clusters
-      - biomedical, finance, entity, and scientific-paper retrieval pairs
-      - language-specific hard negatives for each base task
+    - multilingual question-passage retrieval pairs
+    - multilingual claim-evidence and scientific-claim retrieval data
+    - argument, counterargument, and debate passage retrieval data
+    - duplicate-question and paraphrase retrieval clusters
+    - biomedical, finance, entity, and scientific-paper retrieval pairs
+    - language-specific hard negatives for each base task
     synthetic_data:
-      document_generation: multilingual passages, claims, entity descriptions, scientific abstracts, medical documents, finance answers, duplicate questions, and debate arguments with preserved task relations
-      question_generation: target-language search queries, claims, topic prompts, paper titles, counterarguments, duplicate-question variants, and medical or finance questions grounded in the selected document
-      answerability: positives must satisfy the BEIR source-task relation in the target language, not only share translated keywords
+      document_generation: multilingual passages, claims, entity descriptions, scientific
+        abstracts, medical documents, finance answers, duplicate questions, and debate
+        arguments with preserved task relations
+      question_generation: target-language search queries, claims, topic prompts,
+        paper titles, counterarguments, duplicate-question variants, and medical or
+        finance questions grounded in the selected document
+      answerability: positives must satisfy the BEIR source-task relation in the target
+        language, not only share translated keywords
     multi_positive_training: mixed_single_and_multi_positive_multilingual_retrieval_objective
   links:
     nano_dataset_pattern: https://huggingface.co/datasets/hakari-bench/NanoBEIR-{language}
     source_urls:
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB arXiv
-        url: https://arxiv.org/abs/2502.13595
-      - label: NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: MMTEB arXiv
+      url: https://arxiv.org/abs/2502.13595
+    - label: NanoBEIR collection
+      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
     source_notes: []
   references:
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
-      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.454680472
+      query_weighted_hit_at_10: 0.7329619533
+      query_weighted_recall_at_100: 0.7200462381
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.5198646023
+      query_weighted_hit_at_10: 0.796728695
+      query_weighted_recall_at_100: 0.7724371656
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.5103100246
+      query_weighted_hit_at_10: 0.7972027972
+      query_weighted_recall_at_100: 0.7965459461
+      source: dataset_candidate_subset
 ```

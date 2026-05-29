@@ -76,8 +76,20 @@ different operation.
 | Positive qrels | 486 |
 | Positives per query | avg 2.43, min 1, median 1, max 22 |
 | Multi-positive queries | 84 (42.00%) |
-| BM25 nDCG@10 | 0.3666 |
-| BM25 hit@10 | 0.5350 |
+| BM25 nDCG@10 | 0.4001 |
+| BM25 hit@10 | 0.5550 |
+| BM25 Recall@100 | 0.4774 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5095 |
+| Dense hit@10 | 0.6950 |
+| Dense Recall@100 | 0.6687 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4658 |
+| Reranking hybrid hit@10 | 0.6600 |
+| Reranking hybrid Recall@100 | 0.6687 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 14 |
 | Query length avg chars | 49.21 |
 | Document length avg chars | 969.12 |
 
@@ -137,18 +149,18 @@ benchmark_task_metadata:
     query_mean: 49.205
     document_mean: 969.1243
   bm25:
-    ndcg_at_10: 0.36656783742488813
-    hit_at_10: 0.535
-    source: dataset_bm25_column
+    ndcg_at_10: 0.4000965055783616
+    hit_at_10: 0.555
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MTEB CQADupStack Unix test split
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoMTEB-v2 cqadupstack_unix duplicate-question pairs
     useful_training_data:
-      - StackExchange duplicate-question pairs
-      - Unix and shell support questions
-      - same-command hard negatives
+    - StackExchange duplicate-question pairs
+    - Unix and shell support questions
+    - same-command hard negatives
     synthetic_data:
       document_generation: long Unix StackExchange questions with commands and errors
       question_generation: short duplicate-style Unix problem titles
@@ -157,22 +169,67 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-v2
     source_urls:
-      - label: CQADupStack paper
-        url: https://eltimster.github.io/www/pubs/adcs2015.pdf
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: mteb/cqadupstack-unix
-        url: https://huggingface.co/datasets/mteb/cqadupstack-unix
+    - label: CQADupStack paper
+      url: https://eltimster.github.io/www/pubs/adcs2015.pdf
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: mteb/cqadupstack-unix
+      url: https://huggingface.co/datasets/mteb/cqadupstack-unix
     source_notes: []
   references:
-    - title: "CQADupStack: A Benchmark Data Set for Community Question-Answering Research"
-      url: https://eltimster.github.io/www/pubs/adcs2015.pdf
-      year: 2015
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'CQADupStack: A Benchmark Data Set for Community Question-Answering Research'
+    url: https://eltimster.github.io/www/pubs/adcs2015.pdf
+    year: 2015
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4000965056
+      hit_at_10: 0.555
+      recall_at_100: 0.4773662551
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4773662551
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5095281929
+      hit_at_10: 0.695
+      recall_at_100: 0.6687242798
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6687242798
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4658451876
+      hit_at_10: 0.66
+      recall_at_100: 0.6687242798
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.07
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6687242798
+      safeguard_positive_rows: 14
+      rows_with_101_candidates: 14
 ```

@@ -82,6 +82,18 @@ with the same surname, category, or concept family to reduce pure title matching
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.8781 |
 | BM25 hit@10 | 0.9000 |
+| BM25 Recall@100 | 0.9200 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9599 |
+| Dense hit@10 | 0.9800 |
+| Dense Recall@100 | 0.9950 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9024 |
+| Reranking hybrid hit@10 | 0.9150 |
+| Reranking hybrid Recall@100 | 0.9950 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 13.25 |
 | Document length avg chars | 1,982.85 |
 
@@ -118,13 +130,14 @@ benchmark_task_metadata:
   dataset_id: hakari-bench/NanoMTEB-Scandinavian
   task_name: snl
   split_name: snl
-  language: no
+  language: false
   category: natural_language
   document_path: docs/benchmark_tasks/NanoMTEB-Scandinavian/snl.md
   source_research:
     primary_source_type: benchmark_paper_and_dataset_card
     paper_pdf_or_html_checked: true
-    no_paper_note: No standalone SNL Retrieval paper was found; SEB paper and Hugging Face source cards were checked.
+    no_paper_note: No standalone SNL Retrieval paper was found; SEB paper and Hugging
+      Face source cards were checked.
   counts:
     queries: 200
     documents: 1300
@@ -142,38 +155,86 @@ benchmark_task_metadata:
   bm25:
     ndcg_at_10: 0.8780559736224016
     hit_at_10: 0.9
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
     leakage_note: exclude Nano SNL titles, qrels, and matching article/ingress texts
     useful_training_data:
-      - non-overlapping SNL headline/article pairs
-      - Norwegian encyclopedia title-to-article retrieval pairs
-      - category-neighbor hard negatives
-      - Norwegian alias and headword matching data
+    - non-overlapping SNL headline/article pairs
+    - Norwegian encyclopedia title-to-article retrieval pairs
+    - category-neighbor hard negatives
+    - Norwegian alias and headword matching data
     synthetic_data:
-      document_generation: Norwegian encyclopedia entries with title, category, ingress, and article body
+      document_generation: Norwegian encyclopedia entries with title, category, ingress,
+        and article body
       question_generation: short title, alias, and headword queries
-      answerability: each positive should be the article corresponding to the title-like query
+      answerability: each positive should be the article corresponding to the title-like
+        query
     multi_positive_training: single_positive_title_article_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Scandinavian
     source_urls:
-      - label: Scandinavian Embedding Benchmarks
-        url: https://arxiv.org/abs/2406.02396
-      - label: adrlau/navjordj-SNL_summarization_copy
-        url: https://huggingface.co/datasets/adrlau/navjordj-SNL_summarization_copy
-      - label: mteb/SNLRetrieval
-        url: https://huggingface.co/datasets/mteb/SNLRetrieval
-    source_notes:
-      - SEB defines the retrieval formalization; source card exposes headline, ingress, category, and article fields.
-  references:
-    - title: "The Scandinavian Embedding Benchmarks"
+    - label: Scandinavian Embedding Benchmarks
       url: https://arxiv.org/abs/2406.02396
-      year: 2024
-      doi: 10.48550/arXiv.2406.02396
-      is_paper: true
-      source_confidence: benchmark_paper
+    - label: adrlau/navjordj-SNL_summarization_copy
+      url: https://huggingface.co/datasets/adrlau/navjordj-SNL_summarization_copy
+    - label: mteb/SNLRetrieval
+      url: https://huggingface.co/datasets/mteb/SNLRetrieval
+    source_notes:
+    - SEB defines the retrieval formalization; source card exposes headline, ingress,
+      category, and article fields.
+  references:
+  - title: The Scandinavian Embedding Benchmarks
+    url: https://arxiv.org/abs/2406.02396
+    year: 2024
+    doi: 10.48550/arXiv.2406.02396
+    is_paper: true
+    source_confidence: benchmark_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8780559736
+      hit_at_10: 0.9
+      recall_at_100: 0.92
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.92
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9599097988
+      hit_at_10: 0.98
+      recall_at_100: 0.995
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.995
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9024102282
+      hit_at_10: 0.915
+      recall_at_100: 0.995
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.005
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.995
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

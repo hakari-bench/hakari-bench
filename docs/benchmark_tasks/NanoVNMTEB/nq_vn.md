@@ -95,8 +95,20 @@ attribute. Do not seed generation from this evaluation split.
 | Avg positives / query | 1.17 |
 | Positives per query (min / median / max) | 1 / 1 / 3 |
 | Queries with multiple positives | 32 (16.00%) |
-| BM25 nDCG@10 | 0.6789 |
-| BM25 hit@10 | 0.8450 |
+| BM25 nDCG@10 | 0.5882 |
+| BM25 hit@10 | 0.7450 |
+| BM25 Recall@100 | 0.8718 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7981 |
+| Dense hit@10 | 0.9000 |
+| Dense Recall@100 | 0.9658 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6826 |
+| Reranking hybrid hit@10 | 0.8300 |
+| Reranking hybrid Recall@100 | 0.9957 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 39.40 |
 | Document length avg chars | 557.60 |
 
@@ -144,10 +156,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://aclanthology.org/Q19-1026/
     additional_source_urls:
-      - https://ai.google.com/research/NaturalQuestions/
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/nq-vn
+    - https://ai.google.com/research/NaturalQuestions/
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/nq-vn
     no_paper_note: null
   counts:
     queries: 200
@@ -164,61 +176,111 @@ benchmark_task_metadata:
     query_mean: 39.4
     document_mean: 557.6
   bm25:
-    ndcg_at_10: 0.678882681
-    hit_at_10: 0.845
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5882327266882935
+    hit_at_10: 0.745
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB NQ test split from GreenNode/nq-vn"
+    evaluation_split_origin: translated VN-MTEB NQ test split from GreenNode/nq-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated NQ-VN test queries, qrels, documents, and positive passages used by this Nano split."
+    leakage_note: Exclude translated NQ-VN test queries, qrels, documents, and positive
+      passages used by this Nano split.
     useful_training_data:
-      - official Natural Questions training examples with overlap removed
-      - Vietnamese Wikipedia QA
-      - non-overlapping question-to-passage retrieval pairs
-      - translated NQ data with overlap removed
+    - official Natural Questions training examples with overlap removed
+    - Vietnamese Wikipedia QA
+    - non-overlapping question-to-passage retrieval pairs
+    - translated NQ data with overlap removed
     synthetic_data:
-      document_generation: "Vietnamese Wikipedia-style entity and topic passages with explicit attributes."
-      question_generation: "Short Vietnamese search questions asking for a specific entity attribute, date, location, role, title, or list membership."
-      answerability: "Each question should be answerable from the passage, with same-entity different-attribute negatives."
+      document_generation: Vietnamese Wikipedia-style entity and topic passages with
+        explicit attributes.
+      question_generation: Short Vietnamese search questions asking for a specific
+        entity attribute, date, location, role, title, or list membership.
+      answerability: Each question should be answerable from the passage, with same-entity
+        different-attribute negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: Natural Questions ACL Anthology
-        url: https://aclanthology.org/Q19-1026/
-      - label: Natural Questions official page
-        url: https://ai.google.com/research/NaturalQuestions/
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/nq-vn
-        url: https://huggingface.co/datasets/GreenNode/nq-vn
+    - label: Natural Questions ACL Anthology
+      url: https://aclanthology.org/Q19-1026/
+    - label: Natural Questions official page
+      url: https://ai.google.com/research/NaturalQuestions/
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/nq-vn
+      url: https://huggingface.co/datasets/GreenNode/nq-vn
     source_notes: []
   references:
-    - title: "Natural Questions: A Benchmark for Question Answering Research"
-      url: https://aclanthology.org/Q19-1026/
-      year: 2019
-      doi: 10.1162/tacl_a_00276
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/nq-vn
-      url: https://huggingface.co/datasets/GreenNode/nq-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'Natural Questions: A Benchmark for Question Answering Research'
+    url: https://aclanthology.org/Q19-1026/
+    year: 2019
+    doi: 10.1162/tacl_a_00276
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/nq-vn
+    url: https://huggingface.co/datasets/GreenNode/nq-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5882327267
+      hit_at_10: 0.745
+      recall_at_100: 0.8717948718
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8717948718
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.798112531
+      hit_at_10: 0.9
+      recall_at_100: 0.9658119658
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9658119658
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6825894352
+      hit_at_10: 0.83
+      recall_at_100: 0.9957264957
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9957264957
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

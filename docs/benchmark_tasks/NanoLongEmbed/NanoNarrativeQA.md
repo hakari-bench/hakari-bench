@@ -98,8 +98,20 @@ questions or positive documents as seeds.
 | Queries | 200 |
 | Documents | 355 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.6910 |
-| BM25 hit@10 | 0.7900 |
+| BM25 nDCG@10 | 0.7619 |
+| BM25 hit@10 | 0.8450 |
+| BM25 Recall@100 | 0.9000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3315 |
+| Dense hit@10 | 0.4300 |
+| Dense Recall@100 | 0.7500 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.5120 |
+| Reranking hybrid hit@10 | 0.6550 |
+| Reranking hybrid Recall@100 | 0.9450 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 11 |
 | Query length avg chars | 49.32 |
 | Document length avg chars | 326753.00 |
 
@@ -157,45 +169,94 @@ benchmark_task_metadata:
     query_mean: 49.315
     document_mean: 326752.9971830986
   bm25:
-    ndcg_at_10: 0.6909643972
-    hit_at_10: 0.79
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7619326236299936
+    hit_at_10: 0.845
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude NarrativeQA test data, Nano queries, qrels, and positive long documents likely to overlap with this evaluation
+    leakage_note: exclude NarrativeQA test data, Nano queries, qrels, and positive
+      long documents likely to overlap with this evaluation
     useful_training_data:
-      - official non-overlapping NarrativeQA train pairs
-      - long-form book and screenplay question-document retrieval pairs
-      - story-level QA over chapters or full narratives
-      - hard negatives from similar stories or shared character names
+    - official non-overlapping NarrativeQA train pairs
+    - long-form book and screenplay question-document retrieval pairs
+    - story-level QA over chapters or full narratives
+    - hard negatives from similar stories or shared character names
     synthetic_data:
-      document_generation: long narrative documents, books, plays, or screenplay-style texts with distant events and recurring character names
-      question_generation: story questions about motives, deaths, relationships, travel, actions, and event consequences
-      answerability: the relevant event should be explicitly grounded somewhere in the long document, not only implied by metadata
+      document_generation: long narrative documents, books, plays, or screenplay-style
+        texts with distant events and recurring character names
+      question_generation: story questions about motives, deaths, relationships, travel,
+        actions, and event consequences
+      answerability: the relevant event should be explicitly grounded somewhere in
+        the long document, not only implied by metadata
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoLongEmbed
     source_urls:
-      - label: NarrativeQA arXiv
-        url: https://arxiv.org/abs/1712.07040
-      - label: LongEmbed arXiv
-        url: https://arxiv.org/abs/2404.12096
-      - label: dwzhu/LongEmbed
-        url: https://huggingface.co/datasets/dwzhu/LongEmbed
+    - label: NarrativeQA arXiv
+      url: https://arxiv.org/abs/1712.07040
+    - label: LongEmbed arXiv
+      url: https://arxiv.org/abs/2404.12096
+    - label: dwzhu/LongEmbed
+      url: https://huggingface.co/datasets/dwzhu/LongEmbed
     source_notes: []
   references:
-    - title: "The NarrativeQA Reading Comprehension Challenge"
-      url: https://arxiv.org/abs/1712.07040
-      year: 2018
-      doi: 10.1162/tacl_a_00023
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "LongEmbed: Extending Embedding Models for Long Context Retrieval"
-      url: https://arxiv.org/abs/2404.12096
-      year: 2024
-      doi: 10.18653/v1/2024.emnlp-main.47
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: The NarrativeQA Reading Comprehension Challenge
+    url: https://arxiv.org/abs/1712.07040
+    year: 2018
+    doi: 10.1162/tacl_a_00023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+    url: https://arxiv.org/abs/2404.12096
+    year: 2024
+    doi: 10.18653/v1/2024.emnlp-main.47
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7619326236
+      hit_at_10: 0.845
+      recall_at_100: 0.9
+      candidate_count_min: 355
+      candidate_count_max: 355
+      candidate_count_mean: 355.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.33150071
+      hit_at_10: 0.43
+      recall_at_100: 0.75
+      candidate_count_min: 355
+      candidate_count_max: 355
+      candidate_count_mean: 355.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.75
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.512040179
+      hit_at_10: 0.655
+      recall_at_100: 0.945
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.055
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.945
+      safeguard_positive_rows: 11
+      rows_with_101_candidates: 11
 ```

@@ -84,8 +84,20 @@ explicitly grounded in the positive document.
 | Queries | 98 |
 | Documents | 800 |
 | Positive qrels | 98 |
-| BM25 nDCG@10 | 0.6852 |
-| BM25 hit@10 | 0.9286 |
+| BM25 nDCG@10 | 0.7207 |
+| BM25 hit@10 | 0.9592 |
+| BM25 Recall@100 | 0.9694 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6099 |
+| Dense hit@10 | 0.7857 |
+| Dense Recall@100 | 0.9592 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6823 |
+| Reranking hybrid hit@10 | 0.8878 |
+| Reranking hybrid Recall@100 | 0.9898 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 58.99 |
 | Document length avg chars | 35246.12 |
 
@@ -125,7 +137,8 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: benchmark_paper
     paper_pdf_or_html_checked: true
-    no_paper_note: no standalone task paper was confirmed; LongEmbed is the source paper for this synthetic retrieval task
+    no_paper_note: no standalone task paper was confirmed; LongEmbed is the source
+      paper for this synthetic retrieval task
   counts:
     queries: 98
     documents: 800
@@ -141,37 +154,86 @@ benchmark_task_metadata:
     query_mean: 58.98979591836735
     document_mean: 35246.1175
   bm25:
-    ndcg_at_10: 0.6852432935
-    hit_at_10: 0.9285714286
-    source: dataset_bm25_column
+    ndcg_at_10: 0.720722269129006
+    hit_at_10: 0.9591836734693877
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: synthetic
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude Nano evaluation questions, inserted facts, qrels, and positive documents
+    leakage_note: exclude Nano evaluation questions, inserted facts, qrels, and positive
+      documents
     useful_training_data:
-      - synthetic needle-in-context retrieval
-      - long document QA with inserted facts
-      - evidence localization over essays or articles
-      - position-robust factual retrieval examples
+    - synthetic needle-in-context retrieval
+    - long document QA with inserted facts
+    - evidence localization over essays or articles
+    - position-robust factual retrieval examples
     synthetic_data:
-      document_generation: long non-evaluation base documents with explicit factual needle sentences inserted at varied depths
-      question_generation: natural factual questions about formulas, creators, dates, locations, definitions, and comparisons
-      answerability: each answer should be explicitly stated in the inserted needle sentence inside the positive document
+      document_generation: long non-evaluation base documents with explicit factual
+        needle sentences inserted at varied depths
+      question_generation: natural factual questions about formulas, creators, dates,
+        locations, definitions, and comparisons
+      answerability: each answer should be explicitly stated in the inserted needle
+        sentence inside the positive document
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoLongEmbed
     source_urls:
-      - label: LongEmbed arXiv
-        url: https://arxiv.org/abs/2404.12096
-      - label: dwzhu/LongEmbed
-        url: https://huggingface.co/datasets/dwzhu/LongEmbed
+    - label: LongEmbed arXiv
+      url: https://arxiv.org/abs/2404.12096
+    - label: dwzhu/LongEmbed
+      url: https://huggingface.co/datasets/dwzhu/LongEmbed
     source_notes: []
   references:
-    - title: "LongEmbed: Extending Embedding Models for Long Context Retrieval"
-      url: https://arxiv.org/abs/2404.12096
-      year: 2024
-      doi: 10.18653/v1/2024.emnlp-main.47
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'LongEmbed: Extending Embedding Models for Long Context Retrieval'
+    url: https://arxiv.org/abs/2404.12096
+    year: 2024
+    doi: 10.18653/v1/2024.emnlp-main.47
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7207222691
+      hit_at_10: 0.9591836735
+      recall_at_100: 0.9693877551
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 98
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9693877551
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6098811727
+      hit_at_10: 0.7857142857
+      recall_at_100: 0.9591836735
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 98
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9591836735
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.6823290708
+      hit_at_10: 0.887755102
+      recall_at_100: 0.9897959184
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.010204
+      query_count: 98
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9897959184
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

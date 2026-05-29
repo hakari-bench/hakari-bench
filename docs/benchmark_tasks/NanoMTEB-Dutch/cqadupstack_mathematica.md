@@ -83,6 +83,18 @@ different behavior.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.1826 |
 | BM25 hit@10 | 0.2750 |
+| BM25 Recall@100 | 0.4350 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.1992 |
+| Dense hit@10 | 0.3050 |
+| Dense Recall@100 | 0.5250 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2181 |
+| Reranking hybrid hit@10 | 0.3150 |
+| Reranking hybrid Recall@100 | 0.5750 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 85 |
 | Query length avg chars | 55.30 |
 | Document length avg chars | 1,166.66 |
 
@@ -129,10 +141,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://doi.org/10.1145/2838931.2838934
     additional_source_urls:
-      - https://eltimster.github.io/www/pubs/adcs2015.pdf
-      - https://aclanthology.org/2025.bucc-1.5/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/clips/beir-nl-cqadupstack
+    - https://eltimster.github.io/www/pubs/adcs2015.pdf
+    - https://aclanthology.org/2025.bucc-1.5/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/clips/beir-nl-cqadupstack
   counts:
     queries: 200
     documents: 10000
@@ -148,22 +160,70 @@ benchmark_task_metadata:
     query_mean: 55.3
     document_mean: 1166.6578
   bm25:
-    ndcg_at_10: 0.1826120876
+    ndcg_at_10: 0.18261208757793798
     hit_at_10: 0.275
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "CQADupstackMathematica-NL test split from clips/beir-nl-cqadupstack"
+    evaluation_split_origin: CQADupstackMathematica-NL test split from clips/beir-nl-cqadupstack
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated CQADupStack Mathematica test queries and duplicate positives used by this Nano split."
+    leakage_note: Exclude translated CQADupStack Mathematica test queries and duplicate
+      positives used by this Nano split.
     useful_training_data:
-      - non-overlapping CQADupStack Mathematica duplicate-question pairs
-      - Wolfram Language forum QA with duplicate links
-      - code-question paraphrase data with overlap removed
+    - non-overlapping CQADupStack Mathematica duplicate-question pairs
+    - Wolfram Language forum QA with duplicate links
+    - code-question paraphrase data with overlap removed
     synthetic_data:
-      document_generation: "Dutch Mathematica support posts with original code tokens preserved."
-      question_generation: "Paraphrased duplicate Wolfram Language questions."
-      answerability: "Each query should duplicate one prior Mathematica question, with code-near hard negatives."
+      document_generation: Dutch Mathematica support posts with original code tokens
+        preserved.
+      question_generation: Paraphrased duplicate Wolfram Language questions.
+      answerability: Each query should duplicate one prior Mathematica question, with
+        code-near hard negatives.
     multi_positive_training: single_positive
   example_count: 5
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1826120876
+      hit_at_10: 0.275
+      recall_at_100: 0.435
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.435
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1992167041
+      hit_at_10: 0.305
+      recall_at_100: 0.525
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.525
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2180920891
+      hit_at_10: 0.315
+      recall_at_100: 0.575
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.425
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.575
+      safeguard_positive_rows: 85
+      rows_with_101_candidates: 85
 ```

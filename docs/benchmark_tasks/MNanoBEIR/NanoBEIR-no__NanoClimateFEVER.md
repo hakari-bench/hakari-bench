@@ -74,6 +74,18 @@ terms but fail to support or refute the exact claim.
 | Queries with multiple positives | 44 (88.0%) |
 | BM25 nDCG@10 | 0.2099 |
 | BM25 hit@10 | 0.5000 |
+| BM25 Recall@100 | 0.4730 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3053 |
+| Dense hit@10 | 0.6600 |
+| Dense Recall@100 | 0.5811 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2862 |
+| Reranking hybrid hit@10 | 0.6600 |
+| Reranking hybrid Recall@100 | 0.6081 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 3 |
 | Query length avg chars | 124.66 |
 | Document length avg chars | 1,524.22 |
 
@@ -111,7 +123,7 @@ benchmark_task_metadata:
   dataset_id: hakari-bench/NanoBEIR-no
   task_name: NanoClimateFEVER
   split_name: NanoClimateFEVER
-  language: "no"
+  language: 'no'
   category: natural_language
   document_path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoClimateFEVER.md
   source_research:
@@ -133,7 +145,52 @@ benchmark_task_metadata:
     query_mean: 124.66
     document_mean: 1524.216843
   bm25:
-    ndcg_at_10: 0.2098556167
+    ndcg_at_10: 0.2098556167376287
     hit_at_10: 0.5
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2098556167
+      hit_at_10: 0.5
+      recall_at_100: 0.472972973
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.472972973
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3053175042
+      hit_at_10: 0.66
+      recall_at_100: 0.5810810811
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5810810811
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2862211495
+      hit_at_10: 0.66
+      recall_at_100: 0.6081081081
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.06
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6081081081
+      safeguard_positive_rows: 3
+      rows_with_101_candidates: 3
 ```

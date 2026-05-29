@@ -161,8 +161,20 @@ classification.
 | Avg positives / query | 2.96 |
 | Positives per query (min / median / max) | 1 / 3.00 / 5 |
 | Queries with multiple positives | 44 (88.0%) |
-| BM25 nDCG@10 | 0.3289 |
-| BM25 hit@10 | 0.7400 |
+| BM25 nDCG@10 | 0.3266 |
+| BM25 hit@10 | 0.7200 |
+| BM25 Recall@100 | 0.5743 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2811 |
+| Dense hit@10 | 0.6800 |
+| Dense Recall@100 | 0.6757 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3419 |
+| Reranking hybrid hit@10 | 0.7600 |
+| Reranking hybrid Recall@100 | 0.7027 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 128.40 |
 | Document length avg chars | 1619.53 |
 
@@ -220,42 +232,92 @@ benchmark_task_metadata:
     query_mean: 128.4
     document_mean: 1619.53169
   bm25:
-    ndcg_at_10: 0.3288755905
-    hit_at_10: 0.74
-    source: dataset_bm25_column
+    ndcg_at_10: 0.3265612239542905
+    hit_at_10: 0.72
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding upstream dev/test data or other Climate-FEVER/BEIR-derived data likely to overlap with the NanoBEIR evaluation claims and evidence
+    leakage_note: prefer excluding upstream dev/test data or other Climate-FEVER/BEIR-derived
+      data likely to overlap with the NanoBEIR evaluation claims and evidence
     useful_training_data:
-      - non-overlapping climate claim-evidence retrieval pairs
-      - FEVER-style fact verification evidence retrieval data
-      - scientific and climate-domain claim verification datasets
+    - non-overlapping climate claim-evidence retrieval pairs
+    - FEVER-style fact verification evidence retrieval data
+    - scientific and climate-domain claim verification datasets
     synthetic_data:
-      document_generation: climate or environmental science evidence passages with entities, dates, quantities, and causal statements
-      question_generation: declarative climate claims that can be supported, refuted, or qualified by one selected passage
-      answerability: positives should contain evidence addressing the claim, not merely the same climate topic
+      document_generation: climate or environmental science evidence passages with
+        entities, dates, quantities, and causal statements
+      question_generation: declarative climate claims that can be supported, refuted,
+        or qualified by one selected passage
+      answerability: positives should contain evidence addressing the claim, not merely
+        the same climate topic
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-en
     source_urls:
-      - label: Climate-FEVER project site
-        url: http://climatefever.ai
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    - label: Climate-FEVER project site
+      url: http://climatefever.ai
+    - label: Zeta Alpha NanoBEIR collection
+      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
     source_notes: []
   references:
-    - title: 'CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims'
-      url: https://arxiv.org/abs/2012.00614
-      year: 2020
-      doi: 10.48550/arXiv.2012.00614
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models'
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
+  - title: 'CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims'
+    url: https://arxiv.org/abs/2012.00614
+    year: 2020
+    doi: 10.48550/arXiv.2012.00614
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.326561224
+      hit_at_10: 0.72
+      recall_at_100: 0.5743243243
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5743243243
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2810517681
+      hit_at_10: 0.68
+      recall_at_100: 0.6756756757
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6756756757
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3418726246
+      hit_at_10: 0.76
+      recall_at_100: 0.7027027027
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.02
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7027027027
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

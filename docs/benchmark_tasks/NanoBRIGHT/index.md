@@ -175,8 +175,15 @@ positive text as seeds for synthetic generation.
 | Positive qrels | 9,287 |
 | Positives per query | avg 4.14, min 1, median 2, max 85 |
 | Multi-positive queries | 1,234 (54.97%) |
-| Query-weighted BM25 nDCG@10 | 0.2156 |
-| Query-weighted BM25 hit@10 | 0.4454 |
+| Query-weighted BM25 nDCG@10 | 0.2792 |
+| Query-weighted BM25 hit@10 | 0.5318 |
+| Query-weighted BM25 Recall@100 | 0.6539 |
+| Query-weighted Dense nDCG@10 | 0.3736 |
+| Query-weighted Dense hit@10 | 0.6343 |
+| Query-weighted Dense Recall@100 | 0.7155 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.3635 |
+| Query-weighted Reranking hybrid hit@10 | 0.6566 |
+| Query-weighted Reranking hybrid Recall@100 | 0.7625 |
 | Mean query length | 821.82 chars, weighted by query count |
 | Mean document length | 2,930.58 chars, weighted by split-local document count |
 
@@ -230,209 +237,232 @@ benchmark_task_group_metadata:
     max: 85
     multi_positive_tasks: 20
     multi_positive_queries: 1234
-    multi_positive_query_percent: 54.966592427616925
+    multi_positive_query_percent: 54.96659242761692
   text_stats_chars:
     query_mean_weighted_by_queries: 821.8240534521158
     document_mean_weighted_by_documents: 2930.579086974731
   bm25:
-    ndcg_at_10_query_weighted: 0.21559377472467653
-    hit_at_10_query_weighted: 0.44543429844098
+    ndcg_at_10_query_weighted: 0.2791868132
+    hit_at_10_query_weighted: 0.5318485523
     ndcg_at_10_unweighted_task_mean: 0.2135341449588916
     hit_at_10_unweighted_task_mean: 0.4389759255612618
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: NanoBrightEarthScienceLong
     hardest_task_by_ndcg_at_10: NanoBrightTheoremQATheorems
   tasks:
-    - name: NanoBrightAops
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightAops.md
-      retrieval_shape: math_problem_to_same_skill_problem
-      queries: 111
-      documents: 10000
-      positive_qrels: 524
-      bm25_ndcg_at_10: 0.14432700131414306
-      bm25_hit_at_10: 0.5225225225225225
-    - name: NanoBrightBiology
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightBiology.md
-      retrieval_shape: biology_question_to_cited_passage
-      queries: 103
-      documents: 10000
-      positive_qrels: 372
-      bm25_ndcg_at_10: 0.2489409555054503
-      bm25_hit_at_10: 0.5048543689320388
-    - name: NanoBrightBiologyLong
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightBiologyLong.md
-      retrieval_shape: biology_question_to_full_cited_page
-      queries: 103
-      documents: 498
-      positive_qrels: 134
-      bm25_ndcg_at_10: 0.2540185992266564
-      bm25_hit_at_10: 0.44660194174757284
-    - name: NanoBrightEarthScience
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightEarthScience.md
-      retrieval_shape: earth_science_question_to_cited_passage
-      queries: 116
-      documents: 10000
-      positive_qrels: 579
-      bm25_ndcg_at_10: 0.31634958706490335
-      bm25_hit_at_10: 0.6551724137931034
-    - name: NanoBrightEarthScienceLong
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightEarthScienceLong.md
-      retrieval_shape: earth_science_question_to_full_cited_page
-      queries: 116
-      documents: 587
-      positive_qrels: 186
-      bm25_ndcg_at_10: 0.3282261995195742
-      bm25_hit_at_10: 0.5344827586206896
-    - name: NanoBrightEconomics
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightEconomics.md
-      retrieval_shape: economics_question_to_cited_passage
-      queries: 103
-      documents: 10000
-      positive_qrels: 800
-      bm25_ndcg_at_10: 0.2159843773721903
-      bm25_hit_at_10: 0.44660194174757284
-    - name: NanoBrightEconomicsLong
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightEconomicsLong.md
-      retrieval_shape: economics_question_to_full_cited_page
-      queries: 103
-      documents: 515
-      positive_qrels: 109
-      bm25_ndcg_at_10: 0.25101039352381815
-      bm25_hit_at_10: 0.3592233009708738
-    - name: NanoBrightLeetcode
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightLeetcode.md
-      retrieval_shape: programming_problem_to_algorithmically_similar_problem
-      queries: 142
-      documents: 10000
-      positive_qrels: 262
-      bm25_ndcg_at_10: 0.270523544902632
-      bm25_hit_at_10: 0.5915492957746479
-    - name: NanoBrightPony
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightPony.md
-      retrieval_shape: pony_task_to_supporting_passage
-      queries: 112
-      documents: 6183
-      positive_qrels: 2219
-      bm25_ndcg_at_10: 0.036171605156298615
-      bm25_hit_at_10: 0.29464285714285715
-    - name: NanoBrightPonyLong
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightPonyLong.md
-      retrieval_shape: pony_task_to_full_reference_document
-      queries: 112
-      documents: 577
-      positive_qrels: 769
-      bm25_ndcg_at_10: 0.267432389671051
-      bm25_hit_at_10: 0.9464285714285714
-    - name: NanoBrightPsychology
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightPsychology.md
-      retrieval_shape: psychology_question_to_cited_passage
-      queries: 101
-      documents: 10000
-      positive_qrels: 692
-      bm25_ndcg_at_10: 0.14754529592509114
-      bm25_hit_at_10: 0.31683168316831684
-    - name: NanoBrightPsychologyLong
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightPsychologyLong.md
-      retrieval_shape: psychology_question_to_full_cited_page
-      queries: 101
-      documents: 509
-      positive_qrels: 116
-      bm25_ndcg_at_10: 0.22701053658053216
-      bm25_hit_at_10: 0.33663366336633666
-    - name: NanoBrightRobotics
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightRobotics.md
-      retrieval_shape: robotics_question_to_cited_passage
-      queries: 101
-      documents: 10000
-      positive_qrels: 518
-      bm25_ndcg_at_10: 0.08879149656934751
-      bm25_hit_at_10: 0.2376237623762376
-    - name: NanoBrightRoboticsLong
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightRoboticsLong.md
-      retrieval_shape: robotics_question_to_full_cited_page
-      queries: 101
-      documents: 505
-      positive_qrels: 106
-      bm25_ndcg_at_10: 0.21929135808585956
-      bm25_hit_at_10: 0.3465346534653465
-    - name: NanoBrightStackoverflow
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightStackoverflow.md
-      retrieval_shape: developer_question_to_cited_technical_passage
-      queries: 117
-      documents: 10000
-      positive_qrels: 478
-      bm25_ndcg_at_10: 0.2043421382260914
-      bm25_hit_at_10: 0.39316239316239315
-    - name: NanoBrightStackoverflowLong
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightStackoverflowLong.md
-      retrieval_shape: developer_question_to_full_technical_page
-      queries: 117
-      documents: 1846
-      positive_qrels: 129
-      bm25_ndcg_at_10: 0.308370058146309
-      bm25_hit_at_10: 0.5213675213675214
-    - name: NanoBrightSustainableLiving
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightSustainableLiving.md
-      retrieval_shape: sustainability_question_to_cited_passage
-      queries: 108
-      documents: 10000
-      positive_qrels: 575
-      bm25_ndcg_at_10: 0.2845443821290713
-      bm25_hit_at_10: 0.5185185185185185
-    - name: NanoBrightSustainableLivingLong
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightSustainableLivingLong.md
-      retrieval_shape: sustainability_question_to_full_cited_page
-      queries: 108
-      documents: 551
-      positive_qrels: 129
-      bm25_ndcg_at_10: 0.30381074672192243
-      bm25_hit_at_10: 0.48148148148148145
-    - name: NanoBrightTheoremQAQuestions
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightTheoremQAQuestions.md
-      retrieval_shape: applied_theorem_scenario_to_same_theorem_problem
-      queries: 194
-      documents: 10000
-      positive_qrels: 439
-      bm25_ndcg_at_10: 0.14164450412856855
-      bm25_hit_at_10: 0.29896907216494845
-    - name: NanoBrightTheoremQATheorems
-      path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightTheoremQATheorems.md
-      retrieval_shape: applied_theorem_scenario_to_formal_theorem
-      queries: 76
-      documents: 10000
-      positive_qrels: 151
-      bm25_ndcg_at_10: 0.012347729408321562
-      bm25_hit_at_10: 0.02631578947368421
+  - name: NanoBrightAops
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightAops.md
+    retrieval_shape: math_problem_to_same_skill_problem
+    queries: 111
+    documents: 10000
+    positive_qrels: 524
+    bm25_ndcg_at_10: 0.14432700131414306
+    bm25_hit_at_10: 0.5225225225225225
+  - name: NanoBrightBiology
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightBiology.md
+    retrieval_shape: biology_question_to_cited_passage
+    queries: 103
+    documents: 10000
+    positive_qrels: 372
+    bm25_ndcg_at_10: 0.2489409555054503
+    bm25_hit_at_10: 0.5048543689320388
+  - name: NanoBrightBiologyLong
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightBiologyLong.md
+    retrieval_shape: biology_question_to_full_cited_page
+    queries: 103
+    documents: 498
+    positive_qrels: 134
+    bm25_ndcg_at_10: 0.2540185992266564
+    bm25_hit_at_10: 0.44660194174757284
+  - name: NanoBrightEarthScience
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightEarthScience.md
+    retrieval_shape: earth_science_question_to_cited_passage
+    queries: 116
+    documents: 10000
+    positive_qrels: 579
+    bm25_ndcg_at_10: 0.31634958706490335
+    bm25_hit_at_10: 0.6551724137931034
+  - name: NanoBrightEarthScienceLong
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightEarthScienceLong.md
+    retrieval_shape: earth_science_question_to_full_cited_page
+    queries: 116
+    documents: 587
+    positive_qrels: 186
+    bm25_ndcg_at_10: 0.3282261995195742
+    bm25_hit_at_10: 0.5344827586206896
+  - name: NanoBrightEconomics
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightEconomics.md
+    retrieval_shape: economics_question_to_cited_passage
+    queries: 103
+    documents: 10000
+    positive_qrels: 800
+    bm25_ndcg_at_10: 0.2159843773721903
+    bm25_hit_at_10: 0.44660194174757284
+  - name: NanoBrightEconomicsLong
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightEconomicsLong.md
+    retrieval_shape: economics_question_to_full_cited_page
+    queries: 103
+    documents: 515
+    positive_qrels: 109
+    bm25_ndcg_at_10: 0.25101039352381815
+    bm25_hit_at_10: 0.3592233009708738
+  - name: NanoBrightLeetcode
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightLeetcode.md
+    retrieval_shape: programming_problem_to_algorithmically_similar_problem
+    queries: 142
+    documents: 10000
+    positive_qrels: 262
+    bm25_ndcg_at_10: 0.270523544902632
+    bm25_hit_at_10: 0.5915492957746479
+  - name: NanoBrightPony
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightPony.md
+    retrieval_shape: pony_task_to_supporting_passage
+    queries: 112
+    documents: 6183
+    positive_qrels: 2219
+    bm25_ndcg_at_10: 0.036171605156298615
+    bm25_hit_at_10: 0.29464285714285715
+  - name: NanoBrightPonyLong
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightPonyLong.md
+    retrieval_shape: pony_task_to_full_reference_document
+    queries: 112
+    documents: 577
+    positive_qrels: 769
+    bm25_ndcg_at_10: 0.267432389671051
+    bm25_hit_at_10: 0.9464285714285714
+  - name: NanoBrightPsychology
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightPsychology.md
+    retrieval_shape: psychology_question_to_cited_passage
+    queries: 101
+    documents: 10000
+    positive_qrels: 692
+    bm25_ndcg_at_10: 0.14754529592509114
+    bm25_hit_at_10: 0.31683168316831684
+  - name: NanoBrightPsychologyLong
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightPsychologyLong.md
+    retrieval_shape: psychology_question_to_full_cited_page
+    queries: 101
+    documents: 509
+    positive_qrels: 116
+    bm25_ndcg_at_10: 0.22701053658053216
+    bm25_hit_at_10: 0.33663366336633666
+  - name: NanoBrightRobotics
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightRobotics.md
+    retrieval_shape: robotics_question_to_cited_passage
+    queries: 101
+    documents: 10000
+    positive_qrels: 518
+    bm25_ndcg_at_10: 0.08879149656934751
+    bm25_hit_at_10: 0.2376237623762376
+  - name: NanoBrightRoboticsLong
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightRoboticsLong.md
+    retrieval_shape: robotics_question_to_full_cited_page
+    queries: 101
+    documents: 505
+    positive_qrels: 106
+    bm25_ndcg_at_10: 0.21929135808585956
+    bm25_hit_at_10: 0.3465346534653465
+  - name: NanoBrightStackoverflow
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightStackoverflow.md
+    retrieval_shape: developer_question_to_cited_technical_passage
+    queries: 117
+    documents: 10000
+    positive_qrels: 478
+    bm25_ndcg_at_10: 0.2043421382260914
+    bm25_hit_at_10: 0.39316239316239315
+  - name: NanoBrightStackoverflowLong
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightStackoverflowLong.md
+    retrieval_shape: developer_question_to_full_technical_page
+    queries: 117
+    documents: 1846
+    positive_qrels: 129
+    bm25_ndcg_at_10: 0.308370058146309
+    bm25_hit_at_10: 0.5213675213675214
+  - name: NanoBrightSustainableLiving
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightSustainableLiving.md
+    retrieval_shape: sustainability_question_to_cited_passage
+    queries: 108
+    documents: 10000
+    positive_qrels: 575
+    bm25_ndcg_at_10: 0.2845443821290713
+    bm25_hit_at_10: 0.5185185185185185
+  - name: NanoBrightSustainableLivingLong
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightSustainableLivingLong.md
+    retrieval_shape: sustainability_question_to_full_cited_page
+    queries: 108
+    documents: 551
+    positive_qrels: 129
+    bm25_ndcg_at_10: 0.30381074672192243
+    bm25_hit_at_10: 0.48148148148148145
+  - name: NanoBrightTheoremQAQuestions
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightTheoremQAQuestions.md
+    retrieval_shape: applied_theorem_scenario_to_same_theorem_problem
+    queries: 194
+    documents: 10000
+    positive_qrels: 439
+    bm25_ndcg_at_10: 0.14164450412856855
+    bm25_hit_at_10: 0.29896907216494845
+  - name: NanoBrightTheoremQATheorems
+    path: docs/benchmark_tasks/NanoBRIGHT/NanoBrightTheoremQATheorems.md
+    retrieval_shape: applied_theorem_scenario_to_formal_theorem
+    queries: 76
+    documents: 10000
+    positive_qrels: 151
+    bm25_ndcg_at_10: 0.012347729408321562
+    bm25_hit_at_10: 0.02631578947368421
   learning:
-    leakage_note: exclude NanoBRIGHT evaluation queries, qrels, positive passages, and full cited source pages; audit upstream BRIGHT and source splits before using public source data for training
+    leakage_note: exclude NanoBRIGHT evaluation queries, qrels, positive passages,
+      and full cited source pages; audit upstream BRIGHT and source splits before
+      using public source data for training
     useful_training_data:
-      - theorem-labeled solved problems and contest math problem families
-      - algorithm-problem similarity pairs and programming documentation retrieval data
-      - StackExchange questions paired with cited or expert-validated supporting sources
-      - scientific, technical, and policy QA with explicit evidence documents
-      - long-document retrieval data where the positive is a full source page
+    - theorem-labeled solved problems and contest math problem families
+    - algorithm-problem similarity pairs and programming documentation retrieval data
+    - StackExchange questions paired with cited or expert-validated supporting sources
+    - scientific, technical, and policy QA with explicit evidence documents
+    - long-document retrieval data where the positive is a full source page
     synthetic_data:
-      document_generation: solved problems, theorem statements, code solutions, technical documentation, and cited source passages with explicit reasoning support
-      question_generation: applied scenarios, StackExchange-style questions, programming tasks, and evidence-seeking prompts grounded in the generated or selected document
-      answerability: each positive must support the same theorem, algorithm, mechanism, cited claim, or documentation need rather than sharing only surface terms
+      document_generation: solved problems, theorem statements, code solutions, technical
+        documentation, and cited source passages with explicit reasoning support
+      question_generation: applied scenarios, StackExchange-style questions, programming
+        tasks, and evidence-seeking prompts grounded in the generated or selected
+        document
+      answerability: each positive must support the same theorem, algorithm, mechanism,
+        cited claim, or documentation need rather than sharing only surface terms
     multi_positive_training: multi_positive_reasoning_and_evidence_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBRIGHT
     source_urls:
-      - label: BRIGHT arXiv
-        url: https://arxiv.org/abs/2407.12883
-      - label: BRIGHT project
-        url: https://brightbenchmark.github.io/
-      - label: xlangai/BRIGHT
-        url: https://huggingface.co/datasets/xlangai/BRIGHT
-      - label: mteb/BRIGHT
-        url: https://huggingface.co/datasets/mteb/BRIGHT
+    - label: BRIGHT arXiv
+      url: https://arxiv.org/abs/2407.12883
+    - label: BRIGHT project
+      url: https://brightbenchmark.github.io/
+    - label: xlangai/BRIGHT
+      url: https://huggingface.co/datasets/xlangai/BRIGHT
+    - label: mteb/BRIGHT
+      url: https://huggingface.co/datasets/mteb/BRIGHT
     source_notes: []
   references:
-    - title: "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval"
-      url: https://arxiv.org/abs/2407.12883
-      year: 2024
-      doi: 10.48550/arXiv.2407.12883
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+      Retrieval'
+    url: https://arxiv.org/abs/2407.12883
+    year: 2024
+    doi: 10.48550/arXiv.2407.12883
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.2791868132
+      query_weighted_hit_at_10: 0.5318485523
+      query_weighted_recall_at_100: 0.6538506962
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.373566337
+      query_weighted_hit_at_10: 0.634298441
+      query_weighted_recall_at_100: 0.7154744051
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.363476371
+      query_weighted_hit_at_10: 0.6565701559
+      query_weighted_recall_at_100: 0.7625301648
+      source: dataset_candidate_subset
 ```

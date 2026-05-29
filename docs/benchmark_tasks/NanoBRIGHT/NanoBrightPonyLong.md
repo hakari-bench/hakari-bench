@@ -75,8 +75,20 @@ constructs that look plausible but do not contain the needed feature.
 | Positive qrels | 769 |
 | Positives per query | avg 6.87, min 1, median 7, max 12 |
 | Multi-positive queries | 111 (99.11%) |
-| BM25 nDCG@10 | 0.2674 |
-| BM25 hit@10 | 0.9464 |
+| BM25 nDCG@10 | 0.2244 |
+| BM25 hit@10 | 0.8304 |
+| BM25 Recall@100 | 0.8765 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.0767 |
+| Dense hit@10 | 0.4554 |
+| Dense Recall@100 | 0.4174 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2871 |
+| Reranking hybrid hit@10 | 0.8661 |
+| Reranking hybrid Recall@100 | 0.7750 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 388.97 |
 | Document length avg chars | 3553.13 |
 
@@ -137,38 +149,86 @@ benchmark_task_metadata:
     query_mean: 388.9732142857143
     document_mean: 3553.1282495667247
   bm25:
-    ndcg_at_10: 0.267432389671051
-    hit_at_10: 0.9464285714285714
-    source: dataset_bm25_column
+    ndcg_at_10: 0.2244474654295809
+    hit_at_10: 0.8303571428571429
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: BRIGHT Pony long-document evaluation split
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoBRIGHT PonyLong task templates and manual-page positives
     useful_training_data:
-      - document-level programming manual retrieval
-      - rare-language coding tasks aligned to manual pages
-      - synthetic tasks labeled with required language constructs
+    - document-level programming manual retrieval
+    - rare-language coding tasks aligned to manual pages
+    - synthetic tasks labeled with required language constructs
     synthetic_data:
-      document_generation: complete Pony manual pages about syntax, control flow, errors, and libraries
+      document_generation: complete Pony manual pages about syntax, control flow,
+        errors, and libraries
       question_generation: Pony coding tasks requiring a specific language construct
-      answerability: positive page should contain the manual section needed to implement the task
+      answerability: positive page should contain the manual section needed to implement
+        the task
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBRIGHT
     source_urls:
-      - label: BRIGHT arXiv
-        url: https://arxiv.org/abs/2407.12883
-      - label: BRIGHT project
-        url: https://brightbenchmark.github.io/
-      - label: xlangai/BRIGHT
-        url: https://huggingface.co/datasets/xlangai/BRIGHT
+    - label: BRIGHT arXiv
+      url: https://arxiv.org/abs/2407.12883
+    - label: BRIGHT project
+      url: https://brightbenchmark.github.io/
+    - label: xlangai/BRIGHT
+      url: https://huggingface.co/datasets/xlangai/BRIGHT
     source_notes: []
   references:
-    - title: "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval"
-      url: https://arxiv.org/abs/2407.12883
-      year: 2024
-      doi: 10.48550/arXiv.2407.12883
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+      Retrieval'
+    url: https://arxiv.org/abs/2407.12883
+    year: 2024
+    doi: 10.48550/arXiv.2407.12883
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2244474654
+      hit_at_10: 0.8303571429
+      recall_at_100: 0.8764629389
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 112
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8764629389
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.076675447
+      hit_at_10: 0.4553571429
+      recall_at_100: 0.4174252276
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 112
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4174252276
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2870728499
+      hit_at_10: 0.8660714286
+      recall_at_100: 0.7750325098
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 112
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7750325098
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

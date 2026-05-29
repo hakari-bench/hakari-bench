@@ -72,8 +72,20 @@ and refute claims, and hard negatives that share words like `temperature`,
 | Positive qrels | 621 |
 | Positives per query | avg 3.10, min 1, median 3, max 5 |
 | Multi-positive queries | 181 (90.50%) |
-| BM25 nDCG@10 | 0.1934 |
-| BM25 hit@10 | 0.4750 |
+| BM25 nDCG@10 | 0.1719 |
+| BM25 hit@10 | 0.4550 |
+| BM25 Recall@100 | 0.5250 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3276 |
+| Dense hit@10 | 0.7300 |
+| Dense Recall@100 | 0.6522 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2794 |
+| Reranking hybrid hit@10 | 0.6600 |
+| Reranking hybrid Recall@100 | 0.6747 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 17 |
 | Query length avg chars | 114.97 |
 | Document length avg chars | 1115.93 |
 
@@ -133,18 +145,18 @@ benchmark_task_metadata:
     query_mean: 114.965
     document_mean: 1115.9307
   bm25:
-    ndcg_at_10: 0.19336752051783465
-    hit_at_10: 0.475
-    source: dataset_bm25_column
+    ndcg_at_10: 0.17188276087328483
+    hit_at_10: 0.455
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MTEB ClimateFEVER hard-negative test split
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoMTEB-v2 climate_fever claims, qrels, and positive documents
     useful_training_data:
-      - climate claim-evidence retrieval pairs
-      - FEVER-style evidence retrieval
-      - hard negatives with overlapping climate vocabulary
+    - climate claim-evidence retrieval pairs
+    - FEVER-style evidence retrieval
+    - hard negatives with overlapping climate vocabulary
     synthetic_data:
       document_generation: Wikipedia-style evidence passages about climate science
       question_generation: real-world climate claims with numbers and attribution
@@ -153,22 +165,67 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-v2
     source_urls:
-      - label: CLIMATE-FEVER arXiv
-        url: https://arxiv.org/abs/2012.00614
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: MTEB ClimateFEVER hard-negative dataset
-        url: https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2
+    - label: CLIMATE-FEVER arXiv
+      url: https://arxiv.org/abs/2012.00614
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: MTEB ClimateFEVER hard-negative dataset
+      url: https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2
     source_notes: []
   references:
-    - title: "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims"
-      url: https://arxiv.org/abs/2012.00614
-      year: 2020
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims'
+    url: https://arxiv.org/abs/2012.00614
+    year: 2020
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1718827609
+      hit_at_10: 0.455
+      recall_at_100: 0.5249597424
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5249597424
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3275558502
+      hit_at_10: 0.73
+      recall_at_100: 0.652173913
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.652173913
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2794203666
+      hit_at_10: 0.66
+      recall_at_100: 0.6747181965
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.085
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6747181965
+      safeguard_positive_rows: 17
+      rows_with_101_candidates: 17
 ```

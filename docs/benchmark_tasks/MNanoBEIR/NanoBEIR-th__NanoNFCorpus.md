@@ -60,8 +60,20 @@ multiple positives for the same condition or outcome.
 | Positives per query avg | 33.02 |
 | Positives per query min / median / max | 1 / 23.5 / 100 |
 | Multi-positive queries | 47 (94.00%) |
-| BM25 nDCG@10 | 0.3243 |
-| BM25 hit@10 | 0.6400 |
+| BM25 nDCG@10 | 0.2484 |
+| BM25 hit@10 | 0.6200 |
+| BM25 Recall@100 | 0.1538 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2133 |
+| Dense hit@10 | 0.5400 |
+| Dense Recall@100 | 0.1532 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2520 |
+| Reranking hybrid hit@10 | 0.6000 |
+| Reranking hybrid Recall@100 | 0.1750 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 8 |
 | Query length avg chars | 22.62 |
 | Document length avg chars | 1,387.38 |
 
@@ -99,9 +111,71 @@ benchmark_task_metadata:
   language: th
   category: natural_language
   document_path: docs/benchmark_tasks/MNanoBEIR/NanoBEIR-th__NanoNFCorpus.md
-  source_research: {primary_source_type: task_paper, paper_pdf_or_html_checked: true, no_paper_note: null}
-  counts: {queries: 50, documents: 2953, positive_qrels: 1651}
-  positives_per_query: {average: 33.02, min: 1, median: 23.5, max: 100, multi_positive_queries: 47, multi_positive_query_percent: 94.0}
-  text_stats_chars: {query_mean: 22.62, document_mean: 1387.382323}
-  bm25: {ndcg_at_10: 0.3243007643, hit_at_10: 0.64, source: dataset_bm25_column}
+  source_research:
+    primary_source_type: task_paper
+    paper_pdf_or_html_checked: true
+    no_paper_note: null
+  counts:
+    queries: 50
+    documents: 2953
+    positive_qrels: 1651
+  positives_per_query:
+    average: 33.02
+    min: 1
+    median: 23.5
+    max: 100
+    multi_positive_queries: 47
+    multi_positive_query_percent: 94.0
+  text_stats_chars:
+    query_mean: 22.62
+    document_mean: 1387.382323
+  bm25:
+    ndcg_at_10: 0.24837324770394148
+    hit_at_10: 0.62
+    source: dataset_candidate_subset
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2483732477
+      hit_at_10: 0.62
+      recall_at_100: 0.1538461538
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1538461538
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.213266815
+      hit_at_10: 0.54
+      recall_at_100: 0.1532404603
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1532404603
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2520031164
+      hit_at_10: 0.6
+      recall_at_100: 0.175045427
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.16
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.175045427
+      safeguard_positive_rows: 8
+      rows_with_101_candidates: 8
 ```

@@ -104,8 +104,20 @@ topic word.
 | Queries | 50 |
 | Documents | 5,043 |
 | Positive qrels | 50 |
-| BM25 nDCG@10 | 0.2431 |
-| BM25 hit@10 | 0.3600 |
+| BM25 nDCG@10 | 0.2732 |
+| BM25 hit@10 | 0.4400 |
+| BM25 Recall@100 | 0.8200 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3625 |
+| Dense hit@10 | 0.5200 |
+| Dense Recall@100 | 0.8800 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3212 |
+| Reranking hybrid hit@10 | 0.4600 |
+| Reranking hybrid Recall@100 | 0.9000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 5 |
 | Query length avg chars | 31.02 |
 | Document length avg chars | 275.62 |
 
@@ -167,68 +179,119 @@ benchmark_task_metadata:
     query_mean: 31.02
     document_mean: 275.620067
   bm25:
-    ndcg_at_10: 0.2431413078
-    hit_at_10: 0.36
-    source: dataset_bm25_column
+    ndcg_at_10: 0.27323437307213155
+    hit_at_10: 0.44
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MNanoBEIR Arabic NanoBEIR task split from hakari-bench/NanoBEIR-ar
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding MS MARCO, BEIR, or NanoBEIR records likely to overlap with these evaluation queries or passages
+    leakage_note: prefer excluding MS MARCO, BEIR, or NanoBEIR records likely to overlap
+      with these evaluation queries or passages
     useful_training_data:
-      - non-overlapping MS MARCO passage-ranking pairs
-      - Arabic or multilingual web QA retrieval data
-      - search query to answer-passage pairs
-      - noisy real user question datasets
+    - non-overlapping MS MARCO passage-ranking pairs
+    - Arabic or multilingual web QA retrieval data
+    - search query to answer-passage pairs
+    - noisy real user question datasets
     synthetic_data:
-      document_generation: concise Arabic web-style answer passages across everyday domains
-      question_generation: realistic short search questions with fragments, definitions, abbreviations, and noisy phrasing
-      answerability: positives should directly answer the user information need, not merely share keywords
+      document_generation: concise Arabic web-style answer passages across everyday
+        domains
+      question_generation: realistic short search questions with fragments, definitions,
+        abbreviations, and noisy phrasing
+      answerability: positives should directly answer the user information need, not
+        merely share keywords
     multi_positive_training: not_required_for_this_sample
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-ar
     source_urls:
-      - label: MS MARCO paper
-        url: https://arxiv.org/abs/1611.09268
-      - label: MS MARCO dataset site
-        url: https://microsoft.github.io/msmarco/Datasets.html
-      - label: BEIR paper
-        url: https://arxiv.org/abs/2104.08663
-      - label: MMTEB paper
-        url: https://arxiv.org/abs/2502.13595
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR task
-  references:
-    - title: "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset"
+    - label: MS MARCO paper
       url: https://arxiv.org/abs/1611.09268
-      year: 2016
-      doi: 10.48550/arXiv.1611.09268
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: MS MARCO dataset site
+    - label: MS MARCO dataset site
       url: https://microsoft.github.io/msmarco/Datasets.html
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_dataset_page
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
+    - label: BEIR paper
       url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
+    - label: MMTEB paper
       url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      doi: 10.48550/arXiv.2502.13595
-      is_paper: true
-      source_confidence: benchmark_context_paper
-    - title: "NanoBEIR: Smaller BEIR dataset subsets"
+    - label: Zeta Alpha NanoBEIR collection
       url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-      year: 2024
-      doi: null
-      is_paper: false
-      source_confidence: dataset_collection
+    source_notes:
+    - Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR
+      task
+  references:
+  - title: 'MS MARCO: A Human Generated MAchine Reading COmprehension Dataset'
+    url: https://arxiv.org/abs/1611.09268
+    year: 2016
+    doi: 10.48550/arXiv.1611.09268
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: MS MARCO dataset site
+    url: https://microsoft.github.io/msmarco/Datasets.html
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_dataset_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    doi: 10.48550/arXiv.2502.13595
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  - title: 'NanoBEIR: Smaller BEIR dataset subsets'
+    url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    year: 2024
+    doi: null
+    is_paper: false
+    source_confidence: dataset_collection
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2732343731
+      hit_at_10: 0.44
+      recall_at_100: 0.82
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.82
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3625225784
+      hit_at_10: 0.52
+      recall_at_100: 0.88
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.88
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3211855482
+      hit_at_10: 0.46
+      recall_at_100: 0.9
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.1
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9
+      safeguard_positive_rows: 5
+      rows_with_101_candidates: 5
 ```

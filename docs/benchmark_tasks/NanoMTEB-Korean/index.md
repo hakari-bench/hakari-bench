@@ -136,8 +136,15 @@ not be used as seeds.
 | Positive qrels | 1,400 |
 | Positives per query | 1.53 average |
 | Multi-positive queries | 226 |
-| Query-weighted BM25 nDCG@10 | 0.5254 |
-| Query-weighted BM25 hit@10 | 0.6893 |
+| Query-weighted BM25 nDCG@10 | 0.6525 |
+| Query-weighted BM25 hit@10 | 0.8359 |
+| Query-weighted BM25 Recall@100 | 0.9247 |
+| Query-weighted Dense nDCG@10 | 0.7481 |
+| Query-weighted Dense hit@10 | 0.8961 |
+| Query-weighted Dense Recall@100 | 0.9377 |
+| Query-weighted Reranking hybrid nDCG@10 | 0.7557 |
+| Query-weighted Reranking hybrid hit@10 | 0.9114 |
+| Query-weighted Reranking hybrid Recall@100 | 0.9640 |
 | Mean query length | 37.24 chars, weighted by query count |
 | Mean document length | 301.33 chars, weighted by split-local document count |
 
@@ -205,113 +212,136 @@ benchmark_task_group_metadata:
     query_mean_weighted_by_queries: 37.24398249452714
     document_mean_weighted_by_documents: 301.3260523414709
   bm25:
-    ndcg_at_10_query_weighted: 0.5253808935582057
-    hit_at_10_query_weighted: 0.6892778993461706
+    ndcg_at_10_query_weighted: 0.6525188883
+    hit_at_10_query_weighted: 0.8358862144
     ndcg_at_10_unweighted_task_mean: 0.54943955986
     hit_at_10_unweighted_task_mean: 0.70921052632
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
     easiest_task_by_ndcg_at_10: squad_kor_v1
     hardest_task_by_ndcg_at_10: lawir_ko
   tasks:
-    - name: autorag
-      path: docs/benchmark_tasks/NanoMTEB-Korean/autorag.md
-      retrieval_shape: korean_rag_question_to_public_document_chunk
-      queries: 114
-      documents: 720
-      positive_qrels: 114
-      bm25_ndcg_at_10: 0.8051328273
-      bm25_hit_at_10: 0.9210526316
-    - name: ko_strategy_qa
-      path: docs/benchmark_tasks/NanoMTEB-Korean/ko_strategy_qa.md
-      retrieval_shape: korean_implicit_question_to_evidence_passages
-      queries: 200
-      documents: 9251
-      positive_qrels: 378
-      bm25_ndcg_at_10: 0.3693571076
-      bm25_hit_at_10: 0.58
-    - name: lawir_ko
-      path: docs/benchmark_tasks/NanoMTEB-Korean/lawir_ko.md
-      retrieval_shape: korean_law_provision_query_to_statute_article
-      queries: 200
-      documents: 3562
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.2782674716
-      bm25_hit_at_10: 0.395
-    - name: miracl_ko
-      path: docs/benchmark_tasks/NanoMTEB-Korean/miracl_ko.md
-      retrieval_shape: korean_question_to_wikipedia_passage
-      queries: 200
-      documents: 10000
-      positive_qrels: 508
-      bm25_ndcg_at_10: 0.4132083896
-      bm25_hit_at_10: 0.705
-    - name: squad_kor_v1
-      path: docs/benchmark_tasks/NanoMTEB-Korean/squad_kor_v1.md
-      retrieval_shape: korean_qa_question_to_answer_context
-      queries: 200
-      documents: 960
-      positive_qrels: 200
-      bm25_ndcg_at_10: 0.8812320032
-      bm25_hit_at_10: 0.945
+  - name: autorag
+    path: docs/benchmark_tasks/NanoMTEB-Korean/autorag.md
+    retrieval_shape: korean_rag_question_to_public_document_chunk
+    queries: 114
+    documents: 720
+    positive_qrels: 114
+    bm25_ndcg_at_10: 0.8051328273
+    bm25_hit_at_10: 0.9210526316
+  - name: ko_strategy_qa
+    path: docs/benchmark_tasks/NanoMTEB-Korean/ko_strategy_qa.md
+    retrieval_shape: korean_implicit_question_to_evidence_passages
+    queries: 200
+    documents: 9251
+    positive_qrels: 378
+    bm25_ndcg_at_10: 0.3693571076
+    bm25_hit_at_10: 0.58
+  - name: lawir_ko
+    path: docs/benchmark_tasks/NanoMTEB-Korean/lawir_ko.md
+    retrieval_shape: korean_law_provision_query_to_statute_article
+    queries: 200
+    documents: 3562
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.2782674716
+    bm25_hit_at_10: 0.395
+  - name: miracl_ko
+    path: docs/benchmark_tasks/NanoMTEB-Korean/miracl_ko.md
+    retrieval_shape: korean_question_to_wikipedia_passage
+    queries: 200
+    documents: 10000
+    positive_qrels: 508
+    bm25_ndcg_at_10: 0.4132083896
+    bm25_hit_at_10: 0.705
+  - name: squad_kor_v1
+    path: docs/benchmark_tasks/NanoMTEB-Korean/squad_kor_v1.md
+    retrieval_shape: korean_qa_question_to_answer_context
+    queries: 200
+    documents: 960
+    positive_qrels: 200
+    bm25_ndcg_at_10: 0.8812320032
+    bm25_hit_at_10: 0.945
   learning:
-    leakage_note: exclude NanoMTEB-Korean evaluation queries, qrels, positive passages, and upstream dev/test rows that overlap the Nano splits
+    leakage_note: exclude NanoMTEB-Korean evaluation queries, qrels, positive passages,
+      and upstream dev/test rows that overlap the Nano splits
     useful_training_data:
-      - Korean RAG question-to-chunk pairs from public reports
-      - Ko-StrategyQA and Korean multi-hop evidence retrieval pairs
-      - Korean Wikipedia QA retrieval and MIRACL Korean training data
-      - Korean legal article retrieval and law-title-to-provision mappings
-      - hard negatives from the same report, law, Wikipedia page, or reasoning chain
+    - Korean RAG question-to-chunk pairs from public reports
+    - Ko-StrategyQA and Korean multi-hop evidence retrieval pairs
+    - Korean Wikipedia QA retrieval and MIRACL Korean training data
+    - Korean legal article retrieval and law-title-to-provision mappings
+    - hard negatives from the same report, law, Wikipedia page, or reasoning chain
     synthetic_data:
-      document_generation: Korean public-report chunks, evidence passages, statute articles, and Wikipedia passages in source-like style
-      question_generation: Korean RAG questions, implicit reasoning questions, law-provision queries, and answerable Wikipedia questions grounded in the generated or selected document
-      answerability: positives must contain the answer evidence, legal article, or reasoning support rather than only sharing Korean keywords
+      document_generation: Korean public-report chunks, evidence passages, statute
+        articles, and Wikipedia passages in source-like style
+      question_generation: Korean RAG questions, implicit reasoning questions, law-provision
+        queries, and answerable Wikipedia questions grounded in the generated or selected
+        document
+      answerability: positives must contain the answer evidence, legal article, or
+        reasoning support rather than only sharing Korean keywords
     multi_positive_training: preserve_strategyqa_and_miracl_multi_positive_evidence
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Korean
     source_urls:
-      - label: AutoRAG arXiv
-        url: https://arxiv.org/abs/2410.20878
-      - label: yjoonjang/markers_bm
-        url: https://huggingface.co/datasets/yjoonjang/markers_bm
-      - label: StrategyQA arXiv
-        url: https://arxiv.org/abs/2101.02235
-      - label: taeminlee/Ko-StrategyQA
-        url: https://huggingface.co/datasets/taeminlee/Ko-StrategyQA
-      - label: on-and-on/lawgov_ir-ko
-        url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
-      - label: MIRACL
-        url: http://miracl.ai/
-      - label: mteb/MIRACLRetrieval
-        url: https://huggingface.co/datasets/mteb/MIRACLRetrieval
-      - label: KorQuAD1.0 arXiv
-        url: https://arxiv.org/abs/1909.07005
-      - label: yjoonjang/squad_kor_v1
-        url: https://huggingface.co/datasets/yjoonjang/squad_kor_v1
+    - label: AutoRAG arXiv
+      url: https://arxiv.org/abs/2410.20878
+    - label: yjoonjang/markers_bm
+      url: https://huggingface.co/datasets/yjoonjang/markers_bm
+    - label: StrategyQA arXiv
+      url: https://arxiv.org/abs/2101.02235
+    - label: taeminlee/Ko-StrategyQA
+      url: https://huggingface.co/datasets/taeminlee/Ko-StrategyQA
+    - label: on-and-on/lawgov_ir-ko
+      url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
+    - label: MIRACL
+      url: http://miracl.ai/
+    - label: mteb/MIRACLRetrieval
+      url: https://huggingface.co/datasets/mteb/MIRACLRetrieval
+    - label: KorQuAD1.0 arXiv
+      url: https://arxiv.org/abs/1909.07005
+    - label: yjoonjang/squad_kor_v1
+      url: https://huggingface.co/datasets/yjoonjang/squad_kor_v1
     source_notes: []
   references:
-    - title: "AutoRAG: Automated Framework for optimization of Retrieval Augmented Generation Pipeline"
-      url: https://arxiv.org/abs/2410.20878
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies
-      url: https://arxiv.org/abs/2101.02235
-      year: 2021
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: LawIRKo source reference
-      url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
-      year: 2024
-      is_paper: false
-      source_confidence: dataset_source_reference
-    - title: MIRACL
-      url: http://miracl.ai/
-      year: 2022
-      is_paper: false
-      source_confidence: benchmark_page
-    - title: "KorQuAD1.0: Korean QA Dataset for Machine Reading Comprehension"
-      url: https://arxiv.org/abs/1909.07005
-      year: 2019
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'AutoRAG: Automated Framework for optimization of Retrieval Augmented Generation
+      Pipeline'
+    url: https://arxiv.org/abs/2410.20878
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit
+      Reasoning Strategies
+    url: https://arxiv.org/abs/2101.02235
+    year: 2021
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: LawIRKo source reference
+    url: https://huggingface.co/datasets/on-and-on/lawgov_ir-ko
+    year: 2024
+    is_paper: false
+    source_confidence: dataset_source_reference
+  - title: MIRACL
+    url: http://miracl.ai/
+    year: 2022
+    is_paper: false
+    source_confidence: benchmark_page
+  - title: 'KorQuAD1.0: Korean QA Dataset for Machine Reading Comprehension'
+    url: https://arxiv.org/abs/1909.07005
+    year: 2019
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      query_weighted_ndcg_at_10: 0.6525188883
+      query_weighted_hit_at_10: 0.8358862144
+      query_weighted_recall_at_100: 0.9247381185
+      source: dataset_candidate_subset
+    dense:
+      query_weighted_ndcg_at_10: 0.748084005
+      query_weighted_hit_at_10: 0.8960612691
+      query_weighted_recall_at_100: 0.9377250984
+      source: dataset_candidate_subset
+    reranking_hybrid:
+      query_weighted_ndcg_at_10: 0.7556932059
+      query_weighted_hit_at_10: 0.9113785558
+      query_weighted_recall_at_100: 0.9640104706
+      source: dataset_candidate_subset
 ```

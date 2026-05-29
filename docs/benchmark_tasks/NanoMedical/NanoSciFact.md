@@ -119,8 +119,20 @@ positive abstracts.
 | Positive qrels | 226 |
 | Positives per query | avg 1.13; min 1; median 1; max 5 |
 | Multi-positive queries | 16 / 200 (8.00%) |
-| BM25 nDCG@10 | 0.6289 |
-| BM25 hit@10 | 0.7850 |
+| BM25 nDCG@10 | 0.7017 |
+| BM25 hit@10 | 0.8650 |
+| BM25 Recall@100 | 0.9425 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7334 |
+| Dense hit@10 | 0.8800 |
+| Dense Recall@100 | 0.9336 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7506 |
+| Reranking hybrid hit@10 | 0.8850 |
+| Reranking hybrid Recall@100 | 0.9779 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 5 |
 | Query length avg chars | 90.07 |
 | Document length avg chars | 1,499.41 |
 
@@ -161,7 +173,7 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2004.14974
     additional_source_urls:
-      - https://aclanthology.org/2020.emnlp-main.609/
+    - https://aclanthology.org/2020.emnlp-main.609/
   counts:
     queries: 200
     documents: 5183
@@ -177,30 +189,80 @@ benchmark_task_metadata:
     query_mean: 90.065
     document_mean: 1499.407293
   bm25:
-    ndcg_at_10: 0.6288504435
-    hit_at_10: 0.785
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7017460407556101
+    hit_at_10: 0.865
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: SciFact evidence retrieval split sampled into NanoMedical
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude SciFact evaluation claims, positive abstracts, and near-duplicate claims derived from the same source citances
+    leakage_note: exclude SciFact evaluation claims, positive abstracts, and near-duplicate
+      claims derived from the same source citances
     useful_training_data:
-      - non-overlapping scientific claim-evidence pairs
-      - biomedical citation-to-abstract retrieval data
-      - SciFact-style rationale and verification data outside the evaluation split
-      - same-topic biomedical hard negatives
+    - non-overlapping scientific claim-evidence pairs
+    - biomedical citation-to-abstract retrieval data
+    - SciFact-style rationale and verification data outside the evaluation split
+    - same-topic biomedical hard negatives
     synthetic_data:
-      document_generation: biomedical abstracts with explicit methods, findings, and outcomes
-      question_generation: atomic scientific claims about one result, association, intervention, or mechanism
-      hard_negatives: same-topic abstracts differing in direction, condition, population, or outcome
-      answerability: the abstract should contain evidence sufficient to support or refute the claim
+      document_generation: biomedical abstracts with explicit methods, findings, and
+        outcomes
+      question_generation: atomic scientific claims about one result, association,
+        intervention, or mechanism
+      hard_negatives: same-topic abstracts differing in direction, condition, population,
+        or outcome
+      answerability: the abstract should contain evidence sufficient to support or
+        refute the claim
     multi_positive_training: mostly single-positive with limited multi-positive support
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMedical
     source_urls:
-      - label: SciFact arXiv
-        url: https://arxiv.org/abs/2004.14974
-      - label: SciFact ACL Anthology
-        url: https://aclanthology.org/2020.emnlp-main.609/
+    - label: SciFact arXiv
+      url: https://arxiv.org/abs/2004.14974
+    - label: SciFact ACL Anthology
+      url: https://aclanthology.org/2020.emnlp-main.609/
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7017460408
+      hit_at_10: 0.865
+      recall_at_100: 0.9424778761
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9424778761
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7333800224
+      hit_at_10: 0.88
+      recall_at_100: 0.9336283186
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9336283186
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7506049978
+      hit_at_10: 0.885
+      recall_at_100: 0.9778761062
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.025
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9778761062
+      safeguard_positive_rows: 5
+      rows_with_101_candidates: 5
 ```

@@ -127,8 +127,20 @@ evaluation queries or positive abstracts.
 | Positive qrels | 3,718 |
 | Positives per query | avg 18.59; min 1; median 9; max 97 |
 | Multi-positive queries | 160 / 200 (80.00%) |
-| BM25 nDCG@10 | 0.2434 |
-| BM25 hit@10 | 0.5650 |
+| BM25 nDCG@10 | 0.2921 |
+| BM25 hit@10 | 0.6200 |
+| BM25 Recall@100 | 0.2066 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3070 |
+| Dense hit@10 | 0.6150 |
+| Dense Recall@100 | 0.2633 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3182 |
+| Reranking hybrid hit@10 | 0.6500 |
+| Reranking hybrid Recall@100 | 0.2604 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 48 |
 | Query length avg chars | 17.15 |
 | Document length avg chars | 1,589.52 |
 
@@ -172,9 +184,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf
     additional_source_urls:
-      - https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
-      - https://doi.org/10.1007/978-3-319-30671-1_58
-      - https://huggingface.co/datasets/mteb/nfcorpus
+    - https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+    - https://doi.org/10.1007/978-3-319-30671-1_58
+    - https://huggingface.co/datasets/mteb/nfcorpus
   counts:
     queries: 200
     documents: 3593
@@ -190,34 +202,85 @@ benchmark_task_metadata:
     query_mean: 17.15
     document_mean: 1589.51656
   bm25:
-    ndcg_at_10: 0.2434183752
-    hit_at_10: 0.565
-    source: dataset_bm25_column
+    ndcg_at_10: 0.2920763641920576
+    hit_at_10: 0.62
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: NFCorpus retrieval split sampled into NanoMedical
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude overlapping NFCorpus test queries, source NutritionFacts page links, and positive PubMed/PMC abstract qrels for clean evaluation
+    leakage_note: exclude overlapping NFCorpus test queries, source NutritionFacts
+      page links, and positive PubMed/PMC abstract qrels for clean evaluation
     useful_training_data:
-      - non-overlapping consumer-health to biomedical retrieval pairs
-      - nutrition article citation links
-      - biomedical abstract retrieval with layperson queries
-      - hard negatives from the same food, disease, exposure, or mechanism
+    - non-overlapping consumer-health to biomedical retrieval pairs
+    - nutrition article citation links
+    - biomedical abstract retrieval with layperson queries
+    - hard negatives from the same food, disease, exposure, or mechanism
     synthetic_data:
-      document_generation: technical PubMed-like abstracts about nutrition, disease, exposure, and prevention
-      question_generation: short layperson health-topic titles, food names, acronyms, and consumer questions
-      hard_negatives: same-topic biomedical abstracts with different outcome, mechanism, or population
-      answerability: the abstract should provide evidence for the health-topic query or cited claim
-    multi_positive_training: support many positives per query and graded or citation-derived relevance
+      document_generation: technical PubMed-like abstracts about nutrition, disease,
+        exposure, and prevention
+      question_generation: short layperson health-topic titles, food names, acronyms,
+        and consumer questions
+      hard_negatives: same-topic biomedical abstracts with different outcome, mechanism,
+        or population
+      answerability: the abstract should provide evidence for the health-topic query
+        or cited claim
+    multi_positive_training: support many positives per query and graded or citation-derived
+      relevance
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMedical
     source_urls:
-      - label: NFCorpus ECIR paper PDF
-        url: https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf
-      - label: NFCorpus official page
-        url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
-      - label: ECIR DOI
-        url: https://doi.org/10.1007/978-3-319-30671-1_58
-      - label: mteb/nfcorpus
-        url: https://huggingface.co/datasets/mteb/nfcorpus
+    - label: NFCorpus ECIR paper PDF
+      url: https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf
+    - label: NFCorpus official page
+      url: https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/
+    - label: ECIR DOI
+      url: https://doi.org/10.1007/978-3-319-30671-1_58
+    - label: mteb/nfcorpus
+      url: https://huggingface.co/datasets/mteb/nfcorpus
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2920763642
+      hit_at_10: 0.62
+      recall_at_100: 0.2065626681
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2065626681
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3069805259
+      hit_at_10: 0.615
+      recall_at_100: 0.2633136095
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2633136095
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3181914264
+      hit_at_10: 0.65
+      recall_at_100: 0.2603550296
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.24
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2603550296
+      safeguard_positive_rows: 48
+      rows_with_101_candidates: 48
 ```

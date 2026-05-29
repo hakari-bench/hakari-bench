@@ -75,8 +75,20 @@ question.
 | Avg positives / query | 2.25 |
 | Positives per query (min / median / max) | 1 / 2.0 / 5 |
 | Queries with multiple positives | 105 (52.50%) |
-| BM25 nDCG@10 | 0.1030 |
-| BM25 hit@10 | 0.1750 |
+| BM25 nDCG@10 | 0.1061 |
+| BM25 hit@10 | 0.2050 |
+| BM25 Recall@100 | 0.3149 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3639 |
+| Dense hit@10 | 0.5850 |
+| Dense Recall@100 | 0.7384 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1775 |
+| Reranking hybrid hit@10 | 0.3200 |
+| Reranking hybrid Recall@100 | 0.6918 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 49 |
 | Query length avg chars | 54.61 |
 | Document length avg chars | 137.30 |
 
@@ -134,39 +146,87 @@ benchmark_task_metadata:
     query_mean: 54.61
     document_mean: 137.30465949820788
   bm25:
-    ndcg_at_10: 0.1030484088
-    hit_at_10: 0.175
-    source: dataset_bm25_column
+    ndcg_at_10: 0.10613785256932198
+    hit_at_10: 0.205
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude xPQA test examples, Nano queries, qrels, and positive product candidates
+    leakage_note: exclude xPQA test examples, Nano queries, qrels, and positive product
+      candidates
     useful_training_data:
-      - xPQA train examples
-      - French-to-English product QA retrieval pairs
-      - bilingual e-commerce FAQ data
-      - hard negatives from the same product category
+    - xPQA train examples
+    - French-to-English product QA retrieval pairs
+    - bilingual e-commerce FAQ data
+    - hard negatives from the same product category
     synthetic_data:
-      document_generation: English product snippets with specifications, warranty fields, dimensions, compatibility, volume, and review evidence
+      document_generation: English product snippets with specifications, warranty
+        fields, dimensions, compatibility, volume, and review evidence
       question_generation: French product questions asking about those properties
-      answerability: each positive snippet should contain enough information to answer the French question
+      answerability: each positive snippet should contain enough information to answer
+        the French question
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-French
     source_urls:
-      - label: xPQA arXiv
-        url: https://arxiv.org/abs/2305.09249
-      - label: mteb/XPQARetrieval
-        url: https://huggingface.co/datasets/mteb/XPQARetrieval
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
+    - label: xPQA arXiv
+      url: https://arxiv.org/abs/2305.09249
+    - label: mteb/XPQARetrieval
+      url: https://huggingface.co/datasets/mteb/XPQARetrieval
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
     source_notes: []
   references:
-    - title: "xPQA: Cross-Lingual Product Question Answering across 12 Languages"
-      url: https://arxiv.org/abs/2305.09249
-      year: 2023
-      doi: 10.48550/arXiv.2305.09249
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'xPQA: Cross-Lingual Product Question Answering across 12 Languages'
+    url: https://arxiv.org/abs/2305.09249
+    year: 2023
+    doi: 10.48550/arXiv.2305.09249
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1061378526
+      hit_at_10: 0.205
+      recall_at_100: 0.3148558758
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3148558758
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3638927092
+      hit_at_10: 0.585
+      recall_at_100: 0.7383592018
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7383592018
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.1774886686
+      hit_at_10: 0.32
+      recall_at_100: 0.6917960089
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.245
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6917960089
+      safeguard_positive_rows: 49
+      rows_with_101_candidates: 49
 ```

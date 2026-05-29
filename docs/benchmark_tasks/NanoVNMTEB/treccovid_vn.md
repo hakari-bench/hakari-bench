@@ -92,8 +92,20 @@ virus names, interventions, study populations, outcomes, and uncertainty.
 | Avg positives / query | 92.64 |
 | Positives per query (min / median / max) | 28 / 100 / 100 |
 | Queries with multiple positives | 44 (100.00%) |
-| BM25 nDCG@10 | 0.9169 |
-| BM25 hit@10 | 0.9545 |
+| BM25 nDCG@10 | 0.2811 |
+| BM25 hit@10 | 0.7727 |
+| BM25 Recall@100 | 0.2058 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3750 |
+| Dense hit@10 | 0.9773 |
+| Dense Recall@100 | 0.2463 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.3551 |
+| Reranking hybrid hit@10 | 0.8864 |
+| Reranking hybrid Recall@100 | 0.2588 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 70.55 |
 | Document length avg chars | 1,315.65 |
 
@@ -141,10 +153,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2005.04474
     additional_source_urls:
-      - https://ir.nist.gov/covidSubmit/
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/trec-covid-vn
+    - https://ir.nist.gov/covidSubmit/
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/trec-covid-vn
     no_paper_note: null
   counts:
     queries: 44
@@ -161,61 +173,111 @@ benchmark_task_metadata:
     query_mean: 70.545
     document_mean: 1315.645
   bm25:
-    ndcg_at_10: 0.916850837
-    hit_at_10: 0.954545455
-    source: dataset_bm25_column
+    ndcg_at_10: 0.281093225345464
+    hit_at_10: 0.7727272727272727
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB TREC-COVID test split from GreenNode/trec-covid-vn"
+    evaluation_split_origin: translated VN-MTEB TREC-COVID test split from GreenNode/trec-covid-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated TREC-COVID-VN test topics, qrels, and positive documents used by this Nano split."
+    leakage_note: Exclude translated TREC-COVID-VN test topics, qrels, and positive
+      documents used by this Nano split.
     useful_training_data:
-      - non-overlapping TREC-COVID rounds and judgments
-      - CORD-19 biomedical retrieval pairs
-      - COVID-19 literature search and biomedical QA data
-      - translated scientific retrieval data with overlap removed
+    - non-overlapping TREC-COVID rounds and judgments
+    - CORD-19 biomedical retrieval pairs
+    - COVID-19 literature search and biomedical QA data
+    - translated scientific retrieval data with overlap removed
     synthetic_data:
-      document_generation: "Vietnamese COVID-19 and coronavirus abstracts preserving virus names, interventions, populations, outcomes, and uncertainty."
-      question_generation: "Vietnamese biomedical information needs about treatments, transmission, immunity, diagnostics, mechanisms, or guidelines."
-      answerability: "Each topic should have many relevant papers plus same-disease hard negatives."
+      document_generation: Vietnamese COVID-19 and coronavirus abstracts preserving
+        virus names, interventions, populations, outcomes, and uncertainty.
+      question_generation: Vietnamese biomedical information needs about treatments,
+        transmission, immunity, diagnostics, mechanisms, or guidelines.
+      answerability: Each topic should have many relevant papers plus same-disease
+        hard negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: TREC-COVID arXiv
-        url: https://arxiv.org/abs/2005.04474
-      - label: TREC-COVID challenge page
-        url: https://ir.nist.gov/covidSubmit/
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/trec-covid-vn
-        url: https://huggingface.co/datasets/GreenNode/trec-covid-vn
+    - label: TREC-COVID arXiv
+      url: https://arxiv.org/abs/2005.04474
+    - label: TREC-COVID challenge page
+      url: https://ir.nist.gov/covidSubmit/
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/trec-covid-vn
+      url: https://huggingface.co/datasets/GreenNode/trec-covid-vn
     source_notes: []
   references:
-    - title: "TREC-COVID: Constructing a Pandemic Information Retrieval Test Collection"
-      url: https://arxiv.org/abs/2005.04474
-      year: 2020
-      doi: 10.48550/arXiv.2005.04474
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/trec-covid-vn
-      url: https://huggingface.co/datasets/GreenNode/trec-covid-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'TREC-COVID: Constructing a Pandemic Information Retrieval Test Collection'
+    url: https://arxiv.org/abs/2005.04474
+    year: 2020
+    doi: 10.48550/arXiv.2005.04474
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/trec-covid-vn
+    url: https://huggingface.co/datasets/GreenNode/trec-covid-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2810932253
+      hit_at_10: 0.7727272727
+      recall_at_100: 0.2058390579
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 44
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2058390579
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3750221655
+      hit_at_10: 0.9772727273
+      recall_at_100: 0.2463199215
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 44
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2463199215
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.3550643016
+      hit_at_10: 0.8863636364
+      recall_at_100: 0.2588321884
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 44
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2588321884
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

@@ -94,6 +94,18 @@ grounded.
 | Positive qrels | 200 |
 | BM25 nDCG@10 | 0.7698 |
 | BM25 hit@10 | 0.8450 |
+| BM25 Recall@100 | 0.9050 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8776 |
+| Dense hit@10 | 0.9150 |
+| Dense Recall@100 | 0.9550 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8442 |
+| Reranking hybrid hit@10 | 0.9100 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 50.45 |
 | Document length avg chars | 322.18 |
 
@@ -139,9 +151,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2502.20936
     additional_source_urls:
-      - https://arxiv.org/abs/2509.12340
-      - https://huggingface.co/datasets/mteb/WebFAQRetrieval
-      - https://huggingface.co/PaDaS-Lab
+    - https://arxiv.org/abs/2509.12340
+    - https://huggingface.co/datasets/mteb/WebFAQRetrieval
+    - https://huggingface.co/PaDaS-Lab
     no_paper_note: null
   counts:
     queries: 200
@@ -158,53 +170,102 @@ benchmark_task_metadata:
     query_mean: 50.445
     document_mean: 322.1842
   bm25:
-    ndcg_at_10: 0.769755238
+    ndcg_at_10: 0.7698274126469596
     hit_at_10: 0.845
-    source: dataset_bm25_column
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
-    evaluation_split_origin: "test split, nld subset from mteb/WebFAQRetrieval"
+    evaluation_split_origin: test split, nld subset from mteb/WebFAQRetrieval
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude Dutch WebFAQ test questions, answers, and qrels used by this Nano split."
+    leakage_note: Exclude Dutch WebFAQ test questions, answers, and qrels used by
+      this Nano split.
     useful_training_data:
-      - non-overlapping Dutch FAQ question-answer pairs
-      - multilingual FAQ retrieval pairs with Dutch coverage
-      - customer-support and website FAQ retrieval data
-      - same-site or same-product hard negatives
+    - non-overlapping Dutch FAQ question-answer pairs
+    - multilingual FAQ retrieval pairs with Dutch coverage
+    - customer-support and website FAQ retrieval data
+    - same-site or same-product hard negatives
     synthetic_data:
-      document_generation: "Dutch FAQ answers from web, service, consumer, civic, and technical domains."
-      question_generation: "Natural FAQ-style Dutch questions answerable from the selected answer."
-      answerability: "Each question should have one explicit answer and same-domain hard negatives."
+      document_generation: Dutch FAQ answers from web, service, consumer, civic, and
+        technical domains.
+      question_generation: Natural FAQ-style Dutch questions answerable from the selected
+        answer.
+      answerability: Each question should have one explicit answer and same-domain
+        hard negatives.
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch
     source_urls:
-      - label: WebFAQ arXiv
-        url: https://arxiv.org/abs/2502.20936
-      - label: MTEB-NL arXiv
-        url: https://arxiv.org/abs/2509.12340
-      - label: mteb/WebFAQRetrieval
-        url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
-      - label: PaDaS Lab
-        url: https://huggingface.co/PaDaS-Lab
+    - label: WebFAQ arXiv
+      url: https://arxiv.org/abs/2502.20936
+    - label: MTEB-NL arXiv
+      url: https://arxiv.org/abs/2509.12340
+    - label: mteb/WebFAQRetrieval
+      url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
+    - label: PaDaS Lab
+      url: https://huggingface.co/PaDaS-Lab
     source_notes: []
   references:
-    - title: "WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval"
-      url: https://arxiv.org/abs/2502.20936
-      year: 2025
-      doi: 10.48550/arXiv.2502.20936
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch"
-      url: https://arxiv.org/abs/2509.12340
-      year: 2025
-      doi: 10.48550/arXiv.2509.12340
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: mteb/WebFAQRetrieval
-      url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval'
+    url: https://arxiv.org/abs/2502.20936
+    year: 2025
+    doi: 10.48550/arXiv.2502.20936
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch'
+    url: https://arxiv.org/abs/2509.12340
+    year: 2025
+    doi: 10.48550/arXiv.2509.12340
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: mteb/WebFAQRetrieval
+    url: https://huggingface.co/datasets/mteb/WebFAQRetrieval
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7698274126
+      hit_at_10: 0.845
+      recall_at_100: 0.905
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.905
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8775699739
+      hit_at_10: 0.915
+      recall_at_100: 0.955
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.955
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8441872232
+      hit_at_10: 0.91
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

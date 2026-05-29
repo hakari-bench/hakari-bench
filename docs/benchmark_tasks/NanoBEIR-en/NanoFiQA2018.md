@@ -154,8 +154,20 @@ decision.
 | Avg positives / query | 2.46 |
 | Positives per query (min / median / max) | 1 / 2.00 / 15 |
 | Queries with multiple positives | 28 (56.0%) |
-| BM25 nDCG@10 | 0.3583 |
-| BM25 hit@10 | 0.6400 |
+| BM25 nDCG@10 | 0.4211 |
+| BM25 hit@10 | 0.7400 |
+| BM25 Recall@100 | 0.7236 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5011 |
+| Dense hit@10 | 0.7600 |
+| Dense Recall@100 | 0.7317 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.5150 |
+| Reranking hybrid hit@10 | 0.8000 |
+| Reranking hybrid Recall@100 | 0.8049 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 4 |
 | Query length avg chars | 58.52 |
 | Document length avg chars | 899.63 |
 
@@ -213,50 +225,100 @@ benchmark_task_metadata:
     query_mean: 58.52
     document_mean: 899.632666
   bm25:
-    ndcg_at_10: 0.358343363
-    hit_at_10: 0.64
-    source: dataset_bm25_column
+    ndcg_at_10: 0.4211170299712721
+    hit_at_10: 0.74
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: unknown
     train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding upstream dev/test data or other FiQA/BEIR-derived records likely to overlap with the NanoBEIR evaluation questions and answers
+    leakage_note: prefer excluding upstream dev/test data or other FiQA/BEIR-derived
+      records likely to overlap with the NanoBEIR evaluation questions and answers
     useful_training_data:
-      - non-overlapping FiQA training question-answer pairs
-      - financial community QA pairs
-      - personal-finance forum and FAQ retrieval data
-      - domain QA covering taxes, retirement accounts, brokerage, debt, and banking
+    - non-overlapping FiQA training question-answer pairs
+    - financial community QA pairs
+    - personal-finance forum and FAQ retrieval data
+    - domain QA covering taxes, retirement accounts, brokerage, debt, and banking
     synthetic_data:
-      document_generation: community-style financial answer posts with practical advice, caveats, account types, jurisdictions, and numeric assumptions
-      question_generation: realistic personal-finance questions asking for decisions or explanations that the answer resolves
-      answerability: positives should answer the financial decision or explanation need, not merely mention the same product
+      document_generation: community-style financial answer posts with practical advice,
+        caveats, account types, jurisdictions, and numeric assumptions
+      question_generation: realistic personal-finance questions asking for decisions
+        or explanations that the answer resolves
+      answerability: positives should answer the financial decision or explanation
+        need, not merely mention the same product
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBEIR-en
     source_urls:
-      - label: FiQA 2018 official challenge site
-        url: https://sites.google.com/view/fiqa/home
-      - label: Zeta Alpha NanoBEIR collection
-        url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
-    source_notes:
-      - no_arxiv_page_confirmed_for_original_task_paper
-  references:
-    - title: "WWW'18 Open Challenge: Financial Opinion Mining and Question Answering"
-      url: https://doi.org/10.1145/3184558.3192301
-      year: 2018
-      doi: 10.1145/3184558.3192301
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: FiQA 2018 official challenge site
+    - label: FiQA 2018 official challenge site
       url: https://sites.google.com/view/fiqa/home
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: definitive_project_page
-    - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models'
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: benchmark_context_paper
+    - label: Zeta Alpha NanoBEIR collection
+      url: https://huggingface.co/collections/zeta-alpha-ai/nanobeir
+    source_notes:
+    - no_arxiv_page_confirmed_for_original_task_paper
+  references:
+  - title: 'WWW''18 Open Challenge: Financial Opinion Mining and Question Answering'
+    url: https://doi.org/10.1145/3184558.3192301
+    year: 2018
+    doi: 10.1145/3184558.3192301
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: FiQA 2018 official challenge site
+    url: https://sites.google.com/view/fiqa/home
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: definitive_project_page
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: benchmark_context_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.42111703
+      hit_at_10: 0.74
+      recall_at_100: 0.7235772358
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7235772358
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5011264512
+      hit_at_10: 0.76
+      recall_at_100: 0.7317073171
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7317073171
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.5150252669
+      hit_at_10: 0.8
+      recall_at_100: 0.8048780488
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.08
+      query_count: 50
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8048780488
+      safeguard_positive_rows: 4
+      rows_with_101_candidates: 4
 ```

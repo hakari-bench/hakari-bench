@@ -100,8 +100,20 @@ generation seeds.
 | Avg positives / query | 22.66 |
 | Positives per query (min / median / max) | 1 / 7.5 / 100 |
 | Queries with multiple positives | 155 (85.16%) |
-| BM25 nDCG@10 | 0.2408 |
-| BM25 hit@10 | 0.4286 |
+| BM25 nDCG@10 | 0.2012 |
+| BM25 hit@10 | 0.4780 |
+| BM25 Recall@100 | 0.1360 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2268 |
+| Dense hit@10 | 0.5659 |
+| Dense Recall@100 | 0.2209 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2210 |
+| Reranking hybrid hit@10 | 0.5385 |
+| Reranking hybrid Recall@100 | 0.2097 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 48 |
 | Query length avg chars | 14.57 |
 | Document length avg chars | 451.12 |
 
@@ -145,8 +157,8 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2109.05929
     additional_source_urls:
-      - https://xmrec.github.io/
-      - https://huggingface.co/datasets/mteb/XMarket
+    - https://xmrec.github.io/
+    - https://huggingface.co/datasets/mteb/XMarket
   counts:
     queries: 182
     documents: 10000
@@ -162,39 +174,88 @@ benchmark_task_metadata:
     query_mean: 14.5714285714
     document_mean: 451.1196
   bm25:
-    ndcg_at_10: 0.2408103413
-    hit_at_10: 0.4285714286
-    source: dataset_bm25_column
+    ndcg_at_10: 0.20122867213175316
+    hit_at_10: 0.47802197802197804
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude XMarket German evaluation products, qrels, and category-product pairs likely to overlap with the Nano split
+    leakage_note: exclude XMarket German evaluation products, qrels, and category-product
+      pairs likely to overlap with the Nano split
     useful_training_data:
-      - non-overlapping XMarket product metadata
-      - multilingual e-commerce category-product pairs
-      - German query-to-product click or purchase pairs
-      - hard negatives from neighboring product categories
+    - non-overlapping XMarket product metadata
+    - multilingual e-commerce category-product pairs
+    - German query-to-product click or purchase pairs
+    - hard negatives from neighboring product categories
     synthetic_data:
-      document_generation: marketplace product titles and descriptions with brand, material, dimensions, color, and use case
-      question_generation: short German category labels and shopping-intent queries with multiple relevant products
-      answerability: each product should clearly belong to the category or satisfy the shopping intent
+      document_generation: marketplace product titles and descriptions with brand,
+        material, dimensions, color, and use case
+      question_generation: short German category labels and shopping-intent queries
+        with multiple relevant products
+      answerability: each product should clearly belong to the category or satisfy
+        the shopping intent
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-German
     source_urls:
-      - label: Cross-Market Product Recommendation arXiv
-        url: https://arxiv.org/abs/2109.05929
-      - label: XMRec project page
-        url: https://xmrec.github.io/
-      - label: mteb/XMarket
-        url: https://huggingface.co/datasets/mteb/XMarket
+    - label: Cross-Market Product Recommendation arXiv
+      url: https://arxiv.org/abs/2109.05929
+    - label: XMRec project page
+      url: https://xmrec.github.io/
+    - label: mteb/XMarket
+      url: https://huggingface.co/datasets/mteb/XMarket
     source_notes: []
   references:
-    - title: "Cross-Market Product Recommendation"
-      url: https://arxiv.org/abs/2109.05929
-      year: 2021
-      doi: 10.1145/3459637.3482493
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: Cross-Market Product Recommendation
+    url: https://arxiv.org/abs/2109.05929
+    year: 2021
+    doi: 10.1145/3459637.3482493
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2012286721
+      hit_at_10: 0.478021978
+      recall_at_100: 0.1360329777
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 182
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.1360329777
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2268383516
+      hit_at_10: 0.5659340659
+      recall_at_100: 0.2209020369
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 182
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2209020369
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.2210180066
+      hit_at_10: 0.5384615385
+      recall_at_100: 0.2097478177
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.263736
+      query_count: 182
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2097478177
+      safeguard_positive_rows: 48
+      rows_with_101_candidates: 48
 ```

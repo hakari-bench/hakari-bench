@@ -107,8 +107,20 @@ not use Nano evaluation queries or positive passages as seeds.
 | Avg positives / query | 1.30 |
 | Positives per query (min / median / max) | 1 / 1 / 3 |
 | Queries with multiple positives | 7 (25.93%) |
-| BM25 nDCG@10 | 0.3616 |
-| BM25 hit@10 | 0.4815 |
+| BM25 nDCG@10 | 0.4446 |
+| BM25 hit@10 | 0.6667 |
+| BM25 Recall@100 | 0.8857 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6184 |
+| Dense hit@10 | 0.8519 |
+| Dense Recall@100 | 0.9714 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.5526 |
+| Reranking hybrid hit@10 | 0.7778 |
+| Reranking hybrid Recall@100 | 0.9714 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 54.00 |
 | Document length avg chars | 481.24 |
 
@@ -154,9 +166,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2412.00532
     additional_source_urls:
-      - https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html
-      - https://aclanthology.org/Q19-1026/
-      - https://huggingface.co/datasets/BASF-AI/ChemNQRetrieval
+    - https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html
+    - https://aclanthology.org/Q19-1026/
+    - https://huggingface.co/datasets/BASF-AI/ChemNQRetrieval
   counts:
     queries: 27
     documents: 10000
@@ -172,45 +184,95 @@ benchmark_task_metadata:
     query_mean: 54.0
     document_mean: 481.2438
   bm25:
-    ndcg_at_10: 0.361626823
-    hit_at_10: 0.4814814815
-    source: dataset_bm25_column
+    ndcg_at_10: 0.44455945783505535
+    hit_at_10: 0.6666666666666666
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: ChemNQRetrieval test split derived from Natural Questions
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude ChemNQ evaluation queries, qrels, and positive Wikipedia passages
+    leakage_note: exclude ChemNQ evaluation queries, qrels, and positive Wikipedia
+      passages
     useful_training_data:
-      - non-overlapping Natural Questions long-answer retrieval pairs
-      - chemistry-filtered Wikipedia QA retrieval
-      - biomedical and chemical fact retrieval with paragraph-level positives
-      - same-article hard negatives for relation-specific evidence selection
+    - non-overlapping Natural Questions long-answer retrieval pairs
+    - chemistry-filtered Wikipedia QA retrieval
+    - biomedical and chemical fact retrieval with paragraph-level positives
+    - same-article hard negatives for relation-specific evidence selection
     synthetic_data:
-      document_generation: non-evaluation chemistry and biochemistry Wikipedia-style passages
-      question_generation: short search-like questions asking for a specific answerable fact without polished benchmark wording
-      answerability: the positive paragraph should contain the requested fact and negatives should be topically close but answer-different
+      document_generation: non-evaluation chemistry and biochemistry Wikipedia-style
+        passages
+      question_generation: short search-like questions asking for a specific answerable
+        fact without polished benchmark wording
+      answerability: the positive paragraph should contain the requested fact and
+        negatives should be topically close but answer-different
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoChemTEB
     source_urls:
-      - label: ChemTEB arXiv
-        url: https://arxiv.org/abs/2412.00532
-      - label: Natural Questions ACL Anthology
-        url: https://aclanthology.org/Q19-1026/
-      - label: BASF-AI/ChemNQRetrieval
-        url: https://huggingface.co/datasets/BASF-AI/ChemNQRetrieval
+    - label: ChemTEB arXiv
+      url: https://arxiv.org/abs/2412.00532
+    - label: Natural Questions ACL Anthology
+      url: https://aclanthology.org/Q19-1026/
+    - label: BASF-AI/ChemNQRetrieval
+      url: https://huggingface.co/datasets/BASF-AI/ChemNQRetrieval
     source_notes: []
   references:
-    - title: "ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance & Efficiency on a Specific Domain"
-      url: https://arxiv.org/abs/2412.00532
-      year: 2024
-      doi: 10.48550/arXiv.2412.00532
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Natural Questions: A Benchmark for Question Answering Research"
-      url: https://aclanthology.org/Q19-1026/
-      year: 2019
-      doi: 10.1162/tacl_a_00276
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models
+      Performance & Efficiency on a Specific Domain'
+    url: https://arxiv.org/abs/2412.00532
+    year: 2024
+    doi: 10.48550/arXiv.2412.00532
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'Natural Questions: A Benchmark for Question Answering Research'
+    url: https://aclanthology.org/Q19-1026/
+    year: 2019
+    doi: 10.1162/tacl_a_00276
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4445594578
+      hit_at_10: 0.6666666667
+      recall_at_100: 0.8857142857
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 27
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8857142857
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6183828829
+      hit_at_10: 0.8518518519
+      recall_at_100: 0.9714285714
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 27
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9714285714
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.5525611861
+      hit_at_10: 0.7777777778
+      recall_at_100: 0.9714285714
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.037037
+      query_count: 27
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9714285714
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

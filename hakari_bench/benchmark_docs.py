@@ -67,6 +67,30 @@ class BM25Metadata(BenchmarkDocsModel):
     dureader_paper_cmedqa_bm25_recall_at_50: NonNegativeFloat | None = None
 
 
+class CandidateSubsetMetricsMetadata(BenchmarkDocsModel):
+    config: NonEmptyStr
+    label: NonEmptyStr
+    source: NonEmptyStr
+    top_k: NonNegativeInt
+    ndcg_at_10: UnitScore
+    hit_at_10: UnitScore
+    recall_at_100: UnitScore
+    candidate_count_min: NonNegativeInt
+    candidate_count_max: NonNegativeInt
+    candidate_count_mean: NonNegativeFloat
+    query_count: NonNegativeInt
+    query_coverage: UnitScore
+    relevant_coverage_at_100: UnitScore
+    safeguard_positive_rows: NonNegativeInt | None = None
+    rows_with_101_candidates: NonNegativeInt | None = None
+
+
+class CandidateSubsetsMetadata(BenchmarkDocsModel):
+    bm25: CandidateSubsetMetricsMetadata | None = None
+    dense: CandidateSubsetMetricsMetadata | None = None
+    reranking_hybrid: CandidateSubsetMetricsMetadata | None = None
+
+
 class LeakageRiskMetadata(BenchmarkDocsModel):
     source_dataset: NonEmptyStr
     risk: NonEmptyStr
@@ -144,6 +168,7 @@ class BenchmarkTaskMetadata(BenchmarkDocsModel):
     positives_per_query: PositivesPerQueryMetadata
     text_stats_chars: TextStatsCharsMetadata
     bm25: BM25Metadata
+    candidate_subsets: CandidateSubsetsMetadata | None = None
     learning: LearningMetadata | None = None
     links: LinkMetadata | None = None
     references: list[ReferenceMetadata] | None = None

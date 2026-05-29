@@ -75,8 +75,20 @@ terms but not the supporting explanation.
 | Positive qrels | 134 |
 | Positives per query | avg 1.30, min 1, median 1, max 4 |
 | Multi-positive queries | 24 (23.30%) |
-| BM25 nDCG@10 | 0.2540 |
-| BM25 hit@10 | 0.4466 |
+| BM25 nDCG@10 | 0.3708 |
+| BM25 hit@10 | 0.6311 |
+| BM25 Recall@100 | 0.8731 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5779 |
+| Dense hit@10 | 0.8835 |
+| Dense Recall@100 | 0.9701 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4897 |
+| Reranking hybrid hit@10 | 0.7767 |
+| Reranking hybrid Recall@100 | 0.9701 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 523.03 |
 | Document length avg chars | 36923.73 |
 
@@ -137,38 +149,85 @@ benchmark_task_metadata:
     query_mean: 523.0291262135922
     document_mean: 36923.73092369478
   bm25:
-    ndcg_at_10: 0.2540185992266564
-    hit_at_10: 0.44660194174757284
-    source: dataset_bm25_column
+    ndcg_at_10: 0.3708053276478694
+    hit_at_10: 0.6310679611650486
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: BRIGHT Biology long-document evaluation split
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoBRIGHT BiologyLong queries and full cited source pages
     useful_training_data:
-      - long biology reference pages aligned to questions
-      - StackExchange posts with full cited sources
-      - passage-to-document retrieval distillation
+    - long biology reference pages aligned to questions
+    - StackExchange posts with full cited sources
+    - passage-to-document retrieval distillation
     synthetic_data:
       document_generation: long multi-section biology reference pages
       question_generation: detailed biology questions grounded in a specific section
-      answerability: positive full document should contain the supporting biological mechanism
+      answerability: positive full document should contain the supporting biological
+        mechanism
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoBRIGHT
     source_urls:
-      - label: BRIGHT arXiv
-        url: https://arxiv.org/abs/2407.12883
-      - label: BRIGHT project
-        url: https://brightbenchmark.github.io/
-      - label: xlangai/BRIGHT
-        url: https://huggingface.co/datasets/xlangai/BRIGHT
+    - label: BRIGHT arXiv
+      url: https://arxiv.org/abs/2407.12883
+    - label: BRIGHT project
+      url: https://brightbenchmark.github.io/
+    - label: xlangai/BRIGHT
+      url: https://huggingface.co/datasets/xlangai/BRIGHT
     source_notes: []
   references:
-    - title: "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval"
-      url: https://arxiv.org/abs/2407.12883
-      year: 2024
-      doi: 10.48550/arXiv.2407.12883
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive
+      Retrieval'
+    url: https://arxiv.org/abs/2407.12883
+    year: 2024
+    doi: 10.48550/arXiv.2407.12883
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3708053276
+      hit_at_10: 0.6310679612
+      recall_at_100: 0.8731343284
+      candidate_count_min: 498
+      candidate_count_max: 498
+      candidate_count_mean: 498.0
+      query_count: 103
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.8731343284
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5779145626
+      hit_at_10: 0.8834951456
+      recall_at_100: 0.9701492537
+      candidate_count_min: 498
+      candidate_count_max: 498
+      candidate_count_mean: 498.0
+      query_count: 103
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9701492537
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4897443591
+      hit_at_10: 0.7766990291
+      recall_at_100: 0.9701492537
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.009709
+      query_count: 103
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9701492537
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

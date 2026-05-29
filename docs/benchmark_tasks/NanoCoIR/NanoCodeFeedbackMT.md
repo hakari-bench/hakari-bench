@@ -92,8 +92,20 @@ matches NanoCodeFeedbackMT by normalized text, token fingerprint, or high
 | Queries | 200 |
 | Documents | 10000 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.7311 |
-| BM25 hit@10 | 0.8050 |
+| BM25 nDCG@10 | 0.7403 |
+| BM25 hit@10 | 0.8100 |
+| BM25 Recall@100 | 0.9050 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9177 |
+| Dense hit@10 | 0.9400 |
+| Dense Recall@100 | 0.9450 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8035 |
+| Reranking hybrid hit@10 | 0.8900 |
+| Reranking hybrid Recall@100 | 0.9950 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 1 |
 | Query length avg chars | 4468.62 |
 | Document length avg chars | 1468.16 |
 
@@ -149,14 +161,16 @@ benchmark_task_metadata:
     query_mean: 4468.625
     document_mean: 1468.1565
   bm25:
-    ndcg_at_10: 0.7311458867470343
-    hit_at_10: 0.805
-    source: dataset_bm25_column
+    ndcg_at_10: 0.7403224036178895
+    hit_at_10: 0.81
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: CoIR CodeFeedback-MT test-derived retrieval split
     train_eval_overlap_audit: audited_raw_hf_train_contains_nano_eval_examples
-    leakage_note: raw m-a-p/Code-Feedback train contains NanoCodeFeedbackMT evaluation dialogue histories and final responses; exclude matching source rows before training
+    leakage_note: raw m-a-p/Code-Feedback train contains NanoCodeFeedbackMT evaluation
+      dialogue histories and final responses; exclude matching source rows before
+      training
     leakage_audit:
       source_dataset: m-a-p/Code-Feedback
       source_train_rows_scanned: 66383
@@ -167,9 +181,9 @@ benchmark_task_metadata:
       high_shingle_positive_matches: 199
       risk: direct benchmark leakage if raw public train is used
     useful_training_data:
-      - multi-turn code assistant conversations
-      - execution-feedback repair traces
-      - hard negatives from adjacent code-feedback turns
+    - multi-turn code assistant conversations
+    - execution-feedback repair traces
+    - hard negatives from adjacent code-feedback turns
     synthetic_data:
       document_generation: final assistant responses with prose and code
       question_generation: multi-turn coding dialogue histories
@@ -178,22 +192,67 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCoIR
     source_urls:
-      - label: CoIR arXiv
-        url: https://arxiv.org/abs/2407.02883
-      - label: OpenCodeInterpreter arXiv
-        url: https://arxiv.org/abs/2402.14658
-      - label: m-a-p/Code-Feedback
-        url: https://huggingface.co/datasets/m-a-p/Code-Feedback
+    - label: CoIR arXiv
+      url: https://arxiv.org/abs/2407.02883
+    - label: OpenCodeInterpreter arXiv
+      url: https://arxiv.org/abs/2402.14658
+    - label: m-a-p/Code-Feedback
+      url: https://huggingface.co/datasets/m-a-p/Code-Feedback
     source_notes: []
   references:
-    - title: "CoIR: A Comprehensive Benchmark for Code Information Retrieval Models"
-      url: https://arxiv.org/abs/2407.02883
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "OpenCodeInterpreter: Integrating Code Generation with Execution and Refinement"
-      url: https://arxiv.org/abs/2402.14658
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'CoIR: A Comprehensive Benchmark for Code Information Retrieval Models'
+    url: https://arxiv.org/abs/2407.02883
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'OpenCodeInterpreter: Integrating Code Generation with Execution and Refinement'
+    url: https://arxiv.org/abs/2402.14658
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7403224036
+      hit_at_10: 0.81
+      recall_at_100: 0.905
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.905
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9177479421
+      hit_at_10: 0.94
+      recall_at_100: 0.945
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.945
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8034834683
+      hit_at_10: 0.89
+      recall_at_100: 0.995
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.005
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.995
+      safeguard_positive_rows: 1
+      rows_with_101_candidates: 1
 ```

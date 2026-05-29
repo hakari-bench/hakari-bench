@@ -97,8 +97,20 @@ country but answer a different financial decision.
 | Avg positives / query | 2.75 |
 | Positives per query (min / median / max) | 1 / 2 / 15 |
 | Queries with multiple positives | 129 (64.50%) |
-| BM25 nDCG@10 | 0.3112 |
-| BM25 hit@10 | 0.5650 |
+| BM25 nDCG@10 | 0.3388 |
+| BM25 hit@10 | 0.6000 |
+| BM25 Recall@100 | 0.5902 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.4057 |
+| Dense hit@10 | 0.6500 |
+| Dense Recall@100 | 0.6612 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.4118 |
+| Reranking hybrid hit@10 | 0.6700 |
+| Reranking hybrid Recall@100 | 0.7031 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 21 |
 | Query length avg chars | 69.43 |
 | Document length avg chars | 811.03 |
 
@@ -146,10 +158,10 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://doi.org/10.1145/3184558.3192301
     additional_source_urls:
-      - https://sites.google.com/view/fiqa/
-      - https://aclanthology.org/2026.findings-eacl.86/
-      - https://arxiv.org/abs/2104.08663
-      - https://huggingface.co/datasets/GreenNode/fiqa-vn
+    - https://sites.google.com/view/fiqa/
+    - https://aclanthology.org/2026.findings-eacl.86/
+    - https://arxiv.org/abs/2104.08663
+    - https://huggingface.co/datasets/GreenNode/fiqa-vn
     no_paper_note: null
   counts:
     queries: 200
@@ -166,61 +178,111 @@ benchmark_task_metadata:
     query_mean: 69.43
     document_mean: 811.031
   bm25:
-    ndcg_at_10: 0.311195336
-    hit_at_10: 0.565
-    source: dataset_bm25_column
+    ndcg_at_10: 0.33881073973066944
+    hit_at_10: 0.6
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
-    evaluation_split_origin: "translated VN-MTEB FiQA2018 test split from GreenNode/fiqa-vn"
+    evaluation_split_origin: translated VN-MTEB FiQA2018 test split from GreenNode/fiqa-vn
     train_eval_overlap_audit: not_audited
-    leakage_note: "Exclude translated FiQA-VN test questions, qrels, and positive answers used by this Nano split."
+    leakage_note: Exclude translated FiQA-VN test questions, qrels, and positive answers
+      used by this Nano split.
     useful_training_data:
-      - official FiQA training question-answer pairs with overlap removed
-      - Vietnamese personal-finance and investment QA
-      - finance-domain forum answer ranking data
-      - translated financial QA data with overlap removed
+    - official FiQA training question-answer pairs with overlap removed
+    - Vietnamese personal-finance and investment QA
+    - finance-domain forum answer ranking data
+    - translated financial QA data with overlap removed
     synthetic_data:
-      document_generation: "Vietnamese financial answer posts with currencies, jurisdictions, account types, and product names."
-      question_generation: "Vietnamese investor or personal-finance questions answerable from those posts."
-      answerability: "Questions should require the same financial decision context, with same-product but different-advice negatives."
+      document_generation: Vietnamese financial answer posts with currencies, jurisdictions,
+        account types, and product names.
+      question_generation: Vietnamese investor or personal-finance questions answerable
+        from those posts.
+      answerability: Questions should require the same financial decision context,
+        with same-product but different-advice negatives.
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoVNMTEB
     source_urls:
-      - label: FiQA DOI
-        url: https://doi.org/10.1145/3184558.3192301
-      - label: FiQA project page
-        url: https://sites.google.com/view/fiqa/
-      - label: VN-MTEB ACL Anthology
-        url: https://aclanthology.org/2026.findings-eacl.86/
-      - label: BEIR arXiv
-        url: https://arxiv.org/abs/2104.08663
-      - label: GreenNode/fiqa-vn
-        url: https://huggingface.co/datasets/GreenNode/fiqa-vn
+    - label: FiQA DOI
+      url: https://doi.org/10.1145/3184558.3192301
+    - label: FiQA project page
+      url: https://sites.google.com/view/fiqa/
+    - label: VN-MTEB ACL Anthology
+      url: https://aclanthology.org/2026.findings-eacl.86/
+    - label: BEIR arXiv
+      url: https://arxiv.org/abs/2104.08663
+    - label: GreenNode/fiqa-vn
+      url: https://huggingface.co/datasets/GreenNode/fiqa-vn
     source_notes: []
   references:
-    - title: "WWW'18 Open Challenge: Financial Opinion Mining and Question Answering"
-      url: https://doi.org/10.1145/3184558.3192301
-      year: 2018
-      doi: 10.1145/3184558.3192301
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "VN-MTEB: Vietnamese Massive Text Embedding Benchmark"
-      url: https://aclanthology.org/2026.findings-eacl.86/
-      year: 2026
-      doi: 10.18653/v1/2026.findings-eacl.86
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models"
-      url: https://arxiv.org/abs/2104.08663
-      year: 2021
-      doi: 10.48550/arXiv.2104.08663
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: GreenNode/fiqa-vn
-      url: https://huggingface.co/datasets/GreenNode/fiqa-vn
-      year: null
-      doi: null
-      is_paper: false
-      source_confidence: probably_correct
+  - title: 'WWW''18 Open Challenge: Financial Opinion Mining and Question Answering'
+    url: https://doi.org/10.1145/3184558.3192301
+    year: 2018
+    doi: 10.1145/3184558.3192301
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'VN-MTEB: Vietnamese Massive Text Embedding Benchmark'
+    url: https://aclanthology.org/2026.findings-eacl.86/
+    year: 2026
+    doi: 10.18653/v1/2026.findings-eacl.86
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information
+      Retrieval Models'
+    url: https://arxiv.org/abs/2104.08663
+    year: 2021
+    doi: 10.48550/arXiv.2104.08663
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: GreenNode/fiqa-vn
+    url: https://huggingface.co/datasets/GreenNode/fiqa-vn
+    year: null
+    doi: null
+    is_paper: false
+    source_confidence: probably_correct
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3388107397
+      hit_at_10: 0.6
+      recall_at_100: 0.5901639344
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5901639344
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.405692534
+      hit_at_10: 0.65
+      recall_at_100: 0.6612021858
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6612021858
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.4118067935
+      hit_at_10: 0.67
+      recall_at_100: 0.7030965392
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.105
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7030965392
+      safeguard_positive_rows: 21
+      rows_with_101_candidates: 21
 ```

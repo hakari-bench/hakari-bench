@@ -72,8 +72,20 @@ support the answer.
 | Queries | 376 |
 | Documents | 10000 |
 | Positive qrels | 376 |
-| BM25 nDCG@10 | 0.1402 |
-| BM25 hit@10 | 0.2154 |
+| BM25 nDCG@10 | 0.0903 |
+| BM25 hit@10 | 0.1383 |
+| BM25 Recall@100 | 0.2207 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.2781 |
+| Dense hit@10 | 0.3404 |
+| Dense Recall@100 | 0.4787 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.1782 |
+| Reranking hybrid hit@10 | 0.2473 |
+| Reranking hybrid Recall@100 | 0.4122 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 221 |
 | Query length avg chars | 95.39 |
 | Document length avg chars | 509.21 |
 
@@ -131,19 +143,20 @@ benchmark_task_metadata:
     query_mean: 95.3936170212766
     document_mean: 509.2113
   bm25:
-    ndcg_at_10: 0.14015808740655672
-    hit_at_10: 0.2154255319148936
-    source: dataset_bm25_column
+    ndcg_at_10: 0.0903338585074925
+    hit_at_10: 0.13829787234042554
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: do not train on this Nano split's questions, qrels, or positive passages
+    leakage_note: do not train on this Nano split's questions, qrels, or positive
+      passages
     useful_training_data:
-      - non-overlapping Belebele or FLORES passage-question pairs
-      - multilingual reading-comprehension retrieval data
-      - native-language QA retrieval pairs
-      - cross-script hard negatives
+    - non-overlapping Belebele or FLORES passage-question pairs
+    - multilingual reading-comprehension retrieval data
+    - native-language QA retrieval pairs
+    - cross-script hard negatives
     synthetic_data:
       document_generation: native-language short passages in FLORES-like domains
       question_generation: questions answerable only from the associated passage
@@ -152,22 +165,68 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMMTEB-v2
     source_urls:
-      - label: Belebele arXiv
-        url: https://arxiv.org/abs/2308.16884
-      - label: mteb/belebele
-        url: https://huggingface.co/datasets/mteb/belebele
-      - label: MMTEB arXiv
-        url: https://arxiv.org/abs/2502.13595
+    - label: Belebele arXiv
+      url: https://arxiv.org/abs/2308.16884
+    - label: mteb/belebele
+      url: https://huggingface.co/datasets/mteb/belebele
+    - label: MMTEB arXiv
+      url: https://arxiv.org/abs/2502.13595
     source_notes: []
   references:
-    - title: "The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants"
-      url: https://arxiv.org/abs/2308.16884
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MMTEB: Massive Multilingual Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2502.13595
-      year: 2025
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122
+      Language Variants'
+    url: https://arxiv.org/abs/2308.16884
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MMTEB: Massive Multilingual Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2502.13595
+    year: 2025
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.0903338585
+      hit_at_10: 0.1382978723
+      recall_at_100: 0.2207446809
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 376
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.2207446809
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.2781240391
+      hit_at_10: 0.3404255319
+      recall_at_100: 0.4787234043
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 376
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4787234043
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.178216765
+      hit_at_10: 0.2473404255
+      recall_at_100: 0.4122340426
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.587766
+      query_count: 376
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.4122340426
+      safeguard_positive_rows: 221
+      rows_with_101_candidates: 221
 ```

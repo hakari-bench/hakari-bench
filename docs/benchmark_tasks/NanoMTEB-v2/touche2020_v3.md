@@ -70,8 +70,20 @@ provide unsupported commentary rather than a usable argument.
 | Positive qrels | 1704 |
 | Positives per query | avg 34.78, min 6, median 33, max 65 |
 | Multi-positive queries | 49 (100.00%) |
-| BM25 nDCG@10 | 0.8083 |
-| BM25 hit@10 | 0.9796 |
+| BM25 nDCG@10 | 0.8424 |
+| BM25 hit@10 | 1.0000 |
+| BM25 Recall@100 | 0.9243 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8810 |
+| Dense hit@10 | 1.0000 |
+| Dense Recall@100 | 0.9343 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8835 |
+| Reranking hybrid hit@10 | 1.0000 |
+| Reranking hybrid Recall@100 | 0.9495 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 43.43 |
 | Document length avg chars | 2386.21 |
 
@@ -131,18 +143,18 @@ benchmark_task_metadata:
     query_mean: 43.42857142857143
     document_mean: 2386.2117
   bm25:
-    ndcg_at_10: 0.8082621810352335
-    hit_at_10: 0.9795918367346939
-    source: dataset_bm25_column
+    ndcg_at_10: 0.8423903701446509
+    hit_at_10: 1.0
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: MTEB Webis Touché 2020 v3 test split
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoMTEB-v2 touche2020_v3 controversial questions and passages
     useful_training_data:
-      - argument retrieval data
-      - debate passage collections
-      - stance and claim-evidence corpora
+    - argument retrieval data
+    - debate passage collections
+    - stance and claim-evidence corpora
     synthetic_data:
       document_generation: pro and con argumentative passages for controversial topics
       question_generation: short controversial questions
@@ -151,22 +163,67 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-v2
     source_urls:
-      - label: Touché 2020 overview
-        url: https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf
-      - label: MTEB arXiv
-        url: https://arxiv.org/abs/2210.07316
-      - label: mteb/webis-touche2020-v3
-        url: https://huggingface.co/datasets/mteb/webis-touche2020-v3
+    - label: Touché 2020 overview
+      url: https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf
+    - label: MTEB arXiv
+      url: https://arxiv.org/abs/2210.07316
+    - label: mteb/webis-touche2020-v3
+      url: https://huggingface.co/datasets/mteb/webis-touche2020-v3
     source_notes: []
   references:
-    - title: "Overview of Touché 2020: Argument Retrieval"
-      url: https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf
-      year: 2020
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "MTEB: Massive Text Embedding Benchmark"
-      url: https://arxiv.org/abs/2210.07316
-      year: 2023
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'Overview of Touché 2020: Argument Retrieval'
+    url: https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf
+    year: 2020
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'MTEB: Massive Text Embedding Benchmark'
+    url: https://arxiv.org/abs/2210.07316
+    year: 2023
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8423903701
+      hit_at_10: 1.0
+      recall_at_100: 0.9242957746
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 49
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9242957746
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8809921897
+      hit_at_10: 1.0
+      recall_at_100: 0.9342723005
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 49
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9342723005
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8834743629
+      hit_at_10: 1.0
+      recall_at_100: 0.9495305164
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 49
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9495305164
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

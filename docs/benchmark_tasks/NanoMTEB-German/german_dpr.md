@@ -96,8 +96,20 @@ Do not seed generation with Nano evaluation questions or positive passages.
 | Queries | 200 |
 | Documents | 2,876 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.4230 |
-| BM25 hit@10 | 0.7900 |
+| BM25 nDCG@10 | 0.4647 |
+| BM25 hit@10 | 0.8150 |
+| BM25 Recall@100 | 0.9800 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7837 |
+| Dense hit@10 | 0.9450 |
+| Dense Recall@100 | 0.9550 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.6120 |
+| Reranking hybrid hit@10 | 0.9050 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 63.71 |
 | Document length avg chars | 1,288.60 |
 
@@ -142,9 +154,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2104.12741
     additional_source_urls:
-      - https://aclanthology.org/2021.mrqa-1.4/
-      - https://huggingface.co/datasets/mteb/GermanDPR
-      - https://huggingface.co/datasets/deepset/germandpr
+    - https://aclanthology.org/2021.mrqa-1.4/
+    - https://huggingface.co/datasets/mteb/GermanDPR
+    - https://huggingface.co/datasets/deepset/germandpr
   counts:
     queries: 200
     documents: 2876
@@ -160,42 +172,92 @@ benchmark_task_metadata:
     query_mean: 63.71
     document_mean: 1288.599444
   bm25:
-    ndcg_at_10: 0.4230457645
-    hit_at_10: 0.79
-    source: dataset_bm25_column
+    ndcg_at_10: 0.46473038568444763
+    hit_at_10: 0.815
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude GermanDPR test data, Nano queries, qrels, and positive passages likely to overlap with the evaluation split
+    leakage_note: exclude GermanDPR test data, Nano queries, qrels, and positive passages
+      likely to overlap with the evaluation split
     useful_training_data:
-      - non-overlapping GermanDPR train pairs
-      - GermanQuAD train contexts reformatted for retrieval
-      - German Wikipedia question-to-passage pairs
-      - German Wikipedia hard negatives selected by BM25 or dense retrieval
+    - non-overlapping GermanDPR train pairs
+    - GermanQuAD train contexts reformatted for retrieval
+    - German Wikipedia question-to-passage pairs
+    - German Wikipedia hard negatives selected by BM25 or dense retrieval
     synthetic_data:
-      document_generation: German Wikipedia-style passages with titles and explicit answer evidence
-      question_generation: self-contained German fact questions over entities, dates, counts, definitions, and locations
-      answerability: the positive passage should contain the answer text or enough context to support it
+      document_generation: German Wikipedia-style passages with titles and explicit
+        answer evidence
+      question_generation: self-contained German fact questions over entities, dates,
+        counts, definitions, and locations
+      answerability: the positive passage should contain the answer text or enough
+        context to support it
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-German
     source_urls:
-      - label: GermanQuAD/GermanDPR arXiv
-        url: https://arxiv.org/abs/2104.12741
-      - label: ACL Anthology record
-        url: https://aclanthology.org/2021.mrqa-1.4/
-      - label: mteb/GermanDPR
-        url: https://huggingface.co/datasets/mteb/GermanDPR
-      - label: deepset/germandpr
-        url: https://huggingface.co/datasets/deepset/germandpr
+    - label: GermanQuAD/GermanDPR arXiv
+      url: https://arxiv.org/abs/2104.12741
+    - label: ACL Anthology record
+      url: https://aclanthology.org/2021.mrqa-1.4/
+    - label: mteb/GermanDPR
+      url: https://huggingface.co/datasets/mteb/GermanDPR
+    - label: deepset/germandpr
+      url: https://huggingface.co/datasets/deepset/germandpr
     source_notes: []
   references:
-    - title: "GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval"
-      url: https://arxiv.org/abs/2104.12741
-      year: 2021
-      doi: 10.48550/arXiv.2104.12741
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'GermanQuAD and GermanDPR: Improving Non-English Question Answering and
+      Passage Retrieval'
+    url: https://arxiv.org/abs/2104.12741
+    year: 2021
+    doi: 10.48550/arXiv.2104.12741
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.4647303857
+      hit_at_10: 0.815
+      recall_at_100: 0.98
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.98
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.783712021
+      hit_at_10: 0.945
+      recall_at_100: 0.955
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.955
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.612010826
+      hit_at_10: 0.905
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```
 

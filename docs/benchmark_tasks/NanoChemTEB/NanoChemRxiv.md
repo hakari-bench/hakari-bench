@@ -113,8 +113,20 @@ synthetic data with Nano evaluation queries or positive paragraphs.
 | Queries | 200 |
 | Documents | 10,000 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.8718 |
-| BM25 hit@10 | 0.9400 |
+| BM25 nDCG@10 | 0.9411 |
+| BM25 hit@10 | 0.9900 |
+| BM25 Recall@100 | 0.9950 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9000 |
+| Dense hit@10 | 0.9400 |
+| Dense Recall@100 | 0.9850 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9419 |
+| Reranking hybrid hit@10 | 0.9750 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 111.70 |
 | Document length avg chars | 1,079.07 |
 
@@ -160,9 +172,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2508.01643
     additional_source_urls:
-      - https://arxiv.org/abs/2412.00532
-      - https://huggingface.co/datasets/BASF-AI/ChemRxivRetrieval
-      - https://huggingface.co/collections/BASF-AI/chembed-training-data
+    - https://arxiv.org/abs/2412.00532
+    - https://huggingface.co/datasets/BASF-AI/ChemRxivRetrieval
+    - https://huggingface.co/collections/BASF-AI/chembed-training-data
   counts:
     queries: 200
     documents: 10000
@@ -178,47 +190,98 @@ benchmark_task_metadata:
     query_mean: 111.705
     document_mean: 1079.0728
   bm25:
-    ndcg_at_10: 0.8717574389
-    hit_at_10: 0.94
-    source: dataset_bm25_column
+    ndcg_at_10: 0.941122697371718
+    hit_at_10: 0.99
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: ChemRxivRetrieval held-out test split
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude ChemRxiv Retrieval evaluation queries, qrels, and held-out source paragraphs
+    leakage_note: exclude ChemRxiv Retrieval evaluation queries, qrels, and held-out
+      source paragraphs
     useful_training_data:
-      - non-overlapping ChEmbed synthetic query-passage pairs
-      - ChemRxiv paragraphs outside the evaluation set
-      - PubChem and Semantic Scholar chemistry passages
-      - chemistry literature QA and same-paper hard negatives
+    - non-overlapping ChEmbed synthetic query-passage pairs
+    - ChemRxiv paragraphs outside the evaluation set
+    - PubChem and Semantic Scholar chemistry passages
+    - chemistry literature QA and same-paper hard negatives
     synthetic_data:
-      document_generation: non-evaluation ChemRxiv-style scientific paragraphs with methods, measurements, compounds, catalysts, and results
-      question_generation: clear technical chemistry questions answerable from one paragraph and grounded in exact experimental or computational details
-      answerability: the source paragraph should contain the requested condition, method, threshold, compound effect, or numerical result
+      document_generation: non-evaluation ChemRxiv-style scientific paragraphs with
+        methods, measurements, compounds, catalysts, and results
+      question_generation: clear technical chemistry questions answerable from one
+        paragraph and grounded in exact experimental or computational details
+      answerability: the source paragraph should contain the requested condition,
+        method, threshold, compound effect, or numerical result
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoChemTEB
     source_urls:
-      - label: ChEmbed arXiv
-        url: https://arxiv.org/abs/2508.01643
-      - label: ChemTEB arXiv
-        url: https://arxiv.org/abs/2412.00532
-      - label: BASF-AI/ChemRxivRetrieval
-        url: https://huggingface.co/datasets/BASF-AI/ChemRxivRetrieval
-      - label: ChEmbed training data collection
-        url: https://huggingface.co/collections/BASF-AI/chembed-training-data
+    - label: ChEmbed arXiv
+      url: https://arxiv.org/abs/2508.01643
+    - label: ChemTEB arXiv
+      url: https://arxiv.org/abs/2412.00532
+    - label: BASF-AI/ChemRxivRetrieval
+      url: https://huggingface.co/datasets/BASF-AI/ChemRxivRetrieval
+    - label: ChEmbed training data collection
+      url: https://huggingface.co/collections/BASF-AI/chembed-training-data
     source_notes: []
   references:
-    - title: "ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings"
-      url: https://arxiv.org/abs/2508.01643
-      year: 2025
-      doi: 10.48550/arXiv.2508.01643
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models Performance & Efficiency on a Specific Domain"
-      url: https://arxiv.org/abs/2412.00532
-      year: 2024
-      doi: 10.48550/arXiv.2412.00532
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific
+      Text Embeddings'
+    url: https://arxiv.org/abs/2508.01643
+    year: 2025
+    doi: 10.48550/arXiv.2508.01643
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'ChemTEB: Chemical Text Embedding Benchmark, an Overview of Embedding Models
+      Performance & Efficiency on a Specific Domain'
+    url: https://arxiv.org/abs/2412.00532
+    year: 2024
+    doi: 10.48550/arXiv.2412.00532
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9411226974
+      hit_at_10: 0.99
+      recall_at_100: 0.995
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.995
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8999799152
+      hit_at_10: 0.94
+      recall_at_100: 0.985
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.985
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9419245017
+      hit_at_10: 0.975
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

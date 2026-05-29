@@ -140,8 +140,20 @@ positive passages.
 | Positive qrels | 5,181 |
 | Positives per query | avg 25.91; min 1; median 18; max 100 |
 | Multi-positive queries | 171 / 200 (85.50%) |
-| BM25 nDCG@10 | 0.3699 |
-| BM25 hit@10 | 0.8050 |
+| BM25 nDCG@10 | 0.4693 |
+| BM25 hit@10 | 0.9000 |
+| BM25 Recall@100 | 0.5314 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.5003 |
+| Dense hit@10 | 0.8700 |
+| Dense Recall@100 | 0.5862 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.5262 |
+| Reranking hybrid hit@10 | 0.9000 |
+| Reranking hybrid Recall@100 | 0.6126 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 14 |
 | Query length avg chars | 75.89 |
 | Document length avg chars | 604.21 |
 
@@ -185,8 +197,8 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2412.06954
     additional_source_urls:
-      - https://doi.org/10.1145/3711896.3737435
-      - https://huggingface.co/datasets/clinia/CUREv1
+    - https://doi.org/10.1145/3711896.3737435
+    - https://huggingface.co/datasets/clinia/CUREv1
   counts:
     queries: 200
     documents: 10000
@@ -202,34 +214,83 @@ benchmark_task_metadata:
     query_mean: 75.89
     document_mean: 604.2063
   bm25:
-    ndcg_at_10: 0.3698959662
-    hit_at_10: 0.805
-    source: dataset_bm25_column
-    original_paper_en_ndcg_at_10: 0.355
-    original_paper_en_recall_at_100: 0.523
+    ndcg_at_10: 0.4692956819601968
+    hit_at_10: 0.9
+    source: dataset_candidate_subset
   learning:
     original_train_split: unavailable
     evaluation_split_origin: CURE benchmark test collection sampled into NanoMedical
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude CURE evaluation queries, CURE positive passages, and near-duplicate mined biomedical passages when training for clean evaluation
+    leakage_note: exclude CURE evaluation queries, CURE positive passages, and near-duplicate
+      mined biomedical passages when training for clean evaluation
     useful_training_data:
-      - non-overlapping clinical question-to-passage retrieval pairs
-      - biomedical evidence retrieval data grounded in article passages
-      - medical QA retrieval data with passage-level evidence
-      - clinical abbreviation and specialty-specific hard-negative training
+    - non-overlapping clinical question-to-passage retrieval pairs
+    - biomedical evidence retrieval data grounded in article passages
+    - medical QA retrieval data with passage-level evidence
+    - clinical abbreviation and specialty-specific hard-negative training
     synthetic_data:
-      document_generation: biomedical article-title plus passage snippets from non-evaluation clinical specialties
-      question_generation: concise clinician-style questions targeting diagnosis, treatment, contraindication, measurement, or clinical implication
-      hard_negatives: same-topic passages with different clinical relations or patient contexts
-      answerability: each question should be answerable from the selected passage without outside medical knowledge
-    multi_positive_training: train with multi-positive labels and same-topic hard negatives
+      document_generation: biomedical article-title plus passage snippets from non-evaluation
+        clinical specialties
+      question_generation: concise clinician-style questions targeting diagnosis,
+        treatment, contraindication, measurement, or clinical implication
+      hard_negatives: same-topic passages with different clinical relations or patient
+        contexts
+      answerability: each question should be answerable from the selected passage
+        without outside medical knowledge
+    multi_positive_training: train with multi-positive labels and same-topic hard
+      negatives
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMedical
     source_urls:
-      - label: CURE arXiv
-        url: https://arxiv.org/abs/2412.06954
-      - label: CURE KDD DOI
-        url: https://doi.org/10.1145/3711896.3737435
-      - label: clinia/CUREv1
-        url: https://huggingface.co/datasets/clinia/CUREv1
+    - label: CURE arXiv
+      url: https://arxiv.org/abs/2412.06954
+    - label: CURE KDD DOI
+      url: https://doi.org/10.1145/3711896.3737435
+    - label: clinia/CUREv1
+      url: https://huggingface.co/datasets/clinia/CUREv1
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.469295682
+      hit_at_10: 0.9
+      recall_at_100: 0.5313646014
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5313646014
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.500265766
+      hit_at_10: 0.87
+      recall_at_100: 0.5861802741
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.5861802741
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.5261565449
+      hit_at_10: 0.9
+      recall_at_100: 0.6126230457
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.07
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6126230457
+      safeguard_positive_rows: 14
+      rows_with_101_candidates: 14
 ```

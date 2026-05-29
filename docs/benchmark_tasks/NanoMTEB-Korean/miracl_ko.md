@@ -97,8 +97,20 @@ positive passages as seeds.
 | Avg positives / query | 2.54 |
 | Positives per query (min / median / max) | 1 / 2.0 / 12 |
 | Queries with multiple positives | 103 (51.5%) |
-| BM25 nDCG@10 | 0.4132 |
-| BM25 hit@10 | 0.7050 |
+| BM25 nDCG@10 | 0.5069 |
+| BM25 hit@10 | 0.8050 |
+| BM25 Recall@100 | 0.9606 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.6997 |
+| Dense hit@10 | 0.9150 |
+| Dense Recall@100 | 0.9291 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7121 |
+| Reranking hybrid hit@10 | 0.9550 |
+| Reranking hybrid Recall@100 | 0.9902 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 3 |
 | Query length avg chars | 21.70 |
 | Document length avg chars | 192.21 |
 
@@ -142,8 +154,8 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2210.09984
     additional_source_urls:
-      - http://miracl.ai/
-      - https://huggingface.co/datasets/mteb/MIRACLRetrieval
+    - http://miracl.ai/
+    - https://huggingface.co/datasets/mteb/MIRACLRetrieval
   counts:
     queries: 200
     documents: 10000
@@ -159,40 +171,88 @@ benchmark_task_metadata:
     query_mean: 21.705
     document_mean: 192.2093
   bm25:
-    ndcg_at_10: 0.4132083896
-    hit_at_10: 0.705
-    source: dataset_bm25_column
+    ndcg_at_10: 0.5069456507109353
+    hit_at_10: 0.805
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: dev
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude MIRACL Korean dev/test queries, qrels, and positive passages likely to overlap with the Nano split
+    leakage_note: exclude MIRACL Korean dev/test queries, qrels, and positive passages
+      likely to overlap with the Nano split
     useful_training_data:
-      - non-overlapping MIRACL Korean train pairs
-      - Mr. TyDi Korean retrieval pairs
-      - Korean Wikipedia question-to-passage retrieval pairs
-      - native Korean hard negatives from the same Wikipedia topic
+    - non-overlapping MIRACL Korean train pairs
+    - Mr. TyDi Korean retrieval pairs
+    - Korean Wikipedia question-to-passage retrieval pairs
+    - native Korean hard negatives from the same Wikipedia topic
     synthetic_data:
-      document_generation: Korean Wikipedia-style passages with titles, aliases, dates, places, organizations, and definitions
+      document_generation: Korean Wikipedia-style passages with titles, aliases, dates,
+        places, organizations, and definitions
       question_generation: Korean fact questions grounded in one or more source passages
-      answerability: positives should contain answer-bearing evidence or necessary context for the query
+      answerability: positives should contain answer-bearing evidence or necessary
+        context for the query
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Korean
     source_urls:
-      - label: MIRACL arXiv
-        url: https://arxiv.org/abs/2210.09984
-      - label: MIRACL project page
-        url: http://miracl.ai/
-      - label: mteb/MIRACLRetrieval
-        url: https://huggingface.co/datasets/mteb/MIRACLRetrieval
+    - label: MIRACL arXiv
+      url: https://arxiv.org/abs/2210.09984
+    - label: MIRACL project page
+      url: http://miracl.ai/
+    - label: mteb/MIRACLRetrieval
+      url: https://huggingface.co/datasets/mteb/MIRACLRetrieval
     source_notes: []
   references:
-    - title: "MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages"
-      url: https://arxiv.org/abs/2210.09984
-      year: 2023
-      doi: 10.1162/tacl_a_00595
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
+    url: https://arxiv.org/abs/2210.09984
+    year: 2023
+    doi: 10.1162/tacl_a_00595
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.5069456507
+      hit_at_10: 0.805
+      recall_at_100: 0.9606299213
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9606299213
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6997423906
+      hit_at_10: 0.915
+      recall_at_100: 0.9291338583
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9291338583
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7120510249
+      hit_at_10: 0.955
+      recall_at_100: 0.9901574803
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.015
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9901574803
+      safeguard_positive_rows: 3
+      rows_with_101_candidates: 3
 ```
 

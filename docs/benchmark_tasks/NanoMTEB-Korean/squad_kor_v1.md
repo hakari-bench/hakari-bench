@@ -91,8 +91,20 @@ use Nano evaluation questions or positive passages as seeds.
 | Queries | 200 |
 | Documents | 960 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.8812 |
-| BM25 hit@10 | 0.9450 |
+| BM25 nDCG@10 | 0.9618 |
+| BM25 hit@10 | 0.9850 |
+| BM25 Recall@100 | 0.9950 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9158 |
+| Dense hit@10 | 1.0000 |
+| Dense Recall@100 | 1.0000 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9585 |
+| Reranking hybrid hit@10 | 0.9950 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 35.77 |
 | Document length avg chars | 545.20 |
 
@@ -134,7 +146,7 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/1909.07005
     additional_source_urls:
-      - https://huggingface.co/datasets/yjoonjang/squad_kor_v1
+    - https://huggingface.co/datasets/yjoonjang/squad_kor_v1
   counts:
     queries: 200
     documents: 960
@@ -150,37 +162,86 @@ benchmark_task_metadata:
     query_mean: 35.77
     document_mean: 545.1958333333
   bm25:
-    ndcg_at_10: 0.8812320032
-    hit_at_10: 0.945
-    source: dataset_bm25_column
+    ndcg_at_10: 0.9618395415129224
+    hit_at_10: 0.985
+    source: dataset_candidate_subset
   learning:
     original_train_split: available
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude source test data, Nano queries, qrels, and positive Korean Wikipedia passages likely to overlap with the evaluation split
+    leakage_note: exclude source test data, Nano queries, qrels, and positive Korean
+      Wikipedia passages likely to overlap with the evaluation split
     useful_training_data:
-      - non-overlapping KorQuAD or SQuADKor train pairs
-      - Korean Wikipedia question-to-passage retrieval data
-      - native Korean QA reformulations
-      - same-article hard negatives
+    - non-overlapping KorQuAD or SQuADKor train pairs
+    - Korean Wikipedia question-to-passage retrieval data
+    - native Korean QA reformulations
+    - same-article hard negatives
     synthetic_data:
-      document_generation: Korean Wikipedia-style paragraphs with titles, named entities, dates, offices, locations, and numeric facts
-      question_generation: Korean extractive QA questions whose answer span is explicit in the passage
-      answerability: each positive passage should contain the answer span and enough local context
+      document_generation: Korean Wikipedia-style paragraphs with titles, named entities,
+        dates, offices, locations, and numeric facts
+      question_generation: Korean extractive QA questions whose answer span is explicit
+        in the passage
+      answerability: each positive passage should contain the answer span and enough
+        local context
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Korean
     source_urls:
-      - label: KorQuAD1.0 arXiv
-        url: https://arxiv.org/abs/1909.07005
-      - label: yjoonjang/squad_kor_v1
-        url: https://huggingface.co/datasets/yjoonjang/squad_kor_v1
+    - label: KorQuAD1.0 arXiv
+      url: https://arxiv.org/abs/1909.07005
+    - label: yjoonjang/squad_kor_v1
+      url: https://huggingface.co/datasets/yjoonjang/squad_kor_v1
     source_notes: []
   references:
-    - title: "KorQuAD1.0: Korean QA Dataset for Machine Reading Comprehension"
-      url: https://arxiv.org/abs/1909.07005
-      year: 2019
-      doi: null
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'KorQuAD1.0: Korean QA Dataset for Machine Reading Comprehension'
+    url: https://arxiv.org/abs/1909.07005
+    year: 2019
+    doi: null
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9618395415
+      hit_at_10: 0.985
+      recall_at_100: 0.995
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.995
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9157974005
+      hit_at_10: 1.0
+      recall_at_100: 1.0
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.958510434
+      hit_at_10: 0.995
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```

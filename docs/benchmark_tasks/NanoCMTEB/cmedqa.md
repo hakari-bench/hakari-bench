@@ -86,8 +86,20 @@ describing a different patient context.
 | Positive qrels | 324 |
 | Positives per query | avg 1.62 / min 1 / median 1.0 / max 9 |
 | Multi-positive queries | 70 (35.00%) |
-| BM25 nDCG@10 | 0.0113 |
-| BM25 hit@10 | 0.0200 |
+| BM25 nDCG@10 | 0.1667 |
+| BM25 hit@10 | 0.2700 |
+| BM25 Recall@100 | 0.3735 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.3322 |
+| Dense hit@10 | 0.5150 |
+| Dense Recall@100 | 0.7222 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.2595 |
+| Reranking hybrid hit@10 | 0.4200 |
+| Reranking hybrid Recall@100 | 0.6698 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 56 |
 | Query length avg chars | 51.99 |
 | Document length avg chars | 157.57 |
 
@@ -145,19 +157,19 @@ benchmark_task_metadata:
     query_mean: 51.995
     document_mean: 157.5694
   bm25:
-    ndcg_at_10: 0.011250194130034799
-    hit_at_10: 0.02
-    source: dataset_bm25_column
+    ndcg_at_10: 0.16669484941126567
+    hit_at_10: 0.27
+    source: dataset_candidate_subset
   learning:
     original_train_split: available_in_source_family
     evaluation_split_origin: CmedqaRetrieval dev
     train_eval_overlap_audit: not_audited
     leakage_note: exclude NanoCMTEB cmedqa queries, qrels, and answer passages
     useful_training_data:
-      - non-overlapping Chinese medical QA pairs
-      - consultation question-answer retrieval pairs
-      - disease and symptom paraphrase pairs
-      - same-specialty medical hard negatives
+    - non-overlapping Chinese medical QA pairs
+    - consultation question-answer retrieval pairs
+    - disease and symptom paraphrase pairs
+    - same-specialty medical hard negatives
     synthetic_data:
       document_generation: concise doctor-style Chinese medical advice answers
       question_generation: patient consultation questions with symptoms and constraints
@@ -166,17 +178,62 @@ benchmark_task_metadata:
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoCMTEB
     source_urls:
-      - label: C-Pack arXiv
-        url: https://arxiv.org/abs/2309.07597
-      - label: C-Pack DOI
-        url: https://doi.org/10.1145/3626772.3657878
-      - label: mteb/CmedqaRetrieval
-        url: https://huggingface.co/datasets/mteb/CmedqaRetrieval
+    - label: C-Pack arXiv
+      url: https://arxiv.org/abs/2309.07597
+    - label: C-Pack DOI
+      url: https://doi.org/10.1145/3626772.3657878
+    - label: mteb/CmedqaRetrieval
+      url: https://huggingface.co/datasets/mteb/CmedqaRetrieval
     source_notes: []
   references:
-    - title: "C-Pack: Packed Resources For General Chinese Embeddings"
-      url: https://arxiv.org/abs/2309.07597
-      year: 2024
-      is_paper: true
-      source_confidence: definitive_benchmark_paper
+  - title: 'C-Pack: Packed Resources For General Chinese Embeddings'
+    url: https://arxiv.org/abs/2309.07597
+    year: 2024
+    is_paper: true
+    source_confidence: definitive_benchmark_paper
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.1666948494
+      hit_at_10: 0.27
+      recall_at_100: 0.3734567901
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.3734567901
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.3322404347
+      hit_at_10: 0.515
+      recall_at_100: 0.7222222222
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.7222222222
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.259495033
+      hit_at_10: 0.42
+      recall_at_100: 0.6697530864
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.28
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.6697530864
+      safeguard_positive_rows: 56
+      rows_with_101_candidates: 56
 ```

@@ -111,8 +111,20 @@ synthetic seeds.
 | Avg positives / query | 1.67 |
 | Positives per query (min / median / max) | 1 / 1 / 4 |
 | Queries with multiple positives | 89 (44.50%) |
-| BM25 nDCG@10 | 0.5132 |
-| BM25 hit@10 | 0.7000 |
+| BM25 nDCG@10 | 0.6979 |
+| BM25 hit@10 | 0.8400 |
+| BM25 Recall@100 | 0.9042 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.8739 |
+| Dense hit@10 | 0.9400 |
+| Dense Recall@100 | 0.9341 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.7767 |
+| Reranking hybrid hit@10 | 0.8950 |
+| Reranking hybrid Recall@100 | 0.9790 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 52.19 |
 | Document length avg chars | 484.49 |
 
@@ -160,11 +172,11 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://openreview.net/forum?id=P5UQFFoQ4PJ
     additional_source_urls:
-      - https://arxiv.org/abs/2408.12503
-      - https://aclanthology.org/2025.naacl-long.12/
-      - https://github.com/vladislavneon/RuBQ
-      - https://doi.org/10.5281/zenodo.4345696
-      - https://huggingface.co/datasets/ai-forever/rubq-retrieval
+    - https://arxiv.org/abs/2408.12503
+    - https://aclanthology.org/2025.naacl-long.12/
+    - https://github.com/vladislavneon/RuBQ
+    - https://doi.org/10.5281/zenodo.4345696
+    - https://huggingface.co/datasets/ai-forever/rubq-retrieval
   counts:
     queries: 200
     documents: 10000
@@ -180,49 +192,99 @@ benchmark_task_metadata:
     query_mean: 52.19
     document_mean: 484.4884
   bm25:
-    ndcg_at_10: 0.5131650332
-    hit_at_10: 0.7
-    source: dataset_bm25_column
+    ndcg_at_10: 0.6979381402428251
+    hit_at_10: 0.84
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: RuBQRetrieval test split
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude RuBQRetrieval test questions, qrels, and answer-bearing positive paragraphs
+    leakage_note: exclude RuBQRetrieval test questions, qrels, and answer-bearing
+      positive paragraphs
     useful_training_data:
-      - non-overlapping RuBQ development questions and supporting paragraphs when allowed
-      - Russian KBQA question-to-Wikipedia evidence pairs
-      - Wikidata relation questions paired with Russian Wikipedia evidence
-      - Russian open-domain QA data with paragraph-level positives and entity hard negatives
+    - non-overlapping RuBQ development questions and supporting paragraphs when allowed
+    - Russian KBQA question-to-Wikipedia evidence pairs
+    - Wikidata relation questions paired with Russian Wikipedia evidence
+    - Russian open-domain QA data with paragraph-level positives and entity hard negatives
     synthetic_data:
-      document_generation: non-evaluation Russian Wikipedia-style paragraphs with explicit entity relations
-      question_generation: concise Russian KBQA-style questions about capital, location, author, family, alias, and work-setting relations
-      answerability: each question should be answerable from the paragraph and distinguishable from same-entity negatives
+      document_generation: non-evaluation Russian Wikipedia-style paragraphs with
+        explicit entity relations
+      question_generation: concise Russian KBQA-style questions about capital, location,
+        author, family, alias, and work-setting relations
+      answerability: each question should be answerable from the paragraph and distinguishable
+        from same-entity negatives
     multi_positive_training: multi_positive_objective
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoRuMTEB
     source_urls:
-      - label: RuBQ 2.0 OpenReview
-        url: https://openreview.net/forum?id=P5UQFFoQ4PJ
-      - label: ruMTEB arXiv
-        url: https://arxiv.org/abs/2408.12503
-      - label: RuBQ GitHub
-        url: https://github.com/vladislavneon/RuBQ
-      - label: RuBQ Zenodo
-        url: https://doi.org/10.5281/zenodo.4345696
-      - label: ai-forever/rubq-retrieval
-        url: https://huggingface.co/datasets/ai-forever/rubq-retrieval
+    - label: RuBQ 2.0 OpenReview
+      url: https://openreview.net/forum?id=P5UQFFoQ4PJ
+    - label: ruMTEB arXiv
+      url: https://arxiv.org/abs/2408.12503
+    - label: RuBQ GitHub
+      url: https://github.com/vladislavneon/RuBQ
+    - label: RuBQ Zenodo
+      url: https://doi.org/10.5281/zenodo.4345696
+    - label: ai-forever/rubq-retrieval
+      url: https://huggingface.co/datasets/ai-forever/rubq-retrieval
     source_notes: []
   references:
-    - title: "RuBQ 2.0: An Innovated Russian Question Answering Dataset"
-      url: https://openreview.net/forum?id=P5UQFFoQ4PJ
-      year: 2021
-      doi: 10.5281/zenodo.4345696
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design"
-      url: https://arxiv.org/abs/2408.12503
-      year: 2025
-      doi: 10.18653/v1/2025.naacl-long.12
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'RuBQ 2.0: An Innovated Russian Question Answering Dataset'
+    url: https://openreview.net/forum?id=P5UQFFoQ4PJ
+    year: 2021
+    doi: 10.5281/zenodo.4345696
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: 'The Russian-focused embedders'' exploration: ruMTEB benchmark and Russian
+      embedding model design'
+    url: https://arxiv.org/abs/2408.12503
+    year: 2025
+    doi: 10.18653/v1/2025.naacl-long.12
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.6979381402
+      hit_at_10: 0.84
+      recall_at_100: 0.9041916168
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9041916168
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.8739121548
+      hit_at_10: 0.94
+      recall_at_100: 0.9341317365
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9341317365
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.7766980278
+      hit_at_10: 0.895
+      recall_at_100: 0.9790419162
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9790419162
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```

@@ -94,8 +94,20 @@ positive chunks as seeds.
 | Queries | 114 |
 | Documents | 720 |
 | Positive qrels | 114 |
-| BM25 nDCG@10 | 0.8051 |
-| BM25 hit@10 | 0.9211 |
+| BM25 nDCG@10 | 0.9053 |
+| BM25 hit@10 | 0.9912 |
+| BM25 Recall@100 | 1.0000 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.7745 |
+| Dense hit@10 | 0.9211 |
+| Dense Recall@100 | 0.9561 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.8530 |
+| Reranking hybrid hit@10 | 0.9737 |
+| Reranking hybrid Recall@100 | 1.0000 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100 |
+| Reranking hybrid safeguard rows | 0 |
 | Query length avg chars | 69.61 |
 | Document length avg chars | 823.60 |
 
@@ -137,11 +149,12 @@ benchmark_task_metadata:
   source_research:
     primary_source_type: dataset_card
     paper_pdf_or_html_checked: true
-    no_paper_note: The AutoRAG paper was checked, but the exact markers_bm dataset construction is primarily described by dataset metadata and observed data.
+    no_paper_note: The AutoRAG paper was checked, but the exact markers_bm dataset
+      construction is primarily described by dataset metadata and observed data.
     paper_url: https://arxiv.org/abs/2410.20878
     additional_source_urls:
-      - https://github.com/Marker-Inc-Korea/AutoRAG
-      - https://huggingface.co/datasets/yjoonjang/markers_bm
+    - https://github.com/Marker-Inc-Korea/AutoRAG
+    - https://huggingface.co/datasets/yjoonjang/markers_bm
   counts:
     queries: 114
     documents: 720
@@ -157,40 +170,91 @@ benchmark_task_metadata:
     query_mean: 69.6140350877
     document_mean: 823.5986111111
   bm25:
-    ndcg_at_10: 0.8051328273
-    hit_at_10: 0.9210526316
-    source: dataset_bm25_column
+    ndcg_at_10: 0.9053156960168427
+    hit_at_10: 0.9912280701754386
+    source: dataset_candidate_subset
   learning:
     original_train_split: unknown
     evaluation_split_origin: test
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude markers_bm evaluation queries, qrels, answers, and positive chunks likely to overlap with the Nano split
+    leakage_note: exclude markers_bm evaluation queries, qrels, answers, and positive
+      chunks likely to overlap with the Nano split
     useful_training_data:
-      - non-overlapping Korean public-report RAG QA pairs
-      - Korean finance, government, legal, medical, and commerce document retrieval pairs
-      - question-to-chunk supervision from public PDFs
-      - hard negatives from the same report or domain
+    - non-overlapping Korean public-report RAG QA pairs
+    - Korean finance, government, legal, medical, and commerce document retrieval
+      pairs
+    - question-to-chunk supervision from public PDFs
+    - hard negatives from the same report or domain
     synthetic_data:
-      document_generation: Korean report chunks with headings, tables, dates, percentages, policy conditions, and domain terminology
-      question_generation: Korean RAG questions asking for factual explanations, quantities, comparisons, and named measures grounded in one chunk
-      answerability: the positive chunk should contain the evidence needed to answer the question without external context
+      document_generation: Korean report chunks with headings, tables, dates, percentages,
+        policy conditions, and domain terminology
+      question_generation: Korean RAG questions asking for factual explanations, quantities,
+        comparisons, and named measures grounded in one chunk
+      answerability: the positive chunk should contain the evidence needed to answer
+        the question without external context
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMTEB-Korean
     source_urls:
-      - label: AutoRAG arXiv
-        url: https://arxiv.org/abs/2410.20878
-      - label: AutoRAG GitHub
-        url: https://github.com/Marker-Inc-Korea/AutoRAG
-      - label: yjoonjang/markers_bm
-        url: https://huggingface.co/datasets/yjoonjang/markers_bm
+    - label: AutoRAG arXiv
+      url: https://arxiv.org/abs/2410.20878
+    - label: AutoRAG GitHub
+      url: https://github.com/Marker-Inc-Korea/AutoRAG
+    - label: yjoonjang/markers_bm
+      url: https://huggingface.co/datasets/yjoonjang/markers_bm
     source_notes: []
   references:
-    - title: "AutoRAG: Automated Framework for optimization of Retrieval Augmented Generation Pipeline"
-      url: https://arxiv.org/abs/2410.20878
-      year: 2024
-      doi: 10.48550/arXiv.2410.20878
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'AutoRAG: Automated Framework for optimization of Retrieval Augmented Generation
+      Pipeline'
+    url: https://arxiv.org/abs/2410.20878
+    year: 2024
+    doi: 10.48550/arXiv.2410.20878
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.905315696
+      hit_at_10: 0.9912280702
+      recall_at_100: 1.0
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 114
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.7744616364
+      hit_at_10: 0.9210526316
+      recall_at_100: 0.9561403509
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 114
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.9561403509
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.8529929439
+      hit_at_10: 0.9736842105
+      recall_at_100: 1.0
+      candidate_count_min: 100
+      candidate_count_max: 100
+      candidate_count_mean: 100.0
+      query_count: 114
+      query_coverage: 1.0
+      relevant_coverage_at_100: 1.0
+      safeguard_positive_rows: 0
+      rows_with_101_candidates: 0
 ```
 

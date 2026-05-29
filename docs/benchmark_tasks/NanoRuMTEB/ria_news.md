@@ -107,8 +107,20 @@ positive articles as seeds.
 | Queries | 200 |
 | Documents | 10,000 |
 | Positive qrels | 200 |
-| BM25 nDCG@10 | 0.8479 |
-| BM25 hit@10 | 0.9150 |
+| BM25 nDCG@10 | 0.9135 |
+| BM25 hit@10 | 0.9500 |
+| BM25 Recall@100 | 0.9750 |
+| BM25 candidate subset | top-500 (`bm25`) |
+| Dense nDCG@10 | 0.9478 |
+| Dense hit@10 | 0.9700 |
+| Dense Recall@100 | 0.9750 |
+| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
+| Reranking hybrid nDCG@10 | 0.9272 |
+| Reranking hybrid hit@10 | 0.9450 |
+| Reranking hybrid Recall@100 | 0.9900 |
+| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
+| Reranking hybrid candidates / query | 100-101 |
+| Reranking hybrid safeguard rows | 2 |
 | Query length avg chars | 61.99 |
 | Document length avg chars | 1,145.34 |
 
@@ -152,9 +164,9 @@ benchmark_task_metadata:
     paper_pdf_or_html_checked: true
     paper_url: https://arxiv.org/abs/2408.12503
     additional_source_urls:
-      - https://aclanthology.org/2025.naacl-long.12/
-      - https://arxiv.org/abs/1901.07786
-      - https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2
+    - https://aclanthology.org/2025.naacl-long.12/
+    - https://arxiv.org/abs/1901.07786
+    - https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2
   counts:
     queries: 200
     documents: 10000
@@ -170,45 +182,95 @@ benchmark_task_metadata:
     query_mean: 61.99
     document_mean: 1145.3386
   bm25:
-    ndcg_at_10: 0.8479284861
-    hit_at_10: 0.915
-    source: dataset_bm25_column
+    ndcg_at_10: 0.9134808377831043
+    hit_at_10: 0.95
+    source: dataset_candidate_subset
   learning:
     original_train_split: not_found
     evaluation_split_origin: RiaNewsRetrieval test split through RiaNewsRetrievalHardNegatives.v2
     train_eval_overlap_audit: not_audited
-    leakage_note: exclude RiaNewsRetrieval test headlines, qrels, and overlapping article texts
+    leakage_note: exclude RiaNewsRetrieval test headlines, qrels, and overlapping
+      article texts
     useful_training_data:
-      - non-overlapping Russian headline-to-article retrieval pairs
-      - Russian news summarization corpora converted to asymmetric retrieval pairs
-      - same-topic Russian news hard-negative clusters
-      - Russian news search and click data with overlap removed
+    - non-overlapping Russian headline-to-article retrieval pairs
+    - Russian news summarization corpora converted to asymmetric retrieval pairs
+    - same-topic Russian news hard-negative clusters
+    - Russian news search and click data with overlap removed
     synthetic_data:
-      document_generation: non-evaluation Russian news articles with agency style, dates, quotes, named entities, and event details
-      question_generation: concise Russian headline-like queries naming the main event, actor, location, or outcome
-      answerability: the headline should be supported by the article body and distinguishable from same-topic news negatives
+      document_generation: non-evaluation Russian news articles with agency style,
+        dates, quotes, named entities, and event details
+      question_generation: concise Russian headline-like queries naming the main event,
+        actor, location, or outcome
+      answerability: the headline should be supported by the article body and distinguishable
+        from same-topic news negatives
     multi_positive_training: single_positive_question_document_focus
   links:
     nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoRuMTEB
     source_urls:
-      - label: ruMTEB arXiv
-        url: https://arxiv.org/abs/2408.12503
-      - label: RIA headline generation arXiv
-        url: https://arxiv.org/abs/1901.07786
-      - label: RiaNewsRetrieval source dataset
-        url: https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2
+    - label: ruMTEB arXiv
+      url: https://arxiv.org/abs/2408.12503
+    - label: RIA headline generation arXiv
+      url: https://arxiv.org/abs/1901.07786
+    - label: RiaNewsRetrieval source dataset
+      url: https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2
     source_notes: []
   references:
-    - title: "The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design"
-      url: https://arxiv.org/abs/2408.12503
-      year: 2025
-      doi: 10.18653/v1/2025.naacl-long.12
-      is_paper: true
-      source_confidence: definitive_paper_link
-    - title: "Self-Attentive Model for Headline Generation"
-      url: https://arxiv.org/abs/1901.07786
-      year: 2019
-      doi: null
-      is_paper: true
-      source_confidence: definitive_paper_link
+  - title: 'The Russian-focused embedders'' exploration: ruMTEB benchmark and Russian
+      embedding model design'
+    url: https://arxiv.org/abs/2408.12503
+    year: 2025
+    doi: 10.18653/v1/2025.naacl-long.12
+    is_paper: true
+    source_confidence: definitive_paper_link
+  - title: Self-Attentive Model for Headline Generation
+    url: https://arxiv.org/abs/1901.07786
+    year: 2019
+    doi: null
+    is_paper: true
+    source_confidence: definitive_paper_link
+  candidate_subsets:
+    bm25:
+      config: bm25
+      label: BM25
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9134808378
+      hit_at_10: 0.95
+      recall_at_100: 0.975
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.975
+    dense:
+      config: harrier_oss_v1_270m
+      label: Dense
+      source: dataset_candidate_subset
+      top_k: 500
+      ndcg_at_10: 0.9477866138
+      hit_at_10: 0.97
+      recall_at_100: 0.975
+      candidate_count_min: 500
+      candidate_count_max: 500
+      candidate_count_mean: 500.0
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.975
+    reranking_hybrid:
+      config: reranking_hybrid
+      label: Reranking hybrid
+      source: dataset_candidate_subset
+      top_k: 100
+      ndcg_at_10: 0.9271714542
+      hit_at_10: 0.945
+      recall_at_100: 0.99
+      candidate_count_min: 100
+      candidate_count_max: 101
+      candidate_count_mean: 100.01
+      query_count: 200
+      query_coverage: 1.0
+      relevant_coverage_at_100: 0.99
+      safeguard_positive_rows: 2
+      rows_with_101_candidates: 2
 ```
