@@ -1,0 +1,142 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMIRACL",
+    "backing_dataset": "NanoMIRACL",
+    "dataset_id": "hakari-bench/NanoMIRACL",
+    "task_name": "fa",
+    "split_name": "fa",
+    "language": "fa",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMIRACL/fa.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 427
+    },
+    "positives_per_query": {
+      "average": 2.135,
+      "min": 1,
+      "median": 2.0,
+      "max": 8,
+      "multi_positive_queries": 105,
+      "multi_positive_query_percent": 52.5
+    },
+    "text_stats_chars": {
+      "query_mean": 39.99,
+      "document_mean": 310.7486
+    },
+    "bm25": {
+      "ndcg_at_10": 0.5787921084448737,
+      "hit_at_10": 0.91,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5787921084,
+        "hit_at_10": 0.91,
+        "recall_at_100": 0.9601873536,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9601873536
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.647563983,
+        "hit_at_10": 0.875,
+        "recall_at_100": 0.9016393443,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9016393443
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.6333969451,
+        "hit_at_10": 0.935,
+        "recall_at_100": 0.9929742389,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.005,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9929742389,
+        "safeguard_positive_rows": 1,
+        "rows_with_101_candidates": 1
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "unknown",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding upstream development/test data or other MIRACL-derived data likely to overlap with the NanoMIRACL evaluation questions and passages",
+      "useful_training_data": [
+        "non-overlapping MIRACL Persian train split data",
+        "Persian Wikipedia question-to-passage retrieval pairs",
+        "Persian entity-attribute QA evidence retrieval pairs"
+      ],
+      "synthetic_data": {
+        "document_generation": "Persian Wikipedia-style passages with titles, aliases, dates, places, offices, measurements, definitions, and factual evidence",
+        "question_generation": "Persian fact questions using varied چه, کدام, چند, در چه سالی, در کجا, علت, and چه کسی forms",
+        "answerability": "questions should be grounded in explicit facts or relations in the generated or selected passage"
+      },
+      "multi_positive_training": "single_positive_question_document_focus"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMIRACL",
+      "source_urls": [
+        {
+          "label": "MIRACL corpus dataset",
+          "url": "https://huggingface.co/datasets/miracl/miracl-corpus"
+        },
+        {
+          "label": "MIRACL source queries and qrels",
+          "url": "https://huggingface.co/datasets/miracl/miracl"
+        },
+        {
+          "label": "MIRACL GitHub repository",
+          "url": "https://github.com/project-miracl/miracl"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages",
+        "url": "https://arxiv.org/abs/2210.09984",
+        "year": 2022,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2210.09984",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages",
+        "url": "https://aclanthology.org/2023.tacl-1.63/",
+        "year": 2023,
+        "is_paper": true,
+        "doi": "10.1162/tacl_a_00595",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

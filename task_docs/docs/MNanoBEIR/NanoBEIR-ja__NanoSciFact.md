@@ -1,0 +1,140 @@
+# MNanoBEIR / NanoBEIR-ja / NanoSciFact
+
+## Overview
+
+`NanoBEIR-ja__NanoSciFact` is the Japanese NanoBEIR version of SciFact, a
+scientific claim verification retrieval benchmark. The task uses Japanese
+translated scientific claims as queries and asks a retriever to rank Japanese
+translated abstracts that provide evidence for support or refutation. The Nano
+split contains 50 queries, 2,919 documents, and 56 positive qrels. Most queries
+have one positive, while 4 queries have multiple positives. This is a
+claim-to-evidence task rather than a related-paper task: the model must find
+the abstract whose experimental finding bears on a specific scientific claim.
+
+## Details
+
+### What the Original Data Measures
+
+[Fact or Fiction: Verifying Scientific Claims](https://arxiv.org/abs/2004.14974)
+introduced SciFact as expert-written scientific claims paired with evidence
+abstracts, support/refute labels, and rationales. BEIR evaluates the retrieval
+component: before a verifier can decide whether a claim is supported or refuted,
+the system must retrieve the relevant abstract. In this Japanese NanoBEIR
+version, the evidence retrieval problem is tested through translated
+biomedical and scientific claims and translated abstracts.
+
+### Observed Data Profile
+
+The task has 50 queries and 2,919 documents. It contains 56 positive qrels,
+with 1.12 positives per query on average. The positives-per-query distribution
+is 1 minimum, 1.00 median, and 4 maximum, and only 8.0% of queries are
+multi-positive. Queries average 40.58 characters, while documents average
+633.08 characters. The examples cover neutrophil migration, antiretroviral
+therapy, interferon-induced genes, cervical cancer screening, and TDP-43
+interactions. Claims are concise but terminology-heavy, and abstracts contain
+the experimental context needed for verification.
+
+### BM25 Evaluation Profile
+
+The BM25 top-500 subset reaches nDCG@10 = 0.7023, hit@10 = 0.8600, and
+Recall@100 = 0.9464. BM25 is very strong because scientific claims often repeat
+distinctive entities, proteins, diseases, interventions, or outcome terms that
+also appear in the evidence abstract. Exact terminology is highly predictive in
+this task. The limitation is that evidence may use abbreviations, different
+phrasing, or broader experimental descriptions, so lexical matching alone does
+not always produce the best ranked evidence.
+
+### Dense Evaluation Profile
+
+The dense `harrier-oss-270m` top-500 subset reaches nDCG@10 = 0.6751, hit@10 =
+0.7800, and Recall@100 = 0.8750. Dense retrieval is competitive but below BM25
+on all reported metrics. This suggests that general embedding similarity helps
+with scientific paraphrase, but it can lose the precise biomedical anchors that
+matter for claim verification. In SciFact, small entity and relation differences
+can change whether an abstract verifies a claim, so broad semantic relatedness
+is not enough.
+
+### Reranking Hybrid Evaluation Profile
+
+The `reranking_hybrid` subset uses 100 to 101 candidates per query and reaches
+nDCG@10 = 0.7232, hit@10 = 0.8400, and Recall@100 = 0.9286. Four queries use
+the rank-101 safeguard. Hybrid retrieval has the best nDCG@10, while BM25 has
+the best hit@10 and Recall@100. This means lexical retrieval gives the broadest
+candidate coverage for this split, but hybrid fusion improves the ordering of
+the highest-ranked evidence when lexical and semantic signals reinforce each
+other.
+
+### Metric Interpretation for Model Researchers
+
+This task is a strong reminder that scientific claim retrieval is not always
+dense-dominant. BM25 performs extremely well because exact biomedical terms are
+central to relevance. Dense retrieval alone can underperform when it blurs
+nearby scientific concepts. `reranking_hybrid` gives the best nDCG@10, so
+combining exact terminology with semantic evidence matching is valuable, but
+models should not discard lexical anchors. Improvements should preserve entity,
+intervention, and outcome specificity.
+
+### Query and Relevance Type Tendencies
+
+Queries are atomic scientific claims. Relevant documents are abstracts that
+describe experiments, observations, or findings related to the claim. Many
+queries involve genes, proteins, viruses, therapies, or clinical endpoints.
+Relevance depends on the exact scientific relation, not merely on topic
+overlap. A passage about the same disease or molecule can be a hard negative if
+it does not address the claim's assertion.
+
+### Representative Failure Modes
+
+BM25 can over-rank abstracts that repeat the right terms but describe a
+different finding. Dense retrieval can over-rank semantically related abstracts
+from the same biomedical area while missing the exact evidence. Hybrid retrieval
+can improve nDCG but still miss candidate coverage compared with BM25 when the
+semantic side adds noisy related documents. Retrieval errors are costly because
+a downstream verifier cannot support or refute a claim without the evidence
+abstract.
+
+### Training Data That May Help
+
+Useful training data includes non-overlapping scientific fact verification,
+claim-evidence retrieval, biomedical abstract retrieval, and Japanese or
+multilingual scientific NLI. Hard negatives should share terminology with the
+claim but differ in the actual finding, intervention, or outcome. Training
+should exclude SciFact, BEIR, NanoBEIR, and overlapping translated abstracts
+from this benchmark.
+
+### Model Improvement Notes
+
+Strong systems should combine exact biomedical term handling with claim-level
+semantic matching. Rerankers should attend to relation direction, experimental
+context, and whether the abstract actually bears on the claim. For this task,
+lexical recall is a high-value baseline, and dense models should be trained not
+to smooth away scientific specificity.
+
+## Example Data
+
+| Query | Positive document |
+| --- | --- |
+| Ly49Qは、膜ラフト機能を制御することにより、好中球の炎症部位への移動の組織化を指示する。 | 好中球は感染部位や炎症部位へ迅速に浸潤するために、急速に偏極化し、方向性のある運動を行う。 |
+| 抗レトロウイルス療法は、広範なCD4層において結核の発生率を低下させる。 | HIV感染は結核発症の最も強い危険因子であり、抗レトロウイルス療法はHIV関連結核の予防に大きな可能性を有している。 |
+| インターフェロン誘導性遺伝子の急速な上昇調節およびより高い基礎的発現は、ウエストナイルウイルスに感染した顆粒細胞ニューロンの生存を低下させる。 | 脳内の神経細胞が微生物感染に対して感受性を示すことは、臨床的転帰を左右する主要な要因である。 |
+| HPV検出を用いた子宮頸がんの一次スクリーニングは、子宮頸部上皮内腫瘍2度を検出するための従来の細胞診よりも縦断的感度が高い。 | HPV検査に基づく子宮頸がんスクリーニングは、高度の子宮頸部上皮内腫瘍の検出感度を高める。 |
+| TDP-43と呼吸鎖複合体Iのタンパク質ND3およびND6との相互作用を阻害すると、TDP-43誘導性の神経細胞死が増加する。 | TAR DNA結合タンパク質43の遺伝的変異は筋萎縮性側索硬化症を引き起こし、神経変性疾患に関与する。 |
+
+### Public Sources
+
+- [Fact or Fiction: Verifying Scientific Claims](https://arxiv.org/abs/2004.14974).
+- [SciFact repository](https://github.com/allenai/scifact).
+- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663).
+- [MMTEB: Massive Multilingual Text Embedding Benchmark](https://arxiv.org/abs/2502.13595).
+- [Zeta Alpha NanoBEIR collection](https://huggingface.co/collections/zeta-alpha-ai/nanobeir).
+- [hakari-bench/NanoBEIR-ja](https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja).
+
+### Source Reference Table
+
+| Title | Year | Type | URL |
+| --- | ---: | --- | --- |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | task paper | https://arxiv.org/abs/2004.14974 |
+| SciFact repository |  | project page | https://github.com/allenai/scifact |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |

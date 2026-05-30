@@ -1,0 +1,142 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-v2",
+    "backing_dataset": "NanoMTEB-v2",
+    "dataset_id": "hakari-bench/NanoMTEB-v2",
+    "task_name": "fi_qa2018",
+    "split_name": "fi_qa2018",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMTEB-v2/fi_qa2018.md",
+    "source_research": {
+      "primary_source_type": "task_paper_and_benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 534
+    },
+    "positives_per_query": {
+      "average": 2.67,
+      "min": 1,
+      "median": 2.0,
+      "max": 12,
+      "multi_positive_queries": 128,
+      "multi_positive_query_percent": 64.0
+    },
+    "text_stats_chars": {
+      "query_mean": 61.695,
+      "document_mean": 780.3921
+    },
+    "bm25": {
+      "ndcg_at_10": 0.379916004723619,
+      "hit_at_10": 0.66,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3799160047,
+        "hit_at_10": 0.66,
+        "recall_at_100": 0.7097378277,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7097378277
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5494264673,
+        "hit_at_10": 0.8,
+        "recall_at_100": 0.8258426966,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8258426966
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.5257508766,
+        "hit_at_10": 0.8,
+        "recall_at_100": 0.8389513109,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.085,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8389513109,
+        "safeguard_positive_rows": 17,
+        "rows_with_101_candidates": 17
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "MTEB FiQA2018 test split",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoMTEB-v2 fi_qa2018 question-answer pairs",
+      "useful_training_data": [
+        "financial QA pairs",
+        "investor forum answers",
+        "personal-finance FAQ retrieval data"
+      ],
+      "synthetic_data": {
+        "document_generation": "finance advice and explanation passages",
+        "question_generation": "short investor or personal-finance questions",
+        "answerability": "positive passage should directly answer the financial question"
+      },
+      "multi_positive_training": "recommended"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-v2",
+      "source_urls": [
+        {
+          "label": "FiQA paper DOI",
+          "url": "https://doi.org/10.1145/3184558.3192301"
+        },
+        {
+          "label": "MTEB arXiv",
+          "url": "https://arxiv.org/abs/2210.07316"
+        },
+        {
+          "label": "mteb/fiqa",
+          "url": "https://huggingface.co/datasets/mteb/fiqa"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "Financial Opinion Mining and Question Answering",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      }
+    ],
+    "source_dataset_id": "mteb/fiqa",
+    "source_task": "FiQA2018"
+  }
+}

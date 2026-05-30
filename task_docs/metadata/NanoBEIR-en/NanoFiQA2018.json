@@ -1,0 +1,147 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoBEIR-en",
+    "backing_dataset": "NanoBEIR-en",
+    "dataset_id": "hakari-bench/NanoBEIR-en",
+    "task_name": "NanoFiQA2018",
+    "split_name": "NanoFiQA2018",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoBEIR-en/NanoFiQA2018.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 50,
+      "documents": 4598,
+      "positive_qrels": 123
+    },
+    "positives_per_query": {
+      "average": 2.46,
+      "min": 1,
+      "median": 2.0,
+      "max": 15,
+      "multi_positive_queries": 28,
+      "multi_positive_query_percent": 56.0
+    },
+    "text_stats_chars": {
+      "query_mean": 58.52,
+      "document_mean": 899.632666
+    },
+    "bm25": {
+      "ndcg_at_10": 0.4211170299712721,
+      "hit_at_10": 0.74,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.42111703,
+        "hit_at_10": 0.74,
+        "recall_at_100": 0.7235772358,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7235772358
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5011264512,
+        "hit_at_10": 0.76,
+        "recall_at_100": 0.7317073171,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7317073171
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.5150252669,
+        "hit_at_10": 0.8,
+        "recall_at_100": 0.8048780488,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.08,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8048780488,
+        "safeguard_positive_rows": 4,
+        "rows_with_101_candidates": 4
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "unknown",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding upstream dev/test data or other FiQA/BEIR-derived records likely to overlap with the NanoBEIR evaluation questions and answers",
+      "useful_training_data": [
+        "non-overlapping FiQA training question-answer pairs",
+        "financial community QA pairs",
+        "personal-finance forum and FAQ retrieval data",
+        "domain QA covering taxes, retirement accounts, brokerage, debt, and banking"
+      ],
+      "synthetic_data": {
+        "document_generation": "community-style financial answer posts with practical advice, caveats, account types, jurisdictions, and numeric assumptions",
+        "question_generation": "realistic personal-finance questions asking for decisions or explanations that the answer resolves",
+        "answerability": "positives should answer the financial decision or explanation need, not merely mention the same product"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-en",
+      "source_urls": [
+        {
+          "label": "FiQA 2018 official challenge site",
+          "url": "https://sites.google.com/view/fiqa/home"
+        },
+        {
+          "label": "Zeta Alpha NanoBEIR collection",
+          "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
+        }
+      ],
+      "source_notes": [
+        "no_arxiv_page_confirmed_for_original_task_paper"
+      ]
+    },
+    "references": [
+      {
+        "title": "WWW'18 Open Challenge: Financial Opinion Mining and Question Answering",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "doi": "10.1145/3184558.3192301",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "FiQA 2018 official challenge site",
+        "url": "https://sites.google.com/view/fiqa/home",
+        "is_paper": false,
+        "source_confidence": "definitive_project_page"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "benchmark_context_paper"
+      }
+    ]
+  }
+}

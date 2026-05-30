@@ -1,0 +1,136 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoBRIGHT",
+    "backing_dataset": "NanoBRIGHT",
+    "dataset_id": "hakari-bench/NanoBRIGHT",
+    "task_name": "NanoBrightTheoremQAQuestions",
+    "split_name": "NanoBrightTheoremQAQuestions",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoBRIGHT/NanoBrightTheoremQAQuestions.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 194,
+      "documents": 10000,
+      "positive_qrels": 439
+    },
+    "positives_per_query": {
+      "average": 2.262887,
+      "min": 1,
+      "median": 2.0,
+      "max": 7,
+      "multi_positive_queries": 116,
+      "multi_positive_query_percent": 59.793814
+    },
+    "text_stats_chars": {
+      "query_mean": 425.639175,
+      "document_mean": 543.4251
+    },
+    "bm25": {
+      "ndcg_at_10": 0.164648215603047,
+      "hit_at_10": 0.36082474226804123,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.1646482156,
+        "hit_at_10": 0.3608247423,
+        "recall_at_100": 0.4874715262,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 194,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.4874715262
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2798225013,
+        "hit_at_10": 0.5670103093,
+        "recall_at_100": 0.6241457859,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 194,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6241457859
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.2316148432,
+        "hit_at_10": 0.5,
+        "recall_at_100": 0.6560364465,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.195876,
+        "query_count": 194,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6560364465,
+        "safeguard_positive_rows": 38,
+        "rows_with_101_candidates": 38
+      }
+    },
+    "learning": {
+      "original_train_split": "unknown",
+      "evaluation_split_origin": "BRIGHT TheoremQA question-retrieval evaluation split",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoBRIGHT TheoremQAQuestions queries and theorem-linked positives",
+      "useful_training_data": [
+        "non-overlapping theorem-labeled STEM problems",
+        "TheoremQA train-style questions",
+        "solved problems grouped by theorem"
+      ],
+      "synthetic_data": {
+        "document_generation": "solved STEM problems labeled by theorem",
+        "question_generation": "concrete applied scenarios preserving the required theorem",
+        "answerability": "positives should use the same theorem despite different surface wording"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBRIGHT",
+      "source_urls": [
+        {
+          "label": "BRIGHT arXiv",
+          "url": "https://arxiv.org/abs/2407.12883"
+        },
+        {
+          "label": "BRIGHT project",
+          "url": "https://brightbenchmark.github.io/"
+        },
+        {
+          "label": "xlangai/BRIGHT",
+          "url": "https://huggingface.co/datasets/xlangai/BRIGHT"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval",
+        "url": "https://arxiv.org/abs/2407.12883",
+        "year": 2024,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2407.12883",
+        "source_confidence": "definitive_paper_link"
+      }
+    ],
+    "source_dataset_id": "xlangai/BRIGHT",
+    "source_task": "TheoremQA question retrieval"
+  }
+}

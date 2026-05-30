@@ -1,0 +1,143 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoLongEmbed",
+    "backing_dataset": "NanoLongEmbed",
+    "dataset_id": "hakari-bench/NanoLongEmbed",
+    "task_name": "NanoNarrativeQA",
+    "split_name": "NanoNarrativeQA",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoLongEmbed/NanoNarrativeQA.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 355,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 49.315,
+      "document_mean": 326752.997183
+    },
+    "bm25": {
+      "ndcg_at_10": 0.7619326236299936,
+      "hit_at_10": 0.845,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7619326236,
+        "hit_at_10": 0.845,
+        "recall_at_100": 0.9,
+        "candidate_count_min": 355,
+        "candidate_count_max": 355,
+        "candidate_count_mean": 355.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.33150071,
+        "hit_at_10": 0.43,
+        "recall_at_100": 0.75,
+        "candidate_count_min": 355,
+        "candidate_count_max": 355,
+        "candidate_count_mean": 355.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.75
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.512040179,
+        "hit_at_10": 0.655,
+        "recall_at_100": 0.945,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.055,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.945,
+        "safeguard_positive_rows": 11,
+        "rows_with_101_candidates": 11
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NarrativeQA test data, Nano queries, qrels, and positive long documents likely to overlap with this evaluation",
+      "useful_training_data": [
+        "official non-overlapping NarrativeQA train pairs",
+        "long-form book and screenplay question-document retrieval pairs",
+        "story-level QA over chapters or full narratives",
+        "hard negatives from similar stories or shared character names"
+      ],
+      "synthetic_data": {
+        "document_generation": "long narrative documents, books, plays, or screenplay-style texts with distant events and recurring character names",
+        "question_generation": "story questions about motives, deaths, relationships, travel, actions, and event consequences",
+        "answerability": "the relevant event should be explicitly grounded somewhere in the long document, not only implied by metadata"
+      },
+      "multi_positive_training": "single_positive_question_document_focus"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoLongEmbed",
+      "source_urls": [
+        {
+          "label": "NarrativeQA arXiv",
+          "url": "https://arxiv.org/abs/1712.07040"
+        },
+        {
+          "label": "LongEmbed arXiv",
+          "url": "https://arxiv.org/abs/2404.12096"
+        },
+        {
+          "label": "dwzhu/LongEmbed",
+          "url": "https://huggingface.co/datasets/dwzhu/LongEmbed"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "The NarrativeQA Reading Comprehension Challenge",
+        "url": "https://arxiv.org/abs/1712.07040",
+        "year": 2018,
+        "is_paper": true,
+        "doi": "10.1162/tacl_a_00023",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "LongEmbed: Extending Embedding Models for Long Context Retrieval",
+        "url": "https://arxiv.org/abs/2404.12096",
+        "year": 2024,
+        "is_paper": true,
+        "doi": "10.18653/v1/2024.emnlp-main.47",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

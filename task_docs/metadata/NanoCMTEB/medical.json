@@ -1,0 +1,141 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoCMTEB",
+    "backing_dataset": "NanoCMTEB",
+    "dataset_id": "hakari-bench/NanoCMTEB",
+    "task_name": "medical",
+    "split_name": "medical",
+    "language": "zh",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoCMTEB/medical.md",
+    "source_research": {
+      "primary_source_type": "task_paper_and_benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 18.12,
+      "document_mean": 119.7008
+    },
+    "bm25": {
+      "ndcg_at_10": 0.3581679205229802,
+      "hit_at_10": 0.44,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3581679205,
+        "hit_at_10": 0.44,
+        "recall_at_100": 0.56,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.56
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5690757172,
+        "hit_at_10": 0.675,
+        "recall_at_100": 0.84,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.84
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.4699479831,
+        "hit_at_10": 0.57,
+        "recall_at_100": 0.825,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.175,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.825,
+        "safeguard_positive_rows": 35,
+        "rows_with_101_candidates": 35
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "MedicalRetrieval dev",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoCMTEB medical queries, qrels, and answer passages",
+      "useful_training_data": [
+        "Chinese medical consultation QA pairs",
+        "symptom-diagnosis paraphrase data",
+        "patient question-answer retrieval pairs",
+        "same-symptom medical hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "concise Chinese medical answer passages",
+        "question_generation": "short patient questions with informal symptom wording",
+        "answerability": "positives should address the specific medical scenario"
+      },
+      "multi_positive_training": "single_positive"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoCMTEB",
+      "source_urls": [
+        {
+          "label": "Multi-CPR arXiv",
+          "url": "https://arxiv.org/abs/2203.03367"
+        },
+        {
+          "label": "C-Pack arXiv",
+          "url": "https://arxiv.org/abs/2309.07597"
+        },
+        {
+          "label": "mteb/MedicalRetrieval",
+          "url": "https://huggingface.co/datasets/mteb/MedicalRetrieval"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval",
+        "url": "https://arxiv.org/abs/2203.03367",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "C-Pack: Packed Resources For General Chinese Embeddings",
+        "url": "https://arxiv.org/abs/2309.07597",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "definitive_benchmark_paper"
+      }
+    ]
+  }
+}

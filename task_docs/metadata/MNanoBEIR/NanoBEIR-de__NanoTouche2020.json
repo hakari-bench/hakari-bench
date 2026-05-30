@@ -1,0 +1,176 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "MNanoBEIR",
+    "backing_dataset": "NanoBEIR-de",
+    "dataset_id": "hakari-bench/NanoBEIR-de",
+    "task_name": "NanoTouche2020",
+    "split_name": "NanoTouche2020",
+    "language": "de",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoTouche2020.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 49,
+      "documents": 5745,
+      "positive_qrels": 932
+    },
+    "positives_per_query": {
+      "average": 19.020408,
+      "min": 6,
+      "median": 19.0,
+      "max": 32,
+      "multi_positive_queries": 49,
+      "multi_positive_query_percent": 100.0
+    },
+    "text_stats_chars": {
+      "query_mean": 51.0,
+      "document_mean": 2456.639687
+    },
+    "bm25": {
+      "ndcg_at_10": 0.48236956272891435,
+      "hit_at_10": 1.0,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4823695627,
+        "hit_at_10": 1.0,
+        "recall_at_100": 0.7135193133,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7135193133
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4155083887,
+        "hit_at_10": 0.9183673469,
+        "recall_at_100": 0.7628755365,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7628755365
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.5012127127,
+        "hit_at_10": 1.0,
+        "recall_at_100": 0.7843347639,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7843347639,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "MNanoBEIR German NanoBEIR task split from hakari-bench/NanoBEIR-de",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding Touché 2020, BEIR, or NanoBEIR records likely to overlap with these evaluation topics or argument documents",
+      "useful_training_data": [
+        "non-overlapping Touché argument retrieval data",
+        "debate portal argument collections",
+        "pro and con controversial-topic retrieval pairs",
+        "German or multilingual argument quality ranking data"
+      ],
+      "synthetic_data": {
+        "document_generation": "German debate-style arguments for controversial social and policy questions",
+        "question_generation": "concise German controversial questions matching the central issue of the argument",
+        "answerability": "positives should contain substantive arguments addressing the question, not only mention the topic"
+      },
+      "multi_positive_training": "required"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-de",
+      "source_urls": [
+        {
+          "label": "Touché 2020 overview",
+          "url": "https://doi.org/10.1007/978-3-030-58219-7_26"
+        },
+        {
+          "label": "Touché 2020 dataset",
+          "url": "https://doi.org/10.5281/zenodo.6862281"
+        },
+        {
+          "label": "BEIR paper",
+          "url": "https://arxiv.org/abs/2104.08663"
+        },
+        {
+          "label": "MMTEB paper",
+          "url": "https://arxiv.org/abs/2502.13595"
+        },
+        {
+          "label": "Zeta Alpha NanoBEIR collection",
+          "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
+        }
+      ],
+      "source_notes": [
+        "German task is a multilingual NanoBEIR adaptation of the original English BEIR task"
+      ]
+    },
+    "references": [
+      {
+        "title": "Overview of Touché 2020: Argument Retrieval",
+        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
+        "year": 2020,
+        "is_paper": true,
+        "doi": "10.1007/978-3-030-58219-7_26",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "Touche20-Argument-Retrieval-for-Controversial-Questions",
+        "url": "https://doi.org/10.5281/zenodo.6862281",
+        "year": 2022,
+        "is_paper": false,
+        "doi": "10.5281/zenodo.6862281",
+        "source_confidence": "dataset_page"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2502.13595",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "dataset_collection"
+      }
+    ]
+  }
+}

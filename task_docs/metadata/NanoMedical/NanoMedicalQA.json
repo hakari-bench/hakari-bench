@@ -1,0 +1,125 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMedical",
+    "backing_dataset": "NanoMedical",
+    "dataset_id": "hakari-bench/NanoMedical",
+    "task_name": "NanoMedicalQA",
+    "split_name": "NanoMedicalQA",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMedical/NanoMedicalQA.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4",
+      "additional_source_urls": [
+        "https://doi.org/10.1186/s12859-019-3119-4"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 2007,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 54.23,
+      "document_mean": 1102.433981
+    },
+    "bm25": {
+      "ndcg_at_10": 0.5438794723537334,
+      "hit_at_10": 0.855,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5438794724,
+        "hit_at_10": 0.855,
+        "recall_at_100": 0.92,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.92
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7308255844,
+        "hit_at_10": 0.885,
+        "recall_at_100": 0.925,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.925
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.6509587497,
+        "hit_at_10": 0.865,
+        "recall_at_100": 0.97,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.03,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.97,
+        "safeguard_positive_rows": 6,
+        "rows_with_101_candidates": 6
+      }
+    },
+    "learning": {
+      "original_train_split": "available_in_source_qa_collections",
+      "evaluation_split_origin": "medical QA retrieval split sampled into NanoMedical",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude MedQuAD examples, overlapping trusted-source FAQ pages, and near-duplicate templated medical questions",
+      "useful_training_data": [
+        "non-overlapping medical FAQ retrieval pairs",
+        "consumer-health question-answer datasets",
+        "MedQuAD-style trusted-source QA pairs",
+        "answer-type reranking data for definition, diagnosis, prevention, symptoms, and treatment"
+      ],
+      "synthetic_data": {
+        "document_generation": "trusted-source style medical guidance passages with clear answer type",
+        "question_generation": "concise medical FAQ questions targeting one answer type",
+        "answerability": "each question should be answerable from the paired guidance passage",
+        "hard_negatives": "same-disease passages with different answer types"
+      },
+      "multi_positive_training": "single_positive_question_answer_focus"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMedical",
+      "source_urls": [
+        {
+          "label": "BMC Bioinformatics article",
+          "url": "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4"
+        },
+        {
+          "label": "DOI",
+          "url": "https://doi.org/10.1186/s12859-019-3119-4"
+        }
+      ]
+    }
+  }
+}

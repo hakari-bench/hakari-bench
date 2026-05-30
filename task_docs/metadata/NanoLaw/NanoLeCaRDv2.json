@@ -1,0 +1,135 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoLaw",
+    "backing_dataset": "NanoLaw",
+    "dataset_id": "hakari-bench/NanoLaw",
+    "task_name": "NanoLeCaRDv2",
+    "split_name": "NanoLeCaRDv2",
+    "language": "zh",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoLaw/NanoLeCaRDv2.md",
+    "source_research": {
+      "primary_source_type": "task_paper_and_dataset_card",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 159,
+      "documents": 3795,
+      "positive_qrels": 3896
+    },
+    "positives_per_query": {
+      "average": 24.503145,
+      "min": 4,
+      "median": 28.0,
+      "max": 30,
+      "multi_positive_queries": 159,
+      "multi_positive_query_percent": 100.0
+    },
+    "text_stats_chars": {
+      "query_mean": 4259.440252,
+      "document_mean": 7231.823979
+    },
+    "bm25": {
+      "ndcg_at_10": 0.6527794285644833,
+      "hit_at_10": 0.949685534591195,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6527794286,
+        "hit_at_10": 0.9496855346,
+        "recall_at_100": 0.7523100616,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 159,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7523100616
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6939641293,
+        "hit_at_10": 0.9559748428,
+        "recall_at_100": 0.8611396304,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 159,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8611396304
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.7225237853,
+        "hit_at_10": 0.9685534591,
+        "recall_at_100": 0.8619096509,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.006289,
+        "query_count": 159,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8619096509,
+        "safeguard_positive_rows": 1,
+        "rows_with_101_candidates": 1
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "lecardv2_test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoLeCaRDv2 queries, qrels, and relevant criminal case documents",
+      "useful_training_data": [
+        "Chinese legal case retrieval",
+        "criminal charge and fact-section retrieval pairs",
+        "court-document similarity data",
+        "same-charge hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "Chinese criminal judgments with facts, reasoning, and sentencing",
+        "question_generation": "Chinese criminal query cases with material facts and procedural details",
+        "answerability": "positives should align on characterization, penalty, or procedure"
+      },
+      "multi_positive_training": "preserve_large_positive_sets_per_query"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoLaw",
+      "source_urls": [
+        {
+          "label": "LeCaRDv2 arXiv",
+          "url": "https://arxiv.org/abs/2310.17609"
+        },
+        {
+          "label": "THUIR LeCaRDv2",
+          "url": "https://github.com/THUIR/LeCaRDv2"
+        },
+        {
+          "label": "MTEB LeCaRDv2",
+          "url": "https://huggingface.co/datasets/mteb/LeCaRDv2"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset",
+        "url": "https://arxiv.org/abs/2310.17609",
+        "year": 2023,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2310.17609",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

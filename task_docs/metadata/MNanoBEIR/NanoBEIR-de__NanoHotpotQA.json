@@ -1,0 +1,174 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "MNanoBEIR",
+    "backing_dataset": "NanoBEIR-de",
+    "dataset_id": "hakari-bench/NanoBEIR-de",
+    "task_name": "NanoHotpotQA",
+    "split_name": "NanoHotpotQA",
+    "language": "de",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoHotpotQA.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 50,
+      "documents": 5090,
+      "positive_qrels": 100
+    },
+    "positives_per_query": {
+      "average": 2.0,
+      "min": 2,
+      "median": 2.0,
+      "max": 2,
+      "multi_positive_queries": 50,
+      "multi_positive_query_percent": 100.0
+    },
+    "text_stats_chars": {
+      "query_mean": 99.82,
+      "document_mean": 386.235953
+    },
+    "bm25": {
+      "ndcg_at_10": 0.790427028957649,
+      "hit_at_10": 0.98,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.790427029,
+        "hit_at_10": 0.98,
+        "recall_at_100": 0.95,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.95
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7387888419,
+        "hit_at_10": 0.94,
+        "recall_at_100": 0.91,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.91
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.7941074238,
+        "hit_at_10": 1.0,
+        "recall_at_100": 0.95,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.95,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "MNanoBEIR German NanoBEIR task split from hakari-bench/NanoBEIR-de",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding HotpotQA, BEIR, or NanoBEIR records likely to overlap with these evaluation questions or supporting pages",
+      "useful_training_data": [
+        "non-overlapping HotpotQA examples with supporting facts",
+        "German or multilingual multi-hop QA retrieval datasets",
+        "Wikipedia hyperlink graph retrieval pairs",
+        "question-to-multiple-document supervision"
+      ],
+      "synthetic_data": {
+        "document_generation": "paired German Wikipedia-style entity passages connected by hyperlinks, shared types, dates, locations, occupations, creators, or memberships",
+        "question_generation": "German bridge and comparison questions that require both generated passages",
+        "answerability": "positives should be both documents needed for the reasoning path, not a single answer-bearing passage"
+      },
+      "multi_positive_training": "required"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-de",
+      "source_urls": [
+        {
+          "label": "HotpotQA paper",
+          "url": "https://arxiv.org/abs/1809.09600"
+        },
+        {
+          "label": "HotpotQA official site",
+          "url": "https://hotpotqa.github.io/"
+        },
+        {
+          "label": "BEIR paper",
+          "url": "https://arxiv.org/abs/2104.08663"
+        },
+        {
+          "label": "MMTEB paper",
+          "url": "https://arxiv.org/abs/2502.13595"
+        },
+        {
+          "label": "Zeta Alpha NanoBEIR collection",
+          "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
+        }
+      ],
+      "source_notes": [
+        "German task is a multilingual NanoBEIR adaptation of the original English BEIR task"
+      ]
+    },
+    "references": [
+      {
+        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
+        "url": "https://arxiv.org/abs/1809.09600",
+        "year": 2018,
+        "is_paper": true,
+        "doi": "10.18653/v1/D18-1259",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "HotpotQA official site",
+        "url": "https://hotpotqa.github.io/",
+        "is_paper": false,
+        "source_confidence": "definitive_project_page"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2502.13595",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "dataset_collection"
+      }
+    ]
+  }
+}

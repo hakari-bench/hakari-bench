@@ -1,0 +1,146 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoR2MED",
+    "backing_dataset": "NanoR2MED",
+    "dataset_id": "hakari-bench/NanoR2MED",
+    "task_name": "NanoR2MEDPMCTreatment",
+    "split_name": "NanoR2MEDPMCTreatment",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoR2MED/NanoR2MEDPMCTreatment.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://arxiv.org/abs/2505.14558",
+      "additional_source_urls": [
+        "https://r2med.github.io/",
+        "https://github.com/R2MED/R2MED",
+        "https://huggingface.co/datasets/R2MED/PMC-Treatment"
+      ]
+    },
+    "counts": {
+      "queries": 150,
+      "documents": 10000,
+      "positive_qrels": 315
+    },
+    "positives_per_query": {
+      "average": 2.1,
+      "min": 1,
+      "median": 2.0,
+      "max": 5,
+      "multi_positive_queries": 77,
+      "multi_positive_query_percent": 51.333333
+    },
+    "text_stats_chars": {
+      "query_mean": 1755.826667,
+      "document_mean": 726.6314
+    },
+    "bm25": {
+      "ndcg_at_10": 0.25796156430818484,
+      "hit_at_10": 0.49333333333333335,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2579615643,
+        "hit_at_10": 0.4933333333,
+        "recall_at_100": 0.5047619048,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 150,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.5047619048
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3800571081,
+        "hit_at_10": 0.6133333333,
+        "recall_at_100": 0.6412698413,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 150,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6412698413
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.355450316,
+        "hit_at_10": 0.6666666667,
+        "recall_at_100": 0.6984126984,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.153333,
+        "query_count": 150,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6984126984,
+        "safeguard_positive_rows": 23,
+        "rows_with_101_candidates": 23
+      }
+    },
+    "learning": {
+      "original_train_split": "not_found",
+      "evaluation_split_origin": "R2MED benchmark release sampled into NanoR2MED",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude R2MED PMC-Treatment evaluation queries, qrels, and positive PMC passages",
+      "useful_training_data": [
+        "non-overlapping treatment-planning medical QA",
+        "clinical case to evidence retrieval",
+        "PubMed Central treatment and case-report retrieval",
+        "hard negatives with the same disease but different treatment decision"
+      ],
+      "synthetic_data": {
+        "document_generation": "non-evaluation PMC treatment, procedure, or discussion passages",
+        "question_generation": "structured treatment-planning case summaries grounded in the passage",
+        "answerability": "the document should support the treatment decision or clinical management reasoning",
+        "hard_negatives": "same disease and treatment vocabulary but different management implication"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoR2MED",
+      "source_urls": [
+        {
+          "label": "R2MED arXiv",
+          "url": "https://arxiv.org/abs/2505.14558"
+        },
+        {
+          "label": "R2MED project page",
+          "url": "https://r2med.github.io/"
+        },
+        {
+          "label": "R2MED GitHub",
+          "url": "https://github.com/R2MED/R2MED"
+        },
+        {
+          "label": "R2MED/PMC-Treatment",
+          "url": "https://huggingface.co/datasets/R2MED/PMC-Treatment"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "R2MED: A Benchmark for Reasoning-Driven Medical Retrieval",
+        "url": "https://arxiv.org/abs/2505.14558",
+        "year": 2025,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2505.14558",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

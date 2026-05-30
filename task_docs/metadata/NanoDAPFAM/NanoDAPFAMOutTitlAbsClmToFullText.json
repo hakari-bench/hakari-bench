@@ -1,0 +1,133 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoDAPFAM",
+    "backing_dataset": "NanoDAPFAM",
+    "dataset_id": "hakari-bench/NanoDAPFAM",
+    "task_name": "NanoDAPFAMOutTitlAbsClmToFullText",
+    "split_name": "NanoDAPFAMOutTitlAbsClmToFullText",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoDAPFAM/NanoDAPFAMOutTitlAbsClmToFullText.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 1259
+    },
+    "positives_per_query": {
+      "average": 6.295,
+      "min": 1,
+      "median": 4.0,
+      "max": 20,
+      "multi_positive_queries": 159,
+      "multi_positive_query_percent": 79.5
+    },
+    "text_stats_chars": {
+      "query_mean": 9315.66,
+      "document_mean": 71902.3114
+    },
+    "bm25": {
+      "ndcg_at_10": 0.04612901457620332,
+      "hit_at_10": 0.175,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.0461290146,
+        "hit_at_10": 0.175,
+        "recall_at_100": 0.1850675139,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.1850675139
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.1009791956,
+        "hit_at_10": 0.34,
+        "recall_at_100": 0.2700555997,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.2700555997
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.0868835451,
+        "hit_at_10": 0.295,
+        "recall_at_100": 0.271644162,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.325,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.271644162,
+        "safeguard_positive_rows": 65,
+        "rows_with_101_candidates": 65
+      }
+    },
+    "learning": {
+      "original_train_split": "not_confirmed",
+      "evaluation_split_origin": "DAPFAM OUT-domain title-abstract-claims to full-text patent-family retrieval",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoDAPFAM evaluation families, positives, qrels, and family duplicates",
+      "useful_training_data": [
+        "cross-domain patent citation retrieval",
+        "prior-art search across different IPC classes",
+        "technology analogy retrieval over patents"
+      ],
+      "synthetic_data": {
+        "document_generation": "full-text patent records in different technical classes with related mechanisms",
+        "question_generation": "title abstract and claims from source patent families",
+        "answerability": "positives should be cited cross-domain patent families"
+      },
+      "multi_positive_training": "citation_family_multi_positive"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoDAPFAM",
+      "source_urls": [
+        {
+          "label": "DAPFAM arXiv",
+          "url": "https://arxiv.org/abs/2506.22141"
+        },
+        {
+          "label": "DAPFAM DOI",
+          "url": "https://doi.org/10.1016/j.array.2026.100720"
+        },
+        {
+          "label": "datalyes/DAPFAM_patent",
+          "url": "https://huggingface.co/datasets/datalyes/DAPFAM_patent"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "DAPFAM: A Domain-Aware Family-level Dataset to benchmark cross domain patent retrieval",
+        "url": "https://arxiv.org/abs/2506.22141",
+        "year": 2026,
+        "is_paper": true,
+        "doi": "10.1016/j.array.2026.100720",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

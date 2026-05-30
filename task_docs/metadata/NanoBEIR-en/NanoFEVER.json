@@ -1,0 +1,144 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoBEIR-en",
+    "backing_dataset": "NanoBEIR-en",
+    "dataset_id": "hakari-bench/NanoBEIR-en",
+    "task_name": "NanoFEVER",
+    "split_name": "NanoFEVER",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoBEIR-en/NanoFEVER.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 50,
+      "documents": 4996,
+      "positive_qrels": 57
+    },
+    "positives_per_query": {
+      "average": 1.14,
+      "min": 1,
+      "median": 1.0,
+      "max": 3,
+      "multi_positive_queries": 6,
+      "multi_positive_query_percent": 12.0
+    },
+    "text_stats_chars": {
+      "query_mean": 45.42,
+      "document_mean": 1228.71197
+    },
+    "bm25": {
+      "ndcg_at_10": 0.8142897680335605,
+      "hit_at_10": 0.94,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.814289768,
+        "hit_at_10": 0.94,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.8815840542,
+        "hit_at_10": 0.98,
+        "recall_at_100": 0.9824561404,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9824561404
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.852132507,
+        "hit_at_10": 0.98,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "unknown",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding upstream dev/test data or other FEVER/BEIR-derived records likely to overlap with the NanoBEIR evaluation claims and evidence",
+      "useful_training_data": [
+        "non-overlapping FEVER training claims with evidence",
+        "claim-verification datasets with evidence annotations",
+        "Wikipedia claim-evidence retrieval pairs"
+      ],
+      "synthetic_data": {
+        "document_generation": "Wikipedia-style passages about entities, dates, works, locations, professions, and relations",
+        "question_generation": "declarative support/refute claims created by paraphrase, negation, entity substitution, date substitution, relation substitution, and specificity changes",
+        "answerability": "positives should contain evidence that directly settles the claim"
+      },
+      "multi_positive_training": "useful_but_limited"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-en",
+      "source_urls": [
+        {
+          "label": "FEVER project site",
+          "url": "http://fever.ai"
+        },
+        {
+          "label": "Zeta Alpha NanoBEIR collection",
+          "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
+        "url": "https://arxiv.org/abs/1803.05355",
+        "year": 2018,
+        "is_paper": true,
+        "doi": "10.18653/v1/N18-1074",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "FEVER project site",
+        "url": "http://fever.ai",
+        "is_paper": false,
+        "source_confidence": "definitive_project_page"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "benchmark_context_paper"
+      }
+    ]
+  }
+}

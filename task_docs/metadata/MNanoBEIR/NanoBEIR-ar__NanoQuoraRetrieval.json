@@ -1,0 +1,164 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "MNanoBEIR",
+    "backing_dataset": "NanoBEIR-ar",
+    "dataset_id": "hakari-bench/NanoBEIR-ar",
+    "task_name": "NanoQuoraRetrieval",
+    "split_name": "NanoQuoraRetrieval",
+    "language": "ar",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoQuoraRetrieval.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true,
+      "no_paper_note": "no standalone Quora duplicate-question retrieval paper was confirmed; the BEIR benchmark paper and Quora Question Pairs dataset record were used"
+    },
+    "counts": {
+      "queries": 50,
+      "documents": 5046,
+      "positive_qrels": 70
+    },
+    "positives_per_query": {
+      "average": 1.4,
+      "min": 1,
+      "median": 1.0,
+      "max": 6,
+      "multi_positive_queries": 10,
+      "multi_positive_query_percent": 20.0
+    },
+    "text_stats_chars": {
+      "query_mean": 43.22,
+      "document_mean": 58.162307
+    },
+    "bm25": {
+      "ndcg_at_10": 0.7238405355697114,
+      "hit_at_10": 0.9,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7238405356,
+        "hit_at_10": 0.9,
+        "recall_at_100": 0.9428571429,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9428571429
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.8170149936,
+        "hit_at_10": 0.9,
+        "recall_at_100": 0.9428571429,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9428571429
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.7728371912,
+        "hit_at_10": 0.9,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "unknown",
+      "evaluation_split_origin": "MNanoBEIR Arabic NanoBEIR task split from hakari-bench/NanoBEIR-ar",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding Quora, BEIR, or NanoBEIR records likely to overlap with these evaluation duplicate questions",
+      "useful_training_data": [
+        "non-overlapping Quora duplicate-question pairs",
+        "Arabic or multilingual paraphrase datasets",
+        "FAQ and community-question duplicate pairs",
+        "supervised intent-equivalence data"
+      ],
+      "synthetic_data": {
+        "document_generation": "short Arabic user questions grouped by shared intent",
+        "question_generation": "Arabic paraphrased duplicate questions with varied wording, specificity, and grammar",
+        "answerability": "positives should be answer-equivalent duplicate questions, not merely related questions"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ar",
+      "source_urls": [
+        {
+          "label": "Quora Question Pairs",
+          "url": "https://kaggle.com/competitions/quora-question-pairs"
+        },
+        {
+          "label": "BEIR paper",
+          "url": "https://arxiv.org/abs/2104.08663"
+        },
+        {
+          "label": "MMTEB paper",
+          "url": "https://arxiv.org/abs/2502.13595"
+        },
+        {
+          "label": "Zeta Alpha NanoBEIR collection",
+          "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
+        }
+      ],
+      "source_notes": [
+        "Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR task"
+      ]
+    },
+    "references": [
+      {
+        "title": "Quora Question Pairs",
+        "url": "https://kaggle.com/competitions/quora-question-pairs",
+        "year": 2017,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2502.13595",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "dataset_collection"
+      }
+    ]
+  }
+}

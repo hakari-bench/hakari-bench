@@ -1,0 +1,136 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoBRIGHT",
+    "backing_dataset": "NanoBRIGHT",
+    "dataset_id": "hakari-bench/NanoBRIGHT",
+    "task_name": "NanoBrightStackoverflowLong",
+    "split_name": "NanoBrightStackoverflowLong",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoBRIGHT/NanoBrightStackoverflowLong.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 117,
+      "documents": 1846,
+      "positive_qrels": 129
+    },
+    "positives_per_query": {
+      "average": 1.102564,
+      "min": 1,
+      "median": 1.0,
+      "max": 2,
+      "multi_positive_queries": 12,
+      "multi_positive_query_percent": 10.25641
+    },
+    "text_stats_chars": {
+      "query_mean": 1292.965812,
+      "document_mean": 77578.437703
+    },
+    "bm25": {
+      "ndcg_at_10": 0.44401084662537865,
+      "hit_at_10": 0.7008547008547008,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4440108466,
+        "hit_at_10": 0.7008547009,
+        "recall_at_100": 0.9224806202,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 117,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9224806202
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3894004556,
+        "hit_at_10": 0.6581196581,
+        "recall_at_100": 0.9069767442,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 117,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9069767442
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.4743933597,
+        "hit_at_10": 0.8376068376,
+        "recall_at_100": 0.976744186,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.025641,
+        "query_count": 117,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.976744186,
+        "safeguard_positive_rows": 3,
+        "rows_with_101_candidates": 3
+      }
+    },
+    "learning": {
+      "original_train_split": "unknown",
+      "evaluation_split_origin": "BRIGHT Stack Overflow long-document evaluation split",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoBRIGHT StackoverflowLong queries and full cited source pages",
+      "useful_training_data": [
+        "document-level API documentation retrieval",
+        "Stack Overflow questions with cited links",
+        "long technical-reference QA"
+      ],
+      "synthetic_data": {
+        "document_generation": "full API documentation or specification pages with many sections",
+        "question_generation": "developer questions with code and environment context",
+        "answerability": "positive full document should contain the API behavior or feature needed to solve the issue"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBRIGHT",
+      "source_urls": [
+        {
+          "label": "BRIGHT arXiv",
+          "url": "https://arxiv.org/abs/2407.12883"
+        },
+        {
+          "label": "BRIGHT project",
+          "url": "https://brightbenchmark.github.io/"
+        },
+        {
+          "label": "xlangai/BRIGHT",
+          "url": "https://huggingface.co/datasets/xlangai/BRIGHT"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval",
+        "url": "https://arxiv.org/abs/2407.12883",
+        "year": 2024,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2407.12883",
+        "source_confidence": "definitive_paper_link"
+      }
+    ],
+    "source_dataset_id": "xlangai/BRIGHT",
+    "source_task": "Stack Overflow long-document"
+  }
+}

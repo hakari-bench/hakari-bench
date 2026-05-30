@@ -1,0 +1,133 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoBIRCO",
+    "backing_dataset": "NanoBIRCO",
+    "dataset_id": "hakari-bench/NanoBIRCO",
+    "task_name": "NanoBIRCORelic",
+    "split_name": "NanoBIRCORelic",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoBIRCO/NanoBIRCORelic.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 100,
+      "documents": 5023,
+      "positive_qrels": 100
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 1016.31,
+      "document_mean": 477.338244
+    },
+    "bm25": {
+      "ndcg_at_10": 0.1314230259314642,
+      "hit_at_10": 0.23,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.1314230259,
+        "hit_at_10": 0.23,
+        "recall_at_100": 0.59,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 100,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.59
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.0724851371,
+        "hit_at_10": 0.13,
+        "recall_at_100": 0.66,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 100,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.66
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.1276115034,
+        "hit_at_10": 0.22,
+        "recall_at_100": 0.69,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.31,
+        "query_count": 100,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.69,
+        "safeguard_positive_rows": 31,
+        "rows_with_101_candidates": 31
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding RELIC/BIRCO evaluation queries, masked contexts, source passages, and same-work candidate pools from training data",
+      "useful_training_data": [
+        "non-overlapping literary evidence retrieval pairs",
+        "quotation recovery tasks from public-domain literature",
+        "literary analysis paired with supporting source passages",
+        "same-work hard negatives that share characters or themes but do not support the claim"
+      ],
+      "synthetic_data": {
+        "document_generation": "public-domain literary passages with character actions, tone, imagery, irony, and narrative context",
+        "question_generation": "literary-analysis contexts with one or more masked quotations and surrounding interpretive claims",
+        "answerability": "the positive passage should directly support the surrounding analysis without merely repeating adjacent context"
+      },
+      "multi_positive_training": "single_positive_quotation_recovery_focus"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBIRCO",
+      "source_urls": [
+        {
+          "label": "BIRCO GitHub repository",
+          "url": "https://github.com/BIRCO-benchmark/BIRCO"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives",
+        "url": "https://arxiv.org/abs/2402.14151",
+        "year": 2024,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2402.14151",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "BIRCO GitHub repository",
+        "url": "https://github.com/BIRCO-benchmark/BIRCO",
+        "is_paper": false,
+        "source_confidence": "official_project_repository"
+      }
+    ]
+  }
+}

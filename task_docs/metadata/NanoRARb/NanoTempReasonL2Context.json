@@ -1,0 +1,116 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoRARb",
+    "backing_dataset": "NanoRARb",
+    "dataset_id": "hakari-bench/NanoRARb",
+    "task_name": "NanoTempReasonL2Context",
+    "split_name": "NanoTempReasonL2Context",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoRARb/NanoTempReasonL2Context.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 28755.18,
+      "document_mean": 19.9135
+    },
+    "bm25": {
+      "ndcg_at_10": 0.11136374802672032,
+      "hit_at_10": 0.185,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.111363748,
+        "hit_at_10": 0.185,
+        "recall_at_100": 0.46,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.46
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2170510043,
+        "hit_at_10": 0.375,
+        "recall_at_100": 0.795,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.795
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.2048645254,
+        "hit_at_10": 0.365,
+        "recall_at_100": 0.77,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.23,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.77,
+        "safeguard_positive_rows": 46,
+        "rows_with_101_candidates": 46
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRARb",
+      "source_urls": [
+        {
+          "label": "RAR-b arXiv",
+          "url": "https://arxiv.org/abs/2404.06347"
+        },
+        {
+          "label": "TempReason arXiv",
+          "url": "https://arxiv.org/abs/2306.08952"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "RAR-b: Reasoning as Retrieval Benchmark",
+        "url": "https://arxiv.org/abs/2404.06347",
+        "year": 2024,
+        "is_paper": true
+      },
+      {
+        "title": "Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models",
+        "url": "https://arxiv.org/abs/2306.08952",
+        "year": 2023,
+        "is_paper": true
+      }
+    ]
+  }
+}

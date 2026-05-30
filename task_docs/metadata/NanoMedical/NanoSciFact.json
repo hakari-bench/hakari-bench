@@ -1,0 +1,125 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMedical",
+    "backing_dataset": "NanoMedical",
+    "dataset_id": "hakari-bench/NanoMedical",
+    "task_name": "NanoSciFact",
+    "split_name": "NanoSciFact",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMedical/NanoSciFact.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://arxiv.org/abs/2004.14974",
+      "additional_source_urls": [
+        "https://aclanthology.org/2020.emnlp-main.609/"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 5183,
+      "positive_qrels": 226
+    },
+    "positives_per_query": {
+      "average": 1.13,
+      "min": 1,
+      "median": 1.0,
+      "max": 5,
+      "multi_positive_queries": 16,
+      "multi_positive_query_percent": 8.0
+    },
+    "text_stats_chars": {
+      "query_mean": 90.065,
+      "document_mean": 1499.407293
+    },
+    "bm25": {
+      "ndcg_at_10": 0.7017460407556101,
+      "hit_at_10": 0.865,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7017460408,
+        "hit_at_10": 0.865,
+        "recall_at_100": 0.9424778761,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9424778761
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7333800224,
+        "hit_at_10": 0.88,
+        "recall_at_100": 0.9336283186,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9336283186
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.7506049978,
+        "hit_at_10": 0.885,
+        "recall_at_100": 0.9778761062,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.025,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9778761062,
+        "safeguard_positive_rows": 5,
+        "rows_with_101_candidates": 5
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "SciFact evidence retrieval split sampled into NanoMedical",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude SciFact evaluation claims, positive abstracts, and near-duplicate claims derived from the same source citances",
+      "useful_training_data": [
+        "non-overlapping scientific claim-evidence pairs",
+        "biomedical citation-to-abstract retrieval data",
+        "SciFact-style rationale and verification data outside the evaluation split",
+        "same-topic biomedical hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "biomedical abstracts with explicit methods, findings, and outcomes",
+        "question_generation": "atomic scientific claims about one result, association, intervention, or mechanism",
+        "answerability": "the abstract should contain evidence sufficient to support or refute the claim",
+        "hard_negatives": "same-topic abstracts differing in direction, condition, population, or outcome"
+      },
+      "multi_positive_training": "mostly single-positive with limited multi-positive support"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMedical",
+      "source_urls": [
+        {
+          "label": "SciFact arXiv",
+          "url": "https://arxiv.org/abs/2004.14974"
+        },
+        {
+          "label": "SciFact ACL Anthology",
+          "url": "https://aclanthology.org/2020.emnlp-main.609/"
+        }
+      ]
+    }
+  }
+}

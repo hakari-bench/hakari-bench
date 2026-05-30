@@ -1,0 +1,102 @@
+# NanoVNMTEB / treccovid_vn
+
+## Overview
+
+`treccovid_vn` is the Vietnamese NanoVNMTEB version of TREC-COVID, a pandemic-era biomedical information retrieval benchmark built over the rapidly growing CORD-19 literature collection. VN-MTEB translates COVID-19 topics and scientific documents into Vietnamese. Queries are biomedical information needs about SARS-CoV-2, COVID-19 treatments, transmission, immunity, diagnostics, mechanisms, and clinical or public-health guidance.
+
+The Nano split contains 44 queries, 10,000 candidate documents, and 4,076 positive qrels. Every query has many positives: the average is 92.636364, the median is 100, and the maximum is 100. Queries average 70.545455 characters, while documents average 1,315.6452 characters. Dense retrieval is strongest on nDCG@10 and hit@10, while `reranking_hybrid` has the best recall@100. Absolute recall remains low because each topic has a very large relevant set, making broad biomedical coverage difficult.
+
+## Details
+
+### What the Original Data Measures
+
+TREC-COVID was constructed to support information retrieval over COVID-19 scientific literature during the early pandemic. The collection used CORD-19 documents and evolving topic sets with relevance judgments across multiple rounds. The task reflects real biomedical search needs under rapidly changing evidence.
+
+The Vietnamese version translates topics and documents but preserves biomedical terminology, virus names, treatment names, study populations, outcomes, and uncertainty language. Relevance is broad: many papers can be relevant to one topic, and usefulness may depend on treatment evidence, mechanism, public-health implication, or clinical guidance.
+
+### Observed Data Profile
+
+The split has 44 queries and 4,076 positives. Every query is multi-positive, with at least 28 positives and usually 100 positives. This is an extreme many-positive scientific retrieval task. Retrieving one relevant paper is easy compared with covering the relevant literature.
+
+Documents are scientific abstracts or article summaries. They may discuss mechanisms, interventions, epidemiology, diagnostics, modeling, vaccines, masks, social distancing, asymptomatic infection, or drug repurposing. The model must retrieve useful biomedical evidence across a large and diverse relevant set.
+
+### BM25 Evaluation Profile
+
+BM25 reaches nDCG@10 of 0.2810932253, hit@10 of 0.7727272727, and recall@100 of 0.2058390579 with a top-500 candidate set. Sparse retrieval can use exact terms such as SARS-CoV-2, COVID-19, remdesivir, mRNA, cytokine storm, masks, or social distancing, but the scores show that lexical matching alone is weak for ranking broad biomedical evidence.
+
+The low recall@100 is especially important. Since each query has many positives, BM25 may retrieve some obvious exact-term documents while missing much of the relevant literature that uses different terminology, broader coronavirus language, or related clinical concepts.
+
+### Dense Evaluation Profile
+
+Dense retrieval with `harrier-oss-270m` reaches nDCG@10 of 0.3750221655, hit@10 of 0.9772727273, and recall@100 of 0.2463199215. It is strongest on top-rank metrics and substantially improves hit@10 over BM25. Dense retrieval is better at connecting topic descriptions to biomedical abstracts that express the same need without exact wording.
+
+Dense retrieval helps for questions about immunity, transmission, interventions, mechanisms, and clinical guidance. Its recall@100 is still low relative to the number of positives, which suggests that general embeddings struggle to cover broad biomedical topics with many relevant documents. Domain adaptation and literature-search training would likely help.
+
+### Reranking Hybrid Evaluation Profile
+
+`reranking_hybrid` reaches nDCG@10 of 0.3550643016, hit@10 of 0.8863636364, and recall@100 of 0.2588321884. The top-100 candidate pool has exactly 100 candidates per query and no safeguard-expanded rows. Hybrid retrieval has the best recall@100, but dense retrieval has better top-rank quality.
+
+This pattern shows that sparse evidence contributes coverage for exact biomedical terms, while dense retrieval gives better ranking near the top. Hybrid retrieval recovers a slightly larger fraction of the relevant literature, but it can rank exact-term distractors above stronger evidence. A biomedical reranker would need to combine both channels while scoring evidence usefulness.
+
+### Metric Interpretation for Model Researchers
+
+Hit@10 can be misleading because every topic has many positives. Dense retrieval nearly saturates hit@10, but recall@100 remains under 0.25. The key challenge is not just finding one relevant paper; it is covering a broad evidence set and ranking useful documents high.
+
+The metric ordering shows dense retrieval as the best user-facing first-page ranker and hybrid retrieval as the best candidate-coverage condition. Researchers should treat this as a many-positive biomedical literature search benchmark and evaluate both top evidence quality and coverage.
+
+### Query and Relevance Type Tendencies
+
+Queries ask about vaccines, masks, social distancing, drug repurposing, asymptomatic infection, cytokine storms, weather effects, immunity, diagnostics, and clinical guidance. Relevant documents can be original studies, reviews, modeling papers, or clinical summaries. Many positives are related at the topic level rather than as a single answer sentence.
+
+Relevance is scientific usefulness for the topic. A paper can be relevant if it provides evidence, background, mechanism, or guidance related to the information need. This makes the task broader than fact verification and harder than single-answer QA.
+
+### Representative Failure Modes
+
+BM25 can over-rank documents that repeat COVID-19 terms but do not address the specific information need. Dense retrieval can over-rank broad pandemic summaries over targeted studies. Hybrid retrieval can improve coverage but still suffer when exact terms dominate biomedical usefulness.
+
+Another failure mode is missing uncertainty and study type. Pandemic literature includes preliminary findings, reviews, clinical trials, modeling studies, and public-health guidance. A strong retriever should distinguish these contexts when ranking evidence.
+
+### Training Data That May Help
+
+Useful training data includes non-overlapping TREC-COVID rounds and judgments, CORD-19 biomedical retrieval pairs, COVID-19 literature search data, biomedical QA, and translated scientific retrieval with overlap removed. Multi-positive training is essential because each topic has many relevant papers.
+
+Synthetic data should generate Vietnamese biomedical information needs from non-evaluation COVID-19 abstracts. Hard negatives should share disease or treatment terms but differ in outcome, population, or evidence type.
+
+### Model Improvement Notes
+
+The main improvement direction is biomedical literature retrieval with high-coverage ranking. Sparse retrieval should preserve exact virus, drug, intervention, and outcome terms. Dense retrieval should model broader biomedical intent. Rerankers should score evidence usefulness, study type, and topic specificity.
+
+Error analysis should separate exact-term misses, broad-topic false positives, outcome mismatch, intervention mismatch, and evidence-type mismatch. Because TREC-COVID reflects rapidly evolving medical literature, benchmark relevance should not be treated as current clinical advice.
+
+## Example Data
+
+### Public Sources
+
+- [TREC-COVID paper](https://arxiv.org/abs/2005.04474)
+- [TREC-COVID challenge page](https://ir.nist.gov/covidSubmit/)
+- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
+- [BEIR paper](https://arxiv.org/abs/2104.08663)
+- [GreenNode/trec-covid-vn](https://huggingface.co/datasets/GreenNode/trec-covid-vn)
+
+### Source Reference Table
+
+| Source | Role |
+|---|---|
+| TREC-COVID | Original pandemic information retrieval test collection |
+| TREC-COVID challenge page | Official challenge context |
+| BEIR | Retrieval benchmark framing |
+| VN-MTEB | Vietnamese benchmark collection using translated retrieval tasks |
+| GreenNode dataset card | Public dataset entry for this Vietnamese split |
+
+### Representative Snippets
+
+- Query: `Chúng ta biết gì về vắc xin mRNA cho vi-rút SARS-CoV-2?`
+  Relevant documents discuss diagnostics, therapies, vaccines, or SARS-CoV-2 vaccine development.
+- Query: `Những chiếc mặt nạ nào là tốt nhất để phòng ngừa nhiễm Covid-19?`
+  Relevant documents include evidence about masks or prevention of coronavirus infection.
+- Query: `có phải giãn cách xã hội đã ảnh hưởng đến việc làm chậm sự lây lan của COVID-19 không?`
+  Relevant documents discuss social distancing, case burden, and transmission reduction.
+- Query: `Protein SARS-CoV-2 có tương tác với protein của con người...`
+  Relevant documents discuss viral proteins, host interactions, and drug repurposing.
+- Query: `Những gì chúng ta biết về những người bị nhiễm Covid-19 nhưng không có triệu chứng?`
+  Relevant documents discuss asymptomatic infection, transmission, or observed outbreaks.

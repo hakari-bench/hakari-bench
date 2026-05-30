@@ -1,0 +1,147 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoCoIR",
+    "backing_dataset": "NanoCoIR",
+    "dataset_id": "hakari-bench/NanoCoIR",
+    "task_name": "NanoCosQA",
+    "split_name": "NanoCosQA",
+    "language": "en",
+    "category": "code",
+    "document_path": "docs/benchmark_tasks/NanoCoIR/NanoCosQA.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper_and_task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 6267,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 36.1,
+      "document_mean": 307.614489
+    },
+    "bm25": {
+      "ndcg_at_10": 0.3048664557746348,
+      "hit_at_10": 0.465,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3048664558,
+        "hit_at_10": 0.465,
+        "recall_at_100": 0.74,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.74
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6732780489,
+        "hit_at_10": 0.875,
+        "recall_at_100": 0.98,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.98
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.4791907966,
+        "hit_at_10": 0.66,
+        "recall_at_100": 0.965,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.035,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.965,
+        "safeguard_positive_rows": 7,
+        "rows_with_101_candidates": 7
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "CoIR CoSQA test-derived retrieval split",
+      "train_eval_overlap_audit": "not_audited_split_filtering_required",
+      "leakage_note": "exclude NanoCosQA queries and positive Python functions; do not train on CoSQA test-derived rows",
+      "useful_training_data": [
+        "CoSQA query-code pairs",
+        "CodeSearchNet Python functions and docstrings",
+        "search-log style code queries"
+      ],
+      "synthetic_data": {
+        "document_generation": "compact Python utility functions with docstrings",
+        "question_generation": "short web-search-style code queries",
+        "answerability": "positive function must satisfy the query intent"
+      },
+      "multi_positive_training": "single_positive",
+      "leakage_risk": {
+        "source_dataset": "CoSQA / CodeSearchNet Python functions",
+        "risk": "upstream CoSQA test examples can overlap with NanoCosQA evaluation rows",
+        "recommended_filter": "train-side only plus normalized query, code, and token-fingerprint exclusion",
+        "source_train_queries_reported_by_coir": 19000,
+        "source_test_queries_reported_by_coir": 500
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoCoIR",
+      "source_urls": [
+        {
+          "label": "CoIR arXiv",
+          "url": "https://arxiv.org/abs/2407.02883"
+        },
+        {
+          "label": "CoSQA arXiv",
+          "url": "https://arxiv.org/abs/2105.13239"
+        },
+        {
+          "label": "CoIR-Retrieval/cosqa",
+          "url": "https://huggingface.co/datasets/CoIR-Retrieval/cosqa"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "CoIR: A Comprehensive Benchmark for Code Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2407.02883",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "CoSQA: 20,000+ Web Queries for Code Search and Question Answering",
+        "url": "https://arxiv.org/abs/2105.13239",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

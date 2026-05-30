@@ -1,0 +1,134 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMMTEB-v2",
+    "backing_dataset": "NanoMMTEB-v2",
+    "dataset_id": "hakari-bench/NanoMMTEB-v2",
+    "task_name": "spart_qa",
+    "split_name": "spart_qa",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMMTEB-v2/spart_qa.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 1592,
+      "positive_qrels": 384
+    },
+    "positives_per_query": {
+      "average": 1.92,
+      "min": 1,
+      "median": 1.0,
+      "max": 3,
+      "multi_positive_queries": 92,
+      "multi_positive_query_percent": 46.0
+    },
+    "text_stats_chars": {
+      "query_mean": 654.85,
+      "document_mean": 49.797111
+    },
+    "bm25": {
+      "ndcg_at_10": 0.184833607799721,
+      "hit_at_10": 0.38,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.1848336078,
+        "hit_at_10": 0.38,
+        "recall_at_100": 0.5260416667,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.5260416667
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2590914426,
+        "hit_at_10": 0.49,
+        "recall_at_100": 0.4869791667,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.4869791667
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.3382296037,
+        "hit_at_10": 0.57,
+        "recall_at_100": 0.546875,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.185,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.546875,
+        "safeguard_positive_rows": 37,
+        "rows_with_101_candidates": 37
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "do not train on this Nano split's scene queries, qrels, or answer candidates",
+      "useful_training_data": [
+        "textual spatial QA",
+        "scene-graph question answering",
+        "synthetic block-world relation questions",
+        "relation-composition hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "short answer candidates naming objects, blocks, and relations",
+        "question_generation": "dense spatial scene descriptions with relation-composition questions",
+        "answerability": "positives should satisfy all spatial constraints in the query"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMMTEB-v2",
+      "source_urls": [
+        {
+          "label": "SpartQA arXiv",
+          "url": "https://arxiv.org/abs/2104.05832"
+        },
+        {
+          "label": "SpartQA repository",
+          "url": "https://github.com/HLR/SpartQA_generation"
+        },
+        {
+          "label": "mteb/SpartQA",
+          "url": "https://huggingface.co/datasets/mteb/SpartQA"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning",
+        "url": "https://arxiv.org/abs/2104.05832",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

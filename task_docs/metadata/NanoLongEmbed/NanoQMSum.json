@@ -1,0 +1,143 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoLongEmbed",
+    "backing_dataset": "NanoLongEmbed",
+    "dataset_id": "hakari-bench/NanoLongEmbed",
+    "task_name": "NanoQMSum",
+    "split_name": "NanoQMSum",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoLongEmbed/NanoQMSum.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 197,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 446.325,
+      "document_mean": 53335.817259
+    },
+    "bm25": {
+      "ndcg_at_10": 0.7440343572039869,
+      "hit_at_10": 0.85,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7440343572,
+        "hit_at_10": 0.85,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 197,
+        "candidate_count_max": 197,
+        "candidate_count_mean": 197.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.366005226,
+        "hit_at_10": 0.545,
+        "recall_at_100": 0.96,
+        "candidate_count_min": 197,
+        "candidate_count_max": 197,
+        "candidate_count_mean": 197.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.96
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.6097115251,
+        "hit_at_10": 0.8,
+        "recall_at_100": 0.995,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.005,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.995,
+        "safeguard_positive_rows": 1,
+        "rows_with_101_candidates": 1
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude QMSum test data, Nano queries, qrels, and positive meeting transcripts likely to overlap with this evaluation",
+      "useful_training_data": [
+        "non-overlapping QMSum train examples",
+        "meeting summarization corpora with query or topic annotations",
+        "meeting transcript to user-information-need retrieval pairs",
+        "same-domain meeting hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "long multi-speaker meeting transcripts with disfluencies, roles, topic shifts, decisions, and action items",
+        "question_generation": "query-focused summaries over one agenda item, decision, disagreement, or requested topic",
+        "answerability": "the query should be supported by explicit utterances in the transcript"
+      },
+      "multi_positive_training": "single_positive_question_document_focus"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoLongEmbed",
+      "source_urls": [
+        {
+          "label": "QMSum arXiv",
+          "url": "https://arxiv.org/abs/2104.05938"
+        },
+        {
+          "label": "LongEmbed arXiv",
+          "url": "https://arxiv.org/abs/2404.12096"
+        },
+        {
+          "label": "dwzhu/LongEmbed",
+          "url": "https://huggingface.co/datasets/dwzhu/LongEmbed"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization",
+        "url": "https://arxiv.org/abs/2104.05938",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.18653/v1/2021.naacl-main.472",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "LongEmbed: Extending Embedding Models for Long Context Retrieval",
+        "url": "https://arxiv.org/abs/2404.12096",
+        "year": 2024,
+        "is_paper": true,
+        "doi": "10.18653/v1/2024.emnlp-main.47",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

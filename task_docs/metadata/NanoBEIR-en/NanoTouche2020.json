@@ -1,0 +1,159 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoBEIR-en",
+    "backing_dataset": "NanoBEIR-en",
+    "dataset_id": "hakari-bench/NanoBEIR-en",
+    "task_name": "NanoTouche2020",
+    "split_name": "NanoTouche2020",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoBEIR-en/NanoTouche2020.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 49,
+      "documents": 5745,
+      "positive_qrels": 932
+    },
+    "positives_per_query": {
+      "average": 19.020408,
+      "min": 6,
+      "median": 19.0,
+      "max": 32,
+      "multi_positive_queries": 49,
+      "multi_positive_query_percent": 100.0
+    },
+    "text_stats_chars": {
+      "query_mean": 43.428571,
+      "document_mean": 2142.561532
+    },
+    "bm25": {
+      "ndcg_at_10": 0.6647881346489578,
+      "hit_at_10": 1.0,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6647881346,
+        "hit_at_10": 1.0,
+        "recall_at_100": 0.8175965665,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8175965665
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5407197951,
+        "hit_at_10": 1.0,
+        "recall_at_100": 0.8079399142,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8079399142
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.6183824659,
+        "hit_at_10": 1.0,
+        "recall_at_100": 0.839055794,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.839055794,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "unknown",
+      "evaluation_split_origin": "unknown",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding Touché/args.me/BEIR records likely to overlap with Nano evaluation topics, qrels, or debate documents",
+      "useful_training_data": [
+        "non-overlapping debate-portal argument relevance data",
+        "args.me-style query-to-argument supervision",
+        "pro/con topic retrieval and stance-labeled arguments",
+        "multi-positive argument retrieval judgments"
+      ],
+      "synthetic_data": {
+        "document_generation": "debate-style argumentative passages with claims, premises, evidence, rebuttals, and stance",
+        "question_generation": "short controversial questions answerable by stance-diverse arguments",
+        "answerability": "positives should substantively address the topic narrative, not merely mention query terms"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-en",
+      "source_urls": [
+        {
+          "label": "Overview of Touché 2020 paper",
+          "url": "https://doi.org/10.1007/978-3-030-58219-7_26"
+        },
+        {
+          "label": "Open PDF",
+          "url": "https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf"
+        },
+        {
+          "label": "Touche20 dataset record",
+          "url": "https://doi.org/10.5281/zenodo.6862281"
+        },
+        {
+          "label": "mteb/touche2020",
+          "url": "https://huggingface.co/datasets/mteb/touche2020"
+        },
+        {
+          "label": "Zeta Alpha NanoBEIR collection",
+          "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "Overview of Touché 2020: Argument Retrieval",
+        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
+        "year": 2020,
+        "is_paper": true,
+        "doi": "10.1007/978-3-030-58219-7_26",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "Touche20-Argument-Retrieval-for-Controversial-Questions",
+        "url": "https://doi.org/10.5281/zenodo.6862281",
+        "year": 2022,
+        "is_paper": false,
+        "doi": "10.5281/zenodo.6862281",
+        "source_confidence": "definitive_dataset_record"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

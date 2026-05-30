@@ -1,0 +1,114 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-Dutch",
+    "backing_dataset": "NanoMTEB-Dutch",
+    "dataset_id": "hakari-bench/NanoMTEB-Dutch",
+    "task_name": "cqadupstack_wordpress",
+    "split_name": "cqadupstack_wordpress",
+    "language": "nl",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_wordpress.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://doi.org/10.1145/2838931.2838934",
+      "additional_source_urls": [
+        "https://eltimster.github.io/www/pubs/adcs2015.pdf",
+        "https://aclanthology.org/2025.bucc-1.5/",
+        "https://arxiv.org/abs/2104.08663",
+        "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 56.55,
+      "document_mean": 1183.4007
+    },
+    "bm25": {
+      "ndcg_at_10": 0.2607990583308149,
+      "hit_at_10": 0.37,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2607990583,
+        "hit_at_10": 0.37,
+        "recall_at_100": 0.595,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.595
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3056615361,
+        "hit_at_10": 0.425,
+        "recall_at_100": 0.685,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.685
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.337105607,
+        "hit_at_10": 0.46,
+        "recall_at_100": 0.725,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.275,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.725,
+        "safeguard_positive_rows": 55,
+        "rows_with_101_candidates": 55
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "CQADupstackWordpress-NL test split from clips/beir-nl-cqadupstack",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "Exclude translated CQADupStack WordPress test queries and duplicate positives used by this Nano split.",
+      "useful_training_data": [
+        "non-overlapping WordPress Stack Exchange duplicate-question pairs",
+        "WordPress support forum QA pairs",
+        "code-aware CMS duplicate retrieval data"
+      ],
+      "synthetic_data": {
+        "document_generation": "Dutch WordPress support posts with function names and hooks preserved.",
+        "question_generation": "Paraphrased duplicate WordPress implementation questions.",
+        "answerability": "Each query should duplicate one prior WordPress question, with same-API hard negatives."
+      },
+      "multi_positive_training": "single_positive"
+    },
+    "example_count": 5
+  }
+}

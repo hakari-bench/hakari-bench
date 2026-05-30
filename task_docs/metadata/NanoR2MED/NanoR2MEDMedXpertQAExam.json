@@ -1,0 +1,146 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoR2MED",
+    "backing_dataset": "NanoR2MED",
+    "dataset_id": "hakari-bench/NanoR2MED",
+    "task_name": "NanoR2MEDMedXpertQAExam",
+    "split_name": "NanoR2MEDMedXpertQAExam",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoR2MED/NanoR2MEDMedXpertQAExam.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://arxiv.org/abs/2505.14558",
+      "additional_source_urls": [
+        "https://r2med.github.io/",
+        "https://github.com/R2MED/R2MED",
+        "https://huggingface.co/datasets/R2MED/MedXpertQA-Exam"
+      ]
+    },
+    "counts": {
+      "queries": 97,
+      "documents": 10000,
+      "positive_qrels": 292
+    },
+    "positives_per_query": {
+      "average": 3.010309,
+      "min": 1,
+      "median": 3.0,
+      "max": 8,
+      "multi_positive_queries": 74,
+      "multi_positive_query_percent": 76.28866
+    },
+    "text_stats_chars": {
+      "query_mean": 928.443299,
+      "document_mean": 723.8511
+    },
+    "bm25": {
+      "ndcg_at_10": 0.02772033243605187,
+      "hit_at_10": 0.08247422680412371,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.0277203324,
+        "hit_at_10": 0.0824742268,
+        "recall_at_100": 0.1678082192,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 97,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.1678082192
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.1599222724,
+        "hit_at_10": 0.4020618557,
+        "recall_at_100": 0.4143835616,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 97,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.4143835616
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.0978686011,
+        "hit_at_10": 0.2577319588,
+        "recall_at_100": 0.3698630137,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.340206,
+        "query_count": 97,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.3698630137,
+        "safeguard_positive_rows": 33,
+        "rows_with_101_candidates": 33
+      }
+    },
+    "learning": {
+      "original_train_split": "not_found",
+      "evaluation_split_origin": "R2MED benchmark release sampled into NanoR2MED",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude R2MED MedXpertQA-Exam evaluation queries, qrels, and positive Wikipedia passages",
+      "useful_training_data": [
+        "non-overlapping expert medical exam questions paired with test evidence",
+        "clinical examination recommendation retrieval",
+        "medical entity linking from vignettes to diagnostic tests",
+        "hard negatives from similar symptoms with different tests"
+      ],
+      "synthetic_data": {
+        "document_generation": "non-evaluation medical reference sections about diagnostic tests, imaging, labs, or screening instruments",
+        "question_generation": "patient vignettes asking for the best examination or test",
+        "answerability": "the passage should justify the inferred examination recommendation",
+        "hard_negatives": "same disease or symptom vocabulary but different diagnostic procedure"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoR2MED",
+      "source_urls": [
+        {
+          "label": "R2MED arXiv",
+          "url": "https://arxiv.org/abs/2505.14558"
+        },
+        {
+          "label": "R2MED project page",
+          "url": "https://r2med.github.io/"
+        },
+        {
+          "label": "R2MED GitHub",
+          "url": "https://github.com/R2MED/R2MED"
+        },
+        {
+          "label": "R2MED/MedXpertQA-Exam",
+          "url": "https://huggingface.co/datasets/R2MED/MedXpertQA-Exam"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "R2MED: A Benchmark for Reasoning-Driven Medical Retrieval",
+        "url": "https://arxiv.org/abs/2505.14558",
+        "year": 2025,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2505.14558",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

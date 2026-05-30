@@ -1,0 +1,90 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoRTEB",
+    "backing_dataset": "NanoRTEB",
+    "dataset_id": "hakari-bench/NanoRTEB",
+    "task_name": "NanoFreshStack",
+    "split_name": "NanoFreshStack",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoRTEB/NanoFreshStack.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 3770,
+      "positive_qrels": 1522
+    },
+    "positives_per_query": {
+      "average": 7.61,
+      "min": 1,
+      "median": 7.0,
+      "max": 21,
+      "multi_positive_queries": 189,
+      "multi_positive_query_percent": 94.5
+    },
+    "text_stats_chars": {
+      "query_mean": 1660.21,
+      "document_mean": 4983.031034
+    },
+    "bm25": {
+      "ndcg_at_10": 0.27680061764969355,
+      "hit_at_10": 0.685,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2768006176,
+        "hit_at_10": 0.685,
+        "recall_at_100": 0.6195795007,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6195795007
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3395859279,
+        "hit_at_10": 0.775,
+        "recall_at_100": 0.7522996058,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7522996058
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.3482207828,
+        "hit_at_10": 0.76,
+        "recall_at_100": 0.7674113009,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.02,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7674113009,
+        "safeguard_positive_rows": 4,
+        "rows_with_101_candidates": 4
+      }
+    },
+    "example_count": 5
+  }
+}

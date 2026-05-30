@@ -1,0 +1,136 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoBRIGHT",
+    "backing_dataset": "NanoBRIGHT",
+    "dataset_id": "hakari-bench/NanoBRIGHT",
+    "task_name": "NanoBrightRobotics",
+    "split_name": "NanoBrightRobotics",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoBRIGHT/NanoBrightRobotics.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 101,
+      "documents": 10000,
+      "positive_qrels": 518
+    },
+    "positives_per_query": {
+      "average": 5.128713,
+      "min": 1,
+      "median": 2.0,
+      "max": 33,
+      "multi_positive_queries": 65,
+      "multi_positive_query_percent": 64.356436
+    },
+    "text_stats_chars": {
+      "query_mean": 2179.445545,
+      "document_mean": 382.3519
+    },
+    "bm25": {
+      "ndcg_at_10": 0.2607225129088142,
+      "hit_at_10": 0.5148514851485149,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2607225129,
+        "hit_at_10": 0.5148514851,
+        "recall_at_100": 0.4980694981,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 101,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.4980694981
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2589249024,
+        "hit_at_10": 0.4851485149,
+        "recall_at_100": 0.4864864865,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 101,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.4864864865
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.2976358423,
+        "hit_at_10": 0.5247524752,
+        "recall_at_100": 0.5656370656,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.188119,
+        "query_count": 101,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.5656370656,
+        "safeguard_positive_rows": 19,
+        "rows_with_101_candidates": 19
+      }
+    },
+    "learning": {
+      "original_train_split": "unknown",
+      "evaluation_split_origin": "BRIGHT Robotics StackExchange evaluation split",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoBRIGHT Robotics queries, cited positives, and linked answer pages",
+      "useful_training_data": [
+        "non-overlapping Robotics StackExchange posts with cited sources",
+        "ROS and Gazebo documentation search data",
+        "issue-to-document troubleshooting pairs"
+      ],
+      "synthetic_data": {
+        "document_generation": "ROS, Gazebo, controller, and robotics API passages",
+        "question_generation": "long robotics troubleshooting posts with versions and snippets",
+        "answerability": "positives should explain the relevant interface, plugin, controller, or message type"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBRIGHT",
+      "source_urls": [
+        {
+          "label": "BRIGHT arXiv",
+          "url": "https://arxiv.org/abs/2407.12883"
+        },
+        {
+          "label": "BRIGHT project",
+          "url": "https://brightbenchmark.github.io/"
+        },
+        {
+          "label": "xlangai/BRIGHT",
+          "url": "https://huggingface.co/datasets/xlangai/BRIGHT"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval",
+        "url": "https://arxiv.org/abs/2407.12883",
+        "year": 2024,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2407.12883",
+        "source_confidence": "definitive_paper_link"
+      }
+    ],
+    "source_dataset_id": "xlangai/BRIGHT",
+    "source_task": "Robotics StackExchange"
+  }
+}

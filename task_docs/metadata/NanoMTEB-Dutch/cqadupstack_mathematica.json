@@ -1,0 +1,114 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-Dutch",
+    "backing_dataset": "NanoMTEB-Dutch",
+    "dataset_id": "hakari-bench/NanoMTEB-Dutch",
+    "task_name": "cqadupstack_mathematica",
+    "split_name": "cqadupstack_mathematica",
+    "language": "nl",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_mathematica.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://doi.org/10.1145/2838931.2838934",
+      "additional_source_urls": [
+        "https://eltimster.github.io/www/pubs/adcs2015.pdf",
+        "https://aclanthology.org/2025.bucc-1.5/",
+        "https://arxiv.org/abs/2104.08663",
+        "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 55.3,
+      "document_mean": 1166.6578
+    },
+    "bm25": {
+      "ndcg_at_10": 0.18261208757793798,
+      "hit_at_10": 0.275,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.1826120876,
+        "hit_at_10": 0.275,
+        "recall_at_100": 0.435,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.435
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.1992167041,
+        "hit_at_10": 0.305,
+        "recall_at_100": 0.525,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.525
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.2180920891,
+        "hit_at_10": 0.315,
+        "recall_at_100": 0.575,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.425,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.575,
+        "safeguard_positive_rows": 85,
+        "rows_with_101_candidates": 85
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "CQADupstackMathematica-NL test split from clips/beir-nl-cqadupstack",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "Exclude translated CQADupStack Mathematica test queries and duplicate positives used by this Nano split.",
+      "useful_training_data": [
+        "non-overlapping CQADupStack Mathematica duplicate-question pairs",
+        "Wolfram Language forum QA with duplicate links",
+        "code-question paraphrase data with overlap removed"
+      ],
+      "synthetic_data": {
+        "document_generation": "Dutch Mathematica support posts with original code tokens preserved.",
+        "question_generation": "Paraphrased duplicate Wolfram Language questions.",
+        "answerability": "Each query should duplicate one prior Mathematica question, with code-near hard negatives."
+      },
+      "multi_positive_training": "single_positive"
+    },
+    "example_count": 5
+  }
+}

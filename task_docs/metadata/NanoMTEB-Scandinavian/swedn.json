@@ -1,0 +1,142 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-Scandinavian",
+    "backing_dataset": "NanoMTEB-Scandinavian",
+    "dataset_id": "hakari-bench/NanoMTEB-Scandinavian",
+    "task_name": "swedn",
+    "split_name": "swedn",
+    "language": "sv",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMTEB-Scandinavian/swedn.md",
+    "source_research": {
+      "primary_source_type": "resource_page_and_benchmark_paper",
+      "paper_pdf_or_html_checked": true,
+      "no_paper_note": "CLARIN/SweDN resource page and SuperLim/SEB papers were checked; the separate CLARIN annual conference paper was not fully reviewed in this pass."
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 2046,
+      "positive_qrels": 400
+    },
+    "positives_per_query": {
+      "average": 2.0,
+      "min": 2,
+      "median": 2.0,
+      "max": 2,
+      "multi_positive_queries": 200,
+      "multi_positive_query_percent": 100.0
+    },
+    "text_stats_chars": {
+      "query_mean": 45.26,
+      "document_mean": 2896.015152
+    },
+    "bm25": {
+      "ndcg_at_10": 0.7081125173979356,
+      "hit_at_10": 0.895,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7081125174,
+        "hit_at_10": 0.895,
+        "recall_at_100": 0.8375,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8375
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7757365464,
+        "hit_at_10": 0.91,
+        "recall_at_100": 0.9025,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9025
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.7398145343,
+        "hit_at_10": 0.88,
+        "recall_at_100": 0.94,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.01,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.94,
+        "safeguard_positive_rows": 2,
+        "rows_with_101_candidates": 2
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude Nano headlines, qrels, and matching SWE-DN summary/article documents",
+      "useful_training_data": [
+        "non-overlapping SWE-DN headline-summary-article pairs",
+        "Swedish news title-to-article retrieval pairs",
+        "same-section and same-date hard negatives",
+        "multi-positive news retrieval examples"
+      ],
+      "synthetic_data": {
+        "document_generation": "Swedish news articles and lead summaries with headline, date, section, and named entities",
+        "question_generation": "Swedish headline queries, including opinion and quote-style headlines",
+        "answerability": "both the summary and the full article can be positive for a headline query"
+      },
+      "multi_positive_training": "treat_summary_and_article_as_valid_positives"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Scandinavian",
+      "source_urls": [
+        {
+          "label": "Scandinavian Embedding Benchmarks",
+          "url": "https://arxiv.org/abs/2406.02396"
+        },
+        {
+          "label": "SweDN 1.0",
+          "url": "https://spraakbanken.gu.se/resurser/swedn"
+        },
+        {
+          "label": "Superlim paper",
+          "url": "https://aclanthology.org/2023.emnlp-main.506/"
+        },
+        {
+          "label": "mteb/SwednRetrieval",
+          "url": "https://huggingface.co/datasets/mteb/SwednRetrieval"
+        }
+      ],
+      "source_notes": [
+        "SEB states that summarization datasets are converted by using headlines as queries and summaries/articles as corpus positives."
+      ]
+    },
+    "references": [
+      {
+        "title": "SweDN 1.0",
+        "url": "https://spraakbanken.gu.se/resurser/swedn",
+        "year": 2025,
+        "is_paper": false,
+        "doi": "10.23695/36v9-9017",
+        "source_confidence": "official_resource_page"
+      }
+    ]
+  }
+}

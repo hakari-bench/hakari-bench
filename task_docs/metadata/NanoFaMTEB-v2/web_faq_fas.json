@@ -1,0 +1,110 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoFaMTEB-v2",
+    "backing_dataset": "NanoFaMTEB-v2",
+    "dataset_id": "hakari-bench/NanoFaMTEB-v2",
+    "task_name": "web_faq_fas",
+    "split_name": "web_faq_fas",
+    "language": "fa",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoFaMTEB-v2/web_faq_fas.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 48.005,
+      "document_mean": 209.6025
+    },
+    "bm25": {
+      "ndcg_at_10": 0.8680245079793178,
+      "hit_at_10": 0.935,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.868024508,
+        "hit_at_10": 0.935,
+        "recall_at_100": 0.99,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.99
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.875648815,
+        "hit_at_10": 0.925,
+        "recall_at_100": 0.96,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.96
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.9029148396,
+        "hit_at_10": 0.97,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoFaMTEB-v2",
+      "source_urls": [
+        {
+          "label": "FaMTEB arXiv",
+          "url": "https://arxiv.org/abs/2502.11571"
+        },
+        {
+          "label": "mteb/WebFAQRetrieval",
+          "url": "https://huggingface.co/datasets/mteb/WebFAQRetrieval"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
+        "url": "https://arxiv.org/abs/2502.11571",
+        "year": 2025,
+        "is_paper": true
+      }
+    ]
+  }
+}

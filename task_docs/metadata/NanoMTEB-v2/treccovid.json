@@ -1,0 +1,146 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-v2",
+    "backing_dataset": "NanoMTEB-v2",
+    "dataset_id": "hakari-bench/NanoMTEB-v2",
+    "task_name": "treccovid",
+    "split_name": "treccovid",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMTEB-v2/treccovid.md",
+    "source_research": {
+      "primary_source_type": "task_paper_and_benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 50,
+      "documents": 10000,
+      "positive_qrels": 4584
+    },
+    "positives_per_query": {
+      "average": 91.68,
+      "min": 19,
+      "median": 100.0,
+      "max": 100,
+      "multi_positive_queries": 50,
+      "multi_positive_query_percent": 100.0
+    },
+    "text_stats_chars": {
+      "query_mean": 69.24,
+      "document_mean": 1326.6045
+    },
+    "bm25": {
+      "ndcg_at_10": 0.38929096024658594,
+      "hit_at_10": 0.92,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3892909602,
+        "hit_at_10": 0.92,
+        "recall_at_100": 0.2318935428,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.2318935428
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4177294815,
+        "hit_at_10": 0.92,
+        "recall_at_100": 0.2715968586,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.2715968586
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.4520821552,
+        "hit_at_10": 0.98,
+        "recall_at_100": 0.2859947644,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.2859947644,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "MTEB TREC-COVID test split",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoMTEB-v2 treccovid topics and judged articles",
+      "useful_training_data": [
+        "biomedical literature retrieval data",
+        "CORD-19 and PubMed title-abstract retrieval pairs",
+        "TREC-COVID topics and qrels outside this Nano split"
+      ],
+      "synthetic_data": {
+        "document_generation": "biomedical article titles and abstracts",
+        "question_generation": "COVID-19 clinical or scientific information needs",
+        "answerability": "positive article should address the biomedical information need"
+      },
+      "multi_positive_training": "required"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-v2",
+      "source_urls": [
+        {
+          "label": "TREC-COVID paper",
+          "url": "https://arxiv.org/abs/2005.04474"
+        },
+        {
+          "label": "NIST TREC-COVID",
+          "url": "https://ir.nist.gov/covidSubmit/index.html"
+        },
+        {
+          "label": "MTEB arXiv",
+          "url": "https://arxiv.org/abs/2210.07316"
+        },
+        {
+          "label": "mteb/trec-covid",
+          "url": "https://huggingface.co/datasets/mteb/trec-covid"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "TREC-COVID: Constructing a Pandemic Information Retrieval Test Collection",
+        "url": "https://arxiv.org/abs/2005.04474",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      }
+    ],
+    "source_dataset_id": "mteb/trec-covid",
+    "source_task": "TRECCOVID"
+  }
+}

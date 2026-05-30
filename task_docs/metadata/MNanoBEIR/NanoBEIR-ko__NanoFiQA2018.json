@@ -1,0 +1,89 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "MNanoBEIR",
+    "backing_dataset": "NanoBEIR-ko",
+    "dataset_id": "hakari-bench/NanoBEIR-ko",
+    "task_name": "NanoFiQA2018",
+    "split_name": "NanoFiQA2018",
+    "language": "ko",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ko__NanoFiQA2018.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 50,
+      "documents": 4598,
+      "positive_qrels": 123
+    },
+    "positives_per_query": {
+      "average": 2.46,
+      "min": 1,
+      "median": 2.0,
+      "max": 15,
+      "multi_positive_queries": 28,
+      "multi_positive_query_percent": 56.0
+    },
+    "text_stats_chars": {
+      "query_mean": 29.58,
+      "document_mean": 490.337538
+    },
+    "bm25": {
+      "ndcg_at_10": 0.3414783639270473,
+      "hit_at_10": 0.6,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3414783639,
+        "hit_at_10": 0.6,
+        "recall_at_100": 0.5609756098,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.5609756098
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3713133404,
+        "hit_at_10": 0.68,
+        "recall_at_100": 0.7154471545,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7154471545
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.4290789277,
+        "hit_at_10": 0.7,
+        "recall_at_100": 0.7235772358,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.14,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7235772358,
+        "safeguard_positive_rows": 7,
+        "rows_with_101_candidates": 7
+      }
+    }
+  }
+}

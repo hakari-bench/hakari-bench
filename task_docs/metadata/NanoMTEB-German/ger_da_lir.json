@@ -1,0 +1,150 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-German",
+    "backing_dataset": "NanoMTEB-German",
+    "dataset_id": "hakari-bench/NanoMTEB-German",
+    "task_name": "ger_da_lir",
+    "split_name": "ger_da_lir",
+    "language": "de",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMTEB-German/ger_da_lir.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://aclanthology.org/2021.nllp-1.13/",
+      "additional_source_urls": [
+        "https://arxiv.org/abs/2210.07316",
+        "https://arxiv.org/abs/2502.13595",
+        "https://github.com/lavis-nlp/GerDaLIR",
+        "https://huggingface.co/datasets/mteb/GerDaLIR"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 235
+    },
+    "positives_per_query": {
+      "average": 1.175,
+      "min": 1,
+      "median": 1.0,
+      "max": 4,
+      "multi_positive_queries": 29,
+      "multi_positive_query_percent": 14.5
+    },
+    "text_stats_chars": {
+      "query_mean": 879.53,
+      "document_mean": 18071.4799
+    },
+    "bm25": {
+      "ndcg_at_10": 0.536047033406684,
+      "hit_at_10": 0.705,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5360470334,
+        "hit_at_10": 0.705,
+        "recall_at_100": 0.8382978723,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8382978723
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2920030786,
+        "hit_at_10": 0.415,
+        "recall_at_100": 0.6340425532,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6340425532
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.4461480241,
+        "hit_at_10": 0.63,
+        "recall_at_100": 0.8468085106,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.145,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8468085106,
+        "safeguard_positive_rows": 29,
+        "rows_with_101_candidates": 29
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude GerDaLIR test data, Nano queries, qrels, and positive case documents likely to overlap with the evaluation split",
+      "useful_training_data": [
+        "non-overlapping GerDaLIR train examples",
+        "German court-decision citation retrieval pairs",
+        "German legal passage-to-case relevance pairs",
+        "same-statute and same-court hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "German legal decisions with courts, statutes, procedural posture, findings, and sanitized references",
+        "question_generation": "German legal argument passages that imply one or more relevant precedent cases",
+        "answerability": "positives should contain the precedent reasoning or case context needed by the query passage"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-German",
+      "source_urls": [
+        {
+          "label": "GerDaLIR paper",
+          "url": "https://aclanthology.org/2021.nllp-1.13/"
+        },
+        {
+          "label": "GerDaLIR GitHub",
+          "url": "https://github.com/lavis-nlp/GerDaLIR"
+        },
+        {
+          "label": "mteb/GerDaLIR",
+          "url": "https://huggingface.co/datasets/mteb/GerDaLIR"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "GerDaLIR: A German Dataset for Legal Information Retrieval",
+        "url": "https://aclanthology.org/2021.nllp-1.13/",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.18653/v1/2021.nllp-1.13",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2023,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2210.07316",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

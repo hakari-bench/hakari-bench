@@ -1,0 +1,174 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "MNanoBEIR",
+    "backing_dataset": "NanoBEIR-de",
+    "dataset_id": "hakari-bench/NanoBEIR-de",
+    "task_name": "NanoNQ",
+    "split_name": "NanoNQ",
+    "language": "de",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/MNanoBEIR/NanoBEIR-de__NanoNQ.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 50,
+      "documents": 5035,
+      "positive_qrels": 57
+    },
+    "positives_per_query": {
+      "average": 1.14,
+      "min": 1,
+      "median": 1.0,
+      "max": 2,
+      "multi_positive_queries": 7,
+      "multi_positive_query_percent": 14.0
+    },
+    "text_stats_chars": {
+      "query_mean": 55.38,
+      "document_mean": 588.540417
+    },
+    "bm25": {
+      "ndcg_at_10": 0.37573252115913197,
+      "hit_at_10": 0.56,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3757325212,
+        "hit_at_10": 0.56,
+        "recall_at_100": 0.8771929825,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8771929825
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5266430576,
+        "hit_at_10": 0.66,
+        "recall_at_100": 0.8947368421,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8947368421
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.4491457233,
+        "hit_at_10": 0.68,
+        "recall_at_100": 0.9298245614,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.08,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9298245614,
+        "safeguard_positive_rows": 4,
+        "rows_with_101_candidates": 4
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "MNanoBEIR German NanoBEIR task split from hakari-bench/NanoBEIR-de",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding Natural Questions, BEIR, or NanoBEIR records likely to overlap with these evaluation questions or passages",
+      "useful_training_data": [
+        "non-overlapping Natural Questions retrieval data",
+        "open-domain QA evidence retrieval pairs",
+        "German or multilingual Wikipedia QA datasets",
+        "question-to-passage supervision with real user questions"
+      ],
+      "synthetic_data": {
+        "document_generation": "German Wikipedia-style answer passages outside the evaluation set",
+        "question_generation": "natural German search questions whose answer is present in the passage",
+        "answerability": "positives should contain the answer evidence, not merely mention the same entity"
+      },
+      "multi_positive_training": "useful_but_not_central"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-de",
+      "source_urls": [
+        {
+          "label": "Natural Questions paper",
+          "url": "https://aclanthology.org/Q19-1026/"
+        },
+        {
+          "label": "Natural Questions dataset page",
+          "url": "https://ai.google.com/research/NaturalQuestions"
+        },
+        {
+          "label": "BEIR paper",
+          "url": "https://arxiv.org/abs/2104.08663"
+        },
+        {
+          "label": "MMTEB paper",
+          "url": "https://arxiv.org/abs/2502.13595"
+        },
+        {
+          "label": "Zeta Alpha NanoBEIR collection",
+          "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
+        }
+      ],
+      "source_notes": [
+        "German task is a multilingual NanoBEIR adaptation of the original English BEIR task"
+      ]
+    },
+    "references": [
+      {
+        "title": "Natural Questions: a Benchmark for Question Answering Research",
+        "url": "https://aclanthology.org/Q19-1026/",
+        "year": 2019,
+        "is_paper": true,
+        "doi": "10.1162/tacl_a_00276",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "Natural Questions dataset page",
+        "url": "https://ai.google.com/research/NaturalQuestions",
+        "is_paper": false,
+        "source_confidence": "definitive_dataset_page"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2502.13595",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "dataset_collection"
+      }
+    ]
+  }
+}

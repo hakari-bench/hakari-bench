@@ -1,0 +1,148 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-Korean",
+    "backing_dataset": "NanoMTEB-Korean",
+    "dataset_id": "hakari-bench/NanoMTEB-Korean",
+    "task_name": "lawir_ko",
+    "split_name": "lawir_ko",
+    "language": "ko",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMTEB-Korean/lawir_ko.md",
+    "source_research": {
+      "primary_source_type": "dataset_card",
+      "paper_pdf_or_html_checked": true,
+      "no_paper_note": "No standalone task paper was confirmed; interpretation is based on the official dataset card, MTEB metadata, and observed Nano data.",
+      "paper_url": "https://arxiv.org/abs/2210.07316",
+      "additional_source_urls": [
+        "https://huggingface.co/datasets/on-and-on/lawgov_ir-ko",
+        "https://www.law.go.kr/LSW/main.html"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 3562,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 50.62,
+      "document_mean": 387.78776
+    },
+    "bm25": {
+      "ndcg_at_10": 0.5231729437250633,
+      "hit_at_10": 0.71,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5231729437,
+        "hit_at_10": 0.71,
+        "recall_at_100": 0.92,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.92
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6533854503,
+        "hit_at_10": 0.82,
+        "recall_at_100": 0.97,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.97
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.6491401096,
+        "hit_at_10": 0.82,
+        "recall_at_100": 0.975,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.025,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.975,
+        "safeguard_positive_rows": 5,
+        "rows_with_101_candidates": 5
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude lawgov_ir-ko evaluation rows, Nano queries, qrels, and positive statute articles",
+      "useful_training_data": [
+        "non-overlapping lawgov_ir-ko examples",
+        "Korean statute article retrieval pairs",
+        "law-title and article-title matching pairs",
+        "hard negatives from the same law and adjacent provisions"
+      ],
+      "synthetic_data": {
+        "document_generation": "Korean statute articles with numbered clauses, article titles, definitions, duties, and cross-references",
+        "question_generation": "Korean legal retrieval queries naming a law and asking for the article that explains a provision",
+        "answerability": "the positive article should be the provision that directly matches the queried law title and article concept"
+      },
+      "multi_positive_training": "single_positive_question_document_focus"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Korean",
+      "source_urls": [
+        {
+          "label": "on-and-on/lawgov_ir-ko",
+          "url": "https://huggingface.co/datasets/on-and-on/lawgov_ir-ko"
+        },
+        {
+          "label": "Korea Law Information Center",
+          "url": "https://www.law.go.kr/LSW/main.html"
+        },
+        {
+          "label": "MTEB arXiv",
+          "url": "https://arxiv.org/abs/2210.07316"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "on-and-on/lawgov_ir-ko",
+        "url": "https://huggingface.co/datasets/on-and-on/lawgov_ir-ko",
+        "year": 2026,
+        "is_paper": false,
+        "source_confidence": "definitive_dataset_link"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2023,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2210.07316",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMedical",
+    "backing_dataset": "NanoMedical",
+    "dataset_id": "hakari-bench/NanoMedical",
+    "task_name": "NanoCUREv1",
+    "split_name": "NanoCUREv1",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMedical/NanoCUREv1.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://arxiv.org/abs/2412.06954",
+      "additional_source_urls": [
+        "https://doi.org/10.1145/3711896.3737435",
+        "https://huggingface.co/datasets/clinia/CUREv1"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 5181
+    },
+    "positives_per_query": {
+      "average": 25.905,
+      "min": 1,
+      "median": 18.0,
+      "max": 100,
+      "multi_positive_queries": 171,
+      "multi_positive_query_percent": 85.5
+    },
+    "text_stats_chars": {
+      "query_mean": 75.89,
+      "document_mean": 604.2063
+    },
+    "bm25": {
+      "ndcg_at_10": 0.4692956819601968,
+      "hit_at_10": 0.9,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.469295682,
+        "hit_at_10": 0.9,
+        "recall_at_100": 0.5313646014,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.5313646014
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.500265766,
+        "hit_at_10": 0.87,
+        "recall_at_100": 0.5861802741,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.5861802741
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.5261565449,
+        "hit_at_10": 0.9,
+        "recall_at_100": 0.6126230457,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.07,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6126230457,
+        "safeguard_positive_rows": 14,
+        "rows_with_101_candidates": 14
+      }
+    },
+    "learning": {
+      "original_train_split": "unavailable",
+      "evaluation_split_origin": "CURE benchmark test collection sampled into NanoMedical",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude CURE evaluation queries, CURE positive passages, and near-duplicate mined biomedical passages when training for clean evaluation",
+      "useful_training_data": [
+        "non-overlapping clinical question-to-passage retrieval pairs",
+        "biomedical evidence retrieval data grounded in article passages",
+        "medical QA retrieval data with passage-level evidence",
+        "clinical abbreviation and specialty-specific hard-negative training"
+      ],
+      "synthetic_data": {
+        "document_generation": "biomedical article-title plus passage snippets from non-evaluation clinical specialties",
+        "question_generation": "concise clinician-style questions targeting diagnosis, treatment, contraindication, measurement, or clinical implication",
+        "answerability": "each question should be answerable from the selected passage without outside medical knowledge",
+        "hard_negatives": "same-topic passages with different clinical relations or patient contexts"
+      },
+      "multi_positive_training": "train with multi-positive labels and same-topic hard negatives"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMedical",
+      "source_urls": [
+        {
+          "label": "CURE arXiv",
+          "url": "https://arxiv.org/abs/2412.06954"
+        },
+        {
+          "label": "CURE KDD DOI",
+          "url": "https://doi.org/10.1145/3711896.3737435"
+        },
+        {
+          "label": "clinia/CUREv1",
+          "url": "https://huggingface.co/datasets/clinia/CUREv1"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-Spanish",
+    "backing_dataset": "NanoMTEB-Spanish",
+    "dataset_id": "hakari-bench/NanoMTEB-Spanish",
+    "task_name": "spanish_passage_s2_p",
+    "split_name": "spanish_passage_s2_p",
+    "language": "es",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMTEB-Spanish/spanish_passage_s2_p.md",
+    "source_research": {
+      "primary_source_type": "project_page",
+      "paper_pdf_or_html_checked": false,
+      "no_paper_note": "ECIR 2019 paper metadata was confirmed, but only the public project page and dataset cards were inspected for construction details"
+    },
+    "counts": {
+      "queries": 167,
+      "documents": 7501,
+      "positive_qrels": 996
+    },
+    "positives_per_query": {
+      "average": 5.964072,
+      "min": 1,
+      "median": 5.0,
+      "max": 19,
+      "multi_positive_queries": 165,
+      "multi_positive_query_percent": 98.802395
+    },
+    "text_stats_chars": {
+      "query_mean": 67.556886,
+      "document_mean": 2710.846554
+    },
+    "bm25": {
+      "ndcg_at_10": 0.5128967701594193,
+      "hit_at_10": 0.9161676646706587,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5128967702,
+        "hit_at_10": 0.9161676647,
+        "recall_at_100": 0.8855421687,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 167,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8855421687
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4719481412,
+        "hit_at_10": 0.9281437126,
+        "recall_at_100": 0.8363453815,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 167,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8363453815
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.6219620039,
+        "hit_at_10": 0.9880239521,
+        "recall_at_100": 0.9487951807,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.005988,
+        "query_count": 167,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9487951807,
+        "safeguard_positive_rows": 1,
+        "rows_with_101_candidates": 1
+      }
+    },
+    "learning": {
+      "original_train_split": "not_found",
+      "evaluation_split_origin": "test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude PRES evaluation questions, qrels, and Spanish health web pages likely to overlap with Nano",
+      "useful_training_data": [
+        "Spanish consumer-health QA pairs",
+        "Spanish medical FAQ retrieval pairs",
+        "non-overlapping health web document retrieval data",
+        "multi-positive document-level health retrieval examples"
+      ],
+      "synthetic_data": {
+        "document_generation": "Spanish consumer-health web pages about baby care, vaccination, emergencies, and low back pain",
+        "question_generation": "Spanish layperson health questions with varied paraphrases and urgency levels",
+        "answerability": "full positive pages should contain explicit answer passages for the question"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Spanish",
+      "source_urls": [
+        {
+          "label": "Spanish Passage Retrieval dataset page",
+          "url": "https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/"
+        },
+        {
+          "label": "jinaai/spanish_passage_retrieval",
+          "url": "https://huggingface.co/datasets/jinaai/spanish_passage_retrieval"
+        },
+        {
+          "label": "mteb/SpanishPassageRetrievalS2P",
+          "url": "https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2P"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related Resources",
+        "url": "https://doi.org/10.1007/978-3-030-15719-7_19",
+        "year": 2019,
+        "is_paper": true,
+        "doi": "10.1007/978-3-030-15719-7_19",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

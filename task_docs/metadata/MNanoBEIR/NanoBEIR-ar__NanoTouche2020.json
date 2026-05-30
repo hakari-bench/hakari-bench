@@ -1,0 +1,175 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "MNanoBEIR",
+    "backing_dataset": "NanoBEIR-ar",
+    "dataset_id": "hakari-bench/NanoBEIR-ar",
+    "task_name": "NanoTouche2020",
+    "split_name": "NanoTouche2020",
+    "language": "ar",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ar__NanoTouche2020.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 49,
+      "documents": 5745,
+      "positive_qrels": 932
+    },
+    "positives_per_query": {
+      "average": 19.020408,
+      "min": 6,
+      "median": 19.0,
+      "max": 32,
+      "multi_positive_queries": 49,
+      "multi_positive_query_percent": 100.0
+    },
+    "text_stats_chars": {
+      "query_mean": 40.734694,
+      "document_mean": 1803.564839
+    },
+    "bm25": {
+      "ndcg_at_10": 0.5262630740571914,
+      "hit_at_10": 0.9387755102040817,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5262630741,
+        "hit_at_10": 0.9387755102,
+        "recall_at_100": 0.7231759657,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7231759657
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4155013421,
+        "hit_at_10": 0.9387755102,
+        "recall_at_100": 0.7253218884,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7253218884
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.5261795636,
+        "hit_at_10": 0.9795918367,
+        "recall_at_100": 0.775751073,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.775751073,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "unknown",
+      "evaluation_split_origin": "MNanoBEIR Arabic NanoBEIR task split from hakari-bench/NanoBEIR-ar",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding Touché, args.me, BEIR, or NanoBEIR records likely to overlap with these evaluation topics or debate documents",
+      "useful_training_data": [
+        "non-overlapping debate-portal argument relevance data",
+        "Arabic or multilingual query-to-argument supervision",
+        "stance-labeled arguments",
+        "multi-positive argument retrieval judgments"
+      ],
+      "synthetic_data": {
+        "document_generation": "Arabic debate arguments with claims, premises, evidence, rebuttals, and informal style",
+        "question_generation": "short Arabic controversial questions that the argument addresses",
+        "answerability": "positives should be substantive arguments relevant to the topic, not merely long documents sharing keywords"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ar",
+      "source_urls": [
+        {
+          "label": "Touché 2020 paper",
+          "url": "https://doi.org/10.1007/978-3-030-58219-7_26"
+        },
+        {
+          "label": "Touché 2020 open PDF",
+          "url": "https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf"
+        },
+        {
+          "label": "BEIR paper",
+          "url": "https://arxiv.org/abs/2104.08663"
+        },
+        {
+          "label": "MMTEB paper",
+          "url": "https://arxiv.org/abs/2502.13595"
+        },
+        {
+          "label": "Zeta Alpha NanoBEIR collection",
+          "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
+        }
+      ],
+      "source_notes": [
+        "Arabic task is a multilingual NanoBEIR adaptation of the original English BEIR task"
+      ]
+    },
+    "references": [
+      {
+        "title": "Overview of Touché 2020: Argument Retrieval",
+        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
+        "year": 2020,
+        "is_paper": true,
+        "doi": "10.1007/978-3-030-58219-7_26",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "Open PDF: Overview of Touché 2020: Argument Retrieval",
+        "url": "https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2502.13595",
+        "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "dataset_collection"
+      }
+    ]
+  }
+}

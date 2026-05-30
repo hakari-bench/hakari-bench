@@ -1,0 +1,148 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoCoIR",
+    "backing_dataset": "NanoCoIR",
+    "dataset_id": "hakari-bench/NanoCoIR",
+    "task_name": "NanoCodeSearchNet",
+    "split_name": "NanoCodeSearchNet",
+    "language": "en",
+    "category": "code",
+    "document_path": "docs/benchmark_tasks/NanoCoIR/NanoCodeSearchNet.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper_and_task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 636.265,
+      "document_mean": 86.072
+    },
+    "bm25": {
+      "ndcg_at_10": 0.6099066372318422,
+      "hit_at_10": 0.73,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6099066372,
+        "hit_at_10": 0.73,
+        "recall_at_100": 0.905,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.905
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.9687349467,
+        "hit_at_10": 1.0,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.8678369433,
+        "hit_at_10": 0.965,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "CoIR CodeSearchNet test-derived retrieval split",
+      "train_eval_overlap_audit": "not_audited_split_filtering_required",
+      "leakage_note": "exclude NanoCodeSearchNet code-docstring pairs; do not train on CodeSearchNet test-derived rows",
+      "useful_training_data": [
+        "CodeSearchNet code-docstring pairs",
+        "API documentation retrieval examples",
+        "same-library short-docstring hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "concise function summaries and docstrings",
+        "question_generation": "source code snippets as queries",
+        "answerability": "positive text must describe the code behavior"
+      },
+      "multi_positive_training": "single_positive",
+      "leakage_risk": {
+        "source_dataset": "CodeSearchNet",
+        "risk": "upstream CodeSearchNet test code-docstring pairs can overlap with NanoCodeSearchNet evaluation rows",
+        "recommended_filter": "train-side only plus normalized code, docstring, function-name, and token-fingerprint exclusion",
+        "source_train_queries_reported_by_coir": 905000,
+        "source_test_queries_reported_by_coir": 53000,
+        "source_dev_queries_reported_by_coir": 41000
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoCoIR",
+      "source_urls": [
+        {
+          "label": "CoIR arXiv",
+          "url": "https://arxiv.org/abs/2407.02883"
+        },
+        {
+          "label": "CodeSearchNet arXiv",
+          "url": "https://arxiv.org/abs/1909.09436"
+        },
+        {
+          "label": "code-search-net/code_search_net",
+          "url": "https://huggingface.co/datasets/code-search-net/code_search_net"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "CoIR: A Comprehensive Benchmark for Code Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2407.02883",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "CodeSearchNet Challenge: Evaluating the State of Semantic Code Search",
+        "url": "https://arxiv.org/abs/1909.09436",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

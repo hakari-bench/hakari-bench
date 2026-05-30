@@ -1,0 +1,134 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMMTEB-v2",
+    "backing_dataset": "NanoMMTEB-v2",
+    "dataset_id": "hakari-bench/NanoMMTEB-v2",
+    "task_name": "ailastatutes",
+    "split_name": "ailastatutes",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMMTEB-v2/ailastatutes.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 50,
+      "documents": 82,
+      "positive_qrels": 217
+    },
+    "positives_per_query": {
+      "average": 4.34,
+      "min": 2,
+      "median": 4.5,
+      "max": 5,
+      "multi_positive_queries": 50,
+      "multi_positive_query_percent": 100.0
+    },
+    "text_stats_chars": {
+      "query_mean": 3038.42,
+      "document_mean": 1972.634146
+    },
+    "bm25": {
+      "ndcg_at_10": 0.20697288076497222,
+      "hit_at_10": 0.66,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2069728808,
+        "hit_at_10": 0.66,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 82,
+        "candidate_count_max": 82,
+        "candidate_count_mean": 82.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2725058628,
+        "hit_at_10": 0.76,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 82,
+        "candidate_count_max": 82,
+        "candidate_count_mean": 82.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.2557123542,
+        "hit_at_10": 0.74,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 82,
+        "candidate_count_max": 82,
+        "candidate_count_mean": 82.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "do not train on this Nano split's scenarios, qrels, or positive statute text",
+      "useful_training_data": [
+        "fact-to-statute retrieval pairs",
+        "statutory legal entailment data",
+        "legal issue spotting examples",
+        "adjacent statute hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "statute provisions with titles and clause-level legal conditions",
+        "question_generation": "long legal fact patterns requiring several applicable provisions",
+        "answerability": "each positive statute should govern at least one material issue in the scenario"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMMTEB-v2",
+      "source_urls": [
+        {
+          "label": "AILA 2019 paper",
+          "url": "https://ceur-ws.org/Vol-2517/T1-1.pdf"
+        },
+        {
+          "label": "AILA Zenodo release",
+          "url": "https://zenodo.org/records/4063986"
+        },
+        {
+          "label": "mteb/AILA_statutes",
+          "url": "https://huggingface.co/datasets/mteb/AILA_statutes"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance",
+        "url": "https://ceur-ws.org/Vol-2517/T1-1.pdf",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

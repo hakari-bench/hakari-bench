@@ -1,0 +1,130 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoIFIR",
+    "backing_dataset": "NanoIFIR",
+    "dataset_id": "hakari-bench/NanoIFIR",
+    "task_name": "NanoIFIRCds",
+    "split_name": "NanoIFIRCds",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoIFIR/NanoIFIRCds.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper_and_task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 42,
+      "documents": 10000,
+      "positive_qrels": 466
+    },
+    "positives_per_query": {
+      "average": 11.095238,
+      "min": 1,
+      "median": 9.0,
+      "max": 37,
+      "multi_positive_queries": 38,
+      "multi_positive_query_percent": 90.47619
+    },
+    "text_stats_chars": {
+      "query_mean": 225.214286,
+      "document_mean": 1630.2225
+    },
+    "bm25": {
+      "ndcg_at_10": 0.22575663643446836,
+      "hit_at_10": 0.6904761904761905,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2257566364,
+        "hit_at_10": 0.6904761905,
+        "recall_at_100": 0.3927038627,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 42,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.3927038627
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4073249106,
+        "hit_at_10": 0.8095238095,
+        "recall_at_100": 0.7124463519,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 42,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7124463519
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.3376132788,
+        "hit_at_10": 0.7619047619,
+        "recall_at_100": 0.6652360515,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.071429,
+        "query_count": 42,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6652360515,
+        "safeguard_positive_rows": 3,
+        "rows_with_101_candidates": 3
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "ifir_adapted",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoIFIRCds queries, qrels, and positive biomedical articles",
+      "useful_training_data": [
+        "non-overlapping TREC-CDS topics",
+        "PubMed and PMC clinical case retrieval",
+        "biomedical diagnosis treatment and test retrieval data",
+        "same-disease hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "biomedical article titles and abstracts about diagnosis, testing, and treatment",
+        "question_generation": "patient vignettes with explicit diagnosis/test/treatment retrieval instructions",
+        "answerability": "positives should provide information useful for the patient-specific clinical need"
+      },
+      "multi_positive_training": "preserve_multiple_clinically_relevant_articles"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIFIR",
+      "source_urls": [
+        {
+          "label": "IFIR arXiv",
+          "url": "https://arxiv.org/abs/2503.04644"
+        },
+        {
+          "label": "TREC 2015 CDS overview",
+          "url": "https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "Overview of the TREC 2015 Clinical Decision Support Track",
+        "url": "https://trec.nist.gov/pubs/trec24/papers/Overview-CL.pdf",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

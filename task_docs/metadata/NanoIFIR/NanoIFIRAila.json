@@ -1,0 +1,131 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoIFIR",
+    "backing_dataset": "NanoIFIR",
+    "dataset_id": "hakari-bench/NanoIFIR",
+    "task_name": "NanoIFIRAila",
+    "split_name": "NanoIFIRAila",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoIFIR/NanoIFIRAila.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper_and_task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 40,
+      "documents": 2914,
+      "positive_qrels": 119
+    },
+    "positives_per_query": {
+      "average": 2.975,
+      "min": 1,
+      "median": 2.0,
+      "max": 10,
+      "multi_positive_queries": 30,
+      "multi_positive_query_percent": 75.0
+    },
+    "text_stats_chars": {
+      "query_mean": 2890.05,
+      "document_mean": 19998.057653
+    },
+    "bm25": {
+      "ndcg_at_10": 0.09884050780615407,
+      "hit_at_10": 0.2,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.0988405078,
+        "hit_at_10": 0.2,
+        "recall_at_100": 0.3361344538,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 40,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.3361344538
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.0878033668,
+        "hit_at_10": 0.275,
+        "recall_at_100": 0.3949579832,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 40,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.3949579832
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.0797521737,
+        "hit_at_10": 0.2,
+        "recall_at_100": 0.4033613445,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.525,
+        "query_count": 40,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.4033613445,
+        "safeguard_positive_rows": 21,
+        "rows_with_101_candidates": 21
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "ifir_adapted",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoIFIRAila queries, qrels, and positive prior-case documents",
+      "useful_training_data": [
+        "non-overlapping AILA precedent retrieval pairs",
+        "Indian Supreme Court citation graphs",
+        "legal case similarity datasets",
+        "same-statute legal hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "long Indian Supreme Court-style judgments with issues, facts, citations, and reasoning",
+        "question_generation": "legal fact patterns with explicit retrieval instructions and desired precedent constraints",
+        "answerability": "positives should be prior cases satisfying the legal analogy or instruction constraints"
+      },
+      "multi_positive_training": "preserve_multiple_relevant_prior_cases"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIFIR",
+      "source_urls": [
+        {
+          "label": "IFIR arXiv",
+          "url": "https://arxiv.org/abs/2503.04644"
+        },
+        {
+          "label": "AILA 2019 overview",
+          "url": "https://ceur-ws.org/Vol-2517/T1-1.pdf"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain Information Retrieval",
+        "url": "https://arxiv.org/abs/2503.04644",
+        "year": 2025,
+        "is_paper": true,
+        "doi": "10.18653/v1/2025.naacl-long.511",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

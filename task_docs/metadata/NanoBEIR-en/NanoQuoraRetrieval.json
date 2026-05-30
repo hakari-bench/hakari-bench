@@ -1,0 +1,142 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoBEIR-en",
+    "backing_dataset": "NanoBEIR-en",
+    "dataset_id": "hakari-bench/NanoBEIR-en",
+    "task_name": "NanoQuoraRetrieval",
+    "split_name": "NanoQuoraRetrieval",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoBEIR-en/NanoQuoraRetrieval.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true,
+      "no_paper_note": "no standalone Quora duplicate-question retrieval paper was confirmed; the BEIR benchmark paper was inspected for Quora construction and evaluation context"
+    },
+    "counts": {
+      "queries": 50,
+      "documents": 5046,
+      "positive_qrels": 70
+    },
+    "positives_per_query": {
+      "average": 1.4,
+      "min": 1,
+      "median": 1.0,
+      "max": 6,
+      "multi_positive_queries": 10,
+      "multi_positive_query_percent": 20.0
+    },
+    "text_stats_chars": {
+      "query_mean": 47.96,
+      "document_mean": 54.808165
+    },
+    "bm25": {
+      "ndcg_at_10": 0.8745265891744632,
+      "hit_at_10": 0.98,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.8745265892,
+        "hit_at_10": 0.98,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.8887758482,
+        "hit_at_10": 0.96,
+        "recall_at_100": 0.9714285714,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9714285714
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.9104956509,
+        "hit_at_10": 0.98,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "unknown",
+      "evaluation_split_origin": "unknown",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding upstream dev/test data or other Quora-derived data likely to overlap with the BEIR/NanoBEIR evaluation questions",
+      "useful_training_data": [
+        "non-overlapping Quora duplicate-question training pairs",
+        "FAQ and community-question duplicate pairs",
+        "supervised paraphrase and intent-equivalence datasets"
+      ],
+      "synthetic_data": {
+        "document_generation": "short user questions grouped by shared intent",
+        "question_generation": "paraphrased duplicate questions with varied wording and grammar",
+        "answerability": "positives should be answer-equivalent duplicate questions, not merely related questions"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-en",
+      "source_urls": [
+        {
+          "label": "Quora Question Pairs",
+          "url": "https://kaggle.com/competitions/quora-question-pairs"
+        },
+        {
+          "label": "ir_datasets BEIR documentation",
+          "url": "https://ir-datasets.com/beir"
+        },
+        {
+          "label": "Zeta Alpha NanoBEIR collection",
+          "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "Quora Question Pairs",
+        "url": "https://kaggle.com/competitions/quora-question-pairs",
+        "year": 2017,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "benchmark_context_paper"
+      }
+    ]
+  }
+}

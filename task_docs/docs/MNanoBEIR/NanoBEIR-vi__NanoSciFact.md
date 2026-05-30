@@ -1,0 +1,87 @@
+# MNanoBEIR / NanoBEIR-vi / NanoSciFact
+
+## Overview
+
+NanoSciFact in the Vietnamese NanoBEIR slice is a scientific claim evidence retrieval task derived from SciFact. The queries are Vietnamese translated scientific claims, and the corpus contains Vietnamese translated abstract evidence. The retrieval goal is to find abstracts that support or refute a scientific claim. This makes the task useful for evaluating Vietnamese scientific evidence retrieval, biomedical terminology matching, and claim-to-abstract ranking.
+
+## Details
+
+### What the Original Data Measures
+
+SciFact was created for scientific claim verification using abstracts from biomedical and scientific literature. In retrieval form, a model receives a claim and must retrieve the abstract that contains evidence relevant to verifying it. The task is evidence-oriented: a passage is relevant because it addresses the claim, not because it merely shares a topic.
+
+The Vietnamese translated version keeps the scientific evidence structure while introducing multilingual terminology variation. Gene names, disease names, methods, abbreviations, and protein identifiers often remain close to English, while surrounding claim and abstract text is Vietnamese. A strong model must combine exact scientific anchors with evidence-relation matching.
+
+### Observed Data Profile
+
+The task contains 50 queries, 2,919 documents, and 56 relevance judgments. Most queries have one positive abstract, with an average of 1.12 positives per query. The minimum is 1, the median is 1.0, the maximum is 4, and 4 queries are multi-positive, or 8.0% of the set.
+
+Queries average 100.06 characters, while documents average 1,489.56 characters. The claims are longer and more technical than ordinary web questions, and the documents are long scientific abstracts. The model must align a precise claim with abstract-level evidence.
+
+### BM25 Evaluation Profile
+
+BM25 reaches nDCG@10 of 0.7134, hit@10 of 0.8600, and recall@100 of 0.9107 using the top-500 BM25 candidate subset. This is a strong lexical profile. Scientific claims often contain distinctive terms such as gene symbols, diseases, assays, interventions, or molecular pathways, and these terms provide reliable anchors for BM25.
+
+The high score also shows that term frequency can be very effective in scientific evidence retrieval when the claim and abstract share specialized vocabulary. However, BM25 can still over-rank abstracts that mention the right entity without addressing the exact claim, especially when several papers discuss the same method or biological process.
+
+### Dense Evaluation Profile
+
+The dense harrier-oss-270m run reaches nDCG@10 of 0.6644, hit@10 of 0.7800, and recall@100 of 0.9107. Dense retrieval matches BM25's recall@100 but is weaker in top-10 ranking. This suggests that general embedding similarity recovers the same broad evidence pool, but it is less precise than lexical matching for ordering technical scientific abstracts.
+
+The result is plausible for SciFact-style data. Scientific claims include exact terms that are highly informative, and a dense model not specialized for biomedical evidence may blur distinctions between related mechanisms, outcomes, or study contexts. Dense retrieval still has value for paraphrased claims, but it is not the strongest direct ranker here.
+
+### Reranking Hybrid Evaluation Profile
+
+The reranking_hybrid candidate set reaches nDCG@10 of 0.7632, hit@10 of 0.8600, and recall@100 of 0.9107. It uses a top-100 candidate range with an optional rank-101 safeguard; this slice has 5 safeguard rows, candidate counts from 100 to 101, and a mean of 100.10 candidates. It is the strongest profile by nDCG@10 while matching BM25 on hit@10 and recall@100.
+
+This indicates that combining exact scientific term matching with dense semantic similarity improves the top ordering of evidence abstracts. BM25 supplies precise biomedical anchors, while dense retrieval helps when the claim and abstract express the same finding with different wording. The hybrid profile is the most attractive first-stage candidate set for evidence-aware reranking.
+
+### Metric Interpretation for Model Researchers
+
+Because most queries have one positive, hit@10 directly measures whether the evidence abstract is visible to a verifier or RAG system, and nDCG@10 measures how early it appears. recall@100 indicates whether a downstream reranker can access the evidence. In this task, BM25 and dense have the same recall@100, but reranking_hybrid improves top-rank quality.
+
+The comparison shows that scientific term overlap is unusually strong, dense retrieval alone is not enough for the best top ranks, and hybrid retrieval provides the best direct nDCG@10. This task is useful for checking whether a model preserves exact biomedical anchors while still benefiting from semantic evidence matching.
+
+### Query and Relevance Type Tendencies
+
+Queries include claims about Ly49Q regulation of raft membrane function, antiretroviral therapy and tuberculosis rates, interferon-stimulated genes and West Nile virus, HPV detection for cervical cancer screening, and TDP-43 interactions with respiratory complex proteins. Relevant documents are long scientific abstracts that describe experiments, populations, findings, or mechanisms.
+
+The task rewards precise biomedical evidence matching. A relevant abstract must address the claim's scientific relation, not simply mention the same gene, disease, or assay. This makes same-entity scientific negatives especially challenging.
+
+### Representative Failure Modes
+
+Likely failures include retrieving abstracts that share a gene or disease name but test a different hypothesis, confusing support with broad topical similarity, missing evidence when terminology is paraphrased, and over-ranking background abstracts. BM25 may be too term-driven, while dense retrieval may underweight exact biomedical identifiers.
+
+### Training Data That May Help
+
+Useful training data includes Vietnamese scientific claim verification, biomedical abstract retrieval, multilingual evidence retrieval, and hard negatives that share entities or methods but do not support the claim. Training should preserve exact identifiers and include claim-evidence relation supervision.
+
+### Model Improvement Notes
+
+A model targeting this task should keep scientific identifier precision while improving evidence-relation ranking. Sparse systems need strong biomedical tokenization and acronym handling. Dense systems need domain adaptation on biomedical claim-abstract pairs. Hybrid systems are well suited here because the best observed top-rank behavior comes from combining both signals.
+
+## Example Data
+
+### Public Sources
+
+The original task is based on SciFact, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+
+### Source Reference Table
+
+| Item | Reference |
+| --- | --- |
+| Original dataset | [SciFact](https://arxiv.org/abs/2004.14974) |
+| Retrieval benchmark framing | [BEIR](https://arxiv.org/abs/2104.08663) |
+| Multilingual benchmark context | [MMTEB](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR collection | [NanoBEIR on Hugging Face](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |
+| NanoBEIR-vi dataset | [hakari-bench/NanoBEIR-vi](https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi) |
+
+Representative query and positive evidence snippets:
+
+| Query | Positive document snippet |
+| --- | --- |
+| Quy dinh cua Ly49Q ve chuc nang cua mang raft trong su di chuyen cua bach cau trung tinh den cac vi tri viem. | Cac bach cau trung tinh nhanh chong trai qua qua trinh phan cuc va di chuyen... |
+| Lieu phap khang retrovirus va tac dong cua no den viec giam ty le benh lao tren mot loat cac muc CD4. | Nhiem virus suy giam mien dich o nguoi la yeu to nguy co manh nhat dan den benh lao... |
+| Su dieu chinh tang nhanh va bieu hien co ban cao hon cua cac gen duoc kich thich boi interferon co lam giam su song sot cua cac no-ron bi nhiem virus West Nile khong? | Rat it dieu duoc biet ve cac yeu to phan tu dieu chinh do nhay cam nay... |
+| Sang loc ung thu co tu cung nguyen phat voi phat hien HPV co do nhay doc cao hon so voi te bao hoc thong thuong? | Sang loc ung thu co tu cung dua tren viec xet nghiem virus papilloma o nguoi... |
+| Chan tuong tac giua TDP-43 va protein phuc hop ho hap I ND3 va ND6 dan den tang cuong mat neuron do TDP-43 gay ra. | Cac dot bien gen trong protein lien ket DNA TAR gay ra benh xo cung teo co mot ben... |

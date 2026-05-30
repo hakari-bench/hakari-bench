@@ -1,0 +1,114 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-Dutch",
+    "backing_dataset": "NanoMTEB-Dutch",
+    "dataset_id": "hakari-bench/NanoMTEB-Dutch",
+    "task_name": "cqadupstack_stats",
+    "split_name": "cqadupstack_stats",
+    "language": "nl",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMTEB-Dutch/cqadupstack_stats.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://doi.org/10.1145/2838931.2838934",
+      "additional_source_urls": [
+        "https://eltimster.github.io/www/pubs/adcs2015.pdf",
+        "https://aclanthology.org/2025.bucc-1.5/",
+        "https://arxiv.org/abs/2104.08663",
+        "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 200
+    },
+    "positives_per_query": {
+      "average": 1.0,
+      "min": 1,
+      "median": 1.0,
+      "max": 1,
+      "multi_positive_queries": 0,
+      "multi_positive_query_percent": 0.0
+    },
+    "text_stats_chars": {
+      "query_mean": 64.265,
+      "document_mean": 1097.6471
+    },
+    "bm25": {
+      "ndcg_at_10": 0.2826641002903191,
+      "hit_at_10": 0.385,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2826641003,
+        "hit_at_10": 0.385,
+        "recall_at_100": 0.57,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.57
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3224229366,
+        "hit_at_10": 0.43,
+        "recall_at_100": 0.655,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.655
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.3336714842,
+        "hit_at_10": 0.445,
+        "recall_at_100": 0.68,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.32,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.68,
+        "safeguard_positive_rows": 64,
+        "rows_with_101_candidates": 64
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "CQADupstackStats-NL test split from clips/beir-nl-cqadupstack",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "Exclude translated CQADupStack Stats test queries and duplicate positives used by this Nano split.",
+      "useful_training_data": [
+        "non-overlapping Cross Validated duplicate-question pairs",
+        "Dutch-translated statistics QA pairs",
+        "formula-aware STEM duplicate retrieval data"
+      ],
+      "synthetic_data": {
+        "document_generation": "Dutch statistics forum questions with formulas or R code preserved.",
+        "question_generation": "Paraphrased duplicate statistics questions using varied examples.",
+        "answerability": "Each query should duplicate one prior statistics question, with notation-near hard negatives."
+      },
+      "multi_positive_training": "single_positive"
+    },
+    "example_count": 5
+  }
+}

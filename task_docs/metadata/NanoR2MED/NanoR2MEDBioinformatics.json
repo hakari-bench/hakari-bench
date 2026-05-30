@@ -1,0 +1,146 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoR2MED",
+    "backing_dataset": "NanoR2MED",
+    "dataset_id": "hakari-bench/NanoR2MED",
+    "task_name": "NanoR2MEDBioinformatics",
+    "split_name": "NanoR2MEDBioinformatics",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoR2MED/NanoR2MEDBioinformatics.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://arxiv.org/abs/2505.14558",
+      "additional_source_urls": [
+        "https://r2med.github.io/",
+        "https://github.com/R2MED/R2MED",
+        "https://huggingface.co/datasets/R2MED/Bioinformatics"
+      ]
+    },
+    "counts": {
+      "queries": 77,
+      "documents": 10000,
+      "positive_qrels": 226
+    },
+    "positives_per_query": {
+      "average": 2.935065,
+      "min": 1,
+      "median": 2.0,
+      "max": 8,
+      "multi_positive_queries": 49,
+      "multi_positive_query_percent": 63.636364
+    },
+    "text_stats_chars": {
+      "query_mean": 890.324675,
+      "document_mean": 666.8386
+    },
+    "bm25": {
+      "ndcg_at_10": 0.21890410386227224,
+      "hit_at_10": 0.4805194805194805,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2189041039,
+        "hit_at_10": 0.4805194805,
+        "recall_at_100": 0.5663716814,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 77,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.5663716814
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3424739075,
+        "hit_at_10": 0.6233766234,
+        "recall_at_100": 0.7389380531,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 77,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7389380531
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.2622800156,
+        "hit_at_10": 0.5844155844,
+        "recall_at_100": 0.7477876106,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.077922,
+        "query_count": 77,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7477876106,
+        "safeguard_positive_rows": 6,
+        "rows_with_101_candidates": 6
+      }
+    },
+    "learning": {
+      "original_train_split": "not_found",
+      "evaluation_split_origin": "R2MED benchmark release sampled into NanoR2MED",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude R2MED Bioinformatics evaluation queries, qrels, and linked positive passages",
+      "useful_training_data": [
+        "non-overlapping Bioinformatics StackExchange answer-link retrieval",
+        "genomics tool documentation retrieval pairs",
+        "sequencing and variant-format QA with hard negatives",
+        "BRIGHT-style reasoning-intensive reference retrieval data"
+      ],
+      "synthetic_data": {
+        "document_generation": "non-evaluation bioinformatics manuals, file-format specifications, and method passages",
+        "question_generation": "StackExchange-style troubleshooting or explanation questions grounded in those passages",
+        "answerability": "the selected document should explain the command, format, method, or biological mechanism needed by the query",
+        "hard_negatives": "passages sharing tools or file formats but answering a different operation"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoR2MED",
+      "source_urls": [
+        {
+          "label": "R2MED arXiv",
+          "url": "https://arxiv.org/abs/2505.14558"
+        },
+        {
+          "label": "R2MED project page",
+          "url": "https://r2med.github.io/"
+        },
+        {
+          "label": "R2MED GitHub",
+          "url": "https://github.com/R2MED/R2MED"
+        },
+        {
+          "label": "R2MED/Bioinformatics",
+          "url": "https://huggingface.co/datasets/R2MED/Bioinformatics"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "R2MED: A Benchmark for Reasoning-Driven Medical Retrieval",
+        "url": "https://arxiv.org/abs/2505.14558",
+        "year": 2025,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2505.14558",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

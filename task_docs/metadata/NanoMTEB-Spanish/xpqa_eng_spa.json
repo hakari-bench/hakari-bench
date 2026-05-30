@@ -1,0 +1,135 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-Spanish",
+    "backing_dataset": "NanoMTEB-Spanish",
+    "dataset_id": "hakari-bench/NanoMTEB-Spanish",
+    "task_name": "xpqa_eng_spa",
+    "split_name": "xpqa_eng_spa",
+    "language": "multilingual",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMTEB-Spanish/xpqa_eng_spa.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 1936,
+      "positive_qrels": 491
+    },
+    "positives_per_query": {
+      "average": 2.455,
+      "min": 1,
+      "median": 2.0,
+      "max": 5,
+      "multi_positive_queries": 127,
+      "multi_positive_query_percent": 63.5
+    },
+    "text_stats_chars": {
+      "query_mean": 45.16,
+      "document_mean": 123.429236
+    },
+    "bm25": {
+      "ndcg_at_10": 0.09863060947398399,
+      "hit_at_10": 0.195,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.0986306095,
+        "hit_at_10": 0.195,
+        "recall_at_100": 0.2545824847,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.2545824847
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3103777032,
+        "hit_at_10": 0.545,
+        "recall_at_100": 0.7780040733,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7780040733
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.1427569695,
+        "hit_at_10": 0.255,
+        "recall_at_100": 0.6700610998,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.245,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6700610998,
+        "safeguard_positive_rows": 49,
+        "rows_with_101_candidates": 49
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "test",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude xPQA test examples, Nano queries, qrels, and positive product candidates",
+      "useful_training_data": [
+        "xPQA train examples",
+        "bilingual Spanish-to-English product QA pairs",
+        "e-commerce candidate ranking data",
+        "hard negatives from the same product category"
+      ],
+      "synthetic_data": {
+        "document_generation": "English product snippets with specifications, compatibility, quantities, sizes, instructions, and review-like evidence",
+        "question_generation": "Spanish product questions asking about those properties",
+        "answerability": "each positive snippet should contain enough information to answer the product question"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Spanish",
+      "source_urls": [
+        {
+          "label": "xPQA arXiv",
+          "url": "https://arxiv.org/abs/2305.09249"
+        },
+        {
+          "label": "mteb/XPQARetrieval",
+          "url": "https://huggingface.co/datasets/mteb/XPQARetrieval"
+        },
+        {
+          "label": "MTEB arXiv",
+          "url": "https://arxiv.org/abs/2210.07316"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "xPQA: Cross-Lingual Product Question Answering across 12 Languages",
+        "url": "https://arxiv.org/abs/2305.09249",
+        "year": 2023,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2305.09249",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}

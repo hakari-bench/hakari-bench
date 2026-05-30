@@ -1,0 +1,135 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMMTEB-v2",
+    "backing_dataset": "NanoMMTEB-v2",
+    "dataset_id": "hakari-bench/NanoMMTEB-v2",
+    "task_name": "twitter_hjerne",
+    "split_name": "twitter_hjerne",
+    "language": "da",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMMTEB-v2/twitter_hjerne.md",
+    "source_research": {
+      "primary_source_type": "dataset_card",
+      "paper_pdf_or_html_checked": true,
+      "no_paper_note": "No standalone TwitterHjerne retrieval paper was confirmed; source dataset card and Scandinavian benchmark paper were checked."
+    },
+    "counts": {
+      "queries": 77,
+      "documents": 262,
+      "positive_qrels": 262
+    },
+    "positives_per_query": {
+      "average": 3.402597,
+      "min": 1,
+      "median": 3.0,
+      "max": 6,
+      "multi_positive_queries": 75,
+      "multi_positive_query_percent": 97.402597
+    },
+    "text_stats_chars": {
+      "query_mean": 165.753247,
+      "document_mean": 128.770992
+    },
+    "bm25": {
+      "ndcg_at_10": 0.23947764988878614,
+      "hit_at_10": 0.6103896103896104,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2394776499,
+        "hit_at_10": 0.6103896104,
+        "recall_at_100": 0.6526717557,
+        "candidate_count_min": 262,
+        "candidate_count_max": 262,
+        "candidate_count_mean": 262.0,
+        "query_count": 77,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6526717557
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6243289651,
+        "hit_at_10": 0.9220779221,
+        "recall_at_100": 0.9045801527,
+        "candidate_count_min": 262,
+        "candidate_count_max": 262,
+        "candidate_count_mean": 262.0,
+        "query_count": 77,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9045801527
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.4401775618,
+        "hit_at_10": 0.8181818182,
+        "recall_at_100": 0.8702290076,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.025974,
+        "query_count": 77,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8702290076,
+        "safeguard_positive_rows": 2,
+        "rows_with_101_candidates": 2
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "train",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "do not train on this Nano split's question tweets, reply tweets, or qrels",
+      "useful_training_data": [
+        "Danish social-media QA pairs",
+        "Danish forum question-reply data",
+        "community-support and recommendation threads",
+        "multi-positive answer retrieval data"
+      ],
+      "synthetic_data": {
+        "document_generation": "informal Danish reply tweets with advice, recommendations, and troubleshooting tips",
+        "question_generation": "Danish",
+        "answerability": "several replies may be valid if they address the same user need"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMMTEB-v2",
+      "source_urls": [
+        {
+          "label": "Scandinavian Embedding Benchmarks",
+          "url": "https://arxiv.org/abs/2406.02396"
+        },
+        {
+          "label": "sorenmulli/da-hashtag-twitterhjerne",
+          "url": "https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne"
+        },
+        {
+          "label": "mteb/TwitterHjerneRetrieval",
+          "url": "https://huggingface.co/datasets/mteb/TwitterHjerneRetrieval"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "The Scandinavian Embedding Benchmarks",
+        "url": "https://arxiv.org/abs/2406.02396",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "benchmark_paper_link"
+      }
+    ]
+  }
+}

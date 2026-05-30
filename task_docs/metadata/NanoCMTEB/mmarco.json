@@ -1,0 +1,141 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoCMTEB",
+    "backing_dataset": "NanoCMTEB",
+    "dataset_id": "hakari-bench/NanoCMTEB",
+    "task_name": "mmarco",
+    "split_name": "mmarco",
+    "language": "zh",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoCMTEB/mmarco.md",
+    "source_research": {
+      "primary_source_type": "task_paper_and_benchmark_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 212
+    },
+    "positives_per_query": {
+      "average": 1.06,
+      "min": 1,
+      "median": 1.0,
+      "max": 2,
+      "multi_positive_queries": 12,
+      "multi_positive_query_percent": 6.0
+    },
+    "text_stats_chars": {
+      "query_mean": 10.44,
+      "document_mean": 113.9105
+    },
+    "bm25": {
+      "ndcg_at_10": 0.6794677888583007,
+      "hit_at_10": 0.805,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6794677889,
+        "hit_at_10": 0.805,
+        "recall_at_100": 0.9103773585,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9103773585
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.8858607869,
+        "hit_at_10": 0.935,
+        "recall_at_100": 0.9716981132,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9716981132
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.7983972733,
+        "hit_at_10": 0.9,
+        "recall_at_100": 0.9858490566,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.015,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9858490566,
+        "safeguard_positive_rows": 3,
+        "rows_with_101_candidates": 3
+      }
+    },
+    "learning": {
+      "original_train_split": "available",
+      "evaluation_split_origin": "MMarcoRetrieval dev",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "exclude NanoCMTEB mmarco queries, qrels, and translated passages",
+      "useful_training_data": [
+        "non-overlapping mMARCO Chinese pairs",
+        "multilingual MS MARCO passage ranking data",
+        "Chinese fact-seeking QA retrieval pairs",
+        "translated entity-sharing hard negatives"
+      ],
+      "synthetic_data": {
+        "document_generation": "Chinese translated or native web fact passages",
+        "question_generation": "short fact-seeking Chinese queries",
+        "answerability": "positives should contain the answer to the information need"
+      },
+      "multi_positive_training": "preserve_small_number_of_multiple_positives"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoCMTEB",
+      "source_urls": [
+        {
+          "label": "mMARCO arXiv",
+          "url": "https://arxiv.org/abs/2108.13897"
+        },
+        {
+          "label": "C-Pack arXiv",
+          "url": "https://arxiv.org/abs/2309.07597"
+        },
+        {
+          "label": "mteb/MMarcoRetrieval",
+          "url": "https://huggingface.co/datasets/mteb/MMarcoRetrieval"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset",
+        "url": "https://arxiv.org/abs/2108.13897",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "C-Pack: Packed Resources For General Chinese Embeddings",
+        "url": "https://arxiv.org/abs/2309.07597",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "definitive_benchmark_paper"
+      }
+    ]
+  }
+}

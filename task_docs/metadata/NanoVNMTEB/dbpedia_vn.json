@@ -1,0 +1,172 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoVNMTEB",
+    "backing_dataset": "NanoVNMTEB",
+    "dataset_id": "hakari-bench/NanoVNMTEB",
+    "task_name": "dbpedia_vn",
+    "split_name": "dbpedia_vn",
+    "language": "vi",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoVNMTEB/dbpedia_vn.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://doi.org/10.1145/3077136.3080751",
+      "additional_source_urls": [
+        "https://iai-group.github.io/DBpedia-Entity/",
+        "https://aclanthology.org/2026.findings-eacl.86/",
+        "https://arxiv.org/abs/2104.08663",
+        "https://huggingface.co/datasets/GreenNode/dbpedia-vn"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 5754
+    },
+    "positives_per_query": {
+      "average": 28.77,
+      "min": 1,
+      "median": 19.0,
+      "max": 100,
+      "multi_positive_queries": 194,
+      "multi_positive_query_percent": 97.0
+    },
+    "text_stats_chars": {
+      "query_mean": 42.085,
+      "document_mean": 340.3752
+    },
+    "bm25": {
+      "ndcg_at_10": 0.6137045546215129,
+      "hit_at_10": 0.96,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6137045546,
+        "hit_at_10": 0.96,
+        "recall_at_100": 0.5935001738,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.5935001738
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7640113769,
+        "hit_at_10": 0.965,
+        "recall_at_100": 0.7233229058,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7233229058
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.7247250643,
+        "hit_at_10": 0.99,
+        "recall_at_100": 0.7076816128,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7076816128,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "learning": {
+      "original_train_split": "unknown",
+      "evaluation_split_origin": "translated VN-MTEB DBpedia-Entity test split from GreenNode/dbpedia-vn",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "Exclude translated DBpedia-VN test queries, qrels, and positive entity descriptions used by this Nano split.",
+      "useful_training_data": [
+        "non-overlapping DBpedia-Entity and entity-search queries",
+        "Vietnamese entity linking and entity retrieval pairs",
+        "Wikipedia or DBpedia question-to-entity data",
+        "list-search supervision with overlap removed"
+      ],
+      "synthetic_data": {
+        "document_generation": "Vietnamese entity descriptions with titles, aliases, categories, dates, and locations.",
+        "question_generation": "Vietnamese entity-search and list-search queries answerable by one or more entity descriptions.",
+        "answerability": "Queries should have all matching entities labeled and same-category distractors included."
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoVNMTEB",
+      "source_urls": [
+        {
+          "label": "DBpedia-Entity DOI",
+          "url": "https://doi.org/10.1145/3077136.3080751"
+        },
+        {
+          "label": "DBpedia-Entity project page",
+          "url": "https://iai-group.github.io/DBpedia-Entity/"
+        },
+        {
+          "label": "VN-MTEB ACL Anthology",
+          "url": "https://aclanthology.org/2026.findings-eacl.86/"
+        },
+        {
+          "label": "BEIR arXiv",
+          "url": "https://arxiv.org/abs/2104.08663"
+        },
+        {
+          "label": "GreenNode/dbpedia-vn",
+          "url": "https://huggingface.co/datasets/GreenNode/dbpedia-vn"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "DBpedia-Entity v2: A Test Collection for Entity Search",
+        "url": "https://doi.org/10.1145/3077136.3080751",
+        "year": 2017,
+        "is_paper": true,
+        "doi": "10.1145/3077136.3080751",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "VN-MTEB: Vietnamese Massive Text Embedding Benchmark",
+        "url": "https://aclanthology.org/2026.findings-eacl.86/",
+        "year": 2026,
+        "is_paper": true,
+        "doi": "10.18653/v1/2026.findings-eacl.86",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "GreenNode/dbpedia-vn",
+        "url": "https://huggingface.co/datasets/GreenNode/dbpedia-vn",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ]
+  }
+}
