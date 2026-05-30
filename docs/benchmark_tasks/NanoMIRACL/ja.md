@@ -2,13 +2,26 @@
 
 ## Overview
 
-MIRACL frames Japanese as monolingual retrieval: Japanese questions are judged
-against Japanese Wikipedia passages, not translated evidence. The Nano split
-keeps a compact one-positive version of this passage search problem. Its
-queries are especially short, often asking when an organization was founded,
-where a person was born, whether an entity has a property, or how many people
-were affected by an event, so success depends on using sparse Japanese entity,
-date, place, and event cues to find the relevant passage.
+MIRACL is a multilingual ad hoc retrieval benchmark introduced in the
+`Making a MIRACL` paper and later expanded in the TACL version. The Japanese
+task is monolingual: Japanese questions are judged against Japanese Wikipedia
+passages, not translated evidence or cross-lingual documents. The benchmark was
+designed around native-speaker question writing and passage relevance judgments,
+with candidate passages drawn from lexical and neural retrievers, so it measures
+practical passage retrieval rather than answer extraction from a preselected
+article.
+
+This NanoMIRACL Japanese split keeps a compact version of that Wikipedia passage
+search problem. It has 200 short fact-seeking queries over a 10,000-passage
+Japanese corpus, with 373 positive qrel rows. Questions often ask when an
+organization was founded, where a person was born, whether an entity has a
+property, what kind of sport or object something is, or how many people were
+affected by an event. The task is therefore strongly entity-centered, but not
+purely lexical: a good system must preserve rare names, titles, dates, and
+places while also resolving the relation asked by the short query. The BM25,
+dense, and reranking-hybrid candidate profiles expose how much of the dataset is
+driven by exact surface overlap, embedding-level semantic similarity, and the
+combination of both.
 
 ## Details
 
@@ -43,14 +56,15 @@ useful but not sufficient on the full task.
 
 ### Observed Data Profile
 
-The sampled Nano task has 200 queries, 1,846 documents, and 200 positive qrel
-rows. Every query in this Nano split has exactly one positive passage. Queries
-are very short, with an average length of 17.47 characters. They are usually
-natural Japanese fact questions such as asking when an organization was founded,
-where a person was born, whether an entity has a property, or how many people
-were affected by an event. The documents are Japanese Wikipedia passages with an
-average length of 297.91 characters, typically beginning with the article title
-followed by an explanatory paragraph.
+The sampled Nano task has 200 queries, 10,000 documents, and 373 positive qrel
+rows. Most queries have one positive passage, but 78 queries have multiple
+positive passages; the average is 1.865 positives per query, with a maximum of
+8. Queries are very short, with an average length of 17.50 characters. They are
+usually natural Japanese fact questions such as asking when an organization was
+founded, where a person was born, whether an entity has a property, or how many
+people were affected by an event. The documents are Japanese Wikipedia passages
+with an average length of 173.39 characters, typically beginning with the
+article title followed by an explanatory paragraph.
 
 The actual samples are strongly entity-centered. Queries ask about specific
 people, organizations, historical events, sports, vehicles, companies, and
@@ -68,28 +82,113 @@ answer it. The retrieval unit may include more information than the query asks
 for, so a model should treat the relevant passage as evidence-bearing context,
 not as a direct paraphrase.
 
-### BM25 Difficulty
+### BM25 Evaluation Profile
 
-Using the dataset-provided BM25 candidate column, BM25 reaches nDCG@10 = 0.5956
-and hit@10 = 0.9400 on this Nano split. BM25 places 60 of 200 positives at rank
-1, and 188 of 200 positives somewhere in the top 10. This is a strong sparse
-baseline because the task has many short entity queries and Wikipedia passages
-often repeat the exact entity name from the query.
+BM25 is the lexical view of this task: it rewards exact or near-exact overlap
+between the short Japanese question and a Wikipedia passage. On this NanoMIRACL
+Japanese split, the dataset-provided BM25 top-500 candidate subset reaches
+nDCG@10 = 0.6601, hit@10 = 0.9350, and Recall@100 = 0.9705. It is strong because
+many queries contain rare entity names, article titles, organization names,
+vehicles, games, dates, or Japanese Wikipedia surface strings. BM25 is therefore
+a high-coverage first-stage retriever for this split, especially for top-100
+candidate recall. Its weakness is relation resolution: lexical overlap can put
+near-entity passages above the passage that actually answers the short question.
 
-The harder cases show where lexical matching is not enough. For "メジロライアンはいつ
-生まれた？", BM25 ranks several other `メジロ` racehorse passages above the correct
-`メジロライアン` passage. For "ＮＨＫは有料テレビ局？", it is distracted by passages
-about paid television services and NHK-related topics rather than the precise
-license-fee evidence. For "皇族用車両は英国にもありますか？", BM25 finds Japanese
-royal train and British railway passages but misses the passage that explicitly
-answers the cross-country royal-carriage question. These failures are
-entity-neighbor and intent-resolution failures: the right topic family is found,
-but the exact relation asked by the short query is not ranked high enough.
+### Dense Evaluation Profile
 
-This means nDCG@10 should be read as a mixture of lexical anchoring and
-fine-grained evidence selection. A strong retriever should preserve BM25's
-ability to use rare names, dates, and titles while improving cases where the
-query's relation is short and implicit.
+The dense candidate subset, produced by `harrier_oss_v1_270m`, measures a
+different tendency. Instead of relying mainly on term frequency and exact
+Japanese string overlap, it ranks passages by embedding similarity. On this
+split it reaches nDCG@10 = 0.7745 and hit@10 = 0.9150, while Recall@100 is
+0.9303. Dense is the best top-rank ordering signal among the three candidate
+views, but it is not the best top-100 coverage signal. It helps when the query
+asks for a relation rather than only naming an entity, or when the evidence
+passage uses a different surface form from the query. The cost is rare-string
+anchoring: katakana spellings, romanized names, product titles, and exact
+article titles can be smoothed into nearby topics.
+
+### Reranking Hybrid Evaluation Profile
+
+The `reranking_hybrid` candidate subset emulates a hybrid search result by
+combining the lexical strengths of BM25 and the embedding-similarity strengths
+of dense retrieval. On this split it reaches nDCG@10 = 0.7223, hit@10 = 0.9700,
+and Recall@100 = 1.0000. Hybrid is not the best pure top-rank sorter because
+dense has higher nDCG@10, but it is the safest candidate-generation view. It
+finds a positive in the top 10 for 194 of 200 queries and covers all 373 judged
+positives in the top 100. For reranker research, this means the candidate stage
+is already strong enough to test evidence selection rather than only missing
+document recovery.
+
+### Metric Interpretation for Model Researchers
+
+The most important distinction is nDCG@10 versus Recall@100. Dense leading
+nDCG@10 means embedding similarity often orders the answer-bearing passage
+better at the very top. BM25 leading dense on Recall@100 means exact lexical
+anchors still recover positives that dense retrieval can miss. Reranking hybrid
+reaching Recall@100 = 1.0000 means top-100 candidate loss is largely removed for
+this split; the remaining challenge for a reranker is ordering the best evidence
+above near-entity or topic-adjacent passages. A model that improves only nDCG@10
+without preserving Recall@100 may be learning semantic ranking at the cost of
+lexical coverage. A model that improves Recall@100 but not nDCG@10 may be a
+better first-stage retriever but not necessarily a better final ranker.
+
+### Query Type Tendencies
+
+The task is dominated by short entity-centered fact questions. Common query
+types include birthplace, death date, founding date, organization type, sport or
+vehicle classification, yes/no property questions, and event-count questions.
+The lexical winner cases usually contain rare entity strings, exact titles, or
+unusual katakana and romanized forms. Dense tends to help when the query asks a
+relation that is not expressed in the same words as the passage, such as whether
+a broadcaster is paid television, whether a license is required, or where a
+person came from. Hybrid is most useful for questions where both signals are
+needed: the entity string must be preserved, but the correct passage is the one
+that satisfies the relation.
+
+### Representative Failure Modes
+
+Failures often happen inside the correct topic family. BM25 may retrieve other
+`メジロ` racehorse passages before the one that states the birth date of
+`メジロライアン`. It may also retrieve passages about paid television services or
+NHK-related topics before the passage that answers "ＮＨＫは有料テレビ局？". Dense can
+make the opposite mistake: it can rank a semantically coherent passage about a
+nearby person, work, organization, or product above the judged evidence because
+the exact rare string is not strongly anchored. These are not broad topical
+misses; they are passage-level evidence selection errors among plausible
+neighbors.
+
+### Japanese-Specific Notes
+
+Japanese tokenization and normalization matter. Query strings include kanji,
+hiragana, katakana, full-width Latin letters, romanized titles, punctuation,
+variant article-title forms, and date expressions. BM25 quality depends on
+whether proper nouns and compounds are segmented in a way that preserves useful
+lexical anchors. Dense retrieval is less sensitive to segmentation, but it can
+blur rare names, long katakana titles, and full-width/half-width variants. Strong
+systems should normalize harmless orthographic variation while preserving
+entity-distinguishing characters.
+
+### Training and Leakage Notes
+
+MIRACL Japanese train data and other Japanese Wikipedia question-to-passage
+retrieval data are natural training sources, but evaluation queries, qrels, and
+positive passages from this Nano split should be excluded. Upstream MIRACL
+development or test material and other MIRACL-derived data should be audited for
+overlap before training. For model comparison, it is useful to report whether a
+system was trained on MIRACL, Mr. TyDi, Japanese Wikipedia QA, or synthetic
+question-generation data, because those sources can directly teach this
+question-to-evidence style.
+
+### Model Improvement Hints
+
+The most useful improvements are lexical-semantic balance, relation-aware
+reranking, and Japanese entity grounding. First-stage retrievers should preserve
+BM25-like rare-name recall while using dense similarity to rank relation matches
+near the top. Rerankers should be trained with hard negatives from the same
+entity family, the same article title neighborhood, or passages that share the
+entity but answer a different relation. Synthetic data is most valuable when it
+creates short Japanese fact questions from non-evaluation Wikipedia-style
+passages and pairs them with near-entity negatives.
 
 ### Training Data That May Help
 
@@ -137,35 +236,6 @@ needs to answer-bearing passages while handling near-entity confusions.
 | ヘンリー2世はいつ死去した？ (14 chars) | ヘンリー2世 (イングランド王) ヘンリー2世（, 1133年3月5日 - 1189年7月6日）は、プランタジネット朝（あるいはアンジュー朝）初代のイングランド王国の国王（在位：1154年 - 1189年）である。 (107 chars) |
 | アメリカン・エキスプレスはいつ設立した？ (20 chars) | アメリカン・エキスプレス 1850年に、ウェルズ・ファーゴの創設者でもあるヘンリー・ウェルズとウィリアム・ファーゴ、ジョン・バターフィールドの3人によって、荷馬車により貨物を運ぶ宅配便業者（）として、ニューヨーク州バッファローを本社に運輸業を開始した。事業は好調に推移し、輸送網を全米、および隣国のカナダやメキシコにも広げた。 (163 chars) |
 
-## Dataset Information
-
-| Field | Value |
-| --- | --- |
-| Nano set | NanoMIRACL |
-| Backing dataset | NanoMIRACL |
-| Task / split | ja |
-| Hugging Face dataset | [hakari-bench/NanoMIRACL](https://huggingface.co/datasets/hakari-bench/NanoMIRACL) |
-| Language | ja |
-| Category | natural_language |
-| Queries | 200 |
-| Documents | 1,846 |
-| Positive qrels | 200 |
-| BM25 nDCG@10 | 0.6601 |
-| BM25 hit@10 | 0.9350 |
-| BM25 Recall@100 | 0.9705 |
-| BM25 candidate subset | top-500 (`bm25`) |
-| Dense nDCG@10 | 0.7745 |
-| Dense hit@10 | 0.9150 |
-| Dense Recall@100 | 0.9303 |
-| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
-| Reranking hybrid nDCG@10 | 0.7223 |
-| Reranking hybrid hit@10 | 0.9700 |
-| Reranking hybrid Recall@100 | 1.0000 |
-| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
-| Reranking hybrid candidates / query | 100 |
-| Reranking hybrid safeguard rows | 0 |
-| Query length avg chars | 17.47 |
-| Document length avg chars | 297.91 |
 
 ### Public Sources
 
@@ -187,128 +257,3 @@ needs to answer-bearing passages while handling near-entity confusions.
 | MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
 | MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
 | miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
-
-## Machine-Readable Metadata
-
-<!-- benchmark-task-metadata:v1 -->
-
-```yaml
-benchmark_task_metadata:
-  schema_version: 1
-  document_status: first_pass
-  nano_set: NanoMIRACL
-  backing_dataset: NanoMIRACL
-  dataset_id: hakari-bench/NanoMIRACL
-  task_name: ja
-  split_name: ja
-  language: ja
-  category: natural_language
-  document_path: docs/benchmark_tasks/NanoMIRACL/ja.md
-  source_research:
-    primary_source_type: task_paper
-    paper_pdf_or_html_checked: true
-    no_paper_note: null
-  counts:
-    queries: 200
-    documents: 1846
-    positive_qrels: 200
-  positives_per_query:
-    average: 1.0
-    min: 1
-    median: 1.0
-    max: 1
-    multi_positive_queries: 0
-    multi_positive_query_percent: 0.0
-  text_stats_chars:
-    query_mean: 17.47
-    document_mean: 297.912784
-  bm25:
-    ndcg_at_10: 0.660063430132731
-    hit_at_10: 0.935
-    source: dataset_candidate_subset
-  learning:
-    original_train_split: available
-    evaluation_split_origin: unknown
-    train_eval_overlap_audit: not_audited
-    leakage_note: prefer excluding upstream development/test data or other MIRACL-derived
-      data likely to overlap with the NanoMIRACL evaluation questions and passages
-    useful_training_data:
-    - non-overlapping MIRACL Japanese train split data
-    - native Japanese Wikipedia question-to-passage retrieval pairs
-    - Japanese entity-centric QA evidence retrieval pairs
-    synthetic_data:
-      document_generation: Japanese Wikipedia-style passages with titles, dates, names,
-        places, and factual evidence
-      question_generation: short native Japanese fact questions answerable from one
-        selected passage
-      answerability: questions should be grounded in explicit facts or relations in
-        the generated or selected passage
-    multi_positive_training: single_positive_question_document_focus
-  links:
-    nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMIRACL
-    source_urls:
-    - label: MIRACL corpus dataset
-      url: https://huggingface.co/datasets/miracl/miracl-corpus
-    - label: MIRACL GitHub repository
-      url: https://github.com/project-miracl/miracl
-    source_notes: []
-  references:
-  - title: 'Making a MIRACL: Multilingual Information Retrieval Across a Continuum
-      of Languages'
-    url: https://arxiv.org/abs/2210.09984
-    year: 2022
-    doi: 10.48550/arXiv.2210.09984
-    is_paper: true
-    source_confidence: definitive_paper_link
-  - title: 'MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages'
-    url: https://aclanthology.org/2023.tacl-1.63/
-    year: 2023
-    doi: 10.1162/tacl_a_00595
-    is_paper: true
-    source_confidence: definitive_paper_link
-  candidate_subsets:
-    bm25:
-      config: bm25
-      label: BM25
-      source: dataset_candidate_subset
-      top_k: 500
-      ndcg_at_10: 0.6600634301
-      hit_at_10: 0.935
-      recall_at_100: 0.9705093834
-      candidate_count_min: 500
-      candidate_count_max: 500
-      candidate_count_mean: 500.0
-      query_count: 200
-      query_coverage: 1.0
-      relevant_coverage_at_100: 0.9705093834
-    dense:
-      config: harrier_oss_v1_270m
-      label: Dense
-      source: dataset_candidate_subset
-      top_k: 500
-      ndcg_at_10: 0.7744598647
-      hit_at_10: 0.915
-      recall_at_100: 0.9302949062
-      candidate_count_min: 500
-      candidate_count_max: 500
-      candidate_count_mean: 500.0
-      query_count: 200
-      query_coverage: 1.0
-      relevant_coverage_at_100: 0.9302949062
-    reranking_hybrid:
-      config: reranking_hybrid
-      label: Reranking hybrid
-      source: dataset_candidate_subset
-      top_k: 100
-      ndcg_at_10: 0.7223080894
-      hit_at_10: 0.97
-      recall_at_100: 1.0
-      candidate_count_min: 100
-      candidate_count_max: 100
-      candidate_count_mean: 100.0
-      query_count: 200
-      query_coverage: 1.0
-      relevant_coverage_at_100: 1.0
-      safeguard_positive_rows: 0
-      rows_with_101_candidates: 0
-```

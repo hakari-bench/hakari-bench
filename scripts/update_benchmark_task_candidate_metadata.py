@@ -11,10 +11,9 @@ from typing import Any
 
 import yaml
 
-from hakari_bench.benchmark_docs import BENCHMARK_TASK_METADATA_RE
+from hakari_bench.task_docs import TASK_METADATA_RE
 
 
-TASK_METADATA_RE = BENCHMARK_TASK_METADATA_RE
 GROUP_METADATA_RE = re.compile(
     r"<!-- benchmark-task-group-metadata:v1 -->\s*```yaml\n(.*?)\n```",
     re.DOTALL,
@@ -123,7 +122,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Update benchmark task docs with Nano candidate subset metadata.")
+    parser = argparse.ArgumentParser(description="Update task docs with Nano candidate subset metadata.")
     parser.add_argument("--docs-root", type=Path, default=Path("docs/benchmark_tasks"))
     parser.add_argument("--reranking-hybrid-config", default=RERANKING_HYBRID_CONFIG)
     parser.add_argument("--skip-existing", action="store_true", help="Skip task docs that already have candidate_subsets.")

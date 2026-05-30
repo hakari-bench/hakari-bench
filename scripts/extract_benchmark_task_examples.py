@@ -10,11 +10,11 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from hakari_bench.benchmark_docs import BENCHMARK_TASK_METADATA_RE, load_benchmark_task_metadata
+from hakari_bench.task_docs import TASK_METADATA_RE, load_task_metadata
 
 
 EXAMPLE_SECTION_RE = re.compile(r"(## Example Data\n\n).*?(?=\n## Dataset Information)", re.DOTALL)
-METADATA_RE = BENCHMARK_TASK_METADATA_RE
+METADATA_RE = TASK_METADATA_RE
 DEFAULT_TEXT_LIMIT = 225
 DEFAULT_SAMPLE_SIZE = 5
 DEFAULT_SEED = 42
@@ -193,7 +193,7 @@ def _load_dataset_split(dataset_id: str, config_name: str, split_name: str) -> A
 
 
 def _task_reference_from_doc(path: Path) -> TaskReference:
-    metadata = load_benchmark_task_metadata(path)
+    metadata = load_task_metadata(path)
     return TaskReference(dataset_id=metadata.dataset_id, split_name=metadata.split_name or metadata.task_name)
 
 

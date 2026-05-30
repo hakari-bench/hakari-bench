@@ -4,7 +4,12 @@ import re
 import shlex
 from pathlib import Path
 
-from hakari_bench.benchmark_docs import load_benchmark_task_metadata, validate_benchmark_task_docs
+from hakari_bench.task_docs import (
+    TaskMetadataDocument,
+    load_task_metadata,
+    task_metadata_json_path,
+    validate_task_docs,
+)
 from hakari_bench.cli import parse_args
 
 
@@ -44,14 +49,38 @@ def test_nano_readme_template_documents_fill_requirements() -> None:
     assert "- [ ] every config lists the same Nano splits" in text
 
 
-def test_benchmark_task_metadata_schema_parses_yaml_boolean_language() -> None:
-    metadata = load_benchmark_task_metadata(Path("docs/benchmark_tasks/NanoMTEB-Scandinavian/nor_quad.md"))
+def test_task_metadata_schema_parses_yaml_boolean_language() -> None:
+    metadata = load_task_metadata(Path("docs/benchmark_tasks/NanoMTEB-Scandinavian/nor_quad.md"))
 
     assert metadata.language == "no"
 
 
-def test_benchmark_task_docs_metadata_validate() -> None:
-    metadata, issues = validate_benchmark_task_docs()
+def test_task_metadata_prefers_external_json(tmp_path: Path) -> None:
+    docs_root = tmp_path / "docs"
+    metadata_root = tmp_path / "metadata"
+    doc_path = docs_root / "NanoMIRACL" / "ja.md"
+    doc_path.parent.mkdir(parents=True)
+    doc_path.write_text("# NanoMIRACL / ja\n", encoding="utf-8")
+
+    source_metadata = load_task_metadata(Path("docs/benchmark_tasks/NanoMIRACL/ja.md"))
+    updated_metadata = source_metadata.model_copy(update={"document_path": doc_path.as_posix()})
+    document = TaskMetadataDocument(task_metadata=updated_metadata)
+    metadata_path = task_metadata_json_path(
+        doc_path,
+        docs_root=docs_root,
+        metadata_root=metadata_root,
+    )
+    metadata_path.parent.mkdir(parents=True)
+    metadata_path.write_text(document.model_dump_json(indent=2) + "\n", encoding="utf-8")
+
+    metadata, issues = validate_task_docs([doc_path], docs_root=docs_root, metadata_root=metadata_root)
+
+    assert not issues
+    assert [item.task_name for item in metadata] == ["ja"]
+
+
+def test_task_docs_metadata_validate() -> None:
+    metadata, issues = validate_task_docs()
 
     assert not issues
     assert len(metadata) > 500

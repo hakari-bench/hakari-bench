@@ -18,7 +18,7 @@ from hakari_bench.bm25 import (
     run_or_load_bm25_task,
 )
 from hakari_bench.cli_schema import BuildCandidatesParamsJson, EvaluateParamsJson
-from hakari_bench.benchmark_docs import validate_benchmark_task_docs
+from hakari_bench.task_docs import validate_task_docs
 from hakari_bench.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
 from hakari_bench.defaults import DEFAULT_CANDIDATE_RANKING, DEFAULT_RERANK_TOP_K
 from hakari_bench.embedding_variants import (
@@ -153,15 +153,21 @@ def build_parser() -> argparse.ArgumentParser:
     web.add_argument("--viewer-config-dir", default="config/viewer", help="Viewer YAML config directory.")
 
     validate_docs = subparsers.add_parser(
-        "validate-benchmark-docs",
-        aliases=["validation-benchmark-docs"],
-        help="Validate machine-readable benchmark task documentation metadata.",
+        "validate-task-docs",
+        aliases=["validate-benchmark-docs", "validation-benchmark-docs"],
+        help="Validate machine-readable task documentation metadata.",
     )
     validate_docs.add_argument(
         "--docs-root",
         type=Path,
         default=Path("docs/benchmark_tasks"),
-        help="Benchmark task docs root used when no explicit paths are supplied.",
+        help="Task docs root used when no explicit paths are supplied.",
+    )
+    validate_docs.add_argument(
+        "--metadata-root",
+        type=Path,
+        default=Path("task_docs/metadata"),
+        help="Task metadata JSON root.",
     )
     validate_docs.add_argument(
         "paths",
@@ -1393,19 +1399,23 @@ def main(argv: list[str] | None = None) -> None:
     if args.command == "web":
         run_web(args)
         return
-    if args.command in {"validate-benchmark-docs", "validation-benchmark-docs"}:
-        run_validate_benchmark_docs(args)
+    if args.command in {"validate-task-docs", "validate-benchmark-docs", "validation-benchmark-docs"}:
+        run_validate_task_docs(args)
         return
     raise ValueError(f"Unsupported command: {args.command}")
 
 
-def run_validate_benchmark_docs(args: argparse.Namespace) -> None:
-    metadata, issues = validate_benchmark_task_docs(args.paths, docs_root=args.docs_root)
+def run_validate_task_docs(args: argparse.Namespace) -> None:
+    metadata, issues = validate_task_docs(
+        args.paths,
+        docs_root=args.docs_root,
+        metadata_root=args.metadata_root,
+    )
     if issues:
         for issue in issues:
             print(f"{issue.path}: {issue.message}", file=sys.stderr)
         raise SystemExit(1)
-    print(f"Validated {len(metadata)} benchmark task docs.")
+    print(f"Validated {len(metadata)} task docs.")
 
 
 if __name__ == "__main__":

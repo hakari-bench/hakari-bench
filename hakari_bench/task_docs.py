@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
@@ -7,14 +8,16 @@ from pathlib import Path
 from typing import Annotated
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field, ValidationError, field_validator
 from pydantic.types import StringConstraints
 
 
-BENCHMARK_TASK_METADATA_RE = re.compile(
+TASK_METADATA_RE = re.compile(
     r"<!-- benchmark-task-metadata:v1 -->\s*```yaml\n(.*?)\n```",
     re.DOTALL,
 )
+DEFAULT_TASK_DOCS_ROOT = Path("docs/benchmark_tasks")
+DEFAULT_TASK_METADATA_ROOT = Path("task_docs/metadata")
 
 NonEmptyStr = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 UnitScore = Annotated[float, Field(ge=0.0, le=1.0)]
@@ -22,11 +25,11 @@ NonNegativeFloat = Annotated[float, Field(ge=0.0)]
 NonNegativeInt = Annotated[int, Field(ge=0)]
 
 
-class BenchmarkDocsModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+class TaskDocsModel(BaseModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
 
-class SourceResearchMetadata(BenchmarkDocsModel):
+class SourceResearchMetadata(TaskDocsModel):
     primary_source_type: NonEmptyStr
     paper_pdf_or_html_checked: bool
     no_paper_note: NonEmptyStr | None = None
@@ -36,13 +39,13 @@ class SourceResearchMetadata(BenchmarkDocsModel):
     no_fulltext_note: NonEmptyStr | None = None
 
 
-class CountMetadata(BenchmarkDocsModel):
+class CountMetadata(TaskDocsModel):
     queries: NonNegativeInt
     documents: NonNegativeInt
     positive_qrels: NonNegativeInt
 
 
-class PositivesPerQueryMetadata(BenchmarkDocsModel):
+class PositivesPerQueryMetadata(TaskDocsModel):
     average: NonNegativeFloat
     min: NonNegativeInt
     median: NonNegativeFloat
@@ -51,12 +54,12 @@ class PositivesPerQueryMetadata(BenchmarkDocsModel):
     multi_positive_query_percent: Annotated[float, Field(ge=0.0, le=100.0)] | None = None
 
 
-class TextStatsCharsMetadata(BenchmarkDocsModel):
+class TextStatsCharsMetadata(TaskDocsModel):
     query_mean: NonNegativeFloat
     document_mean: NonNegativeFloat
 
 
-class BM25Metadata(BenchmarkDocsModel):
+class BM25Metadata(TaskDocsModel):
     ndcg_at_10: UnitScore
     hit_at_10: UnitScore
     source: NonEmptyStr
@@ -67,7 +70,7 @@ class BM25Metadata(BenchmarkDocsModel):
     dureader_paper_cmedqa_bm25_recall_at_50: NonNegativeFloat | None = None
 
 
-class CandidateSubsetMetricsMetadata(BenchmarkDocsModel):
+class CandidateSubsetMetricsMetadata(TaskDocsModel):
     config: NonEmptyStr
     label: NonEmptyStr
     source: NonEmptyStr
@@ -85,13 +88,13 @@ class CandidateSubsetMetricsMetadata(BenchmarkDocsModel):
     rows_with_101_candidates: NonNegativeInt | None = None
 
 
-class CandidateSubsetsMetadata(BenchmarkDocsModel):
+class CandidateSubsetsMetadata(TaskDocsModel):
     bm25: CandidateSubsetMetricsMetadata | None = None
     dense: CandidateSubsetMetricsMetadata | None = None
     reranking_hybrid: CandidateSubsetMetricsMetadata | None = None
 
 
-class LeakageRiskMetadata(BenchmarkDocsModel):
+class LeakageRiskMetadata(TaskDocsModel):
     source_dataset: NonEmptyStr
     risk: NonEmptyStr
     recommended_filter: NonEmptyStr
@@ -101,7 +104,7 @@ class LeakageRiskMetadata(BenchmarkDocsModel):
     source_corpus_size_reported_by_coderag_bench: NonNegativeInt | None = None
 
 
-class LeakageAuditMetadata(BenchmarkDocsModel):
+class LeakageAuditMetadata(TaskDocsModel):
     source_dataset: NonEmptyStr
     source_train_rows_scanned: NonNegativeInt
     nano_query_rows: NonNegativeInt
@@ -113,14 +116,14 @@ class LeakageAuditMetadata(BenchmarkDocsModel):
     normalized_exact_query_positive_matches: NonNegativeInt | None = None
 
 
-class SyntheticDataMetadata(BenchmarkDocsModel):
+class SyntheticDataMetadata(TaskDocsModel):
     document_generation: NonEmptyStr
     question_generation: NonEmptyStr
     answerability: NonEmptyStr
     hard_negatives: NonEmptyStr | None = None
 
 
-class LearningMetadata(BenchmarkDocsModel):
+class LearningMetadata(TaskDocsModel):
     original_train_split: NonEmptyStr
     evaluation_split_origin: NonEmptyStr
     train_eval_overlap_audit: NonEmptyStr
@@ -132,18 +135,18 @@ class LearningMetadata(BenchmarkDocsModel):
     leakage_audit: LeakageAuditMetadata | None = None
 
 
-class SourceUrlMetadata(BenchmarkDocsModel):
+class SourceUrlMetadata(TaskDocsModel):
     label: NonEmptyStr
     url: NonEmptyStr
 
 
-class LinkMetadata(BenchmarkDocsModel):
+class LinkMetadata(TaskDocsModel):
     nano_dataset: NonEmptyStr
     source_urls: list[SourceUrlMetadata]
     source_notes: list[NonEmptyStr] | None = None
 
 
-class ReferenceMetadata(BenchmarkDocsModel):
+class ReferenceMetadata(TaskDocsModel):
     title: NonEmptyStr
     url: NonEmptyStr
     year: NonNegativeInt | None = None
@@ -152,7 +155,7 @@ class ReferenceMetadata(BenchmarkDocsModel):
     source_confidence: NonEmptyStr | None = None
 
 
-class BenchmarkTaskMetadata(BenchmarkDocsModel):
+class TaskMetadata(TaskDocsModel):
     schema_version: int
     document_status: NonEmptyStr
     nano_set: NonEmptyStr
@@ -191,53 +194,105 @@ class BenchmarkTaskMetadata(BenchmarkDocsModel):
         return value
 
 
-class BenchmarkTaskMetadataDocument(BenchmarkDocsModel):
-    benchmark_task_metadata: BenchmarkTaskMetadata
+class TaskMetadataDocument(TaskDocsModel):
+    task_metadata: TaskMetadata = Field(validation_alias=AliasChoices("task_metadata", "benchmark_task_metadata"))
+
+    @property
+    def benchmark_task_metadata(self) -> TaskMetadata:
+        return self.task_metadata
 
 
 @dataclass(frozen=True)
-class BenchmarkDocsValidationIssue:
+class TaskDocsValidationIssue:
     path: Path
     message: str
 
 
-def load_benchmark_task_metadata(path: Path) -> BenchmarkTaskMetadata:
-    return load_benchmark_task_metadata_document(path).benchmark_task_metadata
-
-
-def load_benchmark_task_metadata_document(path: Path) -> BenchmarkTaskMetadataDocument:
-    text = path.read_text(encoding="utf-8")
-    match = BENCHMARK_TASK_METADATA_RE.search(text)
-    if not match:
-        raise ValueError("missing benchmark task metadata block")
+def task_metadata_json_path(
+    path: Path,
+    *,
+    docs_root: Path = DEFAULT_TASK_DOCS_ROOT,
+    metadata_root: Path = DEFAULT_TASK_METADATA_ROOT,
+) -> Path:
     try:
-        payload = yaml.safe_load(match.group(1))
-    except yaml.YAMLError as exc:
-        raise ValueError(f"invalid benchmark task metadata YAML: {exc}") from exc
-    return BenchmarkTaskMetadataDocument.model_validate(payload)
+        relative_path = path.resolve().relative_to(docs_root.resolve())
+    except ValueError:
+        try:
+            relative_path = path.relative_to(docs_root)
+        except ValueError:
+            relative_path = path.name
+    return metadata_root / Path(relative_path).with_suffix(".json")
 
 
-def collect_benchmark_task_doc_paths(paths: Sequence[Path], *, docs_root: Path) -> list[Path]:
+def load_task_metadata(
+    path: Path,
+    *,
+    docs_root: Path = DEFAULT_TASK_DOCS_ROOT,
+    metadata_root: Path = DEFAULT_TASK_METADATA_ROOT,
+) -> TaskMetadata:
+    return load_task_metadata_document(
+        path,
+        docs_root=docs_root,
+        metadata_root=metadata_root,
+    ).task_metadata
+
+
+def load_task_metadata_document(
+    path: Path,
+    *,
+    docs_root: Path = DEFAULT_TASK_DOCS_ROOT,
+    metadata_root: Path = DEFAULT_TASK_METADATA_ROOT,
+    prefer_external: bool = True,
+) -> TaskMetadataDocument:
+    metadata_path = task_metadata_json_path(path, docs_root=docs_root, metadata_root=metadata_root)
+    if prefer_external and metadata_path.exists():
+        return load_task_metadata_json(metadata_path)
+
+    text = path.read_text(encoding="utf-8")
+    match = TASK_METADATA_RE.search(text)
+    if match:
+        try:
+            payload = yaml.safe_load(match.group(1))
+        except yaml.YAMLError as exc:
+            raise ValueError(f"invalid task metadata YAML: {exc}") from exc
+        return TaskMetadataDocument.model_validate(payload)
+
+    if metadata_path.exists():
+        return load_task_metadata_json(metadata_path)
+
+    raise ValueError(f"missing task metadata JSON at {metadata_path} or embedded metadata block")
+
+
+def load_task_metadata_json(path: Path) -> TaskMetadataDocument:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"invalid task metadata JSON: {exc}") from exc
+    return TaskMetadataDocument.model_validate(payload)
+
+
+def collect_task_doc_paths(paths: Sequence[Path], *, docs_root: Path) -> list[Path]:
     if paths:
         return sorted(_expand_doc_paths(paths))
     return sorted(path for path in docs_root.rglob("*.md") if path.name != "index.md")
 
 
-def validate_benchmark_task_docs(
+def validate_task_docs(
     paths: Sequence[Path] = (),
     *,
-    docs_root: Path = Path("docs/benchmark_tasks"),
+    docs_root: Path = DEFAULT_TASK_DOCS_ROOT,
+    metadata_root: Path = DEFAULT_TASK_METADATA_ROOT,
     validate_document_paths: bool = True,
-) -> tuple[list[BenchmarkTaskMetadata], list[BenchmarkDocsValidationIssue]]:
-    metadata: list[BenchmarkTaskMetadata] = []
-    issues: list[BenchmarkDocsValidationIssue] = []
-    for path in collect_benchmark_task_doc_paths(paths, docs_root=docs_root):
+) -> tuple[list[TaskMetadata], list[TaskDocsValidationIssue]]:
+    metadata: list[TaskMetadata] = []
+    issues: list[TaskDocsValidationIssue] = []
+    for path in collect_task_doc_paths(paths, docs_root=docs_root):
         try:
-            item = load_benchmark_task_metadata(path)
+            item = load_task_metadata(path, docs_root=docs_root, metadata_root=metadata_root)
             if validate_document_paths:
                 _validate_document_path(path=path, metadata=item)
         except (OSError, ValidationError, ValueError) as exc:
-            issues.append(BenchmarkDocsValidationIssue(path=path, message=_format_validation_error(exc)))
+            issues.append(TaskDocsValidationIssue(path=path, message=_format_validation_error(exc)))
             continue
         metadata.append(item)
     return metadata, issues
@@ -251,7 +306,7 @@ def _expand_doc_paths(paths: Sequence[Path]) -> Iterable[Path]:
             yield path
 
 
-def _validate_document_path(*, path: Path, metadata: BenchmarkTaskMetadata) -> None:
+def _validate_document_path(*, path: Path, metadata: TaskMetadata) -> None:
     expected = _repo_relative_path(path)
     if metadata.document_path != expected:
         raise ValueError(f"document_path must be {expected!r}, got {metadata.document_path!r}")
@@ -273,3 +328,18 @@ def _format_validation_error(exc: Exception) -> str:
             messages.append(f"{loc}: {error['msg']}")
         return "; ".join(messages)
     return str(exc)
+
+
+BENCHMARK_TASK_METADATA_RE = TASK_METADATA_RE
+DEFAULT_BENCHMARK_TASK_DOCS_ROOT = DEFAULT_TASK_DOCS_ROOT
+DEFAULT_BENCHMARK_TASK_METADATA_ROOT = DEFAULT_TASK_METADATA_ROOT
+BenchmarkDocsModel = TaskDocsModel
+BenchmarkTaskMetadata = TaskMetadata
+BenchmarkTaskMetadataDocument = TaskMetadataDocument
+BenchmarkDocsValidationIssue = TaskDocsValidationIssue
+benchmark_task_metadata_json_path = task_metadata_json_path
+load_benchmark_task_metadata = load_task_metadata
+load_benchmark_task_metadata_document = load_task_metadata_document
+load_benchmark_task_metadata_json = load_task_metadata_json
+collect_benchmark_task_doc_paths = collect_task_doc_paths
+validate_benchmark_task_docs = validate_task_docs

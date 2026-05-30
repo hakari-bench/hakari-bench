@@ -1,16 +1,17 @@
 # Creating Benchmark Task Documents
 
-This document defines the policy and template for task-level benchmark
-documentation under `docs/benchmark_tasks/`.
+This document defines the policy and template for reader-facing benchmark task
+documentation under `task_docs/docs/`, plus the group index pages that summarize
+each Nano set.
 
 ## Purpose
 
 Each task page should let a reader understand what the retrieval task measures
 before looking at leaderboard scores. A page should explain the source benchmark,
-the concrete query and document shapes, the domain, the language, the BM25
-baseline behavior, representative examples from the actual Nano tables, and the
-kind of training data likely to improve the task without leaking evaluation
-answers.
+the concrete query and document shapes, the domain, the language, the BM25,
+dense, and reranking-hybrid retrieval signals, representative examples from the
+actual Nano tables, and the kind of training data likely to improve the task
+without leaking evaluation answers.
 
 The pages are public GitHub Markdown. Do not include local paper paths, local
 Obsidian links, local filesystem paths, private notes, or machine-specific URLs.
@@ -20,15 +21,19 @@ Obsidian links, local filesystem paths, private notes, or machine-specific URLs.
 Write task documents under:
 
 ```text
-docs/benchmark_tasks/{Nano-set name}/{task name}.md
+task_docs/docs/{Nano-set name}/{task name}.md
 ```
 
 For collection-level samples where the backing Nano dataset is different from
 the collection name, include the backing dataset in the file name, for example:
 
 ```text
-docs/benchmark_tasks/MNanoBEIR/NanoBEIR-ja__NanoMSMARCO.md
+task_docs/docs/MNanoBEIR/NanoBEIR-ja__NanoMSMARCO.md
 ```
+
+Older task pages under `docs/benchmark_tasks/` remain useful as source material
+and provenance, but new reader-facing task prose should be authored under
+`task_docs/docs/`. The matching JSON metadata remains under `task_docs/metadata/`.
 
 ## Source Policy
 
@@ -95,15 +100,25 @@ baseline discussion, and limitations. Mention whichever of those items materiall
 changes the interpretation of the Nano task.
 
 OB Wiki Search can be used as background research, but local wiki or paper-note
-paths must not be written into generated Markdown or into the machine-readable
-metadata block.
+paths must not be written into generated Markdown or into task metadata JSON.
 
-## Structured Fields
+## Task Metadata JSON
 
-Place structured reference material after `## Example Data` and before
-`## Machine-Readable Metadata`. This keeps the reader-facing flow focused on the
-task first: overview, interpretation, then examples. The information table
-should include at least:
+Keep benchmark statistics and other structured task metadata outside the
+reader-facing Markdown. Store one Pydantic-validated JSON file for each task at:
+
+```text
+task_docs/metadata/{Nano-set name}/{task file stem}.json
+```
+
+The JSON path mirrors the Markdown path. For example:
+
+```text
+task_docs/docs/NanoMIRACL/ja.md
+task_docs/metadata/NanoMIRACL/ja.json
+```
+
+The metadata JSON should include at least:
 
 - Nano set name.
 - Backing dataset name.
@@ -120,52 +135,49 @@ should include at least:
   rank-101 safeguard positive when the top-100 contains no qrels positive.
 - Average query length and document length in characters.
 
-Include positives-per-query rows in the visible information table only when they
-add signal: for example, when the average is not exactly `1.00`, when the
-minimum/maximum differ from `1`, or when any query has multiple positives. If
-every query has exactly one positive qrel, omit the visible distribution rows.
-Still keep the full positives-per-query statistics in the final YAML metadata
-block so index builders and audits can use them.
+Do not hand-maintain these statistics in Markdown prose. Generate or refresh
+them from the Nano dataset tables with:
 
-Character averages are sufficient for the current version. Prefer
-repository-maintained `query_text_stats` and `document_text_stats` when present.
-If they are missing, compute them from the Nano `queries` and `corpus` tables.
+```bash
+uv run python scripts/build_task_metadata_json.py task_docs/docs/{Nano-set name}/{task}.md
+```
+
+The Markdown source should contain the narrative task explanation only. Public
+web pages may render a statistics table by combining Markdown with the matching
+JSON metadata, but the authored Markdown should not duplicate the JSON values as
+a manually maintained table.
+
+Character averages are sufficient for the current version. Compute them from the
+Nano `queries` and `corpus` tables so the JSON reflects the exact task split.
+Repository-maintained `query_text_stats` and `document_text_stats` can be used
+as an audit signal, but should not replace the generated task metadata.
 
 ## Required Page Structure
 
 Use this structure unless a task needs a clearly better variant:
 
 1. `# {Nano set} / {task}` title.
-2. GitHub note, placed immediately after the title, warning that the page was
-   generated by an LLM from source papers, dataset cards, repository metadata,
-   and sampled data, and that it may contain mistakes. Keep it simple and
-   reader-facing:
-
-   ```markdown
-   > [!NOTE]
-   > This page was generated by an LLM using source papers, dataset cards,
-   > repository metadata, and sampled benchmark data. It may contain mistakes;
-   > please treat it as a reference aid rather than a definitive source.
-   ```
-
-3. `## Overview`: a paper-centered summary of what the benchmark task is. Start
-   from the source paper when one exists: what retrieval problem the paper
-   introduced, how the source data is framed, and what the concrete task asks a
-   model to retrieve. If no source paper is available, summarize the benchmark
-   task itself from the dataset card, official project page, and sampled data.
-   The Overview should be task-specific prose, not a reusable sentence pattern
-   such as "`{Task}` evaluates ... Queries are ...". Mention Nano packaging only
-   when it changes how the source task is interpreted.
-4. `## Details`: longer interpretive prose about the original task/data,
-   source-paper findings, observed Nano data tendencies, BM25 difficulty, and
-   why the benchmark differs from adjacent benchmarks.
-5. `## Example Data`: random query-positive examples from the actual Nano split.
-6. `## Dataset Information`: a Markdown table for structured facts.
-7. `### Public Sources`: source papers, official pages, and dataset records.
-8. `### Hugging Face Links`: the Nano dataset and source Hugging Face datasets
+2. `## Overview`: a public web-page lead of about 120-180 English words, or
+   roughly 500 Japanese characters when translated. Start from the source paper
+   or source benchmark when one exists, then explain the concrete Nano task:
+   what the model retrieves, query shape, document shape, language, domain,
+   query/document/qrel scale, single-positive or multi-positive nature, main
+   retrieval difficulty, and one sentence on what BM25, dense, and reranking
+   hybrid reveal. Keep sampling and candidate-generation mechanics out of this
+   section.
+3. `## Details`: longer interpretive prose with the subheadings defined in
+   `Interpretation Policy`. The Details section should explain what the task
+   measures and how model researchers should read it, not how the Nano files
+   were built.
+4. `## Example Data`: random query-positive examples from the actual Nano split.
+5. `### Public Sources`: source papers, official pages, and dataset records.
+6. `### Hugging Face Links`: the Nano dataset and source Hugging Face datasets
    when known.
-9. `### Source Reference Table`: structured source title, year, type, URL.
-10. `## Machine-Readable Metadata`: final YAML block for index generation.
+7. `### Source Reference Table`: structured source title, year, type, URL.
+
+Do not include an LLM-generated-content note in the authored Markdown. Do not
+embed machine-readable YAML metadata blocks or raw `Dataset Information` tables
+in the task prose; keep structured values in the matching JSON metadata.
 
 ## Example Policy
 
@@ -239,7 +251,23 @@ Use these subheadings inside `## Details`:
 
 ### Observed Data Profile
 
-### BM25 Difficulty
+### BM25 Evaluation Profile
+
+### Dense Evaluation Profile
+
+### Reranking Hybrid Evaluation Profile
+
+### Metric Interpretation for Model Researchers
+
+### Query and Relevance Type Tendencies
+
+### Representative Failure Modes
+
+### Language- or Domain-Specific Notes
+
+### Training and Leakage Notes
+
+### Model Improvement Hints
 
 ### Training Data That May Help
 
@@ -255,13 +283,17 @@ Discuss:
   design, related benchmarks, baseline behavior, limitations, or intended use,
 - what the actual Nano data looks like: query style, document genre, document
   length, positives per query, language, and domain,
-- whether lexical matching is likely to be strong,
+- whether lexical matching, embedding similarity, or hybrid retrieval is likely
+  to be strong,
 - whether the task is multilingual, domain-specific, code-oriented,
   long-document-oriented, or fact/evidence-oriented,
 - whether qrels are mostly single-positive or multi-positive,
-- how BM25 nDCG@10 and hit@10 should be read for this task,
-- how dense and reranking hybrid candidate metrics should be read when they are
-  available,
+- how BM25, dense, and reranking hybrid nDCG@10, hit@10, and Recall@100 should
+  be read for this task,
+- which query and relevance types define the task,
+- which failure modes are likely to matter for model development,
+- which language-specific or domain-specific quirks affect retrieval,
+- what improvements would help first-stage retrievers and rerankers,
 - what existing non-evaluation training data may help,
 - what synthetic source documents and synthetic questions would be useful.
 
@@ -285,6 +317,114 @@ No source paper was confirmed for this task. The interpretation below is based
 on the official Hugging Face dataset card, project metadata, and observed sample
 queries and positives.
 ```
+
+### Search Signal Subsections
+
+Keep the BM25, Dense, and Reranking Hybrid subsections short. Each subsection
+should be about 40-80 English words and include:
+
+- nDCG@10, hit@10, and Recall@100.
+- What this retrieval view captures for the task.
+- One main limitation or failure tendency.
+
+Do not put all metric interpretation in these subsections. Use
+`### Metric Interpretation for Model Researchers` for the broader reading of
+nDCG@10 versus Recall@100, first-stage candidate coverage, and reranker
+evidence ordering.
+
+### Metric Interpretation for Model Researchers
+
+This subsection should explain how to read the visible scores for this specific
+task. Cover:
+
+- Whether nDCG@10 or Recall@100 is the more important signal for this task.
+- Whether the task primarily tests top-rank ordering, candidate coverage,
+  evidence selection, or all of them.
+- What it means when BM25, dense, or reranking hybrid is strongest.
+- For multi-positive tasks, explain that Recall@100 can remain low even when a
+  candidate list is useful, because many judged positives may exist per query.
+- For reranker-oriented tasks, explain whether top-100 candidate loss is still a
+  main issue or whether the remaining challenge is ordering plausible evidence.
+
+### Query and Relevance Type Tendencies
+
+This subsection should describe the main query and relevance patterns. Cover:
+
+- Main query categories and document genres.
+- What counts as relevant.
+- Which query types are lexical-heavy.
+- Which query types require semantic matching.
+- Which query types benefit from hybrid retrieval.
+- Domain-specific forms such as entity facts, health phrases, legal questions,
+  patent prior art, code intent, claims, argument topics, citation families, or
+  long-document cited sources.
+
+### Representative Failure Modes
+
+This subsection should explain task-level mistakes that a model researcher would
+want to diagnose. Cover 2-4 concrete patterns, such as:
+
+- near-entity confusion,
+- near-topic or domain-neighbor retrieval,
+- wrong relation or wrong attribute,
+- wrong evidence span inside a long document,
+- code semantic mismatch despite identifier overlap,
+- citation-family ambiguity,
+- translation or normalization artifacts.
+
+Use real query examples when available. Avoid describing only one model's
+idiosyncratic errors; focus on failures implied by the task.
+
+### Language- or Domain-Specific Notes
+
+Use the generic heading when no narrower title is better, or adapt it to the
+task:
+
+- `### Japanese-Specific Notes`
+- `### Code-Specific Notes`
+- `### Legal-Specific Notes`
+- `### Biomedical-Specific Notes`
+- `### Patent-Specific Notes`
+- `### Long-Document Notes`
+- `### Multilingual Notes`
+
+Cover tokenization, normalization, script, transliteration, spelling,
+punctuation, date/number formats, domain terminology, long-document structure,
+code/API semantics, or other task-specific matching problems. Say whether exact
+terms must be preserved and whether dense retrieval helps bridge paraphrase or
+translation artifacts.
+
+### Training and Leakage Notes
+
+This subsection should say what not to train on and what training exposure must
+be disclosed. Cover:
+
+- Evaluation queries, qrels, positive passages/documents, and source rows that
+  should be excluded.
+- Upstream train/dev/test split risks.
+- Public benchmark overlap risks, especially for common sources such as MS
+  MARCO, NQ, FEVER, CodeSearchNet, HumanEval, MIRACL, NFCorpus, SciFact,
+  SCIDOCS, legal datasets, patent datasets, and BRIGHT source documents.
+- What a model report should disclose, such as whether the model saw the source
+  benchmark, source corpus, translated evaluation text, or synthetic data derived
+  from evaluation positives.
+
+### Model Improvement Hints
+
+This subsection should translate the task analysis into concrete modeling
+directions. Cover:
+
+- First-stage retriever improvements, such as lexical-semantic fusion,
+  long-document chunking, code-aware encoding, entity grounding, or domain term
+  preservation.
+- Reranker improvements, such as relation-aware reranking, evidence-span
+  selection, multi-positive/listwise training, or long-context evidence
+  selection.
+- Hard negative design, such as same entity but wrong relation, same statute but
+  wrong legal issue, same API family but wrong behavior, same biomedical term
+  but wrong outcome, or same patent topic but different mechanism.
+- Synthetic data directions that teach the task-specific behavior without
+  seeding from evaluation queries or positives.
 
 ### Training Data That May Help
 
@@ -345,127 +485,77 @@ Cover these cases:
 - For multi-positive tasks, train with multi-positive objectives or listwise /
   distillation signals rather than reducing the task to one positive per query.
 
-## Machine-Readable Metadata
+## External Metadata JSON
 
-Each task page must end with a fenced YAML block. This block is for future index
-page generation and should be easy to parse without reading prose.
+Each task page should have a matching metadata JSON file instead of an embedded
+YAML metadata block. The Markdown file should end after the reader-facing
+sections, usually after `### Source Reference Table`.
 
-Use this marker immediately before the YAML block:
+The JSON file must validate against `TaskMetadataDocument` in
+`hakari_bench/task_docs.py`. It should use the top-level key `task_metadata` and
+live at the mirrored path under `task_docs/metadata/`.
 
-```markdown
-<!-- benchmark-task-metadata:v1 -->
+Minimal shape:
+
+```json
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMIRACL",
+    "backing_dataset": "NanoMIRACL",
+    "dataset_id": "hakari-bench/NanoMIRACL",
+    "task_name": "ja",
+    "split_name": "ja",
+    "language": "ja",
+    "category": "natural_language",
+    "document_path": "docs/benchmark_tasks/NanoMIRACL/ja.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "no_paper_note": null
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 373
+    },
+    "positives_per_query": {
+      "average": 1.865,
+      "min": 1,
+      "median": 1.0,
+      "max": 8,
+      "multi_positive_queries": 78,
+      "multi_positive_query_percent": 39.0
+    },
+    "text_stats_chars": {
+      "query_mean": 17.5,
+      "document_mean": 173.3871
+    },
+    "bm25": {
+      "ndcg_at_10": 0.6600634301,
+      "hit_at_10": 0.935,
+      "source": "dataset_candidate_subset"
+    }
+  }
+}
 ```
 
-The block must be the final content in the Markdown file:
-
-````markdown
-## Machine-Readable Metadata
-
-<!-- benchmark-task-metadata:v1 -->
-
-```yaml
-benchmark_task_metadata:
-  schema_version: 1
-  document_status: first_pass
-  nano_set: NanoMIRACL
-  backing_dataset: NanoMIRACL
-  dataset_id: hakari-bench/NanoMIRACL
-  task_name: ja
-  split_name: ja
-  language: ja
-  category: natural_language
-  document_path: docs/benchmark_tasks/NanoMIRACL/ja.md
-  source_research:
-    primary_source_type: task_paper
-    paper_pdf_or_html_checked: true
-    no_paper_note: null
-  counts:
-    queries: 200
-    documents: 1846
-    positive_qrels: 200
-  positives_per_query:
-    average: 1.0
-    min: 1
-    median: 1.0
-    max: 1
-    multi_positive_queries: 0
-    multi_positive_query_percent: 0.0
-  text_stats_chars:
-    query_mean: 17.47
-    document_mean: 297.912784
-  bm25:
-    ndcg_at_10: 0.5956231823
-    hit_at_10: 0.94
-    source: dataset_candidate_subset
-  learning:
-    original_train_split: unknown
-    evaluation_split_origin: unknown
-    train_eval_overlap_audit: not_audited
-    leakage_note: do not train on upstream dev/test queries, qrels, or positive passages
-    useful_training_data:
-      - official non-overlapping train split
-      - native-language question-to-passage retrieval pairs
-      - non-overlapping source-corpus passage QA pairs
-    synthetic_data:
-      document_generation: native-language answer-bearing passages from the source collection style
-      question_generation: native-language information needs answerable from those passages
-      answerability: questions should be grounded in explicit facts, entities, or relations in the document
-    multi_positive_training: single_positive_question_document_focus
-  links:
-    nano_dataset: https://huggingface.co/datasets/hakari-bench/NanoMIRACL
-    source_urls:
-      - label: MIRACL unified source dataset
-        url: https://huggingface.co/datasets/hotchpotch/miracl-hf-unified
-    source_notes: []
-  references:
-    - title: "MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages"
-      url: https://arxiv.org/abs/2210.09984
-      year: 2023
-      doi: 10.1162/tacl_a_00595
-      is_paper: true
-      source_confidence: definitive_paper_link
-```
-````
-
-Metadata field guidance:
+Field guidance:
 
 - `schema_version`: increment only for incompatible schema changes.
 - `document_status`: use `first_pass`, `reviewed`, or `needs_review`.
-- `document_path`: repository-relative path only.
+- `document_path`: repository-relative Markdown path only.
 - `source_research.primary_source_type`: use `task_paper`, `benchmark_paper`,
   `dataset_card`, `project_page`, `technical_article`, or `sample_inference`.
-  Use `benchmark_paper` when the strongest paper source is the benchmark paper
-  that includes the task, even if no standalone task paper was confirmed.
-- `source_research.paper_pdf_or_html_checked`: boolean. Set `true` only when
-  the paper PDF or HTML was inspected beyond title/abstract metadata.
-- `source_research.no_paper_note`: short public note when no paper was
-  confirmed, otherwise `null`.
 - `bm25.source`: must be `dataset_candidate_subset` for the current Nano set
   unless the task explicitly uses a different source.
 - `candidate_subsets`: records `bm25`, `dense`, and `reranking_hybrid`
   candidate metrics. `bm25` and `dense` are top-500 candidate subsets.
   `reranking_hybrid` is top-100 plus optional rank-101 safeguard.
-- `learning.original_train_split`: use `available`, `not_found`, or `unknown`.
-  Leave this as `unknown` unless the original source split was explicitly
-  audited.
-- `learning.evaluation_split_origin`: record the upstream split if known, such
-  as `train`, `dev`, `test`, `validation`, or `unknown`.
-- `learning.train_eval_overlap_audit`: use `passed`, `failed`,
-  `not_applicable`, or `not_audited`. Use `not_audited` until query IDs,
-  document IDs, source titles, and positive text overlap were checked.
-- `learning.leakage_note`: short public warning about what not to train on.
-- `learning.useful_training_data`: concise machine-readable list of existing
-  data types that may teach the domain without using evaluation answers.
-- `learning.synthetic_data`: concise machine-readable hints for what synthetic
-  documents and questions to generate. These are for index/filter pages and
-  should mirror the prose in `### Synthetic Data Guidance`.
-- `learning.multi_positive_training`: use `multi_positive_objective` when the
-  qrels contain multiple positives for a meaningful share of queries, otherwise
-  `single_positive_question_document_focus`.
-- `references[].url`: use the arXiv URL first when one exists.
-- `links.source_urls`: structured `{label, url}` objects with public URLs only.
-  These may include Hugging Face datasets, project pages, or source repositories.
-- `links.source_notes`: optional non-URL source notes from README metadata.
+- `learning.*`, `links.*`, and `references[]`: optional structured support
+  material for index pages, public rendering, and doc generation. Keep public
+  URLs only; do not store local research paths.
 
 ## Document Template
 
@@ -474,21 +564,14 @@ Use this template for new pages:
 ````markdown
 # {Nano set} / {task name}
 
-> [!NOTE]
-> This page was generated by an LLM using source papers, dataset cards,
-> repository metadata, and sampled benchmark data. It may contain mistakes;
-> please treat it as a reference aid rather than a definitive source.
-
 ## Overview
 
-{About 500 English characters summarizing what this benchmark task is. When a
-paper exists, ground the overview in the paper: what problem the paper introduced,
-how the data was constructed or adapted, what the query and document sides
-represent, and what retrieval behavior is being tested. When no paper exists,
-summarize the task from the dataset card, official page, repository metadata, and
-sampled data. Avoid a fill-in-the-blank pattern such as "`{Task}` evaluates ...
-Queries are ..."; the paragraph should contain details that would not fit most
-other tasks in the same group.}
+{120-180 English words. Write the public web-page lead. Include source paper or
+benchmark lineage when available, what the model retrieves, query shape,
+document shape, language, domain, query/document/qrel scale, single-positive or
+multi-positive nature, the main retrieval difficulty, and one sentence on what
+BM25, dense, and reranking hybrid reveal. Avoid implementation details, Nano
+build procedure, and candidate-generation mechanics.}
 
 ## Details
 
@@ -506,11 +589,68 @@ interpretation is based on public dataset cards, project pages, and sample data.
 query and document styles, recurring intents, multi-positive clusters, visible
 data quirks, and what those imply for retrieval.}
 
-### BM25 Difficulty
+### BM25 Evaluation Profile
 
-{Explain BM25 nDCG@10 and hit@10 for this task. Include concrete patterns from
-the Nano BM25 candidate ranking when useful, such as cases where lexical matching
-finds the topic but misses intent equivalence.}
+{40-80 English words. Include BM25 nDCG@10, hit@10, and Recall@100. Say what
+BM25 captures for this task and name one main limitation.}
+
+### Dense Evaluation Profile
+
+{40-80 English words. Include dense nDCG@10, hit@10, and Recall@100 from
+`harrier_oss_v1_270m`. Say what embedding similarity captures for this task and
+name one main limitation.}
+
+### Reranking Hybrid Evaluation Profile
+
+{40-80 English words. Include reranking hybrid nDCG@10, hit@10, and Recall@100.
+Say whether hybrid is best for top-rank quality, candidate coverage, or both,
+and what this implies for reranker evaluation.}
+
+### Metric Interpretation for Model Researchers
+
+{100-170 English words. Explain how to read nDCG@10 versus Recall@100 for this
+task. Say whether the task primarily tests top-rank ordering, candidate
+coverage, evidence selection, or all of them. Explain what it means if BM25,
+dense, or hybrid is strongest. For multi-positive tasks, explain how the number
+of positives changes Recall@100 interpretation.}
+
+### Query and Relevance Type Tendencies
+
+{100-170 English words. Describe main query categories, document genres, and
+what counts as relevant. Say which query types are lexical-heavy, which require
+semantic matching, and which benefit from hybrid retrieval. Use task-specific
+categories such as entity facts, legal questions, code intent, biomedical
+phrases, claims, arguments, citations, or long-document sources.}
+
+### Representative Failure Modes
+
+{100-180 English words. Describe 2-4 task-level failure patterns. Use real query
+examples when available. Explain whether errors are near-entity confusions,
+near-topic/domain-neighbor misses, wrong-relation errors, evidence-selection
+errors, code semantic mismatches, citation-family ambiguity, long-document
+dilution, or translation artifacts.}
+
+### {Language- or Domain-Specific Notes}
+
+{80-150 English words. Replace the heading with a specific title when useful,
+such as `Japanese-Specific Notes`, `Code-Specific Notes`, `Legal-Specific
+Notes`, `Biomedical-Specific Notes`, `Patent-Specific Notes`,
+`Long-Document Notes`, or `Multilingual Notes`. Discuss tokenization,
+normalization, scripts, transliteration, spelling, punctuation, dates/numbers,
+domain terminology, long-document structure, code/API semantics, and whether
+exact terms must be preserved.}
+
+### Training and Leakage Notes
+
+{80-150 English words. Say which evaluation queries, qrels, positives, source
+rows, or upstream splits should be excluded. Mention benchmark overlap risks and
+what training exposure should be disclosed when reporting model scores.}
+
+### Model Improvement Hints
+
+{80-150 English words. Translate the task analysis into modeling directions:
+first-stage retriever improvements, reranker improvements, hard negative design,
+and synthetic data directions. Keep the advice specific to this task.}
 
 ### Training Data That May Help
 
@@ -527,45 +667,47 @@ document-to-question generation from generating both documents and questions.
 State that evaluation split queries and positive passages should not be used as
 seeds.}
 
+### Optional: Qrels Semantics
+
+{Use this section only when relevance labels are multi-positive, graded,
+citation-based, claim-evidence based, argument-based, or otherwise non-obvious.
+Explain what a positive qrel means and how that affects metric interpretation.}
+
+### Optional: Task Boundary Notes
+
+{Use this section only when the task is easily confused with another task type,
+such as QA versus retrieval, duplicate retrieval versus topical retrieval,
+generation benchmark versus retrieval adaptation, or code search direction.}
+
+### Optional: Long-Document Retrieval Notes
+
+{Use this section for BRIGHT, legal, patent, long-context, full-document, or
+documentation tasks where evidence may be buried inside a long document.}
+
+### Optional: Benchmark Information Leakage
+
+{Use this section for CodeSearchNet, HumanEval, public QA, public legal,
+medical, benchmark-derived, or otherwise leakage-prone tasks with known
+train/test or source-corpus overlap risks.}
+
+### Optional: Comparison With Source Task
+
+{Use this section only when the Nano task differs materially from the full
+source task in corpus size, qrels semantics, language, document granularity,
+translation, or retrieval direction.}
+
+### Optional: Known Artifacts
+
+{Use this section only when translation, OCR, synthetic generation, HTML
+boilerplate, code formatting, source formatting, or candidate-pool artifacts are
+visible enough to affect interpretation.}
+
 ## Example Data
 
 {Five deterministic random query-positive examples. Generate with
 `scripts/extract_benchmark_task_examples.py`. Use a two-column Markdown table,
 include full character counts inline, and visibly truncate long content with
 `[truncated 225 chars](N chars)`.}
-
-## Dataset Information
-
-| Field | Value |
-| --- | --- |
-| Nano set | {Nano set} |
-| Backing dataset | {Backing dataset} |
-| Task / split | {Task or split} |
-| Hugging Face dataset | [{dataset_id}](https://huggingface.co/datasets/{dataset_id}) |
-| Language | {language} |
-| Category | {natural_language or code} |
-| Queries | {query_count} |
-| Documents | {document_count} |
-| Positive qrels | {qrel_count} |
-| Avg positives / query | {avg_positives_per_query; omit this row when all queries have exactly one positive} |
-| Positives per query (min / median / max) | {min} / {median} / {max; omit this row when all queries have exactly one positive} |
-| Queries with multiple positives | {count} ({percent}%; omit this row when all queries have exactly one positive} |
-| BM25 nDCG@10 | {bm25_ndcg_at_10} |
-| BM25 hit@10 | {bm25_hit_at_10} |
-| BM25 Recall@100 | {bm25_recall_at_100} |
-| BM25 candidate subset | top-500 (`bm25`) |
-| Dense nDCG@10 | {dense_ndcg_at_10} |
-| Dense hit@10 | {dense_hit_at_10} |
-| Dense Recall@100 | {dense_recall_at_100} |
-| Dense candidate subset | top-500 (`harrier_oss_v1_270m`) |
-| Reranking hybrid nDCG@10 | {reranking_hybrid_ndcg_at_10} |
-| Reranking hybrid hit@10 | {reranking_hybrid_hit_at_10} |
-| Reranking hybrid Recall@100 | {reranking_hybrid_recall_at_100} |
-| Reranking hybrid candidate subset | top-100 plus optional rank-101 safeguard (`reranking_hybrid`) |
-| Reranking hybrid candidates / query | {100 or 100-101} |
-| Reranking hybrid safeguard rows | {safeguard_positive_rows} |
-| Query length avg chars | {query_mean_chars} |
-| Document length avg chars | {document_mean_chars} |
 
 ### Public Sources
 
@@ -582,141 +724,75 @@ include full character counts inline, and visibly truncate long content with
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
 | {title} | {year} | paper | {url} |
-
-## Machine-Readable Metadata
-
-<!-- benchmark-task-metadata:v1 -->
-
-```yaml
-benchmark_task_metadata:
-  schema_version: 1
-  document_status: first_pass
-  nano_set: {Nano set}
-  backing_dataset: {Backing dataset}
-  dataset_id: {dataset_id}
-  task_name: {task_name}
-  split_name: {split_name}
-  language: {language}
-  category: {category}
-  document_path: docs/benchmark_tasks/{Nano-set name}/{task name}.md
-  source_research:
-    primary_source_type: {task_paper|benchmark_paper|dataset_card|project_page|technical_article|sample_inference}
-    paper_pdf_or_html_checked: {true|false}
-    no_paper_note: {null or public note}
-  counts:
-    queries: {query_count}
-    documents: {document_count}
-    positive_qrels: {qrel_count}
-  positives_per_query:
-    average: {avg_positives_per_query}
-    min: {min_positives}
-    median: {median_positives}
-    max: {max_positives}
-    multi_positive_queries: {multi_positive_query_count}
-    multi_positive_query_percent: {multi_positive_query_percent}
-  text_stats_chars:
-    query_mean: {query_mean_chars}
-    document_mean: {document_mean_chars}
-  bm25:
-    ndcg_at_10: {bm25_ndcg_at_10}
-    hit_at_10: {bm25_hit_at_10}
-    source: dataset_candidate_subset
-  candidate_subsets:
-    bm25:
-      config: bm25
-      label: BM25
-      source: dataset_candidate_subset
-      top_k: 500
-      ndcg_at_10: {bm25_ndcg_at_10}
-      hit_at_10: {bm25_hit_at_10}
-      recall_at_100: {bm25_recall_at_100}
-      candidate_count_min: {bm25_candidate_count_min}
-      candidate_count_max: {bm25_candidate_count_max}
-      candidate_count_mean: {bm25_candidate_count_mean}
-      query_count: {query_count}
-      query_coverage: {bm25_query_coverage}
-      relevant_coverage_at_100: {bm25_relevant_coverage_at_100}
-    dense:
-      config: harrier_oss_v1_270m
-      label: Dense
-      source: dataset_candidate_subset
-      top_k: 500
-      ndcg_at_10: {dense_ndcg_at_10}
-      hit_at_10: {dense_hit_at_10}
-      recall_at_100: {dense_recall_at_100}
-      candidate_count_min: {dense_candidate_count_min}
-      candidate_count_max: {dense_candidate_count_max}
-      candidate_count_mean: {dense_candidate_count_mean}
-      query_count: {query_count}
-      query_coverage: {dense_query_coverage}
-      relevant_coverage_at_100: {dense_relevant_coverage_at_100}
-    reranking_hybrid:
-      config: reranking_hybrid
-      label: Reranking hybrid
-      source: dataset_candidate_subset
-      top_k: 100
-      ndcg_at_10: {reranking_hybrid_ndcg_at_10}
-      hit_at_10: {reranking_hybrid_hit_at_10}
-      recall_at_100: {reranking_hybrid_recall_at_100}
-      candidate_count_min: {reranking_hybrid_candidate_count_min}
-      candidate_count_max: {reranking_hybrid_candidate_count_max}
-      candidate_count_mean: {reranking_hybrid_candidate_count_mean}
-      query_count: {query_count}
-      query_coverage: {reranking_hybrid_query_coverage}
-      relevant_coverage_at_100: {reranking_hybrid_relevant_coverage_at_100}
-      safeguard_positive_rows: {reranking_hybrid_safeguard_positive_rows}
-      rows_with_101_candidates: {reranking_hybrid_rows_with_101_candidates}
-  learning:
-    original_train_split: unknown
-    evaluation_split_origin: {train|dev|test|validation|unknown}
-    train_eval_overlap_audit: not_audited
-    leakage_note: {short leakage warning}
-    useful_training_data:
-      - {existing_training_data_type}
-    synthetic_data:
-      document_generation: {synthetic_document_generation}
-      question_generation: {synthetic_question_generation}
-      answerability: {synthetic_answerability}
-    multi_positive_training: {multi_positive_training}
-  links:
-    nano_dataset: https://huggingface.co/datasets/{dataset_id}
-    source_urls:
-      - label: {source_label}
-        url: {source_url}
-    source_notes: []
-  references:
-    - title: {title}
-      url: {public_url}
-      year: {year}
-      doi: {doi}
-      is_paper: true
-      source_confidence: {source_confidence}
-```
 ````
 
 ## Group Index Pages
 
-Before scaling to all 500+ tasks, add group index pages such as:
+Collection-level index pages should not use the full task template. They should
+summarize the Nano set as a public entry point and then link to task pages. Use:
 
 ```text
-docs/benchmark_tasks/{Nano-set name}/index.md
+task_docs/docs/{Nano-set name}/index.md
 ```
 
-Build index pages from the machine-readable metadata blocks. Each group index
-should include:
+Use this reader-facing structure:
+
+1. `# {Nano set}` title.
+2. `## Overview`: about 150-250 English words explaining the benchmark group,
+   source benchmark or paper, language/domain coverage, and what kind of
+   retrieval behavior the group measures.
+3. `## What This Group Measures`: the shared retrieval semantics of the group:
+   single-evidence retrieval, multi-positive retrieval, duplicate-question
+   retrieval, argument retrieval, scientific or biomedical retrieval, entity
+   retrieval, monolingual/multilingual/cross-lingual behavior, and whether the
+   group is native or translated.
+4. `## Task Families`: bullets by task family, language family, domain, or
+   retrieval setting. This section should make heterogeneous Nano sets easy to
+   scan.
+5. `## Dataset Shape`: task count, query/document/qrel totals, multi-positive
+   distribution, task-family differences, document length differences, and
+   language/domain caveats. Explain that document totals are split-local sums
+   when that is how the metadata is aggregated.
+6. `## Retrieval Behavior`: group-level BM25, dense, and reranking hybrid
+   patterns. Include `### BM25 Profile`, `### Dense Profile`, and
+   `### Reranking Hybrid Profile` when the group has enough tasks for those
+   comparisons to be meaningful.
+7. `## Task Summary`: navigation table linking to task pages. For multilingual
+   or strongly heterogeneous groups, add `## Language Summary`, `## Task Family
+   Summary`, or `## Outlier Tasks` before or after the task table when useful.
+8. `## Interpretation Notes for Model Researchers`: how to compare languages,
+   task families, domains, model families, and reranking versus retrieval
+   behavior. Call out hit@10 saturation, multi-positive recall, lexical bias,
+   and cases where dense or hybrid retrieval changes the interpretation.
+9. `## Training and Leakage Notes`: group-level training suggestions and overlap
+   cautions. Treat direct translations, upstream train/dev/test splits, and
+   common benchmark mixtures as possible leakage sources.
+10. `## Public Sources`: group-level source papers, official pages, dataset
+    cards, and a compact source reference table.
+
+Do not include machine-readable group metadata in the authored index page. The
+index should read as a public web page, not as a metadata dump.
+
+Build index pages from the task metadata JSON files. Each group index
+summary table should include:
 
 - task name and document link,
 - language and category,
 - query/document/qrels counts,
-- positives-per-query summary only when the task is not exactly one-positive per
-  query,
-- BM25 nDCG@10, hit@10, and Recall@100,
-- Dense top-500 nDCG@10, hit@10, and Recall@100,
-- Reranking hybrid top-100/top-101 nDCG@10, hit@10, Recall@100, candidate
-  count range, and safeguard row count,
+- positives-per-query summary only when it adds signal,
+- BM25, dense, and reranking hybrid nDCG@10,
+- the best nDCG@10 profile (`BM25`, `Dense`, `Reranking hybrid`, or `Mixed`),
 - average query/document character lengths,
-- source status and primary paper title,
-- document status.
+- source status and primary paper title when available.
+
+Avoid oversized tables in the index. Put full metric payloads, candidate counts,
+safeguard rows, and document status in `task_docs/metadata/`, not in the
+reader-facing group table.
+
+Group index pages should be authored one Nano set at a time. Use the metadata
+JSON files, the task pages in `task_docs/docs/`, and the older provenance pages
+under `docs/benchmark_tasks/` as references, but write the group prose manually.
+Do not bulk-generate these index pages from a template script.
 
 ## Maintenance Checklist
 
@@ -735,15 +811,17 @@ Before publishing a batch:
 5. Confirm train/dev/test provenance. If the Nano task comes from an upstream
    dev/test split, the page must warn against training on that split and should
    recommend only non-overlapping train or source-corpus data.
-6. Confirm BM25 nDCG@10 was computed from the Nano `bm25` top-500 table, not
-   from a fresh local BM25 run.
+6. Confirm BM25, dense, and reranking hybrid metrics were computed from the Nano
+   candidate subset tables: `bm25` top-500, `harrier_oss_v1_270m` top-500, and
+   `reranking_hybrid` top-100 plus optional rank-101 safeguard. Do not replace
+   dataset-provided BM25 with a fresh local BM25 run.
 7. Confirm positives-per-query statistics were computed from qrels.
 8. Confirm exactly five random examples come from the selected Nano split when
    at least five qrel pairs are available.
 9. Confirm sample data shows actual query and positive document text, not a
    summary, and that long samples are visibly truncated with original character
    count.
-10. Confirm the final YAML metadata block parses successfully.
+10. Confirm the matching task metadata JSON validates successfully.
 11. Confirm no generated benchmark outputs, caches, local paper paths, local wiki
    paths, or private scratch artifacts are committed.
 
@@ -770,31 +848,43 @@ Use this checklist before considering a generated task page ready:
    document genres, recurring domains, language-specific issues, entity or
    terminology patterns, multi-positive clusters when present, and any quirks
    that affect retrieval.
-5. The BM25 section interprets the score. It should explain what BM25 is doing
-   well, what it fails to distinguish, and include concrete patterns from the
-   dataset-provided BM25 ranking when those patterns are informative.
-6. The task-specific difficulty is explicit. For example, debate tasks should
+5. The search signal sections are concise. BM25, dense, and reranking hybrid
+   each state the visible metrics, what signal the candidate view captures, and
+   one limitation. They should not become long essays.
+6. The metric interpretation section explains how to read nDCG@10, hit@10, and
+   Recall@100 for this task. It should distinguish top-rank ordering, candidate
+   coverage, evidence selection, and multi-positive relevance when applicable.
+7. The task-specific difficulty is explicit. For example, debate tasks should
    discuss stance and counterargument matching; duplicate-question tasks should
    discuss intent equivalence and paraphrase clusters; Wikipedia QA retrieval
    should discuss short fact queries and passage evidence; public-health FAQ
    retrieval should discuss procedural guidance and action-specific matching.
-7. The training-data section is concise and technical. It recommends existing
+8. Query and relevance type tendencies are concrete. They should name the
+   recurring query forms and explain what counts as relevant, rather than only
+   saying that the task requires semantic understanding.
+9. Representative failure modes are useful for model debugging. They should name
+   near-entity, near-topic, wrong-relation, long-document, code, legal, patent,
+   biomedical, translation, or citation-style errors as appropriate.
+10. The language/domain-specific section explains the practical matching issues:
+    tokenization, normalization, scripts, domain terminology, long documents,
+    code/API semantics, or other task-specific constraints.
+11. The training-data section is concise and technical. It recommends existing
    data types that teach the domain without using likely evaluation answers, and
    it includes a practical overlap warning for public train/dev/test data.
-8. The synthetic-data section focuses on what documents and questions to
+12. The synthetic-data section focuses on what documents and questions to
    generate. It should specify document genre, question style, answerability, and
-   domain details. Do not spend this section on hard negatives.
-9. The examples are actual query-positive text from the Nano split. They should
+   domain details. Hard negatives can be mentioned when they are central to the
+   task.
+13. The examples are actual query-positive text from the Nano split. They should
    be readable on GitHub, include full character counts, and show truncation
    clearly when content is shortened.
-10. The page avoids generic filler. Replace broad statements such as "this task
+14. The page avoids generic filler. Replace broad statements such as "this task
     requires semantic understanding" with task-specific statements about the
     exact relation being retrieved.
-11. The writing separates evidence from inference. If a claim comes from a
+15. The writing separates evidence from inference. If a claim comes from a
     paper, say so with a link. If it comes from inspecting the sampled Nano data,
     make that clear through wording such as "the sampled data shows" or "the
     observed BM25 ranking suggests".
-12. The final page has a coherent reader flow: warning note, overview, details,
-    samples, dataset information, public sources, and machine-readable metadata.
-    A user should understand the task before reaching the tables and source
-    lists.
+16. The final page has a coherent reader flow: warning note, overview, details,
+    samples, public sources, Hugging Face links, and source references. A user
+    should understand the task before reaching the source lists.
