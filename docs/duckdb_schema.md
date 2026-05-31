@@ -809,13 +809,13 @@ variant categories are added.
 
 | UI flag | variant rule |
 | --- | --- |
-| Quantization | Non-rescore rows where `quantization IS NOT NULL` or `embedding_variant_name` contains `quantize`. |
-| Truncate dims | `embedding_variant_name` contains `truncate`. |
+| Quantization | Non-rescore rows where `quantization IS NOT NULL` or `embedding_variant_name` contains `quantize`, excluding rows that also contain `truncate` unless Truncate dims is also enabled. |
+| Truncate dims | Rows where `embedding_variant_name` contains `truncate`, excluding quantized rows unless Quantization is also enabled. |
 | Rescore | `embedding_variant_name` contains `rescore`. Rescore rows are not included by the Quantization flag by default. |
 | Other variants | Variant rows that are neither quantization nor truncation variants. |
 
-Rows that are both quantized and truncated are displayed when either matching
-category flag is enabled. Facet filter query parameters such as `dim_filter` and
+Rows that are both quantized and truncated are displayed only when both matching
+category flags are enabled. Facet filter query parameters such as `dim_filter` and
 `quant_filter` do not infer or re-enable display flags; the display flags come
 only from the explicit display controls.
 If old results contain a no-op truncation variant whose `truncate_dim_N` matches
@@ -936,7 +936,7 @@ choices:
   Base rows are always read, but quantization-only, truncate-only, rescore-only,
   and other-variant views avoid fetching unrelated variant rows before Python
   ranking. Cross variants such as truncate plus quantization are fetched when
-  either matching display flag is enabled.
+  both matching display flags are enabled.
 - Surface runtime metadata such as dtype, attention implementation, prompt
   mode, and `trust_remote_code` in model details metadata; dtype, attention,
   and prompt remain available as facet filters.
@@ -1200,10 +1200,21 @@ source_rows AS (
           tr.quantization IS NOT NULL
           OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%quantize%'
         )
+        AND (
+          p.include_truncate_variants
+          OR lower(COALESCE(tr.embedding_variant_name, '')) NOT LIKE '%truncate%'
+        )
       )
       OR (
         p.include_truncate_variants
         AND lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%truncate%'
+        AND (
+          p.include_quantization_variants
+          OR NOT (
+            tr.quantization IS NOT NULL
+            OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%quantize%'
+          )
+        )
       )
       OR (
         p.include_rescore_variants
@@ -1431,10 +1442,21 @@ raw_rows AS (
           tr.quantization IS NOT NULL
           OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%quantize%'
         )
+        AND (
+          p.include_truncate_variants
+          OR lower(COALESCE(tr.embedding_variant_name, '')) NOT LIKE '%truncate%'
+        )
       )
       OR (
         p.include_truncate_variants
         AND lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%truncate%'
+        AND (
+          p.include_quantization_variants
+          OR NOT (
+            tr.quantization IS NOT NULL
+            OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%quantize%'
+          )
+        )
       )
       OR (
         p.include_rescore_variants

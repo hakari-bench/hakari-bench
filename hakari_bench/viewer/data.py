@@ -697,9 +697,9 @@ def _quantize_or_truncate_variant_filter(
     if flags.quantization and flags.truncate:
         return f"({quantization_category} OR {truncate_category})"
     if flags.quantization:
-        return quantization_category
+        return f"({quantization_category} AND NOT {truncate_category})"
     if flags.truncate:
-        return truncate_category
+        return f"({truncate_category} AND NOT {quantization_category})"
     return ""
 
 

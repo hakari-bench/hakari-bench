@@ -1531,7 +1531,6 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert [row.model_name for row in base_result.rows] == ["model/a", "model/b"]
     assert [row.model_name for row in quantization_result.rows] == [
         "model/a (768 dims)",
-        "model/a (256 dims, int8)",
         "model/a (768 dims, uint8)",
         "model/b (512 dims)",
     ]
@@ -1540,7 +1539,6 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         "model/a (768 dims)",
         "model/a (512 dims)",
         "model/a (384 dims)",
-        "model/a (256 dims, int8)",
         "model/b (512 dims)",
     ]
     assert [row.model_name for row in all_variant_result.rows] == [
@@ -1559,7 +1557,6 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     delta_by_model = {row.model_name: row.base_score_delta_percent for row in quantization_result.rows}
     assert delta_by_model == {
         "model/a (768 dims)": None,
-        "model/a (256 dims, int8)": pytest.approx(-8.8888888889),
         "model/a (768 dims, uint8)": pytest.approx(-11.1111111111),
         "model/b (512 dims)": None,
     }
@@ -1633,7 +1630,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "binary_rescore" not in response.text
     assert "Δ vs Base" in response.text
     assert "-11.1%" in response.text
-    assert "-8.9%" in response.text
+    assert "-8.9%" not in response.text
     assert 'data-filter-hidden="true"' in response.text
     assert "Dims" in response.text
     assert "Quantization" in response.text
@@ -1642,7 +1639,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "htmx:afterSwap" not in response.text
     assert "window.__hakariRestoreModelFilterFocus" not in response.text
     assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' in response.text
-    assert 'name="dim_filter" value="256" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="dim_filter" value="256" class="h-4 w-4 accent-cyan-700" checked' not in response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
 
     base_head = render_table_head(result=base_result, sort="borda_rank", direction="asc")
@@ -1910,8 +1907,7 @@ def test_variant_display_names_stay_unique_when_dimension_and_quantization_colli
 
     assert [row.model_name for row in quantization_result.rows] == [
         "model/a (768 dims)",
-        "model/a (768 dims, int8, quantize_int8_docs)",
-        "model/a (768 dims, int8, truncate_sparse_query_max_dims_8_truncate_sparse_docs_max_dims_64_quantize_int8_docs)",
+        "model/a (768 dims, int8)",
         "model/b (512 dims)",
     ]
     assert [row.model_name for row in cross_variant_result.rows] == [

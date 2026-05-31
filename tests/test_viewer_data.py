@@ -389,12 +389,10 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
     assert [(record.embedding_variant_name, record.quantization) for record in quantization_records] == [
         (None, None),
         ("quantize_uint8_docs", "uint8"),
-        ("truncate_dim_256_quantize_int8_docs", "int8"),
     ]
     assert [(record.embedding_variant_name, record.quantization) for record in truncate_records] == [
         (None, None),
         ("truncate_dim_384", None),
-        ("truncate_dim_256_quantize_int8_docs", "int8"),
     ]
     assert [(record.embedding_variant_name, record.quantization) for record in cross_variant_records] == [
         (None, None),
