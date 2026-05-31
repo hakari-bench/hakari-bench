@@ -30,7 +30,7 @@ def test_legacy_variants_flag_enables_all_variant_display_flags() -> None:
     )
 
 
-def test_quantization_only_does_not_include_truncate_quantization_cross_variant() -> None:
+def test_quantization_only_includes_truncate_quantization_cross_variant() -> None:
     flags = VariantDisplayFlags(quantization=True)
 
     assert include_variant_row(
@@ -43,14 +43,14 @@ def test_quantization_only_does_not_include_truncate_quantization_cross_variant(
         quantization="uint8",
         flags=flags,
     )
-    assert not include_variant_row(
+    assert include_variant_row(
         embedding_variant_name="truncate_dim_256_quantize_int8_docs",
         quantization="int8",
         flags=flags,
     )
 
 
-def test_truncate_only_does_not_include_truncate_quantization_cross_variant() -> None:
+def test_truncate_only_includes_truncate_quantization_cross_variant() -> None:
     flags = VariantDisplayFlags(truncate=True)
 
     assert include_variant_row(
@@ -58,7 +58,7 @@ def test_truncate_only_does_not_include_truncate_quantization_cross_variant() ->
         quantization=None,
         flags=flags,
     )
-    assert not include_variant_row(
+    assert include_variant_row(
         embedding_variant_name="truncate_dim_256_quantize_int8_docs",
         quantization="int8",
         flags=flags,

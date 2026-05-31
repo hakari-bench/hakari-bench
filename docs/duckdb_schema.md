@@ -814,10 +814,10 @@ variant categories are added.
 | Rescore | `embedding_variant_name` contains `rescore`. Rescore rows are not included by the Quantization flag by default. |
 | Other variants | Variant rows that are neither quantization nor truncation variants. |
 
-Rows that are both quantized and truncated are displayed only when both the
-Quantization and Truncate dims flags are enabled. Facet filter query parameters
-such as `dim_filter` and `quant_filter` do not infer or re-enable display
-flags; the display flags come only from the explicit display controls.
+Rows that are both quantized and truncated are displayed when either matching
+category flag is enabled. Facet filter query parameters such as `dim_filter` and
+`quant_filter` do not infer or re-enable display flags; the display flags come
+only from the explicit display controls.
 If old results contain a no-op truncation variant whose `truncate_dim_N` matches
 the measured `embedding_dim`, and an equivalent non-truncate row exists for the
 same model, task, runtime metadata, dimension, and quantization, the leaderboard
@@ -935,8 +935,8 @@ choices:
 - When variants are requested, push the selected display categories into SQL.
   Base rows are always read, but quantization-only, truncate-only, rescore-only,
   and other-variant views avoid fetching unrelated variant rows before Python
-  ranking. Cross variants such as truncate plus quantization are fetched only
-  when both required display flags are enabled.
+  ranking. Cross variants such as truncate plus quantization are fetched when
+  either matching display flag is enabled.
 - Surface runtime metadata such as dtype, attention implementation, prompt
   mode, and `trust_remote_code` in model details metadata; dtype, attention,
   and prompt remain available as facet filters.

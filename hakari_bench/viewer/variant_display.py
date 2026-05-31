@@ -55,8 +55,12 @@ def include_variant_row(
     category = variant_category(embedding_variant_name=embedding_variant_name, quantization=quantization)
     if category.rescore:
         return flags.rescore
+    if category.quantization and flags.quantization:
+        return True
+    if category.truncate and flags.truncate:
+        return True
     if category.quantization or category.truncate:
-        return (not category.quantization or flags.quantization) and (not category.truncate or flags.truncate)
+        return False
     return flags.other
 
 
