@@ -132,6 +132,18 @@
         "is_paper": true,
         "doi": "10.1162/tacl_a_00595",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MIRACL GitHub repository",
+        "url": "https://github.com/project-miracl/miracl",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "miracl/miracl-corpus",
+        "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

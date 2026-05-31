@@ -131,6 +131,36 @@
           "url": "https://github.com/zhangsheng93/cMedQA2"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "DuReader-Retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from Web Search Engine",
+        "url": "https://arxiv.org/abs/2203.10232",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "DuReader-Retrieval: A Large-scale Chinese Benchmark for Passage Retrieval from Web Search Engine",
+        "url": "https://aclanthology.org/2022.emnlp-main.357/",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer Selection",
+        "url": "https://doi.org/10.1109/ACCESS.2018.2883637",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "cMedQA2",
+        "url": "https://github.com/zhangsheng93/cMedQA2",
+        "year": 2018,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ]
   }
 }

@@ -85,6 +85,37 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning",
+        "url": "https://arxiv.org/abs/1709.00103",
+        "year": 2017,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Salesforce/wikisql",
+        "url": "https://huggingface.co/datasets/Salesforce/wikisql",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/Salesforce/wikisql"
+        }
+      ]
+    }
   }
 }

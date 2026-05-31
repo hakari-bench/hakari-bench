@@ -85,6 +85,37 @@
         "rows_with_101_candidates": 1
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants",
+        "url": "https://arxiv.org/abs/2308.16884",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "facebookresearch/belebele",
+        "url": "https://github.com/facebookresearch/belebele",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/belebele",
+        "url": "https://huggingface.co/datasets/mteb/belebele",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/mteb/belebele"
+        }
+      ]
+    }
   }
 }

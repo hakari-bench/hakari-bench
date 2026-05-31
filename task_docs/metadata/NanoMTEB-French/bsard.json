@@ -129,6 +129,20 @@
         "is_paper": true,
         "doi": "10.18653/v1/2022.acl-long.468",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis",
+        "url": "https://arxiv.org/abs/2405.20468",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/BSARDRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/BSARDRetrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

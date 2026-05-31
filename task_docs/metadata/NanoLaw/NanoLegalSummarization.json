@@ -129,6 +129,13 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.1906.00424",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "legal_summarization",
+        "url": "https://github.com/lauramanor/legal_summarization",
+        "year": 2019,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

@@ -85,6 +85,36 @@
         "rows_with_101_candidates": 2
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings",
+        "url": "https://arxiv.org/abs/2502.08638",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Andrianos/clsd_wmt19_21",
+        "url": "https://huggingface.co/datasets/Andrianos/clsd_wmt19_21",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "MTEB retrieval task listing",
+        "url": "https://embeddings-benchmark.github.io/mteb/overview/available_tasks/retrieval/",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/Andrianos/clsd_wmt19_21"
+        }
+      ]
+    }
   }
 }

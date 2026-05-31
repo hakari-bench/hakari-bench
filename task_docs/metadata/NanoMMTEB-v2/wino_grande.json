@@ -128,6 +128,20 @@
         "year": 2019,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "WinoGrande project page",
+        "url": "https://winogrande.allenai.org/",
+        "year": 2019,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/WinoGrande",
+        "url": "https://huggingface.co/datasets/mteb/WinoGrande",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

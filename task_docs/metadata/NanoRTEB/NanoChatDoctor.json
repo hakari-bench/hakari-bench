@@ -85,6 +85,38 @@
         "rows_with_101_candidates": 34
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI (LLaMA) Using Medical Domain Knowledge",
+        "url": "https://arxiv.org/abs/2303.14070",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "lavita/ChatDoctor-HealthCareMagic-100k",
+        "url": "https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k"
+        }
+      ]
+    }
   }
 }

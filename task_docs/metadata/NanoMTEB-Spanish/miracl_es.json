@@ -129,6 +129,20 @@
         "is_paper": true,
         "doi": "10.1162/tacl_a_00595",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/MIRACLRetrievalHardNegatives",
+        "url": "https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

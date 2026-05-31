@@ -134,6 +134,20 @@
         "is_paper": true,
         "doi": "10.1162/tacl_a_00595",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MIRACL project page",
+        "url": "http://miracl.ai/",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/MIRACLRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/MIRACLRetrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

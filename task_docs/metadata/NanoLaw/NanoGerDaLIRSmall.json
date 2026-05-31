@@ -128,6 +128,13 @@
         "year": 2021,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "GerDaLIR",
+        "url": "https://github.com/lavis-nlp/GerDaLIR",
+        "year": 2021,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

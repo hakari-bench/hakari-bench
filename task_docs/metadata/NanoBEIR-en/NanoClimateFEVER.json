@@ -132,6 +132,12 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
         "source_confidence": "benchmark_context_paper"
+      },
+      {
+        "title": "Climate-FEVER project site",
+        "url": "http://climatefever.ai",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

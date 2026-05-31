@@ -153,6 +153,12 @@
         "url": "https://huggingface.co/datasets/mteb/WebFAQRetrieval",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "PaDaS Lab Hugging Face organization",
+        "url": "https://huggingface.co/PaDaS-Lab",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

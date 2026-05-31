@@ -152,6 +152,13 @@
         "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ],
     "example_count": 5

@@ -135,6 +135,27 @@
         "year": 2024,
         "is_paper": false,
         "source_confidence": "official_datasheet"
+      },
+      {
+        "title": "The Scandinavian Embedding Benchmarks",
+        "url": "https://arxiv.org/abs/2406.02396",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Are GLLMs Danoliterate?",
+        "url": "https://sorenmulli.github.io/thesis/thesis.pdf",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "alexandrainst/nordjylland-news-summarization",
+        "url": "https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

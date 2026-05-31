@@ -130,6 +130,20 @@
         "is_paper": true,
         "doi": "10.1007/978-3-030-15719-7_19",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "Spanish Passage Retrieval dataset (PRES)",
+        "url": "https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/",
+        "year": 2019,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "jinaai/spanish_passage_retrieval",
+        "url": "https://huggingface.co/datasets/jinaai/spanish_passage_retrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

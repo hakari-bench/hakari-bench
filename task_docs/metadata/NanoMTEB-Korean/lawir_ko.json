@@ -142,6 +142,13 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2210.07316",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "Korea Law Information Center",
+        "url": "https://www.law.go.kr/LSW/main.html",
+        "year": 2026,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

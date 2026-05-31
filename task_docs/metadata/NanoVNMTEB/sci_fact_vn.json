@@ -166,6 +166,12 @@
         "url": "https://huggingface.co/datasets/GreenNode/scifact-vn",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "SciFact GitHub repository",
+        "url": "https://github.com/allenai/scifact",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

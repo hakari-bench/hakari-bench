@@ -128,6 +128,20 @@
         "year": 2021,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "The Scandinavian Embedding Benchmarks",
+        "url": "https://arxiv.org/abs/2406.02396",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "strombergnlp/danfever",
+        "url": "https://huggingface.co/datasets/strombergnlp/danfever",
+        "year": 2021,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

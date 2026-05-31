@@ -128,6 +128,20 @@
         "year": 2023,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "StatCan Dialogue Dataset project page",
+        "url": "https://mcgill-nlp.github.io/statcan-dialogue-dataset/",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/StatcanDialogueDatasetRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

@@ -116,6 +116,10 @@
         {
           "label": "xlangai/BRIGHT",
           "url": "https://huggingface.co/datasets/xlangai/BRIGHT"
+        },
+        {
+          "label": "MTEB dataset record",
+          "url": "https://huggingface.co/datasets/mteb/BRIGHT"
         }
       ],
       "source_notes": []
@@ -128,6 +132,20 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2407.12883",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "BRIGHT project page",
+        "url": "https://brightbenchmark.github.io/",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "xlangai/BRIGHT",
+        "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",

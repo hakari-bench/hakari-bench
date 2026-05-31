@@ -120,6 +120,22 @@
           "url": "https://ir.nist.gov/trec-covid/"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID",
+        "url": "https://arxiv.org/abs/2104.09632",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "TREC-COVID data archive",
+        "url": "https://ir.nist.gov/trec-covid/",
+        "year": 2020,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ]
   }
 }

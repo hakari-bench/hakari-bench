@@ -120,6 +120,22 @@
           "url": "https://doi.org/10.1186/s12859-019-3119-4"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "A question-entailment approach to question answering",
+        "url": "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4",
+        "year": 2019,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "A question-entailment approach to question answering",
+        "url": "https://doi.org/10.1186/s12859-019-3119-4",
+        "year": 2019,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ]
   }
 }

@@ -166,6 +166,12 @@
         "url": "https://huggingface.co/datasets/GreenNode/hotpotqa-vn",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "HotpotQA project page",
+        "url": "https://hotpotqa.github.io/",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

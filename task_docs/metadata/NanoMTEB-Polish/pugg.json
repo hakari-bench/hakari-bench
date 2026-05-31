@@ -85,6 +85,36 @@
         "rows_with_101_candidates": 4
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "Developing PUGG for Polish: A Modern Approach to KBQA, MRC, and IR Dataset Construction",
+        "url": "https://aclanthology.org/2024.findings-acl.652/",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "clarin-pl/PUGG_IR",
+        "url": "https://huggingface.co/datasets/clarin-pl/PUGG_IR",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "PUGG GitHub repository",
+        "url": "https://github.com/CLARIN-PL/PUGG",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/clarin-pl/PUGG_IR"
+        }
+      ]
+    }
   }
 }

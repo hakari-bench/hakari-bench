@@ -140,6 +140,27 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2505.14558",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "R2MED project page",
+        "url": "https://r2med.github.io/",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "R2MED GitHub repository",
+        "url": "https://github.com/R2MED/R2MED",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "R2MED/PMC-Clinical",
+        "url": "https://huggingface.co/datasets/R2MED/PMC-Clinical",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

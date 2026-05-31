@@ -134,6 +134,20 @@
         "is_paper": true,
         "doi": "10.1145/3459637.3482493",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "XMRec project page",
+        "url": "https://xmrec.github.io/",
+        "year": 2021,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/XMarket",
+        "url": "https://huggingface.co/datasets/mteb/XMarket",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

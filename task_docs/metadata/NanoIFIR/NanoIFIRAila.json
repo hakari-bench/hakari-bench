@@ -125,6 +125,13 @@
         "is_paper": true,
         "doi": "10.18653/v1/2025.naacl-long.511",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance",
+        "url": "https://ceur-ws.org/Vol-2517/T1-1.pdf",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

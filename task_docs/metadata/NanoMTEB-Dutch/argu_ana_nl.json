@@ -154,6 +154,12 @@
         "url": "https://huggingface.co/datasets/clips/beir-nl-arguana",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB project repository",
+        "url": "https://github.com/embeddings-benchmark/mteb",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ],
     "example_count": 5

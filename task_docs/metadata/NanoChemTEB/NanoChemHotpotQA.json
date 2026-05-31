@@ -123,6 +123,10 @@
         {
           "label": "BASF-AI/ChemHotpotQARetrieval",
           "url": "https://huggingface.co/datasets/BASF-AI/ChemHotpotQARetrieval"
+        },
+        {
+          "label": "MTEB mirror",
+          "url": "https://huggingface.co/datasets/mteb/ChemHotpotQARetrieval"
         }
       ],
       "source_notes": []
@@ -143,6 +147,13 @@
         "is_paper": true,
         "doi": "10.18653/v1/D18-1259",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "BASF-AI/ChemHotpotQARetrieval",
+        "url": "https://huggingface.co/datasets/BASF-AI/ChemHotpotQARetrieval",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

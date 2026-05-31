@@ -86,6 +86,37 @@
         "rows_with_101_candidates": 26
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "WWW18 Open Challenge: Financial Opinion Mining and Question Answering",
+        "url": "https://research.universityofgalway.ie/en/publications/www18-open-challenge-financial-opinion-mining-and-question-answer/",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "FiQA 2018 challenge site",
+        "url": "https://sites.google.com/view/fiqa/",
+        "year": 2018,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/FiQA-PL",
+        "url": "https://huggingface.co/datasets/mteb/FiQA-PL",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/mteb/FiQA-PL"
+        }
+      ]
+    }
   }
 }

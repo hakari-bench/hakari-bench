@@ -134,14 +134,23 @@ class ViewerAppConfig(BaseModel):
     config_dir: Path = Path("config/viewer")
 
 
-def create_app(*, store: LocalDuckDbStore, config_dir: Path = Path("config/viewer"), docs_dir: Path = Path("docs/benchmark_tasks")):
+def create_app(
+    *,
+    store: LocalDuckDbStore,
+    config_dir: Path = Path("config/viewer"),
+    docs_dir: Path = Path("task_docs/docs"),
+    docs_metadata_dir: Path | None = None,
+):
     from fastapi import FastAPI, Query
     from fastapi.middleware.gzip import GZipMiddleware
     from fastapi.responses import FileResponse, HTMLResponse, Response
     from fastapi.staticfiles import StaticFiles
 
     viewer_config = load_viewer_config(config_dir)
-    benchmark_docs = BenchmarkDocs(docs_dir)
+    resolved_docs_metadata_dir = docs_metadata_dir
+    if resolved_docs_metadata_dir is None and docs_dir == Path("task_docs/docs"):
+        resolved_docs_metadata_dir = Path("task_docs/metadata")
+    benchmark_docs = BenchmarkDocs(docs_dir, metadata_dir=resolved_docs_metadata_dir)
     app = FastAPI(title="HAKARI-bench leaderboard")
     app.add_middleware(GZipMiddleware, minimum_size=1024)
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")

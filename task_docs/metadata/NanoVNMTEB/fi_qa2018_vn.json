@@ -166,6 +166,12 @@
         "url": "https://huggingface.co/datasets/GreenNode/fiqa-vn",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "FiQA project page",
+        "url": "https://sites.google.com/view/fiqa/",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

@@ -40,6 +40,191 @@ def test_benchmark_docs_resolves_group_and_task_overviews(tmp_path: Path) -> Non
     assert task_doc.url == "/docs/benchmark-tasks/NanoMIRACL/ja"
 
 
+def test_benchmark_docs_renders_task_metadata_from_task_docs_json(tmp_path: Path) -> None:
+    docs_dir = tmp_path / "task_docs" / "docs"
+    metadata_dir = tmp_path / "task_docs" / "metadata"
+    group_dir = docs_dir / "NanoMIRACL"
+    metadata_group_dir = metadata_dir / "NanoMIRACL"
+    group_dir.mkdir(parents=True)
+    metadata_group_dir.mkdir(parents=True)
+    (group_dir / "ja.md").write_text(
+        "# NanoMIRACL / ja\n\n## Overview\n\nJapanese task overview.\n",
+        encoding="utf-8",
+    )
+    (metadata_group_dir / "ja.json").write_text(
+        """
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMIRACL",
+    "backing_dataset": "NanoMIRACL",
+    "dataset_id": "hakari-bench/NanoMIRACL",
+    "task_name": "ja",
+    "split_name": "ja",
+    "language": "ja",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoMIRACL/ja.md",
+    "source_research": {"primary_source_type": "task_paper", "paper_pdf_or_html_checked": true},
+    "counts": {"queries": 200, "documents": 10000, "positive_qrels": 373},
+    "positives_per_query": {
+      "average": 1.865,
+      "min": 1,
+      "median": 1.0,
+      "max": 8,
+      "multi_positive_queries": 78,
+      "multi_positive_query_percent": 39.0
+    },
+    "text_stats_chars": {"query_mean": 17.5, "document_mean": 173.3871},
+    "bm25": {"ndcg_at_10": 0.6600634301, "hit_at_10": 0.935, "source": "dataset_candidate_subset"},
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6600634301,
+        "hit_at_10": 0.935,
+        "recall_at_100": 0.9705093834,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9705093834
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.7744598647,
+        "hit_at_10": 0.915,
+        "recall_at_100": 0.9302949062,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9302949062
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.7223080894,
+        "hit_at_10": 0.97,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMIRACL",
+      "source_urls": [{"label": "MIRACL repository", "url": "https://github.com/project-miracl/miracl"}]
+    },
+    "references": [
+      {
+        "title": "Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages",
+        "url": "https://arxiv.org/abs/2210.09984",
+        "year": 2022,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2210.09984"
+      }
+    ]
+  }
+}
+""".strip(),
+        encoding="utf-8",
+    )
+
+    docs = BenchmarkDocs(docs_dir, metadata_dir=metadata_dir)
+
+    doc = docs.task_doc(view_name="NanoMIRACL", metric_column="ja")
+
+    assert doc is not None
+    assert "## Dataset Information" in doc.markdown
+    assert "| Queries | 200 |" in doc.markdown
+    assert "| Positive qrels | 373 |" in doc.markdown
+    assert "| BM25 | `bm25` | 0.6601 | 0.9350 | 0.9705 | top-500 |" in doc.markdown
+    assert "| Dense | `harrier_oss_v1_270m` | 0.7745 | 0.9150 | 0.9303 | top-500 |" in doc.markdown
+    assert "- Nano dataset: [hakari-bench/NanoMIRACL](https://huggingface.co/datasets/hakari-bench/NanoMIRACL)" in doc.markdown
+    assert "| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |" in doc.markdown
+
+
+def test_benchmark_docs_renders_group_metadata_summary_from_task_docs_json(tmp_path: Path) -> None:
+    docs_dir = tmp_path / "task_docs" / "docs"
+    metadata_dir = tmp_path / "task_docs" / "metadata"
+    group_dir = docs_dir / "NanoTiny"
+    metadata_group_dir = metadata_dir / "NanoTiny"
+    group_dir.mkdir(parents=True)
+    metadata_group_dir.mkdir(parents=True)
+    (group_dir / "index.md").write_text("# NanoTiny\n\n## Overview\n\nTiny overview.\n", encoding="utf-8")
+    for name, language, queries, docs_count, positives, ndcg in [
+        ("alpha", "en", 10, 100, 12, 0.25),
+        ("beta", "ja", 20, 200, 40, 0.75),
+    ]:
+        (group_dir / f"{name}.md").write_text(f"# NanoTiny / {name}\n\n## Overview\n\n{name} overview.\n", encoding="utf-8")
+        (metadata_group_dir / f"{name}.json").write_text(
+            f"""
+{{
+  "task_metadata": {{
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoTiny",
+    "backing_dataset": "NanoTiny",
+    "dataset_id": "hakari-bench/NanoTiny",
+    "task_name": "{name}",
+    "split_name": "{name}",
+    "language": "{language}",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoTiny/{name}.md",
+    "source_research": {{"primary_source_type": "dataset_card", "paper_pdf_or_html_checked": false}},
+    "counts": {{"queries": {queries}, "documents": {docs_count}, "positive_qrels": {positives}}},
+    "positives_per_query": {{"average": 1.0, "min": 1, "median": 1.0, "max": 1, "multi_positive_queries": 0}},
+    "text_stats_chars": {{"query_mean": 12.5, "document_mean": 234.5}},
+    "bm25": {{"ndcg_at_10": {ndcg}, "hit_at_10": 0.5, "source": "dataset_candidate_subset"}},
+    "candidate_subsets": {{
+      "bm25": {{
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": {ndcg},
+        "hit_at_10": 0.5,
+        "recall_at_100": 0.6,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": {queries},
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6
+      }}
+    }}
+  }}
+}}
+""".strip(),
+            encoding="utf-8",
+        )
+
+    docs = BenchmarkDocs(docs_dir, metadata_dir=metadata_dir)
+
+    doc = docs.group_doc("NanoTiny")
+
+    assert doc is not None
+    assert "## Metadata Summary" in doc.markdown
+    assert "| Task pages | 2 |" in doc.markdown
+    assert "| Queries | 30 |" in doc.markdown
+    assert "| Languages | en, ja |" in doc.markdown
+    assert "| [alpha](alpha.md) | NanoTiny | en | natural_language | 10 | 100 | 12 | 0.2500 |  |  | BM25 |" in doc.markdown
+    assert "| [beta](beta.md) | NanoTiny | ja | natural_language | 20 | 200 | 40 | 0.7500 |  |  | BM25 |" in doc.markdown
+
+
 def test_benchmark_docs_lists_group_docs_with_descriptions(tmp_path: Path) -> None:
     docs_dir = tmp_path / "docs" / "benchmark_tasks"
     miracl_dir = docs_dir / "NanoMIRACL"

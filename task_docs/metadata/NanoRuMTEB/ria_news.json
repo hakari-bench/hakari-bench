@@ -142,6 +142,13 @@
         "year": 2019,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2",
+        "url": "https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

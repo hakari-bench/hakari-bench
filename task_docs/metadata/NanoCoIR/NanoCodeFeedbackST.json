@@ -138,6 +138,13 @@
         "year": 2025,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "OpenCodeInterpreter: Integrating Code Generation with Execution and Refinement",
+        "url": "https://arxiv.org/abs/2402.14658",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

@@ -147,6 +147,18 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "mteb/nfcorpus",
+        "url": "https://huggingface.co/datasets/mteb/nfcorpus",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "BeIR/nfcorpus",
+        "url": "https://huggingface.co/datasets/BeIR/nfcorpus",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

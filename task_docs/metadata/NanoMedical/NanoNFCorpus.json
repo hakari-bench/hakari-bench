@@ -130,6 +130,29 @@
           "url": "https://huggingface.co/datasets/mteb/nfcorpus"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
+        "url": "https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
+        "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
+        "year": 2016,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
+        "url": "https://doi.org/10.1007/978-3-319-30671-1_58",
+        "year": 2016,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ]
   }
 }

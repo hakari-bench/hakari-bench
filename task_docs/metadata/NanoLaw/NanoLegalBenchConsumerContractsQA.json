@@ -129,6 +129,20 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2308.11462",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "consumer_contracts_qa",
+        "url": "https://hazyresearch.stanford.edu/legalbench/tasks/consumer_contracts_qa.html",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Predicting Consumer Contracts",
+        "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3844988",
+        "year": 2022,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

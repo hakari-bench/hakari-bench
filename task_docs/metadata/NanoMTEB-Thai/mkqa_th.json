@@ -85,6 +85,37 @@
         "rows_with_101_candidates": 168
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "MKQA: A Linguistically Diverse Benchmark for Multilingual Open Domain Question Answering",
+        "url": "https://arxiv.org/abs/2007.15207",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "apple/ml-mkqa",
+        "url": "https://github.com/apple/ml-mkqa",
+        "year": 2020,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/MKQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/MKQARetrieval",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/mteb/MKQARetrieval"
+        }
+      ]
+    }
   }
 }

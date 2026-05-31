@@ -85,6 +85,41 @@
         "rows_with_101_candidates": 3
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval",
+        "url": "https://arxiv.org/abs/2108.08787",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "castorini/mr-tydi",
+        "url": "https://huggingface.co/datasets/castorini/mr-tydi",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "sbintuitions/JMTEB",
+        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoJMTEB-v2",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/mteb/mrtidy"
+        },
+        {
+          "label": "Upstream source dataset",
+          "url": "https://huggingface.co/datasets/castorini/mr-tydi"
+        }
+      ]
+    }
   }
 }

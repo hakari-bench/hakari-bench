@@ -136,6 +136,12 @@
         "year": 2024,
         "is_paper": true,
         "source_confidence": "definitive_benchmark_paper"
+      },
+      {
+        "title": "mteb/CovidRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/CovidRetrieval",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

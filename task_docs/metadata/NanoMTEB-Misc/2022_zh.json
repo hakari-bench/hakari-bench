@@ -85,6 +85,36 @@
         "rows_with_101_candidates": 2
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "Overview of the TREC 2022 NeuCLIR Track",
+        "url": "https://arxiv.org/abs/2304.12367",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "NeuCLIR official site",
+        "url": "https://neuclir.github.io/",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/NeuCLIR2022RetrievalHardNegatives",
+        "url": "https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives"
+        }
+      ]
+    }
   }
 }

@@ -128,6 +128,20 @@
         "year": 2023,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MIRACL project page",
+        "url": "https://project-miracl.github.io/",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/MIRACLRetrievalHardNegatives",
+        "url": "https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

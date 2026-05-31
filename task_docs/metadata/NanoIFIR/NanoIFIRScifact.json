@@ -125,6 +125,13 @@
         "is_paper": true,
         "doi": "10.18653/v1/2020.emnlp-main.609",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain Information Retrieval",
+        "url": "https://arxiv.org/abs/2503.04644",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

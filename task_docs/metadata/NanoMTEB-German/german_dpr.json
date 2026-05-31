@@ -139,6 +139,20 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.12741",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval",
+        "url": "https://aclanthology.org/2021.mrqa-1.4/",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/GermanDPR",
+        "url": "https://huggingface.co/datasets/mteb/GermanDPR",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

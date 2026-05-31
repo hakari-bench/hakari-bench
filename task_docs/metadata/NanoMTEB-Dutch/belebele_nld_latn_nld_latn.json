@@ -152,6 +152,13 @@
         "url": "https://huggingface.co/datasets/mteb/belebele",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "facebookresearch/belebele",
+        "url": "https://github.com/facebookresearch/belebele",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ],
     "example_count": 5

@@ -125,6 +125,13 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2405.20468",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "lyon-nlp/mteb-fr-retrieval-syntec-s2p",
+        "url": "https://huggingface.co/datasets/lyon-nlp/mteb-fr-retrieval-syntec-s2p",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

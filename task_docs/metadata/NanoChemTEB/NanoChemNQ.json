@@ -123,6 +123,10 @@
         {
           "label": "BASF-AI/ChemNQRetrieval",
           "url": "https://huggingface.co/datasets/BASF-AI/ChemNQRetrieval"
+        },
+        {
+          "label": "MTEB mirror",
+          "url": "https://huggingface.co/datasets/mteb/ChemNQRetrieval"
         }
       ],
       "source_notes": []
@@ -143,6 +147,13 @@
         "is_paper": true,
         "doi": "10.1162/tacl_a_00276",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "BASF-AI/ChemNQRetrieval",
+        "url": "https://huggingface.co/datasets/BASF-AI/ChemNQRetrieval",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

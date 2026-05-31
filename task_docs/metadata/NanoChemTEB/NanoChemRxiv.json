@@ -127,6 +127,10 @@
         {
           "label": "ChEmbed training data collection",
           "url": "https://huggingface.co/collections/BASF-AI/chembed-training-data"
+        },
+        {
+          "label": "Source papers table",
+          "url": "https://huggingface.co/datasets/BASF-AI/ChemRxiv-Papers"
         }
       ],
       "source_notes": []
@@ -147,6 +151,13 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2412.00532",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "BASF-AI/ChemRxivRetrieval",
+        "url": "https://huggingface.co/datasets/BASF-AI/ChemRxivRetrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

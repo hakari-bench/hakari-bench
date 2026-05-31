@@ -104,6 +104,27 @@
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
         "is_paper": true
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "NeuCLIR",
+        "url": "https://neuclir.github.io/",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/NeuCLIR2023RetrievalHardNegatives",
+        "url": "https://huggingface.co/datasets/mteb/NeuCLIR2023RetrievalHardNegatives",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

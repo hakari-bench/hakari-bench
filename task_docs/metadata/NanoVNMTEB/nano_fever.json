@@ -166,6 +166,12 @@
         "url": "https://huggingface.co/datasets/GreenNode/nano-fever-vn",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "FEVER project page",
+        "url": "https://fever.ai/",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

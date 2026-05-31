@@ -128,6 +128,20 @@
         "year": 2024,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "dwzhu/LongEmbed",
+        "url": "https://huggingface.co/datasets/dwzhu/LongEmbed",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/LEMBPasskeyRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/LEMBPasskeyRetrieval",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

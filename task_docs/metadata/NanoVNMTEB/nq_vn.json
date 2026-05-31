@@ -166,6 +166,12 @@
         "url": "https://huggingface.co/datasets/GreenNode/nq-vn",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Natural Questions official page",
+        "url": "https://ai.google.com/research/NaturalQuestions/",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

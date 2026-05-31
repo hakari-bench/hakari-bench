@@ -85,6 +85,37 @@
         "rows_with_101_candidates": 13
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "Plain English Summarization of Contracts",
+        "url": "https://aclanthology.org/W19-2201/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/legal_summarization",
+        "url": "https://huggingface.co/datasets/mteb/legal_summarization",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/mteb/legal_summarization"
+        }
+      ]
+    }
   }
 }

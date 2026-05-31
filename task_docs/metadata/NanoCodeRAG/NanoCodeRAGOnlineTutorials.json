@@ -146,6 +146,20 @@
         "is_paper": true,
         "doi": "10.18653/v1/2025.findings-naacl.176",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "CodeRAG-Bench project page",
+        "url": "https://code-rag-bench.github.io/",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "code-rag-bench/online-tutorials",
+        "url": "https://huggingface.co/datasets/code-rag-bench/online-tutorials",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

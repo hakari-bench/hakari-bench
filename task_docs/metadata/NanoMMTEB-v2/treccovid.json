@@ -128,6 +128,20 @@
         "year": 2020,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "NIST TREC-COVID challenge page",
+        "url": "https://ir.nist.gov/covidSubmit/index.html",
+        "year": 2020,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/trec-covid",
+        "url": "https://huggingface.co/datasets/mteb/trec-covid",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

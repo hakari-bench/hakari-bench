@@ -85,6 +85,36 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "On the Cross-lingual Transferability of Monolingual Representations",
+        "url": "https://arxiv.org/abs/1910.11856",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "google-deepmind/xquad",
+        "url": "https://github.com/google-deepmind/xquad",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "google/xquad",
+        "url": "https://huggingface.co/datasets/google/xquad",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/google/xquad"
+        }
+      ]
+    }
   }
 }

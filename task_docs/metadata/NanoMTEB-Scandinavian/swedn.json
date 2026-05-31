@@ -136,6 +136,27 @@
         "is_paper": false,
         "doi": "10.23695/36v9-9017",
         "source_confidence": "official_resource_page"
+      },
+      {
+        "title": "The Scandinavian Embedding Benchmarks",
+        "url": "https://arxiv.org/abs/2406.02396",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Superlim: A Swedish Language Understanding Evaluation Benchmark",
+        "url": "https://aclanthology.org/2023.emnlp-main.506/",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/SwednRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/SwednRetrieval",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

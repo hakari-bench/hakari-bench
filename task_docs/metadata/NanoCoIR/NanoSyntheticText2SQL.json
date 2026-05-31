@@ -131,6 +131,13 @@
         "year": 2025,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "Synthetic-Text-To-SQL",
+        "url": "https://huggingface.co/datasets/gretelai/synthetic_text_to_sql",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

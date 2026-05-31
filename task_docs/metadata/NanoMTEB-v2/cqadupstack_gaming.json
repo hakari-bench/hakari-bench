@@ -134,6 +134,13 @@
         "year": 2023,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "mteb/cqadupstack-gaming",
+        "url": "https://huggingface.co/datasets/mteb/cqadupstack-gaming",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ],
     "source_dataset_id": "mteb/cqadupstack-gaming",

@@ -85,6 +85,45 @@
         "rows_with_101_candidates": 1
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "CURE: A Dataset for Clinical Understanding & Retrieval Evaluation",
+        "url": "https://arxiv.org/abs/2412.06954",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "CURE ACM proceedings record",
+        "url": "https://doi.org/10.1145/3711896.3737435",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "clinia/CUREv1",
+        "url": "https://huggingface.co/datasets/clinia/CUREv1",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/clinia/CUREv1"
+        }
+      ]
+    }
   }
 }

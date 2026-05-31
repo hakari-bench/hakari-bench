@@ -120,6 +120,22 @@
           "url": "https://github.com/zhangsheng93/cMedQA2"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer Selection",
+        "url": "https://doi.org/10.1109/ACCESS.2018.2883637",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "cMedQA2",
+        "url": "https://github.com/zhangsheng93/cMedQA2",
+        "year": 2018,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ]
   }
 }

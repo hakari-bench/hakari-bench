@@ -85,6 +85,36 @@
         "rows_with_101_candidates": 3
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval",
+        "url": "https://arxiv.org/abs/2502.20936",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "PaDaS-Lab/webfaq",
+        "url": "https://huggingface.co/datasets/PaDaS-Lab/webfaq",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/WebFAQRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/WebFAQRetrieval",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/mteb/WebFAQRetrieval"
+        }
+      ]
+    }
   }
 }

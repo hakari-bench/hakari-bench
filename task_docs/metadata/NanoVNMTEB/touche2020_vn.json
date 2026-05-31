@@ -165,6 +165,12 @@
         "url": "https://huggingface.co/datasets/GreenNode/webis-touche2020-vn",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Touché 2020 Task 1 page",
+        "url": "https://webis.de/events/touche-20/shared-task-1.html",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

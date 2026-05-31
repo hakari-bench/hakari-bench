@@ -120,6 +120,22 @@
           "url": "https://aclanthology.org/2020.emnlp-main.609/"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://aclanthology.org/2020.emnlp-main.609/",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ]
   }
 }

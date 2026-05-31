@@ -129,6 +129,20 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2305.09249",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/XPQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/XPQARetrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

@@ -85,6 +85,36 @@
         "rows_with_101_candidates": 3
       }
     },
-    "example_count": 5
+    "example_count": 5,
+    "references": [
+      {
+        "title": "RuSciBench: Open Benchmark for Russian and English Scientific Document Representations",
+        "url": "https://doi.org/10.1134/S1064562424602191",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval",
+        "url": "https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "ru_sci_bench_mteb",
+        "url": "https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ],
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
+      "source_urls": [
+        {
+          "label": "Source task dataset",
+          "url": "https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval"
+        }
+      ]
+    }
   }
 }

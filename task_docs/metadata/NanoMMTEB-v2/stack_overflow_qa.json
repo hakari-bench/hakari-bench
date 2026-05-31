@@ -125,6 +125,13 @@
         "year": 2025,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "mteb/StackOverflowQA",
+        "url": "https://huggingface.co/datasets/mteb/StackOverflowQA",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

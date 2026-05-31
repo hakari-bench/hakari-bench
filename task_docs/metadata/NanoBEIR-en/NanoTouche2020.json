@@ -153,6 +153,19 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "Open PDF: Overview of Touché 2020: Argument Retrieval",
+        "url": "https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/touche2020",
+        "url": "https://huggingface.co/datasets/mteb/touche2020",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

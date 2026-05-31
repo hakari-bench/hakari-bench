@@ -136,6 +136,13 @@
         "year": 2025,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "Stack Overflow Data",
+        "url": "https://www.kaggle.com/datasets/stackoverflow/stacksample/data",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

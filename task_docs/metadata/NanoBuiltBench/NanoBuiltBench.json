@@ -148,6 +148,20 @@
         "is_paper": true,
         "doi": "10.1038/s41598-025-09052-5",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "BuiltBench paper GitHub repository",
+        "url": "https://github.com/mehrzadshm/built-bench-paper",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "MTEB BuiltBenchRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/BuiltBenchRetrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

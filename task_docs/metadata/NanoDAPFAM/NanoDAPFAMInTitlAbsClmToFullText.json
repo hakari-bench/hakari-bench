@@ -127,6 +127,20 @@
         "is_paper": true,
         "doi": "10.1016/j.array.2026.100720",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "DAPFAM DOI record",
+        "url": "https://doi.org/10.1016/j.array.2026.100720",
+        "year": 2026,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "datalyes/DAPFAM_patent",
+        "url": "https://huggingface.co/datasets/datalyes/DAPFAM_patent",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

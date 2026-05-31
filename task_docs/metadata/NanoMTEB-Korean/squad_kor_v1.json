@@ -128,6 +128,13 @@
         "year": 2019,
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "yjoonjang/squad_kor_v1",
+        "url": "https://huggingface.co/datasets/yjoonjang/squad_kor_v1",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

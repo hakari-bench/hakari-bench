@@ -166,6 +166,12 @@
         "url": "https://huggingface.co/datasets/GreenNode/scidocs-vn",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "SciDocs dataset page",
+        "url": "https://allenai.org/data/scidocs",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

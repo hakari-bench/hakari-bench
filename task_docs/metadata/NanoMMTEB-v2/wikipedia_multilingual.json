@@ -129,6 +129,20 @@
         "year": 2025,
         "is_paper": true,
         "source_confidence": "benchmark_paper_link"
+      },
+      {
+        "title": "mteb/WikipediaRetrievalMultilingual",
+        "url": "https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "ellamind/wikipedia-2023-11-retrieval-multilingual-queries",
+        "url": "https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

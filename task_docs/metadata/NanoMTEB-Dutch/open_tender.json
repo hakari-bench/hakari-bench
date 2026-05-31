@@ -141,6 +141,12 @@
         "url": "https://huggingface.co/datasets/clips/mteb-nl-opentender-ret",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB project repository",
+        "url": "https://github.com/embeddings-benchmark/mteb",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

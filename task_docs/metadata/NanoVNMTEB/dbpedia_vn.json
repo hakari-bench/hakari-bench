@@ -166,6 +166,12 @@
         "url": "https://huggingface.co/datasets/GreenNode/dbpedia-vn",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "DBpedia-Entity project page",
+        "url": "https://iai-group.github.io/DBpedia-Entity/",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

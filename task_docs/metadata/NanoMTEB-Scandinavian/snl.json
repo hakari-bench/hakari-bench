@@ -132,6 +132,20 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2406.02396",
         "source_confidence": "benchmark_paper"
+      },
+      {
+        "title": "adrlau/navjordj-SNL_summarization_copy",
+        "url": "https://huggingface.co/datasets/adrlau/navjordj-SNL_summarization_copy",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "mteb/SNLRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/SNLRetrieval",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

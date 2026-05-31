@@ -129,6 +129,13 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2310.17609",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "THUIR LeCaRDv2",
+        "url": "https://github.com/THUIR/LeCaRDv2",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

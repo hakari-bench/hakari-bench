@@ -153,6 +153,27 @@
         "is_paper": true,
         "doi": "10.18653/v1/2025.naacl-long.12",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "RuBQ project repository",
+        "url": "https://github.com/vladislavneon/RuBQ",
+        "year": 2021,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "RuBQ Zenodo record",
+        "url": "https://doi.org/10.5281/zenodo.4345696",
+        "year": 2020,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "ai-forever/rubq-retrieval",
+        "url": "https://huggingface.co/datasets/ai-forever/rubq-retrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

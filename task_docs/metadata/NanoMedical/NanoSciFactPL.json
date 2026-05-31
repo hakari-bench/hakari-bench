@@ -135,6 +135,36 @@
           "url": "https://huggingface.co/clarin-knext"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language",
+        "url": "https://arxiv.org/abs/2305.19840",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language",
+        "url": "https://aclanthology.org/2024.lrec-main.194/",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://aclanthology.org/2020.emnlp-main.609/",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ]
   }
 }

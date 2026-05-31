@@ -166,6 +166,12 @@
         "url": "https://huggingface.co/datasets/GreenNode/trec-covid-vn",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "TREC-COVID challenge page",
+        "url": "https://ir.nist.gov/covidSubmit/",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

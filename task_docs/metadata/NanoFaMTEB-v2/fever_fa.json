@@ -104,6 +104,20 @@
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
         "is_paper": true
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "MCINext/FEVER_FA_test_top_250_only_w_correct-v2",
+        "url": "https://huggingface.co/datasets/MCINext/FEVER_FA_test_top_250_only_w_correct-v2",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

@@ -166,6 +166,12 @@
         "url": "https://huggingface.co/datasets/GreenNode/nfcorpus-vn",
         "is_paper": false,
         "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NFCorpus project page",
+        "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

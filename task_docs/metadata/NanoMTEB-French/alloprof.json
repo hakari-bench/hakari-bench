@@ -130,6 +130,20 @@
         "is_paper": true,
         "doi": "10.48550/arXiv.2405.20468",
         "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "mteb/AlloprofRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/AlloprofRetrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "antoinelb7/alloprof",
+        "url": "https://huggingface.co/datasets/antoinelb7/alloprof",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
       }
     ]
   }

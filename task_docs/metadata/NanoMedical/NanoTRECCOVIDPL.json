@@ -135,6 +135,36 @@
           "url": "https://huggingface.co/clarin-knext"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language",
+        "url": "https://arxiv.org/abs/2305.19840",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language",
+        "url": "https://aclanthology.org/2024.lrec-main.194/",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID",
+        "url": "https://arxiv.org/abs/2104.09632",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "migrated_from_legacy_docs"
+      },
+      {
+        "title": "TREC-COVID data archive",
+        "url": "https://ir.nist.gov/trec-covid/",
+        "year": 2020,
+        "is_paper": false,
+        "source_confidence": "migrated_from_legacy_docs"
+      }
+    ]
   }
 }
