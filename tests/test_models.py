@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 from types import SimpleNamespace
+from typing import Any
 
 import pytest
 import torch
@@ -123,8 +124,8 @@ def test_pylate_dense_patch_defaults_missing_activation_function(monkeypatch: py
             self.loaded_state = None
 
         @staticmethod
-        def from_sentence_transformers(dense: object) -> object:
-            config = dense.get_config_dict()  # type: ignore[attr-defined]
+        def from_sentence_transformers(dense: Any) -> object:
+            config = dense.get_config_dict()
             config["activation_function"]
             raise AssertionError("unreachable")
 

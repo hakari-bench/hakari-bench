@@ -105,7 +105,10 @@ def _import_pylate_colbert() -> Any:
 
 
 def _patch_pylate_dense_missing_activation_function() -> None:
-    dense_cls = getattr(importlib.import_module("pylate.models"), "Dense")
+    try:
+        dense_cls = getattr(importlib.import_module("pylate.models"), "Dense")
+    except ModuleNotFoundError:
+        return
     original = getattr(dense_cls, "from_sentence_transformers", None)
     if original is None or getattr(original, "_hakari_missing_activation_patch", False):
         return
@@ -116,7 +119,7 @@ def _patch_pylate_dense_missing_activation_function() -> None:
         except KeyError as exc:
             if exc.args != ("activation_function",):
                 raise
-        config = dense.get_config_dict()
+        config = getattr(dense, "get_config_dict")()
         config.setdefault("activation_function", "torch.nn.Identity")
         activation = config["activation_function"]
         if isinstance(activation, str):
@@ -126,7 +129,7 @@ def _patch_pylate_dense_missing_activation_function() -> None:
         model.load_state_dict(dense.state_dict())
         return model
 
-    from_sentence_transformers._hakari_missing_activation_patch = True  # type: ignore[attr-defined]
+    setattr(from_sentence_transformers, "_hakari_missing_activation_patch", True)
     dense_cls.from_sentence_transformers = staticmethod(from_sentence_transformers)
 
 
