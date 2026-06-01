@@ -107,7 +107,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         description="Build external task metadata JSON from Nano dataset tables."
     )
     parser.add_argument("paths", nargs="*", type=Path, help="Optional Markdown task docs or directories.")
-    parser.add_argument("--docs-root", type=Path, default=Path("docs/benchmark_tasks"))
+    parser.add_argument("--docs-root", type=Path, default=Path("task_docs/docs"))
     parser.add_argument("--metadata-root", type=Path, default=Path("task_docs/metadata"))
     parser.add_argument("--reranking-hybrid-config", default=RERANKING_HYBRID_CONFIG)
     parser.add_argument("--dry-run", action="store_true")

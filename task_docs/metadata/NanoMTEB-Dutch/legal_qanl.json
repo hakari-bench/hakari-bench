@@ -9,7 +9,7 @@
     "split_name": "legal_qanl",
     "language": "nl",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoMTEB-Dutch/legal_qanl.md",
+    "document_path": "task_docs/docs/NanoMTEB-Dutch/legal_qanl.md",
     "source_research": {
       "primary_source_type": "task_paper",
       "paper_pdf_or_html_checked": true,

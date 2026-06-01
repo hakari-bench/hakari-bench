@@ -123,7 +123,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Update task docs with Nano candidate subset metadata.")
-    parser.add_argument("--docs-root", type=Path, default=Path("docs/benchmark_tasks"))
+    parser.add_argument("--docs-root", type=Path, default=Path("task_docs/docs"))
     parser.add_argument("--reranking-hybrid-config", default=RERANKING_HYBRID_CONFIG)
     parser.add_argument("--skip-existing", action="store_true", help="Skip task docs that already have candidate_subsets.")
     parser.add_argument("--dry-run", action="store_true")

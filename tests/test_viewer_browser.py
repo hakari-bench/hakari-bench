@@ -27,7 +27,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: NanoRTEB\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     bench_docs_dir = docs_dir / "BenchA"
     bench_docs_dir.mkdir(parents=True)
     (bench_docs_dir / "index.md").write_text("# BenchA\n\n## Overview\n\nBenchA overview for browser tests.\n", encoding="utf-8")

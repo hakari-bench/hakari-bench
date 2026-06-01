@@ -31,9 +31,8 @@ the collection name, include the backing dataset in the file name, for example:
 task_docs/docs/MNanoBEIR/NanoBEIR-ja__NanoMSMARCO.md
 ```
 
-Older task pages under `docs/benchmark_tasks/` remain useful as source material
-and provenance, but new reader-facing task prose should be authored under
-`task_docs/docs/`. The matching JSON metadata remains under `task_docs/metadata/`.
+Reader-facing task prose should be authored under `task_docs/docs/`. The
+matching JSON metadata remains under `task_docs/metadata/`.
 
 ## Source Policy
 
@@ -193,7 +192,7 @@ uv run python scripts/extract_benchmark_task_examples.py hakari-bench/NanoMMTEB-
 For bulk refreshes, replace only the `## Example Data` sections with:
 
 ```bash
-uv run python scripts/extract_benchmark_task_examples.py --update-docs docs/benchmark_tasks
+uv run python scripts/extract_benchmark_task_examples.py --update-docs task_docs/docs
 ```
 
 Use a Markdown table with exactly two columns by default: `Query` and
@@ -509,7 +508,7 @@ Minimal shape:
     "split_name": "ja",
     "language": "ja",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoMIRACL/ja.md",
+    "document_path": "task_docs/docs/NanoMIRACL/ja.md",
     "source_research": {
       "primary_source_type": "task_paper",
       "paper_pdf_or_html_checked": true,
@@ -790,9 +789,9 @@ safeguard rows, and document status in `task_docs/metadata/`, not in the
 reader-facing group table.
 
 Group index pages should be authored one Nano set at a time. Use the metadata
-JSON files, the task pages in `task_docs/docs/`, and the older provenance pages
-under `docs/benchmark_tasks/` as references, but write the group prose manually.
-Do not bulk-generate these index pages from a template script.
+JSON files and the task pages in `task_docs/docs/` as references, but write the
+group prose manually. Do not bulk-generate these index pages from a template
+script.
 
 ## Maintenance Checklist
 

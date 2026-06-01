@@ -9,7 +9,7 @@
     "split_name": "NanoChatDoctor",
     "language": "en",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoRTEB/NanoChatDoctor.md",
+    "document_path": "task_docs/docs/NanoRTEB/NanoChatDoctor.md",
     "source_research": {
       "primary_source_type": "task_paper",
       "paper_pdf_or_html_checked": true

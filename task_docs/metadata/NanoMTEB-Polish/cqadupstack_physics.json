@@ -9,7 +9,7 @@
     "split_name": "cqadupstack_physics",
     "language": "pl",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoMTEB-Polish/cqadupstack_physics.md",
+    "document_path": "task_docs/docs/NanoMTEB-Polish/cqadupstack_physics.md",
     "source_research": {
       "primary_source_type": "dataset_card",
       "paper_pdf_or_html_checked": true,

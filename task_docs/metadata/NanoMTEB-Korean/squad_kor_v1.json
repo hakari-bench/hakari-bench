@@ -9,7 +9,7 @@
     "split_name": "squad_kor_v1",
     "language": "ko",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoMTEB-Korean/squad_kor_v1.md",
+    "document_path": "task_docs/docs/NanoMTEB-Korean/squad_kor_v1.md",
     "source_research": {
       "primary_source_type": "task_paper",
       "paper_pdf_or_html_checked": true,

@@ -9,7 +9,7 @@
     "split_name": "NanoFiQA2018",
     "language": "vi",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/MNanoBEIR/NanoBEIR-vi__NanoFiQA2018.md",
+    "document_path": "task_docs/docs/MNanoBEIR/NanoBEIR-vi__NanoFiQA2018.md",
     "source_research": {
       "primary_source_type": "task_paper",
       "paper_pdf_or_html_checked": true

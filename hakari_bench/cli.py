@@ -160,7 +160,7 @@ def build_parser() -> argparse.ArgumentParser:
     validate_docs.add_argument(
         "--docs-root",
         type=Path,
-        default=Path("docs/benchmark_tasks"),
+        default=Path("task_docs/docs"),
         help="Task docs root used when no explicit paths are supplied.",
     )
     validate_docs.add_argument(

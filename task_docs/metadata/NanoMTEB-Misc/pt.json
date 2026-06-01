@@ -9,7 +9,7 @@
     "split_name": "pt",
     "language": "pt",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoMTEB-Misc/pt.md",
+    "document_path": "task_docs/docs/NanoMTEB-Misc/pt.md",
     "source_research": {
       "primary_source_type": "dataset_card",
       "paper_pdf_or_html_checked": true,

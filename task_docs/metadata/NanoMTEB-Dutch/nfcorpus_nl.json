@@ -9,7 +9,7 @@
     "split_name": "nfcorpus_nl",
     "language": "multilingual",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoMTEB-Dutch/nfcorpus_nl.md",
+    "document_path": "task_docs/docs/NanoMTEB-Dutch/nfcorpus_nl.md",
     "source_research": {
       "primary_source_type": "task_paper",
       "paper_pdf_or_html_checked": true,

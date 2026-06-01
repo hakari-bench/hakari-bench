@@ -16,7 +16,7 @@ TASK_METADATA_RE = re.compile(
     r"<!-- benchmark-task-metadata:v1 -->\s*```yaml\n(.*?)\n```",
     re.DOTALL,
 )
-DEFAULT_TASK_DOCS_ROOT = Path("docs/benchmark_tasks")
+DEFAULT_TASK_DOCS_ROOT = Path("task_docs/docs")
 DEFAULT_TASK_METADATA_ROOT = Path("task_docs/metadata")
 
 NonEmptyStr = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]

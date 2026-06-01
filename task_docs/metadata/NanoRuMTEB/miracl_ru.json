@@ -9,7 +9,7 @@
     "split_name": "miracl_ru",
     "language": "ru",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoRuMTEB/miracl_ru.md",
+    "document_path": "task_docs/docs/NanoRuMTEB/miracl_ru.md",
     "source_research": {
       "primary_source_type": "task_paper",
       "paper_pdf_or_html_checked": true,

@@ -9,7 +9,7 @@
     "split_name": "pugg",
     "language": "pl",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoMTEB-Polish/pugg.md",
+    "document_path": "task_docs/docs/NanoMTEB-Polish/pugg.md",
     "source_research": {
       "primary_source_type": "task_paper",
       "paper_pdf_or_html_checked": true

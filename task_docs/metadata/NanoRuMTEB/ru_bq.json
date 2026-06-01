@@ -9,7 +9,7 @@
     "split_name": "ru_bq",
     "language": "ru",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoRuMTEB/ru_bq.md",
+    "document_path": "task_docs/docs/NanoRuMTEB/ru_bq.md",
     "source_research": {
       "primary_source_type": "task_paper",
       "paper_pdf_or_html_checked": true,

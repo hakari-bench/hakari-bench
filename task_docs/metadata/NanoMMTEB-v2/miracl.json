@@ -9,7 +9,7 @@
     "split_name": "miracl",
     "language": "multilingual",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoMMTEB-v2/miracl.md",
+    "document_path": "task_docs/docs/NanoMMTEB-v2/miracl.md",
     "source_research": {
       "primary_source_type": "task_paper",
       "paper_pdf_or_html_checked": true

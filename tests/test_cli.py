@@ -173,16 +173,16 @@ def test_parse_args_accepts_task_docs_validation_command() -> None:
     args = parse_args(["validate-task-docs"])
 
     assert args.command == "validate-task-docs"
-    assert args.docs_root.as_posix() == "docs/benchmark_tasks"
+    assert args.docs_root.as_posix() == "task_docs/docs"
     assert args.metadata_root.as_posix() == "task_docs/metadata"
     assert args.paths == []
 
 
 def test_parse_args_accepts_task_docs_validation_legacy_alias() -> None:
-    args = parse_args(["validate-benchmark-docs", "docs/benchmark_tasks/NanoBEIR-en/NanoNQ.md"])
+    args = parse_args(["validate-benchmark-docs", "task_docs/docs/NanoBEIR-en/NanoNQ.md"])
 
     assert args.command == "validate-benchmark-docs"
-    assert [path.as_posix() for path in args.paths] == ["docs/benchmark_tasks/NanoBEIR-en/NanoNQ.md"]
+    assert [path.as_posix() for path in args.paths] == ["task_docs/docs/NanoBEIR-en/NanoNQ.md"]
 
 
 def test_parse_args_normalizes_local_model_alias() -> None:

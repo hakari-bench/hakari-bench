@@ -9,7 +9,7 @@
     "split_name": "fr",
     "language": "fr",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoMuPLeR/fr.md",
+    "document_path": "task_docs/docs/NanoMuPLeR/fr.md",
     "source_research": {
       "primary_source_type": "dataset_card",
       "paper_pdf_or_html_checked": true,

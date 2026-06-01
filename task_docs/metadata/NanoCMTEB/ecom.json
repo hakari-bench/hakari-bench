@@ -9,7 +9,7 @@
     "split_name": "ecom",
     "language": "multilingual",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoCMTEB/ecom.md",
+    "document_path": "task_docs/docs/NanoCMTEB/ecom.md",
     "source_research": {
       "primary_source_type": "task_paper_and_benchmark_paper",
       "paper_pdf_or_html_checked": true

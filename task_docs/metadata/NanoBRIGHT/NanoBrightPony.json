@@ -9,7 +9,7 @@
     "split_name": "NanoBrightPony",
     "language": "en",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoBRIGHT/NanoBrightPony.md",
+    "document_path": "task_docs/docs/NanoBRIGHT/NanoBrightPony.md",
     "source_research": {
       "primary_source_type": "benchmark_paper",
       "paper_pdf_or_html_checked": true

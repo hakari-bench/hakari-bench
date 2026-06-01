@@ -9,7 +9,7 @@
     "split_name": "NanoQuoraRetrieval",
     "language": "no",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/MNanoBEIR/NanoBEIR-no__NanoQuoraRetrieval.md",
+    "document_path": "task_docs/docs/MNanoBEIR/NanoBEIR-no__NanoQuoraRetrieval.md",
     "source_research": {
       "primary_source_type": "benchmark_paper",
       "paper_pdf_or_html_checked": true,

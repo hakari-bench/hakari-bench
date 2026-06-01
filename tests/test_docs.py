@@ -50,7 +50,7 @@ def test_nano_readme_template_documents_fill_requirements() -> None:
 
 
 def test_task_metadata_schema_parses_yaml_boolean_language() -> None:
-    metadata = load_task_metadata(Path("docs/benchmark_tasks/NanoMTEB-Scandinavian/nor_quad.md"))
+    metadata = load_task_metadata(Path("task_docs/docs/NanoMTEB-Scandinavian/nor_quad.md"))
 
     assert metadata.language == "no"
 
@@ -62,7 +62,7 @@ def test_task_metadata_prefers_external_json(tmp_path: Path) -> None:
     doc_path.parent.mkdir(parents=True)
     doc_path.write_text("# NanoMIRACL / ja\n", encoding="utf-8")
 
-    source_metadata = load_task_metadata(Path("docs/benchmark_tasks/NanoMIRACL/ja.md"))
+    source_metadata = load_task_metadata(Path("task_docs/docs/NanoMIRACL/ja.md"))
     updated_metadata = source_metadata.model_copy(update={"document_path": doc_path.as_posix()})
     document = TaskMetadataDocument(task_metadata=updated_metadata)
     metadata_path = task_metadata_json_path(

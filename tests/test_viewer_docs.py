@@ -13,7 +13,7 @@ from tests.test_viewer import _write_task_results
 
 
 def test_benchmark_docs_resolves_group_and_task_overviews(tmp_path: Path) -> None:
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     group_dir = docs_dir / "NanoMIRACL"
     group_dir.mkdir(parents=True)
     (group_dir / "index.md").write_text(
@@ -226,7 +226,7 @@ def test_benchmark_docs_renders_group_metadata_summary_from_task_docs_json(tmp_p
 
 
 def test_benchmark_docs_lists_group_docs_with_descriptions(tmp_path: Path) -> None:
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     miracl_dir = docs_dir / "NanoMIRACL"
     coir_dir = docs_dir / "NanoCoIR"
     empty_dir = docs_dir / "NoIndex"
@@ -246,7 +246,7 @@ def test_benchmark_docs_lists_group_docs_with_descriptions(tmp_path: Path) -> No
 
 
 def test_benchmark_docs_resolves_mnanobeir_task_key_documents(tmp_path: Path) -> None:
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     group_dir = docs_dir / "MNanoBEIR"
     group_dir.mkdir(parents=True)
     (group_dir / "NanoBEIR-ja__NanoMSMARCO.md").write_text(
@@ -266,7 +266,7 @@ def test_benchmark_docs_resolves_mnanobeir_task_key_documents(tmp_path: Path) ->
 
 
 def test_benchmark_docs_resolves_nanobeir_short_task_aliases(tmp_path: Path) -> None:
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     group_dir = docs_dir / "MNanoBEIR"
     group_dir.mkdir(parents=True)
     (group_dir / "NanoBEIR-ja__NanoArguAna.md").write_text(
@@ -339,7 +339,7 @@ def test_markdown_renderer_collapses_machine_readable_metadata_by_default() -> N
 
 
 def test_real_benchmark_task_summary_links_resolve_to_existing_docs() -> None:
-    docs_dir = Path("docs/benchmark_tasks")
+    docs_dir = Path("task_docs/docs")
     broken_links: list[str] = []
     link_count = 0
     for index_path in sorted(docs_dir.glob("*/index.md")):
@@ -366,7 +366,7 @@ def test_docs_endpoint_renders_markdown_page_and_rejects_missing_docs(tmp_path: 
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: NanoMIRACL\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMIRACL\n", encoding="utf-8")
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     group_dir = docs_dir / "NanoMIRACL"
     group_dir.mkdir(parents=True)
     (group_dir / "index.md").write_text("# NanoMIRACL\n\n## Overview\n\nGroup overview text.\n", encoding="utf-8")
@@ -394,7 +394,7 @@ def test_docs_index_endpoint_lists_benchmark_docs(tmp_path: Path) -> None:
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: NanoMIRACL\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMIRACL\n", encoding="utf-8")
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     group_dir = docs_dir / "NanoMIRACL"
     group_dir.mkdir(parents=True)
     (group_dir / "index.md").write_text("# NanoMIRACL\n\n## Overview\n\nMIRACL overview.\n", encoding="utf-8")
@@ -434,7 +434,7 @@ def test_docs_pages_render_breadcrumb_navigation(tmp_path: Path) -> None:
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: NanoCodeRAG\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoCodeRAG\n", encoding="utf-8")
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     group_dir = docs_dir / "NanoCodeRAG"
     group_dir.mkdir(parents=True)
     (group_dir / "index.md").write_text("# NanoCodeRAG\n\n## Overview\n\nGroup overview.\n", encoding="utf-8")
@@ -472,7 +472,7 @@ def test_docs_endpoint_renders_group_task_summary_links(tmp_path: Path) -> None:
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: NanoCoIR\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoCoIR\n", encoding="utf-8")
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     group_dir = docs_dir / "NanoCoIR"
     group_dir.mkdir(parents=True)
     (group_dir / "index.md").write_text(
@@ -514,7 +514,7 @@ benchmarks:
         encoding="utf-8",
     )
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMIRACL\n", encoding="utf-8")
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     group_dir = docs_dir / "NanoMIRACL"
     group_dir.mkdir(parents=True)
     (group_dir / "index.md").write_text("# NanoMIRACL\n\n## Overview\n\nGroup overview text.\n", encoding="utf-8")
@@ -574,7 +574,7 @@ def test_leaderboard_renders_nanobeir_task_doc_triggers_for_short_task_keys(tmp_
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: MNanoBEIR\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n", encoding="utf-8")
-    docs_dir = tmp_path / "docs" / "benchmark_tasks"
+    docs_dir = tmp_path / "task_docs" / "docs"
     group_dir = docs_dir / "MNanoBEIR"
     group_dir.mkdir(parents=True)
     (group_dir / "NanoBEIR-ja__NanoArguAna.md").write_text(

@@ -330,7 +330,7 @@ summary. Domain and language-specific diagnosis should still use `All`,
 ## References and Source Pointers
 
 - HAKARI Core configuration: `config/viewer/overall.yaml`.
-- HAKARI benchmark metadata and task docs: `docs/benchmark_tasks/`.
+- HAKARI benchmark metadata and task docs: `task_docs/`.
 - Dense-result warehouse used for the 2026-05-21 analysis:
   `output/results/hakari_bench.duckdb` in the evaluated local worktree.
 - Official MTEB repository checked on 2026-05-21:

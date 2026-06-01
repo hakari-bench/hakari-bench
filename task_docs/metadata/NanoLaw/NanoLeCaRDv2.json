@@ -9,7 +9,7 @@
     "split_name": "NanoLeCaRDv2",
     "language": "zh",
     "category": "natural_language",
-    "document_path": "docs/benchmark_tasks/NanoLaw/NanoLeCaRDv2.md",
+    "document_path": "task_docs/docs/NanoLaw/NanoLeCaRDv2.md",
     "source_research": {
       "primary_source_type": "task_paper_and_dataset_card",
       "paper_pdf_or_html_checked": true
