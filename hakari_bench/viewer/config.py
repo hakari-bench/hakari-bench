@@ -33,6 +33,7 @@ class BenchmarkConfig(BaseModel):
     excluded_tasks: list[str] = Field(default_factory=list)
     score_groups: list[ScoreGroupConfig] = Field(default_factory=list)
     language_filter_mode: LanguageFilterMode = "languages"
+    language_page_languages: list[str] = Field(default_factory=list)
     task_labels: dict[str, str] = Field(default_factory=dict)
 
     @property

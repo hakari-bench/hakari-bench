@@ -153,6 +153,9 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
     assert "NanoMIRACL" not in core_overall.benchmark_names
     assert "NanoCMTEB" in config.view_names
     assert "NanoCMTEB" in config.overall.benchmark_names
+    nano_cmteb = config.benchmark_for_view("NanoCMTEB")
+    assert nano_cmteb is not None
+    assert nano_cmteb.language_page_languages == ["zh"]
     nano_law = config.benchmark_for_view("NanoLaw")
     assert nano_law is not None
     assert "NanoAILACasedocs" in nano_law.excluded_tasks
@@ -163,6 +166,27 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
     nano_miracl = config.benchmark_for_view("NanoMIRACL")
     assert nano_miracl is not None
     assert nano_miracl.language_filter_mode == "primary_language"
+    language_page_languages = {
+        benchmark.name: benchmark.language_page_languages
+        for benchmark in config.benchmarks
+        if benchmark.name.startswith("NanoMTEB-") or benchmark.name in {"NanoJMTEB-v2", "NanoFaMTEB-v2", "NanoRuMTEB", "NanoVNMTEB"}
+    }
+    assert language_page_languages == {
+        "NanoMTEB-Dutch": ["nl"],
+        "NanoMTEB-French": ["fr"],
+        "NanoMTEB-German": ["de"],
+        "NanoJMTEB-v2": ["ja"],
+        "NanoMTEB-Korean": ["ko"],
+        "NanoFaMTEB-v2": ["fa"],
+        "NanoMTEB-Polish": ["pl"],
+        "NanoRuMTEB": ["ru"],
+        "NanoMTEB-Scandinavian": ["da", "no", "sv"],
+        "NanoMTEB-Spanish": ["es"],
+        "NanoMTEB-Thai": ["th"],
+        "NanoVNMTEB": ["vi"],
+        "NanoMTEB-v2": ["en"],
+        "NanoMTEB-Misc": [],
+    }
     nanomteb_misc = config.benchmark_for_view("NanoMTEB-Misc")
     assert nanomteb_misc is not None
     assert nanomteb_misc.task_labels == {
@@ -2722,6 +2746,90 @@ benchmarks:
     assert yo_result.selected_languages == ("yo",)
     assert yo_result.expected_tasks == 1
     assert yo_result.rows[0].mean_score == 90.0
+
+
+def test_language_specific_benchmark_pages_use_configured_language_page_languages(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = []
+    metadata_rows = []
+    for split_name, language, languages, score in [
+        ("dutch_only", "nl", ["nl"], 0.40),
+        ("dutch_cross", "multilingual", ["en", "nl"], 0.80),
+        ("zh_only", "zh", ["zh"], 0.50),
+        ("zh_cross", "multilingual", ["zh", "ja"], 0.70),
+        ("scandinavian_en", "multilingual", ["no", "en", "de"], 0.60),
+        ("scandinavian_sv", "sv", ["sv"], 0.90),
+    ]:
+        benchmark = "NanoMTEB-Dutch" if split_name.startswith("dutch") else "NanoCMTEB"
+        if split_name.startswith("scandinavian"):
+            benchmark = "NanoMTEB-Scandinavian"
+        task_key = f"{benchmark}::{split_name}"
+        rows.append(
+            (
+                "model/a",
+                benchmark,
+                f"hakari-bench/{benchmark}",
+                benchmark,
+                split_name,
+                split_name,
+                task_key,
+                score,
+                10,
+                12,
+                8192,
+            )
+        )
+        metadata_rows.append(
+            (
+                benchmark,
+                f"hakari-bench/{benchmark}",
+                benchmark,
+                split_name,
+                split_name,
+                task_key,
+                language,
+                languages,
+            )
+        )
+    _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: NanoCMTEB
+    language_page_languages: [zh]
+  - name: NanoMTEB-Dutch
+    language_page_languages: [nl]
+  - name: NanoMTEB-Scandinavian
+    language_page_languages: [da, "no", sv]
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoCMTEB\n  - NanoMTEB-Dutch\n  - NanoMTEB-Scandinavian\n",
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    dutch = service.get_leaderboard("NanoMTEB-Dutch")
+    dutch_en = service.get_leaderboard("NanoMTEB-Dutch", language_filters=("en",))
+    dutch_nl = service.get_leaderboard("NanoMTEB-Dutch", language_filters=("nl",))
+    cmteb = service.get_leaderboard("NanoCMTEB")
+    cmteb_ja = service.get_leaderboard("NanoCMTEB", language_filters=("ja",))
+    cmteb_zh = service.get_leaderboard("NanoCMTEB", language_filters=("zh",))
+    scandinavian = service.get_leaderboard("NanoMTEB-Scandinavian")
+
+    assert [(option.code, option.task_count) for option in dutch.available_languages] == [("nl", 2)]
+    assert dutch_en.selected_languages == ()
+    assert dutch_en.expected_tasks == 2
+    assert dutch_nl.selected_languages == ("nl",)
+    assert dutch_nl.expected_tasks == 2
+    assert [(option.code, option.task_count) for option in cmteb.available_languages] == [("zh", 2)]
+    assert cmteb_ja.selected_languages == ()
+    assert cmteb_zh.selected_languages == ("zh",)
+    assert cmteb_zh.expected_tasks == 2
+    assert [(option.code, option.task_count) for option in scandinavian.available_languages] == [("no", 1), ("sv", 1)]
 
 
 def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path: Path) -> None:

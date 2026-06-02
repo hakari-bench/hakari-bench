@@ -959,6 +959,12 @@ choices:
   English; their Language pages therefore use the primary language, such as
   `NanoBEIR-ja` -> `ja` or the NanoMIRACL split code, rather than expanding
   every code in `languages`.
+- Benchmarks may also set `language_page_languages` to constrain the Language
+  page options while still filtering matching task rows through their stored
+  metadata languages. Language-specific Nano sets use this to keep auxiliary
+  languages from cross-language tasks out of the page selector; for example,
+  `NanoMTEB-Dutch` exposes `nl` but not English, and `NanoCMTEB` exposes `zh`
+  but not Japanese.
 - Viewer benchmark groups put the compact curated Core set under
   Core benchmarks. Other broader multilingual/domain suites, including
   `NanoMIRACL` and `NanoLaw`, remain Domain-specific unless they are an official
@@ -1568,6 +1574,10 @@ MNanoBEIR and NanoMIRACL Language pages use
 This keeps language filters aligned with their dataset/language axis and avoids
 over-counting secondary language tags that appear inside multilingual source
 rows.
+
+Language-specific NanoMTEB family views and `NanoCMTEB` additionally set
+`language_page_languages` so Language pages represent the benchmark's intended
+language axis, not every auxiliary code detected inside mixed-language tasks.
 
 For UI rendering, long format is usually easier than SQL pivoting. Reuse
 `complete_rows` from the benchmark leaderboard query:
