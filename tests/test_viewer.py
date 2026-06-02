@@ -930,6 +930,62 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert response.text.index("model/b") < response.text.index("bm25") < response.text.index("model/a")
 
 
+def test_leaderboard_target_reranking_can_include_embedding_variants(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192, None, 768, None),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "BenchA::a1",
+                0.80,
+                10,
+                12,
+                8192,
+                "quantize_uint8_docs",
+                768,
+                "uint8",
+            ),
+        ],
+        include_embedding_variant_columns=True,
+    )
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            """
+            INSERT INTO viewer_task_results
+            SELECT * REPLACE ('reranking' AS score_target, 0.95 AS score)
+            FROM viewer_task_results
+            """
+        )
+    finally:
+        con.close()
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA", score_target="reranking", include_quantization_variants=True)
+
+    assert [row.model_name for row in result.rows] == ["model/a (768 dims)", "model/a (768 dims, uint8)"]
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&target=reranking&quantization=1")
+
+    assert response.status_code == 200
+    assert 'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
+
+
 def test_leaderboard_target_all_excludes_reranker_models(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(

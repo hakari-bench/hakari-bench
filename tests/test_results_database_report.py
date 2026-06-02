@@ -404,6 +404,27 @@ def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_pa
                 "corpus_ids": ["d3", "d4"],
                 "safeguard_policy": "RRF top-100 plus optional safeguard positive at rank 101",
             },
+            {
+                "name": "truncate:2",
+                "ranking_kind": "candidate_rerank",
+                "embedding_variant_name": "truncate:2",
+                "distance": "cosine",
+                "score_name": "truncate:2_cosine_bm25_top100_rerank",
+                "query_id": "q1",
+                "corpus_ids": ["d2", "d1"],
+                "safeguard_policy": "RRF top-100 plus optional safeguard positive at rank 101",
+                "safeguard_corpus_id": "d2",
+            },
+            {
+                "name": "truncate:2",
+                "ranking_kind": "candidate_rerank",
+                "embedding_variant_name": "truncate:2",
+                "distance": "cosine",
+                "score_name": "truncate:2_cosine_bm25_top100_rerank",
+                "query_id": "q2",
+                "corpus_ids": ["d4", "d3"],
+                "safeguard_policy": "RRF top-100 plus optional safeguard positive at rank 101",
+            },
         ],
     }
     task_path.write_text(
@@ -464,11 +485,16 @@ def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_pa
     assert metric_values[("all", "truncate:2", "en_truncate:2_cosine_acc@10")] == pytest.approx(1.0)
     assert metric_values[("reranking", None, "en_cosine_bm25_top100_rerank_acc@1")] == pytest.approx(0.5)
     assert metric_values[("reranking", None, "en_cosine_bm25_top100_rerank_acc@10")] == pytest.approx(1.0)
+    assert metric_values[("reranking", "truncate:2", "en_truncate:2_cosine_bm25_top100_rerank_acc@1")] == pytest.approx(1.0)
+    assert metric_values[("reranking", "truncate:2", "en_truncate:2_cosine_bm25_top100_rerank_acc@10")] == pytest.approx(1.0)
     assert metric_values[
         ("reranking_without_safeguard", None, "en_cosine_bm25_top100_rerank_acc@1")
     ] == pytest.approx(0.0)
     assert metric_values[
         ("reranking_without_safeguard", None, "en_cosine_bm25_top100_rerank_acc@10")
+    ] == pytest.approx(0.5)
+    assert metric_values[
+        ("reranking_without_safeguard", "truncate:2", "en_truncate:2_cosine_bm25_top100_rerank_acc@1")
     ] == pytest.approx(0.5)
 
 
@@ -2091,13 +2117,21 @@ def test_write_duckdb_materializes_task_score_targets(tmp_path: Path) -> None:
         candidate_source="dataset_candidate_subset",
         candidate_ranking="reranking_hybrid",
     )
+    variant_row = row.model_copy(
+        update={
+            "score": 0.40,
+            "embedding_variant_name": "truncate_dim_512_quantize_uint8_docs",
+            "embedding_dim": 512,
+            "quantization": "uint8",
+        }
+    )
     standings, borda_rows = report.compute_standings([row])
     db_path = tmp_path / "results.duckdb"
 
     report.write_duckdb(
         db_path,
         runs=[{"model_dir": "model", "model_name": "example/model"}],
-        rows=[row],
+        rows=[row, variant_row],
         metric_rows=[
             {
                 "model_dir": "model",
@@ -2120,6 +2154,30 @@ def test_write_duckdb_materializes_task_score_targets(tmp_path: Path) -> None:
                 "result_path": "result.json",
                 "score_target": "reranking_without_safeguard",
             },
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_truncate_dim_512_quantize_uint8_docs_cosine_reranking_hybrid_top100_rerank_ndcg@10",
+                "metric_value": 0.47,
+                "result_path": "result.json",
+                "score_target": "reranking",
+                "embedding_variant_name": "truncate_dim_512_quantize_uint8_docs",
+            },
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "NanoJMTEB-v2",
+                "dataset_id": "hakari-bench/NanoJMTEB-v2",
+                "task_name": "ja_cwir",
+                "metric_name": "ja_cwir_truncate_dim_512_quantize_uint8_docs_cosine_reranking_hybrid_top100_rerank_ndcg@10",
+                "metric_value": 0.44,
+                "result_path": "result.json",
+                "score_target": "reranking_without_safeguard",
+                "embedding_variant_name": "truncate_dim_512_quantize_uint8_docs",
+            },
         ],
         diagnostic_rows=[diagnostic_row],
         standings=standings,
@@ -2130,25 +2188,31 @@ def test_write_duckdb_materializes_task_score_targets(tmp_path: Path) -> None:
     try:
         assert con.execute(
             """
-            SELECT score_target, score, candidate_ranking, rerank_top_k, embedding_variant_name
-            FROM fact_task_score
-            ORDER BY score_target
+                SELECT score_target, score, candidate_ranking, rerank_top_k, embedding_variant_name
+                FROM fact_task_score
+                ORDER BY score_target, embedding_variant_name IS NOT NULL, embedding_variant_name
             """
         ).fetchall() == [
             ("all", 0.42, None, None, None),
+            ("all", 0.40, None, None, "truncate_dim_512_quantize_uint8_docs"),
             ("reranking", 0.50, "reranking_hybrid", 101, None),
+            ("reranking", 0.47, "reranking_hybrid", 100, "truncate_dim_512_quantize_uint8_docs"),
             ("reranking_without_safeguard", 0.45, "reranking_hybrid", 100, None),
+            ("reranking_without_safeguard", 0.44, "reranking_hybrid", 100, "truncate_dim_512_quantize_uint8_docs"),
         ]
         assert con.execute(
             """
-            SELECT score_target, score
+            SELECT score_target, score, embedding_variant_name
             FROM viewer_task_results
-            ORDER BY score_target
+            ORDER BY score_target, embedding_variant_name IS NOT NULL, embedding_variant_name
             """
         ).fetchall() == [
-            ("all", 0.42),
-            ("reranking", 0.50),
-            ("reranking_without_safeguard", 0.45),
+            ("all", 0.42, None),
+            ("all", 0.40, "truncate_dim_512_quantize_uint8_docs"),
+            ("reranking", 0.50, None),
+            ("reranking", 0.47, "truncate_dim_512_quantize_uint8_docs"),
+            ("reranking_without_safeguard", 0.45, None),
+            ("reranking_without_safeguard", 0.44, "truncate_dim_512_quantize_uint8_docs"),
         ]
         assert (
             con.execute(

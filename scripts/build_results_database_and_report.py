@@ -1907,13 +1907,26 @@ def _selected_metric_rankings(
             variant_key = embedding_variant_name or "base"
             if not retrieval_score_names or ranking.get("score_name") == retrieval_score_names.get(variant_key):
                 selected.append((ranking, "all", embedding_variant_name))
-        elif (
-            ranking_kind == "candidate_rerank"
-            and embedding_variant_name is None
-            and ranking.get("score_name") == _best_rerank_score_name(evaluation)
-        ):
-            selected.append((ranking, "reranking", None))
+        elif ranking_kind == "candidate_rerank":
+            score_name = ranking.get("score_name")
+            if not isinstance(score_name, str):
+                continue
+            if embedding_variant_name is None:
+                if score_name == _best_rerank_score_name(evaluation):
+                    selected.append((ranking, "reranking", None))
+                continue
+            variant_key = embedding_variant_name
+            retrieval_score_name = retrieval_score_names.get(variant_key)
+            if retrieval_score_name is not None and _is_rerank_score_name_for_retrieval(
+                score_name=score_name,
+                retrieval_score_name=retrieval_score_name,
+            ):
+                selected.append((ranking, "reranking", embedding_variant_name))
     return selected
+
+
+def _is_rerank_score_name_for_retrieval(*, score_name: str, retrieval_score_name: str) -> bool:
+    return score_name.startswith(f"{retrieval_score_name}_") and score_name.endswith("_rerank")
 
 
 def _best_rerank_score_name(evaluation: dict[str, Any]) -> str | None:
@@ -3831,6 +3844,71 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
             tr.split_name,
             tr.task_name,
             tr.task_key,
+            'reranking' AS score_target,
+            ml.metric_value AS score,
+            ml.metric_value * 100.0 AS score_100,
+            tr.aggregate_metric,
+            tr.result_path,
+            tr.experiment_fingerprint,
+            tr.active_parameters,
+            tr.total_parameters,
+            tr.max_seq_length,
+            tr.dtype,
+            tr.embedding_variant_name,
+            tr.embedding_dim,
+            tr.quantization,
+            tr.attn_implementation,
+            tr.query_prompt,
+            tr.document_prompt,
+            tr.query_prompt_name,
+            tr.document_prompt_name,
+            tr.query_encode_task,
+            tr.document_encode_task,
+            tr.trust_remote_code,
+            tr.late_interaction_query_length,
+            tr.late_interaction_document_length,
+            tr.late_interaction_query_prefix,
+            tr.late_interaction_document_prefix,
+            tr.late_interaction_query_expansion,
+            tr.late_interaction_attend_to_expansion_tokens,
+            'dataset_candidate_subset' AS candidate_source,
+            'reranking_hybrid' AS candidate_ranking,
+            try_cast(regexp_extract(ml.metric_name, '_top([0-9]+)_rerank_', 1) AS INTEGER) AS rerank_top_k,
+            'available' AS rerank_status,
+            tr.started_at_utc,
+            tr.finished_at_utc,
+            tr.evaluated_at_utc
+        FROM task_results AS tr
+        JOIN metrics_long AS ml
+          ON ml.model_dir = tr.model_dir
+         AND ml.model_name = tr.model_name
+         AND ml.benchmark = tr.benchmark
+         AND ml.dataset_id = tr.dataset_id
+         AND ml.task_name = tr.task_name
+         AND ml.result_path = tr.result_path
+         AND ml.embedding_variant_name IS NOT DISTINCT FROM tr.embedding_variant_name
+        JOIN dim_metric AS dm
+          ON dm.metric_name = ml.metric_name
+        WHERE tr.embedding_variant_name IS NOT NULL
+          AND ml.score_target = 'reranking'
+          AND dm.metric_family = nullif(lower(regexp_extract(COALESCE(tr.aggregate_metric, 'ndcg@10'), '([A-Za-z]+)@[0-9]+$', 1)), '')
+          AND dm.cutoff = try_cast(regexp_extract(COALESCE(tr.aggregate_metric, 'ndcg@10'), '@([0-9]+)$', 1) AS INTEGER)
+
+        UNION ALL
+
+        SELECT
+            tr.model_dir,
+            tr.model_name,
+            tr.model_revision,
+            tr.model_revision_requested,
+            tr.benchmark,
+            tr.dataset_id,
+            tr.dataset_revision,
+            tr.dataset_revision_requested,
+            tr.dataset_name,
+            tr.split_name,
+            tr.task_name,
+            tr.task_key,
             'reranking_without_safeguard' AS score_target,
             ml.metric_value AS score,
             ml.metric_value * 100.0 AS score_100,
@@ -3876,8 +3954,7 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
          AND ml.embedding_variant_name IS NOT DISTINCT FROM tr.embedding_variant_name
         JOIN dim_metric AS dm
           ON dm.metric_name = ml.metric_name
-        WHERE tr.embedding_variant_name IS NULL
-          AND ml.score_target = 'reranking_without_safeguard'
+        WHERE ml.score_target = 'reranking_without_safeguard'
           AND dm.metric_family = nullif(lower(regexp_extract(COALESCE(tr.aggregate_metric, 'ndcg@10'), '([A-Za-z]+)@[0-9]+$', 1)), '')
           AND dm.cutoff = try_cast(regexp_extract(COALESCE(tr.aggregate_metric, 'ndcg@10'), '@([0-9]+)$', 1) AS INTEGER)
         ) AS scores

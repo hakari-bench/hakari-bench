@@ -478,7 +478,7 @@ class TaskResultsRepository:
                 metadata_columns=metadata_columns,
             )
             variant_filter = ""
-            if "embedding_variant_name" in columns and (score_target != "all" or not include_embedding_variants):
+            if "embedding_variant_name" in columns and not include_embedding_variants:
                 variant_filter = "AND tr.embedding_variant_name IS NULL"
             elif "embedding_variant_name" in columns and variant_display_flags is not None:
                 variant_filter = _variant_filter_sql(columns, variant_display_flags)

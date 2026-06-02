@@ -271,6 +271,45 @@ def test_task_results_repository_can_fetch_embedding_variant_rows_when_requested
     ]
 
 
+def test_task_results_repository_can_fetch_reranking_embedding_variant_rows_when_requested(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_viewer_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "a1", "a1", 0.90, 10, 12, 8192, None, 768, None),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.80,
+                10,
+                12,
+                8192,
+                "quantize_uint8_docs",
+                768,
+                "uint8",
+            ),
+        ],
+        rows_override_score_targets=["reranking", "reranking"],
+    )
+
+    records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=True,
+        score_target="reranking",
+        variant_display_flags=VariantDisplayFlags(quantization=True),
+    )
+
+    assert [(record.embedding_variant_name, record.quantization) for record in records] == [
+        (None, None),
+        ("quantize_uint8_docs", "uint8"),
+    ]
+
+
 def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_viewer_task_results(
@@ -757,6 +796,7 @@ def _write_viewer_task_results(
     db_path: Path,
     rows: list[tuple],
     *,
+    rows_override_score_targets: list[str] | None = None,
     rows_override_languages: list[tuple[str, list[str]]] | None = None,
     rows_override_text_lengths: list[tuple[float | None, float | None]] | None = None,
     schema_version: str = CURRENT_DUCKDB_SCHEMA_VERSION,
@@ -825,6 +865,8 @@ def _write_viewer_task_results(
                 query_mean_chars=query_mean_chars,
                 document_mean_chars=document_mean_chars,
             )
+            if rows_override_score_targets is not None:
+                normalized_row = (*normalized_row[:7], rows_override_score_targets[index], *normalized_row[8:])
             if not include_text_length_columns:
                 normalized_row = normalized_row[:-2]
             if include_model_type_column:

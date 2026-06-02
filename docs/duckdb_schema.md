@@ -216,7 +216,7 @@ The web viewer exposes four user-facing query surfaces over the DuckDB file:
 | UI surface | source tables | semantics |
 | --- | --- | --- |
 | Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
-| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores, `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`, and `Reranking without safeguard` removes the optional rank-101 safeguard positive before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking ranks base rows. |
+| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores, `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`, and `Reranking without safeguard` removes the optional rank-101 safeguard positive before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
 | Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for quantization-first comparisons; rescore and `truncate_dim` variants are hidden unless explicitly enabled in the panel. |
 | Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
 | Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
@@ -451,13 +451,15 @@ same family and cutoff while allowing the candidate subset depth to vary.
 default full-corpus score and candidate-reranking score in the same row shape
 with a `score_target` discriminator instead of adding one score column per
 target. `score_target = 'all'` rows are copied from `task_results.score`.
-`score_target = 'reranking'` rows are copied from `task_diagnostics.rerank_score`
-when the diagnostic row is available for `reranking_hybrid` reranking.
-`score_target = 'reranking_without_safeguard'` rows are derived during DuckDB
-creation from `artifacts.top_rankings` by removing each query's optional
-rank-101 safeguard positive before recomputing metrics. Reranking rows are
-currently base-only because diagnostics do not yet carry embedding-variant
-identity. The viewer also adds the BM25 `score_target = 'all'` rows as the
+Base `score_target = 'reranking'` rows are copied from
+`task_diagnostics.rerank_score` when the diagnostic row is available for
+`reranking_hybrid` reranking. Embedding-variant reranking rows are derived from
+`artifacts.top_rankings` `candidate_rerank` rows whose score name matches the
+variant's selected retrieval score. `score_target =
+'reranking_without_safeguard'` rows are derived during DuckDB creation from
+`artifacts.top_rankings` by removing each query's optional rank-101 safeguard
+positive before recomputing metrics for both base rows and available embedding
+variants. The viewer also adds the BM25 `score_target = 'all'` rows as the
 candidate-order baseline in `Reranking` displays, unless the DuckDB build has
 already materialized BM25 rows for `score_target = 'reranking'`.
 
@@ -485,7 +487,7 @@ already materialized BM25 rows for `score_target = 'reranking'`.
 | `total_parameters` | `BIGINT` | Total parameter count. |
 | `max_seq_length` | `INTEGER` | Model maximum sequence length. |
 | `dtype` | `VARCHAR` | Evaluation dtype. |
-| `embedding_variant_name` | `VARCHAR` | Embedding variant name. Reranking rows are currently `NULL`. |
+| `embedding_variant_name` | `VARCHAR` | Embedding variant name, or `NULL` for base rows. |
 | `embedding_dim` | `INTEGER` | Embedding dimension. |
 | `quantization` | `VARCHAR` | Quantization precision. |
 | `attn_implementation` | `VARCHAR` | Attention implementation copied from `task_results`. |
@@ -930,9 +932,9 @@ choices:
   misleading for leaderboard comparison.
 - Exclude `score IS NULL` rows because they cannot participate in ranking.
 - Read only benchmarks requested by the selected view.
-- Read only base rows when variants are not requested; reranking also reads
-  base rows.
-- When variants are requested, push the selected display categories into SQL.
+- Read only base rows when variants are not requested.
+- When variants are requested, including for reranking targets, push the
+  selected display categories into SQL.
   Base rows are always read, but quantization-only, truncate-only, rescore-only,
   and other-variant views avoid fetching unrelated variant rows before Python
   ranking. Cross variants such as truncate plus quantization are fetched when
