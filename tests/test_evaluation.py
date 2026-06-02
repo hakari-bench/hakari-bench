@@ -1835,6 +1835,88 @@ def test_evaluate_late_interaction_task_truncates_variants_after_single_encode()
     assert truncate_eval["embedding_metadata"]["representation_type"] == "late_interaction"
     assert truncate_eval["embedding_metadata"]["dimensions"] == {"dim": 1}
     assert "ToyData_test_late_interaction_exact_maxsim_truncate_dim_1_ndcg@10" in truncate_eval["metrics"]
+    assert truncate_eval["reranking_evaluation"]["status"] == "available"
+    assert (
+        truncate_eval["reranking_evaluation"]["best_score_name"]
+        == "late_interaction_exact_maxsim_truncate_dim_1_reranking_hybrid_top2_rerank"
+    )
+
+
+def test_evaluate_late_interaction_task_records_candidate_reranking_metrics() -> None:
+    result = evaluate_late_interaction_task(
+        model=FakeLateInteractionModel(),
+        dataset=_toy_dataset(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        exact_doc_batch_size=2,
+        exact_query_batch_size=2,
+        device="cpu",
+        aggregate_metric="ndcg@10",
+        rerank_top_n=1,
+        candidate_ranking_name="bm25",
+    )
+
+    assert result.metrics["ToyData_test_late_interaction_exact_maxsim_ndcg@10"] == pytest.approx(1.0)
+    assert result.rerank_aggregate_metric_value == pytest.approx(0.5)
+    assert result.reranking_evaluations[0]["status"] == "available"
+    assert result.reranking_evaluations[0]["rerank_top_n"] == 1
+    assert result.reranking_evaluations[0]["aggregate_metric_value"] == pytest.approx(0.5)
+    assert result.reranking_evaluations[0]["best_score_name"] == "late_interaction_exact_maxsim_bm25_top1_rerank"
+    assert result.reranking_evaluations[0]["candidate_coverage"] == {
+        "top_k": 1,
+        "query_count": 2,
+        "query_with_relevance_count": 2,
+        "covered_query_count": 1,
+        "query_coverage": 0.5,
+        "relevant_count": 2,
+        "covered_relevant_count": 1,
+        "relevant_coverage": 0.5,
+    }
+    assert (
+        result.rerank_metrics["ToyData_test_late_interaction_exact_maxsim_bm25_top1_rerank_ndcg@10"]
+        == pytest.approx(0.5)
+    )
+    assert (
+        result.rerank_metrics["ToyData_test_late_interaction_exact_maxsim_bm25_top1_rerank_acc@100"]
+        == pytest.approx(0.5)
+    )
+    assert result.embedding_evaluations[0]["reranking_evaluation"]["status"] == "available"
+    assert any(ranking["ranking_kind"] == "candidate_rerank" for ranking in result.top_rankings)
+
+
+def test_evaluate_late_interaction_task_skips_candidate_reranking_without_candidates() -> None:
+    result = evaluate_late_interaction_task(
+        model=FakeLateInteractionModel(),
+        dataset=_toy_dataset_without_candidates(),
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        exact_doc_batch_size=2,
+        exact_query_batch_size=2,
+        device="cpu",
+        aggregate_metric="ndcg@10",
+        rerank_top_n=100,
+        candidate_ranking_name="bm25",
+    )
+
+    assert result.rerank_metrics == {}
+    assert result.rerank_aggregate_metric_value is None
+    assert result.reranking_evaluations == [
+        {
+            "name": "bm25_top_100",
+            "source": "dataset_candidate_subset",
+            "status": "skipped",
+            "reason": "candidate_subset_unavailable",
+            "rerank_top_n": 100,
+        }
+    ]
 
 
 def test_evaluate_dense_task_records_bm25_top_n_reranking_metrics() -> None:
@@ -2193,6 +2275,71 @@ def test_run_or_load_task_records_embedding_model_reranking_evaluations(tmp_path
     assert run_summary_payload["splits"][0]["rerank_aggregate_metric_value"] == pytest.approx(0.5)
     assert run_summary_payload["splits"][0]["reranking_evaluations"][0]["status"] == "available"
     assert "metrics" not in run_summary_payload["splits"][0]["reranking_evaluations"][0]["distance_evaluations"][0]
+
+
+def test_run_or_load_task_records_late_interaction_reranking_evaluations(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/colbert-model",
+        model_type="late-interaction",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        query_task=None,
+        corpus_task=None,
+        truncate_dim=None,
+        embedding_variants=[],
+        candidate_subset_name="bm25",
+        rerank_top_n=1,
+        aggregate_metric="ndcg@10",
+        late_interaction_query_length=None,
+        late_interaction_document_length=None,
+        late_interaction_query_prefix=None,
+        late_interaction_document_prefix=None,
+        late_interaction_attend_to_expansion_tokens=None,
+        late_interaction_exact_doc_batch_size=2,
+        late_interaction_exact_query_batch_size=2,
+        device="cpu",
+        override=False,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeLateInteractionModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"id": "hotchpotch/colbert-model", "method": "late-interaction"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    evaluation = result.payload["evaluation"]
+    assert evaluation["aggregate_metric_value"] == pytest.approx(1.0)
+    assert evaluation["rerank_aggregate_metric_value"] == pytest.approx(0.5)
+    assert (
+        evaluation["reranking_evaluations"][0]["best_score_name"]
+        == "late_interaction_exact_maxsim_bm25_top1_rerank"
+    )
+    assert (
+        result.payload["rerank_metrics"]["ToyData_test_late_interaction_exact_maxsim_bm25_top1_rerank_ndcg@10"]
+        == pytest.approx(0.5)
+    )
+    assert result.payload["config"]["candidate_ranking"] == "bm25"
+    assert result.payload["config"]["rerank_top_k"] == 1
+    assert result.payload["evaluation"]["timing"]["reranking_score_and_topk_seconds"] >= 0.0
+
+    run_summary_payload = build_run_summary_payload(
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"id": "hotchpotch/colbert-model", "method": "late-interaction"},
+        results=[result],
+    )
+
+    assert run_summary_payload["totals"]["rerank_aggregate_metric_mean"] == pytest.approx(0.5)
+    assert run_summary_payload["splits"][0]["reranking_evaluations"][0]["status"] == "available"
 
 
 def test_run_or_load_task_defaults_to_all_available_rerank_candidates(tmp_path: Path) -> None:

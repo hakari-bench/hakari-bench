@@ -557,6 +557,10 @@ def test_parse_args_accepts_late_interaction_options() -> None:
             "16",
             "--late-interaction-exact-query-batch-size",
             "4",
+            "--candidate-ranking",
+            "reranking_hybrid",
+            "--rerank-top-k",
+            "101",
             "--embedding-variant",
             "truncate:96,64",
         ]
@@ -570,6 +574,8 @@ def test_parse_args_accepts_late_interaction_options() -> None:
     assert args.late_interaction_attend_to_expansion_tokens is True
     assert args.late_interaction_exact_doc_batch_size == 16
     assert args.late_interaction_exact_query_batch_size == 4
+    assert args.candidate_subset_name == "reranking_hybrid"
+    assert args.rerank_top_n == 101
     assert args.embedding_variants == [
         _pipeline_variant("truncate_dim_96", _truncate_step(96)),
         _pipeline_variant("truncate_dim_64", _truncate_step(64)),

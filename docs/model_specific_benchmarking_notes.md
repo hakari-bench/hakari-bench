@@ -561,6 +561,10 @@ uv run --group pylate hakari-bench evaluate late-interaction \
   --late-interaction-document-length 519
 ```
 
+Unless overridden, late-interaction runs also evaluate the default
+`reranking_hybrid` candidate subset with exact MaxSim and record those scores
+for the viewer's `Target: Reranking` leaderboard.
+
 Compatibility notes:
 
 - This repository keeps PyLate behind the `pylate` dependency group, so use

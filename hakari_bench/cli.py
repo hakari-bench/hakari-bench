@@ -92,6 +92,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_dataset_args(late_interaction, action="evaluate")
     _add_prompt_args(late_interaction)
     _add_late_interaction_args(late_interaction)
+    _add_candidate_args(late_interaction)
     _add_output_args(late_interaction, results_default="output/results")
 
     bm25 = evaluate_methods.add_parser("bm25", help="Evaluate BM25 rankings.")

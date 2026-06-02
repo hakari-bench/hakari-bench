@@ -276,6 +276,14 @@ specified sparse variants.
 Use `evaluate late-interaction` for PyLate ColBERT models. Check
 model-specific query/document prefixes, sequence lengths, `--trust-remote-code`,
 and `--late-interaction-attend-to-expansion-tokens` before running.
+Late-interaction evaluation now records two standard targets when a candidate
+ranking is available: full-corpus exact MaxSim retrieval for `Target: All`, and
+candidate-set exact MaxSim reranking for `Target: Reranking`. The candidate
+reranking path uses the same `--candidate-ranking` and `--rerank-top-k` options
+as dense, sparse, and CrossEncoder reranker runs. Keep the default
+`--candidate-ranking reranking_hybrid` and default all-candidate rerank depth for
+leaderboard runs unless a benchmark note explicitly calls for another candidate
+set.
 
 For `jinaai/jina-colbert-v2`, the documented PyLate initialization uses
 `query_prefix="[QueryMarker]"`, `document_prefix="[DocumentMarker]"`,

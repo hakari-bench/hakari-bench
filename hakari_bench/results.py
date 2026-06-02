@@ -33,6 +33,8 @@ TIMING_KEYS = [
     "corpus_embedding_seconds",
     "score_and_topk_seconds",
     "metric_compute_seconds",
+    "reranking_score_and_topk_seconds",
+    "reranking_metric_compute_seconds",
     "embedding_variant_score_and_topk_seconds",
     "embedding_variant_metric_compute_seconds",
     "pure_compute_seconds",
@@ -191,6 +193,8 @@ def run_or_load_task(
             device=args.device,
             aggregate_metric=args.aggregate_metric,
             embedding_variants=getattr(args, "embedding_variants", []),
+            rerank_top_n=args.rerank_top_n,
+            candidate_ranking_name=getattr(args, "candidate_subset_name", None),
         )
     else:
         evaluation = evaluate_dense_task(

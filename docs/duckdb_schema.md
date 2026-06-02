@@ -1008,6 +1008,13 @@ rows by
 embedding_variant_name)`. This avoids repeated metadata joins and lets the
 viewer switch `Target: All` / `Target: Reranking` without joining diagnostics
 on the hot path.
+Late-interaction runs are expected to contribute both `all` and `reranking`
+targets when the selected dataset candidate ranking is available: `all` stores
+full-corpus exact MaxSim retrieval, while `reranking` stores candidate-set exact
+MaxSim reranking from `evaluation.reranking_evaluations`, `rerank_metrics`, and
+candidate rerank rows in the top-rankings artifact. If the candidate subset is
+unavailable, the result should record a skipped reranking evaluation and no
+`reranking` task-score row.
 Because `viewer_task_results` is already physically ordered, the viewer skips
 the query-time `ORDER BY` when reading it.
 If an older database has these length columns only in `dataset_metadata`, the

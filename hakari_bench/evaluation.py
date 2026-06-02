@@ -525,6 +525,9 @@ def evaluate_late_interaction_task(
     exact_query_batch_size: int = 8,
     aggregate_metric: str = "ndcg@10",
     embedding_variants: list[dict[str, Any]] | None = None,
+    rerank_top_n: int | None = DEFAULT_RERANK_TOP_K,
+    candidate_ranking_name: str | None = DEFAULT_CANDIDATE_RANKING,
+    metric_names: Sequence[str] | None = None,
 ) -> TaskEvaluation:
     if exact_doc_batch_size <= 0:
         raise ValueError("Late-interaction exact doc batch size must be positive.")
@@ -595,9 +598,31 @@ def evaluate_late_interaction_task(
         qrels=dataset.qrels,
         evaluator_name=dataset.evaluator_name,
         score_name=score_name,
+        metric_names=metric_names,
     )
     metric_seconds = time.perf_counter() - metric_start
     aggregate_metric_value = _aggregate_metric_value_for(metrics, aggregate_metric)
+    reranking_scoring = _score_late_interaction_candidate_reranking(
+        query_ids=query_ids,
+        corpus_ids=corpus_ids,
+        qrels=dataset.qrels,
+        evaluator_name=dataset.evaluator_name,
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        score_name=score_name,
+        variant_name=None,
+        aggregate_metric=aggregate_metric,
+        candidates=dataset.candidates,
+        rerank_top_n=rerank_top_n,
+        candidate_ranking_name=candidate_ranking_name,
+        metric_names=metric_names,
+        exact_doc_batch_size=exact_doc_batch_size,
+        exact_query_batch_size=exact_query_batch_size,
+        device=device,
+    )
+    reranking_evaluation = cast(dict[str, Any], reranking_scoring["reranking_evaluation"])
+    rerank_score_seconds = float(reranking_scoring["score_seconds"])
+    rerank_metric_seconds = float(reranking_scoring["metric_seconds"])
 
     base_timing = {
         "query_embedding_seconds": float(query_seconds),
@@ -633,6 +658,7 @@ def evaluate_late_interaction_task(
             "best_score": aggregate_metric_value,
             "best_distance": distance_name,
             "best_score_name": score_name,
+            "reranking_evaluation": reranking_evaluation,
         },
         timing=base_timing,
         aggregate_metric=aggregate_metric,
@@ -649,9 +675,12 @@ def evaluate_late_interaction_task(
             rankings=rankings,
         )
     ]
+    top_rankings.extend(cast(list[dict[str, Any]], reranking_scoring["top_rankings"]))
 
     variant_score_seconds = 0.0
     variant_metric_seconds = 0.0
+    variant_rerank_score_seconds = 0.0
+    variant_rerank_metric_seconds = 0.0
     for variant in embedding_variants or []:
         variant_name = str(variant["name"])
         noop_truncate_dim = _noop_truncate_variant_dim(
@@ -689,10 +718,31 @@ def evaluate_late_interaction_task(
             qrels=dataset.qrels,
             evaluator_name=dataset.evaluator_name,
             score_name=variant_score_name,
+            metric_names=metric_names,
         )
         variant_metric_elapsed = time.perf_counter() - variant_metric_start
         variant_metric_seconds += variant_metric_elapsed
         variant_aggregate_metric_value = _aggregate_metric_value_for(variant_metrics, aggregate_metric)
+        variant_reranking_scoring = _score_late_interaction_candidate_reranking(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            qrels=dataset.qrels,
+            evaluator_name=dataset.evaluator_name,
+            query_embeddings=variant_query_embeddings,
+            corpus_embeddings=variant_corpus_embeddings,
+            score_name=variant_score_name,
+            variant_name=variant_name,
+            aggregate_metric=aggregate_metric,
+            candidates=dataset.candidates,
+            rerank_top_n=rerank_top_n,
+            candidate_ranking_name=candidate_ranking_name,
+            metric_names=metric_names,
+            exact_doc_batch_size=exact_doc_batch_size,
+            exact_query_batch_size=exact_query_batch_size,
+            device=device,
+        )
+        variant_rerank_score_seconds += float(variant_reranking_scoring["score_seconds"])
+        variant_rerank_metric_seconds += float(variant_reranking_scoring["metric_seconds"])
         variant_evaluation = _embedding_evaluation_payload(
             name=variant_name,
             transform=dict(variant["transform"]),
@@ -718,6 +768,7 @@ def evaluate_late_interaction_task(
                 "best_score": variant_aggregate_metric_value,
                 "best_distance": distance_name,
                 "best_score_name": variant_score_name,
+                "reranking_evaluation": variant_reranking_scoring["reranking_evaluation"],
             },
             timing={
                 "query_embedding_seconds": 0.0,
@@ -746,6 +797,7 @@ def evaluate_late_interaction_task(
                 rankings=variant_rankings,
             )
         )
+        top_rankings.extend(cast(list[dict[str, Any]], variant_reranking_scoring["top_rankings"]))
 
     return TaskEvaluation(
         metrics=metrics,
@@ -754,6 +806,8 @@ def evaluate_late_interaction_task(
             "corpus_embedding_seconds": float(corpus_seconds),
             "score_and_topk_seconds": float(score_seconds),
             "metric_compute_seconds": float(metric_seconds),
+            "reranking_score_and_topk_seconds": float(rerank_score_seconds + variant_rerank_score_seconds),
+            "reranking_metric_compute_seconds": float(rerank_metric_seconds + variant_rerank_metric_seconds),
             "embedding_variant_score_and_topk_seconds": float(variant_score_seconds),
             "embedding_variant_metric_compute_seconds": float(variant_metric_seconds),
             "pure_compute_seconds": float(
@@ -761,8 +815,12 @@ def evaluate_late_interaction_task(
                 + corpus_seconds
                 + score_seconds
                 + metric_seconds
+                + rerank_score_seconds
+                + rerank_metric_seconds
                 + variant_score_seconds
                 + variant_metric_seconds
+                + variant_rerank_score_seconds
+                + variant_rerank_metric_seconds
             ),
         },
         embedding_conversion={
@@ -778,6 +836,9 @@ def evaluate_late_interaction_task(
             ),
         },
         embedding_evaluations=embedding_evaluations,
+        rerank_metrics=cast(dict[str, float], reranking_scoring["rerank_metrics"]),
+        reranking_evaluations=[reranking_evaluation],
+        rerank_aggregate_metric_value=cast(float | None, reranking_scoring["rerank_aggregate_metric_value"]),
         top_rankings=top_rankings,
     )
 
@@ -1539,6 +1600,171 @@ def _rank_candidate_subset_by_similarity(
         score_name=score_name,
         rerank_top_n=rerank_top_n,
         rank_by_similarity=_rank_by_similarity,
+    )
+
+
+def _score_late_interaction_candidate_reranking(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    qrels: dict[str, set[str]],
+    evaluator_name: str,
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    score_name: str,
+    variant_name: str | None,
+    aggregate_metric: str,
+    candidates: dict[str, list[str]] | None,
+    rerank_top_n: int | None,
+    candidate_ranking_name: str | None,
+    metric_names: Sequence[str] | None,
+    exact_doc_batch_size: int,
+    exact_query_batch_size: int,
+    device: str | None,
+) -> dict[str, Any]:
+    if candidates is None:
+        skipped = _candidate_reranking_evaluation(
+            [],
+            rerank_top_n=rerank_top_n,
+            aggregate_metric=aggregate_metric,
+            candidate_ranking_name=candidate_ranking_name,
+        )
+        return {
+            "rerank_metrics": {},
+            "rerank_aggregate_metric_value": None,
+            "reranking_evaluation": skipped,
+            "top_rankings": [],
+            "score_seconds": 0.0,
+            "metric_seconds": 0.0,
+        }
+
+    effective_rerank_top_n = _effective_rerank_top_n(candidates, rerank_top_n)
+    candidate_label = _candidate_ranking_score_label(candidate_ranking_name)
+    candidate_coverage = (
+        candidate_coverage_for_qrels(qrels=qrels, candidates=candidates, top_k=effective_rerank_top_n)
+        if effective_rerank_top_n is not None
+        else None
+    )
+    safeguard_metadata = (
+        candidate_safeguard_metadata(
+            candidates=candidates,
+            qrels=qrels,
+            rrf_top_k=RERANKING_HYBRID_RRF_TOP_K,
+        )
+        if candidate_label == "reranking_hybrid"
+        else None
+    )
+    rerank_score_name = f"{score_name}_{candidate_label}_top{effective_rerank_top_n}_rerank"
+    score_start = time.perf_counter()
+    rerank_rankings = _rank_candidate_subset_by_late_interaction_exact_maxsim(
+        query_ids=query_ids,
+        corpus_ids=corpus_ids,
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        candidates=candidates,
+        rerank_top_n=rerank_top_n,
+        exact_doc_batch_size=exact_doc_batch_size,
+        exact_query_batch_size=exact_query_batch_size,
+        device=device,
+    )
+    score_seconds = time.perf_counter() - score_start
+
+    metric_start = time.perf_counter()
+    rerank_metrics = compute_ir_metrics(
+        rankings=rerank_rankings,
+        qrels=qrels,
+        evaluator_name=evaluator_name,
+        score_name=rerank_score_name,
+        metric_names=metric_names,
+    )
+    metric_seconds = time.perf_counter() - metric_start
+    rerank_aggregate_metric_value = _aggregate_metric_value_for(rerank_metrics, aggregate_metric)
+    distance_evaluation = {
+        "distance": "exact_maxsim",
+        "score_name": rerank_score_name,
+        "aggregate_metric": aggregate_metric,
+        "aggregate_metric_value": rerank_aggregate_metric_value,
+        "metrics": rerank_metrics,
+        "timing": {
+            "score_and_topk_seconds": float(score_seconds),
+            "metric_compute_seconds": float(metric_seconds),
+            "pure_compute_seconds": float(score_seconds + metric_seconds),
+        },
+    }
+    reranking_evaluation = _candidate_reranking_evaluation(
+        [distance_evaluation],
+        rerank_top_n=effective_rerank_top_n,
+        aggregate_metric=aggregate_metric,
+        candidate_coverage=candidate_coverage,
+        candidate_ranking_name=candidate_ranking_name,
+        safeguard=safeguard_metadata,
+    )
+    top_rankings = [
+        top_ranking_payload(
+            name=variant_name or "base",
+            ranking_kind="candidate_rerank",
+            embedding_variant_name=variant_name,
+            distance="exact_maxsim",
+            score_name=rerank_score_name,
+            rankings=rerank_rankings,
+            safeguard_corpus_ids_by_query=(
+                cast(dict[str, str], safeguard_metadata["safeguard_corpus_ids_by_query"])
+                if safeguard_metadata is not None
+                else None
+            ),
+        )
+    ]
+    return {
+        "rerank_metrics": rerank_metrics,
+        "rerank_aggregate_metric_value": rerank_aggregate_metric_value,
+        "reranking_evaluation": reranking_evaluation,
+        "top_rankings": top_rankings,
+        "score_seconds": float(score_seconds),
+        "metric_seconds": float(metric_seconds),
+    }
+
+
+def _rank_candidate_subset_by_late_interaction_exact_maxsim(
+    *,
+    query_ids: list[str],
+    corpus_ids: list[str],
+    query_embeddings: Any,
+    corpus_embeddings: Any,
+    candidates: dict[str, list[str]],
+    rerank_top_n: int | None,
+    exact_doc_batch_size: int,
+    exact_query_batch_size: int,
+    device: str | None,
+) -> dict[str, list[str]]:
+    def rank_by_late_interaction_exact_maxsim(
+        *,
+        query_ids: list[str],
+        corpus_ids: list[str],
+        query_embeddings: Any,
+        corpus_embeddings: Any,
+        score_name: str,
+    ) -> dict[str, list[str]]:
+        del score_name
+        return _rank_late_interaction_exact_maxsim(
+            query_ids=query_ids,
+            corpus_ids=corpus_ids,
+            query_embeddings=query_embeddings,
+            corpus_embeddings=corpus_embeddings,
+            top_k=len(corpus_ids),
+            doc_batch_size=exact_doc_batch_size,
+            query_batch_size=exact_query_batch_size,
+            device=device,
+        )
+
+    return rank_candidate_subset_by_similarity(
+        query_ids=query_ids,
+        corpus_ids=corpus_ids,
+        query_embeddings=query_embeddings,
+        corpus_embeddings=corpus_embeddings,
+        candidates=candidates,
+        score_name="exact_maxsim",
+        rerank_top_n=rerank_top_n,
+        rank_by_similarity=rank_by_late_interaction_exact_maxsim,
     )
 
 

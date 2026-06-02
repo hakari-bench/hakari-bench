@@ -1305,6 +1305,8 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
                     "document_prompt_name": None,
                     "query_encode_task": None,
                     "document_encode_task": None,
+                    "candidate_ranking": "reranking_hybrid",
+                    "rerank_top_k": 100,
                 },
                 "environment": {
                     "package_versions": {
@@ -1328,6 +1330,30 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
                 "evaluation": {
                     "aggregate_metric": "ndcg@10",
                     "aggregate_metric_value": 0.42,
+                    "rerank_aggregate_metric_value": 0.50,
+                    "reranking_evaluations": [
+                        {
+                            "name": "reranking_hybrid_top_100",
+                            "source": "dataset_candidate_subset",
+                            "status": "available",
+                            "rerank_top_n": 100,
+                            "aggregate_metric": "ndcg@10",
+                            "aggregate_metric_value": 0.50,
+                            "best_score": 0.50,
+                            "best_distance": "exact_maxsim",
+                            "best_score_name": "late_interaction_exact_maxsim_reranking_hybrid_top100_rerank",
+                            "candidate_coverage": {
+                                "top_k": 100,
+                                "query_count": 1,
+                                "query_with_relevance_count": 1,
+                                "covered_query_count": 1,
+                                "query_coverage": 1.0,
+                                "relevant_count": 1,
+                                "covered_relevant_count": 1,
+                                "relevant_coverage": 1.0,
+                            },
+                        }
+                    ],
                     "late_interaction": {
                         "query_length": 48,
                         "document_length": 512,
@@ -1338,6 +1364,9 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
                     "evaluated_at_utc": "2026-04-29T00:00:00+00:00",
                 },
                 "metrics": {"ja_cwir_ndcg@10": 0.42},
+                "rerank_metrics": {
+                    "ja_cwir_late_interaction_exact_maxsim_reranking_hybrid_top100_rerank_ndcg@10": 0.50,
+                },
                 "artifacts": {
                     "top_rankings": {
                         "schema_version": 1,
@@ -1404,9 +1433,13 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert rows[0].late_interaction_document_prefix == "[D] "
     assert rows[0].late_interaction_query_expansion is False
     assert rows[0].late_interaction_attend_to_expansion_tokens is False
-    assert len(metric_rows) == 1
+    assert len(metric_rows) == 2
     assert len(diagnostic_rows) == 1
     assert diagnostic_rows[0].base_score == 0.42
+    assert diagnostic_rows[0].rerank_score == 0.50
+    assert diagnostic_rows[0].rerank_status == "available"
+    assert diagnostic_rows[0].rerank_top_k == 100
+    assert diagnostic_rows[0].candidate_ranking == "reranking_hybrid"
     assert len(dataset_metadata_rows) == 1
     assert dataset_metadata_rows[0].language == "ja"
     assert dataset_metadata_rows[0].languages == ["ja"]
