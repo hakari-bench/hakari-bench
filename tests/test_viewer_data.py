@@ -178,10 +178,12 @@ def test_task_results_repository_limits_display_metric_options_to_research_focus
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@5", 0.40, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@10", 0.50, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_acc@100", 0.90, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_ndcg@100", 0.60, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_precision@1", 0.20, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_precision@10", 0.50, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_recall@1", 0.20, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_recall@10", 0.50, "a.json"),
+            ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_recall@100", 0.95, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_mrr@10", 0.70, "a.json"),
             ("model/a", "BenchA", "bench/a", "a1", "a1", "BenchA_a1_cosine_map@100", 0.80, "a.json"),
         ],
@@ -189,11 +191,12 @@ def test_task_results_repository_limits_display_metric_options_to_research_focus
 
     assert TaskResultsRepository(db_path).fetch_score_metric_options() == [
         "ndcg@10",
+        "ndcg@100",
+        "recall@10",
+        "recall@100",
         "acc@1",
         "acc@10",
         "acc@100",
-        "precision@10",
-        "recall@10",
         "mrr@10",
         "map@100",
     ]

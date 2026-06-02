@@ -3155,10 +3155,13 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_acc@3", 0.20, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_acc@5", 0.30, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_acc@10", 0.40, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_acc@100", 0.90, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_ndcg@100", 0.70, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_precision@1", 0.20, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_precision@10", 0.40, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_recall@1", 0.20, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_recall@10", 0.40, "a.json"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_recall@100", 0.95, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_mrr@10", 0.50, "a.json"),
             ("model/a", "BenchA", "bench/a", "BenchA", "t1", "BenchA::t1", "BenchA_t1_cosine_map@100", 0.60, "a.json"),
         ],
@@ -3176,10 +3179,12 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
     assert result.selected_score_metric == "acc@1"
     assert result.available_score_metrics == [
         "ndcg@10",
+        "ndcg@100",
+        "recall@10",
+        "recall@100",
         "acc@1",
         "acc@10",
-        "precision@10",
-        "recall@10",
+        "acc@100",
         "mrr@10",
         "map@100",
     ]
@@ -3192,12 +3197,15 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
     assert response.status_code == 200
     assert "Metric" in response.text
     assert "Acc@1" in response.text
-    assert response.text.index("nDCG@10") < response.text.index("Acc@1") < response.text.index("Acc@10")
-    assert response.text.index("Acc@10") < response.text.index("Precision@10") < response.text.index("Recall@10")
-    assert response.text.index("Recall@10") < response.text.index("MRR@10") < response.text.index("MAP@100")
+    assert response.text.index("nDCG@10") < response.text.index("nDCG@100")
+    assert response.text.index("nDCG@100") < response.text.index("Recall@10") < response.text.index("Recall@100")
+    assert response.text.index("Recall@100") < response.text.index("Acc@1") < response.text.index("Acc@10")
+    assert response.text.index("Acc@10") < response.text.index("Acc@100") < response.text.index("MRR@10")
+    assert response.text.index("MRR@10") < response.text.index("MAP@100")
     assert "nDCG@10" in response.text
     assert "Acc@3" not in response.text
     assert "Acc@5" not in response.text
+    assert "Precision@10" not in response.text
     assert "Precision@1\n" not in response.text
     assert "Recall@1\n" not in response.text
 

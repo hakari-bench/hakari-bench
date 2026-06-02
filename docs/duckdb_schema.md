@@ -116,10 +116,13 @@ The input files are:
   `docs/model_cards.md` for the generation workflow.
 - `artifacts.top_rankings` inside each task result JSON: per-query top-100
   ranking rows written by default. These embedded artifacts include both the
-  ranked top-100 corpus ids and the binary qrels relevant corpus ids, so metrics
-  such as nDCG@10, acc@1/10/100, MAP, MRR, precision, and recall can be
-  recomputed later without re-running model inference. Legacy sidecar artifacts
-  under `rankings/{split_or_task}.top100.json` are still readable.
+  ranked top-100 corpus ids and the binary qrels relevant corpus ids. The
+  DuckDB build uses them to recompute metrics such as nDCG@10/100,
+  recall@10/100, acc@1/10/100, MRR@10, MAP@100, and task-specific diagnostic
+  metrics without re-running model inference. Legacy sidecar artifacts under
+  `rankings/{split_or_task}.top100.json` are still readable. See
+  [`docs/leaderboard_metrics.md`](leaderboard_metrics.md) for the visible
+  leaderboard metric policy.
 
 `load_results()` determines `benchmark` from `target.dataset_id` and
 `target.dataset_name` using `config/viewer/benchmarks.yaml`, then writes only
@@ -919,10 +922,11 @@ choices:
 	  result path, score target, embedding variant, metric family, and cutoff. Full-corpus targets exclude metric
 	  names containing `_reranking_hybrid_top`; reranking targets prefer that marker
   and fall back only for older DuckDB builds.
-- The visible metric selector is intentionally limited and ordered with
-  `nDCG@10`, `acc@1`, `acc@10`, and `acc@100` first. Additional recomputed
-  families/cutoffs can remain in DuckDB for analysis and may be exposed after
-  those defaults when present.
+- The visible metric selector is intentionally limited and ordered as
+  `nDCG@10`, `nDCG@100`, `recall@10`, `recall@100`, `acc@1`, `acc@10`,
+  `acc@100`, `mrr@10`, and `map@100` when those metrics are present. Additional
+  recomputed families/cutoffs can remain in DuckDB for analysis without being
+  exposed by default.
 - For `score_target = 'reranking'`, append BM25 `score_target = 'all'` task
   rows as the candidate-order baseline before completeness filtering and Borda
   ranking. This keeps BM25 comparable to rerankers without treating BM25 as a

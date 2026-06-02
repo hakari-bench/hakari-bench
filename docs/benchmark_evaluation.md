@@ -380,8 +380,10 @@ Top-100 ranking rows are embedded in each task result JSON under
 recomputation. The embedded artifact contains base retrieval, available
 embedding variants, BM25/reranker outputs, candidate-rerank outputs, and binary
 qrels relevant corpus ids. Rebuild the DuckDB warehouse after evaluation to
-compute `acc@1`, `acc@10`, `acc@100`, `precision@10`, `recall@10`, `mrr@10`,
-and `map@100` for the viewer.
+compute `nDCG@100`, `recall@10`, `recall@100`, `acc@1`, `acc@10`, `acc@100`,
+`mrr@10`, and `map@100` for the viewer. See
+[`docs/leaderboard_metrics.md`](leaderboard_metrics.md) for the leaderboard
+metric policy and rationale.
 
 When comparing models, check that prompt and embedding-variant choices are fair
 and intentional.

@@ -482,11 +482,24 @@ def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_pa
     assert metric_values[("all", None, "en_cosine_acc@10")] == pytest.approx(1.0)
     assert metric_values[("all", None, "en_cosine_acc@100")] == pytest.approx(1.0)
     assert metric_values[("all", None, "en_cosine_ndcg@10")] == pytest.approx((1 / math.log2(3) + 1) / 2)
+    assert metric_values[("all", None, "en_cosine_ndcg@100")] == pytest.approx((1 / math.log2(3) + 1) / 2)
+    assert metric_values[("all", None, "en_cosine_recall@100")] == pytest.approx(1.0)
     assert metric_values[("all", "truncate:2", "en_truncate:2_cosine_acc@10")] == pytest.approx(1.0)
+    assert metric_values[("all", "truncate:2", "en_truncate:2_cosine_ndcg@100")] == pytest.approx(
+        1 / math.log2(3)
+    )
+    assert metric_values[("all", "truncate:2", "en_truncate:2_cosine_recall@100")] == pytest.approx(1.0)
     assert metric_values[("reranking", None, "en_cosine_bm25_top100_rerank_acc@1")] == pytest.approx(0.5)
     assert metric_values[("reranking", None, "en_cosine_bm25_top100_rerank_acc@10")] == pytest.approx(1.0)
+    assert metric_values[("reranking", None, "en_cosine_bm25_top100_rerank_ndcg@100")] == pytest.approx(
+        (1 + 1 / math.log2(3)) / 2
+    )
+    assert metric_values[("reranking", None, "en_cosine_bm25_top100_rerank_recall@100")] == pytest.approx(1.0)
     assert metric_values[("reranking", "truncate:2", "en_truncate:2_cosine_bm25_top100_rerank_acc@1")] == pytest.approx(1.0)
     assert metric_values[("reranking", "truncate:2", "en_truncate:2_cosine_bm25_top100_rerank_acc@10")] == pytest.approx(1.0)
+    assert metric_values[
+        ("reranking", "truncate:2", "en_truncate:2_cosine_bm25_top100_rerank_recall@100")
+    ] == pytest.approx(1.0)
     assert metric_values[
         ("reranking_without_safeguard", None, "en_cosine_bm25_top100_rerank_acc@1")
     ] == pytest.approx(0.0)
@@ -495,6 +508,9 @@ def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_pa
     ] == pytest.approx(0.5)
     assert metric_values[
         ("reranking_without_safeguard", "truncate:2", "en_truncate:2_cosine_bm25_top100_rerank_acc@1")
+    ] == pytest.approx(0.5)
+    assert metric_values[
+        ("reranking_without_safeguard", "truncate:2", "en_truncate:2_cosine_bm25_top100_rerank_recall@100")
     ] == pytest.approx(0.5)
 
 

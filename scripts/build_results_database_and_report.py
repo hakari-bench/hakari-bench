@@ -148,11 +148,12 @@ METRIC_LONG_COLUMNS = (
 )
 VIEWER_RECOMPUTED_METRICS = (
     "nDCG@10",
+    "nDCG@100",
+    "recall@10",
+    "recall@100",
     "acc@1",
     "acc@10",
     "acc@100",
-    "precision@10",
-    "recall@10",
     "mrr@10",
     "map@100",
 )

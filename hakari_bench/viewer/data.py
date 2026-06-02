@@ -27,11 +27,12 @@ COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {CURRENT_DUCKDB_SCHEMA_VERSION}
 REQUIRED_VIEWER_TABLES = ("meta_database", "viewer_task_results")
 DISPLAY_SCORE_METRIC_ORDER = (
     "ndcg@10",
+    "ndcg@100",
+    "recall@10",
+    "recall@100",
     "acc@1",
     "acc@10",
     "acc@100",
-    "precision@10",
-    "recall@10",
     "mrr@10",
     "map@100",
 )
