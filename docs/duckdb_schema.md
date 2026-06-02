@@ -966,12 +966,12 @@ choices:
   `NanoMTEB-Dutch` exposes `nl` but not English, and `NanoCMTEB` exposes `zh`
   but not Japanese.
 - Viewer benchmark groups put the compact curated Core set under
-  Core benchmarks. Other broader multilingual/domain suites, including
-  `NanoMIRACL` and `NanoLaw`, remain Domain-specific unless they are an official
-  language-specific NanoMTEB family such as `NanoJMTEB-v2`, `NanoFaMTEB-v2`,
-  `NanoRuMTEB`, `NanoVNMTEB`, or `NanoCMTEB`. `NanoIndicQA`, `NanoMuPLeR`, and
-  `NanoChemTEB` remain Domain-specific by viewer policy even when they expose
-  language pages.
+  Core benchmarks. Language-axis suites are grouped as Language-specific,
+  including official language-specific NanoMTEB families, `NanoCMTEB`,
+  `NanoIndicQA`, `NanoMuPLeR`, and `NanoMIRACL`. `NanoMuPLeR` should still be
+  read as translated/parallel legal retrieval, not as native unrelated
+  monolingual corpora. Domain-focused suites such as `NanoLaw`, `NanoMedical`,
+  `NanoChemTEB`, and `NanoCodeRAG` remain Domain-specific.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 
@@ -1578,6 +1578,9 @@ rows.
 Language-specific NanoMTEB family views and `NanoCMTEB` additionally set
 `language_page_languages` so Language pages represent the benchmark's intended
 language axis, not every auxiliary code detected inside mixed-language tasks.
+`NanoIndicQA`, `NanoMuPLeR`, and `NanoMIRACL` are also grouped under
+Language-specific because their benchmark-view navigation is primarily by
+language split.
 
 For UI rendering, long format is usually easier than SQL pivoting. Reuse
 `complete_rows` from the benchmark leaderboard query:

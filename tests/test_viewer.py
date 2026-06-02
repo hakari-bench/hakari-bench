@@ -212,7 +212,7 @@ def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> No
     assert _view_group("NanoMMTEB-v2") == "Core benchmarks"
     assert _view_group("MNanoBEIR") == "Core benchmarks"
     assert _view_group("NanoRTEB") == "Core benchmarks"
-    assert _view_group("NanoMIRACL") == "Domain-specific"
+    assert _view_group("NanoMIRACL") == "Language-specific"
     assert _view_group("NanoMLDR") == "Core benchmarks"
     assert _view_group("NanoBRIGHT") == "Core benchmarks"
     assert _view_group("NanoLaw") == "Domain-specific"
@@ -229,8 +229,8 @@ def test_language_specific_view_group_includes_official_language_mteb_families()
     assert _view_group("NanoRuMTEB") == "Language-specific"
     assert _view_group("NanoVNMTEB") == "Language-specific"
     assert _view_group("NanoCMTEB") == "Language-specific"
-    assert _view_group("NanoIndicQA") == "Domain-specific"
-    assert _view_group("NanoMuPLeR") == "Domain-specific"
+    assert _view_group("NanoIndicQA") == "Language-specific"
+    assert _view_group("NanoMuPLeR") == "Language-specific"
     assert _view_group("NanoChemTEB") == "Domain-specific"
 
 

@@ -359,6 +359,20 @@ def test_real_benchmark_task_summary_links_resolve_to_existing_docs() -> None:
     assert broken_links == []
 
 
+def test_language_specific_group_overviews_start_with_language_axis_context() -> None:
+    docs = BenchmarkDocs(Path("task_docs/docs"))
+
+    expected_phrases = {
+        "NanoMIRACL": "language specific",
+        "NanoIndicQA": "language specific",
+        "NanoMuPLeR": "language specific translated/parallel legal retrieval",
+    }
+    for view_name, phrase in expected_phrases.items():
+        doc = docs.group_doc(view_name)
+        assert doc is not None
+        assert phrase in doc.description.lower()
+
+
 def test_docs_endpoint_renders_markdown_page_and_rejects_missing_docs(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(db_path, [("model/a", "NanoMIRACL", "bench/a", "NanoMIRACL", "ja", "ja", "NanoMIRACL::ja", 0.90, 10, 12, 8192)])

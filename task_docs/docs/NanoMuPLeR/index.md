@@ -2,12 +2,12 @@
 
 ## Overview
 
-NanoMuPLeR is the Nano task group for MuPLeR-retrieval, a multilingual parallel
-legal retrieval benchmark derived from European Union legal text. It covers 14
+NanoMuPLeR is a language-specific translated/parallel legal retrieval benchmark
+for MuPLeR-retrieval. It derives from European Union legal text and covers 14
 European languages: Greek, English, Spanish, Finnish, French, Italian,
 Lithuanian, Latvian, Dutch, Polish, Portuguese, Slovak, Slovenian, and Swedish.
 Each split contains same-language synthetic legal queries and DGT-Acquis-derived
-legal passages.
+parallel legal passages.
 
 The group contains 2,800 queries, 140,000 task-local documents, and 2,800
 positive qrel rows. Every language has exactly 200 queries, 10,000 documents,

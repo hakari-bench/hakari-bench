@@ -1017,7 +1017,10 @@ def _view_group(view_name: str) -> str:
     language_specific_views = {
         "NanoCMTEB",
         "NanoFaMTEB-v2",
+        "NanoIndicQA",
         "NanoJMTEB-v2",
+        "NanoMIRACL",
+        "NanoMuPLeR",
         "NanoRuMTEB",
         "NanoVNMTEB",
     }

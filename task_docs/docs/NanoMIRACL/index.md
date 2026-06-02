@@ -2,12 +2,12 @@
 
 ## Overview
 
-NanoMIRACL is the compact Nano set for MIRACL, a multilingual ad hoc retrieval
-benchmark built around Wikipedia passage retrieval. The original MIRACL work
-covers eighteen languages and asks a monolingual retrieval question in each
-split: an Arabic query retrieves Arabic passages, a Japanese query retrieves
-Japanese passages, and so on. This group keeps that retrieval setting while
-making the task small enough to inspect one language at a time.
+NanoMIRACL is a language-specific Nano benchmark for MIRACL, a multilingual ad
+hoc retrieval benchmark built around Wikipedia passage retrieval. The original
+MIRACL work covers eighteen languages and asks a monolingual retrieval question
+in each split: an Arabic query retrieves Arabic passages, a Japanese query
+retrieves Japanese passages, and so on. This group keeps that retrieval setting
+while making the task small enough to inspect one language at a time.
 
 The group is valuable because it holds the high-level task constant while
 changing script, morphology, tokenization behavior, resource level, and

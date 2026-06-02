@@ -2,12 +2,12 @@
 
 ## Overview
 
-NanoIndicQA is the compact Nano set for IndicQA retrieval. It covers eleven
-Indic language splits: Assamese, Bengali, Gujarati, Hindi, Kannada, Malayalam,
-Marathi, Odia, Punjabi, Tamil, and Telugu. Each split turns an IndicQA
-reading-comprehension example into retrieval: the query is a question in the
-target language, and the positive document is the context paragraph containing
-the evidence needed to answer it.
+NanoIndicQA is a language-specific Nano benchmark for IndicQA retrieval. It
+covers eleven Indic language splits: Assamese, Bengali, Gujarati, Hindi,
+Kannada, Malayalam, Marathi, Odia, Punjabi, Tamil, and Telugu. Each split turns
+an IndicQA reading-comprehension example into retrieval: the query is a
+question in the target language, and the positive document is the context
+paragraph containing the evidence needed to answer it.
 
 The group is useful as a controlled multilingual passage-selection benchmark.
 All languages share the same retrieval shape, so differences mainly reflect
