@@ -13,7 +13,7 @@ import duckdb
 import pytest
 from pydantic import ValidationError
 
-from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig
+from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.warehouse_schema import (
     DatasetMetadataRow,
     MetricLongRow,
@@ -568,6 +568,37 @@ def test_load_results_parallel_json_workers_match_serial(tmp_path: Path) -> None
 
     serial = report.load_results(results_dir, result_json_workers=1)
     parallel = report.load_results(results_dir, result_json_workers=2)
+
+    assert parallel == serial
+
+
+def test_load_results_parallel_selection_workers_match_serial(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    for task_name, score in [("en", 0.42), ("ja", 0.35)]:
+        task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / f"{task_name}.json"
+        task_path.parent.mkdir(parents=True, exist_ok=True)
+        task_path.write_text(
+            json.dumps(
+                {
+                    "model": {"id": "example/model"},
+                    "target": {
+                        "dataset_name": "NanoMIRACL",
+                        "dataset_id": "hakari-bench/NanoMIRACL",
+                        "split_name": task_name,
+                        "task_name": task_name,
+                    },
+                    "evaluation": {
+                        "aggregate_metric": "ndcg@10",
+                        "aggregate_metric_value": score,
+                    },
+                    "metrics": {f"NanoMIRACL_{task_name}_cosine_ndcg@10": score},
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    serial = report.load_results(results_dir, result_selection_workers=1)
+    parallel = report.load_results(results_dir, result_selection_workers=2)
 
     assert parallel == serial
 
@@ -2724,7 +2755,12 @@ def test_build_viewer_leaderboard_mart_materializes_display_modes(tmp_path: Path
         borda_rows=[],
     )
     viewer_config = ViewerConfig(
-        benchmarks=[BenchmarkConfig(name="BenchA")],
+        benchmarks=[
+            BenchmarkConfig(
+                name="BenchA",
+                score_groups=[ScoreGroupConfig(name="dataset", label="Datasets", group_by="dataset_id")],
+            )
+        ],
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
     )
 
@@ -2763,6 +2799,144 @@ def test_build_viewer_leaderboard_mart_materializes_display_modes(tmp_path: Path
         ).fetchall() == [("Overall", "all", True, "en", "EN", 1)]
     finally:
         con.close()
+
+
+def test_cached_viewer_leaderboard_mart_rows_match_service_path(tmp_path: Path) -> None:
+    def task_row(
+        *,
+        model_name: str,
+        task_name: str,
+        score: float,
+        result_path: str,
+        embedding_variant_name: str | None = None,
+        embedding_dim: int | None = 384,
+        quantization: str | None = None,
+    ) -> report.TaskResult:
+        return report.TaskResult(
+            model_dir=model_name.replace("/", "__"),
+            model_name=model_name,
+            benchmark="BenchA",
+            dataset_id="bench/a",
+            dataset_name="BenchA",
+            split_name=task_name,
+            task_name=task_name,
+            task_key=f"BenchA::bench/a::{task_name}",
+            score=score,
+            aggregate_metric="ndcg@10",
+            result_path=result_path,
+            active_parameters=1_000_000,
+            total_parameters=2_000_000,
+            max_seq_length=512,
+            dtype="bf16",
+            embedding_variant_name=embedding_variant_name,
+            embedding_dim=embedding_dim,
+            quantization=quantization,
+        )
+
+    rows: list[report.TaskResult] = []
+    metric_rows: list[dict[str, object]] = []
+    diagnostic_rows: list[TaskDiagnosticRow] = []
+    dataset_metadata_rows: list[DatasetMetadataRow] = []
+    for task_index, task_name in enumerate(["task1", "task2"], start=1):
+        dataset_metadata_rows.append(
+            DatasetMetadataRow(
+                benchmark="BenchA",
+                dataset_id="bench/a",
+                dataset_name="BenchA",
+                split_name=task_name,
+                task_name=task_name,
+                task_key=f"BenchA::bench/a::{task_name}",
+                language="en",
+                languages=["en"],
+            )
+        )
+        for model_name, score in [
+            ("example/dense", 0.40 + task_index * 0.01),
+            ("bm25", 0.20 + task_index * 0.01),
+            ("cross-encoder/tiny-reranker", 0.30 + task_index * 0.01),
+        ]:
+            row = task_row(
+                model_name=model_name,
+                task_name=task_name,
+                score=score,
+                result_path=f"{model_name}/{task_name}.json",
+            )
+            rows.append(row)
+            diagnostic_rows.append(
+                TaskDiagnosticRow(
+                    model_dir=row.model_dir,
+                    model_name=row.model_name,
+                    benchmark=row.benchmark,
+                    dataset_id=row.dataset_id,
+                    task_name=row.task_name,
+                    task_key=row.task_key,
+                    result_path=row.result_path,
+                    base_score=row.score,
+                    rerank_score=row.score + 0.05,
+                    rerank_status="available",
+                    candidate_ranking="reranking_hybrid",
+                )
+            )
+        for variant_name, quantization, score in [
+            ("truncate_dim_256", None, 0.38 + task_index * 0.01),
+            ("int8", "int8", 0.37 + task_index * 0.01),
+            ("rescore:int8", "int8", 0.39 + task_index * 0.01),
+        ]:
+            variant = task_row(
+                model_name="example/dense",
+                task_name=task_name,
+                score=score,
+                result_path=f"example/dense/{task_name}.json",
+                embedding_variant_name=variant_name,
+                embedding_dim=256 if "truncate" in variant_name else 384,
+                quantization=quantization,
+            )
+            rows.append(variant)
+            metric_rows.append(
+                {
+                    "model_dir": variant.model_dir,
+                    "model_name": variant.model_name,
+                    "benchmark": variant.benchmark,
+                    "dataset_id": variant.dataset_id,
+                    "task_name": variant.task_name,
+                    "metric_name": f"{task_name}_{variant_name}_reranking_hybrid_top100_rerank_ndcg@10",
+                    "metric_value": variant.score + 0.04,
+                    "result_path": variant.result_path,
+                    "score_target": "reranking",
+                    "embedding_variant_name": variant.embedding_variant_name,
+                }
+            )
+
+    db_path = tmp_path / "results.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/dense"}],
+        rows=rows,
+        metric_rows=metric_rows,
+        diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
+        standings={},
+        borda_rows=[],
+    )
+    viewer_config = ViewerConfig(
+        benchmarks=[
+            BenchmarkConfig(
+                name="BenchA",
+                score_groups=[ScoreGroupConfig(name="dataset", label="Datasets", group_by="dataset_id")],
+            )
+        ],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
+    )
+
+    assert report._viewer_leaderboard_mart_rows_from_cached_records(
+        db_path,
+        viewer_config=viewer_config,
+        view_names=["Overall", "BenchA"],
+    ) == report._viewer_leaderboard_mart_rows_from_service(
+        db_path,
+        viewer_config=viewer_config,
+        view_names=["Overall", "BenchA"],
+    )
 
 
 def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path) -> None:

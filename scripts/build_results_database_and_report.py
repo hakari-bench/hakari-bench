@@ -27,7 +27,24 @@ from hakari_bench.datasets import DatasetRegistry
 from hakari_bench.metrics import compute_ir_metrics
 from hakari_bench.model_cards import load_model_cards, model_card_yaml_paths
 from hakari_bench.viewer.config import BenchmarkConfig, ViewerConfig, load_viewer_config
-from hakari_bench.viewer.leaderboard import LeaderboardService
+from hakari_bench.viewer.leaderboard import (
+    LeaderboardService,
+    _aggregate_overall_scores,
+    _aggregate_benchmark_score_group_scores,
+    _append_missing_bm25_task_scores,
+    _exclude_configured_tasks,
+    _exclude_reranker_task_scores,
+    _language_filter_mode_for_view,
+    _language_options,
+    _language_page_languages_for_view,
+    _overall_metric_score_group,
+    _score_groups_for_view,
+    _select_score_group,
+    _task_scores_from_records,
+    compute_leaderboard_rows,
+    sort_rows,
+)
+from hakari_bench.viewer.variant_display import VariantDisplayFlags
 from hakari_bench.viewer.task_names import (
     canonical_metric_name,
     canonical_split_name,
@@ -622,6 +639,12 @@ def main() -> None:
         help="Number of parsed result JSON files between memory samples when --memory-log-path is set.",
     )
     parser.add_argument(
+        "--result-selection-workers",
+        type=int,
+        default=1,
+        help="Number of worker processes used to read result JSON summaries during candidate selection.",
+    )
+    parser.add_argument(
         "--result-json-workers",
         type=int,
         default=1,
@@ -668,6 +691,7 @@ def main() -> None:
             model_cards_path=args.model_cards_path,
             exclude_model_names=set(args.exclude_model_name or []),
             memory_monitor=memory_monitor,
+            result_selection_workers=args.result_selection_workers,
             result_json_workers=args.result_json_workers,
             result_row_workers=args.result_row_workers,
         )
@@ -717,6 +741,7 @@ def main() -> None:
         exclude_model_names=set(args.exclude_model_name or []),
         duplicate_result_policy=duplicate_result_policy,
         memory_monitor=memory_monitor,
+        result_selection_workers=args.result_selection_workers,
         result_json_workers=args.result_json_workers,
         result_row_workers=args.result_row_workers,
     )
@@ -768,6 +793,7 @@ def load_results(
     exclude_model_names: set[str] | None = None,
     duplicate_result_policy: DuplicateResultPolicy = "first-wins",
     memory_monitor: MemoryMonitor | None = None,
+    result_selection_workers: int = 1,
     result_json_workers: int = 1,
     result_row_workers: int = 1,
 ) -> tuple[
@@ -849,6 +875,7 @@ def load_results(
         duplicate_result_policy=duplicate_result_policy,
         include_retrieval_rankings=include_retrieval_rankings,
         memory_monitor=memory_monitor,
+        result_selection_workers=result_selection_workers,
     )
     processed_result_count = 0
     for processed in _processed_result_rows(
@@ -1632,21 +1659,27 @@ def _selected_result_jsons(
     duplicate_result_policy: DuplicateResultPolicy = "first-wins",
     include_retrieval_rankings: bool = False,
     memory_monitor: MemoryMonitor | None = None,
+    result_selection_workers: int = 1,
 ) -> list[SelectedResultJson]:
     selected_by_task: dict[tuple[str, str, str, str], SelectedResultJson] = {}
     parsed_count = 0
     for source_priority, source_dir in enumerate(_results_dirs(results_dir)):
-        for result_path in _result_json_paths(source_dir):
-            if result_paths is not None and str(result_path) not in result_paths:
-                continue
-            selected = _selected_result_json(
-                result_path,
+        source_paths = [
+            result_path
+            for result_path in _result_json_paths(source_dir)
+            if result_paths is None or str(result_path) in result_paths
+        ]
+        for selected in _iterate_async(
+            _async_selected_result_jsons(
+                source_paths,
                 results_dir=source_dir,
                 source_priority=source_priority,
                 benchmark_configs=benchmark_configs,
                 target_benchmarks=target_benchmarks,
                 exclude_model_names=exclude_model_names,
+                workers=result_selection_workers,
             )
+        ):
             parsed_count += 1
             if memory_monitor is not None:
                 memory_monitor.maybe_sample("result_json_selected", processed_count=parsed_count)
@@ -1674,6 +1707,69 @@ def _selected_result_jsons(
             selected.task_name,
             str(selected.result_path),
         ),
+    )
+
+
+async def _async_selected_result_jsons(
+    result_paths: Sequence[Path],
+    *,
+    results_dir: Path,
+    source_priority: int,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    target_benchmarks: set[str],
+    exclude_model_names: set[str],
+    workers: int,
+) -> AsyncIterable[SelectedResultJson | None]:
+    workers = max(1, workers)
+    if workers == 1 or len(result_paths) <= 1:
+        for result_path in result_paths:
+            yield _selected_result_json(
+                result_path,
+                results_dir=results_dir,
+                source_priority=source_priority,
+                benchmark_configs=benchmark_configs,
+                target_benchmarks=target_benchmarks,
+                exclude_model_names=exclude_model_names,
+            )
+        return
+
+    loop = asyncio.get_running_loop()
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        async def submit(result_path: Path) -> SelectedResultJson | None:
+            return await loop.run_in_executor(
+                executor,
+                _selected_result_json_worker,
+                str(result_path),
+                str(results_dir),
+                source_priority,
+                list(benchmark_configs),
+                set(target_benchmarks),
+                set(exclude_model_names),
+            )
+
+        async for item in _ordered_async_bounded_map(
+            result_paths,
+            submit,
+            max_pending=workers * 2,
+        ):
+            yield item
+
+
+def _selected_result_json_worker(
+    result_path: str,
+    results_dir: str,
+    source_priority: int,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    target_benchmarks: set[str],
+    exclude_model_names: set[str],
+) -> SelectedResultJson | None:
+    return _selected_result_json(
+        Path(result_path),
+        results_dir=Path(results_dir),
+        source_priority=source_priority,
+        benchmark_configs=benchmark_configs,
+        target_benchmarks=target_benchmarks,
+        exclude_model_names=exclude_model_names,
     )
 
 
@@ -4201,6 +4297,34 @@ def build_viewer_leaderboard_mart(
     viewer_config: ViewerConfig,
     view_names: Sequence[str] | None = None,
 ) -> None:
+    mart_rows, language_rows = _viewer_leaderboard_mart_rows_from_cached_records(
+        db_path,
+        viewer_config=viewer_config,
+        view_names=view_names,
+    )
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute("DROP TABLE IF EXISTS viewer_leaderboard_language_options")
+        con.execute("DROP TABLE IF EXISTS viewer_leaderboard_rows")
+        _create_empty_viewer_leaderboard_rows_table(con)
+        _create_empty_viewer_leaderboard_language_options_table(con)
+        _insert_duckdb_rows(con, "viewer_leaderboard_rows", VIEWER_LEADERBOARD_ROW_COLUMNS, mart_rows)
+        _insert_duckdb_rows(
+            con,
+            "viewer_leaderboard_language_options",
+            VIEWER_LEADERBOARD_LANGUAGE_COLUMNS,
+            language_rows,
+        )
+    finally:
+        con.close()
+
+
+def _viewer_leaderboard_mart_rows_from_service(
+    db_path: Path,
+    *,
+    viewer_config: ViewerConfig,
+    view_names: Sequence[str] | None = None,
+) -> tuple[list[tuple[Any, ...]], list[tuple[Any, ...]]]:
     display_flag_sets = list(product((False, True), repeat=4))
     service = LeaderboardService(duckdb_path=db_path, config=viewer_config, use_precomputed=False)
     mart_rows: list[tuple[Any, ...]] = []
@@ -4262,21 +4386,138 @@ def build_viewer_leaderboard_mart(
                     )
                     for row in result.rows
                 )
-    con = duckdb.connect(str(db_path))
-    try:
-        con.execute("DROP TABLE IF EXISTS viewer_leaderboard_language_options")
-        con.execute("DROP TABLE IF EXISTS viewer_leaderboard_rows")
-        _create_empty_viewer_leaderboard_rows_table(con)
-        _create_empty_viewer_leaderboard_language_options_table(con)
-        _insert_duckdb_rows(con, "viewer_leaderboard_rows", VIEWER_LEADERBOARD_ROW_COLUMNS, mart_rows)
-        _insert_duckdb_rows(
-            con,
-            "viewer_leaderboard_language_options",
-            VIEWER_LEADERBOARD_LANGUAGE_COLUMNS,
-            language_rows,
+    return mart_rows, language_rows
+
+
+def _viewer_leaderboard_mart_rows_from_cached_records(
+    db_path: Path,
+    *,
+    viewer_config: ViewerConfig,
+    view_names: Sequence[str] | None = None,
+) -> tuple[list[tuple[Any, ...]], list[tuple[Any, ...]]]:
+    display_flag_sets = list(product((False, True), repeat=4))
+    service = LeaderboardService(duckdb_path=db_path, config=viewer_config, use_precomputed=False)
+    mart_rows: list[tuple[Any, ...]] = []
+    language_rows: list[tuple[Any, ...]] = []
+    all_variant_flags = VariantDisplayFlags(quantization=True, truncate=True, rescore=True, other=True)
+    for view_name in view_names or viewer_config.view_names:
+        benchmarks = viewer_config.benchmarks_for_view(view_name)
+        overall = viewer_config.overall_for_view(view_name)
+        is_overall = overall is not None
+        selected_score_group = (
+            None
+            if is_overall
+            else _select_score_group(_score_groups_for_view(viewer_config, view_name), None)
         )
-    finally:
-        con.close()
+        language_filter_mode = _language_filter_mode_for_view(viewer_config, view_name)
+        language_page_languages = _language_page_languages_for_view(viewer_config, view_name)
+        for score_target in ("all", "reranking"):
+            records = service.task_results_repository.fetch_task_result_rows(
+                benchmarks=benchmarks,
+                score_target=score_target,
+                score_metric="ndcg@10",
+                include_embedding_variants=True,
+                variant_display_flags=all_variant_flags,
+            )
+            bm25_task_scores = []
+            if score_target == "reranking":
+                bm25_records = service.task_results_repository.fetch_task_result_rows(
+                    benchmarks=benchmarks,
+                    score_target="all",
+                    score_metric="ndcg@10",
+                    include_embedding_variants=False,
+                    variant_display_flags=VariantDisplayFlags(),
+                )
+                bm25_task_scores = _task_scores_from_records(
+                    bm25_records,
+                    include_any_variants=False,
+                    variant_flags=VariantDisplayFlags(),
+                )
+            for quantization, truncate, rescore, other in display_flag_sets:
+                variant_flags = VariantDisplayFlags(
+                    quantization=quantization,
+                    truncate=truncate,
+                    rescore=rescore,
+                    other=other,
+                )
+                include_any_variants = variant_flags.any_enabled
+                rows = _task_scores_from_records(
+                    records,
+                    include_any_variants=include_any_variants,
+                    variant_flags=variant_flags,
+                )
+                if score_target == "all":
+                    rows = _exclude_reranker_task_scores(rows)
+                elif score_target == "reranking":
+                    rows = _append_missing_bm25_task_scores(rows, bm25_task_scores)
+                rows = _exclude_configured_tasks(rows, viewer_config)
+                available_languages = _language_options(
+                    rows,
+                    mode=language_filter_mode,
+                    allowed_languages=language_page_languages,
+                )
+                metric_score_group = None
+                if overall is not None:
+                    rows = _aggregate_overall_scores(rows, overall)
+                    metric_score_group = _overall_metric_score_group(overall)
+                elif selected_score_group is not None:
+                    rows = _aggregate_benchmark_score_group_scores(rows, selected_score_group)
+                    metric_score_group = selected_score_group
+                leaderboard_rows = compute_leaderboard_rows(
+                    rows,
+                    is_overall=is_overall,
+                    score_group=metric_score_group,
+                    metric_columns=[],
+                )
+                sorted_rows = sort_rows(leaderboard_rows, sort="borda_rank", direction="asc")
+                expected_tasks = len({row.task_key for row in rows})
+                language_rows.extend(
+                    (
+                        view_name,
+                        score_target,
+                        quantization,
+                        truncate,
+                        rescore,
+                        other,
+                        option.code,
+                        option.label,
+                        option.task_count,
+                    )
+                    for option in available_languages
+                )
+                mart_rows.extend(
+                    (
+                        view_name,
+                        score_target,
+                        quantization,
+                        truncate,
+                        rescore,
+                        other,
+                        expected_tasks,
+                        row.borda_rank,
+                        row.mean_rank,
+                        row.model_name,
+                        row.borda_score,
+                        row.mean_score,
+                        row.macro_mean,
+                        row.micro_mean,
+                        row.task_count,
+                        row.active_parameters,
+                        row.total_parameters,
+                        row.max_seq_length,
+                        row.dtype,
+                        row.attn_implementation,
+                        row.prompt_summary,
+                        row.trust_remote_code,
+                        row.embedding_variant_name,
+                        row.embedding_dim,
+                        row.quantization,
+                        row.source_model_name,
+                        row.base_score_delta_percent,
+                    )
+                    for row in sorted_rows
+                )
+    return mart_rows, language_rows
 
 
 def export_duckdb_tables_to_parquet(db_path: Path, output_dir: Path) -> None:
