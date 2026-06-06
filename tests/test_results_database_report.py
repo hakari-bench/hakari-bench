@@ -173,6 +173,30 @@ def test_small_result_json_from_summary_uses_full_parse(
     assert calls == [f"read:{result_path.name}"]
 
 
+def test_small_result_summary_payload_uses_full_parse_and_drops_artifacts(tmp_path: Path) -> None:
+    result_path = tmp_path / "result.json"
+    result_path.write_text(
+        json.dumps(
+            {
+                "target": {"dataset_id": "dataset"},
+                "evaluation": {"aggregate_metric_value": 0.5},
+                "artifacts": {"top_rankings": {"rankings": [{"query_id": "q1"}]}},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    selected = report._read_result_summary_payload_with_sha256(result_path)
+
+    assert selected is not None
+    payload, payload_sha256 = selected
+    assert payload == {
+        "target": {"dataset_id": "dataset"},
+        "evaluation": {"aggregate_metric_value": 0.5},
+    }
+    assert payload_sha256 == report._payload_sha256(str(result_path))
+
+
 def test_large_result_json_from_summary_keeps_streaming_path(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
