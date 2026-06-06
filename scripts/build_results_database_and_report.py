@@ -642,6 +642,7 @@ def _read_top_rankings_artifact_stream(
     corpus_ids_prefix = f"{ranking_prefix}.corpus_ids"
     current_ranking: dict[str, Any] | None = None
     current_corpus_ids: list[Any] | None = None
+    keep_current_ranking: bool | None = None
     collect_current_corpus_ids = False
     in_current_corpus_ids = False
     evaluation = payload.get("evaluation", {})
@@ -649,6 +650,10 @@ def _read_top_rankings_artifact_stream(
         evaluation = {}
     embedding_evaluations = _embedding_evaluations(
         evaluation.get("embedding_evaluations") or payload.get("embedding_evaluations")
+    )
+    selection_context = _top_ranking_selection_context(
+        evaluation=evaluation,
+        embedding_evaluations=embedding_evaluations,
     )
     with _open_json_bytes(path) as file:
         for prefix, event, value in ijson.parse(file, use_float=True):
@@ -670,6 +675,7 @@ def _read_top_rankings_artifact_stream(
             if prefix == ranking_prefix and event == "start_map":
                 current_ranking = {}
                 current_corpus_ids = None
+                keep_current_ranking = None
                 collect_current_corpus_ids = False
                 in_current_corpus_ids = False
                 continue
@@ -678,28 +684,29 @@ def _read_top_rankings_artifact_stream(
             if prefix == ranking_prefix and event == "end_map":
                 if current_corpus_ids is not None:
                     current_ranking["corpus_ids"] = current_corpus_ids
-                if _keep_top_ranking_row(
-                    current_ranking,
-                    evaluation=evaluation,
-                    embedding_evaluations=embedding_evaluations,
-                    include_retrieval_rankings=include_retrieval_rankings,
-                ):
+                if keep_current_ranking is None:
+                    keep_current_ranking = _keep_top_ranking_row(
+                        current_ranking,
+                        selection_context=selection_context,
+                        include_retrieval_rankings=include_retrieval_rankings,
+                    )
+                if keep_current_ranking:
                     rankings.append(current_ranking)
                 current_ranking = None
                 current_corpus_ids = None
+                keep_current_ranking = None
                 collect_current_corpus_ids = False
                 in_current_corpus_ids = False
                 continue
             if prefix == corpus_ids_prefix and event == "start_array":
-                collect_current_corpus_ids = (
-                    not _ranking_selection_fields_complete(current_ranking)
-                    or _keep_top_ranking_row(
+                fields_complete = _ranking_selection_fields_complete(current_ranking)
+                if fields_complete:
+                    keep_current_ranking = _keep_top_ranking_row(
                         current_ranking,
-                        evaluation=evaluation,
-                        embedding_evaluations=embedding_evaluations,
+                        selection_context=selection_context,
                         include_retrieval_rankings=include_retrieval_rankings,
                     )
-                )
+                collect_current_corpus_ids = not fields_complete or bool(keep_current_ranking)
                 current_corpus_ids = [] if collect_current_corpus_ids else None
                 in_current_corpus_ids = True
                 continue
@@ -729,24 +736,38 @@ def _ranking_selection_fields_complete(ranking: dict[str, Any]) -> bool:
     return isinstance(ranking.get("ranking_kind"), str) and isinstance(ranking.get("score_name"), str)
 
 
-def _keep_top_ranking_row(
-    ranking: Any,
+@dataclass(frozen=True)
+class TopRankingSelectionContext:
+    retrieval_score_names: dict[str | None, str | None]
+    best_rerank_score_name: str | None
+
+
+def _top_ranking_selection_context(
     *,
     evaluation: dict[str, Any],
     embedding_evaluations: list[dict[str, Any]],
+) -> TopRankingSelectionContext:
+    return TopRankingSelectionContext(
+        retrieval_score_names={
+            _str_or_none(item.get("name")): _str_or_none(item.get("best_score_name"))
+            for item in embedding_evaluations
+            if isinstance(item, dict)
+        },
+        best_rerank_score_name=_best_rerank_score_name(evaluation),
+    )
+
+
+def _keep_top_ranking_row(
+    ranking: Any,
+    *,
+    selection_context: TopRankingSelectionContext,
     include_retrieval_rankings: bool,
 ) -> bool:
     if not isinstance(ranking, dict):
         return False
     if include_retrieval_rankings:
         return True
-    return bool(
-        _selected_metric_rankings(
-            [ranking],
-            evaluation=evaluation,
-            embedding_evaluations=embedding_evaluations,
-        )
-    )
+    return _selected_metric_ranking(ranking, selection_context) is not None
 
 
 @dataclass(frozen=True)
@@ -2297,37 +2318,50 @@ def _selected_metric_rankings(
     evaluation: dict[str, Any],
     embedding_evaluations: list[dict[str, Any]],
 ) -> list[tuple[dict[str, Any], str, str | None]]:
+    context = _top_ranking_selection_context(
+        evaluation=evaluation,
+        embedding_evaluations=embedding_evaluations,
+    )
     selected: list[tuple[dict[str, Any], str, str | None]] = []
-    retrieval_score_names = {
-        _str_or_none(item.get("name")): _str_or_none(item.get("best_score_name"))
-        for item in embedding_evaluations
-        if isinstance(item, dict)
-    }
     for ranking in rankings:
         if not isinstance(ranking, dict):
             continue
-        ranking_kind = ranking.get("ranking_kind")
-        embedding_variant_name = _str_or_none(ranking.get("embedding_variant_name"))
-        if ranking_kind == "retrieval":
-            variant_key = embedding_variant_name or "base"
-            if not retrieval_score_names or ranking.get("score_name") == retrieval_score_names.get(variant_key):
-                selected.append((ranking, "all", embedding_variant_name))
-        elif ranking_kind == "candidate_rerank":
-            score_name = ranking.get("score_name")
-            if not isinstance(score_name, str):
-                continue
-            if embedding_variant_name is None:
-                if score_name == _best_rerank_score_name(evaluation):
-                    selected.append((ranking, "reranking", None))
-                continue
-            variant_key = embedding_variant_name
-            retrieval_score_name = retrieval_score_names.get(variant_key)
-            if retrieval_score_name is not None and _is_rerank_score_name_for_retrieval(
-                score_name=score_name,
-                retrieval_score_name=retrieval_score_name,
-            ):
-                selected.append((ranking, "reranking", embedding_variant_name))
+        selected_ranking = _selected_metric_ranking(ranking, context)
+        if selected_ranking is not None:
+            selected.append(selected_ranking)
     return selected
+
+
+def _selected_metric_ranking(
+    ranking: dict[str, Any],
+    context: TopRankingSelectionContext,
+) -> tuple[dict[str, Any], str, str | None] | None:
+    ranking_kind = ranking.get("ranking_kind")
+    embedding_variant_name = _str_or_none(ranking.get("embedding_variant_name"))
+    if ranking_kind == "retrieval":
+        variant_key = embedding_variant_name or "base"
+        if (
+            not context.retrieval_score_names
+            or ranking.get("score_name") == context.retrieval_score_names.get(variant_key)
+        ):
+            return ranking, "all", embedding_variant_name
+        return None
+    if ranking_kind != "candidate_rerank":
+        return None
+    score_name = ranking.get("score_name")
+    if not isinstance(score_name, str):
+        return None
+    if embedding_variant_name is None:
+        if score_name == context.best_rerank_score_name:
+            return ranking, "reranking", None
+        return None
+    retrieval_score_name = context.retrieval_score_names.get(embedding_variant_name)
+    if retrieval_score_name is not None and _is_rerank_score_name_for_retrieval(
+        score_name=score_name,
+        retrieval_score_name=retrieval_score_name,
+    ):
+        return ranking, "reranking", embedding_variant_name
+    return None
 
 
 def _is_rerank_score_name_for_retrieval(*, score_name: str, retrieval_score_name: str) -> bool:

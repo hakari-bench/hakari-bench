@@ -270,6 +270,7 @@ class DatasetRegistry:
             self.add_collection(collection)
 
     @classmethod
+    @lru_cache(maxsize=1)
     def load_builtin(cls) -> DatasetRegistry:
         local_config_root = Path("config")
         if local_config_root.exists():

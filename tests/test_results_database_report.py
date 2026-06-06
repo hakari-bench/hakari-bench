@@ -101,6 +101,49 @@ def test_resolve_result_worker_counts_preserves_explicit_row_workers() -> None:
     ) == report.ResultWorkerCounts(selection=15, json=1, row=1)
 
 
+def test_top_ranking_selection_context_matches_selected_metric_rankings() -> None:
+    evaluation = {
+        "reranking_evaluations": [{"best_score_name": "cosine_bm25_top100_rerank"}],
+        "embedding_evaluations": [
+            {"name": "base", "best_score_name": "cosine"},
+            {"name": "int8", "best_score_name": "int8_cosine"},
+        ],
+    }
+    embedding_evaluations = report._embedding_evaluations(evaluation["embedding_evaluations"])
+    rankings = [
+        {"ranking_kind": "retrieval", "score_name": "cosine", "embedding_variant_name": None},
+        {"ranking_kind": "retrieval", "score_name": "wrong", "embedding_variant_name": None},
+        {"ranking_kind": "candidate_rerank", "score_name": "cosine_bm25_top100_rerank"},
+        {
+            "ranking_kind": "candidate_rerank",
+            "score_name": "int8_cosine_bm25_top100_rerank",
+            "embedding_variant_name": "int8",
+        },
+        {
+            "ranking_kind": "candidate_rerank",
+            "score_name": "wrong_bm25_top100_rerank",
+            "embedding_variant_name": "int8",
+        },
+    ]
+    context = report._top_ranking_selection_context(
+        evaluation=evaluation,
+        embedding_evaluations=embedding_evaluations,
+    )
+
+    selected_with_context = [
+        report._selected_metric_ranking(ranking, context)
+        for ranking in rankings
+        if report._selected_metric_ranking(ranking, context) is not None
+    ]
+    selected_existing = report._selected_metric_rankings(
+        rankings,
+        evaluation=evaluation,
+        embedding_evaluations=embedding_evaluations,
+    )
+
+    assert selected_with_context == selected_existing
+
+
 def test_insert_duckdb_rows_loads_rows_in_chunks() -> None:
     con = duckdb.connect()
     try:

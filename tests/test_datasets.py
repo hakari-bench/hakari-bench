@@ -59,6 +59,10 @@ def test_builtin_config_lives_in_repo_config() -> None:
     assert config_root.joinpath("viewer", "benchmarks.yaml").is_file()
 
 
+def test_builtin_registry_is_cached() -> None:
+    assert DatasetRegistry.load_builtin() is DatasetRegistry.load_builtin()
+
+
 def test_resolve_eval_tasks_for_builtin_nanomteb_uses_declared_splits() -> None:
     registry = DatasetRegistry.load_builtin()
 
