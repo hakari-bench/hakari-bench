@@ -450,7 +450,12 @@ def _read_top_rankings_artifact_stream(
     qrels: list[Any] = []
     rankings: list[dict[str, Any]] = []
     qrel_builder: _JsonValueBuilder | None = None
-    ranking_builder: _JsonValueBuilder | None = None
+    ranking_prefix = "artifacts.top_rankings.rankings.item"
+    corpus_ids_prefix = f"{ranking_prefix}.corpus_ids"
+    current_ranking: dict[str, Any] | None = None
+    current_corpus_ids: list[Any] | None = None
+    collect_current_corpus_ids = False
+    in_current_corpus_ids = False
     evaluation = payload.get("evaluation", {})
     if not isinstance(evaluation, dict):
         evaluation = {}
@@ -474,24 +479,66 @@ def _read_top_rankings_artifact_stream(
                     qrels.append(qrel)
                     qrel_builder = None
                 continue
-            if prefix.startswith("artifacts.top_rankings.rankings.item"):
-                if ranking_builder is None:
-                    ranking_builder = _JsonValueBuilder()
-                done, ranking = ranking_builder.feed(event, value)
-                if done:
-                    if _keep_top_ranking_row(
-                        ranking,
+            if prefix == ranking_prefix and event == "start_map":
+                current_ranking = {}
+                current_corpus_ids = None
+                collect_current_corpus_ids = False
+                in_current_corpus_ids = False
+                continue
+            if current_ranking is None:
+                continue
+            if prefix == ranking_prefix and event == "end_map":
+                if current_corpus_ids is not None:
+                    current_ranking["corpus_ids"] = current_corpus_ids
+                if _keep_top_ranking_row(
+                    current_ranking,
+                    evaluation=evaluation,
+                    embedding_evaluations=embedding_evaluations,
+                    include_retrieval_rankings=include_retrieval_rankings,
+                ):
+                    rankings.append(current_ranking)
+                current_ranking = None
+                current_corpus_ids = None
+                collect_current_corpus_ids = False
+                in_current_corpus_ids = False
+                continue
+            if prefix == corpus_ids_prefix and event == "start_array":
+                collect_current_corpus_ids = (
+                    not _ranking_selection_fields_complete(current_ranking)
+                    or _keep_top_ranking_row(
+                        current_ranking,
                         evaluation=evaluation,
                         embedding_evaluations=embedding_evaluations,
                         include_retrieval_rankings=include_retrieval_rankings,
-                    ):
-                        rankings.append(ranking)
-                    ranking_builder = None
+                    )
+                )
+                current_corpus_ids = [] if collect_current_corpus_ids else None
+                in_current_corpus_ids = True
+                continue
+            if prefix == corpus_ids_prefix and event == "end_array":
+                in_current_corpus_ids = False
+                continue
+            if in_current_corpus_ids:
+                if collect_current_corpus_ids and prefix == f"{corpus_ids_prefix}.item" and event in {
+                    "string",
+                    "number",
+                    "boolean",
+                    "null",
+                }:
+                    assert current_corpus_ids is not None
+                    current_corpus_ids.append(value)
+                continue
+            if prefix.startswith(f"{ranking_prefix}.") and event in {"string", "number", "boolean", "null"}:
+                current_ranking[prefix.rsplit(".", 1)[-1]] = value
     if not qrels and not rankings and "path" not in artifact:
         return None
     artifact["qrels"] = qrels
     artifact["rankings"] = rankings
     return artifact
+
+
+def _ranking_selection_fields_complete(ranking: dict[str, Any]) -> bool:
+    return isinstance(ranking.get("ranking_kind"), str) and isinstance(ranking.get("score_name"), str)
 
 
 def _keep_top_ranking_row(

@@ -335,6 +335,118 @@ def test_load_results_reuses_unchanged_incremental_duckdb_rows(
     assert cached_ranking_rows == []
 
 
+def test_read_top_rankings_stream_keeps_only_selected_metric_rankings(tmp_path: Path) -> None:
+    path = tmp_path / "result.json"
+    payload = {
+        "evaluation": {
+            "embedding_evaluations": [
+                {"name": "base", "best_score_name": "cosine"},
+            ],
+            "reranking_evaluations": [
+                {"best_score_name": "cosine_reranking_hybrid_top100_rerank"},
+            ],
+        }
+    }
+    path.write_text(
+        json.dumps(
+            {
+                **payload,
+                "artifacts": {
+                    "top_rankings": {
+                        "schema_version": 1,
+                        "top_k": 100,
+                        "qrels": [{"query_id": "q1", "relevant_corpus_ids": ["d1"]}],
+                        "rankings": [
+                            {
+                                "ranking_kind": "retrieval",
+                                "score_name": "dot",
+                                "query_id": "q1",
+                                "corpus_ids": ["d2"],
+                            },
+                            {
+                                "ranking_kind": "retrieval",
+                                "score_name": "cosine",
+                                "query_id": "q1",
+                                "corpus_ids": ["d1"],
+                            },
+                            {
+                                "ranking_kind": "candidate_rerank",
+                                "score_name": "cosine_reranking_hybrid_top100_rerank",
+                                "query_id": "q1",
+                                "corpus_ids": ["d1", "d2"],
+                                "safeguard_corpus_id": "d2",
+                            },
+                        ],
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    artifact = report._read_top_rankings_artifact_stream(
+        path,
+        payload=payload,
+        include_retrieval_rankings=False,
+    )
+
+    assert artifact is not None
+    assert artifact["qrels"] == [{"query_id": "q1", "relevant_corpus_ids": ["d1"]}]
+    assert [row["score_name"] for row in artifact["rankings"]] == [
+        "cosine",
+        "cosine_reranking_hybrid_top100_rerank",
+    ]
+    assert artifact["rankings"][1]["safeguard_corpus_id"] == "d2"
+
+
+def test_read_top_rankings_stream_handles_late_selection_fields(tmp_path: Path) -> None:
+    path = tmp_path / "result.json"
+    payload = {
+        "evaluation": {
+            "embedding_evaluations": [
+                {"name": "base", "best_score_name": "cosine"},
+            ],
+        }
+    }
+    path.write_text(
+        json.dumps(
+            {
+                **payload,
+                "artifacts": {
+                    "top_rankings": {
+                        "qrels": [{"query_id": "q1", "relevant_corpus_ids": ["d1"]}],
+                        "rankings": [
+                            {
+                                "query_id": "q1",
+                                "corpus_ids": ["d1", "d2"],
+                                "ranking_kind": "retrieval",
+                                "score_name": "cosine",
+                            },
+                        ],
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    artifact = report._read_top_rankings_artifact_stream(
+        path,
+        payload=payload,
+        include_retrieval_rankings=False,
+    )
+
+    assert artifact is not None
+    assert artifact["rankings"] == [
+        {
+            "query_id": "q1",
+            "corpus_ids": ["d1", "d2"],
+            "ranking_kind": "retrieval",
+            "score_name": "cosine",
+        }
+    ]
+
+
 def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_path: Path) -> None:
     results_dir = tmp_path / "results"
     task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / "en.json"

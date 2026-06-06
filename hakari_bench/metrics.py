@@ -25,38 +25,93 @@ def compute_ir_metrics(
         return {}
 
     requested_metrics = _requested_metric_groups(metric_names)
-    metrics: dict[str, float] = {}
-    for k_value in requested_metrics["acc"]:
-        metrics[f"acc@{k_value}"] = _mean(
-            1.0 if _hits_at_k(rankings[query_id], qrels.get(query_id, set()), k_value) else 0.0
-            for query_id in query_ids
-        )
+    requested_cutoffs = sorted({cutoff for cutoffs in requested_metrics.values() for cutoff in cutoffs})
+    if not requested_cutoffs:
+        return {}
+    max_cutoff = requested_cutoffs[-1]
+    metric_sums = {
+        f"{family}@{cutoff}": 0.0
+        for family, cutoffs in requested_metrics.items()
+        if family not in {"accuracy", "hit"}
+        for cutoff in cutoffs
+    }
+    ideal_dcg_cache: dict[tuple[int, int], float] = {}
+    empty_relevant: set[str] = set()
 
-    for k_value in requested_metrics["precision"]:
-        metrics[f"precision@{k_value}"] = _mean(
-            _precision_at_k(rankings[query_id], qrels.get(query_id, set()), k_value) for query_id in query_ids
+    for query_id in query_ids:
+        ranking = rankings[query_id]
+        relevant_docs = qrels.get(query_id, empty_relevant)
+        relevant_count = len(relevant_docs)
+        cutoff_values = _ranking_cutoff_values(
+            ranking=ranking,
+            relevant_docs=relevant_docs,
+            relevant_count=relevant_count,
+            max_cutoff=max_cutoff,
+            requested_cutoffs=requested_cutoffs,
+            ideal_dcg_cache=ideal_dcg_cache,
         )
-    for k_value in requested_metrics["recall"]:
-        metrics[f"recall@{k_value}"] = _mean(
-            _recall_at_k(rankings[query_id], qrels.get(query_id, set()), k_value) for query_id in query_ids
-        )
+        for metric_name in metric_sums:
+            family, cutoff_text = metric_name.split("@", 1)
+            metric_sums[metric_name] += cutoff_values[family][int(cutoff_text)]
 
-    for k_value in requested_metrics["mrr"]:
-        metrics[f"mrr@{k_value}"] = _mean(
-            _reciprocal_rank_at_k(rankings[query_id], qrels.get(query_id, set()), k_value) for query_id in query_ids
-        )
-
-    for k_value in requested_metrics["ndcg"]:
-        metrics[f"ndcg@{k_value}"] = _mean(
-            _ndcg_at_k(rankings[query_id], qrels.get(query_id, set()), k_value) for query_id in query_ids
-        )
-
-    for k_value in requested_metrics["map"]:
-        metrics[f"map@{k_value}"] = _mean(
-            _average_precision_at_k(rankings[query_id], qrels.get(query_id, set()), k_value) for query_id in query_ids
-        )
+    query_count = float(len(query_ids))
+    metrics = {metric_name: metric_sum / query_count for metric_name, metric_sum in metric_sums.items()}
 
     return {f"{evaluator_name}_{score_name}_{key}": value for key, value in metrics.items()}
+
+
+def _ranking_cutoff_values(
+    *,
+    ranking: list[str],
+    relevant_docs: set[str],
+    relevant_count: int,
+    max_cutoff: int,
+    requested_cutoffs: Sequence[int],
+    ideal_dcg_cache: dict[tuple[int, int], float],
+) -> dict[str, dict[int, float]]:
+    seen_relevant: set[str] = set()
+    unique_hits = 0
+    hit_count = 0
+    dcg = 0.0
+    average_precision_sum = 0.0
+    first_hit_rank: int | None = None
+    values = {family: {} for family in ("acc", "precision", "recall", "mrr", "ndcg", "map")}
+    cutoff_index = 0
+
+    def record(cutoff: int) -> None:
+        values["acc"][cutoff] = 1.0 if unique_hits else 0.0
+        values["precision"][cutoff] = unique_hits / float(cutoff)
+        values["recall"][cutoff] = unique_hits / float(relevant_count) if relevant_count else 0.0
+        values["mrr"][cutoff] = 1.0 / float(first_hit_rank) if first_hit_rank is not None and first_hit_rank <= cutoff else 0.0
+        ideal = _ideal_dcg(relevant_count, cutoff, ideal_dcg_cache)
+        values["ndcg"][cutoff] = dcg / ideal if ideal else 0.0
+        denominator = min(relevant_count, cutoff)
+        values["map"][cutoff] = average_precision_sum / float(denominator) if denominator and hit_count else 0.0
+
+    for index, doc_id in enumerate(ranking[:max_cutoff], start=1):
+        if doc_id in relevant_docs:
+            hit_count += 1
+            if first_hit_rank is None:
+                first_hit_rank = index
+            if doc_id not in seen_relevant:
+                seen_relevant.add(doc_id)
+                unique_hits += 1
+            dcg += 1.0 / math.log2(index + 1)
+            average_precision_sum += hit_count / float(index)
+        while cutoff_index < len(requested_cutoffs) and requested_cutoffs[cutoff_index] == index:
+            record(requested_cutoffs[cutoff_index])
+            cutoff_index += 1
+    while cutoff_index < len(requested_cutoffs):
+        record(requested_cutoffs[cutoff_index])
+        cutoff_index += 1
+    return values
+
+
+def _ideal_dcg(relevant_count: int, cutoff: int, cache: dict[tuple[int, int], float]) -> float:
+    key = (relevant_count, cutoff)
+    if key not in cache:
+        cache[key] = _dcg([1] * min(relevant_count, cutoff)) if relevant_count else 0.0
+    return cache[key]
 
 
 def normalize_ir_metric_names(metric_names: Sequence[str]) -> tuple[str, ...]:
