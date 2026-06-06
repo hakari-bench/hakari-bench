@@ -603,6 +603,83 @@ def test_load_results_parallel_selection_workers_match_serial(tmp_path: Path) ->
     assert parallel == serial
 
 
+def test_process_result_rows_worker_reuses_selected_summary_payload(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    selected = report.SelectedResultJson(
+        result_path=tmp_path / "result.json",
+        results_dir=tmp_path,
+        source_priority=0,
+        payload={
+            "model": {"id": "example/model"},
+            "target": {
+                "dataset_name": "NanoMIRACL",
+                "dataset_id": "hakari-bench/NanoMIRACL",
+                "split_name": "en",
+                "task_name": "en",
+            },
+            "evaluation": {
+                "aggregate_metric": "ndcg@10",
+                "aggregate_metric_value": 0.42,
+            },
+            "metrics": {"NanoMIRACL_en_cosine_ndcg@10": 0.42},
+        },
+        benchmark="NanoMIRACL",
+        model_dir="model",
+        model_name="example/model",
+        dataset_id="hakari-bench/NanoMIRACL",
+        task_name="en",
+        task_key="NanoMIRACL::hakari-bench/NanoMIRACL::en",
+    )
+
+    monkeypatch.setattr(
+        report,
+        "_read_result_json",
+        lambda *args, **kwargs: pytest.fail("worker should not reread result JSON summary"),
+    )
+
+    def fake_from_summary(
+        result_path: Path,
+        *,
+        payload: dict[str, object],
+        include_retrieval_rankings: bool,
+    ) -> dict[str, object]:
+        assert result_path == selected.result_path
+        assert payload is selected.payload
+        assert include_retrieval_rankings is False
+        return payload | {"from_selected_summary": True}
+
+    monkeypatch.setattr(report, "_read_result_json_from_summary", fake_from_summary)
+
+    def fake_process_result_rows(**kwargs: object) -> report.ProcessedResultRows:
+        assert isinstance(kwargs["task_payload"], dict)
+        assert kwargs["task_payload"]["from_selected_summary"] is True
+        return report.ProcessedResultRows(
+            rows=[],
+            run_accumulators={},
+            metric_rows=[],
+            diagnostic_rows=[],
+            dataset_metadata_rows=[],
+            ranking_rows=[],
+        )
+
+    monkeypatch.setattr(report, "_process_result_rows", fake_process_result_rows)
+
+    assert report._process_result_rows_worker(
+        selected,
+        include_retrieval_rankings=False,
+        model_cards_path=None,
+    ) == report.ProcessedResultRows(
+        rows=[],
+        run_accumulators={},
+        metric_rows=[],
+        diagnostic_rows=[],
+        dataset_metadata_rows=[],
+        ranking_rows=[],
+    )
+
+
 def test_load_results_parallel_row_workers_match_serial(tmp_path: Path) -> None:
     results_dir = tmp_path / "results"
     for task_name, score in [("en", 0.42), ("ja", 0.35)]:

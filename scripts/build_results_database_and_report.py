@@ -332,6 +332,28 @@ def _read_result_json(
         )
 
 
+def _read_result_json_from_summary(
+    path: Path,
+    *,
+    payload: dict[str, Any],
+    include_retrieval_rankings: bool,
+) -> dict[str, Any] | None:
+    try:
+        task_payload = dict(payload)
+        artifact = _read_top_rankings_artifact_stream(
+            path,
+            payload=task_payload,
+            include_retrieval_rankings=include_retrieval_rankings,
+        )
+        if artifact is not None:
+            artifacts = dict(task_payload.get("artifacts", {}))
+            artifacts["top_rankings"] = artifact
+            task_payload["artifacts"] = artifacts
+        return task_payload
+    except (ijson.JSONError, UnicodeDecodeError, ValueError):
+        return _read_result_json(path, include_retrieval_rankings=include_retrieval_rankings)
+
+
 def _read_result_summary_payload(path: Path) -> dict[str, Any] | None:
     try:
         return _read_result_summary_json(path)
@@ -1139,8 +1161,9 @@ async def _async_loaded_result_payloads(
         for selected_result in selected_results:
             yield (
                 selected_result,
-                _read_result_json(
+                _read_result_json_from_summary(
                     selected_result.result_path,
+                    payload=selected_result.payload,
                     include_retrieval_rankings=include_retrieval_rankings,
                 ),
             )
@@ -1151,8 +1174,9 @@ async def _async_loaded_result_payloads(
         async def submit(selected_result: SelectedResultJson) -> tuple[SelectedResultJson, dict[str, Any] | None]:
             payload = await loop.run_in_executor(
                 executor,
-                _read_result_json_worker,
+                _read_result_json_from_summary_worker,
                 str(selected_result.result_path),
+                selected_result.payload,
                 include_retrieval_rankings,
             )
             return selected_result, payload
@@ -1167,6 +1191,18 @@ async def _async_loaded_result_payloads(
 
 def _read_result_json_worker(path: str, include_retrieval_rankings: bool) -> dict[str, Any] | None:
     return _read_result_json(Path(path), include_retrieval_rankings=include_retrieval_rankings)
+
+
+def _read_result_json_from_summary_worker(
+    path: str,
+    payload: dict[str, Any],
+    include_retrieval_rankings: bool,
+) -> dict[str, Any] | None:
+    return _read_result_json_from_summary(
+        Path(path),
+        payload=payload,
+        include_retrieval_rankings=include_retrieval_rankings,
+    )
 
 
 def _processed_result_rows(
@@ -1265,8 +1301,9 @@ def _process_result_rows_worker(
     include_retrieval_rankings: bool,
     model_cards_path: str | None,
 ) -> ProcessedResultRows | None:
-    task_payload = _read_result_json(
+    task_payload = _read_result_json_from_summary(
         selected_result.result_path,
+        payload=selected_result.payload,
         include_retrieval_rankings=include_retrieval_rankings,
     )
     if task_payload is None:
