@@ -66,6 +66,7 @@ DEFAULT_VIEWER_CONFIG_DIR = Path("config/viewer")
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 DuplicateResultPolicy = Literal["first-wins", "last-wins"]
 RESULT_JSON_SUFFIXES = (".json", ".json.gz", ".json.xz")
+FULL_PARSE_RESULT_JSON_MAX_BYTES = 128 * 1024
 
 
 @dataclass(frozen=True)
@@ -501,6 +502,17 @@ def _read_result_json_from_summary(
     payload: dict[str, Any],
     include_retrieval_rankings: bool,
 ) -> dict[str, Any] | None:
+    if not include_retrieval_rankings and _should_full_parse_result_json(path):
+        try:
+            full_payload = _read_json(path)
+            if not isinstance(full_payload, dict):
+                return None
+            return _compact_result_payload(
+                full_payload,
+                include_retrieval_rankings=include_retrieval_rankings,
+            )
+        except (OSError, orjson.JSONDecodeError, json.JSONDecodeError, UnicodeDecodeError, ValueError):
+            pass
     try:
         task_payload = dict(payload)
         artifact = _read_top_rankings_artifact_stream(
@@ -515,6 +527,13 @@ def _read_result_json_from_summary(
         return task_payload
     except (ijson.JSONError, UnicodeDecodeError, ValueError):
         return _read_result_json(path, include_retrieval_rankings=include_retrieval_rankings)
+
+
+def _should_full_parse_result_json(path: Path) -> bool:
+    try:
+        return path.stat().st_size <= FULL_PARSE_RESULT_JSON_MAX_BYTES
+    except OSError:
+        return False
 
 
 def _read_result_summary_payload(path: Path) -> dict[str, Any] | None:

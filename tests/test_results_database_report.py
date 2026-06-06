@@ -144,6 +144,61 @@ def test_top_ranking_selection_context_matches_selected_metric_rankings() -> Non
     assert selected_with_context == selected_existing
 
 
+def test_small_result_json_from_summary_uses_full_parse(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    result_path = tmp_path / "result.json"
+    result_path.write_text("{}", encoding="utf-8")
+    calls: list[str] = []
+
+    def fake_read_json(path: Path) -> dict[str, object]:
+        calls.append(f"read:{path.name}")
+        return {"target": {}, "evaluation": {}, "artifacts": {"top_rankings": {"rankings": []}}}
+
+    def fake_stream(*args: object, **kwargs: object) -> None:
+        calls.append("stream")
+        return None
+
+    monkeypatch.setattr(report, "_read_json", fake_read_json)
+    monkeypatch.setattr(report, "_read_top_rankings_artifact_stream", fake_stream)
+
+    payload = report._read_result_json_from_summary(
+        result_path,
+        payload={"target": {}, "evaluation": {}},
+        include_retrieval_rankings=False,
+    )
+
+    assert payload == {"target": {}, "evaluation": {}, "artifacts": {"top_rankings": {"rankings": []}}}
+    assert calls == [f"read:{result_path.name}"]
+
+
+def test_large_result_json_from_summary_keeps_streaming_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    result_path = tmp_path / "result.json"
+    result_path.write_bytes(b"{}")
+    calls: list[str] = []
+
+    monkeypatch.setattr(report, "FULL_PARSE_RESULT_JSON_MAX_BYTES", 1)
+
+    def fake_stream(*args: object, **kwargs: object) -> dict[str, object]:
+        calls.append("stream")
+        return {"rankings": []}
+
+    monkeypatch.setattr(report, "_read_top_rankings_artifact_stream", fake_stream)
+
+    payload = report._read_result_json_from_summary(
+        result_path,
+        payload={"target": {}, "evaluation": {}},
+        include_retrieval_rankings=False,
+    )
+
+    assert payload == {"target": {}, "evaluation": {}, "artifacts": {"top_rankings": {"rankings": []}}}
+    assert calls == ["stream"]
+
+
 def test_insert_duckdb_rows_loads_rows_in_chunks() -> None:
     con = duckdb.connect()
     try:
