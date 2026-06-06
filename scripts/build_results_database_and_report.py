@@ -9,6 +9,7 @@ import hashlib
 import json
 import lzma
 import math
+import os
 import resource
 import sys
 from collections import defaultdict
@@ -65,6 +66,118 @@ DEFAULT_VIEWER_CONFIG_DIR = Path("config/viewer")
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 DuplicateResultPolicy = Literal["first-wins", "last-wins"]
 RESULT_JSON_SUFFIXES = (".json", ".json.gz", ".json.xz")
+
+
+@dataclass(frozen=True)
+class ResultWorkerCounts:
+    selection: int
+    json: int
+    row: int
+
+
+def _physical_cpu_count_from_linux_cpuinfo(
+    cpuinfo_text: str,
+    *,
+    allowed_processors: set[int] | None = None,
+) -> int | None:
+    cores: set[tuple[str, str]] = set()
+    processor: int | None = None
+    physical_id: str | None = None
+    core_id: str | None = None
+
+    def flush_record() -> None:
+        nonlocal processor, physical_id, core_id
+        if (
+            processor is not None
+            and physical_id is not None
+            and core_id is not None
+            and (allowed_processors is None or processor in allowed_processors)
+        ):
+            cores.add((physical_id, core_id))
+        processor = None
+        physical_id = None
+        core_id = None
+
+    for line in cpuinfo_text.splitlines():
+        if not line.strip():
+            flush_record()
+            continue
+        key, separator, value = line.partition(":")
+        if not separator:
+            continue
+        key = key.strip()
+        value = value.strip()
+        if key == "processor":
+            try:
+                processor = int(value)
+            except ValueError:
+                processor = None
+        elif key == "physical id":
+            physical_id = value
+        elif key == "core id":
+            core_id = value
+    flush_record()
+    return len(cores) or None
+
+
+def _available_cpu_count() -> int | None:
+    process_cpu_count = getattr(os, "process_cpu_count", None)
+    if process_cpu_count is not None:
+        count = process_cpu_count()
+        if count:
+            return int(count)
+    try:
+        return len(os.sched_getaffinity(0))
+    except AttributeError:
+        return os.cpu_count()
+
+
+def _linux_physical_cpu_count(cpuinfo_path: Path = Path("/proc/cpuinfo")) -> int | None:
+    try:
+        cpuinfo_text = cpuinfo_path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    try:
+        allowed_processors = set(os.sched_getaffinity(0))
+    except AttributeError:
+        allowed_processors = None
+    return _physical_cpu_count_from_linux_cpuinfo(
+        cpuinfo_text,
+        allowed_processors=allowed_processors,
+    )
+
+
+def default_result_worker_count() -> int:
+    cpu_count = _linux_physical_cpu_count() or _available_cpu_count() or 1
+    return max(1, cpu_count - 1)
+
+
+def resolve_result_worker_counts(
+    *,
+    result_selection_workers: int | None,
+    result_json_workers: int | None,
+    result_row_workers: int | None,
+    default_workers: int | None = None,
+) -> ResultWorkerCounts:
+    default_workers = default_result_worker_count() if default_workers is None else max(1, default_workers)
+    selection_workers = max(1, result_selection_workers) if result_selection_workers is not None else default_workers
+    if result_row_workers is not None:
+        return ResultWorkerCounts(
+            selection=selection_workers,
+            json=max(1, result_json_workers) if result_json_workers is not None else 1,
+            row=max(1, result_row_workers),
+        )
+    if result_json_workers is not None:
+        return ResultWorkerCounts(
+            selection=selection_workers,
+            json=max(1, result_json_workers),
+            row=1,
+        )
+    return ResultWorkerCounts(
+        selection=selection_workers,
+        json=default_workers,
+        row=default_workers,
+    )
 
 
 def load_benchmark_configs(config_dir: Path = DEFAULT_VIEWER_CONFIG_DIR) -> list[BenchmarkConfig]:
@@ -786,22 +899,29 @@ def main() -> None:
     parser.add_argument(
         "--result-selection-workers",
         type=int,
-        default=1,
-        help="Number of worker processes used to read result JSON summaries during candidate selection.",
+        default=None,
+        help=(
+            "Number of worker processes used to read result JSON summaries during candidate selection. "
+            "Defaults to physical CPU cores minus one."
+        ),
     )
     parser.add_argument(
         "--result-json-workers",
         type=int,
-        default=1,
-        help="Number of worker processes used to parse selected result JSON files. Use 1 for serial parsing.",
+        default=None,
+        help=(
+            "Number of worker processes used to parse selected result JSON files. "
+            "Defaults to physical CPU cores minus one when neither this option nor --result-row-workers is set. "
+            "Use 1 for serial parsing."
+        ),
     )
     parser.add_argument(
         "--result-row-workers",
         type=int,
-        default=1,
+        default=None,
         help=(
             "Number of worker processes used to parse selected result JSON and build per-file warehouse rows. "
-            "When greater than 1, this supersedes --result-json-workers."
+            "Defaults to physical CPU cores minus one. When greater than 1, this supersedes --result-json-workers."
         ),
     )
     parser.add_argument(
@@ -811,6 +931,11 @@ def main() -> None:
         help="Model name to exclude from the generated DuckDB. May be supplied multiple times.",
     )
     args = parser.parse_args()
+    result_workers = resolve_result_worker_counts(
+        result_selection_workers=args.result_selection_workers,
+        result_json_workers=args.result_json_workers,
+        result_row_workers=args.result_row_workers,
+    )
 
     memory_monitor = MemoryMonitor(
         log_path=args.memory_log_path,
@@ -836,9 +961,9 @@ def main() -> None:
             model_cards_path=args.model_cards_path,
             exclude_model_names=set(args.exclude_model_name or []),
             memory_monitor=memory_monitor,
-            result_selection_workers=args.result_selection_workers,
-            result_json_workers=args.result_json_workers,
-            result_row_workers=args.result_row_workers,
+            result_selection_workers=result_workers.selection,
+            result_json_workers=result_workers.json,
+            result_row_workers=result_workers.row,
             include_source_hashes=True,
         )
         append_duckdb_results(
@@ -888,9 +1013,9 @@ def main() -> None:
         exclude_model_names=set(args.exclude_model_name or []),
         duplicate_result_policy=duplicate_result_policy,
         memory_monitor=memory_monitor,
-        result_selection_workers=args.result_selection_workers,
-        result_json_workers=args.result_json_workers,
-        result_row_workers=args.result_row_workers,
+        result_selection_workers=result_workers.selection,
+        result_json_workers=result_workers.json,
+        result_row_workers=result_workers.row,
         include_source_hashes=True,
     )
     base_rows: list[TaskResultRow] = []

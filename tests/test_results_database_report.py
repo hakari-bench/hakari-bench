@@ -44,6 +44,63 @@ def test_nanocoir_is_a_ranked_benchmark() -> None:
     assert report.benchmark_name("hakari-bench/NanoCoIR", "NanoCoIR") == "NanoCoIR"
 
 
+def test_linux_physical_cpu_count_from_cpuinfo_counts_hyperthreaded_cores() -> None:
+    cpuinfo = "\n\n".join(
+        "\n".join(
+            [
+                f"processor\t: {processor}",
+                "physical id\t: 0",
+                f"core id\t\t: {processor % 16}",
+            ]
+        )
+        for processor in range(32)
+    )
+
+    assert report._physical_cpu_count_from_linux_cpuinfo(cpuinfo) == 16
+
+
+def test_default_result_worker_count_uses_physical_cores_minus_one(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(report, "_linux_physical_cpu_count", lambda: 16)
+
+    assert report.default_result_worker_count() == 15
+
+
+def test_default_result_worker_count_falls_back_to_available_logical_cpus(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(report, "_linux_physical_cpu_count", lambda: None)
+    monkeypatch.setattr(report, "_available_cpu_count", lambda: 8)
+
+    assert report.default_result_worker_count() == 7
+
+
+def test_resolve_result_worker_counts_uses_auto_default_when_unspecified() -> None:
+    assert report.resolve_result_worker_counts(
+        result_selection_workers=None,
+        result_json_workers=None,
+        result_row_workers=None,
+        default_workers=15,
+    ) == report.ResultWorkerCounts(selection=15, json=15, row=15)
+
+
+def test_resolve_result_worker_counts_preserves_explicit_json_workers() -> None:
+    assert report.resolve_result_worker_counts(
+        result_selection_workers=None,
+        result_json_workers=8,
+        result_row_workers=None,
+        default_workers=15,
+    ) == report.ResultWorkerCounts(selection=15, json=8, row=1)
+
+
+def test_resolve_result_worker_counts_preserves_explicit_row_workers() -> None:
+    assert report.resolve_result_worker_counts(
+        result_selection_workers=None,
+        result_json_workers=None,
+        result_row_workers=1,
+        default_workers=15,
+    ) == report.ResultWorkerCounts(selection=15, json=1, row=1)
+
+
 def test_insert_duckdb_rows_loads_rows_in_chunks() -> None:
     con = duckdb.connect()
     try:
