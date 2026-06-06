@@ -715,6 +715,41 @@ def test_load_results_parallel_selection_workers_match_serial(tmp_path: Path) ->
     assert parallel == serial
 
 
+def test_selected_result_json_records_payload_sha256(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / "en.json"
+    task_path.parent.mkdir(parents=True)
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {"id": "example/model"},
+                "target": {
+                    "dataset_name": "NanoMIRACL",
+                    "dataset_id": "hakari-bench/NanoMIRACL",
+                    "split_name": "en",
+                    "task_name": "en",
+                },
+                "evaluation": {"aggregate_metric": "ndcg@10", "aggregate_metric_value": 0.42},
+                "metrics": {"NanoMIRACL_en_cosine_ndcg@10": 0.42},
+                "artifacts": {"top_rankings": {"rankings": []}},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    selected = report._selected_result_json(
+        task_path,
+        results_dir=results_dir,
+        source_priority=0,
+        benchmark_configs=report.load_benchmark_configs(),
+        target_benchmarks=set(report.TARGET_BENCHMARKS),
+        exclude_model_names=set(),
+    )
+
+    assert selected is not None
+    assert selected.payload_sha256 == hashlib.sha256(task_path.read_bytes()).hexdigest()
+
+
 def test_process_result_rows_worker_reuses_selected_summary_payload(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -743,6 +778,7 @@ def test_process_result_rows_worker_reuses_selected_summary_payload(
         dataset_id="hakari-bench/NanoMIRACL",
         task_name="en",
         task_key="NanoMIRACL::hakari-bench/NanoMIRACL::en",
+        payload_sha256="abc123",
     )
 
     monkeypatch.setattr(
@@ -2662,6 +2698,42 @@ def test_write_duckdb_records_source_load_state_and_changed_count(tmp_path: Path
     con = duckdb.connect(str(db_path))
     try:
         assert con.execute("SELECT source_count, changed_count FROM ingestion_batches").fetchone() == (1, 0)
+    finally:
+        con.close()
+
+
+def test_write_duckdb_uses_precomputed_source_payload_hash(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    result_path = tmp_path / "model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    result_path.parent.mkdir(parents=True)
+    result_path.write_text('{"score": 0.42}', encoding="utf-8")
+    row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="NanoJMTEB-v2",
+        dataset_id="hakari-bench/NanoJMTEB-v2",
+        dataset_name="NanoJMTEB-v2",
+        split_name="ja_cwir",
+        task_name="ja_cwir",
+        task_key="NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::ja_cwir",
+        score=0.42,
+        aggregate_metric="ndcg@10",
+        result_path=str(result_path),
+    )
+    monkeypatch.setattr(report, "_payload_sha256", lambda path: pytest.fail(f"should reuse precomputed hash: {path}"))
+
+    report.write_duckdb(
+        tmp_path / "results.duckdb",
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=[row],
+        metric_rows=[],
+        standings={},
+        borda_rows=[],
+        source_payload_sha256_by_path={str(result_path): "precomputed-sha"},
+    )
+
+    con = duckdb.connect(str(tmp_path / "results.duckdb"))
+    try:
+        assert con.execute("SELECT payload_sha256 FROM source_load_state").fetchone() == ("precomputed-sha",)
     finally:
         con.close()
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+from contextlib import contextmanager
 from concurrent.futures import ProcessPoolExecutor
 import gzip
 import hashlib
@@ -305,6 +306,55 @@ def _open_json_bytes(path: Path) -> Any:
     return path.open("rb")
 
 
+class _HashingReader:
+    def __init__(self, file: Any) -> None:
+        self.file = file
+        self.digest = hashlib.sha256()
+
+    def read(self, size: int = -1) -> bytes:
+        data = self.file.read(size)
+        if data:
+            self.digest.update(data)
+        return data
+
+    def readinto(self, buffer: Any) -> int:
+        count = self.file.readinto(buffer)
+        if count:
+            self.digest.update(memoryview(buffer)[:count])
+        return count
+
+    def readable(self) -> bool:
+        return True
+
+    def close(self) -> None:
+        self.file.close()
+
+    def __enter__(self) -> _HashingReader:
+        return self
+
+    def __exit__(self, *exc_info: object) -> None:
+        self.close()
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self.file, name)
+
+
+@contextmanager
+def _open_json_bytes_with_raw_sha256(path: Path) -> Any:
+    raw_file = path.open("rb")
+    hashing_file = _HashingReader(raw_file)
+    if path.name.endswith(".json.gz"):
+        stream = gzip.GzipFile(fileobj=hashing_file, mode="rb")
+    elif path.name.endswith(".json.xz"):
+        stream = lzma.LZMAFile(hashing_file, mode="rb")
+    else:
+        stream = hashing_file
+    try:
+        yield stream, hashing_file.digest
+    finally:
+        stream.close()
+
+
 def _read_result_json(
     path: Path,
     *,
@@ -366,6 +416,19 @@ def _read_result_summary_payload(path: Path) -> dict[str, Any] | None:
         return summary_payload
 
 
+def _read_result_summary_payload_with_sha256(path: Path) -> tuple[dict[str, Any], str | None] | None:
+    try:
+        payload, payload_sha256 = _read_result_summary_json_with_sha256(path)
+        return payload, payload_sha256
+    except (ijson.JSONError, UnicodeDecodeError, ValueError):
+        payload = _read_json(path)
+        if not isinstance(payload, dict):
+            return None
+        summary_payload = dict(payload)
+        summary_payload.pop("artifacts", None)
+        return summary_payload, _payload_sha256(str(path))
+
+
 class _JsonValueBuilder:
     def __init__(self) -> None:
         self._root: Any = None
@@ -413,30 +476,42 @@ class _JsonValueBuilder:
 
 
 def _read_result_summary_json(path: Path) -> dict[str, Any]:
+    with _open_json_bytes(path) as file:
+        return _read_result_summary_json_from_file(file)
+
+
+def _read_result_summary_json_with_sha256(path: Path) -> tuple[dict[str, Any], str]:
+    with _open_json_bytes_with_raw_sha256(path) as (file, digest):
+        payload = _read_result_summary_json_from_file(file)
+        for _ in iter(lambda: file.read(1024 * 1024), b""):
+            pass
+        return payload, digest.hexdigest()
+
+
+def _read_result_summary_json_from_file(file: Any) -> dict[str, Any]:
     payload: dict[str, Any] = {}
     current_key: str | None = None
     builder: _JsonValueBuilder | None = None
     skipping_artifacts = False
-    with _open_json_bytes(path) as file:
-        for prefix, event, value in ijson.parse(file, use_float=True):
-            if prefix == "" and event == "start_map":
-                continue
-            if prefix == "" and event == "map_key":
-                current_key = str(value)
-                builder = None
-                skipping_artifacts = current_key == "artifacts"
-                continue
-            if prefix == "" and event == "end_map":
-                break
-            if current_key is None or skipping_artifacts:
-                continue
-            if builder is None:
-                builder = _JsonValueBuilder()
-            done, result = builder.feed(event, value)
-            if done:
-                payload[current_key] = result
-                current_key = None
-                builder = None
+    for prefix, event, value in ijson.parse(file, use_float=True):
+        if prefix == "" and event == "start_map":
+            continue
+        if prefix == "" and event == "map_key":
+            current_key = str(value)
+            builder = None
+            skipping_artifacts = current_key == "artifacts"
+            continue
+        if prefix == "" and event == "end_map":
+            break
+        if current_key is None or skipping_artifacts:
+            continue
+        if builder is None:
+            builder = _JsonValueBuilder()
+        done, result = builder.feed(event, value)
+        if done:
+            payload[current_key] = result
+            current_key = None
+            builder = None
     return payload
 
 
@@ -573,6 +648,7 @@ class SelectedResultJson:
     dataset_id: str
     task_name: str
     task_key: str
+    payload_sha256: str | None = None
 
 
 @dataclass
@@ -753,7 +829,7 @@ def main() -> None:
             parser.error("--append-results-dir does not support --html-output")
         if args.include_result_extensions:
             parser.error("--append-results-dir does not support --include-result-extensions")
-        rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = load_results(
+        rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = load_results(
             args.append_results_dir,
             benchmark_configs=benchmark_configs,
             include_retrieval_rankings=args.include_retrieval_rankings,
@@ -763,6 +839,7 @@ def main() -> None:
             result_selection_workers=args.result_selection_workers,
             result_json_workers=args.result_json_workers,
             result_row_workers=args.result_row_workers,
+            include_source_hashes=True,
         )
         append_duckdb_results(
             args.duckdb_path,
@@ -771,6 +848,7 @@ def main() -> None:
             diagnostic_rows=diagnostic_rows,
             dataset_metadata_rows=dataset_metadata_rows,
             ranking_rows=ranking_rows,
+            source_payload_sha256_by_path=source_hashes,
         )
         build_viewer_leaderboard_mart(
             args.duckdb_path,
@@ -801,7 +879,7 @@ def main() -> None:
     ):
         memory_monitor.sample("incremental_cache_current")
         return
-    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = load_results(
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = load_results(
         results_dirs,
         benchmark_configs=benchmark_configs,
         include_retrieval_rankings=args.include_retrieval_rankings,
@@ -813,6 +891,7 @@ def main() -> None:
         result_selection_workers=args.result_selection_workers,
         result_json_workers=args.result_json_workers,
         result_row_workers=args.result_row_workers,
+        include_source_hashes=True,
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
@@ -832,6 +911,7 @@ def main() -> None:
         borda_rows=borda_rows,
         include_result_extensions=args.include_result_extensions,
         model_cards_path=args.model_cards_path,
+        source_payload_sha256_by_path=source_hashes,
     )
     build_viewer_leaderboard_mart(
         args.duckdb_path,
@@ -865,6 +945,7 @@ def load_results(
     result_selection_workers: int = 1,
     result_json_workers: int = 1,
     result_row_workers: int = 1,
+    include_source_hashes: bool = False,
 ) -> tuple[
     list[TaskResult],
     list[dict[str, Any]],
@@ -872,6 +953,14 @@ def load_results(
     list[TaskDiagnosticRow],
     list[DatasetMetadataRow],
     list[RetrievalRankingRow],
+] | tuple[
+    list[TaskResult],
+    list[dict[str, Any]],
+    list[MetricLongRow],
+    list[TaskDiagnosticRow],
+    list[DatasetMetadataRow],
+    list[RetrievalRankingRow],
+    dict[str, str | None],
 ]:
     rows: list[TaskResult] = []
     run_accumulators: dict[str, dict[str, Any]] = {}
@@ -907,7 +996,7 @@ def load_results(
                 if current_hashes.get(path) != previous_hashes[path]
             }
             added_paths = current_paths - previous_paths
-            if not changed_paths and not added_paths and (
+            if not include_source_hashes and not changed_paths and not added_paths and (
                 cached_results := _load_results_from_incremental_cache(
                     results_dir,
                     db_path=incremental_db_path,
@@ -971,7 +1060,7 @@ def load_results(
     deduped_rows = _dedupe_task_results(rows)
     if memory_monitor is not None:
         memory_monitor.sample("load_results_complete", processed_count=len(rows))
-    return (
+    result_payload = (
         deduped_rows,
         _runs_from_task_result_rows(deduped_rows) if rebuild_runs_from_rows else _runs_from_task_results(run_accumulators),
         _dedupe_metric_rows(metric_rows),
@@ -979,6 +1068,14 @@ def load_results(
         _dedupe_dataset_metadata_rows(dataset_metadata_rows),
         _dedupe_retrieval_ranking_rows(ranking_rows),
     )
+    if not include_source_hashes:
+        return result_payload
+    source_hashes = {
+        str(selected.result_path): selected.payload_sha256
+        for selected in selected_results
+        if selected.payload_sha256 is not None
+    }
+    return (*result_payload, source_hashes)
 
 
 LoadResultsPayload = tuple[
@@ -1872,9 +1969,10 @@ def _selected_result_json(
     target_benchmarks: set[str],
     exclude_model_names: set[str],
 ) -> SelectedResultJson | None:
-    task_payload = _read_result_summary_payload(result_path)
-    if task_payload is None:
+    summary = _read_result_summary_payload_with_sha256(result_path)
+    if summary is None:
         return None
+    task_payload, payload_sha256 = summary
     target = task_payload.get("target", {})
     if not isinstance(target, dict):
         return None
@@ -1911,6 +2009,7 @@ def _selected_result_json(
         dataset_id=dataset_id,
         task_name=task_name,
         task_key=task_key,
+        payload_sha256=payload_sha256,
     )
 
 
@@ -2775,6 +2874,7 @@ def write_duckdb(
     loaded_at_utc: str | None = None,
     include_result_extensions: bool = False,
     model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
+    source_payload_sha256_by_path: dict[str, str | None] | None = None,
 ) -> None:
     db_path.parent.mkdir(parents=True, exist_ok=True)
     normalized_metric_rows = [
@@ -2801,6 +2901,7 @@ def write_duckdb(
         ranking_rows=normalized_ranking_rows,
         batch_id=batch_id,
         loaded_at_utc=loaded_at,
+        payload_sha256_by_path=source_payload_sha256_by_path,
     )
     resolved_batch_id = batch_id or _source_batch_id(source_rows, loaded_at)
     source_rows = [row | {"last_successful_batch_id": resolved_batch_id} for row in source_rows]
@@ -3233,6 +3334,7 @@ def append_duckdb_results(
     dataset_metadata_rows: Sequence[DatasetMetadataRow | dict[str, Any]] = (),
     batch_id: str | None = None,
     loaded_at_utc: str | None = None,
+    source_payload_sha256_by_path: dict[str, str | None] | None = None,
 ) -> None:
     if not db_path.exists():
         raise FileNotFoundError(f"Cannot append results because DuckDB does not exist: {db_path}")
@@ -3262,6 +3364,7 @@ def append_duckdb_results(
         ranking_rows=normalized_ranking_rows,
         batch_id=batch_id,
         loaded_at_utc=loaded_at,
+        payload_sha256_by_path=source_payload_sha256_by_path,
     )
     resolved_batch_id = batch_id or _source_batch_id(source_rows, loaded_at)
     source_rows = [row | {"last_successful_batch_id": resolved_batch_id} for row in source_rows]
@@ -3453,6 +3556,7 @@ def _source_load_state_rows(
     ranking_rows: Sequence[RetrievalRankingRow],
     batch_id: str | None,
     loaded_at_utc: str,
+    payload_sha256_by_path: dict[str, str | None] | None = None,
 ) -> list[dict[str, Any]]:
     result_paths = {
         row.result_path
@@ -3461,7 +3565,11 @@ def _source_load_state_rows(
     }
     source_rows: list[dict[str, Any]] = []
     for result_path in sorted(result_paths):
-        payload_sha256 = _payload_sha256(result_path)
+        payload_sha256 = (
+            payload_sha256_by_path[result_path]
+            if payload_sha256_by_path is not None and result_path in payload_sha256_by_path
+            else _payload_sha256(result_path)
+        )
         canonical_key_hash = hashlib.sha256(result_path.encode("utf-8")).hexdigest()
         source_rows.append(
             {
