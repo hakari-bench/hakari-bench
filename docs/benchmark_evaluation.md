@@ -274,8 +274,12 @@ specified sparse variants.
 ## Late-Interaction, Reranker, And BM25
 
 Use `evaluate late-interaction` for PyLate ColBERT models. Check
-model-specific query/document prefixes, sequence lengths, `--trust-remote-code`,
-and `--late-interaction-attend-to-expansion-tokens` before running.
+model-specific query/document prefixes, sequence lengths, prompt names,
+`--trust-remote-code`, and `--late-interaction-attend-to-expansion-tokens`
+before running. Prefer `evaluate from-model-card` when a reviewed card exists,
+because the card carries the measured best model options. Candidate ranking and
+rerank top-K/depth are benchmark protocol settings, not model optimization
+options, so they should be selected separately from the model card.
 Late-interaction evaluation now records two standard targets when a candidate
 ranking is available: full-corpus exact MaxSim retrieval for `Target: All`, and
 candidate-set exact MaxSim reranking for `Target: Reranking`. The candidate

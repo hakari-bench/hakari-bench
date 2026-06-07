@@ -585,6 +585,12 @@ def _apply_model_card_args(args: argparse.Namespace, *, provided_options: set[st
     runtime = card.get("runtime")
     if isinstance(runtime, dict):
         _apply_model_card_runtime(args, runtime, provided_options=provided_options)
+    prompts = card.get("prompts")
+    if isinstance(prompts, dict):
+        _apply_model_card_prompts(args, prompts, provided_options=provided_options)
+    late_interaction = card.get("late_interaction")
+    if method == "late-interaction" and isinstance(late_interaction, dict):
+        _apply_model_card_late_interaction(args, late_interaction, provided_options=provided_options)
     _validate_model_card_remote_code(card=card, source=source, runtime=runtime)
     target = card.get("target")
     if isinstance(target, dict):
@@ -638,6 +644,55 @@ def _apply_model_card_runtime(args: argparse.Namespace, runtime: dict[str, Any],
 
 
 _FULL_HF_REVISION_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+
+
+def _apply_model_card_prompts(args: argparse.Namespace, prompts: dict[str, Any], *, provided_options: set[str]) -> None:
+    option_map = {
+        "query_prompt": "--query-prompt",
+        "document_prompt": "--document-prompt",
+        "query_prompt_name": "--query-prompt-name",
+        "document_prompt_name": "--document-prompt-name",
+        "query_encode_task": "--query-encode-task",
+        "document_encode_task": "--document-encode-task",
+    }
+    for key, option in option_map.items():
+        if prompts.get(key) is not None and option not in provided_options:
+            setattr(args, key, _optional_string_param(prompts[key], f"model_card.prompts.{key}"))
+
+
+def _apply_model_card_late_interaction(
+    args: argparse.Namespace,
+    late_interaction: dict[str, Any],
+    *,
+    provided_options: set[str],
+) -> None:
+    int_options = {
+        "query_length": ("late_interaction_query_length", "--late-interaction-query-length"),
+        "document_length": ("late_interaction_document_length", "--late-interaction-document-length"),
+    }
+    for key, (attr, option) in int_options.items():
+        if late_interaction.get(key) is not None and option not in provided_options:
+            setattr(args, attr, _optional_positive_int_param(late_interaction[key], f"model_card.late_interaction.{key}"))
+    string_options = {
+        "query_prefix": ("late_interaction_query_prefix", "--late-interaction-query-prefix"),
+        "document_prefix": ("late_interaction_document_prefix", "--late-interaction-document-prefix"),
+    }
+    for key, (attr, option) in string_options.items():
+        if late_interaction.get(key) is not None and option not in provided_options:
+            setattr(args, attr, _optional_string_param(late_interaction[key], f"model_card.late_interaction.{key}"))
+    if late_interaction.get("do_query_expansion") is not None:
+        args.late_interaction_do_query_expansion = _bool_param(
+            late_interaction["do_query_expansion"],
+            "model_card.late_interaction.do_query_expansion",
+        )
+    if (
+        late_interaction.get("attend_to_expansion_tokens") is not None
+        and "--late-interaction-attend-to-expansion-tokens" not in provided_options
+    ):
+        args.late_interaction_attend_to_expansion_tokens = _bool_param(
+            late_interaction["attend_to_expansion_tokens"],
+            "model_card.late_interaction.attend_to_expansion_tokens",
+        )
 
 
 def _validate_model_card_remote_code(*, card: dict[str, Any], source: Any, runtime: Any) -> None:
@@ -1150,6 +1205,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 late_interaction_document_length=getattr(args, "late_interaction_document_length", None),
                 late_interaction_query_prefix=getattr(args, "late_interaction_query_prefix", None),
                 late_interaction_document_prefix=getattr(args, "late_interaction_document_prefix", None),
+                late_interaction_do_query_expansion=getattr(args, "late_interaction_do_query_expansion", None),
                 late_interaction_attend_to_expansion_tokens=getattr(
                     args,
                     "late_interaction_attend_to_expansion_tokens",

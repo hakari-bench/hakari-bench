@@ -294,6 +294,93 @@ target:
     assert args.embedding_variants[:1] == [_pipeline_variant("truncate_dim_768", _truncate_step(768))]
 
 
+def test_parse_args_from_model_card_sets_prompt_and_late_interaction_model_options(tmp_path) -> None:
+    model_card = tmp_path / "lightonai__ColBERT-Zero.yaml"
+    model_card.write_text(
+        """
+id: lightonai/ColBERT-Zero
+source:
+  type: huggingface
+  name: lightonai/ColBERT-Zero
+  revision: 5a1f22f2be589f17654d1ed455b635b70d4aff21
+method: late-interaction
+runtime:
+  dtype: fp32
+  attn_implementation: sdpa
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+late_interaction:
+  architecture: colbert
+  scoring: maxsim
+  query_prefix: "[Q] "
+  document_prefix: "[D] "
+  query_length: 39
+  document_length: 519
+  do_query_expansion: false
+  attend_to_expansion_tokens: false
+target:
+  datasets:
+    - hakari-bench/NanoBEIR-en
+""".strip(),
+        encoding="utf-8",
+    )
+
+    args = parse_args(["evaluate", "from-model-card", "--model-card", str(model_card)])
+
+    assert args.model_type == "late-interaction"
+    assert args.dtype == "fp32"
+    assert args.attn_implementation == "sdpa"
+    assert args.query_prompt_name == "query"
+    assert args.document_prompt_name == "document"
+    assert args.late_interaction_query_prefix == "[Q] "
+    assert args.late_interaction_document_prefix == "[D] "
+    assert args.late_interaction_query_length == 39
+    assert args.late_interaction_document_length == 519
+    assert args.late_interaction_do_query_expansion is False
+    assert args.late_interaction_attend_to_expansion_tokens is False
+
+
+def test_parse_args_from_model_card_keeps_explicit_prompt_and_late_interaction_overrides(tmp_path) -> None:
+    model_card = tmp_path / "lightonai__ColBERT-Zero.yaml"
+    model_card.write_text(
+        """
+id: lightonai/ColBERT-Zero
+source:
+  type: huggingface
+  name: lightonai/ColBERT-Zero
+  revision: 5a1f22f2be589f17654d1ed455b635b70d4aff21
+method: late-interaction
+prompts:
+  query_prompt_name: query
+late_interaction:
+  architecture: colbert
+  scoring: maxsim
+  query_length: 39
+target:
+  datasets:
+    - hakari-bench/NanoBEIR-en
+""".strip(),
+        encoding="utf-8",
+    )
+
+    args = parse_args(
+        [
+            "evaluate",
+            "from-model-card",
+            "--model-card",
+            str(model_card),
+            "--query-prompt-name",
+            "custom-query",
+            "--late-interaction-query-length",
+            "64",
+        ]
+    )
+
+    assert args.query_prompt_name == "custom-query"
+    assert args.late_interaction_query_length == 64
+
+
 def test_parse_args_from_model_card_rejects_unapproved_remote_code(tmp_path, capsys) -> None:
     model_card = tmp_path / "remote-code.yaml"
     model_card.write_text(

@@ -95,6 +95,7 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
             late_interaction_document_length=300,
             late_interaction_query_prefix="[QueryMarker]",
             late_interaction_document_prefix="[DocumentMarker]",
+            late_interaction_do_query_expansion=False,
             late_interaction_attend_to_expansion_tokens=True,
         )
     )
@@ -112,6 +113,7 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
             "document_length": 300,
             "query_prefix": "[QueryMarker]",
             "document_prefix": "[DocumentMarker]",
+            "do_query_expansion": False,
             "attend_to_expansion_tokens": True,
         }
     ]

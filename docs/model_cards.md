@@ -34,15 +34,30 @@ uv run hakari-bench evaluate from-model-card \
   --batch-size 32
 ```
 
-The `from-model-card` evaluator reads `method`, `source`, `runtime`,
-`embedding.truncate_dims`, and `target` from the YAML, then runs the normal
-`dense`, `sparse`, `reranker`, or `late-interaction` evaluation path. Runtime
-options such as batch size, device, prompt options, candidate ranking, and output
-directory can still be supplied on the command line.
+The `from-model-card` evaluator reads `method`, `source`, `runtime`, `prompts`,
+`embedding.truncate_dims`, `late_interaction`, and `target` from the YAML, then
+runs the normal `dense`, `sparse`, `reranker`, or `late-interaction` evaluation
+path. Runtime options such as batch size, device, candidate ranking, rerank
+depth, and output directory can still be supplied on the command line.
+
+Only model-specific optimization options belong in a model card. For example,
+prompt names, retrieval prefixes, model sequence length, dtype, attention
+implementation, and ColBERT query/document token lengths are model options.
+Candidate-ranking choices and reranking top-K/depth settings are benchmark
+protocol options, not model options, and should not be stored as model-card
+defaults.
+
+Prompt settings use the optional `prompts` section:
+
+```yaml
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+```
 
 Late-interaction model cards may also include a `late_interaction` section for
-ColBERT-style settings that should be visible in the leaderboard viewer, for
-example:
+ColBERT-style model settings that should be used by `from-model-card` evaluation
+and shown in the leaderboard viewer, for example:
 
 ```yaml
 late_interaction:
@@ -56,8 +71,11 @@ late_interaction:
   attend_to_expansion_tokens: false
 ```
 
-The viewer uses this section to populate Model Details when older DuckDB builds
-do not carry these runtime fields directly.
+The evaluator applies `query_prefix`, `document_prefix`, `query_length`,
+`document_length`, `do_query_expansion`, and `attend_to_expansion_tokens` from
+this section. For fields that also have command-line options, explicit command
+line values take precedence. The viewer also uses this section to populate Model
+Details when older DuckDB builds do not carry these runtime fields directly.
 
 If a card sets `runtime.trust_remote_code: true`, the card must also include
 `runtime.remote_code_approved: true` and `source.revision` must be the full

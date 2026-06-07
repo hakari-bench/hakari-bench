@@ -32,6 +32,7 @@ class ModelLoadConfig:
     late_interaction_document_length: int | None = None
     late_interaction_query_prefix: str | None = None
     late_interaction_document_prefix: str | None = None
+    late_interaction_do_query_expansion: bool | None = None
     late_interaction_attend_to_expansion_tokens: bool | None = None
 
 
@@ -156,6 +157,7 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         document_prefix: str | None = None,
         query_length: int | None = None,
         document_length: int | None = None,
+        do_query_expansion: bool | None = None,
     ) -> None:
         super().__init__()
         self.model_name_or_path = model_name_or_path
@@ -166,7 +168,7 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         self.document_prefix = document_prefix
         self.query_length = query_length
         self.document_length = document_length
-        self.do_query_expansion = None
+        self.do_query_expansion = do_query_expansion
         self.attend_to_expansion_tokens = None
         self.max_seq_length = document_length or _tokenizer_default_max_length(tokenizer)
         self._target_device = torch.device(device) if device is not None else _first_module_device(self)
@@ -186,6 +188,7 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         document_prefix: str | None = None,
         query_length: int | None = None,
         document_length: int | None = None,
+        do_query_expansion: bool | None = None,
     ) -> ColbertLateInteractionAdapter:
         tokenizer = _import_auto_tokenizer().from_pretrained(
             model_name_or_path,
@@ -214,6 +217,7 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
             document_prefix=document_prefix,
             query_length=query_length,
             document_length=document_length,
+            do_query_expansion=do_query_expansion,
         )
 
     @property
@@ -348,6 +352,8 @@ def load_model(config: ModelLoadConfig) -> Any:
             kwargs["query_prefix"] = config.late_interaction_query_prefix
         if config.late_interaction_document_prefix is not None:
             kwargs["document_prefix"] = config.late_interaction_document_prefix
+        if config.late_interaction_do_query_expansion is not None:
+            kwargs["do_query_expansion"] = config.late_interaction_do_query_expansion
         if config.late_interaction_attend_to_expansion_tokens is not None:
             kwargs["attend_to_expansion_tokens"] = config.late_interaction_attend_to_expansion_tokens
         try:
@@ -365,6 +371,7 @@ def load_model(config: ModelLoadConfig) -> Any:
                 document_prefix=config.late_interaction_document_prefix,
                 query_length=config.late_interaction_query_length,
                 document_length=config.late_interaction_document_length,
+                do_query_expansion=config.late_interaction_do_query_expansion,
             )
         _set_model_dtype(model, config.dtype)
         _set_attn_implementation(model, attn_implementation)
