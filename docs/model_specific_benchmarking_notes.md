@@ -532,23 +532,33 @@ uv run hakari-bench evaluate sparse \
 No non-empty query/document prompts were found in the Sentence Transformers
 SparseEncoder config.
 
-## LightOn ColBERT Zero
+## ColBERT Late-Interaction Models
 
 Applies to:
 
 - `lightonai/ColBERT-Zero`
+- `lightonai/GTE-ModernColBERT-v1`
+- `answerdotai/answerai-colbert-small-v1`
+- `colbert-ir/colbertv2.0`
+- `mixedbread-ai/mxbai-edge-colbert-v0-17m`
 
-Use the late-interaction evaluator and the ColBERT-specific settings stored in
-the model config:
+Use the late-interaction evaluator and the model-specific settings stored in
+`config/model_cards/`. These are model optimization options only: prompt names,
+prefixes, dtype, attention implementation, and ColBERT query/document token
+lengths. Do not record candidate ranking, reranking top-K, or other benchmark
+protocol settings as model defaults.
 
-- query prompt name: `query`
-- document prompt name: `document`
-- query prefix: `[Q] `
-- document prefix: `[D] `
-- query length: `39`
-- document length: `519`
+The current best NanoBEIR-en options measured in this repository are:
 
-Example:
+| Model | Runtime | Prompts | Prefixes | Query/document length | Expansion attention | Note |
+| --- | --- | --- | --- | --- | --- | --- |
+| `lightonai/ColBERT-Zero` | `fp32`, `sdpa`; best reproduced with Transformers 4.48.3 + PyLate 1.3.4 | `query_prompt_name=query`, `document_prompt_name=document` | `[Q] ` / `[D] ` | `39` / `519` | `false` | Required to avoid the no-prompt regression. |
+| `lightonai/GTE-ModernColBERT-v1` | `fp32`, `sdpa`; best reproduced with Transformers 4.48.3 + PyLate 1.3.4 | none | `[Q] ` / `[D] ` | `48` / `512` | `false` | Do not enable expansion-token attention; it regressed NanoBEIR-en. |
+| `answerdotai/answerai-colbert-small-v1` | `fp32`, `sdpa` | none | `[unused0]` / `[unused1]` | `48` / `512` | n/a | fp32 was only marginally better than the existing bf16 result. |
+| `colbert-ir/colbertv2.0` | `bf16`, `sdpa` | none | none | `48` / `512` | n/a | Prefix changes did not improve the measured score. |
+| `mixedbread-ai/mxbai-edge-colbert-v0-17m` | `bf16`, `sdpa` | none | `[Q] ` / `[D] ` | `32` / `180` | `false` | Best among the tested local options, but the absolute score remained low. |
+
+Example for the highest-scoring ColBERT-Zero option:
 
 ```bash
 uv run --group pylate hakari-bench evaluate late-interaction \
@@ -561,16 +571,25 @@ uv run --group pylate hakari-bench evaluate late-interaction \
   --late-interaction-document-length 519
 ```
 
-Unless overridden, late-interaction runs also evaluate the default
-`reranking_hybrid` candidate subset with exact MaxSim and record those scores
-for the viewer's `Target: Reranking` leaderboard.
+For reviewed cards, prefer:
+
+```bash
+uv run --group pylate hakari-bench evaluate from-model-card \
+  --model-card config/model_cards/lightonai__ColBERT-Zero.yaml
+```
+
+Use the matching card for the other ColBERT models. The card applies the model
+options above; select benchmark protocol options such as candidate ranking and
+rerank depth separately when a run explicitly requires them.
 
 Compatibility notes:
 
 - This repository keeps PyLate behind the `pylate` dependency group, so use
-  `uv run --group pylate ...` for this model.
-- PyLate currently requires Transformers 5.x in this project, so the
-  Transformers 4.x runtime matrix entries were skipped for this model.
+  `uv run --group pylate ...` for these models unless using a dedicated
+  compatibility environment.
+- ColBERT-Zero and GTE-ModernColBERT-v1 scored best in the local NanoBEIR-en
+  sweep under a Transformers 4.48.3 + PyLate 1.3.4 compatibility environment.
+  Torch was not pinned for that comparison.
 - The local evaluator aliases PyLate's renamed `_input_length` helper to
   `_text_length` before encoding. With that compatibility shim, NanoMIRACL/en
   succeeded with `tf5-sdpa`.

@@ -15,15 +15,15 @@ runtime:
   dtype: bf16
   trust_remote_code: false
   attn_implementation: sdpa
-  backend_library: sentence-transformers
+  backend_library: pylate
 late_interaction:
   architecture: colbert
   scoring: maxsim
   query_prefix: '[Q] '
   document_prefix: '[D] '
-  query_length: 48
-  document_length: 512
-  do_query_expansion: false
+  query_length: 32
+  document_length: 180
+  do_query_expansion: true
   attend_to_expansion_tokens: false
 target:
   datasets:

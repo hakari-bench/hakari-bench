@@ -1,17 +1,17 @@
-id: answerdotai/answerai-colbert-small-v1
+id: lightonai/GTE-ModernColBERT-v1
 source:
   type: huggingface
-  name: answerdotai/answerai-colbert-small-v1
-  revision: c72aa89bc61afdd85373643f3a1a75b2aad6e0fe
+  name: lightonai/GTE-ModernColBERT-v1
+  revision: cbbe53366e564450558f5e639dd499171f127538
 method: late-interaction
 parameters:
-  total: 33396864
-  input_embedding: 11720448
-  active: 21676416
+  total: 149114112
+  input_embedding: 38684160
+  active: 110429952
 embedding:
   truncate_dims: null
 runtime:
-  max_seq_length: 512
+  max_seq_length: 299
   dtype: fp32
   trust_remote_code: false
   attn_implementation: sdpa
@@ -19,10 +19,12 @@ runtime:
 late_interaction:
   architecture: colbert
   scoring: maxsim
-  query_prefix: '[unused0]'
-  document_prefix: '[unused1]'
+  query_prefix: '[Q] '
+  document_prefix: '[D] '
   query_length: 48
   document_length: 512
+  do_query_expansion: false
+  attend_to_expansion_tokens: false
 target:
   datasets:
   - hakari-bench/NanoBEIR-en

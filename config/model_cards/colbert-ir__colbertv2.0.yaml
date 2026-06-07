@@ -1,26 +1,24 @@
-id: answerdotai/answerai-colbert-small-v1
+id: colbert-ir/colbertv2.0
 source:
   type: huggingface
-  name: answerdotai/answerai-colbert-small-v1
-  revision: c72aa89bc61afdd85373643f3a1a75b2aad6e0fe
+  name: colbert-ir/colbertv2.0
+  revision: c1e84128e85ef755c096a95bdb06b47793b13acf
 method: late-interaction
 parameters:
-  total: 33396864
-  input_embedding: 11720448
-  active: 21676416
+  total: 109580544
+  input_embedding: 0
+  active: 109580544
 embedding:
   truncate_dims: null
 runtime:
   max_seq_length: 512
-  dtype: fp32
+  dtype: bf16
   trust_remote_code: false
   attn_implementation: sdpa
   backend_library: pylate
 late_interaction:
   architecture: colbert
   scoring: maxsim
-  query_prefix: '[unused0]'
-  document_prefix: '[unused1]'
   query_length: 48
   document_length: 512
 target:

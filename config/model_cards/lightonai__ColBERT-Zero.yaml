@@ -15,7 +15,10 @@ runtime:
   dtype: fp32
   trust_remote_code: false
   attn_implementation: sdpa
-  backend_library: sentence-transformers
+  backend_library: pylate
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
 late_interaction:
   architecture: colbert
   scoring: maxsim
