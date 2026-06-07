@@ -549,16 +549,6 @@ def _read_result_summary_payload(path: Path) -> dict[str, Any] | None:
 
 
 def _read_result_summary_payload_with_sha256(path: Path) -> tuple[dict[str, Any], str | None] | None:
-    if _should_full_parse_result_json(path):
-        try:
-            payload, payload_sha256 = _read_json_with_raw_sha256(path)
-            if not isinstance(payload, dict):
-                return None
-            summary_payload = dict(payload)
-            summary_payload.pop("artifacts", None)
-            return summary_payload, payload_sha256
-        except (OSError, orjson.JSONDecodeError, json.JSONDecodeError, UnicodeDecodeError, ValueError):
-            pass
     try:
         payload, payload_sha256 = _read_result_summary_json_with_sha256(path)
         return payload, payload_sha256
@@ -569,15 +559,6 @@ def _read_result_summary_payload_with_sha256(path: Path) -> tuple[dict[str, Any]
         summary_payload = dict(payload)
         summary_payload.pop("artifacts", None)
         return summary_payload, _payload_sha256(str(path))
-
-
-def _read_json_with_raw_sha256(path: Path) -> tuple[Any, str]:
-    with _open_json_bytes_with_raw_sha256(path) as (file, digest):
-        payload = file.read()
-        try:
-            return orjson.loads(payload), digest.hexdigest()
-        except orjson.JSONDecodeError:
-            return json.loads(payload.decode("utf-8")), digest.hexdigest()
 
 
 class _JsonValueBuilder:
