@@ -1206,6 +1206,35 @@ def test_write_duckdb_streaming_results_matches_materialized_build(tmp_path: Pat
         con.close()
 
 
+def test_compact_duckdb_database_preserves_live_tables(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute("CREATE TABLE kept AS SELECT 1 AS id, 'ok' AS value")
+        con.execute("CREATE TABLE discarded AS SELECT range AS id FROM range(1000)")
+        con.execute("DROP TABLE discarded")
+        con.execute("CHECKPOINT")
+    finally:
+        con.close()
+
+    report._compact_duckdb_database(db_path)
+
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        assert con.execute("SELECT * FROM kept").fetchall() == [(1, "ok")]
+        assert con.execute(
+            """
+            SELECT table_name
+            FROM duckdb_tables()
+            WHERE database_name = current_database()
+              AND schema_name = 'main'
+            ORDER BY table_name
+            """
+        ).fetchall() == [("kept",)]
+    finally:
+        con.close()
+
+
 def test_read_result_json_drops_unneeded_retrieval_rankings(tmp_path: Path) -> None:
     results_dir = tmp_path / "results"
     task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / "en.json"

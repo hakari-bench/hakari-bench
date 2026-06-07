@@ -3319,6 +3319,7 @@ def write_duckdb_streaming_results(
             )
     finally:
         con.close()
+    _compact_duckdb_database(db_path)
 
 
 @dataclass
@@ -3463,6 +3464,43 @@ def _insert_runs(con: duckdb.DuckDBPyConnection, runs: Sequence[dict[str, Any]])
             for item in runs
         ),
     )
+
+
+def _compact_duckdb_database(db_path: Path) -> None:
+    if not db_path.exists():
+        return
+    compact_path = db_path.with_name(f"{db_path.name}.compact.{os.getpid()}.tmp")
+    wal_path = db_path.with_name(f"{db_path.name}.wal")
+    compact_wal_path = compact_path.with_name(f"{compact_path.name}.wal")
+    compact_path.unlink(missing_ok=True)
+    compact_wal_path.unlink(missing_ok=True)
+    try:
+        con = duckdb.connect(str(compact_path))
+        try:
+            con.execute(f"ATTACH '{db_path}' AS source_db (READ_ONLY)")
+            table_names = [
+                row[0]
+                for row in con.execute(
+                    """
+                    SELECT table_name
+                    FROM duckdb_tables()
+                    WHERE database_name = 'source_db'
+                      AND schema_name = 'main'
+                    ORDER BY table_name
+                    """
+                ).fetchall()
+            ]
+            for table_name in table_names:
+                escaped = table_name.replace('"', '""')
+                con.execute(f'CREATE TABLE "{escaped}" AS SELECT * FROM source_db."{escaped}"')
+            con.execute("CHECKPOINT")
+        finally:
+            con.close()
+        os.replace(compact_path, db_path)
+        wal_path.unlink(missing_ok=True)
+    finally:
+        compact_path.unlink(missing_ok=True)
+        compact_wal_path.unlink(missing_ok=True)
 
 
 def _result_path_stem_sql(column_name: str = "result_path") -> str:
