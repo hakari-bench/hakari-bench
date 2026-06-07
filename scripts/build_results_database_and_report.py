@@ -658,7 +658,10 @@ def _read_top_rankings_artifact_stream(
     rankings: list[dict[str, Any]] = []
     qrel_builder: _JsonValueBuilder | None = None
     ranking_prefix = "artifacts.top_rankings.rankings.item"
+    ranking_field_prefix = f"{ranking_prefix}."
     corpus_ids_prefix = f"{ranking_prefix}.corpus_ids"
+    corpus_ids_item_prefix = f"{corpus_ids_prefix}.item"
+    qrels_item_prefix = "artifacts.top_rankings.qrels.item"
     current_ranking: dict[str, Any] | None = None
     current_corpus_ids: list[Any] | None = None
     keep_current_ranking: bool | None = None
@@ -683,7 +686,13 @@ def _read_top_rankings_artifact_stream(
             } and event in {"string", "number", "boolean", "null"}:
                 artifact[prefix.rsplit(".", 1)[-1]] = value
                 continue
-            if prefix.startswith("artifacts.top_rankings.qrels.item"):
+            if qrel_builder is not None:
+                done, qrel = qrel_builder.feed(event, value)
+                if done:
+                    qrels.append(qrel)
+                    qrel_builder = None
+                continue
+            if prefix == qrels_item_prefix:
                 if qrel_builder is None:
                     qrel_builder = _JsonValueBuilder()
                 done, qrel = qrel_builder.feed(event, value)
@@ -733,7 +742,7 @@ def _read_top_rankings_artifact_stream(
                 in_current_corpus_ids = False
                 continue
             if in_current_corpus_ids:
-                if collect_current_corpus_ids and prefix == f"{corpus_ids_prefix}.item" and event in {
+                if collect_current_corpus_ids and prefix == corpus_ids_item_prefix and event in {
                     "string",
                     "number",
                     "boolean",
@@ -742,8 +751,8 @@ def _read_top_rankings_artifact_stream(
                     assert current_corpus_ids is not None
                     current_corpus_ids.append(value)
                 continue
-            if prefix.startswith(f"{ranking_prefix}.") and event in {"string", "number", "boolean", "null"}:
-                current_ranking[prefix.rsplit(".", 1)[-1]] = value
+            if prefix.startswith(ranking_field_prefix) and event in {"string", "number", "boolean", "null"}:
+                current_ranking[prefix[len(ranking_field_prefix) :]] = value
     if not qrels and not rankings and "path" not in artifact:
         return None
     artifact["qrels"] = qrels
