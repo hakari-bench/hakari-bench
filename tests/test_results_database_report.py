@@ -781,6 +781,25 @@ def test_load_results_recomputes_viewer_metrics_from_top_ranking_artifact(tmp_pa
     ] == pytest.approx(0.5)
 
 
+def test_query_rankings_from_artifact_row_reuses_string_corpus_ids() -> None:
+    corpus_ids = ["d1", "d2"]
+
+    query_rankings = report._query_rankings_from_artifact_row(
+        {"query_id": "q1", "corpus_ids": corpus_ids}
+    )
+
+    assert query_rankings == {"q1": ["d1", "d2"]}
+    assert query_rankings["q1"] is corpus_ids
+
+
+def test_query_rankings_from_artifact_row_converts_non_string_values() -> None:
+    query_rankings = report._query_rankings_from_artifact_row(
+        {"query_id": 1, "corpus_ids": [2, "d3"]}
+    )
+
+    assert query_rankings == {"1": ["2", "d3"]}
+
+
 def test_load_results_parallel_json_workers_match_serial(tmp_path: Path) -> None:
     results_dir = tmp_path / "results"
     for task_name, score in [("en", 0.42), ("ja", 0.35)]:

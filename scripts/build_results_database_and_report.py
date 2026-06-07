@@ -2397,7 +2397,10 @@ def _query_rankings_from_artifact_row(ranking: dict[str, Any]) -> dict[str, list
     corpus_ids = ranking.get("corpus_ids")
     if query_id is None or not isinstance(corpus_ids, list):
         return {}
-    return {str(query_id): [str(corpus_id) for corpus_id in corpus_ids]}
+    query_id_text = query_id if isinstance(query_id, str) else str(query_id)
+    if all(isinstance(corpus_id, str) for corpus_id in corpus_ids):
+        return {query_id_text: corpus_ids}
+    return {query_id_text: [str(corpus_id) for corpus_id in corpus_ids]}
 
 
 def _query_rankings_without_safeguard_from_artifact_row(ranking: dict[str, Any]) -> dict[str, list[str]]:
