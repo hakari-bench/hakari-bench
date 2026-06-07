@@ -1082,6 +1082,130 @@ def test_load_results_parallel_row_workers_match_serial(tmp_path: Path) -> None:
     assert parallel == serial
 
 
+def test_write_duckdb_streaming_results_matches_materialized_build(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    for task_name, score in [("en", 0.42), ("ja", 0.35)]:
+        task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / f"{task_name}.json"
+        task_path.parent.mkdir(parents=True, exist_ok=True)
+        task_path.write_text(
+            json.dumps(
+                {
+                    "model": {"id": "example/model"},
+                    "target": {
+                        "dataset_name": "NanoMIRACL",
+                        "dataset_id": "hakari-bench/NanoMIRACL",
+                        "split_name": task_name,
+                        "task_name": task_name,
+                    },
+                    "evaluation": {
+                        "aggregate_metric": "ndcg@10",
+                        "aggregate_metric_value": score,
+                        "embedding_evaluations": [
+                            {
+                                "name": "base",
+                                "aggregate_metric": "ndcg@10",
+                                "aggregate_metric_value": score,
+                                "best_score_name": "cosine",
+                            }
+                        ],
+                    },
+                    "metrics": {f"NanoMIRACL_{task_name}_cosine_ndcg@10": score},
+                    "artifacts": {
+                        "top_rankings": {
+                            "schema_version": 2,
+                            "top_k": 100,
+                            "qrels": [{"query_id": "q1", "relevant_corpus_ids": ["d2"]}],
+                            "rankings": [
+                                {
+                                    "name": "base",
+                                    "ranking_kind": "retrieval",
+                                    "embedding_variant_name": None,
+                                    "score_name": "cosine",
+                                    "query_id": "q1",
+                                    "corpus_ids": ["d1", "d2"],
+                                }
+                            ],
+                        }
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    benchmark_configs = report.load_benchmark_configs()
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = report.load_results(
+        results_dir,
+        benchmark_configs=benchmark_configs,
+        include_source_hashes=True,
+    )
+    materialized_db = tmp_path / "materialized.duckdb"
+    report.write_duckdb(
+        materialized_db,
+        runs=runs,
+        rows=rows,
+        metric_rows=metric_rows,
+        diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
+        ranking_rows=ranking_rows,
+        standings={},
+        borda_rows=[],
+        source_payload_sha256_by_path=source_hashes,
+    )
+    streaming_db = tmp_path / "streaming.duckdb"
+    report.write_duckdb_streaming_results(
+        results_dir,
+        streaming_db,
+        benchmark_configs=benchmark_configs,
+        result_selection_workers=1,
+        result_json_workers=1,
+        result_row_workers=1,
+        insert_chunk_size=1,
+    )
+
+    con = duckdb.connect()
+    try:
+        con.execute(f"ATTACH '{materialized_db}' AS materialized")
+        con.execute(f"ATTACH '{streaming_db}' AS streaming")
+        source_columns = "result_path, payload_sha256, canonical_key_hash"
+        assert con.execute(
+            f"""
+            SELECT count(*)
+            FROM (
+                SELECT {source_columns} FROM materialized.source_load_state
+                EXCEPT
+                SELECT {source_columns} FROM streaming.source_load_state
+            )
+            """
+        ).fetchone() == (0,)
+        assert con.execute(
+            f"""
+            SELECT count(*)
+            FROM (
+                SELECT {source_columns} FROM streaming.source_load_state
+                EXCEPT
+                SELECT {source_columns} FROM materialized.source_load_state
+            )
+            """
+        ).fetchone() == (0,)
+        for table in [
+            "runs",
+            "task_results",
+            "metrics_long",
+            "task_diagnostics",
+            "dataset_metadata",
+            "viewer_task_results",
+            "viewer_filter_values",
+        ]:
+            assert con.execute(
+                f"SELECT count(*) FROM (SELECT * FROM materialized.{table} EXCEPT SELECT * FROM streaming.{table})"
+            ).fetchone() == (0,)
+            assert con.execute(
+                f"SELECT count(*) FROM (SELECT * FROM streaming.{table} EXCEPT SELECT * FROM materialized.{table})"
+            ).fetchone() == (0,)
+    finally:
+        con.close()
+
+
 def test_read_result_json_drops_unneeded_retrieval_rankings(tmp_path: Path) -> None:
     results_dir = tmp_path / "results"
     task_path = results_dir / "model" / "hakari-bench__NanoMIRACL" / "en.json"

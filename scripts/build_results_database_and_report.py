@@ -67,6 +67,7 @@ DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 DuplicateResultPolicy = Literal["first-wins", "last-wins"]
 RESULT_JSON_SUFFIXES = (".json", ".json.gz", ".json.xz")
 FULL_PARSE_RESULT_JSON_MAX_BYTES = 128 * 1024
+STREAM_RESULT_INSERT_CHUNK_SIZE = 10_000
 
 
 @dataclass(frozen=True)
@@ -934,6 +935,14 @@ def main() -> None:
         help="Reuse unchanged canonical rows from the existing DuckDB database when possible.",
     )
     parser.add_argument(
+        "--stream-results-to-duckdb",
+        action="store_true",
+        help=(
+            "Write parsed result rows to DuckDB in chunks instead of materializing all warehouse rows "
+            "in Python memory. This is intended for large full rebuilds."
+        ),
+    )
+    parser.add_argument(
         "--memory-log-path",
         type=Path,
         default=None,
@@ -1035,6 +1044,10 @@ def main() -> None:
         return
     results_dirs = args.results_dir or [Path("output/results")]
     duplicate_result_policy: DuplicateResultPolicy = "last-wins" if args.overwrite_result_duplicates else "first-wins"
+    if args.stream_results_to_duckdb and args.html_output is not None:
+        parser.error("--stream-results-to-duckdb cannot be combined with --html-output")
+    if args.stream_results_to_duckdb and args.append_results_dir:
+        parser.error("--stream-results-to-duckdb cannot be combined with --append-results-dir")
     # For deploy builds with no secondary artifacts requested, unchanged input
     # can return immediately after hash validation; rewriting the same DB would
     # dominate the incremental path.
@@ -1053,6 +1066,31 @@ def main() -> None:
     ):
         memory_monitor.sample("incremental_cache_current")
         return
+    if args.stream_results_to_duckdb:
+        write_duckdb_streaming_results(
+            results_dirs,
+            args.duckdb_path,
+            benchmark_configs=benchmark_configs,
+            include_retrieval_rankings=args.include_retrieval_rankings,
+            model_cards_path=args.model_cards_path,
+            exclude_model_names=set(args.exclude_model_name or []),
+            duplicate_result_policy=duplicate_result_policy,
+            memory_monitor=memory_monitor,
+            result_selection_workers=result_workers.selection,
+            result_json_workers=result_workers.json,
+            result_row_workers=result_workers.row,
+            include_result_extensions=args.include_result_extensions,
+        )
+        build_viewer_leaderboard_mart(
+            args.duckdb_path,
+            viewer_config=viewer_config,
+            view_names=[overall.name for overall in viewer_config.overalls],
+        )
+        if args.parquet_output_dir is not None:
+            export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
+        memory_monitor.sample("complete")
+        return
+
     rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = load_results(
         results_dirs,
         benchmark_configs=benchmark_configs,
@@ -3047,6 +3085,482 @@ def apply_rank(rows: list[dict[str, Any]], *, value_key: str, rank_key: str) -> 
     rank_by_model = {model: rank for model, rank in ranked}
     for row in rows:
         row[rank_key] = rank_by_model[row["model"]]
+
+
+def _create_runs_table(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE runs (
+            model_dir VARCHAR, model_name VARCHAR,
+            generated_at_utc VARCHAR, started_at_utc VARCHAR, finished_at_utc VARCHAR,
+            target_count INTEGER, split_count INTEGER, cache_hit_count INTEGER, evaluated_count INTEGER,
+            aggregate_metric_mean DOUBLE, active_parameters BIGINT, total_parameters BIGINT,
+            max_seq_length INTEGER, dtype VARCHAR, attn_implementation VARCHAR,
+            torch_version VARCHAR, transformers_version VARCHAR, sentence_transformers_version VARCHAR
+        )
+        """
+    )
+
+
+def _create_task_results_table(con: duckdb.DuckDBPyConnection, table_name: str = "task_results") -> None:
+    con.execute(
+        f"""
+        CREATE TABLE {table_name} (
+            model_dir VARCHAR, model_name VARCHAR,
+            model_revision VARCHAR, model_revision_requested VARCHAR,
+            benchmark VARCHAR,
+            dataset_id VARCHAR, dataset_revision VARCHAR, dataset_revision_requested VARCHAR,
+            dataset_name VARCHAR, split_name VARCHAR, task_name VARCHAR, task_key VARCHAR,
+            score DOUBLE, score_100 DOUBLE, aggregate_metric VARCHAR, result_path VARCHAR,
+            experiment_fingerprint VARCHAR,
+            active_parameters BIGINT, total_parameters BIGINT, max_seq_length INTEGER, dtype VARCHAR,
+            embedding_variant_name VARCHAR, embedding_dim INTEGER, quantization VARCHAR,
+            attn_implementation VARCHAR,
+            query_prompt VARCHAR, document_prompt VARCHAR, query_prompt_name VARCHAR, document_prompt_name VARCHAR,
+            query_encode_task VARCHAR, document_encode_task VARCHAR, trust_remote_code BOOLEAN,
+            late_interaction_query_length INTEGER,
+            late_interaction_document_length INTEGER,
+            late_interaction_query_prefix VARCHAR,
+            late_interaction_document_prefix VARCHAR,
+            late_interaction_query_expansion BOOLEAN,
+            late_interaction_attend_to_expansion_tokens BOOLEAN,
+            torch_version VARCHAR, transformers_version VARCHAR,
+            sentence_transformers_version VARCHAR, started_at_utc VARCHAR, finished_at_utc VARCHAR,
+            evaluated_at_utc VARCHAR, duration_seconds_including_dataset_load DOUBLE, wall_seconds DOUBLE
+        )
+        """
+    )
+
+
+def _create_metrics_long_table(con: duckdb.DuckDBPyConnection, table_name: str = "metrics_long") -> None:
+    con.execute(
+        f"""
+        CREATE TABLE {table_name} (
+            model_dir VARCHAR, model_name VARCHAR, benchmark VARCHAR,
+            dataset_id VARCHAR, task_name VARCHAR, metric_name VARCHAR, metric_value DOUBLE,
+            result_path VARCHAR, score_target VARCHAR, embedding_variant_name VARCHAR
+        )
+        """
+    )
+
+
+def _create_retrieval_rankings_table(con: duckdb.DuckDBPyConnection, table_name: str = "retrieval_rankings") -> None:
+    con.execute(
+        f"""
+        CREATE TABLE {table_name} (
+            model_dir VARCHAR, model_name VARCHAR, benchmark VARCHAR,
+            dataset_id VARCHAR, dataset_revision VARCHAR, dataset_name VARCHAR,
+            split_name VARCHAR, task_name VARCHAR, task_key VARCHAR,
+            result_path VARCHAR, ranking_path VARCHAR, ranking_name VARCHAR,
+            ranking_kind VARCHAR, embedding_variant_name VARCHAR, distance VARCHAR,
+            score_name VARCHAR, query_id VARCHAR, rank INTEGER, corpus_id VARCHAR
+        )
+        """
+    )
+
+
+def _create_task_diagnostics_table(con: duckdb.DuckDBPyConnection, table_name: str = "task_diagnostics") -> None:
+    con.execute(
+        f"""
+        CREATE TABLE {table_name} (
+            model_dir VARCHAR, model_name VARCHAR, benchmark VARCHAR, dataset_id VARCHAR,
+            task_name VARCHAR, task_key VARCHAR, result_path VARCHAR,
+            base_score DOUBLE, rerank_score DOUBLE, rerank_lift DOUBLE,
+            rerank_status VARCHAR, rerank_top_k INTEGER, candidate_source VARCHAR,
+            candidate_ranking VARCHAR, bm25_source VARCHAR,
+            query_coverage DOUBLE, relevant_coverage DOUBLE,
+            covered_query_count INTEGER, query_with_relevance_count INTEGER,
+            covered_relevant_count INTEGER, relevant_count INTEGER,
+            dataset_load_seconds DOUBLE, query_embedding_seconds DOUBLE,
+            corpus_embedding_seconds DOUBLE, score_and_topk_seconds DOUBLE,
+            metric_compute_seconds DOUBLE, pure_compute_seconds DOUBLE,
+            wall_seconds DOUBLE, duration_seconds_including_dataset_load DOUBLE
+        )
+        """
+    )
+
+
+def _create_dataset_metadata_table(con: duckdb.DuckDBPyConnection, table_name: str = "dataset_metadata") -> None:
+    con.execute(
+        f"""
+        CREATE TABLE {table_name} (
+            benchmark VARCHAR, dataset_id VARCHAR, dataset_name VARCHAR, split_name VARCHAR,
+            task_name VARCHAR, task_key VARCHAR, language VARCHAR, languages VARCHAR[], category VARCHAR,
+            short_description VARCHAR, citation_count INTEGER, reference_count INTEGER,
+            has_bibtex BOOLEAN, query_count INTEGER, document_count INTEGER,
+            query_mean_chars DOUBLE, document_mean_chars DOUBLE
+        )
+        """
+    )
+
+
+def write_duckdb_streaming_results(
+    results_dir: Path | Sequence[Path],
+    db_path: Path,
+    *,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    include_retrieval_rankings: bool = False,
+    model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
+    exclude_model_names: set[str] | None = None,
+    duplicate_result_policy: DuplicateResultPolicy = "first-wins",
+    memory_monitor: MemoryMonitor | None = None,
+    result_selection_workers: int = 1,
+    result_json_workers: int = 1,
+    result_row_workers: int = 1,
+    include_result_extensions: bool = False,
+    insert_chunk_size: int = STREAM_RESULT_INSERT_CHUNK_SIZE,
+) -> None:
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    target_benchmarks = set(target_benchmark_names(benchmark_configs))
+    selected_results = _selected_result_jsons(
+        results_dir,
+        benchmark_configs=benchmark_configs,
+        target_benchmarks=target_benchmarks,
+        exclude_model_names=exclude_model_names or set(),
+        duplicate_result_policy=duplicate_result_policy,
+        include_retrieval_rankings=include_retrieval_rankings,
+        memory_monitor=memory_monitor,
+        result_selection_workers=result_selection_workers,
+    )
+    loaded_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    source_rows = _source_load_state_rows_from_selected_results(
+        selected_results,
+        batch_id=None,
+        loaded_at_utc=loaded_at,
+    )
+    resolved_batch_id = _source_batch_id(source_rows, loaded_at)
+    source_rows = [row | {"last_successful_batch_id": resolved_batch_id} for row in source_rows]
+    previous_source_hashes = _read_previous_source_hashes(db_path)
+    changed_count = sum(1 for row in source_rows if previous_source_hashes.get(row["result_path"]) != row["payload_sha256"])
+    model_cards_source_path, model_cards_sha256 = _model_cards_state(model_cards_path)
+    registry = DatasetRegistry.load_builtin()
+    model_cards = load_model_cards(model_cards_path)
+    run_accumulators: dict[str, dict[str, Any]] = {}
+
+    con = duckdb.connect(str(db_path))
+    try:
+        for table in WAREHOUSE_TABLES:
+            con.execute(f"DROP TABLE IF EXISTS {table}")
+        for table in (
+            "task_results_raw",
+            "metrics_long_raw",
+            "retrieval_rankings_raw",
+            "task_diagnostics_raw",
+            "dataset_metadata_raw",
+        ):
+            con.execute(f"DROP TABLE IF EXISTS {table}")
+        _create_schema_evolution_tables(
+            con,
+            source_rows=source_rows,
+            batch_id=resolved_batch_id,
+            loaded_at_utc=loaded_at,
+            include_result_extensions=include_result_extensions,
+            model_cards_path=model_cards_source_path,
+            model_cards_sha256=model_cards_sha256,
+        )
+        _create_ingestion_state_tables(
+            con,
+            batch_id=resolved_batch_id,
+            loaded_at_utc=loaded_at,
+            source_rows=source_rows,
+            changed_count=changed_count,
+        )
+        _create_runs_table(con)
+        _create_task_results_table(con, "task_results_raw")
+        _create_metrics_long_table(con, "metrics_long_raw")
+        _create_retrieval_rankings_table(con, "retrieval_rankings_raw")
+        _create_task_diagnostics_table(con, "task_diagnostics_raw")
+        _create_dataset_metadata_table(con, "dataset_metadata_raw")
+
+        buffers = _StreamingDuckDbBuffers(con=con, chunk_size=max(1, insert_chunk_size))
+        processed_result_count = 0
+        for processed in _processed_result_rows(
+            selected_results,
+            registry=registry,
+            model_cards=model_cards,
+            model_cards_path=model_cards_path,
+            include_retrieval_rankings=include_retrieval_rankings,
+            result_json_workers=result_json_workers,
+            result_row_workers=result_row_workers,
+        ):
+            if processed is None:
+                continue
+            processed_result_count += 1
+            if memory_monitor is not None:
+                memory_monitor.maybe_sample("result_json_loaded", processed_count=processed_result_count)
+            _merge_run_accumulators(run_accumulators, processed.run_accumulators)
+            buffers.add(processed)
+        buffers.flush()
+
+        runs = _runs_from_task_results(run_accumulators)
+        _insert_runs(con, runs)
+        _materialize_streamed_result_tables(con)
+        _create_metric_dimension_and_fact_tables(con)
+        _create_fact_task_score_table(con)
+        _create_canonical_dimension_tables(con)
+        _create_viewer_task_results_table(con)
+        _create_viewer_filter_values_table(con)
+        _create_empty_viewer_leaderboard_rows_table(con)
+        _create_empty_viewer_leaderboard_language_options_table(con)
+        _create_empty_model_score_tables(con)
+        for table in (
+            "task_results_raw",
+            "metrics_long_raw",
+            "retrieval_rankings_raw",
+            "task_diagnostics_raw",
+            "dataset_metadata_raw",
+        ):
+            con.execute(f"DROP TABLE IF EXISTS {table}")
+        if memory_monitor is not None:
+            task_row = con.execute("SELECT count(*) FROM task_results").fetchone()
+            memory_monitor.sample(
+                "load_results_complete",
+                processed_count=int(task_row[0]) if task_row is not None else processed_result_count,
+            )
+    finally:
+        con.close()
+
+
+@dataclass
+class _StreamingDuckDbBuffers:
+    con: duckdb.DuckDBPyConnection
+    chunk_size: int
+    task_rows: list[TaskResult] = field(default_factory=list)
+    metric_rows: list[MetricLongRow] = field(default_factory=list)
+    diagnostic_rows: list[TaskDiagnosticRow] = field(default_factory=list)
+    dataset_metadata_rows: list[DatasetMetadataRow] = field(default_factory=list)
+    ranking_rows: list[RetrievalRankingRow] = field(default_factory=list)
+
+    def add(self, processed: ProcessedResultRows) -> None:
+        self.task_rows.extend(processed.rows)
+        self.metric_rows.extend(processed.metric_rows)
+        self.diagnostic_rows.extend(processed.diagnostic_rows)
+        self.dataset_metadata_rows.extend(processed.dataset_metadata_rows)
+        self.ranking_rows.extend(processed.ranking_rows)
+        self.flush_ready()
+
+    def flush_ready(self) -> None:
+        if len(self.task_rows) >= self.chunk_size:
+            self._flush_task_rows()
+        if len(self.metric_rows) >= self.chunk_size:
+            self._flush_metric_rows()
+        if len(self.diagnostic_rows) >= self.chunk_size:
+            self._flush_diagnostic_rows()
+        if len(self.dataset_metadata_rows) >= self.chunk_size:
+            self._flush_dataset_metadata_rows()
+        if len(self.ranking_rows) >= self.chunk_size:
+            self._flush_ranking_rows()
+
+    def flush(self) -> None:
+        self._flush_task_rows()
+        self._flush_metric_rows()
+        self._flush_diagnostic_rows()
+        self._flush_dataset_metadata_rows()
+        self._flush_ranking_rows()
+
+    def _flush_task_rows(self) -> None:
+        if not self.task_rows:
+            return
+        rows = self.task_rows
+        self.task_rows = []
+        _insert_duckdb_rows(self.con, "task_results_raw", TASK_RESULT_COLUMNS, (row.duckdb_values() for row in rows))
+
+    def _flush_metric_rows(self) -> None:
+        if not self.metric_rows:
+            return
+        rows = self.metric_rows
+        self.metric_rows = []
+        _insert_duckdb_rows(self.con, "metrics_long_raw", METRIC_LONG_COLUMNS, (row.duckdb_values() for row in rows))
+
+    def _flush_diagnostic_rows(self) -> None:
+        if not self.diagnostic_rows:
+            return
+        rows = self.diagnostic_rows
+        self.diagnostic_rows = []
+        _insert_duckdb_rows(self.con, "task_diagnostics_raw", TASK_DIAGNOSTIC_COLUMNS, (row.duckdb_values() for row in rows))
+
+    def _flush_dataset_metadata_rows(self) -> None:
+        if not self.dataset_metadata_rows:
+            return
+        rows = self.dataset_metadata_rows
+        self.dataset_metadata_rows = []
+        _insert_duckdb_rows(self.con, "dataset_metadata_raw", DATASET_METADATA_COLUMNS, (row.duckdb_values() for row in rows))
+
+    def _flush_ranking_rows(self) -> None:
+        if not self.ranking_rows:
+            return
+        rows = self.ranking_rows
+        self.ranking_rows = []
+        _insert_duckdb_rows(self.con, "retrieval_rankings_raw", RETRIEVAL_RANKING_COLUMNS, (row.duckdb_values() for row in rows))
+
+
+def _source_load_state_rows_from_selected_results(
+    selected_results: Sequence[SelectedResultJson],
+    *,
+    batch_id: str | None,
+    loaded_at_utc: str,
+) -> list[dict[str, Any]]:
+    source_rows: list[dict[str, Any]] = []
+    for selected in sorted(selected_results, key=lambda item: str(item.result_path)):
+        result_path = str(selected.result_path)
+        source_rows.append(
+            {
+                "result_path": result_path,
+                "payload_sha256": selected.payload_sha256,
+                "canonical_key_hash": hashlib.sha256(result_path.encode("utf-8")).hexdigest(),
+                "last_successful_batch_id": batch_id,
+                "loaded_at_utc": loaded_at_utc,
+            }
+        )
+    return source_rows
+
+
+def _insert_runs(con: duckdb.DuckDBPyConnection, runs: Sequence[dict[str, Any]]) -> None:
+    _insert_duckdb_rows(
+        con,
+        "runs",
+        (
+            "model_dir",
+            "model_name",
+            "generated_at_utc",
+            "started_at_utc",
+            "finished_at_utc",
+            "target_count",
+            "split_count",
+            "cache_hit_count",
+            "evaluated_count",
+            "aggregate_metric_mean",
+            "active_parameters",
+            "total_parameters",
+            "max_seq_length",
+            "dtype",
+            "attn_implementation",
+            "torch_version",
+            "transformers_version",
+            "sentence_transformers_version",
+        ),
+        (
+            (
+                item.get("model_dir"),
+                item.get("model_name"),
+                item.get("generated_at_utc"),
+                item.get("started_at_utc"),
+                item.get("finished_at_utc"),
+                item.get("target_count"),
+                item.get("split_count"),
+                item.get("cache_hit_count"),
+                item.get("evaluated_count"),
+                item.get("aggregate_metric_mean"),
+                item.get("active_parameters"),
+                item.get("total_parameters"),
+                item.get("max_seq_length"),
+                item.get("dtype"),
+                item.get("attn_implementation"),
+                item.get("torch_version"),
+                item.get("transformers_version"),
+                item.get("sentence_transformers_version"),
+            )
+            for item in runs
+        ),
+    )
+
+
+def _result_path_stem_sql(column_name: str = "result_path") -> str:
+    return f"regexp_replace(regexp_extract({column_name}, '[^/]+$'), '\\\\.json(\\\\.gz|\\\\.xz)?$', '')"
+
+
+def _materialize_streamed_result_tables(con: duckdb.DuckDBPyConnection) -> None:
+    task_columns = ", ".join(TASK_RESULT_COLUMNS)
+    metric_columns = ", ".join(METRIC_LONG_COLUMNS)
+    diagnostic_columns = ", ".join(TASK_DIAGNOSTIC_COLUMNS)
+    metadata_columns = ", ".join(DATASET_METADATA_COLUMNS)
+    ranking_columns = ", ".join(RETRIEVAL_RANKING_COLUMNS)
+    task_stem = _result_path_stem_sql("result_path")
+    con.execute(
+        f"""
+        CREATE TABLE task_results AS
+        SELECT {task_columns}
+        FROM (
+            SELECT *,
+                   row_number() OVER (
+                       PARTITION BY model_name, benchmark, dataset_id, task_key,
+                                    embedding_variant_name, embedding_dim, quantization
+                       ORDER BY CASE WHEN {task_stem} = task_name THEN 0 ELSE 1 END, result_path
+                   ) AS _rn
+            FROM task_results_raw
+        )
+        WHERE _rn = 1
+        """
+    )
+    con.execute(
+        f"""
+        CREATE TABLE metrics_long AS
+        SELECT {metric_columns}
+        FROM (
+            SELECT *,
+                   row_number() OVER (
+                       PARTITION BY model_name, benchmark, dataset_id, task_name,
+                                    score_target, embedding_variant_name, metric_name
+                       ORDER BY CASE WHEN {task_stem} = task_name THEN 0 ELSE 1 END, result_path
+                   ) AS _rn
+            FROM metrics_long_raw
+        )
+        WHERE _rn = 1
+        """
+    )
+    con.execute(
+        f"""
+        CREATE TABLE task_diagnostics AS
+        SELECT {diagnostic_columns}
+        FROM (
+            SELECT *,
+                   row_number() OVER (
+                       PARTITION BY model_name, benchmark, dataset_id, task_key
+                       ORDER BY CASE WHEN {task_stem} = task_name THEN 0 ELSE 1 END, result_path
+                   ) AS _rn
+            FROM task_diagnostics_raw
+        )
+        WHERE _rn = 1
+        """
+    )
+    con.execute(
+        f"""
+        CREATE TABLE dataset_metadata AS
+        SELECT {metadata_columns}
+        FROM (
+            SELECT *,
+                   row_number() OVER (
+                       PARTITION BY task_key
+                       ORDER BY benchmark, dataset_id, task_name
+                   ) AS _rn
+            FROM dataset_metadata_raw
+        )
+        WHERE _rn = 1
+        """
+    )
+    con.execute(f"CREATE TABLE retrieval_rankings AS SELECT DISTINCT {ranking_columns} FROM retrieval_rankings_raw")
+
+
+def _create_empty_model_score_tables(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE model_scores (
+            view_name VARCHAR, model_name VARCHAR, task_count INTEGER,
+            mean_score DOUBLE, score_rank DOUBLE, borda_score DOUBLE, borda_rank DOUBLE,
+            active_parameters BIGINT, total_parameters BIGINT, max_seq_length INTEGER, dtype VARCHAR,
+            attn_implementation VARCHAR, torch_version VARCHAR, transformers_version VARCHAR,
+            sentence_transformers_version VARCHAR
+        )
+        """
+    )
+    con.execute(
+        """
+        CREATE TABLE borda_task_scores (
+            view_name VARCHAR, model_name VARCHAR, benchmark VARCHAR, task_key VARCHAR,
+            rank DOUBLE, model_count INTEGER, borda_score DOUBLE, score DOUBLE
+        )
+        """
+    )
 
 
 def write_duckdb(
