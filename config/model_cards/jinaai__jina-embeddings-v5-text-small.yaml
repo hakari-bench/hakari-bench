@@ -25,6 +25,11 @@ runtime:
   attn_implementation: flash_attention_2
   backend_library: sentence-transformers
   similarity_fn_name: cosine
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+  query_encode_task: retrieval
+  document_encode_task: retrieval
 target:
   datasets:
   - hakari-bench/NanoBEIR-ar

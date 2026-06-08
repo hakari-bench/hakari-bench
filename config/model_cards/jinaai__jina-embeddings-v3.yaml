@@ -24,6 +24,11 @@ runtime:
   remote_code_approved: true
   backend_library: sentence-transformers
   similarity_fn_name: cosine
+prompts:
+  query_prompt_name: retrieval.query
+  document_prompt_name: retrieval.passage
+  query_encode_task: retrieval.query
+  document_encode_task: retrieval.passage
 target:
   datasets:
   - hakari-bench/NanoBEIR-ar
