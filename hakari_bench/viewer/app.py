@@ -133,8 +133,13 @@ _ICON_PATHS = {
     "info-simple": '<path d="M12 17v-6"/><path d="M12 7h.01"/>',
     "languages": '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
     "layers": '<path d="m12.83 2.18 8.5 4.73a1 1 0 0 1 0 1.75l-8.5 4.73a1.7 1.7 0 0 1-1.66 0l-8.5-4.73a1 1 0 0 1 0-1.75l8.5-4.73a1.7 1.7 0 0 1 1.66 0Z"/><path d="m22 12.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 17.5"/>',
+    "list-ordered": '<path d="M11 5h10"/><path d="M11 12h10"/><path d="M11 19h10"/><path d="M4 4h1v5"/><path d="M4 9h2"/><path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"/>',
+    "message-square-text": '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M7 11h10"/><path d="M7 15h6"/><path d="M7 7h8"/>',
     "ruler": '<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>',
+    "scan-eye": '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="1"/><path d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0"/>',
+    "shapes": '<path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/>',
     "table-properties": '<path d="M15 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M21 9H3"/><path d="M21 15H3"/>',
+    "type": '<path d="M12 4v16"/><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"/><path d="M9 20h6"/>',
 }
 
 
@@ -682,15 +687,13 @@ def _icon_svg(name: str, *, class_name: str = "hakari-icon") -> str:
 
 
 def _render_sort_indicator(*, active: bool, direction: str) -> str:
-    icon = "arrow-down-up"
-    color = "text-zinc-300"
-    if active:
-        icon = "arrow-down-narrow-wide" if direction == "asc" else "arrow-down-wide-narrow"
-        color = "text-cyan-700"
-    sort_direction_attr = escape(direction if active else "", quote=True)
+    if not active:
+        return ""
+    icon = "arrow-down-narrow-wide" if direction == "asc" else "arrow-down-wide-narrow"
+    sort_direction_attr = escape(direction, quote=True)
     return (
-        f"""<span class="inline-flex shrink-0 items-center {color}" """
-        f"""data-sort-active="{str(active).lower()}" data-sort-direction="{sort_direction_attr}">"""
+        f"""<span class="inline-flex shrink-0 items-center text-cyan-700" """
+        f"""data-sort-active="true" data-sort-direction="{sort_direction_attr}">"""
         f"""{_icon_svg(icon, class_name="hakari-icon h-3.5 w-3.5")}</span>"""
     )
 
@@ -801,7 +804,7 @@ def render_analysis_shell(*, view: str) -> str:
           <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
                   hx-get="/analysis?{escape(variant_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("git-compare-arrows", class_name="hakari-icon action-icon shrink-0")}<span>Variant impact</span></button>
           <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
-                  hx-get="/analysis?{escape(rerank_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("arrow-down-up", class_name="hakari-icon action-icon shrink-0")}<span>Reranking diagnostics</span></button>
+                  hx-get="/analysis?{escape(rerank_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("list-ordered", class_name="hakari-icon action-icon shrink-0")}<span>Reranking diagnostics</span></button>
           <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
                   hx-get="/analysis?{escape(dataset_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("database", class_name="hakari-icon action-icon shrink-0")}<span>Dataset diagnostics</span></button>
         </div>
@@ -1566,9 +1569,9 @@ def render_controls(
             {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
             <div class="flex flex-wrap items-start gap-3 border-l border-zinc-200 pl-3">
               <p class="pt-1">{_control_label(icon="cpu", text="Runtime")}</p>
-              {_render_filter_details(name="dtype_filter", summary="Dtype", icon="braces", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
-              {_render_filter_details(name="attn_filter", summary="Attention", icon="activity", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
-              {_render_filter_details(name="prompt_filter", summary="Prompt", icon="table-properties", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
+              {_render_filter_details(name="dtype_filter", summary="Dtype", icon="type", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
+              {_render_filter_details(name="attn_filter", summary="Attention", icon="scan-eye", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
+              {_render_filter_details(name="prompt_filter", summary="Prompt", icon="message-square-text", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
             </div>
           </div>
         </form>
@@ -1620,7 +1623,7 @@ def _render_model_type_controls(
     return f"""
       <fieldset id="model-type-controls" class="flex flex-wrap items-center gap-x-4 gap-y-2">
         <input type="hidden" name="model_type_filter" value="{FILTER_NONE_VALUE}">
-        {_control_label(icon="cpu", text="Model type:")}
+        {_control_label(icon="shapes", text="Model type:")}
         {''.join(checkboxes)}
       </fieldset>
     """

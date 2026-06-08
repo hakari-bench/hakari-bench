@@ -760,7 +760,7 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
     assert 'id="analysis-panel" class="px-3 pb-3"' in leaderboard_response.text
     assert 'data-icon="activity"' in leaderboard_response.text
     assert 'data-icon="git-compare-arrows"' in leaderboard_response.text
-    assert 'data-icon="arrow-down-up"' in leaderboard_response.text
+    assert 'data-icon="list-ordered"' in leaderboard_response.text
     assert 'data-icon="database"' in leaderboard_response.text
     assert "Variant impact" in leaderboard_response.text
     assert "Reranking diagnostics" in leaderboard_response.text
@@ -1714,6 +1714,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Other variants" in response.text
     assert "Model type:" in response.text
     assert 'id="model-type-controls"' in response.text
+    assert 'data-icon="shapes"' in response.text
     assert response.text.index("Filters:") < response.text.index("Model type:") < response.text.index('id="model-filter-input"')
     assert 'name="model_type_filter" value="__none_selected__"' in response.text
     assert "Filters:" in response.text
@@ -1779,7 +1780,10 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert " ▲" not in base_head
     assert " ▼" not in base_head
     assert 'data-icon="arrow-down-narrow-wide"' in base_head
+    assert 'data-icon="arrow-down-up"' not in base_head
     assert 'data-icon="arrow-down-wide-narrow"' in score_desc_head
+    assert base_head.count('data-sort-active="true"') == 1
+    assert 'data-sort-active="false"' not in base_head
     assert 'data-sort-active="true"' in base_head
     assert 'data-sort-direction="asc"' in base_head
 
@@ -2590,9 +2594,9 @@ def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
     assert 'data-filter-detail="attn_filter"' in response.text
     assert 'data-filter-detail="dtype_filter"' in response.text
     assert 'data-filter-detail="prompt_filter"' in response.text
-    assert 'data-filter-icon="activity"' in response.text
-    assert 'data-filter-icon="braces"' in response.text
-    assert 'data-filter-icon="table-properties"' in response.text
+    assert 'data-filter-icon="scan-eye"' in response.text
+    assert 'data-filter-icon="type"' in response.text
+    assert 'data-filter-icon="message-square-text"' in response.text
     assert ">Attention</span>" in response.text
     assert ">Dtype</span>" in response.text
     assert ">Prompt</span>" in response.text
