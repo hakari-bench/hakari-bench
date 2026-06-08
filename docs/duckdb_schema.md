@@ -1059,6 +1059,9 @@ are recalculated with BM25 in the reranking population.
 Older schema 5 DuckDB builds do not have late-interaction runtime columns in
 `viewer_leaderboard_rows`. The viewer fills missing Model Details values from
 matching `config/model_cards/*.yaml` `late_interaction` sections at runtime.
+The viewer also reads `language_support` from matching model cards at runtime to
+render the language support row at the top of the Model Details dialog. This is
+display metadata only and is not stored in the DuckDB schema.
 
 `viewer_leaderboard_language_options` uses the same key columns as
 `viewer_leaderboard_rows` and stores the language filter choices that should be

@@ -85,6 +85,20 @@ _ICON_PATHS = {
         '<path d="m21 8-4-4-4 4"/>'
         '<path d="M17 4v16"/>'
     ),
+    "arrow-down-narrow-wide": (
+        '<path d="m3 16 4 4 4-4"/>'
+        '<path d="M7 20V4"/>'
+        '<path d="M11 4h4"/>'
+        '<path d="M11 8h7"/>'
+        '<path d="M11 12h10"/>'
+    ),
+    "arrow-down-wide-narrow": (
+        '<path d="m3 16 4 4 4-4"/>'
+        '<path d="M7 20V4"/>'
+        '<path d="M11 4h10"/>'
+        '<path d="M11 8h7"/>'
+        '<path d="M11 12h4"/>'
+    ),
     "bar-chart-3": (
         '<path d="M3 3v18h18"/>'
         '<path d="M18 17V9"/>'
@@ -92,6 +106,10 @@ _ICON_PATHS = {
         '<path d="M8 17v-3"/>'
     ),
     "binary": '<path d="M6 20h4"/><path d="M14 10h4"/><path d="M6 14h2v6"/><path d="M14 4h2v6"/>',
+    "book-open": (
+        '<path d="M12 7v14"/>'
+        '<path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>'
+    ),
     "braces": '<path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-4a2 2 0 0 1 2-2 2 2 0 0 1-2-2V7a2 2 0 0 0-2-2h-1"/>',
     "circle-help": (
         '<circle cx="12" cy="12" r="10"/>'
@@ -112,6 +130,7 @@ _ICON_PATHS = {
     "filter": '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
     "git-branch": '<line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
     "git-compare-arrows": '<circle cx="5" cy="6" r="3"/><circle cx="19" cy="18" r="3"/><path d="M12 6h3a4 4 0 0 1 4 4v5"/><path d="m15 9-3-3 3-3"/><path d="M12 18H9a4 4 0 0 1-4-4V9"/><path d="m9 15 3 3-3 3"/>',
+    "info-simple": '<path d="M12 17v-6"/><path d="M12 7h.01"/>',
     "languages": '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
     "layers": '<path d="m12.83 2.18 8.5 4.73a1 1 0 0 1 0 1.75l-8.5 4.73a1.7 1.7 0 0 1-1.66 0l-8.5-4.73a1 1 0 0 1 0-1.75l8.5-4.73a1.7 1.7 0 0 1 1.66 0Z"/><path d="m22 12.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 17.5"/>',
     "ruler": '<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>',
@@ -662,6 +681,20 @@ def _icon_svg(name: str, *, class_name: str = "hakari-icon") -> str:
     )
 
 
+def _render_sort_indicator(*, active: bool, direction: str) -> str:
+    icon = "arrow-down-up"
+    color = "text-zinc-300"
+    if active:
+        icon = "arrow-down-narrow-wide" if direction == "asc" else "arrow-down-wide-narrow"
+        color = "text-cyan-700"
+    sort_direction_attr = escape(direction if active else "", quote=True)
+    return (
+        f"""<span class="inline-flex shrink-0 items-center {color}" """
+        f"""data-sort-active="{str(active).lower()}" data-sort-direction="{sort_direction_attr}">"""
+        f"""{_icon_svg(icon, class_name="hakari-icon h-3.5 w-3.5")}</span>"""
+    )
+
+
 def _section_title(*, icon: str, text: str, class_name: str = "text-base font-semibold") -> str:
     return (
         f"""<h2 class="inline-flex items-center gap-1.5 {class_name}">"""
@@ -701,11 +734,11 @@ def render_doc_summary_modal() -> str:
 
 def _render_doc_summary_trigger(*, doc: BenchmarkDoc, label: str) -> str:
     return f"""<button type="button"
-                  class="doc-summary-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600 hover:border-cyan-600 hover:text-cyan-700"
+                  class="doc-summary-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full text-[9px] leading-none"
                   data-doc-title="{escape(doc.title, quote=True)}"
                   data-doc-description="{escape(doc.description, quote=True)}"
                   data-doc-url="{escape(doc.url, quote=True)}"
-                  aria-label="{escape(label, quote=True)}">{_icon_svg("circle-help")}</button>"""
+                  aria-label="{escape(label, quote=True)}">{_icon_svg("book-open")}</button>"""
 
 
 def _render_help_tooltip(tooltip: str) -> str:
@@ -1705,7 +1738,7 @@ def render_table_head(
     for key, label, default_direction, align, is_metric, full_metric_name in columns:
         align = "left"
         next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
-        indicator = " ▲" if sort == key and direction == "asc" else " ▼" if sort == key else ""
+        indicator = _render_sort_indicator(active=sort == key, direction=direction)
         query_payload = state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
         query = urlencode(query_payload, doseq=True)
         justify = "justify-end" if align == "right" else "justify-start"
@@ -1724,10 +1757,10 @@ def render_table_head(
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview") if doc is not None else ""
         header_content = f"""
                  <span class="doc-label-group inline-flex w-full items-center gap-0.5" data-doc-label-group="metric">
-                   <button type="button" class="inline-flex w-full min-w-0 flex-1 {justify} text-left hover:text-cyan-700"
+                   <button type="button" class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
                            hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                            {_leaderboard_control_hx_attrs()}>
-                     <span class="{label_class}"{label_attrs}>{escape(label)}</span><span class="shrink-0 text-zinc-400">{indicator}</span>
+                     <span class="{label_class}"{label_attrs}>{escape(label)}</span>{indicator}
                    </button>{doc_trigger}
                  </span>"""
         heads.append(

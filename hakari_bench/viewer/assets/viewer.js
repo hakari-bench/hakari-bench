@@ -126,6 +126,7 @@
   };
 
   const modelDetailFields = [
+    ["Language", "language_support_label"],
     ["Model type", "model_type"],
     ["Ranking label", "ranking_model_name"],
     ["Variant", "embedding_variant_name"],
@@ -184,6 +185,11 @@
       if (!modal || !title || !list) return;
       const metadata = JSON.parse(trigger.dataset.modelMetadata || "{}");
       title.textContent = metadata.model_name || trigger.textContent || "";
+      if (metadata.model_url) {
+        title.href = metadata.model_url;
+      } else {
+        title.removeAttribute("href");
+      }
       list.replaceChildren();
       for (const [label, key] of modelDetailFields) {
         const value = formatModelDetailValue(metadata[key]);

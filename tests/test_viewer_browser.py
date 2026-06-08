@@ -316,7 +316,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                         borderRadius: getComputedStyle(el).borderRadius,
                         height: parseFloat(getComputedStyle(el).height),
                         width: parseFloat(getComputedStyle(el).width),
-                        iconCount: el.querySelectorAll("svg[data-icon='circle-help']").length,
+                        iconCount: el.querySelectorAll("svg[data-icon='book-open']").length,
                     })"""
                 )
                 assert doc_trigger_style["borderRadius"] == "9999px"

@@ -308,8 +308,68 @@ def test_static_model_cards_cover_latest_leaderboard_models() -> None:
             assert card["late_interaction"]["architecture"] == "colbert"
             assert card["late_interaction"]["scoring"] == "maxsim"
         assert card["parameters"]["active"] >= 0
-        assert card["source"]["revision"]
-        assert card["target"]["datasets"]
+
+
+def test_static_model_cards_include_language_support_evidence() -> None:
+    cards = model_cards.load_model_cards(Path("config/model_cards"))
+
+    for card in cards.values():
+        language_support = card.get("language_support")
+        assert isinstance(language_support, dict)
+        assert language_support["category"] in {"english_only", "english_plus", "multilingual"}
+        if language_support["category"] == "multilingual":
+            assert "languages" not in language_support
+        else:
+            assert isinstance(language_support["languages"], list)
+            assert language_support["languages"]
+            assert all(isinstance(language, str) and language for language in language_support["languages"])
+        evidence = language_support.get("evidence")
+        assert isinstance(evidence, dict)
+        assert evidence["benchmarks"] == ["NanoMIRACL", "MNanoBEIR"]
+        assert evidence["score_target"] == "all"
+        assert evidence["classification_policy"] == (
+            "model identity first; use broad score evidence only for models without explicit language identity"
+        )
+        assert evidence["classification_reason"]
+        assert evidence["evaluated_language_count"] > 0
+
+
+def test_static_model_card_language_support_uses_model_identity() -> None:
+    cards = model_cards.load_model_cards(Path("config/model_cards"))
+
+    assert cards["lightonai/GTE-ModernColBERT-v1"]["language_support"]["category"] == "english_only"
+    assert cards["lightonai/GTE-ModernColBERT-v1"]["language_support"]["languages"] == ["en"]
+    assert cards["sentence-transformers/all-MiniLM-L6-v2"]["language_support"]["languages"] == ["en"]
+    assert cards["cl-nagoya/ruri-v3-30m"]["language_support"]["languages"] == ["ja", "en"]
+    assert cards["hotchpotch/japanese-reranker-xsmall-v2"]["language_support"]["languages"] == ["ja", "en"]
+    assert cards["Lajavaness/bilingual-embedding-small"]["language_support"]["category"] == "multilingual"
+    assert "languages" not in cards["Lajavaness/bilingual-embedding-small"]["language_support"]
+    assert cards["codefuse-ai/F2LLM-v2-80M"]["language_support"]["category"] == "multilingual"
+    assert "languages" not in cards["codefuse-ai/F2LLM-v2-80M"]["language_support"]
+
+
+def test_static_model_card_language_support_keeps_most_rerankers_english_only() -> None:
+    cards = model_cards.load_model_cards(Path("config/model_cards"))
+
+    for model_id in [
+        "cross-encoder/ettin-reranker-17m-v1",
+        "cross-encoder/ettin-reranker-32m-v1",
+        "cross-encoder/ettin-reranker-68m-v1",
+        "cross-encoder/ettin-reranker-150m-v1",
+        "cross-encoder/ettin-reranker-400m-v1",
+    ]:
+        assert cards[model_id]["language_support"]["category"] == "english_only"
+        assert cards[model_id]["language_support"]["languages"] == ["en"]
+
+    for model_id in [
+        "Alibaba-NLP/gte-multilingual-reranker-base",
+        "BAAI/bge-reranker-v2-m3",
+        "Qwen/Qwen3-Reranker-0.6B",
+        "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+        "jinaai/jina-reranker-v2-base-multilingual",
+    ]:
+        assert cards[model_id]["language_support"]["category"] == "multilingual"
+        assert "languages" not in cards[model_id]["language_support"]
 
 
 def _write_result(

@@ -77,6 +77,60 @@ this section. For fields that also have command-line options, explicit command
 line values take precedence. The viewer also uses this section to populate Model
 Details when older DuckDB builds do not carry these runtime fields directly.
 
+Model cards may include a `language_support` section for static leaderboard
+display metadata. This section is descriptive and is not used as an evaluation
+option. Language support labels should prefer the model's intended language
+identity over weak cross-lingual transfer observed in evaluation scores. Use
+NanoMIRACL and MNanoBEIR language scores as evidence, but do not expand an
+English-only model into many languages solely because it has non-English
+transfer scores.
+
+```yaml
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    english_score: 0.62
+    non_english_mean_score: 0.702
+    high_non_english_score_threshold: 0.6
+    high_non_english_language_count: 8
+    high_non_english_family_count: 5
+    evaluated_language_count: 20
+```
+
+Use `english_only` for models that appear English-only by name, model family, or
+known benchmark intent even if they show weak non-English transfer. Use
+`english_plus` for explicit limited-language cases such as Japanese-focused
+models, where current cards use `languages: [ja, en]`. Use `multilingual` for
+models whose name or family explicitly says multilingual or bilingual, and for
+models with broad multilingual score evidence. Multilingual cards intentionally
+omit `languages`; explicit language lists are only used for limited-language
+cards such as `english_only` and `english_plus`.
+
+The leaderboard viewer shows this metadata at the top of the clicked Model
+Details dialog, before the model type. `multilingual` renders as
+`Multilingual`, `english_only` renders as `English only`, and `english_plus`
+renders the configured language list such as `ja, en`. Set
+`language_support.marker` only when another display surface needs a short label
+without changing the classification, for example:
+
+```yaml
+language_support:
+  category: english_plus
+  languages:
+  - ja
+  - en
+  marker: JP
+```
+
+The Model Details title links to the model page when a Hugging Face-style model
+identifier is available.
+
 If a card sets `runtime.trust_remote_code: true`, the card must also include
 `runtime.remote_code_approved: true` and `source.revision` must be the full
 40-character Hugging Face commit SHA that was reviewed. Short revisions,

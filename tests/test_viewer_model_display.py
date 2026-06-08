@@ -57,8 +57,8 @@ def test_render_model_name_cell_allows_long_visible_model_name_to_wrap() -> None
     html = render_model_name_cell(row, model_view)
 
     assert f">{long_name}</button>" in html
-    assert f'title="{long_name}"' in html
-    assert "aria-label=" not in html
+    assert f'aria-label="{long_name}"' in html
+    assert "title=" not in html
     assert " min-w-0 truncate " not in html
     assert "[overflow-wrap:anywhere]" in html
     assert model_view.display_name == long_name

@@ -11,6 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from hakari_bench.viewer.leaderboard import LeaderboardRow
 from hakari_bench.viewer.model_types import normalized_model_type
 
+
 class ModelCellView(BaseModel):
     model_config = ConfigDict(frozen=True)
 
@@ -195,6 +196,7 @@ def _model_metadata(
     model_type_view = _model_type_view(row=row, full_model_name=full_model_name)
     return {
         "model_name": full_model_name,
+        "model_url": _model_url(full_model_name),
         "model_type": model_type_view["label"],
         "model_type_key": model_type_view["key"],
         "ranking_model_name": row.model_name,
@@ -218,13 +220,16 @@ def _model_metadata(
         "late_interaction_document_prefix": row.late_interaction_document_prefix,
         "late_interaction_query_expansion": row.late_interaction_query_expansion,
         "late_interaction_attend_to_expansion_tokens": row.late_interaction_attend_to_expansion_tokens,
+        "language_support_category": row.language_support_category,
+        "language_support_languages": list(row.language_support_languages),
+        "language_support_label": _language_support_label(row),
     }
 
 
 def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> str:
     metadata_json = json.dumps(model_view.metadata, ensure_ascii=False, separators=(",", ":"))
     display_name = model_view.display_name
-    name_attrs = f' title="{escape(model_view.display_name, quote=True)}"'
+    name_attrs = f' aria-label="{escape(model_view.display_name, quote=True)}"'
     badges = []
     if model_view.model_type_badge_label is not None:
         badges.append(
@@ -277,6 +282,24 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> st
     </td>"""
 
 
+def _language_support_label(row: LeaderboardRow) -> str | None:
+    category = row.language_support_category
+    if category == "multilingual":
+        return "Multilingual"
+    if category == "english_only":
+        return "English only"
+    if category == "english_plus":
+        return ", ".join(row.language_support_languages) if row.language_support_languages else "Multiple"
+    return None
+
+
+def _model_url(model_name: str) -> str | None:
+    owner, separator, name = model_name.partition("/")
+    if not owner or not separator or not name:
+        return None
+    return f"https://huggingface.co/{model_name}"
+
+
 def _render_badge(*, label: str, classes: str, tooltip: str | None = None) -> str:
     escaped_tooltip = escape(tooltip, quote=True) if tooltip else ""
     tooltip_attrs = f' tabindex="0" data-tooltip="{escaped_tooltip}" aria-label="{escaped_tooltip}"' if tooltip else ""
@@ -297,7 +320,7 @@ def render_model_detail_modal() -> str:
     </div>
   </form>
   <div class="px-4 py-3">
-    <p id="model-detail-title" class="break-all font-mono text-sm font-semibold text-zinc-900"></p>
+    <a id="model-detail-title" class="break-all font-mono text-sm font-semibold text-zinc-900 underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer"></a>
     <dl id="model-detail-fields" class="mt-3 grid grid-cols-[10rem_1fr] gap-x-3 gap-y-2 text-sm"></dl>
   </div>
 </dialog>

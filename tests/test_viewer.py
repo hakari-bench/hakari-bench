@@ -537,6 +537,42 @@ runtime:
     assert result.rows[0].max_seq_length == 2048
 
 
+def test_leaderboard_service_backfills_language_support_from_model_cards(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, None, None, None),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.80, None, None, None),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "model__a.yaml").write_text(
+        """
+id: model/a
+language_support:
+  category: english_plus
+  languages:
+    - ja
+    - en
+  marker: JP
+""".strip(),
+        encoding="utf-8",
+    )
+    config = ViewerConfig(benchmarks=[BenchmarkConfig(name="BenchA")], overalls=[])
+
+    result = LeaderboardService(
+        duckdb_path=db_path,
+        config=config,
+        model_cards_path=model_cards_dir,
+    ).get_leaderboard("BenchA")
+
+    assert result.rows[0].language_support_category == "english_plus"
+    assert result.rows[0].language_support_languages == ("ja", "en")
+    assert result.rows[0].language_support_marker == "JP"
+
+
 def test_leaderboard_service_backfills_late_interaction_metadata_from_model_cards(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
@@ -767,6 +803,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "hakari-leaderboard-spin" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
     assert ".global-tooltip" in css_response.text
+    assert ".model-tooltip" not in css_response.text
+    assert ".doc-summary-trigger{background-color:transparent" in css_response.text
+    assert ".doc-summary-trigger:hover" in css_response.text
     assert "z-index:1000" in css_response.text
 
     htmx_response = client.get("/assets/htmx.min.js")
@@ -782,6 +821,7 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "window.__hakariShowTooltip" in viewer_js_response.text
     assert "window.__hakariHideTooltip" in viewer_js_response.text
     assert "window.__hakariPositionTooltip" in viewer_js_response.text
+    assert "renderCompactModelTooltip" not in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
     assert "setTimeout(() =>" in viewer_js_response.text
     assert ", 1000);" in viewer_js_response.text
@@ -888,8 +928,17 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Reranking" in response.text
     assert "data-tooltip=" in response.text
     assert "data-tooltip-placement=\"left\"" in response.text
+    assert 'class="doc-summary-trigger' in response.text
+    assert 'data-icon="book-open"' in response.text
     assert 'data-icon="circle-help"' in response.text
     assert 'data-icon="question-mark"' not in response.text
+    doc_trigger_html = response.text.split('class="doc-summary-trigger', 1)[1].split("</button>", 1)[0]
+    assert 'data-icon="book-open"' in doc_trigger_html
+    assert "<circle" not in doc_trigger_html
+    assert "border border-zinc-300" not in doc_trigger_html
+    assert "hover:bg-cyan-50" not in doc_trigger_html
+    assert "hover:border-cyan-600" not in doc_trigger_html
+    assert 'data-icon="circle-help"' not in doc_trigger_html
     assert "full-corpus retrieval scores" in response.text
     assert "reranking_hybrid reranking scores" in response.text
     assert 'data-leaderboard-control="true"' in response.text
@@ -1724,8 +1773,15 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
 
     base_head = render_table_head(result=base_result, sort="borda_rank", direction="asc")
     quantization_head = render_table_head(result=quantization_result, sort="borda_rank", direction="asc")
+    score_desc_head = render_table_head(result=base_result, sort="borda_score", direction="desc")
     assert ">Quantization</span>" not in base_head
     assert ">Quantization</span>" in quantization_head
+    assert " ▲" not in base_head
+    assert " ▼" not in base_head
+    assert 'data-icon="arrow-down-narrow-wide"' in base_head
+    assert 'data-icon="arrow-down-wide-narrow"' in score_desc_head
+    assert 'data-sort-active="true"' in base_head
+    assert 'data-sort-direction="asc"' in base_head
 
     short_filter_response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=mo")
 
@@ -2102,10 +2158,15 @@ def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) 
     assert "binary" in response.text
     assert ">remote code<" not in response.text
     assert 'data-model-metadata="' in response.text
+    assert 'data-model-tooltip="true"' not in response.text
+    assert "model-detail-trigger tooltip-trigger tooltip-delay" not in response.text
     assert "&quot;dtype&quot;:&quot;bf16&quot;" in response.text
     assert "&quot;attention&quot;:&quot;flash_attention_2&quot;" in response.text
     assert "&quot;trust_remote_code&quot;:true" in response.text
+    assert "&quot;model_url&quot;:&quot;https://huggingface.co/jinaai/jina-embeddings-v5-text-nano&quot;" in response.text
     assert "Model Details" in response.text
+    assert '<a id="model-detail-title"' in response.text
+    assert 'target="_blank" rel="noopener noreferrer"' in response.text
     assert "<script>" not in response.text
 
     ranked_facet_response = client.get(
@@ -2122,6 +2183,9 @@ def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) 
 
     viewer_js_response = client.get("/assets/viewer.js")
     assert "JSON.parse" in viewer_js_response.text
+    assert "renderCompactModelTooltip" not in viewer_js_response.text
+    assert "Language" in viewer_js_response.text
+    assert "model_url" in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
     assert 'event.target.id === "model-detail-modal"' in viewer_js_response.text
     assert "modal.close();" in viewer_js_response.text
@@ -2334,6 +2398,68 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
         'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
         'text-left px-2 uppercase leaderboard-col-rank'
     ) in head
+
+
+def test_leaderboard_model_name_cell_omits_language_marker_and_keeps_language_details(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/en-ja", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.90, 10, 12, 8192),
+            ("model/multi", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.80, 20, 24, 4096),
+            ("model/en", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.70, 30, 36, 2048),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "model__en-ja.yaml").write_text(
+        """
+id: model/en-ja
+language_support:
+  category: english_plus
+  languages:
+    - ja
+    - en
+  marker: JP
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "model__multi.yaml").write_text(
+        """
+id: model/multi
+language_support:
+  category: multilingual
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "model__en.yaml").write_text(
+        """
+id: model/en
+language_support:
+  category: english_only
+  languages:
+    - en
+""".strip(),
+        encoding="utf-8",
+    )
+    config = ViewerConfig(benchmarks=[BenchmarkConfig(name="BenchA")], overalls=[])
+    result = LeaderboardService(
+        duckdb_path=db_path,
+        config=config,
+        model_cards_path=model_cards_dir,
+    ).get_leaderboard("BenchA")
+
+    body = render_table_body(result=result)
+
+    assert 'data-language-support-category=' not in body
+    assert "language-support-marker" not in body
+    assert 'data-icon="languages"' not in body
+    assert ">JP</span>" not in body
+    assert ">EN</span>" not in body
+    assert "&quot;language_support_label&quot;:&quot;ja, en&quot;" in body
+    assert "&quot;language_support_label&quot;:&quot;Multilingual&quot;" in body
+    assert "&quot;language_support_label&quot;:&quot;English only&quot;" in body
+    assert "border-cyan-200 bg-cyan-50" not in body
 
 
 def test_leaderboard_table_hides_sparse_dimension_values() -> None:

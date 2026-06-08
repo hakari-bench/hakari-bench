@@ -35,6 +35,9 @@ class ModelCardParameters:
     late_interaction_document_prefix: str | None = None
     late_interaction_query_expansion: bool | None = None
     late_interaction_attend_to_expansion_tokens: bool | None = None
+    language_support_category: str | None = None
+    language_support_languages: tuple[str, ...] = ()
+    language_support_marker: str | None = None
 
 
 @dataclass(frozen=True)
@@ -104,6 +107,9 @@ class LeaderboardRow(BaseModel):
     late_interaction_document_prefix: str | None = None
     late_interaction_query_expansion: bool | None = None
     late_interaction_attend_to_expansion_tokens: bool | None = None
+    language_support_category: str | None = None
+    language_support_languages: tuple[str, ...] = ()
+    language_support_marker: str | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
     metric_z_values: dict[str, float] = Field(default_factory=dict)
     metric_rank_values: dict[str, float] = Field(default_factory=dict)
@@ -415,6 +421,10 @@ class LeaderboardService:
                     show_task_ranks=show_task_ranks,
                     use_task_mean_for_overall=bool(ranking_task_filter_terms),
                 )
+                leaderboard_rows = _with_model_card_parameters_for_leaderboard_rows(
+                    leaderboard_rows,
+                    self.model_card_parameters,
+                )
                 sort_key = "mean_score" if ranking_task_filter_terms and sort in {"macro_mean", "micro_mean"} else sort
                 sorted_rows = sort_rows(leaderboard_rows, sort=sort_key, direction=direction)
                 phase_timing["leaderboard_row_count"] = len(sorted_rows)
@@ -537,6 +547,7 @@ def _cached_model_card_parameters(
         if not isinstance(runtime, dict):
             runtime = {}
         late_interaction = _late_interaction_card_section(card)
+        language_support = _language_support_card_section(card)
         parameters_by_model[model_id] = ModelCardParameters(
             active_parameters=_int_or_none(parameters.get("active")),
             total_parameters=_int_or_none(parameters.get("total")),
@@ -551,6 +562,9 @@ def _cached_model_card_parameters(
             late_interaction_attend_to_expansion_tokens=_bool_or_none(
                 late_interaction.get("attend_to_expansion_tokens")
             ),
+            language_support_category=_str_or_none(language_support.get("category")),
+            language_support_languages=_str_tuple(language_support.get("languages")),
+            language_support_marker=_str_or_none(language_support.get("marker")),
         )
     return parameters_by_model
 
@@ -592,6 +606,11 @@ def _late_interaction_card_section(card: dict[str, Any]) -> dict[str, Any]:
     if isinstance(params, dict) and isinstance(params.get("late_interaction"), dict):
         return params["late_interaction"]
     return {}
+
+
+def _language_support_card_section(card: dict[str, Any]) -> dict[str, Any]:
+    section = card.get("language_support")
+    return section if isinstance(section, dict) else {}
 
 
 def _with_model_card_parameters_for_task_scores(
@@ -672,6 +691,13 @@ def _with_model_card_parameters_for_leaderboard_rows(
                     "late_interaction_attend_to_expansion_tokens": row.late_interaction_attend_to_expansion_tokens
                     if row.late_interaction_attend_to_expansion_tokens is not None
                     else parameters.late_interaction_attend_to_expansion_tokens,
+                    "language_support_category": row.language_support_category
+                    if row.language_support_category is not None
+                    else parameters.language_support_category,
+                    "language_support_languages": row.language_support_languages or parameters.language_support_languages,
+                    "language_support_marker": row.language_support_marker
+                    if row.language_support_marker is not None
+                    else parameters.language_support_marker,
                 }
             )
         )
@@ -703,6 +729,12 @@ def _str_or_none(value: Any) -> str | None:
 
 def _bool_or_none(value: Any) -> bool | None:
     return value if isinstance(value, bool) else None
+
+
+def _str_tuple(value: Any) -> tuple[str, ...]:
+    if not isinstance(value, list):
+        return ()
+    return tuple(item for item in value if isinstance(item, str) and item)
 
 
 def _load_task_scores_uncached(

@@ -22,6 +22,22 @@ runtime:
   attn_implementation: flash_attention_2
   backend_library: sentence-transformers
   similarity_fn_name: cosine
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    english_score: 0.449
+    non_english_mean_score: 0.38
+    high_non_english_score_threshold: 0.6
+    high_non_english_language_count: 0
+    high_non_english_family_count: 0
+    evaluated_language_count: 20
 target:
   datasets:
   - hakari-bench/NanoBEIR-ar

@@ -1,23 +1,25 @@
-id: jinaai/jina-reranker-v2-base-multilingual
+id: cross-encoder/ettin-reranker-150m-v1
 source:
   type: huggingface
-  name: jinaai/jina-reranker-v2-base-multilingual
-  revision: 9cfeff2df7d40d1b78e75e5e9cebec92a99813c9
+  name: cross-encoder/ettin-reranker-150m-v1
+  revision_requested: 025501c4e0f9bbeb4c5b198318e0089ff061cc14
+  revision: 025501c4e0f9bbeb4c5b198318e0089ff061cc14
 method: reranker
 parameters:
-  total: 278437633
-  input_embedding: 192001536
-  active: 86436097
+  total: 149606401
+  trainable: 149606401
+  input_embedding: 38682624
+  active: 110923777
 embedding:
   truncate_dims: null
 runtime:
-  max_seq_length: 1024
+  max_seq_length: 7999
   dtype: bf16
-  trust_remote_code: true
-  remote_code_approved: true
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
   backend_library: sentence-transformers
 language_support:
-  category: multilingual
+  category: english_only
   evidence:
     benchmarks:
     - NanoMIRACL
@@ -25,13 +27,15 @@ language_support:
     score_target: all
     classification_policy: model identity first; use broad score evidence only for
       models without explicit language identity
-    classification_reason: model_identity_multilingual_or_bilingual
-    english_score: 0.689
-    non_english_mean_score: 0.734
+    classification_reason: model_identity_english_only
+    english_score: 0.701
+    non_english_mean_score: 0.635
     high_non_english_score_threshold: 0.6
-    high_non_english_language_count: 18
-    high_non_english_family_count: 6
+    high_non_english_language_count: 11
+    high_non_english_family_count: 5
     evaluated_language_count: 20
+  languages:
+  - en
 target:
   datasets:
   - hakari-bench/NanoBEIR-ar

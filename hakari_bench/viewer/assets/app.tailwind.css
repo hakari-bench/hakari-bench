@@ -217,6 +217,17 @@
     width: 0.75rem;
   }
 
+  .doc-summary-trigger {
+    background-color: transparent;
+    color: var(--hakari-text-faint);
+  }
+
+  .doc-summary-trigger:hover,
+  .doc-summary-trigger:focus {
+    background-color: var(--hakari-accent-soft);
+    color: var(--hakari-accent);
+  }
+
   .section-heading-icon,
   .control-heading-icon,
   .filter-detail-icon,
