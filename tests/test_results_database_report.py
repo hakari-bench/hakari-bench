@@ -176,6 +176,68 @@ def test_run_warehouse_build_stream_plan_uses_streaming_writer(
     ]
 
 
+def test_run_warehouse_build_append_plan_uses_shared_loader(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    args = report.build_arg_parser().parse_args(
+        ["--append-results-dir", "added_results", "--duckdb-path", str(tmp_path / "base.duckdb")]
+    )
+    plan = report.resolve_warehouse_build_plan(args)
+    viewer_config = ViewerConfig(
+        benchmarks=[],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=[])],
+    )
+    calls: list[tuple[str, object]] = []
+
+    def load_for_plan(
+        plan_arg: report.WarehouseBuildPlan,
+        results_dirs: list[Path],
+        *,
+        benchmark_configs: list[BenchmarkConfig],
+        memory_monitor: report.MemoryMonitor,
+        incremental_db_path: Path | None = None,
+        include_source_hashes: bool = False,
+    ) -> report.LoadResultsPayloadWithSourceHashes:
+        calls.append(
+            (
+                "load",
+                (
+                    plan_arg.mode,
+                    results_dirs,
+                    benchmark_configs,
+                    incremental_db_path,
+                    include_source_hashes,
+                    isinstance(memory_monitor, report.MemoryMonitor),
+                ),
+            )
+        )
+        return [], [], [], [], [], [], {}
+
+    monkeypatch.setattr(report, "load_viewer_config", lambda _path: viewer_config)
+    monkeypatch.setattr(report, "_load_results_for_plan", load_for_plan)
+    monkeypatch.setattr(report, "append_duckdb_results", lambda duckdb_path, **_: calls.append(("append", duckdb_path)))
+    monkeypatch.setattr(report, "build_viewer_leaderboard_mart", lambda duckdb_path, **_: calls.append(("mart", duckdb_path)))
+
+    report.run_warehouse_build(plan, memory_monitor=report.MemoryMonitor(log_path=None))
+
+    assert calls == [
+        (
+            "load",
+            (
+                "append",
+                [Path("added_results")],
+                [],
+                None,
+                True,
+                True,
+            ),
+        ),
+        ("append", tmp_path / "base.duckdb"),
+        ("mart", tmp_path / "base.duckdb"),
+    ]
+
+
 def test_top_ranking_selection_context_matches_selected_metric_rankings() -> None:
     evaluation = {
         "reranking_evaluations": [{"best_score_name": "cosine_bm25_top100_rerank"}],

@@ -1064,16 +1064,11 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
     benchmark_configs = viewer_config.benchmarks
     target_benchmarks = target_benchmark_names(benchmark_configs)
     if plan.mode == "append":
-        rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = load_results(
+        rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = _load_results_for_plan(
+            plan,
             plan.append_results_dirs,
             benchmark_configs=benchmark_configs,
-            include_retrieval_rankings=plan.include_retrieval_rankings,
-            model_cards_path=plan.model_cards_path,
-            exclude_model_names=plan.exclude_model_names,
             memory_monitor=memory_monitor,
-            result_selection_workers=plan.result_workers.selection,
-            result_json_workers=plan.result_workers.json,
-            result_row_workers=plan.result_workers.row,
             include_source_hashes=True,
         )
         append_duckdb_results(
@@ -1137,18 +1132,12 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
         memory_monitor.sample("complete")
         return
 
-    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = load_results(
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = _load_results_for_plan(
+        plan,
         plan.results_dirs,
         benchmark_configs=benchmark_configs,
-        include_retrieval_rankings=plan.include_retrieval_rankings,
         incremental_db_path=plan.duckdb_path if plan.incremental and plan.duplicate_result_policy == "first-wins" else None,
-        model_cards_path=plan.model_cards_path,
-        exclude_model_names=plan.exclude_model_names,
-        duplicate_result_policy=plan.duplicate_result_policy,
         memory_monitor=memory_monitor,
-        result_selection_workers=plan.result_workers.selection,
-        result_json_workers=plan.result_workers.json,
-        result_row_workers=plan.result_workers.row,
         include_source_hashes=True,
     )
     base_rows: list[TaskResultRow] = []
@@ -1223,6 +1212,55 @@ LoadResultsPayloadWithSourceHashes = tuple[
     list[RetrievalRankingRow],
     dict[str, str | None],
 ]
+
+
+@overload
+def _load_results_for_plan(
+    plan: WarehouseBuildPlan,
+    results_dir: Path | Sequence[Path],
+    *,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    memory_monitor: MemoryMonitor | None,
+    incremental_db_path: Path | None = None,
+    include_source_hashes: Literal[False] = False,
+) -> LoadResultsPayload: ...
+
+
+@overload
+def _load_results_for_plan(
+    plan: WarehouseBuildPlan,
+    results_dir: Path | Sequence[Path],
+    *,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    memory_monitor: MemoryMonitor | None,
+    incremental_db_path: Path | None = None,
+    include_source_hashes: Literal[True],
+) -> LoadResultsPayloadWithSourceHashes: ...
+
+
+def _load_results_for_plan(
+    plan: WarehouseBuildPlan,
+    results_dir: Path | Sequence[Path],
+    *,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    memory_monitor: MemoryMonitor | None,
+    incremental_db_path: Path | None = None,
+    include_source_hashes: bool = False,
+) -> LoadResultsPayload | LoadResultsPayloadWithSourceHashes:
+    return load_results(
+        results_dir,
+        benchmark_configs=benchmark_configs,
+        include_retrieval_rankings=plan.include_retrieval_rankings,
+        incremental_db_path=incremental_db_path,
+        model_cards_path=plan.model_cards_path,
+        exclude_model_names=plan.exclude_model_names,
+        duplicate_result_policy=plan.duplicate_result_policy,
+        memory_monitor=memory_monitor,
+        result_selection_workers=plan.result_workers.selection,
+        result_json_workers=plan.result_workers.json,
+        result_row_workers=plan.result_workers.row,
+        include_source_hashes=include_source_hashes,
+    )
 
 
 @overload
