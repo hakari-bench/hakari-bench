@@ -600,7 +600,7 @@ def render_page(
         {latest_update}
       </h1>
       <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
-      <p class="mt-2 max-w-4xl text-sm text-zinc-600">Compare multilingual retrieval models, inspect compression variants, and audit reranking and Nano subset diagnostics from the DuckDB result warehouse.</p>
+      <p class="mt-2 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
     </header>
     <section
       id="leaderboard-panel"
