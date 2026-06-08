@@ -65,9 +65,12 @@ from hakari_bench.warehouse_schema import (
 DEFAULT_VIEWER_CONFIG_DIR = Path("config/viewer")
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 DuplicateResultPolicy = Literal["first-wins", "last-wins"]
+WarehouseBuildMode = Literal["append", "stream", "materialized"]
 RESULT_JSON_SUFFIXES = (".json", ".json.gz", ".json.xz")
 FULL_PARSE_RESULT_JSON_MAX_BYTES = 128 * 1024
 STREAM_RESULT_INSERT_CHUNK_SIZE = 10_000
+DEFAULT_RESULTS_DIR = Path("output/hakari-results")
+DEFAULT_DUCKDB_PATH = DEFAULT_RESULTS_DIR / "hakari_bench.duckdb"
 
 
 @dataclass(frozen=True)
@@ -75,6 +78,24 @@ class ResultWorkerCounts:
     selection: int
     json: int
     row: int
+
+
+@dataclass(frozen=True)
+class WarehouseBuildPlan:
+    mode: WarehouseBuildMode
+    results_dirs: list[Path]
+    append_results_dirs: list[Path]
+    duckdb_path: Path
+    html_output: Path | None
+    viewer_config_dir: Path
+    model_cards_path: Path | None
+    parquet_output_dir: Path | None
+    include_retrieval_rankings: bool
+    include_result_extensions: bool
+    incremental: bool
+    duplicate_result_policy: DuplicateResultPolicy
+    result_workers: ResultWorkerCounts
+    exclude_model_names: set[str]
 
 
 def _physical_cpu_count_from_linux_cpuinfo(
@@ -865,7 +886,7 @@ def _peak_rss_bytes() -> int:
     return peak if sys.platform == "darwin" else peak * 1024
 
 
-def main() -> None:
+def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--results-dir",
@@ -895,7 +916,7 @@ def main() -> None:
             "the original result roots. May be supplied multiple times."
         ),
     )
-    parser.add_argument("--duckdb-path", type=Path, default=Path("output/hakari-results/hakari_bench.duckdb"))
+    parser.add_argument("--duckdb-path", type=Path, default=DEFAULT_DUCKDB_PATH)
     parser.add_argument(
         "--html-output",
         type=Path,
@@ -989,44 +1010,74 @@ def main() -> None:
         default=None,
         help="Model name to exclude from the generated DuckDB. May be supplied multiple times.",
     )
-    args = parser.parse_args()
+    return parser
+
+
+def resolve_warehouse_build_plan(args: argparse.Namespace) -> WarehouseBuildPlan:
     result_workers = resolve_result_worker_counts(
         result_selection_workers=args.result_selection_workers,
         result_json_workers=args.result_json_workers,
         result_row_workers=args.result_row_workers,
     )
-
-    memory_monitor = MemoryMonitor(
-        log_path=args.memory_log_path,
-        sample_interval=args.memory_log_interval,
-    )
-    memory_monitor.sample("start", processed_count=0)
-    viewer_config = load_viewer_config(args.viewer_config_dir)
-    benchmark_configs = viewer_config.benchmarks
-    target_benchmarks = target_benchmark_names(benchmark_configs)
     if args.append_results_dir:
         if args.results_dir is not None:
-            parser.error("--append-results-dir cannot be combined with --results-dir")
+            raise ValueError("--append-results-dir cannot be combined with --results-dir")
         if args.overwrite_result_duplicates:
-            parser.error("--append-results-dir cannot be combined with --overwrite-result-duplicates")
+            raise ValueError("--append-results-dir cannot be combined with --overwrite-result-duplicates")
         if args.html_output is not None:
-            parser.error("--append-results-dir does not support --html-output")
+            raise ValueError("--append-results-dir does not support --html-output")
         if args.include_result_extensions:
-            parser.error("--append-results-dir does not support --include-result-extensions")
+            raise ValueError("--append-results-dir does not support --include-result-extensions")
+        mode: WarehouseBuildMode = "append"
+        results_dirs: list[Path] = []
+        append_results_dirs = list(args.append_results_dir)
+    else:
+        if args.stream_results_to_duckdb and args.html_output is not None:
+            raise ValueError("--stream-results-to-duckdb cannot be combined with --html-output")
+        mode = "stream" if args.stream_results_to_duckdb else "materialized"
+        results_dirs = list(args.results_dir or [DEFAULT_RESULTS_DIR])
+        append_results_dirs = []
+
+    duplicate_result_policy: DuplicateResultPolicy = (
+        "last-wins" if args.overwrite_result_duplicates else "first-wins"
+    )
+    return WarehouseBuildPlan(
+        mode=mode,
+        results_dirs=results_dirs,
+        append_results_dirs=append_results_dirs,
+        duckdb_path=args.duckdb_path,
+        html_output=args.html_output,
+        viewer_config_dir=args.viewer_config_dir,
+        model_cards_path=args.model_cards_path,
+        parquet_output_dir=args.parquet_output_dir,
+        include_retrieval_rankings=args.include_retrieval_rankings,
+        include_result_extensions=args.include_result_extensions,
+        incremental=args.incremental,
+        duplicate_result_policy=duplicate_result_policy,
+        result_workers=result_workers,
+        exclude_model_names=set(args.exclude_model_name or []),
+    )
+
+
+def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonitor) -> None:
+    viewer_config = load_viewer_config(plan.viewer_config_dir)
+    benchmark_configs = viewer_config.benchmarks
+    target_benchmarks = target_benchmark_names(benchmark_configs)
+    if plan.mode == "append":
         rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = load_results(
-            args.append_results_dir,
+            plan.append_results_dirs,
             benchmark_configs=benchmark_configs,
-            include_retrieval_rankings=args.include_retrieval_rankings,
-            model_cards_path=args.model_cards_path,
-            exclude_model_names=set(args.exclude_model_name or []),
+            include_retrieval_rankings=plan.include_retrieval_rankings,
+            model_cards_path=plan.model_cards_path,
+            exclude_model_names=plan.exclude_model_names,
             memory_monitor=memory_monitor,
-            result_selection_workers=result_workers.selection,
-            result_json_workers=result_workers.json,
-            result_row_workers=result_workers.row,
+            result_selection_workers=plan.result_workers.selection,
+            result_json_workers=plan.result_workers.json,
+            result_row_workers=plan.result_workers.row,
             include_source_hashes=True,
         )
         append_duckdb_results(
-            args.duckdb_path,
+            plan.duckdb_path,
             rows=rows,
             metric_rows=metric_rows,
             diagnostic_rows=diagnostic_rows,
@@ -1035,85 +1086,79 @@ def main() -> None:
             source_payload_sha256_by_path=source_hashes,
         )
         build_viewer_leaderboard_mart(
-            args.duckdb_path,
+            plan.duckdb_path,
             viewer_config=viewer_config,
             view_names=[overall.name for overall in viewer_config.overalls],
         )
-        if args.parquet_output_dir is not None:
-            export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
+        if plan.parquet_output_dir is not None:
+            export_duckdb_tables_to_parquet(plan.duckdb_path, plan.parquet_output_dir)
         memory_monitor.sample("complete")
         return
-    results_dirs = args.results_dir or [Path("output/hakari-results")]
-    duplicate_result_policy: DuplicateResultPolicy = "last-wins" if args.overwrite_result_duplicates else "first-wins"
-    if args.stream_results_to_duckdb and args.html_output is not None:
-        parser.error("--stream-results-to-duckdb cannot be combined with --html-output")
-    if args.stream_results_to_duckdb and args.append_results_dir:
-        parser.error("--stream-results-to-duckdb cannot be combined with --append-results-dir")
     # For deploy builds with no secondary artifacts requested, unchanged input
     # can return immediately after hash validation; rewriting the same DB would
     # dominate the incremental path.
     if (
-        args.incremental
-        and not args.overwrite_result_duplicates
-        and args.html_output is None
-        and args.parquet_output_dir is None
-        and not args.include_retrieval_rankings
-        and not args.include_result_extensions
+        plan.incremental
+        and plan.duplicate_result_policy == "first-wins"
+        and plan.html_output is None
+        and plan.parquet_output_dir is None
+        and not plan.include_retrieval_rankings
+        and not plan.include_result_extensions
         and _incremental_cache_current(
-            _current_source_hashes(results_dirs),
-            args.duckdb_path,
-            model_cards_path=args.model_cards_path,
+            _current_source_hashes(plan.results_dirs),
+            plan.duckdb_path,
+            model_cards_path=plan.model_cards_path,
         )
     ):
         memory_monitor.sample("incremental_cache_current")
         return
-    if args.stream_results_to_duckdb:
+    if plan.mode == "stream":
         write_duckdb_streaming_results(
-            results_dirs,
-            args.duckdb_path,
+            plan.results_dirs,
+            plan.duckdb_path,
             benchmark_configs=benchmark_configs,
-            include_retrieval_rankings=args.include_retrieval_rankings,
-            model_cards_path=args.model_cards_path,
-            exclude_model_names=set(args.exclude_model_name or []),
-            duplicate_result_policy=duplicate_result_policy,
+            include_retrieval_rankings=plan.include_retrieval_rankings,
+            model_cards_path=plan.model_cards_path,
+            exclude_model_names=plan.exclude_model_names,
+            duplicate_result_policy=plan.duplicate_result_policy,
             memory_monitor=memory_monitor,
-            result_selection_workers=result_workers.selection,
-            result_json_workers=result_workers.json,
-            result_row_workers=result_workers.row,
-            include_result_extensions=args.include_result_extensions,
+            result_selection_workers=plan.result_workers.selection,
+            result_json_workers=plan.result_workers.json,
+            result_row_workers=plan.result_workers.row,
+            include_result_extensions=plan.include_result_extensions,
         )
         build_viewer_leaderboard_mart(
-            args.duckdb_path,
+            plan.duckdb_path,
             viewer_config=viewer_config,
             view_names=[overall.name for overall in viewer_config.overalls],
         )
-        if args.parquet_output_dir is not None:
-            export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
+        if plan.parquet_output_dir is not None:
+            export_duckdb_tables_to_parquet(plan.duckdb_path, plan.parquet_output_dir)
         memory_monitor.sample("complete")
         return
 
     rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = load_results(
-        results_dirs,
+        plan.results_dirs,
         benchmark_configs=benchmark_configs,
-        include_retrieval_rankings=args.include_retrieval_rankings,
-        incremental_db_path=args.duckdb_path if args.incremental and not args.overwrite_result_duplicates else None,
-        model_cards_path=args.model_cards_path,
-        exclude_model_names=set(args.exclude_model_name or []),
-        duplicate_result_policy=duplicate_result_policy,
+        include_retrieval_rankings=plan.include_retrieval_rankings,
+        incremental_db_path=plan.duckdb_path if plan.incremental and plan.duplicate_result_policy == "first-wins" else None,
+        model_cards_path=plan.model_cards_path,
+        exclude_model_names=plan.exclude_model_names,
+        duplicate_result_policy=plan.duplicate_result_policy,
         memory_monitor=memory_monitor,
-        result_selection_workers=result_workers.selection,
-        result_json_workers=result_workers.json,
-        result_row_workers=result_workers.row,
+        result_selection_workers=plan.result_workers.selection,
+        result_json_workers=plan.result_workers.json,
+        result_row_workers=plan.result_workers.row,
         include_source_hashes=True,
     )
     base_rows: list[TaskResultRow] = []
     standings: dict[str, list[dict[str, Any]]] = {}
     borda_rows: list[dict[str, Any]] = []
-    if args.html_output is not None:
+    if plan.html_output is not None:
         base_rows = [row for row in rows if row.embedding_variant_name is None]
         standings, borda_rows = compute_standings(base_rows, target_benchmarks=target_benchmarks)
     write_duckdb(
-        args.duckdb_path,
+        plan.duckdb_path,
         runs=runs,
         rows=rows,
         metric_rows=metric_rows,
@@ -1122,27 +1167,43 @@ def main() -> None:
         ranking_rows=ranking_rows,
         standings=standings,
         borda_rows=borda_rows,
-        include_result_extensions=args.include_result_extensions,
-        model_cards_path=args.model_cards_path,
+        include_result_extensions=plan.include_result_extensions,
+        model_cards_path=plan.model_cards_path,
         source_payload_sha256_by_path=source_hashes,
     )
     build_viewer_leaderboard_mart(
-        args.duckdb_path,
+        plan.duckdb_path,
         viewer_config=viewer_config,
         view_names=[overall.name for overall in viewer_config.overalls],
     )
-    if args.parquet_output_dir is not None:
-        export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
-    if args.html_output is not None:
+    if plan.parquet_output_dir is not None:
+        export_duckdb_tables_to_parquet(plan.duckdb_path, plan.parquet_output_dir)
+    if plan.html_output is not None:
         write_html(
-            args.html_output,
-            duckdb_path=args.duckdb_path,
+            plan.html_output,
+            duckdb_path=plan.duckdb_path,
             rows=base_rows,
             runs=runs,
             standings=standings,
             target_benchmarks=target_benchmarks,
         )
     memory_monitor.sample("complete")
+
+
+def main() -> None:
+    parser = build_arg_parser()
+    args = parser.parse_args()
+    try:
+        plan = resolve_warehouse_build_plan(args)
+    except ValueError as exc:
+        parser.error(str(exc))
+
+    memory_monitor = MemoryMonitor(
+        log_path=args.memory_log_path,
+        sample_interval=args.memory_log_interval,
+    )
+    memory_monitor.sample("start", processed_count=0)
+    run_warehouse_build(plan, memory_monitor=memory_monitor)
 
 
 LoadResultsPayload = tuple[
@@ -3554,6 +3615,10 @@ def _materialize_streamed_result_tables(con: duckdb.DuckDBPyConnection) -> None:
     metadata_columns = ", ".join(DATASET_METADATA_COLUMNS)
     ranking_columns = ", ".join(RETRIEVAL_RANKING_COLUMNS)
     task_stem = _result_path_stem_sql("result_path")
+    # Keep long repeated path strings clustered. Without an explicit final
+    # order, DuckDB may persist window-output rows in a scattered order, which
+    # weakens dictionary compression and can make the warehouse hundreds of MiB
+    # larger.
     con.execute(
         f"""
         CREATE TABLE task_results AS

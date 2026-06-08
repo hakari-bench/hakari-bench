@@ -102,6 +102,80 @@ def test_resolve_result_worker_counts_preserves_explicit_row_workers() -> None:
     ) == report.ResultWorkerCounts(selection=15, json=1, row=1)
 
 
+def test_resolve_warehouse_build_plan_defaults_to_materialized_hakari_results() -> None:
+    args = report.build_arg_parser().parse_args([])
+
+    plan = report.resolve_warehouse_build_plan(args)
+
+    assert plan.mode == "materialized"
+    assert plan.results_dirs == [Path("output/hakari-results")]
+    assert plan.append_results_dirs == []
+    assert plan.duckdb_path == Path("output/hakari-results/hakari_bench.duckdb")
+    assert plan.duplicate_result_policy == "first-wins"
+
+
+def test_resolve_warehouse_build_plan_selects_streaming_mode() -> None:
+    args = report.build_arg_parser().parse_args(["--stream-results-to-duckdb"])
+
+    plan = report.resolve_warehouse_build_plan(args)
+
+    assert plan.mode == "stream"
+    assert plan.results_dirs == [Path("output/hakari-results")]
+
+
+def test_resolve_warehouse_build_plan_selects_append_mode() -> None:
+    args = report.build_arg_parser().parse_args(
+        ["--append-results-dir", "new_results", "--duckdb-path", "base.duckdb"]
+    )
+
+    plan = report.resolve_warehouse_build_plan(args)
+
+    assert plan.mode == "append"
+    assert plan.results_dirs == []
+    assert plan.append_results_dirs == [Path("new_results")]
+    assert plan.duckdb_path == Path("base.duckdb")
+
+
+def test_resolve_warehouse_build_plan_rejects_append_with_results_dir() -> None:
+    args = report.build_arg_parser().parse_args(
+        ["--append-results-dir", "new_results", "--results-dir", "base_results"]
+    )
+
+    with pytest.raises(ValueError, match="--append-results-dir cannot be combined with --results-dir"):
+        report.resolve_warehouse_build_plan(args)
+
+
+def test_run_warehouse_build_stream_plan_uses_streaming_writer(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    args = report.build_arg_parser().parse_args(
+        ["--stream-results-to-duckdb", "--results-dir", "results", "--duckdb-path", str(tmp_path / "out.duckdb")]
+    )
+    plan = report.resolve_warehouse_build_plan(args)
+    viewer_config = ViewerConfig(
+        benchmarks=[],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=[])],
+    )
+    calls: list[tuple[str, object]] = []
+
+    monkeypatch.setattr(report, "load_viewer_config", lambda _path: viewer_config)
+    monkeypatch.setattr(
+        report,
+        "write_duckdb_streaming_results",
+        lambda results_dirs, db_path, **_: calls.append(("stream", (results_dirs, db_path))),
+    )
+    monkeypatch.setattr(report, "build_viewer_leaderboard_mart", lambda duckdb_path, **_: calls.append(("mart", duckdb_path)))
+    monkeypatch.setattr(report, "load_results", lambda *_, **__: pytest.fail("stream plan should not materialize rows"))
+
+    report.run_warehouse_build(plan, memory_monitor=report.MemoryMonitor(log_path=None))
+
+    assert calls == [
+        ("stream", ([Path("results")], tmp_path / "out.duckdb")),
+        ("mart", tmp_path / "out.duckdb"),
+    ]
+
+
 def test_top_ranking_selection_context_matches_selected_metric_rankings() -> None:
     evaluation = {
         "reranking_evaluations": [{"best_score_name": "cosine_bm25_top100_rerank"}],
