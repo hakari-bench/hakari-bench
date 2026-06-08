@@ -2425,9 +2425,18 @@ def _fmt_params(value: int | None) -> str:
     if value is None:
         return ""
     if value >= 1_000_000_000:
-        return f"{value / 1_000_000_000:.2f}B"
+        raw_billions = value / 1_000_000_000
+        if raw_billions >= 100:
+            billions = math.floor(raw_billions + 0.5)
+            return f"{billions}B"
+        if raw_billions >= 10:
+            billions = math.floor(raw_billions * 10 + 0.5) / 10
+            return f"{billions:.1f}B"
+        billions = math.floor(raw_billions * 100 + 0.5) / 100
+        return f"{billions:.2f}B"
     if value >= 1_000_000:
-        return f"{value / 1_000_000:.1f}M"
+        millions = math.floor(value / 1_000_000 + 0.5)
+        return f"{millions}M"
     return f"{value:,}"
 
 

@@ -14,6 +14,7 @@ import pytest
 from hakari_bench.datasets import DatasetRegistry, resolve_dataset_splits, _task_name_for_split
 from hakari_bench.viewer.app import (
     _fmt_max_len,
+    _fmt_params,
     _metric_column_label,
     _metric_column_labels,
     _rounded_z_score,
@@ -3906,6 +3907,18 @@ benchmarks:
 def test_max_len_is_formatted_with_grouping_separator() -> None:
     assert _fmt_max_len(8192) == "8,192"
     assert _fmt_max_len(None) == ""
+
+
+def test_parameter_counts_use_compact_rounded_display() -> None:
+    assert _fmt_params(None) == ""
+    assert _fmt_params(310_300_000) == "310M"
+    assert _fmt_params(310_500_000) == "311M"
+    assert _fmt_params(999_499_999) == "999M"
+    assert _fmt_params(1_320_000_000) == "1.32B"
+    assert _fmt_params(1_325_000_000) == "1.33B"
+    assert _fmt_params(27_330_000_000) == "27.3B"
+    assert _fmt_params(27_350_000_000) == "27.4B"
+    assert _fmt_params(101_300_000_000) == "101B"
 
 
 def test_local_duckdb_store_copies_newer_source_on_page_load(tmp_path: Path) -> None:
