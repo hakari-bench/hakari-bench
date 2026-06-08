@@ -8,6 +8,7 @@ import pytest
 import torch
 
 from hakari_bench.models import (
+    ColbertLateInteractionAdapter,
     ModelLoadConfig,
     _patch_pylate_dense_missing_activation_function,
     collect_model_metadata,
@@ -156,6 +157,76 @@ def test_pylate_dense_patch_defaults_missing_activation_function(monkeypatch: py
     assert isinstance(model, FakePylateDense)
     assert isinstance(model.config["activation_function"], torch.nn.Identity)
     assert model.loaded_state == {"linear.weight": "weights"}
+
+
+def test_colbert_adapter_encode_uses_role_prefix_token_ids() -> None:
+    class FakeTokenizer:
+        model_max_length = 8
+        mask_token_id = 99
+        pad_token_id = 0
+
+        def convert_tokens_to_ids(self, token: str) -> int:
+            return {"[unused0]": 1, "[unused1]": 2, ".": 4}.get(token, 50)
+
+        def __call__(self, sentences: list[str], **kwargs: object) -> dict[str, torch.Tensor]:
+            assert kwargs["max_length"] == 4
+            ids: list[list[int]] = []
+            masks: list[list[int]] = []
+            padding = kwargs.get("padding")
+            for sentence in sentences:
+                row = [101, 10 + len(sentence), 102]
+                max_length = kwargs["max_length"]
+                assert isinstance(max_length, int)
+                if len(row) < max_length and padding in {"max_length", True}:
+                    row = row + [self.pad_token_id] * (max_length - len(row))
+                ids.append(row)
+                masks.append([0 if token_id == self.pad_token_id else 1 for token_id in row])
+            return {
+                "input_ids": torch.tensor(ids, dtype=torch.long),
+                "attention_mask": torch.tensor(masks, dtype=torch.long),
+            }
+
+    class FakeBackbone(torch.nn.Module):
+        def __init__(self) -> None:
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.ones(1))
+            self.calls: list[torch.Tensor] = []
+
+        def forward(self, **features: torch.Tensor) -> SimpleNamespace:
+            input_ids = features["input_ids"]
+            self.calls.append(input_ids.detach().cpu())
+            hidden = torch.stack(
+                [
+                    input_ids.float(),
+                    input_ids.float() + 1,
+                    input_ids.float() + 2,
+                    input_ids.float() + 3,
+                ],
+                dim=-1,
+            )
+            return SimpleNamespace(last_hidden_state=hidden)
+
+    tokenizer = FakeTokenizer()
+    backbone = FakeBackbone()
+    model = ColbertLateInteractionAdapter(
+        model_name_or_path="colbert-ir/colbertv2.0",
+        tokenizer=tokenizer,
+        backbone=backbone,
+        projection=None,
+        device="cpu",
+        query_prefix="[unused0]",
+        document_prefix="[unused1]",
+        query_length=5,
+        document_length=5,
+    )
+
+    query_embeddings = model.encode(["q"], is_query=True, convert_to_numpy=False)
+    document_embeddings = model.encode(["doc"], is_query=False, convert_to_numpy=False)
+
+    assert backbone.calls[0][0].tolist() == [101, 1, 11, 102, 99]
+    assert backbone.calls[1][0].tolist()[:4] == [101, 2, 13, 102]
+    assert len(query_embeddings[0]) == 5
+    assert len(document_embeddings[0]) == 4
 
 
 def test_load_model_reranker_passes_cross_encoder_kwargs(monkeypatch: pytest.MonkeyPatch) -> None:

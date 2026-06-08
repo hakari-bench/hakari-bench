@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib
 import importlib.metadata
 import platform
+import string
 import sys
 from dataclasses import dataclass
 from functools import lru_cache
@@ -158,18 +159,31 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         query_length: int | None = None,
         document_length: int | None = None,
         do_query_expansion: bool | None = None,
+        attend_to_expansion_tokens: bool | None = None,
     ) -> None:
         super().__init__()
         self.model_name_or_path = model_name_or_path
         self.tokenizer = tokenizer
         self.backbone = backbone
         self.projection = projection
-        self.query_prefix = query_prefix
-        self.document_prefix = document_prefix
-        self.query_length = query_length
-        self.document_length = document_length
-        self.do_query_expansion = do_query_expansion
-        self.attend_to_expansion_tokens = None
+        self.query_prefix = "[unused0]" if query_prefix is None else query_prefix
+        self.document_prefix = "[unused1]" if document_prefix is None else document_prefix
+        self.query_prefix_id = _late_interaction_prefix_id(tokenizer, self.query_prefix)
+        self.document_prefix_id = _late_interaction_prefix_id(tokenizer, self.document_prefix)
+        self.query_length = query_length or 32
+        self.document_length = document_length or 180
+        self.do_query_expansion = True if do_query_expansion is None else do_query_expansion
+        self.attend_to_expansion_tokens = False if attend_to_expansion_tokens is None else attend_to_expansion_tokens
+        if not self.do_query_expansion:
+            self.attend_to_expansion_tokens = False
+        mask_token_id = getattr(tokenizer, "mask_token_id", None)
+        if mask_token_id is not None:
+            tokenizer.pad_token_id = mask_token_id
+        self.skiplist = [
+            token_id
+            for token_id in (_convert_token_to_id(tokenizer, token) for token in string.punctuation)
+            if isinstance(token_id, int) and token_id >= 0
+        ]
         self.max_seq_length = document_length or _tokenizer_default_max_length(tokenizer)
         self._target_device = torch.device(device) if device is not None else _first_module_device(self)
         if device is not None:
@@ -189,6 +203,7 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         query_length: int | None = None,
         document_length: int | None = None,
         do_query_expansion: bool | None = None,
+        attend_to_expansion_tokens: bool | None = None,
     ) -> ColbertLateInteractionAdapter:
         tokenizer = _import_auto_tokenizer().from_pretrained(
             model_name_or_path,
@@ -218,6 +233,7 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
             query_length=query_length,
             document_length=document_length,
             do_query_expansion=do_query_expansion,
+            attend_to_expansion_tokens=attend_to_expansion_tokens,
         )
 
     @property
@@ -232,37 +248,36 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         show_progress_bar: bool | None = None,
         convert_to_numpy: bool = True,
         convert_to_tensor: bool = False,
-        **_: Any,
-    ) -> torch.Tensor | Any:
-        del show_progress_bar
-        sentences = [inputs] if isinstance(inputs, str) else list(inputs)
-        batches: list[torch.Tensor] = []
-        for start in range(0, len(sentences), batch_size):
-            batch = self._encode_batch(sentences[start : start + batch_size])
-            if convert_to_numpy and not convert_to_tensor:
-                batch = batch.cpu()
-            batches.append(batch)
-        result_device = self.device if convert_to_tensor or not convert_to_numpy else torch.device("cpu")
-        result = _pad_late_interaction_batches(batches, device=result_device, dim=self._output_dim())
-        if convert_to_tensor:
-            return result
-        if convert_to_numpy:
-            return result.detach().cpu().numpy()
-        return result
+        is_query: bool = True,
+        **kwargs: Any,
+    ) -> Any:
+        return self._encode_with_role(
+            inputs,
+            prefix_id=self.query_prefix_id if is_query else self.document_prefix_id,
+            max_length=self.query_length if is_query else self.document_length,
+            is_query=is_query,
+            batch_size=batch_size,
+            show_progress_bar=show_progress_bar,
+            convert_to_numpy=convert_to_numpy,
+            convert_to_tensor=convert_to_tensor,
+            **kwargs,
+        )
 
     def encode_query(self, inputs: list[str] | str, **kwargs: Any) -> torch.Tensor | Any:
         return self._encode_with_role(
             inputs,
-            prefix=self.query_prefix,
+            prefix_id=self.query_prefix_id,
             max_length=self.query_length,
+            is_query=True,
             **kwargs,
         )
 
     def encode_document(self, inputs: list[str] | str, **kwargs: Any) -> torch.Tensor | Any:
         return self._encode_with_role(
             inputs,
-            prefix=self.document_prefix,
+            prefix_id=self.document_prefix_id,
             max_length=self.document_length,
+            is_query=False,
             **kwargs,
         )
 
@@ -270,42 +285,61 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         self,
         inputs: list[str] | str,
         *,
-        prefix: str | None,
+        prefix_id: int | None,
         max_length: int | None,
+        is_query: bool,
         batch_size: int = 32,
         show_progress_bar: bool | None = None,
         convert_to_numpy: bool = True,
         convert_to_tensor: bool = False,
         **_: Any,
-    ) -> torch.Tensor | Any:
+    ) -> Any:
         del show_progress_bar
+        input_was_string = isinstance(inputs, str)
         sentences = [inputs] if isinstance(inputs, str) else list(inputs)
-        if prefix:
-            sentences = [prefix + sentence for sentence in sentences]
-        batches: list[torch.Tensor] = []
+        embeddings: list[torch.Tensor] = []
         for start in range(0, len(sentences), batch_size):
-            batch = self._encode_batch(sentences[start : start + batch_size], max_length=max_length)
-            if convert_to_numpy and not convert_to_tensor:
-                batch = batch.cpu()
-            batches.append(batch)
-        result_device = self.device if convert_to_tensor or not convert_to_numpy else torch.device("cpu")
-        result = _pad_late_interaction_batches(batches, device=result_device, dim=self._output_dim())
-        if convert_to_tensor:
-            return result
-        if convert_to_numpy:
-            return result.detach().cpu().numpy()
-        return result
+            embeddings.extend(
+                self._encode_batch(
+                    sentences[start : start + batch_size],
+                    max_length=max_length,
+                    prefix_id=prefix_id,
+                    is_query=is_query,
+                )
+            )
+        if convert_to_numpy and not convert_to_tensor:
+            result: Any = [embedding.detach().cpu().float().numpy() for embedding in embeddings]
+        else:
+            result = embeddings
+        return result[0] if input_was_string else result
 
-    def _encode_batch(self, sentences: list[str], *, max_length: int | None = None) -> torch.Tensor:
+    def _encode_batch(
+        self,
+        sentences: list[str],
+        *,
+        max_length: int | None = None,
+        prefix_id: int | None = None,
+        is_query: bool = True,
+    ) -> list[torch.Tensor]:
         tokenizer_kwargs: dict[str, Any] = {
-            "padding": True,
             "truncation": True,
             "return_tensors": "pt",
         }
         resolved_max_length = max_length or self.max_seq_length
         if resolved_max_length is not None:
-            tokenizer_kwargs["max_length"] = resolved_max_length
+            tokenizer_kwargs["max_length"] = resolved_max_length - 1 if prefix_id is not None else resolved_max_length
+        if is_query and self.do_query_expansion:
+            tokenizer_kwargs["padding"] = "max_length"
+        else:
+            tokenizer_kwargs["padding"] = True
         tokenized = self.tokenizer(sentences, **tokenizer_kwargs)
+        if prefix_id is not None:
+            tokenized["input_ids"] = _insert_late_interaction_prefix_token(tokenized["input_ids"], prefix_id)
+            tokenized["attention_mask"] = _insert_late_interaction_prefix_token(tokenized["attention_mask"], 1)
+            if "token_type_ids" in tokenized:
+                tokenized["token_type_ids"] = _insert_late_interaction_prefix_token(tokenized["token_type_ids"], 0)
+        if is_query and self.attend_to_expansion_tokens:
+            tokenized["attention_mask"].fill_(1)
         tokenized = {
             key: value.to(self.device) if isinstance(value, torch.Tensor) else value for key, value in tokenized.items()
         }
@@ -316,9 +350,16 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
                 token_embeddings = self.projection(token_embeddings)
             token_embeddings = torch.nn.functional.normalize(token_embeddings.float(), p=2, dim=-1)
         attention_mask = tokenized.get("attention_mask")
-        if isinstance(attention_mask, torch.Tensor):
-            token_embeddings = token_embeddings * attention_mask.unsqueeze(-1).to(dtype=token_embeddings.dtype)
-        return token_embeddings
+        input_ids = tokenized.get("input_ids")
+        if not isinstance(attention_mask, torch.Tensor) or not isinstance(input_ids, torch.Tensor):
+            return [embedding for embedding in token_embeddings]
+        if is_query and self.do_query_expansion:
+            masks = torch.ones_like(input_ids, dtype=torch.bool)
+        else:
+            masks = attention_mask.bool()
+            if not is_query and self.skiplist:
+                masks = torch.logical_and(masks, _skiplist_mask(input_ids, self.skiplist))
+        return [embedding[mask] for embedding, mask in zip(token_embeddings, masks)]
 
     def _output_dim(self) -> int:
         if isinstance(self.projection, torch.nn.Linear):
@@ -372,6 +413,7 @@ def load_model(config: ModelLoadConfig) -> Any:
                 query_length=config.late_interaction_query_length,
                 document_length=config.late_interaction_document_length,
                 do_query_expansion=config.late_interaction_do_query_expansion,
+                attend_to_expansion_tokens=config.late_interaction_attend_to_expansion_tokens,
             )
         _set_model_dtype(model, config.dtype)
         _set_attn_implementation(model, attn_implementation)
@@ -431,6 +473,41 @@ def _tokenizer_default_max_length(tokenizer: Any) -> int | None:
     if model_max_length > 1_000_000:
         return None
     return model_max_length
+
+
+def _convert_token_to_id(tokenizer: Any, token: str) -> int | None:
+    convert = getattr(tokenizer, "convert_tokens_to_ids", None)
+    if not callable(convert):
+        return None
+    token_id = convert(token)
+    return token_id if isinstance(token_id, int) else None
+
+
+def _late_interaction_prefix_id(tokenizer: Any, prefix: str | None) -> int | None:
+    if not prefix:
+        return None
+    return _convert_token_to_id(tokenizer, prefix)
+
+
+def _insert_late_interaction_prefix_token(input_ids: torch.Tensor, prefix_id: int) -> torch.Tensor:
+    prefix_tensor = torch.full(
+        size=(input_ids.size(dim=0), 1),
+        fill_value=prefix_id,
+        dtype=input_ids.dtype,
+        device=input_ids.device,
+    )
+    return torch.cat((input_ids[:, :1], prefix_tensor, input_ids[:, 1:]), dim=1)
+
+
+def _skiplist_mask(input_ids: torch.Tensor, skiplist: list[int]) -> torch.Tensor:
+    mask = torch.ones_like(input_ids, dtype=torch.bool)
+    for token_id in skiplist:
+        mask = torch.where(
+            input_ids == token_id,
+            torch.tensor(False, dtype=torch.bool, device=input_ids.device),
+            mask,
+        )
+    return mask
 
 
 def _first_module_device(module: torch.nn.Module) -> torch.device | None:
