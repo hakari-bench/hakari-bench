@@ -37,15 +37,15 @@ paper-facing analysis panels. It does not read `model_scores`.
 Build the DuckDB database from benchmark JSON output:
 
 ```bash
-uv run python scripts/build_results_database_and_report.py \
-  --results-dir output/hakari-results \
-  --duckdb-path output/hakari-results/hakari_bench.duckdb
+uv run python scripts/build_results_database_and_report.py
 ```
+
+With no arguments, the builder reads `output/hakari-results` and writes
+`output/hakari-results/hakari_bench.duckdb`. It streams selected result rows
+into DuckDB by default, which keeps Python memory use low for full rebuilds.
 
 Use `--incremental` for repeated local or deploy builds against an existing
 DuckDB file. The builder compares source JSON hashes from `source_load_state`
-with the current files and compares the model-card YAML manifest hash recorded
-in `meta_database`. If nothing changed and no secondary outputs are requested,
 with the current files and compares the model-card YAML manifest hash recorded
 in `meta_database`. If nothing changed and no secondary outputs are requested,
 it exits without rewriting the database. If only some source files changed or
@@ -102,6 +102,26 @@ uv run python scripts/build_results_database_and_report.py \
   --append-results-dir output/new_model_results \
   --duckdb-path output/hakari-results/hakari_bench.duckdb
 ```
+
+If the target DuckDB path does not exist and no local base is supplied, append
+mode downloads the configured latest remote DuckDB before appending. Supply
+`--append-hf-dataset-repo-id` or set
+`HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID`; `--append-hf-dataset-path` defaults
+to the viewer DuckDB path used by the web viewer. To create a separate merged
+file from a local or remote base, use `--append-base-duckdb` with
+`--append-output-duckdb`:
+
+```bash
+uv run python scripts/build_results_database_and_report.py \
+  --append-results-dir output/new_model_results \
+  --append-base-duckdb latest \
+  --append-hf-dataset-repo-id hakari-bench/leaderboard_database \
+  --append-output-duckdb output/hakari-results/merged.duckdb
+```
+
+When an append directory contains exactly one logical local experiment, use
+`--model-name-override local/experiment_name` to rewrite the loaded
+`model_name` without editing the original result JSON.
 
 The input files are:
 

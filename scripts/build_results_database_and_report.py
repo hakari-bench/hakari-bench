@@ -11,6 +11,7 @@ import lzma
 import math
 import os
 import resource
+import shutil
 import sys
 from collections import defaultdict
 from collections.abc import AsyncIterable, Awaitable, Callable, Iterable, Sequence
@@ -29,6 +30,11 @@ from hakari_bench.datasets import DatasetRegistry
 from hakari_bench.metrics import compute_ir_metrics
 from hakari_bench.model_cards import load_model_cards, model_card_yaml_paths
 from hakari_bench.viewer.config import BenchmarkConfig, ViewerConfig, load_viewer_config
+from hakari_bench.viewer.store import (
+    DEFAULT_HF_DUCKDB_PATH,
+    HuggingFaceDuckDbSource,
+    _download_hf_duckdb,
+)
 from hakari_bench.viewer.leaderboard import (
     LeaderboardService,
     _aggregate_overall_scores,
@@ -66,6 +72,7 @@ DEFAULT_VIEWER_CONFIG_DIR = Path("config/viewer")
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 DuplicateResultPolicy = Literal["first-wins", "last-wins"]
 WarehouseBuildMode = Literal["append", "stream", "materialized"]
+AppendBaseDuckDb = Literal["latest"] | Path
 RESULT_JSON_SUFFIXES = (".json", ".json.gz", ".json.xz")
 FULL_PARSE_RESULT_JSON_MAX_BYTES = 128 * 1024
 STREAM_RESULT_INSERT_CHUNK_SIZE = 10_000
@@ -86,6 +93,10 @@ class WarehouseBuildPlan:
     results_dirs: list[Path]
     append_results_dirs: list[Path]
     duckdb_path: Path
+    append_base_duckdb: AppendBaseDuckDb | None
+    append_hf_dataset_repo_id: str | None
+    append_hf_dataset_path: str
+    append_hf_dataset_revision: str | None
     html_output: Path | None
     viewer_config_dir: Path
     model_cards_path: Path | None
@@ -96,6 +107,7 @@ class WarehouseBuildPlan:
     duplicate_result_policy: DuplicateResultPolicy
     result_workers: ResultWorkerCounts
     exclude_model_names: set[str]
+    model_name_override: str | None
 
 
 def _physical_cpu_count_from_linux_cpuinfo(
@@ -918,6 +930,38 @@ def build_arg_parser() -> argparse.ArgumentParser:
             "the original result roots. May be supplied multiple times."
         ),
     )
+    parser.add_argument(
+        "--append-base-duckdb",
+        default=None,
+        help=(
+            "Base DuckDB to append into before writing --append-output-duckdb, "
+            "or 'latest' to download the configured Hugging Face dataset DuckDB."
+        ),
+    )
+    parser.add_argument(
+        "--append-output-duckdb",
+        type=Path,
+        default=None,
+        help="Write append results to a copy of --append-base-duckdb instead of updating the base DuckDB in place.",
+    )
+    parser.add_argument(
+        "--append-hf-dataset-repo-id",
+        default=None,
+        help=(
+            "Hugging Face dataset repo used when --append-base-duckdb=latest or when append mode needs "
+            "to initialize a missing target DuckDB. Defaults to HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID."
+        ),
+    )
+    parser.add_argument(
+        "--append-hf-dataset-path",
+        default=DEFAULT_HF_DUCKDB_PATH,
+        help="DuckDB file path inside the Hugging Face dataset repo for --append-base-duckdb=latest.",
+    )
+    parser.add_argument(
+        "--append-hf-dataset-revision",
+        default=None,
+        help="Optional Hugging Face dataset revision used when --append-base-duckdb=latest.",
+    )
     parser.add_argument("--duckdb-path", type=Path, default=DEFAULT_DUCKDB_PATH)
     parser.add_argument(
         "--html-output",
@@ -963,8 +1007,13 @@ def build_arg_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Write parsed result rows to DuckDB in chunks instead of materializing all warehouse rows "
-            "in Python memory. This is intended for large full rebuilds."
+            "in Python memory. This is the default for builds without --html-output."
         ),
+    )
+    parser.add_argument(
+        "--materialize-results-in-python",
+        action="store_true",
+        help="Use the legacy Python-materialized build path. This is mainly useful for static HTML output.",
     )
     parser.add_argument(
         "--memory-log-path",
@@ -1012,6 +1061,14 @@ def build_arg_parser() -> argparse.ArgumentParser:
         default=None,
         help="Model name to exclude from the generated DuckDB. May be supplied multiple times.",
     )
+    parser.add_argument(
+        "--model-name-override",
+        default=None,
+        help=(
+            "Override model_name for loaded result JSON rows. Intended for local experiment paths such as "
+            "local/model_exp_122; use only when the input dirs represent one logical model."
+        ),
+    )
     return parser
 
 
@@ -1030,15 +1087,23 @@ def resolve_warehouse_build_plan(args: argparse.Namespace) -> WarehouseBuildPlan
             raise ValueError("--append-results-dir does not support --html-output")
         if args.include_result_extensions:
             raise ValueError("--append-results-dir does not support --include-result-extensions")
+        if args.append_output_duckdb is not None and args.append_base_duckdb is None:
+            raise ValueError("--append-output-duckdb requires --append-base-duckdb")
         mode: WarehouseBuildMode = "append"
         results_dirs: list[Path] = []
         append_results_dirs = list(args.append_results_dir)
+        append_base_duckdb = _append_base_duckdb_arg(args.append_base_duckdb)
+        duckdb_path = args.append_output_duckdb or args.duckdb_path
     else:
         if args.stream_results_to_duckdb and args.html_output is not None:
             raise ValueError("--stream-results-to-duckdb cannot be combined with --html-output")
-        mode = "stream" if args.stream_results_to_duckdb else "materialized"
+        if args.stream_results_to_duckdb and args.materialize_results_in_python:
+            raise ValueError("--stream-results-to-duckdb cannot be combined with --materialize-results-in-python")
+        mode = "materialized" if args.html_output is not None or args.materialize_results_in_python else "stream"
         results_dirs = list(args.results_dir or [DEFAULT_RESULTS_DIR])
         append_results_dirs = []
+        append_base_duckdb = None
+        duckdb_path = args.duckdb_path
 
     duplicate_result_policy: DuplicateResultPolicy = (
         "last-wins" if args.overwrite_result_duplicates else "first-wins"
@@ -1047,7 +1112,11 @@ def resolve_warehouse_build_plan(args: argparse.Namespace) -> WarehouseBuildPlan
         mode=mode,
         results_dirs=results_dirs,
         append_results_dirs=append_results_dirs,
-        duckdb_path=args.duckdb_path,
+        duckdb_path=duckdb_path,
+        append_base_duckdb=append_base_duckdb,
+        append_hf_dataset_repo_id=args.append_hf_dataset_repo_id,
+        append_hf_dataset_path=args.append_hf_dataset_path,
+        append_hf_dataset_revision=args.append_hf_dataset_revision,
         html_output=args.html_output,
         viewer_config_dir=args.viewer_config_dir,
         model_cards_path=args.model_cards_path,
@@ -1058,7 +1127,16 @@ def resolve_warehouse_build_plan(args: argparse.Namespace) -> WarehouseBuildPlan
         duplicate_result_policy=duplicate_result_policy,
         result_workers=result_workers,
         exclude_model_names=set(args.exclude_model_name or []),
+        model_name_override=args.model_name_override,
     )
+
+
+def _append_base_duckdb_arg(value: str | None) -> AppendBaseDuckDb | None:
+    if value is None:
+        return None
+    if value == "latest":
+        return "latest"
+    return Path(value)
 
 
 def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonitor) -> None:
@@ -1066,6 +1144,7 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
     benchmark_configs = viewer_config.benchmarks
     target_benchmarks = target_benchmark_names(benchmark_configs)
     if plan.mode == "append":
+        _prepare_append_duckdb(plan)
         rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = _load_results_for_plan(
             plan,
             plan.append_results_dirs,
@@ -1117,6 +1196,7 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
             include_retrieval_rankings=plan.include_retrieval_rankings,
             model_cards_path=plan.model_cards_path,
             exclude_model_names=plan.exclude_model_names,
+            model_name_override=plan.model_name_override,
             duplicate_result_policy=plan.duplicate_result_policy,
             memory_monitor=memory_monitor,
             result_selection_workers=plan.result_workers.selection,
@@ -1179,6 +1259,47 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
             target_benchmarks=target_benchmarks,
         )
     memory_monitor.sample("complete")
+
+
+def _prepare_append_duckdb(plan: WarehouseBuildPlan) -> None:
+    if plan.append_base_duckdb is None:
+        if plan.duckdb_path.exists():
+            return
+        source = _resolve_latest_append_duckdb(plan)
+    else:
+        source = _resolve_append_base_duckdb(plan)
+    if not source.exists():
+        raise FileNotFoundError(f"Cannot append results because base DuckDB does not exist: {source}")
+    if source.resolve() == plan.duckdb_path.resolve():
+        return
+    plan.duckdb_path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = plan.duckdb_path.with_suffix(plan.duckdb_path.suffix + ".tmp")
+    shutil.copy2(source, temp_path)
+    temp_path.replace(plan.duckdb_path)
+
+
+def _resolve_append_base_duckdb(plan: WarehouseBuildPlan) -> Path:
+    if plan.append_base_duckdb == "latest":
+        return _resolve_latest_append_duckdb(plan)
+    if isinstance(plan.append_base_duckdb, Path):
+        return plan.append_base_duckdb
+    raise ValueError(f"Unsupported append base DuckDB: {plan.append_base_duckdb!r}")
+
+
+def _resolve_latest_append_duckdb(plan: WarehouseBuildPlan) -> Path:
+    repo_id = plan.append_hf_dataset_repo_id or os.getenv("HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID")
+    if not repo_id:
+        raise ValueError(
+            "Appending to a missing DuckDB requires --append-hf-dataset-repo-id, "
+            "--append-base-duckdb=latest with that repo id, or HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID"
+        )
+    return _download_hf_duckdb(
+        HuggingFaceDuckDbSource(
+            repo_id=repo_id,
+            filename=plan.append_hf_dataset_path,
+            revision=plan.append_hf_dataset_revision,
+        )
+    )
 
 
 def main() -> None:
@@ -1256,6 +1377,7 @@ def _load_results_for_plan(
         incremental_db_path=incremental_db_path,
         model_cards_path=plan.model_cards_path,
         exclude_model_names=plan.exclude_model_names,
+        model_name_override=plan.model_name_override,
         duplicate_result_policy=plan.duplicate_result_policy,
         memory_monitor=memory_monitor,
         result_selection_workers=plan.result_workers.selection,
@@ -1274,6 +1396,7 @@ def load_results(
     incremental_db_path: Path | None = None,
     model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
     exclude_model_names: set[str] | None = None,
+    model_name_override: str | None = None,
     duplicate_result_policy: DuplicateResultPolicy = "first-wins",
     memory_monitor: MemoryMonitor | None = None,
     result_selection_workers: int = 1,
@@ -1292,6 +1415,7 @@ def load_results(
     incremental_db_path: Path | None = None,
     model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
     exclude_model_names: set[str] | None = None,
+    model_name_override: str | None = None,
     duplicate_result_policy: DuplicateResultPolicy = "first-wins",
     memory_monitor: MemoryMonitor | None = None,
     result_selection_workers: int = 1,
@@ -1309,6 +1433,7 @@ def load_results(
     incremental_db_path: Path | None = None,
     model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
     exclude_model_names: set[str] | None = None,
+    model_name_override: str | None = None,
     duplicate_result_policy: DuplicateResultPolicy = "first-wins",
     memory_monitor: MemoryMonitor | None = None,
     result_selection_workers: int = 1,
@@ -1388,6 +1513,7 @@ def load_results(
         include_retrieval_rankings=include_retrieval_rankings,
         memory_monitor=memory_monitor,
         result_selection_workers=result_selection_workers,
+        model_name_override=model_name_override,
     )
     processed_result_count = 0
     for processed in _processed_result_rows(
@@ -2186,6 +2312,7 @@ def _selected_result_jsons(
     memory_monitor: MemoryMonitor | None = None,
     result_selection_workers: int = 1,
     retain_summary_payload: bool = True,
+    model_name_override: str | None = None,
 ) -> list[SelectedResultJson]:
     selected_by_task: dict[tuple[str, str, str, str], SelectedResultJson] = {}
     parsed_count = 0
@@ -2211,6 +2338,8 @@ def _selected_result_jsons(
                 memory_monitor.maybe_sample("result_json_selected", processed_count=parsed_count)
             if selected is None:
                 continue
+            if model_name_override is not None:
+                selected = replace(selected, model_name=model_name_override)
             key = (
                 selected.model_name,
                 selected.benchmark,
@@ -3348,6 +3477,7 @@ def write_duckdb_streaming_results(
     include_retrieval_rankings: bool = False,
     model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
     exclude_model_names: set[str] | None = None,
+    model_name_override: str | None = None,
     duplicate_result_policy: DuplicateResultPolicy = "first-wins",
     memory_monitor: MemoryMonitor | None = None,
     result_selection_workers: int = 1,
@@ -3368,6 +3498,7 @@ def write_duckdb_streaming_results(
         memory_monitor=memory_monitor,
         result_selection_workers=result_selection_workers,
         retain_summary_payload=False,
+        model_name_override=model_name_override,
     )
     loaded_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     source_rows = _source_load_state_rows_from_selected_results(

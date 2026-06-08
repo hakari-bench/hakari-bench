@@ -5,6 +5,10 @@ evaluations. Do not rely on skill-local benchmark instructions as the source of
 truth. Skill files may point here, but evaluation commands, variant policy, and
 coverage checks should be maintained in this document.
 
+For the shorter operational path from model evaluation to DuckDB append and
+viewer startup, see
+[`model_evaluation_workflow.md`](model_evaluation_workflow.md).
+
 ## Core Workflow
 
 1. Read `AGENTS.md`, this document, `README.md`, `pyproject.toml`, relevant
@@ -23,7 +27,7 @@ coverage checks should be maintained in this document.
 6. Run a small validation command when options are uncertain, then scale to the
    requested benchmark set.
 7. Keep an ignored progress checklist under `tmp/` for long benchmark waves.
-8. After benchmarking, rebuild DuckDB/HTML viewer artifacts when the user asks
+8. After benchmarking, rebuild DuckDB/viewer artifacts when the user asks
    for comparisons, leaderboards, or viewer updates. If results are split
    across multiple result roots, pass repeated `--results-dir` options in
    priority order; earlier directories win duplicate model-task JSON conflicts.

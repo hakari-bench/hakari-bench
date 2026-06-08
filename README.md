@@ -29,6 +29,36 @@ not belong to a specific official MTEB family are grouped under
 `NanoMTEB-Misc`. Historical broad `NanoMTEB-{language}` aliases are not
 supported; use the canonical dataset names directly.
 
+## Model evaluation workflow
+
+1. Evaluate a model on all standard tasks:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model MODEL_NAME \
+  --all
+```
+
+2. Add the result JSON to the viewer DuckDB database:
+
+```bash
+uv run python scripts/build_results_database_and_report.py
+```
+
+3. Start the viewer and inspect the added model:
+
+```bash
+uv run hakari-bench web \
+  --source-duckdb-path output/hakari-results/hakari_bench.duckdb
+```
+
+Result files default to compressed `.json.xz` files under
+`output/hakari-results/`, and DuckDB generation streams results into DuckDB by
+default. See
+[`docs/model_evaluation_workflow.md`](docs/model_evaluation_workflow.md) for
+partial task runs, append mode, local model aliases, and useful evaluation
+options.
+
 ## Example
 
 ```bash
@@ -57,11 +87,11 @@ can make long benchmark runs substantially slower for some models.
 Results are written under:
 
 ```text
-output/results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
+output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json.xz
 ```
 
 For example, `hakari-bench/NanoJMTEB` is stored under
-`output/results/{model_id}/hakari-bench__NanoJMTEB/`.
+`output/hakari-results/{model_id}/hakari-bench__NanoJMTEB/`.
 
 Uploadable NanoMTEB family dataset repositories can be staged under:
 
@@ -102,7 +132,7 @@ uv run hakari-bench evaluate dense \
     "model": {"source": "/local_model_A/", "alias": "local/model_A"},
     "target": {"collections": ["MNanoBEIR"]},
     "runtime": {"batch_size": 16, "dtype": "fp16"},
-    "output": {"results_dir": "output/results", "overwrite": true}
+    "output": {"results_dir": "output/hakari-results", "overwrite": true}
   }'
 ```
 
@@ -451,10 +481,12 @@ reviewing fresh leaderboard data:
 
 ```bash
 uv run python scripts/build_results_database_and_report.py \
-  --results-dir output/results \
-  --duckdb-path output/results/hakari_bench.duckdb \
-  --html-output output/results/report.html
+  --results-dir output/hakari-results \
+  --duckdb-path output/hakari-results/hakari_bench.duckdb
 ```
+
+This path streams result JSON into DuckDB by default. Use `--html-output` only
+when a static report is also needed.
 
 To merge historical or separate result roots, repeat `--results-dir` in
 priority order. If the same model-task JSON exists in more than one root, the
@@ -468,12 +500,11 @@ duplicate logical model-task rows from earlier roots.
 
 ```bash
 uv run python scripts/build_results_database_and_report.py \
-  --results-dir output/results \
-  --results-dir output/results_combined_20260510_1340 \
+  --results-dir output/hakari-results \
+  --results-dir output/hakari-results-combined_20260510_1340 \
   --overwrite-result-duplicates \
   --exclude-model-name hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR \
-  --duckdb-path output/results/hakari_bench.duckdb \
-  --html-output output/results/report.html
+  --duckdb-path output/hakari-results/hakari_bench.duckdb
 ```
 
 To add a separate result root for new model-task JSON to an existing DuckDB
@@ -484,8 +515,16 @@ rejected.
 ```bash
 uv run python scripts/build_results_database_and_report.py \
   --append-results-dir output/new_model_results \
-  --duckdb-path output/results/hakari_bench.duckdb
+  --duckdb-path output/hakari-results/hakari_bench.duckdb
 ```
+
+If the target DuckDB does not exist, append mode can download the latest
+configured remote DuckDB before adding local results. Use
+`--append-base-duckdb latest` with `--append-output-duckdb` to create a separate
+merged copy, and `--model-name-override local/experiment_name` when a local
+result directory should be shown under a specific logical model id. See
+[`docs/model_evaluation_workflow.md`](docs/model_evaluation_workflow.md) for
+examples.
 
 By default, it binds to `127.0.0.1:8000` and keeps
 `output/viewer/hakari_bench.duckdb` synchronized from the benchmark results

@@ -102,30 +102,47 @@ def test_resolve_result_worker_counts_preserves_explicit_row_workers() -> None:
     ) == report.ResultWorkerCounts(selection=15, json=1, row=1)
 
 
-def test_resolve_warehouse_build_plan_defaults_to_materialized_hakari_results() -> None:
+def test_resolve_warehouse_build_plan_defaults_to_streamed_hakari_results() -> None:
     args = report.build_arg_parser().parse_args([])
 
     plan = report.resolve_warehouse_build_plan(args)
 
-    assert plan.mode == "materialized"
+    assert plan.mode == "stream"
     assert plan.results_dirs == [Path("output/hakari-results")]
     assert plan.append_results_dirs == []
     assert plan.duckdb_path == Path("output/hakari-results/hakari_bench.duckdb")
     assert plan.duplicate_result_policy == "first-wins"
 
 
-def test_resolve_warehouse_build_plan_selects_streaming_mode() -> None:
-    args = report.build_arg_parser().parse_args(["--stream-results-to-duckdb"])
+def test_resolve_warehouse_build_plan_selects_materialized_mode_for_html_output() -> None:
+    args = report.build_arg_parser().parse_args(["--html-output", "report.html"])
 
     plan = report.resolve_warehouse_build_plan(args)
 
-    assert plan.mode == "stream"
-    assert plan.results_dirs == [Path("output/hakari-results")]
+    assert plan.mode == "materialized"
+    assert plan.html_output == Path("report.html")
+
+
+def test_resolve_warehouse_build_plan_selects_explicit_materialized_mode() -> None:
+    args = report.build_arg_parser().parse_args(["--materialize-results-in-python"])
+
+    plan = report.resolve_warehouse_build_plan(args)
+
+    assert plan.mode == "materialized"
 
 
 def test_resolve_warehouse_build_plan_selects_append_mode() -> None:
     args = report.build_arg_parser().parse_args(
-        ["--append-results-dir", "new_results", "--duckdb-path", "base.duckdb"]
+        [
+            "--append-results-dir",
+            "new_results",
+            "--append-base-duckdb",
+            "base.duckdb",
+            "--append-output-duckdb",
+            "merged.duckdb",
+            "--model-name-override",
+            "local/model_exp_122",
+        ]
     )
 
     plan = report.resolve_warehouse_build_plan(args)
@@ -133,7 +150,9 @@ def test_resolve_warehouse_build_plan_selects_append_mode() -> None:
     assert plan.mode == "append"
     assert plan.results_dirs == []
     assert plan.append_results_dirs == [Path("new_results")]
-    assert plan.duckdb_path == Path("base.duckdb")
+    assert plan.duckdb_path == Path("merged.duckdb")
+    assert plan.append_base_duckdb == Path("base.duckdb")
+    assert plan.model_name_override == "local/model_exp_122"
 
 
 def test_resolve_warehouse_build_plan_rejects_append_with_results_dir() -> None:
@@ -142,6 +161,15 @@ def test_resolve_warehouse_build_plan_rejects_append_with_results_dir() -> None:
     )
 
     with pytest.raises(ValueError, match="--append-results-dir cannot be combined with --results-dir"):
+        report.resolve_warehouse_build_plan(args)
+
+
+def test_resolve_warehouse_build_plan_rejects_append_output_without_base() -> None:
+    args = report.build_arg_parser().parse_args(
+        ["--append-results-dir", "new_results", "--append-output-duckdb", "merged.duckdb"]
+    )
+
+    with pytest.raises(ValueError, match="--append-output-duckdb requires --append-base-duckdb"):
         report.resolve_warehouse_build_plan(args)
 
 
@@ -180,8 +208,10 @@ def test_run_warehouse_build_append_plan_uses_shared_loader(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    duckdb_path = tmp_path / "base.duckdb"
+    duckdb_path.write_bytes(b"base-db")
     args = report.build_arg_parser().parse_args(
-        ["--append-results-dir", "added_results", "--duckdb-path", str(tmp_path / "base.duckdb")]
+        ["--append-results-dir", "added_results", "--duckdb-path", str(duckdb_path)]
     )
     plan = report.resolve_warehouse_build_plan(args)
     viewer_config = ViewerConfig(
@@ -233,8 +263,109 @@ def test_run_warehouse_build_append_plan_uses_shared_loader(
                 True,
             ),
         ),
-        ("append", tmp_path / "base.duckdb"),
-        ("mart", tmp_path / "base.duckdb"),
+        ("append", duckdb_path),
+        ("mart", duckdb_path),
+    ]
+
+
+def test_run_warehouse_build_append_plan_copies_base_duckdb_to_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    base_db = tmp_path / "base.duckdb"
+    output_db = tmp_path / "merged.duckdb"
+    base_db.write_bytes(b"base-db")
+    args = report.build_arg_parser().parse_args(
+        [
+            "--append-results-dir",
+            "added_results",
+            "--append-base-duckdb",
+            str(base_db),
+            "--append-output-duckdb",
+            str(output_db),
+        ]
+    )
+    plan = report.resolve_warehouse_build_plan(args)
+    viewer_config = ViewerConfig(
+        benchmarks=[],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=[])],
+    )
+    calls: list[tuple[str, object]] = []
+
+    monkeypatch.setattr(report, "load_viewer_config", lambda _path: viewer_config)
+    monkeypatch.setattr(report, "_load_results_for_plan", lambda *_, **__: ([], [], [], [], [], [], {}))
+    monkeypatch.setattr(report, "append_duckdb_results", lambda duckdb_path, **_: calls.append(("append", duckdb_path)))
+    monkeypatch.setattr(report, "build_viewer_leaderboard_mart", lambda duckdb_path, **_: calls.append(("mart", duckdb_path)))
+
+    report.run_warehouse_build(plan, memory_monitor=report.MemoryMonitor(log_path=None))
+
+    assert output_db.read_bytes() == b"base-db"
+    assert calls == [
+        ("append", output_db),
+        ("mart", output_db),
+    ]
+
+
+def test_run_warehouse_build_append_plan_downloads_latest_when_target_duckdb_is_missing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    downloaded_db = tmp_path / "downloaded.duckdb"
+    output_db = tmp_path / "hakari_bench.duckdb"
+    downloaded_db.write_bytes(b"latest-db")
+    args = report.build_arg_parser().parse_args(
+        [
+            "--append-results-dir",
+            "added_results",
+            "--duckdb-path",
+            str(output_db),
+            "--append-hf-dataset-repo-id",
+            "hakari-bench/viewer-data",
+        ]
+    )
+    plan = report.resolve_warehouse_build_plan(args)
+    viewer_config = ViewerConfig(
+        benchmarks=[],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=[])],
+    )
+
+    monkeypatch.setattr(report, "load_viewer_config", lambda _path: viewer_config)
+    monkeypatch.setattr(report, "_download_hf_duckdb", lambda source: downloaded_db)
+    monkeypatch.setattr(report, "_load_results_for_plan", lambda *_, **__: ([], [], [], [], [], [], {}))
+    monkeypatch.setattr(report, "append_duckdb_results", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(report, "build_viewer_leaderboard_mart", lambda *_args, **_kwargs: None)
+
+    report.run_warehouse_build(plan, memory_monitor=report.MemoryMonitor(log_path=None))
+
+    assert output_db.read_bytes() == b"latest-db"
+
+
+def test_model_name_override_rewrites_loaded_result_rows(tmp_path: Path) -> None:
+    results_dir = tmp_path / "results"
+    task_path = results_dir / "source_model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    _write_minimal_task_result(
+        task_path,
+        model_id="source/model",
+        task_name="ja_cwir",
+        score=0.42,
+    )
+
+    rows, runs, metric_rows, diagnostic_rows, _, _ = report.load_results(
+        results_dir,
+        model_name_override="local/model_exp_122",
+    )
+
+    assert [(row.model_dir, row.model_name) for row in rows] == [
+        ("source_model", "local/model_exp_122"),
+    ]
+    assert [(row.model_name, row.metric_value) for row in metric_rows] == [
+        ("local/model_exp_122", 0.42),
+    ]
+    assert [(row.model_name, row.base_score) for row in diagnostic_rows] == [
+        ("local/model_exp_122", 0.42),
+    ]
+    assert [(run["model_dir"], run["model_name"]) for run in runs] == [
+        ("source_model", "local/model_exp_122"),
     ]
 
 

@@ -46,9 +46,9 @@ under `config/datasets/`, and dataset collection definitions live under
 ## Evaluation Execution
 
 - Before running or scheduling benchmark evaluations, read
-  `docs/benchmark_evaluation.md` and follow it as the source of truth for
-  commands, prompt/runtime choices, embedding variant policy, and result
-  coverage audits.
+  `docs/model_evaluation_workflow.md` for the practical evaluate-build-viewer
+  workflow and `docs/benchmark_evaluation.md` as the source of truth for
+  prompt/runtime choices, embedding variant policy, and result coverage audits.
 - Prefer the attention implementation officially recommended by the evaluated
   model. Use explicit `--attn-implementation sdpa`, `--flash-attn2`, or
   `--attn-implementation flash_attention_2` when appropriate; leaving attention
@@ -163,9 +163,17 @@ output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
   duplicate logical model-task rows from earlier directories.
   `model_name` comes from result JSON `model.id`; do not use `model_dir` as
   part of the logical model identity.
+- DuckDB builds default to streaming result rows into DuckDB. Use
+  `--materialize-results-in-python` only for the legacy materialized path or
+  `--html-output` when a static HTML report is required.
 - Use `--append-results-dir` when adding a separate root containing only new
   model-task JSON to an existing DuckDB. This mode is append-only and should
   reject duplicate result paths or duplicate logical model-task rows.
+  If the target DuckDB is missing and no local base is supplied, append mode
+  should download the configured latest remote DuckDB before adding results.
+  Use `--append-base-duckdb` plus `--append-output-duckdb` when a new merged DB
+  should be created from an existing base, and `--model-name-override` only when
+  the append directory represents one logical model.
 - Existing result files should be skipped unless `--overwrite` is provided.
 - Result JSON should preserve as much runtime detail as practical, including
   batch size, dtype, package versions, torch/CUDA info, prompts, total
