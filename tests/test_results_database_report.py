@@ -8,6 +8,7 @@ import math
 import hashlib
 from pathlib import Path
 import sys
+from typing import Any, cast
 
 import duckdb
 import pytest
@@ -975,8 +976,9 @@ def test_process_result_rows_worker_reuses_selected_summary_payload(
     monkeypatch.setattr(report, "_read_result_json_from_summary", fake_from_summary)
 
     def fake_process_result_rows(**kwargs: object) -> report.ProcessedResultRows:
-        assert isinstance(kwargs["task_payload"], dict)
-        assert kwargs["task_payload"]["from_selected_summary"] is True
+        task_payload = cast(dict[str, Any], kwargs["task_payload"])
+        assert isinstance(task_payload, dict)
+        assert task_payload["from_selected_summary"] is True
         return report.ProcessedResultRows(
             rows=[],
             run_accumulators={},

@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from itertools import islice, product
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast, overload
 
 import duckdb
 import ijson
@@ -459,9 +459,9 @@ def _open_json_bytes_with_raw_sha256(path: Path) -> Any:
     raw_file = path.open("rb")
     hashing_file = _HashingReader(raw_file)
     if path.name.endswith(".json.gz"):
-        stream = gzip.GzipFile(fileobj=hashing_file, mode="rb")
+        stream = gzip.GzipFile(fileobj=cast(Any, hashing_file), mode="rb")
     elif path.name.endswith(".json.xz"):
-        stream = lzma.LZMAFile(hashing_file, mode="rb")
+        stream = lzma.LZMAFile(cast(Any, hashing_file), mode="rb")
     else:
         stream = hashing_file
     try:
@@ -1144,6 +1144,61 @@ def main() -> None:
     memory_monitor.sample("complete")
 
 
+LoadResultsPayload = tuple[
+    list[TaskResult],
+    list[dict[str, Any]],
+    list[MetricLongRow],
+    list[TaskDiagnosticRow],
+    list[DatasetMetadataRow],
+    list[RetrievalRankingRow],
+]
+LoadResultsPayloadWithSourceHashes = tuple[
+    list[TaskResult],
+    list[dict[str, Any]],
+    list[MetricLongRow],
+    list[TaskDiagnosticRow],
+    list[DatasetMetadataRow],
+    list[RetrievalRankingRow],
+    dict[str, str | None],
+]
+
+
+@overload
+def load_results(
+    results_dir: Path | Sequence[Path],
+    *,
+    benchmark_configs: Sequence[BenchmarkConfig] | None = None,
+    include_retrieval_rankings: bool = False,
+    incremental_db_path: Path | None = None,
+    model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
+    exclude_model_names: set[str] | None = None,
+    duplicate_result_policy: DuplicateResultPolicy = "first-wins",
+    memory_monitor: MemoryMonitor | None = None,
+    result_selection_workers: int = 1,
+    result_json_workers: int = 1,
+    result_row_workers: int = 1,
+    include_source_hashes: Literal[False] = False,
+) -> LoadResultsPayload: ...
+
+
+@overload
+def load_results(
+    results_dir: Path | Sequence[Path],
+    *,
+    benchmark_configs: Sequence[BenchmarkConfig] | None = None,
+    include_retrieval_rankings: bool = False,
+    incremental_db_path: Path | None = None,
+    model_cards_path: Path | None = DEFAULT_MODEL_CARDS_PATH,
+    exclude_model_names: set[str] | None = None,
+    duplicate_result_policy: DuplicateResultPolicy = "first-wins",
+    memory_monitor: MemoryMonitor | None = None,
+    result_selection_workers: int = 1,
+    result_json_workers: int = 1,
+    result_row_workers: int = 1,
+    include_source_hashes: Literal[True] = True,
+) -> LoadResultsPayloadWithSourceHashes: ...
+
+
 def load_results(
     results_dir: Path | Sequence[Path],
     *,
@@ -1158,22 +1213,7 @@ def load_results(
     result_json_workers: int = 1,
     result_row_workers: int = 1,
     include_source_hashes: bool = False,
-) -> tuple[
-    list[TaskResult],
-    list[dict[str, Any]],
-    list[MetricLongRow],
-    list[TaskDiagnosticRow],
-    list[DatasetMetadataRow],
-    list[RetrievalRankingRow],
-] | tuple[
-    list[TaskResult],
-    list[dict[str, Any]],
-    list[MetricLongRow],
-    list[TaskDiagnosticRow],
-    list[DatasetMetadataRow],
-    list[RetrievalRankingRow],
-    dict[str, str | None],
-]:
+) -> LoadResultsPayload | LoadResultsPayloadWithSourceHashes:
     rows: list[TaskResult] = []
     run_accumulators: dict[str, dict[str, Any]] = {}
     metric_rows: list[MetricLongRow] = []
@@ -1282,22 +1322,11 @@ def load_results(
     )
     if not include_source_hashes:
         return result_payload
-    source_hashes = {
+    source_hashes: dict[str, str | None] = {
         str(selected.result_path): selected.payload_sha256
         for selected in selected_results
-        if selected.payload_sha256 is not None
     }
     return (*result_payload, source_hashes)
-
-
-LoadResultsPayload = tuple[
-    list[TaskResult],
-    list[dict[str, Any]],
-    list[MetricLongRow],
-    list[TaskDiagnosticRow],
-    list[DatasetMetadataRow],
-    list[RetrievalRankingRow],
-]
 
 
 @dataclass
