@@ -14,7 +14,7 @@ import resource
 import sys
 from collections import defaultdict
 from collections.abc import AsyncIterable, Awaitable, Callable, Iterable, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from itertools import islice, product
 from pathlib import Path
@@ -525,6 +525,8 @@ def _read_result_json_from_summary(
     payload: dict[str, Any],
     include_retrieval_rankings: bool,
 ) -> dict[str, Any] | None:
+    if not payload:
+        return _read_result_json(path, include_retrieval_rankings=include_retrieval_rankings)
     if not include_retrieval_rankings and _should_full_parse_result_json(path):
         try:
             full_payload = _read_json(path)
@@ -2183,6 +2185,7 @@ def _selected_result_jsons(
     include_retrieval_rankings: bool = False,
     memory_monitor: MemoryMonitor | None = None,
     result_selection_workers: int = 1,
+    retain_summary_payload: bool = True,
 ) -> list[SelectedResultJson]:
     selected_by_task: dict[tuple[str, str, str, str], SelectedResultJson] = {}
     parsed_count = 0
@@ -2220,7 +2223,7 @@ def _selected_result_jsons(
                 current,
                 duplicate_result_policy=duplicate_result_policy,
             ):
-                selected_by_task[key] = selected
+                selected_by_task[key] = selected if retain_summary_payload else _discard_selected_result_payload(selected)
     return sorted(
         selected_by_task.values(),
         key=lambda selected: (
@@ -2231,6 +2234,10 @@ def _selected_result_jsons(
             str(selected.result_path),
         ),
     )
+
+
+def _discard_selected_result_payload(selected: SelectedResultJson) -> SelectedResultJson:
+    return replace(selected, payload={})
 
 
 async def _async_selected_result_jsons(
@@ -3360,6 +3367,7 @@ def write_duckdb_streaming_results(
         include_retrieval_rankings=include_retrieval_rankings,
         memory_monitor=memory_monitor,
         result_selection_workers=result_selection_workers,
+        retain_summary_payload=False,
     )
     loaded_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     source_rows = _source_load_state_rows_from_selected_results(

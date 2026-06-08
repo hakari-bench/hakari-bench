@@ -238,6 +238,73 @@ def test_run_warehouse_build_append_plan_uses_shared_loader(
     ]
 
 
+def test_selected_result_jsons_can_discard_summary_payload_after_selection(tmp_path: Path) -> None:
+    result_path = tmp_path / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    _write_minimal_task_result(
+        result_path,
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.42,
+    )
+
+    selected = report._selected_result_jsons(
+        tmp_path,
+        benchmark_configs=[BenchmarkConfig(name="NanoJMTEB-v2", matches=["NanoJMTEB-v2"])],
+        target_benchmarks={"NanoJMTEB-v2"},
+        exclude_model_names=set(),
+        retain_summary_payload=False,
+    )
+
+    assert len(selected) == 1
+    assert selected[0].payload == {}
+    assert selected[0].model_name == "example/model_A"
+    assert selected[0].task_name == "ja_cwir"
+
+
+def test_read_result_json_from_summary_rereads_when_payload_was_discarded(tmp_path: Path) -> None:
+    result_path = tmp_path / "model_A" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    _write_minimal_task_result(
+        result_path,
+        model_id="example/model_A",
+        task_name="ja_cwir",
+        score=0.42,
+    )
+    large_payload = json.loads(result_path.read_text(encoding="utf-8"))
+    large_payload["large_metadata"] = "x" * (report.FULL_PARSE_RESULT_JSON_MAX_BYTES + 1)
+    result_path.write_text(json.dumps(large_payload), encoding="utf-8")
+
+    payload = report._read_result_json_from_summary(
+        result_path,
+        payload={},
+        include_retrieval_rankings=False,
+    )
+
+    assert payload is not None
+    assert payload["model"]["id"] == "example/model_A"
+    assert payload["evaluation"]["aggregate_metric_value"] == 0.42
+
+
+def test_write_duckdb_streaming_results_discards_selection_payloads(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    retain_values: list[bool] = []
+
+    def selected_result_jsons(*_: object, retain_summary_payload: bool = True, **__: object) -> list[report.SelectedResultJson]:
+        retain_values.append(retain_summary_payload)
+        return []
+
+    monkeypatch.setattr(report, "_selected_result_jsons", selected_result_jsons)
+
+    report.write_duckdb_streaming_results(
+        tmp_path / "results",
+        tmp_path / "stream.duckdb",
+        benchmark_configs=[],
+    )
+
+    assert retain_values == [False]
+
+
 def test_top_ranking_selection_context_matches_selected_metric_rankings() -> None:
     evaluation = {
         "reranking_evaluations": [{"best_score_name": "cosine_bm25_top100_rerank"}],
