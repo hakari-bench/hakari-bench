@@ -58,6 +58,7 @@ class RuntimeParams(ParamsModel):
 class OutputParams(ParamsModel):
     results_dir: str | None = None
     candidates_dir: str | None = None
+    result_format: Literal["json.xz", "json"] | None = None
     overwrite: bool | None = None
 
 

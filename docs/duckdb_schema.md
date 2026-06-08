@@ -38,8 +38,8 @@ Build the DuckDB database from benchmark JSON output:
 
 ```bash
 uv run python scripts/build_results_database_and_report.py \
-  --results-dir output/results \
-  --duckdb-path output/results/hakari_bench.duckdb
+  --results-dir output/hakari-results \
+  --duckdb-path output/hakari-results/hakari_bench.duckdb
 ```
 
 Use `--incremental` for repeated local or deploy builds against an existing
@@ -60,10 +60,10 @@ Optional outputs and heavier offline-analysis tables are opt-in:
 
 ```bash
 uv run python scripts/build_results_database_and_report.py \
-  --results-dir output/results \
-  --duckdb-path output/results/hakari_bench.duckdb \
-  --html-output output/results/report.html \
-  --parquet-output-dir output/results/parquet \
+  --results-dir output/hakari-results \
+  --duckdb-path output/hakari-results/hakari_bench.duckdb \
+  --html-output output/hakari-results/report.html \
+  --parquet-output-dir output/hakari-results/parquet \
   --include-retrieval-rankings \
   --include-result-extensions
 ```
@@ -82,12 +82,12 @@ not as part of the logical model identity.
 
 ```bash
 uv run python scripts/build_results_database_and_report.py \
-  --results-dir output/results \
-  --results-dir output/results_combined_20260510_1340 \
+  --results-dir output/hakari-results \
+  --results-dir output/hakari-results-combined_20260510_1340 \
   --overwrite-result-duplicates \
   --exclude-model-name hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR \
-  --duckdb-path output/results/hakari_bench.duckdb \
-  --html-output output/results/report.html
+  --duckdb-path output/hakari-results/hakari_bench.duckdb \
+  --html-output output/hakari-results/report.html
 ```
 
 For a strictly append-only update where new model-task JSON is stored in a
@@ -100,13 +100,14 @@ duplicate logical `(model_name, benchmark, dataset_id, task_key)` base rows.
 ```bash
 uv run python scripts/build_results_database_and_report.py \
   --append-results-dir output/new_model_results \
-  --duckdb-path output/results/hakari_bench.duckdb
+  --duckdb-path output/hakari-results/hakari_bench.duckdb
 ```
 
 The input files are:
 
-- `output/results/{model_dir}/{huggingface_dataset_name}/{split_or_task}.json`:
-  task-level benchmark results.
+- `output/hakari-results/{model_dir}/{huggingface_dataset_name}/{split_or_task}.json.xz`:
+  task-level benchmark results written by default. Plain `.json` and `.json.gz`
+  result files are also readable for legacy or explicitly uncompressed runs.
 - `config/model_cards/*.yaml`: static HAKARI model metadata used to backfill
   missing model fields such as active parameters. Store one model card per file,
   using filenames such as `BAAI__bge-m3.yaml` for model id `BAAI/bge-m3`.
@@ -320,7 +321,7 @@ one model, one benchmark task, and one embedding variant. Base results use
 
 | column | type | meaning |
 | --- | --- | --- |
-| `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
+| `model_dir` | `VARCHAR` | Directory name under `output/hakari-results/{model_dir}`. |
 | `model_name` | `VARCHAR` | `model.id` from result JSON, or `model_dir` when absent. |
 | `model_revision` | `VARCHAR` | Resolved Hugging Face model revision, stored as a short commit SHA when available. Existing result JSON may leave this `NULL`. |
 | `model_revision_requested` | `VARCHAR` | Requested Hugging Face model revision from the run, or `NULL` when not specified or unavailable. |
@@ -374,7 +375,7 @@ rebuilding the same inputs produces stable ids.
 | column | type | meaning |
 | --- | --- | --- |
 | `model_id` | `BIGINT` | Deterministic model dimension id. |
-| `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
+| `model_dir` | `VARCHAR` | Directory name under `output/hakari-results/{model_dir}`. |
 | `model_name` | `VARCHAR` | Model name from result JSON. |
 | `model_revision` | `VARCHAR` | Resolved model revision, when available. |
 | `model_revision_requested` | `VARCHAR` | Requested model revision, when available. |
@@ -470,7 +471,7 @@ already materialized BM25 rows for `score_target = 'reranking'`.
 
 | column | type | meaning |
 | --- | --- | --- |
-| `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
+| `model_dir` | `VARCHAR` | Directory name under `output/hakari-results/{model_dir}`. |
 | `model_name` | `VARCHAR` | Model display/name identity. |
 | `model_revision` | `VARCHAR` | Resolved model revision, when available. |
 | `model_revision_requested` | `VARCHAR` | Requested model revision, when available. |
@@ -522,7 +523,7 @@ completeness displays.
 
 | column | type | meaning |
 | --- | --- | --- |
-| `model_dir` | `VARCHAR` | Directory name under `output/results/{model_dir}`. |
+| `model_dir` | `VARCHAR` | Directory name under `output/hakari-results/{model_dir}`. |
 | `model_name` | `VARCHAR` | `model.id` from task JSON, or `model_dir` when absent. |
 | `generated_at_utc` | `VARCHAR` | Latest task JSON generation time for the model. |
 | `started_at_utc` | `VARCHAR` | Earliest task evaluation start time for the model. |

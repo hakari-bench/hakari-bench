@@ -895,7 +895,7 @@ def main() -> None:
             "the original result roots. May be supplied multiple times."
         ),
     )
-    parser.add_argument("--duckdb-path", type=Path, default=Path("output/results/hakari_bench.duckdb"))
+    parser.add_argument("--duckdb-path", type=Path, default=Path("output/hakari-results/hakari_bench.duckdb"))
     parser.add_argument(
         "--html-output",
         type=Path,
@@ -1043,7 +1043,7 @@ def main() -> None:
             export_duckdb_tables_to_parquet(args.duckdb_path, args.parquet_output_dir)
         memory_monitor.sample("complete")
         return
-    results_dirs = args.results_dir or [Path("output/results")]
+    results_dirs = args.results_dir or [Path("output/hakari-results")]
     duplicate_result_policy: DuplicateResultPolicy = "last-wins" if args.overwrite_result_duplicates else "first-wins"
     if args.stream_results_to_duckdb and args.html_output is not None:
         parser.error("--stream-results-to-duckdb cannot be combined with --html-output")

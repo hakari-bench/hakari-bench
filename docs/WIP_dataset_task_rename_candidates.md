@@ -81,7 +81,7 @@ through old registry names.
 Primary result files remain under:
 
 ```text
-output/results/{model_id}/{huggingface_dataset_name}/{split}.json
+output/hakari-results/{model_id}/{huggingface_dataset_name}/{split}.json.xz
 ```
 
 For every moved split, the migration:

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import lzma
 import os
 import re
 import time
@@ -64,6 +65,11 @@ PROMPT_CONFIG_KEYS = [
     "query_encode_task",
     "document_encode_task",
 ]
+RESULT_FORMAT_SUFFIXES = {
+    "json.xz": ".json.xz",
+    "json": ".json",
+}
+DEFAULT_RESULT_FORMAT = "json.xz"
 
 
 @dataclass(frozen=True)
@@ -82,18 +88,74 @@ def safe_path_part(value: str) -> str:
     return normalized or "value"
 
 
-def result_path_for_task(*, output_dir: Path, model_id: str, task: EvalTask) -> Path:
+def normalize_result_format(value: str | None) -> str:
+    result_format = value or DEFAULT_RESULT_FORMAT
+    if result_format not in RESULT_FORMAT_SUFFIXES:
+        supported = ", ".join(sorted(RESULT_FORMAT_SUFFIXES))
+        raise ValueError(f"Unsupported result format {result_format!r}; expected one of: {supported}.")
+    return result_format
+
+
+def result_path_for_task(
+    *,
+    output_dir: Path,
+    model_id: str,
+    task: EvalTask,
+    result_format: str | None = None,
+) -> Path:
+    suffix = RESULT_FORMAT_SUFFIXES[normalize_result_format(result_format)]
     return (
         output_dir
         / safe_path_part(model_id)
         / safe_path_part(task.dataset_id)
-        / f"{safe_path_part(task.task_name)}.json"
+        / f"{safe_path_part(task.task_name)}{suffix}"
     )
 
 
 def top_rankings_path_for_task(*, output_dir: Path, model_id: str, task: EvalTask) -> Path:
     result_path = result_path_for_task(output_dir=output_dir, model_id=model_id, task=task)
-    return result_path.parent / "rankings" / f"{result_path.stem}.top100.json"
+    return result_path.parent / "rankings" / f"{safe_path_part(task.task_name)}.top100.json"
+
+
+def existing_result_path_for_task(
+    *,
+    output_dir: Path,
+    model_id: str,
+    task: EvalTask,
+    result_format: str | None = None,
+) -> Path | None:
+    requested_format = normalize_result_format(result_format)
+    requested_path = result_path_for_task(
+        output_dir=output_dir,
+        model_id=model_id,
+        task=task,
+        result_format=requested_format,
+    )
+    if requested_path.exists():
+        return requested_path
+    for candidate_format in RESULT_FORMAT_SUFFIXES:
+        if candidate_format == requested_format:
+            continue
+        candidate_path = result_path_for_task(
+            output_dir=output_dir,
+            model_id=model_id,
+            task=task,
+            result_format=candidate_format,
+        )
+        if candidate_path.exists():
+            return candidate_path
+    return None
+
+
+def read_result_json(path: Path) -> dict[str, Any]:
+    if path.name.endswith(".json.xz"):
+        with lzma.open(path, "rt", encoding="utf-8") as file:
+            payload = json.load(file)
+    else:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Result JSON payload must be an object: {path}")
+    return payload
 
 
 def run_or_load_task(
@@ -109,13 +171,20 @@ def run_or_load_task(
         output_dir=Path(args.output_dir),
         model_id=getattr(args, "model_id", args.model),
         task=task,
+        result_format=getattr(args, "result_format", None),
     )
-    if output_path.exists() and not args.override:
+    existing_path = existing_result_path_for_task(
+        output_dir=Path(args.output_dir),
+        model_id=getattr(args, "model_id", args.model),
+        task=task,
+        result_format=getattr(args, "result_format", None),
+    )
+    if existing_path is not None and not args.override:
         return TaskRunResult(
             task=task,
             cache_hit=True,
-            output_path=output_path,
-            payload=json.loads(output_path.read_text(encoding="utf-8")),
+            output_path=existing_path,
+            payload=read_result_json(existing_path),
         )
 
     total_start = time.perf_counter()
@@ -321,7 +390,25 @@ def run_or_load_task(
         _remove_optional_artifact(ranking_path)
     payload["experiment_manifest"] = build_experiment_manifest(payload)
     _write_json(output_path, payload)
+    _remove_alternate_result_files(
+        output_path=output_path,
+        output_dir=Path(args.output_dir),
+        model_id=getattr(args, "model_id", args.model),
+        task=task,
+    )
     return TaskRunResult(task=task, cache_hit=False, output_path=output_path, payload=payload)
+
+
+def _remove_alternate_result_files(*, output_path: Path, output_dir: Path, model_id: str, task: EvalTask) -> None:
+    for result_format in RESULT_FORMAT_SUFFIXES:
+        candidate_path = result_path_for_task(
+            output_dir=output_dir,
+            model_id=model_id,
+            task=task,
+            result_format=result_format,
+        )
+        if candidate_path != output_path and candidate_path.exists():
+            candidate_path.unlink()
 
 
 def _remove_optional_artifact(path: Path) -> None:
@@ -633,7 +720,12 @@ def build_run_summary_payload(
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    text = json.dumps(payload, ensure_ascii=False, indent=2)
+    if path.name.endswith(".json.xz"):
+        with lzma.open(path, "wt", encoding="utf-8") as file:
+            file.write(text)
+        return
+    path.write_text(text, encoding="utf-8")
 
 
 def _numeric(value: Any, *, fallback: Any = None) -> float | None:

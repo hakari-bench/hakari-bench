@@ -156,16 +156,17 @@ Every non-BM25 evaluation also writes a reusable model card next to the result
 tree:
 
 ```text
-output/results/{safe_model_id}/{safe_model_id}.yaml
+output/hakari-results/{safe_model_id}/{safe_model_id}.yaml
 ```
 
 This file can be copied into `config/model_cards/` after review.
 
-Generate cards from existing benchmark result JSON:
+Generate cards from existing benchmark result JSON. The generator reads the
+default `.json.xz` task files and legacy or explicitly plain `.json` files:
 
 ```bash
 uv run python scripts/generate_model_cards.py \
-  --from-results output/results \
+  --from-results output/hakari-results \
   --output-dir config/model_cards \
   --overwrite
 ```

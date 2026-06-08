@@ -39,6 +39,8 @@ from hakari_bench.models import (
 from hakari_bench.results import (
     TaskRunResult,
     build_run_summary_payload,
+    existing_result_path_for_task,
+    read_result_json,
     result_path_for_task,
     run_or_load_task,
     safe_path_part,
@@ -50,6 +52,7 @@ MISSING_ATTENTION_IMPLEMENTATION_WARNING = (
     "Benchmark inference can be long, and the model's officially recommended attention "
     "implementation can be substantially faster."
 )
+DEFAULT_RESULTS_DIR = "output/hakari-results"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -65,7 +68,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_dataset_args(dense, action="evaluate")
     _add_prompt_args(dense)
     _add_candidate_args(dense)
-    _add_output_args(dense, results_default="output/results")
+    _add_output_args(dense, results_default=DEFAULT_RESULTS_DIR)
 
     sparse = evaluate_methods.add_parser("sparse", help="Evaluate a sparse embedding model.")
     _add_evaluate_model_args(sparse)
@@ -75,7 +78,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_dataset_args(sparse, action="evaluate")
     _add_prompt_args(sparse)
     _add_candidate_args(sparse)
-    _add_output_args(sparse, results_default="output/results")
+    _add_output_args(sparse, results_default=DEFAULT_RESULTS_DIR)
 
     reranker = evaluate_methods.add_parser("reranker", help="Evaluate a reranker model.")
     _add_evaluate_model_args(reranker)
@@ -83,7 +86,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_dataset_args(reranker, action="evaluate")
     _add_reranker_args(reranker)
     _add_candidate_args(reranker)
-    _add_output_args(reranker, results_default="output/results")
+    _add_output_args(reranker, results_default=DEFAULT_RESULTS_DIR)
 
     late_interaction = evaluate_methods.add_parser("late-interaction", help="Evaluate a late-interaction model.")
     _add_evaluate_model_args(late_interaction)
@@ -93,14 +96,14 @@ def build_parser() -> argparse.ArgumentParser:
     _add_prompt_args(late_interaction)
     _add_late_interaction_args(late_interaction)
     _add_candidate_args(late_interaction)
-    _add_output_args(late_interaction, results_default="output/results")
+    _add_output_args(late_interaction, results_default=DEFAULT_RESULTS_DIR)
 
     bm25 = evaluate_methods.add_parser("bm25", help="Evaluate BM25 rankings.")
     _add_params_arg(bm25)
     bm25.add_argument("--model", default=None, help="Display/storage model id for BM25 result metadata.")
     _add_dataset_args(bm25, action="evaluate")
     _add_candidate_args(bm25, candidate_default="bm25")
-    _add_output_args(bm25, results_default="output/results")
+    _add_output_args(bm25, results_default=DEFAULT_RESULTS_DIR)
     _add_bm25_args(bm25, include_source=True)
 
     from_model_card = evaluate_methods.add_parser(
@@ -122,7 +125,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_candidate_args(from_model_card)
     _add_reranker_args(from_model_card)
     _add_late_interaction_args(from_model_card)
-    _add_output_args(from_model_card, results_default="output/results")
+    _add_output_args(from_model_card, results_default=DEFAULT_RESULTS_DIR)
 
     build_candidates = subparsers.add_parser(
         "build-candidates",
@@ -354,6 +357,12 @@ def _add_late_interaction_args(parser: argparse.ArgumentParser) -> None:
 def _add_output_args(parser: argparse.ArgumentParser, *, results_default: str) -> None:
     _add_execution_args(parser)
     parser.add_argument("--results-dir", default=results_default)
+    parser.add_argument(
+        "--result-format",
+        default="json.xz",
+        choices=["json.xz", "json"],
+        help="Per-task result file format. Defaults to compressed JSON payloads in .json.xz files.",
+    )
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--primary-metric", default="ndcg@10")
 
@@ -544,7 +553,8 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
     args.rerank_top_n = getattr(args, "rerank_top_k", DEFAULT_RERANK_TOP_K)
     args.truncate_sparse_query_max_dims = getattr(args, "sparse_query_max_active_dims", None)
     args.truncate_sparse_docs_max_dims = getattr(args, "sparse_document_max_active_dims", None)
-    args.output_dir = getattr(args, "results_dir", "output/results")
+    args.output_dir = getattr(args, "results_dir", DEFAULT_RESULTS_DIR)
+    args.result_format = getattr(args, "result_format", "json.xz")
     args.override = getattr(args, "overwrite", False)
     args.save_top_rankings = True
     args.aggregate_metric = getattr(args, "primary_metric", "ndcg@10")
@@ -895,13 +905,15 @@ def _apply_runtime_params(args: argparse.Namespace, value: dict[str, Any]) -> No
 def _apply_output_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
     _reject_unknown_keys(
         value,
-        allowed={"results_dir", "candidates_dir", "overwrite"},
+        allowed={"results_dir", "candidates_dir", "result_format", "overwrite"},
         path="params.output",
     )
     if "results_dir" in value:
         args.results_dir = _string_param(value["results_dir"], "params.output.results_dir")
     if "candidates_dir" in value:
         args.candidates_dir = _string_param(value["candidates_dir"], "params.output.candidates_dir")
+    if "result_format" in value:
+        args.result_format = _string_param(value["result_format"], "params.output.result_format")
     if "overwrite" in value:
         args.overwrite = _bool_param(value["overwrite"], "params.output.overwrite")
 
@@ -1180,7 +1192,14 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     pending_tasks = [
         task
         for task in tasks
-        if args.override or not result_path_for_task(output_dir=output_dir, model_id=args.model_id, task=task).exists()
+        if args.override
+        or existing_result_path_for_task(
+            output_dir=output_dir,
+            model_id=args.model_id,
+            task=task,
+            result_format=args.result_format,
+        )
+        is None
     ]
     environment = collect_runtime_environment()
     _warn_if_missing_attention_implementation(args)
@@ -1237,7 +1256,16 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         if model is not None and args.model_type == "reranker" and pending_tasks:
             reranker_pool = _start_reranker_score_pool(model, args)
         for task in tasks:
-            if model is None and result_path_for_task(output_dir=output_dir, model_id=args.model_id, task=task).exists():
+            if (
+                model is None
+                and existing_result_path_for_task(
+                    output_dir=output_dir,
+                    model_id=args.model_id,
+                    task=task,
+                    result_format=args.result_format,
+                )
+                is not None
+            ):
                 results.append(_load_cached_task(args=args, task=task))
                 continue
             if model is None and args.model_type != "bm25":
@@ -1423,12 +1451,24 @@ def _load_dataset_for_args(args: argparse.Namespace, task: EvalTask) -> LoadedIr
 
 
 def _load_cached_task(*, args: argparse.Namespace, task: EvalTask) -> TaskRunResult:
-    output_path = result_path_for_task(output_dir=Path(args.output_dir), model_id=args.model_id, task=task)
+    output_path = existing_result_path_for_task(
+        output_dir=Path(args.output_dir),
+        model_id=args.model_id,
+        task=task,
+        result_format=getattr(args, "result_format", None),
+    )
+    if output_path is None:
+        output_path = result_path_for_task(
+            output_dir=Path(args.output_dir),
+            model_id=args.model_id,
+            task=task,
+            result_format=getattr(args, "result_format", None),
+        )
     return TaskRunResult(
         task=task,
         cache_hit=True,
         output_path=output_path,
-        payload=json.loads(output_path.read_text(encoding="utf-8")),
+        payload=read_result_json(output_path),
     )
 
 

@@ -80,5 +80,6 @@ After any late-interaction rerun:
 3. Compare both exact MaxSim `nDCG@10` and reranking-candidate `nDCG@10` against
    the previous run. Large single-model deltas should be reproduced in a
    separate output directory before overwriting shared result roots.
-4. Regenerate matching `.json.xz` files from the final plain JSON files when the
-   compressed result root is part of the published dataset.
+4. Keep the default compressed `.json.xz` result files for published result
+   roots. Use `--result-format json` only for local diagnostics that require
+   plain JSON.

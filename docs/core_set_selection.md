@@ -332,7 +332,7 @@ summary. Domain and language-specific diagnosis should still use `All`,
 - HAKARI Core configuration: `config/viewer/overall.yaml`.
 - HAKARI benchmark metadata and task docs: `task_docs/`.
 - Dense-result warehouse used for the 2026-05-21 analysis:
-  `output/results/hakari_bench.duckdb` in the evaluated local worktree.
+  `output/hakari-results/hakari_bench.duckdb` in the evaluated local worktree.
 - Official MTEB repository checked on 2026-05-21:
   <https://github.com/embeddings-benchmark/mteb>.
 - BEIR paper: <https://arxiv.org/abs/2104.08663>.

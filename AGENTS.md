@@ -150,7 +150,7 @@ uv run --group all ty check
 - Per-task result files are written below:
 
 ```text
-output/results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
+output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json.xz
 ```
 
 - Run-level summaries are derived from per-task result JSON when building the

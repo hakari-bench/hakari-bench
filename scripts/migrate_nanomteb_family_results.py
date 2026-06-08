@@ -126,7 +126,7 @@ def _dataset_id_for_name(name: str, *, fallback: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Migrate NanoMTEB result JSON files to canonical dataset names.")
-    parser.add_argument("--results-dir", type=Path, default=Path("output/results"))
+    parser.add_argument("--results-dir", type=Path, default=Path("output/hakari-results"))
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 

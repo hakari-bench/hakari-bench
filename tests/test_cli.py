@@ -130,7 +130,8 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.dtype == "bf16"
     assert args.retrieval_score_device == "auto"
     assert args.dataset == ["hakari-bench/NanoBEIR-en"]
-    assert args.results_dir == "output/results"
+    assert args.results_dir == "output/hakari-results"
+    assert args.result_format == "json.xz"
     assert args.save_top_rankings is True
     assert args.embedding_variants == _default_dense_quantized_variants()
 
@@ -225,7 +226,7 @@ def test_parse_args_accepts_structured_params_json() -> None:
                 '"target":{"collections":["MNanoBEIR"]},'
                 '"runtime":{"batch_size":16,"dtype":"fp16",'
                 '"encode_devices":["cuda:0","cuda:1"],"encode_chunk_size":64},'
-                '"output":{"results_dir":"output/custom","overwrite":true}}'
+                '"output":{"results_dir":"output/custom","result_format":"json","overwrite":true}}'
             ),
         ]
     )
@@ -240,6 +241,7 @@ def test_parse_args_accepts_structured_params_json() -> None:
     assert args.encode_devices == ["cuda:0", "cuda:1"]
     assert args.encode_chunk_size == 64
     assert args.results_dir == "output/custom"
+    assert args.result_format == "json"
     assert args.overwrite is True
     assert args.save_top_rankings is True
 

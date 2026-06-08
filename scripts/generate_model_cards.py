@@ -32,7 +32,7 @@ def main() -> None:
         "--from-results",
         type=Path,
         default=None,
-        help="Build one card per model from existing output/results JSON instead of loading a single model.",
+        help="Build one card per model from existing output/hakari-results JSON instead of loading a single model.",
     )
     parser.add_argument("--output-dir", type=Path, default=Path("config/model_cards"))
     parser.add_argument("--dataset", action="append", default=None, help="Dataset id/name to store in the card target.")

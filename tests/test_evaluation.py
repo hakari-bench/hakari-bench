@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import lzma
 import sys
 import types
 from pathlib import Path
@@ -1985,16 +1986,22 @@ def test_evaluate_dense_task_skips_bm25_reranking_without_candidates() -> None:
 
 def test_result_path_layout() -> None:
     path = result_path_for_task(
-        output_dir=Path("output/results"),
+        output_dir=Path("output/hakari-results"),
         model_id="local/bekko-model",
         task=_toy_task(),
     )
 
-    assert path == Path("output/results/local__bekko-model/toy__data/test.json")
+    assert path == Path("output/hakari-results/local__bekko-model/toy__data/test.json.xz")
+    assert result_path_for_task(
+        output_dir=Path("output/hakari-results"),
+        model_id="local/bekko-model",
+        task=_toy_task(),
+        result_format="json",
+    ) == Path("output/hakari-results/local__bekko-model/toy__data/test.json")
     assert safe_path_part("/tmp/local model") == "tmp__local_model"
 
 
-def test_run_or_load_task_skips_existing_json(tmp_path: Path) -> None:
+def test_run_or_load_task_skips_existing_compressed_json(tmp_path: Path) -> None:
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
@@ -2011,10 +2018,12 @@ def test_run_or_load_task_skips_existing_json(tmp_path: Path) -> None:
         rerank_top_n=100,
         aggregate_metric="ndcg@10",
         override=False,
+        result_format="json.xz",
     )
     output_path = result_path_for_task(output_dir=tmp_path, model_id=args.model, task=task)
     output_path.parent.mkdir(parents=True)
-    output_path.write_text(json.dumps({"metrics": {"cached": 1.0}}), encoding="utf-8")
+    with lzma.open(output_path, "wt", encoding="utf-8") as file:
+        json.dump({"metrics": {"cached": 1.0}}, file)
 
     result = run_or_load_task(
         task=task,
@@ -2026,6 +2035,49 @@ def test_run_or_load_task_skips_existing_json(tmp_path: Path) -> None:
     )
 
     assert result.cache_hit is True
+    assert result.output_path == output_path
+    assert result.payload["metrics"] == {"cached": 1.0}
+
+
+def test_run_or_load_task_keeps_legacy_plain_json_cache(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+        result_format="json.xz",
+    )
+    legacy_path = result_path_for_task(
+        output_dir=tmp_path,
+        model_id=args.model,
+        task=task,
+        result_format="json",
+    )
+    legacy_path.parent.mkdir(parents=True)
+    legacy_path.write_text(json.dumps({"metrics": {"cached": 1.0}}), encoding="utf-8")
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"id": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    assert result.cache_hit is True
+    assert result.output_path == legacy_path
     assert result.payload["metrics"] == {"cached": 1.0}
 
 
@@ -2058,6 +2110,9 @@ def test_run_or_load_task_records_evaluation_timestamps_and_durations(tmp_path: 
     )
 
     evaluation = result.payload["evaluation"]
+    assert result.output_path.name == "test.json.xz"
+    with lzma.open(result.output_path, "rt", encoding="utf-8") as file:
+        assert json.load(file)["evaluation"]["cache_hit"] is False
     assert evaluation["dataset_load_started_at_utc"].endswith("+00:00")
     assert evaluation["dataset_load_finished_at_utc"].endswith("+00:00")
     assert evaluation["started_at_utc"].endswith("+00:00")
@@ -2070,6 +2125,39 @@ def test_run_or_load_task_records_evaluation_timestamps_and_durations(tmp_path: 
     assert evaluation["embedding_conversion"]["query"]["batch_size"] == 2
     assert evaluation["embedding_conversion"]["docs"]["text_count"] == 3
     assert evaluation["embedding_conversion"]["docs"]["batch_size"] == 2
+
+
+def test_run_or_load_task_can_write_plain_json_when_requested(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/model",
+        model_type="dense",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=100,
+        aggregate_metric="ndcg@10",
+        override=False,
+        result_format="json",
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeDenseModel(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"id": "hotchpotch/model"},
+        dataset_loader=lambda _: _toy_dataset(),
+    )
+
+    assert result.output_path.name == "test.json"
+    assert json.loads(result.output_path.read_text(encoding="utf-8"))["evaluation"]["cache_hit"] is False
 
 
 def test_run_or_load_task_records_dataset_revision(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

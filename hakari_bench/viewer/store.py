@@ -144,6 +144,9 @@ def _source_from_results_dir(source_results_dir: Path | None) -> Path | None:
 
 def _discover_source_duckdb() -> Path | None:
     candidates = [
+        Path("../hakari-bench/output/hakari-results") / DEFAULT_DUCKDB_NAME,
+        Path("../../hakari-bench/output/hakari-results") / DEFAULT_DUCKDB_NAME,
+        Path("output/hakari-results") / DEFAULT_DUCKDB_NAME,
         Path("../hakari-bench/output/results") / DEFAULT_DUCKDB_NAME,
         Path("../../hakari-bench/output/results") / DEFAULT_DUCKDB_NAME,
         Path("output/results") / DEFAULT_DUCKDB_NAME,

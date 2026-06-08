@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import lzma
 import math
 from dataclasses import dataclass
 from pathlib import Path
@@ -165,7 +166,7 @@ def collect_model_cards_from_results(
     metadata_by_model: dict[str, dict[str, Any]] = {}
     truncate_dims_by_model: dict[str, set[int]] = {}
     datasets_by_model: dict[str, set[str]] = {}
-    for result_path in sorted(results_dir.glob("*/*/*.json")):
+    for result_path in _result_json_paths(results_dir):
         payload = _read_json(result_path)
         if not isinstance(payload, dict):
             continue
@@ -330,9 +331,20 @@ def _drop_empty(payload: dict[str, Any]) -> dict[str, Any]:
 
 def _read_json(path: Path) -> Any:
     try:
+        if path.name.endswith(".json.xz"):
+            with lzma.open(path, "rt", encoding="utf-8") as file:
+                return json.load(file)
         return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, lzma.LZMAError, UnicodeDecodeError):
         return None
+
+
+def _result_json_paths(results_dir: Path) -> list[Path]:
+    return sorted(
+        path
+        for path in results_dir.glob("*/*/*")
+        if path.is_file() and path.name.endswith((".json", ".json.xz"))
+    )
 
 
 def _model_id_from_result_path(results_dir: Path, result_path: Path) -> str:
