@@ -1204,6 +1204,19 @@ def test_write_duckdb_streaming_results_matches_materialized_build(tmp_path: Pat
             assert con.execute(
                 f"SELECT count(*) FROM (SELECT * FROM streaming.{table} EXCEPT SELECT * FROM materialized.{table})"
             ).fetchone() == (0,)
+        assert con.execute(
+            """
+            SELECT result_path
+            FROM streaming.metrics_long
+            """
+        ).fetchall() == con.execute(
+            """
+            SELECT result_path
+            FROM streaming.metrics_long
+            ORDER BY result_path, metric_name, score_target, embedding_variant_name,
+                     model_name, benchmark, dataset_id, task_name
+            """
+        ).fetchall()
     finally:
         con.close()
 

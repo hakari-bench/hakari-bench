@@ -3568,6 +3568,8 @@ def _materialize_streamed_result_tables(con: duckdb.DuckDBPyConnection) -> None:
             FROM task_results_raw
         )
         WHERE _rn = 1
+        ORDER BY result_path, model_name, benchmark, dataset_id, task_key,
+                 embedding_variant_name, embedding_dim, quantization
         """
     )
     con.execute(
@@ -3584,6 +3586,8 @@ def _materialize_streamed_result_tables(con: duckdb.DuckDBPyConnection) -> None:
             FROM metrics_long_raw
         )
         WHERE _rn = 1
+        ORDER BY result_path, metric_name, score_target, embedding_variant_name,
+                 model_name, benchmark, dataset_id, task_name
         """
     )
     con.execute(
@@ -3599,6 +3603,7 @@ def _materialize_streamed_result_tables(con: duckdb.DuckDBPyConnection) -> None:
             FROM task_diagnostics_raw
         )
         WHERE _rn = 1
+        ORDER BY result_path, model_name, benchmark, dataset_id, task_key
         """
     )
     con.execute(
@@ -3614,9 +3619,17 @@ def _materialize_streamed_result_tables(con: duckdb.DuckDBPyConnection) -> None:
             FROM dataset_metadata_raw
         )
         WHERE _rn = 1
+        ORDER BY benchmark, dataset_id, task_name, task_key
         """
     )
-    con.execute(f"CREATE TABLE retrieval_rankings AS SELECT DISTINCT {ranking_columns} FROM retrieval_rankings_raw")
+    con.execute(
+        f"""
+        CREATE TABLE retrieval_rankings AS
+        SELECT DISTINCT {ranking_columns}
+        FROM retrieval_rankings_raw
+        ORDER BY result_path, ranking_path, ranking_name, query_id, rank
+        """
+    )
 
 
 def _create_empty_model_score_tables(con: duckdb.DuckDBPyConnection) -> None:
