@@ -19,8 +19,12 @@ runtime:
 late_interaction:
   architecture: colbert
   scoring: maxsim
-  query_length: 48
+  query_prefix: "[unused0]"
+  document_prefix: "[unused1]"
+  query_length: 32
   document_length: 512
+  do_query_expansion: true
+  attend_to_expansion_tokens: false
 target:
   datasets:
   - hakari-bench/NanoBEIR-en

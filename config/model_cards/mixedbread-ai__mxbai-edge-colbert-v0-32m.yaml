@@ -1,13 +1,13 @@
-id: mixedbread-ai/mxbai-edge-colbert-v0-17m
+id: mixedbread-ai/mxbai-edge-colbert-v0-32m
 source:
   type: huggingface
-  name: mixedbread-ai/mxbai-edge-colbert-v0-17m
-  revision: 21996dcf231e0b406c3342b374155e43d4960341
+  name: mixedbread-ai/mxbai-edge-colbert-v0-32m
+  revision: 963e23afa1478d8bcc12e5d7115adcfdbd22c3af
 method: late-interaction
 parameters:
-  total: 16953600
-  input_embedding: 12894720
-  active: 4058880
+  total: 32817792
+  input_embedding: 19342080
+  active: 13475712
 embedding:
   truncate_dims: null
 runtime:
