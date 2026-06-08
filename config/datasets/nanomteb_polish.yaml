@@ -22,6 +22,8 @@ splits:
 - quora
 metadata:
   language: pl
+  primary_languages:
+  - pl
   category: natural_language
   short_description: NanoMTEB-Polish retrieval benchmark.
   description: NanoMTEB-Polish is a Nano-style retrieval dataset hosted by hakari-bench.

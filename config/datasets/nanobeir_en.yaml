@@ -21,6 +21,8 @@ splits:
 - NanoTouche2020
 metadata:
   language: en
+  primary_languages:
+  - en
   category: natural_language
   short_description: Compact English BEIR retrieval benchmark.
   description: NanoBEIR-en is a compact English benchmark derived from BEIR retrieval

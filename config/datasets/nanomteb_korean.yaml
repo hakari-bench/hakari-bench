@@ -13,6 +13,8 @@ splits:
 - squad_kor_v1
 metadata:
   language: ko
+  primary_languages:
+  - ko
   category: natural_language
   short_description: Korean NanoMTEB retrieval benchmark.
   description: NanoMTEB-Korean is a compact Korean retrieval benchmark containing

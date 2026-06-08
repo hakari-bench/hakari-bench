@@ -22,8 +22,8 @@ from hakari_bench.viewer.task_names import (
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
-CURRENT_DUCKDB_SCHEMA_VERSION = "7"
-COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {CURRENT_DUCKDB_SCHEMA_VERSION}
+CURRENT_DUCKDB_SCHEMA_VERSION = "8"
+COMPATIBLE_DUCKDB_SCHEMA_VERSIONS = {"7", CURRENT_DUCKDB_SCHEMA_VERSION}
 REQUIRED_VIEWER_TABLES = ("meta_database", "viewer_task_results")
 DISPLAY_SCORE_METRIC_ORDER = (
     "ndcg@10",
@@ -79,6 +79,7 @@ class TaskResultRecord(BaseModel):
     model_type: str | None = None
     language: str | None = None
     languages: list[str] = Field(default_factory=list)
+    primary_languages: list[str] = Field(default_factory=list)
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
@@ -134,6 +135,7 @@ class TaskResultRow:
     model_type: str | None = None
     language: str | None = None
     languages: tuple[str, ...] = ()
+    primary_languages: tuple[str, ...] = ()
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
@@ -316,6 +318,13 @@ class TaskResultsRepository:
                 if "languages" in metadata_columns
                 else "[]::VARCHAR[]"
             )
+            primary_languages_expr = (
+                qualified_column("tr", "primary_languages", allowed_columns=columns)
+                if "primary_languages" in columns
+                else qualified_column("dm", "primary_languages", allowed_columns=metadata_columns)
+                if "primary_languages" in metadata_columns
+                else "[]::VARCHAR[]"
+            )
             placeholders = ", ".join("?" for _ in benchmarks)
             rerank_metric_marker = "_reranking_hybrid_top"
             rerank_metric_filter = (
@@ -354,6 +363,7 @@ class TaskResultsRepository:
                     ms.metric_value AS score,
                     {language_expr} AS language,
                     {languages_expr} AS languages,
+                    {primary_languages_expr} AS primary_languages,
                     tr.active_parameters,
                     tr.total_parameters,
                     tr.max_seq_length,
@@ -455,6 +465,11 @@ class TaskResultsRepository:
             query_params.append(score_target)
             language_expr = qualified_column("tr", "language", allowed_columns=columns)
             languages_expr = qualified_column("tr", "languages", allowed_columns=columns)
+            primary_languages_expr = (
+                qualified_column("tr", "primary_languages", allowed_columns=columns)
+                if "primary_languages" in columns
+                else "[]::VARCHAR[]"
+            )
             variant_name_expr = _column_or_null(columns, "embedding_variant_name")
             model_type_expr = _column_or_null(columns, "model_type")
             embedding_dim_expr = _column_or_null(columns, "embedding_dim")
@@ -498,6 +513,7 @@ class TaskResultsRepository:
                     {score_expr} AS score,
                     {language_expr} AS language,
                     {languages_expr} AS languages,
+                    {primary_languages_expr} AS primary_languages,
                     tr.active_parameters,
                     tr.total_parameters,
                     tr.max_seq_length,
@@ -561,6 +577,7 @@ def _task_result_payload(field_names: list[str], row: tuple[Any, ...]) -> dict[s
     payload["split_name"] = canonical_split_name(benchmark, payload.get("split_name"))
     payload["task_name"] = task_name
     payload["languages"] = _normalized_languages(payload.get("languages"), payload.get("language"))
+    payload["primary_languages"] = _normalized_primary_languages(payload.get("primary_languages"))
     return payload
 
 
@@ -583,6 +600,7 @@ def _task_result_row(field_names: list[str], row: tuple[Any, ...]) -> TaskResult
         score=float(payload["score"]),
         language=payload["language"] if isinstance(payload["language"], str) else None,
         languages=tuple(payload["languages"]),
+        primary_languages=tuple(payload["primary_languages"]),
         active_parameters=_int_payload_value(payload.get("active_parameters")),
         total_parameters=_int_payload_value(payload.get("total_parameters")),
         max_seq_length=_int_payload_value(payload.get("max_seq_length")),
@@ -777,3 +795,9 @@ def _normalized_languages(value: Any, language: Any) -> list[str]:
     if isinstance(language, str) and language:
         return [language]
     return []
+
+
+def _normalized_primary_languages(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, str) and item]

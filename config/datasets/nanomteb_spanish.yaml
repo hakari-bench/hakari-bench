@@ -15,6 +15,8 @@ splits:
 - xpqa_spa_spa
 metadata:
   language: multilingual
+  primary_languages:
+  - es
   category: natural_language
   short_description: Spanish NanoMTEB retrieval benchmark.
   description: NanoMTEB-Spanish is a compact Spanish retrieval benchmark aligned with

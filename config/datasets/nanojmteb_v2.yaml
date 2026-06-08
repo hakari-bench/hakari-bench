@@ -19,6 +19,8 @@ splits:
 - nlpjournal_title_intro
 metadata:
   language: ja
+  primary_languages:
+  - ja
   category: natural_language
   short_description: NanoJMTEB-v2 retrieval benchmark.
   description: NanoJMTEB-v2 is a Nano-style retrieval dataset hosted by hakari-bench.

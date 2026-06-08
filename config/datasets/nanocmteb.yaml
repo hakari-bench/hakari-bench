@@ -16,6 +16,8 @@ splits:
 - video
 metadata:
   language: multilingual
+  primary_languages:
+  - zh
   category: natural_language
   short_description: Chinese Nano retrieval benchmark based on C-MTEB retrieval tasks.
   description: NanoCMTEB is a compact Chinese retrieval benchmark assembled from C-MTEB

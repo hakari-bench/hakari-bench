@@ -41,6 +41,14 @@ class ModelCardParameters:
 
 
 @dataclass(frozen=True)
+class LanguageFilterPolicy:
+    default_mode: LanguageFilterMode = "languages"
+    default_allowed_languages: tuple[str, ...] = ()
+    modes_by_benchmark: dict[str, LanguageFilterMode] | None = None
+    allowed_languages_by_benchmark: dict[str, tuple[str, ...]] | None = None
+
+
+@dataclass(frozen=True)
 class TaskScore:
     model_name: str
     benchmark: str
@@ -56,6 +64,7 @@ class TaskScore:
     model_type: str | None = None
     language: str | None = None
     languages: tuple[str, ...] = ()
+    primary_languages: tuple[str, ...] = ()
     dtype: str | None = None
     attn_implementation: str | None = None
     prompt_summary: str | None = None
@@ -265,8 +274,7 @@ class LeaderboardService:
                 rescore=include_rescore_variants,
                 other=include_other_variants,
             )
-            language_filter_mode = _language_filter_mode_for_view(self.config, view_name)
-            language_page_languages = _language_page_languages_for_view(self.config, view_name)
+            language_filter_policy = _language_filter_policy_for_view(self.config, view_name)
             has_length_filters = _has_task_length_filters(
                 query_min_chars=query_min_chars,
                 query_max_chars=query_max_chars,
@@ -284,8 +292,7 @@ class LeaderboardService:
                 and not task_filter.strip()
                 and not has_length_filters
                 and selected_score_metric == "ndcg@10"
-                and language_filter_mode == "languages"
-                and not language_page_languages
+                and _language_filter_policy_supports_precomputed(language_filter_policy)
                 and (overall is None or not _overall_uses_grouped_components(overall))
             ):
                 precomputed = _load_precomputed_leaderboard_rows(
@@ -373,13 +380,12 @@ class LeaderboardService:
                     phase_timing["task_score_count"] = len(rows)
             available_languages = _language_options(
                 rows,
-                mode=language_filter_mode,
-                allowed_languages=language_page_languages,
+                policy=language_filter_policy,
             )
             selected_languages = _selected_languages(language_filters, available_languages)
             if selected_languages:
                 with timed_operation("viewer.leaderboard.phase", operation="filter_languages", view=view_name) as phase_timing:
-                    rows = _filter_rows_by_languages(rows, selected_languages, mode=language_filter_mode)
+                    rows = _filter_rows_by_languages(rows, selected_languages, policy=language_filter_policy)
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["language_count"] = len(selected_languages)
             if ranking_task_filter_terms:
@@ -1023,6 +1029,7 @@ def _task_scores_from_records(
                     score=record.score,
                     language=record.language,
                     languages=tuple(record.languages),
+                    primary_languages=tuple(record.primary_languages),
                     active_parameters=record.active_parameters,
                     total_parameters=record.total_parameters,
                     max_seq_length=record.max_seq_length,
@@ -1338,6 +1345,9 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
                 score=_mean(row.score for row in aggregate_rows),
                 language=first.language,
                 languages=tuple(sorted({language for row in aggregate_rows for language in row.languages})),
+                primary_languages=tuple(
+                    sorted({language for row in aggregate_rows for language in row.primary_languages})
+                ),
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
@@ -1393,6 +1403,9 @@ def _aggregate_benchmark_score_group_scores(rows: list[TaskScore], score_group: 
                 score=_mean(row.score for row in aggregate_rows),
                 language=first.language,
                 languages=tuple(sorted({language for row in aggregate_rows for language in row.languages})),
+                primary_languages=tuple(
+                    sorted({language for row in aggregate_rows for language in row.primary_languages})
+                ),
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
                 max_seq_length=first.max_seq_length,
@@ -1473,13 +1486,11 @@ def _language_options(
     *,
     mode: LanguageFilterMode = "languages",
     allowed_languages: tuple[str, ...] = (),
+    policy: LanguageFilterPolicy | None = None,
 ) -> list[LanguageOption]:
-    allowed = set(allowed_languages)
     task_keys_by_language: dict[str, set[str]] = defaultdict(set)
     for row in rows:
-        for language in _language_codes_for_row(row, mode=mode):
-            if allowed and language not in allowed:
-                continue
+        for language in _language_codes_for_row(row, mode=mode, allowed_languages=allowed_languages, policy=policy):
             task_keys_by_language[language].add(row.task_key)
     return [
         LanguageOption(code=language, label=_language_label(language), task_count=len(task_keys))
@@ -1504,9 +1515,10 @@ def _filter_rows_by_languages(
     selected_languages: tuple[str, ...],
     *,
     mode: LanguageFilterMode = "languages",
+    policy: LanguageFilterPolicy | None = None,
 ) -> list[TaskScore]:
     selected = set(selected_languages)
-    return [row for row in rows if selected.intersection(_language_codes_for_row(row, mode=mode))]
+    return [row for row in rows if selected.intersection(_language_codes_for_row(row, mode=mode, policy=policy))]
 
 
 def _filter_rows_by_model_terms(rows: list[TaskScore], terms: tuple[str, ...]) -> list[TaskScore]:
@@ -1605,11 +1617,34 @@ def _task_row_matches_filter_terms(row: TaskScore, terms: tuple[str, ...]) -> bo
     )
 
 
-def _language_codes_for_row(row: TaskScore, *, mode: LanguageFilterMode) -> tuple[str, ...]:
+def _language_codes_for_row(
+    row: TaskScore,
+    *,
+    mode: LanguageFilterMode,
+    allowed_languages: tuple[str, ...] = (),
+    policy: LanguageFilterPolicy | None = None,
+) -> tuple[str, ...]:
+    if policy is not None:
+        mode = (policy.modes_by_benchmark or {}).get(row.benchmark, policy.default_mode)
+        allowed_languages = (policy.allowed_languages_by_benchmark or {}).get(
+            row.benchmark,
+            policy.default_allowed_languages,
+        )
     if mode == "primary_language":
-        language = _primary_language_for_row(row)
-        return (language,) if language else ()
-    return row.languages
+        languages = _primary_languages_for_row(row)
+    else:
+        languages = row.languages
+    if not allowed_languages:
+        return languages
+    allowed = set(allowed_languages)
+    return tuple(language for language in languages if language in allowed)
+
+
+def _primary_languages_for_row(row: TaskScore) -> tuple[str, ...]:
+    if row.primary_languages:
+        return row.primary_languages
+    language = _primary_language_for_row(row)
+    return (language,) if language else ()
 
 
 def _primary_language_for_row(row: TaskScore) -> str | None:
@@ -1691,6 +1726,39 @@ def _language_page_languages_for_view(config: ViewerConfig, view_name: str) -> t
     if benchmark is None:
         return ()
     return tuple(benchmark.language_page_languages)
+
+
+def _language_filter_policy_for_view(config: ViewerConfig, view_name: str) -> LanguageFilterPolicy:
+    overall = config.overall_for_view(view_name)
+    if overall is not None:
+        benchmark_names = set(overall.benchmark_names)
+        modes_by_benchmark: dict[str, LanguageFilterMode] = {
+            benchmark.name: benchmark.language_filter_mode
+            for benchmark in config.benchmarks
+            if benchmark.name in benchmark_names and benchmark.language_filter_mode != "languages"
+        }
+        allowed_languages_by_benchmark = {
+            benchmark.name: tuple(benchmark.language_page_languages)
+            for benchmark in config.benchmarks
+            if benchmark.name in benchmark_names and benchmark.language_page_languages
+        }
+        return LanguageFilterPolicy(
+            modes_by_benchmark=modes_by_benchmark,
+            allowed_languages_by_benchmark=allowed_languages_by_benchmark,
+        )
+    return LanguageFilterPolicy(
+        default_mode=_language_filter_mode_for_view(config, view_name),
+        default_allowed_languages=_language_page_languages_for_view(config, view_name),
+    )
+
+
+def _language_filter_policy_supports_precomputed(policy: LanguageFilterPolicy) -> bool:
+    return (
+        policy.default_mode == "languages"
+        and not policy.default_allowed_languages
+        and not policy.modes_by_benchmark
+        and not policy.allowed_languages_by_benchmark
+    )
 
 
 def _overall_metric_score_group(overall: OverallConfig) -> ScoreGroupConfig | None:

@@ -255,6 +255,7 @@ class DatasetMetadataRow(WarehouseModel):
     task_key: str
     language: str | None = None
     languages: list[str] = Field(default_factory=list)
+    primary_languages: list[str] = Field(default_factory=list)
     category: str | None = None
     short_description: str | None = None
     citation_count: int | None = None
@@ -275,6 +276,7 @@ class DatasetMetadataRow(WarehouseModel):
             self.task_key,
             self.language,
             self.languages,
+            self.primary_languages,
             self.category,
             self.short_description,
             self.citation_count,

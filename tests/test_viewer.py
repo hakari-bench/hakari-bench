@@ -11,6 +11,7 @@ import duckdb
 from fastapi.testclient import TestClient
 import pytest
 
+from hakari_bench.datasets import DatasetRegistry, resolve_dataset_splits, _task_name_for_split
 from hakari_bench.viewer.app import (
     _fmt_max_len,
     _metric_column_label,
@@ -203,6 +204,31 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
         "wmt21_de_fr": "CLSD-WMT21-de-fr",
         "wmt21_fr_de": "CLSD-WMT21-fr-de",
     }
+
+
+def test_primary_language_view_benchmarks_define_primary_languages() -> None:
+    config = load_viewer_config(Path("config/viewer"))
+    registry = DatasetRegistry.load_builtin()
+
+    missing: list[str] = []
+    for benchmark in config.benchmarks:
+        if benchmark.language_filter_mode != "primary_language":
+            continue
+        try:
+            collection = registry.get_collection(benchmark.name)
+        except KeyError:
+            dataset_names = [benchmark.name]
+        else:
+            dataset_names = list(collection.datasets)
+        for dataset_name in dataset_names:
+            dataset = registry.get_dataset(dataset_name)
+            for split_name in resolve_dataset_splits(dataset):
+                task_name = _task_name_for_split(dataset, split_name)
+                metadata = dataset.metadata_for_task(split_name=split_name, task_name=task_name)
+                if not metadata.get("primary_languages"):
+                    missing.append(f"{benchmark.name}/{dataset.name}/{task_name}")
+
+    assert missing == []
 
 
 def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> None:
@@ -1263,10 +1289,7 @@ def test_leaderboard_service_cache_invalidates_when_duckdb_file_changes(
             language=None,
             languages=[],
         )
-        con.execute(
-            "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            row,
-        )
+        con.execute(f"INSERT INTO viewer_task_results VALUES ({', '.join('?' for _ in row)})", row)
     finally:
         con.close()
     os.utime(db_path)
@@ -2813,6 +2836,181 @@ benchmarks:
     assert en_result.rows[0].mean_score == 10.0
 
 
+def test_primary_language_pages_use_metadata_primary_languages_first(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = [
+        (
+            "model/a",
+            "MNanoBEIR",
+            "hakari-bench/NanoBEIR-no",
+            "NanoBEIR-norwegian",
+            "nfcorpus",
+            "nfcorpus",
+            "MNanoBEIR::NanoBEIR-no::nfcorpus",
+            0.90,
+            10,
+            12,
+            8192,
+        ),
+        (
+            "model/a",
+            "NanoMTEB-Misc",
+            "hakari-bench/NanoMTEB-Misc",
+            "NanoMTEB-Misc",
+            "wmt19_de_fr",
+            "wmt19_de_fr",
+            "NanoMTEB-Misc::wmt19_de_fr",
+            0.80,
+            10,
+            12,
+            8192,
+        ),
+    ]
+    metadata_rows = [
+        (
+            "MNanoBEIR",
+            "hakari-bench/NanoBEIR-no",
+            "NanoBEIR-norwegian",
+            "nfcorpus",
+            "nfcorpus",
+            "MNanoBEIR::NanoBEIR-no::nfcorpus",
+            "multilingual",
+            ["en", "no", "da"],
+            ["no"],
+        ),
+        (
+            "NanoMTEB-Misc",
+            "hakari-bench/NanoMTEB-Misc",
+            "NanoMTEB-Misc",
+            "wmt19_de_fr",
+            "wmt19_de_fr",
+            "NanoMTEB-Misc::wmt19_de_fr",
+            "multilingual",
+            ["en", "de", "fr"],
+            ["de", "fr"],
+        ),
+    ]
+    _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: MNanoBEIR
+    language_filter_mode: primary_language
+  - name: NanoMTEB-Misc
+    language_filter_mode: primary_language
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n  - NanoMTEB-Misc\n",
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("Overall")
+    en_result = service.get_leaderboard("Overall", language_filters=("en",))
+    no_result = service.get_leaderboard("Overall", language_filters=("no",))
+    de_result = service.get_leaderboard("Overall", language_filters=("de",))
+    fr_result = service.get_leaderboard("Overall", language_filters=("fr",))
+
+    assert [(option.code, option.task_count) for option in result.available_languages] == [
+        ("de", 1),
+        ("fr", 1),
+        ("no", 1),
+    ]
+    assert en_result.selected_languages == ()
+    assert no_result.selected_languages == ("no",)
+    assert no_result.expected_tasks == 1
+    assert de_result.selected_languages == ("de",)
+    assert de_result.expected_tasks == 1
+    assert fr_result.selected_languages == ("fr",)
+    assert fr_result.expected_tasks == 1
+
+
+def test_overall_language_pages_use_component_language_policy(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = []
+    metadata_rows = []
+    for benchmark, dataset_name, primary_language, languages, score in [
+        ("MNanoBEIR", "NanoBEIR-en", "en", ["en"], 0.10),
+        ("MNanoBEIR", "NanoBEIR-no", "multilingual", ["no", "en", "da"], 0.90),
+        ("NanoMTEB-v2", "NanoMTEB-v2", "en", ["en"], 0.30),
+        ("NanoMTEB-Dutch", "NanoMTEB-Dutch", "multilingual", ["nl", "en"], 0.80),
+    ]:
+        task_name = "nfcorpus" if benchmark == "MNanoBEIR" else dataset_name
+        task_key = f"{benchmark}::{dataset_name}::{task_name}"
+        rows.append(
+            (
+                "model/a",
+                benchmark,
+                dataset_name,
+                dataset_name,
+                task_name,
+                task_name,
+                task_key,
+                score,
+                10,
+                12,
+                8192,
+            )
+        )
+        metadata_rows.append(
+            (
+                benchmark,
+                dataset_name,
+                dataset_name,
+                task_name,
+                task_name,
+                task_key,
+                primary_language,
+                languages,
+            )
+        )
+    _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: MNanoBEIR
+    language_filter_mode: primary_language
+  - name: NanoMTEB-v2
+    language_page_languages: [en]
+  - name: NanoMTEB-Dutch
+    language_page_languages: [nl]
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+overalls:
+  - name: All
+    label: All
+    benchmarks:
+      - MNanoBEIR
+      - NanoMTEB-v2
+      - NanoMTEB-Dutch
+""".strip(),
+        encoding="utf-8",
+    )
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("All")
+    en_result = service.get_leaderboard("All", language_filters=("en",))
+
+    assert [(option.code, option.task_count) for option in result.available_languages] == [
+        ("en", 2),
+        ("nl", 1),
+        ("no", 1),
+    ]
+    assert en_result.selected_languages == ("en",)
+    assert en_result.expected_tasks == 2
+    assert en_result.rows[0].task_count == 2
+    assert en_result.rows[0].mean_score == 20.0
+
+
 def test_split_language_pages_use_primary_split_language(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     rows = []
@@ -4098,6 +4296,7 @@ def _write_task_results(
             "score DOUBLE",
             "language VARCHAR",
             "languages VARCHAR[]",
+            "primary_languages VARCHAR[]",
             "active_parameters BIGINT",
             "total_parameters BIGINT",
             "max_seq_length INTEGER",
@@ -4127,10 +4326,11 @@ def _write_task_results(
         normalized_rows = [
             _viewer_task_result_row(
                 row,
-                language=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], None, None))[0],
-                languages=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], None, None))[1],
-                query_mean_chars=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], None, None))[2],
-                document_mean_chars=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], None, None))[3],
+                language=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[0],
+                languages=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[1],
+                primary_languages=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[2],
+                query_mean_chars=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[3],
+                document_mean_chars=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[4],
             )
             for row in rows
         ]
@@ -4144,15 +4344,20 @@ def _write_task_results(
         con.close()
 
 
-def _metadata_by_task(rows: list[tuple]) -> dict[tuple[str, str, str, str, str], tuple[str | None, list[str], float | None, float | None]]:
+def _metadata_by_task(
+    rows: list[tuple],
+) -> dict[tuple[str, str, str, str, str], tuple[str | None, list[str], list[str], float | None, float | None]]:
     metadata = {}
     for row in rows:
         benchmark, dataset_id, _dataset_name, split_name, task_name, task_key, language, languages, *lengths = row
-        query_mean_chars = lengths[0] if len(lengths) >= 1 else None
-        document_mean_chars = lengths[1] if len(lengths) >= 2 else None
+        primary_languages = lengths[0] if len(lengths) >= 1 and isinstance(lengths[0], list) else []
+        length_offset = 1 if primary_languages else 0
+        query_mean_chars = lengths[length_offset] if len(lengths) >= length_offset + 1 else None
+        document_mean_chars = lengths[length_offset + 1] if len(lengths) >= length_offset + 2 else None
         metadata[(benchmark, dataset_id, split_name, task_name, task_key)] = (
             language,
             languages,
+            primary_languages,
             query_mean_chars,
             document_mean_chars,
         )
@@ -4289,6 +4494,7 @@ def _viewer_task_result_row(
     *,
     language: str | None,
     languages: list[str],
+    primary_languages: list[str] | None = None,
     query_mean_chars: float | None = None,
     document_mean_chars: float | None = None,
 ) -> tuple:
@@ -4345,6 +4551,7 @@ def _viewer_task_result_row(
         base[7],
         language,
         languages,
+        primary_languages or [],
         *base[8:11],
         dtype,
         attn_implementation,
@@ -4367,7 +4574,7 @@ def _reranking_viewer_rows(base_rows: list[tuple], diagnostic_rows: list[tuple])
     base_by_task = {
         (row[0], row[1], row[2], row[5], row[6]): row
         for row in base_rows
-        if row[7] == "all" and row[23] is None
+        if row[7] == "all" and row[24] is None
     }
     reranking_rows = []
     for diagnostic in diagnostic_rows:

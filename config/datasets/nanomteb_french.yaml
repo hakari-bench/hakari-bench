@@ -16,6 +16,8 @@ splits:
 - xpqa_fra_fra
 metadata:
   language: multilingual
+  primary_languages:
+  - fr
   category: natural_language
   short_description: French NanoMTEB retrieval benchmark.
   description: NanoMTEB-French is a compact French retrieval benchmark containing

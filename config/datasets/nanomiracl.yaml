@@ -60,6 +60,8 @@ metadata:
 task_metadata:
   ar:
     language: ar
+    primary_languages:
+    - ar
     category: natural_language
     short_description: Arabic MIRACL passage retrieval task.
     description: The Arabic split of NanoMIRACL evaluates retrieval of Arabic Wikipedia
@@ -119,6 +121,8 @@ task_metadata:
           ar: 99.946
   bn:
     language: bn
+    primary_languages:
+    - bn
     category: natural_language
     short_description: Bengali MIRACL passage retrieval task.
     description: The Bengali split of NanoMIRACL evaluates retrieval of Bengali Wikipedia
@@ -178,6 +182,8 @@ task_metadata:
           bn: 99.942
   de:
     language: de
+    primary_languages:
+    - de
     category: natural_language
     short_description: German MIRACL passage retrieval task.
     description: The German split of NanoMIRACL evaluates retrieval of German Wikipedia
@@ -239,6 +245,8 @@ task_metadata:
           en: 1.259
   en:
     language: en
+    primary_languages:
+    - en
     category: natural_language
     short_description: English MIRACL passage retrieval task.
     description: The English split of NanoMIRACL evaluates retrieval of English Wikipedia
@@ -298,6 +306,8 @@ task_metadata:
           en: 99.759
   es:
     language: es
+    primary_languages:
+    - es
     category: natural_language
     short_description: Spanish MIRACL passage retrieval task.
     description: The Spanish split of NanoMIRACL evaluates retrieval of Spanish Wikipedia
@@ -359,6 +369,8 @@ task_metadata:
           en: 0.762
   fa:
     language: fa
+    primary_languages:
+    - fa
     category: natural_language
     short_description: Persian MIRACL passage retrieval task.
     description: The Persian split of NanoMIRACL evaluates retrieval of Persian Wikipedia
@@ -418,6 +430,8 @@ task_metadata:
           fa: 99.946
   fi:
     language: fi
+    primary_languages:
+    - fi
     category: natural_language
     short_description: Finnish MIRACL passage retrieval task.
     description: The Finnish split of NanoMIRACL evaluates retrieval of Finnish Wikipedia
@@ -480,6 +494,8 @@ task_metadata:
           en: 0.602
   fr:
     language: fr
+    primary_languages:
+    - fr
     category: natural_language
     short_description: French MIRACL passage retrieval task.
     description: The French split of NanoMIRACL evaluates retrieval of French Wikipedia
@@ -540,6 +556,8 @@ task_metadata:
           fr: 99.887
   hi:
     language: hi
+    primary_languages:
+    - hi
     category: natural_language
     short_description: Hindi MIRACL passage retrieval task.
     description: The Hindi split of NanoMIRACL evaluates retrieval of Hindi Wikipedia
@@ -599,6 +617,8 @@ task_metadata:
           hi: 99.714
   id:
     language: id
+    primary_languages:
+    - id
     category: natural_language
     short_description: Indonesian MIRACL passage retrieval task.
     description: The Indonesian split of NanoMIRACL evaluates retrieval of Indonesian
@@ -668,6 +688,8 @@ task_metadata:
           en: 1.842
   ja:
     language: ja
+    primary_languages:
+    - ja
     category: natural_language
     short_description: Japanese MIRACL passage retrieval task.
     description: The Japanese split of NanoMIRACL evaluates retrieval of Japanese
@@ -727,6 +749,8 @@ task_metadata:
           ja: 100.0
   ko:
     language: ko
+    primary_languages:
+    - ko
     category: natural_language
     short_description: Korean MIRACL passage retrieval task.
     description: The Korean split of NanoMIRACL evaluates retrieval of Korean Wikipedia
@@ -787,6 +811,8 @@ task_metadata:
           ko: 99.917
   ru:
     language: ru
+    primary_languages:
+    - ru
     category: natural_language
     short_description: Russian MIRACL passage retrieval task.
     description: The Russian split of NanoMIRACL evaluates retrieval of Russian Wikipedia
@@ -846,6 +872,8 @@ task_metadata:
           ru: 99.942
   sw:
     language: multilingual
+    primary_languages:
+    - sw
     category: natural_language
     short_description: Swahili MIRACL passage retrieval task.
     description: The Swahili split of NanoMIRACL evaluates retrieval of Swahili Wikipedia
@@ -927,6 +955,8 @@ task_metadata:
           nl: 0.688
   te:
     language: te
+    primary_languages:
+    - te
     category: natural_language
     short_description: Telugu MIRACL passage retrieval task.
     description: The Telugu split of NanoMIRACL evaluates retrieval of Telugu Wikipedia
@@ -986,6 +1016,8 @@ task_metadata:
           te: 100.0
   th:
     language: th
+    primary_languages:
+    - th
     category: natural_language
     short_description: Thai MIRACL passage retrieval task.
     description: The Thai split of NanoMIRACL evaluates retrieval of Thai Wikipedia
@@ -1045,6 +1077,8 @@ task_metadata:
           th: 100.0
   yo:
     language: multilingual
+    primary_languages:
+    - yo
     category: natural_language
     short_description: Yoruba MIRACL passage retrieval task.
     description: The Yoruba split of NanoMIRACL evaluates retrieval of Yoruba Wikipedia
@@ -1160,6 +1194,8 @@ task_metadata:
           sk: 0.543
   zh:
     language: zh
+    primary_languages:
+    - zh
     category: natural_language
     short_description: Chinese MIRACL passage retrieval task.
     description: The Chinese split of NanoMIRACL evaluates retrieval of Chinese Wikipedia

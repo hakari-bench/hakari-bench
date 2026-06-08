@@ -11,6 +11,8 @@ splits:
 - ru_bq
 metadata:
   language: ru
+  primary_languages:
+  - ru
   category: natural_language
   short_description: Russian Nano retrieval benchmark based on ruMTEB retrieval tasks.
   description: NanoRuMTEB is a compact Russian retrieval benchmark assembled from

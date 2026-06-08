@@ -361,6 +361,32 @@ def _validate_metadata_mapping(metadata: dict[str, Any], *, context: str) -> lis
                 elif not _is_valid_language_code(detected_language):
                     errors.append(f"{context} has invalid languages[{index}] '{detected_language}'.")
 
+    primary_languages = metadata.get("primary_languages")
+    if primary_languages is not None:
+        if not isinstance(primary_languages, list) or not primary_languages:
+            errors.append(f"{context} has invalid primary_languages; expected non-empty list.")
+        else:
+            normalized_primary_languages: list[str] = []
+            for index, primary_language in enumerate(primary_languages):
+                if not isinstance(primary_language, str):
+                    errors.append(f"{context} primary_languages[{index}] must be string.")
+                    continue
+                if not _is_valid_primary_language_code(primary_language):
+                    errors.append(f"{context} has invalid primary_languages[{index}] '{primary_language}'.")
+                    continue
+                normalized_primary_languages.append(primary_language)
+            if "multilingual" in normalized_primary_languages and normalized_primary_languages != ["multilingual"]:
+                errors.append(f"{context} primary_languages must be only ['multilingual'] when it includes 'multilingual'.")
+            concrete_primary_languages = [
+                primary_language
+                for primary_language in normalized_primary_languages
+                if primary_language not in {"multilingual", "unknown"}
+            ]
+            if len(concrete_primary_languages) > 2:
+                errors.append(
+                    f"{context} primary_languages must contain at most two language codes, or only 'multilingual'."
+                )
+
     category = metadata.get("category")
     if isinstance(category, str):
         if category not in VALID_METADATA_CATEGORIES:
@@ -459,6 +485,10 @@ def _validate_language_detection(language_detection: Any, *, context: str) -> li
 
 def _is_valid_language_code(language: str) -> bool:
     return language == "unknown" or 2 <= len(language) <= 3
+
+
+def _is_valid_primary_language_code(language: str) -> bool:
+    return language == "multilingual" or _is_valid_language_code(language)
 
 
 def validate_builtin_metadata() -> list[str]:

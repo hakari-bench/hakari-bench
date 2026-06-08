@@ -192,7 +192,7 @@ def target_benchmark_names(benchmark_configs: Sequence[BenchmarkConfig]) -> list
 
 TARGET_BENCHMARKS: list[str] = target_benchmark_names(load_benchmark_configs())
 VIEWS = ["Overall", *TARGET_BENCHMARKS]
-WAREHOUSE_SCHEMA_VERSION = "7"
+WAREHOUSE_SCHEMA_VERSION = "8"
 WAREHOUSE_COMPATIBILITY_LEVEL = "current"
 WAREHOUSE_TABLES = (
     "meta_database",
@@ -330,6 +330,7 @@ DATASET_METADATA_COLUMNS = (
     "task_key",
     "language",
     "languages",
+    "primary_languages",
     "category",
     "short_description",
     "citation_count",
@@ -1435,6 +1436,7 @@ def _load_cached_warehouse_rows(
                 "task_key",
                 "language",
                 "languages",
+                "primary_languages",
                 "category",
                 "short_description",
                 "citation_count",
@@ -2877,6 +2879,7 @@ def _dataset_metadata_row(*, common: dict[str, Any], registry: DatasetRegistry) 
         task_key=str(common["task_key"]),
         language=_str_or_none(metadata.get("language")),
         languages=_metadata_languages(metadata),
+        primary_languages=_metadata_primary_languages(metadata),
         category=_str_or_none(metadata.get("category")),
         short_description=_str_or_none(metadata.get("short_description")),
         citation_count=len(citation_keys) if isinstance(citation_keys, list) else None,
@@ -2910,6 +2913,13 @@ def _metadata_languages(metadata: dict[str, Any]) -> list[str]:
         return [str(language) for language in languages if isinstance(language, str) and language]
     language = _str_or_none(metadata.get("language"))
     return [language] if language else []
+
+
+def _metadata_primary_languages(metadata: dict[str, Any]) -> list[str]:
+    primary_languages = metadata.get("primary_languages")
+    if isinstance(primary_languages, list):
+        return [str(language) for language in primary_languages if isinstance(language, str) and language]
+    return []
 
 
 def _task_diagnostic_row(
@@ -3214,7 +3224,8 @@ def _create_dataset_metadata_table(con: duckdb.DuckDBPyConnection, table_name: s
         f"""
         CREATE TABLE {table_name} (
             benchmark VARCHAR, dataset_id VARCHAR, dataset_name VARCHAR, split_name VARCHAR,
-            task_name VARCHAR, task_key VARCHAR, language VARCHAR, languages VARCHAR[], category VARCHAR,
+            task_name VARCHAR, task_key VARCHAR, language VARCHAR, languages VARCHAR[],
+            primary_languages VARCHAR[], category VARCHAR,
             short_description VARCHAR, citation_count INTEGER, reference_count INTEGER,
             has_bibtex BOOLEAN, query_count INTEGER, document_count INTEGER,
             query_mean_chars DOUBLE, document_mean_chars DOUBLE
@@ -3964,7 +3975,8 @@ def write_duckdb(
             """
             CREATE TABLE dataset_metadata (
                 benchmark VARCHAR, dataset_id VARCHAR, dataset_name VARCHAR, split_name VARCHAR,
-                task_name VARCHAR, task_key VARCHAR, language VARCHAR, languages VARCHAR[], category VARCHAR,
+                task_name VARCHAR, task_key VARCHAR, language VARCHAR, languages VARCHAR[],
+                primary_languages VARCHAR[], category VARCHAR,
                 short_description VARCHAR, citation_count INTEGER, reference_count INTEGER,
                 has_bibtex BOOLEAN, query_count INTEGER, document_count INTEGER,
                 query_mean_chars DOUBLE, document_mean_chars DOUBLE
@@ -3984,6 +3996,7 @@ def write_duckdb(
                     "task_key",
                     "language",
                     "languages",
+                    "primary_languages",
                     "category",
                     "short_description",
                     "citation_count",
@@ -4655,6 +4668,7 @@ def _create_canonical_dimension_tables(con: duckdb.DuckDBPyConnection) -> None:
                 tr.task_key,
                 max(dm.language) AS language,
                 any_value(dm.languages) AS languages,
+                any_value(dm.primary_languages) AS primary_languages,
                 max(dm.category) AS category,
                 max(dm.short_description) AS short_description,
                 max(dm.citation_count) AS citation_count,
@@ -5046,6 +5060,7 @@ def _create_viewer_task_results_table(con: duckdb.DuckDBPyConnection) -> None:
             fts.score,
             dm.language,
             dm.languages,
+            dm.primary_languages,
             fts.active_parameters,
             fts.total_parameters,
             fts.max_seq_length,

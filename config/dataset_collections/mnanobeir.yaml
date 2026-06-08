@@ -6,6 +6,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - ar
     category: natural_language
     short_description: Arabic compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-ar is the Arabic language-specific component of MNanoBEIR.
@@ -1194,6 +1196,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - de
     category: natural_language
     short_description: German compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-de is the German language-specific component of MNanoBEIR.
@@ -2397,6 +2401,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - es
     category: natural_language
     short_description: Spanish compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-es is the Spanish language-specific component of MNanoBEIR.
@@ -3604,6 +3610,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - fr
     category: natural_language
     short_description: French compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-fr is the French language-specific component of MNanoBEIR.
@@ -4806,6 +4814,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - it
     category: natural_language
     short_description: Italian compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-it is the Italian language-specific component of MNanoBEIR.
@@ -6014,6 +6024,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - ja
     category: natural_language
     short_description: Japanese compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-ja is the Japanese language-specific component of MNanoBEIR.
@@ -7206,6 +7218,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: ko
+    primary_languages:
+    - ko
     category: natural_language
     short_description: Korean compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-ko is the Korean language-specific component of MNanoBEIR.
@@ -8393,6 +8407,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - "no"
     category: natural_language
     short_description: Norwegian compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-no is the Norwegian language-specific component of MNanoBEIR.
@@ -9694,6 +9710,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - pt
     category: natural_language
     short_description: Portuguese compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-pt is the Portuguese language-specific component of MNanoBEIR.
@@ -10919,6 +10937,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - sr
     category: natural_language
     short_description: Serbian compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-sr is the Serbian language-specific component of MNanoBEIR.
@@ -12263,6 +12283,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - sv
     category: natural_language
     short_description: Swedish compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-sv is the Swedish language-specific component of MNanoBEIR.
@@ -13506,6 +13528,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - th
     category: natural_language
     short_description: Thai compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-th is the Thai language-specific component of MNanoBEIR.
@@ -14694,6 +14718,8 @@ datasets:
   benchmark_kind: nanobeir
   metadata:
     language: multilingual
+    primary_languages:
+    - vi
     category: natural_language
     short_description: Vietnamese compact NanoBEIR retrieval benchmark.
     description: NanoBEIR-vi is the Vietnamese language-specific component of MNanoBEIR.

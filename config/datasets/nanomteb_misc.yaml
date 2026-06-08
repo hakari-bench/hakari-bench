@@ -492,6 +492,9 @@ task_metadata:
           es: 0.683
   wmt19_de_fr:
     language: multilingual
+    primary_languages:
+    - de
+    - fr
     category: natural_language
     short_description: CrossLingualSemanticDiscriminationWMT19 retrieval split.
     description: 'Evaluate a multilingual embedding model based on its ability to
@@ -543,6 +546,9 @@ task_metadata:
           de: 100.0
   wmt19_fr_de:
     language: multilingual
+    primary_languages:
+    - fr
+    - de
     category: natural_language
     short_description: CrossLingualSemanticDiscriminationWMT19 retrieval split.
     description: 'Evaluate a multilingual embedding model based on its ability to
@@ -594,6 +600,9 @@ task_metadata:
           fr: 99.986
   wmt21_de_fr:
     language: multilingual
+    primary_languages:
+    - de
+    - fr
     category: natural_language
     short_description: CrossLingualSemanticDiscriminationWMT21 retrieval split.
     description: 'Evaluate a multilingual embedding model based on its ability to
@@ -645,6 +654,9 @@ task_metadata:
           de: 99.776
   wmt21_fr_de:
     language: multilingual
+    primary_languages:
+    - fr
+    - de
     category: natural_language
     short_description: CrossLingualSemanticDiscriminationWMT21 retrieval split.
     description: 'Evaluate a multilingual embedding model based on its ability to

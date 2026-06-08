@@ -96,6 +96,7 @@ benchmarks:
   - name: NanoCMTEB
     label: NanoCMTEB
     include_in_overall: true
+    language_filter_mode: primary_language
     language_page_languages:
       - zh
   - name: NanoIndicQA
@@ -107,51 +108,61 @@ benchmarks:
   - name: NanoMTEB-v2
     label: NanoMTEB-v2
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - en
   - name: NanoMTEB-Dutch
     label: NanoMTEB-Dutch
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - nl
   - name: NanoMTEB-French
     label: NanoMTEB-French
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - fr
   - name: NanoMTEB-German
     label: NanoMTEB-German
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - de
   - name: NanoJMTEB-v2
     label: NanoJMTEB-v2
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - ja
   - name: NanoMTEB-Korean
     label: NanoMTEB-Korean
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - ko
   - name: NanoFaMTEB-v2
     label: NanoFaMTEB-v2
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - fa
   - name: NanoMTEB-Polish
     label: NanoMTEB-Polish
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - pl
   - name: NanoRuMTEB
     label: NanoRuMTEB
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - ru
   - name: NanoMTEB-Scandinavian
     label: NanoMTEB-Scandinavian
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - da
       - "no"
@@ -159,16 +170,19 @@ benchmarks:
   - name: NanoMTEB-Spanish
     label: NanoMTEB-Spanish
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - es
   - name: NanoMTEB-Thai
     label: NanoMTEB-Thai
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - th
   - name: NanoVNMTEB
     label: NanoVNMTEB
     include_in_overall: false
+    language_filter_mode: primary_language
     language_page_languages:
       - vi
   - name: NanoMTEB-Misc

@@ -34,6 +34,8 @@ splits:
 - treccovid_vn
 metadata:
   language: multilingual
+  primary_languages:
+  - vi
   category: natural_language
   short_description: Vietnamese Nano retrieval benchmark based on VN-MTEB retrieval
     tasks.

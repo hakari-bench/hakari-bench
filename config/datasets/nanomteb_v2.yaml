@@ -18,6 +18,8 @@ splits:
 - treccovid
 metadata:
   language: en
+  primary_languages:
+  - en
   category: natural_language
   short_description: NanoMTEB-v2 retrieval benchmark.
   description: NanoMTEB-v2 is a Nano-style retrieval dataset hosted by hakari-bench.

@@ -13,6 +13,8 @@ splits:
 - xmarket_de
 metadata:
   language: multilingual
+  primary_languages:
+  - de
   category: natural_language
   short_description: German NanoMTEB retrieval benchmark.
   description: NanoMTEB-German is a compact German retrieval benchmark containing

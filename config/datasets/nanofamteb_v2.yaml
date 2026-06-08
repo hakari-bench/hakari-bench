@@ -25,6 +25,8 @@ splits:
 - wikipedia_multilingual_fa
 metadata:
   language: fa
+  primary_languages:
+  - fa
   category: natural_language
   short_description: NanoFaMTEB-v2 retrieval benchmark.
   description: NanoFaMTEB-v2 is a Nano-style retrieval dataset hosted by hakari-bench.

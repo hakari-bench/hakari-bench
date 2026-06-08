@@ -3,9 +3,10 @@
 This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
-The current warehouse schema version is `7`. Version `7` makes top-ranking
-artifacts the source for viewer metric recomputation and drops viewer
-compatibility with older warehouse files.
+The current warehouse schema version is `8`. Version `8` adds canonical
+`primary_languages` metadata for language-page routing. The viewer can still
+read schema `7` files by falling back to legacy language metadata, but new
+DuckDB builds should use schema `8`.
 
 The canonical source table for benchmark results is `task_results`. New DuckDB
 builds also materialize `meta_database`, `schema_change_log`, and
@@ -406,6 +407,7 @@ category, citations, and dataset statistics.
 | `task_key` | `VARCHAR` | Canonical ranking task identity. |
 | `language` | `VARCHAR` | Primary task language from metadata. |
 | `languages` | `VARCHAR[]` | Task languages from metadata. |
+| `primary_languages` | `VARCHAR[]` | Canonical language-page routing codes from metadata. |
 | `category` | `VARCHAR` | Task category from metadata. |
 | `short_description` | `VARCHAR` | Short task description from metadata. |
 | `citation_count` | `INTEGER` | Number of citation records. |
@@ -675,6 +677,7 @@ language, category, citation coverage, or text length profile.
 | `task_key` | `VARCHAR` | Ranking task identity. |
 | `language` | `VARCHAR` | Primary metadata language code, or `multilingual`. |
 | `languages` | `VARCHAR[]` | Main detected language codes for the task, copied from YAML `metadata.languages`. Falls back conceptually to `[language]` for older metadata. |
+| `primary_languages` | `VARCHAR[]` | Canonical language-page routing codes from YAML `metadata.primary_languages`. Single-language NanoSets should define this at dataset level; split-language or bitext tasks may define it per task. |
 | `category` | `VARCHAR` | Metadata category, such as `natural_language` or `code`. |
 | `short_description` | `VARCHAR` | Short human-readable task description. |
 | `citation_count` | `INTEGER` | Number of citation keys recorded for the task. |
@@ -946,25 +949,28 @@ choices:
 - Surface runtime metadata such as dtype, attention implementation, prompt
   mode, and `trust_remote_code` in model details metadata; dtype, attention,
   and prompt remain available as facet filters.
-- Read materialized `language` and `languages` from `viewer_task_results`.
+- Read materialized `language`, `languages`, and `primary_languages` from `viewer_task_results`.
   The HTMX viewer uses `lang_filter` query parameters as
   task-level ranking filters: Borda, mean scores, expected task counts, and
-  completeness are recomputed only over tasks whose `languages` contains at
-  least one selected language. If no `lang_filter` is set, all tasks in the
-  selected view are ranked.
+  completeness are recomputed only over matching tasks. If no `lang_filter` is
+  set, all tasks in the selected view are ranked.
 - Benchmarks may override that filter source with
-  `language_filter_mode: primary_language`. MNanoBEIR and NanoMIRACL use this
-  mode because they are organized around explicit dataset/language axes and
-  several multilingual rows include secondary detected languages such as
-  English; their Language pages therefore use the primary language, such as
-  `NanoBEIR-ja` -> `ja` or the NanoMIRACL split code, rather than expanding
-  every code in `languages`.
+  `language_filter_mode: primary_language`. In this mode the viewer uses
+  `primary_languages` first. If an older DuckDB does not have that column or a
+  task has not been migrated yet, it falls back to the legacy `language` /
+  dataset-name / split-name / `languages` heuristic. MNanoBEIR, NanoMIRACL, and
+  language-specific NanoMTEB-family views use this mode because they are
+  organized around explicit dataset/language axes and several multilingual rows
+  include secondary detected languages such as English.
+- Overall views apply the same per-benchmark language policy before overall
+  aggregation. For example, selecting `EN` in `All` includes `NanoBEIR-en`
+  rows from MNanoBEIR but does not include `NanoBEIR-no` rows merely because
+  their detected `languages` array contains English as a secondary language.
 - Benchmarks may also set `language_page_languages` to constrain the Language
-  page options while still filtering matching task rows through their stored
-  metadata languages. Language-specific Nano sets use this to keep auxiliary
-  languages from cross-language tasks out of the page selector; for example,
-  `NanoMTEB-Dutch` exposes `nl` but not English, and `NanoCMTEB` exposes `zh`
-  but not Japanese.
+  page options. Language-specific Nano sets use this together with
+  `primary_languages` to keep auxiliary detector languages from cross-language
+  tasks out of the page selector; for example, `NanoMTEB-Dutch` exposes `nl`
+  but not English, and `NanoCMTEB` exposes `zh` but not Japanese.
 - Viewer benchmark groups put the compact curated Core set under
   Core benchmarks. Language-axis suites are grouped as Language-specific,
   including official language-specific NanoMTEB families, `NanoCMTEB`,
@@ -1001,7 +1007,8 @@ DB build scripts create `viewer_task_results` as a physical table after
 `dataset_metadata` and `fact_task_score` are written. It selects only the
 columns required by `TaskResultsRepository`, includes `score_target`, joins
 `dataset_metadata` by `(benchmark, dataset_id, task_key)`, includes
-`query_mean_chars` and `document_mean_chars` for task text-length filters,
+`primary_languages`, `query_mean_chars`, and `document_mean_chars` for language
+and task text-length filters,
 keeps late-interaction runtime fields for the Model Details modal, and orders
 rows by
 `(benchmark, score_target, dataset_id, task_name, model_name,
@@ -1197,6 +1204,7 @@ source_rows AS (
     tr.score * 100.0 AS score_100,
     dm.language,
     dm.languages,
+    dm.primary_languages,
     tr.active_parameters,
     tr.total_parameters,
     tr.max_seq_length,

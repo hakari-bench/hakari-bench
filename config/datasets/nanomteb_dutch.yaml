@@ -35,6 +35,8 @@ splits:
 - wikipedia_multilingual_nl
 metadata:
   language: multilingual
+  primary_languages:
+  - nl
   category: natural_language
   short_description: Dutch NanoMTEB retrieval benchmark.
   description: NanoMTEB-Dutch is a compact Dutch retrieval benchmark containing the

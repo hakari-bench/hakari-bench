@@ -121,6 +121,7 @@ task_metadata:
 | Field | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `language` | string | yes | ISO 639-1 two-character code, or `multilingual`. |
+| `primary_languages` | list of strings | required for language-axis Nano sets | Canonical language routing for leaderboard language pages. Use one code for a language-specific NanoSet such as `vi`, up to two codes for bitext/cross-lingual tasks such as `[de, fr]`, or only `[multilingual]` when the task is inherently mixed across many languages. |
 | `languages` | list of strings | recommended | Main detected languages for the task. Include languages that account for at least 10% of either query or document texts, ordered by detected usage. Use `unknown` when detection cannot establish a language. |
 | `language_detection` | mapping | recommended | `fast-langdetect` query/document language percentages. Include languages at or above 0.5% for each side. |
 | `category` | string | yes | `natural_language` or `code`. |

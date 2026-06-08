@@ -43,6 +43,9 @@ metadata:
 task_metadata:
   dan_fever:
     language: multilingual
+    primary_languages:
+    - da
+    - "no"
     category: natural_language
     short_description: DanFeverRetrieval retrieval split.
     description: 'A Danish dataset intended for misinformation research. It follows
@@ -108,6 +111,8 @@ task_metadata:
           nn: 0.793
   nor_quad:
     language: multilingual
+    primary_languages:
+    - "no"
     category: natural_language
     short_description: NorQuadRetrieval retrieval split.
     description: 'Human-created question for Norwegian wikipedia passages. Source
@@ -177,6 +182,8 @@ task_metadata:
           ru: 0.859
   snl:
     language: multilingual
+    primary_languages:
+    - "no"
     category: natural_language
     short_description: SNLRetrieval retrieval split.
     description: 'Webscrabed articles and ingresses from the Norwegian lexicon ''Det
@@ -260,6 +267,8 @@ task_metadata:
           sv: 2.846
   swe_faq:
     language: sv
+    primary_languages:
+    - sv
     category: natural_language
     short_description: SweFaqRetrieval retrieval split.
     description: 'A Swedish QA dataset derived from FAQ Source dataset: mteb/SweFaqRetrieval;
@@ -313,6 +322,8 @@ task_metadata:
           sv: 99.609
   swedn:
     language: sv
+    primary_languages:
+    - sv
     category: natural_language
     short_description: SwednRetrieval retrieval split.
     description: 'The SWE-DN corpus is based on 1,963,576 news articles from the Swedish
@@ -375,6 +386,8 @@ task_metadata:
           sv: 99.707
   tv2_nordretrieval:
     language: da
+    primary_languages:
+    - da
     category: natural_language
     short_description: TV2Nordretrieval retrieval split.
     description: 'News Article and corresponding summaries extracted from the Danish
@@ -427,6 +440,8 @@ task_metadata:
           'no': 5.078
   twitter_hjerne:
     language: da
+    primary_languages:
+    - da
     category: natural_language
     short_description: TwitterHjerneRetrieval retrieval split.
     description: 'Danish question asked on Twitter with the Hashtag #Twitterhjerne

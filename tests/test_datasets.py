@@ -708,6 +708,51 @@ def test_metadata_validation_accepts_language_detection_fields() -> None:
     assert spec.validate_metadata() == []
 
 
+def test_metadata_validation_accepts_primary_languages() -> None:
+    spec = NanoDatasetSpec(
+        name="Toy",
+        dataset_id="local/toy",
+        metadata={
+            "language": "multilingual",
+            "primary_languages": ["de", "fr"],
+            "languages": ["de", "fr", "en"],
+            "category": "natural_language",
+            "short_description": "Toy metadata.",
+            "description": "Toy bitext metadata with canonical language routing.",
+        },
+    )
+
+    assert spec.validate_metadata() == []
+
+
+def test_metadata_validation_rejects_invalid_primary_languages() -> None:
+    spec = NanoDatasetSpec(
+        name="Toy",
+        dataset_id="local/toy",
+        metadata={
+            "language": "multilingual",
+            "primary_languages": ["en", "de", "fr"],
+            "category": "natural_language",
+            "short_description": "Toy metadata.",
+            "description": "Toy metadata with too many canonical languages.",
+        },
+        task_metadata={
+            "mixed": {
+                "language": "multilingual",
+                "primary_languages": ["multilingual", "en"],
+                "category": "natural_language",
+                "short_description": "Mixed.",
+                "description": "Mixed metadata with an invalid multilingual combination.",
+            }
+        },
+    )
+
+    assert spec.validate_metadata() == [
+        "Toy metadata primary_languages must contain at most two language codes, or only 'multilingual'.",
+        "Toy/mixed metadata primary_languages must be only ['multilingual'] when it includes 'multilingual'.",
+    ]
+
+
 def test_metadata_validation_rejects_invalid_language_detection_fields() -> None:
     spec = NanoDatasetSpec(
         name="Toy",
