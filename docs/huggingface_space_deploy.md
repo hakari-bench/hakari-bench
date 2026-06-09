@@ -7,7 +7,8 @@ database consumed by that Space.
 ## Repositories
 
 - Space: `hakari-bench/leaderboard`
-- Space URL: `https://hakari-bench-leaderboard.hf.space/`
+- Space page URL with Hugging Face iframe: `https://huggingface.co/spaces/hakari-bench/leaderboard`
+- Direct app URL: `https://hakari-bench-leaderboard.hf.space/`
 - Source repository: `https://github.com/hakari-bench/hakari-bench`
 - GHCR image: `ghcr.io/hakari-bench/hakari-bench-leaderboard:hf-space-docker-latest`
 - DuckDB dataset: `hakari-bench/leaderboard_database`
@@ -112,6 +113,8 @@ This Space hosts the public leaderboard for HAKARI-Bench, a Nano-style informati
 The leaderboard viewer runs from a prebuilt Docker image published by the HAKARI-Bench GitHub repository:
 
 - Project repository: https://github.com/hakari-bench/hakari-bench
+- Space page: https://huggingface.co/spaces/hakari-bench/leaderboard
+- Direct app: https://hakari-bench-leaderboard.hf.space/
 - Leaderboard database: https://huggingface.co/datasets/hakari-bench/leaderboard_database
 
 The app downloads the current DuckDB leaderboard database at startup and serves the interactive benchmark tables, model comparisons, task documentation, and filtering views from that database.
@@ -280,9 +283,11 @@ for _ in range(30):
 PY
 ```
 
-Check the public endpoints:
+Check both public URLs. The Hugging Face URL shows the Space page with an
+iframe, while the `hf.space` URL serves the app directly:
 
 ```bash
+curl -L -sS https://huggingface.co/spaces/hakari-bench/leaderboard | rg "HAKARI-Bench Leaderboard|hakari-bench-leaderboard.hf.space"
 curl -L -sS https://hakari-bench-leaderboard.hf.space/ | rg "HAKARI-bench leaderboard|/assets/app.css|/assets/viewer.js|/assets/favicon.png|/assets/htmx.min.js"
 curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=All' | rg "Retrieval|NanoMMTEB-v2|Task facets"
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/favicon.png -o /tmp/hakari_favicon.png
