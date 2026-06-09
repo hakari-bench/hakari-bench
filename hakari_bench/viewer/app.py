@@ -179,7 +179,7 @@ def create_app(
 ):
     from fastapi import FastAPI, Query
     from fastapi.middleware.gzip import GZipMiddleware
-    from fastapi.responses import FileResponse, HTMLResponse, Response
+    from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Response
     from fastapi.staticfiles import StaticFiles
 
     viewer_config = load_viewer_config(config_dir)
@@ -187,7 +187,7 @@ def create_app(
     if resolved_docs_metadata_dir is None and docs_dir == Path("task_docs/docs"):
         resolved_docs_metadata_dir = Path("task_docs/metadata")
     benchmark_docs = BenchmarkDocs(docs_dir, metadata_dir=resolved_docs_metadata_dir)
-    app = FastAPI(title="HAKARI-Bench leaderboard")
+    app = FastAPI(title="HAKARI-Bench leaderboard", docs_url=None, redoc_url=None)
     app.add_middleware(GZipMiddleware, minimum_size=1024)
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
@@ -206,6 +206,11 @@ def create_app(
     @app.get("/favicon.ico")
     def favicon_ico() -> FileResponse:
         return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
+
+    @app.get("/docs")
+    @app.get("/docs/")
+    def docs_index_redirect() -> RedirectResponse:
+        return RedirectResponse(url="/docs/benchmark-tasks")
 
     @app.get("/docs/benchmark-tasks", response_class=HTMLResponse)
     def benchmark_docs_index() -> HTMLResponse:
@@ -546,7 +551,7 @@ def render_page(
     viewer_js_url = _asset_url("viewer.js")
     latest_update = _latest_update_label(summary.latest_finished_at_utc if summary else None)
     footer = _render_page_footer(latest_update=latest_update, database_label=database_label)
-    theme_toggle = _render_theme_toggle()
+    header_actions = _render_header_actions()
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -568,7 +573,7 @@ def render_page(
           <img src="{favicon_url}" alt="" aria-hidden="true" class="h-8 w-8 shrink-0">
           <span>HAKARI-Bench leaderboard</span>
         </h1>
-        {theme_toggle}
+        {header_actions}
       </div>
       <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
       <p class="mt-2 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
@@ -579,7 +584,10 @@ def render_page(
       hx-trigger="load"
       {_leaderboard_request_hx_attrs()}
     >
-      <div class="border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">Loading leaderboard...</div>
+      <div class="leaderboard-initial-loading border border-zinc-200 bg-white text-sm font-medium text-zinc-700" role="status" aria-live="polite" aria-atomic="true">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <span>Loading leaderboard...</span>
+      </div>
     </section>
     {render_leaderboard_loading_toast()}
     {render_global_tooltip()}
@@ -612,7 +620,8 @@ def render_leaderboard_loading_toast() -> str:
     <div id="leaderboard-loading-toast"
          class="leaderboard-loading-toast fixed bottom-4 right-4 z-50 border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-800 shadow-sm"
          role="status" aria-live="polite" aria-atomic="true">
-      Loading leaderboard...
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Loading leaderboard...</span>
     </div>
     """
 
@@ -630,6 +639,20 @@ def _render_theme_toggle() -> str:
           <span class="theme-toggle-icon-light">{_icon_svg("moon", class_name="hakari-icon")}</span>
           <span class="theme-toggle-icon-dark">{_icon_svg("sun", class_name="hakari-icon")}</span>
         </button>"""
+
+
+def _render_docs_link() -> str:
+    return f"""<a id="hakari-docs-link" href="/docs/" class="theme-toggle grid h-8 w-8 shrink-0 place-items-center border"
+          aria-label="Open documentation" title="Open documentation">
+          {_icon_svg("book-open", class_name="hakari-icon")}
+        </a>"""
+
+
+def _render_header_actions() -> str:
+    return f"""<div class="flex shrink-0 items-center gap-2">
+          {_render_docs_link()}
+          {_render_theme_toggle()}
+        </div>"""
 
 
 def _render_page_footer(*, latest_update: str, database_label: str) -> str:
@@ -731,12 +754,11 @@ def render_doc_summary_modal() -> str:
 <dialog id="doc-summary-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
   <form method="dialog">
     <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
-      <h3 class="text-base font-semibold">Benchmark Documentation</h3>
+      <h3 id="doc-summary-heading" class="break-all text-base font-semibold">Benchmark documentation</h3>
       <button type="submit" class="border border-zinc-300 px-2 py-1 text-sm text-zinc-700 hover:border-cyan-600 hover:text-cyan-700">Close</button>
     </div>
   </form>
   <div class="px-4 py-3">
-    <p id="doc-summary-title" class="break-all font-mono text-sm font-semibold text-zinc-900"></p>
     <p id="doc-summary-description" class="mt-3 whitespace-pre-wrap text-sm leading-tight text-zinc-700"></p>
     <p class="mt-3 text-sm">
       <a id="doc-summary-link" class="text-cyan-700 underline-offset-2 hover:underline" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
@@ -928,8 +950,8 @@ def render_tabs(
             continue
         if view_name == "MNanoBEIR":
             for offset, score_group, label in [
-                (0, "task_mean", "MNanoBEIR(task)"),
-                (1, "lang_mean", "MNanoBEIR(lang)"),
+                (0, "task_mean", "M-BEIR(task)"),
+                (1, "lang_mean", "M-BEIR(lang)"),
             ]:
                 group_query_payload = dict(query_payload)
                 group_query_payload["group"] = score_group
@@ -1039,7 +1061,7 @@ def _render_benchmark_view_button(
                       {_leaderboard_control_hx_attrs()}>
                       {escape(label)}
                     </button>"""
-    doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview")
+    doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
     return f"""<span class="doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
               <button type="button" class="py-1 pl-2 pr-0 text-left"
                 hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -1240,12 +1262,11 @@ def _view_group_sort_key(*, view_name: str, fallback: int) -> int:
 
 
 def _viewer_scope_label(*, view_name: str, fallback: str) -> str:
-    labels = {
-        "All": "All",
-        "Core": "Core",
-        "Group": "Group",
-    }
-    return labels.get(view_name, fallback)
+    if view_name == "MNanoBEIR":
+        return "M-BEIR(task)"
+    if fallback.startswith("Nano"):
+        return fallback.removeprefix("Nano")
+    return fallback
 
 
 def _control_button_classes(*, active: bool) -> str:

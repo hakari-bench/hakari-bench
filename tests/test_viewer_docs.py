@@ -424,6 +424,24 @@ def test_docs_index_endpoint_lists_benchmark_docs(tmp_path: Path) -> None:
     assert "MIRACL overview." in response.text
 
 
+def test_docs_root_redirects_to_benchmark_docs_until_docs_home_exists(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(db_path, [("model/a", "NanoMIRACL", "bench/a", "NanoMIRACL", "ja", "ja", "NanoMIRACL::ja", 0.90, 10, 12, 8192)])
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: NanoMIRACL\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMIRACL\n", encoding="utf-8")
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+
+    response = TestClient(app).get("/docs/", follow_redirects=False)
+    slashless_response = TestClient(app).get("/docs", follow_redirects=False)
+
+    assert response.status_code == 307
+    assert response.headers["location"] == "/docs/benchmark-tasks"
+    assert slashless_response.status_code == 307
+    assert slashless_response.headers["location"] == "/docs/benchmark-tasks"
+
+
 def test_docs_pages_render_breadcrumb_navigation(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(

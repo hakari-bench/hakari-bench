@@ -232,14 +232,15 @@
       event.preventDefault();
       event.stopPropagation();
       const modal = document.getElementById("doc-summary-modal");
-      const title = document.getElementById("doc-summary-title");
+      const heading = document.getElementById("doc-summary-heading");
       const description = document.getElementById("doc-summary-description");
       const link = document.getElementById("doc-summary-link");
-      if (!modal || !title || !description || !link) return;
-      title.textContent = trigger.dataset.docTitle || "";
+      if (!modal || !heading || !description || !link) return;
+      const docTitle = trigger.dataset.docTitle || "Benchmark documentation";
+      heading.textContent = docTitle;
       description.textContent = trigger.dataset.docDescription || "";
       link.href = trigger.dataset.docUrl || "#";
-      link.textContent = `Read the ${trigger.dataset.docTitle || "benchmark"} overview`;
+      link.textContent = `Read the ${docTitle} overview`;
       if (typeof modal.showModal === "function") modal.showModal();
     });
 

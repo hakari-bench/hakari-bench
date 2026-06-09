@@ -743,6 +743,10 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert '<h1 class="flex min-w-0 items-center gap-2 text-2xl font-semibold">' in response.text
     assert '<img src="/assets/favicon.png?' in response.text
     assert 'alt="" aria-hidden="true" class="h-8 w-8 shrink-0">' in response.text
+    assert 'id="hakari-docs-link"' in response.text
+    assert 'href="/docs/"' in response.text
+    assert 'aria-label="Open documentation"' in response.text
+    assert 'data-icon="book-open"' in response.text
     assert 'id="hakari-theme-toggle"' in response.text
     assert 'aria-label="Toggle color theme"' in response.text
     assert 'data-icon="moon"' in response.text
@@ -767,8 +771,10 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert re.search(r'<script src="/assets/viewer\.js\?v=[0-9a-f]{12}" defer></script>', response.text)
     assert "<script>" not in response.text
     assert "window.__hakariApplyHashQueryState" not in response.text
+    assert "leaderboard-initial-loading border border-zinc-200 bg-white" in response.text
     assert 'id="leaderboard-loading-toast"' in response.text
     assert "leaderboard-loading-toast fixed bottom-4 right-4" in response.text
+    assert response.text.count('class="loading-spinner" aria-hidden="true"') == 2
     assert 'role="status"' in response.text
     assert 'aria-live="polite"' in response.text
     assert "Loading leaderboard..." in response.text
@@ -846,7 +852,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ":root.dark" in css_response.text
     assert "JetBrains Mono" in css_response.text
     assert ".theme-toggle" in css_response.text
+    assert ".leaderboard-initial-loading" in css_response.text
     assert ".leaderboard-loading-toast.htmx-request" in css_response.text
+    assert ".loading-spinner" in css_response.text
     assert "hakari-leaderboard-spin" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
     assert ".global-tooltip" in css_response.text
@@ -1009,9 +1017,9 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
         '&amp;group=task&amp;task_z_scores=0&amp;target=reranking"'
     ) in response.text
     scope_section = response.text.split("Benchmark scope", 1)[1].split("Efficiency variants", 1)[0]
-    assert "NanoMTEB-Japanese" in scope_section
-    assert "NanoRTEB" in scope_section
-    assert "NanoMedical" in scope_section
+    assert "MTEB-Japanese" in scope_section
+    assert "RTEB" in scope_section
+    assert "Medical" in scope_section
     assert "Multilingual retrieval" not in response.text
     assert "Code retrieval" not in response.text
     assert "Specialized domains" not in response.text
@@ -2828,12 +2836,12 @@ benchmarks:
 
     assert response.status_code == 200
     assert mmteb_response.status_code == 200
-    assert "MNanoBEIR(task)" in response.text
-    assert "MNanoBEIR(lang)" in response.text
-    assert "NanoMMTEB-v2" in response.text
+    assert "M-BEIR(task)" in response.text
+    assert "M-BEIR(lang)" in response.text
+    assert "MMTEB-v2" in response.text
     lang_scope_section = response.text.split("Benchmark scope", 1)[1].split("Table display", 1)[0]
     mmteb_scope_section = mmteb_response.text.split("Benchmark scope", 1)[1].split("Table display", 1)[0]
-    expected_scope_order = ["MNanoBEIR(task)", "MNanoBEIR(lang)", "NanoMMTEB-v2"]
+    expected_scope_order = ["M-BEIR(task)", "M-BEIR(lang)", "MMTEB-v2"]
     for scope_section in [lang_scope_section, mmteb_scope_section]:
         scope_positions = [scope_section.index(label) for label in expected_scope_order]
         assert scope_positions == sorted(scope_positions)
