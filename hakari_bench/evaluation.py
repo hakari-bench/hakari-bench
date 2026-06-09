@@ -18,6 +18,7 @@ from hakari_bench.datasets import EvalTask
 from hakari_bench.defaults import DEFAULT_CANDIDATE_RANKING, DEFAULT_RERANK_TOP_K
 from hakari_bench.embedding_matrix import QuantizedEmbeddingMatrix
 from hakari_bench.metrics import compute_ir_metrics
+from hakari_bench.model_protocols import validate_model_capabilities
 from hakari_bench.scoring import candidate_coverage_for_qrels
 from hakari_bench.scoring import rank_candidate_subset_by_similarity
 
@@ -195,8 +196,12 @@ def evaluate_dense_task(
     encode_devices: list[str] | None = None,
     encode_chunk_size: int | None = None,
     encode_pool: dict[str, Any] | None = None,
+    encode_kwargs: dict[str, Any] | None = None,
+    query_encode_kwargs: dict[str, Any] | None = None,
+    corpus_encode_kwargs: dict[str, Any] | None = None,
     metric_names: Sequence[str] | None = None,
 ) -> TaskEvaluation:
+    validate_model_capabilities(model, model_type="dense")
     query_ids = list(dataset.queries)
     corpus_ids = list(dataset.corpus)
     query_texts = [dataset.queries[query_id] for query_id in query_ids]
@@ -228,6 +233,7 @@ def evaluate_dense_task(
             score_device=score_device,
             encode_pool=encode_pool,
             encode_chunk_size=encode_chunk_size,
+            extra_kwargs=_role_encode_kwargs(encode_kwargs, query_encode_kwargs),
         )
         query_seconds = time.perf_counter() - query_start
 
@@ -246,6 +252,7 @@ def evaluate_dense_task(
             score_device=score_device,
             encode_pool=encode_pool,
             encode_chunk_size=encode_chunk_size,
+            extra_kwargs=_role_encode_kwargs(encode_kwargs, corpus_encode_kwargs),
         )
         corpus_seconds = time.perf_counter() - corpus_start
     finally:
@@ -403,6 +410,7 @@ def evaluate_reranker_task(
     score_kwargs: dict[str, Any] | None = None,
     metric_names: Sequence[str] | None = None,
 ) -> TaskEvaluation:
+    validate_model_capabilities(model, model_type="reranker")
     if dataset.candidates is None:
         raise ValueError("Reranker evaluation requires a candidate subset such as bm25.")
 
@@ -527,8 +535,12 @@ def evaluate_late_interaction_task(
     embedding_variants: list[dict[str, Any]] | None = None,
     rerank_top_n: int | None = DEFAULT_RERANK_TOP_K,
     candidate_ranking_name: str | None = DEFAULT_CANDIDATE_RANKING,
+    encode_kwargs: dict[str, Any] | None = None,
+    query_encode_kwargs: dict[str, Any] | None = None,
+    corpus_encode_kwargs: dict[str, Any] | None = None,
     metric_names: Sequence[str] | None = None,
 ) -> TaskEvaluation:
+    validate_model_capabilities(model, model_type="late-interaction")
     if exact_doc_batch_size <= 0:
         raise ValueError("Late-interaction exact doc batch size must be positive.")
     if exact_query_batch_size <= 0:
@@ -548,6 +560,7 @@ def evaluate_late_interaction_task(
         prompt=query_prompt,
         prompt_name=query_prompt_name,
         is_query=True,
+        extra_kwargs=_role_encode_kwargs(encode_kwargs, query_encode_kwargs),
     )
     query_seconds = time.perf_counter() - query_start
 
@@ -560,6 +573,7 @@ def evaluate_late_interaction_task(
         prompt=corpus_prompt,
         prompt_name=corpus_prompt_name,
         is_query=False,
+        extra_kwargs=_role_encode_kwargs(encode_kwargs, corpus_encode_kwargs),
     )
     corpus_seconds = time.perf_counter() - corpus_start
 
@@ -852,6 +866,7 @@ def _encode_late_interaction(
     prompt: str | None,
     prompt_name: str | None,
     is_query: bool,
+    extra_kwargs: dict[str, Any] | None = None,
 ) -> Any:
     kwargs: dict[str, Any] = {
         "batch_size": batch_size,
@@ -862,8 +877,9 @@ def _encode_late_interaction(
         kwargs["prompt"] = prompt
     elif prompt_name is not None:
         kwargs["prompt_name"] = prompt_name
+    kwargs.update(extra_kwargs or {})
     _ensure_late_interaction_encode_compat(model)
-    return model.encode(sentences, **kwargs)
+    return _call_with_supported_kwargs(model.encode, sentences, **kwargs)
 
 
 def _ensure_late_interaction_encode_compat(model: Any) -> None:
@@ -972,6 +988,7 @@ def _encode(
     score_device: str = "auto",
     encode_pool: dict[str, Any] | None = None,
     encode_chunk_size: int | None = None,
+    extra_kwargs: dict[str, Any] | None = None,
 ) -> Any:
     encode_fn = None if task is not None else getattr(model, "encode_query" if role == "query" else "encode_document", None)
     if encode_fn is None:
@@ -986,6 +1003,7 @@ def _encode(
         kwargs["task"] = task
     if truncate_dim is not None:
         kwargs["truncate_dim"] = truncate_dim
+    kwargs.update(extra_kwargs or {})
     if encode_pool is not None:
         if not _accepts_encode_parameter(encode_fn, "pool"):
             raise ValueError(
@@ -1001,29 +1019,30 @@ def _encode(
                 )
             kwargs["chunk_size"] = encode_chunk_size
 
-    if _accepts_encode_parameter(encode_fn, "convert_to_sparse_tensor"):
+    if _accepts_encode_parameter(encode_fn, "convert_to_sparse_tensor", allow_var_keyword=False):
         if encode_pool is not None:
             raise ValueError("Multi-process encode is not supported for sparse tensor encoding.")
         sparse_kwargs: dict[str, Any] = {
             "convert_to_tensor": True,
             "convert_to_sparse_tensor": True,
         }
-        if _accepts_encode_parameter(encode_fn, "save_to_cpu"):
+        if _accepts_encode_parameter(encode_fn, "save_to_cpu", allow_var_keyword=False):
             sparse_kwargs["save_to_cpu"] = score_device == "cpu" or (
                 score_device != "cuda" and not _model_prefers_tensor_scoring(model)
             )
-        return encode_fn(sentences, **sparse_kwargs, **kwargs)
+        return _call_with_supported_kwargs(encode_fn, sentences, **{**sparse_kwargs, **kwargs})
 
     if prefer_tensor:
-        try:
-            return encode_fn(sentences, convert_to_tensor=True, **kwargs)
-        except TypeError:
-            pass
+        return _call_with_supported_kwargs(encode_fn, sentences, convert_to_tensor=True, **kwargs)
 
     try:
-        return encode_fn(sentences, convert_to_numpy=True, **kwargs)
+        return _call_with_supported_kwargs(encode_fn, sentences, convert_to_numpy=True, **kwargs)
     except TypeError:
-        return encode_fn(sentences, **kwargs)
+        return _call_with_supported_kwargs(encode_fn, sentences, **kwargs)
+
+
+def _role_encode_kwargs(common_kwargs: dict[str, Any] | None, role_kwargs: dict[str, Any] | None) -> dict[str, Any]:
+    return {**(common_kwargs or {}), **(role_kwargs or {})}
 
 
 def start_encode_pool(model: Any, encode_devices: list[str] | None) -> dict[str, Any] | None:
@@ -1065,11 +1084,14 @@ def _move_embeddings_for_score_device(embeddings: Any, *, score_device: str) -> 
     return embeddings
 
 
-def _accepts_encode_parameter(encode_fn: Any, name: str) -> bool:
+def _accepts_encode_parameter(encode_fn: Any, name: str, *, allow_var_keyword: bool = True) -> bool:
     try:
-        return name in inspect.signature(encode_fn).parameters
+        parameters = inspect.signature(encode_fn).parameters
     except (TypeError, ValueError):
         return False
+    return name in parameters or (
+        allow_var_keyword and any(parameter.kind is inspect.Parameter.VAR_KEYWORD for parameter in parameters.values())
+    )
 
 
 def _model_prefers_tensor_scoring(model: Any) -> bool:

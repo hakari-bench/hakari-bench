@@ -638,6 +638,50 @@ def test_evaluate_dense_task_explicit_tasks_use_generic_encode() -> None:
     assert model.calls[1]["task"] == "retrieval"
 
 
+def test_evaluate_dense_task_passes_signature_aware_custom_encode_kwargs() -> None:
+    class ApiLikeDenseModel:
+        similarity_fn_name = "dot"
+
+        def __init__(self) -> None:
+            self.query_calls: list[dict[str, object]] = []
+            self.document_calls: list[dict[str, object]] = []
+
+        def encode_query(self, sentences: list[str], *, input_type: str, dimensions: int) -> np.ndarray:
+            self.query_calls.append({"sentences": sentences, "input_type": input_type, "dimensions": dimensions})
+            return np.array([[1.0, 0.0], [0.0, 1.0]], dtype=np.float32)
+
+        def encode_document(self, sentences: list[str], *, input_type: str, dimensions: int) -> np.ndarray:
+            self.document_calls.append({"sentences": sentences, "input_type": input_type, "dimensions": dimensions})
+            return np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]], dtype=np.float32)
+
+    model = ApiLikeDenseModel()
+
+    result = evaluate_dense_task(
+        model=model,
+        dataset=_toy_dataset(),
+        batch_size=4,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        encode_kwargs={"dimensions": 2},
+        query_encode_kwargs={"input_type": "query"},
+        corpus_encode_kwargs={"input_type": "document"},
+    )
+
+    assert result.metrics["ToyData_test_dot_ndcg@10"] == pytest.approx(1.0)
+    assert model.query_calls == [{"sentences": ["cat query", "dog query"], "input_type": "query", "dimensions": 2}]
+    assert model.document_calls == [
+        {
+            "sentences": ["cat doc", "dog doc", "other doc"],
+            "input_type": "document",
+            "dimensions": 2,
+        }
+    ]
+
+
 def test_evaluate_dense_task_scores_embedding_variants_without_extra_encoding() -> None:
     model = FakeDenseModel()
 

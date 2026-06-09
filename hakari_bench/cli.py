@@ -191,6 +191,19 @@ def _add_evaluate_model_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--model", default=None, help="Hugging Face model id or local model path.")
     parser.add_argument("--model-alias", default=None, help="Display/storage alias for a local model path.")
     parser.add_argument("--model-revision", default=None, help="Hugging Face model revision to evaluate.")
+    parser.add_argument(
+        "--model-loader",
+        default=None,
+        help=(
+            "Optional custom model loader in module:function form. The callable receives ModelLoadConfig "
+            "and must return an object matching the evaluation method's duck-typed interface."
+        ),
+    )
+    parser.add_argument(
+        "--model-loader-kwargs-json",
+        default=None,
+        help="JSON object of custom model loader kwargs available as ModelLoadConfig.model_loader_kwargs.",
+    )
 
 
 def _add_evaluate_runtime_args(parser: argparse.ArgumentParser) -> None:
@@ -320,6 +333,21 @@ def _add_prompt_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--document-prompt-name", default=None)
     parser.add_argument("--query-encode-task", default=None)
     parser.add_argument("--document-encode-task", default=None)
+    parser.add_argument(
+        "--encode-kwargs-json",
+        default=None,
+        help="JSON object of extra kwargs passed to query and document encode calls.",
+    )
+    parser.add_argument(
+        "--query-encode-kwargs-json",
+        default=None,
+        help="JSON object of extra kwargs passed only to query encode calls.",
+    )
+    parser.add_argument(
+        "--document-encode-kwargs-json",
+        default=None,
+        help="JSON object of extra kwargs passed only to document encode calls.",
+    )
 
 
 def _add_reranker_args(parser: argparse.ArgumentParser) -> None:
@@ -450,6 +478,22 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         delattr(args, "embedding_variant_values")
         delattr(args, "embedding_variant_grid_values")
         try:
+            args.model_loader_kwargs = _parse_json_object_arg(
+                getattr(args, "model_loader_kwargs_json", None),
+                option_name="--model-loader-kwargs-json",
+            )
+            args.encode_kwargs = _parse_json_object_arg(
+                getattr(args, "encode_kwargs_json", None),
+                option_name="--encode-kwargs-json",
+            )
+            args.query_encode_kwargs = _parse_json_object_arg(
+                getattr(args, "query_encode_kwargs_json", None),
+                option_name="--query-encode-kwargs-json",
+            )
+            args.document_encode_kwargs = _parse_json_object_arg(
+                getattr(args, "document_encode_kwargs_json", None),
+                option_name="--document-encode-kwargs-json",
+            )
             args.cross_encoder_kwargs = _parse_json_object_arg(
                 getattr(args, "reranker_init_kwargs_json", None),
                 option_name="--reranker-init-kwargs-json",
@@ -460,12 +504,24 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             )
         except ValueError as exc:
             parser.error(str(exc))
+        for attr in (
+            "model_loader_kwargs_json",
+            "encode_kwargs_json",
+            "query_encode_kwargs_json",
+            "document_encode_kwargs_json",
+        ):
+            if hasattr(args, attr):
+                delattr(args, attr)
         if hasattr(args, "reranker_init_kwargs_json"):
             delattr(args, "reranker_init_kwargs_json")
         if hasattr(args, "reranker_inference_kwargs_json"):
             delattr(args, "reranker_inference_kwargs_json")
         if args.model_type != "reranker" and (args.cross_encoder_kwargs or args.reranker_score_kwargs):
             parser.error("--reranker-init-kwargs-json and --reranker-inference-kwargs-json require evaluate reranker.")
+        if args.model_type == "bm25" and (args.model_loader is not None or args.model_loader_kwargs):
+            parser.error("--model-loader and --model-loader-kwargs-json are not supported for evaluate bm25.")
+        if args.model_loader is None and args.model_loader_kwargs:
+            parser.error("--model-loader-kwargs-json requires --model-loader.")
     if args.command == "build-candidates":
         try:
             _apply_build_candidates_params_json(args)
@@ -530,6 +586,8 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
     args.model = getattr(args, "model", None)
     args.model_alias = getattr(args, "model_alias", None)
     args.model_revision = getattr(args, "model_revision", None)
+    args.model_loader = getattr(args, "model_loader", None)
+    args.model_loader_kwargs = getattr(args, "model_loader_kwargs", {})
     args.all = getattr(args, "all", False)
     args.dtype = getattr(args, "dtype", "bf16")
     args.trust_remote_code = getattr(args, "trust_remote_code", False)
@@ -544,6 +602,9 @@ def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
     args.document_prompt_name = getattr(args, "document_prompt_name", None)
     args.query_encode_task = getattr(args, "query_encode_task", None)
     args.document_encode_task = getattr(args, "document_encode_task", None)
+    args.encode_kwargs = getattr(args, "encode_kwargs", {})
+    args.query_encode_kwargs = getattr(args, "query_encode_kwargs", {})
+    args.document_encode_kwargs = getattr(args, "document_encode_kwargs", {})
     args.corpus_prompt = getattr(args, "document_prompt", None)
     args.corpus_prompt_name = getattr(args, "document_prompt_name", None)
     args.evaluation_scope = getattr(args, "evaluation_scope", "standard")
@@ -841,13 +902,17 @@ def _reject_unknown_keys(value: dict[str, Any], *, allowed: set[str], path: str)
 
 
 def _apply_model_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
-    _reject_unknown_keys(value, allowed={"source", "alias", "revision"}, path="params.model")
+    _reject_unknown_keys(value, allowed={"source", "alias", "revision", "loader", "loader_kwargs"}, path="params.model")
     if "source" in value:
         args.model = _string_param(value["source"], "params.model.source")
     if "alias" in value:
         args.model_alias = _string_param(value["alias"], "params.model.alias")
     if "revision" in value:
         args.model_revision = _optional_string_param(value["revision"], "params.model.revision")
+    if "loader" in value:
+        args.model_loader = _optional_string_param(value["loader"], "params.model.loader")
+    if "loader_kwargs" in value:
+        args.model_loader_kwargs_json = json.dumps(_dict_param(value["loader_kwargs"], "params.model.loader_kwargs"))
 
 
 def _apply_target_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
@@ -936,11 +1001,25 @@ def _apply_prompt_params(args: argparse.Namespace, value: dict[str, Any]) -> Non
             "document_prompt_name",
             "query_encode_task",
             "document_encode_task",
+            "encode_kwargs",
+            "query_encode_kwargs",
+            "document_encode_kwargs",
         },
         path="params.prompts",
     )
-    for key in value:
-        setattr(args, key, _optional_string_param(value[key], f"params.prompts.{key}"))
+    for key in (
+        "query_prompt",
+        "document_prompt",
+        "query_prompt_name",
+        "document_prompt_name",
+        "query_encode_task",
+        "document_encode_task",
+    ):
+        if key in value:
+            setattr(args, key, _optional_string_param(value[key], f"params.prompts.{key}"))
+    for key in ("encode_kwargs", "query_encode_kwargs", "document_encode_kwargs"):
+        if key in value:
+            setattr(args, f"{key}_json", json.dumps(_dict_param(value[key], f"params.prompts.{key}")))
 
 
 def _apply_reranker_params(args: argparse.Namespace, value: dict[str, Any]) -> None:
@@ -1212,6 +1291,8 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
             ModelLoadConfig(
                 model_name_or_path=args.model,
                 model_type=args.model_type,
+                model_loader=args.model_loader,
+                model_loader_kwargs=getattr(args, "model_loader_kwargs", {}),
                 model_revision=args.model_revision,
                 dtype=args.dtype,
                 attn_implementation=args.attn_implementation,
