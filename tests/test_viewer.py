@@ -781,6 +781,8 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'hx-get="/leaderboard?view=Overall' in response.text
     assert "<footer" in response.text
     assert '<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-xs text-zinc-500 sm:px-6">' in response.text
+    footer_html = response.text.split("<footer", 1)[1]
+    assert "HAKARI-Bench leaderboard" not in footer_html
     assert "[overflow-wrap:anywhere]" in response.text
     assert response.text.index('id="leaderboard-panel"') < response.text.index("<footer")
 
@@ -1761,13 +1763,15 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert response.status_code == 200
     assert "Table display" in response.text
     assert 'data-icon="table-properties"' in response.text
-    assert "Show STD cells" in response.text
+    assert "<span>STD</span>" in response.text
     assert "Efficiency variants" in response.text
     assert 'data-icon="git-compare-arrows"' in response.text
     assert "Other variants" in response.text
     assert "Model family" in response.text
     assert 'id="model-type-controls"' in response.text
     assert 'data-icon="shapes"' in response.text
+    assert response.text.index("Efficiency variants") < response.text.index("Refine results")
+    assert response.text.index("Table display") < response.text.index("Refine results")
     assert response.text.index("Refine results") < response.text.index("Model family") < response.text.index('id="model-filter-input"')
     assert 'name="model_type_filter" value="__none_selected__"' in response.text
     assert "Refine results" in response.text
@@ -1793,6 +1797,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'from:input[type=' not in response.text
     assert 'hx-trigger="change, submit"' in response.text
     assert 'hx-include="#display-controls"' not in response.text
+    assert 'data-icon="list-filter"' in response.text
     assert "Truncate dims" in response.text
     assert "Rescore" in response.text
     assert 'id="model-filter-input"' in response.text
@@ -3334,7 +3339,7 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
 
     assert response.status_code == 200
     assert "Table display" in response.text
-    assert "<span>Show STD cells</span>" in response.text
+    assert "<span>STD</span>" in response.text
     assert "Task std display" not in response.text
     assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "task-z-score task-z-pos-100" in response.text
@@ -3390,14 +3395,16 @@ def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 200
-    assert "<span>Show task ranks</span>" in response.text
+    assert "<span>Task ranks</span>" in response.text
     assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="task_scores" value="1"' in response.text
-    assert '<span class="task-rank-label">[1]</span>' in response.text
-    assert '<span class="task-rank-label">[T2]</span>' in response.text
-    assert '<span class="task-rank-score-value">90.00</span>' in response.text
-    assert '<span class="task-rank-score-value">80.00</span>' in response.text
+    assert '<span class="task-rank-label">[1]</span>' not in response.text
+    assert '<span class="task-rank-label">[T2]</span>' not in response.text
+    assert '<span class="task-rank-score-value">' not in response.text
+    assert '>1</td>' in response.text
+    assert '>T2</td>' in response.text
+    assert '>4</td>' in response.text
     assert ">2.5</td>" not in response.text
     assert "sort=metric%3Aarguana" in response.text
 

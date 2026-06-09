@@ -102,23 +102,6 @@
     text-rendering: optimizeLegibility;
   }
 
-  body::before {
-    background-image:
-      linear-gradient(var(--hakari-grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--hakari-grid) 1px, transparent 1px),
-      radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.08) 1px, transparent 0);
-    background-size:
-      28px 28px,
-      28px 28px,
-      4px 4px;
-    content: "";
-    inset: 0;
-    opacity: 0.72;
-    pointer-events: none;
-    position: fixed;
-    z-index: -1;
-  }
-
   ::selection {
     background: color-mix(in srgb, var(--hakari-accent) 22%, transparent);
   }
@@ -532,12 +515,6 @@
     flex: 0 0 auto;
     color: var(--hakari-text-muted);
     font-size: 0.75rem;
-  }
-
-  .task-rank-score-value {
-    min-width: 0;
-    flex: 1 1 auto;
-    text-align: right;
   }
 
   .task-z-neutral {

@@ -139,6 +139,7 @@ _ICON_PATHS = {
     "info-simple": '<path d="M12 17v-6"/><path d="M12 7h.01"/>',
     "languages": '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
     "layers": '<path d="m12.83 2.18 8.5 4.73a1 1 0 0 1 0 1.75l-8.5 4.73a1.7 1.7 0 0 1-1.66 0l-8.5-4.73a1 1 0 0 1 0-1.75l8.5-4.73a1.7 1.7 0 0 1 1.66 0Z"/><path d="m22 12.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 17.5"/>',
+    "list-filter": '<path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/>',
     "list-ordered": '<path d="M11 5h10"/><path d="M11 12h10"/><path d="M11 19h10"/><path d="M4 4h1v5"/><path d="M4 9h2"/><path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"/>',
     "message-square-text": '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M7 11h10"/><path d="M7 15h6"/><path d="M7 7h8"/>',
     "moon": '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
@@ -645,8 +646,8 @@ def _render_page_footer(*, latest_update: str, database_label: str) -> str:
         {meta}
       </div>"""
     return f"""<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-xs text-zinc-500 sm:px-6">
-    <div class="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-      <span class="shrink-0">HAKARI-Bench leaderboard</span>{meta}
+    <div class="flex min-w-0 justify-end">
+      {meta}
     </div>
   </footer>"""
 
@@ -810,20 +811,21 @@ def render_leaderboard(
     csv_query = urlencode(state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state), doseq=True)
     return f"""
 <div>
-  {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
-  {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
-  <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
-    <div>
-      <h2 class="text-lg font-semibold">{escape(result.view_label)}</h2>
-      <p class="mt-1 text-sm text-zinc-600" data-shown-count="{shown_count}">
-        {shown_count} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks
-        <a class="ml-2 inline-flex items-center gap-1 border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-800 underline-offset-2 hover:border-cyan-600 hover:text-cyan-700"
-           href="{_csv_url(csv_query)}" aria-label="Download visible leaderboard as CSV">
-          {_icon_svg("file-spreadsheet", class_name="hakari-icon h-3.5 w-3.5")}
-          <span>Download CSV</span>
-        </a>
-      </p>
+  {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, benchmark_docs=benchmark_docs)}
+  <div class="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600" data-shown-count="{shown_count}">
+    <div class="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
+      <span class="inline-flex items-center gap-1 font-medium text-zinc-600">
+        {_icon_svg("table-properties", class_name="hakari-icon control-heading-icon shrink-0")}
+        <span>{escape(result.view_label)}</span>
+      </span>
+      <span class="text-zinc-400">/</span>
+      <span>{shown_count} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks</span>
     </div>
+    <a class="inline-flex items-center gap-1 border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-800 underline-offset-2 hover:border-cyan-600 hover:text-cyan-700"
+       href="{_csv_url(csv_query)}" aria-label="Download visible leaderboard as CSV">
+      {_icon_svg("file-spreadsheet", class_name="hakari-icon h-3.5 w-3.5")}
+      <span>Download CSV</span>
+    </a>
   </div>
   <div class="leaderboard-table-scroll overflow-x-auto border border-zinc-200 bg-white">
     <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
@@ -843,9 +845,11 @@ def render_tabs(
     sort: str,
     direction: str,
     filter_state: FilterState | None = None,
+    filter_context: FilterContext | None = None,
     benchmark_docs: BenchmarkDocs | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
+    filter_context = filter_context or row_filter_context(result.rows, filter_state)
     grouped_buttons: dict[str, list[tuple[int, str]]] = {
         "Scope presets": [],
         "Nano suites": [],
@@ -931,21 +935,24 @@ def render_tabs(
     preset_buttons = [button for _, button in sorted(grouped_buttons["Scope presets"])]
     suite_buttons = [button for _, button in sorted(grouped_buttons["Nano suites"])]
     return f"""
-    <nav class="mb-4 border border-zinc-200 bg-white p-2" aria-label="Leaderboard configuration">
+    <nav class="mb-4 border border-zinc-200 bg-white p-2 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
       <div class="grid gap-2">
         <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
           {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
           {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
         </div>
         <div class="grid gap-2">
-          <div class="flex flex-wrap items-center gap-2">
-            {_control_label(icon="database", text="Benchmark scope")}
-            <div class="flex flex-wrap gap-2">{''.join(preset_buttons)}</div>
+          <div class="border border-zinc-200 bg-white p-2">
+            <div class="mb-2 flex flex-wrap items-center gap-2">
+              {_control_label(icon="database", text="Benchmark scope")}
+              <div class="flex flex-wrap gap-2">{''.join(preset_buttons)}</div>
+            </div>
+            <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
           </div>
-          <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
           {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True)}
         </div>
         {render_display_controls(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+        {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
       </div>
     </nav>
     """
@@ -1107,10 +1114,8 @@ def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str
         )
     return f"""
             <div class="flex min-w-0 flex-wrap items-center gap-2">
-              <span class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-zinc-500">
-                <span>Score metric</span>
-                {_render_help_tooltip("Changes the metric used for model means, Borda ranks, and task columns. The default is the paper's primary retrieval metric; recall metrics are useful for candidate coverage and reranking diagnostics.")}
-              </span>
+              {_control_label(icon="bar-chart-3", text="Score metric")}
+              {_render_help_tooltip("Changes the metric used for model means, Borda ranks, and task columns. The default is the paper's primary retrieval metric; recall metrics are useful for candidate coverage and reranking diagnostics.")}
               {''.join(buttons)}
             </div>
             """
@@ -1228,7 +1233,11 @@ def render_language_pages(
           </details>
         """
     wrapper_tag = "div" if embedded else "nav"
-    wrapper_class = "flex flex-wrap items-start gap-2" if embedded else "mb-4 flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
+    wrapper_class = (
+        "flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
+        if embedded
+        else "mb-4 flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
+    )
     return f"""
       <{wrapper_tag} class="{wrapper_class}" aria-label="Task facets">
         <span class="inline-flex items-center gap-1 pt-1 text-[0.8125rem]">
@@ -1378,12 +1387,12 @@ def render_display_controls(
           <label class="inline-flex items-center gap-2">
             <input type="hidden" name="task_z_scores" value="0">
             <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
-            <span>Show STD cells</span>
+            <span>STD</span>
           </label>
           <label class="inline-flex items-center gap-2">
             <input type="hidden" name="task_ranks" value="0">
             <input type="checkbox" name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700"{task_ranks_checked}>
-            <span>Show task ranks</span>
+            <span>Task ranks</span>
           </label>
         </div>
       </form>
@@ -1624,8 +1633,8 @@ def render_controls(
     )
     advanced_filter_open_attr = " open" if filter_state.filters_active or filter_state.has_task_length_filters else ""
     return f"""
-    <div class="mb-4 grid gap-3 text-[0.8125rem] text-zinc-700">
-      <form id="filter-controls" class="border border-zinc-200 bg-white p-3"
+    <div class="grid gap-2 text-[0.8125rem] text-zinc-700">
+      <form id="filter-controls" class="border border-zinc-200 bg-white p-2"
             hx-get="/leaderboard" hx-push-url="true"
             {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
@@ -1666,9 +1675,9 @@ def render_controls(
             </div>
           </div>
           <details id="facet-filters" class="min-w-0 border border-zinc-200 bg-zinc-50 p-2"{advanced_filter_open_attr}>
-            <summary class="cursor-pointer text-xs font-semibold uppercase text-zinc-500">
+            <summary class="cursor-pointer">
               <span class="inline-flex items-center gap-1">
-                <span>Advanced filters</span>
+                {_control_label(icon="list-filter", text="Advanced filters")}
                 {_render_help_tooltip("Open for dimension, quantization, length, dtype, attention, and prompt filters. These refine the current result set after scope and evaluation mode are selected.")}
               </span>
             </summary>
@@ -2226,12 +2235,11 @@ def _render_metric_rank_score_cell(
     metric_rank_labels: dict[tuple[str, str], str] | None,
 ) -> str:
     rank_label = _metric_rank_label(row, column, row.metric_rank_values.get(column), metric_rank_labels)
-    rank_html = f'<span class="task-rank-label">{escape(f"[{rank_label}]")}</span>' if rank_label else ""
-    if result.show_task_z_scores:
-        score_html = _render_score_z_badge(score=row.metric_values.get(column), z_score=row.metric_z_values.get(column))
-    else:
-        score_html = f'<span class="task-rank-score-value">{escape(_fmt_score(row.metric_values.get(column)))}</span>'
     metric_width_class = _metric_column_width_class(result)
+    if not result.show_task_z_scores:
+        return f"""<td class="{metric_width_class} px-1 py-1 text-left tabular-nums">{escape(rank_label)}</td>"""
+    rank_html = f'<span class="task-rank-label">{escape(f"[{rank_label}]")}</span>' if rank_label else ""
+    score_html = _render_score_z_badge(score=row.metric_values.get(column), z_score=row.metric_z_values.get(column))
     return (
         f'<td class="{metric_width_class} px-1 py-1 tabular-nums">'
         '<span class="task-rank-score-cell">'
@@ -2245,7 +2253,7 @@ def _metric_column_width_class(result: LeaderboardResult) -> str:
     if result.show_task_ranks and result.show_task_z_scores:
         return "w-[7rem] min-w-[7rem] max-w-[7rem]"
     if result.show_task_ranks:
-        return "w-[6rem] min-w-[6rem] max-w-[6rem]"
+        return "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]"
     return "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]"
 
 
