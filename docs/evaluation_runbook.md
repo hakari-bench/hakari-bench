@@ -106,6 +106,11 @@ uv run hakari-bench evaluate dense \
   --embedding-variant truncate:256,128,64
 ```
 
+For Matryoshka/truncate-aware models, include the supported truncation
+dimensions unless the run is intentionally base-only. See
+[`evaluation_policy.md#dense-evaluation`](evaluation_policy.md#dense-evaluation)
+for how to choose the variant plan.
+
 Use `--no-default-embedding-variants` only when those automatic variants should
 be intentionally omitted.
 

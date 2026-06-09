@@ -25,7 +25,8 @@ viewer startup.
 4. Prefer the attention implementation officially recommended by the model
    author. If no explicit attention implementation is passed, the CLI will warn
    because long benchmark inference can be much slower for some models.
-5. Decide the full embedding-variant plan before starting any large run.
+5. Decide the full method-specific option and variant plan before starting any
+   large run.
 6. Run a small validation command when options are uncertain, then scale to the
    requested benchmark set.
 7. Keep an ignored progress checklist under `tmp/` for long benchmark waves.
@@ -135,6 +136,14 @@ For every model:
   `--query-prompt`, `--document-prompt`, `--query-prompt-name`,
   `--document-prompt-name`, `--query-encode-task`, or
   `--document-encode-task`.
+- Check whether the model advertises method-specific capabilities that should be
+  reflected in the benchmark plan. Examples include Matryoshka/truncate
+  dimensions for dense embeddings, sparse max-active-dim controls,
+  late-interaction query/document token lengths or query expansion, reranker
+  candidate-ranking requirements, and provider/API encode options for custom
+  backends. Include supported capabilities in the run unless the user explicitly
+  asks for a base-only or ablation run, and record the decision in result
+  metadata or the run summary.
 - Check whether `--trust-remote-code` is required.
 - If the model is evaluated through a custom backend, read
   [`custom_model_backends.md`](custom_model_backends.md), confirm the backend
@@ -168,12 +177,15 @@ variants plus top-100 float-rescored variants whenever
 `--no-default-embedding-variants` is not set. Explicit dense variants no longer
 disable these defaults.
 
-This is the most important coverage rule:
+This is the most important dense coverage rule:
 
-> For dense models, specify truncation dimensions with
-> `--embedding-variant truncate:DIMS` when dimensional comparisons are needed.
-> The CLI will automatically add standalone truncation, full-dim quantized and
-> rescored variants, and truncation x quantized/rescore variants for those dims.
+> For Matryoshka or otherwise truncate-aware dense models, include the model's
+> supported truncation dimensions with `--embedding-variant truncate:DIMS`
+> unless the user explicitly requests a base-only or ablation run. Use the model
+> card, implementation notes, or provider documentation to choose the supported
+> dimensions. The CLI will automatically add standalone truncation, full-dim
+> quantized and rescored variants, and truncation x quantized/rescore variants
+> for those dims.
 
 If a requested truncation dimension matches the encoded base embedding
 dimension, evaluation emits a warning and skips that no-op truncate variant
@@ -188,8 +200,9 @@ the model output device. Use `--retrieval-score-device cpu` or
 
 ## Dense Variant Plans
 
-For plain dense baselines with no dimensional comparisons, omit explicit
-embedding variants and let the dense defaults run:
+For plain dense baselines with no documented truncation support or dimensional
+comparison requirement, omit explicit embedding variants and let the dense
+defaults run:
 
 ```bash
 uv run hakari-bench evaluate dense \
@@ -198,7 +211,8 @@ uv run hakari-bench evaluate dense \
   --dtype bf16
 ```
 
-For Matryoshka or other dimension comparisons, provide the truncation dimensions:
+For Matryoshka/truncate-aware models, provide the supported truncation
+dimensions:
 
 - standalone truncation variants,
 - standalone quantized search and rescore variants at the original dimension,
