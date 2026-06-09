@@ -937,9 +937,11 @@ def render_tabs(
     return f"""
     <nav class="mb-4 border border-zinc-200 bg-white p-2 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
       <div class="grid gap-2">
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-          {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
-          {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+        <div class="border border-zinc-200 bg-white p-2">
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+            {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+            {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+          </div>
         </div>
         <div class="grid gap-2">
           <div class="border border-zinc-200 bg-white p-2">
