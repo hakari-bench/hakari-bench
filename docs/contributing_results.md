@@ -116,8 +116,8 @@ Fill every TODO before opening the PR.
 
 ## Open a Hugging Face Dataset PR
 
-Use `hf upload --create-pr` so reviewers can inspect the change before it is
-merged. For one model directory:
+Use a Hugging Face Dataset PR so reviewers can inspect the change before it is
+merged. The simple path is `hf upload --create-pr`. For one model directory:
 
 ```bash
 PR_BODY="$(cat tmp/{model_dir}_results_pr.md)"
@@ -149,6 +149,90 @@ Prefer `hf upload` for PR submissions because it creates one commit for the
 model directory. `hf upload-large-folder` is useful for resumable bulk uploads,
 but it does not expose `--create-pr` in the installed CLI and can create many
 commits for one model, which may hit repository commit rate limits.
+
+### Push to an Existing Hugging Face Dataset PR
+
+Hugging Face dataset PRs are not exactly the same as GitHub pull requests.
+For private dataset repositories or organization-owned repositories,
+`hf upload --create-pr` can fail even when normal git access works. In that
+case, have a user with the required Hugging Face permission create an empty PR
+from the web UI first. The web UI will assign a PR number and show a special
+git ref such as `refs/pr/1`.
+
+Paste the generated PR body into the web UI when creating the PR, or update the
+description before publishing. A git commit message cannot replace the PR
+description.
+
+After the PR exists, authenticate and push the result files directly to that PR
+ref:
+
+```bash
+PR_NUMBER=1
+hf auth login
+git lfs install
+git xet install
+git clone https://huggingface.co/datasets/hakari-bench/results
+cd results
+git fetch origin refs/pr/${PR_NUMBER}:pr/${PR_NUMBER}
+git checkout pr/${PR_NUMBER}
+```
+
+`git lfs install` configures Git LFS filters used by existing result payloads.
+`git xet install` configures Git Xet filters used by Hugging Face repositories
+that store large files through Xet. Run both before cloning or fetching the
+dataset repo. If `git xet` is unavailable, install the Hugging Face Git Xet
+extension first; otherwise clone, fetch, or push can fail when the repository
+uses Xet-backed storage.
+
+Copy or generate the result files in the checked-out repository, preserving the
+canonical path:
+
+```text
+hakari-results/{model_dir}/{dataset_id_or_name}/{task}.json.xz
+```
+
+Then inspect, commit, and push to the PR ref:
+
+```bash
+git status --short
+git diff --stat
+git lfs status
+git add hakari-results/{model_dir}
+git commit -m "Add results for MODEL_NAME"
+git push origin pr/${PR_NUMBER}:refs/pr/${PR_NUMBER}
+```
+
+If the PR ref already contains reviewer changes or another contributor's
+commit, fetch `refs/pr/${PR_NUMBER}` again and build on top of it. Do not reset
+or force-push a Hugging Face PR ref unless the PR owner explicitly coordinates
+that rewrite.
+
+If you need to work from the standard local cache instead of a fresh clone,
+keep the checkout under:
+
+```text
+~/.cache/hakari-bench/hf-datasets/hakari-bench__results
+```
+
+Make sure the pushed commit contains only reviewable result payloads. Do not
+include generated DuckDB files, `.duckdb.wal` files, viewer artifacts, local
+caches, or temporary reports. Before pushing, a useful guard is:
+
+```bash
+find . -name '*.duckdb' -o -name '*.duckdb.wal'
+```
+
+The command should print nothing. If the dataset PR was temporarily mirrored to
+a normal branch for upload or review, delete that branch after the PR ref has
+been populated:
+
+```bash
+git push origin :temporary-branch-name
+```
+
+Do not delete `refs/pr/PR_NUMBER`; that is the active Hugging Face Dataset PR.
+After the PR ref is ready, use the Hugging Face web UI's Publish button to mark
+the PR ready for merge.
 
 ## Reviewer Checklist
 
