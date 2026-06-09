@@ -67,6 +67,8 @@ under `config/datasets/`, and dataset collection definitions live under
 
 ## Leaderboard Viewer
 
+- For leaderboard viewer design changes, read `@DESIGN.md` first and keep
+  design-specific rules there.
 - When updating the leaderboard viewer in this project, keep
   `docs/duckdb_schema.md` in sync. Update it when DuckDB schema, viewer queries,
   leaderboard semantics, score grouping, variant handling, or required columns

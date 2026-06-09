@@ -715,7 +715,7 @@ benchmarks:
     assert config.benchmarks[0].match_patterns == ["uploaded/bench-a"]
 
 
-def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> None:
+def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
     db_path = tmp_path / "results.duckdb"
@@ -780,19 +780,15 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
 
     leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
     assert leaderboard_response.status_code == 200
-    assert "Analysis views" in leaderboard_response.text
-    assert leaderboard_response.text.index("leaderboard-table-scroll") < leaderboard_response.text.index("Analysis views")
-    assert '<section class="mt-6 mb-5 border border-zinc-200 bg-white" aria-label="Analysis views">' in leaderboard_response.text
+    assert "Analysis views" not in leaderboard_response.text
     assert 'class="border-t border-zinc-200 px-3 py-3 text-sm text-zinc-600"' not in leaderboard_response.text
-    assert 'id="analysis-panel" class="px-3 pb-3"' in leaderboard_response.text
-    assert 'data-icon="activity"' in leaderboard_response.text
-    assert 'data-icon="git-compare-arrows"' in leaderboard_response.text
-    assert 'data-icon="list-ordered"' in leaderboard_response.text
-    assert 'data-icon="database"' in leaderboard_response.text
-    assert "Variant impact" in leaderboard_response.text
-    assert "Reranking diagnostics" in leaderboard_response.text
-    assert "Dataset diagnostics" in leaderboard_response.text
-    assert 'hx-get="/analysis?panel=variants&amp;view=BenchA"' in leaderboard_response.text
+    assert 'id="analysis-panel"' not in leaderboard_response.text
+    assert "Variant impact" not in leaderboard_response.text
+    assert "Reranking diagnostics" not in leaderboard_response.text
+    assert "Dataset diagnostics" not in leaderboard_response.text
+    assert 'hx-get="/analysis?' not in leaderboard_response.text
+    assert "leaderboard-table-scroll" in leaderboard_response.text
+    assert TestClient(app).get("/analysis").status_code == 404
 
     page_with_latest = render_page(
         viewer_config=config,

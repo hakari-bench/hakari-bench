@@ -491,53 +491,6 @@ def create_app(
                 headers={"Content-Disposition": f'attachment; filename="{filename}"'},
             )
 
-    @app.get("/analysis", response_class=HTMLResponse)
-    def analysis(
-        panel: str = Query(default="variants", pattern="^(variants|reranking|datasets)$"),
-        view: str = Query(default=viewer_config.overall.name),
-        include_rescore: bool = Query(default=False),
-        include_truncate: bool = Query(default=False),
-    ) -> HTMLResponse:
-        with timed_operation("viewer.http.request", route="analysis", panel=panel) as request_timing:
-            store.ensure_current()
-            if view not in viewer_config.view_names:
-                view = viewer_config.overall.name
-            benchmarks = viewer_config.benchmarks_for_view(view)
-            repository = ViewerAnalyticsRepository(store.path)
-            if panel == "reranking":
-                rows = repository.fetch_rerank_diagnostics(benchmarks=benchmarks)
-                with timed_operation("viewer.render", operation="render_reranking_panel", view=view) as render_timing:
-                    content = render_reranking_panel(
-                        view_label=viewer_config.label_for_view(view),
-                        rows=rows,
-                    )
-                    render_timing["row_count"] = len(rows)
-            elif panel == "datasets":
-                rows = repository.fetch_dataset_diagnostics(benchmarks=benchmarks)
-                with timed_operation("viewer.render", operation="render_dataset_diagnostics_panel", view=view) as render_timing:
-                    content = render_dataset_diagnostics_panel(
-                        view_label=viewer_config.label_for_view(view),
-                        rows=rows,
-                    )
-                    render_timing["row_count"] = len(rows)
-            else:
-                rows = repository.fetch_variant_analysis(
-                    benchmarks=benchmarks,
-                    include_rescore=include_rescore,
-                    include_truncate=include_truncate,
-                )
-                with timed_operation("viewer.render", operation="render_variant_panel", view=view) as render_timing:
-                    content = render_variant_panel(
-                        view_name=view,
-                        view_label=viewer_config.label_for_view(view),
-                        rows=rows,
-                        include_rescore=include_rescore,
-                        include_truncate=include_truncate,
-                    )
-                    render_timing["row_count"] = len(rows)
-            request_timing["view"] = view
-            return HTMLResponse(content=content)
-
     return app
 
 
@@ -789,33 +742,6 @@ def render_summary_cards(summary: ViewerSummary) -> str:
     """
 
 
-def render_analysis_shell(*, view: str) -> str:
-    variant_query = urlencode({"panel": "variants", "view": view})
-    rerank_query = urlencode({"panel": "reranking", "view": view})
-    dataset_query = urlencode({"panel": "datasets", "view": view})
-    return f"""
-    <section class="mt-6 mb-5 border border-zinc-200 bg-white" aria-label="Analysis views">
-      <div class="px-3 pt-3">
-        <div class="mb-3">
-          {_section_title(icon="activity", text="Analysis views")}
-          <p class="text-sm text-zinc-600">Use these panels for paper-facing variant, reranking, and Nano subset audits.</p>
-        </div>
-        <div class="grid gap-2 sm:grid-cols-3">
-          <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
-                  hx-get="/analysis?{escape(variant_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("git-compare-arrows", class_name="hakari-icon action-icon shrink-0")}<span>Variant impact</span></button>
-          <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
-                  hx-get="/analysis?{escape(rerank_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("list-ordered", class_name="hakari-icon action-icon shrink-0")}<span>Reranking diagnostics</span></button>
-          <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
-                  hx-get="/analysis?{escape(dataset_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("database", class_name="hakari-icon action-icon shrink-0")}<span>Dataset diagnostics</span></button>
-        </div>
-      </div>
-      <div id="analysis-panel" class="px-3 pb-3">
-        <div class="mt-3 border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-600">Select an analysis view to load paper-facing diagnostics for the current benchmark view.</div>
-      </div>
-    </section>
-    """
-
-
 def render_leaderboard(
     *,
     result: LeaderboardResult,
@@ -853,7 +779,6 @@ def render_leaderboard(
       {render_table_body(result=result, filter_context=filter_context)}
     </table>
   </div>
-  {render_analysis_shell(view=result.view_name)}
   {render_model_detail_modal()}
   {render_doc_summary_modal()}
 </div>
@@ -1981,228 +1906,6 @@ def _csv_cell(value: object | None) -> str:
     return text
 
 
-def render_variant_panel(
-    *,
-    view_label: str,
-    rows,
-    include_rescore: bool = False,
-    include_truncate: bool = False,
-    view_name: str | None = None,
-) -> str:
-    rescore_toggle = _variant_analysis_toggle(
-        view_name=view_name,
-        label_enabled="Hide rescore",
-        label_disabled="Include rescore",
-        flag_name="include_rescore",
-        flag_value=include_rescore,
-        other_flags={"include_truncate": include_truncate},
-    )
-    truncate_toggle = _variant_analysis_toggle(
-        view_name=view_name,
-        label_enabled="Hide truncate_dim",
-        label_disabled="Include truncate_dim",
-        flag_name="include_truncate",
-        flag_value=include_truncate,
-        other_flags={"include_rescore": include_rescore},
-    )
-    if not rows:
-        body = """<tr><td class="px-3 py-5 text-center text-zinc-500" colspan="7">No embedding variant rows are available for this view.</td></tr>"""
-    else:
-        body = "".join(
-            f"""
-            <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
-              <td class="px-3 py-2 font-medium">{escape(row.model_name)}</td>
-              <td class="px-3 py-2">{escape(row.variant_name)}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
-              <td class="px-3 py-2">{escape(row.quantization or "original")}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score_100)}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent_delta(row.base_delta_percent)}</td>
-            </tr>
-            """
-            for row in rows
-        )
-    return f"""
-    <div class="px-3 py-3">
-      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h3 class="text-base font-semibold">Variant impact</h3>
-          <p class="text-sm text-zinc-600">{escape(view_label)}: base-relative score changes for embedding variants. Rescore and truncate_dim variants are hidden by default.</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          {rescore_toggle}
-          {truncate_toggle}
-          <p class="text-xs text-zinc-500">{len(rows):,} variant groups</p>
-        </div>
-      </div>
-      <div class="max-h-80 overflow-auto border border-zinc-200">
-        <table class="min-w-full text-sm">
-          <thead>
-            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
-              <th class="px-3 py-2 text-left">Model</th>
-              <th class="px-3 py-2 text-left">Variant</th>
-              <th class="px-3 py-2 text-right">Dims</th>
-              <th class="px-3 py-2 text-left">Quantization</th>
-              <th class="px-3 py-2 text-right">Tasks</th>
-              <th class="px-3 py-2 text-right">Mean score</th>
-              <th class="px-3 py-2 text-right">Delta vs base</th>
-            </tr>
-          </thead>
-          <tbody>{body}</tbody>
-        </table>
-      </div>
-    </div>
-    """
-
-
-def _variant_analysis_toggle(
-    *,
-    view_name: str | None,
-    label_enabled: str,
-    label_disabled: str,
-    flag_name: str,
-    flag_value: bool,
-    other_flags: dict[str, bool],
-) -> str:
-    if view_name is None:
-        return ""
-    query_payload = {
-        "panel": "variants",
-        "view": view_name,
-        flag_name: "0" if flag_value else "1",
-    }
-    query_payload.update({name: "1" for name, value in other_flags.items() if value})
-    toggle_query = urlencode(query_payload)
-    toggle_label = label_enabled if flag_value else label_disabled
-    toggle_classes = (
-        "border-cyan-700 bg-cyan-50 text-cyan-900"
-        if flag_value
-        else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-600 hover:text-cyan-700"
-    )
-    return f"""
-    <button type="button" class="border px-2 py-1 text-[0.8125rem] {toggle_classes}"
-            hx-get="/analysis?{escape(toggle_query, quote=True)}"
-            hx-target="#analysis-panel" hx-swap="innerHTML">{escape(toggle_label)}</button>
-    """
-
-
-def render_reranking_panel(*, view_label: str, rows) -> str:
-    if not rows:
-        return _empty_analysis_panel(
-            title="Reranking diagnostics",
-            body="No reranking diagnostic rows are available for this view.",
-        )
-    body = "".join(
-        f"""
-        <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
-          <td class="px-3 py-2 font-medium">{escape(row.benchmark)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.query_coverage_percent)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.relevant_coverage_percent)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_signed_points(row.mean_lift_points)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_max_len(row.rerank_top_k)}</td>
-          <td class="px-3 py-2">{escape(row.candidate_source or "")}</td>
-          <td class="px-3 py-2">{escape(row.candidate_ranking or "")}</td>
-          <td class="px-3 py-2">{escape(row.bm25_source or "")}</td>
-        </tr>
-        """
-        for row in rows
-    )
-    return f"""
-    <div class="px-3 py-3">
-      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h3 class="text-base font-semibold">Reranking diagnostics</h3>
-          <p class="text-sm text-zinc-600">{escape(view_label)}: candidate coverage and second-stage rerank lift.</p>
-        </div>
-        <p class="text-xs text-zinc-500">{len(rows):,} benchmark rows</p>
-      </div>
-      <div class="max-h-80 overflow-auto border border-zinc-200">
-        <table class="min-w-full text-sm">
-          <thead>
-            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
-              <th class="px-3 py-2 text-left">Benchmark</th>
-              <th class="px-3 py-2 text-right">Tasks</th>
-              <th class="px-3 py-2 text-right">Query coverage</th>
-              <th class="px-3 py-2 text-right">Relevant coverage</th>
-              <th class="px-3 py-2 text-right">Lift</th>
-              <th class="px-3 py-2 text-right">Top K</th>
-              <th class="px-3 py-2 text-left">Candidate source</th>
-              <th class="px-3 py-2 text-left">Ranking</th>
-              <th class="px-3 py-2 text-left">BM25 source</th>
-            </tr>
-          </thead>
-          <tbody>{body}</tbody>
-        </table>
-      </div>
-    </div>
-    """
-
-
-def render_dataset_diagnostics_panel(*, view_label: str, rows) -> str:
-    if not rows:
-        return _empty_analysis_panel(
-            title="Dataset diagnostics",
-            body="No dataset metadata rows are available for this view.",
-        )
-    body = "".join(
-        f"""
-        <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
-          <td class="px-3 py-2 font-medium">{escape(row.benchmark)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.language_count:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.category_count:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.base_rows:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.saturation_percent)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_query_count)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_document_count)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_query_chars)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_document_chars)}</td>
-        </tr>
-        """
-        for row in rows
-    )
-    return f"""
-    <div class="px-3 py-3">
-      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h3 class="text-base font-semibold">Dataset diagnostics</h3>
-          <p class="text-sm text-zinc-600">{escape(view_label)}: metadata coverage, sample sizes, text lengths, and score saturation.</p>
-        </div>
-        <p class="text-xs text-zinc-500">{len(rows):,} benchmark rows</p>
-      </div>
-      <div class="max-h-80 overflow-auto border border-zinc-200">
-        <table class="min-w-full text-sm">
-          <thead>
-            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
-              <th class="px-3 py-2 text-left">Benchmark</th>
-              <th class="px-3 py-2 text-right">Tasks</th>
-              <th class="px-3 py-2 text-right">Languages</th>
-              <th class="px-3 py-2 text-right">Categories</th>
-              <th class="px-3 py-2 text-right">Base rows</th>
-              <th class="px-3 py-2 text-right">Saturation</th>
-              <th class="px-3 py-2 text-right">Queries</th>
-              <th class="px-3 py-2 text-right">Docs</th>
-              <th class="px-3 py-2 text-right">Query chars</th>
-              <th class="px-3 py-2 text-right">Doc chars</th>
-            </tr>
-          </thead>
-          <tbody>{body}</tbody>
-        </table>
-      </div>
-    </div>
-    """
-
-
-def _empty_analysis_panel(*, title: str, body: str) -> str:
-    return f"""
-    <div class="px-3 py-4">
-      <h3 class="text-base font-semibold">{escape(title)}</h3>
-      <p class="mt-1 text-sm text-zinc-600">{escape(body)}</p>
-    </div>
-    """
-
-
 def _render_metric_cells(
     *,
     result: LeaderboardResult,
@@ -2456,18 +2159,6 @@ def _fmt_row_embedding_dim(row: LeaderboardRow) -> str:
 
 def _fmt_percent_delta(value: float | None) -> str:
     return "" if value is None else f"{value:+.1f}%"
-
-
-def _fmt_percent(value: float | None) -> str:
-    return "" if value is None else f"{value:.1f}%"
-
-
-def _fmt_signed_points(value: float | None) -> str:
-    return "" if value is None else f"{value:+.2f}"
-
-
-def _fmt_number(value: float | None) -> str:
-    return "" if value is None else f"{value:,.1f}"
 
 
 def _metric_column_label(column: str) -> str:

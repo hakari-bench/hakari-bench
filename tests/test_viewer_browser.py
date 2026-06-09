@@ -54,18 +54,8 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert section_icon_state["width"] == pytest.approx(14.0, abs=0.1)
                 assert section_icon_state["height"] == pytest.approx(14.0, abs=0.1)
                 assert section_icon_state["color"] != "rgb(0, 0, 0)"
-                assert page.locator("button", has_text="Variant impact").locator("svg[data-icon='git-compare-arrows']").count() == 1
+                assert page.locator("button", has_text="Variant impact").count() == 0
                 assert page.locator("summary", has_text="Languages").locator("svg[data-icon='languages']").count() == 1
-                compact_tile_state = page.locator("button", has_text="Variant impact").first.evaluate(
-                    """(el) => ({
-                        fontSize: parseFloat(getComputedStyle(el).fontSize),
-                        paddingLeft: parseFloat(getComputedStyle(el).paddingLeft),
-                        paddingTop: parseFloat(getComputedStyle(el).paddingTop),
-                    })"""
-                )
-                assert compact_tile_state["fontSize"] == pytest.approx(13.0, abs=0.1)
-                assert compact_tile_state["paddingLeft"] <= 8.0
-                assert compact_tile_state["paddingTop"] <= 4.0
                 language_tile_state = page.locator("nav[aria-label='Language pages'] button", has_text="All").first.evaluate(
                     """(el) => ({
                         fontSize: parseFloat(getComputedStyle(el).fontSize),

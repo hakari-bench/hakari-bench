@@ -29,8 +29,8 @@ analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
 exposes YAML task metadata for language, category, citation, and text-stat
 analysis, and `model_scores` /
 `borda_task_scores` are precomputed tables used by the static HTML report. The
-current HTMX viewer reads `task_diagnostics` / `dataset_metadata` for
-paper-facing analysis panels. It does not read `model_scores`.
+current HTMX viewer does not expose the analysis-oriented `task_diagnostics`
+surface and does not read `model_scores`.
 
 ## Generation
 
@@ -236,20 +236,15 @@ load time.
 
 ## HTMX Viewer Query Surfaces
 
-The web viewer exposes four user-facing query surfaces over the DuckDB file:
+The web viewer exposes the leaderboard query surface over the DuckDB file:
 
 | UI surface | source tables | semantics |
 | --- | --- | --- |
-| Summary cards | `task_results`, `dataset_metadata` | Counts distinct models, benchmarks, tasks, languages, base result rows, variant rows, and the latest available evaluation timestamp. |
 | Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores, `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`, and `Reranking without safeguard` removes the optional rank-101 safeguard positive before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
-| Variant impact | `task_results` | Joins each embedding variant row to the matching base row by `(model_name, benchmark, task_key)` and reports mean score plus relative delta versus base. This is intended for quantization-first comparisons; rescore and `truncate_dim` variants are hidden unless explicitly enabled in the panel. |
-| Reranking diagnostics | `task_diagnostics` | Aggregates candidate coverage and rerank lift by benchmark for the selected YAML view. |
-| Dataset diagnostics | `dataset_metadata`, `task_results` | Aggregates task metadata, query/document sample sizes, text lengths, and the fraction of base rows with `score >= 0.95` as a saturation signal. |
 
-Analysis panels are scoped by the same YAML view selection as the leaderboard.
-Configured overall views (`All`, `Core`, and `Group`) expand to their configured
-benchmark components before querying. The diagnostics panels are descriptive and
-do not alter leaderboard ranking.
+The page header also reads `task_results` for the latest available evaluation
+timestamp. Configured overall views (`All`, `Core`, and `Group`) expand to their
+configured benchmark components before querying the leaderboard.
 
 ## Table Overview
 
