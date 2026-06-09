@@ -4,29 +4,94 @@
 
 @layer base {
   :root {
-    color-scheme: light dark;
-    --hakari-bg: #f4f1e8;
-    --hakari-surface: #fffaf0;
-    --hakari-surface-muted: #ebe6d9;
-    --hakari-surface-faint: #f8f4eb;
-    --hakari-border: #d3ccb9;
-    --hakari-border-strong: #aaa18e;
-    --hakari-text: #1d1b18;
-    --hakari-text-muted: #70695c;
-    --hakari-text-faint: #918978;
-    --hakari-accent: #256d57;
-    --hakari-accent-soft: #dceee4;
-    --hakari-accent-border: #80b39d;
-    --hakari-warn-bg: #f7e7c6;
-    --hakari-warn-border: #c28f31;
-    --hakari-warn-text: #704b08;
-    --hakari-danger: #b24a57;
-    --hakari-danger-soft: #f3d7da;
-    --hakari-purple-soft: #e8e0ef;
-    --hakari-row-hover: #ece4d2;
+    color-scheme: light;
+    --hakari-bg: #f7fdff;
+    --hakari-surface: #ffffff;
+    --hakari-surface-muted: #e9f5f8;
+    --hakari-surface-faint: #f2fbfd;
+    --hakari-border: #bedbe3;
+    --hakari-border-strong: #85bdcc;
+    --hakari-grid: rgb(0 168 200 / 0.11);
+    --hakari-text: #243036;
+    --hakari-text-muted: #637078;
+    --hakari-text-faint: #87949a;
+    --hakari-accent: #0077aa;
+    --hakari-accent-strong: #005f88;
+    --hakari-accent-soft: rgb(0 119 170 / 0.1);
+    --hakari-accent-border: #85bdcc;
+    --hakari-warn-bg: #fff6df;
+    --hakari-warn-border: #d8b56b;
+    --hakari-warn-text: #a96b00;
+    --hakari-danger: #ff5888;
+    --hakari-danger-soft: rgb(255 88 136 / 0.12);
+    --hakari-purple: #765aa8;
+    --hakari-purple-soft: rgb(118 90 168 / 0.12);
+    --hakari-code-bg: rgb(255 255 255 / 0.66);
+    --hakari-row-hover: rgb(0 168 200 / 0.08);
     --hakari-font:
-      "SFMono-Regular", "Cascadia Code", "Roboto Mono", "Noto Sans Mono",
-      "Yu Gothic UI", "Meiryo", ui-monospace, monospace;
+      "JetBrains Mono", "Fira Code", "SFMono-Regular", "Cascadia Code",
+      "Roboto Mono", "Noto Sans Mono", "Yu Gothic UI", "Meiryo",
+      ui-monospace, monospace;
+  }
+
+  :root.light {
+    color-scheme: light;
+  }
+
+  :root.dark {
+    color-scheme: dark;
+    --hakari-bg: #202628;
+    --hakari-surface: #2b3133;
+    --hakari-surface-muted: #343d40;
+    --hakari-surface-faint: #252c2e;
+    --hakari-border: #435358;
+    --hakari-border-strong: #5b7880;
+    --hakari-grid: rgb(0 208 255 / 0.08);
+    --hakari-text: #f1fbff;
+    --hakari-text-muted: #abb9bd;
+    --hakari-text-faint: #768589;
+    --hakari-accent: #00d0ff;
+    --hakari-accent-strong: #a8f0ff;
+    --hakari-accent-soft: rgb(0 208 255 / 0.11);
+    --hakari-accent-border: #5b7880;
+    --hakari-warn-bg: rgb(239 208 106 / 0.11);
+    --hakari-warn-border: #8f7431;
+    --hakari-warn-text: #efd06a;
+    --hakari-danger: #ff5888;
+    --hakari-danger-soft: rgb(255 88 136 / 0.13);
+    --hakari-purple: #b99cff;
+    --hakari-purple-soft: rgb(185 156 255 / 0.14);
+    --hakari-code-bg: rgb(12 15 16 / 0.44);
+    --hakari-row-hover: rgb(0 208 255 / 0.09);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light) {
+      color-scheme: dark;
+      --hakari-bg: #202628;
+      --hakari-surface: #2b3133;
+      --hakari-surface-muted: #343d40;
+      --hakari-surface-faint: #252c2e;
+      --hakari-border: #435358;
+      --hakari-border-strong: #5b7880;
+      --hakari-grid: rgb(0 208 255 / 0.08);
+      --hakari-text: #f1fbff;
+      --hakari-text-muted: #abb9bd;
+      --hakari-text-faint: #768589;
+      --hakari-accent: #00d0ff;
+      --hakari-accent-strong: #a8f0ff;
+      --hakari-accent-soft: rgb(0 208 255 / 0.11);
+      --hakari-accent-border: #5b7880;
+      --hakari-warn-bg: rgb(239 208 106 / 0.11);
+      --hakari-warn-border: #8f7431;
+      --hakari-warn-text: #efd06a;
+      --hakari-danger: #ff5888;
+      --hakari-danger-soft: rgb(255 88 136 / 0.13);
+      --hakari-purple: #b99cff;
+      --hakari-purple-soft: rgb(185 156 255 / 0.14);
+      --hakari-code-bg: rgb(12 15 16 / 0.44);
+      --hakari-row-hover: rgb(0 208 255 / 0.09);
+    }
   }
 
   body {
@@ -39,51 +104,23 @@
 
   body::before {
     background-image:
-      linear-gradient(rgb(255 255 255 / 0.18) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(29 27 24 / 0.05) 1px, transparent 1px),
-      radial-gradient(circle at 1px 1px, rgb(29 27 24 / 0.08) 1px, transparent 0);
+      linear-gradient(var(--hakari-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--hakari-grid) 1px, transparent 1px),
+      radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.08) 1px, transparent 0);
     background-size:
-      100% 3rem,
-      3rem 100%,
+      28px 28px,
+      28px 28px,
       4px 4px;
     content: "";
     inset: 0;
-    opacity: 0.36;
+    opacity: 0.72;
     pointer-events: none;
     position: fixed;
     z-index: -1;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --hakari-bg: #29292d;
-      --hakari-surface: #242428;
-      --hakari-surface-muted: #303035;
-      --hakari-surface-faint: #2a2a2f;
-      --hakari-border: #45474c;
-      --hakari-border-strong: #5b625f;
-      --hakari-text: #f0eee8;
-      --hakari-text-muted: #aaa8a1;
-      --hakari-text-faint: #7f7f7b;
-      --hakari-accent: #8bd99a;
-      --hakari-accent-soft: #23352c;
-      --hakari-accent-border: #5a8d66;
-      --hakari-warn-bg: #3d2c1c;
-      --hakari-warn-border: #a46a22;
-      --hakari-warn-text: #f0c36f;
-      --hakari-danger: #ff7d8a;
-      --hakari-danger-soft: #41272d;
-      --hakari-purple-soft: #332b3c;
-      --hakari-row-hover: #38393d;
-    }
-
-    body::before {
-      background-image:
-        linear-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgb(255 255 255 / 0.025) 1px, transparent 1px),
-        radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.16) 1px, transparent 0);
-      opacity: 0.42;
-    }
+  ::selection {
+    background: color-mix(in srgb, var(--hakari-accent) 22%, transparent);
   }
 }
 
@@ -182,7 +219,7 @@
   }
 
   .text-violet-800 {
-    color: #765a8f;
+    color: var(--hakari-purple);
   }
 
   .border-zinc-200,
@@ -202,7 +239,7 @@
   }
 
   .border-violet-200 {
-    border-color: #a78bbd;
+    border-color: color-mix(in srgb, var(--hakari-purple) 48%, var(--hakari-border));
   }
 
   input,
@@ -212,6 +249,7 @@
   summary,
   details {
     border-color: var(--hakari-border);
+    color-scheme: inherit;
   }
 
   input,
@@ -235,6 +273,40 @@
   .hakari-icon {
     height: 0.875rem;
     width: 0.875rem;
+  }
+
+  .theme-toggle {
+    background-color: var(--hakari-code-bg);
+    border-color: var(--hakari-border);
+    color: var(--hakari-accent);
+  }
+
+  .theme-toggle:hover,
+  .theme-toggle:focus {
+    border-color: var(--hakari-accent);
+    color: var(--hakari-accent-strong);
+  }
+
+  .theme-toggle-icon-dark {
+    display: none;
+  }
+
+  :root.dark .theme-toggle-icon-light {
+    display: none;
+  }
+
+  :root.dark .theme-toggle-icon-dark {
+    display: block;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light) .theme-toggle-icon-light {
+      display: none;
+    }
+
+    :root:not(.light) .theme-toggle-icon-dark {
+      display: block;
+    }
   }
 
   .tooltip-trigger .hakari-icon,
@@ -569,109 +641,203 @@
     }
   }
 
+  :root.dark .shadow-sm {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  }
+
+  :root.dark dialog::backdrop {
+    background-color: rgb(12 15 16 / 0.76);
+  }
+
+  :root.dark .global-tooltip {
+    border-color: var(--hakari-border-strong);
+    background-color: var(--hakari-surface);
+    color: var(--hakari-text);
+  }
+
+  :root.dark .task-z-score {
+    border-color: rgb(241 251 255 / 0.22);
+  }
+
+  :root.dark .task-z-pos-025 {
+    background-color: theme("colors.emerald.950");
+    color: theme("colors.emerald.200");
+  }
+
+  :root.dark .task-z-pos-050 {
+    background-color: theme("colors.emerald.900");
+    color: theme("colors.emerald.100");
+  }
+
+  :root.dark .task-z-pos-075 {
+    background-color: theme("colors.emerald.800");
+    color: theme("colors.emerald.50");
+  }
+
+  :root.dark .task-z-pos-100 {
+    background-color: theme("colors.emerald.700");
+    color: theme("colors.white");
+  }
+
+  :root.dark .task-z-pos-125 {
+    background-color: theme("colors.emerald.600");
+    color: theme("colors.white");
+  }
+
+  :root.dark .task-z-pos-150 {
+    background-color: theme("colors.emerald.500");
+    color: theme("colors.emerald.950");
+  }
+
+  :root.dark .task-z-pos-175 {
+    background-color: theme("colors.emerald.400");
+    color: theme("colors.emerald.950");
+  }
+
+  :root.dark .task-z-pos-200 {
+    background-color: theme("colors.emerald.300");
+    color: theme("colors.emerald.950");
+  }
+
+  :root.dark .task-z-neg-025 {
+    background-color: theme("colors.rose.950");
+    color: theme("colors.rose.200");
+  }
+
+  :root.dark .task-z-neg-050 {
+    background-color: theme("colors.rose.900");
+    color: theme("colors.rose.100");
+  }
+
+  :root.dark .task-z-neg-075 {
+    background-color: theme("colors.rose.800");
+    color: theme("colors.rose.50");
+  }
+
+  :root.dark .task-z-neg-100 {
+    background-color: theme("colors.rose.700");
+    color: theme("colors.white");
+  }
+
+  :root.dark .task-z-neg-125 {
+    background-color: theme("colors.rose.600");
+    color: theme("colors.white");
+  }
+
+  :root.dark .task-z-neg-150 {
+    background-color: theme("colors.rose.500");
+    color: theme("colors.white");
+  }
+
+  :root.dark .task-z-neg-175 {
+    background-color: theme("colors.rose.600");
+    color: theme("colors.white");
+  }
+
+  :root.dark .task-z-neg-200 {
+    background-color: theme("colors.rose.700");
+    color: theme("colors.white");
+  }
+
   @media (prefers-color-scheme: dark) {
     .shadow-sm {
       box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.5);
     }
 
-    input,
-    select,
-    textarea,
-    button,
-    summary {
-      color-scheme: dark;
+    :root.light .shadow-sm {
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.18);
     }
 
-    dialog::backdrop {
-      background-color: rgb(24 24 27 / 0.76);
+    :root:not(.light) dialog::backdrop {
+      background-color: rgb(12 15 16 / 0.76);
     }
 
-    .global-tooltip {
+    :root:not(.light) .global-tooltip {
       border-color: var(--hakari-border-strong);
       background-color: var(--hakari-surface);
       color: var(--hakari-text);
     }
 
-    .task-z-score {
-      border-color: rgb(240 238 232 / 0.22);
+    :root:not(.light) .task-z-score {
+      border-color: rgb(241 251 255 / 0.22);
     }
 
-    .task-z-pos-025 {
+    :root:not(.light) .task-z-pos-025 {
       background-color: theme("colors.emerald.950");
       color: theme("colors.emerald.200");
     }
 
-    .task-z-pos-050 {
+    :root:not(.light) .task-z-pos-050 {
       background-color: theme("colors.emerald.900");
       color: theme("colors.emerald.100");
     }
 
-    .task-z-pos-075 {
+    :root:not(.light) .task-z-pos-075 {
       background-color: theme("colors.emerald.800");
       color: theme("colors.emerald.50");
     }
 
-    .task-z-pos-100 {
+    :root:not(.light) .task-z-pos-100 {
       background-color: theme("colors.emerald.700");
       color: theme("colors.white");
     }
 
-    .task-z-pos-125 {
+    :root:not(.light) .task-z-pos-125 {
       background-color: theme("colors.emerald.600");
       color: theme("colors.white");
     }
 
-    .task-z-pos-150 {
+    :root:not(.light) .task-z-pos-150 {
       background-color: theme("colors.emerald.500");
       color: theme("colors.emerald.950");
     }
 
-    .task-z-pos-175 {
+    :root:not(.light) .task-z-pos-175 {
       background-color: theme("colors.emerald.400");
       color: theme("colors.emerald.950");
     }
 
-    .task-z-pos-200 {
+    :root:not(.light) .task-z-pos-200 {
       background-color: theme("colors.emerald.300");
       color: theme("colors.emerald.950");
     }
 
-    .task-z-neg-025 {
+    :root:not(.light) .task-z-neg-025 {
       background-color: theme("colors.rose.950");
       color: theme("colors.rose.200");
     }
 
-    .task-z-neg-050 {
+    :root:not(.light) .task-z-neg-050 {
       background-color: theme("colors.rose.900");
       color: theme("colors.rose.100");
     }
 
-    .task-z-neg-075 {
+    :root:not(.light) .task-z-neg-075 {
       background-color: theme("colors.rose.800");
       color: theme("colors.rose.50");
     }
 
-    .task-z-neg-100 {
+    :root:not(.light) .task-z-neg-100 {
       background-color: theme("colors.rose.700");
       color: theme("colors.white");
     }
 
-    .task-z-neg-125 {
+    :root:not(.light) .task-z-neg-125 {
       background-color: theme("colors.rose.600");
       color: theme("colors.white");
     }
 
-    .task-z-neg-150 {
+    :root:not(.light) .task-z-neg-150 {
       background-color: theme("colors.rose.500");
       color: theme("colors.white");
     }
 
-    .task-z-neg-175 {
+    :root:not(.light) .task-z-neg-175 {
       background-color: theme("colors.rose.600");
       color: theme("colors.white");
     }
 
-    .task-z-neg-200 {
+    :root:not(.light) .task-z-neg-200 {
       background-color: theme("colors.rose.700");
       color: theme("colors.white");
     }

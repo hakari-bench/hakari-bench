@@ -740,9 +740,13 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert response.status_code == 200
     assert "<title>HAKARI-Bench leaderboard</title>" in response.text
     assert "HAKARI-Bench leaderboard" in response.text
-    assert '<h1 class="flex items-center gap-2 text-2xl font-semibold">' in response.text
+    assert '<h1 class="flex min-w-0 items-center gap-2 text-2xl font-semibold">' in response.text
     assert '<img src="/assets/favicon.png?' in response.text
     assert 'alt="" aria-hidden="true" class="h-8 w-8 shrink-0">' in response.text
+    assert 'id="hakari-theme-toggle"' in response.text
+    assert 'aria-label="Toggle color theme"' in response.text
+    assert 'data-icon="moon"' in response.text
+    assert 'data-icon="sun"' in response.text
     assert '<p class="text-sm font-medium text-cyan-700">HAKARI-Bench leaderboard</p>' not in response.text
     assert (
         "🚧 WIP: This leaderboard is currently under active implementation, "
@@ -836,7 +840,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert css_response.status_code == 200
     assert css_response.headers["content-type"].startswith("text/css")
     assert "prefers-color-scheme:dark" in css_response.text
-    assert "color-scheme:light dark" in css_response.text
+    assert ":root.dark" in css_response.text
+    assert "JetBrains Mono" in css_response.text
+    assert ".theme-toggle" in css_response.text
     assert ".leaderboard-loading-toast.htmx-request" in css_response.text
     assert "hakari-leaderboard-spin" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
@@ -856,6 +862,10 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "window.__hakariApplyHashQueryState" in viewer_js_response.text
     assert "window.__hakariSyncHashQueryStateToParent" in viewer_js_response.text
     assert "window.__hakariSetLeaderboardPending" in viewer_js_response.text
+    assert "window.__hakariApplyTheme" in viewer_js_response.text
+    assert "window.__hakariBindThemeToggle" in viewer_js_response.text
+    assert "window.__hakariSyncThemeToggle" in viewer_js_response.text
+    assert 'window.matchMedia("(prefers-color-scheme: dark)")' in viewer_js_response.text
     assert "window.__hakariShowTooltip" in viewer_js_response.text
     assert "window.__hakariHideTooltip" in viewer_js_response.text
     assert "window.__hakariPositionTooltip" in viewer_js_response.text
@@ -3558,7 +3568,7 @@ def test_task_z_score_heatmap_css_defines_light_and_dark_buckets() -> None:
     for direction in ("pos", "neg"):
         for bucket in ("025", "050", "075", "100", "125", "150", "175", "200"):
             selector = f".task-z-{direction}-{bucket}"
-            assert css_source.count(selector) == 2
+            assert css_source.count(selector) == 3
 
 
 def test_task_z_score_heatmap_css_uses_intuitive_positive_negative_colors() -> None:
@@ -3570,7 +3580,7 @@ def test_task_z_score_heatmap_css_uses_intuitive_positive_negative_colors() -> N
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-size: 0\.5625rem;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
-    assert re.search(r"\.task-z-score\s*{[^}]*border-color: rgb\(240 238 232 / 0\.22\);", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score\s*{[^}]*border-color: rgb\(241 251 255 / 0\.22\);", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-pos-025\s*{\s*background-color: #f4f1df;", css_source)
     assert re.search(r"\.task-z-pos-200\s*{\s*background-color: #566126;", css_source)
     assert re.search(r"\.task-z-neg-025\s*{\s*background-color: #f7ebe4;", css_source)

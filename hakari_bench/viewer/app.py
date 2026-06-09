@@ -141,9 +141,11 @@ _ICON_PATHS = {
     "layers": '<path d="m12.83 2.18 8.5 4.73a1 1 0 0 1 0 1.75l-8.5 4.73a1.7 1.7 0 0 1-1.66 0l-8.5-4.73a1 1 0 0 1 0-1.75l8.5-4.73a1.7 1.7 0 0 1 1.66 0Z"/><path d="m22 12.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 17.5"/>',
     "list-ordered": '<path d="M11 5h10"/><path d="M11 12h10"/><path d="M11 19h10"/><path d="M4 4h1v5"/><path d="M4 9h2"/><path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"/>',
     "message-square-text": '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M7 11h10"/><path d="M7 15h6"/><path d="M7 7h8"/>',
+    "moon": '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
     "ruler": '<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>',
     "scan-eye": '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="1"/><path d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0"/>',
     "shapes": '<path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/>',
+    "sun": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
     "table-properties": '<path d="M15 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M21 9H3"/><path d="M21 15H3"/>',
     "type": '<path d="M12 4v16"/><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"/><path d="M9 20h6"/>',
 }
@@ -540,6 +542,7 @@ def render_page(
     viewer_js_url = _asset_url("viewer.js")
     latest_update = _latest_update_label(summary.latest_finished_at_utc if summary else None)
     footer = _render_page_footer(latest_update=latest_update, database_label=database_label)
+    theme_toggle = _render_theme_toggle()
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -556,10 +559,13 @@ def render_page(
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
     <header class="mb-5 border-b border-zinc-200 pb-4">
-      <h1 class="flex items-center gap-2 text-2xl font-semibold">
-        <img src="{favicon_url}" alt="" aria-hidden="true" class="h-8 w-8 shrink-0">
-        <span>HAKARI-Bench leaderboard</span>
-      </h1>
+      <div class="flex items-start justify-between gap-3">
+        <h1 class="flex min-w-0 items-center gap-2 text-2xl font-semibold">
+          <img src="{favicon_url}" alt="" aria-hidden="true" class="h-8 w-8 shrink-0">
+          <span>HAKARI-Bench leaderboard</span>
+        </h1>
+        {theme_toggle}
+      </div>
       <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
       <p class="mt-2 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
     </header>
@@ -612,6 +618,14 @@ def render_global_tooltip() -> str:
     <div id="hakari-global-tooltip" class="global-tooltip fixed border border-zinc-300 bg-white px-2 py-1 text-xs font-medium text-zinc-800 shadow-sm"
          role="tooltip" hidden></div>
     """
+
+
+def _render_theme_toggle() -> str:
+    return f"""<button id="hakari-theme-toggle" type="button" class="theme-toggle grid h-8 w-8 shrink-0 place-items-center border"
+          aria-label="Toggle color theme" aria-pressed="false" title="Toggle color theme">
+          <span class="theme-toggle-icon-light">{_icon_svg("moon", class_name="hakari-icon")}</span>
+          <span class="theme-toggle-icon-dark">{_icon_svg("sun", class_name="hakari-icon")}</span>
+        </button>"""
 
 
 def _render_page_footer(*, latest_update: str, database_label: str) -> str:

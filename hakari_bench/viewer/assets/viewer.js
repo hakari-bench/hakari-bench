@@ -7,6 +7,73 @@
     return target.closest(selector);
   }
 
+  const themeStorageKey = "hakari-theme";
+  const themeQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+
+  function storedTheme() {
+    try {
+      const value = window.localStorage.getItem(themeStorageKey);
+      return value === "dark" || value === "light" ? value : null;
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function storeTheme(theme) {
+    try {
+      window.localStorage.setItem(themeStorageKey, theme);
+    } catch (_error) {
+      // Theme switching should still work when storage is unavailable.
+    }
+  }
+
+  function effectiveTheme() {
+    const root = document.documentElement;
+    if (root.classList.contains("dark")) return "dark";
+    if (root.classList.contains("light")) return "light";
+    return themeQuery && themeQuery.matches ? "dark" : "light";
+  }
+
+  window.__hakariApplyTheme = (theme, persist) => {
+    const root = document.documentElement;
+    root.classList.toggle("dark", theme === "dark");
+    root.classList.toggle("light", theme === "light");
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+    if (persist) storeTheme(theme);
+    window.__hakariSyncThemeToggle();
+  };
+
+  window.__hakariSyncThemeToggle = () => {
+    const button = document.getElementById("hakari-theme-toggle");
+    if (!button) return;
+    const theme = effectiveTheme();
+    const isDark = theme === "dark";
+    const label = isDark ? "Switch to light theme" : "Switch to dark theme";
+    button.setAttribute("aria-label", label);
+    button.setAttribute("aria-pressed", String(isDark));
+    button.setAttribute("title", label);
+  };
+
+  window.__hakariBindThemeToggle = () => {
+    const button = document.getElementById("hakari-theme-toggle");
+    if (!button || button.dataset.themeToggleBound === "true") return;
+    button.dataset.themeToggleBound = "true";
+    button.addEventListener("click", () => {
+      const nextTheme = effectiveTheme() === "dark" ? "light" : "dark";
+      window.__hakariApplyTheme(nextTheme, true);
+    });
+    window.__hakariSyncThemeToggle();
+  };
+
+  const initialStoredTheme = storedTheme();
+  if (initialStoredTheme) window.__hakariApplyTheme(initialStoredTheme, false);
+  if (themeQuery) {
+    themeQuery.addEventListener("change", () => {
+      if (!storedTheme()) window.__hakariSyncThemeToggle();
+    });
+  }
+
   function paramsFrom(value) {
     const raw = (value || "").replace(/^[#?]/, "");
     return raw ? new URLSearchParams(raw) : new URLSearchParams();
@@ -281,7 +348,9 @@
   window.addEventListener("resize", window.__hakariHideTooltip);
 
   window.__hakariApplyHashQueryState();
+  window.__hakariBindThemeToggle();
   window.__hakariBindModelDetails();
+  document.addEventListener("DOMContentLoaded", window.__hakariBindThemeToggle, { once: true });
   document.addEventListener("DOMContentLoaded", window.__hakariSyncHashQueryStateToParent, { once: true });
   document.addEventListener("htmx:beforeRequest", (event) => window.__hakariSetLeaderboardPending(event, true));
   document.addEventListener("htmx:afterRequest", (event) => window.__hakariSetLeaderboardPending(event, false));
