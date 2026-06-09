@@ -55,6 +55,11 @@ AGGREGATED_CONFIG_KEYS = [
     "sparse_document_max_active_dims",
     "sparse_truncation",
     "retrieval_score_device",
+    "encode_kwargs",
+    "query_encode_kwargs",
+    "document_encode_kwargs",
+    "model_loader",
+    "model_loader_kwargs",
     "late_interaction",
 ]
 PROMPT_CONFIG_KEYS = [
@@ -264,6 +269,9 @@ def run_or_load_task(
             embedding_variants=getattr(args, "embedding_variants", []),
             rerank_top_n=args.rerank_top_n,
             candidate_ranking_name=getattr(args, "candidate_subset_name", None),
+            encode_kwargs=getattr(args, "encode_kwargs", {}),
+            query_encode_kwargs=getattr(args, "query_encode_kwargs", {}),
+            corpus_encode_kwargs=getattr(args, "document_encode_kwargs", {}),
         )
     else:
         evaluation = evaluate_dense_task(
@@ -288,6 +296,9 @@ def run_or_load_task(
             encode_devices=getattr(args, "encode_devices", None),
             encode_chunk_size=getattr(args, "encode_chunk_size", None),
             encode_pool=getattr(args, "encode_pool", None),
+            encode_kwargs=getattr(args, "encode_kwargs", {}),
+            query_encode_kwargs=getattr(args, "query_encode_kwargs", {}),
+            corpus_encode_kwargs=getattr(args, "document_encode_kwargs", {}),
         )
     elapsed = time.perf_counter() - start
     finished_at = datetime.now(timezone.utc)
@@ -331,6 +342,11 @@ def run_or_load_task(
             "retrieval_score_device": getattr(args, "score_device", "auto"),
             "encode_devices": getattr(args, "encode_devices", None),
             "encode_chunk_size": getattr(args, "encode_chunk_size", None),
+            "encode_kwargs": getattr(args, "encode_kwargs", {}),
+            "query_encode_kwargs": getattr(args, "query_encode_kwargs", {}),
+            "document_encode_kwargs": getattr(args, "document_encode_kwargs", {}),
+            "model_loader": getattr(args, "model_loader", None),
+            "model_loader_kwargs": _redact_sensitive_payload(getattr(args, "model_loader_kwargs", {}) or {}),
             "reranker_init_kwargs": getattr(args, "cross_encoder_kwargs", {})
             if args.model_type == "reranker"
             else {},
@@ -888,6 +904,22 @@ def _summarize_distance_evaluations(value: Any) -> list[dict[str, Any]]:
             }
         )
     return summaries
+
+
+def _redact_sensitive_payload(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: "<redacted>" if _is_sensitive_key(str(key)) else _redact_sensitive_payload(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_redact_sensitive_payload(item) for item in value]
+    return value
+
+
+def _is_sensitive_key(key: str) -> bool:
+    normalized = key.lower()
+    return any(marker in normalized for marker in ("api_key", "apikey", "token", "secret", "password", "credential"))
 
 
 def _consistent_task_model_metadata(results: list[TaskRunResult]) -> dict[str, Any] | None:

@@ -119,6 +119,12 @@ uv run python scripts/build_results_database_and_report.py \
   --append-output-duckdb output/hakari-results/merged.duckdb
 ```
 
+The configured latest remote DuckDB is cached at
+`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb` by default and
+is shared with the web viewer's Hugging Face dataset source. The cache path is
+overridable with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH`; the sidecar metadata
+path is overridable with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH`.
+
 When an append directory contains exactly one logical local experiment, use
 `--model-name-override local/experiment_name` to rewrite the loaded
 `model_name` without editing the original result JSON.

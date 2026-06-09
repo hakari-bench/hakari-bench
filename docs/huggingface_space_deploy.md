@@ -199,6 +199,10 @@ When the viewer uses the Hugging Face dataset source, it checks/downloads the
 DuckDB source at startup and then caches the source check for 10 minutes per
 running process. Requests served within that window use the already-local
 `/data/viewer/hakari_bench.duckdb` file and do not call `hf_hub_download()`.
+Remote DuckDB downloads are first synchronized into a shared remote latest cache
+(`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb` by default)
+using Hugging Face file metadata and a sidecar SHA-1 to avoid repeated downloads
+or local copies when the content has not changed.
 
 The same viewer can be pointed at a different source locally or in a Space with:
 
@@ -208,6 +212,8 @@ The same viewer can be pointed at a different source locally or in a Space with:
 - `HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID`
 - `HAKARI_BENCH_VIEWER_HF_DATASET_PATH`
 - `HAKARI_BENCH_VIEWER_HF_DATASET_REVISION`
+- `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH`
+- `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH`
 - `HAKARI_BENCH_VIEWER_FRAME_ANCESTORS`
 
 ## URL State in Embedded Spaces

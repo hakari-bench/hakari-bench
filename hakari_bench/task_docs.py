@@ -57,6 +57,10 @@ class PositivesPerQueryMetadata(TaskDocsModel):
 class TextStatsCharsMetadata(TaskDocsModel):
     query_mean: NonNegativeFloat
     document_mean: NonNegativeFloat
+    query_median: NonNegativeFloat | None = None
+    query_max: NonNegativeInt | None = None
+    document_median: NonNegativeFloat | None = None
+    document_max: NonNegativeInt | None = None
 
 
 class BM25Metadata(TaskDocsModel):

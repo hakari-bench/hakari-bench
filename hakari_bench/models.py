@@ -11,6 +11,8 @@ from typing import Any
 
 import torch
 
+from hakari_bench.model_protocols import validate_model_capabilities
+
 try:
     HfApi: Any = getattr(importlib.import_module("huggingface_hub"), "HfApi")
 except Exception:  # pragma: no cover
@@ -21,6 +23,8 @@ except Exception:  # pragma: no cover
 class ModelLoadConfig:
     model_name_or_path: str
     model_type: str = "dense"
+    model_loader: str | None = None
+    model_loader_kwargs: dict[str, Any] | None = None
     model_revision: str | None = None
     dtype: str = "bf16"
     attn_implementation: str | None = None
@@ -372,6 +376,11 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
 
 
 def load_model(config: ModelLoadConfig) -> Any:
+    if config.model_loader is not None:
+        model = _load_custom_model(config)
+        validate_model_capabilities(model, model_type=config.model_type)
+        return model
+
     model_kwargs = _model_kwargs(config)
     attn_implementation = resolve_attn_implementation(
         attn_implementation=config.attn_implementation,
@@ -461,9 +470,29 @@ def load_model(config: ModelLoadConfig) -> Any:
         model = _import_cross_encoder()(config.model_name_or_path, **kwargs)
         _set_model_dtype(model, config.dtype)
         _set_attn_implementation(model, attn_implementation)
+        validate_model_capabilities(model, model_type=config.model_type)
         return model
 
     raise ValueError(f"Unsupported model type: {config.model_type}")
+
+
+def _load_custom_model(config: ModelLoadConfig) -> Any:
+    loader = config.model_loader
+    if loader is None:
+        raise ValueError("Custom model loader was requested without a loader path.")
+    factory = _import_loader_factory(loader)
+    return factory(config)
+
+
+def _import_loader_factory(loader: str) -> Any:
+    module_name, separator, attr_name = loader.partition(":")
+    if not separator or not module_name or not attr_name:
+        raise ValueError("--model-loader must use 'module:function' syntax.")
+    module = importlib.import_module(module_name)
+    factory = getattr(module, attr_name)
+    if not callable(factory):
+        raise TypeError(f"Custom model loader {loader!r} is not callable.")
+    return factory
 
 
 def _tokenizer_default_max_length(tokenizer: Any) -> int | None:
@@ -666,6 +695,9 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
         getattr(args, "model_source", {"type": "huggingface", "name": args.model}),
         requested_revision=getattr(args, "model_revision", None),
     )
+    model_loader = getattr(args, "model_loader", None)
+    backend_metadata = _custom_model_metadata(model)
+    backend_payload = _backend_payload(args)
     payload: dict[str, Any] = {
         "method": args.model_type,
         "id": getattr(args, "model_id", args.model),
@@ -677,7 +709,7 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
             flash_attn2=args.flash_attn2,
         ),
         "trust_remote_code": args.trust_remote_code,
-        "backend_library": "pylate" if args.model_type == "late-interaction" else "sentence-transformers",
+        "backend_library": _backend_library_name(args, backend_metadata=backend_metadata),
         "max_seq_length": getattr(model, "max_seq_length", getattr(model, "max_length", None)),
         "similarity_fn_name": str(getattr(model, "similarity_fn_name", "")) or None,
         "prompts": getattr(model, "prompts", None),
@@ -688,6 +720,12 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
         "transformer_parameters": active_parameters,
         "active_parameters": active_parameters,
     }
+    if backend_payload:
+        payload["backend"] = backend_payload
+    if model_loader is not None:
+        payload["loader"] = model_loader
+    if backend_metadata:
+        payload["backend_metadata"] = _redact_sensitive_payload(backend_metadata)
     if args.model_type == "late-interaction":
         payload["late_interaction"] = {
             "architecture": "colbert",
@@ -700,6 +738,51 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
             "attend_to_expansion_tokens": getattr(model, "attend_to_expansion_tokens", None),
         }
     return payload
+
+
+def _backend_library_name(args: Any, *, backend_metadata: dict[str, Any]) -> str:
+    backend_library = backend_metadata.get("backend_library")
+    if isinstance(backend_library, str) and backend_library:
+        return backend_library
+    if getattr(args, "model_loader", None) is not None:
+        return "custom"
+    return "pylate" if args.model_type == "late-interaction" else "sentence-transformers"
+
+
+def _backend_payload(args: Any) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "loader": getattr(args, "model_loader", None),
+        "loader_kwargs": _redact_sensitive_payload(getattr(args, "model_loader_kwargs", {}) or {}),
+    }
+    if payload["loader"] is None and not payload["loader_kwargs"]:
+        return {}
+    return payload
+
+
+def _custom_model_metadata(model: Any) -> dict[str, Any]:
+    metadata_fn = getattr(model, "metadata", None)
+    if not callable(metadata_fn):
+        return {}
+    metadata = metadata_fn()
+    if not isinstance(metadata, dict):
+        raise TypeError("model.metadata() must return a JSON-serializable object mapping.")
+    return dict(metadata)
+
+
+def _redact_sensitive_payload(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: "<redacted>" if _is_sensitive_key(str(key)) else _redact_sensitive_payload(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_redact_sensitive_payload(item) for item in value]
+    return value
+
+
+def _is_sensitive_key(key: str) -> bool:
+    normalized = key.lower()
+    return any(marker in normalized for marker in ("api_key", "apikey", "token", "secret", "password", "credential"))
 
 
 def _model_source_with_revision(source: Any, *, requested_revision: str | None) -> Any:

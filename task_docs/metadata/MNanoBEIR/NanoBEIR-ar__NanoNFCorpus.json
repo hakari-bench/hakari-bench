@@ -17,23 +17,27 @@
     "counts": {
       "queries": 50,
       "documents": 2953,
-      "positive_qrels": 1651
+      "positive_qrels": 2518
     },
     "positives_per_query": {
-      "average": 33.02,
+      "average": 50.36,
       "min": 1,
       "median": 23.5,
-      "max": 100,
+      "max": 463,
       "multi_positive_queries": 47,
       "multi_positive_query_percent": 94.0
     },
     "text_stats_chars": {
       "query_mean": 22.3,
-      "document_mean": 1408.180833
+      "document_mean": 1408.180833,
+      "query_median": 20.0,
+      "query_max": 57,
+      "document_median": 1376.0,
+      "document_max": 57995
     },
     "bm25": {
-      "ndcg_at_10": 0.23495873584649601,
-      "hit_at_10": 0.56,
+      "ndcg_at_10": 0.16628488356264892,
+      "hit_at_10": 0.5,
       "source": "dataset_candidate_subset"
     },
     "candidate_subsets": {
@@ -42,47 +46,47 @@
         "label": "BM25",
         "source": "dataset_candidate_subset",
         "top_k": 500,
-        "ndcg_at_10": 0.2349587358,
-        "hit_at_10": 0.56,
-        "recall_at_100": 0.1568746214,
+        "ndcg_at_10": 0.16628488356264892,
+        "hit_at_10": 0.5,
+        "recall_at_100": 0.12812738326255954,
         "candidate_count_min": 500,
         "candidate_count_max": 500,
         "candidate_count_mean": 500.0,
         "query_count": 50,
         "query_coverage": 1.0,
-        "relevant_coverage_at_100": 0.1568746214
+        "relevant_coverage_at_100": 0.12812738326255954
       },
       "dense": {
         "config": "harrier_oss_v1_270m",
         "label": "Dense",
         "source": "dataset_candidate_subset",
         "top_k": 500,
-        "ndcg_at_10": 0.1965546668,
-        "hit_at_10": 0.48,
-        "recall_at_100": 0.1605087826,
+        "ndcg_at_10": 0.2066683079021357,
+        "hit_at_10": 0.5,
+        "recall_at_100": 0.2357303635856767,
         "candidate_count_min": 500,
         "candidate_count_max": 500,
         "candidate_count_mean": 500.0,
         "query_count": 50,
         "query_coverage": 1.0,
-        "relevant_coverage_at_100": 0.1605087826
+        "relevant_coverage_at_100": 0.2357303635856767
       },
       "reranking_hybrid": {
         "config": "reranking_hybrid",
         "label": "Reranking hybrid",
         "source": "dataset_candidate_subset",
         "top_k": 100,
-        "ndcg_at_10": 0.2343290911,
-        "hit_at_10": 0.6,
-        "recall_at_100": 0.1841308298,
+        "ndcg_at_10": 0.19996877565395058,
+        "hit_at_10": 0.52,
+        "recall_at_100": 0.2520205944030391,
         "candidate_count_min": 100,
         "candidate_count_max": 101,
-        "candidate_count_mean": 100.18,
+        "candidate_count_mean": 100.14,
         "query_count": 50,
         "query_coverage": 1.0,
-        "relevant_coverage_at_100": 0.1841308298,
-        "safeguard_positive_rows": 9,
-        "rows_with_101_candidates": 9
+        "relevant_coverage_at_100": 0.2520205944030391,
+        "safeguard_positive_rows": 7,
+        "rows_with_101_candidates": 7
       }
     },
     "learning": {
