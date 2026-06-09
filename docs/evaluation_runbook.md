@@ -304,6 +304,13 @@ uv run python scripts/build_results_database_and_report.py \
   --append-hf-dataset-repo-id hakari-bench/leaderboard_database
 ```
 
+Remote DuckDB downloads are normalized through a shared "remote latest" cache at
+`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb`. The cache uses
+Hugging Face file metadata when available and records a sidecar SHA-1 so repeat
+append/viewer runs can skip downloading or copying unchanged files. Override the
+cache path with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH` and the sidecar metadata
+path with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH`.
+
 Use an explicit remote base when you want to create a separate merged file:
 
 ```bash
@@ -348,6 +355,10 @@ uv run hakari-bench web \
 
 If the viewer should sync from a results directory instead of a specific file,
 use `--source-results-dir output/hakari-results`.
+
+When the viewer uses `--hf-dataset-repo-id`, it reads the same remote latest
+cache described above and copies it to the viewer's local DuckDB only when the
+contents differ.
 
 ## Before Reporting
 

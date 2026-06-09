@@ -36,6 +36,7 @@ from hakari_bench.viewer.leaderboard import (
     _clear_task_score_cache,
     compute_leaderboard_rows,
 )
+from hakari_bench.viewer import store as viewer_store
 from hakari_bench.viewer.model_display import model_cell_views
 from hakari_bench.viewer.store import (
     DuckDbLocation,
@@ -4088,6 +4089,67 @@ def test_local_duckdb_store_refreshes_hf_source_after_ttl(
     assert store.ensure_current() is True
     assert calls == [source, source]
     assert local.read_bytes() == b"hf-new"
+
+
+def test_download_hf_duckdb_uses_remote_latest_cache_metadata(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    cache_path = tmp_path / "remote_latest_hakari_bench.duckdb"
+    metadata_path = tmp_path / "remote_latest_hakari_bench.duckdb.metadata.json"
+    downloaded = tmp_path / "hf-cache.duckdb"
+    downloaded.write_bytes(b"remote-db")
+    source = HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database")
+    calls: list[HuggingFaceDuckDbSource] = []
+
+    def fake_download(download_source: HuggingFaceDuckDbSource) -> Path:
+        calls.append(download_source)
+        return downloaded
+
+    monkeypatch.setenv(viewer_store.REMOTE_LATEST_DUCKDB_PATH_ENV, str(cache_path))
+    monkeypatch.setenv(viewer_store.REMOTE_LATEST_DUCKDB_METADATA_PATH_ENV, str(metadata_path))
+    monkeypatch.setattr(
+        viewer_store,
+        "_fetch_hf_duckdb_metadata",
+        lambda _source: {"etag": "etag-1", "commit_hash": "commit-1", "size": len(b"remote-db")},
+    )
+    monkeypatch.setattr(viewer_store, "_download_hf_duckdb_to_hub_cache", fake_download)
+
+    assert viewer_store._download_hf_duckdb(source) == cache_path
+    assert cache_path.read_bytes() == b"remote-db"
+    assert viewer_store._download_hf_duckdb(source) == cache_path
+    assert calls == [source]
+
+
+def test_download_hf_duckdb_falls_back_to_existing_remote_latest_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    cache_path = tmp_path / "remote_latest_hakari_bench.duckdb"
+    cache_path.write_bytes(b"cached-db")
+    source = HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database")
+
+    def fake_download(_source: HuggingFaceDuckDbSource) -> Path:
+        raise RuntimeError("network unavailable")
+
+    monkeypatch.setenv(viewer_store.REMOTE_LATEST_DUCKDB_PATH_ENV, str(cache_path))
+    monkeypatch.setattr(viewer_store, "_fetch_hf_duckdb_metadata", lambda _source: {})
+    monkeypatch.setattr(viewer_store, "_download_hf_duckdb_to_hub_cache", fake_download)
+
+    assert viewer_store._download_hf_duckdb(source) == cache_path
+    assert cache_path.read_bytes() == b"cached-db"
+
+
+def test_local_duckdb_store_skips_copy_when_source_content_matches(tmp_path: Path) -> None:
+    source = tmp_path / "source.duckdb"
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    source.write_bytes(b"same")
+    local.parent.mkdir()
+    local.write_bytes(b"same")
+    os.utime(local, (1, 1))
+    os.utime(source, (2, 2))
+    store = LocalDuckDbStore(DuckDbLocation(local_path=local, source_path=source))
+
+    assert store.ensure_current() is False
+    assert local.stat().st_mtime == 1
 
 
 def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:

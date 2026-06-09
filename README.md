@@ -543,6 +543,12 @@ result directory should be shown under a specific logical model id. See
 [`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for
 examples.
 
+The remote "latest" DuckDB is cached at
+`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb` by default and
+is shared by append mode and the viewer's Hugging Face dataset source. Override
+that path with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH`; override the sidecar
+metadata path with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH`.
+
 By default, it binds to `127.0.0.1:8000` and keeps
 `output/viewer/hakari_bench.duckdb` synchronized from the benchmark results
 DuckDB when a page is loaded. Use `--host 0.0.0.0 --port 28090` for remote
