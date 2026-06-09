@@ -136,7 +136,6 @@ Tailwind CSS before deploying when viewer templates or styles change:
 npx --yes tailwindcss@3.4.17 \
   -i hakari_bench/viewer/assets/app.tailwind.css \
   -o hakari_bench/viewer/assets/app.css \
-  --content 'hakari_bench/viewer/**/*.py,tests/**/*.py' \
   --minify
 ```
 
@@ -253,7 +252,7 @@ Check the public endpoints:
 
 ```bash
 curl -L -sS https://hakari-bench-leaderboard.hf.space/ | rg "HAKARI-bench leaderboard|/assets/app.css|/assets/viewer.js|/assets/favicon.png|/assets/htmx.min.js"
-curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=All' | rg "Core benchmarks|NanoMMTEB-v2|Language pages"
+curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=All' | rg "Retrieval|NanoMMTEB-v2|Task facets"
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/favicon.png -o /tmp/hakari_favicon.png
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/app.css -o /tmp/hakari_app.css
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/viewer.js -o /tmp/hakari_viewer.js

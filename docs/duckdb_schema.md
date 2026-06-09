@@ -240,7 +240,7 @@ The web viewer exposes the leaderboard query surface over the DuckDB file:
 
 | UI surface | source tables | semantics |
 | --- | --- | --- |
-| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Target` selector filters `score_target`; `All` uses full-corpus retrieval scores, `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`, and `Reranking without safeguard` removes the optional rank-101 safeguard positive before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
+| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Evaluation mode` selector filters `score_target`; `Retrieval` uses `score_target = 'all'`, and `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. The Reranking safeguard toggle switches between `score_target = 'reranking'`, which keeps the optional rank-101 positive so every task has at least one relevant candidate, and `score_target = 'reranking_without_safeguard'`, which removes that safeguard before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
 
 The page header also reads `task_results` for the latest available evaluation
 timestamp. Configured overall views (`All`, `Core`, and `Group`) expand to their
@@ -583,9 +583,9 @@ for summary values, not the source of the full viewer metric set.
 
 `fact_metric_score` is the normalized metric-value fact table derived from
 `metrics_long` and `dim_metric`. It keeps detailed metrics separate from the
-primary leaderboard score in `fact_task_score`. For `Target: All`, the viewer
-uses metric names that do not contain `_reranking_hybrid_top`. For
-`Target: Reranking` and `Target: Reranking without safeguard`, the viewer uses
+primary leaderboard score in `fact_task_score`. In `Retrieval` mode, the viewer
+uses metric names that do not contain `_reranking_hybrid_top`. In `Reranking`
+mode, with or without the safeguard toggle, the viewer uses
 metric rows with the selected reranking `score_target` and metric names that
 contain `_reranking_hybrid_top`.
 
@@ -641,7 +641,7 @@ ranking rows only.
 
 `task_diagnostics` is a notebook-friendly table for analyzing why a model did
 or did not improve under BM25 candidate reranking. The viewer also uses
-`rerank_score` for the optional `Target: Reranking` leaderboard mode when
+`rerank_score` for the optional fixed-candidate reranking leaderboard mode when
 `rerank_status = 'available'`, `candidate_ranking = 'bm25'`, and
 `rerank_top_k = 100` where those columns are present.
 
@@ -893,11 +893,16 @@ change, such as `-24.5%` or `+1.2%`. Base rows and rows without a matching base
 row leave this column blank.
 
 Task metric column headers keep their full metric key for sorting and query
-state, but shorten long dataset task keys for display. For example,
-`MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana` renders as
-`NanoBEIR-ar::arguana` when that short label is unique. If two full keys shorten
-to the same label, those conflicting headers render their full key. The full key
-is also exposed on the header label with `data-metric-column-full-name`.
+state, but shorten long dataset task keys for display. If a grouped key repeats
+the same name, such as `NanoChemTEB::NanoChemTEB`, the visible header collapses
+to `NanoChemTEB`. Dataset/task labels such as
+`MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana` render as a two-line header in
+each metric column, with `NanoBEIR-ar` on the first line and `arguana` on the
+second line. Benchmark documentation triggers are attached beside the task label
+on the second line. If two full keys shorten to the same label, those
+conflicting headers render their full key. The full key is also exposed on the
+task header label with `data-metric-column-full-name` and in the task-column
+tooltip.
 Benchmark-level `task_labels` from `config/viewer/benchmarks.yaml` override only
 the visible header text; sorting, task filters, and metric values continue to
 use the underlying metric key.
@@ -982,18 +987,17 @@ choices:
   aggregation. For example, selecting `EN` in `All` includes `NanoBEIR-en`
   rows from MNanoBEIR but does not include `NanoBEIR-no` rows merely because
   their detected `languages` array contains English as a secondary language.
-- Benchmarks may also set `language_page_languages` to constrain the Language
-  page options. Language-specific Nano sets use this together with
+- Benchmarks may also set `language_page_languages` to constrain the Task
+  language filter options. Language-focused Nano sets use this together with
   `primary_languages` to keep auxiliary detector languages from cross-language
-  tasks out of the page selector; for example, `NanoMTEB-Dutch` exposes `nl`
+  tasks out of the selector; for example, `NanoMTEB-Dutch` exposes `nl`
   but not English, and `NanoCMTEB` exposes `zh` but not Japanese.
-- Viewer benchmark groups put the compact curated Core set under
-  Core benchmarks. Language-axis suites are grouped as Language-specific,
-  including official language-specific NanoMTEB families, `NanoCMTEB`,
-  `NanoIndicQA`, `NanoMuPLeR`, and `NanoMIRACL`. `NanoMuPLeR` should still be
-  read as translated/parallel legal retrieval, not as native unrelated
-  monolingual corpora. Domain-focused suites such as `NanoLaw`, `NanoMedical`,
-  `NanoChemTEB`, and `NanoCodeRAG` remain Domain-specific.
+- Viewer benchmark scope exposes aggregate presets such as `All`, `Core`, and
+  `Group`, then the individual Nano set buttons. Scope preset buttons carry
+  inline help explaining their aggregation semantics. `MNanoBEIR` is shown as
+  two Nano set choices, `MNanoBEIR(task)` for `task_mean` and `MNanoBEIR(lang)`
+  for `lang_mean`; other suite buttons preserve configuration order. Task
+  facets live inside the same leaderboard configuration panel.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 
@@ -1029,8 +1033,8 @@ keeps late-interaction runtime fields for the Model Details modal, and orders
 rows by
 `(benchmark, score_target, dataset_id, task_name, model_name,
 embedding_variant_name)`. This avoids repeated metadata joins and lets the
-viewer switch `Target: All` / `Target: Reranking` without joining diagnostics
-on the hot path.
+viewer switch between full-corpus retrieval and fixed-candidate reranking
+without joining diagnostics on the hot path.
 Late-interaction runs are expected to contribute both `all` and `reranking`
 targets when the selected dataset candidate ranking is available: `all` stores
 full-corpus exact MaxSim retrieval, while `reranking` stores candidate-set exact
@@ -1603,18 +1607,16 @@ selected group changes benchmark-view `Mean Score`, Borda, and rank. When
 `task_scores=1` is active, the same group also determines the extra metric
 columns shown in the table.
 
-MNanoBEIR and NanoMIRACL Language pages use
+MNanoBEIR and NanoMIRACL Task facets language filters use
 `language_filter_mode: primary_language` rather than the full `languages` array.
 This keeps language filters aligned with their dataset/language axis and avoids
 over-counting secondary language tags that appear inside multilingual source
 rows.
 
-Language-specific NanoMTEB family views and `NanoCMTEB` additionally set
-`language_page_languages` so Language pages represent the benchmark's intended
-language axis, not every auxiliary code detected inside mixed-language tasks.
-`NanoIndicQA`, `NanoMuPLeR`, and `NanoMIRACL` are also grouped under
-Language-specific because their benchmark-view navigation is primarily by
-language split.
+MTEB language suite views and `NanoCMTEB` additionally set
+`language_page_languages` so Task facets language filters represent the benchmark's
+intended language axis, not every auxiliary code detected inside mixed-language
+tasks.
 
 For UI rendering, long format is usually easier than SQL pivoting. Reuse
 `complete_rows` from the benchmark leaderboard query:

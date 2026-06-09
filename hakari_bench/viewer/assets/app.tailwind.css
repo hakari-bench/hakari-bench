@@ -87,6 +87,32 @@
   }
 }
 
+.leaderboard-loading-toast {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 160ms ease-in-out,
+    transform 160ms ease-in-out;
+}
+
+.leaderboard-loading-toast.htmx-request {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaderboard-loading-toast {
+    transition: none;
+  }
+}
+
+.benchmark-scope-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+}
+
 @layer utilities {
   body.bg-zinc-50 {
     background-color: var(--hakari-bg);
