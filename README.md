@@ -1,14 +1,3 @@
----
-title: HAKARI-Bench Leaderboard
-emoji: 📊
-colorFrom: blue
-colorTo: gray
-sdk: docker
-app_port: 7860
-pinned: false
-license: apache-2.0
----
-
 # HAKARI-Bench
 
 HAKARI-Bench is a library, viewer, and leaderboard project for evaluating small information retrieval datasets.

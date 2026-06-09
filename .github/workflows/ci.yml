@@ -20,7 +20,7 @@ jobs:
           enable-cache: true
 
       - name: Run unit, lint, and type checks
-        run: uv run tox -- -m "not browser"
+        run: uv run tox
 
   browser:
     name: Viewer browser smoke

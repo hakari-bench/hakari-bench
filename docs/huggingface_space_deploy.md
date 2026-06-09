@@ -7,31 +7,25 @@ database consumed by that Space.
 ## Repositories
 
 - Space: `hakari-bench/leaderboard`
+- Space URL: `https://hakari-bench-leaderboard.hf.space/`
+- GHCR image: `ghcr.io/hakari-bench/hakari-bench-leaderboard:hf-space-docker-latest`
 - DuckDB dataset: `hakari-bench/leaderboard_database`
 - DuckDB path in dataset: `duckdb/hakari_bench.duckdb`
-- Public Space URL: `https://hakari-bench-leaderboard.hf.space/`
 
-The Space runs the FastAPI viewer from `hakari_bench.viewer.space:create_space_app`
-and downloads the DuckDB file dynamically from the dataset repo. The database is
-cached inside the Space at `/data/viewer/hakari_bench.duckdb`.
+The Space repo is intentionally minimal. The viewer application is built in
+GitHub Actions, published to GHCR, and then referenced from the Space
+`Dockerfile`. The running container downloads the DuckDB file dynamically from
+the dataset repo and caches it at `/data/viewer/hakari_bench.duckdb`.
 
 ## Required Permissions
 
-The Hugging Face token used for deployment must be able to:
+The Hugging Face token or local git credential used for deployment must be able
+to read and write repos under the `hakari-bench` organization, including force
+pushing to `hakari-bench/leaderboard`. The token used for publishing the DuckDB
+dataset must also be able to create or update
+`hakari-bench/leaderboard_database`.
 
-- Read and write repos under the `hakari-bench` organization.
-- Create or update a dataset repo for `hakari-bench/leaderboard_database`.
-- Create or update a Docker Space for `hakari-bench/leaderboard`.
-- Change Space visibility if the Space needs to be public.
-- Read the DuckDB dataset from the running Space. Public datasets work without a
-  Space secret; private datasets require an `HF_TOKEN` Space secret.
-
-The current deployment was performed with an authenticated Hugging Face account
-that is an admin of the `hakari-bench` organization and has fine-grained
-permissions including organization read/write, repo access read, repo content
-read, and repo write for `hakari-bench`.
-
-Verify authentication locally:
+Verify Hugging Face authentication locally:
 
 ```bash
 uv run --group viewer python - <<'PY'
@@ -40,6 +34,125 @@ from huggingface_hub import HfApi
 print(HfApi().whoami())
 PY
 ```
+
+The GitHub Actions workflow publishes the Docker image with `GITHUB_TOKEN`, so
+the workflow needs `packages: write`. After the first GHCR package is created,
+make the package public in GitHub so Hugging Face can pull it without registry
+credentials.
+
+## Publish the Viewer Image
+
+The source repository builds and publishes the viewer image from the
+`hf-space-docker` branch via `.github/workflows/build-leaderboard-image.yml`.
+The workflow runs on manual dispatch and on pushes to `hf-space-docker` that
+change viewer image inputs.
+
+It publishes one rolling tag:
+
+```text
+ghcr.io/hakari-bench/hakari-bench-leaderboard:hf-space-docker-latest
+```
+
+The workflow first builds the image locally, runs an import smoke test inside
+the container, then pushes the same tag to GHCR.
+
+After the first successful workflow run, confirm the image is anonymously
+pullable:
+
+```bash
+docker pull ghcr.io/hakari-bench/hakari-bench-leaderboard:hf-space-docker-latest
+```
+
+If a pinned or experimental revision is needed, publish a separate GHCR tag and
+set the Space variable `HAKARI_BENCH_LEADERBOARD_IMAGE_TAG` to that tag before
+rebuilding the Space. Normal production operation leaves the variable unset or
+sets it to `hf-space-docker-latest`.
+
+## Deploy the Space Repo
+
+Deploy the Space by replacing its `main` branch with a minimal git commit. This
+keeps local virtual environments, test files, generated outputs, and benchmark
+source files out of the Space repo.
+
+Create a temporary clone:
+
+```bash
+SPACE_WORKDIR=/tmp/hakari-bench-leaderboard-space
+rm -rf "$SPACE_WORKDIR"
+git clone https://huggingface.co/spaces/hakari-bench/leaderboard "$SPACE_WORKDIR"
+cd "$SPACE_WORKDIR"
+```
+
+Reset the working tree to a new minimal branch:
+
+```bash
+git switch --orphan prebuilt-image-deploy
+git rm -rf .
+```
+
+Create the Space metadata:
+
+```bash
+cat > README.md <<'EOF'
+---
+title: HAKARI-Bench Leaderboard
+emoji: 📊
+colorFrom: blue
+colorTo: gray
+sdk: docker
+app_port: 7860
+pinned: false
+license: apache-2.0
+fullWidth: true
+short_description: HAKARI-Bench retrieval leaderboard
+---
+
+# HAKARI-Bench Leaderboard
+
+This Space runs the prebuilt HAKARI-Bench leaderboard viewer image.
+The leaderboard database is loaded from `hakari-bench/leaderboard_database`.
+EOF
+```
+
+Create the Space Dockerfile:
+
+```bash
+cat > Dockerfile <<'EOF'
+ARG HAKARI_BENCH_LEADERBOARD_IMAGE_TAG=hf-space-docker-latest
+FROM ghcr.io/hakari-bench/hakari-bench-leaderboard:${HAKARI_BENCH_LEADERBOARD_IMAGE_TAG}
+EOF
+```
+
+Create a small ignore file:
+
+```bash
+cat > .gitignore <<'EOF'
+.DS_Store
+*.swp
+EOF
+```
+
+Force push the minimal commit:
+
+```bash
+git add README.md Dockerfile .gitignore
+git commit -m "Deploy prebuilt Docker leaderboard image"
+git push -f origin HEAD:main
+```
+
+## Space Image Tag Variable
+
+The Space Dockerfile defaults to `hf-space-docker-latest`:
+
+```dockerfile
+ARG HAKARI_BENCH_LEADERBOARD_IMAGE_TAG=hf-space-docker-latest
+FROM ghcr.io/hakari-bench/hakari-bench-leaderboard:${HAKARI_BENCH_LEADERBOARD_IMAGE_TAG}
+```
+
+Hugging Face Docker Spaces expose Space variables as Docker build args. Set
+`HAKARI_BENCH_LEADERBOARD_IMAGE_TAG` in the Space settings when the Space should
+pull a tag other than `hf-space-docker-latest`, then restart or rebuild the
+Space.
 
 ## Publish the DuckDB Database
 
@@ -93,113 +206,15 @@ print(path.exists(), path.stat().st_size)
 PY
 ```
 
-## Deploy the Docker Space
-
-The Space uses:
-
-- `Dockerfile`
-- `.dockerignore`
-- `README.md` Space metadata with `sdk: docker`
-- `hakari_bench/viewer/space.py`
-- `hakari_bench/viewer/assets/` for local CSS, viewer JavaScript, HTMX, and
-  favicon assets
-- `task_docs/` for benchmark group and task documentation rendered
-  by the viewer
-
-The Docker image installs only viewer runtime dependencies and starts:
-
-```bash
-uvicorn hakari_bench.viewer.space:create_space_app --factory --host 0.0.0.0 --port ${PORT:-7860}
-```
-
-The Space Dockerfile pins the Python and `uv` image references by digest and
-runs the FastAPI process as the non-root `hakari` user. If those base images are
-intentionally updated, refresh the digest pins in `Dockerfile`, rebuild locally,
-and keep this deployment note in sync.
-
-The viewer also adds response security headers at runtime, including a
-Content-Security-Policy. The default `frame-ancestors` allows Hugging Face
-embedding hosts:
-
-```text
-https://huggingface.co https://*.huggingface.co
-```
-
-If Hugging Face introduces another parent origin or a private deployment needs a
-different embedding origin, set `HAKARI_BENCH_VIEWER_FRAME_ANCESTORS` to a
-space-separated list of allowed origins.
-
-The viewer does not depend on CDN-hosted browser assets. Regenerate the local
-Tailwind CSS before deploying when viewer templates or styles change:
-
-```bash
-npx --yes tailwindcss@3.4.17 \
-  -i hakari_bench/viewer/assets/app.tailwind.css \
-  -o hakari_bench/viewer/assets/app.css \
-  --content 'hakari_bench/viewer/**/*.py,tests/**/*.py' \
-  --minify
-```
-
-Upload the current workspace to the Space:
-
-```bash
-uv run --group viewer python - <<'PY'
-from pathlib import Path
-from huggingface_hub import HfApi
-
-api = HfApi()
-api.create_repo(
-    repo_id="hakari-bench/leaderboard",
-    repo_type="space",
-    space_sdk="docker",
-    exist_ok=True,
-    private=False,
-)
-info = api.upload_folder(
-    repo_id="hakari-bench/leaderboard",
-    repo_type="space",
-    folder_path=Path("."),
-    commit_message="Deploy Docker leaderboard viewer",
-    ignore_patterns=[
-        ".git",
-        ".git/**",
-        ".venv/**",
-        "__pycache__/**",
-        ".pytest_cache/**",
-        ".ruff_cache/**",
-        ".tox/**",
-        "output/**",
-        "tmp/**",
-    ],
-    delete_patterns=[
-        "output/**",
-        "tmp/**",
-    ],
-)
-print(info)
-PY
-```
-
-If the Space was created private or needs public access, update visibility:
-
-```bash
-uv run hf repos settings hakari-bench/leaderboard --repo-type space --public
-```
-
 ## Runtime Configuration
 
-The Dockerfile sets these defaults:
+The viewer image sets these defaults:
 
 ```text
 HAKARI_BENCH_VIEWER_DATA_DIR=/data/viewer
 HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID=hakari-bench/leaderboard_database
 HAKARI_BENCH_VIEWER_HF_DATASET_PATH=duckdb/hakari_bench.duckdb
 ```
-
-When the viewer uses the Hugging Face dataset source, it checks/downloads the
-DuckDB source at startup and then caches the source check for 10 minutes per
-running process. Requests served within that window use the already-local
-`/data/viewer/hakari_bench.duckdb` file and do not call `hf_hub_download()`.
 
 The same viewer can be pointed at a different source locally or in a Space with:
 
@@ -211,22 +226,13 @@ The same viewer can be pointed at a different source locally or in a Space with:
 - `HAKARI_BENCH_VIEWER_HF_DATASET_REVISION`
 - `HAKARI_BENCH_VIEWER_FRAME_ANCESTORS`
 
-## URL State in Embedded Spaces
+The viewer also adds response security headers at runtime, including a
+Content-Security-Policy. The default `frame-ancestors` allows Hugging Face
+embedding hosts:
 
-Hugging Face propagates the parent Space page query string and hash to the
-embedded `*.hf.space` application on initial load. The viewer supports both URL
-forms:
-
-- Query strings such as `?view=All&target=reranking` are handled by the
-  server as before.
-- Hash parameters such as `#view=All&target=reranking` are merged into the
-  first HTMX leaderboard request before it loads, which keeps deep links working
-  inside embedded Space URLs.
-
-After HTMX changes the leaderboard state, the viewer sends a best-effort
-`window.parent.postMessage` update to `https://huggingface.co` with the state in
-the hash and an empty query string. This keeps the parent Hugging Face Space URL
-shareable while avoiding duplicate query and hash state.
+```text
+https://huggingface.co https://*.huggingface.co
+```
 
 ## Verification
 
@@ -254,40 +260,34 @@ Check the public endpoints:
 ```bash
 curl -L -sS https://hakari-bench-leaderboard.hf.space/ | rg "HAKARI-bench leaderboard|/assets/app.css|/assets/viewer.js|/assets/favicon.png|/assets/htmx.min.js"
 curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=All' | rg "Core benchmarks|NanoMMTEB-v2|Language pages"
-curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/favicon.png -o /tmp/hakari_favicon.png
-curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/app.css -o /tmp/hakari_app.css
-curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/viewer.js -o /tmp/hakari_viewer.js
-curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/htmx.min.js -o /tmp/hakari_htmx.min.js
 ```
 
-Check logs if the Space is not serving traffic:
+Check Space logs if the app is not serving traffic:
 
 ```bash
 uv run hf spaces logs hakari-bench/leaderboard -n 100
 uv run hf spaces logs hakari-bench/leaderboard --build -n 100
 ```
 
-Before considering a deploy complete, run local validation:
+Before considering a source repo change complete, run local validation:
 
 ```bash
 uv run tox
 ```
 
-The viewer also has a Playwright-backed browser smoke test for the static
-JavaScript, HTMX load path, tooltip layer, and model details modal. Install the
-Chromium browser once for the local environment, then run the test through `uv`:
+The viewer also has a Playwright-backed browser smoke test:
 
 ```bash
 uv run playwright install chromium
 uv run --group all pytest -q tests/test_viewer_browser.py
 ```
 
-CI is configured to run only on pull requests or explicit manual dispatches.
-The browser smoke test has its own lightweight dependency group so the browser
-job does not need to install the full benchmark/runtime stack:
+## Rollback
 
-```bash
-uv sync --only-group viewer-browser-test --frozen
-uv run --only-group viewer-browser-test playwright install --with-deps chromium
-uv run --only-group viewer-browser-test pytest -q -m browser tests/test_viewer_browser.py
-```
+For viewer code rollback, publish or select a known-good GHCR tag and set
+`HAKARI_BENCH_LEADERBOARD_IMAGE_TAG` in the Space settings, then rebuild the
+Space. For the normal rolling tag, reverting the source branch and rerunning the
+image workflow updates `hf-space-docker-latest`.
+
+For database rollback, restore `duckdb/hakari_bench.duckdb` in
+`hakari-bench/leaderboard_database` from a known-good dataset commit.

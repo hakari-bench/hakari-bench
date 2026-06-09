@@ -7,7 +7,7 @@ import tempfile
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 from datasets import Dataset, DatasetDict
@@ -116,10 +116,10 @@ def push_dataset(target: DatasetTarget, *, readme_only: bool = False) -> None:
 
 
 def dataset_dict_from_config(config_dir: Path) -> DatasetDict:
-    splits = {}
+    splits: dict[str, Dataset] = {}
     for parquet_path in sorted(config_dir.glob("*.parquet")):
         splits[parquet_path.stem] = Dataset.from_parquet(str(parquet_path))
-    return DatasetDict(splits)
+    return DatasetDict(cast(Any, splits))
 
 
 def merged_readme_with_remote_frontmatter(
