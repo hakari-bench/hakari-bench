@@ -214,6 +214,63 @@ uv run python scripts/build_results_database_and_report.py \
   --html-output output/hakari-results/report.html
 ```
 
+## Sync Remote Results And Rebuild
+
+The canonical remote result JSON lives in the private Hugging Face dataset repo
+`hakari-bench/results`. Keep a git/LFS checkout under
+`~/.cache/hakari-bench/hf-datasets/` and rebuild the DuckDB from that checkout
+when refreshing the published leaderboard data.
+
+Use the helper for the standard path:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py
+```
+
+By default, this does the following:
+
+1. Clones or fast-forwards
+   `https://huggingface.co/datasets/hakari-bench/results` at
+   `~/.cache/hakari-bench/hf-datasets/hakari-bench__results`.
+2. Runs `git lfs pull` so the latest `.json.xz` payloads are present locally.
+3. Materializes missing BM25 baseline result JSON from
+   `task_docs/metadata/**.json`, using the stored Nano-set
+   `candidate_subsets.bm25` scores. It does not load candidate parquet files,
+   run `evaluate bm25`, or recompute BM25 with `bm25s`.
+4. Rebuilds:
+
+   ```bash
+   uv run python scripts/build_results_database_and_report.py \
+     --results-dir ~/.cache/hakari-bench/hf-datasets/hakari-bench__results/hakari-results \
+     --duckdb-path ~/.cache/hakari-bench/hf-datasets/hakari-bench__results/hakari-results/hakari_bench.duckdb
+   ```
+
+The dataset repo is private, so authenticate before syncing, for example with
+`hf auth login` or a configured Hugging Face git credential. If the checkout
+already exists and you only want to rebuild from local files, pass
+`--skip-git-sync`.
+
+Useful variants:
+
+```bash
+# Rebuild from an existing checkout and keep the standard BM25 baseline fill.
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --skip-git-sync
+```
+
+```bash
+# Refresh only a metadata-backed BM25 subset before rebuilding.
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --bm25-dataset NanoBEIR-en \
+  --bm25-split NanoArguAna
+```
+
+```bash
+# Rebuild without touching BM25 baseline JSON.
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --no-bm25-baseline
+```
+
 ## Append New Results
 
 Use append mode when you already have a complete viewer DuckDB and only need to

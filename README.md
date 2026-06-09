@@ -490,6 +490,21 @@ uv run python scripts/build_results_database_and_report.py \
 This path streams result JSON into DuckDB by default. Use `--html-output` only
 when a static report is also needed.
 
+To refresh the canonical remote result JSON first, keep the private Hugging Face
+dataset repo `hakari-bench/results` as a git/LFS checkout under
+`~/.cache/hakari-bench/hf-datasets/` and run:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py
+```
+
+That helper clones or fast-forwards the dataset repo, runs `git lfs pull`,
+materializes missing BM25 baseline JSON from the stored Nano-set BM25 metadata
+in `task_docs/metadata`, and rebuilds the DuckDB. It does not run a BM25
+evaluation or recompute BM25 with `bm25s`. See
+[`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for the detailed
+sync/rebuild workflow.
+
 To merge historical or separate result roots, repeat `--results-dir` in
 priority order. If the same model-task JSON exists in more than one root, the
 first directory wins and later directories fill only missing results. The

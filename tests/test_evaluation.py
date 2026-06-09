@@ -2934,7 +2934,7 @@ def test_build_run_summary_payload_uses_task_model_metadata_when_consistent(tmp_
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
-        model="bm25/dataset-bm25",
+        model="bm25",
         model_type="bm25",
         batch_size=2,
         show_progress=False,
@@ -3024,7 +3024,7 @@ def test_run_or_load_task_records_bm25_candidate_subset_source(tmp_path: Path) -
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
-        model="bm25/dataset-bm25",
+        model="bm25",
         model_type="bm25",
         batch_size=2,
         show_progress=False,
@@ -3066,7 +3066,7 @@ def test_run_or_load_task_requires_dataset_bm25_source_candidates(tmp_path: Path
     task = _toy_task()
     args = argparse.Namespace(
         output_dir=str(tmp_path),
-        model="bm25/dataset-bm25",
+        model="bm25",
         model_type="bm25",
         batch_size=2,
         show_progress=False,
@@ -3094,6 +3094,6 @@ def test_run_or_load_task_requires_dataset_bm25_source_candidates(tmp_path: Path
             model=None,
             args=args,
             environment={"package_versions": {}},
-            model_metadata={"id": "bm25/dataset-bm25"},
+            model_metadata={"id": "bm25"},
             dataset_loader=lambda _: _toy_dataset_without_candidates(),
         )

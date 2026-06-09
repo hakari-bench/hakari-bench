@@ -785,7 +785,7 @@ def test_parse_args_allows_bm25_evaluation_without_model_name() -> None:
 def test_parse_args_defaults_bm25_tokenizer_to_auto_when_omitted() -> None:
     args = parse_args(["evaluate", "bm25"])
 
-    assert args.model == "bm25/dataset-bm25"
+    assert args.model == "bm25"
     assert args.bm25_source == "dataset"
     assert args.bm25_tokenizer is None
 

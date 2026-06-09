@@ -799,6 +799,8 @@ def _default_bm25_model_id(args: argparse.Namespace) -> str:
     if getattr(args, "bm25_source", "dataset") == "computed":
         return f"bm25/{bm25_config_name(bm25_config_from_args(args))}"
     candidate_name = safe_path_part(getattr(args, "candidate_subset_name", "bm25") or "bm25")
+    if candidate_name == "bm25":
+        return "bm25"
     return f"bm25/dataset-{candidate_name}"
 
 
