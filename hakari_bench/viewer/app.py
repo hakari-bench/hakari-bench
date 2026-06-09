@@ -31,7 +31,12 @@ from hakari_bench.viewer.leaderboard import (
     ScoreTarget,
     SortDirection,
 )
-from hakari_bench.viewer.model_display import model_cell_views, render_model_detail_modal, render_model_name_cell
+from hakari_bench.viewer.model_display import (
+    ModelCellView,
+    model_cell_views,
+    render_model_detail_modal,
+    render_model_name_cell,
+)
 from hakari_bench.viewer.model_types import model_type_filter_key
 from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.state import (
@@ -47,6 +52,7 @@ from hakari_bench.viewer.state import (
 )
 from hakari_bench.viewer.store import LocalDuckDbStore
 from hakari_bench.viewer.variant_display import (
+    variant_category,
     variant_display_flags_from_query,
 )
 
@@ -1957,6 +1963,8 @@ def _csv_headers(*, result: LeaderboardResult, metric_headers: dict[str, str]) -
             "Original Embedding Dims",
             "Truncated Embedding Dims",
             "Quantization",
+            "Variant Label",
+            "Variant Category",
             "Embedding Variant",
             "Base Score Delta Percent",
             "DType",
@@ -1990,6 +1998,8 @@ def _csv_metric_headers(*, result: LeaderboardResult, metric_labels: dict[str, s
         "Original Embedding Dims",
         "Truncated Embedding Dims",
         "Quantization",
+        "Variant Label",
+        "Variant Category",
         "Embedding Variant",
         "Base Score Delta Percent",
         "DType",
@@ -2022,14 +2032,14 @@ def _csv_record_for_row(
     *,
     result: LeaderboardResult,
     row: LeaderboardRow,
-    model_view: object,
+    model_view: ModelCellView,
     metric_headers: dict[str, str],
 ) -> dict[str, object | None]:
-    metadata = getattr(model_view, "metadata")
+    metadata = model_view.metadata
     record: dict[str, object | None] = {
         "Borda Rank": row.borda_rank,
         "Mean Rank": row.mean_rank,
-        "Model Name": getattr(model_view, "display_name"),
+        "Model Name": model_view.display_name,
         "Borda Score": row.borda_score,
         "Task Count": row.task_count,
         "Full Model Name": metadata.get("model_name"),
@@ -2044,6 +2054,8 @@ def _csv_record_for_row(
         "Original Embedding Dims": metadata.get("original_embedding_dim"),
         "Truncated Embedding Dims": metadata.get("truncated_embedding_dim"),
         "Quantization": metadata.get("quantization"),
+        "Variant Label": _csv_variant_label(row=row, model_view=model_view),
+        "Variant Category": _csv_variant_category(row),
         "Embedding Variant": metadata.get("embedding_variant_name"),
         "Base Score Delta Percent": metadata.get("base_score_delta_percent"),
         "DType": metadata.get("dtype"),
@@ -2059,6 +2071,37 @@ def _csv_record_for_row(
     for column in result.metric_columns:
         record[metric_headers[column]] = row.metric_values.get(column)
     return record
+
+
+def _csv_variant_label(*, row: LeaderboardRow, model_view: ModelCellView) -> str | None:
+    if row.embedding_variant_name is None and row.quantization is None:
+        return None
+    return model_view.variant_label or row.quantization or row.embedding_variant_name
+
+
+def _csv_variant_category(row: LeaderboardRow) -> str | None:
+    if row.embedding_variant_name is None:
+        return "quantization" if row.quantization is not None else None
+    if _is_sparse_active_dims_variant(row):
+        return "sparse active dims"
+    category = variant_category(embedding_variant_name=row.embedding_variant_name, quantization=row.quantization)
+    labels = []
+    if category.truncate:
+        labels.append("truncate")
+    if category.quantization:
+        labels.append("quantization")
+    if category.rescore:
+        labels.append("rescore")
+    return " + ".join(labels) if labels else "other"
+
+
+def _is_sparse_active_dims_variant(row: LeaderboardRow) -> bool:
+    variant_name = row.embedding_variant_name or ""
+    return (
+        model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) == "sparse"
+        and "sparse_" in variant_name
+        and ("max_active_dims" in variant_name or "max_dims" in variant_name)
+    )
 
 
 def _csv_cell(value: object | None) -> str:

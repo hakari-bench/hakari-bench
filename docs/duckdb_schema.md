@@ -892,6 +892,12 @@ for the same source model and renders the relative percentage change, such as
 `-24.5%` or `+1.2%`. Base rows and rows without a matching base row leave this
 column blank.
 
+CSV downloads keep the full raw `Embedding Variant` value and also include
+spreadsheet-friendly `Variant Label` and `Variant Category` columns. Variant
+labels mirror compact UI labels such as `512d <- 1024` or `q32d d256d`, while
+categories summarize the variant as `truncate`, `quantization`, `rescore`,
+`sparse active dims`, `other`, or a ` + ` joined combination for cross variants.
+
 Task metric column headers keep their full metric key for sorting and query
 state, but shorten long dataset task keys for display. If a grouped key repeats
 the same name, such as `NanoChemTEB::NanoChemTEB`, the visible header collapses

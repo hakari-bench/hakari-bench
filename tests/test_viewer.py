@@ -21,6 +21,7 @@ from hakari_bench.viewer.app import (
     _view_group,
     _z_score_bucket_class,
     create_app,
+    render_leaderboard_csv,
     render_page,
     render_table_body,
     render_table_head,
@@ -4292,6 +4293,8 @@ def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Pat
     assert rows[0]["Embedding Dims"] == "1024"
     assert rows[0]["Original Embedding Dims"] == "1024"
     assert rows[0]["Truncated Embedding Dims"] == ""
+    assert rows[0]["Variant Label"] == ""
+    assert rows[0]["Variant Category"] == ""
     assert rows[0]["DType"] == "bf16"
     assert rows[0]["Attention Implementation"] == "flash_attention_2"
     assert rows[0]["Prompt"] == "prompt names"
@@ -4303,6 +4306,77 @@ def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Pat
     assert truncated["Embedding Dims"] == "512"
     assert truncated["Original Embedding Dims"] == "1024"
     assert truncated["Embedding Variant"] == "truncate_dim_512"
+    assert truncated["Variant Label"] == "512d <- 1024"
+    assert truncated["Variant Category"] == "truncate"
+
+
+def test_leaderboard_csv_exports_short_variant_labels_and_categories() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/sparse-model",
+                source_model_name="org/sparse-model",
+                model_type="sparse",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                embedding_dim=105879,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name=(
+                    "org/sparse-model "
+                    "(sparse_query_max_active_dims_32_sparse_document_max_active_dims_256)"
+                ),
+                source_model_name="org/sparse-model",
+                model_type="sparse",
+                borda_score=95,
+                mean_score=95,
+                task_count=1,
+                embedding_dim=105879,
+                embedding_variant_name="sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",
+                base_score_delta_percent=-5.0,
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="org/dense-model (512 dims, int8)",
+                source_model_name="org/dense-model",
+                borda_score=90,
+                mean_score=90,
+                task_count=1,
+                embedding_dim=512,
+                quantization="int8",
+                embedding_variant_name="truncate_dim_512_int8_rescore",
+                base_score_delta_percent=-10.0,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        include_rescore_variants=True,
+        include_other_variants=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    rows = list(csv.DictReader(render_leaderboard_csv(result=result).splitlines()))
+
+    assert rows[0]["Variant Label"] == ""
+    assert rows[0]["Variant Category"] == ""
+    assert rows[1]["Variant Label"] == "q32d d256d"
+    assert rows[1]["Variant Category"] == "sparse active dims"
+    assert rows[1]["Embedding Variant"] == "sparse_query_max_active_dims_32_sparse_document_max_active_dims_256"
+    assert rows[1]["Base Score Delta Percent"] == "-5"
+    assert rows[2]["Variant Label"] == "512d"
+    assert rows[2]["Variant Category"] == "truncate + quantization + rescore"
+    assert rows[2]["Quantization"] == "int8"
 
 
 def test_viewer_page_uses_query_state_and_canonical_url(tmp_path: Path) -> None:
