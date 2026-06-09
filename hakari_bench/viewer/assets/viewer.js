@@ -244,6 +244,29 @@
     });
 
     document.addEventListener("click", (event) => {
+      const trigger = closestElement(event.target, ".help-summary-trigger");
+      if (!trigger) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const modal = document.getElementById("help-summary-modal");
+      const heading = document.getElementById("help-summary-heading");
+      const summary = document.getElementById("help-summary-short");
+      const details = document.getElementById("help-summary-details");
+      if (!modal || !heading || !summary || !details) return;
+      heading.textContent = trigger.dataset.helpTitle || "";
+      summary.textContent = trigger.dataset.helpSummary || "";
+      details.textContent = trigger.dataset.helpDetails || "";
+      if (typeof modal.showModal === "function") modal.showModal();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const trigger = closestElement(event.target, ".help-summary-trigger");
+      if (!trigger || (event.key !== "Enter" && event.key !== " ")) return;
+      event.preventDefault();
+      trigger.click();
+    });
+
+    document.addEventListener("click", (event) => {
       const trigger = closestElement(event.target, ".model-detail-trigger");
       if (!trigger) return;
       const modal = document.getElementById("model-detail-modal");
@@ -279,6 +302,11 @@
 
     document.addEventListener("click", (event) => {
       const modal = event.target && event.target.id === "doc-summary-modal" ? event.target : null;
+      if (modal) modal.close();
+    });
+
+    document.addEventListener("click", (event) => {
+      const modal = event.target && event.target.id === "help-summary-modal" ? event.target : null;
       if (modal) modal.close();
     });
 

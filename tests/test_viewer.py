@@ -805,6 +805,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
         database_label=f"database: local / {db_path}",
     )
     assert "Latest update: 2026-05-22T20:27:54(UTC)" in page_with_latest
+    assert 'data-icon="calendar-days"' in page_with_latest
     assert page_with_latest.split("</header>", 1)[0].find("Latest update:") == -1
     assert page_with_latest.index("<footer") < page_with_latest.index("Latest update:")
     assert f"database: local / {db_path}" in page_with_latest
@@ -976,12 +977,17 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Choose the evaluation mode first" not in response.text
     assert "Language-focused MTEB/MMTEB-style Nano suites" not in response.text
     assert "Overall" in response.text
-    assert "Overall scope from the viewer configuration" in response.text
+    assert "Shows the Overall scope from the viewer configuration." in response.text
     assert "Retrieval" in response.text
     assert "Reranking" in response.text
+    assert 'data-icon="search"' in response.text
+    assert 'data-icon="list-ordered"' in response.text
     assert "Safeguard positives" not in response.text
-    assert "data-tooltip=" in response.text
-    assert "data-tooltip-placement=\"left\"" in response.text
+    assert 'id="help-summary-modal"' in response.text
+    assert 'class="help-summary-trigger' in response.text
+    assert 'data-help-title="Benchmark scope: Overall"' in response.text
+    assert 'class="inline-flex items-center border text-[0.8125rem] leading-tight' in response.text
+    assert "Benchmark scope chooses the tasks that are eligible for the leaderboard" in response.text
     assert 'class="doc-summary-trigger' in response.text
     assert 'data-icon="book-open"' in response.text
     assert 'data-icon="circle-help"' in response.text
@@ -993,8 +999,8 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "hover:bg-cyan-50" not in doc_trigger_html
     assert "hover:border-cyan-600" not in doc_trigger_html
     assert 'data-icon="circle-help"' not in doc_trigger_html
-    assert "full-corpus retrieval scores" in response.text
-    assert "shared BM25 candidate set" in response.text
+    assert "full-corpus retrieval results" in response.text
+    assert "shared candidate set" in response.text
     assert 'data-leaderboard-control="true"' in response.text
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
@@ -1059,10 +1065,13 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
 
     assert response.status_code == 200
     assert "target=reranking" in response.text
+    assert 'data-icon="list-ordered"' in response.text
+    assert "Reranking" in response.text
     assert "Safeguard positives" in response.text
     assert 'type="checkbox" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "target=reranking_without_safeguard" in response.text
-    assert "every task includes at least one relevant positive" in response.text
+    assert 'data-help-title="Safeguard positives"' in response.text
+    assert "every evaluated task includes at least one known positive document" in response.text
     assert response.text.index("model/b") < response.text.index("bm25") < response.text.index("model/a")
 
 
@@ -1527,6 +1536,8 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     ) in response.text
     assert 'aria-label="Task facets"' in response.text
     assert 'data-shown-count="2"' in response.text
+    assert 'data-icon="search"' in response.text
+    assert "Retrieval" in response.text
     assert "2 shown / 2 complete models / 1 tasks" in response.text
 
 
@@ -1769,7 +1780,12 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "<span>STD</span>" in response.text
     assert "Efficiency variants" in response.text
     assert 'data-icon="git-compare-arrows"' in response.text
-    assert "Other variants" in response.text
+    assert ">Other</span>" in response.text
+    assert "Other variants" not in response.text
+    assert 'data-help-title="Efficiency variants"' in response.text
+    assert "Dims includes truncated embedding rows and uses short labels such as 512d or 512d &lt;- 1024" in response.text
+    assert "Quantization includes compressed numeric formats such as int8 and binary." in response.text
+    assert "Other includes model-specific variants, especially sparse active-dimension limits" in response.text
     assert "Model family" in response.text
     assert 'id="model-type-controls"' in response.text
     assert 'data-icon="shapes"' in response.text
@@ -1802,18 +1818,23 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'hx-trigger="change, submit"' in response.text
     assert 'hx-include="#display-controls"' not in response.text
     assert 'data-icon="list-filter"' in response.text
-    assert "Truncate dims" in response.text
+    assert ">Dims</span>" in response.text
+    assert "Truncate dims" not in response.text
+    assert response.text.index(">Dims</span>") < response.text.index(">Quantization</span>")
     assert "Rescore" in response.text
     assert 'id="model-filter-input"' in response.text
     assert 'name="model_filter"' in response.text
     assert ">Model</span>" in response.text
     assert ">Model name</span>" not in response.text
     assert "Filters leaderboard rows by model name." in response.text
+    assert "jina bge keeps rows whose model name contains jina or bge" in response.text
     assert ">Task</span>" in response.text
     assert ">Task name</span>" not in response.text
     assert "Filters task columns and task rows by benchmark" in response.text
+    assert "arguana fever keeps task columns or task rows whose identifiers contain arguana or fever" in response.text
+    assert "Short task names such as nq also work" in response.text
     assert "Recalculate ranks from filters" in response.text
-    assert "Recomputes Borda, mean ranks, and visible means" in response.text
+    assert "Borda ranks, mean ranks, and visible means are recalculated" in response.text
     assert "Apply text filters" not in response.text
     assert response.text.index("Refine results") < response.text.index("Recalculate ranks from filters") < response.text.index("Model family")
     assert 'value="model/b"' in response.text
@@ -3238,8 +3259,10 @@ def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path:
         [
             ("model/a", "BenchA", "bench/a", "BenchA", "NanoArguAna", "arguana", "bench::arguana", 0.90, 10, 12, 8192),
             ("model/a", "BenchA", "bench/a", "BenchA", "NanoFEVER", "fever", "bench::fever", 0.80, 10, 12, 8192),
+            ("model/a", "BenchA", "bench/a", "BenchA", "NanoNQ", "nq", "bench::nq", 0.50, 10, 12, 8192),
             ("model/b", "BenchA", "bench/a", "BenchA", "NanoArguAna", "arguana", "bench::arguana", 0.70, 10, 12, 8192),
             ("model/b", "BenchA", "bench/a", "BenchA", "NanoFEVER", "fever", "bench::fever", 0.60, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "NanoNQ", "nq", "bench::nq", 0.40, 10, 12, 8192),
         ],
     )
     config_dir = tmp_path / "config"
@@ -3253,7 +3276,7 @@ def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path:
     filtered_result = service.get_leaderboard("BenchA", show_task_scores=True, task_filter="arguana qwen")
 
     assert hidden_result.metric_columns == []
-    assert full_result.metric_columns == ["arguana", "fever"]
+    assert full_result.metric_columns == ["arguana", "fever", "nq"]
     assert filtered_result.metric_columns == ["arguana"]
     assert filtered_result.rows[0].metric_values["arguana"] == 90.0
 
@@ -3267,6 +3290,14 @@ def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path:
     assert ">arguana</span>" in response.text
     assert ">fever</span>" not in response.text
     assert "metric%3Aarguana" in response.text
+
+    nq_response = TestClient(app).get("/leaderboard?view=BenchA&task_scores=1&task_filter=nq")
+
+    assert nq_response.status_code == 200
+    assert 'value="nq"' in nq_response.text
+    assert ">nq</span>" in nq_response.text
+    assert ">arguana</span>" not in nq_response.text
+    assert ">fever</span>" not in nq_response.text
 
 
 def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> None:
@@ -3812,8 +3843,9 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     assert ">Length</span>" in response.text
     assert "Query length ≤" in response.text
     assert "Document length ≤" in response.text
-    assert 'data-tooltip="Filters tasks by average query and document length in characters.' in response.text
-    assert "Tasks missing length metadata are excluded when a bound is set." in response.text
+    assert 'data-help-title="Length filters"' in response.text
+    assert "Length filters operate at the task level using average text length metadata" in response.text
+    assert "Tasks without length metadata are excluded when any bound is set." in response.text
     assert "Query string <=" not in response.text
     assert "Doc string <=" not in response.text
     assert 'name="query_len_max" value="1000"' in response.text
@@ -3901,87 +3933,104 @@ benchmarks:
 
 def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
+    task_rows = [
+        (
+            "model/a",
+            "MNanoBEIR",
+            "hakari-bench/NanoBEIR-ar",
+            "NanoBEIR-ar",
+            "ar",
+            "arguana",
+            "MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana",
+            0.80,
+            10,
+            12,
+            8192,
+        ),
+        (
+            "model/a",
+            "MNanoBEIR",
+            "hakari-bench/NanoBEIR-ar",
+            "NanoBEIR-ar",
+            "ar",
+            "climatefever",
+            "MNanoBEIR::hakari-bench/NanoBEIR-ar::climatefever",
+            0.82,
+            10,
+            12,
+            8192,
+        ),
+        (
+            "model/a",
+            "MNanoBEIR",
+            "hakari-bench/NanoBEIR-ja",
+            "NanoBEIR-ja",
+            "ja",
+            "arguana",
+            "MNanoBEIR::hakari-bench/NanoBEIR-ja::arguana",
+            0.70,
+            10,
+            12,
+            8192,
+        ),
+        (
+            "model/b",
+            "MNanoBEIR",
+            "hakari-bench/NanoBEIR-ar",
+            "NanoBEIR-ar",
+            "ar",
+            "arguana",
+            "MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana",
+            0.60,
+            20,
+            24,
+            4096,
+        ),
+        (
+            "model/b",
+            "MNanoBEIR",
+            "hakari-bench/NanoBEIR-ar",
+            "NanoBEIR-ar",
+            "ar",
+            "climatefever",
+            "MNanoBEIR::hakari-bench/NanoBEIR-ar::climatefever",
+            0.62,
+            20,
+            24,
+            4096,
+        ),
+        (
+            "model/b",
+            "MNanoBEIR",
+            "hakari-bench/NanoBEIR-ja",
+            "NanoBEIR-ja",
+            "ja",
+            "arguana",
+            "MNanoBEIR::hakari-bench/NanoBEIR-ja::arguana",
+            0.50,
+            20,
+            24,
+            4096,
+        ),
+    ]
     _write_task_results(
         db_path,
-        [
-            (
-                "model/a",
-                "MNanoBEIR",
-                "hakari-bench/NanoBEIR-ar",
-                "NanoBEIR-ar",
-                "ar",
-                "arguana",
-                "MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana",
-                0.80,
-                10,
-                12,
-                8192,
-            ),
-            (
-                "model/a",
-                "MNanoBEIR",
-                "hakari-bench/NanoBEIR-ar",
-                "NanoBEIR-ar",
-                "ar",
-                "climatefever",
-                "MNanoBEIR::hakari-bench/NanoBEIR-ar::climatefever",
-                0.82,
-                10,
-                12,
-                8192,
-            ),
-            (
-                "model/a",
-                "MNanoBEIR",
-                "hakari-bench/NanoBEIR-ja",
-                "NanoBEIR-ja",
-                "ja",
-                "arguana",
-                "MNanoBEIR::hakari-bench/NanoBEIR-ja::arguana",
-                0.70,
-                10,
-                12,
-                8192,
-            ),
-            (
-                "model/b",
-                "MNanoBEIR",
-                "hakari-bench/NanoBEIR-ar",
-                "NanoBEIR-ar",
-                "ar",
-                "arguana",
-                "MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana",
-                0.60,
-                20,
-                24,
-                4096,
-            ),
-            (
-                "model/b",
-                "MNanoBEIR",
-                "hakari-bench/NanoBEIR-ar",
-                "NanoBEIR-ar",
-                "ar",
-                "climatefever",
-                "MNanoBEIR::hakari-bench/NanoBEIR-ar::climatefever",
-                0.62,
-                20,
-                24,
-                4096,
-            ),
-            (
-                "model/b",
-                "MNanoBEIR",
-                "hakari-bench/NanoBEIR-ja",
-                "NanoBEIR-ja",
-                "ja",
-                "arguana",
-                "MNanoBEIR::hakari-bench/NanoBEIR-ja::arguana",
-                0.50,
-                20,
-                24,
-                4096,
-            ),
+        task_rows,
+        dataset_metadata_rows=[
+            (benchmark, dataset_id, dataset_name, split_name, task_name, task_key, split_name, [split_name], [split_name])
+            for (
+                _model_name,
+                benchmark,
+                dataset_id,
+                dataset_name,
+                split_name,
+                task_name,
+                task_key,
+                _score,
+                _active_parameters,
+                _total_parameters,
+                _max_seq_length,
+            ) in task_rows
         ],
     )
     config_dir = tmp_path / "config"
@@ -3994,6 +4043,9 @@ benchmarks:
       - name: task_key
         label: Task Key
         group_by: task_key
+      - name: task_mean
+        label: Task Mean
+        group_by: task_name
 """.strip(),
         encoding="utf-8",
     )
@@ -4019,6 +4071,22 @@ benchmarks:
         in response.text
     )
     assert 'class="doc-summary-trigger' in response.text
+
+    filtered_result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard(
+        "MNanoBEIR",
+        score_group_name="task_mean",
+        show_task_scores=True,
+        language_filters=("ja",),
+    )
+    assert filtered_result.metric_columns == ["arguana"]
+    assert filtered_result.metric_column_doc_keys == {"arguana": "MNanoBEIR::NanoBEIR-ja::arguana"}
+
+    filtered_response = TestClient(app).get(
+        "/leaderboard?view=MNanoBEIR&group=task_mean&task_scores=1&lang_filter=ja"
+    )
+    assert filtered_response.status_code == 200
+    assert 'data-doc-title="MNanoBEIR / NanoBEIR-ja / NanoArguAna"' in filtered_response.text
+    assert 'data-doc-title="MNanoBEIR / NanoBEIR-ar / NanoArguAna"' not in filtered_response.text
 
 
 def test_max_len_is_formatted_with_grouping_separator() -> None:

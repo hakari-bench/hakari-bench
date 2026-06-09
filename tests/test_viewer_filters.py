@@ -4,6 +4,7 @@ from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
     FilterContext,
     active_model_filter_terms,
+    active_task_filter_terms,
     task_name_matches_filter_terms,
     row_filter_context,
     visible_row_count,
@@ -77,8 +78,13 @@ def test_short_model_filter_terms_do_not_hide_rows() -> None:
     assert visible_row_count(_rows(), context) == 4
 
 
-def test_task_name_filter_uses_same_token_matching_as_model_filter() -> None:
-    terms = active_model_filter_terms("GeRmAn arguana")
+def test_task_name_filter_accepts_two_character_task_names() -> None:
+    assert active_model_filter_terms("nq") == ()
+    assert active_task_filter_terms("nq") == ("nq",)
+
+
+def test_task_name_filter_uses_same_partial_matching_as_model_filter() -> None:
+    terms = active_task_filter_terms("GeRmAn arguana")
 
     assert task_name_matches_filter_terms("NanoMTEB-German::NanoArguAna", terms)
     assert task_name_matches_filter_terms("NanoArguAna retrieval", terms)

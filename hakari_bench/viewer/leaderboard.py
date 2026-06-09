@@ -166,6 +166,7 @@ class LeaderboardResult(BaseModel):
     selected_score_group: ScoreGroup | None = None
     metric_columns: list[str]
     metric_column_labels: dict[str, str] = Field(default_factory=dict)
+    metric_column_doc_keys: dict[str, str] = Field(default_factory=dict)
     available_languages: list[LanguageOption] = Field(default_factory=list)
     selected_languages: tuple[str, ...] = ()
 
@@ -243,7 +244,7 @@ class LeaderboardService:
             show_task_scores=show_task_scores,
         ) as request_timing:
             model_filter_terms = active_filter_terms(model_filter)
-            task_filter_terms = active_filter_terms(task_filter)
+            task_filter_terms = active_filter_terms(task_filter, min_length=2)
             ranking_model_filter_terms = model_filter_terms if rank_filtered else ()
             ranking_task_filter_terms = task_filter_terms if rank_filtered else ()
             ranking_dim_filters = dim_filters if rank_filtered else ()
@@ -416,6 +417,11 @@ class LeaderboardService:
                     metric_columns=metric_columns,
                     config=self.config,
                 )
+                metric_column_doc_keys = _metric_column_doc_keys(
+                    rows=rows,
+                    score_group=metric_score_group,
+                    metric_columns=metric_columns,
+                )
                 phase_timing["metric_column_count"] = len(metric_columns)
             with timed_operation("viewer.leaderboard.phase", operation="compute_rows", view=view_name) as phase_timing:
                 leaderboard_rows = compute_leaderboard_rows(
@@ -464,6 +470,7 @@ class LeaderboardService:
                 ),
                 metric_columns=metric_columns,
                 metric_column_labels=metric_column_labels,
+                metric_column_doc_keys=metric_column_doc_keys,
                 available_languages=available_languages,
                 selected_languages=selected_languages,
             )
@@ -1839,13 +1846,35 @@ def _metric_columns(rows: list[TaskScore], score_group: ScoreGroupConfig | None)
     return sorted({_score_group_key(row, score_group.group_by) for row in rows})
 
 
+def _metric_column_doc_keys(
+    *,
+    rows: list[TaskScore],
+    score_group: ScoreGroupConfig | None,
+    metric_columns: list[str],
+) -> dict[str, str]:
+    if score_group is None or not metric_columns:
+        return {}
+    metric_column_set = set(metric_columns)
+    candidates_by_column: dict[str, set[str]] = defaultdict(set)
+    for row in rows:
+        column = _score_group_key(row, score_group.group_by)
+        if column not in metric_column_set:
+            continue
+        candidates_by_column[column].add(f"{row.benchmark}::{row.dataset_name}::{row.task_name}")
+    return {
+        column: next(iter(candidates))
+        for column, candidates in candidates_by_column.items()
+        if len(candidates) == 1
+    }
+
+
 def _filter_metric_columns(
     rows: list[TaskScore],
     score_group: ScoreGroupConfig | None,
     columns: list[str],
     task_filter: str,
 ) -> list[str]:
-    terms = active_filter_terms(task_filter)
+    terms = active_filter_terms(task_filter, min_length=2)
     if not terms or score_group is None:
         return columns
     labels_by_column: dict[str, set[str]] = defaultdict(set)

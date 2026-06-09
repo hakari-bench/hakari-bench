@@ -114,6 +114,10 @@ def active_model_filter_terms(model_filter: str) -> tuple[str, ...]:
     return active_filter_terms(model_filter)
 
 
+def active_task_filter_terms(task_filter: str) -> tuple[str, ...]:
+    return active_filter_terms(task_filter, min_length=2)
+
+
 def model_name_matches_filter_terms(model_name: str, terms: tuple[str, ...]) -> bool:
     return text_matches_filter_terms(model_name, terms)
 
