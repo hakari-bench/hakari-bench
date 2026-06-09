@@ -35,7 +35,7 @@ covered by the dataset repository's Git LFS rules.
 
 ## Before Running Evaluation
 
-Read [`docs/benchmark_evaluation.md`](benchmark_evaluation.md) before running a
+Read [`docs/evaluation_policy.md`](evaluation_policy.md) before running a
 large evaluation. It is the source of truth for runtime options, prompt policy,
 embedding variant policy, attention implementation choices, and coverage
 audits.

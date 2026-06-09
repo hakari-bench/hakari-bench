@@ -18,7 +18,8 @@ def test_documented_hakari_bench_commands_parse() -> None:
         path.read_text(encoding="utf-8")
         for path in [
             Path("README.md"),
-            Path("docs/benchmark_evaluation.md"),
+            Path("docs/evaluation_runbook.md"),
+            Path("docs/evaluation_policy.md"),
         ]
     )
     commands = [

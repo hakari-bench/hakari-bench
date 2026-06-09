@@ -1,10 +1,12 @@
-# Model Evaluation Workflow
+# Evaluation Runbook
 
 This guide covers the practical workflow for evaluating a model, adding its
 result JSON to a viewer DuckDB database, and opening the leaderboard viewer.
-For long official benchmark waves, also read
-[`benchmark_evaluation.md`](benchmark_evaluation.md) for model-specific prompt,
-attention, variant, and coverage-audit policy.
+
+Use this file when you need runnable commands for evaluation, DuckDB updates,
+or viewer startup. Use [`evaluation_policy.md`](evaluation_policy.md) when you
+need to decide prompt behavior, attention implementation, embedding variants,
+offline/cache policy, or coverage-audit requirements.
 
 ## Full Evaluation
 
@@ -28,6 +30,22 @@ output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
 
 Use `--result-format json` only when a plain `.json` result tree is required.
 Use `--results-dir DIR` when a run should write to a separate result root.
+
+If the required Hugging Face datasets and model artifacts are already cached
+locally, you can run in offline mode:
+
+```bash
+HF_DATASETS_OFFLINE=1 HF_HUB_OFFLINE=1 \
+  uv run hakari-bench evaluate dense \
+    --model MODEL_NAME \
+    --all \
+    --dtype bf16 \
+    --device cuda:0
+```
+
+This avoids repeated Hugging Face API metadata checks during repeat runs. See
+[`evaluation_policy.md#long-benchmark-waves`](evaluation_policy.md#long-benchmark-waves)
+before using offline mode for a large benchmark wave.
 
 Local models can be evaluated directly. Give them a stable alias so later
 viewer rows have a useful logical model name:
@@ -123,6 +141,32 @@ For long GPU runs, pass the model author's recommended attention option when
 known, such as `--attn-implementation sdpa`, `--flash-attn2`, or
 `--attn-implementation flash_attention_2`. Reduce `--batch-size` before
 changing model maximum sequence length.
+
+## Custom Model Backends
+
+The built-in loaders use SentenceTransformers for dense, sparse, and reranker
+evaluation, and PyLate for late-interaction evaluation. When a model needs to
+be evaluated through another Python library or a hosted embedding/reranker API,
+pass a custom loader with `--model-loader module:function`.
+
+The loader receives `ModelLoadConfig` and returns a duck-typed model object.
+No base-class inheritance is required. Dense and sparse backends expose
+`encode_query` / `encode_document` or `encode`; rerankers expose `rank`,
+`predict`, or `__call__`; late-interaction backends expose `encode(...,
+is_query=...)`.
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model api/embed-v1 \
+  --model-loader my_pkg.hakari_loader:load_model \
+  --model-loader-kwargs-json '{"endpoint":"https://example.test","model":"embed-v1"}' \
+  --encode-kwargs-json '{"dimensions":1024}' \
+  --query-encode-kwargs-json '{"input_type":"query"}' \
+  --document-encode-kwargs-json '{"input_type":"document"}'
+```
+
+See [`custom_model_backends.md`](custom_model_backends.md) for the full
+interface contract and the dummy backend example.
 
 ## Build the Viewer DuckDB
 

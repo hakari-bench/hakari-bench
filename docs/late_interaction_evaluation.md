@@ -2,7 +2,7 @@
 
 This document records the current repository workflow for ColBERT-style
 late-interaction models. The canonical end-to-end benchmark procedure is
-[`benchmark_evaluation.md`](benchmark_evaluation.md); model-specific prompts and
+[`evaluation_policy.md`](evaluation_policy.md); model-specific prompts and
 runtime choices are maintained in
 [`model_specific_benchmarking_notes.md`](model_specific_benchmarking_notes.md)
 and in the YAML cards under `config/model_cards/`.

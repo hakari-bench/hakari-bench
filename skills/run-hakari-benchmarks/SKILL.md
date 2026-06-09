@@ -6,7 +6,7 @@ description: Entry point for HAKARI-Bench evaluation work. Use when Codex is ask
 # Run HAKARI-Bench Evaluations
 
 The canonical evaluation procedure lives in
-[`docs/benchmark_evaluation.md`](../../docs/benchmark_evaluation.md).
+[`docs/evaluation_policy.md`](../../docs/evaluation_policy.md).
 
 Before running or scheduling evaluations, read that document and follow it as
 the source of truth for:
@@ -19,4 +19,4 @@ the source of truth for:
 - DuckDB/HTML viewer refresh expectations.
 
 Do not maintain evaluation command details in this skill file. Update
-`docs/benchmark_evaluation.md` instead.
+`docs/evaluation_policy.md` instead.

@@ -29,7 +29,7 @@ not belong to a specific official MTEB family are grouped under
 `NanoMTEB-Misc`. Historical broad `NanoMTEB-{language}` aliases are not
 supported; use the canonical dataset names directly.
 
-## Model evaluation workflow
+## Evaluation runbook
 
 1. Evaluate a model on all standard tasks:
 
@@ -55,9 +55,11 @@ uv run hakari-bench web \
 Result files default to compressed `.json.xz` files under
 `output/hakari-results/`, and DuckDB generation streams results into DuckDB by
 default. See
-[`docs/model_evaluation_workflow.md`](docs/model_evaluation_workflow.md) for
+[`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for
 partial task runs, append mode, local model aliases, and useful evaluation
-options.
+options. See [`docs/evaluation_policy.md`](docs/evaluation_policy.md) when
+choosing prompts, attention implementation, embedding variants, cache/offline
+behavior, or coverage-audit requirements.
 
 ## Example
 
@@ -523,7 +525,7 @@ configured remote DuckDB before adding local results. Use
 `--append-base-duckdb latest` with `--append-output-duckdb` to create a separate
 merged copy, and `--model-name-override local/experiment_name` when a local
 result directory should be shown under a specific logical model id. See
-[`docs/model_evaluation_workflow.md`](docs/model_evaluation_workflow.md) for
+[`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for
 examples.
 
 By default, it binds to `127.0.0.1:8000` and keeps

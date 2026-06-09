@@ -1,13 +1,15 @@
-# Benchmark Evaluation Guide
+# Evaluation Policy
 
 This document is the canonical repository guidance for running HAKARI-Bench
 evaluations. Do not rely on skill-local benchmark instructions as the source of
-truth. Skill files may point here, but evaluation commands, variant policy, and
-coverage checks should be maintained in this document.
+truth. Skill files may point here, but evaluation setting policy, variant
+policy, and coverage checks should be maintained in this document.
 
-For the shorter operational path from model evaluation to DuckDB append and
-viewer startup, see
-[`model_evaluation_workflow.md`](model_evaluation_workflow.md).
+Use this file when you need to choose evaluation settings: prompts, attention
+implementation, dtype, embedding variants, cache/offline behavior, retries, or
+coverage audits. Use [`evaluation_runbook.md`](evaluation_runbook.md) when you
+need the shorter operational path from model evaluation to DuckDB append and
+viewer startup.
 
 ## Core Workflow
 
@@ -134,6 +136,10 @@ For every model:
   `--document-prompt-name`, `--query-encode-task`, or
   `--document-encode-task`.
 - Check whether `--trust-remote-code` is required.
+- If the model is evaluated through a custom backend, read
+  [`custom_model_backends.md`](custom_model_backends.md), confirm the backend
+  interface, and record provider/model/encode kwargs in metadata. Prefer
+  environment variables for credentials.
 - Check the model's default maximum sequence length, but do not override it
   unless the user explicitly asks.
 - Do not shorten context length to avoid slow execution or memory pressure.
@@ -382,6 +388,7 @@ Per-task result JSON should preserve enough metadata to explain the run:
 - embedding variants and representation metadata,
 - dtype and attention implementation,
 - Transformers, Sentence Transformers, and Torch versions,
+- custom backend loader and non-secret loader/encode kwargs when used,
 - batch size,
 - timing,
 - parameter counts,
