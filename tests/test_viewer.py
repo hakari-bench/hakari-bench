@@ -13,6 +13,7 @@ import pytest
 
 from hakari_bench.datasets import DatasetRegistry, resolve_dataset_splits, _task_name_for_split
 from hakari_bench.viewer.app import (
+    _database_footer_label,
     _fmt_max_len,
     _fmt_params,
     _metric_column_label,
@@ -737,18 +738,18 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     response = TestClient(app).get("/")
 
     assert response.status_code == 200
-    assert "<title>HAKARI-bench leaderboard</title>" in response.text
-    assert "HAKARI-bench leaderboard" in response.text
+    assert "<title>HAKARI-Bench leaderboard</title>" in response.text
+    assert "HAKARI-Bench leaderboard" in response.text
     assert '<h1 class="flex items-center gap-2 text-2xl font-semibold">' in response.text
     assert '<img src="/assets/favicon.png?' in response.text
     assert 'alt="" aria-hidden="true" class="h-8 w-8 shrink-0">' in response.text
-    assert '<p class="text-sm font-medium text-cyan-700">HAKARI-bench leaderboard</p>' not in response.text
+    assert '<p class="text-sm font-medium text-cyan-700">HAKARI-Bench leaderboard</p>' not in response.text
     assert (
         "🚧 WIP: This leaderboard is currently under active implementation, "
         "so specifications and data may change significantly."
     ) in response.text
     assert "DuckDB:" not in response.text
-    assert str(db_path) not in response.text
+    assert f"database: local / {db_path}" in response.text
     assert "Benchmark coverage" not in response.text
     assert 'data-icon="bar-chart-3"' not in response.text
     assert 'data-testid="summary-card-models"' not in response.text
@@ -775,7 +776,8 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "https://unpkg.com/htmx.org" not in response.text
     assert 'hx-get="/leaderboard?view=Overall' in response.text
     assert "<footer" in response.text
-    assert '<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-center text-xs text-zinc-500 sm:px-6">' in response.text
+    assert '<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-xs text-zinc-500 sm:px-6">' in response.text
+    assert "[overflow-wrap:anywhere]" in response.text
     assert response.text.index('id="leaderboard-panel"') < response.text.index("<footer")
 
     leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
@@ -794,10 +796,23 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
         viewer_config=config,
         duckdb_path=db_path,
         summary=ViewerSummary(latest_finished_at_utc="2026-05-22T20:27:54.839377+00:00"),
+        database_label=f"database: local / {db_path}",
     )
     assert "Latest update: 2026-05-22T20:27:54(UTC)" in page_with_latest
-    assert page_with_latest.index("HAKARI-bench leaderboard</span>") < page_with_latest.index("Latest update:")
+    assert page_with_latest.split("</header>", 1)[0].find("Latest update:") == -1
+    assert page_with_latest.index("<footer") < page_with_latest.index("Latest update:")
+    assert f"database: local / {db_path}" in page_with_latest
     assert "Latest result:" not in page_with_latest
+
+    remote_db_path = tmp_path / "remote.duckdb"
+    remote_db_path.write_bytes(b"remote duckdb")
+    remote_store = LocalDuckDbStore(
+        DuckDbLocation(
+            local_path=remote_db_path,
+            hf_source=HuggingFaceDuckDbSource(repo_id="org/dataset", filename="duckdb/hakari_bench.duckdb"),
+        )
+    )
+    assert _database_footer_label(remote_store) == "database: remote / 365e94b76ce1"
 
 
 def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:

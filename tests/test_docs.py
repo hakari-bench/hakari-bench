@@ -40,7 +40,7 @@ def test_nano_readme_template_documents_fill_requirements() -> None:
 
     assert template.exists()
     text = template.read_text(encoding="utf-8")
-    assert "[HAKARI-bench](https://github.com/hakari-bench/hakari-bench)" in text
+    assert "[HAKARI-Bench](https://github.com/hakari-bench/hakari-bench)" in text
     assert "[NanoBEIR](https://huggingface.co/blog/sionic-ai/eval-sionic-nano-beir)" in text
     assert "{{SPLIT_STATISTICS_ROWS}}" in text
     assert "{{CANDIDATE_SCORE_ROWS}}" in text

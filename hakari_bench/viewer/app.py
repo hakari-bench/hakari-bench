@@ -181,7 +181,7 @@ def create_app(
     if resolved_docs_metadata_dir is None and docs_dir == Path("task_docs/docs"):
         resolved_docs_metadata_dir = Path("task_docs/metadata")
     benchmark_docs = BenchmarkDocs(docs_dir, metadata_dir=resolved_docs_metadata_dir)
-    app = FastAPI(title="HAKARI-bench leaderboard")
+    app = FastAPI(title="HAKARI-Bench leaderboard")
     app.add_middleware(GZipMiddleware, minimum_size=1024)
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
@@ -299,6 +299,7 @@ def create_app(
                     summary=summary,
                     initial_query=initial_query,
                     benchmark_docs=benchmark_docs,
+                    database_label=_database_footer_label(store),
                 )
             request_timing["view"] = initial_query["view"]
             return content
@@ -530,19 +531,21 @@ def render_page(
     summary: ViewerSummary | None = None,
     initial_query: QueryState | None = None,
     benchmark_docs: BenchmarkDocs | None = None,
+    database_label: str = "",
 ) -> str:
     query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
     css_url = _asset_url("app.css")
     favicon_url = _asset_url("favicon.png")
     htmx_url = _asset_url("htmx.min.js")
     viewer_js_url = _asset_url("viewer.js")
-    latest_update = _render_latest_update(summary.latest_finished_at_utc if summary else None)
+    latest_update = _latest_update_label(summary.latest_finished_at_utc if summary else None)
+    footer = _render_page_footer(latest_update=latest_update, database_label=database_label)
     return f"""<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HAKARI-bench leaderboard</title>
+  <title>HAKARI-Bench leaderboard</title>
   <link rel="canonical" href="/">
   <link rel="stylesheet" href="{css_url}">
   <link rel="icon" type="image/png" href="{favicon_url}">
@@ -555,8 +558,7 @@ def render_page(
     <header class="mb-5 border-b border-zinc-200 pb-4">
       <h1 class="flex items-center gap-2 text-2xl font-semibold">
         <img src="{favicon_url}" alt="" aria-hidden="true" class="h-8 w-8 shrink-0">
-        <span>HAKARI-bench leaderboard</span>
-        {latest_update}
+        <span>HAKARI-Bench leaderboard</span>
       </h1>
       <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
       <p class="mt-2 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
@@ -572,7 +574,7 @@ def render_page(
     {render_leaderboard_loading_toast()}
     {render_global_tooltip()}
   </main>
-  <footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-center text-xs text-zinc-500 sm:px-6">HAKARI-bench leaderboard</footer>
+  {footer}
 </body>
 </html>"""
 
@@ -612,11 +614,43 @@ def render_global_tooltip() -> str:
     """
 
 
-def _render_latest_update(latest_finished_at_utc: str | None) -> str:
-    label = _latest_update_label(latest_finished_at_utc)
-    if not label:
-        return ""
-    return f"""<span class="text-xs font-normal text-zinc-500">{escape(label)}</span>"""
+def _render_page_footer(*, latest_update: str, database_label: str) -> str:
+    meta_items = []
+    if latest_update:
+        meta_items.append(
+            f"""<span class="whitespace-nowrap font-mono text-[11px] text-zinc-500">{escape(latest_update)}</span>"""
+        )
+    if database_label:
+        meta_items.append(
+            f"""<span class="min-w-0 text-left font-mono text-[11px] text-zinc-500 [overflow-wrap:anywhere] sm:text-right">{escape(database_label)}</span>"""
+        )
+    meta = "\n        ".join(meta_items)
+    if meta:
+        meta = f"""
+      <div class="flex min-w-0 flex-col gap-1 sm:items-end">
+        {meta}
+      </div>"""
+    return f"""<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-xs text-zinc-500 sm:px-6">
+    <div class="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+      <span class="shrink-0">HAKARI-Bench leaderboard</span>{meta}
+    </div>
+  </footer>"""
+
+
+def _database_footer_label(store: LocalDuckDbStore) -> str:
+    if store.location.hf_source is not None:
+        return f"database: remote / {_sha1_prefix(store.path)}"
+    return f"database: local / {store.path}"
+
+
+def _sha1_prefix(path: Path, *, length: int = 12) -> str:
+    if not path.exists():
+        return "unavailable"
+    digest = hashlib.sha1()
+    with path.open("rb") as file:
+        for chunk in iter(lambda: file.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()[:length]
 
 
 def _latest_update_label(latest_finished_at_utc: str | None) -> str:

@@ -609,7 +609,7 @@ def _read_readme_template() -> str:
     return (
         "# {{DATASET_NAME}}\n\n"
         "This dataset is a Nano-style retrieval dataset. Nano-series evaluation can "
-        "be run easily with [HAKARI-bench](https://github.com/hakari-bench/hakari-bench).\n\n"
+        "be run easily with [HAKARI-Bench](https://github.com/hakari-bench/hakari-bench).\n\n"
         "## Split Statistics\n\n"
         "{{SPLIT_STATISTICS_ROWS}}\n\n"
         "## Candidate Quality\n\n"

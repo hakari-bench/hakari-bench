@@ -78,7 +78,7 @@ def test_build_nano_dataset_from_rows_writes_flat_subset_layout_yaml_and_bm25(tm
     readme = (output_dir / "README.md").read_text(encoding="utf-8")
     assert "config_name: bm25" in readme
     assert "path: bm25/NanoToy.parquet" in readme
-    assert "[HAKARI-bench](https://github.com/hakari-bench/hakari-bench)" in readme
+    assert "[HAKARI-Bench](https://github.com/hakari-bench/hakari-bench)" in readme
     assert "## Split Statistics" in readme
     assert "| NanoToy | 1 | 3 | 1 |" in readme
     assert "## Candidate Quality" in readme

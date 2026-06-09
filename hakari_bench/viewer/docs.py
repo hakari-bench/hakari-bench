@@ -145,7 +145,7 @@ def render_markdown_page(*, doc: BenchmarkDoc, css_version: str) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{escape(doc.title)} - HAKARI-bench docs</title>
+  <title>{escape(doc.title)} - HAKARI-Bench docs</title>
   <link rel="stylesheet" href="/assets/app.css?v={escape(css_version, quote=True)}">
 </head>
 <body class="bg-zinc-50 text-zinc-950">
@@ -172,7 +172,7 @@ def render_docs_index_page(*, docs: list[BenchmarkDoc], css_version: str) -> str
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Benchmark documentation - HAKARI-bench docs</title>
+  <title>Benchmark documentation - HAKARI-Bench docs</title>
   <link rel="stylesheet" href="/assets/app.css?v={escape(css_version, quote=True)}">
 </head>
 <body class="bg-zinc-50 text-zinc-950">
