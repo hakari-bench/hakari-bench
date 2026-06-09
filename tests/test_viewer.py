@@ -780,7 +780,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "https://unpkg.com/htmx.org" not in response.text
     assert 'hx-get="/leaderboard?view=Overall' in response.text
     assert "<footer" in response.text
-    assert '<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-xs text-zinc-500 sm:px-6">' in response.text
+    assert '<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">' in response.text
     footer_html = response.text.split("<footer", 1)[1]
     assert "HAKARI-Bench leaderboard" not in footer_html
     assert "[overflow-wrap:anywhere]" in response.text
@@ -852,6 +852,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".model-tooltip" not in css_response.text
     assert ".doc-summary-trigger{background-color:transparent" in css_response.text
     assert ".doc-summary-trigger:hover" in css_response.text
+    assert ".leaderboard-col-model{box-sizing:border-box;left:0" in css_response.text
+    assert "overflow:hidden;width:var(--hakari-model-col-width)" in css_response.text
+    assert ".leaderboard-row:hover>.leaderboard-col-model{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
 
     htmx_response = client.get("/assets/htmx.min.js")
@@ -1770,6 +1773,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Model family" in response.text
     assert 'id="model-type-controls"' in response.text
     assert 'data-icon="shapes"' in response.text
+    assert response.text.index("Table display") < response.text.index("Efficiency variants")
     assert response.text.index("Efficiency variants") < response.text.index("Refine results")
     assert response.text.index("Table display") < response.text.index("Refine results")
     assert response.text.index("Refine results") < response.text.index("Model family") < response.text.index('id="model-filter-input"')
@@ -2438,11 +2442,12 @@ def test_overall_task_filter_renders_single_task_mean_column(tmp_path: Path) -> 
 
 def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
+    long_task = "legal_bench_corporate_lobbying"
     _write_task_results(
         db_path,
         [
-            ("org/model-a", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.90, 10, 12, 8192),
-            ("org/model-b", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.80, 20, 24, 4096),
+            ("org/model-a", "BenchA", "bench/a", "BenchA", long_task, long_task, long_task, 0.90, 10, 12, 8192),
+            ("org/model-b", "BenchA", "bench/a", "BenchA", long_task, long_task, long_task, 0.80, 20, 24, 4096),
         ],
     )
     config_dir = tmp_path / "config"
@@ -2450,7 +2455,7 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    result = service.get_leaderboard("BenchA")
+    result = service.get_leaderboard("BenchA", show_task_scores=True)
 
     head = render_table_head(result=result, sort="borda_rank", direction="asc")
     body = render_table_body(result=result)
@@ -2469,6 +2474,10 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
     assert (
         'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
         'text-left px-2 uppercase leaderboard-col-rank'
+    ) in head
+    assert (
+        '<span class="min-w-0 text-left leading-tight block max-w-full truncate tooltip-trigger cursor-pointer" '
+        f'data-metric-column-full-name="{long_task}"'
     ) in head
 
 
@@ -2743,6 +2752,8 @@ def test_individual_leaderboard_adds_metric_columns_from_score_group(tmp_path: P
             ("model/b", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoArguAna", "arguana", "ja-arguana", 0.50, 20, 24, 4096),
             ("model/b", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "NanoFEVER", "fever", "ja-fever", 0.40, 20, 24, 4096),
             ("model/b", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "NanoArguAna", "arguana", "en-arguana", 0.60, 20, 24, 4096),
+            ("model/a", "NanoMMTEB-v2", "NanoMMTEB-v2", "NanoMMTEB-v2", "mmteb", "mmteb", "mmteb", 0.65, 10, 12, 8192),
+            ("model/b", "NanoMMTEB-v2", "NanoMMTEB-v2", "NanoMMTEB-v2", "mmteb", "mmteb", "mmteb", 0.55, 20, 24, 4096),
         ],
     )
     config_dir = tmp_path / "config"
@@ -2758,11 +2769,12 @@ benchmarks:
       - name: lang_mean
         label: Lang Mean
         group_by: dataset_name
+  - name: NanoMMTEB-v2
 """.strip(),
         encoding="utf-8",
     )
     (config_dir / "overall.yaml").write_text(
-        "name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n",
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n  - NanoMMTEB-v2\n",
         encoding="utf-8",
     )
 
@@ -2791,10 +2803,19 @@ benchmarks:
     response = TestClient(app).get(
         "/leaderboard?view=MNanoBEIR&group=lang_mean&task_scores=1&sort=metric:NanoBEIR-ja"
     )
+    mmteb_response = TestClient(app).get("/leaderboard?view=NanoMMTEB-v2&task_scores=1")
 
     assert response.status_code == 200
+    assert mmteb_response.status_code == 200
     assert "MNanoBEIR(task)" in response.text
     assert "MNanoBEIR(lang)" in response.text
+    assert "NanoMMTEB-v2" in response.text
+    lang_scope_section = response.text.split("Benchmark scope", 1)[1].split("Table display", 1)[0]
+    mmteb_scope_section = mmteb_response.text.split("Benchmark scope", 1)[1].split("Table display", 1)[0]
+    expected_scope_order = ["MNanoBEIR(task)", "MNanoBEIR(lang)", "NanoMMTEB-v2"]
+    for scope_section in [lang_scope_section, mmteb_scope_section]:
+        scope_positions = [scope_section.index(label) for label in expected_scope_order]
+        assert scope_positions == sorted(scope_positions)
     assert "Task Mean" not in response.text
     assert 'aria-label="Score groups"' not in response.text
     assert "group=task_mean" in response.text

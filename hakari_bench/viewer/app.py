@@ -559,7 +559,7 @@ def render_page(
 </head>
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
-    <header class="mb-5 border-b border-zinc-200 pb-4">
+    <header class="mb-4">
       <div class="flex items-start justify-between gap-3">
         <h1 class="flex min-w-0 items-center gap-2 text-2xl font-semibold">
           <img src="{favicon_url}" alt="" aria-hidden="true" class="h-8 w-8 shrink-0">
@@ -645,7 +645,7 @@ def _render_page_footer(*, latest_update: str, database_label: str) -> str:
       <div class="flex min-w-0 flex-col gap-1 sm:items-end">
         {meta}
       </div>"""
-    return f"""<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-4 text-xs text-zinc-500 sm:px-6">
+    return f"""<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">
     <div class="flex min-w-0 justify-end">
       {meta}
     </div>
@@ -911,7 +911,7 @@ def render_tabs(
         if doc is None:
             grouped_buttons[group].append(
                 (
-                    sort_key,
+                    sort_key * 10,
                     f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
                       hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                       {_leaderboard_control_hx_attrs()}>
@@ -922,7 +922,7 @@ def render_tabs(
             continue
         grouped_buttons[group].append(
             (
-                sort_key,
+                sort_key * 10,
                 _render_benchmark_view_button(
                     label=view_label,
                     active=active,
@@ -1344,6 +1344,32 @@ def render_display_controls(
     variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
     return f"""
     <div class="grid gap-2 text-[0.8125rem] text-zinc-700 lg:grid-cols-2">
+      <form id="column-controls" class="border border-zinc-200 bg-white p-2"
+            hx-get="/leaderboard" hx-push-url="true"
+            {_leaderboard_control_hx_attrs()}
+            hx-trigger="change, submit">
+        {column_hidden_html}
+        <div class="mb-2 flex flex-wrap items-center gap-2">
+          {_control_label(icon="table-properties", text="Table display")}
+          {_render_help_tooltip("Changes visible columns only. It does not change which results are included in model ranking.")}
+        </div>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
+            <span>Task columns</span>
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="hidden" name="task_z_scores" value="0">
+            <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
+            <span>STD</span>
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="hidden" name="task_ranks" value="0">
+            <input type="checkbox" name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700"{task_ranks_checked}>
+            <span>Task ranks</span>
+          </label>
+        </div>
+      </form>
       <form id="variant-controls" class="border border-zinc-200 bg-white p-2"
             hx-get="/leaderboard" hx-push-url="true"
             {_leaderboard_control_hx_attrs()}
@@ -1369,32 +1395,6 @@ def render_display_controls(
           <label class="inline-flex items-center gap-2">
             <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
             <span>Other variants</span>
-          </label>
-        </div>
-      </form>
-      <form id="column-controls" class="border border-zinc-200 bg-white p-2"
-            hx-get="/leaderboard" hx-push-url="true"
-            {_leaderboard_control_hx_attrs()}
-            hx-trigger="change, submit">
-        {column_hidden_html}
-        <div class="mb-2 flex flex-wrap items-center gap-2">
-          {_control_label(icon="table-properties", text="Table display")}
-          {_render_help_tooltip("Changes visible columns only. It does not change which results are included in model ranking.")}
-        </div>
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
-            <span>Task columns</span>
-          </label>
-          <label class="inline-flex items-center gap-2">
-            <input type="hidden" name="task_z_scores" value="0">
-            <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
-            <span>STD</span>
-          </label>
-          <label class="inline-flex items-center gap-2">
-            <input type="hidden" name="task_ranks" value="0">
-            <input type="checkbox" name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700"{task_ranks_checked}>
-            <span>Task ranks</span>
           </label>
         </div>
       </form>
@@ -1915,7 +1915,7 @@ def render_table_head(
                    <button type="button" class="inline-flex min-w-0 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
                            hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                            {_leaderboard_control_hx_attrs()}>
-                     <span class="{label_class} tooltip-trigger cursor-pointer"{label_attrs}>{escape(group_label)}</span>{indicator}
+                     <span class="{label_class} block max-w-full truncate tooltip-trigger cursor-pointer"{label_attrs}>{escape(group_label)}</span>{indicator}
                    </button>{doc_trigger}
                  </span>"""
         else:
