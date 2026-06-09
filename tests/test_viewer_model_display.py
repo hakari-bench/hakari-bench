@@ -122,6 +122,32 @@ def test_render_model_name_cell_shows_sparse_type_without_dimension_badge() -> N
     assert ">1024d</span>" not in html
 
 
+def test_render_model_name_cell_shortens_sparse_active_dim_variant_with_tooltip() -> None:
+    row = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name=(
+            "opensearch-project/opensearch-neural-sparse-encoding-multilingual-v1 "
+            "(sparse_query_max_active_dims_32_sparse_document_max_active_dims_256)"
+        ),
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+        model_type="sparse",
+        embedding_variant_name="sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",
+    )
+    model_view = model_cell_views([row])[row.model_name]
+
+    html = render_model_name_cell(row, model_view)
+
+    assert model_view.variant_label == "q32d d256d"
+    assert ">q32d d256d</span>" in html
+    assert "Sparse active dimension cap." in html
+    assert "Query max active dims: 32." in html
+    assert "Document max active dims: 256." in html
+    assert "Full variant: sparse_query_max_active_dims_32_sparse_document_max_active_dims_256" in html
+
+
 def test_render_model_name_cell_orders_dimension_badges_before_quantization() -> None:
     base = LeaderboardRow(
         borda_rank=1,

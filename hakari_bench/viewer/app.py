@@ -31,7 +31,12 @@ from hakari_bench.viewer.leaderboard import (
     ScoreTarget,
     SortDirection,
 )
-from hakari_bench.viewer.model_display import model_cell_views, render_model_detail_modal, render_model_name_cell
+from hakari_bench.viewer.model_display import (
+    ModelCellView,
+    model_cell_views,
+    render_model_detail_modal,
+    render_model_name_cell,
+)
 from hakari_bench.viewer.model_types import model_type_filter_key
 from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.state import (
@@ -47,6 +52,7 @@ from hakari_bench.viewer.state import (
 )
 from hakari_bench.viewer.store import LocalDuckDbStore
 from hakari_bench.viewer.variant_display import (
+    variant_category,
     variant_display_flags_from_query,
 )
 
@@ -491,53 +497,6 @@ def create_app(
                 headers={"Content-Disposition": f'attachment; filename="{filename}"'},
             )
 
-    @app.get("/analysis", response_class=HTMLResponse)
-    def analysis(
-        panel: str = Query(default="variants", pattern="^(variants|reranking|datasets)$"),
-        view: str = Query(default=viewer_config.overall.name),
-        include_rescore: bool = Query(default=False),
-        include_truncate: bool = Query(default=False),
-    ) -> HTMLResponse:
-        with timed_operation("viewer.http.request", route="analysis", panel=panel) as request_timing:
-            store.ensure_current()
-            if view not in viewer_config.view_names:
-                view = viewer_config.overall.name
-            benchmarks = viewer_config.benchmarks_for_view(view)
-            repository = ViewerAnalyticsRepository(store.path)
-            if panel == "reranking":
-                rows = repository.fetch_rerank_diagnostics(benchmarks=benchmarks)
-                with timed_operation("viewer.render", operation="render_reranking_panel", view=view) as render_timing:
-                    content = render_reranking_panel(
-                        view_label=viewer_config.label_for_view(view),
-                        rows=rows,
-                    )
-                    render_timing["row_count"] = len(rows)
-            elif panel == "datasets":
-                rows = repository.fetch_dataset_diagnostics(benchmarks=benchmarks)
-                with timed_operation("viewer.render", operation="render_dataset_diagnostics_panel", view=view) as render_timing:
-                    content = render_dataset_diagnostics_panel(
-                        view_label=viewer_config.label_for_view(view),
-                        rows=rows,
-                    )
-                    render_timing["row_count"] = len(rows)
-            else:
-                rows = repository.fetch_variant_analysis(
-                    benchmarks=benchmarks,
-                    include_rescore=include_rescore,
-                    include_truncate=include_truncate,
-                )
-                with timed_operation("viewer.render", operation="render_variant_panel", view=view) as render_timing:
-                    content = render_variant_panel(
-                        view_name=view,
-                        view_label=viewer_config.label_for_view(view),
-                        rows=rows,
-                        include_rescore=include_rescore,
-                        include_truncate=include_truncate,
-                    )
-                    render_timing["row_count"] = len(rows)
-            request_timing["view"] = view
-            return HTMLResponse(content=content)
-
     return app
 
 
@@ -789,33 +748,6 @@ def render_summary_cards(summary: ViewerSummary) -> str:
     """
 
 
-def render_analysis_shell(*, view: str) -> str:
-    variant_query = urlencode({"panel": "variants", "view": view})
-    rerank_query = urlencode({"panel": "reranking", "view": view})
-    dataset_query = urlencode({"panel": "datasets", "view": view})
-    return f"""
-    <section class="mt-6 mb-5 border border-zinc-200 bg-white" aria-label="Analysis views">
-      <div class="px-3 pt-3">
-        <div class="mb-3">
-          {_section_title(icon="activity", text="Analysis views")}
-          <p class="text-sm text-zinc-600">Use these panels for paper-facing variant, reranking, and Nano subset audits.</p>
-        </div>
-        <div class="grid gap-2 sm:grid-cols-3">
-          <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
-                  hx-get="/analysis?{escape(variant_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("git-compare-arrows", class_name="hakari-icon action-icon shrink-0")}<span>Variant impact</span></button>
-          <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
-                  hx-get="/analysis?{escape(rerank_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("list-ordered", class_name="hakari-icon action-icon shrink-0")}<span>Reranking diagnostics</span></button>
-          <button type="button" class="inline-flex items-center justify-center gap-1.5 border border-zinc-300 px-2 py-1 text-[0.8125rem] text-zinc-800 hover:border-cyan-600 hover:text-cyan-700"
-                  hx-get="/analysis?{escape(dataset_query, quote=True)}" hx-target="#analysis-panel" hx-swap="innerHTML">{_icon_svg("database", class_name="hakari-icon action-icon shrink-0")}<span>Dataset diagnostics</span></button>
-        </div>
-      </div>
-      <div id="analysis-panel" class="px-3 pb-3">
-        <div class="mt-3 border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-600">Select an analysis view to load paper-facing diagnostics for the current benchmark view.</div>
-      </div>
-    </section>
-    """
-
-
 def render_leaderboard(
     *,
     result: LeaderboardResult,
@@ -831,9 +763,7 @@ def render_leaderboard(
     return f"""
 <div>
   {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
-  {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
-  {render_score_groups(result=result, sort=sort, direction=direction, filter_state=filter_state)}
   <div class="mb-3 flex flex-wrap items-end justify-between gap-3">
     <div>
       <h2 class="text-lg font-semibold">{escape(result.view_label)}</h2>
@@ -853,7 +783,6 @@ def render_leaderboard(
       {render_table_body(result=result, filter_context=filter_context)}
     </table>
   </div>
-  {render_analysis_shell(view=result.view_name)}
   {render_model_detail_modal()}
   {render_doc_summary_modal()}
 </div>
@@ -869,86 +798,184 @@ def render_tabs(
     benchmark_docs: BenchmarkDocs | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
-    grouped_buttons: dict[str, list[str]] = {
-        "Overall": [],
-        "Core benchmarks": [],
-        "Language-specific": [],
-        "Domain-specific": [],
+    grouped_buttons: dict[str, list[tuple[int, str]]] = {
+        "Scope presets": [],
+        "Nano suites": [],
     }
-    for view_name in result.available_views:
+    for index, view_name in enumerate(result.available_views):
         active = view_name == result.view_name
-        view_label = result.available_view_labels.get(view_name, view_name)
-        classes = (
-            "border-cyan-700 bg-cyan-50 text-cyan-900"
-            if active
-            else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
-        )
+        raw_view_label = result.available_view_labels.get(view_name, view_name)
+        view_label = _viewer_scope_label(view_name=view_name, fallback=raw_view_label)
+        classes = _control_button_classes(active=active)
         tab_sort = "borda_rank" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         query_payload["view"] = view_name
-        query = urlencode(query_payload, doseq=True)
         doc = benchmark_docs.group_doc(view_name) if benchmark_docs is not None else None
+        group = _view_group(view_name)
+        sort_key = _view_group_sort_key(view_name=view_name, fallback=index)
+        if group == "Scope presets":
+            query_payload.pop("group", None)
+            query = urlencode(query_payload, doseq=True)
+            grouped_buttons[group].append(
+                (
+                    sort_key,
+                    _render_scope_button(
+                        result=result,
+                        view_name=view_name,
+                        view_label=view_label,
+                        query=query,
+                        query_payload=query_payload,
+                    ),
+                )
+            )
+            continue
+        if view_name == "MNanoBEIR":
+            for offset, score_group, label in [
+                (0, "task_mean", "MNanoBEIR(task)"),
+                (1, "lang_mean", "MNanoBEIR(lang)"),
+            ]:
+                group_query_payload = dict(query_payload)
+                group_query_payload["group"] = score_group
+                group_query = urlencode(group_query_payload, doseq=True)
+                active = result.view_name == view_name and (
+                    result.selected_score_group is not None and result.selected_score_group.name == score_group
+                )
+                grouped_buttons[group].append(
+                    (
+                        sort_key * 10 + offset,
+                        _render_benchmark_view_button(
+                            label=label,
+                            active=active,
+                            query=group_query,
+                            query_payload=group_query_payload,
+                            doc=doc,
+                        ),
+                    )
+                )
+            continue
+        query_payload.pop("group", None)
+        query = urlencode(query_payload, doseq=True)
         if doc is None:
-            grouped_buttons[_view_group(view_name)].append(
-                f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] {classes}"
+            grouped_buttons[group].append(
+                (
+                    sort_key,
+                    f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
                       hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                       {_leaderboard_control_hx_attrs()}>
                       {escape(view_label)}
-                    </button>"""
+                    </button>""",
+                )
             )
             continue
-        doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{view_label} overview")
-        grouped_buttons[_view_group(view_name)].append(
-            f"""<span class="doc-label-group inline-flex items-center border text-[0.8125rem] {classes}" data-doc-label-group="benchmark">
-                  <button type="button" class="py-1 pl-2 pr-0 text-left"
-                    hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                    {_leaderboard_control_hx_attrs()}>
-                    {escape(view_label)}
-                  </button>
-                  <span class="inline-flex items-center pl-0.5 pr-2">{doc_trigger}</span>
-                </span>"""
+        grouped_buttons[group].append(
+            (
+                sort_key,
+                _render_benchmark_view_button(
+                    label=view_label,
+                    active=active,
+                    query=query,
+                    query_payload=query_payload,
+                    doc=doc,
+                ),
+            )
         )
-    primary_sections = [
-        _render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state),
-        _render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state),
-        _render_benchmark_group(label="Overall", buttons=grouped_buttons.pop("Overall")),
-        _render_benchmark_group(label="Core benchmarks", buttons=grouped_buttons.pop("Core benchmarks")),
-    ]
-    groups = [
-        f"""
-            <div class="min-w-0 space-y-3" data-testid="primary-benchmark-column">
-              {''.join(section for section in primary_sections if section)}
-            </div>
-            """
-    ]
-    for label, buttons in grouped_buttons.items():
-        if not buttons:
-            continue
-        groups.append(
-            f"""
-            <div class="min-w-0" data-testid="secondary-benchmark-column">
-              {_render_benchmark_group(label=label, buttons=buttons)}
-            </div>
-            """
-        )
+    preset_buttons = [button for _, button in sorted(grouped_buttons["Scope presets"])]
+    suite_buttons = [button for _, button in sorted(grouped_buttons["Nano suites"])]
     return f"""
-    <nav class="mb-4 border border-zinc-200 bg-white p-3" aria-label="Benchmark views">
-      <div class="mb-2 flex items-center justify-between gap-2">
-        {_section_title(icon="layers", text="Benchmark groups", class_name="text-sm font-semibold")}
-        <p class="text-xs text-zinc-500">Views are grouped to keep multilingual and domain-specific suites scannable.</p>
+    <nav class="mb-4 border border-zinc-200 bg-white p-2" aria-label="Leaderboard configuration">
+      <div class="grid gap-2">
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+          {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+          {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+        </div>
+        <div class="grid gap-2">
+          <div class="flex flex-wrap items-center gap-2">
+            {_control_label(icon="database", text="Benchmark scope")}
+            <div class="flex flex-wrap gap-2">{''.join(preset_buttons)}</div>
+          </div>
+          <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
+          {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True)}
+        </div>
+        {render_display_controls(result=result, sort=sort, direction=direction, filter_state=filter_state)}
       </div>
-      <div class="grid gap-3">{''.join(groups)}</div>
     </nav>
     """
 
 
-def _render_benchmark_group(*, label: str, buttons: list[str]) -> str:
+def _render_scope_button(
+    *,
+    result: LeaderboardResult,
+    view_name: str,
+    view_label: str,
+    query: str,
+    query_payload: QueryState,
+) -> str:
+    active = view_name == result.view_name
+    classes = _control_button_classes(active=active)
+    tooltip = _scope_preset_tooltip(view_name)
+    return f"""<button type="button" class="inline-flex items-center gap-1 border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
+                  hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                  {_leaderboard_control_hx_attrs()}>
+                  <span>{escape(view_label)}</span>
+                  {_render_button_help_icon(tooltip)}
+                </button>"""
+
+
+def _render_benchmark_view_button(
+    *,
+    label: str,
+    active: bool,
+    query: str,
+    query_payload: QueryState,
+    doc: BenchmarkDoc | None,
+) -> str:
+    classes = _control_button_classes(active=active)
+    if doc is None:
+        return f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
+                      hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                      {_leaderboard_control_hx_attrs()}>
+                      {escape(label)}
+                    </button>"""
+    doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview")
+    return f"""<span class="doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+              <button type="button" class="py-1 pl-2 pr-0 text-left"
+                hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                {_leaderboard_control_hx_attrs()}>
+                {escape(label)}
+              </button>
+              <span class="inline-flex items-center pl-0.5 pr-2">{doc_trigger}</span>
+            </span>"""
+
+
+def _render_button_help_icon(tooltip: str) -> str:
+    return f"""<span class="tooltip-trigger inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600"
+                    data-tooltip="{escape(tooltip, quote=True)}"
+                    data-tooltip-placement="left"
+                    aria-label="{escape(tooltip, quote=True)}">{_icon_svg("circle-help")}</span>"""
+
+
+def _scope_preset_tooltip(view_name: str) -> str:
+    tooltips = {
+        "All": "All benchmark families in the viewer. Use this for the broad leaderboard across multilingual, language-specific, and domain-specific Nano sets.",
+        "Core": "The compact core benchmark set used for a quick read of general retrieval quality: MNanoBEIR by task plus NanoMMTEB-v2, NanoRTEB, NanoMLDR, NanoBRIGHT, and NanoCoIR.",
+        "Group": "A balanced overview that first averages large benchmark families into their configured groups, then ranks models. Use this when you do not want large suites to dominate the mean.",
+    }
+    return tooltips.get(
+        view_name,
+        f"{view_name} scope from the viewer configuration. It chooses which benchmark tasks are included before row filters are applied.",
+    )
+
+
+def _render_benchmark_group(*, label: str, description: str, buttons: list[str], framed: bool = True) -> str:
     if not buttons:
         return ""
+    wrapper_class = "min-w-0 border border-zinc-200 bg-zinc-50 p-2" if framed else "min-w-0"
+    description_html = f'<p class="mb-2 text-xs leading-tight text-zinc-500">{escape(description)}</p>' if description and not framed else ""
     return f"""
-              <div>
+              <div class="{wrapper_class}">
                 <p class="mb-1 text-xs font-semibold uppercase text-zinc-500">{escape(label)}</p>
+                {description_html}
                 <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
               </div>
             """
@@ -956,23 +983,17 @@ def _render_benchmark_group(*, label: str, buttons: list[str]) -> str:
 
 def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState) -> str:
     target_options = [
-        ("all", "All"),
+        ("all", "Retrieval"),
         ("reranking", "Reranking"),
-        ("reranking_without_safeguard", "Reranking no safeguard"),
     ]
     tooltip = (
-        "All shows full-corpus retrieval scores and excludes cross-encoder reranker runs. "
-        "Reranking shows reranking_hybrid reranking scores with the optional rank-101 safeguard. "
-        "Reranking no safeguard removes that rank-101 positive when present."
+        "Switches between full-corpus retrieval scores and fixed-candidate reranking scores. "
+        "Retrieval excludes cross-encoder reranker runs. Reranking compares rerankers on a shared BM25 candidate set."
     )
     buttons = []
     for target, label in target_options:
-        active = result.score_target == target
-        classes = (
-            "border-cyan-700 bg-cyan-50 text-cyan-900"
-            if active
-            else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
-        )
+        active = result.score_target == "all" if target == "all" else result.score_target != "all"
+        classes = _control_button_classes(active=active)
         tab_sort = "borda_rank" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
@@ -982,19 +1003,34 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
             query_payload["target"] = target
         query = urlencode(query_payload, doseq=True)
         buttons.append(
-            f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] {classes}"
+            f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                   {_leaderboard_control_hx_attrs()}>
                   {escape(label)}
                 </button>"""
         )
+    safeguard_toggle = ""
+    if result.score_target != "all":
+        safeguard_enabled = result.score_target == "reranking"
+        toggle_target = "reranking_without_safeguard" if safeguard_enabled else "reranking"
+        checked_attr = " checked" if safeguard_enabled else ""
+        query_payload = state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state)
+        query_payload["target"] = toggle_target
+        query = urlencode(query_payload, doseq=True)
+        safeguard_toggle = f"""
+                <label class="inline-flex items-center gap-2 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
+                  <input type="checkbox" class="h-4 w-4 accent-cyan-700"{checked_attr}
+                    hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                    {_leaderboard_control_hx_attrs()}>
+                  <span>Safeguard positives</span>
+                </label>
+                {_render_help_tooltip("When enabled, reranking candidates are evaluated with the rank-101 safeguard so every task includes at least one relevant positive in the candidate set. This is the default.")}
+        """
     return f"""
-            <div>
-              <p class="mb-1 inline-flex items-center gap-1 text-xs font-semibold uppercase text-zinc-500">
-                <span>Target</span>
-                {_render_help_tooltip(tooltip)}
-              </p>
-              <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
+            <div class="flex min-w-0 flex-wrap items-center gap-2">
+              {''.join(buttons)}
+              {_render_help_tooltip(tooltip)}
+              {safeguard_toggle}
             </div>
             """
 
@@ -1005,11 +1041,7 @@ def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str
     buttons = []
     for metric in result.available_score_metrics:
         active = metric == result.selected_score_metric
-        classes = (
-            "border-cyan-700 bg-cyan-50 text-cyan-900"
-            if active
-            else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
-        )
+        classes = _control_button_classes(active=active)
         tab_sort = "borda_rank" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
@@ -1019,16 +1051,19 @@ def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str
             query_payload["metric"] = metric
         query = urlencode(query_payload, doseq=True)
         buttons.append(
-            f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] {classes}"
+            f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                   {_leaderboard_control_hx_attrs()}>
                   {escape(_score_metric_label(metric))}
                 </button>"""
         )
     return f"""
-            <div>
-              <p class="mb-1 text-xs font-semibold uppercase text-zinc-500">Metric</p>
-              <div class="flex flex-wrap gap-2">{''.join(buttons)}</div>
+            <div class="flex min-w-0 flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-zinc-500">
+                <span>Score metric</span>
+                {_render_help_tooltip("Changes the metric used for model means, Borda ranks, and task columns. The default is the paper's primary retrieval metric; recall metrics are useful for candidate coverage and reranking diagnostics.")}
+              </span>
+              {''.join(buttons)}
             </div>
             """
 
@@ -1050,30 +1085,45 @@ def _score_metric_label(metric: str) -> str:
 
 def _view_group(view_name: str) -> str:
     overall_views = {"All", "Core", "Group"}
-    language_specific_views = {
-        "NanoCMTEB",
-        "NanoFaMTEB-v2",
-        "NanoIndicQA",
-        "NanoJMTEB-v2",
-        "NanoMIRACL",
-        "NanoMuPLeR",
-        "NanoRuMTEB",
-        "NanoVNMTEB",
-    }
     if view_name in overall_views or view_name.startswith("Overall"):
-        return "Overall"
-    if view_name.startswith("NanoMTEB-") or view_name in language_specific_views:
-        return "Language-specific"
-    if view_name in {
-        "MNanoBEIR",
-        "NanoMMTEB-v2",
-        "NanoRTEB",
-        "NanoMLDR",
-        "NanoBRIGHT",
-        "NanoCoIR",
-    }:
-        return "Core benchmarks"
-    return "Domain-specific"
+        return "Scope presets"
+    return "Nano suites"
+
+
+def _view_group_sort_key(*, view_name: str, fallback: int) -> int:
+    priority = {
+        "All": 0,
+        "Core": 1,
+        "Group": 2,
+        "MNanoBEIR": 0,
+        "NanoMMTEB-v2": 1,
+        "NanoRTEB": 2,
+        "NanoMLDR": 3,
+        "NanoMIRACL": 4,
+        "NanoCoIR": 5,
+        "NanoBRIGHT": 6,
+        "NanoIndicQA": 7,
+        "NanoMuPLeR": 8,
+        "NanoCodeRAG": 9,
+    }
+    return priority.get(view_name, 1000 + fallback)
+
+
+def _viewer_scope_label(*, view_name: str, fallback: str) -> str:
+    labels = {
+        "All": "All",
+        "Core": "Core",
+        "Group": "Group",
+    }
+    return labels.get(view_name, fallback)
+
+
+def _control_button_classes(*, active: bool) -> str:
+    return (
+        "border-cyan-700 bg-cyan-50 text-cyan-900"
+        if active
+        else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
+    )
 
 
 def render_language_pages(
@@ -1082,6 +1132,7 @@ def render_language_pages(
     sort: str,
     direction: str,
     filter_state: FilterState | None = None,
+    embedded: bool = False,
 ) -> str:
     filter_state = filter_state or FilterState()
     if not result.available_languages:
@@ -1096,8 +1147,8 @@ def render_language_pages(
             filter_state=filter_state,
         )
     ]
-    visible_options = result.available_languages[:12]
-    more_options = result.available_languages[12:]
+    visible_options = result.available_languages[:8]
+    more_options = result.available_languages[8:]
     buttons.extend(
         _language_page_button(
             option=option,
@@ -1122,18 +1173,23 @@ def render_language_pages(
         )
         more = f"""
           <details class="relative">
-            <summary class="cursor-pointer border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">More</summary>
+            <summary class="cursor-pointer border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">More languages</summary>
             <div class="absolute z-10 mt-1 grid max-h-72 min-w-[28rem] grid-cols-3 gap-1 overflow-auto border border-zinc-300 bg-white p-2 shadow-sm sm:grid-cols-5">
               {more_buttons}
             </div>
           </details>
         """
+    wrapper_tag = "div" if embedded else "nav"
+    wrapper_class = "flex flex-wrap items-start gap-2" if embedded else "mb-4 flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
     return f"""
-      <nav class="mb-4 flex flex-wrap items-start gap-2" aria-label="Language pages">
-        {_control_label(icon="languages", text="Language pages", extra_class="pt-1 text-[0.8125rem]")}
+      <{wrapper_tag} class="{wrapper_class}" aria-label="Task facets">
+        <span class="inline-flex items-center gap-1 pt-1 text-[0.8125rem]">
+          {_control_label(icon="languages", text="Task facets")}
+          {_render_help_tooltip("Filters tasks inside the selected benchmark scope by language. Benchmark scope chooses the Nano suite family; this control narrows the tasks within that scope.")}
+        </span>
         {''.join(buttons)}
         {more}
-      </nav>
+      </{wrapper_tag}>
     """
 
 
@@ -1147,12 +1203,8 @@ def _language_page_button(
 ) -> str:
     language_filters = () if option is None else (option.code,)
     active = result.selected_languages == language_filters
-    label = "All" if option is None else f"{option.label} {option.task_count}"
-    classes = (
-        "border-cyan-700 bg-cyan-50 text-cyan-900"
-        if active
-        else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
-    )
+    label = "All languages" if option is None else f"{option.label} {option.task_count}"
+    classes = _control_button_classes(active=active)
     query_payload = state_payload(
         result=result,
         sort=sort,
@@ -1161,7 +1213,7 @@ def _language_page_button(
     )
     query = urlencode(query_payload, doseq=True)
     data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
-    return f"""<button type="button"{data_attr} class="border px-2 py-1 text-[0.8125rem] {classes}"
+    return f"""<button type="button"{data_attr} class="shrink-0 whitespace-nowrap border px-2 py-1 text-[0.8125rem] {classes}"
               hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
               {_leaderboard_control_hx_attrs()}>{escape(label)}</button>"""
 
@@ -1192,16 +1244,14 @@ def _task_length_filter_kwargs(filter_state: FilterState) -> _TaskLengthFilterKw
     }
 
 
-def render_controls(
+def render_display_controls(
     *,
     result: LeaderboardResult,
     sort: str,
     direction: str,
     filter_state: FilterState | None = None,
-    filter_context: FilterContext | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
-    filter_context = filter_context or row_filter_context(result.rows, filter_state)
     quantization_checked = " checked" if result.include_quantization_variants else ""
     truncate_checked = " checked" if result.include_truncate_variants else ""
     rescore_checked = " checked" if result.include_rescore_variants else ""
@@ -1209,7 +1259,6 @@ def render_controls(
     task_scores_checked = " checked" if result.show_task_scores else ""
     task_z_scores_checked = " checked" if result.show_task_z_scores else ""
     task_ranks_checked = " checked" if result.show_task_ranks else ""
-    rank_filtered_checked = " checked" if filter_state.rank_filtered else ""
     state_fields = [
         ("view", result.view_name),
         ("sort", sort),
@@ -1234,6 +1283,98 @@ def render_controls(
         task_score_hidden_fields.append(("task_ranks", "1"))
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
     variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
+    return f"""
+    <div class="grid gap-2 text-[0.8125rem] text-zinc-700 lg:grid-cols-2">
+      <form id="variant-controls" class="border border-zinc-200 bg-white p-2"
+            hx-get="/leaderboard" hx-push-url="true"
+            {_leaderboard_control_hx_attrs()}
+            hx-trigger="change, submit">
+        {variant_hidden_html}
+        <div class="mb-2 flex flex-wrap items-center gap-2">
+          {_control_label(icon="git-compare-arrows", text="Efficiency variants")}
+          {_render_help_tooltip("Adds non-base embedding variants to the table. These are first-class rows for quality-vs-size comparisons such as truncation, int8/binary quantization, and rescoring.")}
+        </div>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="quantization" value="1" class="h-4 w-4 accent-cyan-700"{quantization_checked}>
+            <span>Quantization</span>
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="truncate" value="1" class="h-4 w-4 accent-cyan-700"{truncate_checked}>
+            <span>Truncate dims</span>
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="rescore" value="1" class="h-4 w-4 accent-cyan-700"{rescore_checked}>
+            <span>Rescore</span>
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
+            <span>Other variants</span>
+          </label>
+        </div>
+      </form>
+      <form id="column-controls" class="border border-zinc-200 bg-white p-2"
+            hx-get="/leaderboard" hx-push-url="true"
+            {_leaderboard_control_hx_attrs()}
+            hx-trigger="change, submit">
+        {column_hidden_html}
+        <div class="mb-2 flex flex-wrap items-center gap-2">
+          {_control_label(icon="table-properties", text="Table display")}
+          {_render_help_tooltip("Changes visible columns only. It does not change which results are included in model ranking.")}
+        </div>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
+            <span>Task columns</span>
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="hidden" name="task_z_scores" value="0">
+            <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
+            <span>Show STD cells</span>
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="hidden" name="task_ranks" value="0">
+            <input type="checkbox" name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700"{task_ranks_checked}>
+            <span>Show task ranks</span>
+          </label>
+        </div>
+      </form>
+    </div>
+    """
+
+
+def render_controls(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState | None = None,
+    filter_context: FilterContext | None = None,
+) -> str:
+    filter_state = filter_state or FilterState()
+    filter_context = filter_context or row_filter_context(result.rows, filter_state)
+    rank_filtered_checked = " checked" if filter_state.rank_filtered else ""
+    state_fields = [
+        ("view", result.view_name),
+        ("sort", sort),
+        ("direction", direction),
+    ]
+    if result.score_target != "all":
+        state_fields.append(("target", result.score_target))
+    if result.selected_score_metric != "ndcg@10":
+        state_fields.append(("metric", result.selected_score_metric))
+    if result.selected_score_group is not None:
+        state_fields.append(("group", result.selected_score_group.name))
+    variant_hidden_fields = _active_variant_hidden_fields(result)
+    task_score_hidden_fields = []
+    if result.show_task_scores:
+        task_score_hidden_fields.append(("task_scores", "1"))
+    if result.show_task_z_scores:
+        task_score_hidden_fields.append(("task_z_scores", "1"))
+    else:
+        task_score_hidden_fields.append(("task_z_scores", "0"))
+    if result.show_task_ranks:
+        task_score_hidden_fields.append(("task_ranks", "1"))
     filter_hidden_fields = [
         *state_fields,
         ("filters", "1"),
@@ -1247,7 +1388,6 @@ def render_controls(
     attn_options = filter_context.attn_options
     prompt_options = filter_context.prompt_options
     model_type_options = filter_context.model_type_options
-    language_options = [(option.code, f"{option.label} ({option.task_count})") for option in result.available_languages]
     selected_dims = filter_context.selected_dims
     selected_quants = filter_context.selected_quants
     selected_dtypes = filter_context.selected_dtypes
@@ -1434,148 +1574,75 @@ def render_controls(
             **_task_length_filter_kwargs(filter_state),
         ),
     )
-    language_all_query = state_payload(
-        result=result,
-        sort=sort,
-        direction=direction,
-        filter_state=FilterState(
-            model_filter=filter_state.model_filter,
-            task_filter=filter_state.task_filter,
-            filters_active=filter_state.filters_active,
-            dim_filters=filter_state.dim_filters,
-            quant_filters=filter_state.quant_filters,
-            model_type_filters=filter_state.model_type_filters,
-            dtype_filters=filter_state.dtype_filters,
-            attn_filters=filter_state.attn_filters,
-            prompt_filters=filter_state.prompt_filters,
-            **_task_length_filter_kwargs(filter_state),
-        ),
-    )
-    language_none_query = state_payload(
-        result=result,
-        sort=sort,
-        direction=direction,
-        filter_state=FilterState(
-            model_filter=filter_state.model_filter,
-            task_filter=filter_state.task_filter,
-            filters_active=filter_state.filters_active,
-            dim_filters=filter_state.dim_filters,
-            quant_filters=filter_state.quant_filters,
-            model_type_filters=filter_state.model_type_filters,
-            dtype_filters=filter_state.dtype_filters,
-            attn_filters=filter_state.attn_filters,
-            prompt_filters=filter_state.prompt_filters,
-            **_task_length_filter_kwargs(filter_state),
-        ),
-    )
-    language_filter_html = (
-        _render_filter_details(
-            name="lang_filter",
-            summary=f"Languages ({len(result.available_languages)})",
-            icon="languages",
-            options=language_options,
-            selected_values=set(result.selected_languages),
-            all_query=language_all_query,
-            none_query=language_none_query,
-            grid_class="grid max-h-72 min-w-[28rem] grid-cols-3 gap-x-2 gap-y-1 overflow-auto sm:grid-cols-5",
-        )
-        if language_options
-        else ""
-    )
+    advanced_filter_open_attr = " open" if filter_state.filters_active or filter_state.has_task_length_filters else ""
     return f"""
-    <div class="mb-4 text-[0.8125rem] text-zinc-700">
-      <form id="column-controls" class="flex flex-wrap items-center gap-x-5 gap-y-2"
+    <div class="mb-4 grid gap-3 text-[0.8125rem] text-zinc-700">
+      <form id="filter-controls" class="border border-zinc-200 bg-white p-3"
             hx-get="/leaderboard" hx-push-url="true"
             {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
-        {column_hidden_html}
-        {_control_label(icon="table-properties", text="Columns:")}
-        <label class="inline-flex items-center gap-2">
-          <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
-          <span>Tasks</span>
-        </label>
-        {_control_label(icon="eye", text="Display:")}
-        <label class="inline-flex items-center gap-2">
-          <input type="hidden" name="task_z_scores" value="0">
-          <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
-          <span>STD</span>
-        </label>
-        <label class="inline-flex items-center gap-2">
-          <input type="hidden" name="task_ranks" value="0">
-          <input type="checkbox" name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700"{task_ranks_checked}>
-          <span>Task Rank</span>
-        </label>
-      </form>
-      <form id="variant-controls" class="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2"
-            hx-get="/leaderboard" hx-push-url="true"
-            {_leaderboard_control_hx_attrs()}
-            hx-trigger="change, submit">
-        {variant_hidden_html}
-        {_control_label(icon="git-branch", text="Include variants:")}
-        <label class="inline-flex items-center gap-2">
-          <input type="checkbox" name="quantization" value="1" class="h-4 w-4 accent-cyan-700"{quantization_checked}>
-          <span>Quantization</span>
-        </label>
-        <label class="inline-flex items-center gap-2">
-          <input type="checkbox" name="truncate" value="1" class="h-4 w-4 accent-cyan-700"{truncate_checked}>
-          <span>Truncate dims</span>
-        </label>
-        <label class="inline-flex items-center gap-2">
-          <input type="checkbox" name="rescore" value="1" class="h-4 w-4 accent-cyan-700"{rescore_checked}>
-          <span>Rescore</span>
-        </label>
-        <label class="inline-flex items-center gap-2">
-          <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
-          <span>Other variants</span>
-        </label>
-      </form>
-      <div class="mt-3 flex flex-wrap items-start gap-3">
-        <p class="pt-1">{_control_label(icon="filter", text="Filters:")}</p>
-        <form id="filter-controls" class="flex flex-wrap items-start gap-3"
-              hx-get="/leaderboard" hx-push-url="true"
-              {_leaderboard_control_hx_attrs()}
-              hx-trigger="change, submit">
-          {filter_hidden_html}
-        {_render_model_type_controls(
-            options=model_type_options,
-            selected_values=selected_model_types,
-        )}
-        <label class="flex min-w-64 items-center gap-2">
-          <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model</span>
-          {_render_help_tooltip("Filter by model name. Separate multiple names with spaces. Partial matches are supported.")}
-          <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
-                 class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
-                 autocomplete="off">
-        </label>
-        <label class="flex min-w-64 items-center gap-2">
-          <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Task</span>
-          {_render_help_tooltip("Filter by task name. Separate multiple names with spaces. Partial matches are supported.")}
-          <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
-                 class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
-                 autocomplete="off">
-        </label>
-        <label class="inline-flex items-center gap-2 pt-1">
-          <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
-          <span class="whitespace-nowrap font-medium text-zinc-800">Recalculate Borda, Mean</span>
-          {_render_help_tooltip("When enabled, Model, Task, and active facet filters narrow the ranking population before Borda and Mean are recomputed. With a Task filter, Borda is computed from per-task ranks over the filtered tasks.")}
-        </label>
-        <button type="submit" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-[0.8125rem] font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
-          Apply
-        </button>
-          <div id="facet-filters" class="flex flex-wrap items-start gap-3">
-            {_render_task_length_filter_inputs(filter_state)}
-            {language_filter_html}
-            {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
-            {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
-            <div class="flex flex-wrap items-start gap-3 border-l border-zinc-200 pl-3">
-              <p class="pt-1">{_control_label(icon="cpu", text="Runtime")}</p>
-              {_render_filter_details(name="dtype_filter", summary="Dtype", icon="type", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
-              {_render_filter_details(name="attn_filter", summary="Attention", icon="scan-eye", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
-              {_render_filter_details(name="prompt_filter", summary="Prompt", icon="message-square-text", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
+        {filter_hidden_html}
+        <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <span class="inline-flex items-center gap-1">
+            {_control_label(icon="filter", text="Refine results")}
+            {_render_help_tooltip("Narrows which rows and tasks are included in the current leaderboard. Press Enter in a text field to apply text filters; checkbox and facet changes update automatically.")}
+          </span>
+          <label class="inline-flex items-center gap-2">
+            <input type="hidden" name="rank_filtered" value="0">
+            <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
+            <span class="font-medium text-zinc-800">Recalculate ranks from filters</span>
+            {_render_help_tooltip("Recomputes Borda, mean ranks, and visible means after active model/task/facet filters are applied. Leave this off when you want the original global ranking context.")}
+          </label>
+        </div>
+        <div class="grid gap-2">
+          <div class="min-w-0 space-y-2">
+            {_render_model_type_controls(
+                options=model_type_options,
+                selected_values=selected_model_types,
+            )}
+            <div class="flex flex-wrap items-center gap-3">
+              <label class="flex min-w-64 flex-1 items-center gap-2">
+                <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model</span>
+                {_render_help_tooltip("Filters leaderboard rows by model name. Separate multiple terms with spaces; each term is matched partially.")}
+                <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
+                       class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
+                       autocomplete="off">
+              </label>
+              <label class="flex min-w-64 flex-1 items-center gap-2">
+                <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Task</span>
+                {_render_help_tooltip("Filters task columns and task rows by benchmark, dataset, split, or task name. Use this before enabling rank recalculation when inspecting one task family.")}
+                <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
+                       class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
+                       autocomplete="off">
+              </label>
             </div>
           </div>
-        </form>
-      </div>
+          <details id="facet-filters" class="min-w-0 border border-zinc-200 bg-zinc-50 p-2"{advanced_filter_open_attr}>
+            <summary class="cursor-pointer text-xs font-semibold uppercase text-zinc-500">
+              <span class="inline-flex items-center gap-1">
+                <span>Advanced filters</span>
+                {_render_help_tooltip("Open for dimension, quantization, length, dtype, attention, and prompt filters. These refine the current result set after scope and evaluation mode are selected.")}
+              </span>
+            </summary>
+            <div class="mt-2 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                {_control_label(icon="git-branch", text="Efficiency filters")}
+                {_render_help_tooltip("Filters already-included variant rows by embedding dimension or quantization type. Use the Efficiency variants panel above to include variant rows first.")}
+                {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
+                {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
+              </div>
+              {_render_task_length_filter_inputs(filter_state)}
+              <div class="flex flex-wrap items-center gap-2">
+                {_control_label(icon="cpu", text="Run metadata")}
+                {_render_help_tooltip("Filters by recorded runtime metadata. These fields describe how a result was produced; they do not change the benchmark scope.")}
+                {_render_filter_details(name="dtype_filter", summary="Dtype", icon="type", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
+                {_render_filter_details(name="attn_filter", summary="Attention", icon="scan-eye", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
+                {_render_filter_details(name="prompt_filter", summary="Prompt", icon="message-square-text", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
+              </div>
+            </div>
+          </details>
+        </div>
+      </form>
     </div>
     """
 
@@ -1623,7 +1690,10 @@ def _render_model_type_controls(
     return f"""
       <fieldset id="model-type-controls" class="flex flex-wrap items-center gap-x-4 gap-y-2">
         <input type="hidden" name="model_type_filter" value="{FILTER_NONE_VALUE}">
-        {_control_label(icon="shapes", text="Model type:")}
+        <span class="inline-flex items-center gap-1">
+          {_control_label(icon="shapes", text="Model family")}
+          {_render_help_tooltip("Filters rows by retrieval/model family after the evaluation mode is selected. Dense, sparse/BM25, and late-interaction rows are comparable full-corpus retrieval families; reranker rows appear through reranking mode.")}
+        </span>
         {''.join(checkboxes)}
       </fieldset>
     """
@@ -1634,38 +1704,38 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
         "w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
-    active_classes = "border-cyan-700 bg-cyan-50" if filter_state.has_task_length_filters else "border-zinc-200 bg-zinc-50"
+    active_class = "text-cyan-700" if filter_state.has_task_length_filters else ""
     tooltip = (
-        "Filters tasks by average query and document string length in characters. "
+        "Filters tasks by average query and document length in characters. "
         "Tasks missing length metadata are excluded when a bound is set."
     )
     return f"""
-    <fieldset class="flex flex-wrap items-center gap-2 border {active_classes} px-1.5 py-1">
-      <legend class="inline-flex items-center gap-1 px-1 text-xs font-semibold uppercase text-zinc-500">
-        <span>Task string length</span>
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="inline-flex items-center gap-1">
+        {_control_label(icon="ruler", text="Length", extra_class=active_class)}
         {_render_help_tooltip(tooltip)}
-      </legend>
+      </span>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Query string >=</span>
+        <span class="text-xs font-medium text-zinc-700">Query length ≥</span>
         <input type="number" min="0" step="any" name="query_len_min" value="{escape(filter_state.query_len_min)}"
                class="{input_class}">
       </label>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Query string <=</span>
+        <span class="text-xs font-medium text-zinc-700">Query length ≤</span>
         <input type="number" min="0" step="any" name="query_len_max" value="{escape(filter_state.query_len_max)}"
                class="{input_class}">
       </label>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Doc string >=</span>
+        <span class="text-xs font-medium text-zinc-700">Document length ≥</span>
         <input type="number" min="0" step="any" name="doc_len_min" value="{escape(filter_state.doc_len_min)}"
                class="{input_class}">
       </label>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Doc string <=</span>
+        <span class="text-xs font-medium text-zinc-700">Document length ≤</span>
         <input type="number" min="0" step="any" name="doc_len_max" value="{escape(filter_state.doc_len_max)}"
                class="{input_class}">
       </label>
-    </fieldset>
+    </div>
     """
 
 
@@ -1746,26 +1816,57 @@ def render_table_head(
         query = urlencode(query_payload, doseq=True)
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
-        th_spacing = "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 normal-case" if is_metric else "px-2 uppercase"
+        th_spacing = f"{_metric_column_width_class(result)} px-1 normal-case" if is_metric else "px-2 uppercase"
         sticky = _sticky_head_class(key)
-        label_class = "min-w-0 text-left leading-tight [overflow-wrap:anywhere]" if is_metric else "text-left"
+        label_class = "min-w-0 text-left leading-tight" if is_metric else "text-left"
         label_attrs = (
             f' data-metric-column-full-name="{escape(full_metric_name, quote=True)}"' if is_metric else ""
         )
+        if is_metric:
+            label_attrs += (
+                f' data-tooltip="{escape(_metric_column_tooltip(label=label, full_metric_name=full_metric_name, result=result), quote=True)}"'
+                ' data-tooltip-placement="left"'
+                f' aria-label="{escape(_metric_column_tooltip(label=label, full_metric_name=full_metric_name, result=result), quote=True)}"'
+            )
         doc = (
             benchmark_docs.task_doc(view_name=result.view_name, metric_column=full_metric_name)
             if benchmark_docs is not None and is_metric
             else None
         )
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview") if doc is not None else ""
-        header_content = f"""
-                 <span class="doc-label-group inline-flex w-full items-center gap-0.5" data-doc-label-group="metric">
-                   <button type="button" class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
+        if is_metric:
+            group_label, task_label = _metric_column_header_parts(label)
+            if task_label:
+                header_content = f"""
+                 <span class="doc-label-group block w-full min-w-0" data-doc-label-group="metric">
+                   <span class="{label_class} tooltip-trigger cursor-pointer"{label_attrs}>
+                     <span class="block w-full truncate">{escape(group_label)}</span>
+                     <span class="inline-flex max-w-full items-center gap-1">
+                       <button type="button" class="inline-flex min-w-0 items-center gap-0.5 text-left hover:text-cyan-700"
+                               hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                               {_leaderboard_control_hx_attrs()}>
+                         <span class="block max-w-full truncate font-normal text-zinc-500">{escape(task_label)}</span>{indicator}
+                       </button>{doc_trigger}
+                     </span>
+                   </span>
+                 </span>"""
+            else:
+                header_content = f"""
+                 <span class="doc-label-group inline-flex w-full min-w-0 items-center gap-1" data-doc-label-group="metric">
+                   <button type="button" class="inline-flex min-w-0 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
                            hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                            {_leaderboard_control_hx_attrs()}>
-                     <span class="{label_class}"{label_attrs}>{escape(label)}</span>{indicator}
+                     <span class="{label_class} tooltip-trigger cursor-pointer"{label_attrs}>{escape(group_label)}</span>{indicator}
                    </button>{doc_trigger}
                  </span>"""
+        else:
+            label_markup = escape(label)
+            header_content = f"""
+                 <button type="button" class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
+                         hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                         {_leaderboard_control_hx_attrs()}>
+                   <span class="{label_class}"{label_attrs}>{label_markup}</span>{indicator}
+                 </button>"""
         heads.append(
             f"""<th scope="col" data-column-key="{escape(key, quote=True)}" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
                  {header_content}
@@ -1862,6 +1963,8 @@ def _csv_headers(*, result: LeaderboardResult, metric_headers: dict[str, str]) -
             "Original Embedding Dims",
             "Truncated Embedding Dims",
             "Quantization",
+            "Variant Label",
+            "Variant Category",
             "Embedding Variant",
             "Base Score Delta Percent",
             "DType",
@@ -1895,6 +1998,8 @@ def _csv_metric_headers(*, result: LeaderboardResult, metric_labels: dict[str, s
         "Original Embedding Dims",
         "Truncated Embedding Dims",
         "Quantization",
+        "Variant Label",
+        "Variant Category",
         "Embedding Variant",
         "Base Score Delta Percent",
         "DType",
@@ -1927,14 +2032,14 @@ def _csv_record_for_row(
     *,
     result: LeaderboardResult,
     row: LeaderboardRow,
-    model_view: object,
+    model_view: ModelCellView,
     metric_headers: dict[str, str],
 ) -> dict[str, object | None]:
-    metadata = getattr(model_view, "metadata")
+    metadata = model_view.metadata
     record: dict[str, object | None] = {
         "Borda Rank": row.borda_rank,
         "Mean Rank": row.mean_rank,
-        "Model Name": getattr(model_view, "display_name"),
+        "Model Name": model_view.display_name,
         "Borda Score": row.borda_score,
         "Task Count": row.task_count,
         "Full Model Name": metadata.get("model_name"),
@@ -1949,6 +2054,8 @@ def _csv_record_for_row(
         "Original Embedding Dims": metadata.get("original_embedding_dim"),
         "Truncated Embedding Dims": metadata.get("truncated_embedding_dim"),
         "Quantization": metadata.get("quantization"),
+        "Variant Label": _csv_variant_label(row=row, model_view=model_view),
+        "Variant Category": _csv_variant_category(row),
         "Embedding Variant": metadata.get("embedding_variant_name"),
         "Base Score Delta Percent": metadata.get("base_score_delta_percent"),
         "DType": metadata.get("dtype"),
@@ -1966,6 +2073,37 @@ def _csv_record_for_row(
     return record
 
 
+def _csv_variant_label(*, row: LeaderboardRow, model_view: ModelCellView) -> str | None:
+    if row.embedding_variant_name is None and row.quantization is None:
+        return None
+    return model_view.variant_label or row.quantization or row.embedding_variant_name
+
+
+def _csv_variant_category(row: LeaderboardRow) -> str | None:
+    if row.embedding_variant_name is None:
+        return "quantization" if row.quantization is not None else None
+    if _is_sparse_active_dims_variant(row):
+        return "sparse active dims"
+    category = variant_category(embedding_variant_name=row.embedding_variant_name, quantization=row.quantization)
+    labels = []
+    if category.truncate:
+        labels.append("truncate")
+    if category.quantization:
+        labels.append("quantization")
+    if category.rescore:
+        labels.append("rescore")
+    return " + ".join(labels) if labels else "other"
+
+
+def _is_sparse_active_dims_variant(row: LeaderboardRow) -> bool:
+    variant_name = row.embedding_variant_name or ""
+    return (
+        model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) == "sparse"
+        and "sparse_" in variant_name
+        and ("max_active_dims" in variant_name or "max_dims" in variant_name)
+    )
+
+
 def _csv_cell(value: object | None) -> str:
     if value is None:
         return ""
@@ -1981,228 +2119,6 @@ def _csv_cell(value: object | None) -> str:
     return text
 
 
-def render_variant_panel(
-    *,
-    view_label: str,
-    rows,
-    include_rescore: bool = False,
-    include_truncate: bool = False,
-    view_name: str | None = None,
-) -> str:
-    rescore_toggle = _variant_analysis_toggle(
-        view_name=view_name,
-        label_enabled="Hide rescore",
-        label_disabled="Include rescore",
-        flag_name="include_rescore",
-        flag_value=include_rescore,
-        other_flags={"include_truncate": include_truncate},
-    )
-    truncate_toggle = _variant_analysis_toggle(
-        view_name=view_name,
-        label_enabled="Hide truncate_dim",
-        label_disabled="Include truncate_dim",
-        flag_name="include_truncate",
-        flag_value=include_truncate,
-        other_flags={"include_rescore": include_rescore},
-    )
-    if not rows:
-        body = """<tr><td class="px-3 py-5 text-center text-zinc-500" colspan="7">No embedding variant rows are available for this view.</td></tr>"""
-    else:
-        body = "".join(
-            f"""
-            <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
-              <td class="px-3 py-2 font-medium">{escape(row.model_name)}</td>
-              <td class="px-3 py-2">{escape(row.variant_name)}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_embedding_dim(row.embedding_dim)}</td>
-              <td class="px-3 py-2">{escape(row.quantization or "original")}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_score(row.mean_score_100)}</td>
-              <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent_delta(row.base_delta_percent)}</td>
-            </tr>
-            """
-            for row in rows
-        )
-    return f"""
-    <div class="px-3 py-3">
-      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h3 class="text-base font-semibold">Variant impact</h3>
-          <p class="text-sm text-zinc-600">{escape(view_label)}: base-relative score changes for embedding variants. Rescore and truncate_dim variants are hidden by default.</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          {rescore_toggle}
-          {truncate_toggle}
-          <p class="text-xs text-zinc-500">{len(rows):,} variant groups</p>
-        </div>
-      </div>
-      <div class="max-h-80 overflow-auto border border-zinc-200">
-        <table class="min-w-full text-sm">
-          <thead>
-            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
-              <th class="px-3 py-2 text-left">Model</th>
-              <th class="px-3 py-2 text-left">Variant</th>
-              <th class="px-3 py-2 text-right">Dims</th>
-              <th class="px-3 py-2 text-left">Quantization</th>
-              <th class="px-3 py-2 text-right">Tasks</th>
-              <th class="px-3 py-2 text-right">Mean score</th>
-              <th class="px-3 py-2 text-right">Delta vs base</th>
-            </tr>
-          </thead>
-          <tbody>{body}</tbody>
-        </table>
-      </div>
-    </div>
-    """
-
-
-def _variant_analysis_toggle(
-    *,
-    view_name: str | None,
-    label_enabled: str,
-    label_disabled: str,
-    flag_name: str,
-    flag_value: bool,
-    other_flags: dict[str, bool],
-) -> str:
-    if view_name is None:
-        return ""
-    query_payload = {
-        "panel": "variants",
-        "view": view_name,
-        flag_name: "0" if flag_value else "1",
-    }
-    query_payload.update({name: "1" for name, value in other_flags.items() if value})
-    toggle_query = urlencode(query_payload)
-    toggle_label = label_enabled if flag_value else label_disabled
-    toggle_classes = (
-        "border-cyan-700 bg-cyan-50 text-cyan-900"
-        if flag_value
-        else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-600 hover:text-cyan-700"
-    )
-    return f"""
-    <button type="button" class="border px-2 py-1 text-[0.8125rem] {toggle_classes}"
-            hx-get="/analysis?{escape(toggle_query, quote=True)}"
-            hx-target="#analysis-panel" hx-swap="innerHTML">{escape(toggle_label)}</button>
-    """
-
-
-def render_reranking_panel(*, view_label: str, rows) -> str:
-    if not rows:
-        return _empty_analysis_panel(
-            title="Reranking diagnostics",
-            body="No reranking diagnostic rows are available for this view.",
-        )
-    body = "".join(
-        f"""
-        <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
-          <td class="px-3 py-2 font-medium">{escape(row.benchmark)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.query_coverage_percent)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.relevant_coverage_percent)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_signed_points(row.mean_lift_points)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_max_len(row.rerank_top_k)}</td>
-          <td class="px-3 py-2">{escape(row.candidate_source or "")}</td>
-          <td class="px-3 py-2">{escape(row.candidate_ranking or "")}</td>
-          <td class="px-3 py-2">{escape(row.bm25_source or "")}</td>
-        </tr>
-        """
-        for row in rows
-    )
-    return f"""
-    <div class="px-3 py-3">
-      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h3 class="text-base font-semibold">Reranking diagnostics</h3>
-          <p class="text-sm text-zinc-600">{escape(view_label)}: candidate coverage and second-stage rerank lift.</p>
-        </div>
-        <p class="text-xs text-zinc-500">{len(rows):,} benchmark rows</p>
-      </div>
-      <div class="max-h-80 overflow-auto border border-zinc-200">
-        <table class="min-w-full text-sm">
-          <thead>
-            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
-              <th class="px-3 py-2 text-left">Benchmark</th>
-              <th class="px-3 py-2 text-right">Tasks</th>
-              <th class="px-3 py-2 text-right">Query coverage</th>
-              <th class="px-3 py-2 text-right">Relevant coverage</th>
-              <th class="px-3 py-2 text-right">Lift</th>
-              <th class="px-3 py-2 text-right">Top K</th>
-              <th class="px-3 py-2 text-left">Candidate source</th>
-              <th class="px-3 py-2 text-left">Ranking</th>
-              <th class="px-3 py-2 text-left">BM25 source</th>
-            </tr>
-          </thead>
-          <tbody>{body}</tbody>
-        </table>
-      </div>
-    </div>
-    """
-
-
-def render_dataset_diagnostics_panel(*, view_label: str, rows) -> str:
-    if not rows:
-        return _empty_analysis_panel(
-            title="Dataset diagnostics",
-            body="No dataset metadata rows are available for this view.",
-        )
-    body = "".join(
-        f"""
-        <tr class="border-t border-zinc-200 odd:bg-white even:bg-zinc-50">
-          <td class="px-3 py-2 font-medium">{escape(row.benchmark)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.task_count:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.language_count:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.category_count:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{row.base_rows:,}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_percent(row.saturation_percent)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_query_count)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_document_count)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_query_chars)}</td>
-          <td class="px-3 py-2 text-right tabular-nums">{_fmt_number(row.mean_document_chars)}</td>
-        </tr>
-        """
-        for row in rows
-    )
-    return f"""
-    <div class="px-3 py-3">
-      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h3 class="text-base font-semibold">Dataset diagnostics</h3>
-          <p class="text-sm text-zinc-600">{escape(view_label)}: metadata coverage, sample sizes, text lengths, and score saturation.</p>
-        </div>
-        <p class="text-xs text-zinc-500">{len(rows):,} benchmark rows</p>
-      </div>
-      <div class="max-h-80 overflow-auto border border-zinc-200">
-        <table class="min-w-full text-sm">
-          <thead>
-            <tr class="bg-zinc-100 text-xs font-semibold uppercase text-zinc-600">
-              <th class="px-3 py-2 text-left">Benchmark</th>
-              <th class="px-3 py-2 text-right">Tasks</th>
-              <th class="px-3 py-2 text-right">Languages</th>
-              <th class="px-3 py-2 text-right">Categories</th>
-              <th class="px-3 py-2 text-right">Base rows</th>
-              <th class="px-3 py-2 text-right">Saturation</th>
-              <th class="px-3 py-2 text-right">Queries</th>
-              <th class="px-3 py-2 text-right">Docs</th>
-              <th class="px-3 py-2 text-right">Query chars</th>
-              <th class="px-3 py-2 text-right">Doc chars</th>
-            </tr>
-          </thead>
-          <tbody>{body}</tbody>
-        </table>
-      </div>
-    </div>
-    """
-
-
-def _empty_analysis_panel(*, title: str, body: str) -> str:
-    return f"""
-    <div class="px-3 py-4">
-      <h3 class="text-base font-semibold">{escape(title)}</h3>
-      <p class="mt-1 text-sm text-zinc-600">{escape(body)}</p>
-    </div>
-    """
-
-
 def _render_metric_cells(
     *,
     result: LeaderboardResult,
@@ -2210,9 +2126,13 @@ def _render_metric_cells(
     metric_rank_labels: dict[tuple[str, str], str] | None = None,
 ) -> str:
     if result.show_task_ranks:
-        values = row.metric_rank_values
         return "".join(
-            f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums">{_metric_rank_label(row, column, values.get(column), metric_rank_labels)}</td>"""
+            _render_metric_rank_score_cell(
+                result=result,
+                row=row,
+                column=column,
+                metric_rank_labels=metric_rank_labels,
+            )
             for column in result.metric_columns
         )
     if result.show_task_z_scores:
@@ -2221,8 +2141,9 @@ def _render_metric_cells(
             for column in result.metric_columns
         )
     values = row.metric_values
+    metric_width_class = _metric_column_width_class(result)
     return "".join(
-        f"""<td class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums">{_fmt_score(values.get(column))}</td>"""
+        f"""<td class="{metric_width_class} px-1 py-1 text-left tabular-nums">{_fmt_score(values.get(column))}</td>"""
         for column in result.metric_columns
     )
 
@@ -2242,14 +2163,49 @@ def _render_mean_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str
 
 
 def _render_metric_z_cell(*, score: float | None, z_score: float | None) -> str:
-    return _render_score_z_cell(
-        score=score,
-        z_score=z_score,
-        cell_class="w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem] px-1 py-1 text-left tabular-nums",
+    return (
+        '<td class="w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem] px-1 py-1 text-left tabular-nums">'
+        f"{_render_score_z_badge(score=score, z_score=z_score)}"
+        "</td>"
     )
 
 
+def _render_metric_rank_score_cell(
+    *,
+    result: LeaderboardResult,
+    row: LeaderboardRow,
+    column: str,
+    metric_rank_labels: dict[tuple[str, str], str] | None,
+) -> str:
+    rank_label = _metric_rank_label(row, column, row.metric_rank_values.get(column), metric_rank_labels)
+    rank_html = f'<span class="task-rank-label">{escape(f"[{rank_label}]")}</span>' if rank_label else ""
+    if result.show_task_z_scores:
+        score_html = _render_score_z_badge(score=row.metric_values.get(column), z_score=row.metric_z_values.get(column))
+    else:
+        score_html = f'<span class="task-rank-score-value">{escape(_fmt_score(row.metric_values.get(column)))}</span>'
+    metric_width_class = _metric_column_width_class(result)
+    return (
+        f'<td class="{metric_width_class} px-1 py-1 tabular-nums">'
+        '<span class="task-rank-score-cell">'
+        f"{rank_html}{score_html}"
+        "</span>"
+        "</td>"
+    )
+
+
+def _metric_column_width_class(result: LeaderboardResult) -> str:
+    if result.show_task_ranks and result.show_task_z_scores:
+        return "w-[7rem] min-w-[7rem] max-w-[7rem]"
+    if result.show_task_ranks:
+        return "w-[6rem] min-w-[6rem] max-w-[6rem]"
+    return "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]"
+
+
 def _render_score_z_cell(*, score: float | None, z_score: float | None, cell_class: str) -> str:
+    return f'<td class="{cell_class}">{_render_score_z_badge(score=score, z_score=z_score)}</td>'
+
+
+def _render_score_z_badge(*, score: float | None, z_score: float | None) -> str:
     rounded = _rounded_z_score(z_score)
     if rounded is None:
         z_label = ""
@@ -2259,12 +2215,10 @@ def _render_score_z_cell(*, score: float | None, z_score: float | None, cell_cla
         z_label = f"{_fmt_z_score(z_score)}σ"
         bucket_class = _z_score_bucket_class(rounded)
     return (
-        f'<td class="{cell_class}">'
         f'<span class="task-z-score {bucket_class}">'
         f'<span class="task-z-score-value">{escape(_fmt_score(score))}</span>'
         f'<span class="task-z-score-delta">{escape(z_label)}</span>'
         "</span>"
-        "</td>"
     )
 
 
@@ -2281,7 +2235,12 @@ def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow)
 
 
 def _show_base_delta_column(result: LeaderboardResult) -> bool:
-    return result.include_quantization_variants or result.include_truncate_variants
+    return (
+        result.include_quantization_variants
+        or result.include_truncate_variants
+        or result.include_rescore_variants
+        or result.include_other_variants
+    )
 
 
 def _render_filter_details(
@@ -2458,27 +2417,54 @@ def _fmt_percent_delta(value: float | None) -> str:
     return "" if value is None else f"{value:+.1f}%"
 
 
-def _fmt_percent(value: float | None) -> str:
-    return "" if value is None else f"{value:.1f}%"
-
-
-def _fmt_signed_points(value: float | None) -> str:
-    return "" if value is None else f"{value:+.2f}"
-
-
-def _fmt_number(value: float | None) -> str:
-    return "" if value is None else f"{value:,.1f}"
-
-
 def _metric_column_label(column: str) -> str:
     parts = column.split("::")
     if len(parts) >= 3:
         dataset = parts[-2].rsplit("/", 1)[-1]
         task = parts[-1]
+        if dataset == task:
+            return dataset
         return f"{dataset}::{task}"
     if len(parts) == 2:
+        if parts[0] == parts[1]:
+            return parts[0]
         return column
     return column.removeprefix("Nano")
+
+
+def _metric_column_label_markup(label: str) -> str:
+    parts = [part for part in label.split("::") if part]
+    if len(parts) <= 1:
+        return f'<span class="block w-full truncate">{escape(label)}</span>'
+    escaped_parts = [escape(part) for part in parts]
+    first, rest = escaped_parts[0], escaped_parts[1:]
+    return (
+        f'<span class="block w-full truncate">{first}</span>'
+        + "".join(f'<span class="block w-full truncate font-normal text-zinc-500">{part}</span>' for part in rest)
+    )
+
+
+def _metric_column_header_parts(label: str) -> tuple[str, str]:
+    parts = [part for part in label.split("::") if part]
+    if len(parts) >= 3:
+        return parts[-2].rsplit("/", 1)[-1], parts[-1]
+    if len(parts) == 2:
+        return parts[0], "" if parts[0] == parts[1] else parts[1]
+    return label, ""
+
+
+def _metric_column_tooltip(*, label: str, full_metric_name: str, result: LeaderboardResult) -> str:
+    if result.selected_score_group is not None:
+        group_label = result.selected_score_group.label
+        base = (
+            f"{group_label} column. Scores are averaged per model over the raw benchmark rows that belong "
+            "to this group."
+        )
+    else:
+        base = "Task score column for this benchmark task."
+    if full_metric_name == label:
+        return f"{base} Full key: {full_metric_name}"
+    return f"{base} Display: {label}. Full key: {full_metric_name}"
 
 
 def _metric_column_labels(columns: list[str], *, overrides: dict[str, str] | None = None) -> dict[str, str]:

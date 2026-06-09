@@ -120,6 +120,40 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
     ]
 
 
+def test_load_model_uses_custom_loader() -> None:
+    model = load_model(
+        ModelLoadConfig(
+            model_name_or_path="dummy/model",
+            model_type="dense",
+            model_loader="examples.custom_backends.dummy_backend:load_model",
+            model_loader_kwargs={"scale": 2.0, "backend_name": "test-dummy"},
+        )
+    )
+
+    assert model.metadata()["backend_library"] == "hakari-dummy"
+    assert model.metadata()["backend_name"] == "test-dummy"
+    assert model.scale == 2.0
+
+
+def test_load_model_validates_custom_loader_capabilities(monkeypatch: pytest.MonkeyPatch) -> None:
+    class InvalidModel:
+        pass
+
+    def fake_loader(_config: ModelLoadConfig) -> InvalidModel:
+        return InvalidModel()
+
+    monkeypatch.setattr("hakari_bench.models._import_loader_factory", lambda _loader: fake_loader)
+
+    with pytest.raises(TypeError, match="dense model backends must expose"):
+        load_model(
+            ModelLoadConfig(
+                model_name_or_path="dummy/model",
+                model_type="dense",
+                model_loader="tests.fake:load_model",
+            )
+        )
+
+
 def test_pylate_dense_patch_defaults_missing_activation_function(monkeypatch: pytest.MonkeyPatch) -> None:
     class FakePylateDense:
         def __init__(self, **config: object) -> None:
@@ -371,6 +405,46 @@ def test_collect_model_metadata_records_model_revision(monkeypatch: pytest.Monke
         "name": "hotchpotch/model",
         "revision_requested": "main",
         "revision": "0123456789abcdef0123456789abcdef01234567",
+    }
+
+
+def test_collect_model_metadata_records_custom_backend_metadata() -> None:
+    class CustomModel:
+        similarity_fn_name = "dot"
+
+        def metadata(self) -> dict[str, object]:
+            return {
+                "backend_library": "custom-api",
+                "provider_model": "embed-v1",
+                "api_token": "should-not-leak",
+            }
+
+    args = argparse.Namespace(
+        model="api/embed-v1",
+        model_id="api/embed-v1",
+        model_type="dense",
+        dtype="bf16",
+        device=None,
+        trust_remote_code=False,
+        attn_implementation=None,
+        flash_attn2=False,
+        model_revision=None,
+        model_source={"type": "custom", "name": "api/embed-v1"},
+        model_loader="pkg.loader:load_model",
+        model_loader_kwargs={"endpoint": "https://example.test", "api_key": "secret"},
+    )
+
+    metadata = collect_model_metadata(CustomModel(), args)
+
+    assert metadata["backend_library"] == "custom-api"
+    assert metadata["backend"] == {
+        "loader": "pkg.loader:load_model",
+        "loader_kwargs": {"endpoint": "https://example.test", "api_key": "<redacted>"},
+    }
+    assert metadata["backend_metadata"] == {
+        "backend_library": "custom-api",
+        "provider_model": "embed-v1",
+        "api_token": "<redacted>",
     }
 
 

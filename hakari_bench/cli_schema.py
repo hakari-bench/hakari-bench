@@ -19,6 +19,8 @@ class ModelParams(ParamsModel):
     source: str | None = None
     alias: str | None = None
     revision: str | None = None
+    loader: str | None = None
+    loader_kwargs: dict[str, Any] | None = None
 
 
 class TargetParams(ParamsModel):
@@ -74,6 +76,9 @@ class PromptParams(ParamsModel):
     document_prompt_name: str | None = None
     query_encode_task: str | None = None
     document_encode_task: str | None = None
+    encode_kwargs: dict[str, Any] | None = None
+    query_encode_kwargs: dict[str, Any] | None = None
+    document_encode_kwargs: dict[str, Any] | None = None
 
 
 class RerankerParams(ParamsModel):

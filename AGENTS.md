@@ -46,8 +46,8 @@ under `config/datasets/`, and dataset collection definitions live under
 ## Evaluation Execution
 
 - Before running or scheduling benchmark evaluations, read
-  `docs/model_evaluation_workflow.md` for the practical evaluate-build-viewer
-  workflow and `docs/benchmark_evaluation.md` as the source of truth for
+  `docs/evaluation_runbook.md` for the practical evaluate-build-viewer
+  workflow and `docs/evaluation_policy.md` as the source of truth for
   prompt/runtime choices, embedding variant policy, and result coverage audits.
 - Prefer the attention implementation officially recommended by the evaluated
   model. Use explicit `--attn-implementation sdpa`, `--flash-attn2`, or
@@ -67,6 +67,8 @@ under `config/datasets/`, and dataset collection definitions live under
 
 ## Leaderboard Viewer
 
+- For leaderboard viewer design changes, read `@DESIGN.md` first and keep
+  design-specific rules there.
 - When updating the leaderboard viewer in this project, keep
   `docs/duckdb_schema.md` in sync. Update it when DuckDB schema, viewer queries,
   leaderboard semantics, score grouping, variant handling, or required columns

@@ -161,10 +161,17 @@ def _available_cpu_count() -> int | None:
         count = process_cpu_count()
         if count:
             return int(count)
-    try:
-        return len(os.sched_getaffinity(0))
-    except AttributeError:
-        return os.cpu_count()
+    affinity = _sched_getaffinity(0)
+    if affinity is not None:
+        return len(affinity)
+    return os.cpu_count()
+
+
+def _sched_getaffinity(pid: int) -> set[int] | None:
+    sched_getaffinity = getattr(os, "sched_getaffinity", None)
+    if sched_getaffinity is None:
+        return None
+    return set(sched_getaffinity(pid))
 
 
 def _linux_physical_cpu_count(cpuinfo_path: Path = Path("/proc/cpuinfo")) -> int | None:
@@ -172,10 +179,7 @@ def _linux_physical_cpu_count(cpuinfo_path: Path = Path("/proc/cpuinfo")) -> int
         cpuinfo_text = cpuinfo_path.read_text(encoding="utf-8")
     except OSError:
         return None
-    try:
-        allowed_processors = set(os.sched_getaffinity(0))
-    except AttributeError:
-        allowed_processors = None
+    allowed_processors = _sched_getaffinity(0)
     return _physical_cpu_count_from_linux_cpuinfo(
         cpuinfo_text,
         allowed_processors=allowed_processors,

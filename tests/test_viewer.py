@@ -21,6 +21,7 @@ from hakari_bench.viewer.app import (
     _view_group,
     _z_score_bucket_class,
     create_app,
+    render_leaderboard_csv,
     render_page,
     render_table_body,
     render_table_head,
@@ -36,6 +37,7 @@ from hakari_bench.viewer.leaderboard import (
     _clear_task_score_cache,
     compute_leaderboard_rows,
 )
+from hakari_bench.viewer import store as viewer_store
 from hakari_bench.viewer.model_display import model_cell_views
 from hakari_bench.viewer.store import (
     DuckDbLocation,
@@ -232,33 +234,31 @@ def test_primary_language_view_benchmarks_define_primary_languages() -> None:
     assert missing == []
 
 
-def test_core_benchmark_view_group_only_contains_primary_core_benchmarks() -> None:
-    assert _view_group("All") == "Overall"
-    assert _view_group("Core") == "Overall"
-    assert _view_group("Group") == "Overall"
-    assert _view_group("NanoMMTEB-v2") == "Core benchmarks"
-    assert _view_group("MNanoBEIR") == "Core benchmarks"
-    assert _view_group("NanoRTEB") == "Core benchmarks"
-    assert _view_group("NanoMIRACL") == "Language-specific"
-    assert _view_group("NanoMLDR") == "Core benchmarks"
-    assert _view_group("NanoBRIGHT") == "Core benchmarks"
-    assert _view_group("NanoLaw") == "Domain-specific"
-    assert _view_group("NanoCoIR") == "Core benchmarks"
-    assert _view_group("NanoLongEmbed") == "Domain-specific"
-    assert _view_group("NanoBIRCO") == "Domain-specific"
-    assert _view_group("NanoDAPFAM") == "Domain-specific"
-
-
-def test_language_specific_view_group_includes_official_language_mteb_families() -> None:
-    assert _view_group("NanoMTEB-Dutch") == "Language-specific"
-    assert _view_group("NanoJMTEB-v2") == "Language-specific"
-    assert _view_group("NanoFaMTEB-v2") == "Language-specific"
-    assert _view_group("NanoRuMTEB") == "Language-specific"
-    assert _view_group("NanoVNMTEB") == "Language-specific"
-    assert _view_group("NanoCMTEB") == "Language-specific"
-    assert _view_group("NanoIndicQA") == "Language-specific"
-    assert _view_group("NanoMuPLeR") == "Language-specific"
-    assert _view_group("NanoChemTEB") == "Domain-specific"
+def test_benchmark_view_groups_follow_viewer_information_architecture() -> None:
+    assert _view_group("All") == "Scope presets"
+    assert _view_group("Core") == "Scope presets"
+    assert _view_group("Group") == "Scope presets"
+    assert _view_group("NanoMMTEB-v2") == "Nano suites"
+    assert _view_group("NanoMTEB-Dutch") == "Nano suites"
+    assert _view_group("NanoJMTEB-v2") == "Nano suites"
+    assert _view_group("NanoFaMTEB-v2") == "Nano suites"
+    assert _view_group("NanoRuMTEB") == "Nano suites"
+    assert _view_group("NanoVNMTEB") == "Nano suites"
+    assert _view_group("NanoCMTEB") == "Nano suites"
+    assert _view_group("MNanoBEIR") == "Nano suites"
+    assert _view_group("NanoRTEB") == "Nano suites"
+    assert _view_group("NanoMIRACL") == "Nano suites"
+    assert _view_group("NanoMLDR") == "Nano suites"
+    assert _view_group("NanoIndicQA") == "Nano suites"
+    assert _view_group("NanoMuPLeR") == "Nano suites"
+    assert _view_group("NanoCoIR") == "Nano suites"
+    assert _view_group("NanoCodeRAG") == "Nano suites"
+    assert _view_group("NanoBRIGHT") == "Nano suites"
+    assert _view_group("NanoLaw") == "Nano suites"
+    assert _view_group("NanoLongEmbed") == "Nano suites"
+    assert _view_group("NanoBIRCO") == "Nano suites"
+    assert _view_group("NanoDAPFAM") == "Nano suites"
+    assert _view_group("NanoChemTEB") == "Nano suites"
 
 
 def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Path) -> None:
@@ -715,7 +715,7 @@ benchmarks:
     assert config.benchmarks[0].match_patterns == ["uploaded/bench-a"]
 
 
-def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> None:
+def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
     db_path = tmp_path / "results.duckdb"
@@ -780,19 +780,15 @@ def test_index_renders_summary_cards_and_analysis_navigation(tmp_path: Path) -> 
 
     leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
     assert leaderboard_response.status_code == 200
-    assert "Analysis views" in leaderboard_response.text
-    assert leaderboard_response.text.index("leaderboard-table-scroll") < leaderboard_response.text.index("Analysis views")
-    assert '<section class="mt-6 mb-5 border border-zinc-200 bg-white" aria-label="Analysis views">' in leaderboard_response.text
+    assert "Analysis views" not in leaderboard_response.text
     assert 'class="border-t border-zinc-200 px-3 py-3 text-sm text-zinc-600"' not in leaderboard_response.text
-    assert 'id="analysis-panel" class="px-3 pb-3"' in leaderboard_response.text
-    assert 'data-icon="activity"' in leaderboard_response.text
-    assert 'data-icon="git-compare-arrows"' in leaderboard_response.text
-    assert 'data-icon="list-ordered"' in leaderboard_response.text
-    assert 'data-icon="database"' in leaderboard_response.text
-    assert "Variant impact" in leaderboard_response.text
-    assert "Reranking diagnostics" in leaderboard_response.text
-    assert "Dataset diagnostics" in leaderboard_response.text
-    assert 'hx-get="/analysis?panel=variants&amp;view=BenchA"' in leaderboard_response.text
+    assert 'id="analysis-panel"' not in leaderboard_response.text
+    assert "Variant impact" not in leaderboard_response.text
+    assert "Reranking diagnostics" not in leaderboard_response.text
+    assert "Dataset diagnostics" not in leaderboard_response.text
+    assert 'hx-get="/analysis?' not in leaderboard_response.text
+    assert "leaderboard-table-scroll" in leaderboard_response.text
+    assert TestClient(app).get("/analysis").status_code == 404
 
     page_with_latest = render_page(
         viewer_config=config,
@@ -938,21 +934,22 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     response = TestClient(app).get("/leaderboard?view=NanoMTEB-Japanese")
 
     assert response.status_code == 200
-    assert "Benchmark groups" in response.text
-    assert 'data-icon="layers"' in response.text
-    assert 'class="border px-2 py-1 text-[0.8125rem] border-cyan-700 bg-cyan-50 text-cyan-900"' in response.text
+    assert "Leaderboard view" not in response.text
+    assert 'data-icon="layers"' not in response.text
+    assert 'class="border px-2 py-1 text-[0.8125rem] leading-tight border-cyan-700 bg-cyan-50 text-cyan-900"' in response.text
     assert 'class="border px-3 py-1.5 text-sm' not in response.text
-    assert response.text.index("Target") < response.text.index("Overall")
-    assert 'data-testid="primary-benchmark-column"' in response.text
-    assert '<div class="grid gap-3">' in response.text
-    assert "lg:grid-cols-2" not in response.text
-    assert "xl:grid-cols-3" not in response.text
-    primary_column = response.text.split('data-testid="primary-benchmark-column"', 1)[1].split('data-testid="secondary-benchmark-column"', 1)[0]
-    assert "Target" in primary_column
-    assert "Overall" in primary_column
-    assert "Core benchmarks" in primary_column
-    assert "All" in response.text
+    assert response.text.index("Retrieval") < response.text.index("Benchmark scope")
+    assert response.text.index("Benchmark scope") < response.text.index("Efficiency variants")
+    assert "lg:grid-cols-2" in response.text
+    assert "Scope presets" not in response.text
+    assert "Nano suites" not in response.text
+    assert "Choose the evaluation mode first" not in response.text
+    assert "Language-focused MTEB/MMTEB-style Nano suites" not in response.text
+    assert "Overall" in response.text
+    assert "Overall scope from the viewer configuration" in response.text
+    assert "Retrieval" in response.text
     assert "Reranking" in response.text
+    assert "Safeguard positives" not in response.text
     assert "data-tooltip=" in response.text
     assert "data-tooltip-placement=\"left\"" in response.text
     assert 'class="doc-summary-trigger' in response.text
@@ -967,7 +964,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "hover:border-cyan-600" not in doc_trigger_html
     assert 'data-icon="circle-help"' not in doc_trigger_html
     assert "full-corpus retrieval scores" in response.text
-    assert "reranking_hybrid reranking scores" in response.text
+    assert "shared BM25 candidate set" in response.text
     assert 'data-leaderboard-control="true"' in response.text
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
@@ -975,8 +972,13 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
         'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_rank&amp;direction=asc'
         '&amp;group=task&amp;task_z_scores=0&amp;target=reranking"'
     ) in response.text
-    assert "Language-specific" in response.text
-    assert "Domain-specific" in response.text
+    scope_section = response.text.split("Benchmark scope", 1)[1].split("Efficiency variants", 1)[0]
+    assert "NanoMTEB-Japanese" in scope_section
+    assert "NanoRTEB" in scope_section
+    assert "NanoMedical" in scope_section
+    assert "Multilingual retrieval" not in response.text
+    assert "Code retrieval" not in response.text
+    assert "Specialized domains" not in response.text
     assert "leaderboard-col-model sticky" in response.text
     assert "leaderboard-col-rank" in response.text
     assert "leaderboard-col-borda sticky" not in response.text
@@ -1027,6 +1029,10 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
 
     assert response.status_code == 200
     assert "target=reranking" in response.text
+    assert "Safeguard positives" in response.text
+    assert 'type="checkbox" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert "target=reranking_without_safeguard" in response.text
+    assert "every task includes at least one relevant positive" in response.text
     assert response.text.index("model/b") < response.text.index("bm25") < response.text.index("model/a")
 
 
@@ -1481,15 +1487,15 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     response = TestClient(app).get("/leaderboard?view=BenchA&lang_filter=ja")
 
     assert response.status_code == 200
-    assert "Language pages" in response.text
-    assert "Languages (13)" in response.text
+    assert "Task facets" in response.text
+    assert "Language multi-select" not in response.text
     assert "max-h-72" in response.text
-    assert 'name="lang_filter" value="ja" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'data-language-page="ja"' in response.text
     assert (
         'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task'
         '&amp;task_z_scores=0&amp;lang_filter=en"'
     ) in response.text
-    assert 'data-language-page="ja"' in response.text
+    assert 'aria-label="Task facets"' in response.text
     assert 'data-shown-count="2"' in response.text
     assert "2 shown / 2 complete models / 1 tasks" in response.text
 
@@ -1728,22 +1734,23 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=model%2Fb")
 
     assert response.status_code == 200
-    assert "Columns:" in response.text
+    assert "Table display" in response.text
     assert 'data-icon="table-properties"' in response.text
-    assert "Display:" in response.text
-    assert 'data-icon="eye"' in response.text
-    assert "<span>STD</span>" in response.text
-    assert "Include variants:" in response.text
-    assert 'data-icon="git-branch"' in response.text
+    assert "Show STD cells" in response.text
+    assert "Efficiency variants" in response.text
+    assert 'data-icon="git-compare-arrows"' in response.text
     assert "Other variants" in response.text
-    assert "Model type:" in response.text
+    assert "Model family" in response.text
     assert 'id="model-type-controls"' in response.text
     assert 'data-icon="shapes"' in response.text
-    assert response.text.index("Filters:") < response.text.index("Model type:") < response.text.index('id="model-filter-input"')
+    assert response.text.index("Refine results") < response.text.index("Model family") < response.text.index('id="model-filter-input"')
     assert 'name="model_type_filter" value="__none_selected__"' in response.text
-    assert "Filters:" in response.text
+    assert "Refine results" in response.text
     assert 'data-icon="filter"' in response.text
-    assert '<div class="mt-3 flex flex-wrap items-start gap-3">' in response.text
+    assert '<details id="facet-filters" class="min-w-0 border border-zinc-200 bg-zinc-50 p-2">' in response.text
+    assert "Advanced filters" in response.text
+    assert "Efficiency filters" in response.text
+    assert "Run metadata" in response.text
     assert 'data-filter-detail="dim_filter"' in response.text
     assert 'data-filter-icon="ruler"' in response.text
     assert 'data-filter-detail="quant_filter"' in response.text
@@ -1767,13 +1774,14 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'name="model_filter"' in response.text
     assert ">Model</span>" in response.text
     assert ">Model name</span>" not in response.text
-    assert "Filter by model name. Separate multiple names with spaces. Partial matches are supported." in response.text
+    assert "Filters leaderboard rows by model name." in response.text
     assert ">Task</span>" in response.text
     assert ">Task name</span>" not in response.text
-    assert "Filter by task name. Separate multiple names with spaces. Partial matches are supported." in response.text
-    assert "Recalculate Borda, Mean" in response.text
-    assert "With a Task filter, Borda is computed from per-task ranks over the filtered tasks." in response.text
-    assert "Apply" in response.text
+    assert "Filters task columns and task rows by benchmark" in response.text
+    assert "Recalculate ranks from filters" in response.text
+    assert "Recomputes Borda, mean ranks, and visible means" in response.text
+    assert "Apply text filters" not in response.text
+    assert response.text.index("Refine results") < response.text.index("Recalculate ranks from filters") < response.text.index("Model family")
     assert 'value="model/b"' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
     assert "model/a" in response.text
@@ -1869,7 +1877,13 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert rescore_response.status_code == 200
     assert 'name="rescore" value="1" class="h-4 w-4 accent-cyan-700" checked' in rescore_response.text
     assert "binary_rescore" in rescore_response.text
-    assert "Δ vs Base" not in rescore_response.text
+    assert "Δ vs Base" in rescore_response.text
+
+    other_variant_response = TestClient(app).get("/leaderboard?view=BenchA&other_variant=1")
+
+    assert other_variant_response.status_code == 200
+    assert 'name="other_variant" value="1" class="h-4 w-4 accent-cyan-700" checked' in other_variant_response.text
+    assert "Δ vs Base" in other_variant_response.text
 
 
 def test_viewer_dedupes_noop_truncate_variants_in_favor_of_original_rows(tmp_path: Path) -> None:
@@ -2613,7 +2627,7 @@ def test_viewer_renders_and_filters_runtime_options(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 200
-    assert "Runtime" in response.text
+    assert "Run metadata" in response.text
     assert 'data-icon="cpu"' in response.text
     assert 'data-filter-detail="attn_filter"' in response.text
     assert 'data-filter-detail="dtype_filter"' in response.text
@@ -2749,15 +2763,18 @@ benchmarks:
     )
 
     assert response.status_code == 200
-    assert "Task Mean" in response.text
-    assert "Lang Mean" in response.text
+    assert "MNanoBEIR(task)" in response.text
+    assert "MNanoBEIR(lang)" in response.text
+    assert "Task Mean" not in response.text
+    assert 'aria-label="Score groups"' not in response.text
+    assert "group=task_mean" in response.text
+    assert "group=lang_mean" in response.text
     assert ">Tasks</span>" in response.text
     assert "Task score columns" not in response.text
     assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "Mean Score" in response.text
     assert ">BEIR-ja</span>" in response.text
-    assert "[overflow-wrap:anywhere]" in response.text
-    assert "w-[4.75rem] min-w-[4.75rem] max-w-[4.75rem]" in response.text
+    assert "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]" in response.text
     assert "metric%3ANanoBEIR-ja" in response.text
     assert 'hx-push-url="/?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja' in response.text
 
@@ -3291,8 +3308,8 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     response = TestClient(app).get("/leaderboard?view=BenchA&truncate=1&task_z_scores=1")
 
     assert response.status_code == 200
-    assert "Display:" in response.text
-    assert "<span>STD</span>" in response.text
+    assert "Table display" in response.text
+    assert "<span>Show STD cells</span>" in response.text
     assert "Task std display" not in response.text
     assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "task-z-score task-z-pos-100" in response.text
@@ -3306,6 +3323,14 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert '<span class="task-z-score-value">90.00</span>' in task_column_response.text
     assert '<span class="task-z-score-value">82.70</span>' in task_column_response.text
     assert '<span class="task-z-score-delta">+0.27σ</span>' in task_column_response.text
+
+    ranked_std_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&truncate=1&task_scores=1&task_z_scores=1&task_ranks=1"
+    )
+    assert ranked_std_response.status_code == 200
+    assert '<span class="task-rank-label">[1]</span>' in ranked_std_response.text
+    assert '<span class="task-z-score-value">90.00</span>' in ranked_std_response.text
+    assert '<span class="task-z-score-delta">+1.00σ</span>' in ranked_std_response.text
 
 
 def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
@@ -3340,12 +3365,14 @@ def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 200
-    assert "<span>Task Rank</span>" in response.text
+    assert "<span>Show task ranks</span>" in response.text
     assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="task_scores" value="1"' in response.text
-    assert ">1</td>" in response.text
-    assert ">T2</td>" in response.text
+    assert '<span class="task-rank-label">[1]</span>' in response.text
+    assert '<span class="task-rank-label">[T2]</span>' in response.text
+    assert '<span class="task-rank-score-value">90.00</span>' in response.text
+    assert '<span class="task-rank-score-value">80.00</span>' in response.text
     assert ">2.5</td>" not in response.text
     assert "sort=metric%3Aarguana" in response.text
 
@@ -3632,7 +3659,7 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
     response = TestClient(app).get("/leaderboard?view=BenchA&metric=acc@1")
 
     assert response.status_code == 200
-    assert "Metric" in response.text
+    assert "Score metric" in response.text
     assert "Acc@1" in response.text
     assert response.text.index("nDCG@10") < response.text.index("nDCG@100")
     assert response.text.index("nDCG@100") < response.text.index("Recall@10") < response.text.index("Recall@100")
@@ -3728,11 +3755,14 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 200
-    assert "Task string length" in response.text
-    assert "Task length" not in response.text
-    assert 'data-tooltip="Filters tasks by average query and document string length in characters.' in response.text
+    assert "Task string length" not in response.text
+    assert ">Length</span>" in response.text
+    assert "Query length ≤" in response.text
+    assert "Document length ≤" in response.text
+    assert 'data-tooltip="Filters tasks by average query and document length in characters.' in response.text
     assert "Tasks missing length metadata are excluded when a bound is set." in response.text
-    assert "border-cyan-700 bg-cyan-50" in response.text
+    assert "Query string <=" not in response.text
+    assert "Doc string <=" not in response.text
     assert 'name="query_len_max" value="1000"' in response.text
     assert 'name="doc_len_max" value="2000"' in response.text
     assert ">short</span>" in response.text
@@ -3752,7 +3782,7 @@ def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
     assert _metric_column_label("NanoBEIR-ja") == "BEIR-ja"
     assert _metric_column_label("NanoWikipediaRetrievalMultilingual") == "WikipediaRetrievalMultilingual"
     assert _metric_column_label("arguana") == "arguana"
-    assert _metric_column_label("NanoBIRCO::NanoBIRCO") == "NanoBIRCO::NanoBIRCO"
+    assert _metric_column_label("NanoBIRCO::NanoBIRCO") == "NanoBIRCO"
     assert _metric_column_label("NanoMMTEB::NanoArguAna") == "NanoMMTEB::NanoArguAna"
     assert _metric_column_label("MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana") == "NanoBEIR-ar::arguana"
 
@@ -3837,6 +3867,19 @@ def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(
             (
                 "model/a",
                 "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ar",
+                "NanoBEIR-ar",
+                "ar",
+                "climatefever",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ar::climatefever",
+                0.82,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "MNanoBEIR",
                 "hakari-bench/NanoBEIR-ja",
                 "NanoBEIR-ja",
                 "ja",
@@ -3856,6 +3899,19 @@ def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(
                 "arguana",
                 "MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana",
                 0.60,
+                20,
+                24,
+                4096,
+            ),
+            (
+                "model/b",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ar",
+                "NanoBEIR-ar",
+                "ar",
+                "climatefever",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ar::climatefever",
+                0.62,
                 20,
                 24,
                 4096,
@@ -3896,12 +3952,20 @@ benchmarks:
     response = TestClient(app).get("/leaderboard?view=MNanoBEIR&group=task_key&task_scores=1")
 
     assert response.status_code == 200
-    assert ">NanoBEIR-ar::arguana</span>" in response.text
-    assert ">NanoBEIR-ja::arguana</span>" in response.text
+    assert 'scope="colgroup"' not in response.text
+    assert '<span class="block w-full truncate">NanoBEIR-ar</span>' in response.text
+    assert '<span class="block w-full truncate">NanoBEIR-ja</span>' in response.text
+    assert '<span class="block max-w-full truncate font-normal text-zinc-500">arguana</span>' in response.text
+    assert (
+        '<span class="block max-w-full truncate font-normal text-zinc-500">climatefever</span>'
+        in response.text
+    )
+    assert "Task Key column. Scores are averaged per model over the raw benchmark rows" in response.text
     assert (
         'data-metric-column-full-name="MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana"'
         in response.text
     )
+    assert 'class="doc-summary-trigger' in response.text
 
 
 def test_max_len_is_formatted_with_grouping_separator() -> None:
@@ -4090,6 +4154,67 @@ def test_local_duckdb_store_refreshes_hf_source_after_ttl(
     assert local.read_bytes() == b"hf-new"
 
 
+def test_download_hf_duckdb_uses_remote_latest_cache_metadata(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    cache_path = tmp_path / "remote_latest_hakari_bench.duckdb"
+    metadata_path = tmp_path / "remote_latest_hakari_bench.duckdb.metadata.json"
+    downloaded = tmp_path / "hf-cache.duckdb"
+    downloaded.write_bytes(b"remote-db")
+    source = HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database")
+    calls: list[HuggingFaceDuckDbSource] = []
+
+    def fake_download(download_source: HuggingFaceDuckDbSource) -> Path:
+        calls.append(download_source)
+        return downloaded
+
+    monkeypatch.setenv(viewer_store.REMOTE_LATEST_DUCKDB_PATH_ENV, str(cache_path))
+    monkeypatch.setenv(viewer_store.REMOTE_LATEST_DUCKDB_METADATA_PATH_ENV, str(metadata_path))
+    monkeypatch.setattr(
+        viewer_store,
+        "_fetch_hf_duckdb_metadata",
+        lambda _source: {"etag": "etag-1", "commit_hash": "commit-1", "size": len(b"remote-db")},
+    )
+    monkeypatch.setattr(viewer_store, "_download_hf_duckdb_to_hub_cache", fake_download)
+
+    assert viewer_store._download_hf_duckdb(source) == cache_path
+    assert cache_path.read_bytes() == b"remote-db"
+    assert viewer_store._download_hf_duckdb(source) == cache_path
+    assert calls == [source]
+
+
+def test_download_hf_duckdb_falls_back_to_existing_remote_latest_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    cache_path = tmp_path / "remote_latest_hakari_bench.duckdb"
+    cache_path.write_bytes(b"cached-db")
+    source = HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database")
+
+    def fake_download(_source: HuggingFaceDuckDbSource) -> Path:
+        raise RuntimeError("network unavailable")
+
+    monkeypatch.setenv(viewer_store.REMOTE_LATEST_DUCKDB_PATH_ENV, str(cache_path))
+    monkeypatch.setattr(viewer_store, "_fetch_hf_duckdb_metadata", lambda _source: {})
+    monkeypatch.setattr(viewer_store, "_download_hf_duckdb_to_hub_cache", fake_download)
+
+    assert viewer_store._download_hf_duckdb(source) == cache_path
+    assert cache_path.read_bytes() == b"cached-db"
+
+
+def test_local_duckdb_store_skips_copy_when_source_content_matches(tmp_path: Path) -> None:
+    source = tmp_path / "source.duckdb"
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    source.write_bytes(b"same")
+    local.parent.mkdir()
+    local.write_bytes(b"same")
+    os.utime(local, (1, 1))
+    os.utime(source, (2, 2))
+    store = LocalDuckDbStore(DuckDbLocation(local_path=local, source_path=source))
+
+    assert store.ensure_current() is False
+    assert local.stat().st_mtime == 1
+
+
 def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
@@ -4230,6 +4355,8 @@ def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Pat
     assert rows[0]["Embedding Dims"] == "1024"
     assert rows[0]["Original Embedding Dims"] == "1024"
     assert rows[0]["Truncated Embedding Dims"] == ""
+    assert rows[0]["Variant Label"] == ""
+    assert rows[0]["Variant Category"] == ""
     assert rows[0]["DType"] == "bf16"
     assert rows[0]["Attention Implementation"] == "flash_attention_2"
     assert rows[0]["Prompt"] == "prompt names"
@@ -4241,6 +4368,77 @@ def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Pat
     assert truncated["Embedding Dims"] == "512"
     assert truncated["Original Embedding Dims"] == "1024"
     assert truncated["Embedding Variant"] == "truncate_dim_512"
+    assert truncated["Variant Label"] == "512d <- 1024"
+    assert truncated["Variant Category"] == "truncate"
+
+
+def test_leaderboard_csv_exports_short_variant_labels_and_categories() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/sparse-model",
+                source_model_name="org/sparse-model",
+                model_type="sparse",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                embedding_dim=105879,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name=(
+                    "org/sparse-model "
+                    "(sparse_query_max_active_dims_32_sparse_document_max_active_dims_256)"
+                ),
+                source_model_name="org/sparse-model",
+                model_type="sparse",
+                borda_score=95,
+                mean_score=95,
+                task_count=1,
+                embedding_dim=105879,
+                embedding_variant_name="sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",
+                base_score_delta_percent=-5.0,
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="org/dense-model (512 dims, int8)",
+                source_model_name="org/dense-model",
+                borda_score=90,
+                mean_score=90,
+                task_count=1,
+                embedding_dim=512,
+                quantization="int8",
+                embedding_variant_name="truncate_dim_512_int8_rescore",
+                base_score_delta_percent=-10.0,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        include_rescore_variants=True,
+        include_other_variants=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    rows = list(csv.DictReader(render_leaderboard_csv(result=result).splitlines()))
+
+    assert rows[0]["Variant Label"] == ""
+    assert rows[0]["Variant Category"] == ""
+    assert rows[1]["Variant Label"] == "q32d d256d"
+    assert rows[1]["Variant Category"] == "sparse active dims"
+    assert rows[1]["Embedding Variant"] == "sparse_query_max_active_dims_32_sparse_document_max_active_dims_256"
+    assert rows[1]["Base Score Delta Percent"] == "-5"
+    assert rows[2]["Variant Label"] == "512d"
+    assert rows[2]["Variant Category"] == "truncate + quantization + rescore"
+    assert rows[2]["Quantization"] == "int8"
 
 
 def test_viewer_page_uses_query_state_and_canonical_url(tmp_path: Path) -> None:

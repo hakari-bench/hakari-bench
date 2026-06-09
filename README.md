@@ -18,7 +18,7 @@ not belong to a specific official MTEB family are grouped under
 `NanoMTEB-Misc`. Historical broad `NanoMTEB-{language}` aliases are not
 supported; use the canonical dataset names directly.
 
-## Model evaluation workflow
+## Evaluation runbook
 
 1. Evaluate a model on all standard tasks:
 
@@ -44,9 +44,11 @@ uv run hakari-bench web \
 Result files default to compressed `.json.xz` files under
 `output/hakari-results/`, and DuckDB generation streams results into DuckDB by
 default. See
-[`docs/model_evaluation_workflow.md`](docs/model_evaluation_workflow.md) for
+[`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for
 partial task runs, append mode, local model aliases, and useful evaluation
-options.
+options. See [`docs/evaluation_policy.md`](docs/evaluation_policy.md) when
+choosing prompts, attention implementation, embedding variants, cache/offline
+behavior, or coverage-audit requirements.
 
 ## Example
 
@@ -477,6 +479,21 @@ uv run python scripts/build_results_database_and_report.py \
 This path streams result JSON into DuckDB by default. Use `--html-output` only
 when a static report is also needed.
 
+To refresh the canonical remote result JSON first, keep the private Hugging Face
+dataset repo `hakari-bench/results` as a git/LFS checkout under
+`~/.cache/hakari-bench/hf-datasets/` and run:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py
+```
+
+That helper clones or fast-forwards the dataset repo, runs `git lfs pull`,
+materializes missing BM25 baseline JSON from the stored Nano-set BM25 metadata
+in `task_docs/metadata`, and rebuilds the DuckDB. It does not run a BM25
+evaluation or recompute BM25 with `bm25s`. See
+[`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for the detailed
+sync/rebuild workflow.
+
 To merge historical or separate result roots, repeat `--results-dir` in
 priority order. If the same model-task JSON exists in more than one root, the
 first directory wins and later directories fill only missing results. The
@@ -512,8 +529,14 @@ configured remote DuckDB before adding local results. Use
 `--append-base-duckdb latest` with `--append-output-duckdb` to create a separate
 merged copy, and `--model-name-override local/experiment_name` when a local
 result directory should be shown under a specific logical model id. See
-[`docs/model_evaluation_workflow.md`](docs/model_evaluation_workflow.md) for
+[`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for
 examples.
+
+The remote "latest" DuckDB is cached at
+`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb` by default and
+is shared by append mode and the viewer's Hugging Face dataset source. Override
+that path with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH`; override the sidecar
+metadata path with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH`.
 
 By default, it binds to `127.0.0.1:8000` and keeps
 `output/viewer/hakari_bench.duckdb` synchronized from the benchmark results

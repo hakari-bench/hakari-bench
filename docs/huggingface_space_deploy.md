@@ -8,14 +8,15 @@ database consumed by that Space.
 
 - Space: `hakari-bench/leaderboard`
 - Space URL: `https://hakari-bench-leaderboard.hf.space/`
+- Source repository: `https://github.com/hakari-bench/hakari-bench`
 - GHCR image: `ghcr.io/hakari-bench/hakari-bench-leaderboard:hf-space-docker-latest`
 - DuckDB dataset: `hakari-bench/leaderboard_database`
 - DuckDB path in dataset: `duckdb/hakari_bench.duckdb`
 
 The Space repo is intentionally minimal. The viewer application is built in
-GitHub Actions, published to GHCR, and then referenced from the Space
-`Dockerfile`. The running container downloads the DuckDB file dynamically from
-the dataset repo and caches it at `/data/viewer/hakari_bench.duckdb`.
+GitHub Actions, published to GHCR, and referenced from the Space `Dockerfile`.
+The running container downloads the DuckDB file dynamically from the dataset
+repo and caches it at `/data/viewer/hakari_bench.duckdb`.
 
 ## Required Permissions
 
@@ -36,9 +37,8 @@ PY
 ```
 
 The GitHub Actions workflow publishes the Docker image with `GITHUB_TOKEN`, so
-the workflow needs `packages: write`. After the first GHCR package is created,
-make the package public in GitHub so Hugging Face can pull it without registry
-credentials.
+the workflow needs `packages: write`. The GHCR package must be public so
+Hugging Face can pull the image without registry credentials.
 
 ## Publish the Viewer Image
 
@@ -47,20 +47,18 @@ The source repository builds and publishes the viewer image from the
 The workflow runs on manual dispatch and on pushes to `hf-space-docker` that
 change viewer image inputs.
 
-It publishes one rolling tag:
+The workflow runs `uv run tox` before building the Docker image. After
+validation passes, it builds the image, runs a container import smoke test, and
+pushes one rolling tag:
 
 ```text
 ghcr.io/hakari-bench/hakari-bench-leaderboard:hf-space-docker-latest
 ```
 
-The workflow first builds the image locally, runs an import smoke test inside
-the container, then pushes the same tag to GHCR.
-
-After the first successful workflow run, confirm the image is anonymously
-pullable:
+After a successful workflow run, confirm the image is anonymously pullable:
 
 ```bash
-docker pull ghcr.io/hakari-bench/hakari-bench-leaderboard:hf-space-docker-latest
+docker manifest inspect ghcr.io/hakari-bench/hakari-bench-leaderboard:hf-space-docker-latest
 ```
 
 If a pinned or experimental revision is needed, publish a separate GHCR tag and
@@ -68,7 +66,7 @@ set the Space variable `HAKARI_BENCH_LEADERBOARD_IMAGE_TAG` to that tag before
 rebuilding the Space. Normal production operation leaves the variable unset or
 sets it to `hf-space-docker-latest`.
 
-## Deploy the Space Repo
+## Deploy or Rebuild the Space Repo
 
 Deploy the Space by replacing its `main` branch with a minimal git commit. This
 keeps local virtual environments, test files, generated outputs, and benchmark
@@ -83,7 +81,7 @@ git clone https://huggingface.co/spaces/hakari-bench/leaderboard "$SPACE_WORKDIR
 cd "$SPACE_WORKDIR"
 ```
 
-Reset the working tree to a new minimal branch:
+For a first migration or full reset, create an orphan branch:
 
 ```bash
 git switch --orphan prebuilt-image-deploy
@@ -109,8 +107,14 @@ short_description: HAKARI-Bench retrieval leaderboard
 
 # HAKARI-Bench Leaderboard
 
-This Space runs the prebuilt HAKARI-Bench leaderboard viewer image.
-The leaderboard database is loaded from `hakari-bench/leaderboard_database`.
+This Space hosts the public leaderboard for HAKARI-Bench, a Nano-style information retrieval benchmark suite for SentenceTransformers-compatible dense, sparse, reranker, late-interaction, and BM25 systems.
+
+The leaderboard viewer runs from a prebuilt Docker image published by the HAKARI-Bench GitHub repository:
+
+- Project repository: https://github.com/hakari-bench/hakari-bench
+- Leaderboard database: https://huggingface.co/datasets/hakari-bench/leaderboard_database
+
+The app downloads the current DuckDB leaderboard database at startup and serves the interactive benchmark tables, model comparisons, task documentation, and filtering views from that database.
 EOF
 ```
 
@@ -138,6 +142,16 @@ Force push the minimal commit:
 git add README.md Dockerfile .gitignore
 git commit -m "Deploy prebuilt Docker leaderboard image"
 git push -f origin HEAD:main
+```
+
+When the Space repo is already minimal and only the rolling GHCR tag changed,
+trigger a rebuild with an empty commit:
+
+```bash
+git clone https://huggingface.co/spaces/hakari-bench/leaderboard /tmp/hakari-bench-leaderboard-space
+cd /tmp/hakari-bench-leaderboard-space
+git commit --allow-empty -m "Rebuild prebuilt Docker leaderboard image"
+git push origin HEAD:main
 ```
 
 ## Space Image Tag Variable
@@ -216,6 +230,15 @@ HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID=hakari-bench/leaderboard_database
 HAKARI_BENCH_VIEWER_HF_DATASET_PATH=duckdb/hakari_bench.duckdb
 ```
 
+When the viewer uses the Hugging Face dataset source, it checks/downloads the
+DuckDB source at startup and then caches the source check for 10 minutes per
+running process. Requests served within that window use the already-local
+`/data/viewer/hakari_bench.duckdb` file and do not call `hf_hub_download()`.
+Remote DuckDB downloads are first synchronized into a shared remote latest cache
+(`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb` by default)
+using Hugging Face file metadata and a sidecar SHA-1 to avoid repeated downloads
+or local copies when the content has not changed.
+
 The same viewer can be pointed at a different source locally or in a Space with:
 
 - `HAKARI_BENCH_VIEWER_DUCKDB_PATH`
@@ -224,6 +247,8 @@ The same viewer can be pointed at a different source locally or in a Space with:
 - `HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID`
 - `HAKARI_BENCH_VIEWER_HF_DATASET_PATH`
 - `HAKARI_BENCH_VIEWER_HF_DATASET_REVISION`
+- `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH`
+- `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH`
 - `HAKARI_BENCH_VIEWER_FRAME_ANCESTORS`
 
 The viewer also adds response security headers at runtime, including a
@@ -259,7 +284,11 @@ Check the public endpoints:
 
 ```bash
 curl -L -sS https://hakari-bench-leaderboard.hf.space/ | rg "HAKARI-bench leaderboard|/assets/app.css|/assets/viewer.js|/assets/favicon.png|/assets/htmx.min.js"
-curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=All' | rg "Core benchmarks|NanoMMTEB-v2|Language pages"
+curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=All' | rg "Retrieval|NanoMMTEB-v2|Task facets"
+curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/favicon.png -o /tmp/hakari_favicon.png
+curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/app.css -o /tmp/hakari_app.css
+curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/viewer.js -o /tmp/hakari_viewer.js
+curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/htmx.min.js -o /tmp/hakari_htmx.min.js
 ```
 
 Check Space logs if the app is not serving traffic:

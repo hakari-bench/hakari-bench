@@ -246,6 +246,75 @@ def test_parse_args_accepts_structured_params_json() -> None:
     assert args.save_top_rankings is True
 
 
+def test_parse_args_accepts_custom_model_loader_options() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "dense",
+            "--model",
+            "api/embed-v1",
+            "--model-loader",
+            "examples.custom_backends.dummy_backend:load_model",
+            "--model-loader-kwargs-json",
+            '{"scale":2,"api_key":"secret"}',
+            "--encode-kwargs-json",
+            '{"dimensions":2}',
+            "--query-encode-kwargs-json",
+            '{"input_type":"query"}',
+            "--document-encode-kwargs-json",
+            '{"input_type":"document"}',
+        ]
+    )
+
+    assert args.model_loader == "examples.custom_backends.dummy_backend:load_model"
+    assert args.model_loader_kwargs == {"scale": 2, "api_key": "secret"}
+    assert args.encode_kwargs == {"dimensions": 2}
+    assert args.query_encode_kwargs == {"input_type": "query"}
+    assert args.document_encode_kwargs == {"input_type": "document"}
+
+
+def test_parse_args_accepts_custom_model_loader_params_json() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "dense",
+            "--params-json",
+            (
+                '{"model":{"source":"api/embed-v1","loader":"pkg.loader:load_model",'
+                '"loader_kwargs":{"endpoint":"https://example.test"}},'
+                '"prompts":{"encode_kwargs":{"dimensions":2},'
+                '"query_encode_kwargs":{"input_type":"query"},'
+                '"document_encode_kwargs":{"input_type":"document"}}}'
+            ),
+        ]
+    )
+
+    assert args.model == "api/embed-v1"
+    assert args.model_loader == "pkg.loader:load_model"
+    assert args.model_loader_kwargs == {"endpoint": "https://example.test"}
+    assert args.encode_kwargs == {"dimensions": 2}
+    assert args.query_encode_kwargs == {"input_type": "query"}
+    assert args.document_encode_kwargs == {"input_type": "document"}
+
+
+def test_parse_args_rejects_model_loader_kwargs_without_loader() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "dense",
+                "--model",
+                "api/embed-v1",
+                "--model-loader-kwargs-json",
+                '{"endpoint":"https://example.test"}',
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected model loader kwargs without a loader to be rejected.")
+
+
 def test_parse_args_rejects_save_top_rankings_flags() -> None:
     for option in ("--save-top-rankings", "--no-save-top-rankings"):
         try:
@@ -716,7 +785,7 @@ def test_parse_args_allows_bm25_evaluation_without_model_name() -> None:
 def test_parse_args_defaults_bm25_tokenizer_to_auto_when_omitted() -> None:
     args = parse_args(["evaluate", "bm25"])
 
-    assert args.model == "bm25/dataset-bm25"
+    assert args.model == "bm25"
     assert args.bm25_source == "dataset"
     assert args.bm25_tokenizer is None
 

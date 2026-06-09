@@ -1,10 +1,12 @@
-# Model Evaluation Workflow
+# Evaluation Runbook
 
 This guide covers the practical workflow for evaluating a model, adding its
 result JSON to a viewer DuckDB database, and opening the leaderboard viewer.
-For long official benchmark waves, also read
-[`benchmark_evaluation.md`](benchmark_evaluation.md) for model-specific prompt,
-attention, variant, and coverage-audit policy.
+
+Use this file when you need runnable commands for evaluation, DuckDB updates,
+or viewer startup. Use [`evaluation_policy.md`](evaluation_policy.md) when you
+need to decide prompt behavior, attention implementation, embedding variants,
+offline/cache policy, or coverage-audit requirements.
 
 ## Full Evaluation
 
@@ -28,6 +30,22 @@ output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
 
 Use `--result-format json` only when a plain `.json` result tree is required.
 Use `--results-dir DIR` when a run should write to a separate result root.
+
+If the required Hugging Face datasets and model artifacts are already cached
+locally, you can run in offline mode:
+
+```bash
+HF_DATASETS_OFFLINE=1 HF_HUB_OFFLINE=1 \
+  uv run hakari-bench evaluate dense \
+    --model MODEL_NAME \
+    --all \
+    --dtype bf16 \
+    --device cuda:0
+```
+
+This avoids repeated Hugging Face API metadata checks during repeat runs. See
+[`evaluation_policy.md#long-benchmark-waves`](evaluation_policy.md#long-benchmark-waves)
+before using offline mode for a large benchmark wave.
 
 Local models can be evaluated directly. Give them a stable alias so later
 viewer rows have a useful logical model name:
@@ -88,6 +106,11 @@ uv run hakari-bench evaluate dense \
   --embedding-variant truncate:256,128,64
 ```
 
+For Matryoshka/truncate-aware models, include the supported truncation
+dimensions unless the run is intentionally base-only. See
+[`evaluation_policy.md#dense-evaluation`](evaluation_policy.md#dense-evaluation)
+for how to choose the variant plan.
+
 Use `--no-default-embedding-variants` only when those automatic variants should
 be intentionally omitted.
 
@@ -123,6 +146,32 @@ For long GPU runs, pass the model author's recommended attention option when
 known, such as `--attn-implementation sdpa`, `--flash-attn2`, or
 `--attn-implementation flash_attention_2`. Reduce `--batch-size` before
 changing model maximum sequence length.
+
+## Custom Model Backends
+
+The built-in loaders use SentenceTransformers for dense, sparse, and reranker
+evaluation, and PyLate for late-interaction evaluation. When a model needs to
+be evaluated through another Python library or a hosted embedding/reranker API,
+pass a custom loader with `--model-loader module:function`.
+
+The loader receives `ModelLoadConfig` and returns a duck-typed model object.
+No base-class inheritance is required. Dense and sparse backends expose
+`encode_query` / `encode_document` or `encode`; rerankers expose `rank`,
+`predict`, or `__call__`; late-interaction backends expose `encode(...,
+is_query=...)`.
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model api/embed-v1 \
+  --model-loader my_pkg.hakari_loader:load_model \
+  --model-loader-kwargs-json '{"endpoint":"https://example.test","model":"embed-v1"}' \
+  --encode-kwargs-json '{"dimensions":1024}' \
+  --query-encode-kwargs-json '{"input_type":"query"}' \
+  --document-encode-kwargs-json '{"input_type":"document"}'
+```
+
+See [`custom_model_backends.md`](custom_model_backends.md) for the full
+interface contract and the dummy backend example.
 
 ## Build the Viewer DuckDB
 
@@ -165,6 +214,63 @@ uv run python scripts/build_results_database_and_report.py \
   --html-output output/hakari-results/report.html
 ```
 
+## Sync Remote Results And Rebuild
+
+The canonical remote result JSON lives in the private Hugging Face dataset repo
+`hakari-bench/results`. Keep a git/LFS checkout under
+`~/.cache/hakari-bench/hf-datasets/` and rebuild the DuckDB from that checkout
+when refreshing the published leaderboard data.
+
+Use the helper for the standard path:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py
+```
+
+By default, this does the following:
+
+1. Clones or fast-forwards
+   `https://huggingface.co/datasets/hakari-bench/results` at
+   `~/.cache/hakari-bench/hf-datasets/hakari-bench__results`.
+2. Runs `git lfs pull` so the latest `.json.xz` payloads are present locally.
+3. Materializes missing BM25 baseline result JSON from
+   `task_docs/metadata/**.json`, using the stored Nano-set
+   `candidate_subsets.bm25` scores. It does not load candidate parquet files,
+   run `evaluate bm25`, or recompute BM25 with `bm25s`.
+4. Rebuilds:
+
+   ```bash
+   uv run python scripts/build_results_database_and_report.py \
+     --results-dir ~/.cache/hakari-bench/hf-datasets/hakari-bench__results/hakari-results \
+     --duckdb-path ~/.cache/hakari-bench/hf-datasets/hakari-bench__results/hakari-results/hakari_bench.duckdb
+   ```
+
+The dataset repo is private, so authenticate before syncing, for example with
+`hf auth login` or a configured Hugging Face git credential. If the checkout
+already exists and you only want to rebuild from local files, pass
+`--skip-git-sync`.
+
+Useful variants:
+
+```bash
+# Rebuild from an existing checkout and keep the standard BM25 baseline fill.
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --skip-git-sync
+```
+
+```bash
+# Refresh only a metadata-backed BM25 subset before rebuilding.
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --bm25-dataset NanoBEIR-en \
+  --bm25-split NanoArguAna
+```
+
+```bash
+# Rebuild without touching BM25 baseline JSON.
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --no-bm25-baseline
+```
+
 ## Append New Results
 
 Use append mode when you already have a complete viewer DuckDB and only need to
@@ -197,6 +303,13 @@ uv run python scripts/build_results_database_and_report.py \
   --duckdb-path output/hakari-results/hakari_bench.duckdb \
   --append-hf-dataset-repo-id hakari-bench/leaderboard_database
 ```
+
+Remote DuckDB downloads are normalized through a shared "remote latest" cache at
+`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb`. The cache uses
+Hugging Face file metadata when available and records a sidecar SHA-1 so repeat
+append/viewer runs can skip downloading or copying unchanged files. Override the
+cache path with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH` and the sidecar metadata
+path with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH`.
 
 Use an explicit remote base when you want to create a separate merged file:
 
@@ -242,6 +355,10 @@ uv run hakari-bench web \
 
 If the viewer should sync from a results directory instead of a specific file,
 use `--source-results-dir output/hakari-results`.
+
+When the viewer uses `--hf-dataset-repo-id`, it reads the same remote latest
+cache described above and copies it to the viewer's local DuckDB only when the
+contents differ.
 
 ## Before Reporting
 

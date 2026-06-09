@@ -87,6 +87,32 @@
   }
 }
 
+.leaderboard-loading-toast {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 160ms ease-in-out,
+    transform 160ms ease-in-out;
+}
+
+.leaderboard-loading-toast.htmx-request {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaderboard-loading-toast {
+    transition: none;
+  }
+}
+
+.benchmark-scope-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+}
+
 @layer utilities {
   body.bg-zinc-50 {
     background-color: var(--hakari-bg);
@@ -419,6 +445,27 @@
     margin-top: 0;
     font-size: 0.5625rem;
     font-weight: 400;
+  }
+
+  .task-rank-score-cell {
+    display: flex;
+    min-width: 0;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.375rem;
+  }
+
+  .task-rank-label {
+    flex: 0 0 auto;
+    color: var(--hakari-text-muted);
+    font-size: 0.75rem;
+  }
+
+  .task-rank-score-value {
+    min-width: 0;
+    flex: 1 1 auto;
+    text-align: right;
   }
 
   .task-z-neutral {
