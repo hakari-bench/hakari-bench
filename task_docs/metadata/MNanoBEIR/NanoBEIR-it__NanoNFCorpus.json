@@ -17,22 +17,26 @@
     "counts": {
       "queries": 50,
       "documents": 2953,
-      "positive_qrels": 1651
+      "positive_qrels": 2518
     },
     "positives_per_query": {
-      "average": 33.02,
+      "average": 50.36,
       "min": 1,
       "median": 23.5,
-      "max": 100,
+      "max": 463,
       "multi_positive_queries": 47,
       "multi_positive_query_percent": 94.0
     },
     "text_stats_chars": {
       "query_mean": 28.52,
-      "document_mean": 1725.457501
+      "document_mean": 1725.457501,
+      "query_median": 24.0,
+      "query_max": 90,
+      "document_median": 1754.0,
+      "document_max": 10496
     },
     "bm25": {
-      "ndcg_at_10": 0.301594708240685,
+      "ndcg_at_10": 0.33466415334392513,
       "hit_at_10": 0.72,
       "source": "dataset_candidate_subset"
     },
@@ -42,47 +46,47 @@
         "label": "BM25",
         "source": "dataset_candidate_subset",
         "top_k": 500,
-        "ndcg_at_10": 0.3015947082,
+        "ndcg_at_10": 0.33466415334392513,
         "hit_at_10": 0.72,
-        "recall_at_100": 0.1477892187,
+        "recall_at_100": 0.21439293461104725,
         "candidate_count_min": 500,
         "candidate_count_max": 500,
         "candidate_count_mean": 500.0,
         "query_count": 50,
         "query_coverage": 1.0,
-        "relevant_coverage_at_100": 0.1477892187
+        "relevant_coverage_at_100": 0.21439293461104725
       },
       "dense": {
         "config": "harrier_oss_v1_270m",
         "label": "Dense",
         "source": "dataset_candidate_subset",
         "top_k": 500,
-        "ndcg_at_10": 0.2449579449,
+        "ndcg_at_10": 0.2634047154903774,
         "hit_at_10": 0.62,
-        "recall_at_100": 0.1823137492,
+        "recall_at_100": 0.26326258817635045,
         "candidate_count_min": 500,
         "candidate_count_max": 500,
         "candidate_count_mean": 500.0,
         "query_count": 50,
         "query_coverage": 1.0,
-        "relevant_coverage_at_100": 0.1823137492
+        "relevant_coverage_at_100": 0.26326258817635045
       },
       "reranking_hybrid": {
         "config": "reranking_hybrid",
         "label": "Reranking hybrid",
         "source": "dataset_candidate_subset",
         "top_k": 100,
-        "ndcg_at_10": 0.3005077372,
-        "hit_at_10": 0.66,
-        "recall_at_100": 0.1907934585,
+        "ndcg_at_10": 0.33770233443038467,
+        "hit_at_10": 0.68,
+        "recall_at_100": 0.28578818075636364,
         "candidate_count_min": 100,
         "candidate_count_max": 101,
-        "candidate_count_mean": 100.12,
+        "candidate_count_mean": 100.08,
         "query_count": 50,
         "query_coverage": 1.0,
-        "relevant_coverage_at_100": 0.1907934585,
-        "safeguard_positive_rows": 6,
-        "rows_with_101_candidates": 6
+        "relevant_coverage_at_100": 0.28578818075636364,
+        "safeguard_positive_rows": 4,
+        "rows_with_101_candidates": 4
       }
     },
     "references": [
