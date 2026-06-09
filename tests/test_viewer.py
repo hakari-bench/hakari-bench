@@ -856,6 +856,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".leaderboard-loading-toast.htmx-request" in css_response.text
     assert ".loading-spinner" in css_response.text
     assert "hakari-leaderboard-spin" in css_response.text
+    assert "--hakari-radius-lg:8px" in css_response.text
+    assert "border-radius:var(--hakari-radius-lg)" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
     assert ".global-tooltip" in css_response.text
     assert ".model-tooltip" not in css_response.text
@@ -3642,7 +3644,7 @@ def test_task_z_score_heatmap_css_uses_intuitive_positive_negative_colors() -> N
     css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
 
     assert re.search(r"\.task-z-score\s*{[^}]*border: 1px solid rgb\(29 27 24 / 0\.14\);", css_source, flags=re.DOTALL)
-    assert re.search(r"\.task-z-score\s*{[^}]*border-radius: 0;", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score\s*{[^}]*border-radius: var\(--hakari-radius-sm\);", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-size: 0\.8125rem;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-size: 0\.5625rem;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)

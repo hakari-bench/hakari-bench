@@ -28,6 +28,9 @@
     --hakari-purple-soft: rgb(118 90 168 / 0.12);
     --hakari-code-bg: rgb(255 255 255 / 0.66);
     --hakari-row-hover: rgb(0 168 200 / 0.08);
+    --hakari-radius-sm: 4px;
+    --hakari-radius-md: 6px;
+    --hakari-radius-lg: 8px;
     --hakari-font:
       "JetBrains Mono", "Fira Code", "SFMono-Regular", "Cascadia Code",
       "Roboto Mono", "Noto Sans Mono", "Yu Gothic UI", "Meiryo",
@@ -220,6 +223,33 @@
   textarea {
     background-color: var(--hakari-surface-faint);
     color: var(--hakari-text);
+  }
+
+  button,
+  summary,
+  select,
+  textarea,
+  input:not([type="checkbox"]):not([type="radio"]),
+  a.theme-toggle,
+  .doc-label-group,
+  .model-detail-trigger,
+  .border.bg-cyan-50,
+  .border.bg-amber-50,
+  .border.bg-violet-50,
+  .border.bg-zinc-50,
+  .border.bg-zinc-100 {
+    border-radius: var(--hakari-radius-md);
+  }
+
+  nav[aria-label="Leaderboard configuration"],
+  dialog,
+  .benchmark-doc,
+  .leaderboard-table-scroll,
+  .leaderboard-initial-loading,
+  .leaderboard-loading-toast,
+  .global-tooltip,
+  .border.bg-white {
+    border-radius: var(--hakari-radius-lg);
   }
 
   button:hover,
@@ -496,7 +526,7 @@
     align-items: flex-end;
     justify-content: center;
     border: 1px solid rgb(29 27 24 / 0.14);
-    border-radius: 0;
+    border-radius: var(--hakari-radius-sm);
     line-height: 1;
     padding: 0.1rem 0.3rem;
   }
