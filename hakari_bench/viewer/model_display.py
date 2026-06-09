@@ -50,8 +50,8 @@ def model_cell_views(rows: list[LeaderboardRow]) -> dict[str, ModelCellView]:
             dimension_tooltip=None,
             original_embedding_dim=_original_dim_for_view(row=row, original_dim=original_dim),
             truncated_embedding_dim=truncate_dim,
-            variant_label=_variant_label(row, original_dim=original_dim),
-            variant_tooltip=_variant_tooltip(row, original_dim=original_dim),
+            variant_label=_variant_label(row, original_dim=original_dim, model_type_key=model_type_view["key"]),
+            variant_tooltip=_variant_tooltip(row, original_dim=original_dim, model_type_key=model_type_view["key"]),
             metadata=_model_metadata(
                 row=row,
                 full_model_name=full_model_name,
@@ -129,19 +129,28 @@ def _dimension_label(row: LeaderboardRow, *, model_type_key: str | None) -> str 
     return f"{row.embedding_dim}d"
 
 
-def _variant_label(row: LeaderboardRow, *, original_dim: int | None) -> str | None:
+def _variant_label(row: LeaderboardRow, *, original_dim: int | None, model_type_key: str | None) -> str | None:
     variant_name = row.embedding_variant_name
     if variant_name is None or variant_name == "base":
         return None
     truncate_dim = _truncate_dim(row)
     if truncate_dim is not None:
         return f"{truncate_dim}d <- {original_dim}" if original_dim is not None else f"{truncate_dim}d"
+    if model_type_key == "sparse":
+        sparse_label = _sparse_active_dims_label(variant_name)
+        if sparse_label is not None:
+            return sparse_label
     if row.quantization is not None and variant_name.casefold() == row.quantization.casefold():
         return None
     return variant_name
 
 
-def _variant_tooltip(row: LeaderboardRow, *, original_dim: int | None) -> str | None:
+def _variant_tooltip(row: LeaderboardRow, *, original_dim: int | None, model_type_key: str | None) -> str | None:
+    variant_name = row.embedding_variant_name or ""
+    if model_type_key == "sparse":
+        sparse_tooltip = _sparse_active_dims_tooltip(variant_name)
+        if sparse_tooltip is not None:
+            return sparse_tooltip
     truncate_dim = _truncate_dim(row)
     if truncate_dim is None:
         return None
@@ -150,6 +159,41 @@ def _variant_tooltip(row: LeaderboardRow, *, original_dim: int | None) -> str | 
     return (
         f"Original embedding dimension is {original_dim}. "
         f"This result was evaluated after truncating embeddings to {truncate_dim} dimensions."
+    )
+
+
+def _sparse_active_dims_label(variant_name: str) -> str | None:
+    query_dim, document_dim = _sparse_active_dims(variant_name)
+    labels = []
+    if query_dim is not None:
+        labels.append(f"q{query_dim}d")
+    if document_dim is not None:
+        labels.append(f"d{document_dim}d")
+    return " ".join(labels) if labels else None
+
+
+def _sparse_active_dims_tooltip(variant_name: str) -> str | None:
+    query_dim, document_dim = _sparse_active_dims(variant_name)
+    if query_dim is None and document_dim is None:
+        return None
+    details = ["Sparse active dimension cap."]
+    if query_dim is not None:
+        details.append(f"Query max active dims: {query_dim}.")
+    if document_dim is not None:
+        details.append(f"Document max active dims: {document_dim}.")
+    details.append(f"Full variant: {variant_name}")
+    return " ".join(details)
+
+
+def _sparse_active_dims(variant_name: str) -> tuple[int | None, int | None]:
+    query_match = re.search(r"(?:^|_)sparse_query_(?:max_active_dims|max_dims)_(\d+)(?:_|$)", variant_name)
+    document_match = re.search(
+        r"(?:^|_)sparse_(?:document|docs)_(?:max_active_dims|max_dims)_(\d+)(?:_|$)",
+        variant_name,
+    )
+    return (
+        int(query_match.group(1)) if query_match is not None else None,
+        int(document_match.group(1)) if document_match is not None else None,
     )
 
 

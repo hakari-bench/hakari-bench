@@ -1778,7 +1778,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Filters task columns and task rows by benchmark" in response.text
     assert "Recalculate ranks from filters" in response.text
     assert "Recomputes Borda, mean ranks, and visible means" in response.text
-    assert "Apply" in response.text
+    assert "Apply text filters" not in response.text
+    assert response.text.index("Refine results") < response.text.index("Recalculate ranks from filters") < response.text.index("Model family")
     assert 'value="model/b"' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
     assert "model/a" in response.text
@@ -1874,7 +1875,13 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert rescore_response.status_code == 200
     assert 'name="rescore" value="1" class="h-4 w-4 accent-cyan-700" checked' in rescore_response.text
     assert "binary_rescore" in rescore_response.text
-    assert "Δ vs Base" not in rescore_response.text
+    assert "Δ vs Base" in rescore_response.text
+
+    other_variant_response = TestClient(app).get("/leaderboard?view=BenchA&other_variant=1")
+
+    assert other_variant_response.status_code == 200
+    assert 'name="other_variant" value="1" class="h-4 w-4 accent-cyan-700" checked' in other_variant_response.text
+    assert "Δ vs Base" in other_variant_response.text
 
 
 def test_viewer_dedupes_noop_truncate_variants_in_favor_of_original_rows(tmp_path: Path) -> None:
@@ -2765,7 +2772,7 @@ benchmarks:
     assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "Mean Score" in response.text
     assert ">BEIR-ja</span>" in response.text
-    assert "w-[7rem] min-w-[7rem] max-w-[7rem]" in response.text
+    assert "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]" in response.text
     assert "metric%3ANanoBEIR-ja" in response.text
     assert 'hx-push-url="/?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja' in response.text
 
@@ -3315,6 +3322,14 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert '<span class="task-z-score-value">82.70</span>' in task_column_response.text
     assert '<span class="task-z-score-delta">+0.27σ</span>' in task_column_response.text
 
+    ranked_std_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&truncate=1&task_scores=1&task_z_scores=1&task_ranks=1"
+    )
+    assert ranked_std_response.status_code == 200
+    assert '<span class="task-rank-label">[1]</span>' in ranked_std_response.text
+    assert '<span class="task-z-score-value">90.00</span>' in ranked_std_response.text
+    assert '<span class="task-z-score-delta">+1.00σ</span>' in ranked_std_response.text
+
 
 def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
@@ -3352,8 +3367,10 @@ def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
     assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert 'name="task_scores" value="1"' in response.text
-    assert ">1</td>" in response.text
-    assert ">T2</td>" in response.text
+    assert '<span class="task-rank-label">[1]</span>' in response.text
+    assert '<span class="task-rank-label">[T2]</span>' in response.text
+    assert '<span class="task-rank-score-value">90.00</span>' in response.text
+    assert '<span class="task-rank-score-value">80.00</span>' in response.text
     assert ">2.5</td>" not in response.text
     assert "sort=metric%3Aarguana" in response.text
 
@@ -3736,11 +3753,14 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 200
-    assert "Task string length" in response.text
-    assert "Task length" in response.text
-    assert 'data-tooltip="Filters tasks by average query and document string length in characters.' in response.text
+    assert "Task string length" not in response.text
+    assert ">Length</span>" in response.text
+    assert "Query length ≤" in response.text
+    assert "Document length ≤" in response.text
+    assert 'data-tooltip="Filters tasks by average query and document length in characters.' in response.text
     assert "Tasks missing length metadata are excluded when a bound is set." in response.text
-    assert "border-cyan-700 bg-cyan-50" in response.text
+    assert "Query string <=" not in response.text
+    assert "Doc string <=" not in response.text
     assert 'name="query_len_max" value="1000"' in response.text
     assert 'name="doc_len_max" value="2000"' in response.text
     assert ">short</span>" in response.text

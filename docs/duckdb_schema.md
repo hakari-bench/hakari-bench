@@ -886,11 +886,11 @@ attention implementation, prompt mode, and `trust_remote_code` are carried in a
 `data-model-metadata` JSON attribute on the model-name button and displayed in
 the model details modal.
 
-When quantization or truncation variants are displayed, the viewer appends a
-`Δ vs Base` column. It compares each variant row's displayed mean score against
-the base row for the same source model and renders the relative percentage
-change, such as `-24.5%` or `+1.2%`. Base rows and rows without a matching base
-row leave this column blank.
+When any embedding variant rows are displayed, the viewer appends a `Δ vs Base`
+column. It compares each variant row's displayed mean score against the base row
+for the same source model and renders the relative percentage change, such as
+`-24.5%` or `+1.2%`. Base rows and rows without a matching base row leave this
+column blank.
 
 Task metric column headers keep their full metric key for sorting and query
 state, but shorten long dataset task keys for display. If a grouped key repeats
@@ -916,6 +916,9 @@ z-score label is rendered to two decimals, while the heatmap color is rounded to
 0.25 standard-deviation increments and bucketed from `-2.0` to `+2.0`. A task
 with zero base-row standard deviation leaves the z-score cell blank because
 there is no meaningful distance from the task distribution.
+When `Task Rank` is also enabled, each task cell keeps the rank label on the
+left, such as `[1]` or `[T2]`, and keeps the score or score-plus-STD badge
+right-aligned.
 
 ## Current Viewer Data Access Layer
 

@@ -1579,11 +1579,14 @@ def render_controls(
         <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
           <span class="inline-flex items-center gap-1">
             {_control_label(icon="filter", text="Refine results")}
-            {_render_help_tooltip("Narrows which rows and tasks are included in the current leaderboard. Text searches require Apply; checkbox and facet changes update automatically.")}
+            {_render_help_tooltip("Narrows which rows and tasks are included in the current leaderboard. Press Enter in a text field to apply text filters; checkbox and facet changes update automatically.")}
           </span>
-          <button type="submit" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-[0.8125rem] font-medium text-zinc-800 hover:border-cyan-600 hover:text-cyan-700">
-            Apply text filters
-          </button>
+          <label class="inline-flex items-center gap-2">
+            <input type="hidden" name="rank_filtered" value="0">
+            <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
+            <span class="font-medium text-zinc-800">Recalculate ranks from filters</span>
+            {_render_help_tooltip("Recomputes Borda, mean ranks, and visible means after active model/task/facet filters are applied. Leave this off when you want the original global ranking context.")}
+          </label>
         </div>
         <div class="grid gap-2">
           <div class="min-w-0 space-y-2">
@@ -1607,17 +1610,12 @@ def render_controls(
                        autocomplete="off">
               </label>
             </div>
-            <label class="inline-flex items-center gap-2">
-              <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
-              <span class="font-medium text-zinc-800">Recalculate ranks from filters</span>
-              {_render_help_tooltip("Recomputes Borda, mean ranks, and visible means after active model/task/facet filters are applied. Leave this off when you want the original global ranking context.")}
-            </label>
           </div>
           <details id="facet-filters" class="min-w-0 border border-zinc-200 bg-zinc-50 p-2"{advanced_filter_open_attr}>
             <summary class="cursor-pointer text-xs font-semibold uppercase text-zinc-500">
               <span class="inline-flex items-center gap-1">
                 <span>Advanced filters</span>
-                {_render_help_tooltip("Open for dimension, quantization, task length, dtype, attention, and prompt filters. These refine the current result set after scope and evaluation mode are selected.")}
+                {_render_help_tooltip("Open for dimension, quantization, length, dtype, attention, and prompt filters. These refine the current result set after scope and evaluation mode are selected.")}
               </span>
             </summary>
             <div class="mt-2 space-y-2">
@@ -1627,10 +1625,7 @@ def render_controls(
                 {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
                 {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
               </div>
-              <div class="flex flex-wrap items-center gap-2">
-                {_control_label(icon="ruler", text="Task length")}
-                {_render_task_length_filter_inputs(filter_state)}
-              </div>
+              {_render_task_length_filter_inputs(filter_state)}
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="cpu", text="Run metadata")}
                 {_render_help_tooltip("Filters by recorded runtime metadata. These fields describe how a result was produced; they do not change the benchmark scope.")}
@@ -1703,38 +1698,38 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
         "w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
-    active_classes = "border-cyan-700 bg-cyan-50" if filter_state.has_task_length_filters else "border-zinc-200 bg-zinc-50"
+    active_class = "text-cyan-700" if filter_state.has_task_length_filters else ""
     tooltip = (
-        "Filters tasks by average query and document string length in characters. "
+        "Filters tasks by average query and document length in characters. "
         "Tasks missing length metadata are excluded when a bound is set."
     )
     return f"""
-    <fieldset class="flex flex-wrap items-center gap-2 border {active_classes} px-1.5 py-1">
-      <legend class="inline-flex items-center gap-1 px-1 text-xs font-semibold uppercase text-zinc-500">
-        <span>Task string length</span>
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="inline-flex items-center gap-1">
+        {_control_label(icon="ruler", text="Length", extra_class=active_class)}
         {_render_help_tooltip(tooltip)}
-      </legend>
+      </span>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Query string >=</span>
+        <span class="text-xs font-medium text-zinc-700">Query length ≥</span>
         <input type="number" min="0" step="any" name="query_len_min" value="{escape(filter_state.query_len_min)}"
                class="{input_class}">
       </label>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Query string <=</span>
+        <span class="text-xs font-medium text-zinc-700">Query length ≤</span>
         <input type="number" min="0" step="any" name="query_len_max" value="{escape(filter_state.query_len_max)}"
                class="{input_class}">
       </label>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Doc string >=</span>
+        <span class="text-xs font-medium text-zinc-700">Document length ≥</span>
         <input type="number" min="0" step="any" name="doc_len_min" value="{escape(filter_state.doc_len_min)}"
                class="{input_class}">
       </label>
       <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Doc string <=</span>
+        <span class="text-xs font-medium text-zinc-700">Document length ≤</span>
         <input type="number" min="0" step="any" name="doc_len_max" value="{escape(filter_state.doc_len_max)}"
                class="{input_class}">
       </label>
-    </fieldset>
+    </div>
     """
 
 
@@ -1815,7 +1810,7 @@ def render_table_head(
         query = urlencode(query_payload, doseq=True)
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
-        th_spacing = "w-[7rem] min-w-[7rem] max-w-[7rem] px-1 normal-case" if is_metric else "px-2 uppercase"
+        th_spacing = f"{_metric_column_width_class(result)} px-1 normal-case" if is_metric else "px-2 uppercase"
         sticky = _sticky_head_class(key)
         label_class = "min-w-0 text-left leading-tight" if is_metric else "text-left"
         label_attrs = (
@@ -2088,9 +2083,13 @@ def _render_metric_cells(
     metric_rank_labels: dict[tuple[str, str], str] | None = None,
 ) -> str:
     if result.show_task_ranks:
-        values = row.metric_rank_values
         return "".join(
-            f"""<td class="w-[7rem] min-w-[7rem] max-w-[7rem] px-1 py-1 text-left tabular-nums">{_metric_rank_label(row, column, values.get(column), metric_rank_labels)}</td>"""
+            _render_metric_rank_score_cell(
+                result=result,
+                row=row,
+                column=column,
+                metric_rank_labels=metric_rank_labels,
+            )
             for column in result.metric_columns
         )
     if result.show_task_z_scores:
@@ -2099,8 +2098,9 @@ def _render_metric_cells(
             for column in result.metric_columns
         )
     values = row.metric_values
+    metric_width_class = _metric_column_width_class(result)
     return "".join(
-        f"""<td class="w-[7rem] min-w-[7rem] max-w-[7rem] px-1 py-1 text-left tabular-nums">{_fmt_score(values.get(column))}</td>"""
+        f"""<td class="{metric_width_class} px-1 py-1 text-left tabular-nums">{_fmt_score(values.get(column))}</td>"""
         for column in result.metric_columns
     )
 
@@ -2120,14 +2120,49 @@ def _render_mean_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str
 
 
 def _render_metric_z_cell(*, score: float | None, z_score: float | None) -> str:
-    return _render_score_z_cell(
-        score=score,
-        z_score=z_score,
-        cell_class="w-[7rem] min-w-[7rem] max-w-[7rem] px-1 py-1 text-left tabular-nums",
+    return (
+        '<td class="w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem] px-1 py-1 text-left tabular-nums">'
+        f"{_render_score_z_badge(score=score, z_score=z_score)}"
+        "</td>"
     )
 
 
+def _render_metric_rank_score_cell(
+    *,
+    result: LeaderboardResult,
+    row: LeaderboardRow,
+    column: str,
+    metric_rank_labels: dict[tuple[str, str], str] | None,
+) -> str:
+    rank_label = _metric_rank_label(row, column, row.metric_rank_values.get(column), metric_rank_labels)
+    rank_html = f'<span class="task-rank-label">{escape(f"[{rank_label}]")}</span>' if rank_label else ""
+    if result.show_task_z_scores:
+        score_html = _render_score_z_badge(score=row.metric_values.get(column), z_score=row.metric_z_values.get(column))
+    else:
+        score_html = f'<span class="task-rank-score-value">{escape(_fmt_score(row.metric_values.get(column)))}</span>'
+    metric_width_class = _metric_column_width_class(result)
+    return (
+        f'<td class="{metric_width_class} px-1 py-1 tabular-nums">'
+        '<span class="task-rank-score-cell">'
+        f"{rank_html}{score_html}"
+        "</span>"
+        "</td>"
+    )
+
+
+def _metric_column_width_class(result: LeaderboardResult) -> str:
+    if result.show_task_ranks and result.show_task_z_scores:
+        return "w-[7rem] min-w-[7rem] max-w-[7rem]"
+    if result.show_task_ranks:
+        return "w-[6rem] min-w-[6rem] max-w-[6rem]"
+    return "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]"
+
+
 def _render_score_z_cell(*, score: float | None, z_score: float | None, cell_class: str) -> str:
+    return f'<td class="{cell_class}">{_render_score_z_badge(score=score, z_score=z_score)}</td>'
+
+
+def _render_score_z_badge(*, score: float | None, z_score: float | None) -> str:
     rounded = _rounded_z_score(z_score)
     if rounded is None:
         z_label = ""
@@ -2137,12 +2172,10 @@ def _render_score_z_cell(*, score: float | None, z_score: float | None, cell_cla
         z_label = f"{_fmt_z_score(z_score)}σ"
         bucket_class = _z_score_bucket_class(rounded)
     return (
-        f'<td class="{cell_class}">'
         f'<span class="task-z-score {bucket_class}">'
         f'<span class="task-z-score-value">{escape(_fmt_score(score))}</span>'
         f'<span class="task-z-score-delta">{escape(z_label)}</span>'
         "</span>"
-        "</td>"
     )
 
 
@@ -2159,7 +2192,12 @@ def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow)
 
 
 def _show_base_delta_column(result: LeaderboardResult) -> bool:
-    return result.include_quantization_variants or result.include_truncate_variants
+    return (
+        result.include_quantization_variants
+        or result.include_truncate_variants
+        or result.include_rescore_variants
+        or result.include_other_variants
+    )
 
 
 def _render_filter_details(
