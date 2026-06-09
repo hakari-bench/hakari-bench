@@ -132,7 +132,7 @@ env_list = py312, lint, type
 
 [testenv]
 dependency_groups = all
-commands = python -m pytest {posargs}
+commands = python -m pytest {posargs:-m "not browser"}
 
 [testenv:lint]
 commands = ruff check .
