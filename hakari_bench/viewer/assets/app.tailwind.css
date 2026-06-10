@@ -233,7 +233,6 @@
   a.theme-toggle,
   .doc-label-group,
   .control-button-group,
-  .control-label-group,
   .model-detail-trigger,
   .border.bg-cyan-50,
   .border.bg-amber-50,
@@ -565,8 +564,7 @@
   nav[aria-label="Leaderboard configuration"] select,
   nav[aria-label="Leaderboard configuration"] input:not([type="checkbox"]):not([type="radio"]),
   nav[aria-label="Leaderboard configuration"] .doc-label-group,
-  nav[aria-label="Leaderboard configuration"] .control-button-group,
-  nav[aria-label="Leaderboard configuration"] .control-label-group {
+  nav[aria-label="Leaderboard configuration"] .control-button-group {
     background-color: var(--hakari-surface-muted);
     border-color: transparent;
   }
@@ -585,17 +583,26 @@
   nav[aria-label="Leaderboard configuration"] .control-label-group .help-summary-trigger {
     background-color: transparent;
     border-color: transparent;
+    color: inherit;
   }
 
   nav[aria-label="Leaderboard configuration"] button:hover,
   nav[aria-label="Leaderboard configuration"] summary:hover,
   nav[aria-label="Leaderboard configuration"] .doc-label-group:hover,
   nav[aria-label="Leaderboard configuration"] .control-button-group:hover,
-  nav[aria-label="Leaderboard configuration"] .control-label-group:hover,
   nav[aria-label="Leaderboard configuration"] .hover\:border-cyan-500:hover,
   nav[aria-label="Leaderboard configuration"] .hover\:border-cyan-600:hover {
     background-color: var(--hakari-accent-soft);
     border-color: transparent;
+  }
+
+  nav[aria-label="Leaderboard configuration"] .control-button-group > button:hover,
+  nav[aria-label="Leaderboard configuration"] .control-button-group .doc-summary-trigger:hover,
+  nav[aria-label="Leaderboard configuration"] .control-button-group .help-summary-trigger:hover,
+  nav[aria-label="Leaderboard configuration"] .control-label-group .help-summary-trigger:hover {
+    background-color: transparent;
+    border-color: transparent;
+    color: inherit;
   }
 
   .border.bg-amber-50,
