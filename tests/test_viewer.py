@@ -858,6 +858,10 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "hakari-leaderboard-spin" in css_response.text
     assert "--hakari-radius-lg:8px" in css_response.text
     assert "border-radius:var(--hakari-radius-lg)" in css_response.text
+    assert 'nav[aria-label="Leaderboard configuration"]' in css_response.text
+    assert "border-color:transparent" in css_response.text
+    assert ".leaderboard-table-scroll{--hakari-model-col-width" in css_response.text
+    assert "border-color:var(--hakari-border)" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
     assert ".global-tooltip" in css_response.text
     assert ".model-tooltip" not in css_response.text

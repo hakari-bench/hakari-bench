@@ -269,14 +269,15 @@
   }
 
   .theme-toggle {
-    background-color: var(--hakari-code-bg);
-    border-color: var(--hakari-border);
+    background-color: var(--hakari-surface-muted);
+    border-color: transparent;
     color: var(--hakari-accent);
   }
 
   .theme-toggle:hover,
   .theme-toggle:focus {
-    border-color: var(--hakari-accent);
+    background-color: var(--hakari-accent-soft);
+    border-color: transparent;
     color: var(--hakari-accent-strong);
   }
 
@@ -337,6 +338,7 @@
   .leaderboard-table-scroll {
     --hakari-model-col-width: clamp(18rem, 40vw, 36rem);
     --hakari-rank-col-width: 4rem;
+    border-color: var(--hakari-border);
   }
 
   .leaderboard-col-model {
@@ -442,6 +444,7 @@
   }
 
   .global-tooltip {
+    border-color: transparent;
     z-index: 1000;
     max-width: min(24rem, calc(100vw - 2rem));
     opacity: 0;
@@ -462,6 +465,7 @@
 
   .leaderboard-initial-loading {
     align-items: center;
+    border-color: transparent;
     display: flex;
     gap: 0.625rem;
     justify-content: center;
@@ -472,6 +476,7 @@
 
   .leaderboard-loading-toast {
     align-items: center;
+    border-color: transparent;
     display: inline-flex;
     gap: 0.5rem;
     opacity: 0;
@@ -540,6 +545,52 @@
     margin-top: 0;
     font-size: 0.5625rem;
     font-weight: 400;
+  }
+
+  nav[aria-label="Leaderboard configuration"] {
+    background-color: color-mix(in srgb, var(--hakari-surface-muted) 82%, var(--hakari-surface));
+    border-color: transparent;
+  }
+
+  nav[aria-label="Leaderboard configuration"] .border.bg-white,
+  nav[aria-label="Leaderboard configuration"] .border.bg-zinc-50 {
+    background-color: var(--hakari-surface-faint);
+    border-color: transparent;
+  }
+
+  nav[aria-label="Leaderboard configuration"] button,
+  nav[aria-label="Leaderboard configuration"] summary,
+  nav[aria-label="Leaderboard configuration"] select,
+  nav[aria-label="Leaderboard configuration"] input:not([type="checkbox"]):not([type="radio"]),
+  nav[aria-label="Leaderboard configuration"] .doc-label-group {
+    background-color: var(--hakari-surface-muted);
+    border-color: transparent;
+  }
+
+  nav[aria-label="Leaderboard configuration"] .border-cyan-700,
+  nav[aria-label="Leaderboard configuration"] .bg-cyan-50 {
+    background-color: color-mix(in srgb, var(--hakari-accent) 18%, var(--hakari-surface));
+    border-color: transparent;
+  }
+
+  nav[aria-label="Leaderboard configuration"] button:hover,
+  nav[aria-label="Leaderboard configuration"] summary:hover,
+  nav[aria-label="Leaderboard configuration"] .doc-label-group:hover,
+  nav[aria-label="Leaderboard configuration"] .hover\:border-cyan-500:hover,
+  nav[aria-label="Leaderboard configuration"] .hover\:border-cyan-600:hover {
+    background-color: var(--hakari-accent-soft);
+    border-color: transparent;
+  }
+
+  .border.bg-amber-50,
+  .border.bg-violet-50,
+  .border.bg-zinc-100,
+  a[href^="/leaderboard.csv"] {
+    border-color: transparent;
+  }
+
+  dialog {
+    border-color: transparent;
   }
 
   .task-rank-score-cell {
