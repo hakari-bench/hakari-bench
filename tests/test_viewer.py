@@ -30,6 +30,7 @@ from hakari_bench.viewer.app import (
 from hakari_bench.viewer.analytics import ViewerSummary
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
+from hakari_bench.viewer.filters import row_filter_context
 from hakari_bench.viewer.leaderboard import (
     LeaderboardResult,
     LeaderboardRow,
@@ -46,6 +47,7 @@ from hakari_bench.viewer.store import (
     LocalDuckDbStore,
     resolve_duckdb_location,
 )
+from hakari_bench.viewer.state import FilterState
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
@@ -869,6 +871,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".doc-summary-trigger:hover" in css_response.text
     assert ".leaderboard-col-model{box-sizing:border-box;left:0" in css_response.text
     assert "overflow:hidden;width:var(--hakari-model-col-width)" in css_response.text
+    assert ".borda-score-bar{position:absolute;bottom:0;left:0;display:block" in css_response.text
+    assert ".borda-score-bar-fill{fill:var(--hakari-accent)}" in css_response.text
     assert ".leaderboard-row:hover>.leaderboard-col-model{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
 
@@ -2518,6 +2522,56 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
         '<span class="min-w-0 text-left leading-tight block max-w-full truncate tooltip-trigger cursor-pointer" '
         f'data-metric-column-full-name="{long_task}"'
     ) in head
+    assert body.count('class="borda-score-bar"') == 2
+    assert 'class="borda-score-bar-fill" x="0" y="0" width="100.00" height="1"' in body
+    assert 'class="borda-score-bar-fill" x="0" y="0" width="0.00" height="1"' in body
+
+
+def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("org/model-a", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.90, 10, 12, 8192),
+            ("org/model-b", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.80, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA", show_task_scores=True)
+    filter_context = row_filter_context(result.rows, FilterState(filters_active=True, model_filter="model-a"))
+
+    body = render_table_body(result=result, filter_context=filter_context)
+
+    assert body.count('class="borda-score-bar"') == 1
+    assert 'class="borda-score-bar-fill" x="0" y="0" width="100.00" height="1"' in body
+    assert body.count('data-filter-hidden="true"') == 1
+
+
+def test_leaderboard_model_name_borda_score_bar_handles_no_visible_filtered_rows(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("org/model-a", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.90, 10, 12, 8192),
+            ("org/model-b", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.80, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA", show_task_scores=True)
+    filter_context = row_filter_context(result.rows, FilterState(filters_active=True, model_filter="missing-model"))
+
+    body = render_table_body(result=result, filter_context=filter_context)
+
+    assert 'class="borda-score-bar"' not in body
+    assert body.count('data-filter-hidden="true"') == 2
 
 
 def test_leaderboard_model_name_cell_omits_language_marker_and_keeps_language_details(tmp_path: Path) -> None:

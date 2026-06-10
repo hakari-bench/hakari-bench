@@ -270,10 +270,19 @@ def _model_metadata(
     }
 
 
-def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> str:
+def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, borda_score_bar_width: float | None = None) -> str:
     metadata_json = json.dumps(model_view.metadata, ensure_ascii=False, separators=(",", ":"))
     display_name = model_view.display_name
     name_attrs = f' aria-label="{escape(model_view.display_name, quote=True)}"'
+    borda_bar_html = ""
+    if borda_score_bar_width is not None:
+        clamped_width = min(100.0, max(0.0, borda_score_bar_width))
+        borda_bar_html = (
+            '<svg class="borda-score-bar" viewBox="0 0 100 1" preserveAspectRatio="none"'
+            ' aria-hidden="true" focusable="false">'
+            f'<rect class="borda-score-bar-fill" x="0" y="0" width="{clamped_width:.2f}" height="1"></rect>'
+            "</svg>"
+        )
     badges = []
     if model_view.model_type_badge_label is not None:
         badges.append(
@@ -322,7 +331,7 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView) -> st
       <div class="flex min-w-0 flex-wrap items-center gap-1">
         <button type="button" class="model-detail-trigger min-w-0 [overflow-wrap:anywhere] text-left text-[0.8125rem] leading-tight font-medium underline-offset-2 hover:underline"
                 data-model-metadata="{escape(metadata_json)}"{name_attrs}>{escape(display_name)}</button>{badge_html}
-      </div>
+      </div>{borda_bar_html}
     </td>"""
 
 

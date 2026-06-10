@@ -10,7 +10,7 @@ import math
 import os
 from pathlib import Path
 import re
-from typing import Iterable, TypedDict, cast
+from typing import Iterable, Sequence, TypedDict, cast
 from urllib.parse import urlencode
 
 from pydantic import BaseModel, ConfigDict
@@ -2102,6 +2102,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
     filter_context = filter_context or row_filter_context(result.rows, FilterState())
     body_rows = []
     model_views = model_cell_views(result.rows)
+    borda_score_bar_widths = _borda_score_bar_widths(rows=result.rows, filter_context=filter_context)
     borda_rank_labels = _rank_display_labels((row.model_name, row.borda_rank) for row in result.rows)
     mean_rank_labels = _rank_display_labels((row.model_name, row.mean_rank) for row in result.rows)
     metric_rank_labels = _metric_rank_display_labels(result)
@@ -2112,7 +2113,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
-              {render_model_name_cell(row, model_views[row.model_name])}
+              {render_model_name_cell(row, model_views[row.model_name], borda_score_bar_width=borda_score_bar_widths.get(row.model_name))}
               <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{borda_rank_labels[row.model_name]}</td>
               <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{mean_rank_labels[row.model_name]}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.borda_score)}</td>
@@ -2128,6 +2129,19 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
+
+
+def _borda_score_bar_widths(*, rows: Sequence[LeaderboardRow], filter_context: FilterContext) -> dict[str, float]:
+    visible_rows = [row for row in rows if filter_context.is_visible(row)]
+    if not visible_rows:
+        return {}
+    scores = [row.borda_score for row in visible_rows]
+    min_score = min(scores)
+    max_score = max(scores)
+    if max_score <= min_score:
+        return {row.model_name: 100.0 for row in visible_rows}
+    score_range = max_score - min_score
+    return {row.model_name: ((row.borda_score - min_score) / score_range) * 100.0 for row in visible_rows}
 
 
 def render_leaderboard_csv(*, result: LeaderboardResult, filter_state: FilterState | None = None) -> str:

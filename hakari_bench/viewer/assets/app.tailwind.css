@@ -414,6 +414,21 @@
     width: var(--hakari-model-col-width);
   }
 
+  .borda-score-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 1px;
+    opacity: 0.72;
+    pointer-events: none;
+  }
+
+  .borda-score-bar-fill {
+    fill: var(--hakari-accent);
+  }
+
   .leaderboard-col-rank {
     box-sizing: border-box;
     max-width: var(--hakari-rank-col-width);
