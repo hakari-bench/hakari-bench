@@ -3429,6 +3429,7 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     )
     assert ranked_std_response.status_code == 200
     assert '<span class="task-rank-label">[1]</span>' in ranked_std_response.text
+    assert "task-z-score-with-rank" in ranked_std_response.text
     assert '<span class="task-z-score-value">90.00</span>' in ranked_std_response.text
     assert '<span class="task-z-score-delta">+1.00σ</span>' in ranked_std_response.text
 
@@ -3658,8 +3659,8 @@ def test_task_z_score_heatmap_css_uses_intuitive_positive_negative_colors() -> N
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score\s*{[^}]*border-color: rgb\(241 251 255 / 0\.22\);", css_source, flags=re.DOTALL)
-    assert re.search(r"\.task-z-pos-025\s*{\s*background-color: #f4f1df;", css_source)
-    assert re.search(r"\.task-z-pos-200\s*{\s*background-color: #566126;", css_source)
+    assert re.search(r"\.task-z-pos-025\s*{\s*background-color: #eaf6ef;", css_source)
+    assert re.search(r"\.task-z-pos-200\s*{\s*background-color: #2f704d;", css_source)
     assert re.search(r"\.task-z-neg-025\s*{\s*background-color: #f7ebe4;", css_source)
     assert re.search(r"\.task-z-neg-200\s*{\s*background-color: #733126;", css_source)
     assert re.search(r'\.task-z-pos-025\s*{\s*background-color: theme\("colors\.emerald\.950"\);', css_source)

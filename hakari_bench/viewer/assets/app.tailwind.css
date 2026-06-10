@@ -607,6 +607,22 @@
     border-radius: var(--hakari-radius-sm);
     line-height: 1;
     padding: 0.1rem 0.3rem;
+    text-align: right;
+  }
+
+  .task-z-score-with-rank {
+    width: 4.25rem;
+    min-width: 4.25rem;
+    align-items: stretch;
+    padding-inline: 0.25rem;
+  }
+
+  .task-z-score-main {
+    display: flex;
+    width: 100%;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.125rem;
   }
 
   .task-z-score-value {
@@ -615,6 +631,7 @@
   }
 
   .task-z-score-delta {
+    align-self: flex-end;
     margin-top: 0;
     font-size: 0.5625rem;
     font-weight: 400;
@@ -712,19 +729,13 @@
     border-color: transparent;
   }
 
-  .task-rank-score-cell {
-    display: flex;
-    min-width: 0;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.375rem;
-  }
-
   .task-rank-label {
     flex: 0 0 auto;
-    color: var(--hakari-text-muted);
-    font-size: 0.75rem;
+    color: inherit;
+    font-size: 0.8125rem;
+    line-height: 1;
+    opacity: 0.66;
+    text-align: left;
   }
 
   .task-z-neutral {
@@ -733,43 +744,43 @@
   }
 
   .task-z-pos-025 {
-    background-color: #f4f1df;
-    color: #5a6335;
+    background-color: #eaf6ef;
+    color: #326247;
   }
 
   .task-z-pos-050 {
-    background-color: #e8e5c4;
-    color: #4f5b2e;
+    background-color: #d8eddf;
+    color: #28573e;
   }
 
   .task-z-pos-075 {
-    background-color: #d7d49f;
-    color: #3f4a24;
+    background-color: #c2e1cc;
+    color: #1f4b36;
   }
 
   .task-z-pos-100 {
-    background-color: #c5c27c;
-    color: #30391b;
+    background-color: #a6d0b5;
+    color: #173d2b;
   }
 
   .task-z-pos-125 {
-    background-color: #aaa85f;
-    color: #252d16;
+    background-color: #82bb97;
+    color: #103322;
   }
 
   .task-z-pos-150 {
-    background-color: #8c8f46;
-    color: #fffaf0;
+    background-color: #5fa578;
+    color: #f4fff8;
   }
 
   .task-z-pos-175 {
-    background-color: #707735;
-    color: #fffaf0;
+    background-color: #438b61;
+    color: #f4fff8;
   }
 
   .task-z-pos-200 {
-    background-color: #566126;
-    color: #fffaf0;
+    background-color: #2f704d;
+    color: #f4fff8;
   }
 
   .task-z-neg-025 {

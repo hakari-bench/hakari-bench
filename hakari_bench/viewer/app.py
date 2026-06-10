@@ -2392,20 +2392,21 @@ def _render_metric_rank_score_cell(
     metric_width_class = _metric_column_width_class(result)
     if not result.show_task_z_scores:
         return f"""<td class="{metric_width_class} px-1 py-1 text-left tabular-nums">{escape(rank_label)}</td>"""
-    rank_html = f'<span class="task-rank-label">{escape(f"[{rank_label}]")}</span>' if rank_label else ""
-    score_html = _render_score_z_badge(score=row.metric_values.get(column), z_score=row.metric_z_values.get(column))
+    score_html = _render_score_z_badge(
+        score=row.metric_values.get(column),
+        z_score=row.metric_z_values.get(column),
+        rank_label=rank_label,
+    )
     return (
-        f'<td class="{metric_width_class} px-1 py-1 tabular-nums">'
-        '<span class="task-rank-score-cell">'
-        f"{rank_html}{score_html}"
-        "</span>"
+        f'<td class="{metric_width_class} px-1 py-1 text-left tabular-nums">'
+        f"{score_html}"
         "</td>"
     )
 
 
 def _metric_column_width_class(result: LeaderboardResult) -> str:
     if result.show_task_ranks and result.show_task_z_scores:
-        return "w-[7rem] min-w-[7rem] max-w-[7rem]"
+        return "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]"
     if result.show_task_ranks:
         return "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]"
     return "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]"
@@ -2415,7 +2416,7 @@ def _render_score_z_cell(*, score: float | None, z_score: float | None, cell_cla
     return f'<td class="{cell_class}">{_render_score_z_badge(score=score, z_score=z_score)}</td>'
 
 
-def _render_score_z_badge(*, score: float | None, z_score: float | None) -> str:
+def _render_score_z_badge(*, score: float | None, z_score: float | None, rank_label: str | None = None) -> str:
     rounded = _rounded_z_score(z_score)
     if rounded is None:
         z_label = ""
@@ -2424,9 +2425,21 @@ def _render_score_z_badge(*, score: float | None, z_score: float | None) -> str:
         assert z_score is not None
         z_label = f"{_fmt_z_score(z_score)}σ"
         bucket_class = _z_score_bucket_class(rounded)
+    rank_html = (
+        f'<span class="task-rank-label">{escape(f"[{rank_label}]")}</span>'
+        if rank_label
+        else ""
+    )
+    value_html = f'<span class="task-z-score-value">{escape(_fmt_score(score))}</span>'
+    score_main_html = (
+        f'<span class="task-z-score-main">{rank_html}{value_html}</span>'
+        if rank_label
+        else value_html
+    )
+    badge_modifier = " task-z-score-with-rank" if rank_label else ""
     return (
-        f'<span class="task-z-score {bucket_class}">'
-        f'<span class="task-z-score-value">{escape(_fmt_score(score))}</span>'
+        f'<span class="task-z-score {bucket_class}{badge_modifier}">'
+        f"{score_main_html}"
         f'<span class="task-z-score-delta">{escape(z_label)}</span>'
         "</span>"
     )
