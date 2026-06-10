@@ -378,11 +378,35 @@
   .leaderboard-table-scroll {
     --hakari-model-col-width: clamp(18rem, 40vw, 36rem);
     --hakari-rank-col-width: 4rem;
-    border-color: var(--hakari-border);
+    background-color: color-mix(in srgb, var(--hakari-surface-muted) 82%, var(--hakari-surface));
+    border-color: transparent;
+    border-radius: var(--hakari-radius-lg);
+  }
+
+  .leaderboard-table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .leaderboard-table thead th {
+    background-color: color-mix(in srgb, var(--hakari-surface-muted) 70%, var(--hakari-surface));
+  }
+
+  .leaderboard-table tbody tr {
+    background-color: var(--hakari-surface-faint);
+  }
+
+  .leaderboard-table tbody tr:nth-child(even) {
+    background-color: color-mix(in srgb, var(--hakari-surface-faint) 82%, var(--hakari-surface-muted));
+  }
+
+  .leaderboard-table tbody td {
+    background-color: inherit;
   }
 
   .leaderboard-col-model {
     box-sizing: border-box;
+    background-color: inherit;
     left: 0;
     max-width: var(--hakari-model-col-width);
     min-width: var(--hakari-model-col-width);
@@ -546,10 +570,19 @@
 
   [data-leaderboard-pending="true"] {
     cursor: progress;
+  }
+
+  button[data-leaderboard-pending="true"],
+  a[data-leaderboard-pending="true"],
+  summary[data-leaderboard-pending="true"],
+  .control-button-group[data-leaderboard-pending="true"] {
     opacity: 0.72;
   }
 
-  [data-leaderboard-pending="true"]::after {
+  button[data-leaderboard-pending="true"]::after,
+  a[data-leaderboard-pending="true"]::after,
+  summary[data-leaderboard-pending="true"]::after,
+  .control-button-group[data-leaderboard-pending="true"]::after {
     animation: hakari-leaderboard-spin 700ms linear infinite;
     border: 2px solid currentColor;
     border-right-color: transparent;
@@ -791,7 +824,10 @@
     }
 
     .loading-spinner,
-    [data-leaderboard-pending="true"]::after {
+    button[data-leaderboard-pending="true"]::after,
+    a[data-leaderboard-pending="true"]::after,
+    summary[data-leaderboard-pending="true"]::after,
+    .control-button-group[data-leaderboard-pending="true"]::after {
       animation: none;
     }
   }

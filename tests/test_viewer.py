@@ -2610,7 +2610,7 @@ def test_leaderboard_table_hides_sparse_dimension_values() -> None:
 
     assert "30,000" not in body
     assert ">sparse</span>" in body
-    assert '<tr class="leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50">' in body
+    assert '<tr class="leaderboard-row odd:bg-white even:bg-zinc-50">' in body
     assert '<td class="leaderboard-col-model sticky z-10' in body
     assert '<td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">' in body
     assert "leaderboard-col-borda sticky" not in body

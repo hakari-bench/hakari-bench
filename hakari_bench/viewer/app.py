@@ -887,7 +887,7 @@ def render_leaderboard(
       <span>Download CSV</span>
     </a>
   </div>
-  <div class="leaderboard-table-scroll overflow-x-auto border border-zinc-200 bg-white">
+  <div class="leaderboard-table-scroll table-shell overflow-x-auto bg-white">
     <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
       {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
       {render_table_body(result=result, filter_context=filter_context)}
@@ -2107,7 +2107,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
     metric_rank_labels = _metric_rank_display_labels(result)
     for row in result.rows:
         hidden = not filter_context.is_visible(row)
-        row_class = "leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
+        row_class = "leaderboard-row odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
