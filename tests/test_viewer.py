@@ -1810,7 +1810,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'name="model_type_filter" value="__none_selected__"' in response.text
     assert "Refine results" in response.text
     assert 'data-icon="filter"' in response.text
-    assert '<details id="facet-filters" class="min-w-0 border border-zinc-200 bg-zinc-50 p-2">' in response.text
+    assert '<details id="facet-filters" class="filter-panel min-w-0 bg-zinc-50 p-2">' in response.text
+    assert 'advanced-filter-summary flex cursor-pointer list-none items-center justify-between gap-2' in response.text
+    assert 'data-icon="chevron-right"' in response.text
     assert "Advanced filters" in response.text
     assert "Efficiency filters" in response.text
     assert "Run metadata" in response.text
@@ -1819,7 +1821,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-detail="quant_filter"' in response.text
     assert 'data-filter-icon="binary"' in response.text
     assert 'data-filter-detail="model_type_filter"' not in response.text
-    assert 'summary class="cursor-pointer px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800"' in response.text
+    assert 'summary class="filter-detail-summary flex cursor-pointer list-none items-center px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800"' in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
     assert response.text.count(">All</button>") == 5

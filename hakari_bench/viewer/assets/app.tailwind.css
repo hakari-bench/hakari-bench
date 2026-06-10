@@ -19,6 +19,9 @@
     --hakari-accent-strong: #005f88;
     --hakari-accent-soft: rgb(0 119 170 / 0.1);
     --hakari-accent-border: #85bdcc;
+    --hakari-control-bg: #edf8fb;
+    --hakari-control-hover: #e4f3f7;
+    --hakari-control-active: #d9eef4;
     --hakari-warn-bg: #fff6df;
     --hakari-warn-border: #d8b56b;
     --hakari-warn-text: #a96b00;
@@ -57,6 +60,9 @@
     --hakari-accent-strong: #a8f0ff;
     --hakari-accent-soft: rgb(0 208 255 / 0.11);
     --hakari-accent-border: #5b7880;
+    --hakari-control-bg: #30383a;
+    --hakari-control-hover: #344044;
+    --hakari-control-active: #30454b;
     --hakari-warn-bg: rgb(239 208 106 / 0.11);
     --hakari-warn-border: #8f7431;
     --hakari-warn-text: #efd06a;
@@ -85,6 +91,9 @@
       --hakari-accent-strong: #a8f0ff;
       --hakari-accent-soft: rgb(0 208 255 / 0.11);
       --hakari-accent-border: #5b7880;
+      --hakari-control-bg: #30383a;
+      --hakari-control-hover: #344044;
+      --hakari-control-active: #30454b;
       --hakari-warn-bg: rgb(239 208 106 / 0.11);
       --hakari-warn-border: #8f7431;
       --hakari-warn-text: #efd06a;
@@ -328,6 +337,34 @@
     color: var(--hakari-accent);
   }
 
+  .advanced-filter-summary::marker,
+  .filter-detail-summary::marker {
+    content: "";
+  }
+
+  .advanced-filter-summary::-webkit-details-marker,
+  .filter-detail-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .details-chevron {
+    transition: transform 150ms ease;
+  }
+
+  details[open] > summary .details-chevron {
+    transform: rotate(90deg);
+  }
+
+  .filter-panel,
+  .filter-detail,
+  .filter-detail-body {
+    background-color: var(--hakari-surface-faint);
+  }
+
+  .filter-panel-body {
+    color: var(--hakari-text-muted);
+  }
+
   .leaderboard-row:hover > td {
     background-color: var(--hakari-row-hover);
   }
@@ -565,15 +602,24 @@
   nav[aria-label="Leaderboard configuration"] input:not([type="checkbox"]):not([type="radio"]),
   nav[aria-label="Leaderboard configuration"] .doc-label-group,
   nav[aria-label="Leaderboard configuration"] .control-button-group {
-    background-color: var(--hakari-surface-muted);
+    background-color: var(--hakari-control-bg);
     border-color: transparent;
+  }
+
+  nav[aria-label="Leaderboard configuration"] button.border.bg-white,
+  nav[aria-label="Leaderboard configuration"] button.border.bg-zinc-50,
+  nav[aria-label="Leaderboard configuration"] summary.border.bg-white,
+  nav[aria-label="Leaderboard configuration"] summary.border.bg-zinc-50,
+  nav[aria-label="Leaderboard configuration"] .doc-label-group.border.bg-white,
+  nav[aria-label="Leaderboard configuration"] .control-button-group.border.bg-white {
+    background-color: var(--hakari-control-bg);
   }
 
   nav[aria-label="Leaderboard configuration"] .border-cyan-700,
   nav[aria-label="Leaderboard configuration"] .bg-cyan-50,
   nav[aria-label="Leaderboard configuration"] .control-button-group.border-cyan-700,
   nav[aria-label="Leaderboard configuration"] .control-button-group.bg-cyan-50 {
-    background-color: color-mix(in srgb, var(--hakari-accent) 18%, var(--hakari-surface));
+    background-color: var(--hakari-control-active);
     border-color: transparent;
   }
 
@@ -596,6 +642,15 @@
     border-color: transparent;
   }
 
+  nav[aria-label="Leaderboard configuration"] button.border.bg-white:hover,
+  nav[aria-label="Leaderboard configuration"] button.border.bg-zinc-50:hover,
+  nav[aria-label="Leaderboard configuration"] summary.border.bg-white:hover,
+  nav[aria-label="Leaderboard configuration"] summary.border.bg-zinc-50:hover,
+  nav[aria-label="Leaderboard configuration"] .doc-label-group.border.bg-white:hover,
+  nav[aria-label="Leaderboard configuration"] .control-button-group.border.bg-white:hover {
+    background-color: var(--hakari-control-hover);
+  }
+
   nav[aria-label="Leaderboard configuration"] .control-button-group > button:hover,
   nav[aria-label="Leaderboard configuration"] .control-button-group .doc-summary-trigger:hover,
   nav[aria-label="Leaderboard configuration"] .control-button-group .help-summary-trigger:hover,
@@ -603,6 +658,14 @@
     background-color: transparent;
     border-color: transparent;
     color: inherit;
+  }
+
+  nav[aria-label="Leaderboard configuration"] .advanced-filter-summary,
+  nav[aria-label="Leaderboard configuration"] .advanced-filter-summary:hover,
+  nav[aria-label="Leaderboard configuration"] .filter-detail-summary,
+  nav[aria-label="Leaderboard configuration"] .filter-detail-summary:hover {
+    background-color: transparent;
+    border-color: transparent;
   }
 
   .border.bg-amber-50,

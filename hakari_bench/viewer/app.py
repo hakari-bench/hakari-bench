@@ -119,6 +119,7 @@ _ICON_PATHS = {
     ),
     "braces": '<path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-4a2 2 0 0 1 2-2 2 2 0 0 1-2-2V7a2 2 0 0 0-2-2h-1"/>',
     "calendar-days": '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>',
+    "chevron-right": '<path d="m9 18 6-6-6-6"/>',
     "circle-help": (
         '<circle cx="12" cy="12" r="10"/>'
         '<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>'
@@ -1804,18 +1805,21 @@ def render_controls(
               </label>
             </div>
           </div>
-          <details id="facet-filters" class="min-w-0 border border-zinc-200 bg-zinc-50 p-2"{advanced_filter_open_attr}>
-            <summary class="cursor-pointer">
-              <span class="inline-flex items-center gap-1">
-                {_control_label(icon="list-filter", text="Advanced filters")}
-                {_render_help_tooltip(
-                    "Advanced filters",
-                    "Opens lower-level filters for dimensions, quantization, task length, dtype, attention, and prompts.",
-                    "Advanced filters refine the current result set after the main controls have selected the evaluation mode, benchmark scope, language facet, and variant categories.\n\nUse Efficiency filters to narrow variant rows by embedding dimensions or quantization type. Use Length to include only tasks within query/document length bounds. Use Run metadata to inspect how results were produced, such as dtype, attention implementation, or prompt metadata.\n\nThese filters are useful for diagnostics and audits. They can change which rows and task columns are visible, especially when Recalculate ranks from filters is enabled.",
-                )}
+          <details id="facet-filters" class="filter-panel min-w-0 bg-zinc-50 p-2"{advanced_filter_open_attr}>
+            <summary class="advanced-filter-summary flex cursor-pointer list-none items-center justify-between gap-2 text-[0.8125rem] font-medium text-zinc-800">
+              <span class="inline-flex items-center gap-1.5">
+                <span class="details-chevron inline-flex h-4 w-4 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
+                <span class="inline-flex items-center gap-1">
+                  {_control_label(icon="list-filter", text="Advanced filters")}
+                  {_render_help_tooltip(
+                      "Advanced filters",
+                      "Opens lower-level filters for dimensions, quantization, task length, dtype, attention, and prompts.",
+                      "Advanced filters refine the current result set after the main controls have selected the evaluation mode, benchmark scope, language facet, and variant categories.\n\nUse Efficiency filters to narrow variant rows by embedding dimensions or quantization type. Use Length to include only tasks within query/document length bounds. Use Run metadata to inspect how results were produced, such as dtype, attention implementation, or prompt metadata.\n\nThese filters are useful for diagnostics and audits. They can change which rows and task columns are visible, especially when Recalculate ranks from filters is enabled.",
+                  )}
+                </span>
               </span>
             </summary>
-            <div class="mt-2 space-y-2">
+            <div class="filter-panel-body mt-2 space-y-2">
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="git-branch", text="Efficiency filters")}
                 {_render_help_tooltip(
@@ -2471,14 +2475,15 @@ def _render_filter_details(
     all_page_url = _page_url(all_query)
     none_page_url = _page_url(none_query)
     return f"""
-      <details class="filter-detail border border-zinc-300 bg-white" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}">
-        <summary class="cursor-pointer px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800">
+      <details class="filter-detail bg-zinc-50" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}">
+        <summary class="filter-detail-summary flex cursor-pointer list-none items-center px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800">
           <span class="inline-flex items-center gap-1.5">
+            <span class="details-chevron inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
             {_icon_svg(icon, class_name="hakari-icon filter-detail-icon shrink-0")}
             <span>{escape(summary)}</span>
           </span>
         </summary>
-        <div class="border-t border-zinc-200 p-2">
+        <div class="filter-detail-body p-2">
           <div class="mb-2 flex gap-1">
             <button type="button" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
                     hx-get="{all_url}" hx-push-url="{all_page_url}"
