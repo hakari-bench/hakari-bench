@@ -872,8 +872,10 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".leaderboard-col-model{box-sizing:border-box;left:0" in css_response.text
     assert "overflow:hidden;width:var(--hakari-model-col-width)" in css_response.text
     assert ".borda-score-bar{position:absolute;bottom:0;left:0;display:block" in css_response.text
+    assert "opacity:.28;pointer-events:none;transition:opacity .18s ease-in-out" in css_response.text
+    assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.78}" in css_response.text
     assert ".borda-score-bar-fill{fill:var(--hakari-accent)}" in css_response.text
-    assert ".leaderboard-row:hover>.leaderboard-col-model{background-color:color-mix" in css_response.text
+    assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
 
     htmx_response = client.get("/assets/htmx.min.js")
@@ -4133,9 +4135,9 @@ benchmarks:
     assert 'scope="colgroup"' not in response.text
     assert '<span class="block w-full truncate">NanoBEIR-ar</span>' in response.text
     assert '<span class="block w-full truncate">NanoBEIR-ja</span>' in response.text
-    assert '<span class="block max-w-full truncate font-normal text-zinc-500">arguana</span>' in response.text
+    assert '<span class="block max-w-full truncate font-normal">arguana</span>' in response.text
     assert (
-        '<span class="block max-w-full truncate font-normal text-zinc-500">climatefever</span>'
+        '<span class="block max-w-full truncate font-normal">climatefever</span>'
         in response.text
     )
     assert "Task Key column. Scores are averaged per model over the raw benchmark rows" in response.text

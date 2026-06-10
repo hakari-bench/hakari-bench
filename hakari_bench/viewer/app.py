@@ -2056,7 +2056,7 @@ def render_table_head(
                        <button type="button" class="inline-flex min-w-0 items-center gap-0.5 text-left hover:text-cyan-700"
                                hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                                {_leaderboard_control_hx_attrs()}>
-                         <span class="block max-w-full truncate font-normal text-zinc-500">{escape(task_label)}</span>{indicator}
+                         <span class="block max-w-full truncate font-normal">{escape(task_label)}</span>{indicator}
                        </button>{doc_trigger}
                      </span>
                    </span>
@@ -2678,7 +2678,7 @@ def _metric_column_label_markup(label: str) -> str:
     first, rest = escaped_parts[0], escaped_parts[1:]
     return (
         f'<span class="block w-full truncate">{first}</span>'
-        + "".join(f'<span class="block w-full truncate font-normal text-zinc-500">{part}</span>' for part in rest)
+        + "".join(f'<span class="block w-full truncate font-normal">{part}</span>' for part in rest)
     )
 
 

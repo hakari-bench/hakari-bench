@@ -368,10 +368,6 @@
   }
 
   .leaderboard-row:hover > td {
-    background-color: var(--hakari-row-hover);
-  }
-
-  .leaderboard-row:hover > .leaderboard-col-model {
     background-color: color-mix(in srgb, var(--hakari-surface) 86%, var(--hakari-accent) 14%);
   }
 
@@ -421,8 +417,14 @@
     display: block;
     width: 100%;
     height: 1px;
-    opacity: 0.72;
+    opacity: 0.28;
     pointer-events: none;
+    transition: opacity 0.18s ease-in-out;
+  }
+
+  .leaderboard-row:hover .borda-score-bar,
+  .leaderboard-col-model:hover .borda-score-bar {
+    opacity: 0.78;
   }
 
   .borda-score-bar-fill {
@@ -846,6 +848,10 @@
 
   @media (prefers-reduced-motion: reduce) {
     .leaderboard-loading-toast {
+      transition: none;
+    }
+
+    .borda-score-bar {
       transition: none;
     }
 
