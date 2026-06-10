@@ -1329,7 +1329,10 @@ def render_language_pages(
         )
         more = f"""
           <details class="relative">
-            <summary class="cursor-pointer border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">More languages</summary>
+            <summary class="language-more-summary flex cursor-pointer list-none items-center gap-1.5 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
+              <span class="details-chevron inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
+              <span>More languages</span>
+            </summary>
             <div class="absolute z-10 mt-1 grid max-h-72 min-w-[28rem] grid-cols-3 gap-1 overflow-auto border border-zinc-300 bg-white p-2 shadow-sm sm:grid-cols-5">
               {more_buttons}
             </div>
@@ -2476,7 +2479,7 @@ def _render_filter_details(
     none_page_url = _page_url(none_query)
     return f"""
       <details class="filter-detail bg-zinc-50" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}">
-        <summary class="filter-detail-summary flex cursor-pointer list-none items-center px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800">
+        <summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800">
           <span class="inline-flex items-center gap-1.5">
             <span class="details-chevron inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
             {_icon_svg(icon, class_name="hakari-icon filter-detail-icon shrink-0")}

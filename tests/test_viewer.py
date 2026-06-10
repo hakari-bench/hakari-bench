@@ -1543,6 +1543,8 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "Task facets" in response.text
     assert "Language multi-select" not in response.text
     assert "max-h-72" in response.text
+    assert "language-more-summary flex cursor-pointer list-none items-center gap-1.5" in response.text
+    assert "More languages" in response.text
     assert 'data-language-page="ja"' in response.text
     assert (
         'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task'
@@ -1821,7 +1823,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-detail="quant_filter"' in response.text
     assert 'data-filter-icon="binary"' in response.text
     assert 'data-filter-detail="model_type_filter"' not in response.text
-    assert 'summary class="filter-detail-summary flex cursor-pointer list-none items-center px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800"' in response.text
+    assert 'summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800"' in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
     assert response.text.count(">All</button>") == 5

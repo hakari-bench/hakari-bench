@@ -337,11 +337,13 @@
     color: var(--hakari-accent);
   }
 
+  .language-more-summary::marker,
   .advanced-filter-summary::marker,
   .filter-detail-summary::marker {
     content: "";
   }
 
+  .language-more-summary::-webkit-details-marker,
   .advanced-filter-summary::-webkit-details-marker,
   .filter-detail-summary::-webkit-details-marker {
     display: none;
@@ -661,9 +663,7 @@
   }
 
   nav[aria-label="Leaderboard configuration"] .advanced-filter-summary,
-  nav[aria-label="Leaderboard configuration"] .advanced-filter-summary:hover,
-  nav[aria-label="Leaderboard configuration"] .filter-detail-summary,
-  nav[aria-label="Leaderboard configuration"] .filter-detail-summary:hover {
+  nav[aria-label="Leaderboard configuration"] .advanced-filter-summary:hover {
     background-color: transparent;
     border-color: transparent;
   }
