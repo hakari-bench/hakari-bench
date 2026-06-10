@@ -315,7 +315,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert doc_trigger_style["iconCount"] == 1
                 doc_trigger.click()
                 page.locator("#doc-summary-modal[open]").wait_for(timeout=5_000)
-                assert page.locator("#doc-summary-title").inner_text() == "BenchA"
+                assert page.locator("#doc-summary-heading").inner_text() == "BenchA"
                 assert "BenchA overview" in page.locator("#doc-summary-description").inner_text()
                 assert page.locator("#doc-summary-link").get_attribute("target") == "_blank"
                 assert page.locator("#doc-summary-link").inner_text() == "Read the BenchA overview"
@@ -331,9 +331,9 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 ar_button = page.get_by_role("button", name="AR 1")
                 assert "border-cyan-700" in (ar_button.get_attribute("class") or "")
 
-                page.get_by_role("button", name="NanoRTEB").click()
+                page.get_by_role("button", name="RTEB").click()
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
-                nano_rteb_button = page.get_by_role("button", name="NanoRTEB")
+                nano_rteb_button = page.get_by_role("button", name="RTEB")
                 assert page.locator("h2.text-lg").first.inner_text() == "NanoRTEB"
                 nano_rteb_label = nano_rteb_button.locator("xpath=ancestor::*[@data-doc-label-group='benchmark']").first
                 active_classes = nano_rteb_label.get_attribute("class") if nano_rteb_label.count() else nano_rteb_button.get_attribute("class")

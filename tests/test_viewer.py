@@ -743,6 +743,10 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert '<h1 class="flex min-w-0 items-center gap-2 text-2xl font-semibold">' in response.text
     assert '<img src="/assets/favicon.png?' in response.text
     assert 'alt="" aria-hidden="true" class="h-8 w-8 shrink-0">' in response.text
+    assert 'id="hakari-docs-link"' in response.text
+    assert 'href="/docs/"' in response.text
+    assert 'aria-label="Open documentation"' in response.text
+    assert 'data-icon="book-open"' in response.text
     assert 'id="hakari-theme-toggle"' in response.text
     assert 'aria-label="Toggle color theme"' in response.text
     assert 'data-icon="moon"' in response.text
@@ -767,8 +771,10 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert re.search(r'<script src="/assets/viewer\.js\?v=[0-9a-f]{12}" defer></script>', response.text)
     assert "<script>" not in response.text
     assert "window.__hakariApplyHashQueryState" not in response.text
+    assert "leaderboard-initial-loading border border-zinc-200 bg-white" in response.text
     assert 'id="leaderboard-loading-toast"' in response.text
     assert "leaderboard-loading-toast fixed bottom-4 right-4" in response.text
+    assert response.text.count('class="loading-spinner" aria-hidden="true"') == 2
     assert 'role="status"' in response.text
     assert 'aria-live="polite"' in response.text
     assert "Loading leaderboard..." in response.text
@@ -846,8 +852,16 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ":root.dark" in css_response.text
     assert "JetBrains Mono" in css_response.text
     assert ".theme-toggle" in css_response.text
+    assert ".leaderboard-initial-loading" in css_response.text
     assert ".leaderboard-loading-toast.htmx-request" in css_response.text
+    assert ".loading-spinner" in css_response.text
     assert "hakari-leaderboard-spin" in css_response.text
+    assert "--hakari-radius-lg:8px" in css_response.text
+    assert "border-radius:var(--hakari-radius-lg)" in css_response.text
+    assert 'nav[aria-label="Leaderboard configuration"]' in css_response.text
+    assert "border-color:transparent" in css_response.text
+    assert ".leaderboard-table-scroll{--hakari-model-col-width" in css_response.text
+    assert "border-color:var(--hakari-border)" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
     assert ".global-tooltip" in css_response.text
     assert ".model-tooltip" not in css_response.text
@@ -986,7 +1000,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'id="help-summary-modal"' in response.text
     assert 'class="help-summary-trigger' in response.text
     assert 'data-help-title="Benchmark scope: Overall"' in response.text
-    assert 'class="inline-flex items-center border text-[0.8125rem] leading-tight' in response.text
+    assert 'class="control-button-group inline-flex items-center border text-[0.8125rem] leading-tight' in response.text
     assert "Benchmark scope chooses the tasks that are eligible for the leaderboard" in response.text
     assert 'class="doc-summary-trigger' in response.text
     assert 'data-icon="book-open"' in response.text
@@ -1009,9 +1023,9 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
         '&amp;group=task&amp;task_z_scores=0&amp;target=reranking"'
     ) in response.text
     scope_section = response.text.split("Benchmark scope", 1)[1].split("Efficiency variants", 1)[0]
-    assert "NanoMTEB-Japanese" in scope_section
-    assert "NanoRTEB" in scope_section
-    assert "NanoMedical" in scope_section
+    assert "MTEB-Japanese" in scope_section
+    assert "RTEB" in scope_section
+    assert "Medical" in scope_section
     assert "Multilingual retrieval" not in response.text
     assert "Code retrieval" not in response.text
     assert "Specialized domains" not in response.text
@@ -1529,6 +1543,8 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "Task facets" in response.text
     assert "Language multi-select" not in response.text
     assert "max-h-72" in response.text
+    assert "language-more-summary flex cursor-pointer list-none items-center gap-1.5" in response.text
+    assert "More languages" in response.text
     assert 'data-language-page="ja"' in response.text
     assert (
         'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task'
@@ -1796,7 +1812,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'name="model_type_filter" value="__none_selected__"' in response.text
     assert "Refine results" in response.text
     assert 'data-icon="filter"' in response.text
-    assert '<details id="facet-filters" class="min-w-0 border border-zinc-200 bg-zinc-50 p-2">' in response.text
+    assert '<details id="facet-filters" class="filter-panel min-w-0 bg-zinc-50 p-2">' in response.text
+    assert 'advanced-filter-summary flex cursor-pointer list-none items-center justify-between gap-2' in response.text
+    assert 'data-icon="chevron-right"' in response.text
     assert "Advanced filters" in response.text
     assert "Efficiency filters" in response.text
     assert "Run metadata" in response.text
@@ -1805,7 +1823,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-detail="quant_filter"' in response.text
     assert 'data-filter-icon="binary"' in response.text
     assert 'data-filter-detail="model_type_filter"' not in response.text
-    assert 'summary class="cursor-pointer px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800"' in response.text
+    assert 'summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800"' in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
     assert response.text.count(">All</button>") == 5
@@ -2592,7 +2610,7 @@ def test_leaderboard_table_hides_sparse_dimension_values() -> None:
 
     assert "30,000" not in body
     assert ">sparse</span>" in body
-    assert '<tr class="leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50">' in body
+    assert '<tr class="leaderboard-row odd:bg-white even:bg-zinc-50">' in body
     assert '<td class="leaderboard-col-model sticky z-10' in body
     assert '<td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">' in body
     assert "leaderboard-col-borda sticky" not in body
@@ -2828,12 +2846,12 @@ benchmarks:
 
     assert response.status_code == 200
     assert mmteb_response.status_code == 200
-    assert "MNanoBEIR(task)" in response.text
-    assert "MNanoBEIR(lang)" in response.text
-    assert "NanoMMTEB-v2" in response.text
+    assert "M-BEIR(task)" in response.text
+    assert "M-BEIR(lang)" in response.text
+    assert "MMTEB-v2" in response.text
     lang_scope_section = response.text.split("Benchmark scope", 1)[1].split("Table display", 1)[0]
     mmteb_scope_section = mmteb_response.text.split("Benchmark scope", 1)[1].split("Table display", 1)[0]
-    expected_scope_order = ["MNanoBEIR(task)", "MNanoBEIR(lang)", "NanoMMTEB-v2"]
+    expected_scope_order = ["M-BEIR(task)", "M-BEIR(lang)", "MMTEB-v2"]
     for scope_section in [lang_scope_section, mmteb_scope_section]:
         scope_positions = [scope_section.index(label) for label in expected_scope_order]
         assert scope_positions == sorted(scope_positions)
@@ -3634,7 +3652,7 @@ def test_task_z_score_heatmap_css_uses_intuitive_positive_negative_colors() -> N
     css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
 
     assert re.search(r"\.task-z-score\s*{[^}]*border: 1px solid rgb\(29 27 24 / 0\.14\);", css_source, flags=re.DOTALL)
-    assert re.search(r"\.task-z-score\s*{[^}]*border-radius: 0;", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score\s*{[^}]*border-radius: var\(--hakari-radius-sm\);", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-size: 0\.8125rem;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-size: 0\.5625rem;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)

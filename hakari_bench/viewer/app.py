@@ -119,6 +119,7 @@ _ICON_PATHS = {
     ),
     "braces": '<path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-4a2 2 0 0 1 2-2 2 2 0 0 1-2-2V7a2 2 0 0 0-2-2h-1"/>',
     "calendar-days": '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>',
+    "chevron-right": '<path d="m9 18 6-6-6-6"/>',
     "circle-help": (
         '<circle cx="12" cy="12" r="10"/>'
         '<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>'
@@ -179,7 +180,7 @@ def create_app(
 ):
     from fastapi import FastAPI, Query
     from fastapi.middleware.gzip import GZipMiddleware
-    from fastapi.responses import FileResponse, HTMLResponse, Response
+    from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Response
     from fastapi.staticfiles import StaticFiles
 
     viewer_config = load_viewer_config(config_dir)
@@ -187,7 +188,7 @@ def create_app(
     if resolved_docs_metadata_dir is None and docs_dir == Path("task_docs/docs"):
         resolved_docs_metadata_dir = Path("task_docs/metadata")
     benchmark_docs = BenchmarkDocs(docs_dir, metadata_dir=resolved_docs_metadata_dir)
-    app = FastAPI(title="HAKARI-Bench leaderboard")
+    app = FastAPI(title="HAKARI-Bench leaderboard", docs_url=None, redoc_url=None)
     app.add_middleware(GZipMiddleware, minimum_size=1024)
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
@@ -206,6 +207,11 @@ def create_app(
     @app.get("/favicon.ico")
     def favicon_ico() -> FileResponse:
         return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
+
+    @app.get("/docs")
+    @app.get("/docs/")
+    def docs_index_redirect() -> RedirectResponse:
+        return RedirectResponse(url="/docs/benchmark-tasks")
 
     @app.get("/docs/benchmark-tasks", response_class=HTMLResponse)
     def benchmark_docs_index() -> HTMLResponse:
@@ -546,7 +552,7 @@ def render_page(
     viewer_js_url = _asset_url("viewer.js")
     latest_update = _latest_update_label(summary.latest_finished_at_utc if summary else None)
     footer = _render_page_footer(latest_update=latest_update, database_label=database_label)
-    theme_toggle = _render_theme_toggle()
+    header_actions = _render_header_actions()
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -568,7 +574,7 @@ def render_page(
           <img src="{favicon_url}" alt="" aria-hidden="true" class="h-8 w-8 shrink-0">
           <span>HAKARI-Bench leaderboard</span>
         </h1>
-        {theme_toggle}
+        {header_actions}
       </div>
       <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
       <p class="mt-2 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
@@ -579,7 +585,10 @@ def render_page(
       hx-trigger="load"
       {_leaderboard_request_hx_attrs()}
     >
-      <div class="border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">Loading leaderboard...</div>
+      <div class="leaderboard-initial-loading border border-zinc-200 bg-white text-sm font-medium text-zinc-700" role="status" aria-live="polite" aria-atomic="true">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <span>Loading leaderboard...</span>
+      </div>
     </section>
     {render_leaderboard_loading_toast()}
     {render_global_tooltip()}
@@ -612,7 +621,8 @@ def render_leaderboard_loading_toast() -> str:
     <div id="leaderboard-loading-toast"
          class="leaderboard-loading-toast fixed bottom-4 right-4 z-50 border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-800 shadow-sm"
          role="status" aria-live="polite" aria-atomic="true">
-      Loading leaderboard...
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Loading leaderboard...</span>
     </div>
     """
 
@@ -630,6 +640,20 @@ def _render_theme_toggle() -> str:
           <span class="theme-toggle-icon-light">{_icon_svg("moon", class_name="hakari-icon")}</span>
           <span class="theme-toggle-icon-dark">{_icon_svg("sun", class_name="hakari-icon")}</span>
         </button>"""
+
+
+def _render_docs_link() -> str:
+    return f"""<a id="hakari-docs-link" href="/docs/" class="theme-toggle grid h-8 w-8 shrink-0 place-items-center border"
+          aria-label="Open documentation" title="Open documentation">
+          {_icon_svg("book-open", class_name="hakari-icon")}
+        </a>"""
+
+
+def _render_header_actions() -> str:
+    return f"""<div class="flex shrink-0 items-center gap-2">
+          {_render_docs_link()}
+          {_render_theme_toggle()}
+        </div>"""
 
 
 def _render_page_footer(*, latest_update: str, database_label: str) -> str:
@@ -731,12 +755,11 @@ def render_doc_summary_modal() -> str:
 <dialog id="doc-summary-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
   <form method="dialog">
     <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
-      <h3 class="text-base font-semibold">Benchmark Documentation</h3>
+      <h3 id="doc-summary-heading" class="break-all text-base font-semibold">Benchmark documentation</h3>
       <button type="submit" class="border border-zinc-300 px-2 py-1 text-sm text-zinc-700 hover:border-cyan-600 hover:text-cyan-700">Close</button>
     </div>
   </form>
   <div class="px-4 py-3">
-    <p id="doc-summary-title" class="break-all font-mono text-sm font-semibold text-zinc-900"></p>
     <p id="doc-summary-description" class="mt-3 whitespace-pre-wrap text-sm leading-tight text-zinc-700"></p>
     <p class="mt-3 text-sm">
       <a id="doc-summary-link" class="text-cyan-700 underline-offset-2 hover:underline" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
@@ -864,7 +887,7 @@ def render_leaderboard(
       <span>Download CSV</span>
     </a>
   </div>
-  <div class="leaderboard-table-scroll overflow-x-auto border border-zinc-200 bg-white">
+  <div class="leaderboard-table-scroll table-shell overflow-x-auto bg-white">
     <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
       {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
       {render_table_body(result=result, filter_context=filter_context)}
@@ -928,8 +951,8 @@ def render_tabs(
             continue
         if view_name == "MNanoBEIR":
             for offset, score_group, label in [
-                (0, "task_mean", "MNanoBEIR(task)"),
-                (1, "lang_mean", "MNanoBEIR(lang)"),
+                (0, "task_mean", "M-BEIR(task)"),
+                (1, "lang_mean", "M-BEIR(lang)"),
             ]:
                 group_query_payload = dict(query_payload)
                 group_query_payload["group"] = score_group
@@ -990,7 +1013,9 @@ def render_tabs(
         <div class="grid gap-2">
           <div class="border border-zinc-200 bg-white p-2">
             <div class="mb-2 flex flex-wrap items-center gap-2">
-              {_control_label(icon="database", text="Benchmark scope")}
+              <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
+                {_control_label(icon="database", text="Benchmark scope")}
+              </span>
               <div class="flex flex-wrap gap-2">{''.join(preset_buttons)}</div>
             </div>
             <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
@@ -1016,7 +1041,7 @@ def _render_scope_button(
     classes = _control_button_classes(active=active)
     title, summary, details = _scope_preset_help(view_name)
     help_icon = _render_button_help_icon(title=title, summary=summary, details=details)
-    return f"""<span class="inline-flex items-center border text-[0.8125rem] leading-tight {classes}">
+    return f"""<span class="control-button-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}">
                   <button type="button" class="py-1 pl-2 pr-0 text-left"
                     hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                     {_leaderboard_control_hx_attrs()}>{escape(view_label)}</button>
@@ -1039,8 +1064,8 @@ def _render_benchmark_view_button(
                       {_leaderboard_control_hx_attrs()}>
                       {escape(label)}
                     </button>"""
-    doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview")
-    return f"""<span class="doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+    doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
+    return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
               <button type="button" class="py-1 pl-2 pr-0 text-left"
                 hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                 {_leaderboard_control_hx_attrs()}>
@@ -1140,7 +1165,7 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
             "This option applies only in Reranking mode. Rerankers do not search the full corpus; they reorder a fixed candidate list, usually produced by BM25.\n\nWhen Safeguard positives is enabled, the candidate list uses the rank-101 safeguard so every evaluated task includes at least one known positive document. This is the default because it avoids scoring a reranker on tasks where the relevant document never appears in the candidate set.\n\nTurn it off only when you intentionally want to inspect reranking behavior without that safeguard.",
         )
         safeguard_toggle = f"""
-                <span class="inline-flex items-center border border-zinc-300 bg-white text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
+                <span class="control-button-group inline-flex items-center border border-zinc-300 bg-white text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
                   <label class="inline-flex items-center gap-2 py-1 pl-2 pr-0">
                     <input type="checkbox" class="h-4 w-4 accent-cyan-700"{checked_attr}
                       hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -1187,12 +1212,14 @@ def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str
         )
     return f"""
             <div class="flex min-w-0 flex-wrap items-center gap-2">
-              {_control_label(icon="bar-chart-3", text="Score metric")}
-              {_render_help_tooltip(
+              <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
+                {_control_label(icon="bar-chart-3", text="Metric")}
+                {_render_help_tooltip(
                   "Score metric",
                   "Changes the metric used for model means, Borda ranks, and task columns.",
                   "Score metric selects which evaluation score is used throughout the current leaderboard.\n\nThe selected metric affects model means, Borda rank calculations, sortable task columns, and exported CSV scores. nDCG@10 is the default because it is the primary ranking-quality metric for the benchmark.\n\nRecall metrics are useful when you care about candidate coverage, especially before reranking. Accuracy, MRR, and MAP views are diagnostic alternatives for tasks where those metrics are available.",
-              )}
+                )}
+              </span>
               {''.join(buttons)}
             </div>
             """
@@ -1240,12 +1267,11 @@ def _view_group_sort_key(*, view_name: str, fallback: int) -> int:
 
 
 def _viewer_scope_label(*, view_name: str, fallback: str) -> str:
-    labels = {
-        "All": "All",
-        "Core": "Core",
-        "Group": "Group",
-    }
-    return labels.get(view_name, fallback)
+    if view_name == "MNanoBEIR":
+        return "M-BEIR(task)"
+    if fallback.startswith("Nano"):
+        return fallback.removeprefix("Nano")
+    return fallback
 
 
 def _control_button_classes(*, active: bool) -> str:
@@ -1303,7 +1329,10 @@ def render_language_pages(
         )
         more = f"""
           <details class="relative">
-            <summary class="cursor-pointer border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">More languages</summary>
+            <summary class="language-more-summary flex cursor-pointer list-none items-center gap-1.5 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
+              <span class="details-chevron inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
+              <span>More languages</span>
+            </summary>
             <div class="absolute z-10 mt-1 grid max-h-72 min-w-[28rem] grid-cols-3 gap-1 overflow-auto border border-zinc-300 bg-white p-2 shadow-sm sm:grid-cols-5">
               {more_buttons}
             </div>
@@ -1317,7 +1346,7 @@ def render_language_pages(
     )
     return f"""
       <{wrapper_tag} class="{wrapper_class}" aria-label="Task facets">
-        <span class="inline-flex items-center gap-1 pt-1 text-[0.8125rem]">
+        <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
           {_control_label(icon="languages", text="Task facets")}
           {_render_help_tooltip(
               "Task facets",
@@ -1779,18 +1808,21 @@ def render_controls(
               </label>
             </div>
           </div>
-          <details id="facet-filters" class="min-w-0 border border-zinc-200 bg-zinc-50 p-2"{advanced_filter_open_attr}>
-            <summary class="cursor-pointer">
-              <span class="inline-flex items-center gap-1">
-                {_control_label(icon="list-filter", text="Advanced filters")}
-                {_render_help_tooltip(
-                    "Advanced filters",
-                    "Opens lower-level filters for dimensions, quantization, task length, dtype, attention, and prompts.",
-                    "Advanced filters refine the current result set after the main controls have selected the evaluation mode, benchmark scope, language facet, and variant categories.\n\nUse Efficiency filters to narrow variant rows by embedding dimensions or quantization type. Use Length to include only tasks within query/document length bounds. Use Run metadata to inspect how results were produced, such as dtype, attention implementation, or prompt metadata.\n\nThese filters are useful for diagnostics and audits. They can change which rows and task columns are visible, especially when Recalculate ranks from filters is enabled.",
-                )}
+          <details id="facet-filters" class="filter-panel min-w-0 bg-zinc-50 p-2"{advanced_filter_open_attr}>
+            <summary class="advanced-filter-summary flex cursor-pointer list-none items-center justify-between gap-2 text-[0.8125rem] font-medium text-zinc-800">
+              <span class="inline-flex items-center gap-1.5">
+                <span class="details-chevron inline-flex h-4 w-4 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
+                <span class="inline-flex items-center gap-1">
+                  {_control_label(icon="list-filter", text="Advanced filters")}
+                  {_render_help_tooltip(
+                      "Advanced filters",
+                      "Opens lower-level filters for dimensions, quantization, task length, dtype, attention, and prompts.",
+                      "Advanced filters refine the current result set after the main controls have selected the evaluation mode, benchmark scope, language facet, and variant categories.\n\nUse Efficiency filters to narrow variant rows by embedding dimensions or quantization type. Use Length to include only tasks within query/document length bounds. Use Run metadata to inspect how results were produced, such as dtype, attention implementation, or prompt metadata.\n\nThese filters are useful for diagnostics and audits. They can change which rows and task columns are visible, especially when Recalculate ranks from filters is enabled.",
+                  )}
+                </span>
               </span>
             </summary>
-            <div class="mt-2 space-y-2">
+            <div class="filter-panel-body mt-2 space-y-2">
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="git-branch", text="Efficiency filters")}
                 {_render_help_tooltip(
@@ -2075,7 +2107,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
     metric_rank_labels = _metric_rank_display_labels(result)
     for row in result.rows:
         hidden = not filter_context.is_visible(row)
-        row_class = "leaderboard-row border-t border-zinc-200 odd:bg-white even:bg-zinc-50"
+        row_class = "leaderboard-row odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
@@ -2446,14 +2478,15 @@ def _render_filter_details(
     all_page_url = _page_url(all_query)
     none_page_url = _page_url(none_query)
     return f"""
-      <details class="filter-detail border border-zinc-300 bg-white" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}">
-        <summary class="cursor-pointer px-1.5 py-0.5 text-[0.8125rem] font-medium text-zinc-800">
+      <details class="filter-detail bg-zinc-50" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}">
+        <summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800">
           <span class="inline-flex items-center gap-1.5">
+            <span class="details-chevron inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
             {_icon_svg(icon, class_name="hakari-icon filter-detail-icon shrink-0")}
             <span>{escape(summary)}</span>
           </span>
         </summary>
-        <div class="border-t border-zinc-200 p-2">
+        <div class="filter-detail-body p-2">
           <div class="mb-2 flex gap-1">
             <button type="button" class="border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
                     hx-get="{all_url}" hx-push-url="{all_page_url}"
