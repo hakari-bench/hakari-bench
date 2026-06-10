@@ -1000,7 +1000,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'id="help-summary-modal"' in response.text
     assert 'class="help-summary-trigger' in response.text
     assert 'data-help-title="Benchmark scope: Overall"' in response.text
-    assert 'class="inline-flex items-center border text-[0.8125rem] leading-tight' in response.text
+    assert 'class="control-button-group inline-flex items-center border text-[0.8125rem] leading-tight' in response.text
     assert "Benchmark scope chooses the tasks that are eligible for the leaderboard" in response.text
     assert 'class="doc-summary-trigger' in response.text
     assert 'data-icon="book-open"' in response.text

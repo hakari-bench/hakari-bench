@@ -232,6 +232,8 @@
   input:not([type="checkbox"]):not([type="radio"]),
   a.theme-toggle,
   .doc-label-group,
+  .control-button-group,
+  .control-label-group,
   .model-detail-trigger,
   .border.bg-cyan-50,
   .border.bg-amber-50,
@@ -562,20 +564,34 @@
   nav[aria-label="Leaderboard configuration"] summary,
   nav[aria-label="Leaderboard configuration"] select,
   nav[aria-label="Leaderboard configuration"] input:not([type="checkbox"]):not([type="radio"]),
-  nav[aria-label="Leaderboard configuration"] .doc-label-group {
+  nav[aria-label="Leaderboard configuration"] .doc-label-group,
+  nav[aria-label="Leaderboard configuration"] .control-button-group,
+  nav[aria-label="Leaderboard configuration"] .control-label-group {
     background-color: var(--hakari-surface-muted);
     border-color: transparent;
   }
 
   nav[aria-label="Leaderboard configuration"] .border-cyan-700,
-  nav[aria-label="Leaderboard configuration"] .bg-cyan-50 {
+  nav[aria-label="Leaderboard configuration"] .bg-cyan-50,
+  nav[aria-label="Leaderboard configuration"] .control-button-group.border-cyan-700,
+  nav[aria-label="Leaderboard configuration"] .control-button-group.bg-cyan-50 {
     background-color: color-mix(in srgb, var(--hakari-accent) 18%, var(--hakari-surface));
+    border-color: transparent;
+  }
+
+  nav[aria-label="Leaderboard configuration"] .control-button-group > button,
+  nav[aria-label="Leaderboard configuration"] .control-button-group .doc-summary-trigger,
+  nav[aria-label="Leaderboard configuration"] .control-button-group .help-summary-trigger,
+  nav[aria-label="Leaderboard configuration"] .control-label-group .help-summary-trigger {
+    background-color: transparent;
     border-color: transparent;
   }
 
   nav[aria-label="Leaderboard configuration"] button:hover,
   nav[aria-label="Leaderboard configuration"] summary:hover,
   nav[aria-label="Leaderboard configuration"] .doc-label-group:hover,
+  nav[aria-label="Leaderboard configuration"] .control-button-group:hover,
+  nav[aria-label="Leaderboard configuration"] .control-label-group:hover,
   nav[aria-label="Leaderboard configuration"] .hover\:border-cyan-500:hover,
   nav[aria-label="Leaderboard configuration"] .hover\:border-cyan-600:hover {
     background-color: var(--hakari-accent-soft);

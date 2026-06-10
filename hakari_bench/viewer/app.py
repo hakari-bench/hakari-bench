@@ -1012,7 +1012,9 @@ def render_tabs(
         <div class="grid gap-2">
           <div class="border border-zinc-200 bg-white p-2">
             <div class="mb-2 flex flex-wrap items-center gap-2">
-              {_control_label(icon="database", text="Benchmark scope")}
+              <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
+                {_control_label(icon="database", text="Benchmark scope")}
+              </span>
               <div class="flex flex-wrap gap-2">{''.join(preset_buttons)}</div>
             </div>
             <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
@@ -1038,7 +1040,7 @@ def _render_scope_button(
     classes = _control_button_classes(active=active)
     title, summary, details = _scope_preset_help(view_name)
     help_icon = _render_button_help_icon(title=title, summary=summary, details=details)
-    return f"""<span class="inline-flex items-center border text-[0.8125rem] leading-tight {classes}">
+    return f"""<span class="control-button-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}">
                   <button type="button" class="py-1 pl-2 pr-0 text-left"
                     hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                     {_leaderboard_control_hx_attrs()}>{escape(view_label)}</button>
@@ -1062,7 +1064,7 @@ def _render_benchmark_view_button(
                       {escape(label)}
                     </button>"""
     doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
-    return f"""<span class="doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+    return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
               <button type="button" class="py-1 pl-2 pr-0 text-left"
                 hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                 {_leaderboard_control_hx_attrs()}>
@@ -1162,7 +1164,7 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
             "This option applies only in Reranking mode. Rerankers do not search the full corpus; they reorder a fixed candidate list, usually produced by BM25.\n\nWhen Safeguard positives is enabled, the candidate list uses the rank-101 safeguard so every evaluated task includes at least one known positive document. This is the default because it avoids scoring a reranker on tasks where the relevant document never appears in the candidate set.\n\nTurn it off only when you intentionally want to inspect reranking behavior without that safeguard.",
         )
         safeguard_toggle = f"""
-                <span class="inline-flex items-center border border-zinc-300 bg-white text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
+                <span class="control-button-group inline-flex items-center border border-zinc-300 bg-white text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
                   <label class="inline-flex items-center gap-2 py-1 pl-2 pr-0">
                     <input type="checkbox" class="h-4 w-4 accent-cyan-700"{checked_attr}
                       hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -1209,12 +1211,14 @@ def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str
         )
     return f"""
             <div class="flex min-w-0 flex-wrap items-center gap-2">
-              {_control_label(icon="bar-chart-3", text="Score metric")}
-              {_render_help_tooltip(
+              <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
+                {_control_label(icon="bar-chart-3", text="Metric")}
+                {_render_help_tooltip(
                   "Score metric",
                   "Changes the metric used for model means, Borda ranks, and task columns.",
                   "Score metric selects which evaluation score is used throughout the current leaderboard.\n\nThe selected metric affects model means, Borda rank calculations, sortable task columns, and exported CSV scores. nDCG@10 is the default because it is the primary ranking-quality metric for the benchmark.\n\nRecall metrics are useful when you care about candidate coverage, especially before reranking. Accuracy, MRR, and MAP views are diagnostic alternatives for tasks where those metrics are available.",
-              )}
+                )}
+              </span>
               {''.join(buttons)}
             </div>
             """
@@ -1338,7 +1342,7 @@ def render_language_pages(
     )
     return f"""
       <{wrapper_tag} class="{wrapper_class}" aria-label="Task facets">
-        <span class="inline-flex items-center gap-1 pt-1 text-[0.8125rem]">
+        <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
           {_control_label(icon="languages", text="Task facets")}
           {_render_help_tooltip(
               "Task facets",
