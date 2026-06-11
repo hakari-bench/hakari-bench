@@ -16,7 +16,7 @@ from urllib.parse import urlencode
 from pydantic import BaseModel, ConfigDict
 
 from hakari_bench.viewer.analytics import ViewerAnalyticsRepository, ViewerSummary
-from hakari_bench.viewer.config import ViewerConfig, load_viewer_config
+from hakari_bench.viewer.config import ScoreAggregation, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
@@ -142,6 +142,7 @@ _ICON_PATHS = {
     "info-simple": '<path d="M12 17v-6"/><path d="M12 7h.01"/>',
     "languages": '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
     "layers": '<path d="m12.83 2.18 8.5 4.73a1 1 0 0 1 0 1.75l-8.5 4.73a1.7 1.7 0 0 1-1.66 0l-8.5-4.73a1 1 0 0 1 0-1.75l8.5-4.73a1.7 1.7 0 0 1 1.66 0Z"/><path d="m22 12.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 17.5"/>',
+    "sigma": '<path d="M18 7V4H6l6 8-6 8h12v-3"/>',
     "list-filter": '<path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/>',
     "list-ordered": '<path d="M11 5h10"/><path d="M11 12h10"/><path d="M11 19h10"/><path d="M4 4h1v5"/><path d="M4 9h2"/><path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"/>',
     "message-square-text": '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M7 11h10"/><path d="M7 15h6"/><path d="M7 7h8"/>',
@@ -241,6 +242,7 @@ def create_app(
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
+        score: str = Query(default="macro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
@@ -275,6 +277,7 @@ def create_app(
                 sort=sort,
                 direction=direction,
                 target=target,
+                score=score,
                 metric=metric,
                 group=group,
                 variants=variants,
@@ -321,6 +324,7 @@ def create_app(
         sort = query_string(state_query["sort"])
         direction = query_string(state_query["direction"])
         target = query_string(state_query.get("target", "all"))
+        score = query_string(state_query.get("score", "macro"))
         score_metric = query_string(state_query.get("metric", "ndcg@10"))
         group = optional_query_string(state_query.get("group"))
         display_flags = variant_display_flags_from_query(state_query)
@@ -332,6 +336,7 @@ def create_app(
             sort=sort,
             direction=cast(SortDirection, direction),
             score_target=cast(ScoreTarget, target),
+            score_aggregation=cast(ScoreAggregation, score),
             score_metric=score_metric,
             score_group_name=group,
             include_quantization_variants=display_flags.quantization,
@@ -364,6 +369,7 @@ def create_app(
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
+        score: str = Query(default="macro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
@@ -398,6 +404,7 @@ def create_app(
                 sort=sort,
                 direction=direction,
                 target=target,
+                score=score,
                 metric=metric,
                 group=group,
                 variants=variants,
@@ -438,6 +445,7 @@ def create_app(
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
+        score: str = Query(default="macro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
@@ -472,6 +480,7 @@ def create_app(
                 sort=sort,
                 direction=direction,
                 target=target,
+                score=score,
                 metric=metric,
                 group=group,
                 variants=variants,
@@ -1007,6 +1016,7 @@ def render_tabs(
         <div class="border border-zinc-200 bg-white p-2">
           <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
             {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+            {_render_score_aggregation_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
             {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
           </div>
         </div>
@@ -1086,20 +1096,15 @@ def _render_button_help_icon(*, title: str, summary: str, details: str) -> str:
 
 def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
     help_text = {
-        "All": (
-            "Benchmark scope: All",
+        "Overall": (
+            "Benchmark scope: Overall",
             "Shows every benchmark family available in the viewer.",
-            "All is the broadest leaderboard scope. It includes multilingual suites, language-specific Nano suites, and domain-specific Nano suites before any language, model, task, or variant filters are applied.\n\nUse All when you want a comprehensive ranking across the full current HAKARI-Bench database. Because large benchmark families contain many tasks, use Group when you want a more balanced family-level overview.",
+            "Overall is the broadest leaderboard scope. It includes multilingual, language-specific, and domain-specific NanoSets before any language, model, task, or variant filters are applied.\n\nUse Overall when you want a comprehensive ranking across the full current HAKARI-Bench database. Pair it with Macro when you want each NanoSet to contribute equally, or Micro when you want every raw task row to contribute equally.",
         ),
         "Core": (
             "Benchmark scope: Core",
             "Shows the compact core benchmark set.",
-            "Core is a smaller scope intended for a quick read of general retrieval quality. It includes MNanoBEIR by task plus NanoMMTEB-v2, NanoRTEB, NanoMLDR, NanoBRIGHT, and NanoCoIR.\n\nUse Core when you want a dense but manageable comparison before drilling into a specific Nano suite or language.",
-        ),
-        "Group": (
-            "Benchmark scope: Group",
-            "Ranks models after configured benchmark families are averaged into groups.",
-            "Group reduces the influence of large suites by first aggregating configured benchmark families, then ranking models on those grouped scores.\n\nUse Group when you want a balanced overview across benchmark families instead of letting suites with many tasks dominate the mean.",
+            "Core is the default scope for the main leaderboard. It includes MNanoBEIR, NanoMMTEB-v2, NanoRTEB, NanoMLDR, NanoBRIGHT, and NanoCoIR.\n\nUse Core when you want the primary HAKARI-Bench comparison before drilling into a specific Nano suite or language. With Macro scoring, MNanoBEIR is first averaged by BEIR source task across languages, then contributes as one NanoSet.",
         ),
     }
     return help_text.get(
@@ -1110,6 +1115,43 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
             "Benchmark scope chooses the tasks that are eligible for the leaderboard before row filters are applied.\n\nUse this control first when you want to compare models on a specific benchmark family, then refine the result with language, model, task, and variant filters.",
         ),
     )
+
+
+def _render_score_aggregation_group(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState) -> str:
+    if not result.is_overall:
+        return ""
+    buttons = []
+    for score, label in [("macro", "Macro"), ("micro", "Micro")]:
+        active = result.score_aggregation == score
+        classes = _control_button_classes(active=active)
+        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_direction = "asc" if sort.startswith("metric:") else direction
+        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        if score == "macro":
+            query_payload.pop("score", None)
+        else:
+            query_payload["score"] = score
+        query = urlencode(query_payload, doseq=True)
+        buttons.append(
+            f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
+                  hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                  {_leaderboard_control_hx_attrs()}>
+                  {escape(label)}
+                </button>"""
+        )
+    return f"""
+            <div class="flex min-w-0 flex-wrap items-center gap-2">
+              <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
+                {_control_label(icon="sigma", text="Score")}
+                {_render_help_tooltip(
+                  "Score aggregation",
+                  "Chooses whether the overall leaderboard is ranked by NanoSet-level macro units or raw task-level micro units.",
+                  "Macro is the default and main leaderboard score. It first computes one score per NanoSet, then ranks and averages those NanoSet scores so large suites do not dominate simply because they contain more tasks. For MNanoBEIR, language variants are first averaged by BEIR source task before the NanoSet receives one overall score.\n\nMicro ranks and averages every raw task row directly. Use Micro when you intentionally want task-count-weighted behavior, or when comparing against older raw-task leaderboard results.",
+                )}
+              </span>
+              {''.join(buttons)}
+            </div>
+            """
 
 
 def _render_benchmark_group(*, label: str, description: str, buttons: list[str], framed: bool = True) -> str:
@@ -1241,7 +1283,7 @@ def _score_metric_label(metric: str) -> str:
 
 
 def _view_group(view_name: str) -> str:
-    overall_views = {"All", "Core", "Group"}
+    overall_views = {"All", "Core", "Group", "Overall"}
     if view_name in overall_views or view_name.startswith("Overall"):
         return "Scope presets"
     return "Nano suites"
@@ -1249,9 +1291,8 @@ def _view_group(view_name: str) -> str:
 
 def _view_group_sort_key(*, view_name: str, fallback: int) -> int:
     priority = {
-        "All": 0,
-        "Core": 1,
-        "Group": 2,
+        "Core": 0,
+        "Overall": 1,
         "MNanoBEIR": 0,
         "NanoMMTEB-v2": 1,
         "NanoRTEB": 2,

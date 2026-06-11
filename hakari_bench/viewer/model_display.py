@@ -277,10 +277,21 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
     borda_bar_html = ""
     if borda_score_bar_width is not None:
         clamped_width = min(100.0, max(0.0, borda_score_bar_width))
+        if clamped_width > 0:
+            radius_x = min(6.0, clamped_width / 2)
+            inner_right = max(0.0, clamped_width - radius_x)
+            bar_shape = (
+                f'<path class="borda-score-bar-fill" d="M 0 0 H {inner_right:.2f} '
+                f"A {radius_x:.2f} 5.00 0 0 1 {clamped_width:.2f} 5.00 "
+                f"A {radius_x:.2f} 5.00 0 0 1 {inner_right:.2f} 10.00 H 0 Z"
+                '"></path>'
+            )
+        else:
+            bar_shape = '<rect class="borda-score-bar-fill" x="0" y="0" width="0.00" height="10"></rect>'
         borda_bar_html = (
-            '<svg class="borda-score-bar" viewBox="0 0 100 1" preserveAspectRatio="none"'
+            '<svg class="borda-score-bar" viewBox="0 0 100 10" preserveAspectRatio="none"'
             ' aria-hidden="true" focusable="false">'
-            f'<rect class="borda-score-bar-fill" x="0" y="0" width="{clamped_width:.2f}" height="1"></rect>'
+            f"{bar_shape}"
             "</svg>"
         )
     badges = []
@@ -328,7 +339,7 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
         else ""
     )
     return f"""<td class="leaderboard-col-model sticky z-10 bg-inherit px-2 py-1">
-      <div class="flex min-w-0 flex-wrap items-center gap-1">
+      <div class="relative z-10 flex min-w-0 flex-wrap items-center gap-1">
         <button type="button" class="model-detail-trigger min-w-0 [overflow-wrap:anywhere] text-left text-[0.8125rem] leading-tight font-medium underline-offset-2 hover:underline"
                 data-model-metadata="{escape(metadata_json)}"{name_attrs}>{escape(display_name)}</button>{badge_html}
       </div>{borda_bar_html}

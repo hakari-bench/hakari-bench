@@ -29,7 +29,7 @@ def test_render_model_name_cell_uses_metadata_json_and_compact_badges() -> None:
     assert "remote code" not in html
     assert "data-model-metadata=" in html
     assert 'leaderboard-col-model sticky z-10' in html
-    assert 'class="flex min-w-0 flex-wrap items-center gap-1"' in html
+    assert 'class="relative z-10 flex min-w-0 flex-wrap items-center gap-1"' in html
     assert "model-detail-trigger min-w-0 [overflow-wrap:anywhere] text-left text-[0.8125rem] leading-tight font-medium underline-offset-2" in html
     assert 'class="model-variant-badges inline-flex min-w-0 flex-wrap gap-1 align-middle"' in html
     assert html.index("jina-embeddings-v5-text-nano</button>") < html.index(">768d</span>")
@@ -197,7 +197,7 @@ def test_render_model_name_cell_places_variant_badges_inline_after_model_name() 
 
     assert "<button" in html
     assert 'class="model-variant-badges inline-flex min-w-0 flex-wrap gap-1 align-middle"' in html
-    assert 'class="flex min-w-0 flex-wrap items-center gap-1"' in html
+    assert 'class="relative z-10 flex min-w-0 flex-wrap items-center gap-1"' in html
     assert html.index("</button>") < html.index('<span class="model-variant-badges inline-flex min-w-0 flex-wrap gap-1 align-middle">')
     assert html.index(">reranker</span>") > html.index("</button>")
     assert html.index(">768d</span>") > html.index("</button>")

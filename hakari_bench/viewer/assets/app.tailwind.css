@@ -412,19 +412,21 @@
 
   .borda-score-bar {
     position: absolute;
-    bottom: 0;
+    top: 2px;
+    bottom: 2px;
     left: 0;
     display: block;
     width: 100%;
-    height: 1px;
-    opacity: 0.28;
+    height: calc(100% - 4px);
+    opacity: 0.16;
     pointer-events: none;
     transition: opacity 0.18s ease-in-out;
+    z-index: 0;
   }
 
   .leaderboard-row:hover .borda-score-bar,
   .leaderboard-col-model:hover .borda-score-bar {
-    opacity: 0.78;
+    opacity: 0.3;
   }
 
   .borda-score-bar-fill {

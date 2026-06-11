@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 
-from hakari_bench.viewer.config import ViewerConfig
+from hakari_bench.viewer.config import ScoreAggregation, ViewerConfig
 from hakari_bench.viewer.leaderboard import LeaderboardResult, SORT_COLUMNS
 from hakari_bench.viewer.variant_display import variant_display_flags_from_values
 
@@ -42,6 +42,7 @@ def normalize_query_state(
     sort: str,
     direction: str,
     target: str = "all",
+    score: str = "macro",
     group: str | None,
     variants: bool,
     quantization: bool,
@@ -68,6 +69,7 @@ def normalize_query_state(
     doc_len_max: str = "",
     metric: str = "ndcg@10",
 ) -> QueryState:
+    view = _normalized_view_name(view)
     if view not in viewer_config.view_names:
         view = viewer_config.overall.name
     if sort not in SORT_COLUMNS and not sort.startswith("metric:"):
@@ -76,6 +78,7 @@ def normalize_query_state(
         direction = "asc"
     if target not in {"all", "reranking", "reranking_without_safeguard"}:
         target = "all"
+    score_aggregation: ScoreAggregation = "micro" if score == "micro" else "macro"
     display_flags = variant_display_flags_from_values(
         variants=variants,
         quantization=quantization,
@@ -87,6 +90,8 @@ def normalize_query_state(
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
     if target != "all":
         query["target"] = target
+    if score_aggregation != "macro":
+        query["score"] = score_aggregation
     if metric and metric != "ndcg@10":
         query["metric"] = metric.strip().casefold()
     if group:
@@ -139,6 +144,14 @@ def normalize_query_state(
     return query
 
 
+def _normalized_view_name(view: str) -> str:
+    aliases = {
+        "All": "Overall",
+        "Group": "Overall",
+    }
+    return aliases.get(view, view)
+
+
 def filter_state_from_query(query: QueryState) -> FilterState:
     return FilterState(
         model_filter=str(query.get("model_filter", "")),
@@ -170,6 +183,8 @@ def state_payload(
     query_payload: QueryState = {"view": result.view_name, "sort": sort, "direction": direction}
     if result.score_target != "all":
         query_payload["target"] = result.score_target
+    if result.score_aggregation != "macro":
+        query_payload["score"] = result.score_aggregation
     if result.selected_score_metric != "ndcg@10":
         query_payload["metric"] = result.selected_score_metric
     if result.selected_score_group is not None:

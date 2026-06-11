@@ -12,11 +12,24 @@ import duckdb
 from pydantic import BaseModel, ConfigDict, Field
 import yaml
 
-from hakari_bench.viewer.config import LanguageFilterMode, OverallConfig, ScoreGroupConfig, ViewerConfig
+from hakari_bench.viewer.config import (
+    LanguageFilterMode,
+    OverallConfig,
+    ScoreAggregation,
+    ScoreGroupConfig,
+    ViewerConfig,
+)
 from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository, _table_exists
-from hakari_bench.viewer.model_types import is_bm25_model, is_reranker_model, model_type_filter_key
+from hakari_bench.viewer.model_types import (
+    is_bm25_model,
+    is_reranker_model,
+    model_type_filter_key,
+)
 from hakari_bench.viewer.observability import log_event, timed_operation
-from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
+from hakari_bench.viewer.text_match import (
+    active_filter_terms,
+    text_matches_filter_terms,
+)
 from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
 
 SortDirection = Literal["asc", "desc"]
@@ -147,6 +160,7 @@ class LeaderboardResult(BaseModel):
     view_label: str
     is_overall: bool
     score_target: ScoreTarget = "all"
+    score_aggregation: ScoreAggregation = "macro"
     selected_score_metric: str = "ndcg@10"
     available_score_metrics: list[str] = Field(default_factory=lambda: ["ndcg@10"])
     expected_tasks: int
@@ -211,6 +225,7 @@ class LeaderboardService:
         sort: str = "borda_rank",
         direction: SortDirection = "asc",
         score_target: ScoreTarget = "all",
+        score_aggregation: ScoreAggregation = "macro",
         score_metric: str = "ndcg@10",
         score_group_name: str | None = None,
         include_quantization_variants: bool = False,
@@ -262,12 +277,19 @@ class LeaderboardService:
                 prompt_filters=ranking_prompt_filters,
             )
             overall = self.config.overall_for_view(view_name)
-            available_score_metrics = self.task_results_repository.fetch_score_metric_options()
-            selected_score_metric = _normalize_score_metric(score_metric, available_score_metrics)
+            available_score_metrics = (
+                self.task_results_repository.fetch_score_metric_options()
+            )
+            selected_score_metric = _normalize_score_metric(
+                score_metric, available_score_metrics
+            )
             benchmarks = self.config.benchmarks_for_view(view_name)
             is_overall = overall is not None
             request_timing["benchmark_count"] = len(benchmarks)
-            score_groups = [] if is_overall else _score_groups_for_view(self.config, view_name)
+            request_timing["score_aggregation"] = score_aggregation
+            score_groups = (
+                [] if is_overall else _score_groups_for_view(self.config, view_name)
+            )
             selected_score_group = _select_score_group(score_groups, score_group_name)
             include_flags = VariantDisplayFlags(
                 quantization=include_quantization_variants,
@@ -275,7 +297,9 @@ class LeaderboardService:
                 rescore=include_rescore_variants,
                 other=include_other_variants,
             )
-            language_filter_policy = _language_filter_policy_for_view(self.config, view_name)
+            language_filter_policy = _language_filter_policy_for_view(
+                self.config, view_name
+            )
             has_length_filters = _has_task_length_filters(
                 query_min_chars=query_min_chars,
                 query_max_chars=query_max_chars,
@@ -294,17 +318,20 @@ class LeaderboardService:
                 and not has_length_filters
                 and selected_score_metric == "ndcg@10"
                 and _language_filter_policy_supports_precomputed(language_filter_policy)
-                and (overall is None or not _overall_uses_grouped_components(overall))
+                and (overall is None or score_aggregation == "micro")
             ):
                 precomputed = _load_precomputed_leaderboard_rows(
                     duckdb_path=self.duckdb_path,
                     view_name=view_name,
                     score_target=score_target,
+                    score_aggregation=score_aggregation,
                     variant_flags=include_flags,
                 )
                 if precomputed is not None:
                     rows, expected_tasks, available_languages = precomputed
-                    rows = _with_model_card_parameters_for_leaderboard_rows(rows, self.model_card_parameters)
+                    rows = _with_model_card_parameters_for_leaderboard_rows(
+                        rows, self.model_card_parameters
+                    )
                     sorted_rows = sort_rows(rows, sort=sort, direction=direction)
                     request_timing["task_score_count"] = None
                     request_timing["leaderboard_row_count"] = len(sorted_rows)
@@ -314,12 +341,16 @@ class LeaderboardService:
                         view_label=self.config.label_for_view(view_name),
                         is_overall=is_overall,
                         score_target=score_target,
+                        score_aggregation=score_aggregation,
                         selected_score_metric=selected_score_metric,
                         available_score_metrics=available_score_metrics,
                         expected_tasks=expected_tasks,
                         rows=sorted_rows,
                         available_views=self.config.view_names,
-                        available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
+                        available_view_labels={
+                            view: self.config.label_for_view(view)
+                            for view in self.config.view_names
+                        },
                         include_quantization_variants=include_quantization_variants,
                         include_truncate_variants=include_truncate_variants,
                         include_rescore_variants=include_rescore_variants,
@@ -328,9 +359,15 @@ class LeaderboardService:
                         show_task_z_scores=False,
                         show_task_ranks=False,
                         task_filter="",
-                        score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
+                        score_groups=[
+                            ScoreGroup(name=group.name, label=group.display_label)
+                            for group in score_groups
+                        ],
                         selected_score_group=(
-                            ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
+                            ScoreGroup(
+                                name=selected_score_group.name,
+                                label=selected_score_group.display_label,
+                            )
                             if selected_score_group is not None
                             else None
                         ),
@@ -338,7 +375,9 @@ class LeaderboardService:
                         available_languages=available_languages,
                         selected_languages=(),
                     )
-            with timed_operation("viewer.leaderboard.phase", operation="load_task_scores", view=view_name) as phase_timing:
+            with timed_operation(
+                "viewer.leaderboard.phase", operation="load_task_scores", view=view_name
+            ) as phase_timing:
                 rows = self._load_task_scores(
                     benchmarks,
                     score_target=score_target,
@@ -353,12 +392,20 @@ class LeaderboardService:
             if _score_metric_cutoff(selected_score_metric) == 100:
                 rows = _exclude_bm25_task_scores(rows)
             if ranking_model_filter_terms:
-                with timed_operation("viewer.leaderboard.phase", operation="filter_models", view=view_name) as phase_timing:
+                with timed_operation(
+                    "viewer.leaderboard.phase",
+                    operation="filter_models",
+                    view=view_name,
+                ) as phase_timing:
                     rows = _filter_rows_by_model_terms(rows, ranking_model_filter_terms)
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["term_count"] = len(ranking_model_filter_terms)
             if has_length_filters:
-                with timed_operation("viewer.leaderboard.phase", operation="filter_task_lengths", view=view_name) as phase_timing:
+                with timed_operation(
+                    "viewer.leaderboard.phase",
+                    operation="filter_task_lengths",
+                    view=view_name,
+                ) as phase_timing:
                     rows = _filter_rows_by_task_lengths(
                         rows,
                         query_min_chars=query_min_chars,
@@ -368,7 +415,11 @@ class LeaderboardService:
                     )
                     phase_timing["task_score_count"] = len(rows)
             if has_rank_facet_filters:
-                with timed_operation("viewer.leaderboard.phase", operation="filter_facets", view=view_name) as phase_timing:
+                with timed_operation(
+                    "viewer.leaderboard.phase",
+                    operation="filter_facets",
+                    view=view_name,
+                ) as phase_timing:
                     rows = _filter_rows_by_facets(
                         rows,
                         dim_filters=ranking_dim_filters,
@@ -383,34 +434,70 @@ class LeaderboardService:
                 rows,
                 policy=language_filter_policy,
             )
-            selected_languages = _selected_languages(language_filters, available_languages)
+            selected_languages = _selected_languages(
+                language_filters, available_languages
+            )
             if selected_languages:
-                with timed_operation("viewer.leaderboard.phase", operation="filter_languages", view=view_name) as phase_timing:
-                    rows = _filter_rows_by_languages(rows, selected_languages, policy=language_filter_policy)
+                with timed_operation(
+                    "viewer.leaderboard.phase",
+                    operation="filter_languages",
+                    view=view_name,
+                ) as phase_timing:
+                    rows = _filter_rows_by_languages(
+                        rows, selected_languages, policy=language_filter_policy
+                    )
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["language_count"] = len(selected_languages)
             if ranking_task_filter_terms:
-                with timed_operation("viewer.leaderboard.phase", operation="filter_tasks", view=view_name) as phase_timing:
+                with timed_operation(
+                    "viewer.leaderboard.phase", operation="filter_tasks", view=view_name
+                ) as phase_timing:
                     rows = _filter_rows_by_task_terms(rows, ranking_task_filter_terms)
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["term_count"] = len(ranking_task_filter_terms)
             metric_score_group = selected_score_group
-            should_show_task_scores = show_task_scores or show_task_ranks or bool(ranking_task_filter_terms)
+            should_show_task_scores = (
+                show_task_scores or show_task_ranks or bool(ranking_task_filter_terms)
+            )
             if overall is not None and not ranking_task_filter_terms:
-                with timed_operation("viewer.leaderboard.phase", operation="aggregate_overall", view=view_name) as phase_timing:
-                    rows = _aggregate_overall_scores(rows, overall)
-                    metric_score_group = _overall_metric_score_group(overall)
+                with timed_operation(
+                    "viewer.leaderboard.phase",
+                    operation="aggregate_overall",
+                    view=view_name,
+                ) as phase_timing:
+                    rows = _aggregate_overall_scores(
+                        rows, overall, score_aggregation=score_aggregation
+                    )
+                    metric_score_group = _overall_metric_score_group(
+                        overall, score_aggregation=score_aggregation
+                    )
                     phase_timing["task_score_count"] = len(rows)
             elif selected_score_group is not None:
-                with timed_operation("viewer.leaderboard.phase", operation="aggregate_score_group", view=view_name) as phase_timing:
-                    rows = _aggregate_benchmark_score_group_scores(rows, selected_score_group)
+                with timed_operation(
+                    "viewer.leaderboard.phase",
+                    operation="aggregate_score_group",
+                    view=view_name,
+                ) as phase_timing:
+                    rows = _aggregate_benchmark_score_group_scores(
+                        rows, selected_score_group
+                    )
                     phase_timing["task_score_count"] = len(rows)
             if should_show_task_scores and metric_score_group is None:
-                metric_score_group = ScoreGroupConfig(name="task_scores", label="Task Scores", group_by="task_key")
-            with timed_operation("viewer.leaderboard.phase", operation="metric_columns", view=view_name) as phase_timing:
-                metric_columns = _metric_columns(rows, metric_score_group) if should_show_task_scores and metric_score_group is not None else []
+                metric_score_group = ScoreGroupConfig(
+                    name="task_scores", label="Task Scores", group_by="task_key"
+                )
+            with timed_operation(
+                "viewer.leaderboard.phase", operation="metric_columns", view=view_name
+            ) as phase_timing:
+                metric_columns = (
+                    _metric_columns(rows, metric_score_group)
+                    if should_show_task_scores and metric_score_group is not None
+                    else []
+                )
                 if not ranking_task_filter_terms:
-                    metric_columns = _filter_metric_columns(rows, metric_score_group, metric_columns, task_filter)
+                    metric_columns = _filter_metric_columns(
+                        rows, metric_score_group, metric_columns, task_filter
+                    )
                 metric_column_labels = _metric_column_label_overrides(
                     rows=rows,
                     score_group=metric_score_group,
@@ -423,7 +510,9 @@ class LeaderboardService:
                     metric_columns=metric_columns,
                 )
                 phase_timing["metric_column_count"] = len(metric_columns)
-            with timed_operation("viewer.leaderboard.phase", operation="compute_rows", view=view_name) as phase_timing:
+            with timed_operation(
+                "viewer.leaderboard.phase", operation="compute_rows", view=view_name
+            ) as phase_timing:
                 leaderboard_rows = compute_leaderboard_rows(
                     rows,
                     is_overall=is_overall,
@@ -432,13 +521,21 @@ class LeaderboardService:
                     show_task_z_scores=show_task_z_scores,
                     show_task_ranks=show_task_ranks,
                     use_task_mean_for_overall=bool(ranking_task_filter_terms),
+                    overall_score_aggregation=score_aggregation,
                 )
                 leaderboard_rows = _with_model_card_parameters_for_leaderboard_rows(
                     leaderboard_rows,
                     self.model_card_parameters,
                 )
-                sort_key = "mean_score" if ranking_task_filter_terms and sort in {"macro_mean", "micro_mean"} else sort
-                sorted_rows = sort_rows(leaderboard_rows, sort=sort_key, direction=direction)
+                sort_key = (
+                    "mean_score"
+                    if ranking_task_filter_terms
+                    and sort in {"macro_mean", "micro_mean"}
+                    else sort
+                )
+                sorted_rows = sort_rows(
+                    leaderboard_rows, sort=sort_key, direction=direction
+                )
                 phase_timing["leaderboard_row_count"] = len(sorted_rows)
             request_timing["task_score_count"] = len(rows)
             request_timing["leaderboard_row_count"] = len(sorted_rows)
@@ -447,12 +544,16 @@ class LeaderboardService:
                 view_label=self.config.label_for_view(view_name),
                 is_overall=is_overall,
                 score_target=score_target,
+                score_aggregation=score_aggregation,
                 selected_score_metric=selected_score_metric,
                 available_score_metrics=available_score_metrics,
                 expected_tasks=len({row.task_key for row in rows}),
                 rows=sorted_rows,
                 available_views=self.config.view_names,
-                available_view_labels={view: self.config.label_for_view(view) for view in self.config.view_names},
+                available_view_labels={
+                    view: self.config.label_for_view(view)
+                    for view in self.config.view_names
+                },
                 include_quantization_variants=include_quantization_variants,
                 include_truncate_variants=include_truncate_variants,
                 include_rescore_variants=include_rescore_variants,
@@ -462,9 +563,15 @@ class LeaderboardService:
                 show_task_ranks=show_task_ranks,
                 rank_filtered=rank_filtered,
                 task_filter=task_filter.strip(),
-                score_groups=[ScoreGroup(name=group.name, label=group.display_label) for group in score_groups],
+                score_groups=[
+                    ScoreGroup(name=group.name, label=group.display_label)
+                    for group in score_groups
+                ],
                 selected_score_group=(
-                    ScoreGroup(name=selected_score_group.name, label=selected_score_group.display_label)
+                    ScoreGroup(
+                        name=selected_score_group.name,
+                        label=selected_score_group.display_label,
+                    )
                     if selected_score_group is not None
                     else None
                 ),
@@ -498,7 +605,9 @@ class LeaderboardService:
             rescore=include_rescore_variants,
             other=include_other_variants,
         )
-        duckdb_path, duckdb_mtime_ns, duckdb_size = _duckdb_cache_identity(self.duckdb_path)
+        duckdb_path, duckdb_mtime_ns, duckdb_size = _duckdb_cache_identity(
+            self.duckdb_path
+        )
         cache_before = _cached_task_scores.cache_info()
         task_scores = list(
             _cached_task_scores(
@@ -523,10 +632,14 @@ class LeaderboardService:
             size=cache_after.currsize,
             task_score_count=len(task_scores),
         )
-        return _with_model_card_parameters_for_task_scores(task_scores, self.model_card_parameters)
+        return _with_model_card_parameters_for_task_scores(
+            task_scores, self.model_card_parameters
+        )
 
 
-def _load_model_card_parameters(model_cards_path: Path | None) -> dict[str, ModelCardParameters]:
+def _load_model_card_parameters(
+    model_cards_path: Path | None,
+) -> dict[str, ModelCardParameters]:
     if model_cards_path is None:
         return {}
     state = _model_cards_cache_state(model_cards_path)
@@ -535,7 +648,9 @@ def _load_model_card_parameters(model_cards_path: Path | None) -> dict[str, Mode
     return _cached_model_card_parameters(str(model_cards_path.resolve()), state)
 
 
-def _model_cards_cache_state(model_cards_path: Path) -> tuple[tuple[str, int, int], ...] | None:
+def _model_cards_cache_state(
+    model_cards_path: Path,
+) -> tuple[tuple[str, int, int], ...] | None:
     if not model_cards_path.exists():
         return None
     return tuple(
@@ -565,12 +680,22 @@ def _cached_model_card_parameters(
             active_parameters=_int_or_none(parameters.get("active")),
             total_parameters=_int_or_none(parameters.get("total")),
             max_seq_length=_int_or_none(runtime.get("max_seq_length")),
-            late_interaction_query_length=_int_or_none(late_interaction.get("query_length")),
-            late_interaction_document_length=_int_or_none(late_interaction.get("document_length")),
-            late_interaction_query_prefix=_str_or_none(late_interaction.get("query_prefix")),
-            late_interaction_document_prefix=_str_or_none(late_interaction.get("document_prefix")),
+            late_interaction_query_length=_int_or_none(
+                late_interaction.get("query_length")
+            ),
+            late_interaction_document_length=_int_or_none(
+                late_interaction.get("document_length")
+            ),
+            late_interaction_query_prefix=_str_or_none(
+                late_interaction.get("query_prefix")
+            ),
+            late_interaction_document_prefix=_str_or_none(
+                late_interaction.get("document_prefix")
+            ),
             late_interaction_query_expansion=_bool_or_none(
-                late_interaction.get("do_query_expansion", late_interaction.get("query_expansion"))
+                late_interaction.get(
+                    "do_query_expansion", late_interaction.get("query_expansion")
+                )
             ),
             late_interaction_attend_to_expansion_tokens=_bool_or_none(
                 late_interaction.get("attend_to_expansion_tokens")
@@ -646,22 +771,34 @@ def _with_model_card_parameters_for_task_scores(
             else _model_card_parameters(row, parameters_by_model).max_seq_length,
             late_interaction_query_length=row.late_interaction_query_length
             if row.late_interaction_query_length is not None
-            else _model_card_parameters(row, parameters_by_model).late_interaction_query_length,
+            else _model_card_parameters(
+                row, parameters_by_model
+            ).late_interaction_query_length,
             late_interaction_document_length=row.late_interaction_document_length
             if row.late_interaction_document_length is not None
-            else _model_card_parameters(row, parameters_by_model).late_interaction_document_length,
+            else _model_card_parameters(
+                row, parameters_by_model
+            ).late_interaction_document_length,
             late_interaction_query_prefix=row.late_interaction_query_prefix
             if row.late_interaction_query_prefix is not None
-            else _model_card_parameters(row, parameters_by_model).late_interaction_query_prefix,
+            else _model_card_parameters(
+                row, parameters_by_model
+            ).late_interaction_query_prefix,
             late_interaction_document_prefix=row.late_interaction_document_prefix
             if row.late_interaction_document_prefix is not None
-            else _model_card_parameters(row, parameters_by_model).late_interaction_document_prefix,
+            else _model_card_parameters(
+                row, parameters_by_model
+            ).late_interaction_document_prefix,
             late_interaction_query_expansion=row.late_interaction_query_expansion
             if row.late_interaction_query_expansion is not None
-            else _model_card_parameters(row, parameters_by_model).late_interaction_query_expansion,
+            else _model_card_parameters(
+                row, parameters_by_model
+            ).late_interaction_query_expansion,
             late_interaction_attend_to_expansion_tokens=row.late_interaction_attend_to_expansion_tokens
             if row.late_interaction_attend_to_expansion_tokens is not None
-            else _model_card_parameters(row, parameters_by_model).late_interaction_attend_to_expansion_tokens,
+            else _model_card_parameters(
+                row, parameters_by_model
+            ).late_interaction_attend_to_expansion_tokens,
         )
         for row in rows
     ]
@@ -685,7 +822,9 @@ def _with_model_card_parameters_for_leaderboard_rows(
                     "total_parameters": row.total_parameters
                     if row.total_parameters is not None
                     else parameters.total_parameters,
-                    "max_seq_length": row.max_seq_length if row.max_seq_length is not None else parameters.max_seq_length,
+                    "max_seq_length": row.max_seq_length
+                    if row.max_seq_length is not None
+                    else parameters.max_seq_length,
                     "late_interaction_query_length": row.late_interaction_query_length
                     if row.late_interaction_query_length is not None
                     else parameters.late_interaction_query_length,
@@ -707,7 +846,8 @@ def _with_model_card_parameters_for_leaderboard_rows(
                     "language_support_category": row.language_support_category
                     if row.language_support_category is not None
                     else parameters.language_support_category,
-                    "language_support_languages": row.language_support_languages or parameters.language_support_languages,
+                    "language_support_languages": row.language_support_languages
+                    or parameters.language_support_languages,
                     "language_support_marker": row.language_support_marker
                     if row.language_support_marker is not None
                     else parameters.language_support_marker,
@@ -766,7 +906,9 @@ def _load_task_scores_uncached(
         include_embedding_variants=include_any_variants,
         variant_display_flags=variant_flags,
     )
-    task_scores = _task_scores_from_records(records, include_any_variants=include_any_variants, variant_flags=variant_flags)
+    task_scores = _task_scores_from_records(
+        records, include_any_variants=include_any_variants, variant_flags=variant_flags
+    )
     if score_target == "all":
         task_scores = _exclude_reranker_task_scores(task_scores)
     elif score_target == "reranking":
@@ -819,6 +961,7 @@ def _load_precomputed_leaderboard_rows(
     duckdb_path: Path,
     view_name: str,
     score_target: ScoreTarget,
+    score_aggregation: ScoreAggregation,
     variant_flags: VariantDisplayFlags,
 ) -> tuple[list[LeaderboardRow], int, list[LanguageOption]] | None:
     if not duckdb_path.exists():
@@ -871,7 +1014,9 @@ def _load_precomputed_leaderboard_rows(
         language_options: list[LanguageOption] = []
         if _table_exists(con, "viewer_leaderboard_language_options"):
             language_options = [
-                LanguageOption(code=str(row[0]), label=str(row[1]), task_count=int(row[2]))
+                LanguageOption(
+                    code=str(row[0]), label=str(row[1]), task_count=int(row[2])
+                )
                 for row in con.execute(
                     """
                     SELECT code, label, task_count
@@ -897,41 +1042,66 @@ def _load_precomputed_leaderboard_rows(
     finally:
         con.close()
     if score_target == "all":
-        rows = [row for row in rows if not _is_reranker_model(model_name=str(row[3]), model_type=None)]
+        rows = [
+            row
+            for row in rows
+            if not _is_reranker_model(model_name=str(row[3]), model_type=None)
+        ]
     elif score_target == "reranking" and not _precomputed_rows_include_bm25(rows):
         return None
     if not rows:
         return None
     expected_tasks = int(rows[0][0])
-    return (
-        [
-            LeaderboardRow(
-                borda_rank=float(row[1]),
-                mean_rank=float(row[2]),
-                model_name=str(row[3]),
-                borda_score=float(row[4]),
-                mean_score=float(row[5]),
+    leaderboard_rows = [
+        LeaderboardRow(
+            borda_rank=float(row[1]),
+            mean_rank=float(row[2]),
+            model_name=str(row[3]),
+            borda_score=float(row[4]),
+            mean_score=_precomputed_mean_score(
+                stored_mean_score=float(row[5]),
                 macro_mean=float(row[6]) if row[6] is not None else None,
                 micro_mean=float(row[7]) if row[7] is not None else None,
-                task_count=int(row[8]),
-                active_parameters=int(row[9]) if row[9] is not None else None,
-                total_parameters=int(row[10]) if row[10] is not None else None,
-                max_seq_length=int(row[11]) if row[11] is not None else None,
-                dtype=str(row[12]) if row[12] is not None else None,
-                attn_implementation=str(row[13]) if row[13] is not None else None,
-                prompt_summary=str(row[14]) if row[14] is not None else None,
-                trust_remote_code=bool(row[15]) if row[15] is not None else None,
-                embedding_variant_name=str(row[16]) if row[16] is not None else None,
-                embedding_dim=int(row[17]) if row[17] is not None else None,
-                quantization=str(row[18]) if row[18] is not None else None,
-                source_model_name=str(row[19]) if row[19] is not None else None,
-                base_score_delta_percent=float(row[20]) if row[20] is not None else None,
-            )
-            for row in rows
-        ],
-        expected_tasks,
-        language_options,
-    )
+                score_aggregation=score_aggregation,
+            ),
+            macro_mean=float(row[6]) if row[6] is not None else None,
+            micro_mean=float(row[7]) if row[7] is not None else None,
+            task_count=int(row[8]),
+            active_parameters=int(row[9]) if row[9] is not None else None,
+            total_parameters=int(row[10]) if row[10] is not None else None,
+            max_seq_length=int(row[11]) if row[11] is not None else None,
+            dtype=str(row[12]) if row[12] is not None else None,
+            attn_implementation=str(row[13]) if row[13] is not None else None,
+            prompt_summary=str(row[14]) if row[14] is not None else None,
+            trust_remote_code=bool(row[15]) if row[15] is not None else None,
+            embedding_variant_name=str(row[16]) if row[16] is not None else None,
+            embedding_dim=int(row[17]) if row[17] is not None else None,
+            quantization=str(row[18]) if row[18] is not None else None,
+            source_model_name=str(row[19]) if row[19] is not None else None,
+            base_score_delta_percent=float(row[20]) if row[20] is not None else None,
+        )
+        for row in rows
+    ]
+    mean_rank_by_model = _rank_desc((row.model_name, row.mean_score) for row in leaderboard_rows)
+    leaderboard_rows = [
+        row.model_copy(update={"mean_rank": mean_rank_by_model[row.model_name]})
+        for row in leaderboard_rows
+    ]
+    return (leaderboard_rows, expected_tasks, language_options)
+
+
+def _precomputed_mean_score(
+    *,
+    stored_mean_score: float,
+    macro_mean: float | None,
+    micro_mean: float | None,
+    score_aggregation: ScoreAggregation,
+) -> float:
+    if score_aggregation == "micro" and micro_mean is not None:
+        return micro_mean
+    if score_aggregation == "macro" and macro_mean is not None:
+        return macro_mean
+    return stored_mean_score
 
 
 def _duckdb_cache_identity(duckdb_path: Path) -> tuple[str, int, int]:
@@ -967,11 +1137,16 @@ def _append_bm25_reranking_baseline(
     return _append_missing_bm25_task_scores(task_scores, bm25_scores)
 
 
-def _append_missing_bm25_task_scores(task_scores: list[TaskScore], candidate_scores: list[TaskScore]) -> list[TaskScore]:
+def _append_missing_bm25_task_scores(
+    task_scores: list[TaskScore], candidate_scores: list[TaskScore]
+) -> list[TaskScore]:
     existing_keys = {_task_score_identity(row) for row in task_scores}
     rows = list(task_scores)
     for row in candidate_scores:
-        if not _is_bm25_model(model_name=row.source_model_name or row.model_name, model_type=row.model_type):
+        if not _is_bm25_model(
+            model_name=row.source_model_name or row.model_name,
+            model_type=row.model_type,
+        ):
             continue
         key = _task_score_identity(row)
         if key in existing_keys:
@@ -981,7 +1156,9 @@ def _append_missing_bm25_task_scores(task_scores: list[TaskScore], candidate_sco
     return rows
 
 
-def _task_score_identity(row: TaskScore) -> tuple[str, str, str, str, str, str, str | None, str | None]:
+def _task_score_identity(
+    row: TaskScore,
+) -> tuple[str, str, str, str, str, str, str | None, str | None]:
     return (
         row.source_model_name or row.model_name,
         row.benchmark,
@@ -995,7 +1172,10 @@ def _task_score_identity(row: TaskScore) -> tuple[str, str, str, str, str, str, 
 
 
 def _precomputed_rows_include_bm25(rows: list[tuple[Any, ...]]) -> bool:
-    return any(_is_bm25_model(model_name=str(row[19] or row[3]), model_type=None) for row in rows)
+    return any(
+        _is_bm25_model(model_name=str(row[19] or row[3]), model_type=None)
+        for row in rows
+    )
 
 
 def _task_scores_from_records(
@@ -1005,7 +1185,9 @@ def _task_scores_from_records(
     variant_flags: VariantDisplayFlags,
 ) -> list[TaskScore]:
     task_scores: list[TaskScore] = []
-    with timed_operation("viewer.leaderboard.phase", operation="filter_variant_records") as timing:
+    with timed_operation(
+        "viewer.leaderboard.phase", operation="filter_variant_records"
+    ) as timing:
         filtered_records = [
             record
             for record in records
@@ -1018,10 +1200,16 @@ def _task_scores_from_records(
         filtered_records = _drop_noop_truncate_duplicate_records(filtered_records)
         timing["record_count"] = len(records)
         timing["filtered_record_count"] = len(filtered_records)
-    with timed_operation("viewer.leaderboard.phase", operation="display_model_names") as timing:
-        model_names = _record_display_model_names(filtered_records, include_variant_details=include_any_variants)
+    with timed_operation(
+        "viewer.leaderboard.phase", operation="display_model_names"
+    ) as timing:
+        model_names = _record_display_model_names(
+            filtered_records, include_variant_details=include_any_variants
+        )
         timing["record_count"] = len(filtered_records)
-    with timed_operation("viewer.leaderboard.phase", operation="build_task_scores") as timing:
+    with timed_operation(
+        "viewer.leaderboard.phase", operation="build_task_scores"
+    ) as timing:
         for record, model_name in zip(filtered_records, model_names, strict=True):
             task_scores.append(
                 TaskScore(
@@ -1046,27 +1234,36 @@ def _task_scores_from_records(
                     trust_remote_code=record.trust_remote_code,
                     embedding_variant_name=record.embedding_variant_name,
                     embedding_dim=record.embedding_dim,
-                quantization=record.quantization,
-                source_model_name=record.model_name,
-                query_mean_chars=record.query_mean_chars,
-                document_mean_chars=record.document_mean_chars,
-                late_interaction_query_length=record.late_interaction_query_length,
-                late_interaction_document_length=record.late_interaction_document_length,
-                late_interaction_query_prefix=record.late_interaction_query_prefix,
-                late_interaction_document_prefix=record.late_interaction_document_prefix,
-                late_interaction_query_expansion=record.late_interaction_query_expansion,
-                late_interaction_attend_to_expansion_tokens=record.late_interaction_attend_to_expansion_tokens,
+                    quantization=record.quantization,
+                    source_model_name=record.model_name,
+                    query_mean_chars=record.query_mean_chars,
+                    document_mean_chars=record.document_mean_chars,
+                    late_interaction_query_length=record.late_interaction_query_length,
+                    late_interaction_document_length=record.late_interaction_document_length,
+                    late_interaction_query_prefix=record.late_interaction_query_prefix,
+                    late_interaction_document_prefix=record.late_interaction_document_prefix,
+                    late_interaction_query_expansion=record.late_interaction_query_expansion,
+                    late_interaction_attend_to_expansion_tokens=record.late_interaction_attend_to_expansion_tokens,
+                )
             )
-        )
         timing["task_score_count"] = len(task_scores)
     return task_scores
 
 
 def _exclude_reranker_task_scores(rows: list[TaskScore]) -> list[TaskScore]:
-    return [row for row in rows if not _is_reranker_model(model_name=row.source_model_name or row.model_name, model_type=row.model_type)]
+    return [
+        row
+        for row in rows
+        if not _is_reranker_model(
+            model_name=row.source_model_name or row.model_name,
+            model_type=row.model_type,
+        )
+    ]
 
 
-def _drop_noop_truncate_duplicate_records(records: list[TaskResultRow]) -> list[TaskResultRow]:
+def _drop_noop_truncate_duplicate_records(
+    records: list[TaskResultRow],
+) -> list[TaskResultRow]:
     original_keys = {
         _noop_truncate_duplicate_key(record)
         for record in records
@@ -1103,7 +1300,11 @@ def _noop_truncate_duplicate_key(record: TaskResultRow) -> tuple[Any, ...]:
 
 def _noop_truncate_dim(record: TaskResultRow) -> int | None:
     truncate_dim = _truncate_dim_from_variant_name(record.embedding_variant_name)
-    if truncate_dim is None or record.embedding_dim is None or truncate_dim != record.embedding_dim:
+    if (
+        truncate_dim is None
+        or record.embedding_dim is None
+        or truncate_dim != record.embedding_dim
+    ):
         return None
     return truncate_dim
 
@@ -1127,7 +1328,10 @@ def _exclude_bm25_task_scores(rows: list[TaskScore]) -> list[TaskScore]:
     return [
         row
         for row in rows
-        if not _is_bm25_model(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
+        if not _is_bm25_model(
+            model_name=row.source_model_name or row.model_name,
+            model_type=row.model_type,
+        )
     ]
 
 
@@ -1152,6 +1356,7 @@ def compute_leaderboard_rows(
     show_task_z_scores: bool = False,
     show_task_ranks: bool = False,
     use_task_mean_for_overall: bool = False,
+    overall_score_aggregation: ScoreAggregation = "macro",
 ) -> list[LeaderboardRow]:
     expected_tasks = {row.task_key for row in rows}
     if not expected_tasks:
@@ -1164,19 +1369,33 @@ def compute_leaderboard_rows(
         task_keys_by_model[row.model_name].add(row.task_key)
 
     complete_models = {
-        model_name for model_name, task_keys in task_keys_by_model.items() if task_keys == expected_tasks
+        model_name
+        for model_name, task_keys in task_keys_by_model.items()
+        if task_keys == expected_tasks
     }
     complete_rows = [row for row in rows if row.model_name in complete_models]
     borda_scores = _borda_scores(complete_rows)
     metric_columns = metric_columns or []
     z_values_by_model = (
-        _metric_z_values_by_model(complete_rows, score_group=score_group, metric_columns=metric_columns)
+        _metric_z_values_by_model(
+            complete_rows, score_group=score_group, metric_columns=metric_columns
+        )
         if show_task_z_scores and metric_columns
         else {}
     )
-    aggregate_z_values_by_model = _aggregate_z_values_by_model(complete_rows, is_overall=is_overall) if show_task_z_scores else {}
+    aggregate_z_values_by_model = (
+        _aggregate_z_values_by_model(
+            complete_rows,
+            is_overall=is_overall,
+            overall_score_aggregation=overall_score_aggregation,
+        )
+        if show_task_z_scores
+        else {}
+    )
     metric_rank_values_by_model = (
-        _metric_rank_values_by_model(complete_rows, score_group=score_group, metric_columns=metric_columns)
+        _metric_rank_values_by_model(
+            complete_rows, score_group=score_group, metric_columns=metric_columns
+        )
         if show_task_ranks and metric_columns
         else {}
     )
@@ -1191,8 +1410,17 @@ def compute_leaderboard_rows(
             for benchmark_rows in _group_by_benchmark(model_rows).values()
         ]
         macro_mean = _mean(benchmark_means)
-        mean_score = micro_mean if use_task_mean_for_overall else macro_mean if is_overall else micro_mean
-        metric_values = _metric_values(model_rows, score_group=score_group, metric_columns=metric_columns)
+        mean_score = (
+            micro_mean
+            if use_task_mean_for_overall
+            or (is_overall and overall_score_aggregation == "micro")
+            else macro_mean
+            if is_overall
+            else micro_mean
+        )
+        metric_values = _metric_values(
+            model_rows, score_group=score_group, metric_columns=metric_columns
+        )
         metric_z_values = z_values_by_model.get(model_name, {})
         metric_rank_values = metric_rank_values_by_model.get(model_name, {})
         aggregate_z_values = aggregate_z_values_by_model.get(model_name, {})
@@ -1206,9 +1434,13 @@ def compute_leaderboard_rows(
                 mean_score=mean_score,
                 mean_score_z=aggregate_z_values.get("mean_score"),
                 macro_mean=macro_mean if is_overall else None,
-                macro_mean_z=aggregate_z_values.get("macro_mean") if is_overall else None,
+                macro_mean_z=aggregate_z_values.get("macro_mean")
+                if is_overall
+                else None,
                 micro_mean=micro_mean if is_overall else None,
-                micro_mean_z=aggregate_z_values.get("micro_mean") if is_overall else None,
+                micro_mean_z=aggregate_z_values.get("micro_mean")
+                if is_overall
+                else None,
                 task_count=len({row.task_key for row in model_rows}),
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
@@ -1230,22 +1462,40 @@ def compute_leaderboard_rows(
                 metric_values=metric_values,
                 metric_z_values=metric_z_values,
                 metric_rank_values=metric_rank_values,
-                metric_sort_values=metric_rank_values if show_task_ranks else metric_z_values if show_task_z_scores else metric_values,
+                metric_sort_values=metric_rank_values
+                if show_task_ranks
+                else metric_z_values
+                if show_task_z_scores
+                else metric_values,
             )
         )
 
-    borda_rank_by_model = _rank_desc((row.model_name, row.borda_score) for row in leaderboard_rows)
-    mean_rank_by_model = _rank_desc((row.model_name, row.mean_score) for row in leaderboard_rows)
+    borda_rank_by_model = _rank_desc(
+        (row.model_name, row.borda_score) for row in leaderboard_rows
+    )
+    mean_rank_by_model = _rank_desc(
+        (row.model_name, row.mean_score) for row in leaderboard_rows
+    )
     ranked_rows = [
-        row.model_copy(update={"borda_rank": borda_rank_by_model[row.model_name], "mean_rank": mean_rank_by_model[row.model_name]})
+        row.model_copy(
+            update={
+                "borda_rank": borda_rank_by_model[row.model_name],
+                "mean_rank": mean_rank_by_model[row.model_name],
+            }
+        )
         for row in leaderboard_rows
     ]
     return _with_base_score_delta_percent(ranked_rows)
 
 
-def sort_rows(rows: list[LeaderboardRow], *, sort: str, direction: SortDirection) -> list[LeaderboardRow]:
+def sort_rows(
+    rows: list[LeaderboardRow], *, sort: str, direction: SortDirection
+) -> list[LeaderboardRow]:
     metric_key = sort.removeprefix("metric:") if sort.startswith("metric:") else None
-    if metric_key is not None and not any(metric_key in row.metric_sort_values or metric_key in row.metric_values for row in rows):
+    if metric_key is not None and not any(
+        metric_key in row.metric_sort_values or metric_key in row.metric_values
+        for row in rows
+    ):
         metric_key = None
     sort_key = sort if sort in SORT_COLUMNS else "borda_rank"
     reverse = direction == "desc" and (metric_key is not None or sort in SORT_COLUMNS)
@@ -1274,7 +1524,11 @@ def _borda_scores(rows: list[TaskScore]) -> dict[str, list[float]]:
         model_count = len(rank_by_model)
         for row in task_rows:
             rank = rank_by_model[row.model_name]
-            score = 100.0 if model_count <= 1 else 100.0 * (model_count - rank) / (model_count - 1)
+            score = (
+                100.0
+                if model_count <= 1
+                else 100.0 * (model_count - rank) / (model_count - 1)
+            )
             scores_by_model[row.model_name].append(score)
     return scores_by_model
 
@@ -1285,7 +1539,9 @@ def _rank_desc(items: Iterable[tuple[str, float]]) -> dict[str, float]:
     index = 0
     while index < len(sorted_items):
         end = index + 1
-        while end < len(sorted_items) and sorted_items[end][1] == sorted_items[index][1]:
+        while (
+            end < len(sorted_items) and sorted_items[end][1] == sorted_items[index][1]
+        ):
             end += 1
         rank = float(index + 1)
         for model_name, _ in sorted_items[index:end]:
@@ -1300,7 +1556,9 @@ def _average_rank_desc(items: Iterable[tuple[str, float]]) -> dict[str, float]:
     index = 0
     while index < len(sorted_items):
         end = index + 1
-        while end < len(sorted_items) and sorted_items[end][1] == sorted_items[index][1]:
+        while (
+            end < len(sorted_items) and sorted_items[end][1] == sorted_items[index][1]
+        ):
             end += 1
         rank = (index + 1 + end) / 2
         for model_name, _ in sorted_items[index:end]:
@@ -1316,9 +1574,16 @@ def _group_by_benchmark(rows: list[TaskScore]) -> dict[str, list[TaskScore]]:
     return grouped
 
 
-def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> list[TaskScore]:
-    component_by_benchmark = {component.name: component for component in overall.benchmark_components}
-    if not _overall_uses_grouped_components(overall):
+def _aggregate_overall_scores(
+    rows: list[TaskScore],
+    overall: OverallConfig,
+    *,
+    score_aggregation: ScoreAggregation,
+) -> list[TaskScore]:
+    component_by_benchmark = {
+        component.name: component for component in overall.benchmark_components
+    }
+    if score_aggregation == "micro":
         return rows
 
     expected_raw_tasks: dict[str, set[str]] = defaultdict(set)
@@ -1327,59 +1592,103 @@ def _aggregate_overall_scores(rows: list[TaskScore], overall: OverallConfig) -> 
         expected_raw_tasks[row.benchmark].add(row.task_key)
         raw_tasks_by_model_benchmark[(row.model_name, row.benchmark)].add(row.task_key)
 
-    aggregate_inputs: dict[tuple[str, str, str], list[TaskScore]] = defaultdict(list)
+    complete_inputs: dict[tuple[str, str], list[TaskScore]] = defaultdict(list)
     for row in rows:
         component = component_by_benchmark[row.benchmark]
         model_benchmark = (row.model_name, row.benchmark)
-        if raw_tasks_by_model_benchmark[model_benchmark] != expected_raw_tasks[row.benchmark]:
+        if (
+            raw_tasks_by_model_benchmark[model_benchmark]
+            != expected_raw_tasks[row.benchmark]
+        ):
             continue
-        aggregate_key = _score_group_key(row, component.group_by or "task_key")
-        aggregate_inputs[(row.model_name, row.benchmark, aggregate_key)].append(row)
+        complete_inputs[(row.model_name, component.name)].append(row)
 
     aggregated: list[TaskScore] = []
-    for (model_name, benchmark, aggregate_key), aggregate_rows in aggregate_inputs.items():
-        first = aggregate_rows[0]
+    for (model_name, benchmark), benchmark_rows in complete_inputs.items():
+        component = component_by_benchmark[benchmark]
+        score_rows = benchmark_rows
+        if component.group_by is not None:
+            group_inputs: dict[str, list[TaskScore]] = defaultdict(list)
+            for row in benchmark_rows:
+                group_inputs[_score_group_key(row, component.group_by)].append(row)
+            score_rows = [
+                _aggregate_task_score_rows(
+                    model_name=model_name,
+                    benchmark=benchmark,
+                    aggregate_key=group_key,
+                    aggregate_rows=group_rows,
+                )
+                for group_key, group_rows in group_inputs.items()
+            ]
         aggregated.append(
-            TaskScore(
+            _aggregate_task_score_rows(
                 model_name=model_name,
-                model_type=first.model_type,
                 benchmark=benchmark,
-                dataset_id=benchmark,
-                dataset_name=benchmark,
-                split_name="",
-                task_name=aggregate_key,
-                task_key=f"{benchmark}::{aggregate_key}",
-                score=_mean(row.score for row in aggregate_rows),
-                language=first.language,
-                languages=tuple(sorted({language for row in aggregate_rows for language in row.languages})),
-                primary_languages=tuple(
-                    sorted({language for row in aggregate_rows for language in row.primary_languages})
-                ),
-                active_parameters=first.active_parameters,
-                total_parameters=first.total_parameters,
-                max_seq_length=first.max_seq_length,
-                dtype=first.dtype,
-                attn_implementation=first.attn_implementation,
-                prompt_summary=first.prompt_summary,
-                trust_remote_code=first.trust_remote_code,
-                embedding_variant_name=first.embedding_variant_name,
-                embedding_dim=first.embedding_dim,
-                quantization=first.quantization,
-                source_model_name=first.source_model_name,
-                query_mean_chars=_mean_optional(row.query_mean_chars for row in aggregate_rows),
-                document_mean_chars=_mean_optional(row.document_mean_chars for row in aggregate_rows),
-                late_interaction_query_length=first.late_interaction_query_length,
-                late_interaction_document_length=first.late_interaction_document_length,
-                late_interaction_query_prefix=first.late_interaction_query_prefix,
-                late_interaction_document_prefix=first.late_interaction_document_prefix,
-                late_interaction_query_expansion=first.late_interaction_query_expansion,
-                late_interaction_attend_to_expansion_tokens=first.late_interaction_attend_to_expansion_tokens,
+                aggregate_key=benchmark,
+                aggregate_rows=score_rows,
             )
         )
     return aggregated
 
 
-def _aggregate_benchmark_score_group_scores(rows: list[TaskScore], score_group: ScoreGroupConfig) -> list[TaskScore]:
+def _aggregate_task_score_rows(
+    *,
+    model_name: str,
+    benchmark: str,
+    aggregate_key: str,
+    aggregate_rows: list[TaskScore],
+) -> TaskScore:
+    first = aggregate_rows[0]
+    return TaskScore(
+        model_name=model_name,
+        model_type=first.model_type,
+        benchmark=benchmark,
+        dataset_id=benchmark,
+        dataset_name=benchmark,
+        split_name="",
+        task_name=aggregate_key,
+        task_key=f"{benchmark}::{aggregate_key}",
+        score=_mean(row.score for row in aggregate_rows),
+        language=first.language,
+        languages=tuple(
+            sorted({language for row in aggregate_rows for language in row.languages})
+        ),
+        primary_languages=tuple(
+            sorted(
+                {
+                    language
+                    for row in aggregate_rows
+                    for language in row.primary_languages
+                }
+            )
+        ),
+        active_parameters=first.active_parameters,
+        total_parameters=first.total_parameters,
+        max_seq_length=first.max_seq_length,
+        dtype=first.dtype,
+        attn_implementation=first.attn_implementation,
+        prompt_summary=first.prompt_summary,
+        trust_remote_code=first.trust_remote_code,
+        embedding_variant_name=first.embedding_variant_name,
+        embedding_dim=first.embedding_dim,
+        quantization=first.quantization,
+        source_model_name=first.source_model_name,
+        query_mean_chars=_mean_optional(row.query_mean_chars for row in aggregate_rows),
+        document_mean_chars=_mean_optional(
+            row.document_mean_chars for row in aggregate_rows
+        ),
+        late_interaction_query_length=first.late_interaction_query_length,
+        late_interaction_document_length=first.late_interaction_document_length,
+        late_interaction_query_prefix=first.late_interaction_query_prefix,
+        late_interaction_document_prefix=first.late_interaction_document_prefix,
+        late_interaction_query_expansion=first.late_interaction_query_expansion,
+        late_interaction_attend_to_expansion_tokens=first.late_interaction_attend_to_expansion_tokens,
+    )
+
+
+def _aggregate_benchmark_score_group_scores(
+    rows: list[TaskScore], score_group: ScoreGroupConfig
+) -> list[TaskScore]:
     expected_raw_tasks: dict[str, set[str]] = defaultdict(set)
     raw_tasks_by_model_benchmark: dict[tuple[str, str], set[str]] = defaultdict(set)
     for row in rows:
@@ -1389,29 +1698,60 @@ def _aggregate_benchmark_score_group_scores(rows: list[TaskScore], score_group: 
     aggregate_inputs: dict[tuple[str, str, str], list[TaskScore]] = defaultdict(list)
     for row in rows:
         model_benchmark = (row.model_name, row.benchmark)
-        if raw_tasks_by_model_benchmark[model_benchmark] != expected_raw_tasks[row.benchmark]:
+        if (
+            raw_tasks_by_model_benchmark[model_benchmark]
+            != expected_raw_tasks[row.benchmark]
+        ):
             continue
         aggregate_key = _score_group_key(row, score_group.group_by)
         aggregate_inputs[(row.model_name, row.benchmark, aggregate_key)].append(row)
 
     aggregated: list[TaskScore] = []
-    for (model_name, benchmark, aggregate_key), aggregate_rows in aggregate_inputs.items():
+    for (
+        model_name,
+        benchmark,
+        aggregate_key,
+    ), aggregate_rows in aggregate_inputs.items():
         first = aggregate_rows[0]
         aggregated.append(
             TaskScore(
                 model_name=model_name,
                 model_type=first.model_type,
                 benchmark=benchmark,
-                dataset_id=aggregate_key if score_group.group_by == "dataset_id" else first.dataset_id,
-                dataset_name=aggregate_key if score_group.group_by == "dataset_name" else first.dataset_name,
-                split_name=aggregate_key if score_group.group_by == "split_name" else first.split_name,
-                task_name=aggregate_key if score_group.group_by == "task_name" else first.task_name,
-                task_key=aggregate_key if score_group.group_by == "task_key" else f"{benchmark}::{score_group.group_by}::{aggregate_key}",
+                dataset_id=aggregate_key
+                if score_group.group_by == "dataset_id"
+                else first.dataset_id,
+                dataset_name=aggregate_key
+                if score_group.group_by == "dataset_name"
+                else first.dataset_name,
+                split_name=aggregate_key
+                if score_group.group_by == "split_name"
+                else first.split_name,
+                task_name=aggregate_key
+                if score_group.group_by == "task_name"
+                else first.task_name,
+                task_key=aggregate_key
+                if score_group.group_by == "task_key"
+                else f"{benchmark}::{score_group.group_by}::{aggregate_key}",
                 score=_mean(row.score for row in aggregate_rows),
                 language=first.language,
-                languages=tuple(sorted({language for row in aggregate_rows for language in row.languages})),
+                languages=tuple(
+                    sorted(
+                        {
+                            language
+                            for row in aggregate_rows
+                            for language in row.languages
+                        }
+                    )
+                ),
                 primary_languages=tuple(
-                    sorted({language for row in aggregate_rows for language in row.primary_languages})
+                    sorted(
+                        {
+                            language
+                            for row in aggregate_rows
+                            for language in row.primary_languages
+                        }
+                    )
                 ),
                 active_parameters=first.active_parameters,
                 total_parameters=first.total_parameters,
@@ -1424,8 +1764,12 @@ def _aggregate_benchmark_score_group_scores(rows: list[TaskScore], score_group: 
                 embedding_dim=first.embedding_dim,
                 quantization=first.quantization,
                 source_model_name=first.source_model_name,
-                query_mean_chars=_mean_optional(row.query_mean_chars for row in aggregate_rows),
-                document_mean_chars=_mean_optional(row.document_mean_chars for row in aggregate_rows),
+                query_mean_chars=_mean_optional(
+                    row.query_mean_chars for row in aggregate_rows
+                ),
+                document_mean_chars=_mean_optional(
+                    row.document_mean_chars for row in aggregate_rows
+                ),
                 late_interaction_query_length=first.late_interaction_query_length,
                 late_interaction_document_length=first.late_interaction_document_length,
                 late_interaction_query_prefix=first.late_interaction_query_prefix,
@@ -1441,7 +1785,9 @@ def _with_base_score_delta_percent(rows: list[LeaderboardRow]) -> list[Leaderboa
     base_score_by_source_model = {
         row.source_model_name: row.mean_score
         for row in rows
-        if row.source_model_name is not None and row.embedding_variant_name is None and row.mean_score != 0.0
+        if row.source_model_name is not None
+        and row.embedding_variant_name is None
+        and row.mean_score != 0.0
     }
     return [
         row.model_copy(
@@ -1472,7 +1818,9 @@ def _base_score_delta_percent(
     return 100.0 * (score - base_score) / base_score
 
 
-def _exclude_configured_tasks(rows: list[TaskScore], config: ViewerConfig) -> list[TaskScore]:
+def _exclude_configured_tasks(
+    rows: list[TaskScore], config: ViewerConfig
+) -> list[TaskScore]:
     excluded_by_benchmark = {
         benchmark.name: set(benchmark.excluded_tasks)
         for benchmark in config.benchmarks
@@ -1497,10 +1845,14 @@ def _language_options(
 ) -> list[LanguageOption]:
     task_keys_by_language: dict[str, set[str]] = defaultdict(set)
     for row in rows:
-        for language in _language_codes_for_row(row, mode=mode, allowed_languages=allowed_languages, policy=policy):
+        for language in _language_codes_for_row(
+            row, mode=mode, allowed_languages=allowed_languages, policy=policy
+        ):
             task_keys_by_language[language].add(row.task_key)
     return [
-        LanguageOption(code=language, label=_language_label(language), task_count=len(task_keys))
+        LanguageOption(
+            code=language, label=_language_label(language), task_count=len(task_keys)
+        )
         for language, task_keys in sorted(
             task_keys_by_language.items(),
             key=lambda item: (-len(item[1]), item[0]),
@@ -1508,7 +1860,9 @@ def _language_options(
     ]
 
 
-def _selected_languages(language_filters: tuple[str, ...], options: list[LanguageOption]) -> tuple[str, ...]:
+def _selected_languages(
+    language_filters: tuple[str, ...], options: list[LanguageOption]
+) -> tuple[str, ...]:
     available = {option.code for option in options}
     selected = []
     for language in language_filters:
@@ -1525,16 +1879,24 @@ def _filter_rows_by_languages(
     policy: LanguageFilterPolicy | None = None,
 ) -> list[TaskScore]:
     selected = set(selected_languages)
-    return [row for row in rows if selected.intersection(_language_codes_for_row(row, mode=mode, policy=policy))]
+    return [
+        row
+        for row in rows
+        if selected.intersection(_language_codes_for_row(row, mode=mode, policy=policy))
+    ]
 
 
-def _filter_rows_by_model_terms(rows: list[TaskScore], terms: tuple[str, ...]) -> list[TaskScore]:
+def _filter_rows_by_model_terms(
+    rows: list[TaskScore], terms: tuple[str, ...]
+) -> list[TaskScore]:
     if not terms:
         return rows
     return [row for row in rows if text_matches_filter_terms(row.model_name, terms)]
 
 
-def _filter_rows_by_task_terms(rows: list[TaskScore], terms: tuple[str, ...]) -> list[TaskScore]:
+def _filter_rows_by_task_terms(
+    rows: list[TaskScore], terms: tuple[str, ...]
+) -> list[TaskScore]:
     if not terms:
         return rows
     return [row for row in rows if _task_row_matches_filter_terms(row, terms)]
@@ -1549,7 +1911,16 @@ def _has_facet_filters(
     attn_filters: tuple[str, ...],
     prompt_filters: tuple[str, ...],
 ) -> bool:
-    return any((dim_filters, quant_filters, model_type_filters, dtype_filters, attn_filters, prompt_filters))
+    return any(
+        (
+            dim_filters,
+            quant_filters,
+            model_type_filters,
+            dtype_filters,
+            attn_filters,
+            prompt_filters,
+        )
+    )
 
 
 def _filter_rows_by_facets(
@@ -1575,12 +1946,20 @@ def _filter_rows_by_facets(
         and (not selected_quants or _quant_bucket(row.quantization) in selected_quants)
         and (
             not selected_model_types
-            or model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
+            or model_type_filter_key(
+                model_name=row.source_model_name or row.model_name,
+                model_type=row.model_type,
+            )
             in selected_model_types
         )
         and (not selected_dtypes or _dtype_bucket(row.dtype) in selected_dtypes)
-        and (not selected_attn or _attn_bucket(row.attn_implementation) in selected_attn)
-        and (not selected_prompts or _prompt_bucket(row.prompt_summary) in selected_prompts)
+        and (
+            not selected_attn or _attn_bucket(row.attn_implementation) in selected_attn
+        )
+        and (
+            not selected_prompts
+            or _prompt_bucket(row.prompt_summary) in selected_prompts
+        )
     ]
 
 
@@ -1685,7 +2064,15 @@ def _has_task_length_filters(
     document_min_chars: float | None,
     document_max_chars: float | None,
 ) -> bool:
-    return any(value is not None for value in (query_min_chars, query_max_chars, document_min_chars, document_max_chars))
+    return any(
+        value is not None
+        for value in (
+            query_min_chars,
+            query_max_chars,
+            document_min_chars,
+            document_max_chars,
+        )
+    )
 
 
 def _filter_rows_by_task_lengths(
@@ -1699,12 +2086,20 @@ def _filter_rows_by_task_lengths(
     return [
         row
         for row in rows
-        if _length_value_matches(row.query_mean_chars, minimum=query_min_chars, maximum=query_max_chars)
-        and _length_value_matches(row.document_mean_chars, minimum=document_min_chars, maximum=document_max_chars)
+        if _length_value_matches(
+            row.query_mean_chars, minimum=query_min_chars, maximum=query_max_chars
+        )
+        and _length_value_matches(
+            row.document_mean_chars,
+            minimum=document_min_chars,
+            maximum=document_max_chars,
+        )
     ]
 
 
-def _length_value_matches(value: float | None, *, minimum: float | None, maximum: float | None) -> bool:
+def _length_value_matches(
+    value: float | None, *, minimum: float | None, maximum: float | None
+) -> bool:
     if minimum is None and maximum is None:
         return True
     if value is None:
@@ -1718,31 +2113,40 @@ def _language_label(language: str) -> str:
     return language.upper() if 2 <= len(language) <= 3 else language
 
 
-def _score_groups_for_view(config: ViewerConfig, view_name: str) -> list[ScoreGroupConfig]:
+def _score_groups_for_view(
+    config: ViewerConfig, view_name: str
+) -> list[ScoreGroupConfig]:
     benchmark = config.benchmark_for_view(view_name)
     return benchmark.resolved_score_groups if benchmark is not None else []
 
 
-def _language_filter_mode_for_view(config: ViewerConfig, view_name: str) -> LanguageFilterMode:
+def _language_filter_mode_for_view(
+    config: ViewerConfig, view_name: str
+) -> LanguageFilterMode:
     benchmark = config.benchmark_for_view(view_name)
     return benchmark.language_filter_mode if benchmark is not None else "languages"
 
 
-def _language_page_languages_for_view(config: ViewerConfig, view_name: str) -> tuple[str, ...]:
+def _language_page_languages_for_view(
+    config: ViewerConfig, view_name: str
+) -> tuple[str, ...]:
     benchmark = config.benchmark_for_view(view_name)
     if benchmark is None:
         return ()
     return tuple(benchmark.language_page_languages)
 
 
-def _language_filter_policy_for_view(config: ViewerConfig, view_name: str) -> LanguageFilterPolicy:
+def _language_filter_policy_for_view(
+    config: ViewerConfig, view_name: str
+) -> LanguageFilterPolicy:
     overall = config.overall_for_view(view_name)
     if overall is not None:
         benchmark_names = set(overall.benchmark_names)
         modes_by_benchmark: dict[str, LanguageFilterMode] = {
             benchmark.name: benchmark.language_filter_mode
             for benchmark in config.benchmarks
-            if benchmark.name in benchmark_names and benchmark.language_filter_mode != "languages"
+            if benchmark.name in benchmark_names
+            and benchmark.language_filter_mode != "languages"
         }
         allowed_languages_by_benchmark = {
             benchmark.name: tuple(benchmark.language_page_languages)
@@ -1768,17 +2172,27 @@ def _language_filter_policy_supports_precomputed(policy: LanguageFilterPolicy) -
     )
 
 
-def _overall_metric_score_group(overall: OverallConfig) -> ScoreGroupConfig | None:
-    if not _overall_uses_grouped_components(overall):
+def _overall_metric_score_group(
+    overall: OverallConfig, *, score_aggregation: ScoreAggregation
+) -> ScoreGroupConfig | None:
+    if not _overall_uses_grouped_components(
+        overall, score_aggregation=score_aggregation
+    ):
         return None
-    return ScoreGroupConfig(name="grouped_tasks", label="Grouped Tasks", group_by="task_key")
+    return ScoreGroupConfig(
+        name="benchmark_macro", label="Benchmark Macro", group_by="benchmark"
+    )
 
 
-def _overall_uses_grouped_components(overall: OverallConfig) -> bool:
-    return any(component.group_by is not None for component in overall.benchmark_components)
+def _overall_uses_grouped_components(
+    overall: OverallConfig, *, score_aggregation: ScoreAggregation
+) -> bool:
+    return score_aggregation == "macro"
 
 
-def _record_display_model_names(records: list[TaskResultRow], *, include_variant_details: bool) -> list[str]:
+def _record_display_model_names(
+    records: list[TaskResultRow], *, include_variant_details: bool
+) -> list[str]:
     if not include_variant_details:
         return [record.model_name for record in records]
 
@@ -1840,7 +2254,9 @@ def _select_score_group(
     return groups[0]
 
 
-def _metric_columns(rows: list[TaskScore], score_group: ScoreGroupConfig | None) -> list[str]:
+def _metric_columns(
+    rows: list[TaskScore], score_group: ScoreGroupConfig | None
+) -> list[str]:
     if score_group is None:
         return []
     return sorted({_score_group_key(row, score_group.group_by) for row in rows})
@@ -1860,7 +2276,9 @@ def _metric_column_doc_keys(
         column = _score_group_key(row, score_group.group_by)
         if column not in metric_column_set:
             continue
-        candidates_by_column[column].add(f"{row.benchmark}::{row.dataset_name}::{row.task_name}")
+        candidates_by_column[column].add(
+            f"{row.benchmark}::{row.dataset_name}::{row.task_name}"
+        )
     return {
         column: next(iter(candidates))
         for column, candidates in candidates_by_column.items()
@@ -1893,7 +2311,10 @@ def _filter_metric_columns(
     return [
         column
         for column in columns
-        if any(text_matches_filter_terms(label, terms) for label in labels_by_column.get(column, {column}))
+        if any(
+            text_matches_filter_terms(label, terms)
+            for label in labels_by_column.get(column, {column})
+        )
     ]
 
 
@@ -1923,7 +2344,11 @@ def _metric_column_label_overrides(
         )
         if label:
             labels_by_column[column].add(label)
-    return {column: next(iter(labels)) for column, labels in labels_by_column.items() if len(labels) == 1}
+    return {
+        column: next(iter(labels))
+        for column, labels in labels_by_column.items()
+        if len(labels) == 1
+    }
 
 
 def _metric_values(
@@ -1936,8 +2361,14 @@ def _metric_values(
         return {}
     values_by_column: dict[str, list[float]] = defaultdict(list)
     for row in rows:
-        values_by_column[_score_group_key(row, score_group.group_by)].append(row.score * 100.0)
-    return {column: _mean(values_by_column[column]) for column in metric_columns if values_by_column[column]}
+        values_by_column[_score_group_key(row, score_group.group_by)].append(
+            row.score * 100.0
+        )
+    return {
+        column: _mean(values_by_column[column])
+        for column in metric_columns
+        if values_by_column[column]
+    }
 
 
 def _metric_z_values_by_model(
@@ -1955,7 +2386,11 @@ def _metric_z_values_by_model(
     )
     stats_by_column: dict[str, tuple[float, float]] = {}
     for column in metric_columns:
-        values = [columns[column] for columns in base_model_column_values.values() if column in columns]
+        values = [
+            columns[column]
+            for columns in base_model_column_values.values()
+            if column in columns
+        ]
         stddev = _population_stddev(values)
         if stddev is not None and stddev > 0.0:
             stats_by_column[column] = (_mean(values), stddev)
@@ -1993,15 +2428,29 @@ def _metric_rank_values_by_model(
     return ranks_by_model
 
 
-def _aggregate_z_values_by_model(rows: list[TaskScore], *, is_overall: bool) -> dict[str, dict[str, float]]:
-    aggregate_values = _aggregate_values_by_model(rows, is_overall=is_overall)
+def _aggregate_z_values_by_model(
+    rows: list[TaskScore],
+    *,
+    is_overall: bool,
+    overall_score_aggregation: ScoreAggregation,
+) -> dict[str, dict[str, float]]:
+    aggregate_values = _aggregate_values_by_model(
+        rows,
+        is_overall=is_overall,
+        overall_score_aggregation=overall_score_aggregation,
+    )
     base_aggregate_values = _aggregate_values_by_model(
         [row for row in rows if row.embedding_variant_name is None],
         is_overall=is_overall,
+        overall_score_aggregation=overall_score_aggregation,
     )
     stats_by_column: dict[str, tuple[float, float]] = {}
     for column in ("mean_score", "macro_mean", "micro_mean"):
-        values = [columns[column] for columns in base_aggregate_values.values() if column in columns]
+        values = [
+            columns[column]
+            for columns in base_aggregate_values.values()
+            if column in columns
+        ]
         stddev = _population_stddev(values)
         if stddev is not None and stddev > 0.0:
             stats_by_column[column] = (_mean(values), stddev)
@@ -2016,7 +2465,12 @@ def _aggregate_z_values_by_model(rows: list[TaskScore], *, is_overall: bool) -> 
     }
 
 
-def _aggregate_values_by_model(rows: list[TaskScore], *, is_overall: bool) -> dict[str, dict[str, float]]:
+def _aggregate_values_by_model(
+    rows: list[TaskScore],
+    *,
+    is_overall: bool,
+    overall_score_aggregation: ScoreAggregation,
+) -> dict[str, dict[str, float]]:
     values_by_model: dict[str, dict[str, float]] = {}
     for model_name, model_rows in _group_by_model(rows).items():
         micro_mean = _mean(row.score * 100.0 for row in model_rows)
@@ -2025,7 +2479,13 @@ def _aggregate_values_by_model(rows: list[TaskScore], *, is_overall: bool) -> di
             for benchmark_rows in _group_by_benchmark(model_rows).values()
         ]
         macro_mean = _mean(benchmark_means)
-        mean_score = macro_mean if is_overall else micro_mean
+        mean_score = (
+            micro_mean
+            if is_overall and overall_score_aggregation == "micro"
+            else macro_mean
+            if is_overall
+            else micro_mean
+        )
         values_by_model[model_name] = {"mean_score": mean_score}
         if is_overall:
             values_by_model[model_name]["macro_mean"] = macro_mean
@@ -2047,7 +2507,9 @@ def _mean_metric_values_by_model(
 ) -> dict[str, dict[str, float]]:
     values_by_model_column: dict[tuple[str, str], list[float]] = defaultdict(list)
     for row in rows:
-        values_by_model_column[(row.model_name, _score_group_key(row, score_group.group_by))].append(row.score)
+        values_by_model_column[
+            (row.model_name, _score_group_key(row, score_group.group_by))
+        ].append(row.score)
     values_by_model: dict[str, dict[str, float]] = defaultdict(dict)
     for (model_name, column), values in values_by_model_column.items():
         values_by_model[model_name][column] = _mean(values)

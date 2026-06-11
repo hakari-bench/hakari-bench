@@ -51,7 +51,7 @@ from hakari_bench.viewer.state import FilterState
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
-def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
+def test_viewer_config_uses_core_and_overall_scope_views() -> None:
     config = load_viewer_config()
     language_nanomteb_benchmarks = [
         "NanoMTEB-Dutch",
@@ -78,11 +78,9 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
     ]
     all_benchmarks = [benchmark.name for benchmark in config.benchmarks]
 
-    assert config.overall.name == "All"
-    assert config.overall.label == "All"
-    assert config.overall.benchmark_names == all_benchmarks
-    core_overall = config.overall_for_view("Core")
-    assert core_overall is not None
+    assert config.overall.name == "Core"
+    assert config.overall.label == "Core"
+    core_overall = config.overall
     assert core_overall.benchmark_names == core_benchmarks
     assert [component.group_by for component in core_overall.benchmark_components] == [
         "task_name",
@@ -92,74 +90,29 @@ def test_viewer_config_uses_all_core_and_grouped_overall_views() -> None:
         None,
         None,
     ]
-    grouped_overall = config.overall_for_view("Group")
-    assert grouped_overall is not None
-    assert [component.name for component in grouped_overall.benchmark_components] == [
-        "MNanoBEIR",
-        "NanoRTEB",
-        "NanoMMTEB-v2",
-        "NanoBIRCO",
-        "NanoMLDR",
-        "NanoLongEmbed",
-        "NanoDAPFAM",
-        "NanoCoIR",
-        "NanoIFIR",
-        "NanoLaw",
-        "NanoMedical",
-        "NanoRARb",
-        "NanoBRIGHT",
-        "NanoCodeRAG",
-        "NanoChemTEB",
-        "NanoR2MED",
-        "NanoBuiltBench",
-        "NanoCMTEB",
-        "NanoIndicQA",
-        "NanoMuPLeR",
-        "NanoMTEB-v2",
-        *language_nanomteb_benchmarks,
-        "NanoMIRACL",
+    overall = config.overall_for_view("Overall")
+    assert overall is not None
+    assert overall.benchmark_names == all_benchmarks
+    assert [component.group_by for component in overall.benchmark_components[:3]] == [
+        None,
+        None,
+        "task_name",
     ]
-    assert [component.group_by for component in grouped_overall.benchmark_components] == [
-        "task_name",
-        "task_name",
-        "task_name",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "task_name",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        "benchmark",
-        *["benchmark"] * len(language_nanomteb_benchmarks),
-        "benchmark",
-    ]
-    assert config.view_names[: len(all_benchmarks) + 3] == [
-        "All",
+    assert config.view_names[: len(all_benchmarks) + 2] == [
         "Core",
-        "Group",
+        "Overall",
         *all_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
     assert "NanoBIRCO" in config.view_names
     assert "NanoDAPFAM" in config.view_names
     assert all(benchmark in config.view_names for benchmark in language_nanomteb_benchmarks)
-    assert all(benchmark in config.overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
+    assert all(benchmark in overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
     assert all(benchmark not in core_overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
-    assert "NanoMIRACL" in config.overall.benchmark_names
+    assert "NanoMIRACL" in overall.benchmark_names
     assert "NanoMIRACL" not in core_overall.benchmark_names
     assert "NanoCMTEB" in config.view_names
-    assert "NanoCMTEB" in config.overall.benchmark_names
+    assert "NanoCMTEB" in overall.benchmark_names
     nano_cmteb = config.benchmark_for_view("NanoCMTEB")
     assert nano_cmteb is not None
     assert nano_cmteb.language_page_languages == ["zh"]
@@ -507,11 +460,13 @@ runtime:
     service = LeaderboardService(duckdb_path=db_path, config=config, model_cards_path=model_cards_dir)
     result = service.get_leaderboard(
         "Overall",
+        score_aggregation="micro",
         include_quantization_variants=True,
     )
     reranking_result = service.get_leaderboard(
         "Overall",
         score_target="reranking",
+        score_aggregation="micro",
         include_quantization_variants=True,
     )
 
@@ -524,7 +479,7 @@ runtime:
     assert result.rows[0].max_seq_length == 8192
     assert result.rows[0].embedding_variant_name == "int8"
     assert [row.model_name for row in reranking_result.rows] == ["model/reranker-output", "bm25"]
-    assert reranking_result.rows[1].mean_score == 43.0
+    assert reranking_result.rows[1].mean_score == 42.0
     assert [(option.code, option.label, option.task_count) for option in result.available_languages] == [
         ("en", "EN", 8),
         ("ar", "AR", 3),
@@ -871,9 +826,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".doc-summary-trigger:hover" in css_response.text
     assert ".leaderboard-col-model{box-sizing:border-box;left:0" in css_response.text
     assert "overflow:hidden;width:var(--hakari-model-col-width)" in css_response.text
-    assert ".borda-score-bar{position:absolute;bottom:0;left:0;display:block" in css_response.text
-    assert "opacity:.28;pointer-events:none;transition:opacity .18s ease-in-out" in css_response.text
-    assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.78}" in css_response.text
+    assert ".borda-score-bar{position:absolute;top:2px;bottom:2px;left:0;display:block" in css_response.text
+    assert "width:100%;height:calc(100% - 4px);opacity:.16;pointer-events:none" in css_response.text
+    assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.3}" in css_response.text
     assert ".borda-score-bar-fill{fill:var(--hakari-accent)}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
@@ -997,7 +952,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Choose the evaluation mode first" not in response.text
     assert "Language-focused MTEB/MMTEB-style Nano suites" not in response.text
     assert "Overall" in response.text
-    assert "Shows the Overall scope from the viewer configuration." in response.text
+    assert "Shows every benchmark family available in the viewer." in response.text
     assert "Retrieval" in response.text
     assert "Reranking" in response.text
     assert 'data-icon="search"' in response.text
@@ -1007,7 +962,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'class="help-summary-trigger' in response.text
     assert 'data-help-title="Benchmark scope: Overall"' in response.text
     assert 'class="control-button-group inline-flex items-center border text-[0.8125rem] leading-tight' in response.text
-    assert "Benchmark scope chooses the tasks that are eligible for the leaderboard" in response.text
+    assert "Overall is the broadest leaderboard scope." in response.text
     assert 'class="doc-summary-trigger' in response.text
     assert 'data-icon="book-open"' in response.text
     assert 'data-icon="circle-help"' in response.text
@@ -1490,9 +1445,9 @@ benchmarks:
     result = service.get_leaderboard("Overall")
 
     assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
-    assert result.rows[0].task_count == 3
+    assert result.rows[0].task_count == 2
     assert result.rows[0].macro_mean == 77.5
-    assert result.rows[0].micro_mean == 80.0
+    assert result.rows[0].micro_mean == 77.5
 
 
 def test_leaderboard_language_filter_recomputes_ranking_for_matching_tasks(tmp_path: Path) -> None:
@@ -1617,23 +1572,21 @@ overalls:
     assert service.get_leaderboard("Overall").metric_columns == []
     result = service.get_leaderboard("OverallGrouped", show_task_scores=True)
 
-    assert result.expected_tasks == 3
+    assert result.expected_tasks == 2
     assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
     by_model = {row.model_name: row for row in result.rows}
-    assert by_model["model/a"].task_count == 3
-    assert by_model["model/a"].borda_score == 100 * 2 / 3
-    assert by_model["model/b"].borda_score == 100 / 3
-    assert by_model["model/a"].micro_mean == (70 + 50 + 80) / 3
+    assert by_model["model/a"].task_count == 2
+    assert by_model["model/a"].borda_score == 50.0
+    assert by_model["model/b"].borda_score == 50.0
+    assert by_model["model/a"].micro_mean == 70.0
     assert by_model["model/a"].macro_mean == 70.0
     assert result.metric_columns == [
-        "BenchMean::BenchMean",
-        "BenchTask::task1",
-        "BenchTask::task2",
+        "BenchMean",
+        "BenchTask",
     ]
     assert by_model["model/a"].metric_values == {
-        "BenchMean::BenchMean": 80.0,
-        "BenchTask::task1": 70.0,
-        "BenchTask::task2": 50.0,
+        "BenchMean": 80.0,
+        "BenchTask": 60.0,
     }
 
     from fastapi.testclient import TestClient
@@ -1643,10 +1596,9 @@ overalls:
 
     assert response.status_code == 200
     assert "Overall Grouped" in response.text
-    assert "BenchMean::BenchMean" in response.text
-    assert "BenchTask::task1" in response.text
-    assert "BenchTask::task2" in response.text
-    assert "metric%3ABenchTask%3A%3Atask1" in response.text
+    assert "BenchMean" in response.text
+    assert "BenchTask" in response.text
+    assert "metric%3ABenchTask" in response.text
 
 
 def test_configured_excluded_tasks_are_not_used_in_leaderboards(tmp_path: Path) -> None:
@@ -2525,8 +2477,8 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
         f'data-metric-column-full-name="{long_task}"'
     ) in head
     assert body.count('class="borda-score-bar"') == 2
-    assert 'class="borda-score-bar-fill" x="0" y="0" width="100.00" height="1"' in body
-    assert 'class="borda-score-bar-fill" x="0" y="0" width="0.00" height="1"' in body
+    assert 'class="borda-score-bar-fill" d="M 0 0 H 94.00 A 6.00 5.00 0 0 1 100.00 5.00 A 6.00 5.00 0 0 1 94.00 10.00 H 0 Z"' in body
+    assert 'class="borda-score-bar-fill" x="0" y="0" width="0.00" height="10"' in body
 
 
 def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row(tmp_path: Path) -> None:
@@ -2549,7 +2501,7 @@ def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row
     body = render_table_body(result=result, filter_context=filter_context)
 
     assert body.count('class="borda-score-bar"') == 1
-    assert 'class="borda-score-bar-fill" x="0" y="0" width="100.00" height="1"' in body
+    assert 'class="borda-score-bar-fill" d="M 0 0 H 94.00 A 6.00 5.00 0 0 1 100.00 5.00 A 6.00 5.00 0 0 1 94.00 10.00 H 0 Z"' in body
     assert body.count('data-filter-hidden="true"') == 1
 
 
@@ -3611,6 +3563,7 @@ def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) ->
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
     result = service.get_leaderboard(
         "Overall",
+        score_aggregation="micro",
         include_truncate_variants=True,
         show_task_z_scores=True,
     )
@@ -3629,7 +3582,7 @@ def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) ->
     assert variant_row.micro_mean_z == pytest.approx(0.5)
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=Overall&truncate=1&task_z_scores=1")
+    response = TestClient(app).get("/leaderboard?view=Overall&score=micro&truncate=1&task_z_scores=1")
 
     assert response.status_code == 200
     assert "Macro Mean" in response.text

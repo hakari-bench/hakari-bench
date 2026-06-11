@@ -1,10 +1,21 @@
 overalls:
-  - name: All
-    label: All
+  - name: Core
+    label: Core
+    benchmarks:
+      - name: MNanoBEIR
+        group_by: task_name
+      - NanoMMTEB-v2
+      - NanoRTEB
+      - NanoMLDR
+      - NanoBRIGHT
+      - NanoCoIR
+  - name: Overall
+    label: Overall
     benchmarks:
       - NanoMMTEB-v2
       - NanoRTEB
-      - MNanoBEIR
+      - name: MNanoBEIR
+        group_by: task_name
       - NanoBIRCO
       - NanoMLDR
       - NanoLongEmbed
@@ -37,86 +48,3 @@ overalls:
       - NanoVNMTEB
       - NanoMTEB-Misc
       - NanoMIRACL
-  - name: Core
-    label: Core
-    benchmarks:
-      - name: MNanoBEIR
-        group_by: task_name
-      - NanoMMTEB-v2
-      - NanoRTEB
-      - NanoMLDR
-      - NanoBRIGHT
-      - NanoCoIR
-  - name: Group
-    label: Group
-    benchmarks:
-      - name: MNanoBEIR
-        group_by: task_name
-      - name: NanoRTEB
-        group_by: task_name
-      - name: NanoMMTEB-v2
-        group_by: task_name
-      - name: NanoBIRCO
-        group_by: benchmark
-      - name: NanoMLDR
-        group_by: benchmark
-      - name: NanoLongEmbed
-        group_by: benchmark
-      - name: NanoDAPFAM
-        group_by: benchmark
-      - name: NanoCoIR
-        group_by: task_name
-      - name: NanoIFIR
-        group_by: benchmark
-      - name: NanoLaw
-        group_by: benchmark
-      - name: NanoMedical
-        group_by: benchmark
-      - name: NanoRARb
-        group_by: benchmark
-      - name: NanoBRIGHT
-        group_by: benchmark
-      - name: NanoCodeRAG
-        group_by: benchmark
-      - name: NanoChemTEB
-        group_by: benchmark
-      - name: NanoR2MED
-        group_by: benchmark
-      - name: NanoBuiltBench
-        group_by: benchmark
-      - name: NanoCMTEB
-        group_by: benchmark
-      - name: NanoIndicQA
-        group_by: benchmark
-      - name: NanoMuPLeR
-        group_by: benchmark
-      - name: NanoMTEB-v2
-        group_by: benchmark
-      - name: NanoMTEB-Dutch
-        group_by: benchmark
-      - name: NanoMTEB-French
-        group_by: benchmark
-      - name: NanoMTEB-German
-        group_by: benchmark
-      - name: NanoJMTEB-v2
-        group_by: benchmark
-      - name: NanoMTEB-Korean
-        group_by: benchmark
-      - name: NanoFaMTEB-v2
-        group_by: benchmark
-      - name: NanoMTEB-Polish
-        group_by: benchmark
-      - name: NanoRuMTEB
-        group_by: benchmark
-      - name: NanoMTEB-Scandinavian
-        group_by: benchmark
-      - name: NanoMTEB-Spanish
-        group_by: benchmark
-      - name: NanoMTEB-Thai
-        group_by: benchmark
-      - name: NanoVNMTEB
-        group_by: benchmark
-      - name: NanoMTEB-Misc
-        group_by: benchmark
-      - name: NanoMIRACL
-        group_by: benchmark

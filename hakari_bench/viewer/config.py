@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 ScoreGroupKey = Literal["task_key", "dataset_name", "dataset_id", "split_name", "benchmark", "task_name"]
 LanguageFilterMode = Literal["languages", "primary_language"]
+ScoreAggregation = Literal["macro", "micro"]
 
 
 class ScoreGroupConfig(BaseModel):
